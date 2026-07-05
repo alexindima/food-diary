@@ -8,7 +8,8 @@ namespace FoodDiary.Application.Authentication.Services;
 public sealed class EmailSender(
     EmailOptions options,
     IEmailTemplateProvider templateProvider,
-    IEmailTransport emailTransport) : IEmailSender {
+    IEmailTransport emailTransport,
+    IEmailOutbox? emailOutbox = null) : IEmailSender {
     private const string EmailVerificationSubjectRu =
         "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 email";
 
@@ -216,7 +217,7 @@ public sealed class EmailSender(
                 ? Text
                 : ApplyTemplateTokens(template.TextBody, link, brand);
 
-            await SendAsync(toEmail, subject, htmlBody, textBody, cancellationToken).ConfigureAwait(false);
+            await DispatchAsync(toEmail, subject, htmlBody, textBody, cancellationToken).ConfigureAwait(false);
             ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "success");
         } catch (Exception ex) {
             ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "failure", ex.GetType().Name);
@@ -291,5 +292,22 @@ public sealed class EmailSender(
             string.IsNullOrWhiteSpace(textBody) ? null : textBody);
 
         await emailTransport.SendAsync(message, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task DispatchAsync(string toEmail, string subject, string htmlBody, string textBody, CancellationToken cancellationToken) {
+        var message = new EmailMessage(
+            options.FromAddress,
+            options.FromName,
+            [toEmail],
+            subject,
+            htmlBody,
+            string.IsNullOrWhiteSpace(textBody) ? null : textBody);
+
+        if (emailOutbox is null) {
+            await emailTransport.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+
+        await emailOutbox.EnqueueAsync(message, cancellationToken).ConfigureAwait(false);
     }
 }

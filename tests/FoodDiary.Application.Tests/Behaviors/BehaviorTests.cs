@@ -128,6 +128,35 @@ public class BehaviorTests {
     }
 
     [Fact]
+    public async Task CommandTransactionBehavior_WhenRequestIsCanceledAfterSave_FlushesPostCommitActionsWithIndependentToken() {
+        using var cancellationTokenSource = new CancellationTokenSource();
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.HasPendingChanges.Returns(returnThis: true);
+        unitOfWork
+            .SaveChangesAsync(Arg.Any<CancellationToken>())
+            .Returns(async _ => {
+                await cancellationTokenSource.CancelAsync().ConfigureAwait(false);
+            });
+        IPostCommitActionQueue postCommitActionQueue = Substitute.For<IPostCommitActionQueue>();
+        postCommitActionQueue.HasActions.Returns(returnThis: true);
+        postCommitActionQueue
+            .FlushAsync(Arg.Any<CancellationToken>())
+            .Returns(call => {
+                Assert.False(call.Arg<CancellationToken>().IsCancellationRequested);
+                return Task.CompletedTask;
+            });
+        var behavior = new CommandTransactionBehavior<TestCommand, Result<string>>(unitOfWork, postCommitActionQueue);
+
+        Result<string> result = await behavior.Handle(
+            new TestCommand(),
+            _ => Task.FromResult(Result.Success("saved")),
+            cancellationTokenSource.Token);
+
+        ResultAssert.Success(result);
+        await postCommitActionQueue.Received(1).FlushAsync(CancellationToken.None);
+    }
+
+    [Fact]
     public async Task CommandTransactionBehavior_WhenHandlerReturnsFailure_DoesNotSaveOrFlushPostCommitActions() {
         IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.HasPendingChanges.Returns(returnThis: true);
@@ -149,7 +178,7 @@ public class BehaviorTests {
 
     [Fact]
     public async Task PostCommitActionQueue_FlushAsync_DrainsActionsEnqueuedDuringFlush() {
-        var postCommitActionQueue = new PostCommitActionQueue();
+        var postCommitActionQueue = new PostCommitActionQueue(NullLogger<PostCommitActionQueue>.Instance);
         var callOrder = new List<string>();
         postCommitActionQueue.Enqueue(_ => {
             callOrder.Add("first");

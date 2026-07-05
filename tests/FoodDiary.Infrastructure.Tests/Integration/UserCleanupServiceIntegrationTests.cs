@@ -7,7 +7,6 @@ using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -60,8 +59,8 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         context.AiUsages.Add(aiUsage);
         await context.SaveChangesAsync();
 
-        var storage = new RecordingImageStorageService();
-        var service = new UserCleanupService(context, storage, NullLogger<UserCleanupService>.Instance);
+        var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
+        var service = new UserCleanupService(context, imageObjectDeletionOutbox, NullLogger<UserCleanupService>.Instance);
 
         int removed = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), batchSize: 10, reassignUserId: null);
 
@@ -77,7 +76,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         Assert.False(await verificationContext.ShoppingListItems.AnyAsync());
         Assert.False(await verificationContext.RecentItems.AnyAsync());
         Assert.False(await verificationContext.AiUsages.AnyAsync());
-        Assert.Equal(["users/deleted/image-1.webp"], storage.DeletedObjectKeys);
+        Assert.Equal(["users/deleted/image-1.webp"], imageObjectDeletionOutbox.ObjectKeys);
     }
 
     [RequiresDockerFact]
@@ -85,8 +84,8 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         (User? deletedUser, User? survivorUser) = await SeedReassignScenarioAsync(context).ConfigureAwait(false);
 
-        var storage = new RecordingImageStorageService();
-        var service = new UserCleanupService(context, storage, NullLogger<UserCleanupService>.Instance);
+        var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
+        var service = new UserCleanupService(context, imageObjectDeletionOutbox, NullLogger<UserCleanupService>.Instance);
 
         int removed = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
@@ -99,7 +98,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             await AssertReassignedContentAsync(verificationContext, deletedUser, survivorUser).ConfigureAwait(false);
             Assert.Equal(
                 ["users/deleted/meal.webp", "users/deleted/profile.webp"],
-                [.. storage.DeletedObjectKeys.Order(StringComparer.Ordinal)]);
+                [.. imageObjectDeletionOutbox.ObjectKeys.Order(StringComparer.Ordinal)]);
         }
     }
 
@@ -132,8 +131,8 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         context.Products.Add(product);
         await context.SaveChangesAsync();
 
-        var storage = new RecordingImageStorageService();
-        var service = new UserCleanupService(context, storage, NullLogger<UserCleanupService>.Instance);
+        var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
+        var service = new UserCleanupService(context, imageObjectDeletionOutbox, NullLogger<UserCleanupService>.Instance);
 
         int removed = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
@@ -146,7 +145,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         Assert.False(await verificationContext.Users.AnyAsync(user => user.Id == deletedUser.Id));
         Assert.False(await verificationContext.Products.AnyAsync());
         Assert.False(await verificationContext.ImageAssets.AnyAsync());
-        Assert.Equal(["users/deleted/fallback.webp"], storage.DeletedObjectKeys);
+        Assert.Equal(["users/deleted/fallback.webp"], imageObjectDeletionOutbox.ObjectKeys);
     }
 
     private static FoodDiaryDbContext CreateVerificationContext(FoodDiaryDbContext sourceContext) {
@@ -245,25 +244,12 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingImageStorageService : IImageStorageService {
-        public List<string> DeletedObjectKeys { get; } = [];
+    private sealed class RecordingImageObjectDeletionOutbox : IImageObjectDeletionOutbox {
+        public List<string> ObjectKeys { get; } = [];
 
-        public Task<PresignedUpload> CreatePresignedUploadAsync(
-            UserId userId,
-            string fileName,
-            string contentType,
-            long fileSizeBytes,
-            CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
-
-        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) {
-            DeletedObjectKeys.Add(objectKey);
+        public Task EnqueueAsync(string objectKey, CancellationToken cancellationToken = default) {
+            ObjectKeys.Add(objectKey);
             return Task.CompletedTask;
         }
-
-        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
-            string objectKey,
-            CancellationToken cancellationToken) =>
-            Task.FromResult(new ImageObjectValidationResult(IsValid: true));
     }
 }

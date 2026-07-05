@@ -22,6 +22,8 @@ public sealed class PersistenceTransactionGuardrailTests {
         string[] allowedFiles = [
             Path.Combine(persistenceRoot, "Billing", "EfBillingTransactionRunner.cs"),
             Path.Combine(persistenceRoot, "EfUnitOfWork.cs"),
+            Path.Combine(persistenceRoot, "Email", "EmailOutbox.cs"),
+            Path.Combine(persistenceRoot, "Email", "EmailOutboxProcessor.cs"),
             Path.Combine(persistenceRoot, "Images", "ImageObjectDeletionOutboxProcessor.cs"),
             Path.Combine(persistenceRoot, "Notifications", "NotificationWebPushOutboxProcessor.cs"),
         ];
@@ -46,6 +48,7 @@ public sealed class PersistenceTransactionGuardrailTests {
         string infrastructureRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure");
         string[] allowedFiles = [
             Path.Combine(infrastructureRoot, "Persistence", "Billing", "EfBillingTransactionRunner.cs"),
+            Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxMessageClaimer.cs"),
             Path.Combine(infrastructureRoot, "Services", "UserCleanupService.cs"),
         ];
         string[] forbiddenPatterns = [

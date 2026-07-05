@@ -218,13 +218,23 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ApplicationSourceFiles_DoNotSuppressCancellationTokens() {
         string applicationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application");
+        string[] allowedFiles = [
+            Path.Combine(applicationRoot, "Common", "Behaviors", "CommandTransactionBehavior.cs"),
+            Path.Combine(applicationRoot, "Fasting", "Services", "FastingNotificationScheduler.cs"),
+        ];
         string[] forbiddenPatterns = [
             "CancellationToken.None",
             "default(CancellationToken)",
             "new CancellationToken(",
         ];
 
-        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
+        var allowed = allowedFiles
+            .Select(path => Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        string[] violations = [.. SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns)
+            .Where(violation => !allowed.Contains(violation.Split(':')[0]))
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }

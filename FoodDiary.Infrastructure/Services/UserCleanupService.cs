@@ -10,7 +10,7 @@ namespace FoodDiary.Infrastructure.Services;
 
 public sealed class UserCleanupService(
     FoodDiaryDbContext dbContext,
-    IImageStorageService imageStorageService,
+    IImageObjectDeletionOutbox imageObjectDeletionOutbox,
     ILogger<UserCleanupService> logger) : IUserCleanupService {
     public async Task<int> CleanupDeletedUsersAsync(
         DateTime olderThanUtc,
@@ -76,19 +76,23 @@ public sealed class UserCleanupService(
     }
 
     private async Task CleanupUserAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
-        IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-        await using (transaction.ConfigureAwait(false)) {
-            if (reassignTarget is not null) {
-                await ReassignOwnedContentAsync(userId, reassignTarget.Value, cancellationToken).ConfigureAwait(false);
-            } else {
-                await DeleteOwnedContentAsync(userId, cancellationToken).ConfigureAwait(false);
-            }
+        IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
+        await strategy.ExecuteAsync(async () => {
+            IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await using (transaction.ConfigureAwait(false)) {
+                if (reassignTarget is not null) {
+                    await ReassignOwnedContentAsync(userId, reassignTarget.Value, cancellationToken).ConfigureAwait(false);
+                } else {
+                    await DeleteOwnedContentAsync(userId, cancellationToken).ConfigureAwait(false);
+                }
 
-            await DeleteDependentRowsAsync(userId, cancellationToken).ConfigureAwait(false);
-            await DeleteImageAssetsAsync(userId, cancellationToken).ConfigureAwait(false);
-            await DeleteUserRowsAsync(userId, cancellationToken).ConfigureAwait(false);
-            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-        }
+                await DeleteDependentRowsAsync(userId, cancellationToken).ConfigureAwait(false);
+                await DeleteImageAssetsAsync(userId, cancellationToken).ConfigureAwait(false);
+                await DeleteUserRowsAsync(userId, cancellationToken).ConfigureAwait(false);
+                await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            }
+        }).ConfigureAwait(false);
     }
 
     private async Task ReassignOwnedContentAsync(UserId userId, UserId reassignTarget, CancellationToken cancellationToken) {
@@ -163,20 +167,12 @@ public sealed class UserCleanupService(
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         foreach (string objectKey in deletedImageObjectKeys) {
-            await DeleteImageObjectAsync(objectKey, cancellationToken).ConfigureAwait(false);
+            await imageObjectDeletionOutbox.EnqueueAsync(objectKey, cancellationToken).ConfigureAwait(false);
         }
 
         await dbContext.ImageAssets
             .Where(asset => asset.UserId == userId)
             .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-    }
-
-    private async Task DeleteImageObjectAsync(string objectKey, CancellationToken cancellationToken) {
-        try {
-            await imageStorageService.DeleteAsync(objectKey, cancellationToken).ConfigureAwait(false);
-        } catch (Exception ex) {
-            logger.LogWarning(ex, "Failed to delete image object {ObjectKey} during deleted user cleanup.", objectKey);
-        }
     }
 
     private async Task DeleteUserRowsAsync(UserId userId, CancellationToken cancellationToken) {

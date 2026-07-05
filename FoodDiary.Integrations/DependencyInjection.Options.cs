@@ -1,6 +1,7 @@
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Integrations;
 
@@ -40,19 +41,34 @@ public static partial class DependencyInjection {
             .ValidateOnStart();
         services.AddOptions<StripeOptions>()
             .Bind(configuration.GetSection(StripeOptions.SectionName))
-            .Validate(static options =>
-                    string.IsNullOrWhiteSpace(options.SecretKey) ||
-                    (!string.IsNullOrWhiteSpace(options.WebhookSecret) &&
-                     !string.IsNullOrWhiteSpace(options.PremiumMonthlyPriceId) &&
-                     !string.IsNullOrWhiteSpace(options.PremiumYearlyPriceId) &&
-                     Uri.IsWellFormedUriString(options.SuccessUrl, UriKind.Absolute) &&
-                     Uri.IsWellFormedUriString(options.CancelUrl, UriKind.Absolute) &&
-                     Uri.IsWellFormedUriString(options.PortalReturnUrl, UriKind.Absolute)),
-                "Stripe configuration is incomplete.");
+            .Validate<IOptions<BillingOptions>>(static (options, billingOptions) =>
+                    !ShouldRequireProviderConfiguration(
+                        billingOptions.Value,
+                        Domain.Entities.Billing.BillingProviderNames.Stripe,
+                        StripeOptions.HasAnyConfiguration(options)) ||
+                    StripeOptions.HasValidConfiguration(options),
+                "Stripe configuration is incomplete for the active billing provider.")
+            .ValidateOnStart();
         services.AddOptions<PaddleOptions>()
-            .Bind(configuration.GetSection(PaddleOptions.SectionName));
+            .Bind(configuration.GetSection(PaddleOptions.SectionName))
+            .Validate<IOptions<BillingOptions>>(static (options, billingOptions) =>
+                    !ShouldRequireProviderConfiguration(
+                        billingOptions.Value,
+                        Domain.Entities.Billing.BillingProviderNames.Paddle,
+                        PaddleOptions.HasAnyConfiguration(options)) ||
+                    PaddleOptions.HasValidConfiguration(options),
+                "Paddle configuration is incomplete for the active billing provider.")
+            .ValidateOnStart();
         services.AddOptions<YooKassaOptions>()
-            .Bind(configuration.GetSection(YooKassaOptions.SectionName));
+            .Bind(configuration.GetSection(YooKassaOptions.SectionName))
+            .Validate<IOptions<BillingOptions>>(static (options, billingOptions) =>
+                    !ShouldRequireProviderConfiguration(
+                        billingOptions.Value,
+                        Domain.Entities.Billing.BillingProviderNames.YooKassa,
+                        YooKassaOptions.HasAnyConfiguration(options)) ||
+                    YooKassaOptions.HasValidCheckoutConfiguration(options),
+                "YooKassa configuration is incomplete for the active billing provider.")
+            .ValidateOnStart();
         services.AddOptions<WebPushOptions>()
             .Bind(configuration.GetSection(WebPushOptions.SectionName))
             .Validate(WebPushOptions.HasValidConfiguration,
@@ -61,9 +77,25 @@ public static partial class DependencyInjection {
 
         services.Configure<UsdaApiOptions>(configuration.GetSection(UsdaApiOptions.SectionName));
         services.Configure<OpenFoodFactsApiOptions>(configuration.GetSection(OpenFoodFactsApiOptions.SectionName));
-        services.Configure<FitbitOptions>(configuration.GetSection(FitbitOptions.SectionName));
-        services.Configure<GoogleFitOptions>(configuration.GetSection(GoogleFitOptions.SectionName));
+        services.AddOptions<FitbitOptions>()
+            .Bind(configuration.GetSection(FitbitOptions.SectionName))
+            .Validate(FitbitOptions.IsEmptyOrComplete,
+                "Fitbit configuration must be empty or include ClientId, ClientSecret, and an absolute RedirectUri.")
+            .ValidateOnStart();
+        services.AddOptions<GoogleFitOptions>()
+            .Bind(configuration.GetSection(GoogleFitOptions.SectionName))
+            .Validate(GoogleFitOptions.IsEmptyOrComplete,
+                "GoogleFit configuration must be empty or include ClientId, ClientSecret, and an absolute RedirectUri.")
+            .ValidateOnStart();
 
         return services;
     }
+
+    private static bool ShouldRequireProviderConfiguration(
+        BillingOptions billingOptions,
+        string provider,
+        bool hasAnyProviderConfiguration) =>
+        hasAnyProviderConfiguration ||
+        (billingOptions.RequireConfiguredProvider &&
+         string.Equals(billingOptions.Provider, provider, StringComparison.OrdinalIgnoreCase));
 }

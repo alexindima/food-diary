@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Images.Common;
-using Microsoft.EntityFrameworkCore;
+using FoodDiary.Infrastructure.Persistence.Outbox;
 using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Infrastructure.Persistence.Images;
@@ -17,11 +17,15 @@ internal sealed class ImageObjectDeletionOutboxProcessor(
         }
 
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
-        List<ImageObjectDeletionOutboxMessage> messages = await context.ImageObjectDeletionOutbox
-            .Where(message => message.ProcessedOnUtc == null && message.NextAttemptOnUtc <= nowUtc)
-            .OrderBy(message => message.CreatedOnUtc)
-            .Take(batchSize)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+        List<ImageObjectDeletionOutboxMessage> messages = await OutboxMessageClaimer
+            .ClaimDueAsync(
+                context,
+                context.ImageObjectDeletionOutbox,
+                "\"ImageObjectDeletionOutbox\"",
+                batchSize,
+                nowUtc,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         int processed = 0;
         foreach (ImageObjectDeletionOutboxMessage message in messages) {

@@ -20,12 +20,16 @@ internal sealed class NotificationWebPushOutboxMessageConfiguration : IEntityTyp
         builder.Property(message => message.LastError)
             .HasMaxLength(2048);
 
+        builder.Property(message => message.LockedBy)
+            .HasMaxLength(128);
+
         builder.HasOne(message => message.Notification)
             .WithMany()
             .HasForeignKey(message => message.NotificationId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasIndex(message => new { message.ProcessedOnUtc, message.NextAttemptOnUtc });
+        builder.HasIndex(message => new { message.ProcessedOnUtc, message.NextAttemptOnUtc, message.LockedUntilUtc })
+            .HasDatabaseName("IX_NotificationWebPushOutbox_DueLease");
         builder.HasIndex(message => message.NotificationId);
     }
 }

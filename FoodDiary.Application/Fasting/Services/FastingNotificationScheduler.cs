@@ -57,14 +57,17 @@ public sealed class FastingNotificationScheduler(
             await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        await FastingNotificationPushDispatcher.PushAsync(
-            usersToPush,
-            notificationRepository,
-            notificationPusher,
-            cancellationToken).ConfigureAwait(false);
+        if (usersToPush.Count > 0) {
+            UserId[] pushUserIds = [.. usersToPush];
+            postCommitActionQueue.Enqueue(ct => FastingNotificationPushDispatcher.PushAsync(
+                pushUserIds,
+                notificationRepository,
+                notificationPusher,
+                ct));
+        }
 
         if (postCommitActionQueue.HasActions) {
-            await postCommitActionQueue.FlushAsync(cancellationToken).ConfigureAwait(false);
+            await postCommitActionQueue.FlushAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
         if (createdCount > 0) {

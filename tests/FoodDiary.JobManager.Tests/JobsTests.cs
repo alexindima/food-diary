@@ -140,6 +140,294 @@ public sealed class JobsTests {
     }
 
     [Fact]
+    public async Task ImageObjectDeletionOutboxJob_WhenEnabled_ProcessesDueMessagesAndRecordsSuccess() {
+        long? executionCount = null;
+        string? outcome = null;
+        long? processedItems = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "images.object_deletion_outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: (value, _) => processedItems = value,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new RecordingImageObjectDeletionOutboxProcessor(processed: 3);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new ImageObjectDeletionOutboxJob(
+            processor,
+            Options.Create(new ImageObjectDeletionOutboxOptions { Enabled = true, BatchSize = 7 }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<ImageObjectDeletionOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(7, processor.BatchSize),
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("success", outcome),
+            () => Assert.Equal(3, processedItems),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(0, tracker.GetSnapshot("images.object_deletion_outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("images.object_deletion_outbox")?.LastSucceededAtUtc));
+    }
+
+    [Fact]
+    public async Task ImageObjectDeletionOutboxJob_WhenDisabled_RecordsSuccessWithoutProcessing() {
+        var processor = new RecordingImageObjectDeletionOutboxProcessor(processed: 3);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new ImageObjectDeletionOutboxJob(
+            processor,
+            Options.Create(new ImageObjectDeletionOutboxOptions { Enabled = false, BatchSize = 7 }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<ImageObjectDeletionOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Null(processor.BatchSize),
+            () => Assert.Equal(0, tracker.GetSnapshot("images.object_deletion_outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("images.object_deletion_outbox")?.LastSucceededAtUtc));
+    }
+
+    [Fact]
+    public async Task ImageObjectDeletionOutboxJob_WhenCanceledBeforeWork_RecordsCanceledMetricAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "images.object_deletion_outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new RecordingImageObjectDeletionOutboxProcessor(processed: 3);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new ImageObjectDeletionOutboxJob(
+            processor,
+            Options.Create(new ImageObjectDeletionOutboxOptions { Enabled = true, BatchSize = 7 }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<ImageObjectDeletionOutboxJob>.Instance);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cts.Token));
+
+        JobExecutionStateSnapshot? snapshot = tracker.GetSnapshot("images.object_deletion_outbox");
+        Assert.NotNull(snapshot);
+        Assert.Multiple(
+            () => Assert.Null(processor.BatchSize),
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("canceled", outcome),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(now, snapshot.Value.LastStartedAtUtc),
+            () => Assert.Null(snapshot.Value.LastSucceededAtUtc),
+            () => Assert.Null(snapshot.Value.LastFailedAtUtc),
+            () => Assert.Equal(0, snapshot.Value.ConsecutiveFailures));
+    }
+
+    [Fact]
+    public async Task ImageObjectDeletionOutboxJob_WhenProcessorFails_RecordsFailureAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "images.object_deletion_outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new ThrowingImageObjectDeletionOutboxProcessor();
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new ImageObjectDeletionOutboxJob(
+            processor,
+            Options.Create(new ImageObjectDeletionOutboxOptions { Enabled = true, BatchSize = 7 }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<ImageObjectDeletionOutboxJob>.Instance);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute(CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("failure", outcome),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(1, tracker.GetSnapshot("images.object_deletion_outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("images.object_deletion_outbox")?.LastFailedAtUtc));
+    }
+
+    [Fact]
+    public async Task NotificationWebPushOutboxJob_WhenEnabled_ProcessesDueMessagesAndRecordsSuccess() {
+        long? executionCount = null;
+        string? outcome = null;
+        long? processedItems = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "notifications.web_push_outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: (value, _) => processedItems = value,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new RecordingNotificationWebPushOutboxProcessor(processed: 4);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new NotificationWebPushOutboxJob(
+            processor,
+            Options.Create(new NotificationWebPushOutboxOptions { Enabled = true, BatchSize = 9 }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<NotificationWebPushOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(9, processor.BatchSize),
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("success", outcome),
+            () => Assert.Equal(4, processedItems),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(0, tracker.GetSnapshot("notifications.web_push_outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("notifications.web_push_outbox")?.LastSucceededAtUtc));
+    }
+
+    [Fact]
+    public async Task NotificationWebPushOutboxJob_WhenDisabled_RecordsSuccessWithoutProcessing() {
+        var processor = new RecordingNotificationWebPushOutboxProcessor(processed: 4);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new NotificationWebPushOutboxJob(
+            processor,
+            Options.Create(new NotificationWebPushOutboxOptions { Enabled = false, BatchSize = 9 }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<NotificationWebPushOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Null(processor.BatchSize),
+            () => Assert.Equal(0, tracker.GetSnapshot("notifications.web_push_outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("notifications.web_push_outbox")?.LastSucceededAtUtc));
+    }
+
+    [Fact]
+    public async Task NotificationWebPushOutboxJob_WhenCanceledBeforeWork_RecordsCanceledMetricAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "notifications.web_push_outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new RecordingNotificationWebPushOutboxProcessor(processed: 4);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new NotificationWebPushOutboxJob(
+            processor,
+            Options.Create(new NotificationWebPushOutboxOptions { Enabled = true, BatchSize = 9 }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<NotificationWebPushOutboxJob>.Instance);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cts.Token));
+
+        JobExecutionStateSnapshot? snapshot = tracker.GetSnapshot("notifications.web_push_outbox");
+        Assert.NotNull(snapshot);
+        Assert.Multiple(
+            () => Assert.Null(processor.BatchSize),
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("canceled", outcome),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(now, snapshot.Value.LastStartedAtUtc),
+            () => Assert.Null(snapshot.Value.LastSucceededAtUtc),
+            () => Assert.Null(snapshot.Value.LastFailedAtUtc),
+            () => Assert.Equal(0, snapshot.Value.ConsecutiveFailures));
+    }
+
+    [Fact]
+    public async Task NotificationWebPushOutboxJob_WhenProcessorFails_RecordsFailureAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "notifications.web_push_outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new ThrowingNotificationWebPushOutboxProcessor();
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new NotificationWebPushOutboxJob(
+            processor,
+            Options.Create(new NotificationWebPushOutboxOptions { Enabled = true, BatchSize = 9 }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<NotificationWebPushOutboxJob>.Instance);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute(CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("failure", outcome),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(1, tracker.GetSnapshot("notifications.web_push_outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("notifications.web_push_outbox")?.LastFailedAtUtc));
+    }
+
+    [Fact]
+    public async Task NoOpNotificationPusher_CompletesPushMethods() {
+        Type pusherType = typeof(JobManagerServiceCollectionExtensions).Assembly.GetType(
+            "FoodDiary.JobManager.Services.NoOpNotificationPusher",
+            throwOnError: true)!;
+        var pusher = (INotificationPusher)Activator.CreateInstance(pusherType)!;
+        var userId = Guid.NewGuid();
+
+        await pusher.PushUnreadCountAsync(userId, count: 5, CancellationToken.None);
+        await pusher.PushNotificationsChangedAsync(userId, CancellationToken.None);
+    }
+
+    [Fact]
     public async Task ImageCleanupJob_WithNonPositiveBatchSize_UsesOne() {
         var cleanupService = new RecordingImageCleanupService([1, 0]);
         IOptions<ImageCleanupOptions> options = Options.Create(new ImageCleanupOptions { BatchSize = 0, OlderThanHours = 12 });
@@ -655,6 +943,7 @@ public sealed class JobsTests {
             Options.Create(new BillingRenewalOptions { Enabled = false, Cron = "15 * * * *" }),
             Options.Create(new FastingNotificationOptions { Cron = "* * * * *" }),
             Options.Create(new ImageObjectDeletionOutboxOptions { Cron = "* * * * *" }),
+            Options.Create(new EmailOutboxOptions { Cron = "* * * * *" }),
             Options.Create(new NotificationWebPushOutboxOptions { Cron = "* * * * *" }),
             Options.Create(new NotificationCleanupOptions {
                 TransientTypes = ["Test"],
@@ -671,6 +960,7 @@ public sealed class JobsTests {
                 RecurringJobIds.BillingRenewal,
                 RecurringJobIds.FastingNotifications,
                 RecurringJobIds.ImageObjectDeletionOutbox,
+                RecurringJobIds.EmailOutbox,
                 RecurringJobIds.NotificationWebPushOutbox,
                 RecurringJobIds.NotificationsCleanup,
                 RecurringJobIds.UsersCleanup,
@@ -685,6 +975,7 @@ public sealed class JobsTests {
                 RecurringJobIds.BillingRenewal,
                 RecurringJobIds.FastingNotifications,
                 RecurringJobIds.ImageObjectDeletionOutbox,
+                RecurringJobIds.EmailOutbox,
                 RecurringJobIds.NotificationWebPushOutbox,
                 RecurringJobIds.UserLoginEventsCleanup,
             ],
@@ -702,6 +993,7 @@ public sealed class JobsTests {
             Options.Create(new BillingRenewalOptions { Enabled = false, Cron = "15 * * * *" }),
             Options.Create(new FastingNotificationOptions { Cron = "* * * * *" }),
             Options.Create(new ImageObjectDeletionOutboxOptions { Cron = "* * * * *" }),
+            Options.Create(new EmailOutboxOptions { Cron = "* * * * *" }),
             Options.Create(new NotificationWebPushOutboxOptions { Cron = "* * * * *" }),
             Options.Create(new NotificationCleanupOptions {
                 TransientTypes = ["Test"],
@@ -725,6 +1017,7 @@ public sealed class JobsTests {
             null!,
             null!,
             null!,
+            null!,
             null!);
 
         await service.StopAsync(CancellationToken.None);
@@ -736,6 +1029,7 @@ public sealed class JobsTests {
         MethodInfo? billingRenewalMethod = typeof(BillingRenewalJob).GetMethod(nameof(BillingRenewalJob.Execute));
         MethodInfo? fastingNotificationMethod = typeof(FastingNotificationJob).GetMethod(nameof(FastingNotificationJob.Execute));
         MethodInfo? imageObjectDeletionOutboxMethod = typeof(ImageObjectDeletionOutboxJob).GetMethod(nameof(ImageObjectDeletionOutboxJob.Execute));
+        MethodInfo? emailOutboxMethod = typeof(EmailOutboxJob).GetMethod(nameof(EmailOutboxJob.Execute));
         MethodInfo? notificationWebPushOutboxMethod = typeof(NotificationWebPushOutboxJob).GetMethod(nameof(NotificationWebPushOutboxJob.Execute));
         MethodInfo? notificationMethod = typeof(NotificationCleanupJob).GetMethod(nameof(NotificationCleanupJob.Execute));
         MethodInfo? userLoginEventCleanupMethod = typeof(UserLoginEventCleanupJob).GetMethod(nameof(UserLoginEventCleanupJob.Execute));
@@ -745,6 +1039,7 @@ public sealed class JobsTests {
         Assert.NotNull(billingRenewalMethod);
         Assert.NotNull(fastingNotificationMethod);
         Assert.NotNull(imageObjectDeletionOutboxMethod);
+        Assert.NotNull(emailOutboxMethod);
         Assert.NotNull(notificationWebPushOutboxMethod);
         Assert.NotNull(notificationMethod);
         Assert.NotNull(userLoginEventCleanupMethod);
@@ -754,6 +1049,7 @@ public sealed class JobsTests {
         AssertExecutionPolicy(billingRenewalMethod!);
         AssertExecutionPolicy(fastingNotificationMethod!);
         AssertExecutionPolicy(imageObjectDeletionOutboxMethod!);
+        AssertExecutionPolicy(emailOutboxMethod!);
         AssertExecutionPolicy(notificationWebPushOutboxMethod!);
         AssertExecutionPolicy(notificationMethod!);
         AssertExecutionPolicy(userLoginEventCleanupMethod!);
@@ -799,14 +1095,15 @@ public sealed class JobsTests {
         string expectedJobName,
         Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onExecution,
         Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onDeletedItems,
-        Action<double, ReadOnlySpan<KeyValuePair<string, object?>>>? onDuration) {
+        Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onProcessedItems = null,
+        Action<double, ReadOnlySpan<KeyValuePair<string, object?>>>? onDuration = null) {
         var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) => {
             if (!string.Equals(instrument.Meter.Name, JobManagerMeterName, StringComparison.Ordinal)) {
                 return;
             }
 
-            if (instrument.Name is "fooddiary.job.execution.events" or "fooddiary.job.deleted_items" or "fooddiary.job.execution.duration") {
+            if (instrument.Name is "fooddiary.job.execution.events" or "fooddiary.job.deleted_items" or "fooddiary.job.processed_items" or "fooddiary.job.execution.duration") {
                 meterListener.EnableMeasurementEvents(instrument);
             }
         };
@@ -819,6 +1116,8 @@ public sealed class JobsTests {
                 onExecution?.Invoke(value, tags);
             } else if (string.Equals(instrument.Name, "fooddiary.job.deleted_items", StringComparison.Ordinal)) {
                 onDeletedItems?.Invoke(value, tags);
+            } else if (string.Equals(instrument.Name, "fooddiary.job.processed_items", StringComparison.Ordinal)) {
+                onProcessedItems?.Invoke(value, tags);
             }
         });
         listener.SetMeasurementEventCallback<double>((instrument, value, tags, _) => {
@@ -909,6 +1208,38 @@ public sealed class JobsTests {
             int value = _results.Count > 0 ? _results.Dequeue() : 0;
             return Task.FromResult(value);
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingImageObjectDeletionOutboxProcessor(int processed) : IImageObjectDeletionOutboxProcessor {
+        public int? BatchSize { get; private set; }
+
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) {
+            BatchSize = batchSize;
+            return Task.FromResult(processed);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingImageObjectDeletionOutboxProcessor : IImageObjectDeletionOutboxProcessor {
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) =>
+            throw new InvalidOperationException("Image object deletion outbox processor failed.");
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingNotificationWebPushOutboxProcessor(int processed) : INotificationWebPushOutboxProcessor {
+        public int? BatchSize { get; private set; }
+
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) {
+            BatchSize = batchSize;
+            return Task.FromResult(processed);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingNotificationWebPushOutboxProcessor : INotificationWebPushOutboxProcessor {
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) =>
+            throw new InvalidOperationException("Notification web-push outbox processor failed.");
     }
 
     private static BillingSubscription CreateSubscriptionSnapshot(

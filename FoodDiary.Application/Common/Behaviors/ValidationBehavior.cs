@@ -58,7 +58,7 @@ public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidat
             ErrorKindResolver.Resolve(errorCode));
 
         if (typeof(TResponse) == typeof(Result)) {
-            return (TResponse)(object)Result.Failure(error);
+            return (TResponse)Result.Failure(error);
         }
 
         Type resultType = typeof(TResponse);

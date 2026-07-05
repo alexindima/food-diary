@@ -75,10 +75,12 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
         double elapsedMs) {
         HttpRequest request = context.Request;
         int statusCode = context.Response.StatusCode;
+        string pathLabel = ResolvePathLabel(context, observation.PathLabel);
+        activity?.SetTag("url.path", pathLabel);
         activity?.SetTag("http.response.status_code", statusCode);
         ObserveBusinessFlow(request.Method, request.Path, statusCode);
         ObserveOutputCache(context, statusCode);
-        RecordRequestMetrics(request.Method, observation.PathLabel, statusCode, elapsedMs);
+        RecordRequestMetrics(request.Method, pathLabel, statusCode, elapsedMs);
         if (ShouldSuppressSuccessfulAccessLog(context, statusCode)) {
             return;
         }
@@ -86,9 +88,21 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
         logger.LogInformation(
             "HTTP {Method} {Path} responded {StatusCode} in {ElapsedMs} ms",
             request.Method,
-            observation.PathLabel,
+            pathLabel,
             statusCode,
             elapsedMs);
+    }
+
+    private static string ResolvePathLabel(HttpContext context, string fallback) {
+        var routeEndpoint = context.GetEndpoint() as RouteEndpoint;
+        string? routePattern = routeEndpoint?.RoutePattern.RawText;
+        if (string.IsNullOrWhiteSpace(routePattern)) {
+            return fallback;
+        }
+
+        return routePattern[0] == '/'
+            ? routePattern
+            : "/" + routePattern;
     }
 
     private static bool ShouldSuppressSuccessfulAccessLog(HttpContext context, int statusCode) =>

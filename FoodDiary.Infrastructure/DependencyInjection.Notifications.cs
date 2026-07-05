@@ -1,4 +1,6 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Notifications;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +11,8 @@ public static partial class DependencyInjection {
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<INotificationReadRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
         services.AddScoped<INotificationWriteRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
+        services.AddScoped<IEmailOutbox, EmailOutbox>();
+        services.AddScoped<IEmailOutboxProcessor, EmailOutboxProcessor>();
         services.AddScoped<INotificationWebPushOutbox, NotificationWebPushOutbox>();
         services.AddScoped<INotificationWebPushOutboxProcessor, NotificationWebPushOutboxProcessor>();
         services.AddScoped<IWebPushSubscriptionRepository, WebPushSubscriptionRepository>();

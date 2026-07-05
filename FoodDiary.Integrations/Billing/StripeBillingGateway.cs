@@ -14,13 +14,15 @@ using CheckoutSessionSubscriptionDataOptions = Stripe.Checkout.SessionSubscripti
 
 namespace FoodDiary.Integrations.Billing;
 
-public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBillingProviderGateway {
+public sealed class StripeBillingGateway(
+    IOptions<StripeOptions> options,
+    IStripeClient stripeClient) : IBillingProviderGateway {
     private readonly StripeOptions _options = options.Value;
-    private IStripeClient StripeClient => field ?? StripeConfiguration.StripeClient;
 
-    internal StripeBillingGateway(IOptions<StripeOptions> options, IStripeClient stripeClient)
-        : this(options) {
-        StripeClient = stripeClient;
+    internal StripeBillingGateway(IOptions<StripeOptions> options)
+        : this(options, new StripeClient(string.IsNullOrWhiteSpace(options.Value.SecretKey)
+            ? "sk_not_configured"
+            : options.Value.SecretKey)) {
     }
 
     public string Provider => Domain.Entities.Billing.BillingProviderNames.Stripe;
@@ -32,11 +34,9 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
             return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
         }
 
-        StripeConfiguration.ApiKey = _options.SecretKey;
-
         string? customerId = request.ExistingCustomerId;
         if (string.IsNullOrWhiteSpace(customerId)) {
-            var customerService = new CustomerService(StripeClient);
+            var customerService = new CustomerService(stripeClient);
             Customer customer = await customerService.CreateAsync(
                 new CustomerCreateOptions {
                     Email = request.Email,
@@ -49,7 +49,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
         }
 
         string priceId = ResolvePriceId(request.Plan);
-        var sessionService = new CheckoutSessionService(StripeClient);
+        var sessionService = new CheckoutSessionService(stripeClient);
         CheckoutSession session = await sessionService.CreateAsync(
             new CheckoutSessionCreateOptions {
                 Mode = "subscription",
@@ -90,9 +90,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
             return Result.Failure<BillingPortalSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
         }
 
-        StripeConfiguration.ApiKey = _options.SecretKey;
-
-        var portalSessionService = new BillingPortalSessionService(StripeClient);
+        var portalSessionService = new BillingPortalSessionService(stripeClient);
         Stripe.BillingPortal.Session portalSession = await portalSessionService.CreateAsync(
             new BillingPortalSessionCreateOptions {
                 Customer = request.CustomerId,
@@ -120,7 +118,6 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
         }
 
         try {
-            StripeConfiguration.ApiKey = _options.SecretKey;
             Event stripeEvent = EventUtility.ConstructEvent(payload, signatureHeader, _options.WebhookSecret);
 
             return stripeEvent.Type switch {
@@ -146,7 +143,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
             return null;
         }
 
-        var subscriptionService = new SubscriptionService(StripeClient);
+        var subscriptionService = new SubscriptionService(stripeClient);
         Subscription subscription = await subscriptionService.GetAsync(session.SubscriptionId, cancellationToken: cancellationToken).ConfigureAwait(false);
         return MapSubscriptionEvent(subscription, stripeEvent, session.Metadata);
     }

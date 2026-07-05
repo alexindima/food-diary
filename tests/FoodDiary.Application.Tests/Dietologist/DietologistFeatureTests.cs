@@ -36,7 +36,6 @@ using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
-using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -143,8 +142,7 @@ public class DietologistFeatureTests {
             resolvedNotificationRepository,
             notificationPusher ?? new FakeNotificationPusher(),
             new ImmediatePostCommitActionQueue(),
-            dateTimeProvider ?? new StubDateTimeProvider(),
-            NullLogger<InviteDietologistCommandHandler>.Instance);
+            dateTimeProvider ?? new StubDateTimeProvider());
     }
 
     private static AcceptInvitationCommandHandler CreateAcceptHandler(
@@ -368,7 +366,7 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
-    public async Task InviteDietologist_WhenEmailDispatchFailsForUnregisteredDietologist_StillCreatesInvitation() {
+    public async Task InviteDietologist_WhenEmailEnqueueFailsForUnregisteredDietologist_Throws() {
         var userId = UserId.New();
         User user = CreateUser(userId);
         var userRepo = new InMemoryUserRepository();
@@ -380,16 +378,14 @@ public class DietologistFeatureTests {
             userRepository: userRepo,
             emailSender: new ThrowingEmailSender());
 
-        Result result = await handler.Handle(
-            new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
-            CancellationToken.None);
-
-        ResultAssert.Success(result);
-        Assert.Single(invitationRepo.Added);
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            handler.Handle(
+                new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
+                CancellationToken.None));
     }
 
     [Fact]
-    public async Task InviteDietologist_WhenEmailDispatchFailsForRegisteredDietologist_UsesNotificationFallback() {
+    public async Task InviteDietologist_WhenEmailEnqueueFailsForRegisteredDietologist_ThrowsBeforeNotificationFallback() {
         var userId = UserId.New();
         User client = CreateUser(userId, "client@example.com");
         User dietologist = CreateUser(UserId.New(), "diet@example.com");
@@ -405,13 +401,11 @@ public class DietologistFeatureTests {
             emailSender: new ThrowingEmailSender(),
             notificationRepository: notificationRepo);
 
-        Result result = await handler.Handle(
-            new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
-            CancellationToken.None);
-
-        ResultAssert.Success(result);
-        Assert.Single(invitationRepo.Added);
-        Assert.Single(notificationRepo.Added);
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            handler.Handle(
+                new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
+                CancellationToken.None));
+        Assert.Empty(notificationRepo.Added);
     }
 
     // â”€â”€ AcceptInvitation â”€â”€

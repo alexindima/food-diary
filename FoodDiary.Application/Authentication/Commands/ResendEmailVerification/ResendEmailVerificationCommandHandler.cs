@@ -4,9 +4,7 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
-using Microsoft.Extensions.Logging;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
@@ -15,9 +13,7 @@ public sealed class ResendEmailVerificationCommandHandler(
     IUserContextService userContextService,
     IPasswordHasher passwordHasher,
     IEmailSender emailSender,
-    TimeProvider dateTimeProvider,
-    IPostCommitActionQueue postCommitActionQueue,
-    ILogger<ResendEmailVerificationCommandHandler> logger) : ICommandHandler<ResendEmailVerificationCommand, Result> {
+    TimeProvider dateTimeProvider) : ICommandHandler<ResendEmailVerificationCommand, Result> {
     private static readonly TimeSpan ResendCooldown = TimeSpan.FromMinutes(1);
 
     public async Task<Result> Handle(ResendEmailVerificationCommand command, CancellationToken cancellationToken) {
@@ -57,13 +53,7 @@ public sealed class ResendEmailVerificationCommandHandler(
         await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         EmailVerificationMessage message = new(currentUser.Email, currentUser.Id.Value.ToString(), emailToken, currentUser.Language, command.ClientOrigin);
-        postCommitActionQueue.Enqueue(async ct => {
-            try {
-                await emailSender.SendEmailVerificationAsync(message, ct).ConfigureAwait(false);
-            } catch (Exception ex) {
-                logger.LogError(ex, "Email verification dispatch failed.");
-            }
-        });
+        await emailSender.SendEmailVerificationAsync(message, cancellationToken).ConfigureAwait(false);
 
         return Result.Success();
     }

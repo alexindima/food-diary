@@ -92,8 +92,8 @@ public static class DependencyInjection {
         services.AddScoped<INotificationWriter, NotificationWriter>();
         services.AddScoped<IGamificationUserProfileService, GamificationUserProfileService>();
         services.AddScoped<IOpenAiFoodService, OpenAiFoodService>();
-        services.AddSingleton<IEmailSender, EmailSender>();
-        services.AddSingleton<IDietologistEmailSender, DietologistEmailSender>();
+        services.AddScoped<IEmailSender, EmailSender>();
+        services.AddScoped<IDietologistEmailSender, DietologistEmailSender>();
         services.AddScoped<IBillingUserContextService, BillingUserContextService>();
         services.AddScoped<IBillingUserLookupService, BillingUserLookupService>();
         services.AddScoped<BillingAccessService>();

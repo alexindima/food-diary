@@ -10,7 +10,6 @@ using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using Microsoft.Extensions.Logging;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
@@ -27,8 +26,7 @@ public sealed class InviteDietologistCommandHandler(
     INotificationReadRepository notificationRepository,
     INotificationPusher notificationPusher,
     IPostCommitActionQueue postCommitActionQueue,
-    TimeProvider dateTimeProvider,
-    ILogger<InviteDietologistCommandHandler> logger)
+    TimeProvider dateTimeProvider)
     : ICommandHandler<InviteDietologistCommand, Result> {
     public async Task<Result> Handle(InviteDietologistCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -67,7 +65,7 @@ public sealed class InviteDietologistCommandHandler(
         var invitation = DietologistInvitation.Create(userId, normalizedEmail, tokenHash, expiresAt, permissions);
         User? registeredDietologist = await dietologistUserContextService.GetAccessibleUserByEmailAsync(normalizedEmail, cancellationToken).ConfigureAwait(false);
         await invitationRepository.AddAsync(invitation, cancellationToken).ConfigureAwait(false);
-        EnqueueInvitationEmail(normalizedEmail, invitation, rawToken, user);
+        await EnqueueInvitationEmailAsync(normalizedEmail, invitation, rawToken, user, cancellationToken).ConfigureAwait(false);
 
         if (registeredDietologist is not null) {
             await NotifyRegisteredDietologistAsync(registeredDietologist, user, invitation, cancellationToken).ConfigureAwait(false);
@@ -76,11 +74,12 @@ public sealed class InviteDietologistCommandHandler(
         return Result.Success();
     }
 
-    private void EnqueueInvitationEmail(
+    private async Task EnqueueInvitationEmailAsync(
         string normalizedEmail,
         DietologistInvitation invitation,
         string rawToken,
-        User user) {
+        User user,
+        CancellationToken cancellationToken) {
         DietologistInvitationMessage message = new(
             normalizedEmail,
             invitation.Id.Value,
@@ -89,13 +88,7 @@ public sealed class InviteDietologistCommandHandler(
             user.LastName,
             user.Language);
 
-        postCommitActionQueue.Enqueue(async ct => {
-            try {
-                await emailSender.SendDietologistInvitationAsync(message, ct).ConfigureAwait(false);
-            } catch (Exception ex) {
-                logger.LogWarning(ex, "Dietologist invitation email dispatch failed for {DietologistEmail}", normalizedEmail);
-            }
-        });
+        await emailSender.SendDietologistInvitationAsync(message, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task NotifyRegisteredDietologistAsync(

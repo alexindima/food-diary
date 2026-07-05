@@ -2,6 +2,7 @@ using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Social;
+using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Notifications;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ public sealed partial class FoodDiaryDbContext {
     public DbSet<DietologistInvitation> DietologistInvitations => Set<DietologistInvitation>();
     public DbSet<Recommendation> Recommendations => Set<Recommendation>();
     public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<EmailOutboxMessage> EmailOutbox => Set<EmailOutboxMessage>();
     public DbSet<NotificationWebPushOutboxMessage> NotificationWebPushOutbox => Set<NotificationWebPushOutboxMessage>();
     public DbSet<WebPushSubscription> WebPushSubscriptions => Set<WebPushSubscription>();
     public DbSet<ContentReport> ContentReports => Set<ContentReport>();

@@ -5,10 +5,8 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
-using Microsoft.Extensions.Logging;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 
 namespace FoodDiary.Application.Authentication.Commands.Register;
 
@@ -17,9 +15,7 @@ public sealed class RegisterCommandHandler(
     IPasswordHasher passwordHasher,
     IEmailSender emailSender,
     TimeProvider dateTimeProvider,
-    IAuthenticationTokenService authenticationTokenService,
-    IPostCommitActionQueue postCommitActionQueue,
-    ILogger<RegisterCommandHandler> logger)
+    IAuthenticationTokenService authenticationTokenService)
     : ICommandHandler<RegisterCommand, Result<AuthenticationModel>> {
 
     public async Task<Result<AuthenticationModel>> Handle(RegisterCommand command, CancellationToken cancellationToken) {
@@ -47,13 +43,7 @@ public sealed class RegisterCommandHandler(
         IssuedAuthenticationTokens tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext).ConfigureAwait(false);
 
         EmailVerificationMessage message = new(user.Email, user.Id.Value.ToString(), emailToken, user.Language, command.ClientOrigin);
-        postCommitActionQueue.Enqueue(async ct => {
-            try {
-                await emailSender.SendEmailVerificationAsync(message, ct).ConfigureAwait(false);
-            } catch (Exception ex) {
-                logger.LogWarning(ex, "Email verification dispatch failed during registration for {Email}", command.Email);
-            }
-        });
+        await emailSender.SendEmailVerificationAsync(message, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(user.ToAuthenticationModel(tokens));
     }

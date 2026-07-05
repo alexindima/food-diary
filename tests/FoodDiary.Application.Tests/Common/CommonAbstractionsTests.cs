@@ -14,7 +14,9 @@ using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Mediator;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 
 namespace FoodDiary.Application.Tests.Common;
@@ -131,6 +133,38 @@ public class CommonAbstractionsTests {
 
         ResultAssert.Failure(result);
         Assert.Equal(error, result.Error);
+    }
+
+    [Fact]
+    public void Result_WithSuccessfulStateAndError_ThrowsInvalidOperationException() {
+        Type resultType = typeof(Result).GetNestedType("NonGenericResult", BindingFlags.NonPublic)!;
+
+        TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() =>
+            Activator.CreateInstance(
+                resultType,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                binder: null,
+                args: [true, Errors.Validation.Required("name")],
+                culture: null));
+
+        Assert.IsType<InvalidOperationException>(ex.InnerException);
+        Assert.Equal("A successful result cannot contain an error.", ex.InnerException.Message);
+    }
+
+    [Fact]
+    public void Result_WithFailedStateAndNoError_ThrowsInvalidOperationException() {
+        Type resultType = typeof(Result).GetNestedType("NonGenericResult", BindingFlags.NonPublic)!;
+
+        TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() =>
+            Activator.CreateInstance(
+                resultType,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                binder: null,
+                args: [false, Error.None],
+                culture: null));
+
+        Assert.IsType<InvalidOperationException>(ex.InnerException);
+        Assert.Equal("A failed result must contain an error.", ex.InnerException.Message);
     }
 
     [Fact]
@@ -369,6 +403,30 @@ public class CommonAbstractionsTests {
     }
 
     [Fact]
+    public async Task ValidationBehavior_ForUnsupportedResultSubtype_ThrowsInvalidOperationException() {
+        Type unsupportedResultType = CreateUnsupportedResultSubtype();
+        Type unsupportedRequestType = CreateUnsupportedRequestType(unsupportedResultType);
+        Type validatorInterfaceType = typeof(IValidator<>).MakeGenericType(unsupportedRequestType);
+        var validators = Array.CreateInstance(validatorInterfaceType, 1);
+        validators.SetValue(
+            Activator.CreateInstance(typeof(UnsupportedRequestValidator<>).MakeGenericType(unsupportedRequestType)),
+            0);
+        Type behaviorType = typeof(ValidationBehavior<,>).MakeGenericType(unsupportedRequestType, unsupportedResultType);
+        object behavior = Activator.CreateInstance(
+            behaviorType,
+            [validators])!;
+        object command = Activator.CreateInstance(unsupportedRequestType)!;
+        object next = CreateUnsupportedResultDelegate(unsupportedResultType);
+
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            (Task)behaviorType.GetMethod(nameof(ValidationBehavior<NonGenericCommand, Result>.Handle))!.Invoke(
+                behavior,
+                [command, next, CancellationToken.None])!);
+
+        Assert.Equal("Unable to create failure result for type UnsupportedValidationResult.", ex.Message);
+    }
+
+    [Fact]
     public void SecurityTokenGenerator_WithInvalidLength_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() => SecurityTokenGenerator.GenerateUrlSafeToken(0));
     }
@@ -538,6 +596,77 @@ public class CommonAbstractionsTests {
                 .WithErrorCode("Validation.Required")
                 .WithMessage("value is required");
         }
+    }
+
+    private static Type CreateUnsupportedResultSubtype() {
+        var assemblyName = new AssemblyName("FoodDiary.Application.Tests.DynamicResults");
+        var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+        ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(assemblyName.Name!);
+        TypeBuilder typeBuilder = moduleBuilder.DefineType(
+            "UnsupportedValidationResult",
+            TypeAttributes.Public | TypeAttributes.Sealed,
+            typeof(Result));
+        ConstructorInfo baseConstructor = typeof(Result).GetConstructor(
+            BindingFlags.Instance | BindingFlags.NonPublic,
+            binder: null,
+            [typeof(bool), typeof(Error)],
+            modifiers: null)!;
+        ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(
+            MethodAttributes.Public,
+            CallingConventions.Standard,
+            Type.EmptyTypes);
+        ILGenerator il = constructorBuilder.GetILGenerator();
+        il.Emit(OpCodes.Ldarg_0);
+        il.Emit(OpCodes.Ldc_I4_1);
+        il.Emit(OpCodes.Ldsfld, typeof(Error).GetField(nameof(Error.None))!);
+        il.Emit(OpCodes.Call, baseConstructor);
+        il.Emit(OpCodes.Ret);
+
+        return typeBuilder.CreateType()!;
+    }
+
+    private static Type CreateUnsupportedRequestType(Type responseType) {
+        var assemblyName = new AssemblyName("FoodDiary.Application.Tests.DynamicRequests");
+        var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+        ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(assemblyName.Name!);
+        TypeBuilder typeBuilder = moduleBuilder.DefineType(
+            "UnsupportedValidationRequest",
+            TypeAttributes.Public | TypeAttributes.Sealed);
+        typeBuilder.AddInterfaceImplementation(typeof(IRequest<>).MakeGenericType(responseType));
+        typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
+
+        return typeBuilder.CreateType()!;
+    }
+
+    private static object CreateUnsupportedResultDelegate(Type unsupportedResultType) {
+        MethodInfo method = typeof(CommonAbstractionsTests)
+            .GetMethod(nameof(CreateUnsupportedResultAsync), BindingFlags.NonPublic | BindingFlags.Static)!
+            .MakeGenericMethod(unsupportedResultType);
+
+        return method.CreateDelegate(typeof(RequestHandlerDelegate<>).MakeGenericType(unsupportedResultType));
+    }
+
+    private static Task<TResponse> CreateUnsupportedResultAsync<TResponse>(CancellationToken cancellationToken)
+        where TResponse : Result =>
+        Task.FromResult((TResponse)Activator.CreateInstance(typeof(TResponse))!);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class UnsupportedRequestValidator<TRequest> : IValidator<TRequest> {
+        public ValidationResult Validate(TRequest instance) =>
+            new([new ValidationFailure("Value", "value is invalid") { ErrorCode = "Validation.Invalid" }]);
+
+        public Task<ValidationResult> ValidateAsync(TRequest instance, CancellationToken cancellation = default) =>
+            Task.FromResult(new ValidationResult([new ValidationFailure("Value", "value is invalid") { ErrorCode = "Validation.Invalid" }]));
+
+        public ValidationResult Validate(IValidationContext context) =>
+            new([new ValidationFailure("Value", "value is invalid") { ErrorCode = "Validation.Invalid" }]);
+
+        public Task<ValidationResult> ValidateAsync(IValidationContext context, CancellationToken cancellation = default) =>
+            Task.FromResult(new ValidationResult([new ValidationFailure("Value", "value is invalid") { ErrorCode = "Validation.Invalid" }]));
+
+        public IValidatorDescriptor CreateDescriptor() => throw new NotSupportedException();
+
+        public bool CanValidateInstancesOfType(Type type) => true;
     }
 
     private static bool ContainsAdHocErrorConstruction(string path) {

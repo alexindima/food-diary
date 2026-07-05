@@ -11,4 +11,21 @@ public sealed class StripeOptions {
     public string SuccessUrl { get; init; } = string.Empty;
     public string CancelUrl { get; init; } = string.Empty;
     public string PortalReturnUrl { get; init; } = string.Empty;
+
+    public static bool HasAnyConfiguration(StripeOptions options) =>
+        !string.IsNullOrWhiteSpace(options.SecretKey) ||
+        !string.IsNullOrWhiteSpace(options.PublishableKey) ||
+        !string.IsNullOrWhiteSpace(options.WebhookSecret) ||
+        !string.IsNullOrWhiteSpace(options.PremiumMonthlyPriceId) ||
+        !string.IsNullOrWhiteSpace(options.PremiumYearlyPriceId);
+
+    public static bool HasValidConfiguration(StripeOptions options) =>
+        !string.IsNullOrWhiteSpace(options.SecretKey) &&
+        !string.IsNullOrWhiteSpace(options.PublishableKey) &&
+        !string.IsNullOrWhiteSpace(options.WebhookSecret) &&
+        !string.IsNullOrWhiteSpace(options.PremiumMonthlyPriceId) &&
+        !string.IsNullOrWhiteSpace(options.PremiumYearlyPriceId) &&
+        Uri.IsWellFormedUriString(options.SuccessUrl, UriKind.Absolute) &&
+        Uri.IsWellFormedUriString(options.CancelUrl, UriKind.Absolute) &&
+        Uri.IsWellFormedUriString(options.PortalReturnUrl, UriKind.Absolute);
 }

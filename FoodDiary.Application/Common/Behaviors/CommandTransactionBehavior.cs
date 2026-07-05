@@ -25,7 +25,7 @@ internal sealed class CommandTransactionBehavior<TRequest, TResponse>(
         }
 
         if (postCommitActionQueue.HasActions) {
-            await postCommitActionQueue.FlushAsync(cancellationToken).ConfigureAwait(false);
+            await postCommitActionQueue.FlushAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
         return response;

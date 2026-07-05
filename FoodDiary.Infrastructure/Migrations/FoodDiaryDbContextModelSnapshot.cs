@@ -3384,6 +3384,69 @@ partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot {
                     b.ToTable("WearableSyncEntries");
                 });
 
+            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Email.EmailOutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("AttemptCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("FromAddress")
+                        .IsRequired()
+                        .HasMaxLength(320)
+                        .HasColumnType("character varying(320)");
+
+                    b.Property<string>("FromName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("HtmlBody")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
+                    b.Property<string>("LockedBy")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTime?>("LockedUntilUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("NextAttemptOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ProcessedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("TextBody")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ToAddressesJson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProcessedOnUtc", "NextAttemptOnUtc", "LockedUntilUtc")
+                        .HasDatabaseName("IX_EmailOutbox_DueLease");
+
+                    b.ToTable("EmailOutbox", (string)null);
+                });
+
             modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Images.ImageObjectDeletionOutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -3400,6 +3463,13 @@ partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot {
                         .HasMaxLength(2048)
                         .HasColumnType("character varying(2048)");
 
+                    b.Property<string>("LockedBy")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTime?>("LockedUntilUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("NextAttemptOnUtc")
                         .HasColumnType("timestamp with time zone");
 
@@ -3413,7 +3483,8 @@ partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot {
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProcessedOnUtc", "NextAttemptOnUtc");
+                    b.HasIndex("ProcessedOnUtc", "NextAttemptOnUtc", "LockedUntilUtc")
+                        .HasDatabaseName("IX_ImageObjectDeletionOutbox_DueLease");
 
                     b.ToTable("ImageObjectDeletionOutbox", (string)null);
                 });
@@ -3434,6 +3505,13 @@ partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot {
                         .HasMaxLength(2048)
                         .HasColumnType("character varying(2048)");
 
+                    b.Property<string>("LockedBy")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTime?>("LockedUntilUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("NextAttemptOnUtc")
                         .HasColumnType("timestamp with time zone");
 
@@ -3447,7 +3525,8 @@ partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot {
 
                     b.HasIndex("NotificationId");
 
-                    b.HasIndex("ProcessedOnUtc", "NextAttemptOnUtc");
+                    b.HasIndex("ProcessedOnUtc", "NextAttemptOnUtc", "LockedUntilUtc")
+                        .HasDatabaseName("IX_NotificationWebPushOutbox_DueLease");
 
                     b.ToTable("NotificationWebPushOutbox", (string)null);
                 });

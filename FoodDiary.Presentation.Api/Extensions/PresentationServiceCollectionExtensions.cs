@@ -8,6 +8,7 @@ using FoodDiary.Presentation.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace FoodDiary.Presentation.Api.Extensions;
 
@@ -15,6 +16,8 @@ public static class PresentationServiceCollectionExtensions {
     public static IServiceCollection AddPresentationApi(this IServiceCollection services) {
         services.AddScoped<TelemetryActionFilter>();
         services.AddScoped<IdempotencyFilter>();
+        services.TryAddSingleton(TimeProvider.System);
+        services.TryAddSingleton<IIdempotencyStore, InMemoryIdempotencyStore>();
         services.AddApiVersioning(options => {
             options.DefaultApiVersion = new ApiVersion(1, 0);
             options.AssumeDefaultVersionWhenUnspecified = true;

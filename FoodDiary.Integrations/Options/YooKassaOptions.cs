@@ -12,6 +12,12 @@ public sealed class YooKassaOptions {
     public string ReturnUrl { get; init; } = string.Empty;
     public string Description { get; init; } = "FoodDiary Premium";
 
+    public static bool HasAnyConfiguration(YooKassaOptions options) =>
+        !string.IsNullOrWhiteSpace(options.ShopId) ||
+        !string.IsNullOrWhiteSpace(options.SecretKey) ||
+        !string.IsNullOrWhiteSpace(options.PremiumMonthlyAmount) ||
+        !string.IsNullOrWhiteSpace(options.PremiumYearlyAmount);
+
     public static bool HasValidCheckoutConfiguration(YooKassaOptions options) =>
         !string.IsNullOrWhiteSpace(options.ShopId) &&
         !string.IsNullOrWhiteSpace(options.SecretKey) &&

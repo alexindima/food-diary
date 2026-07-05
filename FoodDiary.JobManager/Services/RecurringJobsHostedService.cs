@@ -11,6 +11,7 @@ public sealed class RecurringJobsHostedService(
     IOptions<BillingRenewalOptions> billingRenewalOptions,
     IOptions<FastingNotificationOptions> fastingNotificationOptions,
     IOptions<ImageObjectDeletionOutboxOptions> imageObjectDeletionOutboxOptions,
+    IOptions<EmailOutboxOptions> emailOutboxOptions,
     IOptions<NotificationWebPushOutboxOptions> notificationWebPushOutboxOptions,
     IOptions<NotificationCleanupOptions> notificationCleanupOptions,
     IOptions<UserLoginEventCleanupOptions> userLoginEventCleanupOptions,
@@ -20,6 +21,7 @@ public sealed class RecurringJobsHostedService(
         BillingRenewalOptions billingRenewalSettings = billingRenewalOptions.Value;
         FastingNotificationOptions fastingNotificationSettings = fastingNotificationOptions.Value;
         ImageObjectDeletionOutboxOptions imageOutboxSettings = imageObjectDeletionOutboxOptions.Value;
+        EmailOutboxOptions emailOutboxSettings = emailOutboxOptions.Value;
         NotificationWebPushOutboxOptions notificationOutboxSettings = notificationWebPushOutboxOptions.Value;
         NotificationCleanupOptions notificationSettings = notificationCleanupOptions.Value;
         UserLoginEventCleanupOptions userLoginEventSettings = userLoginEventCleanupOptions.Value;
@@ -40,6 +42,10 @@ public sealed class RecurringJobsHostedService(
             RecurringJobIds.ImageObjectDeletionOutbox,
             Job.FromExpression<ImageObjectDeletionOutboxJob>(job => job.Execute(CancellationToken.None)),
             ResolveCron(imageOutboxSettings.Cron, "* * * * *"));
+        recurringJobManager.AddOrUpdate(
+            RecurringJobIds.EmailOutbox,
+            Job.FromExpression<EmailOutboxJob>(job => job.Execute(CancellationToken.None)),
+            ResolveCron(emailOutboxSettings.Cron, "* * * * *"));
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.NotificationWebPushOutbox,
             Job.FromExpression<NotificationWebPushOutboxJob>(job => job.Execute(CancellationToken.None)),

@@ -6,4 +6,5 @@ public sealed class BillingOptions {
     public const string SectionName = "Billing";
 
     public string Provider { get; init; } = BillingProviderNames.Stripe;
+    public bool RequireConfiguredProvider { get; init; }
 }

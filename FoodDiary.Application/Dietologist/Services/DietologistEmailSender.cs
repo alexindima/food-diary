@@ -7,7 +7,8 @@ namespace FoodDiary.Application.Dietologist.Services;
 public sealed class DietologistEmailSender(
     EmailOptions options,
     IEmailTemplateProvider templateProvider,
-    IEmailTransport emailTransport) : IDietologistEmailSender {
+    IEmailTransport emailTransport,
+    IEmailOutbox? emailOutbox = null) : IDietologistEmailSender {
     private const string TemplateKey = "dietologist_invitation";
 
     private readonly EmailOptions _options = options;
@@ -33,7 +34,7 @@ public sealed class DietologistEmailSender(
             ? Text
             : ApplyTemplateTokens(template.TextBody, link, brand, clientName);
 
-        await SendAsync(message.ToEmail, subject, htmlBody, textBody, cancellationToken).ConfigureAwait(false);
+        await DispatchAsync(message.ToEmail, subject, htmlBody, textBody, cancellationToken).ConfigureAwait(false);
     }
 
     private string BuildInvitationLink(Guid invitationId, string token) {
@@ -139,15 +140,20 @@ public sealed class DietologistEmailSender(
          </html>
          """;
 
-    private async Task SendAsync(string toEmail, string subject, string htmlBody, string textBody, CancellationToken cancellationToken) {
-        await emailTransport.SendAsync(
-            new EmailMessage(
-                _options.FromAddress,
-                _options.FromName,
-                [toEmail],
-                subject,
-                htmlBody,
-                string.IsNullOrWhiteSpace(textBody) ? null : textBody),
-            cancellationToken).ConfigureAwait(false);
+    private async Task DispatchAsync(string toEmail, string subject, string htmlBody, string textBody, CancellationToken cancellationToken) {
+        var message = new EmailMessage(
+            _options.FromAddress,
+            _options.FromName,
+            [toEmail],
+            subject,
+            htmlBody,
+            string.IsNullOrWhiteSpace(textBody) ? null : textBody);
+
+        if (emailOutbox is null) {
+            await emailTransport.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+
+        await emailOutbox.EnqueueAsync(message, cancellationToken).ConfigureAwait(false);
     }
 }

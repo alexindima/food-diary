@@ -10,6 +10,8 @@ public sealed class ImageObjectDeletionOutboxMessage {
     public DateTime NextAttemptOnUtc { get; private set; }
     public int AttemptCount { get; private set; }
     public DateTime? ProcessedOnUtc { get; private set; }
+    public DateTime? LockedUntilUtc { get; private set; }
+    public string? LockedBy { get; private set; }
     public string? LastError { get; private set; }
 
     private ImageObjectDeletionOutboxMessage() {
@@ -34,17 +36,33 @@ public sealed class ImageObjectDeletionOutboxMessage {
         };
     }
 
+    public void MarkClaimed(DateTime lockedUntilUtc, string lockedBy) {
+        LockedUntilUtc = NormalizeUtc(lockedUntilUtc);
+        LockedBy = TruncateOptional(lockedBy, maxLength: 128);
+    }
+
     public void MarkProcessed(DateTime processedOnUtc) {
         ProcessedOnUtc = NormalizeUtc(processedOnUtc);
+        LockedUntilUtc = null;
+        LockedBy = null;
         LastError = null;
     }
 
     public void MarkFailed(string error, DateTime nextAttemptOnUtc) {
         AttemptCount++;
         NextAttemptOnUtc = NormalizeUtc(nextAttemptOnUtc);
-        LastError = string.IsNullOrWhiteSpace(error)
-            ? null
-            : error.Trim()[..Math.Min(error.Trim().Length, ErrorMaxLength)];
+        LockedUntilUtc = null;
+        LockedBy = null;
+        LastError = TruncateOptional(error, ErrorMaxLength);
+    }
+
+    private static string? TruncateOptional(string value, int maxLength) {
+        if (string.IsNullOrWhiteSpace(value)) {
+            return null;
+        }
+
+        string trimmed = value.Trim();
+        return trimmed.Length <= maxLength ? trimmed : trimmed[..maxLength];
     }
 
     private static DateTime NormalizeUtc(DateTime value) =>

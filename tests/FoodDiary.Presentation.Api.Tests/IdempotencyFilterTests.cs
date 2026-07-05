@@ -1,208 +1,152 @@
 using System.Security.Claims;
-using System.Text.Json;
 using FoodDiary.Presentation.Api.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class IdempotencyFilterTests {
     [Fact]
-    public async Task OnActionExecutionAsync_WithCachedPostResponse_ReturnsCachedContent() {
-        var cache = new InMemoryDistributedCache();
-        var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
+    public async Task OnActionExecutionAsync_WithCompletedPostResponse_ReturnsCachedContent() {
+        var store = new InMemoryIdempotencyStore(TimeProvider.System);
+        var filter = new IdempotencyFilter(store);
         DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-1", userId: "user-123");
-        const string cacheKey = "idempotency:user-123:/api/v1/products:key-1";
-        await cache.SetStringAsync(cacheKey, "{\"StatusCode\":201,\"Body\":\"{\\u0022id\\u0022:\\u0022cached\\u0022}\"}");
+        ActionExecutingContext firstContext = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
 
-        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+        await filter.OnActionExecutionAsync(firstContext, () => Task.FromResult(new ActionExecutedContext(firstContext, [], new object()) {
+            Result = new ObjectResult(new { id = "created" }) {
+                StatusCode = StatusCodes.Status201Created,
+            },
+        }));
+
+        DefaultHttpContext replayHttpContext = CreateHttpContext("POST", "/api/v1/products", "key-1", userId: "user-123");
+        ActionExecutingContext replayContext = CreateActionExecutingContext(replayHttpContext, new EnableIdempotencyAttribute());
         bool nextCalled = false;
 
-        await filter.OnActionExecutionAsync(context, () => {
+        await filter.OnActionExecutionAsync(replayContext, () => {
             nextCalled = true;
-            throw new InvalidOperationException("Should not execute next delegate when cache hits.");
+            throw new InvalidOperationException("Should not execute next delegate when store replays.");
         });
 
         Assert.False(nextCalled);
-        ContentResult result = Assert.IsType<ContentResult>(context.Result);
+        ContentResult result = Assert.IsType<ContentResult>(replayContext.Result);
         Assert.Equal(StatusCodes.Status201Created, result.StatusCode);
         Assert.Equal("application/json", result.ContentType);
-        Assert.Equal("{\"id\":\"cached\"}", result.Content);
+        Assert.Contains("created", result.Content, StringComparison.Ordinal);
     }
 
     [Fact]
-    public async Task OnActionExecutionAsync_WithCachedNullEntry_ExecutesNextAndRefreshesCache() {
-        var cache = new InMemoryDistributedCache();
-        var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
-        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-null", userId: "user-null");
-        const string cacheKey = "idempotency:user-null:/api/v1/products:key-null";
-        await cache.SetStringAsync(cacheKey, "null");
-
+    public async Task OnActionExecutionAsync_WhenStoreMisses_ExecutesNextAndCompletesReservation() {
+        var store = new InMemoryIdempotencyStore(TimeProvider.System);
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/consumptions", "key-2", userId: "user-456");
         ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
         bool nextCalled = false;
 
         await filter.OnActionExecutionAsync(context, () => {
             nextCalled = true;
             return Task.FromResult(new ActionExecutedContext(context, [], new object()) {
-                Result = new ObjectResult(new { id = "created-after-null-cache" }) {
-                    StatusCode = StatusCodes.Status200OK,
-                },
-            });
-        });
-
-        string? cached = await cache.GetStringAsync(cacheKey);
-
-        Assert.True(nextCalled);
-        Assert.Null(context.Result);
-        Assert.NotNull(cached);
-        using var cacheDoc = JsonDocument.Parse(cached);
-        Assert.Equal(StatusCodes.Status200OK, cacheDoc.RootElement.GetProperty("StatusCode").GetInt32());
-    }
-
-    [Fact]
-    public async Task OnActionExecutionAsync_WithCachedMalformedEntry_ThrowsAndDoesNotExecuteNext() {
-        var cache = new InMemoryDistributedCache();
-        var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
-        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-bad", userId: "user-bad");
-        const string cacheKey = "idempotency:user-bad:/api/v1/products:key-bad";
-        await cache.SetStringAsync(cacheKey, "{");
-
-        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
-        bool nextCalled = false;
-
-        await Assert.ThrowsAsync<JsonException>(() => filter.OnActionExecutionAsync(context, () => {
-            nextCalled = true;
-            return Task.FromResult(new ActionExecutedContext(context, [], new object()));
-        }));
-
-        Assert.False(nextCalled);
-        Assert.Null(context.Result);
-    }
-
-    [Fact]
-    public async Task OnActionExecutionAsync_WithSuccessfulPostAndIdempotencyKey_CachesObjectResult() {
-        var cache = new InMemoryDistributedCache();
-        var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
-        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/consumptions", "key-2", userId: "user-456");
-        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
-
-        await filter.OnActionExecutionAsync(context, () => {
-            var actionExecuted = new ActionExecutedContext(
-                context,
-                [],
-                controller: new object()) {
                 Result = new ObjectResult(new { id = "created", calories = 420 }) {
                     StatusCode = StatusCodes.Status201Created,
                 },
-            };
-
-            return Task.FromResult(actionExecuted);
+            });
         });
 
-        string? cached = await cache.GetStringAsync("idempotency:user-456:/api/v1/consumptions:key-2");
-
-        Assert.NotNull(cached);
-        using var cacheDoc = JsonDocument.Parse(cached);
-        Assert.Equal(StatusCodes.Status201Created, cacheDoc.RootElement.GetProperty("StatusCode").GetInt32());
-        string? body = cacheDoc.RootElement.GetProperty("Body").GetString();
-        Assert.NotNull(body);
-        using var bodyDoc = JsonDocument.Parse(body);
-        Assert.Equal("created", bodyDoc.RootElement.GetProperty("id").GetString());
+        Assert.True(nextCalled);
         Assert.Null(context.Result);
     }
 
     [Fact]
-    public async Task OnActionExecutionAsync_WhenCacheMiss_ExecutesNextAndSetsCache() {
-        var cache = new InMemoryDistributedCache();
-        var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
-        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-miss", userId: "user-miss");
+    public async Task OnActionExecutionAsync_WithSameKeyAndDifferentPayload_ReturnsConflict() {
+        var store = new InMemoryIdempotencyStore(TimeProvider.System);
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext firstHttpContext = CreateHttpContext("POST", "/api/v1/products", "key-conflict", userId: "user-conflict");
+        ActionExecutingContext firstContext = CreateActionExecutingContext(
+            firstHttpContext,
+            new Dictionary<string, object?>(StringComparer.Ordinal) {
+                ["request"] = new { Name = "first" },
+            },
+            new EnableIdempotencyAttribute());
+
+        await filter.OnActionExecutionAsync(firstContext, () => Task.FromResult(new ActionExecutedContext(firstContext, [], new object()) {
+            Result = new ObjectResult(new { id = "created-first" }) {
+                StatusCode = StatusCodes.Status201Created,
+            },
+        }));
+
+        DefaultHttpContext secondHttpContext = CreateHttpContext("POST", "/api/v1/products", "key-conflict", userId: "user-conflict");
+        ActionExecutingContext secondContext = CreateActionExecutingContext(
+            secondHttpContext,
+            new Dictionary<string, object?>(StringComparer.Ordinal) {
+                ["request"] = new { Name = "second" },
+            },
+            new EnableIdempotencyAttribute());
+        bool nextCalled = false;
+
+        await filter.OnActionExecutionAsync(secondContext, () => {
+            nextCalled = true;
+            return Task.FromResult(new ActionExecutedContext(secondContext, [], new object()));
+        });
+
+        Assert.False(nextCalled);
+        ObjectResult conflict = Assert.IsType<ObjectResult>(secondContext.Result);
+        Assert.Equal(StatusCodes.Status409Conflict, conflict.StatusCode);
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WhenReservationIsInProgress_ReturnsConflict() {
+        var filter = new IdempotencyFilter(new FixedIdempotencyStore(
+            new IdempotencyReservation(IdempotencyReservationStatus.InProgress)));
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-busy", userId: "user-busy");
         ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
         bool nextCalled = false;
 
         await filter.OnActionExecutionAsync(context, () => {
             nextCalled = true;
-            return Task.FromResult(new ActionExecutedContext(context, [], new object()) {
-                Result = new ObjectResult(new { id = "created-after-miss" }) {
-                    StatusCode = StatusCodes.Status200OK,
-                },
-            });
+            return Task.FromResult(new ActionExecutedContext(context, [], new object()));
         });
 
-        string? cached = await cache.GetStringAsync("idempotency:user-miss:/api/v1/products:key-miss");
-
-        Assert.True(nextCalled);
-        Assert.NotNull(cached);
-        Assert.Null(context.Result);
+        Assert.False(nextCalled);
+        ObjectResult result = Assert.IsType<ObjectResult>(context.Result);
+        Assert.Equal(StatusCodes.Status409Conflict, result.StatusCode);
     }
 
     [Fact]
-    public async Task OnActionExecutionAsync_WithoutUserAndPath_UsesAnonymousEmptyPathCacheKey() {
-        var cache = new InMemoryDistributedCache();
-        var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
-        DefaultHttpContext httpContext = CreateHttpContext("POST", path: null, "key-anonymous", userId: null);
+    public async Task OnActionExecutionAsync_WithoutIdempotencyKey_DoesNotReserve() {
+        var store = new RecordingIdempotencyStore();
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", idempotencyKey: null, userId: "user-789");
         ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
 
         await filter.OnActionExecutionAsync(context, () => Task.FromResult(new ActionExecutedContext(context, [], new object()) {
-            Result = new ObjectResult(new { id = "created-for-anonymous" }) {
+            Result = new ObjectResult(new { id = "created" }) {
+                StatusCode = StatusCodes.Status201Created,
+            },
+        }));
+
+        Assert.Equal(0, store.ReserveCalls);
+        Assert.Equal(0, store.CompleteCalls);
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WithoutEnableIdempotencyAttribute_SkipsStore() {
+        var store = new RecordingIdempotencyStore();
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/auth/login", "key-3", userId: "user-000");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext);
+
+        await filter.OnActionExecutionAsync(context, () => Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+            Result = new ObjectResult(new { ok = true }) {
                 StatusCode = StatusCodes.Status200OK,
             },
         }));
 
-        string? cached = await cache.GetStringAsync("idempotency:anonymous::key-anonymous");
-
-        Assert.NotNull(cached);
-    }
-
-    [Fact]
-    public async Task OnActionExecutionAsync_WithoutIdempotencyKey_DoesNotCache() {
-        var cache = new InMemoryDistributedCache();
-        var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
-        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", idempotencyKey: null, userId: "user-789");
-        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
-
-        await filter.OnActionExecutionAsync(context, () => {
-            var actionExecuted = new ActionExecutedContext(
-                context,
-                [],
-                controller: new object()) {
-                Result = new ObjectResult(new { id = "created" }) {
-                    StatusCode = StatusCodes.Status201Created,
-                },
-            };
-
-            return Task.FromResult(actionExecuted);
-        });
-
-        string? cached = await cache.GetStringAsync("idempotency:user-789:/api/v1/products:");
-        Assert.Null(cached);
-    }
-
-    [Fact]
-    public async Task OnActionExecutionAsync_WithoutEnableIdempotencyAttribute_SkipsCaching() {
-        var cache = new InMemoryDistributedCache();
-        var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
-        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/auth/login", "key-3", userId: "user-000");
-        ActionExecutingContext context = CreateActionExecutingContext(httpContext);
-        bool nextCalled = false;
-
-        await filter.OnActionExecutionAsync(context, () => {
-            nextCalled = true;
-            return Task.FromResult(new ActionExecutedContext(context, [], new object()) {
-                Result = new ObjectResult(new { ok = true }) {
-                    StatusCode = StatusCodes.Status200OK,
-                },
-            });
-        });
-
-        string? cached = await cache.GetStringAsync("idempotency:user-000:/api/v1/auth/login:key-3");
-        Assert.True(nextCalled);
-        Assert.Null(cached);
+        Assert.Equal(0, store.ReserveCalls);
+        Assert.Equal(0, store.CompleteCalls);
     }
 
     private static DefaultHttpContext CreateHttpContext(string method, string? path, string? idempotencyKey, string? userId) {
@@ -225,7 +169,13 @@ public sealed class IdempotencyFilterTests {
         return httpContext;
     }
 
-    private static ActionExecutingContext CreateActionExecutingContext(HttpContext httpContext, params IFilterMetadata[] filters) {
+    private static ActionExecutingContext CreateActionExecutingContext(HttpContext httpContext, params IFilterMetadata[] filters) =>
+        CreateActionExecutingContext(httpContext, new Dictionary<string, object?>(StringComparer.Ordinal), filters);
+
+    private static ActionExecutingContext CreateActionExecutingContext(
+        HttpContext httpContext,
+        IDictionary<string, object?> actionArguments,
+        params IFilterMetadata[] filters) {
         var actionContext = new ActionContext(
             httpContext,
             new RouteData(),
@@ -234,43 +184,53 @@ public sealed class IdempotencyFilterTests {
         return new ActionExecutingContext(
             actionContext,
             filters,
-            new Dictionary<string, object?>(StringComparer.Ordinal),
+            actionArguments,
             controller: new object());
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryDistributedCache : IDistributedCache {
-        private readonly Dictionary<string, byte[]> _entries = new(StringComparer.Ordinal);
+    private sealed class FixedIdempotencyStore(IdempotencyReservation reservation) : IIdempotencyStore {
+        public Task<IdempotencyReservation> ReserveAsync(
+            string key,
+            string requestHash,
+            TimeSpan responseTtl,
+            TimeSpan processingTtl,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(reservation);
 
-        public byte[]? Get(string key) {
-            return _entries.TryGetValue(key, out byte[]? value) ? value : null;
+        public Task CompleteAsync(
+            string key,
+            string requestHash,
+            int statusCode,
+            string? body,
+            TimeSpan responseTtl,
+            CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingIdempotencyStore : IIdempotencyStore {
+        public int ReserveCalls { get; private set; }
+        public int CompleteCalls { get; private set; }
+
+        public Task<IdempotencyReservation> ReserveAsync(
+            string key,
+            string requestHash,
+            TimeSpan responseTtl,
+            TimeSpan processingTtl,
+            CancellationToken cancellationToken = default) {
+            ReserveCalls++;
+            return Task.FromResult(new IdempotencyReservation(IdempotencyReservationStatus.Acquired));
         }
 
-        public Task<byte[]?> GetAsync(string key, CancellationToken token = default) =>
-            Task.FromResult(_entries.TryGetValue(key, out byte[]? value) ? value : null);
-
-        public void Refresh(string key) {
-        }
-
-        public Task RefreshAsync(string key, CancellationToken token = default) {
-            return Task.CompletedTask;
-        }
-
-        public void Remove(string key) {
-            _entries.Remove(key);
-        }
-
-        public Task RemoveAsync(string key, CancellationToken token = default) {
-            _entries.Remove(key);
-            return Task.CompletedTask;
-        }
-
-        public void Set(string key, byte[] value, DistributedCacheEntryOptions options) {
-            _entries[key] = value;
-        }
-
-        public Task SetAsync(string key, byte[] value, DistributedCacheEntryOptions options, CancellationToken token = default) {
-            _entries[key] = value;
+        public Task CompleteAsync(
+            string key,
+            string requestHash,
+            int statusCode,
+            string? body,
+            TimeSpan responseTtl,
+            CancellationToken cancellationToken = default) {
+            CompleteCalls++;
             return Task.CompletedTask;
         }
     }

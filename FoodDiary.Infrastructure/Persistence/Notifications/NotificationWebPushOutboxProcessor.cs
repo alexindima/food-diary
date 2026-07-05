@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Infrastructure.Persistence.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -17,12 +18,16 @@ internal sealed class NotificationWebPushOutboxProcessor(
         }
 
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
-        List<NotificationWebPushOutboxMessage> messages = await context.NotificationWebPushOutbox
-            .Include(message => message.Notification)
-            .Where(message => message.ProcessedOnUtc == null && message.NextAttemptOnUtc <= nowUtc)
-            .OrderBy(message => message.CreatedOnUtc)
-            .Take(batchSize)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+        List<NotificationWebPushOutboxMessage> messages = await OutboxMessageClaimer
+            .ClaimDueAsync(
+                context,
+                context.NotificationWebPushOutbox,
+                "\"NotificationWebPushOutbox\"",
+                batchSize,
+                nowUtc,
+                context.NotificationWebPushOutbox.Include(message => message.Notification),
+                cancellationToken)
+            .ConfigureAwait(false);
 
         int processed = 0;
         foreach (NotificationWebPushOutboxMessage message in messages) {

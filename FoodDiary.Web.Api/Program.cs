@@ -7,7 +7,7 @@ builder.WebHost.ConfigureKestrel(options => {
     options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10 MB
 });
 
-builder.Services.AddApiServices(builder.Configuration);
+builder.Services.AddApiServices(builder.Configuration, builder.Environment);
 
 WebApplication app = builder.Build();
 app.UseApiPipeline();

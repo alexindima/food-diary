@@ -39,6 +39,11 @@ public static class JobManagerServiceCollectionExtensions {
             .Validate(ImageObjectDeletionOutboxOptions.HasValidConfiguration,
                 "ImageObjectDeletionOutbox configuration requires a positive batch size and a non-empty cron when enabled.")
             .ValidateOnStart();
+        services.AddOptions<EmailOutboxOptions>()
+            .Bind(configuration.GetSection(EmailOutboxOptions.SectionName))
+            .Validate(EmailOutboxOptions.HasValidConfiguration,
+                "EmailOutbox configuration requires a positive batch size and a non-empty cron when enabled.")
+            .ValidateOnStart();
         services.AddOptions<NotificationWebPushOutboxOptions>()
             .Bind(configuration.GetSection(NotificationWebPushOutboxOptions.SectionName))
             .Validate(NotificationWebPushOutboxOptions.HasValidConfiguration,
@@ -50,6 +55,7 @@ public static class JobManagerServiceCollectionExtensions {
         services.AddTransient<BillingRenewalJob>();
         services.AddTransient<FastingNotificationJob>();
         services.AddTransient<ImageObjectDeletionOutboxJob>();
+        services.AddTransient<EmailOutboxJob>();
         services.AddTransient<NotificationWebPushOutboxJob>();
         services.AddTransient<NotificationCleanupJob>();
         services.AddTransient<UserCleanupJob>();

@@ -35,6 +35,7 @@ public sealed class ApiWebApplicationFactory : WebApplicationFactory<Program> {
                 ["S3:ServiceUrl"] = "https://s3.test.local",
                 ["S3:PublicBaseUrl"] = "https://cdn.test.local",
                 ["Stripe:SecretKey"] = "sk_test_codex",
+                ["Stripe:PublishableKey"] = "pk_test_codex",
                 ["Stripe:WebhookSecret"] = "whsec_codex",
                 ["Stripe:PremiumMonthlyPriceId"] = "price_monthly_codex",
                 ["Stripe:PremiumYearlyPriceId"] = "price_yearly_codex",

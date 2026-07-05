@@ -1,17 +1,18 @@
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
+using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Filters;
 
-public sealed class IdempotencyFilter(
-    IDistributedCache cache,
-    ILogger<IdempotencyFilter> logger) : IAsyncActionFilter {
+public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsyncActionFilter {
     private const string IdempotencyKeyHeader = "Idempotency-Key";
     private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(24);
+    private static readonly TimeSpan ProcessingDuration = TimeSpan.FromMinutes(5);
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
         if (!HttpMethods.IsPost(context.HttpContext.Request.Method) || !context.Filters.OfType<EnableIdempotencyAttribute>().Any()) {
@@ -27,35 +28,75 @@ public sealed class IdempotencyFilter(
         }
 
         string cacheKey = BuildCacheKey(context, idempotencyKey);
-        string? cached = await cache.GetStringAsync(cacheKey, context.HttpContext.RequestAborted);
+        string requestHash = ComputeRequestHash(context);
+        IdempotencyReservation reservation = await idempotencyStore
+            .ReserveAsync(cacheKey, requestHash, CacheDuration, ProcessingDuration, context.HttpContext.RequestAborted)
+            .ConfigureAwait(false);
 
-        if (cached is not null) {
-            logger.LogInformation("Idempotency cache hit for key {IdempotencyKey}", idempotencyKey);
-            IdempotencyCacheEntry? entry = JsonSerializer.Deserialize<IdempotencyCacheEntry>(cached);
-            if (entry is not null) {
-                context.Result = new ContentResult {
-                    Content = entry.Body,
-                    ContentType = "application/json",
-                    StatusCode = entry.StatusCode,
-                };
-                return;
-            }
+        if (TryApplyReservation(context, reservation)) {
+            return;
         }
 
-        ActionExecutedContext executedContext = await next();
-
-        if (executedContext.Exception is null && executedContext.Result is ObjectResult objectResult) {
-            var entry = new IdempotencyCacheEntry(
-                objectResult.StatusCode ?? StatusCodes.Status200OK,
-                JsonSerializer.Serialize(objectResult.Value));
-
-            await cache.SetStringAsync(
-                cacheKey,
-                JsonSerializer.Serialize(entry),
-                new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = CacheDuration },
-                context.HttpContext.RequestAborted);
-        }
+        ActionExecutedContext executedContext = await next().ConfigureAwait(false);
+        await CacheExecutedResponseAsync(context, executedContext, cacheKey, requestHash).ConfigureAwait(false);
     }
+
+    private static bool TryApplyReservation(ActionExecutingContext context, IdempotencyReservation reservation) {
+        if (reservation.Status == IdempotencyReservationStatus.Conflict) {
+            context.Result = CreateIdempotencyConflict(context);
+            return true;
+        }
+
+        if (reservation.Status == IdempotencyReservationStatus.InProgress) {
+            context.Result = CreateIdempotencyInProgress(context);
+            return true;
+        }
+
+        if (reservation.Status != IdempotencyReservationStatus.Replay) {
+            return false;
+        }
+
+        context.Result = new ContentResult {
+            Content = reservation.Body,
+            ContentType = "application/json",
+            StatusCode = reservation.StatusCode ?? StatusCodes.Status200OK,
+        };
+        return true;
+    }
+
+    private async Task CacheExecutedResponseAsync(
+        ActionExecutingContext context,
+        ActionExecutedContext executedContext,
+        string cacheKey,
+        string requestHash) {
+        if (executedContext.Exception is not null || executedContext.Result is not ObjectResult objectResult) {
+            return;
+        }
+
+        await idempotencyStore.CompleteAsync(
+            cacheKey,
+            requestHash,
+            objectResult.StatusCode ?? StatusCodes.Status200OK,
+            JsonSerializer.Serialize(objectResult.Value, JsonOptions),
+            CacheDuration,
+            context.HttpContext.RequestAborted).ConfigureAwait(false);
+    }
+
+    private static ObjectResult CreateIdempotencyConflict(ActionExecutingContext context) =>
+        new(new ApiErrorHttpResponse(
+            "Idempotency.Conflict",
+            "The idempotency key was already used with a different request.",
+            context.HttpContext.TraceIdentifier)) {
+            StatusCode = StatusCodes.Status409Conflict,
+        };
+
+    private static ObjectResult CreateIdempotencyInProgress(ActionExecutingContext context) =>
+        new(new ApiErrorHttpResponse(
+            "Idempotency.InProgress",
+            "The idempotency key is already being processed.",
+            context.HttpContext.TraceIdentifier)) {
+            StatusCode = StatusCodes.Status409Conflict,
+        };
 
     private static string BuildCacheKey(ActionExecutingContext context, string idempotencyKey) {
         string userId = context.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "anonymous";
@@ -63,5 +104,15 @@ public sealed class IdempotencyFilter(
         return $"idempotency:{userId}:{path}:{idempotencyKey}";
     }
 
-    private sealed record IdempotencyCacheEntry(int StatusCode, string? Body);
+    private static string ComputeRequestHash(ActionExecutingContext context) {
+        var payload = new SortedDictionary<string, object?>(context.ActionArguments, StringComparer.Ordinal);
+        string serialized = JsonSerializer.Serialize(new {
+            Method = context.HttpContext.Request.Method,
+            Path = context.HttpContext.Request.Path.Value ?? string.Empty,
+            Query = context.HttpContext.Request.QueryString.Value ?? string.Empty,
+            Arguments = payload,
+        }, JsonOptions);
+        byte[] hash = SHA256.HashData(Encoding.UTF8.GetBytes(serialized));
+        return Convert.ToHexString(hash);
+    }
 }

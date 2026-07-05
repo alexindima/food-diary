@@ -14,6 +14,12 @@ using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
+using FoodDiary.Application.Abstractions.Cycles.Common;
+using FoodDiary.Application.Abstractions.DailyAdvices.Common;
+using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Enums;
@@ -21,6 +27,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Dashboard;
+using FoodDiary.Infrastructure.Persistence.Tracking;
 using FoodDiary.Infrastructure.Services;
 using FoodDiary.Integrations;
 using FoodDiary.Integrations.Billing;
@@ -325,6 +332,51 @@ public sealed class DependencyInjectionTests {
     }
 
     [Fact]
+    public void AddInfrastructure_TrackingRepositoriesResolveThroughScopedConcreteInstances() {
+        var services = new ServiceCollection();
+        services.AddSingleton(Substitute.For<IPublisher>());
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
+            ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
+            ["Jwt:Issuer"] = "FoodDiary",
+            ["Jwt:Audience"] = "FoodDiaryClients",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
+        });
+
+        services.AddInfrastructure(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+
+        IWeightEntryRepository weightRepository = scope.ServiceProvider.GetRequiredService<IWeightEntryRepository>();
+        IWaistEntryRepository waistRepository = scope.ServiceProvider.GetRequiredService<IWaistEntryRepository>();
+        IHydrationEntryRepository hydrationRepository = scope.ServiceProvider.GetRequiredService<IHydrationEntryRepository>();
+        IDailyAdviceRepository dailyAdviceRepository = scope.ServiceProvider.GetRequiredService<IDailyAdviceRepository>();
+        ICycleRepository cycleRepository = scope.ServiceProvider.GetRequiredService<ICycleRepository>();
+        IExerciseEntryRepository exerciseRepository = scope.ServiceProvider.GetRequiredService<IExerciseEntryRepository>();
+
+        Assert.Multiple(
+            () => Assert.IsType<WeightEntryRepository>(weightRepository),
+            () => Assert.Same(weightRepository, scope.ServiceProvider.GetRequiredService<IWeightEntryReadRepository>()),
+            () => Assert.Same(weightRepository, scope.ServiceProvider.GetRequiredService<IWeightEntryWriteRepository>()),
+            () => Assert.IsType<WaistEntryRepository>(waistRepository),
+            () => Assert.Same(waistRepository, scope.ServiceProvider.GetRequiredService<IWaistEntryReadRepository>()),
+            () => Assert.Same(waistRepository, scope.ServiceProvider.GetRequiredService<IWaistEntryWriteRepository>()),
+            () => Assert.IsType<HydrationEntryRepository>(hydrationRepository),
+            () => Assert.Same(hydrationRepository, scope.ServiceProvider.GetRequiredService<IHydrationEntryReadRepository>()),
+            () => Assert.Same(hydrationRepository, scope.ServiceProvider.GetRequiredService<IHydrationEntryWriteRepository>()),
+            () => Assert.IsType<DailyAdviceRepository>(dailyAdviceRepository),
+            () => Assert.Same(dailyAdviceRepository, scope.ServiceProvider.GetRequiredService<IDailyAdviceReadRepository>()),
+            () => Assert.IsType<CycleRepository>(cycleRepository),
+            () => Assert.Same(cycleRepository, scope.ServiceProvider.GetRequiredService<ICycleReadRepository>()),
+            () => Assert.Same(cycleRepository, scope.ServiceProvider.GetRequiredService<ICycleWriteRepository>()),
+            () => Assert.IsType<ExerciseEntryRepository>(exerciseRepository),
+            () => Assert.Same(exerciseRepository, scope.ServiceProvider.GetRequiredService<IExerciseEntryReadRepository>()),
+            () => Assert.Same(exerciseRepository, scope.ServiceProvider.GetRequiredService<IExerciseEntryWriteRepository>()));
+    }
+
+    [Fact]
     public void AddInfrastructure_CanResolveDiaryPdfGeneratorTypedClient() {
         var services = new ServiceCollection();
         IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
@@ -558,6 +610,7 @@ public sealed class DependencyInjectionTests {
             ["GoogleAuth:ClientId"] = "google-client",
             ["Billing:Provider"] = BillingProviderNames.Stripe,
             ["Stripe:SecretKey"] = "sk_test",
+            ["Stripe:PublishableKey"] = "pk_test",
             ["Stripe:WebhookSecret"] = "whsec_test",
             ["Stripe:PremiumMonthlyPriceId"] = "price_monthly",
             ["Stripe:PremiumYearlyPriceId"] = "price_yearly",
@@ -565,16 +618,15 @@ public sealed class DependencyInjectionTests {
             ["Stripe:CancelUrl"] = "https://example.com/cancel",
             ["Stripe:PortalReturnUrl"] = "https://example.com/portal",
             ["Paddle:ApiKey"] = "paddle-key",
-            ["Paddle:WebhookSecret"] = "paddle-secret",
-            ["Paddle:MonthlyPriceId"] = "paddle-monthly",
-            ["Paddle:YearlyPriceId"] = "paddle-yearly",
-            ["Paddle:SuccessUrl"] = "https://example.com/success",
-            ["Paddle:CancelUrl"] = "https://example.com/cancel",
+            ["Paddle:ClientSideToken"] = "paddle-client-token",
+            ["Paddle:WebhookSecretKey"] = "paddle-secret",
+            ["Paddle:PremiumMonthlyPriceId"] = "paddle-monthly",
+            ["Paddle:PremiumYearlyPriceId"] = "paddle-yearly",
+            ["Paddle:CheckoutUrl"] = "https://example.com/checkout",
             ["YooKassa:ShopId"] = "shop",
             ["YooKassa:SecretKey"] = "secret",
-            ["YooKassa:WebhookSecret"] = "webhook",
-            ["YooKassa:MonthlyAmount"] = "199.00",
-            ["YooKassa:YearlyAmount"] = "1990.00",
+            ["YooKassa:PremiumMonthlyAmount"] = "199.00",
+            ["YooKassa:PremiumYearlyAmount"] = "1990.00",
             ["YooKassa:ReturnUrl"] = "https://example.com/return",
             ["WebPush:Enabled"] = "true",
             ["WebPush:Subject"] = "https://example.com",
