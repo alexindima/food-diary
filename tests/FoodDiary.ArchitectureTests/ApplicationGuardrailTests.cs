@@ -950,6 +950,21 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void WearableQueries_UseReadServicesInsteadOfWearableAggregates() {
+        string root = GetRepositoryRoot();
+        string wearableQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Wearables", "Queries");
+        string[] wearableQueryFiles = [.. SourceScanner.SourceFiles(wearableQueriesRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, wearableQueryFiles, "FoodDiary.Domain.Entities.Wearables"),
+            .. FindReferencesInFiles(root, wearableQueryFiles, "IWearableConnectionReadRepository"),
+            .. FindReferencesInFiles(root, wearableQueryFiles, "IWearableSyncReadRepository"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullNutritionLessonRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

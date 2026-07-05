@@ -1,14 +1,13 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Wearables.Models;
+using FoodDiary.Application.Wearables.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Wearables;
 
 namespace FoodDiary.Application.Wearables.Queries.GetWearableConnections;
 
-public sealed class GetWearableConnectionsQueryHandler(IWearableConnectionReadRepository repository)
+public sealed class GetWearableConnectionsQueryHandler(IWearableReadService wearableReadService)
     : IQueryHandler<GetWearableConnectionsQuery, Result<IReadOnlyList<WearableConnectionModel>>> {
     public async Task<Result<IReadOnlyList<WearableConnectionModel>>> Handle(
         GetWearableConnectionsQuery query,
@@ -18,17 +17,9 @@ public sealed class GetWearableConnectionsQueryHandler(IWearableConnectionReadRe
             return Result.Failure<IReadOnlyList<WearableConnectionModel>>(userIdResult.Error);
         }
 
-        IReadOnlyList<WearableConnection> connections = await repository.GetAllForUserAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
-
-        var models = connections
-            .Select(c => new WearableConnectionModel(
-                c.Provider.ToString(),
-                c.ExternalUserId,
-                c.IsActive,
-                c.LastSyncedAtUtc,
-                c.CreatedOnUtc))
-            .ToList();
-
+        IReadOnlyList<WearableConnectionModel> models = await wearableReadService
+            .GetConnectionsAsync(userIdResult.Value, cancellationToken)
+            .ConfigureAwait(false);
         return Result.Success<IReadOnlyList<WearableConnectionModel>>(models);
     }
 }

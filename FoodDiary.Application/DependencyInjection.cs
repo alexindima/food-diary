@@ -47,6 +47,8 @@ using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Usda.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Wearables.Common;
+using FoodDiary.Application.Wearables.Services;
 using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Services;
 using FoodDiary.Mediator;
@@ -119,6 +121,7 @@ public static class DependencyInjection {
         services.AddScoped<ICurrentUserAccessService>(static provider => provider.GetRequiredService<UserContextService>());
         services.AddScoped<IUserContextService>(static provider => provider.GetRequiredService<UserContextService>());
         services.AddScoped<IUserProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
+        services.AddScoped<IWearableReadService, WearableReadService>();
         services.AddScoped<ITdeeUserProfileService, TdeeUserProfileService>();
         services.AddScoped<IWeeklyCheckInUserProfileService, WeeklyCheckInUserProfileService>();
         services.AddScoped<IUsdaDailyMicronutrientReadService, UsdaDailyMicronutrientReadService>();

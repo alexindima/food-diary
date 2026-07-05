@@ -3,9 +3,11 @@ using FoodDiary.Application.Wearables.Commands.DisconnectWearable;
 using FoodDiary.Application.Wearables.Commands.SyncWearableData;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Wearables.Models;
+using FoodDiary.Application.Wearables.Common;
 using FoodDiary.Application.Wearables.Queries.GetWearableAuthUrl;
 using FoodDiary.Application.Wearables.Queries.GetWearableConnections;
 using FoodDiary.Application.Wearables.Queries.GetWearableDailySummary;
+using FoodDiary.Application.Wearables.Services;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -262,7 +264,7 @@ public class WearablesFeatureTests {
 
     [Fact]
     public async Task GetWearableDailySummary_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetWearableDailySummaryQueryHandler(new InMemoryWearableSyncRepository());
+        var handler = new GetWearableDailySummaryQueryHandler(CreateWearableReadService());
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new GetWearableDailySummaryQuery(Guid.Empty, DateTime.UtcNow.Date),
@@ -279,7 +281,7 @@ public class WearablesFeatureTests {
         var repository = new InMemoryWearableSyncRepository();
         repository.Seed(WearableSyncEntry.Create(userId, WearableProvider.Fitbit, WearableDataType.Steps, date, 1000));
         repository.Seed(WearableSyncEntry.Create(userId, WearableProvider.Fitbit, WearableDataType.CaloriesBurned, date, 75));
-        var handler = new GetWearableDailySummaryQueryHandler(repository);
+        var handler = new GetWearableDailySummaryQueryHandler(CreateWearableReadService(syncRepository: repository));
 
         Result<WearableDailySummaryModel> result = await handler.Handle(new GetWearableDailySummaryQuery(userId.Value, date), CancellationToken.None);
 
@@ -291,7 +293,7 @@ public class WearablesFeatureTests {
 
     [Fact]
     public async Task GetWearableConnections_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetWearableConnectionsQueryHandler(new InMemoryWearableConnectionRepository());
+        var handler = new GetWearableConnectionsQueryHandler(CreateWearableReadService());
 
         Result<IReadOnlyList<WearableConnectionModel>> result = await handler.Handle(new GetWearableConnectionsQuery(Guid.Empty), CancellationToken.None);
 
@@ -311,7 +313,7 @@ public class WearablesFeatureTests {
             DateTime.UtcNow.AddHours(1));
         var repository = new InMemoryWearableConnectionRepository();
         repository.Seed(connection);
-        var handler = new GetWearableConnectionsQueryHandler(repository);
+        var handler = new GetWearableConnectionsQueryHandler(CreateWearableReadService(connectionRepository: repository));
 
         Result<IReadOnlyList<WearableConnectionModel>> result = await handler.Handle(new GetWearableConnectionsQuery(userId.Value), CancellationToken.None);
 
@@ -511,6 +513,13 @@ public class WearablesFeatureTests {
         Assert.False(connection.IsActive);
         Assert.True(connectionRepository.UpdateCalled);
     }
+
+    private static IWearableReadService CreateWearableReadService(
+        IWearableConnectionReadRepository? connectionRepository = null,
+        IWearableSyncReadRepository? syncRepository = null) =>
+        new WearableReadService(
+            connectionRepository ?? new InMemoryWearableConnectionRepository(),
+            syncRepository ?? new InMemoryWearableSyncRepository());
 
     [ExcludeFromCodeCoverage]
     private sealed class StubWearableClient(WearableProvider provider, WearableTokenResult? tokenResult) : IWearableClient {
