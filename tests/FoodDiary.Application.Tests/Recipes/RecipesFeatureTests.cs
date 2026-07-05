@@ -8,6 +8,7 @@ using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+using FoodDiary.Application.FavoriteRecipes.Services;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Queries.GetRecipeById;
 using FoodDiary.Application.Recipes.Queries.ExploreRecipes;
@@ -934,7 +935,7 @@ public class RecipesFeatureTests {
 
     [Fact]
     public async Task GetRecipesOverviewQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetRecipesOverviewQueryHandler(
+        GetRecipesOverviewQueryHandler handler = CreateRecipesOverviewHandler(
             new OverviewRecipeReadService(),
             new StubRecentItemRepository([]),
             new StubFavoriteRecipeRepository([]),
@@ -952,7 +953,7 @@ public class RecipesFeatureTests {
     public async Task GetRecipesOverviewQueryHandler_WhenUserAccessFails_ReturnsAccessFailure() {
         var user = User.Create("overview-inactive-user@example.com", "hash");
         user.Deactivate();
-        var handler = new GetRecipesOverviewQueryHandler(
+        GetRecipesOverviewQueryHandler handler = CreateRecipesOverviewHandler(
             new OverviewRecipeReadService(),
             new StubRecentItemRepository([]),
             new StubFavoriteRecipeRepository([]),
@@ -997,7 +998,7 @@ public class RecipesFeatureTests {
             new RecentRecipeUsage(dinner.Id, 5, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteRecipeRepository([favorite]);
-        var handler = new GetRecipesOverviewQueryHandler(overviewReadService, recentRepository, favoriteRepository, new StubUserRepository(user));
+        GetRecipesOverviewQueryHandler handler = CreateRecipesOverviewHandler(overviewReadService, recentRepository, favoriteRepository, new StubUserRepository(user));
 
         Result<RecipeOverviewModel> result = await handler.Handle(
             new GetRecipesOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
@@ -1020,7 +1021,7 @@ public class RecipesFeatureTests {
         var recipe = Recipe.Create(user.Id, "No Recents Soup", servings: 1);
         recipe.AddStep(1, "Cook");
         var recentRepository = new StubRecentItemRepository([]);
-        var handler = new GetRecipesOverviewQueryHandler(
+        GetRecipesOverviewQueryHandler handler = CreateRecipesOverviewHandler(
             new OverviewRecipeReadService(pagedItems: [(recipe, 1)]),
             recentRepository,
             new StubFavoriteRecipeRepository([]),
@@ -1051,7 +1052,7 @@ public class RecipesFeatureTests {
             new RecentRecipeUsage(recipe.Id, 1, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteRecipeRepository([]);
-        var handler = new GetRecipesOverviewQueryHandler(overviewReadService, recentRepository, favoriteRepository, new StubUserRepository(user));
+        GetRecipesOverviewQueryHandler handler = CreateRecipesOverviewHandler(overviewReadService, recentRepository, favoriteRepository, new StubUserRepository(user));
 
         Result<RecipeOverviewModel> result = await handler.Handle(
             new GetRecipesOverviewQuery(user.Id.Value, 1, 10, "protein", IncludePublic: true, 10, 10),
@@ -1072,7 +1073,7 @@ public class RecipesFeatureTests {
                 [withImage.Id] = (withImage, 3),
                 [withoutImage.Id] = (withoutImage, 2),
             });
-        var handler = new GetRecipesOverviewQueryHandler(
+        GetRecipesOverviewQueryHandler handler = CreateRecipesOverviewHandler(
             overviewReadService,
             new StubRecentItemRepository([
                 new RecentRecipeUsage(withImage.Id, 3, DateTime.UtcNow),
@@ -1092,7 +1093,7 @@ public class RecipesFeatureTests {
 
     [Fact]
     public async Task GetRecentRecipesQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetRecentRecipesQueryHandler(new StubRecentItemRepository([]), new OverviewRecipeReadService());
+        GetRecentRecipesQueryHandler handler = CreateRecentRecipesHandler(new StubRecentItemRepository([]), new OverviewRecipeReadService());
 
         Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(UserId: null, 10, IncludePublic: true), CancellationToken.None);
 
@@ -1104,7 +1105,7 @@ public class RecipesFeatureTests {
     public async Task GetRecentRecipesQueryHandler_WhenNoRecentRecipes_ReturnsEmptyList() {
         var userId = UserId.New();
         var recentRepository = new StubRecentItemRepository([]);
-        var handler = new GetRecentRecipesQueryHandler(recentRepository, new OverviewRecipeReadService());
+        GetRecentRecipesQueryHandler handler = CreateRecentRecipesHandler(recentRepository, new OverviewRecipeReadService());
 
         Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 10, IncludePublic: true), CancellationToken.None);
 
@@ -1141,7 +1142,7 @@ public class RecipesFeatureTests {
             new RecentRecipeUsage(missingRecipeId, 9, DateTime.UtcNow),
             new RecentRecipeUsage(owned.Id, 5, DateTime.UtcNow),
         ]);
-        var handler = new GetRecentRecipesQueryHandler(recentRepository, readService);
+        GetRecentRecipesQueryHandler handler = CreateRecentRecipesHandler(recentRepository, readService);
 
         Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 99, IncludePublic: true), CancellationToken.None);
 
@@ -1153,6 +1154,22 @@ public class RecipesFeatureTests {
         Assert.Equal(2, result.Value[0].UsageCount);
         Assert.Equal(5, result.Value[1].UsageCount);
     }
+
+    private static GetRecipesOverviewQueryHandler CreateRecipesOverviewHandler(
+        IRecipeOverviewReadService overviewReadService,
+        StubRecentItemRepository recentRepository,
+        StubFavoriteRecipeRepository favoriteRepository,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new(
+            overviewReadService,
+            new RecentRecipeReadService(recentRepository, overviewReadService),
+            new FavoriteRecipeReadService(favoriteRepository),
+            currentUserAccessService);
+
+    private static GetRecentRecipesQueryHandler CreateRecentRecipesHandler(
+        StubRecentItemRepository recentRepository,
+        IRecipeOverviewReadService overviewReadService) =>
+        new(new RecentRecipeReadService(recentRepository, overviewReadService));
 
     [Fact]
     public async Task ExploreRecipesQueryHandler_ReturnsPagedPublicRecipesAndOwnerFlags() {

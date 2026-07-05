@@ -1,14 +1,14 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.FavoriteProducts.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.FavoriteProducts.Queries.IsProductFavorite;
 
 public sealed class IsProductFavoriteQueryHandler(
-    IFavoriteProductReadRepository favoriteProductRepository,
+    IFavoriteProductReadService favoriteProductReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<IsProductFavoriteQuery, Result<bool>> {
     public async Task<Result<bool>> Handle(
@@ -26,7 +26,7 @@ public sealed class IsProductFavoriteQueryHandler(
         }
 
         var productId = new ProductId(query.ProductId);
-        bool isFavorite = await favoriteProductRepository.ExistsByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false);
+        bool isFavorite = await favoriteProductReadService.ExistsByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false);
         return Result.Success(isFavorite);
     }
 }

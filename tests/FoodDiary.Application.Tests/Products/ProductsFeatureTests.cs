@@ -8,12 +8,14 @@ using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Application.Products.Commands.DuplicateProduct;
 using FoodDiary.Application.Products.Commands.UpdateProduct;
+using FoodDiary.Application.FavoriteProducts.Services;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Queries.GetProductById;
 using FoodDiary.Application.Products.Queries.GetProducts;
 using FoodDiary.Application.Products.Queries.GetProductsOverview;
 using FoodDiary.Application.Products.Queries.GetRecentProducts;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
+using FoodDiary.Application.Products.Services;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
@@ -1153,7 +1155,7 @@ public class ProductsFeatureTests {
             new RecentProductUsage(lunch.Id, 5, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteProductRepository([favorite]);
-        var handler = new GetProductsOverviewQueryHandler(overviewReadService, recentRepository, favoriteRepository, new StubUserRepository(user));
+        GetProductsOverviewQueryHandler handler = CreateProductsOverviewHandler(overviewReadService, recentRepository, favoriteRepository, new StubUserRepository(user));
 
         Result<ProductOverviewModel> result = await handler.Handle(
             new GetProductsOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
@@ -1192,7 +1194,7 @@ public class ProductsFeatureTests {
             new RecentProductUsage(product.Id, 1, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteProductRepository([]);
-        var handler = new GetProductsOverviewQueryHandler(overviewReadService, recentRepository, favoriteRepository, new StubUserRepository(user));
+        GetProductsOverviewQueryHandler handler = CreateProductsOverviewHandler(overviewReadService, recentRepository, favoriteRepository, new StubUserRepository(user));
 
         Result<ProductOverviewModel> result = await handler.Handle(
             new GetProductsOverviewQuery(user.Id.Value, 1, 10, "protein", IncludePublic: true, 10, 10),
@@ -1207,7 +1209,7 @@ public class ProductsFeatureTests {
     public async Task GetProductsOverviewQueryHandler_WhenUserAccessFails_ReturnsAccessFailure() {
         var user = User.Create("overview-inactive-product-user@example.com", "hash");
         user.Deactivate();
-        var handler = new GetProductsOverviewQueryHandler(
+        GetProductsOverviewQueryHandler handler = CreateProductsOverviewHandler(
             new OverviewProductReadService(),
             new StubRecentItemRepository([]),
             new StubFavoriteProductRepository([]),
@@ -1223,7 +1225,7 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task GetProductsOverviewQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetProductsOverviewQueryHandler(
+        GetProductsOverviewQueryHandler handler = CreateProductsOverviewHandler(
             new OverviewProductReadService(),
             new StubRecentItemRepository([]),
             new StubFavoriteProductRepository([]),
@@ -1254,7 +1256,7 @@ public class ProductsFeatureTests {
             alcoholPerBase: 0,
             visibility: Visibility.Private);
         var recentRepository = new StubRecentItemRepository([]);
-        var handler = new GetProductsOverviewQueryHandler(
+        GetProductsOverviewQueryHandler handler = CreateProductsOverviewHandler(
             new OverviewProductReadService(pagedItems: [(product, 1)]),
             recentRepository,
             new StubFavoriteProductRepository([]),
@@ -1279,7 +1281,7 @@ public class ProductsFeatureTests {
                 [withImage.Id] = (withImage, 4),
                 [withoutImage.Id] = (withoutImage, 2),
             });
-        var handler = new GetProductsOverviewQueryHandler(
+        GetProductsOverviewQueryHandler handler = CreateProductsOverviewHandler(
             overviewReadService,
             new StubRecentItemRepository([
                 new RecentProductUsage(withImage.Id, 4, DateTime.UtcNow),
@@ -1328,7 +1330,7 @@ public class ProductsFeatureTests {
             alcoholPerBase: 0,
             productType: ProductType.Fruit,
             visibility: Visibility.Private);
-        var handler = new GetProductsOverviewQueryHandler(
+        GetProductsOverviewQueryHandler handler = CreateProductsOverviewHandler(
             new OverviewProductReadService(pagedItems: [(dairy, 3), (fruit, 2)]),
             new StubRecentItemRepository([]),
             new StubFavoriteProductRepository([]),
@@ -1352,7 +1354,7 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task GetRecentProductsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetRecentProductsQueryHandler(new StubRecentItemRepository([]), new OverviewProductReadService());
+        GetRecentProductsQueryHandler handler = CreateRecentProductsHandler(new StubRecentItemRepository([]), new OverviewProductReadService());
 
         Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(UserId: null, 10, IncludePublic: true), CancellationToken.None);
 
@@ -1364,7 +1366,7 @@ public class ProductsFeatureTests {
     public async Task GetRecentProductsQueryHandler_WhenNoRecentProducts_ReturnsEmptyList() {
         var userId = UserId.New();
         var recentRepository = new StubRecentItemRepository([]);
-        var handler = new GetRecentProductsQueryHandler(recentRepository, new OverviewProductReadService());
+        GetRecentProductsQueryHandler handler = CreateRecentProductsHandler(recentRepository, new OverviewProductReadService());
 
         Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 10, IncludePublic: true), CancellationToken.None);
 
@@ -1413,7 +1415,7 @@ public class ProductsFeatureTests {
             new RecentProductUsage(missingProductId, 9, DateTime.UtcNow),
             new RecentProductUsage(owned.Id, 7, DateTime.UtcNow),
         ]);
-        var handler = new GetRecentProductsQueryHandler(recentRepository, readService);
+        GetRecentProductsQueryHandler handler = CreateRecentProductsHandler(recentRepository, readService);
 
         Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 99, IncludePublic: true), CancellationToken.None);
 
@@ -1425,6 +1427,22 @@ public class ProductsFeatureTests {
         Assert.Equal(3, result.Value[0].UsageCount);
         Assert.Equal(7, result.Value[1].UsageCount);
     }
+
+    private static GetProductsOverviewQueryHandler CreateProductsOverviewHandler(
+        IProductOverviewReadService overviewReadService,
+        StubRecentItemRepository recentRepository,
+        StubFavoriteProductRepository favoriteRepository,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new(
+            overviewReadService,
+            new RecentProductReadService(recentRepository, overviewReadService),
+            new FavoriteProductReadService(favoriteRepository),
+            currentUserAccessService);
+
+    private static GetRecentProductsQueryHandler CreateRecentProductsHandler(
+        StubRecentItemRepository recentRepository,
+        IProductOverviewReadService overviewReadService) =>
+        new(new RecentProductReadService(recentRepository, overviewReadService));
 
     [ExcludeFromCodeCoverage]
     private sealed class NoopProductRepository : IProductRepository {

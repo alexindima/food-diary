@@ -4,6 +4,8 @@ using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.FavoriteRecipes.Commands.AddFavoriteRecipe;
 using FoodDiary.Application.FavoriteRecipes.Commands.RemoveFavoriteRecipe;
+using FoodDiary.Application.FavoriteRecipes.Common;
+using FoodDiary.Application.FavoriteRecipes.Mappings;
 using FoodDiary.Application.FavoriteRecipes.Models;
 using FoodDiary.Application.FavoriteRecipes.Queries.GetFavoriteRecipes;
 using FoodDiary.Application.FavoriteRecipes.Queries.IsRecipeFavorite;
@@ -330,7 +332,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryFavoriteRecipeRepository(
         Recipe? recipe = null,
-        IReadOnlyList<FavoriteRecipe>? favorites = null) : IFavoriteRecipeRepository {
+        IReadOnlyList<FavoriteRecipe>? favorites = null) : IFavoriteRecipeRepository, IFavoriteRecipeReadService {
         private readonly List<FavoriteRecipe> _favorites = favorites?.ToList() ?? [];
         public FavoriteRecipe? AddedFavorite { get; private set; }
         public bool DeleteCalled { get; private set; }
@@ -373,6 +375,19 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<RecipeId, FavoriteRecipe>>(
                 _favorites.Where(f => f.UserId == userId && recipeIds.Contains(f.RecipeId)).ToDictionary(f => f.RecipeId));
+
+        async Task<IReadOnlyList<FavoriteRecipeModel>> IFavoriteRecipeReadService.GetAllAsync(
+            UserId userId,
+            CancellationToken cancellationToken) {
+            IReadOnlyList<FavoriteRecipe> favoriteEntities = await GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
+            return [.. favoriteEntities.Select(favorite => favorite.ToModel())];
+        }
+
+        async Task<bool> IFavoriteRecipeReadService.ExistsByRecipeIdAsync(
+            RecipeId recipeId,
+            UserId userId,
+            CancellationToken cancellationToken) =>
+            await GetByRecipeIdAsync(recipeId, userId, cancellationToken).ConfigureAwait(false) is not null;
     }
 
     private static IRecipeAccessService CreateRecipeAccessService(Recipe? recipe) {

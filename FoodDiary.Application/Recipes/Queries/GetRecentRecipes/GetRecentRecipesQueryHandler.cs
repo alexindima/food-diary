@@ -1,17 +1,12 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.Abstractions.Recipes.Models;
-using FoodDiary.Application.Recipes.Mappings;
+using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Models;
-using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 
-public sealed class GetRecentRecipesQueryHandler(
-    IRecentItemReadRepository recentItemRepository,
-    IRecipeOverviewReadService recipeOverviewReadService)
+public sealed class GetRecentRecipesQueryHandler(IRecentRecipeReadService recentRecipeReadService)
     : IQueryHandler<GetRecentRecipesQuery, Result<IReadOnlyList<RecipeModel>>> {
     public async Task<Result<IReadOnlyList<RecipeModel>>> Handle(
         GetRecentRecipesQuery query,
@@ -23,23 +18,12 @@ public sealed class GetRecentRecipesQueryHandler(
         var userId = new UserId(query.UserId!.Value);
         int recentLimit = Math.Clamp(query.Limit, 1, 50);
 
-        IReadOnlyList<RecentRecipeUsage> recents = await recentItemRepository.GetRecentRecipesAsync(userId, recentLimit, cancellationToken).ConfigureAwait(false);
-        if (recents.Count == 0) {
-            return Result.Success<IReadOnlyList<RecipeModel>>(Array.Empty<RecipeModel>());
-        }
-
-        var idsInOrder = recents.Select(x => x.RecipeId).ToList();
-        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> recipesById = await recipeOverviewReadService.GetByIdsWithUsageAsync(
-            idsInOrder,
+        IReadOnlyList<RecipeModel> response = await recentRecipeReadService.GetRecentAsync(
             userId,
+            recentLimit,
             query.IncludePublic,
             cancellationToken).ConfigureAwait(false);
 
-        var response = idsInOrder
-            .Where(recipesById.ContainsKey)
-            .Select(id => recipesById[id].ToModel())
-            .ToList();
-
-        return Result.Success<IReadOnlyList<RecipeModel>>(response);
+        return Result.Success(response);
     }
 }

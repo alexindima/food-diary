@@ -5,6 +5,8 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.FavoriteProducts.Commands.AddFavoriteProduct;
 using FoodDiary.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
 using FoodDiary.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
+using FoodDiary.Application.FavoriteProducts.Common;
+using FoodDiary.Application.FavoriteProducts.Mappings;
 using FoodDiary.Application.FavoriteProducts.Models;
 using FoodDiary.Application.FavoriteProducts.Queries.GetFavoriteProducts;
 using FoodDiary.Application.FavoriteProducts.Queries.IsProductFavorite;
@@ -374,7 +376,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryFavoriteProductRepository(
         Product? product = null,
-        IReadOnlyList<FavoriteProduct>? favorites = null) : IFavoriteProductRepository {
+        IReadOnlyList<FavoriteProduct>? favorites = null) : IFavoriteProductRepository, IFavoriteProductReadService {
         private readonly List<FavoriteProduct> _favorites = favorites?.ToList() ?? [];
         public FavoriteProduct? AddedFavorite { get; private set; }
         public bool DeleteCalled { get; private set; }
@@ -423,6 +425,19 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<ProductId, FavoriteProduct>>(
                 _favorites.Where(f => f.UserId == userId && productIds.Contains(f.ProductId)).ToDictionary(f => f.ProductId));
+
+        async Task<IReadOnlyList<FavoriteProductModel>> IFavoriteProductReadService.GetAllAsync(
+            UserId userId,
+            CancellationToken cancellationToken) {
+            IReadOnlyList<FavoriteProduct> favoriteEntities = await GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
+            return [.. favoriteEntities.Select(favorite => favorite.ToModel())];
+        }
+
+        async Task<bool> IFavoriteProductReadService.ExistsByProductIdAsync(
+            ProductId productId,
+            UserId userId,
+            CancellationToken cancellationToken) =>
+            await GetByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false) is not null;
     }
 
     [ExcludeFromCodeCoverage]

@@ -1,17 +1,12 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Products.Models;
-using FoodDiary.Application.Products.Mappings;
+using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.Models;
-using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Queries.GetRecentProducts;
 
-public sealed class GetRecentProductsQueryHandler(
-    IRecentItemReadRepository recentItemRepository,
-    IProductOverviewReadService productOverviewReadService)
+public sealed class GetRecentProductsQueryHandler(IRecentProductReadService recentProductReadService)
     : IQueryHandler<GetRecentProductsQuery, Result<IReadOnlyList<ProductModel>>> {
     public async Task<Result<IReadOnlyList<ProductModel>>> Handle(
         GetRecentProductsQuery query,
@@ -23,23 +18,12 @@ public sealed class GetRecentProductsQueryHandler(
         var userId = new UserId(query.UserId!.Value);
         int recentLimit = Math.Clamp(query.Limit, 1, 50);
 
-        IReadOnlyList<RecentProductUsage> recents = await recentItemRepository.GetRecentProductsAsync(userId, recentLimit, cancellationToken).ConfigureAwait(false);
-        if (recents.Count == 0) {
-            return Result.Success<IReadOnlyList<ProductModel>>(Array.Empty<ProductModel>());
-        }
-
-        var idsInOrder = recents.Select(x => x.ProductId).ToList();
-        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> productsById = await productOverviewReadService.GetByIdsWithUsageAsync(
-            idsInOrder,
+        IReadOnlyList<ProductModel> response = await recentProductReadService.GetRecentAsync(
             userId,
+            recentLimit,
             query.IncludePublic,
             cancellationToken).ConfigureAwait(false);
 
-        var response = idsInOrder
-            .Where(productsById.ContainsKey)
-            .Select(id => productsById[id].ToModel())
-            .ToList();
-
-        return Result.Success<IReadOnlyList<ProductModel>>(response);
+        return Result.Success(response);
     }
 }

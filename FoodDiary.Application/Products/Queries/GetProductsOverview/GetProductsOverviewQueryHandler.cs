@@ -2,24 +2,23 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Models;
-using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.FavoriteProducts.Mappings;
+using FoodDiary.Application.FavoriteProducts.Common;
+using FoodDiary.Application.FavoriteProducts.Models;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
-using FoodDiary.Application.Abstractions.RecentItems.Common;
+using FoodDiary.Application.Products.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.FavoriteProducts;
 
 namespace FoodDiary.Application.Products.Queries.GetProductsOverview;
 
 public sealed class GetProductsOverviewQueryHandler(
     IProductOverviewReadService productOverviewReadService,
-    IRecentItemReadRepository recentItemRepository,
-    IFavoriteProductReadRepository favoriteProductRepository,
+    IRecentProductReadService recentProductReadService,
+    IFavoriteProductReadService favoriteProductReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetProductsOverviewQuery, Result<ProductOverviewModel>> {
     private sealed record ProductOverviewOptions(
@@ -29,10 +28,12 @@ public sealed class GetProductsOverviewQueryHandler(
         int RecentLimit,
         int FavoriteLimit,
         ProductType[]? ProductTypes,
-        HashSet<ProductType>? SelectedProductTypes,
         double? CaloriesFrom,
         double? CaloriesTo,
-        bool? HasImage);
+        bool? HasImage) {
+        public ProductQueryFilters ToFilters(string? search) =>
+            new(search, ProductTypes, CaloriesFrom, CaloriesTo, HasImage);
+    }
 
     public async Task<Result<ProductOverviewModel>> Handle(
         GetProductsOverviewQuery query,
@@ -54,23 +55,22 @@ public sealed class GetProductsOverviewQueryHandler(
             query.IncludePublic,
             options.PageNumber,
             options.PageSize,
-            new ProductQueryFilters(
-                query.Search,
-                options.ProductTypes,
-                options.CaloriesFrom,
-                options.CaloriesTo,
-                options.HasImage),
+            options.ToFilters(query.Search),
             cancellationToken).ConfigureAwait(false);
 
         var allProducts = items.ToList();
-        IReadOnlyList<FavoriteProduct> allFavorites = await favoriteProductRepository.GetAllAsync(options.UserId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteProductModel> allFavorites = await favoriteProductReadService.GetAllAsync(options.UserId, cancellationToken).ConfigureAwait(false);
         var favoriteItems = allFavorites
             .Take(options.FavoriteLimit)
-            .Select(favorite => favorite.ToModel())
             .ToList();
-        var favoriteLookup = allFavorites.ToDictionary(favorite => favorite.ProductId);
+        var favoriteLookup = allFavorites.ToDictionary(favorite => new ProductId(favorite.ProductId));
 
-        IReadOnlyList<ProductOverviewReadItem> recentItems = await GetRecentItemsAsync(query, options, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<ProductOverviewReadItem> recentItems = await recentProductReadService.GetRecentOverviewItemsAsync(
+            options.UserId,
+            options.RecentLimit,
+            query.IncludePublic,
+            options.ToFilters(query.Search),
+            cancellationToken).ConfigureAwait(false);
         ProductId[] favoriteProductIds = [.. allProducts
             .Select(x => x.Id)
             .Concat(recentItems.Select(x => x.Id))
@@ -99,59 +99,14 @@ public sealed class GetProductsOverviewQueryHandler(
             Math.Clamp(query.RecentLimit, 1, 50),
             Math.Clamp(query.FavoriteLimit, 1, 50),
             productTypes is { Length: > 0 } ? productTypes : null,
-            productTypes is { Length: > 0 } ? [.. productTypes] : null,
             query.CaloriesFrom,
             query.CaloriesTo,
             query.HasImage);
     }
 
-    private async Task<IReadOnlyList<ProductOverviewReadItem>> GetRecentItemsAsync(
-        GetProductsOverviewQuery query,
-        ProductOverviewOptions options,
-        CancellationToken cancellationToken) {
-        if (!string.IsNullOrWhiteSpace(query.Search)) {
-            return [];
-        }
-
-        IReadOnlyList<RecentProductUsage> recents = await recentItemRepository.GetRecentProductsAsync(
-            options.UserId,
-            options.RecentLimit,
-            cancellationToken).ConfigureAwait(false);
-        if (recents.Count == 0) {
-            return [];
-        }
-
-        var recentIds = recents.Select(x => x.ProductId).ToList();
-        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> productsById = await productOverviewReadService.GetByIdsWithUsageAsync(
-            recentIds,
-            options.UserId,
-            query.IncludePublic,
-            cancellationToken).ConfigureAwait(false);
-
-        return recentIds
-            .Where(productsById.ContainsKey)
-            .Select(id => productsById[id])
-            .Where(item => MatchesRecentFilters(item, options))
-            .ToArray();
-    }
-
-    private static bool IsSelectedProductType(
-        ProductOverviewReadItem product,
-        IReadOnlySet<ProductType>? selectedProductTypes) =>
-        selectedProductTypes?.Contains(product.ProductType) != false;
-
-    private static bool MatchesRecentFilters(ProductOverviewReadItem product, ProductOverviewOptions options) =>
-        IsSelectedProductType(product, options.SelectedProductTypes) &&
-        (!options.CaloriesFrom.HasValue || product.CaloriesPerBase >= options.CaloriesFrom.Value) &&
-        (!options.CaloriesTo.HasValue || product.CaloriesPerBase <= options.CaloriesTo.Value) &&
-        (!options.HasImage.HasValue || HasImage(product) == options.HasImage.Value);
-
-    private static bool HasImage(ProductOverviewReadItem product) =>
-        product.ImageUrl is not null || product.ImageAssetId is not null;
-
     private static PagedResponse<ProductModel> CreatePagedProducts(
         IReadOnlyList<ProductOverviewReadItem> products,
-        IReadOnlyDictionary<ProductId, FavoriteProduct> favoritesByProductId,
+        IReadOnlyDictionary<ProductId, FavoriteProductModel> favoritesByProductId,
         ProductOverviewOptions options,
         int totalItems) =>
         new(
@@ -163,13 +118,13 @@ public sealed class GetProductsOverviewQueryHandler(
 
     private static ProductModel[] ToProductModels(
         IEnumerable<ProductOverviewReadItem> products,
-        IReadOnlyDictionary<ProductId, FavoriteProduct> favoritesByProductId) =>
+        IReadOnlyDictionary<ProductId, FavoriteProductModel> favoritesByProductId) =>
         [.. products.Select(product => ToProductModel(product, favoritesByProductId))];
 
     private static ProductModel ToProductModel(
         ProductOverviewReadItem product,
-        IReadOnlyDictionary<ProductId, FavoriteProduct> favoritesByProductId) {
-        FavoriteProduct? favorite = favoritesByProductId.GetValueOrDefault(product.Id);
-        return product.ToModel(favorite is not null, favorite?.Id.Value);
+        IReadOnlyDictionary<ProductId, FavoriteProductModel> favoritesByProductId) {
+        FavoriteProductModel? favorite = favoritesByProductId.GetValueOrDefault(product.Id);
+        return product.ToModel(favorite is not null, favorite?.Id);
     }
 }

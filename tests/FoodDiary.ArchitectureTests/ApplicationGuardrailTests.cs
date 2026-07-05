@@ -487,8 +487,10 @@ public sealed class ApplicationGuardrailTests {
             "GetRecentProductsQueryHandler.cs");
         string source = File.ReadAllText(handlerPath);
 
-        Assert.Contains("IProductOverviewReadService", source, StringComparison.Ordinal);
+        Assert.Contains("IRecentProductReadService", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IProductReadRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IRecentItemReadRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("RecentProductUsage", source, StringComparison.Ordinal);
         Assert.DoesNotContain("Product = FoodDiary.Domain.Entities.Products.Product", source, StringComparison.Ordinal);
     }
 
@@ -628,8 +630,10 @@ public sealed class ApplicationGuardrailTests {
             "GetRecentRecipesQueryHandler.cs");
         string source = File.ReadAllText(handlerPath);
 
-        Assert.Contains("IRecipeOverviewReadService", source, StringComparison.Ordinal);
+        Assert.Contains("IRecentRecipeReadService", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IRecipeReadRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IRecentItemReadRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("RecentRecipeUsage", source, StringComparison.Ordinal);
         Assert.DoesNotContain("Recipe = FoodDiary.Domain.Entities.Recipes.Recipe", source, StringComparison.Ordinal);
     }
 
@@ -929,6 +933,26 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, favoriteStatusQueryFiles, "GetByMealIdAsync"),
             .. FindReferencesInFiles(root, favoriteStatusQueryFiles, "GetByProductIdAsync"),
             .. FindReferencesInFiles(root, favoriteStatusQueryFiles, "GetByRecipeIdAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void FavoriteQueries_UseReadServicesInsteadOfFavoriteRepositoriesAndAggregates() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] favoriteQueryFiles = [
+            .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "FavoriteMeals", "Queries")),
+            .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "FavoriteProducts", "Queries")),
+            .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "FavoriteRecipes", "Queries")),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, favoriteQueryFiles, "FoodDiary.Domain.Entities.Favorite"),
+            .. FindReferencesInFiles(root, favoriteQueryFiles, "IFavoriteMealReadRepository"),
+            .. FindReferencesInFiles(root, favoriteQueryFiles, "IFavoriteProductReadRepository"),
+            .. FindReferencesInFiles(root, favoriteQueryFiles, "IFavoriteRecipeReadRepository"),
         ];
 
         Assert.Empty(violations);

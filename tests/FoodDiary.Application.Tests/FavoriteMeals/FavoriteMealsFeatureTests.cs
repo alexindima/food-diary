@@ -3,6 +3,7 @@ using FoodDiary.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 using FoodDiary.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
 using FoodDiary.Application.FavoriteMeals.Queries.GetFavoriteMeals;
 using FoodDiary.Application.FavoriteMeals.Queries.IsMealFavorite;
+using FoodDiary.Application.FavoriteMeals.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.FavoriteMeals;
@@ -127,7 +128,7 @@ public class FavoriteMealsFeatureTests {
         var meal = Meal.Create(user.Id, DateTime.UtcNow, MealType.Dinner);
         var favorite = FavoriteMeal.Create(user.Id, meal.Id);
         var handler = new IsMealFavoriteQueryHandler(
-            CreateFavoriteMealRepository(existingByMealId: favorite),
+            new FavoriteMealReadService(CreateFavoriteMealRepository(existingByMealId: favorite)),
             CreateCurrentUserAccessService(user));
 
         Result<bool> result = await handler.Handle(
@@ -141,7 +142,7 @@ public class FavoriteMealsFeatureTests {
     public async Task IsMealFavorite_WhenFavoriteIsMissing_ReturnsFalse() {
         var user = User.Create("user@example.com", "hash");
         var handler = new IsMealFavoriteQueryHandler(
-            CreateFavoriteMealRepository(),
+            new FavoriteMealReadService(CreateFavoriteMealRepository()),
             CreateCurrentUserAccessService(user));
 
         Result<bool> result = await handler.Handle(
@@ -154,7 +155,7 @@ public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task IsMealFavorite_WhenUserNotFound_ReturnsFailure() {
         var handler = new IsMealFavoriteQueryHandler(
-            CreateFavoriteMealRepository(),
+            new FavoriteMealReadService(CreateFavoriteMealRepository()),
             CreateCurrentUserAccessService(user: null));
 
         Result<bool> result = await handler.Handle(
@@ -166,7 +167,7 @@ public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task IsMealFavorite_WithNullUserId_ReturnsFailure() {
         var handler = new IsMealFavoriteQueryHandler(
-            CreateFavoriteMealRepository(),
+            new FavoriteMealReadService(CreateFavoriteMealRepository()),
             CreateCurrentUserAccessService(user: null));
 
         Result<bool> result = await handler.Handle(
@@ -197,7 +198,7 @@ public class FavoriteMealsFeatureTests {
         var favorite = FavoriteMeal.Create(user.Id, meal.Id, "  Work lunch  ");
         SetFavoriteMealNavigation(favorite, meal);
         var handler = new GetFavoriteMealsQueryHandler(
-            CreateFavoriteMealRepository(favorites: [favorite]),
+            new FavoriteMealReadService(CreateFavoriteMealRepository(favorites: [favorite])),
             CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(user.Id.Value), CancellationToken.None);
@@ -219,7 +220,7 @@ public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task GetFavoriteMeals_WhenUserIsMissing_ReturnsFailure() {
         var handler = new GetFavoriteMealsQueryHandler(
-            CreateFavoriteMealRepository(),
+            new FavoriteMealReadService(CreateFavoriteMealRepository()),
             CreateCurrentUserAccessService(user: null));
 
         Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(Guid.NewGuid()), CancellationToken.None);
@@ -230,7 +231,7 @@ public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task GetFavoriteMeals_WithNullUserId_ReturnsFailure() {
         var handler = new GetFavoriteMealsQueryHandler(
-            CreateFavoriteMealRepository(),
+            new FavoriteMealReadService(CreateFavoriteMealRepository()),
             CreateCurrentUserAccessService(user: null));
 
         Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(UserId: null), CancellationToken.None);

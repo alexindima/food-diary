@@ -1,14 +1,14 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.FavoriteRecipes.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.FavoriteRecipes.Queries.IsRecipeFavorite;
 
 public sealed class IsRecipeFavoriteQueryHandler(
-    IFavoriteRecipeReadRepository favoriteRecipeRepository,
+    IFavoriteRecipeReadService favoriteRecipeReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<IsRecipeFavoriteQuery, Result<bool>> {
     public async Task<Result<bool>> Handle(
@@ -26,7 +26,7 @@ public sealed class IsRecipeFavoriteQueryHandler(
         }
 
         var recipeId = new RecipeId(query.RecipeId);
-        bool isFavorite = await favoriteRecipeRepository.ExistsByRecipeIdAsync(recipeId, userId, cancellationToken).ConfigureAwait(false);
+        bool isFavorite = await favoriteRecipeReadService.ExistsByRecipeIdAsync(recipeId, userId, cancellationToken).ConfigureAwait(false);
         return Result.Success(isFavorite);
     }
 }
