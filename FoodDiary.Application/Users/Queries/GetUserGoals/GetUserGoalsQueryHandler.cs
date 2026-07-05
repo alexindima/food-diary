@@ -2,14 +2,12 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
-using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Queries.GetUserGoals;
 
-public sealed class GetUserGoalsQueryHandler(IUserContextService userContextService) : IQueryHandler<GetUserGoalsQuery, Result<GoalsModel>> {
+public sealed class GetUserGoalsQueryHandler(IUserProfileReadService userProfileReadService) : IQueryHandler<GetUserGoalsQuery, Result<GoalsModel>> {
     public async Task<Result<GoalsModel>> Handle(GetUserGoalsQuery query, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
@@ -17,9 +15,6 @@ public sealed class GetUserGoalsQueryHandler(IUserContextService userContextServ
         }
 
         UserId userId = userIdResult.Value;
-        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        return userResult.IsFailure
-            ? Result.Failure<GoalsModel>(userResult.Error)
-            : Result.Success(userResult.Value.ToGoalsModel());
+        return await userProfileReadService.GetGoalsAsync(userId, cancellationToken).ConfigureAwait(false);
     }
 }

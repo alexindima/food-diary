@@ -11,6 +11,7 @@ using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
 using FoodDiary.Application.Users.Commands.UpdateUserAppearance;
 using FoodDiary.Application.Users.Commands.UpdateGoals;
+using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
@@ -766,7 +767,7 @@ public class UsersFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class SingleUserRepository(User user) : IUserRepository, IUserContextService {
+    private sealed class SingleUserRepository(User user) : IUserRepository, IUserContextService, IUserProfileReadService {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -777,6 +778,45 @@ public class UsersFeatureTests {
             User? foundUser = user.Id == userId ? user : null;
             Error? error = CurrentUserAccessPolicy.EnsureCanAccess(foundUser);
             return Task.FromResult(error is not null ? Result.Failure<User>(error) : Result.Success(foundUser!));
+        }
+
+        public async Task<Result<UserModel>> GetUserAsync(UserId userId, CancellationToken cancellationToken) {
+            Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            return result.IsFailure ? Result.Failure<UserModel>(result.Error) : Result.Success(result.Value.ToModel());
+        }
+
+        public async Task<Result<GoalsModel>> GetGoalsAsync(UserId userId, CancellationToken cancellationToken) {
+            Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            return result.IsFailure ? Result.Failure<GoalsModel>(result.Error) : Result.Success(result.Value.ToGoalsModel());
+        }
+
+        public async Task<Result<UserDesiredWeightModel>> GetDesiredWeightAsync(UserId userId, CancellationToken cancellationToken) {
+            Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            return result.IsFailure
+                ? Result.Failure<UserDesiredWeightModel>(result.Error)
+                : Result.Success(new UserDesiredWeightModel(result.Value.DesiredWeight));
+        }
+
+        public async Task<Result<UserDesiredWaistModel>> GetDesiredWaistAsync(UserId userId, CancellationToken cancellationToken) {
+            Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            return result.IsFailure
+                ? Result.Failure<UserDesiredWaistModel>(result.Error)
+                : Result.Success(new UserDesiredWaistModel(result.Value.DesiredWaist));
+        }
+
+        public async Task<Result<NotificationPreferencesModel>> GetNotificationPreferencesAsync(UserId userId, CancellationToken cancellationToken) {
+            Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            if (result.IsFailure) {
+                return Result.Failure<NotificationPreferencesModel>(result.Error);
+            }
+
+            User currentUser = result.Value;
+            return Result.Success(new NotificationPreferencesModel(
+                currentUser.PushNotificationsEnabled,
+                currentUser.FastingPushNotificationsEnabled,
+                currentUser.SocialPushNotificationsEnabled,
+                currentUser.FastingCheckInReminderHours,
+                currentUser.FastingCheckInFollowUpReminderHours));
         }
 
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);

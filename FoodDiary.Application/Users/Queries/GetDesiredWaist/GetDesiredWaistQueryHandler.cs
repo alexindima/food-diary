@@ -4,11 +4,10 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Queries.GetDesiredWaist;
 
-public sealed class GetDesiredWaistQueryHandler(IUserContextService userContextService)
+public sealed class GetDesiredWaistQueryHandler(IUserProfileReadService userProfileReadService)
     : IQueryHandler<GetDesiredWaistQuery, Result<UserDesiredWaistModel>> {
     public async Task<Result<UserDesiredWaistModel>> Handle(
         GetDesiredWaistQuery query,
@@ -19,9 +18,6 @@ public sealed class GetDesiredWaistQueryHandler(IUserContextService userContextS
         }
 
         UserId userId = userIdResult.Value;
-        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        return userResult.IsFailure
-            ? Result.Failure<UserDesiredWaistModel>(userResult.Error)
-            : Result.Success(new UserDesiredWaistModel(userResult.Value.DesiredWaist));
+        return await userProfileReadService.GetDesiredWaistAsync(userId, cancellationToken).ConfigureAwait(false);
     }
 }

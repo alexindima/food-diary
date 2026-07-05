@@ -116,6 +116,7 @@ public static class DependencyInjection {
         services.AddScoped<UserContextService>();
         services.AddScoped<ICurrentUserAccessService>(static provider => provider.GetRequiredService<UserContextService>());
         services.AddScoped<IUserContextService>(static provider => provider.GetRequiredService<UserContextService>());
+        services.AddScoped<IUserProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
         services.AddScoped<ITdeeUserProfileService, TdeeUserProfileService>();
         services.AddScoped<IWeeklyCheckInUserProfileService, WeeklyCheckInUserProfileService>();
         services.AddScoped<IUsdaDailyMicronutrientReadService, UsdaDailyMicronutrientReadService>();

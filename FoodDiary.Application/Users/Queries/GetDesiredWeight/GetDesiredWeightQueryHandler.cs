@@ -4,11 +4,10 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Queries.GetDesiredWeight;
 
-public sealed class GetDesiredWeightQueryHandler(IUserContextService userContextService)
+public sealed class GetDesiredWeightQueryHandler(IUserProfileReadService userProfileReadService)
     : IQueryHandler<GetDesiredWeightQuery, Result<UserDesiredWeightModel>> {
     public async Task<Result<UserDesiredWeightModel>> Handle(
         GetDesiredWeightQuery query,
@@ -19,9 +18,6 @@ public sealed class GetDesiredWeightQueryHandler(IUserContextService userContext
         }
 
         UserId userId = userIdResult.Value;
-        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        return userResult.IsFailure
-            ? Result.Failure<UserDesiredWeightModel>(userResult.Error)
-            : Result.Success(new UserDesiredWeightModel(userResult.Value.DesiredWeight));
+        return await userProfileReadService.GetDesiredWeightAsync(userId, cancellationToken).ConfigureAwait(false);
     }
 }
