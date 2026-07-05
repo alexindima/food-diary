@@ -1,25 +1,19 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Consumptions.Mappings;
-using FoodDiary.Application.Consumptions.Models;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
-using FoodDiary.Application.FavoriteMeals.Mappings;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Consumptions.Common;
+using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptionsOverview;
 
 public sealed class GetConsumptionsOverviewQueryHandler(
-    IMealReadRepository mealRepository,
-    ICurrentUserAccessService currentUserAccessService,
-    IFavoriteMealReadRepository favoriteMealRepository)
+    IConsumptionReadService consumptionReadService,
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetConsumptionsOverviewQuery, Result<ConsumptionOverviewModel>> {
     public async Task<Result<ConsumptionOverviewModel>> Handle(
         GetConsumptionsOverviewQuery request,
@@ -45,40 +39,15 @@ public sealed class GetConsumptionsOverviewQueryHandler(
             : null;
         MealQueryFilters filters = CreateFilters(request, normalizedFrom, normalizedTo);
 
-        (IReadOnlyList<Meal> Items, int TotalItems) = await mealRepository.GetPagedAsync(
+        ConsumptionOverviewModel overview = await consumptionReadService.GetOverviewAsync(
             userId,
             sanitizedPage,
             sanitizedLimit,
+            favoriteLimit,
             filters,
             cancellationToken).ConfigureAwait(false);
 
-        IReadOnlyList<FavoriteMeal> favorites = await favoriteMealRepository.GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
-        var favoriteItems = favorites
-            .Take(favoriteLimit)
-            .Select(favorite => favorite.ToModel())
-            .ToList();
-
-        MealId[] mealIds = [.. Items
-            .Select(meal => meal.Id)
-            .Distinct()];
-        IReadOnlyDictionary<MealId, FavoriteMeal> favoritesByMealId = await favoriteMealRepository.GetByMealIdsAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
-
-        int totalPages = (int)Math.Ceiling(TotalItems / (double)sanitizedLimit);
-        var allConsumptions = new PagedResponse<ConsumptionModel>(
-            Items
-                .Select(meal => {
-                    FavoriteMeal? favorite = favoritesByMealId.GetValueOrDefault(meal.Id);
-                    return meal.ToModel(
-                        isFavorite: favorite is not null,
-                        favoriteMealId: favorite?.Id.Value);
-                })
-                .ToList(),
-            sanitizedPage,
-            sanitizedLimit,
-            totalPages,
-            TotalItems);
-
-        return Result.Success(new ConsumptionOverviewModel(allConsumptions, favoriteItems, favorites.Count));
+        return Result.Success(overview);
     }
 
     private static MealQueryFilters CreateFilters(

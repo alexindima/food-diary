@@ -13,6 +13,7 @@ using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 using FoodDiary.Application.Billing.Services;
 using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Application.Common.Services;
+using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
@@ -42,6 +43,8 @@ using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.SearchSuggestions;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Services;
+using FoodDiary.Application.Abstractions.Usda.Common;
+using FoodDiary.Application.Usda.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WeeklyCheckIn.Common;
@@ -71,6 +74,7 @@ public static class DependencyInjection {
         services.AddScoped<IAuthenticationUserLookupService, AuthenticationUserLookupService>();
         services.AddScoped<IAuthenticationUserMutationService, AuthenticationUserMutationService>();
         services.AddScoped<IAuthenticationUserRegistrationService, AuthenticationUserRegistrationService>();
+        services.AddScoped<IConsumptionReadService, ConsumptionReadService>();
         services.AddScoped<IMealNutritionService, MealNutritionService>();
         services.TryAddScoped<IDashboardStatisticsReadService, MediatorDashboardStatisticsReadService>();
         services.TryAddScoped<IDashboardBodyReadService, RepositoryDashboardBodyReadService>();
@@ -114,6 +118,7 @@ public static class DependencyInjection {
         services.AddScoped<IUserContextService>(static provider => provider.GetRequiredService<UserContextService>());
         services.AddScoped<ITdeeUserProfileService, TdeeUserProfileService>();
         services.AddScoped<IWeeklyCheckInUserProfileService, WeeklyCheckInUserProfileService>();
+        services.AddScoped<IUsdaDailyMicronutrientReadService, UsdaDailyMicronutrientReadService>();
 
         return services;
     }

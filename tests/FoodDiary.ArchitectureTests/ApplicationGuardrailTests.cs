@@ -827,6 +827,37 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void DailyMicronutrientsQuery_UsesDedicatedReadServiceInsteadOfMealAggregates() {
+        string root = GetRepositoryRoot();
+        string dailyMicronutrientsQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Usda", "Queries", "GetDailyMicronutrients");
+        string[] dailyMicronutrientsQueryFiles = [.. SourceScanner.SourceFiles(dailyMicronutrientsQueriesRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, dailyMicronutrientsQueryFiles, "IMealReadRepository"),
+            .. FindReferencesInFiles(root, dailyMicronutrientsQueryFiles, "FoodDiary.Domain.Entities.Meals"),
+            .. FindReferencesInFiles(root, dailyMicronutrientsQueryFiles, "FoodDiary.Domain.Entities.Products"),
+            .. FindReferencesInFiles(root, dailyMicronutrientsQueryFiles, "GetWithItemsAndProductsAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ConsumptionQueries_UseDedicatedReadServiceInsteadOfMealRepository() {
+        string root = GetRepositoryRoot();
+        string consumptionQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Consumptions", "Queries");
+        string[] consumptionQueryFiles = [.. SourceScanner.SourceFiles(consumptionQueriesRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, consumptionQueryFiles, "IMealReadRepository"),
+            .. FindReferencesInFiles(root, consumptionQueryFiles, "FoodDiary.Domain.Entities.Meals"),
+            .. FindReferencesInFiles(root, consumptionQueryFiles, "mealRepository"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullNutritionLessonRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

@@ -1562,7 +1562,7 @@ public class ConsumptionsFeatureTests {
             new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
             MealType.Lunch);
 
-        var handler = new GetConsumptionByIdQueryHandler(new SingleMealRepository(meal));
+        var handler = new GetConsumptionByIdQueryHandler(CreateConsumptionReadService(new SingleMealRepository(meal)));
 
         Result<ConsumptionModel> result = await handler.Handle(
             new GetConsumptionByIdQuery(userId.Value, Guid.Empty),
@@ -1584,7 +1584,7 @@ public class ConsumptionsFeatureTests {
         meal.AddProduct(ProductId.New(), 150);
         meal.ApplyNutrition(new MealNutritionUpdate(350, 20, 12, 30, 4, 0, IsAutoCalculated: true));
 
-        var handler = new GetConsumptionByIdQueryHandler(new SingleMealRepository(meal));
+        var handler = new GetConsumptionByIdQueryHandler(CreateConsumptionReadService(new SingleMealRepository(meal)));
 
         Result<ConsumptionModel> result = await handler.Handle(new GetConsumptionByIdQuery(userId.Value, meal.Id.Value), CancellationToken.None);
 
@@ -1597,9 +1597,8 @@ public class ConsumptionsFeatureTests {
     [Fact]
     public async Task GetConsumptionsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetConsumptionsQueryHandler(
-            new CreatingMealRepository(),
-            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
-            new StubFavoriteMealRepository());
+            CreateConsumptionReadService(new CreatingMealRepository()),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
 
         Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
             new GetConsumptionsQuery(UserId: null, 1, 10, DateFrom: null, DateTo: null),
@@ -1613,9 +1612,8 @@ public class ConsumptionsFeatureTests {
     public async Task GetConsumptionsQueryHandler_PreservesDateRangeInstantsForRepositoryQuery() {
         var repository = new RecordingMealPageRepository();
         var handler = new GetConsumptionsQueryHandler(
-            repository,
-            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
-            new StubFavoriteMealRepository());
+            CreateConsumptionReadService(repository),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
         var userId = UserId.New();
         var from = new DateTime(2026, 4, 4, 20, 0, 0, DateTimeKind.Utc);
         var to = new DateTime(2026, 4, 5, 19, 59, 59, 999, DateTimeKind.Utc);
@@ -1637,9 +1635,8 @@ public class ConsumptionsFeatureTests {
     public async Task GetConsumptionsQueryHandler_WithEmptyOrInvalidMealTypes_PassesNullMealTypeFilter(string? mealType) {
         var repository = new RecordingMealPageRepository();
         var handler = new GetConsumptionsQueryHandler(
-            repository,
-            CreateCurrentUserAccessService(User.Create("meal-type-filter@example.com", "hash")),
-            new StubFavoriteMealRepository());
+            CreateConsumptionReadService(repository),
+            CreateCurrentUserAccessService(User.Create("meal-type-filter@example.com", "hash")));
         var userId = UserId.New();
         IReadOnlyCollection<string>? mealTypes = mealType is null ? null : [mealType];
 
@@ -1655,9 +1652,8 @@ public class ConsumptionsFeatureTests {
     public async Task GetConsumptionsQueryHandler_WithDuplicateValidMealTypes_DistinctsMealTypeFilter() {
         var repository = new RecordingMealPageRepository();
         var handler = new GetConsumptionsQueryHandler(
-            repository,
-            CreateCurrentUserAccessService(User.Create("meal-type-distinct@example.com", "hash")),
-            new StubFavoriteMealRepository());
+            CreateConsumptionReadService(repository),
+            CreateCurrentUserAccessService(User.Create("meal-type-distinct@example.com", "hash")));
         var userId = UserId.New();
 
         Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
@@ -1684,9 +1680,10 @@ public class ConsumptionsFeatureTests {
         var favorite = FavoriteMeal.Create(user.Id, dinner.Id, "Evening favorite");
         SetFavoriteMealNavigation(favorite, dinner);
         var handler = new GetConsumptionsQueryHandler(
-            new RecordingMealPageRepository([lunch, dinner], totalItems: 2),
-            CreateCurrentUserAccessService(user),
-            new StubFavoriteMealRepository([favorite]));
+            CreateConsumptionReadService(
+                new RecordingMealPageRepository([lunch, dinner], totalItems: 2),
+                new StubFavoriteMealRepository([favorite])),
+            CreateCurrentUserAccessService(user));
 
         Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
             new GetConsumptionsQuery(user.Id.Value, 1, 10, DateFrom: null, DateTo: null),
@@ -1714,9 +1711,8 @@ public class ConsumptionsFeatureTests {
 
         var repository = new RecordingMealPageRepository([breakfast, dinner], totalItems: 2);
         var handler = new GetConsumptionsOverviewQueryHandler(
-            repository,
-            CreateCurrentUserAccessService(user),
-            new StubFavoriteMealRepository([favorite]));
+            CreateConsumptionReadService(repository, new StubFavoriteMealRepository([favorite])),
+            CreateCurrentUserAccessService(user));
 
         Result<ConsumptionOverviewModel> result = await handler.Handle(
             new GetConsumptionsOverviewQuery(user.Id.Value, 1, 10, DateFrom: null, DateTo: null, 10),
@@ -1736,9 +1732,8 @@ public class ConsumptionsFeatureTests {
     public async Task GetConsumptionsOverviewQueryHandler_WithEmptyOrInvalidMealTypes_PassesNullMealTypeFilter(string? mealType) {
         var repository = new RecordingMealPageRepository();
         var handler = new GetConsumptionsOverviewQueryHandler(
-            repository,
-            CreateCurrentUserAccessService(User.Create("overview-meal-type-filter@example.com", "hash")),
-            new StubFavoriteMealRepository());
+            CreateConsumptionReadService(repository),
+            CreateCurrentUserAccessService(User.Create("overview-meal-type-filter@example.com", "hash")));
         var userId = UserId.New();
         IReadOnlyCollection<string>? mealTypes = mealType is null ? null : [mealType];
 
@@ -1754,9 +1749,8 @@ public class ConsumptionsFeatureTests {
     public async Task GetConsumptionsOverviewQueryHandler_WithDuplicateValidMealTypes_DistinctsMealTypeFilter() {
         var repository = new RecordingMealPageRepository();
         var handler = new GetConsumptionsOverviewQueryHandler(
-            repository,
-            CreateCurrentUserAccessService(User.Create("overview-meal-type-distinct@example.com", "hash")),
-            new StubFavoriteMealRepository());
+            CreateConsumptionReadService(repository),
+            CreateCurrentUserAccessService(User.Create("overview-meal-type-distinct@example.com", "hash")));
         var userId = UserId.New();
 
         Result<ConsumptionOverviewModel> result = await handler.Handle(
@@ -2255,7 +2249,7 @@ public class ConsumptionsFeatureTests {
 
     [Fact]
     public async Task GetConsumptionByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetConsumptionByIdQueryHandler(new CreatingMealRepository());
+        var handler = new GetConsumptionByIdQueryHandler(CreateConsumptionReadService(new CreatingMealRepository()));
 
         Result<ConsumptionModel> result = await handler.Handle(
             new GetConsumptionByIdQuery(UserId: null, Guid.NewGuid()),
@@ -2268,9 +2262,8 @@ public class ConsumptionsFeatureTests {
     [Fact]
     public async Task GetConsumptionsOverviewQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetConsumptionsOverviewQueryHandler(
-            new RecordingMealPageRepository(),
-            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
-            new StubFavoriteMealRepository());
+            CreateConsumptionReadService(new RecordingMealPageRepository()),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
 
         Result<ConsumptionOverviewModel> result = await handler.Handle(
             new GetConsumptionsOverviewQuery(UserId: null, 1, 10, DateFrom: null, DateTo: null, 10),
@@ -2285,9 +2278,8 @@ public class ConsumptionsFeatureTests {
         var user = User.Create("deleted-overview-consumptions@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetConsumptionsOverviewQueryHandler(
-            new RecordingMealPageRepository(),
-            CreateCurrentUserAccessService(user),
-            new StubFavoriteMealRepository());
+            CreateConsumptionReadService(new RecordingMealPageRepository()),
+            CreateCurrentUserAccessService(user));
 
         Result<ConsumptionOverviewModel> result = await handler.Handle(
             new GetConsumptionsOverviewQuery(user.Id.Value, 1, 10, DateFrom: null, DateTo: null, 10),
@@ -2711,9 +2703,8 @@ public class ConsumptionsFeatureTests {
         var user = User.Create("deleted-consumption@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetConsumptionsQueryHandler(
-            new CreatingMealRepository(),
-            CreateCurrentUserAccessService(user),
-            new StubFavoriteMealRepository());
+            CreateConsumptionReadService(new CreatingMealRepository()),
+            CreateCurrentUserAccessService(user));
 
         Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
             new GetConsumptionsQuery(user.Id.Value, 1, 10, DateFrom: null, DateTo: null),
@@ -2722,6 +2713,11 @@ public class ConsumptionsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
+
+    private static IConsumptionReadService CreateConsumptionReadService(
+        IMealReadRepository mealRepository,
+        IFavoriteMealReadRepository? favoriteMealRepository = null) =>
+        new ConsumptionReadService(mealRepository, favoriteMealRepository ?? new StubFavoriteMealRepository());
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) =>
         new StubCurrentUserAccessService(user);

@@ -1,0 +1,110 @@
+using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Usda.Common;
+using FoodDiary.Application.Abstractions.Usda.Models;
+using FoodDiary.Application.Usda.Mappings;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Usda;
+using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Application.Usda.Services;
+
+public sealed class UsdaDailyMicronutrientReadService(
+    IMealReadRepository mealRepository,
+    IUsdaFoodReadRepository usdaFoodRepository) : IUsdaDailyMicronutrientReadService {
+    public async Task<DailyMicronutrientSummaryModel> GetDailySummaryAsync(
+        UserId userId,
+        DateTime date,
+        CancellationToken cancellationToken) {
+        IReadOnlyList<Meal> meals = await mealRepository.GetWithItemsAndProductsAsync(
+            userId,
+            date,
+            cancellationToken).ConfigureAwait(false);
+
+        var productItems = meals
+            .SelectMany(static meal => meal.Items)
+            .Where(static item => item.IsProduct && item.Product is not null)
+            .ToList();
+        var linkedItems = productItems
+            .Where(static item => item.Product!.UsdaFdcId.HasValue)
+            .ToList();
+
+        int totalProductCount = productItems.Count;
+        int linkedProductCount = linkedItems.Count;
+
+        if (linkedItems.Count == 0) {
+            return new DailyMicronutrientSummaryModel(date, 0, totalProductCount, [], HealthScores: null);
+        }
+
+        var fdcIds = linkedItems
+            .Select(static item => item.Product!.UsdaFdcId!.Value)
+            .Distinct()
+            .ToList();
+
+        IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>> nutrientsByFdcId = await usdaFoodRepository.GetNutrientsByFdcIdsAsync(fdcIds, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<int, DailyReferenceValue> dailyValues = await usdaFoodRepository.GetDailyReferenceValuesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+
+        Dictionary<int, AggregatedNutrient> aggregated = AggregateNutrients(linkedItems, nutrientsByFdcId);
+        List<DailyMicronutrientModel> nutrientModels = BuildNutrientModels(aggregated, dailyValues);
+        var nutrientAmounts = aggregated.ToDictionary(static kvp => kvp.Key, static kvp => kvp.Value.Total);
+        var dvAmounts = dailyValues.ToDictionary(static kvp => kvp.Key, static kvp => kvp.Value.Value);
+        var healthScores = HealthAreaScores.Calculate(nutrientAmounts, dvAmounts);
+
+        return new DailyMicronutrientSummaryModel(
+            date,
+            linkedProductCount,
+            totalProductCount,
+            nutrientModels,
+            healthScores.ToModel());
+    }
+
+    private static Dictionary<int, AggregatedNutrient> AggregateNutrients(
+        IReadOnlyList<MealItem> linkedItems,
+        IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>> nutrientsByFdcId) {
+        var aggregated = new Dictionary<int, AggregatedNutrient>();
+        foreach (MealItem item in linkedItems) {
+            Product product = item.Product!;
+            int fdcId = product.UsdaFdcId!.Value;
+
+            if (!nutrientsByFdcId.TryGetValue(fdcId, out IReadOnlyList<UsdaFoodNutrient>? nutrients)) {
+                continue;
+            }
+
+            double scale = product.BaseAmount > 0 ? item.Amount / product.BaseAmount : 0;
+
+            foreach (UsdaFoodNutrient nutrient in nutrients) {
+                double scaledAmount = nutrient.Amount * scale;
+                if (aggregated.TryGetValue(nutrient.NutrientId, out AggregatedNutrient? existing)) {
+                    aggregated[nutrient.NutrientId] = existing with { Total = existing.Total + scaledAmount };
+                } else {
+                    aggregated[nutrient.NutrientId] = new AggregatedNutrient(nutrient.Nutrient.Name, nutrient.Nutrient.UnitName, scaledAmount);
+                }
+            }
+        }
+
+        return aggregated;
+    }
+
+    private static List<DailyMicronutrientModel> BuildNutrientModels(
+        IReadOnlyDictionary<int, AggregatedNutrient> aggregated,
+        IReadOnlyDictionary<int, DailyReferenceValue> dailyValues) {
+        return [.. aggregated
+            .Select(kvp => {
+                dailyValues.TryGetValue(kvp.Key, out DailyReferenceValue? drv);
+                double? dv = drv?.Value;
+                double? percentDv = dv is > 0 ? Math.Round(kvp.Value.Total / dv.Value * 100, 1, MidpointRounding.ToEven) : null;
+
+                return new DailyMicronutrientModel(
+                    kvp.Key,
+                    kvp.Value.Name,
+                    kvp.Value.Unit,
+                    Math.Round(kvp.Value.Total, 2, MidpointRounding.ToEven),
+                    dv,
+                    percentDv);
+            })
+            .OrderBy(static nutrient => nutrient.Name, StringComparer.Ordinal)];
+    }
+
+    private sealed record AggregatedNutrient(string Name, string Unit, double Total);
+}
