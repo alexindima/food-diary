@@ -11,7 +11,6 @@ namespace FoodDiary.Infrastructure;
 public static partial class DependencyInjection {
     private static IServiceCollection AddUserPersistence(this IServiceCollection services) {
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IUserReadRepository>(static provider => provider.GetRequiredService<IUserRepository>());
         services.AddScoped<IUserLookupRepository>(static provider => provider.GetRequiredService<IUserRepository>());
         services.AddScoped<IUserAdminReadRepository>(static provider => provider.GetRequiredService<IUserRepository>());
         services.AddScoped<IUserWriteRepository>(static provider => provider.GetRequiredService<IUserRepository>());

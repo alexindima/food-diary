@@ -288,7 +288,6 @@ public sealed class ApplicationGuardrailTests {
         string[] allowedFiles = [
             "IUserAdminReadRepository.cs",
             "IUserLookupRepository.cs",
-            "IUserReadRepository.cs",
             "IUserRepository.cs",
             "IUserWriteRepository.cs",
             "UserAccountStatusFilter.cs",

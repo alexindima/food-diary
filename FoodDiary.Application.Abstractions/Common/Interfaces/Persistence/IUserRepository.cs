@@ -1,3 +1,3 @@
 namespace FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 
-public interface IUserRepository : IUserReadRepository, IUserWriteRepository;
+public interface IUserRepository : IUserLookupRepository, IUserAdminReadRepository, IUserWriteRepository;
