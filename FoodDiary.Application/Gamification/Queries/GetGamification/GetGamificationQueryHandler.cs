@@ -1,17 +1,19 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Dashboard.Common;
+using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Application.Gamification.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Gamification.Queries.GetGamification;
 
 public sealed class GetGamificationQueryHandler(
     IMealReadRepository mealRepository,
+    IDashboardStatisticsReadService statisticsReadService,
     IGamificationUserProfileService userProfileService,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetGamificationQuery, Result<GamificationModel>> {
@@ -39,10 +41,19 @@ public sealed class GetGamificationQueryHandler(
         int totalMeals = await mealRepository.GetTotalMealCountAsync(userId, cancellationToken).ConfigureAwait(false);
 
         DateTime weekStart = today.AddDays(-6);
-        IReadOnlyList<Meal> weekMeals = await mealRepository.GetByPeriodAsync(userId, weekStart, today, cancellationToken).ConfigureAwait(false);
+        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> weeklyCaloriesResult = await statisticsReadService.GetStatisticsAsync(
+            userId,
+            weekStart,
+            today,
+            quantizationDays: 1,
+            cancellationToken).ConfigureAwait(false);
+        if (weeklyCaloriesResult.IsFailure) {
+            return Result.Failure<GamificationModel>(weeklyCaloriesResult.Error);
+        }
+
         IGamificationUserProfile userProfile = userProfileResult.Value;
         double weeklyAdherence = GamificationCalculator.CalculateWeeklyAdherence(
-            weekMeals, userProfile.GetCalorieTargetForDate, today);
+            ToDailyCalories(weeklyCaloriesResult.Value), userProfile.GetCalorieTargetForDate, today);
 
         IReadOnlyList<BadgeModel> badges = GamificationCalculator.CalculateBadges(longestStreak, totalMeals);
         int healthScore = GamificationCalculator.CalculateHealthScore(currentStreak, weeklyAdherence, totalMeals);
@@ -55,4 +66,9 @@ public sealed class GetGamificationQueryHandler(
             weeklyAdherence,
             badges));
     }
+
+    private static IReadOnlyDictionary<DateTime, double> ToDailyCalories(IReadOnlyList<DashboardStatisticsBucketReadModel> buckets) =>
+        buckets
+            .Where(static bucket => bucket.TotalCalories > 0)
+            .ToDictionary(static bucket => bucket.DateFrom.Date, static bucket => bucket.TotalCalories);
 }

@@ -769,6 +769,20 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void GamificationQueries_DoNotLoadMealAggregatesForWeeklyNutrition() {
+        string root = GetRepositoryRoot();
+        string gamificationQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Gamification", "Queries");
+        string[] gamificationQueryFiles = [.. SourceScanner.SourceFiles(gamificationQueriesRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, gamificationQueryFiles, "FoodDiary.Domain.Entities.Meals"),
+            .. FindReferencesInFiles(root, gamificationQueryFiles, "GetByPeriodAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullNutritionLessonRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

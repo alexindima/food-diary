@@ -80,6 +80,17 @@ string.Equals(b.Category, "streak", StringComparison.Ordinal) ? longestStreak >=
     public static double CalculateWeeklyAdherence(
         IReadOnlyList<Meal> weekMeals,
         Func<DateTime, double?> getCalorieTarget,
+        DateTime today) =>
+        CalculateWeeklyAdherence(
+            weekMeals
+                .GroupBy(static meal => meal.Date.Date)
+                .ToDictionary(static group => group.Key, static group => group.Sum(meal => meal.TotalCalories)),
+            getCalorieTarget,
+            today);
+
+    public static double CalculateWeeklyAdherence(
+        IReadOnlyDictionary<DateTime, double> dailyCalories,
+        Func<DateTime, double?> getCalorieTarget,
         DateTime today) {
         DateTime weekStart = today.AddDays(-6);
         int daysInRange = Math.Min(7, (int)(today - weekStart).TotalDays + 1);
@@ -94,9 +105,7 @@ string.Equals(b.Category, "streak", StringComparison.Ordinal) ? longestStreak >=
             }
 
             daysWithGoal++;
-            double dayCalories = weekMeals
-                .Where(m => m.Date.Date == date)
-                .Sum(m => m.TotalCalories);
+            double dayCalories = dailyCalories.GetValueOrDefault(date);
 
             if (!(dayCalories > 0)) {
                 continue;
@@ -112,6 +121,6 @@ string.Equals(b.Category, "streak", StringComparison.Ordinal) ? longestStreak >=
             return (double)metDays / daysWithGoal;
         }
 
-        return weekMeals.Count > 0 ? 1.0 : 0.0;
+        return dailyCalories.Count > 0 ? 1.0 : 0.0;
     }
 }

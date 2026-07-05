@@ -1,8 +1,9 @@
 using FoodDiary.Application.Gamification.Queries.GetGamification;
 using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Services;
+using FoodDiary.Application.Abstractions.Dashboard.Common;
+using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
@@ -18,7 +19,7 @@ public class GamificationFeatureTests {
     [Fact]
     public async Task GetGamification_WithNullUserId_ReturnsFailure() {
         var handler = new GetGamificationQueryHandler(
-            CreateMealRepository(), CreateUserProfileService(user: null), new StubDateTimeProvider());
+            CreateMealRepository(), CreateStatisticsReadService(), CreateUserProfileService(user: null), new StubDateTimeProvider());
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(UserId: null), CancellationToken.None);
@@ -29,7 +30,7 @@ public class GamificationFeatureTests {
     [Fact]
     public async Task GetGamification_WhenUserNotFound_ReturnsFailure() {
         var handler = new GetGamificationQueryHandler(
-            CreateMealRepository(), CreateUserProfileService(user: null), new StubDateTimeProvider());
+            CreateMealRepository(), CreateStatisticsReadService(), CreateUserProfileService(user: null), new StubDateTimeProvider());
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(Guid.NewGuid()), CancellationToken.None);
@@ -45,7 +46,7 @@ public class GamificationFeatureTests {
 
         IMealRepository mealRepo = CreateMealRepository([Today, Today.AddDays(-1), Today.AddDays(-2)], totalMealCount: 15);
 
-        var handler = new GetGamificationQueryHandler(mealRepo, CreateUserProfileService(user), new StubDateTimeProvider());
+        var handler = new GetGamificationQueryHandler(mealRepo, CreateStatisticsReadService(), CreateUserProfileService(user), new StubDateTimeProvider());
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(userId.Value), CancellationToken.None);
@@ -62,7 +63,7 @@ public class GamificationFeatureTests {
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
 
         var handler = new GetGamificationQueryHandler(
-            CreateMealRepository(), CreateUserProfileService(user), new StubDateTimeProvider());
+            CreateMealRepository(), CreateStatisticsReadService(), CreateUserProfileService(user), new StubDateTimeProvider());
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(userId.Value), CancellationToken.None);
@@ -105,10 +106,16 @@ public class GamificationFeatureTests {
         repository
             .GetTotalMealCountAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(totalMealCount));
-        repository
-            .GetByPeriodAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<IReadOnlyList<Meal>>([]));
         return repository;
+    }
+
+    private static IDashboardStatisticsReadService CreateStatisticsReadService(
+        IReadOnlyList<DashboardStatisticsBucketReadModel>? buckets = null) {
+        IDashboardStatisticsReadService service = Substitute.For<IDashboardStatisticsReadService>();
+        service
+            .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>(buckets ?? [])));
+        return service;
     }
 
     private static IUserContextService CreateUserContextService(User? user) {
