@@ -247,6 +247,15 @@ public class FavoriteMealsFeatureTests {
             .GetByMealIdAsync(Arg.Any<MealId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(existingByMealId));
         repository
+            .ExistsByMealIdAsync(Arg.Any<MealId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                MealId mealId = call.Arg<MealId>();
+                UserId userId = call.Arg<UserId>();
+                return Task.FromResult(existingByMealId is not null &&
+                    existingByMealId.MealId == mealId &&
+                    existingByMealId.UserId == userId);
+            });
+        repository
             .GetByIdAsync(Arg.Any<FavoriteMealId>(), Arg.Any<UserId>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(existingById));
         repository

@@ -915,6 +915,26 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void FavoriteStatusQueries_UseExistenceReadsInsteadOfFavoriteAggregates() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] favoriteStatusQueryFiles = [
+            Path.Combine(applicationRoot, "FavoriteMeals", "Queries", "IsMealFavorite", "IsMealFavoriteQueryHandler.cs"),
+            Path.Combine(applicationRoot, "FavoriteProducts", "Queries", "IsProductFavorite", "IsProductFavoriteQueryHandler.cs"),
+            Path.Combine(applicationRoot, "FavoriteRecipes", "Queries", "IsRecipeFavorite", "IsRecipeFavoriteQueryHandler.cs"),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, favoriteStatusQueryFiles, "FoodDiary.Domain.Entities.Favorite"),
+            .. FindReferencesInFiles(root, favoriteStatusQueryFiles, "GetByMealIdAsync"),
+            .. FindReferencesInFiles(root, favoriteStatusQueryFiles, "GetByProductIdAsync"),
+            .. FindReferencesInFiles(root, favoriteStatusQueryFiles, "GetByRecipeIdAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullNutritionLessonRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

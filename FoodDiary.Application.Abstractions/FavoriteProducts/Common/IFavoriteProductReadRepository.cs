@@ -15,6 +15,12 @@ public interface IFavoriteProductReadRepository {
         UserId userId,
         CancellationToken cancellationToken = default);
 
+    async Task<bool> ExistsByProductIdAsync(
+        ProductId productId,
+        UserId userId,
+        CancellationToken cancellationToken = default) =>
+        await GetByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false) is not null;
+
     Task<IReadOnlyList<FavoriteProduct>> GetAllAsync(
         UserId userId,
         CancellationToken cancellationToken = default);

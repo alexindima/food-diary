@@ -15,6 +15,12 @@ public interface IFavoriteRecipeReadRepository {
         UserId userId,
         CancellationToken cancellationToken = default);
 
+    async Task<bool> ExistsByRecipeIdAsync(
+        RecipeId recipeId,
+        UserId userId,
+        CancellationToken cancellationToken = default) =>
+        await GetByRecipeIdAsync(recipeId, userId, cancellationToken).ConfigureAwait(false) is not null;
+
     Task<IReadOnlyList<FavoriteRecipe>> GetAllAsync(
         UserId userId,
         CancellationToken cancellationToken = default);

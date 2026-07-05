@@ -4,7 +4,6 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.FavoriteProducts;
 
 namespace FoodDiary.Application.FavoriteProducts.Queries.IsProductFavorite;
 
@@ -27,7 +26,7 @@ public sealed class IsProductFavoriteQueryHandler(
         }
 
         var productId = new ProductId(query.ProductId);
-        FavoriteProduct? favorite = await favoriteProductRepository.GetByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false);
-        return Result.Success(favorite is not null);
+        bool isFavorite = await favoriteProductRepository.ExistsByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false);
+        return Result.Success(isFavorite);
     }
 }

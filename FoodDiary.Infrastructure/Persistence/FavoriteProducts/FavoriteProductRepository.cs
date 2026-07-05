@@ -47,6 +47,17 @@ public sealed class FavoriteProductRepository(FoodDiaryDbContext context) : IFav
                 cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<bool> ExistsByProductIdAsync(
+        ProductId productId,
+        UserId userId,
+        CancellationToken cancellationToken = default) {
+        return await context.FavoriteProducts
+            .AsNoTracking()
+            .AnyAsync(
+                f => f.ProductId == productId && f.UserId == userId,
+                cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<IReadOnlyList<FavoriteProduct>> GetAllAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {

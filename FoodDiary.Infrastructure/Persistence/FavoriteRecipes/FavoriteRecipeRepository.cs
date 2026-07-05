@@ -48,6 +48,17 @@ public sealed class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavo
                 cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<bool> ExistsByRecipeIdAsync(
+        RecipeId recipeId,
+        UserId userId,
+        CancellationToken cancellationToken = default) {
+        return await context.FavoriteRecipes
+            .AsNoTracking()
+            .AnyAsync(
+                f => f.RecipeId == recipeId && f.UserId == userId,
+                cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<IReadOnlyList<FavoriteRecipe>> GetAllAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {

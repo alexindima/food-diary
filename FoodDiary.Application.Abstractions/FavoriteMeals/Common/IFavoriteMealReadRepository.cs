@@ -15,6 +15,12 @@ public interface IFavoriteMealReadRepository {
         UserId userId,
         CancellationToken cancellationToken = default);
 
+    async Task<bool> ExistsByMealIdAsync(
+        MealId mealId,
+        UserId userId,
+        CancellationToken cancellationToken = default) =>
+        await GetByMealIdAsync(mealId, userId, cancellationToken).ConfigureAwait(false) is not null;
+
     Task<IReadOnlyDictionary<MealId, FavoriteMeal>> GetByMealIdsAsync(
         UserId userId,
         IReadOnlyCollection<MealId> mealIds,

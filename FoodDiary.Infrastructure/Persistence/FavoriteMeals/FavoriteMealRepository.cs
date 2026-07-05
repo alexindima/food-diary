@@ -46,6 +46,17 @@ public sealed class FavoriteMealRepository(FoodDiaryDbContext context) : IFavori
                 cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<bool> ExistsByMealIdAsync(
+        MealId mealId,
+        UserId userId,
+        CancellationToken cancellationToken = default) {
+        return await context.FavoriteMeals
+            .AsNoTracking()
+            .AnyAsync(
+                f => f.MealId == mealId && f.UserId == userId,
+                cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<IReadOnlyDictionary<MealId, FavoriteMeal>> GetByMealIdsAsync(
         UserId userId,
         IReadOnlyCollection<MealId> mealIds,
