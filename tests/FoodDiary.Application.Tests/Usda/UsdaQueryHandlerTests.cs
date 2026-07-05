@@ -28,7 +28,7 @@ public sealed class UsdaQueryHandlerTests {
                 new UsdaFoodModel(2, "Branded chicken", "Branded"),
             ],
             getLastLimit: out Func<int> getLastLimit);
-        var handler = new SearchUsdaFoodsQueryHandler(repository, branded);
+        var handler = new SearchUsdaFoodsQueryHandler(new UsdaFoodReadService(repository, branded));
 
         Result<IReadOnlyList<UsdaFoodModel>> result = await handler.Handle(new SearchUsdaFoodsQuery("chicken", Limit: 3), CancellationToken.None);
 
@@ -45,7 +45,7 @@ public sealed class UsdaQueryHandlerTests {
                 new UsdaFood { FdcId = 2, Description = "Chicken thigh" },
             ]);
         IUsdaFoodSearchService branded = CreateUsdaFoodSearchService(searchCalled: out Func<bool> wasSearchCalled);
-        var handler = new SearchUsdaFoodsQueryHandler(repository, branded);
+        var handler = new SearchUsdaFoodsQueryHandler(new UsdaFoodReadService(repository, branded));
 
         Result<IReadOnlyList<UsdaFoodModel>> result = await handler.Handle(new SearchUsdaFoodsQuery("chicken", Limit: 2), CancellationToken.None);
 
@@ -75,7 +75,7 @@ public sealed class UsdaQueryHandlerTests {
             dailyValues: new Dictionary<int, DailyReferenceValue> {
                 [301] = new() { NutrientId = 301, Value = 1000, Unit = "mg", AgeGroup = "adult", Gender = "all" },
             });
-        var handler = new GetMicronutrientsQueryHandler(repository, CreateUsdaFoodSearchService());
+        var handler = new GetMicronutrientsQueryHandler(new UsdaFoodReadService(repository, CreateUsdaFoodSearchService()));
 
         Result<UsdaFoodDetailModel> result = await handler.Handle(new GetMicronutrientsQuery(10), CancellationToken.None);
 
@@ -103,7 +103,7 @@ public sealed class UsdaQueryHandlerTests {
                 [new MicronutrientModel(203, "Protein", "g", 10, DailyValue: null, PercentDailyValue: null)],
                 [],
                 HealthScores: null));
-        var handler = new GetMicronutrientsQueryHandler(repository, branded);
+        var handler = new GetMicronutrientsQueryHandler(new UsdaFoodReadService(repository, branded));
 
         Result<UsdaFoodDetailModel> result = await handler.Handle(new GetMicronutrientsQuery(20), CancellationToken.None);
 
@@ -114,9 +114,9 @@ public sealed class UsdaQueryHandlerTests {
 
     [Fact]
     public async Task GetMicronutrients_WhenFoodMissingEverywhere_ReturnsNotFound() {
-        var handler = new GetMicronutrientsQueryHandler(
+        var handler = new GetMicronutrientsQueryHandler(new UsdaFoodReadService(
             CreateUsdaFoodRepository(),
-            CreateUsdaFoodSearchService());
+            CreateUsdaFoodSearchService()));
 
         Result<UsdaFoodDetailModel> result = await handler.Handle(new GetMicronutrientsQuery(999), CancellationToken.None);
 

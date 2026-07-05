@@ -71,6 +71,7 @@ using FoodDiary.Application.ShoppingLists.Services;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Services;
 using FoodDiary.Application.Abstractions.Usda.Common;
+using FoodDiary.Application.Usda.Common;
 using FoodDiary.Application.Usda.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Common;
@@ -186,6 +187,7 @@ public static class DependencyInjection {
         services.AddScoped<IWeeklyCheckInUserProfileService, WeeklyCheckInUserProfileService>();
         services.AddScoped<IWeeklyCheckInReadService, WeeklyCheckInReadService>();
         services.AddScoped<IUsdaDailyMicronutrientReadService, UsdaDailyMicronutrientReadService>();
+        services.AddScoped<IUsdaFoodReadService, UsdaFoodReadService>();
 
         return services;
     }

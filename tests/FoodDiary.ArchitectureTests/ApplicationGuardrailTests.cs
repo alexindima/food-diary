@@ -872,6 +872,24 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void UsdaFoodQueries_UseDedicatedReadServiceInsteadOfFoodRepository() {
+        string root = GetRepositoryRoot();
+        string usdaQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Usda", "Queries");
+        string[] usdaFoodQueryFiles = [
+            .. SourceScanner.SourceFiles(Path.Combine(usdaQueriesRoot, "SearchUsdaFoods")),
+            .. SourceScanner.SourceFiles(Path.Combine(usdaQueriesRoot, "GetMicronutrients")),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, usdaFoodQueryFiles, "IUsdaFoodReadRepository"),
+            .. FindReferencesInFiles(root, usdaFoodQueryFiles, "FoodDiary.Domain.Entities.Usda"),
+            .. FindReferencesInFiles(root, usdaFoodQueryFiles, "FoodDiary.Domain.ValueObjects"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ConsumptionQueries_UseDedicatedReadServiceInsteadOfMealRepository() {
         string root = GetRepositoryRoot();
         string consumptionQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Consumptions", "Queries");
