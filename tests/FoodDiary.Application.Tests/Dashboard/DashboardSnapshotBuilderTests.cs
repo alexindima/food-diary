@@ -3,13 +3,14 @@ using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Abstractions.Exercises.Common;
-using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
+using FoodDiary.Application.Fasting.Common;
+using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Application.Statistics.Queries.GetStatistics;
 using FoodDiary.Application.WaistEntries.Models;
@@ -17,9 +18,7 @@ using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
@@ -39,7 +38,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
             new StubHydrationEntryRepository(),
-            new StubFastingOccurrenceRepository(),
+            new StubFastingReadService(),
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
@@ -68,7 +67,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
             new StubHydrationEntryRepository(),
-            new StubFastingOccurrenceRepository(),
+            new StubFastingReadService(),
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
@@ -97,7 +96,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
             new StubHydrationEntryRepository(),
-            new StubFastingOccurrenceRepository(),
+            new StubFastingReadService(),
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
@@ -126,7 +125,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
             new StubHydrationEntryRepository(),
-            new StubFastingOccurrenceRepository(),
+            new StubFastingReadService(),
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
@@ -181,7 +180,7 @@ public sealed class DashboardSnapshotBuilderTests {
             weightRepository,
             waistRepository,
             new StubHydrationEntryRepository(),
-            new StubFastingOccurrenceRepository(),
+            new StubFastingReadService(),
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
@@ -227,7 +226,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
             new StubHydrationEntryRepository(),
-            new StubFastingOccurrenceRepository(),
+            new StubFastingReadService(),
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
@@ -360,7 +359,7 @@ public sealed class DashboardSnapshotBuilderTests {
             TrendDays: 7,
             TrendStart: date.AddDays(-6),
             Sections(includeStatistics: true),
-            user);
+            CreateDashboardUserContext(user));
         MethodInfo method = typeof(DashboardSnapshotBuilder).GetMethod(
             name: "BuildStatistics",
             BindingFlags.NonPublic | BindingFlags.Static,
@@ -386,7 +385,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
             hydrationEntryRepository ?? new StubHydrationEntryRepository(),
-            new StubFastingOccurrenceRepository(),
+            new StubFastingReadService(),
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
@@ -421,6 +420,31 @@ public sealed class DashboardSnapshotBuilderTests {
             IncludeExercise: false,
             IncludeTdee: false,
             IncludeCycle: false);
+
+    private static DashboardUserContextModel CreateDashboardUserContext(User user) =>
+        new(
+            user.Id.Value,
+            user.Email,
+            user.Language,
+            user.DashboardLayoutJson,
+            user.DesiredWeight,
+            user.DesiredWaist,
+            user.HydrationGoal,
+            user.WaterGoal,
+            user.ProteinTarget,
+            user.FatTarget,
+            user.CarbTarget,
+            user.FiberTarget,
+            new UserCalorieSchedule(
+                user.DailyCalorieTarget,
+                user.CalorieCyclingEnabled,
+                user.MondayCalories,
+                user.TuesdayCalories,
+                user.WednesdayCalories,
+                user.ThursdayCalories,
+                user.FridayCalories,
+                user.SaturdayCalories,
+                user.SundayCalories));
 
     [ExcludeFromCodeCoverage]
     private sealed class ConfigurableDashboardSender : ISender {
@@ -684,28 +708,15 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubFastingOccurrenceRepository : IFastingOccurrenceRepository {
-        public Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => Task.FromResult<FastingOccurrence?>(null);
-        public Task<FastingOccurrence?> GetByIdAsync(FastingOccurrenceId id, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<FastingOccurrence>> GetActiveAsync(CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<FastingOccurrence>>([]);
-        public Task<IReadOnlyList<FastingOccurrence>> GetByPlanAsync(FastingPlanId planId, bool includeCompleted = true, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<FastingOccurrence>> GetByUserAsync(
-            UserId userId,
-            DateTime? from = null,
-            DateTime? to = null,
-            FastingOccurrenceStatus? status = null,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)> GetPagedByUserAsync(
-            UserId userId,
-            int page,
-            int limit,
-            DateTime? from = null,
-            DateTime? to = null,
-            FastingOccurrenceStatus? status = null,
-            CancellationToken cancellationToken = default)
-            => Task.FromResult<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)>(([], 0));
-        public Task AddAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private sealed class StubFastingReadService : IFastingReadService {
+        public Task<FastingSessionModel?> GetCurrentAsync(UserId userId, CancellationToken cancellationToken) =>
+            Task.FromResult<FastingSessionModel?>(null);
+
+        public Task<FastingInsightsModel> GetInsightsAsync(UserId userId, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<FastingOverviewModel> GetOverviewAsync(UserId userId, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]

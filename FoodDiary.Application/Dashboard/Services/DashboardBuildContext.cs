@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dashboard.Services;
@@ -15,4 +15,4 @@ internal sealed record DashboardBuildContext(
     int TrendDays,
     DateTime TrendStart,
     DashboardSnapshotSections Sections,
-    User CurrentUser);
+    DashboardUserContextModel CurrentUser);

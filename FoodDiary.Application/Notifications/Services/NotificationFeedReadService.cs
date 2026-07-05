@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Mappings;
 using FoodDiary.Application.Notifications.Models;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Services;
@@ -14,11 +14,11 @@ internal sealed class NotificationFeedReadService(
         UserId userId,
         NotificationUserContext context,
         CancellationToken cancellationToken) {
-        IReadOnlyList<Notification> notifications = await notificationRepository
-            .GetByUserAsync(userId, cancellationToken: cancellationToken)
+        IReadOnlyList<NotificationReadModel> notifications = await notificationRepository
+            .GetByUserReadModelsAsync(userId, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        IEnumerable<Notification> visibleNotifications = context.HasPassword
+        IEnumerable<NotificationReadModel> visibleNotifications = context.HasPassword
             ? notifications.Where(notification => !string.Equals(notification.Type, NotificationTypes.PasswordSetupSuggested, StringComparison.Ordinal))
             : notifications;
 

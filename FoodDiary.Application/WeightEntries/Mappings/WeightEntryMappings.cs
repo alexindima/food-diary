@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Domain.Entities.Tracking;
 
@@ -8,6 +9,13 @@ public static class WeightEntryMappings {
         new(
             entry.Id.Value,
             entry.UserId.Value,
+            entry.Date,
+            entry.Weight);
+
+    public static WeightEntryModel ToModel(this WeightEntryReadModel entry) =>
+        new(
+            entry.Id,
+            entry.UserId,
             entry.Date,
             entry.Weight);
 }

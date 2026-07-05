@@ -110,7 +110,7 @@ public sealed class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEnt
         }
 
         return await query
-            .Select(entry => new WaistEntryReadModel(entry.Date, entry.Circumference))
+            .Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Circumference))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -143,7 +143,7 @@ public sealed class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEnt
             .Where(entry => entry.UserId == userId && entry.Date >= from && entry.Date <= to)
             .OrderBy(entry => entry.Date)
             .ThenBy(entry => entry.CreatedOnUtc)
-            .Select(entry => new WaistEntryReadModel(entry.Date, entry.Circumference))
+            .Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Circumference))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 }

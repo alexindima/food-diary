@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.Entities.Tracking;
 
@@ -8,6 +9,13 @@ public static class WaistEntryMappings {
         new(
             entry.Id.Value,
             entry.UserId.Value,
+            entry.Date,
+            entry.Circumference);
+
+    public static WaistEntryModel ToModel(this WaistEntryReadModel entry) =>
+        new(
+            entry.Id,
+            entry.UserId,
             entry.Date,
             entry.Circumference);
 }

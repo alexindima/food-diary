@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Mappings;
 using FoodDiary.Application.WeightEntries.Models;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Services;
@@ -15,7 +15,7 @@ internal sealed class WeightEntryReadService(IWeightEntryReadRepository weightEn
         int? limit,
         bool descending,
         CancellationToken cancellationToken) {
-        IReadOnlyList<WeightEntry> entries = await weightEntryRepository.GetEntriesAsync(
+        IReadOnlyList<WeightEntryReadModel> entries = await weightEntryRepository.GetEntryReadModelsAsync(
             userId,
             dateFrom,
             dateTo,
@@ -44,7 +44,7 @@ internal sealed class WeightEntryReadService(IWeightEntryReadRepository weightEn
         DateTime dateTo,
         int quantizationDays,
         CancellationToken cancellationToken) {
-        IReadOnlyList<WeightEntry> entries = await weightEntryRepository.GetByPeriodAsync(
+        IReadOnlyList<WeightEntryReadModel> entries = await weightEntryRepository.GetByPeriodReadModelsAsync(
             userId,
             dateFrom,
             dateTo,
@@ -71,8 +71,8 @@ internal sealed class WeightEntryReadService(IWeightEntryReadRepository weightEn
     private static WeightEntrySummaryModel BuildResponse(
         DateTime start,
         DateTime end,
-        IReadOnlyList<WeightEntry> entries) {
-        List<WeightEntry> bucketEntries = [.. entries.Where(entry => entry.Date >= start && entry.Date <= end)];
+        IReadOnlyList<WeightEntryReadModel> entries) {
+        List<WeightEntryReadModel> bucketEntries = [.. entries.Where(entry => entry.Date >= start && entry.Date <= end)];
 
         if (bucketEntries.Count == 0) {
             return new WeightEntrySummaryModel(start, end, 0);

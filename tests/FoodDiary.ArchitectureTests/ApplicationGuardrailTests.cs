@@ -1193,6 +1193,25 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void NotificationFeedReadService_UsesReadModelsInsteadOfNotificationAggregates() {
+        string root = GetRepositoryRoot();
+        string servicePath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Notifications",
+            "Services",
+            "NotificationFeedReadService.cs");
+        string[] serviceFiles = [servicePath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Notifications"),
+            .. FindReferencesInFiles(root, serviceFiles, "GetByUserAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void WearableQueries_UseReadServicesInsteadOfWearableAggregates() {
         string root = GetRepositoryRoot();
         string wearableQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Wearables", "Queries");
@@ -1246,6 +1265,49 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Tracking"),
             .. FindReferencesInFiles(root, serviceFiles, "GetEntriesAsync"),
             .. FindReferencesInFiles(root, serviceFiles, "GetByPeriodAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void TrackingEntryReadServices_UseReadModelsInsteadOfTrackingAggregates() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] serviceFiles = [
+            Path.Combine(applicationRoot, "WeightEntries", "Services", "WeightEntryReadService.cs"),
+            Path.Combine(applicationRoot, "WaistEntries", "Services", "WaistEntryReadService.cs"),
+            Path.Combine(applicationRoot, "Hydration", "Services", "HydrationEntryReadService.cs"),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Tracking"),
+            .. FindReferencesInFiles(root, serviceFiles, "GetByPeriodAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "GetByDateAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void DashboardSnapshotServices_UseReadModelsInsteadOfDashboardAggregates() {
+        string root = GetRepositoryRoot();
+        string dashboardServicesRoot = Path.Combine(root, "FoodDiary.Application", "Dashboard", "Services");
+        string[] serviceFiles = [
+            Path.Combine(dashboardServicesRoot, "DashboardSnapshotBuilder.cs"),
+            Path.Combine(dashboardServicesRoot, "DashboardSectionDataLoader.cs"),
+            Path.Combine(dashboardServicesRoot, "IDashboardSectionDataLoader.cs"),
+            Path.Combine(dashboardServicesRoot, "DashboardBuildContext.cs"),
+            Path.Combine(dashboardServicesRoot, "DashboardMapping.cs"),
+            Path.Combine(dashboardServicesRoot, "DashboardBodyMapper.cs"),
+            Path.Combine(dashboardServicesRoot, "DashboardStatisticsMapper.cs"),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Tracking"),
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Users"),
+            .. FindReferencesInFiles(root, serviceFiles, "FastingOccurrence"),
+            .. FindReferencesInFiles(root, serviceFiles, "IFastingOccurrenceReadRepository"),
         ];
 
         Assert.Empty(violations);

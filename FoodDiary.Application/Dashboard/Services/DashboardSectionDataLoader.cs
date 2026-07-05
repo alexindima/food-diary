@@ -2,17 +2,17 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Exercises.Common;
-using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
+using FoodDiary.Application.Dashboard.Models;
+using FoodDiary.Application.Fasting.Common;
+using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 using FoodDiary.Application.Dashboard.Common;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 
@@ -21,7 +21,7 @@ namespace FoodDiary.Application.Dashboard.Services;
 internal sealed class DashboardSectionDataLoader(
     ISender sender,
     IDashboardUserContextService dashboardUserContextService,
-    IFastingOccurrenceReadRepository fastingOccurrenceRepository,
+    IFastingReadService fastingReadService,
     IExerciseEntryReadRepository exerciseEntryRepository,
     IDashboardReadService dashboardReadService) : IDashboardSectionDataLoader {
     private const int DefaultPage = 1;
@@ -46,7 +46,7 @@ internal sealed class DashboardSectionDataLoader(
         }
 
         var userId = new UserId(request.UserId);
-        Result<User> userResult = await dashboardUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<DashboardUserContextModel> userResult = await dashboardUserContextService.GetAccessibleDashboardUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure<DashboardBuildContext>(userResult.Error);
         }
@@ -94,12 +94,12 @@ internal sealed class DashboardSectionDataLoader(
             : null;
     }
 
-    public Task<FastingOccurrence?> LoadFastingAsync(
+    public Task<FastingSessionModel?> LoadFastingAsync(
         DashboardBuildContext context,
         CancellationToken cancellationToken) =>
         context.Sections.IncludeFasting
-            ? fastingOccurrenceRepository.GetCurrentAsync(context.UserId, cancellationToken: cancellationToken)
-            : Task.FromResult<FastingOccurrence?>(null);
+            ? fastingReadService.GetCurrentAsync(context.UserId, cancellationToken)
+            : Task.FromResult<FastingSessionModel?>(null);
 
     public Task<double> LoadCaloriesBurnedAsync(
         DashboardBuildContext context,

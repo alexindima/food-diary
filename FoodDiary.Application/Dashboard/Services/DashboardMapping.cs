@@ -3,16 +3,14 @@ using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WeightEntries.Models;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Dashboard.Services;
 
 public static class DashboardMapping {
-    public static DashboardStatisticsModel ToStatisticsModel(DashboardStatisticsBucketReadModel? response, User? user) =>
+    public static DashboardStatisticsModel ToStatisticsModel(DashboardStatisticsBucketReadModel? response, DashboardUserContextModel? user) =>
         DashboardStatisticsMapper.ToModel(response, user);
 
-    public static DashboardStatisticsModel ToStatisticsModel(AggregatedStatisticsModel? response, User? user) =>
+    public static DashboardStatisticsModel ToStatisticsModel(AggregatedStatisticsModel? response, DashboardUserContextModel? user) =>
         DashboardStatisticsMapper.ToModel(response, user);
 
     public static IReadOnlyList<DailyCaloriesModel> ToWeeklyCalories(IReadOnlyList<AggregatedStatisticsModel> responses) =>
@@ -21,14 +19,8 @@ public static class DashboardMapping {
     public static IReadOnlyList<DailyCaloriesModel> ToWeeklyCalories(IReadOnlyList<DashboardStatisticsBucketReadModel> responses) =>
         DashboardStatisticsMapper.ToWeeklyCalories(responses);
 
-    public static DashboardWeightModel ToWeightModel(IReadOnlyList<WeightEntry> entries, double? desired) =>
-        DashboardBodyMapper.ToWeightModel(entries, desired);
-
     public static DashboardWeightModel ToWeightModel(IReadOnlyList<DashboardWeightPointReadModel> entries, double? desired) =>
         DashboardBodyMapper.ToWeightModel(entries, desired);
-
-    public static DashboardWaistModel ToWaistModel(IReadOnlyList<WaistEntry> entries, double? desired) =>
-        DashboardBodyMapper.ToWaistModel(entries, desired);
 
     public static DashboardWaistModel ToWaistModel(IReadOnlyList<DashboardWaistPointReadModel> entries, double? desired) =>
         DashboardBodyMapper.ToWaistModel(entries, desired);

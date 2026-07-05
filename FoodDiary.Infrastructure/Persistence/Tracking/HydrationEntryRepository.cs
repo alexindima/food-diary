@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Application.Abstractions.Hydration.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,21 @@ public sealed class HydrationEntryRepository(FoodDiaryDbContext context) : IHydr
             .AsNoTracking()
             .Where(x => x.UserId == userId && x.Timestamp >= dayStart && x.Timestamp < dayEnd)
             .OrderBy(x => x.Timestamp)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<HydrationEntryReadModel>> GetByDateReadModelsAsync(
+        UserId userId,
+        DateTime dateUtc,
+        CancellationToken cancellationToken = default) {
+        DateTime dayStart = dateUtc.Date;
+        DateTime dayEnd = dayStart.AddDays(1);
+
+        return await context.HydrationEntries
+            .AsNoTracking()
+            .Where(x => x.UserId == userId && x.Timestamp >= dayStart && x.Timestamp < dayEnd)
+            .OrderBy(x => x.Timestamp)
+            .Select(x => new HydrationEntryReadModel(x.Id.Value, x.Timestamp, x.AmountMl))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

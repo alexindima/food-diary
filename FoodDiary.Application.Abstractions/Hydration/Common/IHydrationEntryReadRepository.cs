@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Hydration.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -13,6 +14,14 @@ public interface IHydrationEntryReadRepository {
         UserId userId,
         DateTime dateUtc,
         CancellationToken cancellationToken = default);
+
+    async Task<IReadOnlyList<HydrationEntryReadModel>> GetByDateReadModelsAsync(
+        UserId userId,
+        DateTime dateUtc,
+        CancellationToken cancellationToken = default) {
+        IReadOnlyList<HydrationEntry> entries = await GetByDateAsync(userId, dateUtc, cancellationToken).ConfigureAwait(false);
+        return [.. entries.Select(static entry => new HydrationEntryReadModel(entry.Id.Value, entry.Timestamp, entry.AmountMl))];
+    }
 
     Task<int> GetDailyTotalAsync(
         UserId userId,

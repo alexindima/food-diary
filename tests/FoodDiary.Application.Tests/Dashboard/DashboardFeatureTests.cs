@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Consumptions.Models;
@@ -15,8 +16,8 @@ using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Statistics.Models;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -103,7 +104,7 @@ public class DashboardFeatureTests {
             200,
             28);
 
-        DashboardStatisticsModel dto = DashboardMapping.ToStatisticsModel(response, user);
+        DashboardStatisticsModel dto = DashboardMapping.ToStatisticsModel(response, CreateDashboardUserContext(user));
 
         Assert.Equal(1900, dto.TotalCalories);
         Assert.Equal(110, dto.AverageProteins);
@@ -135,9 +136,9 @@ public class DashboardFeatureTests {
         var userId = UserId.New();
         var latestDate = new DateTime(2026, 2, 20, 0, 0, 0, DateTimeKind.Utc);
         DateTime previousDate = latestDate.AddDays(-1);
-        var entries = new List<WeightEntry> {
-            WeightEntry.Create(userId, latestDate, 82.5),
-            WeightEntry.Create(userId, previousDate, 83),
+        var entries = new List<DashboardWeightPointReadModel> {
+            new(latestDate, 82.5),
+            new(previousDate, 83),
         };
 
         DashboardWeightModel dto = DashboardMapping.ToWeightModel(entries, desired: 80);
@@ -151,7 +152,7 @@ public class DashboardFeatureTests {
 
     [Fact]
     public void DashboardMapping_ToWeightModel_WithNoEntries_ReturnsEmptyPoints() {
-        DashboardWeightModel dto = DashboardMapping.ToWeightModel(Array.Empty<WeightEntry>(), desired: null);
+        DashboardWeightModel dto = DashboardMapping.ToWeightModel(Array.Empty<DashboardWeightPointReadModel>(), desired: null);
 
         Assert.Null(dto.Latest);
         Assert.Null(dto.Previous);
@@ -164,18 +165,18 @@ public class DashboardFeatureTests {
         DateTime dayStart = new(2026, 4, 5, 0, 0, 0, DateTimeKind.Utc);
         DateTime trendStart = dayStart.AddDays(-4);
         IWeightEntryRepository weightRepository = Substitute.For<IWeightEntryRepository>();
-        weightRepository.GetEntriesAsync(
+        weightRepository.GetEntryReadModelsAsync(
                 userId,
                 Arg.Any<DateTime?>(),
                 dayStart,
                 limit: 2,
                 descending: true,
                 cancellationToken: Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<IReadOnlyList<WeightEntry>>([]));
-        weightRepository.GetByPeriodAsync(userId, trendStart, dayStart, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<IReadOnlyList<WeightEntry>>([
-                WeightEntry.Create(userId, trendStart, 80),
-                WeightEntry.Create(userId, dayStart, 82),
+            .Returns(Task.FromResult<IReadOnlyList<WeightEntryReadModel>>([]));
+        weightRepository.GetByPeriodReadModelsAsync(userId, trendStart, dayStart, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<WeightEntryReadModel>>([
+                new(Guid.NewGuid(), userId.Value, trendStart, 80),
+                new(Guid.NewGuid(), userId.Value, dayStart, 82),
             ]));
         RepositoryDashboardBodyReadService service = new(
             weightRepository,
@@ -202,9 +203,9 @@ public class DashboardFeatureTests {
         var userId = UserId.New();
         var latestDate = new DateTime(2026, 2, 20, 0, 0, 0, DateTimeKind.Utc);
         DateTime previousDate = latestDate.AddDays(-1);
-        var entries = new List<WaistEntry> {
-            WaistEntry.Create(userId, latestDate, 92.1),
-            WaistEntry.Create(userId, previousDate, 92.8),
+        var entries = new List<DashboardWaistPointReadModel> {
+            new(latestDate, 92.1),
+            new(previousDate, 92.8),
         };
 
         DashboardWaistModel dto = DashboardMapping.ToWaistModel(entries, desired: 90);
@@ -218,7 +219,7 @@ public class DashboardFeatureTests {
 
     [Fact]
     public void DashboardMapping_ToWaistModel_WithNoEntries_ReturnsEmptyPoints() {
-        DashboardWaistModel dto = DashboardMapping.ToWaistModel(Array.Empty<WaistEntry>(), desired: null);
+        DashboardWaistModel dto = DashboardMapping.ToWaistModel(Array.Empty<DashboardWaistPointReadModel>(), desired: null);
 
         Assert.Null(dto.Latest);
         Assert.Null(dto.Previous);
@@ -575,6 +576,31 @@ public class DashboardFeatureTests {
             Alcohol: 0,
             Confidence: 0.8,
             Resolution: "Accepted");
+
+    private static DashboardUserContextModel CreateDashboardUserContext(User user) =>
+        new(
+            user.Id.Value,
+            user.Email,
+            user.Language,
+            user.DashboardLayoutJson,
+            user.DesiredWeight,
+            user.DesiredWaist,
+            user.HydrationGoal,
+            user.WaterGoal,
+            user.ProteinTarget,
+            user.FatTarget,
+            user.CarbTarget,
+            user.FiberTarget,
+            new UserCalorieSchedule(
+                user.DailyCalorieTarget,
+                user.CalorieCyclingEnabled,
+                user.MondayCalories,
+                user.TuesdayCalories,
+                user.WednesdayCalories,
+                user.ThursdayCalories,
+                user.FridayCalories,
+                user.SaturdayCalories,
+                user.SundayCalories));
 
     private static DashboardMealReadModel CreateDashboardMealReadModel(
         Guid mealId,

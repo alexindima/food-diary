@@ -39,7 +39,7 @@ public interface IWeightEntryReadRepository {
             descending,
             cancellationToken).ConfigureAwait(false);
 
-        return [.. entries.Select(static entry => new WeightEntryReadModel(entry.Date, entry.Weight))];
+        return [.. entries.Select(static entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Weight))];
     }
 
     Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(
@@ -59,6 +59,6 @@ public interface IWeightEntryReadRepository {
             dateTo,
             cancellationToken).ConfigureAwait(false);
 
-        return [.. entries.Select(static entry => new WeightEntryReadModel(entry.Date, entry.Weight))];
+        return [.. entries.Select(static entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Weight))];
     }
 }

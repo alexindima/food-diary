@@ -2,8 +2,8 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.DailyAdvices.Models;
+using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Tdee.Models;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Application.Dashboard.Services;
 
@@ -20,7 +20,7 @@ internal interface IDashboardSectionDataLoader {
         DashboardBuildContext context,
         CancellationToken cancellationToken);
 
-    Task<FastingOccurrence?> LoadFastingAsync(
+    Task<FastingSessionModel?> LoadFastingAsync(
         DashboardBuildContext context,
         CancellationToken cancellationToken);
 

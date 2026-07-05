@@ -39,7 +39,7 @@ public interface IWaistEntryReadRepository {
             descending,
             cancellationToken).ConfigureAwait(false);
 
-        return [.. entries.Select(static entry => new WaistEntryReadModel(entry.Date, entry.Circumference))];
+        return [.. entries.Select(static entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Circumference))];
     }
 
     Task<IReadOnlyList<WaistEntry>> GetByPeriodAsync(
@@ -59,6 +59,6 @@ public interface IWaistEntryReadRepository {
             dateTo,
             cancellationToken).ConfigureAwait(false);
 
-        return [.. entries.Select(static entry => new WaistEntryReadModel(entry.Date, entry.Circumference))];
+        return [.. entries.Select(static entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Circumference))];
     }
 }

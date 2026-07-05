@@ -110,7 +110,7 @@ public sealed class WeightEntryRepository(FoodDiaryDbContext context) : IWeightE
         }
 
         return await query
-            .Select(entry => new WeightEntryReadModel(entry.Date, entry.Weight))
+            .Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Weight))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -143,7 +143,7 @@ public sealed class WeightEntryRepository(FoodDiaryDbContext context) : IWeightE
             .Where(entry => entry.UserId == userId && entry.Date >= from && entry.Date <= to)
             .OrderBy(entry => entry.Date)
             .ThenBy(entry => entry.CreatedOnUtc)
-            .Select(entry => new WeightEntryReadModel(entry.Date, entry.Weight))
+            .Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Weight))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 }

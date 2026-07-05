@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,25 @@ public sealed class NotificationRepository(FoodDiaryDbContext context, TimeProvi
             .Where(n => n.UserId == userId)
             .OrderByDescending(n => n.CreatedOnUtc)
             .Take(limit)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<NotificationReadModel>> GetByUserReadModelsAsync(
+        UserId userId,
+        int limit = 50,
+        CancellationToken cancellationToken = default) {
+        return await context.Notifications
+            .AsNoTracking()
+            .Where(n => n.UserId == userId)
+            .OrderByDescending(n => n.CreatedOnUtc)
+            .Take(limit)
+            .Select(n => new NotificationReadModel(
+                n.Id.Value,
+                n.Type,
+                n.ReferenceId,
+                n.PayloadJson,
+                n.IsRead,
+                n.CreatedOnUtc))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

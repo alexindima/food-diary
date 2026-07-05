@@ -1,9 +1,45 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dashboard.Common;
 
 public interface IDashboardUserContextService {
     Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken);
+
+    async Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(
+        UserId userId,
+        CancellationToken cancellationToken) {
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        return userResult.IsFailure
+            ? Result.Failure<DashboardUserContextModel>(userResult.Error)
+            : Result.Success(ToDashboardUserContextModel(userResult.Value));
+    }
+
+    private static DashboardUserContextModel ToDashboardUserContextModel(User user) =>
+        new(
+            user.Id.Value,
+            user.Email,
+            user.Language,
+            user.DashboardLayoutJson,
+            user.DesiredWeight,
+            user.DesiredWaist,
+            user.HydrationGoal,
+            user.WaterGoal,
+            user.ProteinTarget,
+            user.FatTarget,
+            user.CarbTarget,
+            user.FiberTarget,
+            new UserCalorieSchedule(
+                user.DailyCalorieTarget,
+                user.CalorieCyclingEnabled,
+                user.MondayCalories,
+                user.TuesdayCalories,
+                user.WednesdayCalories,
+                user.ThursdayCalories,
+                user.FridayCalories,
+                user.SaturdayCalories,
+                user.SundayCalories));
 }

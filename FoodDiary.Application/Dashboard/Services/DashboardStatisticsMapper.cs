@@ -1,12 +1,11 @@
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Statistics.Models;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Dashboard.Services;
 
 internal static class DashboardStatisticsMapper {
-    public static DashboardStatisticsModel ToModel(DashboardStatisticsBucketReadModel? response, User? user) {
+    public static DashboardStatisticsModel ToModel(DashboardStatisticsBucketReadModel? response, DashboardUserContextModel? user) {
         if (response is null) {
             return CreateEmpty();
         }
@@ -23,7 +22,7 @@ internal static class DashboardStatisticsMapper {
             user?.FiberTarget);
     }
 
-    public static DashboardStatisticsModel ToModel(AggregatedStatisticsModel? response, User? user) {
+    public static DashboardStatisticsModel ToModel(AggregatedStatisticsModel? response, DashboardUserContextModel? user) {
         if (response is null) {
             return CreateEmpty();
         }

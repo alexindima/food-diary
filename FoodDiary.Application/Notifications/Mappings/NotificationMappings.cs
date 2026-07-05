@@ -18,6 +18,17 @@ public static class NotificationMappings {
             notification.IsRead,
             notification.CreatedOnUtc);
 
+    public static NotificationModel ToModel(this NotificationReadModel notification, NotificationText notificationText) =>
+        new(
+            notification.Id,
+            notification.Type,
+            notificationText.Title,
+            notificationText.Body,
+            NotificationTargetUrlResolver.Resolve(notification.Type, notification.ReferenceId),
+            notification.ReferenceId,
+            notification.IsRead,
+            notification.CreatedAtUtc);
+
     public static WebPushSubscriptionModel ToModel(this WebPushSubscription subscription) =>
         new(
             subscription.Endpoint,

@@ -2,7 +2,6 @@ using System.Text.Json;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Exercises.Common;
-using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
@@ -10,13 +9,13 @@ using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Models;
-using FoodDiary.Application.Fasting.Mappings;
+using FoodDiary.Application.Fasting.Common;
+using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WeightEntries.Models;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging;
@@ -40,14 +39,14 @@ public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
         IWeightEntryReadRepository weightEntryRepository,
         IWaistEntryReadRepository waistEntryRepository,
         IHydrationEntryReadRepository hydrationEntryRepository,
-        IFastingOccurrenceReadRepository fastingOccurrenceRepository,
+        IFastingReadService fastingReadService,
         IExerciseEntryReadRepository exerciseEntryRepository,
         ILogger<DashboardSnapshotBuilder> logger)
         : this(
             new DashboardSectionDataLoader(
                 sender,
                 dashboardUserContextService,
-                fastingOccurrenceRepository,
+                fastingReadService,
                 exerciseEntryRepository,
                 new ComposedDashboardReadService(
                     new MediatorDashboardStatisticsReadService(sender),
@@ -72,7 +71,7 @@ public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
 
         DashboardReadModel readModel = readResult.Value;
         Result<DailyAdviceModel>? adviceResult = await _dataLoader.LoadAdviceAsync(context, cancellationToken).ConfigureAwait(false);
-        FastingOccurrence? fastingSession = await _dataLoader.LoadFastingAsync(context, cancellationToken).ConfigureAwait(false);
+        FastingSessionModel? fastingSession = await _dataLoader.LoadFastingAsync(context, cancellationToken).ConfigureAwait(false);
         DashboardLayoutModel? layout = context.Sections.IncludeLayout
             ? ParseDashboardLayout(context.CurrentUser.DashboardLayoutJson, context.UserId)
             : null;
@@ -92,7 +91,7 @@ public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
             DashboardMapping.ToMealsModel(readModel.Meals),
             BuildHydration(readModel.Body, context),
             adviceResult?.IsSuccess == true ? adviceResult.Value : null,
-            fastingSession?.ToModel(),
+            fastingSession,
             BuildWeightTrend(readModel.Body, context),
             BuildWaistTrend(readModel.Body, context),
             layout,
