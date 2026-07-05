@@ -7,6 +7,7 @@ using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Common;
+using FoodDiary.Application.Admin.Services;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
@@ -28,6 +29,7 @@ using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
+using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Social;
@@ -977,7 +979,8 @@ public class AdminFeatureTests {
     [Fact]
     public async Task GetAdminAiPromptsQueryHandler_ReturnsTemplates() {
         var template = AiPromptTemplate.Create("meal_summary", "en", "Prompt text", isActive: true);
-        var handler = new GetAdminAiPromptsQueryHandler(new InMemoryAiPromptTemplateRepository(template));
+        GetAdminAiPromptsQueryHandler handler = new(CreateAdminContentReadService(
+            aiPromptTemplateRepository: new InMemoryAiPromptTemplateRepository(template)));
 
         Result<IReadOnlyList<AdminAiPromptModel>> result = await handler.Handle(new GetAdminAiPromptsQuery(), CancellationToken.None);
 
@@ -1222,7 +1225,7 @@ public class AdminFeatureTests {
             "Incorrect content");
         report.MarkDismissed("  resolved  ");
         var repository = new CountingContentReportRepository(0, [report]);
-        var handler = new GetAdminContentReportsQueryHandler(repository);
+        GetAdminContentReportsQueryHandler handler = new(CreateAdminContentReadService(contentReportRepository: repository));
 
         Result<PagedResponse<AdminContentReportModel>> result = await handler.Handle(new GetAdminContentReportsQuery("dismissed", 0, 0), CancellationToken.None);
 
@@ -1303,7 +1306,8 @@ public class AdminFeatureTests {
             "<b>Body</b>",
             "Body",
             isActive: true);
-        var handler = new GetAdminEmailTemplatesQueryHandler(new InMemoryEmailTemplateRepository(template));
+        GetAdminEmailTemplatesQueryHandler handler = new(CreateAdminContentReadService(
+            emailTemplateRepository: new InMemoryEmailTemplateRepository(template)));
 
         Result<IReadOnlyList<AdminEmailTemplateModel>> result = await handler.Handle(new GetAdminEmailTemplatesQuery(), CancellationToken.None);
 
@@ -1789,6 +1793,17 @@ public class AdminFeatureTests {
             return Task.FromResult(MarkReadResult);
         }
     }
+
+    private static IAdminContentReadService CreateAdminContentReadService(
+        INutritionLessonReadRepository? lessonRepository = null,
+        IEmailTemplateReadRepository? emailTemplateRepository = null,
+        IAiPromptTemplateReadRepository? aiPromptTemplateRepository = null,
+        IContentReportReadRepository? contentReportRepository = null) =>
+        new AdminContentReadService(
+            lessonRepository ?? Substitute.For<INutritionLessonReadRepository>(),
+            emailTemplateRepository ?? Substitute.For<IEmailTemplateReadRepository>(),
+            aiPromptTemplateRepository ?? Substitute.For<IAiPromptTemplateReadRepository>(),
+            contentReportRepository ?? Substitute.For<IContentReportReadRepository>());
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryEmailTemplateRepository(params EmailTemplate[] templates) : IEmailTemplateRepository {

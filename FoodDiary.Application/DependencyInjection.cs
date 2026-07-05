@@ -36,6 +36,10 @@ using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.Hydration.Services;
 using FoodDiary.Application.Images.Services;
+using FoodDiary.Application.DailyAdvices.Common;
+using FoodDiary.Application.DailyAdvices.Services;
+using FoodDiary.Application.Lessons.Common;
+using FoodDiary.Application.Lessons.Services;
 using FoodDiary.Application.MealPlans.Common;
 using FoodDiary.Application.MealPlans.Services;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -97,6 +101,7 @@ public static class DependencyInjection {
 
         services.AddScoped<IPostCommitActionQueue, PostCommitActionQueue>();
         services.AddScoped<IAdminImpersonationUserService, AdminImpersonationUserService>();
+        services.AddScoped<IAdminContentReadService, AdminContentReadService>();
         services.AddScoped<IAdminUserManagementService, AdminUserManagementService>();
         services.AddScoped<IAdminUserReadService, AdminUserReadService>();
         services.AddScoped<IAiUserContextService, AiUserContextService>();
@@ -105,6 +110,8 @@ public static class DependencyInjection {
         services.AddScoped<IAuthenticationUserRegistrationService, AuthenticationUserRegistrationService>();
         services.AddScoped<IConsumptionReadService, ConsumptionReadService>();
         services.AddScoped<ICycleReadService, CycleReadService>();
+        services.AddScoped<IDailyAdviceReadService, DailyAdviceReadService>();
+        services.AddScoped<ILessonReadService, LessonReadService>();
         services.AddScoped<IMealNutritionService, MealNutritionService>();
         services.AddScoped<IMealPlanReadService, MealPlanReadService>();
         services.TryAddScoped<IDashboardStatisticsReadService, MediatorDashboardStatisticsReadService>();

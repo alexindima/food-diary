@@ -1,16 +1,14 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Abstractions.Lessons.Common;
-using FoodDiary.Application.Lessons.Mappings;
+using FoodDiary.Application.Lessons.Common;
 using FoodDiary.Application.Lessons.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Lessons.Queries.GetLessons;
 
-public sealed class GetLessonsQueryHandler(INutritionLessonReadRepository repository)
+public sealed class GetLessonsQueryHandler(ILessonReadService lessonReadService)
     : IQueryHandler<GetLessonsQuery, Result<IReadOnlyList<LessonSummaryModel>>> {
     public async Task<Result<IReadOnlyList<LessonSummaryModel>>> Handle(
         GetLessonsQuery query,
@@ -23,21 +21,10 @@ public sealed class GetLessonsQueryHandler(INutritionLessonReadRepository reposi
         LessonCategory? categoryFilter = EnumFilterParser.ParseOptional<LessonCategory>(query.Category);
 
         string locale = string.IsNullOrWhiteSpace(query.Locale) ? "en" : query.Locale.Trim().ToLowerInvariant();
-        IReadOnlyList<NutritionLesson> lessons = await repository.GetByLocaleAsync(locale, categoryFilter, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<LessonSummaryModel> models = await lessonReadService
+            .GetByLocaleAsync(userIdResult.Value, locale, categoryFilter, cancellationToken)
+            .ConfigureAwait(false);
 
-        if (lessons.Count == 0 && !string.Equals(locale, "en", StringComparison.Ordinal)) {
-            lessons = await repository.GetByLocaleAsync("en", categoryFilter, cancellationToken).ConfigureAwait(false);
-        }
-
-        IReadOnlyList<UserLessonProgress> progress = await repository.GetUserProgressAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
-        var readIds = progress.Select(p => p.LessonId).ToHashSet();
-
-        var models = lessons
-            .OrderBy(l => l.Category)
-            .ThenBy(l => l.SortOrder)
-            .Select(l => l.ToSummaryModel(readIds))
-            .ToList();
-
-        return Result.Success<IReadOnlyList<LessonSummaryModel>>(models);
+        return Result.Success(models);
     }
 }

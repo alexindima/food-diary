@@ -1099,6 +1099,33 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ContentQueries_UseReadServicesInsteadOfContentAggregates() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] contentQueryFiles = [
+            .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "Lessons", "Queries")),
+            .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "DailyAdvices", "Queries")),
+            .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminLessons")),
+            .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminEmailTemplates")),
+            .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminAiPrompts")),
+            .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminContentReports")),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, contentQueryFiles, "FoodDiary.Domain.Entities.Content"),
+            .. FindReferencesInFiles(root, contentQueryFiles, "FoodDiary.Domain.Entities.Ai"),
+            .. FindReferencesInFiles(root, contentQueryFiles, "FoodDiary.Domain.Entities.Social"),
+            .. FindReferencesInFiles(root, contentQueryFiles, "INutritionLessonReadRepository"),
+            .. FindReferencesInFiles(root, contentQueryFiles, "IDailyAdviceReadRepository"),
+            .. FindReferencesInFiles(root, contentQueryFiles, "IEmailTemplateReadRepository"),
+            .. FindReferencesInFiles(root, contentQueryFiles, "IAiPromptTemplateReadRepository"),
+            .. FindReferencesInFiles(root, contentQueryFiles, "IContentReportReadRepository"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullNutritionLessonRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

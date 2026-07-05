@@ -3,8 +3,10 @@ using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.DailyAdvices.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.DailyAdvices.Common;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
+using FoodDiary.Application.DailyAdvices.Services;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -97,7 +99,7 @@ public class DailyAdvicesFeatureTests {
 
     [Fact]
     public async Task GetDailyAdvice_WithInvalidUserId_ReturnsInvalidToken() {
-        var handler = new GetDailyAdviceQueryHandler(CreateDailyAdviceRepository(), CreateCurrentUserAccessService(User.Create("advice@example.com", "hash")));
+        GetDailyAdviceQueryHandler handler = CreateGetDailyAdviceHandler(CreateDailyAdviceRepository(), CreateCurrentUserAccessService(User.Create("advice@example.com", "hash")));
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(Guid.Empty, DateTime.UtcNow, "en"), CancellationToken.None);
 
@@ -109,7 +111,7 @@ public class DailyAdvicesFeatureTests {
     public async Task GetDailyAdvice_WhenUserDeleted_ReturnsAccountDeleted() {
         var user = User.Create("deleted-advice@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetDailyAdviceQueryHandler(CreateDailyAdviceRepository(), CreateCurrentUserAccessService(user));
+        GetDailyAdviceQueryHandler handler = CreateGetDailyAdviceHandler(CreateDailyAdviceRepository(), CreateCurrentUserAccessService(user));
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "en"), CancellationToken.None);
 
@@ -125,7 +127,7 @@ public class DailyAdvicesFeatureTests {
                 ["en"] = [DailyAdvice.Create("Hydrate", "en", weight: 1)],
             },
             out List<string> requestedLocales);
-        var handler = new GetDailyAdviceQueryHandler(repository, CreateCurrentUserAccessService(user));
+        GetDailyAdviceQueryHandler handler = CreateGetDailyAdviceHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "de-DE"), CancellationToken.None);
 
@@ -137,7 +139,7 @@ public class DailyAdvicesFeatureTests {
     [Fact]
     public async Task GetDailyAdvice_WhenNoAdviceExists_ReturnsNotFound() {
         var user = User.Create("missing-advice@example.com", "hash");
-        var handler = new GetDailyAdviceQueryHandler(CreateDailyAdviceRepository(), CreateCurrentUserAccessService(user));
+        GetDailyAdviceQueryHandler handler = CreateGetDailyAdviceHandler(CreateDailyAdviceRepository(), CreateCurrentUserAccessService(user));
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "ru"), CancellationToken.None);
 
@@ -152,7 +154,7 @@ public class DailyAdvicesFeatureTests {
             new Dictionary<string, IReadOnlyList<DailyAdvice>>(StringComparer.OrdinalIgnoreCase) {
                 ["en"] = [DailyAdvice.Create("Russian advice", "ru", weight: 1)],
             });
-        var handler = new GetDailyAdviceQueryHandler(repository, CreateCurrentUserAccessService(user));
+        GetDailyAdviceQueryHandler handler = CreateGetDailyAdviceHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "en"), CancellationToken.None);
 
@@ -213,6 +215,15 @@ public class DailyAdvicesFeatureTests {
         requestedLocales = capturedRequestedLocales;
         return repository;
     }
+
+    private static GetDailyAdviceQueryHandler CreateGetDailyAdviceHandler(
+        IDailyAdviceReadRepository repository,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new(CreateDailyAdviceReadService(repository), currentUserAccessService);
+
+    private static IDailyAdviceReadService CreateDailyAdviceReadService(
+        IDailyAdviceReadRepository repository) =>
+        new DailyAdviceReadService(repository);
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) {
         ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();

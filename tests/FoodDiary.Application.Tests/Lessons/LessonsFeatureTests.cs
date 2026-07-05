@@ -1,10 +1,12 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Application.Lessons.Commands.MarkLessonRead;
+using FoodDiary.Application.Lessons.Common;
 using FoodDiary.Application.Lessons.Mappings;
 using FoodDiary.Application.Lessons.Models;
 using FoodDiary.Application.Lessons.Queries.GetLessonById;
 using FoodDiary.Application.Lessons.Queries.GetLessons;
+using FoodDiary.Application.Lessons.Services;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -77,7 +79,7 @@ public class LessonsFeatureTests {
             [firstLesson, secondLesson, otherCategoryLesson],
             [progress],
             out List<(string Locale, LessonCategory? Category)> localeRequests);
-        var handler = new GetLessonsQueryHandler(repository);
+        GetLessonsQueryHandler handler = CreateGetLessonsHandler(repository);
 
         Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
             new GetLessonsQuery(userId.Value, " RU ", "macronutrients"), CancellationToken.None);
@@ -106,7 +108,7 @@ public class LessonsFeatureTests {
             [englishLesson],
             [],
             out List<(string Locale, LessonCategory? Category)> localeRequests);
-        var handler = new GetLessonsQueryHandler(repository);
+        GetLessonsQueryHandler handler = CreateGetLessonsHandler(repository);
 
         Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
             new GetLessonsQuery(userId.Value, "fr", Category: null), CancellationToken.None);
@@ -123,7 +125,7 @@ public class LessonsFeatureTests {
             [],
             [],
             out List<(string Locale, LessonCategory? Category)> localeRequests);
-        var handler = new GetLessonsQueryHandler(repository);
+        GetLessonsQueryHandler handler = CreateGetLessonsHandler(repository);
 
         Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
             new GetLessonsQuery(Guid.NewGuid(), "en", "unknown"), CancellationToken.None);
@@ -135,7 +137,7 @@ public class LessonsFeatureTests {
 
     [Fact]
     public async Task GetLessons_WithNullUserId_ReturnsFailure() {
-        var handler = new GetLessonsQueryHandler(CreateLessonRepository([], []));
+        GetLessonsQueryHandler handler = CreateGetLessonsHandler(CreateLessonRepository([], []));
 
         Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
             new GetLessonsQuery(UserId: null, "en", Category: null), CancellationToken.None);
@@ -148,7 +150,7 @@ public class LessonsFeatureTests {
         var userId = UserId.New();
         NutritionLesson lesson = CreateLesson("Protein basics", "en", LessonCategory.Macronutrients);
         var progress = UserLessonProgress.Create(userId, lesson.Id, DateTime.UtcNow);
-        var handler = new GetLessonByIdQueryHandler(CreateLessonRepository([lesson], [progress]));
+        GetLessonByIdQueryHandler handler = CreateGetLessonByIdHandler(CreateLessonRepository([lesson], [progress]));
 
         Result<LessonDetailModel> result = await handler.Handle(
             new GetLessonByIdQuery(userId.Value, lesson.Id.Value), CancellationToken.None);
@@ -161,7 +163,7 @@ public class LessonsFeatureTests {
 
     [Fact]
     public async Task GetLessonById_WhenLessonIsMissing_ReturnsNotFound() {
-        var handler = new GetLessonByIdQueryHandler(CreateLessonRepository([], []));
+        GetLessonByIdQueryHandler handler = CreateGetLessonByIdHandler(CreateLessonRepository([], []));
 
         Result<LessonDetailModel> result = await handler.Handle(
             new GetLessonByIdQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
@@ -172,7 +174,7 @@ public class LessonsFeatureTests {
 
     [Fact]
     public async Task GetLessonById_WithNullUserId_ReturnsFailure() {
-        var handler = new GetLessonByIdQueryHandler(CreateLessonRepository([], []));
+        GetLessonByIdQueryHandler handler = CreateGetLessonByIdHandler(CreateLessonRepository([], []));
 
         Result<LessonDetailModel> result = await handler.Handle(
             new GetLessonByIdQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
@@ -308,6 +310,18 @@ public class LessonsFeatureTests {
         localeRequests = capturedLocaleRequests;
         return repository;
     }
+
+    private static GetLessonsQueryHandler CreateGetLessonsHandler(
+        INutritionLessonReadRepository repository) =>
+        new(CreateLessonReadService(repository));
+
+    private static GetLessonByIdQueryHandler CreateGetLessonByIdHandler(
+        INutritionLessonReadRepository repository) =>
+        new(CreateLessonReadService(repository));
+
+    private static ILessonReadService CreateLessonReadService(
+        INutritionLessonReadRepository repository) =>
+        new LessonReadService(repository);
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider : TimeProvider {

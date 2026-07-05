@@ -2,7 +2,12 @@ using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
 using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
 using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
+using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Queries.GetAdminLessons;
+using FoodDiary.Application.Admin.Services;
+using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
@@ -225,7 +230,7 @@ public class AdminLessonFeatureTests {
         var lesson2 = NutritionLesson.Create("Lesson 2", "Content 2", "Summary", "ru",
             LessonCategory.Macronutrients, LessonDifficulty.Advanced, 10);
         var repo = new InMemoryLessonRepository(lesson1, lesson2);
-        var handler = new GetAdminLessonsQueryHandler(repo);
+        GetAdminLessonsQueryHandler handler = new(CreateAdminContentReadService(repo));
 
         Result<IReadOnlyList<AdminLessonModel>> result = await handler.Handle(new GetAdminLessonsQuery(), CancellationToken.None);
 
@@ -236,7 +241,7 @@ public class AdminLessonFeatureTests {
     [Fact]
     public async Task GetAdminLessonsHandler_WhenEmpty_ReturnsEmptyList() {
         var repo = new InMemoryLessonRepository();
-        var handler = new GetAdminLessonsQueryHandler(repo);
+        GetAdminLessonsQueryHandler handler = new(CreateAdminContentReadService(repo));
 
         Result<IReadOnlyList<AdminLessonModel>> result = await handler.Handle(new GetAdminLessonsQuery(), CancellationToken.None);
 
@@ -429,4 +434,12 @@ public class AdminLessonFeatureTests {
         public Task<UserLessonProgress> AddProgressAsync(UserLessonProgress progress, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
     }
+
+    private static IAdminContentReadService CreateAdminContentReadService(
+        INutritionLessonReadRepository lessonRepository) =>
+        new AdminContentReadService(
+            lessonRepository,
+            Substitute.For<IEmailTemplateReadRepository>(),
+            Substitute.For<IAiPromptTemplateReadRepository>(),
+            Substitute.For<IContentReportReadRepository>());
 }
