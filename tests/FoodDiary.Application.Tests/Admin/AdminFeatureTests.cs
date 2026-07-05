@@ -1022,9 +1022,9 @@ public class AdminFeatureTests {
     [Fact]
     public async Task GetAdminAiUsageSummaryQueryHandler_WithInvertedRange_ReturnsValidationFailure() {
         var repository = new RecordingAiUsageRepository();
-        var handler = new GetAdminAiUsageSummaryQueryHandler(
+        var handler = new GetAdminAiUsageSummaryQueryHandler(new AdminAiUsageReadService(
             repository,
-            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
+            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc))));
 
         Result<AdminAiUsageSummaryModel> result = await handler.Handle(
             new GetAdminAiUsageSummaryQuery(new DateOnly(2026, 4, 1), new DateOnly(2026, 3, 1)),
@@ -1040,7 +1040,7 @@ public class AdminFeatureTests {
     public async Task GetAdminAiUsageSummaryQueryHandler_UsesDateTimeProviderForDefaultRange() {
         var dateTimeProvider = new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc));
         var aiUsageRepository = new RecordingAiUsageRepository();
-        var handler = new GetAdminAiUsageSummaryQueryHandler(aiUsageRepository, dateTimeProvider);
+        var handler = new GetAdminAiUsageSummaryQueryHandler(new AdminAiUsageReadService(aiUsageRepository, dateTimeProvider));
 
         Result<AdminAiUsageSummaryModel> result = await handler.Handle(new GetAdminAiUsageSummaryQuery(From: null, To: null), CancellationToken.None);
 
@@ -1060,9 +1060,9 @@ public class AdminFeatureTests {
             ByOperation: [new AiUsageBreakdown("vision", 20, 8, 12)],
             ByModel: [new AiUsageBreakdown("gpt-test", 30, 12, 18)],
             ByUser: [new AiUsageUserSummary(userId, "user@example.com", 40, 16, 24)]);
-        var handler = new GetAdminAiUsageSummaryQueryHandler(
+        var handler = new GetAdminAiUsageSummaryQueryHandler(new AdminAiUsageReadService(
             new RecordingAiUsageRepository(summary),
-            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
+            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc))));
 
         Result<AdminAiUsageSummaryModel> result = await handler.Handle(
             new GetAdminAiUsageSummaryQuery(new DateOnly(2026, 3, 1), new DateOnly(2026, 3, 31)),
@@ -1202,7 +1202,7 @@ public class AdminFeatureTests {
         User recentUser = CreateUserWithRoles("recent@example.com", [RoleNames.Premium]);
         var userRepository = new SummaryUserRepository((12, 10, 3, 1, [recentUser]));
         var contentReportRepository = new CountingContentReportRepository(4);
-        var handler = new GetAdminDashboardSummaryQueryHandler(userRepository, contentReportRepository);
+        var handler = new GetAdminDashboardSummaryQueryHandler(new AdminDashboardReadService(userRepository, contentReportRepository));
 
         Result<AdminDashboardSummaryModel> result = await handler.Handle(new GetAdminDashboardSummaryQuery(2), CancellationToken.None);
 
