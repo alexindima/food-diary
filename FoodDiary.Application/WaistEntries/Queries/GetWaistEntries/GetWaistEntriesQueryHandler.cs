@@ -3,16 +3,14 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Application.WaistEntries.Mappings;
+using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
 
 public sealed class GetWaistEntriesQueryHandler(
-    IWaistEntryReadRepository waistEntryRepository,
+    IWaistEntryReadService waistEntryReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWaistEntriesQuery, Result<IReadOnlyList<WaistEntryModel>>> {
     public async Task<Result<IReadOnlyList<WaistEntryModel>>> Handle(
@@ -36,7 +34,7 @@ public sealed class GetWaistEntriesQueryHandler(
             ? UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo.Value)
             : null;
 
-        IReadOnlyList<WaistEntry> entries = await waistEntryRepository.GetEntriesAsync(
+        IReadOnlyList<WaistEntryModel> response = await waistEntryReadService.GetEntriesAsync(
             userId,
             normalizedFrom,
             normalizedTo,
@@ -44,7 +42,6 @@ public sealed class GetWaistEntriesQueryHandler(
             query.Descending,
             cancellationToken).ConfigureAwait(false);
 
-        var response = entries.Select(entry => entry.ToModel()).ToList();
         return Result.Success<IReadOnlyList<WaistEntryModel>>(response);
     }
 }

@@ -3,16 +3,14 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Application.WeightEntries.Mappings;
+using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
 
 public sealed class GetWeightEntriesQueryHandler(
-    IWeightEntryReadRepository weightEntryRepository,
+    IWeightEntryReadService weightEntryReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWeightEntriesQuery, Result<IReadOnlyList<WeightEntryModel>>> {
     public async Task<Result<IReadOnlyList<WeightEntryModel>>> Handle(
@@ -36,7 +34,7 @@ public sealed class GetWeightEntriesQueryHandler(
             ? UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo.Value)
             : null;
 
-        IReadOnlyList<WeightEntry> entries = await weightEntryRepository.GetEntriesAsync(
+        IReadOnlyList<WeightEntryModel> response = await weightEntryReadService.GetEntriesAsync(
             userId,
             normalizedFrom,
             normalizedTo,
@@ -44,7 +42,6 @@ public sealed class GetWeightEntriesQueryHandler(
             query.Descending,
             cancellationToken).ConfigureAwait(false);
 
-        var response = entries.Select(entry => entry.ToModel()).ToList();
         return Result.Success<IReadOnlyList<WeightEntryModel>>(response);
     }
 }

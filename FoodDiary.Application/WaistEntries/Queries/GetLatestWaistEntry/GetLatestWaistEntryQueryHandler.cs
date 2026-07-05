@@ -1,16 +1,14 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Application.WaistEntries.Mappings;
+using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WaistEntries.Queries.GetLatestWaistEntry;
 
 public sealed class GetLatestWaistEntryQueryHandler(
-    IWaistEntryReadRepository waistEntryRepository,
+    IWaistEntryReadService waistEntryReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetLatestWaistEntryQuery, Result<WaistEntryModel?>> {
     public async Task<Result<WaistEntryModel?>> Handle(
@@ -26,15 +24,7 @@ public sealed class GetLatestWaistEntryQueryHandler(
             return Result.Failure<WaistEntryModel?>(accessError);
         }
 
-        IReadOnlyList<WaistEntry> entries = await waistEntryRepository.GetEntriesAsync(
-            userId,
-            dateFrom: null,
-            dateTo: null,
-            limit: 1,
-            descending: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
-
-        WaistEntry? latest = entries.Count > 0 ? entries[0] : null;
-        return Result.Success(latest?.ToModel());
+        WaistEntryModel? latest = await waistEntryReadService.GetLatestAsync(userId, cancellationToken).ConfigureAwait(false);
+        return Result.Success(latest);
     }
 }

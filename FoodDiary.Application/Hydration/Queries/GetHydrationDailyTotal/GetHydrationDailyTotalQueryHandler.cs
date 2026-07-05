@@ -1,15 +1,16 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 
 public sealed class GetHydrationDailyTotalQueryHandler(
-    IHydrationEntryReadRepository repository,
+    IHydrationEntryReadService hydrationEntryReadService,
     IHydrationGoalService hydrationGoalService)
     : IQueryHandler<GetHydrationDailyTotalQuery, Result<HydrationDailyModel>> {
     public async Task<Result<HydrationDailyModel>> Handle(
@@ -27,7 +28,7 @@ public sealed class GetHydrationDailyTotalQueryHandler(
         }
 
         DateTime dateUtc = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateUtc);
-        int total = await repository.GetDailyTotalAsync(userId, dateUtc, cancellationToken).ConfigureAwait(false);
+        int total = await hydrationEntryReadService.GetDailyTotalAsync(userId, dateUtc, cancellationToken).ConfigureAwait(false);
 
         var response = new HydrationDailyModel(dateUtc, total, goalResult.Value);
         return Result.Success(response);

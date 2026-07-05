@@ -2,6 +2,8 @@ using FoodDiary.Application.Exercises.Commands.CreateExerciseEntry;
 using FoodDiary.Application.Exercises.Commands.DeleteExerciseEntry;
 using FoodDiary.Application.Exercises.Commands.UpdateExerciseEntry;
 using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Application.Exercises.Common;
+using FoodDiary.Application.Exercises.Mappings;
 using FoodDiary.Application.Exercises.Queries.GetExerciseEntries;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
@@ -153,7 +155,7 @@ public class ExercisesFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryExerciseEntryRepository : IExerciseEntryRepository {
+    private sealed class InMemoryExerciseEntryRepository : IExerciseEntryRepository, IExerciseEntryReadService {
         private readonly List<ExerciseEntry> _entries = [];
         public bool DeleteCalled { get; private set; }
 
@@ -179,5 +181,14 @@ public class ExercisesFeatureTests {
             Task.FromResult<IReadOnlyList<ExerciseEntry>>(_entries.Where(e => e.UserId == userId).ToList());
 
         public Task<double> GetTotalCaloriesBurnedAsync(UserId userId, DateTime date, CancellationToken ct = default) => Task.FromResult(0.0);
+
+        async Task<IReadOnlyList<ExerciseEntryModel>> IExerciseEntryReadService.GetEntriesAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken) {
+            IReadOnlyList<ExerciseEntry> entries = await GetByDateRangeAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
+            return [.. entries.Select(entry => entry.ToModel())];
+        }
     }
 }

@@ -11,6 +11,8 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Hydration.Common;
+using FoodDiary.Application.Hydration.Mappings;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Hydration.Services;
 using FoodDiary.Application.Users.Common;
@@ -478,7 +480,7 @@ public class HydrationFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingHydrationEntryRepository : IHydrationEntryRepository {
+    private sealed class RecordingHydrationEntryRepository : IHydrationEntryRepository, IHydrationEntryReadService {
         public DateTime? LastDailyTotalDateUtc { get; private set; }
 
         public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) =>
@@ -505,6 +507,20 @@ public class HydrationFeatureTests {
             UserId userId, DateTime dateFrom, DateTime dateTo,
             CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+
+        async Task<IReadOnlyList<HydrationEntryModel>> IHydrationEntryReadService.GetEntriesByDateAsync(
+            UserId userId,
+            DateTime dateUtc,
+            CancellationToken cancellationToken) {
+            IReadOnlyList<HydrationEntry> entries = await GetByDateAsync(userId, dateUtc, cancellationToken).ConfigureAwait(false);
+            return [.. entries.Select(entry => entry.ToModel())];
+        }
+
+        Task<int> IHydrationEntryReadService.GetDailyTotalAsync(
+            UserId userId,
+            DateTime dateUtc,
+            CancellationToken cancellationToken) =>
+            GetDailyTotalAsync(userId, dateUtc, cancellationToken);
     }
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) {
@@ -541,7 +557,7 @@ public class HydrationFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryHydrationEntryRepository(HydrationEntry? entry = null) : IHydrationEntryRepository {
+    private sealed class InMemoryHydrationEntryRepository(HydrationEntry? entry = null) : IHydrationEntryRepository, IHydrationEntryReadService {
         private HydrationEntry? _entry = entry;
         private readonly List<HydrationEntry> _entries = entry is null ? [] : [entry];
         public HydrationEntry? AddedEntry { get; private set; }
@@ -585,5 +601,19 @@ public class HydrationFeatureTests {
             UserId userId, DateTime dateFrom, DateTime dateTo,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<(DateTime, int)>>([]);
+
+        async Task<IReadOnlyList<HydrationEntryModel>> IHydrationEntryReadService.GetEntriesByDateAsync(
+            UserId userId,
+            DateTime dateUtc,
+            CancellationToken cancellationToken) {
+            IReadOnlyList<HydrationEntry> entries = await GetByDateAsync(userId, dateUtc, cancellationToken).ConfigureAwait(false);
+            return [.. entries.Select(entry => entry.ToModel())];
+        }
+
+        Task<int> IHydrationEntryReadService.GetDailyTotalAsync(
+            UserId userId,
+            DateTime dateUtc,
+            CancellationToken cancellationToken) =>
+            GetDailyTotalAsync(userId, dateUtc, cancellationToken);
     }
 }

@@ -965,6 +965,30 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void TrackingEntryQueries_UseReadServicesInsteadOfTrackingAggregates() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        (string Slice, string[] RepositoryNames)[] slices = [
+            ("Exercises", ["IExerciseEntryReadRepository"]),
+            ("Hydration", ["IHydrationEntryReadRepository"]),
+            ("WaistEntries", ["IWaistEntryReadRepository"]),
+            ("WeightEntries", ["IWeightEntryReadRepository"]),
+        ];
+
+        string[] violations = [.. slices.SelectMany(slice => {
+            string queriesRoot = Path.Combine(applicationRoot, slice.Slice, "Queries");
+            string[] queryFiles = [.. SourceScanner.SourceFiles(queriesRoot)];
+
+            return new[] {
+                FindReferencesInFiles(root, queryFiles, "FoodDiary.Domain.Entities.Tracking"),
+                [.. slice.RepositoryNames.SelectMany(repositoryName => FindReferencesInFiles(root, queryFiles, repositoryName))],
+            }.SelectMany(items => items);
+        })];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullNutritionLessonRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
