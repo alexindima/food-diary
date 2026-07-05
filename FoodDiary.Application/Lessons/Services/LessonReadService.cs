@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Lessons.Common;
+using FoodDiary.Application.Abstractions.Lessons.Models;
 using FoodDiary.Application.Lessons.Common;
 using FoodDiary.Application.Lessons.Mappings;
 using FoodDiary.Application.Lessons.Models;
-using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -15,19 +15,19 @@ public sealed class LessonReadService(INutritionLessonReadRepository repository)
         string locale,
         LessonCategory? categoryFilter,
         CancellationToken cancellationToken) {
-        IReadOnlyList<NutritionLesson> lessons = await repository
-            .GetByLocaleAsync(locale, categoryFilter, cancellationToken)
+        IReadOnlyList<LessonSummaryReadModel> lessons = await repository
+            .GetSummaryReadModelsByLocaleAsync(locale, categoryFilter, cancellationToken)
             .ConfigureAwait(false);
 
         if (lessons.Count == 0 && !string.Equals(locale, "en", StringComparison.Ordinal)) {
-            lessons = await repository.GetByLocaleAsync("en", categoryFilter, cancellationToken).ConfigureAwait(false);
+            lessons = await repository.GetSummaryReadModelsByLocaleAsync("en", categoryFilter, cancellationToken).ConfigureAwait(false);
         }
 
-        IReadOnlyList<UserLessonProgress> progress = await repository.GetUserProgressAsync(userId, cancellationToken).ConfigureAwait(false);
-        var readIds = new HashSet<NutritionLessonId>([.. progress.Select(static item => item.LessonId)]);
+        IReadOnlyList<Guid> readLessonIds = await repository.GetReadLessonIdsAsync(userId, cancellationToken).ConfigureAwait(false);
+        var readIds = new HashSet<Guid>(readLessonIds);
 
         return lessons
-            .OrderBy(static lesson => lesson.Category)
+            .OrderBy(static lesson => lesson.Category, StringComparer.Ordinal)
             .ThenBy(static lesson => lesson.SortOrder)
             .Select(lesson => lesson.ToSummaryModel(readIds))
             .ToList();
@@ -37,15 +37,15 @@ public sealed class LessonReadService(INutritionLessonReadRepository repository)
         UserId userId,
         NutritionLessonId lessonId,
         CancellationToken cancellationToken) {
-        NutritionLesson? lesson = await repository.GetByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
+        LessonDetailReadModel? lesson = await repository.GetDetailReadModelByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
             return null;
         }
 
-        UserLessonProgress? progress = await repository
-            .GetUserProgressForLessonAsync(userId, lessonId, cancellationToken)
+        bool isRead = await repository
+            .IsLessonReadAsync(userId, lessonId, cancellationToken)
             .ConfigureAwait(false);
 
-        return lesson.ToDetailModel(progress is not null);
+        return lesson.ToDetailModel(isRead);
     }
 }

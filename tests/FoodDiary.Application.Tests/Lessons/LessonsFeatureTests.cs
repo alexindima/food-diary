@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Lessons.Common;
+using FoodDiary.Application.Abstractions.Lessons.Models;
 using FoodDiary.Application.Lessons.Commands.MarkLessonRead;
 using FoodDiary.Application.Lessons.Common;
 using FoodDiary.Application.Lessons.Mappings;
@@ -256,12 +257,45 @@ public class LessonsFeatureTests {
         List<(string Locale, LessonCategory? Category)> capturedLocaleRequests = [];
 
         INutritionLessonRepository repository = Substitute.For<INutritionLessonRepository>();
+        ConfigureLessonLookups(repository, storedLessons);
+        ConfigureProgressLookups(repository, storedProgress, hasProgress);
+        ConfigureLocaleLookups(repository, storedLessons, capturedLocaleRequests);
+        repository
+            .AddProgressAsync(Arg.Do<UserLessonProgress>(item => {
+                progressAdded = true;
+                storedProgress.Add(item);
+            }), Arg.Any<CancellationToken>())
+            .Returns(call => Task.FromResult(call.Arg<UserLessonProgress>()));
+
+        wasProgressAdded = () => progressAdded;
+        localeRequests = capturedLocaleRequests;
+        return repository;
+    }
+
+    private static void ConfigureLessonLookups(
+        INutritionLessonRepository repository,
+        IReadOnlyCollection<NutritionLesson> storedLessons) {
         repository
             .GetByIdAsync(Arg.Any<NutritionLessonId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 NutritionLessonId id = call.Arg<NutritionLessonId>();
                 return Task.FromResult(storedLessons.FirstOrDefault(lesson => lesson.Id == id));
             });
+        repository
+            .GetDetailReadModelByIdAsync(Arg.Any<NutritionLessonId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                NutritionLessonId id = call.Arg<NutritionLessonId>();
+                return Task.FromResult(storedLessons
+                    .Where(lesson => lesson.Id == id)
+                    .Select(ToDetailReadModel)
+                    .FirstOrDefault());
+            });
+    }
+
+    private static void ConfigureProgressLookups(
+        INutritionLessonRepository repository,
+        IReadOnlyCollection<UserLessonProgress> storedProgress,
+        bool hasProgress) {
         repository
             .GetUserProgressForLessonAsync(
                 Arg.Any<UserId>(),
@@ -277,11 +311,45 @@ public class LessonsFeatureTests {
                 return Task.FromResult(foundProgress);
             });
         repository
-            .AddProgressAsync(Arg.Do<UserLessonProgress>(item => {
-                progressAdded = true;
-                storedProgress.Add(item);
-            }), Arg.Any<CancellationToken>())
-            .Returns(call => Task.FromResult(call.Arg<UserLessonProgress>()));
+            .IsLessonReadAsync(
+                Arg.Any<UserId>(),
+                Arg.Any<NutritionLessonId>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId userId = call.ArgAt<UserId>(0);
+                NutritionLessonId lessonId = call.ArgAt<NutritionLessonId>(1);
+                bool isRead = hasProgress ||
+                    storedProgress.Any(progress => progress.UserId == userId && progress.LessonId == lessonId);
+
+                return Task.FromResult(isRead);
+            });
+        repository
+            .GetUserProgressAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId userId = call.Arg<UserId>();
+                IReadOnlyList<UserLessonProgress> matchingProgress = storedProgress
+                    .Where(item => item.UserId == userId)
+                    .ToList();
+
+                return Task.FromResult(matchingProgress);
+            });
+        repository
+            .GetReadLessonIdsAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId userId = call.Arg<UserId>();
+                IReadOnlyList<Guid> readLessonIds = storedProgress
+                    .Where(item => item.UserId == userId)
+                    .Select(item => item.LessonId.Value)
+                    .ToList();
+
+                return Task.FromResult(readLessonIds);
+            });
+    }
+
+    private static void ConfigureLocaleLookups(
+        INutritionLessonRepository repository,
+        IReadOnlyCollection<NutritionLesson> storedLessons,
+        List<(string Locale, LessonCategory? Category)> capturedLocaleRequests) {
         repository
             .GetByLocaleAsync(Arg.Any<string>(), Arg.Any<LessonCategory?>(), Arg.Any<CancellationToken>())
             .Returns(call => {
@@ -296,20 +364,40 @@ public class LessonsFeatureTests {
                 return Task.FromResult(matchingLessons);
             });
         repository
-            .GetUserProgressAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .GetSummaryReadModelsByLocaleAsync(Arg.Any<string>(), Arg.Any<LessonCategory?>(), Arg.Any<CancellationToken>())
             .Returns(call => {
-                UserId userId = call.Arg<UserId>();
-                IReadOnlyList<UserLessonProgress> matchingProgress = storedProgress
-                    .Where(item => item.UserId == userId)
+                string locale = call.ArgAt<string>(0);
+                LessonCategory? category = call.ArgAt<LessonCategory?>(1);
+                capturedLocaleRequests.Add((locale, category));
+                IReadOnlyList<LessonSummaryReadModel> matchingLessons = storedLessons
+                    .Where(lesson => string.Equals(lesson.Locale, locale, StringComparison.OrdinalIgnoreCase))
+                    .Where(lesson => !category.HasValue || lesson.Category == category.Value)
+                    .Select(ToSummaryReadModel)
                     .ToList();
 
-                return Task.FromResult(matchingProgress);
+                return Task.FromResult(matchingLessons);
             });
-
-        wasProgressAdded = () => progressAdded;
-        localeRequests = capturedLocaleRequests;
-        return repository;
     }
+
+    private static LessonSummaryReadModel ToSummaryReadModel(NutritionLesson lesson) =>
+        new(
+            lesson.Id.Value,
+            lesson.Title,
+            lesson.Summary,
+            lesson.Category.ToString(),
+            lesson.Difficulty.ToString(),
+            lesson.EstimatedReadMinutes,
+            lesson.SortOrder);
+
+    private static LessonDetailReadModel ToDetailReadModel(NutritionLesson lesson) =>
+        new(
+            lesson.Id.Value,
+            lesson.Title,
+            lesson.Content,
+            lesson.Summary,
+            lesson.Category.ToString(),
+            lesson.Difficulty.ToString(),
+            lesson.EstimatedReadMinutes);
 
     private static GetLessonsQueryHandler CreateGetLessonsHandler(
         INutritionLessonReadRepository repository) =>

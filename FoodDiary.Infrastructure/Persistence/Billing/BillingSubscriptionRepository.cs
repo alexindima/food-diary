@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,26 @@ public sealed class BillingSubscriptionRepository(FoodDiaryDbContext context) : 
     public Task<BillingSubscription?> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default) {
         return context.BillingSubscriptions
             .FirstOrDefaultAsync(subscription => subscription.UserId == userId, cancellationToken);
+    }
+
+    public Task<BillingSubscriptionOverviewReadModel?> GetOverviewReadModelByUserIdAsync(
+        UserId userId,
+        CancellationToken cancellationToken = default) {
+        return context.BillingSubscriptions
+            .AsNoTracking()
+            .Where(subscription => subscription.UserId == userId)
+            .Select(subscription => new BillingSubscriptionOverviewReadModel(
+                subscription.Id,
+                subscription.UserId.Value,
+                subscription.Provider,
+                subscription.ExternalCustomerId,
+                subscription.Plan,
+                subscription.Status,
+                subscription.CurrentPeriodStartUtc,
+                subscription.CurrentPeriodEndUtc,
+                subscription.CancelAtPeriodEnd,
+                subscription.NextBillingAttemptUtc))
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public Task<BillingSubscription?> GetByExternalCustomerIdAsync(

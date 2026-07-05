@@ -1536,6 +1536,48 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void LessonReadService_UsesReadModelsInsteadOfContentAggregates() {
+        string root = GetRepositoryRoot();
+        string servicePath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Lessons",
+            "Services",
+            "LessonReadService.cs");
+        string[] serviceFiles = [servicePath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Content"),
+            .. FindReferencesInFiles(root, serviceFiles, "repository.GetByLocaleAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "repository.GetByIdAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "repository.GetUserProgressAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "repository.GetUserProgressForLessonAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void BillingOverviewReadService_UsesReadModelsInsteadOfBillingAggregates() {
+        string root = GetRepositoryRoot();
+        string servicePath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Billing",
+            "Services",
+            "BillingOverviewReadService.cs");
+        string[] serviceFiles = [servicePath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Billing"),
+            .. FindReferencesInFiles(root, serviceFiles, "billingSubscriptionRepository.GetByUserIdAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "BillingSubscription?"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullNutritionLessonRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

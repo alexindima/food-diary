@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Lessons.Common;
+using FoodDiary.Application.Abstractions.Lessons.Models;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -25,6 +26,32 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<IReadOnlyList<LessonSummaryReadModel>> GetSummaryReadModelsByLocaleAsync(
+        string locale,
+        LessonCategory? category = null,
+        CancellationToken cancellationToken = default) {
+        IQueryable<NutritionLesson> query = context.Set<NutritionLesson>()
+            .AsNoTracking()
+            .Where(l => l.Locale == locale);
+
+        if (category.HasValue) {
+            query = query.Where(l => l.Category == category.Value);
+        }
+
+        return await query
+            .OrderBy(l => l.Category)
+            .ThenBy(l => l.SortOrder)
+            .Select(l => new LessonSummaryReadModel(
+                l.Id.Value,
+                l.Title,
+                l.Summary,
+                l.Category.ToString(),
+                l.Difficulty.ToString(),
+                l.EstimatedReadMinutes,
+                l.SortOrder))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<IReadOnlyList<NutritionLesson>> GetAllAsync(
         CancellationToken cancellationToken = default) {
         return await context.Set<NutritionLesson>()
@@ -44,6 +71,23 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
             .FirstOrDefaultAsync(l => l.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<LessonDetailReadModel?> GetDetailReadModelByIdAsync(
+        NutritionLessonId id,
+        CancellationToken cancellationToken = default) {
+        return await context.Set<NutritionLesson>()
+            .AsNoTracking()
+            .Where(l => l.Id == id)
+            .Select(l => new LessonDetailReadModel(
+                l.Id.Value,
+                l.Title,
+                l.Content,
+                l.Summary,
+                l.Category.ToString(),
+                l.Difficulty.ToString(),
+                l.EstimatedReadMinutes))
+            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<NutritionLesson?> GetByIdTrackingAsync(
         NutritionLessonId id,
         CancellationToken cancellationToken = default) {
@@ -60,6 +104,16 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<IReadOnlyList<Guid>> GetReadLessonIdsAsync(
+        UserId userId,
+        CancellationToken cancellationToken = default) {
+        return await context.Set<UserLessonProgress>()
+            .AsNoTracking()
+            .Where(p => p.UserId == userId)
+            .Select(p => p.LessonId.Value)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<UserLessonProgress?> GetUserProgressForLessonAsync(
         UserId userId,
         NutritionLessonId lessonId,
@@ -67,6 +121,15 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
         return await context.Set<UserLessonProgress>()
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.UserId == userId && p.LessonId == lessonId, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<bool> IsLessonReadAsync(
+        UserId userId,
+        NutritionLessonId lessonId,
+        CancellationToken cancellationToken = default) {
+        return await context.Set<UserLessonProgress>()
+            .AsNoTracking()
+            .AnyAsync(p => p.UserId == userId && p.LessonId == lessonId, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<UserLessonProgress> AddProgressAsync(

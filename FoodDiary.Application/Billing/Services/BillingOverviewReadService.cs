@@ -3,7 +3,6 @@ using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Models;
-using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Billing.Services;
@@ -14,6 +13,8 @@ public sealed class BillingOverviewReadService(
     IBillingPublicConfigProvider billingPublicConfigProvider,
     TimeProvider dateTimeProvider)
     : IBillingOverviewReadService {
+    private const string YooKassaProvider = "YooKassa";
+
     public async Task<Result<BillingOverviewModel>> GetAsync(UserId userId, CancellationToken cancellationToken) {
         Result<BillingUserProfileModel> userProfileResult = await billingUserContextService
             .GetAccessibleUserProfileAsync(userId, cancellationToken)
@@ -23,7 +24,9 @@ public sealed class BillingOverviewReadService(
         }
 
         BillingUserProfileModel userProfile = userProfileResult.Value;
-        BillingSubscription? subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        BillingSubscriptionOverviewReadModel? subscription = await billingSubscriptionRepository
+            .GetOverviewReadModelByUserIdAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         bool isTrialActive = userProfile.HasActivePremiumTrial(nowUtc);
         bool hasPaidPremium = userProfile.HasPaidPremium;
@@ -49,7 +52,7 @@ public sealed class BillingOverviewReadService(
             subscription?.CancelAtPeriodEnd ?? false,
             renewalEnabled,
             subscription is not null &&
-                !string.Equals(subscription.Provider, BillingProviderNames.YooKassa, StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(subscription.Provider, YooKassaProvider, StringComparison.OrdinalIgnoreCase) &&
                 !string.IsNullOrWhiteSpace(subscription.ExternalCustomerId),
             userProfile.PremiumTrialStartedAtUtc,
             userProfile.PremiumTrialEndsAtUtc,
@@ -61,7 +64,7 @@ public sealed class BillingOverviewReadService(
             publicConfig.AvailableProviders));
     }
 
-    private static bool IsPaidPremiumActive(BillingSubscription? subscription, DateTime nowUtc) {
+    private static bool IsPaidPremiumActive(BillingSubscriptionOverviewReadModel? subscription, DateTime nowUtc) {
         if (subscription is null || string.IsNullOrWhiteSpace(subscription.Status)) {
             return false;
         }
@@ -74,7 +77,7 @@ public sealed class BillingOverviewReadService(
         };
     }
 
-    private static bool IsExpiredProviderTrial(BillingSubscription? subscription, DateTime nowUtc) {
+    private static bool IsExpiredProviderTrial(BillingSubscriptionOverviewReadModel? subscription, DateTime nowUtc) {
         if (subscription is null ||
             !string.Equals(subscription.Status, "trialing", StringComparison.OrdinalIgnoreCase)) {
             return false;
@@ -84,7 +87,7 @@ public sealed class BillingOverviewReadService(
     }
 
     private static string? ResolveSubscriptionStatus(
-        BillingSubscription? subscription,
+        BillingSubscriptionOverviewReadModel? subscription,
         bool isTrialActive,
         bool providerTrialExpired) {
         if (providerTrialExpired) {
@@ -95,7 +98,7 @@ public sealed class BillingOverviewReadService(
     }
 
     private static DateTime? ResolveCurrentPeriodStartUtc(
-        BillingSubscription? subscription,
+        BillingSubscriptionOverviewReadModel? subscription,
         BillingUserProfileModel userProfile,
         bool isTrialActive,
         bool providerTrialExpired) {
@@ -107,7 +110,7 @@ public sealed class BillingOverviewReadService(
     }
 
     private static DateTime? ResolveCurrentPeriodEndUtc(
-        BillingSubscription? subscription,
+        BillingSubscriptionOverviewReadModel? subscription,
         BillingUserProfileModel userProfile,
         bool isTrialActive,
         bool providerTrialExpired) {
