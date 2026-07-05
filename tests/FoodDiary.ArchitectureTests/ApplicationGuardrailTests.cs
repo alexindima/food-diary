@@ -782,6 +782,7 @@ public sealed class ApplicationGuardrailTests {
         string[] gamificationQueryFiles = [.. SourceScanner.SourceFiles(gamificationQueriesRoot)];
 
         string[] violations = [
+            .. FindReferencesInFiles(root, gamificationQueryFiles, "IMealReadRepository"),
             .. FindReferencesInFiles(root, gamificationQueryFiles, "FoodDiary.Domain.Entities.Meals"),
             .. FindReferencesInFiles(root, gamificationQueryFiles, "GetByPeriodAsync"),
         ];
@@ -907,6 +908,10 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, userQueryFiles, "FoodDiary.Domain.Entities.Users"),
+            .. FindReferencesInFiles(root, userQueryFiles, "FoodDiary.Domain.Entities.Notifications"),
+            .. FindReferencesInFiles(root, userQueryFiles, "FoodDiary.Domain.Entities.Dietologist"),
+            .. FindReferencesInFiles(root, userQueryFiles, "IWebPushSubscriptionReadRepository"),
+            .. FindReferencesInFiles(root, userQueryFiles, "IDietologistInvitationReadRepository"),
             .. FindReferencesInFiles(root, userQueryFiles, "GetAccessibleUserAsync"),
         ];
 

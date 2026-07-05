@@ -74,6 +74,7 @@ using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Usda.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Users.Services;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Services;
 using FoodDiary.Application.Wearables.Common;
@@ -141,6 +142,7 @@ public static class DependencyInjection {
         services.AddScoped<IWebPushSubscriptionReadService, WebPushSubscriptionReadService>();
         services.AddScoped<INotificationUserContextService, NotificationUserContextService>();
         services.AddScoped<INotificationWriter, NotificationWriter>();
+        services.AddScoped<IGamificationReadService, GamificationReadService>();
         services.AddScoped<IGamificationUserProfileService, GamificationUserProfileService>();
         services.AddScoped<IShoppingListReadService, ShoppingListReadService>();
         services.AddScoped<IOpenAiFoodService, OpenAiFoodService>();
@@ -168,6 +170,7 @@ public static class DependencyInjection {
         services.AddScoped<ICurrentUserAccessService>(static provider => provider.GetRequiredService<UserContextService>());
         services.AddScoped<IUserContextService>(static provider => provider.GetRequiredService<UserContextService>());
         services.AddScoped<IUserProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
+        services.AddScoped<IProfileOverviewReadService, ProfileOverviewReadService>();
         services.AddScoped<IWaistEntryReadService, WaistEntryReadService>();
         services.AddScoped<IWearableReadService, WearableReadService>();
         services.AddScoped<IWeightEntryReadService, WeightEntryReadService>();

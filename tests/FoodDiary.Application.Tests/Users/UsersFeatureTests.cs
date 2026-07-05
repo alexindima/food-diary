@@ -20,6 +20,7 @@ using FoodDiary.Application.Users.Queries.GetDesiredWaist;
 using FoodDiary.Application.Users.Queries.GetDesiredWeight;
 using FoodDiary.Application.Users.Queries.GetUserById;
 using FoodDiary.Application.Users.Queries.GetUserGoals;
+using FoodDiary.Application.Users.Services;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
@@ -566,10 +567,10 @@ public class UsersFeatureTests {
             locale: "en",
             userAgent: "Chrome");
 
-        var handler = new GetProfileOverviewQueryHandler(
+        var handler = new GetProfileOverviewQueryHandler(new ProfileOverviewReadService(
             new SingleUserRepository(user),
             new FixedWebPushSubscriptionRepository([subscription]),
-            new FixedDietologistInvitationRepository(invitation));
+            new FixedDietologistInvitationRepository(invitation)));
 
         Result<ProfileOverviewModel> result = await handler.Handle(new GetProfileOverviewQuery(user.Id.Value), CancellationToken.None);
 
@@ -588,10 +589,10 @@ public class UsersFeatureTests {
     [Fact]
     public async Task GetProfileOverviewHandler_WithMissingUserId_ReturnsInvalidToken() {
         var user = User.Create("overview-missing@example.com", "hash");
-        var handler = new GetProfileOverviewQueryHandler(
+        var handler = new GetProfileOverviewQueryHandler(new ProfileOverviewReadService(
             new SingleUserRepository(user),
             new FixedWebPushSubscriptionRepository([]),
-            new FixedDietologistInvitationRepository(invitation: null));
+            new FixedDietologistInvitationRepository(invitation: null)));
 
         Result<ProfileOverviewModel> result = await handler.Handle(new GetProfileOverviewQuery(UserId: null), CancellationToken.None);
 
@@ -603,10 +604,10 @@ public class UsersFeatureTests {
     public async Task GetProfileOverviewHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("overview-deleted@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetProfileOverviewQueryHandler(
+        var handler = new GetProfileOverviewQueryHandler(new ProfileOverviewReadService(
             new SingleUserRepository(user),
             new FixedWebPushSubscriptionRepository([]),
-            new FixedDietologistInvitationRepository(invitation: null));
+            new FixedDietologistInvitationRepository(invitation: null)));
 
         Result<ProfileOverviewModel> result = await handler.Handle(new GetProfileOverviewQuery(user.Id.Value), CancellationToken.None);
 

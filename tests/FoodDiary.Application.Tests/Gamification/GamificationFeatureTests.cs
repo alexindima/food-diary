@@ -18,8 +18,8 @@ public class GamificationFeatureTests {
 
     [Fact]
     public async Task GetGamification_WithNullUserId_ReturnsFailure() {
-        var handler = new GetGamificationQueryHandler(
-            CreateMealRepository(), CreateStatisticsReadService(), CreateUserProfileService(user: null), new StubDateTimeProvider());
+        var handler = new GetGamificationQueryHandler(CreateGamificationReadService(
+            CreateMealRepository(), CreateStatisticsReadService(), CreateUserProfileService(user: null)));
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(UserId: null), CancellationToken.None);
@@ -29,8 +29,8 @@ public class GamificationFeatureTests {
 
     [Fact]
     public async Task GetGamification_WhenUserNotFound_ReturnsFailure() {
-        var handler = new GetGamificationQueryHandler(
-            CreateMealRepository(), CreateStatisticsReadService(), CreateUserProfileService(user: null), new StubDateTimeProvider());
+        var handler = new GetGamificationQueryHandler(CreateGamificationReadService(
+            CreateMealRepository(), CreateStatisticsReadService(), CreateUserProfileService(user: null)));
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(Guid.NewGuid()), CancellationToken.None);
@@ -46,7 +46,8 @@ public class GamificationFeatureTests {
 
         IMealRepository mealRepo = CreateMealRepository([Today, Today.AddDays(-1), Today.AddDays(-2)], totalMealCount: 15);
 
-        var handler = new GetGamificationQueryHandler(mealRepo, CreateStatisticsReadService(), CreateUserProfileService(user), new StubDateTimeProvider());
+        var handler = new GetGamificationQueryHandler(CreateGamificationReadService(
+            mealRepo, CreateStatisticsReadService(), CreateUserProfileService(user)));
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(userId.Value), CancellationToken.None);
@@ -62,8 +63,8 @@ public class GamificationFeatureTests {
         var user = User.Create("user@example.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
 
-        var handler = new GetGamificationQueryHandler(
-            CreateMealRepository(), CreateStatisticsReadService(), CreateUserProfileService(user), new StubDateTimeProvider());
+        var handler = new GetGamificationQueryHandler(CreateGamificationReadService(
+            CreateMealRepository(), CreateStatisticsReadService(), CreateUserProfileService(user)));
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(userId.Value), CancellationToken.None);
@@ -108,6 +109,12 @@ public class GamificationFeatureTests {
             .Returns(Task.FromResult(totalMealCount));
         return repository;
     }
+
+    private static IGamificationReadService CreateGamificationReadService(
+        IMealReadRepository mealRepository,
+        IDashboardStatisticsReadService statisticsReadService,
+        IGamificationUserProfileService userProfileService) =>
+        new GamificationReadService(mealRepository, statisticsReadService, userProfileService, new StubDateTimeProvider());
 
     private static IDashboardStatisticsReadService CreateStatisticsReadService(
         IReadOnlyList<DashboardStatisticsBucketReadModel>? buckets = null) {
