@@ -2,8 +2,9 @@ using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dashboard.Services;
@@ -23,20 +24,20 @@ internal sealed class RepositoryDashboardBodyReadService(
         bool includeHydration,
         CancellationToken cancellationToken = default) {
         int normalizedTrendQuantizationDays = Math.Max(1, trendQuantizationDays);
-        IReadOnlyList<WeightEntry> latestWeightEntries = includeWeight
-            ? await weightEntryRepository.GetEntriesAsync(
+        IReadOnlyList<WeightEntryReadModel> latestWeightEntries = includeWeight
+            ? await weightEntryRepository.GetEntryReadModelsAsync(
                 userId, dateFrom: null, dayEndStart, 2, descending: true, cancellationToken).ConfigureAwait(false)
             : [];
-        IReadOnlyList<WaistEntry> latestWaistEntries = includeWaist
-            ? await waistEntryRepository.GetEntriesAsync(
+        IReadOnlyList<WaistEntryReadModel> latestWaistEntries = includeWaist
+            ? await waistEntryRepository.GetEntryReadModelsAsync(
                 userId, dateFrom: null, dayEndStart, 2, descending: true, cancellationToken).ConfigureAwait(false)
             : [];
-        IReadOnlyList<WeightEntry> weightTrendEntries = includeWeight
-            ? await weightEntryRepository.GetByPeriodAsync(
+        IReadOnlyList<WeightEntryReadModel> weightTrendEntries = includeWeight
+            ? await weightEntryRepository.GetByPeriodReadModelsAsync(
                 userId, trendStart, dayStart, cancellationToken).ConfigureAwait(false)
             : [];
-        IReadOnlyList<WaistEntry> waistTrendEntries = includeWaist
-            ? await waistEntryRepository.GetByPeriodAsync(
+        IReadOnlyList<WaistEntryReadModel> waistTrendEntries = includeWaist
+            ? await waistEntryRepository.GetByPeriodReadModelsAsync(
                 userId, trendStart, dayStart, cancellationToken).ConfigureAwait(false)
             : [];
         IReadOnlyList<(DateTime Date, int TotalMl)> hydrationTotals = includeHydration
@@ -56,7 +57,7 @@ internal sealed class RepositoryDashboardBodyReadService(
         DateTime dateFrom,
         DateTime dateTo,
         int quantizationDays,
-        IReadOnlyList<WeightEntry> entries) =>
+        IReadOnlyList<WeightEntryReadModel> entries) =>
         [.. BuildBuckets(dateFrom, dateTo, quantizationDays)
             .Select(bucket => BuildWeightSummary(bucket.Start, bucket.End, entries))];
 
@@ -64,15 +65,15 @@ internal sealed class RepositoryDashboardBodyReadService(
         DateTime dateFrom,
         DateTime dateTo,
         int quantizationDays,
-        IReadOnlyList<WaistEntry> entries) =>
+        IReadOnlyList<WaistEntryReadModel> entries) =>
         [.. BuildBuckets(dateFrom, dateTo, quantizationDays)
             .Select(bucket => BuildWaistSummary(bucket.Start, bucket.End, entries))];
 
     private static DashboardWeightSummaryReadModel BuildWeightSummary(
         DateTime start,
         DateTime end,
-        IReadOnlyList<WeightEntry> entries) {
-        WeightEntry[] bucketEntries = [.. entries.Where(entry => entry.Date >= start && entry.Date <= end)];
+        IReadOnlyList<WeightEntryReadModel> entries) {
+        WeightEntryReadModel[] bucketEntries = [.. entries.Where(entry => entry.Date >= start && entry.Date <= end)];
         double average = bucketEntries.Length == 0
             ? 0
             : Math.Round(bucketEntries.Average(entry => entry.Weight), 2, MidpointRounding.ToEven);
@@ -82,8 +83,8 @@ internal sealed class RepositoryDashboardBodyReadService(
     private static DashboardWaistSummaryReadModel BuildWaistSummary(
         DateTime start,
         DateTime end,
-        IReadOnlyList<WaistEntry> entries) {
-        WaistEntry[] bucketEntries = [.. entries.Where(entry => entry.Date >= start && entry.Date <= end)];
+        IReadOnlyList<WaistEntryReadModel> entries) {
+        WaistEntryReadModel[] bucketEntries = [.. entries.Where(entry => entry.Date >= start && entry.Date <= end)];
         double average = bucketEntries.Length == 0
             ? 0
             : Math.Round(bucketEntries.Average(entry => entry.Circumference), 2, MidpointRounding.ToEven);

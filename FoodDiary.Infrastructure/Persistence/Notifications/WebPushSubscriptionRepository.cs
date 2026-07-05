@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,23 @@ public sealed class WebPushSubscriptionRepository(FoodDiaryDbContext context) : 
         return await context.WebPushSubscriptions
             .Where(x => x.UserId == userId)
             .OrderByDescending(x => x.ModifiedOnUtc ?? x.CreatedOnUtc)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<WebPushSubscriptionReadModel>> GetByUserReadModelsAsync(
+        UserId userId,
+        CancellationToken cancellationToken = default) {
+        return await context.WebPushSubscriptions
+            .AsNoTracking()
+            .Where(x => x.UserId == userId)
+            .OrderByDescending(x => x.ModifiedOnUtc ?? x.CreatedOnUtc)
+            .Select(x => new WebPushSubscriptionReadModel(
+                x.Endpoint,
+                x.ExpirationTimeUtc,
+                x.Locale,
+                x.UserAgent,
+                x.CreatedOnUtc,
+                x.ModifiedOnUtc))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

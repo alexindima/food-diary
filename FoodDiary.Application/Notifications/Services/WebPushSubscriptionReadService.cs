@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Mappings;
 using FoodDiary.Application.Notifications.Models;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Services;
@@ -13,8 +13,8 @@ internal sealed class WebPushSubscriptionReadService(
         UserId userId,
         DateTime utcNow,
         CancellationToken cancellationToken) {
-        IReadOnlyList<WebPushSubscription> subscriptions = await webPushSubscriptionRepository
-            .GetByUserAsync(userId, cancellationToken)
+        IReadOnlyList<WebPushSubscriptionReadModel> subscriptions = await webPushSubscriptionRepository
+            .GetByUserReadModelsAsync(userId, cancellationToken)
             .ConfigureAwait(false);
 
         return [.. subscriptions

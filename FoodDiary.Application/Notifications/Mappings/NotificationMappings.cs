@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Domain.Entities.Notifications;
@@ -26,4 +27,14 @@ public static class NotificationMappings {
             subscription.UserAgent,
             subscription.CreatedOnUtc,
             subscription.ModifiedOnUtc);
+
+    public static WebPushSubscriptionModel ToModel(this WebPushSubscriptionReadModel subscription) =>
+        new(
+            subscription.Endpoint,
+            WebPushEndpointHost.Resolve(subscription.Endpoint),
+            subscription.ExpirationTimeUtc,
+            subscription.Locale,
+            subscription.UserAgent,
+            subscription.CreatedAtUtc,
+            subscription.UpdatedAtUtc);
 }
