@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.MealPlans.Models;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
+using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Domain.Entities.Admin;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.MealPlans;
@@ -147,6 +148,11 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>> nutrientMap = await repository.GetNutrientsByFdcIdsAsync([1001, 1002]);
         IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>> emptyMap = await repository.GetNutrientsByFdcIdsAsync([]);
         IReadOnlyDictionary<int, DailyReferenceValue> referenceValues = await repository.GetDailyReferenceValuesAsync();
+        IReadOnlyList<UsdaFoodReadModel> foodReadModels = await repository.SearchReadModelsAsync("apple", limit: 10);
+        UsdaFoodReadModel? foodReadModel = await repository.GetByFdcIdReadModelAsync(1001);
+        IReadOnlyList<UsdaNutrientReadModel> nutrientReadModels = await repository.GetNutrientReadModelsAsync(1001);
+        IReadOnlyList<UsdaFoodPortionModel> portionReadModels = await repository.GetPortionReadModelsAsync(1001);
+        IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel> referenceValueReadModels = await repository.GetDailyReferenceValueReadModelsAsync();
 
         Assert.Single(foods);
         Assert.NotNull(food);
@@ -156,6 +162,12 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.True(nutrientMap.ContainsKey(1001));
         Assert.Empty(emptyMap);
         Assert.True(referenceValues.ContainsKey(1));
+        Assert.Equal(1001, Assert.Single(foodReadModels).FdcId);
+        Assert.NotNull(foodReadModel);
+        Assert.Equal("Apple raw", foodReadModel.Description);
+        Assert.Equal("Carbohydrate", nutrientReadModels[0].Name);
+        Assert.Equal(182, Assert.Single(portionReadModels).GramWeight);
+        Assert.Equal(275, referenceValueReadModels[1].Value);
     }
 
     [ExcludeFromCodeCoverage]

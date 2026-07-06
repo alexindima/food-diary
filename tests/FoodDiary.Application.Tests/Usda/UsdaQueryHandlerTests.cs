@@ -306,6 +306,30 @@ public sealed class UsdaQueryHandlerTests {
         nutrientsByFdcIdsCalled = () => wasNutrientsByFdcIdsCalled;
 
         IUsdaFoodRepository repository = Substitute.For<IUsdaFoodRepository>();
+        ConfigureUsdaFoodEntityMethods(repository, searchResults, food, nutrients, portions, dailyValues);
+        ConfigureUsdaFoodReadModelMethods(repository, searchResults, food, nutrients, portions, dailyValues);
+        repository
+            .GetNutrientsByFdcIdsAsync(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                wasNutrientsByFdcIdsCalled = true;
+                var requested = call.ArgAt<IEnumerable<int>>(0).ToHashSet();
+                IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>> values = nutrientsByFdcId ?? new Dictionary<int, IReadOnlyList<UsdaFoodNutrient>>();
+                return Task.FromResult<IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>>>(
+                    values
+                        .Where(kvp => requested.Contains(kvp.Key))
+                        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
+            });
+
+        return repository;
+    }
+
+    private static void ConfigureUsdaFoodEntityMethods(
+        IUsdaFoodRepository repository,
+        IReadOnlyList<UsdaFood>? searchResults,
+        UsdaFood? food,
+        IReadOnlyList<UsdaFoodNutrient>? nutrients,
+        IReadOnlyList<UsdaFoodPortion>? portions,
+        IReadOnlyDictionary<int, DailyReferenceValue>? dailyValues) {
         repository
             .SearchAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(call => {
@@ -325,21 +349,65 @@ public sealed class UsdaQueryHandlerTests {
             .GetPortionsAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(portions ?? []));
         repository
-            .GetNutrientsByFdcIdsAsync(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>())
-            .Returns(call => {
-                wasNutrientsByFdcIdsCalled = true;
-                var requested = call.ArgAt<IEnumerable<int>>(0).ToHashSet();
-                IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>> values = nutrientsByFdcId ?? new Dictionary<int, IReadOnlyList<UsdaFoodNutrient>>();
-                return Task.FromResult<IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>>>(
-                    values
-                        .Where(kvp => requested.Contains(kvp.Key))
-                        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
-            });
-        repository
             .GetDailyReferenceValuesAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(dailyValues ?? new Dictionary<int, DailyReferenceValue>()));
+    }
 
-        return repository;
+    private static void ConfigureUsdaFoodReadModelMethods(
+        IUsdaFoodRepository repository,
+        IReadOnlyList<UsdaFood>? searchResults,
+        UsdaFood? food,
+        IReadOnlyList<UsdaFoodNutrient>? nutrients,
+        IReadOnlyList<UsdaFoodPortion>? portions,
+        IReadOnlyDictionary<int, DailyReferenceValue>? dailyValues) {
+        repository
+            .SearchReadModelsAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                int limit = call.ArgAt<int>(1);
+                return Task.FromResult<IReadOnlyList<UsdaFoodReadModel>>([
+                    .. (searchResults ?? [])
+                    .Take(limit)
+                    .Select(static food => new UsdaFoodReadModel(food.FdcId, food.Description, food.FoodCategory)),
+                ]);
+            });
+        repository
+            .GetByFdcIdReadModelAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                int fdcId = call.ArgAt<int>(0);
+                return Task.FromResult(food?.FdcId == fdcId
+                    ? new UsdaFoodReadModel(food.FdcId, food.Description, food.FoodCategory)
+                    : null);
+            });
+        repository
+            .GetNutrientReadModelsAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<UsdaNutrientReadModel>>([
+                .. (nutrients ?? []).Select(static nutrient => new UsdaNutrientReadModel(
+                    nutrient.NutrientId,
+                    nutrient.Nutrient.Name,
+                    nutrient.Nutrient.UnitName,
+                    nutrient.Amount)),
+            ]));
+        repository
+            .GetPortionReadModelsAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<UsdaFoodPortionModel>>([
+                .. (portions ?? []).Select(static portion => new UsdaFoodPortionModel(
+                    portion.Id,
+                    portion.Amount,
+                    portion.MeasureUnitName,
+                    portion.GramWeight,
+                    portion.PortionDescription,
+                    portion.Modifier)),
+            ]));
+        repository
+            .GetDailyReferenceValueReadModelsAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel>>(
+                (dailyValues ?? new Dictionary<int, DailyReferenceValue>())
+                .ToDictionary(
+                    static item => item.Key,
+                    static item => new UsdaDailyReferenceValueReadModel(
+                        item.Value.NutrientId,
+                        item.Value.Value,
+                        item.Value.Unit))));
     }
 
     private static IUsdaFoodRepository CreateUsdaFoodRepository(out Func<bool> nutrientsByFdcIdsCalled) =>
