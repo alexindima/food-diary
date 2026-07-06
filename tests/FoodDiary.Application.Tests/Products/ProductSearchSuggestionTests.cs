@@ -299,6 +299,16 @@ public sealed class ProductSearchSuggestionTests {
                 return Task.FromResult(result);
             });
         repository
+            .SearchReadModelsAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                int limit = call.ArgAt<int>(1);
+                IReadOnlyList<UsdaFoodReadModel> result = foods
+                    .Take(limit)
+                    .Select(static food => new UsdaFoodReadModel(food.FdcId, food.Description, food.FoodCategory))
+                    .ToList();
+                return Task.FromResult(result);
+            });
+        repository
             .GetByFdcIdAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<UsdaFood?>(null));
         repository
