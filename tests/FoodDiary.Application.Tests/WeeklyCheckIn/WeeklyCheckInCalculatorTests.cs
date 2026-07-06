@@ -1,22 +1,20 @@
+using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WeeklyCheckIn.Models;
 using FoodDiary.Application.WeeklyCheckIn.Services;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.WeightEntries.Models;
 
 namespace FoodDiary.Application.Tests.WeeklyCheckIn;
 
 [ExcludeFromCodeCoverage]
 public class WeeklyCheckInCalculatorTests {
-    private static readonly UserId TestUserId = UserId.New();
+    private static readonly Guid TestUserId = Guid.NewGuid();
     private static readonly DateTime WeekStart = new(2026, 3, 30, 0, 0, 0, DateTimeKind.Utc);
 
     [Fact]
     public void BuildSummary_WithEmptyData_ReturnsZeros() {
         WeekSummaryModel summary = WeeklyCheckInCalculator.BuildSummary(
-            [], [], [], [], daysInPeriod: 7);
+            [], mealsLogged: 0, [], [], [], daysInPeriod: 7);
 
         Assert.Equal(0, summary.TotalCalories);
         Assert.Equal(0, summary.AvgDailyCalories);
@@ -28,15 +26,14 @@ public class WeeklyCheckInCalculatorTests {
 
     [Fact]
     public void BuildSummary_WithMeals_CalculatesAveragesCorrectly() {
-        var meals = new List<Meal>();
-        for (int i = 0; i < 3; i++) {
-            var meal = Meal.Create(TestUserId, WeekStart.AddDays(i), MealType.Lunch);
-            meal.ApplyNutrition(new MealNutritionUpdate(700, 40, 25, 80, 8, 0, IsAutoCalculated: true));
-            meals.Add(meal);
-        }
+        IReadOnlyList<DashboardStatisticsBucketReadModel> buckets = [
+            CreateNutritionBucket(WeekStart, 700, 40, 25, 80, 8),
+            CreateNutritionBucket(WeekStart.AddDays(1), 700, 40, 25, 80, 8),
+            CreateNutritionBucket(WeekStart.AddDays(2), 700, 40, 25, 80, 8),
+        ];
 
         WeekSummaryModel summary = WeeklyCheckInCalculator.BuildSummary(
-            meals, [], [], [], daysInPeriod: 7);
+            buckets, mealsLogged: 3, [], [], [], daysInPeriod: 7);
 
         Assert.Equal(2100, summary.TotalCalories);
         Assert.Equal(300, summary.AvgDailyCalories);
@@ -46,17 +43,17 @@ public class WeeklyCheckInCalculatorTests {
 
     [Fact]
     public void BuildSummary_WithWeightsAndWaists_TracksStartAndEnd() {
-        var weights = new List<WeightEntry> {
-            WeightEntry.Create(TestUserId, WeekStart, 80),
-            WeightEntry.Create(TestUserId, WeekStart.AddDays(6), 79.5),
+        var weights = new List<WeightEntryModel> {
+            CreateWeightEntry(WeekStart, 80),
+            CreateWeightEntry(WeekStart.AddDays(6), 79.5),
         };
-        var waists = new List<WaistEntry> {
-            WaistEntry.Create(TestUserId, WeekStart, 85),
-            WaistEntry.Create(TestUserId, WeekStart.AddDays(6), 84),
+        var waists = new List<WaistEntryModel> {
+            CreateWaistEntry(WeekStart, 85),
+            CreateWaistEntry(WeekStart.AddDays(6), 84),
         };
 
         WeekSummaryModel summary = WeeklyCheckInCalculator.BuildSummary(
-            [], weights, waists, [], daysInPeriod: 7);
+            [], mealsLogged: 0, weights, waists, [], daysInPeriod: 7);
 
         Assert.Equal(80, summary.WeightStart);
         Assert.Equal(79.5, summary.WeightEnd);
@@ -72,7 +69,7 @@ public class WeeklyCheckInCalculatorTests {
         };
 
         WeekSummaryModel summary = WeeklyCheckInCalculator.BuildSummary(
-            [], [], [], hydration, daysInPeriod: 7);
+            [], mealsLogged: 0, [], [], hydration, daysInPeriod: 7);
 
         Assert.Equal(3800, summary.TotalHydrationMl);
         Assert.Equal(542, summary.AvgDailyHydrationMl);
@@ -182,4 +179,19 @@ public class WeeklyCheckInCalculatorTests {
 
         Assert.Contains("suggestion.keep_going", suggestions);
     }
+
+    private static DashboardStatisticsBucketReadModel CreateNutritionBucket(
+        DateTime date,
+        double calories,
+        double proteins,
+        double fats,
+        double carbs,
+        double fiber) =>
+        new(date, date, calories, proteins, fats, carbs, fiber, proteins, fats, carbs, fiber);
+
+    private static WeightEntryModel CreateWeightEntry(DateTime date, double weight) =>
+        new(Guid.NewGuid(), TestUserId, date, weight);
+
+    private static WaistEntryModel CreateWaistEntry(DateTime date, double circumference) =>
+        new(Guid.NewGuid(), TestUserId, date, circumference);
 }

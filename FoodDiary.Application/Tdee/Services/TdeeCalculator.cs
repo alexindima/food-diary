@@ -1,8 +1,6 @@
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Exercises.Models;
 using FoodDiary.Application.WeightEntries.Models;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Tdee.Services;
 
@@ -13,25 +11,6 @@ public static class TdeeCalculator {
     private const double MaxReasonableTdee = 6000.0;
     private const double MinReasonableTdee = 800.0;
     private const double EmaAlpha = 0.1;
-
-    public static AdaptiveTdeeResult CalculateAdaptive(
-        IReadOnlyList<WeightEntry> weightEntries,
-        IReadOnlyList<Meal> meals,
-        int periodDays,
-        IReadOnlyList<ExerciseEntry>? exerciseEntries = null) =>
-        CalculateAdaptive(weightEntries, CalculateDailyCalories(meals), periodDays, exerciseEntries);
-
-    public static AdaptiveTdeeResult CalculateAdaptive(
-        IReadOnlyList<WeightEntry> weightEntries,
-        IReadOnlyDictionary<DateTime, double> dailyCalories,
-        int periodDays,
-        IReadOnlyList<ExerciseEntry>? exerciseEntries = null) {
-        return CalculateAdaptiveCore(
-            [.. weightEntries.Select(entry => new WeightSample(entry.Date, entry.Weight))],
-            dailyCalories,
-            periodDays,
-            exerciseEntries?.Select(entry => new ExerciseSample(entry.CaloriesBurned)).ToArray());
-    }
 
     public static AdaptiveTdeeResult CalculateAdaptive(
         IReadOnlyList<WeightEntryModel> weightEntries,
@@ -136,18 +115,6 @@ public static class TdeeCalculator {
             ( >= 100 and <= 500, _, true) => "hint.surplus_moderate",
             _ => "hint.review_goals",
         };
-    }
-
-    private static Dictionary<DateTime, double> CalculateDailyCalories(IReadOnlyList<Meal> meals) {
-        var daily = new Dictionary<DateTime, double>();
-        foreach (Meal meal in meals) {
-            DateTime date = meal.Date.Date;
-            double total = daily.GetValueOrDefault(date, 0);
-
-            daily[date] = total + meal.TotalCalories;
-        }
-
-        return daily;
     }
 
     private static double CalculateAvgDailyExercise(

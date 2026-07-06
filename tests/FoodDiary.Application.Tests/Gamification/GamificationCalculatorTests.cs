@@ -1,9 +1,5 @@
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Application.Gamification.Services;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Gamification;
 
@@ -140,29 +136,23 @@ public class GamificationCalculatorTests {
 
     [Fact]
     public void CalculateWeeklyAdherence_WithAllDaysWithinRange_Returns1() {
-        var userId = UserId.New();
-        var meals = new List<Meal>();
-        for (int i = 0; i < 7; i++) {
-            DateTime date = Today.AddDays(-i);
-            var meal = Meal.Create(userId, date, MealType.Lunch);
-            meal.ApplyNutrition(new MealNutritionUpdate(2000, 100, 70, 230, 25, 0, IsAutoCalculated: true));
-            meals.Add(meal);
-        }
+        IReadOnlyDictionary<DateTime, double> dailyCalories = Enumerable.Range(0, 7)
+            .ToDictionary(index => Today.AddDays(-index).Date, _ => 2000.0);
 
         double adherence = GamificationCalculator.CalculateWeeklyAdherence(
-            meals, _ => 2000, Today);
+            dailyCalories, _ => 2000, Today);
 
         Assert.Equal(1.0, adherence);
     }
 
     [Fact]
     public void CalculateWeeklyAdherence_WithNoGoal_AndMealsExist_Returns1() {
-        var userId = UserId.New();
-        var meal = Meal.Create(userId, Today, MealType.Lunch);
-        meal.ApplyNutrition(new MealNutritionUpdate(2000, 100, 70, 230, 25, 0, IsAutoCalculated: true));
+        IReadOnlyDictionary<DateTime, double> dailyCalories = new Dictionary<DateTime, double> {
+            [Today.Date] = 2000,
+        };
 
         double adherence = GamificationCalculator.CalculateWeeklyAdherence(
-            [meal], _ => null, Today);
+            dailyCalories, _ => null, Today);
 
         Assert.Equal(1.0, adherence);
     }
@@ -170,18 +160,19 @@ public class GamificationCalculatorTests {
     [Fact]
     public void CalculateWeeklyAdherence_WithNoMealsAndNoGoal_Returns0() {
         double adherence = GamificationCalculator.CalculateWeeklyAdherence(
-            [], _ => null, Today);
+            new Dictionary<DateTime, double>(), _ => null, Today);
 
         Assert.Equal(0.0, adherence);
     }
 
     [Fact]
     public void CalculateWeeklyAdherence_WithGoalButNoPositiveCalories_DoesNotCountDayAsMet() {
-        var userId = UserId.New();
-        var meal = Meal.Create(userId, Today, MealType.Lunch);
+        IReadOnlyDictionary<DateTime, double> dailyCalories = new Dictionary<DateTime, double> {
+            [Today.Date] = 0,
+        };
 
         double adherence = GamificationCalculator.CalculateWeeklyAdherence(
-            [meal], _ => 2000, Today);
+            dailyCalories, _ => 2000, Today);
 
         Assert.Equal(0.0, adherence);
     }

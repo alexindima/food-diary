@@ -1,5 +1,4 @@
 using FoodDiary.Application.Gamification.Models;
-using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Gamification.Services;
 
@@ -76,17 +75,6 @@ string.Equals(b.Category, "streak", StringComparison.Ordinal) ? longestStreak >=
 
         return (int)Math.Round(streakScore + adherenceScore + activityScore, MidpointRounding.ToEven);
     }
-
-    public static double CalculateWeeklyAdherence(
-        IReadOnlyList<Meal> weekMeals,
-        Func<DateTime, double?> getCalorieTarget,
-        DateTime today) =>
-        CalculateWeeklyAdherence(
-            weekMeals
-                .GroupBy(static meal => meal.Date.Date)
-                .ToDictionary(static group => group.Key, static group => group.Sum(meal => meal.TotalCalories)),
-            getCalorieTarget,
-            today);
 
     public static double CalculateWeeklyAdherence(
         IReadOnlyDictionary<DateTime, double> dailyCalories,

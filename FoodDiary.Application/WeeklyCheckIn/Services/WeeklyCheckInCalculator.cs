@@ -2,54 +2,10 @@ using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WeeklyCheckIn.Models;
 using FoodDiary.Application.WeightEntries.Models;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WeeklyCheckIn.Services;
 
 public static class WeeklyCheckInCalculator {
-    public static WeekSummaryModel BuildSummary(
-        IReadOnlyList<Meal> meals,
-        IReadOnlyList<WeightEntry> weights,
-        IReadOnlyList<WaistEntry> waists,
-        IReadOnlyList<(DateTime Date, int TotalMl)> hydration,
-        int daysInPeriod) =>
-        BuildSummary(
-            [.. meals
-                .GroupBy(static meal => meal.Date.Date)
-                .Select(static group => new DashboardStatisticsBucketReadModel(
-                    group.Key,
-                    group.Key,
-                    group.Sum(meal => meal.TotalCalories),
-                    group.Sum(meal => meal.TotalProteins),
-                    group.Sum(meal => meal.TotalFats),
-                    group.Sum(meal => meal.TotalCarbs),
-                    AverageFiber: 0,
-                    group.Sum(meal => meal.TotalProteins),
-                    group.Sum(meal => meal.TotalFats),
-                    group.Sum(meal => meal.TotalCarbs),
-                    group.Sum(meal => meal.TotalFiber)))],
-            meals.Count,
-            weights,
-            waists,
-            hydration,
-            daysInPeriod);
-
-    public static WeekSummaryModel BuildSummary(
-        IReadOnlyList<DashboardStatisticsBucketReadModel> nutritionBuckets,
-        int mealsLogged,
-        IReadOnlyList<WeightEntry> weights,
-        IReadOnlyList<WaistEntry> waists,
-        IReadOnlyList<(DateTime Date, int TotalMl)> hydration,
-        int daysInPeriod) =>
-        BuildSummaryCore(
-            nutritionBuckets,
-            mealsLogged,
-            [.. weights.Select(static entry => new WeightSample(entry.Date, entry.Weight))],
-            [.. waists.Select(static entry => new WaistSample(entry.Date, entry.Circumference))],
-            hydration,
-            daysInPeriod);
-
     public static WeekSummaryModel BuildSummary(
         IReadOnlyList<DashboardStatisticsBucketReadModel> nutritionBuckets,
         int mealsLogged,

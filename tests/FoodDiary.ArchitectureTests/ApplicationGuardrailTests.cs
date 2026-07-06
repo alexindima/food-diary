@@ -58,6 +58,31 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationEngagementCalculators_UseReadModelsInsteadOfDomainAggregates() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] calculatorFiles = [
+            Path.Combine(applicationRoot, "Tdee", "Services", "TdeeCalculator.cs"),
+            Path.Combine(applicationRoot, "WeeklyCheckIn", "Services", "WeeklyCheckInCalculator.cs"),
+            Path.Combine(applicationRoot, "Gamification", "Services", "GamificationCalculator.cs"),
+        ];
+        string[] forbiddenPatterns = [
+            "FoodDiary.Domain.Entities.Meals",
+            "FoodDiary.Domain.Entities.Tracking",
+            "IReadOnlyList<Meal>",
+            "IReadOnlyList<WeightEntry>",
+            "IReadOnlyList<WaistEntry>",
+            "IReadOnlyList<ExerciseEntry>",
+        ];
+
+        string[] violations = [.. forbiddenPatterns
+            .SelectMany(pattern => FindReferencesInFiles(root, calculatorFiles, pattern))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationFeatures_DoNotUseLegacyCommandsCommonFolders() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

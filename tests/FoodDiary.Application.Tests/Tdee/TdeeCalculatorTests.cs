@@ -1,23 +1,20 @@
+using FoodDiary.Application.Exercises.Models;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Services;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.WeightEntries.Models;
 
 namespace FoodDiary.Application.Tests.Tdee;
 
 [ExcludeFromCodeCoverage]
 public class TdeeCalculatorTests {
-    private static readonly UserId TestUserId = UserId.New();
+    private static readonly Guid TestUserId = Guid.NewGuid();
 
     [Fact]
     public void CalculateAdaptive_WithTooFewWeightEntries_ReturnsInsufficient() {
-        IReadOnlyList<WeightEntry> weights = CreateWeightEntries(2, startDate: DateTime.UtcNow.AddDays(-30), startWeight: 80);
-        IReadOnlyList<Meal> meals = CreateMeals(20, startDate: DateTime.UtcNow.AddDays(-30), caloriesPerMeal: 500);
+        IReadOnlyList<WeightEntryModel> weights = CreateWeightEntries(2, startDate: DateTime.UtcNow.AddDays(-30), startWeight: 80);
+        IReadOnlyDictionary<DateTime, double> dailyCalories = CreateDailyCalories(20, startDate: DateTime.UtcNow.AddDays(-30), caloriesPerDay: 500);
 
-        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, meals, 30);
+        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, dailyCalories, 30);
 
         Assert.False(result.HasData);
         Assert.Equal(TdeeConfidence.None, result.Confidence);
@@ -25,10 +22,10 @@ public class TdeeCalculatorTests {
 
     [Fact]
     public void CalculateAdaptive_WithTooFewDays_ReturnsInsufficient() {
-        IReadOnlyList<WeightEntry> weights = CreateWeightEntries(5, startDate: DateTime.UtcNow.AddDays(-10), startWeight: 80);
-        IReadOnlyList<Meal> meals = CreateMeals(10, startDate: DateTime.UtcNow.AddDays(-10), caloriesPerMeal: 500);
+        IReadOnlyList<WeightEntryModel> weights = CreateWeightEntries(5, startDate: DateTime.UtcNow.AddDays(-10), startWeight: 80);
+        IReadOnlyDictionary<DateTime, double> dailyCalories = CreateDailyCalories(10, startDate: DateTime.UtcNow.AddDays(-10), caloriesPerDay: 500);
 
-        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, meals, 10);
+        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, dailyCalories, 10);
 
         Assert.False(result.HasData);
     }
@@ -36,10 +33,10 @@ public class TdeeCalculatorTests {
     [Fact]
     public void CalculateAdaptive_WithTooFewCalorieDays_ReturnsInsufficient() {
         DateTime baseDate = DateTime.UtcNow.AddDays(-30);
-        IReadOnlyList<WeightEntry> weights = CreateWeightEntries(5, startDate: baseDate, startWeight: 80);
-        IReadOnlyList<Meal> meals = CreateMeals(13, startDate: baseDate, caloriesPerMeal: 2000);
+        IReadOnlyList<WeightEntryModel> weights = CreateWeightEntries(5, startDate: baseDate, startWeight: 80);
+        IReadOnlyDictionary<DateTime, double> dailyCalories = CreateDailyCalories(13, startDate: baseDate, caloriesPerDay: 2000);
 
-        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, meals, 30);
+        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, dailyCalories, 30);
 
         Assert.False(result.HasData);
     }
@@ -48,11 +45,11 @@ public class TdeeCalculatorTests {
     public void CalculateAdaptive_WithCompressedWeightDates_ReturnsInsufficient() {
         DateTime baseDate = DateTime.UtcNow.AddDays(-10);
         var weights = Enumerable.Range(0, 5)
-            .Select(index => WeightEntry.Create(TestUserId, baseDate.AddDays(index), 80))
+            .Select(index => CreateWeightEntry(baseDate.AddDays(index), 80))
             .ToList();
-        IReadOnlyList<Meal> meals = CreateMeals(20, startDate: baseDate.AddDays(-10), caloriesPerMeal: 2000);
+        IReadOnlyDictionary<DateTime, double> dailyCalories = CreateDailyCalories(20, startDate: baseDate.AddDays(-10), caloriesPerDay: 2000);
 
-        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, meals, 30);
+        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, dailyCalories, 30);
 
         Assert.False(result.HasData);
     }
@@ -60,10 +57,10 @@ public class TdeeCalculatorTests {
     [Fact]
     public void CalculateAdaptive_WithUnreasonableTdee_ReturnsInsufficient() {
         DateTime baseDate = DateTime.UtcNow.AddDays(-30);
-        IReadOnlyList<WeightEntry> weights = CreateWeightEntries(10, startDate: baseDate, startWeight: 80, weightChangePerEntry: 1);
-        IReadOnlyList<Meal> meals = CreateMeals(30, startDate: baseDate, caloriesPerMeal: 900);
+        IReadOnlyList<WeightEntryModel> weights = CreateWeightEntries(10, startDate: baseDate, startWeight: 80, weightChangePerEntry: 1);
+        IReadOnlyDictionary<DateTime, double> dailyCalories = CreateDailyCalories(30, startDate: baseDate, caloriesPerDay: 900);
 
-        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, meals, 30);
+        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, dailyCalories, 30);
 
         Assert.False(result.HasData);
     }
@@ -72,11 +69,11 @@ public class TdeeCalculatorTests {
     public void CalculateAdaptive_WithSufficientData_MaintainingWeight_ReturnsTdeeCloseToIntake() {
         DateTime baseDate = DateTime.UtcNow.AddDays(-30);
         // Stable weight at 80 kg over 30 days
-        IReadOnlyList<WeightEntry> weights = CreateWeightEntries(10, startDate: baseDate, startWeight: 80, weightChangePerEntry: 0);
+        IReadOnlyList<WeightEntryModel> weights = CreateWeightEntries(10, startDate: baseDate, startWeight: 80, weightChangePerEntry: 0);
         // Eating ~2000 kcal/day
-        IReadOnlyList<Meal> meals = CreateMeals(30, startDate: baseDate, caloriesPerMeal: 2000);
+        IReadOnlyDictionary<DateTime, double> dailyCalories = CreateDailyCalories(30, startDate: baseDate, caloriesPerDay: 2000);
 
-        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, meals, 30);
+        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, dailyCalories, 30);
 
         Assert.True(result.HasData);
         // TDEE should be close to intake when weight is stable
@@ -87,11 +84,11 @@ public class TdeeCalculatorTests {
     public void CalculateAdaptive_WithWeightLoss_ReturnsTdeeHigherThanIntake() {
         DateTime baseDate = DateTime.UtcNow.AddDays(-30);
         // Losing ~1 kg over 30 days (80 -> 79)
-        IReadOnlyList<WeightEntry> weights = CreateWeightEntries(10, startDate: baseDate, startWeight: 80, weightChangePerEntry: -0.1);
+        IReadOnlyList<WeightEntryModel> weights = CreateWeightEntries(10, startDate: baseDate, startWeight: 80, weightChangePerEntry: -0.1);
         // Eating 1800 kcal/day
-        IReadOnlyList<Meal> meals = CreateMeals(30, startDate: baseDate, caloriesPerMeal: 1800);
+        IReadOnlyDictionary<DateTime, double> dailyCalories = CreateDailyCalories(30, startDate: baseDate, caloriesPerDay: 1800);
 
-        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, meals, 30);
+        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, dailyCalories, 30);
 
         Assert.True(result.HasData);
         Assert.True(result.AdaptiveTdee > 1800);
@@ -100,10 +97,10 @@ public class TdeeCalculatorTests {
     [Fact]
     public void CalculateAdaptive_HighConfidence_WithExtensiveData() {
         DateTime baseDate = DateTime.UtcNow.AddDays(-35);
-        IReadOnlyList<WeightEntry> weights = CreateWeightEntries(12, startDate: baseDate, startWeight: 80, weightChangePerEntry: 0);
-        IReadOnlyList<Meal> meals = CreateMeals(30, startDate: baseDate, caloriesPerMeal: 2000);
+        IReadOnlyList<WeightEntryModel> weights = CreateWeightEntries(12, startDate: baseDate, startWeight: 80, weightChangePerEntry: 0);
+        IReadOnlyDictionary<DateTime, double> dailyCalories = CreateDailyCalories(30, startDate: baseDate, caloriesPerDay: 2000);
 
-        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, meals, 35);
+        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, dailyCalories, 35);
 
         Assert.True(result.HasData);
         Assert.Equal(TdeeConfidence.High, result.Confidence);
@@ -112,10 +109,10 @@ public class TdeeCalculatorTests {
     [Fact]
     public void CalculateAdaptive_MediumConfidence_WithModerateData() {
         DateTime baseDate = DateTime.UtcNow.AddDays(-24);
-        IReadOnlyList<WeightEntry> weights = CreateWeightEntries(5, startDate: baseDate, startWeight: 80, weightChangePerEntry: 0);
-        IReadOnlyList<Meal> meals = CreateMeals(20, startDate: baseDate, caloriesPerMeal: 2000);
+        IReadOnlyList<WeightEntryModel> weights = CreateWeightEntries(5, startDate: baseDate, startWeight: 80, weightChangePerEntry: 0);
+        IReadOnlyDictionary<DateTime, double> dailyCalories = CreateDailyCalories(20, startDate: baseDate, caloriesPerDay: 2000);
 
-        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, meals, 24);
+        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, dailyCalories, 24);
 
         Assert.True(result.HasData);
         Assert.Equal(TdeeConfidence.Medium, result.Confidence);
@@ -124,10 +121,10 @@ public class TdeeCalculatorTests {
     [Fact]
     public void CalculateAdaptive_LowConfidence_WithMinimumData() {
         DateTime baseDate = DateTime.UtcNow.AddDays(-16);
-        IReadOnlyList<WeightEntry> weights = CreateWeightEntries(3, startDate: baseDate, startWeight: 80, weightChangePerEntry: 0);
-        IReadOnlyList<Meal> meals = CreateMeals(14, startDate: baseDate, caloriesPerMeal: 2000);
+        IReadOnlyList<WeightEntryModel> weights = CreateWeightEntries(3, startDate: baseDate, startWeight: 80, weightChangePerEntry: 0);
+        IReadOnlyDictionary<DateTime, double> dailyCalories = CreateDailyCalories(14, startDate: baseDate, caloriesPerDay: 2000);
 
-        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, meals, 16);
+        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, dailyCalories, 16);
 
         Assert.True(result.HasData);
         Assert.Equal(TdeeConfidence.Low, result.Confidence);
@@ -215,12 +212,12 @@ public class TdeeCalculatorTests {
     [Fact]
     public void CalculateAdaptive_WithExercise_IncreasesTdee() {
         DateTime baseDate = DateTime.UtcNow.AddDays(-30);
-        IReadOnlyList<WeightEntry> weights = CreateWeightEntries(10, startDate: baseDate, startWeight: 80, weightChangePerEntry: 0);
-        IReadOnlyList<Meal> meals = CreateMeals(30, startDate: baseDate, caloriesPerMeal: 2000);
+        IReadOnlyList<WeightEntryModel> weights = CreateWeightEntries(10, startDate: baseDate, startWeight: 80, weightChangePerEntry: 0);
+        IReadOnlyDictionary<DateTime, double> dailyCalories = CreateDailyCalories(30, startDate: baseDate, caloriesPerDay: 2000);
 
-        AdaptiveTdeeResult resultWithout = TdeeCalculator.CalculateAdaptive(weights, meals, 30);
-        IReadOnlyList<ExerciseEntry> exercises = CreateExerciseEntries(30, startDate: baseDate, caloriesPerDay: 300);
-        AdaptiveTdeeResult resultWith = TdeeCalculator.CalculateAdaptive(weights, meals, 30, exercises);
+        AdaptiveTdeeResult resultWithout = TdeeCalculator.CalculateAdaptive(weights, dailyCalories, 30);
+        IReadOnlyList<ExerciseEntryModel> exercises = CreateExerciseEntries(30, startDate: baseDate, caloriesPerDay: 300);
+        AdaptiveTdeeResult resultWith = TdeeCalculator.CalculateAdaptive(weights, dailyCalories, 30, exercises);
 
         Assert.True(resultWithout.HasData);
         Assert.True(resultWith.HasData);
@@ -231,56 +228,56 @@ public class TdeeCalculatorTests {
     public void CalculateAdaptive_EmaSmoothing_HandlesNoisyWeights() {
         DateTime baseDate = DateTime.UtcNow.AddDays(-30);
         // Noisy weights around 80 kg - EMA should smooth them
-        var weights = new List<WeightEntry>();
+        var weights = new List<WeightEntryModel>();
         double[] noisy = [80.5, 79.2, 80.8, 79.5, 80.3, 79.8, 80.1, 79.9, 80.0, 80.2];
         double daysPerEntry = 30.0 / (noisy.Length - 1);
         for (int i = 0; i < noisy.Length; i++) {
-            weights.Add(WeightEntry.Create(TestUserId, baseDate.AddDays(i * daysPerEntry), noisy[i]));
+            weights.Add(CreateWeightEntry(baseDate.AddDays(i * daysPerEntry), noisy[i]));
         }
 
-        IReadOnlyList<Meal> meals = CreateMeals(30, startDate: baseDate, caloriesPerMeal: 2000);
+        IReadOnlyDictionary<DateTime, double> dailyCalories = CreateDailyCalories(30, startDate: baseDate, caloriesPerDay: 2000);
 
-        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, meals, 30);
+        AdaptiveTdeeResult result = TdeeCalculator.CalculateAdaptive(weights, dailyCalories, 30);
 
         Assert.True(result.HasData);
         // With noisy but stable weight, TDEE should be close to intake
         Assert.InRange(result.AdaptiveTdee!.Value, 1800, 2200);
     }
 
-    private static IReadOnlyList<ExerciseEntry> CreateExerciseEntries(
+    private static IReadOnlyList<ExerciseEntryModel> CreateExerciseEntries(
         int count, DateTime startDate, double caloriesPerDay) {
-        var entries = new List<ExerciseEntry>();
+        var entries = new List<ExerciseEntryModel>();
         for (int i = 0; i < count; i++) {
             DateTime date = startDate.AddDays(i);
-            entries.Add(ExerciseEntry.Create(TestUserId, date, ExerciseType.Running, 30, caloriesPerDay));
+            entries.Add(new ExerciseEntryModel(
+                Id: Guid.NewGuid(),
+                Date: date,
+                ExerciseType: "Running",
+                Name: null,
+                DurationMinutes: 30,
+                CaloriesBurned: caloriesPerDay,
+                Notes: null));
         }
 
         return entries;
     }
 
-    private static IReadOnlyList<WeightEntry> CreateWeightEntries(
+    private static IReadOnlyList<WeightEntryModel> CreateWeightEntries(
         int count, DateTime startDate, double startWeight, double weightChangePerEntry = 0) {
-        var entries = new List<WeightEntry>();
+        var entries = new List<WeightEntryModel>();
         double daysPerEntry = count > 1 ? 30.0 / (count - 1) : 1;
         for (int i = 0; i < count; i++) {
             DateTime date = startDate.AddDays(i * daysPerEntry);
-            entries.Add(WeightEntry.Create(TestUserId, date, startWeight + (i * weightChangePerEntry)));
+            entries.Add(CreateWeightEntry(date, startWeight + (i * weightChangePerEntry)));
         }
 
         return entries;
     }
 
-    private static IReadOnlyList<Meal> CreateMeals(int count, DateTime startDate, double caloriesPerMeal) {
-        var meals = new List<Meal>();
-        for (int i = 0; i < count; i++) {
-            DateTime date = startDate.AddDays(i);
-            var meal = Meal.Create(TestUserId, date, MealType.Lunch);
-            meal.ApplyNutrition(new MealNutritionUpdate(
-                caloriesPerMeal, caloriesPerMeal * 0.15, caloriesPerMeal * 0.035,
-                caloriesPerMeal * 0.05, 5, 0, IsAutoCalculated: true));
-            meals.Add(meal);
-        }
+    private static IReadOnlyDictionary<DateTime, double> CreateDailyCalories(int count, DateTime startDate, double caloriesPerDay) =>
+        Enumerable.Range(0, count)
+            .ToDictionary(index => startDate.AddDays(index).Date, _ => caloriesPerDay);
 
-        return meals;
-    }
+    private static WeightEntryModel CreateWeightEntry(DateTime date, double weight) =>
+        new(Guid.NewGuid(), TestUserId, date, weight);
 }
