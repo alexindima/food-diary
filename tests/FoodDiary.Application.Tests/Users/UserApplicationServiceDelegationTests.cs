@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Admin.Services;
 using FoodDiary.Application.Authentication.Services;
@@ -91,14 +92,15 @@ public sealed class UserApplicationServiceDelegationTests {
         var service = new AdminUserReadService(lookupRepository, adminReadRepository);
         var userId = UserId.New();
         var user = User.Create("admin@test.com", "hashed-password");
-        IReadOnlyList<User> users = [user];
+        UserAdminReadModel userReadModel = ToAdminReadModel(user);
+        IReadOnlyList<UserAdminReadModel> users = [userReadModel];
         using var cancellationTokenSource = new CancellationTokenSource();
-        lookupRepository.GetByIdIncludingDeletedAsync(userId, cancellationTokenSource.Token).Returns(user);
+        adminReadRepository.GetByIdIncludingDeletedReadModelAsync(userId, cancellationTokenSource.Token).Returns(userReadModel);
         adminReadRepository
-            .GetPagedAsync("adm", page: 2, limit: 5, UserAccountStatusFilter.Deleted, cancellationTokenSource.Token)
+            .GetPagedReadModelsAsync("adm", page: 2, limit: 5, UserAccountStatusFilter.Deleted, cancellationTokenSource.Token)
             .Returns((users, 10));
         adminReadRepository
-            .GetAdminDashboardSummaryAsync(recentLimit: 3, cancellationTokenSource.Token)
+            .GetAdminDashboardSummaryReadModelsAsync(recentLimit: 3, cancellationTokenSource.Token)
             .Returns((TotalUsers: 10, ActiveUsers: 8, PremiumUsers: 2, DeletedUsers: 1, RecentUsers: users));
 
         AdminUserModel? byId = await service.GetByIdIncludingDeletedAsync(userId, cancellationTokenSource.Token);
@@ -118,8 +120,62 @@ public sealed class UserApplicationServiceDelegationTests {
             () => Assert.Equal(1, summary.DeletedUsers),
             () => Assert.Equal(4, summary.PendingReportsCount),
             () => Assert.Equal(user.Id.Value, Assert.Single(summary.RecentUsers).Id));
-        await lookupRepository.Received(1).GetByIdIncludingDeletedAsync(userId, cancellationTokenSource.Token);
-        await adminReadRepository.Received(1).GetPagedAsync("adm", 2, 5, UserAccountStatusFilter.Deleted, cancellationTokenSource.Token);
-        await adminReadRepository.Received(1).GetAdminDashboardSummaryAsync(3, cancellationTokenSource.Token);
+        await lookupRepository.DidNotReceive().GetByIdIncludingDeletedAsync(userId, cancellationTokenSource.Token);
+        await adminReadRepository.Received(1).GetByIdIncludingDeletedReadModelAsync(userId, cancellationTokenSource.Token);
+        await adminReadRepository.Received(1).GetPagedReadModelsAsync("adm", 2, 5, UserAccountStatusFilter.Deleted, cancellationTokenSource.Token);
+        await adminReadRepository.Received(1).GetAdminDashboardSummaryReadModelsAsync(3, cancellationTokenSource.Token);
     }
+
+    private static UserAdminReadModel ToAdminReadModel(User user) =>
+        new(
+            user.Id.Value,
+            user.Email,
+            user.HasPassword,
+            user.Username,
+            user.FirstName,
+            user.LastName,
+            user.BirthDate,
+            user.Gender,
+            user.Weight,
+            user.DesiredWeight,
+            user.DesiredWaist,
+            user.Height,
+            user.ActivityLevel.ToString(),
+            user.DailyCalorieTarget,
+            user.ProteinTarget,
+            user.FatTarget,
+            user.CarbTarget,
+            user.FiberTarget,
+            user.StepGoal,
+            user.WaterGoal,
+            user.HydrationGoal,
+            user.CalorieCyclingEnabled,
+            user.MondayCalories,
+            user.TuesdayCalories,
+            user.WednesdayCalories,
+            user.ThursdayCalories,
+            user.FridayCalories,
+            user.SaturdayCalories,
+            user.SundayCalories,
+            user.ProfileImage,
+            user.ProfileImageAssetId?.Value,
+            user.DashboardLayoutJson,
+            user.Language,
+            user.Theme,
+            user.UiStyle,
+            user.PushNotificationsEnabled,
+            user.FastingPushNotificationsEnabled,
+            user.SocialPushNotificationsEnabled,
+            user.FastingCheckInReminderHours,
+            user.FastingCheckInFollowUpReminderHours,
+            user.TelegramUserId,
+            user.IsActive,
+            user.IsEmailConfirmed,
+            user.CreatedOnUtc,
+            user.DeletedAt,
+            user.LastLoginAtUtc,
+            [.. user.GetRoleNames()],
+            user.AiInputTokenLimit,
+            user.AiOutputTokenLimit,
+            user.AiConsentAcceptedAt);
 }

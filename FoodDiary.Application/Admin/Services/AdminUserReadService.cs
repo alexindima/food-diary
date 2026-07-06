@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Admin.Services;
@@ -11,7 +11,9 @@ internal sealed class AdminUserReadService(
     IUserLookupRepository userLookupRepository,
     IUserAdminReadRepository userAdminReadRepository) : IAdminUserReadService {
     public async Task<AdminUserModel?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) {
-        User? user = await userLookupRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
+        UserAdminReadModel? user = await userAdminReadRepository
+            .GetByIdIncludingDeletedReadModelAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
         return user?.ToAdminModel();
     }
 
@@ -21,7 +23,7 @@ internal sealed class AdminUserReadService(
         int limit,
         UserAccountStatusFilter status,
         CancellationToken cancellationToken = default) {
-        (IReadOnlyList<User> Items, int TotalItems) = await userAdminReadRepository.GetPagedAsync(
+        (IReadOnlyList<UserAdminReadModel> Items, int TotalItems) = await userAdminReadRepository.GetPagedReadModelsAsync(
             search,
             page,
             limit,
@@ -35,8 +37,8 @@ internal sealed class AdminUserReadService(
         int recentLimit,
         int pendingReportsCount,
         CancellationToken cancellationToken = default) {
-        (int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers) =
-            await userAdminReadRepository.GetAdminDashboardSummaryAsync(recentLimit, cancellationToken).ConfigureAwait(false);
+        (int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<UserAdminReadModel> RecentUsers) =
+            await userAdminReadRepository.GetAdminDashboardSummaryReadModelsAsync(recentLimit, cancellationToken).ConfigureAwait(false);
 
         return new AdminDashboardSummaryModel(
             TotalUsers,
