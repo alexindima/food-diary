@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,23 @@ internal sealed class AiPromptTemplateRepository(FoodDiaryDbContext context) : I
             .AsNoTracking()
             .OrderBy(t => t.Key)
             .ThenBy(t => t.Locale)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<AiPromptTemplateReadModel>> GetAllReadModelsAsync(CancellationToken cancellationToken = default) {
+        return await context.Set<AiPromptTemplate>()
+            .AsNoTracking()
+            .OrderBy(t => t.Key)
+            .ThenBy(t => t.Locale)
+            .Select(t => new AiPromptTemplateReadModel(
+                t.Id.Value,
+                t.Key,
+                t.Locale,
+                t.PromptText,
+                t.Version,
+                t.IsActive,
+                t.CreatedOnUtc,
+                t.ModifiedOnUtc))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

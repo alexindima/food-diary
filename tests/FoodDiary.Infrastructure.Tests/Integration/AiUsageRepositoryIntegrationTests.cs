@@ -1,6 +1,7 @@
 using System.Reflection;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;
@@ -82,6 +83,7 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
         await context.SaveChangesAsync();
 
         IReadOnlyList<AiPromptTemplate> all = await repository.GetAllAsync();
+        IReadOnlyList<AiPromptTemplateReadModel> allReadModels = await repository.GetAllReadModelsAsync();
         AiPromptTemplate? byKey = await repository.GetByKeyAsync("nutrition", "en");
         AiPromptTemplate? tracked = await repository.GetByIdAsync(nutrition.Id, asTracking: true);
         Assert.NotNull(tracked);
@@ -91,6 +93,7 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
         AiPromptTemplate? updated = await repository.GetByIdAsync(nutrition.Id);
 
         Assert.Equal(["nutrition", "vision"], [.. all.Select(template => template.Key)]);
+        Assert.Equal(["nutrition", "vision"], [.. allReadModels.Select(template => template.Key)]);
         Assert.Equal(nutrition.Id, byKey?.Id);
         Assert.Equal(2, updated?.Version);
         Assert.False(updated?.IsActive);

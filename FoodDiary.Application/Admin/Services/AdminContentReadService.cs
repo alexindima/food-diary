@@ -1,12 +1,12 @@
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Models;
-using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Enums;
@@ -30,7 +30,9 @@ public sealed class AdminContentReadService(
     }
 
     public async Task<IReadOnlyList<AdminAiPromptModel>> GetAiPromptsAsync(CancellationToken cancellationToken) {
-        IReadOnlyList<AiPromptTemplate> templates = await aiPromptTemplateRepository.GetAllAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<AiPromptTemplateReadModel> templates = await aiPromptTemplateRepository
+            .GetAllReadModelsAsync(cancellationToken)
+            .ConfigureAwait(false);
         return templates.Select(static template => template.ToAdminModel()).ToList();
     }
 
