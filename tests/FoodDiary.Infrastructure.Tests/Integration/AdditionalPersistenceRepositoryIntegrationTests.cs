@@ -151,6 +151,8 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         IReadOnlyList<UsdaFoodReadModel> foodReadModels = await repository.SearchReadModelsAsync("apple", limit: 10);
         UsdaFoodReadModel? foodReadModel = await repository.GetByFdcIdReadModelAsync(1001);
         IReadOnlyList<UsdaNutrientReadModel> nutrientReadModels = await repository.GetNutrientReadModelsAsync(1001);
+        IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>> nutrientReadModelMap =
+            await repository.GetNutrientReadModelsByFdcIdsAsync([1001, 1002]);
         IReadOnlyList<UsdaFoodPortionModel> portionReadModels = await repository.GetPortionReadModelsAsync(1001);
         IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel> referenceValueReadModels = await repository.GetDailyReferenceValueReadModelsAsync();
 
@@ -165,9 +167,17 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.Equal(1001, Assert.Single(foodReadModels).FdcId);
         Assert.NotNull(foodReadModel);
         Assert.Equal("Apple raw", foodReadModel.Description);
-        Assert.Equal("Carbohydrate", nutrientReadModels[0].Name);
+        AssertUsdaNutrientReadModels(nutrientReadModels, nutrientReadModelMap);
         Assert.Equal(182, Assert.Single(portionReadModels).GramWeight);
         Assert.Equal(275, referenceValueReadModels[1].Value);
+    }
+
+    private static void AssertUsdaNutrientReadModels(
+        IReadOnlyList<UsdaNutrientReadModel> nutrientReadModels,
+        IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>> nutrientReadModelMap) {
+        Assert.Equal("Carbohydrate", nutrientReadModels[0].Name);
+        Assert.True(nutrientReadModelMap.ContainsKey(1001));
+        Assert.Equal("Carbohydrate", nutrientReadModelMap[1001][0].Name);
     }
 
     [ExcludeFromCodeCoverage]

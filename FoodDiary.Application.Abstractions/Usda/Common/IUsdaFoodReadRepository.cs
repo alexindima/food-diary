@@ -64,6 +64,24 @@ public interface IUsdaFoodReadRepository {
         IEnumerable<int> fdcIds,
         CancellationToken cancellationToken = default);
 
+    async Task<IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>>> GetNutrientReadModelsByFdcIdsAsync(
+        IEnumerable<int> fdcIds,
+        CancellationToken cancellationToken = default) {
+        IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>> nutrientsByFdcId = await GetNutrientsByFdcIdsAsync(
+            fdcIds,
+            cancellationToken).ConfigureAwait(false);
+
+        return nutrientsByFdcId.ToDictionary(
+            static item => item.Key,
+            static item => (IReadOnlyList<UsdaNutrientReadModel>)[
+                .. item.Value.Select(static nutrient => new UsdaNutrientReadModel(
+                    nutrient.NutrientId,
+                    nutrient.Nutrient.Name,
+                    nutrient.Nutrient.UnitName,
+                    nutrient.Amount)),
+            ]);
+    }
+
     Task<IReadOnlyDictionary<int, DailyReferenceValue>> GetDailyReferenceValuesAsync(
         string ageGroup = "adult",
         string gender = "all",

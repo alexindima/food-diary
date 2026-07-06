@@ -3,7 +3,6 @@ using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Usda.Mappings;
-using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -37,8 +36,12 @@ public sealed class UsdaDailyMicronutrientReadService(
             .Distinct()
             .ToList();
 
-        IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>> nutrientsByFdcId = await usdaFoodRepository.GetNutrientsByFdcIdsAsync(fdcIds, cancellationToken).ConfigureAwait(false);
-        IReadOnlyDictionary<int, DailyReferenceValue> dailyValues = await usdaFoodRepository.GetDailyReferenceValuesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>> nutrientsByFdcId = await usdaFoodRepository
+            .GetNutrientReadModelsByFdcIdsAsync(fdcIds, cancellationToken)
+            .ConfigureAwait(false);
+        IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel> dailyValues = await usdaFoodRepository
+            .GetDailyReferenceValueReadModelsAsync(cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         Dictionary<int, AggregatedNutrient> aggregated = AggregateNutrients(linkedItems, nutrientsByFdcId);
         List<DailyMicronutrientModel> nutrientModels = BuildNutrientModels(aggregated, dailyValues);
@@ -56,23 +59,23 @@ public sealed class UsdaDailyMicronutrientReadService(
 
     private static Dictionary<int, AggregatedNutrient> AggregateNutrients(
         IReadOnlyList<MealProductNutritionReadModel> linkedItems,
-        IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>> nutrientsByFdcId) {
+        IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>> nutrientsByFdcId) {
         var aggregated = new Dictionary<int, AggregatedNutrient>();
         foreach (MealProductNutritionReadModel item in linkedItems) {
             int fdcId = item.UsdaFdcId!.Value;
 
-            if (!nutrientsByFdcId.TryGetValue(fdcId, out IReadOnlyList<UsdaFoodNutrient>? nutrients)) {
+            if (!nutrientsByFdcId.TryGetValue(fdcId, out IReadOnlyList<UsdaNutrientReadModel>? nutrients)) {
                 continue;
             }
 
             double scale = item.ProductBaseAmount > 0 ? item.Amount / item.ProductBaseAmount : 0;
 
-            foreach (UsdaFoodNutrient nutrient in nutrients) {
+            foreach (UsdaNutrientReadModel nutrient in nutrients) {
                 double scaledAmount = nutrient.Amount * scale;
                 if (aggregated.TryGetValue(nutrient.NutrientId, out AggregatedNutrient? existing)) {
                     aggregated[nutrient.NutrientId] = existing with { Total = existing.Total + scaledAmount };
                 } else {
-                    aggregated[nutrient.NutrientId] = new AggregatedNutrient(nutrient.Nutrient.Name, nutrient.Nutrient.UnitName, scaledAmount);
+                    aggregated[nutrient.NutrientId] = new AggregatedNutrient(nutrient.Name, nutrient.Unit, scaledAmount);
                 }
             }
         }
@@ -82,10 +85,10 @@ public sealed class UsdaDailyMicronutrientReadService(
 
     private static List<DailyMicronutrientModel> BuildNutrientModels(
         IReadOnlyDictionary<int, AggregatedNutrient> aggregated,
-        IReadOnlyDictionary<int, DailyReferenceValue> dailyValues) {
+        IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel> dailyValues) {
         return [.. aggregated
             .Select(kvp => {
-                dailyValues.TryGetValue(kvp.Key, out DailyReferenceValue? drv);
+                dailyValues.TryGetValue(kvp.Key, out UsdaDailyReferenceValueReadModel? drv);
                 double? dv = drv?.Value;
                 double? percentDv = dv is > 0 ? Math.Round(kvp.Value.Total / dv.Value * 100, 1, MidpointRounding.ToEven) : null;
 

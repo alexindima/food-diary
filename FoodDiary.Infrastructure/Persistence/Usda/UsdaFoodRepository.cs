@@ -125,6 +125,33 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
                 g => (IReadOnlyList<UsdaFoodNutrient>)[.. g]);
     }
 
+    public async Task<IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>>> GetNutrientReadModelsByFdcIdsAsync(
+        IEnumerable<int> fdcIds,
+        CancellationToken cancellationToken = default) {
+        var fdcIdList = fdcIds.ToList();
+        if (fdcIdList.Count == 0) {
+            return new Dictionary<int, IReadOnlyList<UsdaNutrientReadModel>>();
+        }
+
+        List<(int FdcId, UsdaNutrientReadModel Nutrient)> nutrients = await dbContext.UsdaFoodNutrients
+            .AsNoTracking()
+            .Where(n => fdcIdList.Contains(n.FdcId))
+            .Select(n => new ValueTuple<int, UsdaNutrientReadModel>(
+                n.FdcId,
+                new UsdaNutrientReadModel(
+                    n.NutrientId,
+                    n.Nutrient.Name,
+                    n.Nutrient.UnitName,
+                    n.Amount)))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+
+        return nutrients
+            .GroupBy(n => n.FdcId)
+            .ToDictionary(
+                g => g.Key,
+                g => (IReadOnlyList<UsdaNutrientReadModel>)[.. g.Select(n => n.Nutrient)]);
+    }
+
     public async Task<IReadOnlyDictionary<int, DailyReferenceValue>> GetDailyReferenceValuesAsync(
         string ageGroup = "adult",
         string gender = "all",

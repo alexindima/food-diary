@@ -319,6 +319,25 @@ public sealed class UsdaQueryHandlerTests {
                         .Where(kvp => requested.Contains(kvp.Key))
                         .ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
             });
+        repository
+            .GetNutrientReadModelsByFdcIdsAsync(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                wasNutrientsByFdcIdsCalled = true;
+                var requested = call.ArgAt<IEnumerable<int>>(0).ToHashSet();
+                IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>> values = nutrientsByFdcId ?? new Dictionary<int, IReadOnlyList<UsdaFoodNutrient>>();
+                return Task.FromResult<IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>>>(
+                    values
+                        .Where(kvp => requested.Contains(kvp.Key))
+                        .ToDictionary(
+                            static kvp => kvp.Key,
+                            static kvp => (IReadOnlyList<UsdaNutrientReadModel>)[
+                                .. kvp.Value.Select(static nutrient => new UsdaNutrientReadModel(
+                                    nutrient.NutrientId,
+                                    nutrient.Nutrient.Name,
+                                    nutrient.Nutrient.UnitName,
+                                    nutrient.Amount)),
+                            ]));
+            });
 
         return repository;
     }

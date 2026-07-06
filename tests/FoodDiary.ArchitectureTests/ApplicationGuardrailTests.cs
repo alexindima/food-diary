@@ -900,7 +900,10 @@ public sealed class ApplicationGuardrailTests {
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Meals"),
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Products"),
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Usda"),
             .. FindReferencesInFiles(root, serviceFiles, "GetWithItemsAndProductsAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "GetNutrientsByFdcIdsAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "GetDailyReferenceValuesAsync"),
         ];
 
         Assert.Empty(violations);
