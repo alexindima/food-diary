@@ -1075,6 +1075,28 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void FavoriteMealReadContract_DoesNotFallbackToAggregateDefaultReadModels() {
+        string root = GetRepositoryRoot();
+        string contractPath = Path.Combine(
+            root,
+            "FoodDiary.Application.Abstractions",
+            "FavoriteMeals",
+            "Common",
+            "IFavoriteMealReadRepository.cs");
+        string[] contractFiles = [contractPath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, contractFiles, "async Task<bool> ExistsByMealIdAsync"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyDictionary<MealId, FavoriteMealId>>"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<FavoriteMealReadModel>>"),
+            .. FindReferencesInFiles(root, contractFiles, "new FavoriteMealReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, ".Select(static favorite"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ConsumptionMappings_DoNotExposePagedMealAggregateReadModels() {
         string root = GetRepositoryRoot();
         string mappingPath = Path.Combine(

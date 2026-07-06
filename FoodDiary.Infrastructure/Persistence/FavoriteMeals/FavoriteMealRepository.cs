@@ -74,6 +74,23 @@ public sealed class FavoriteMealRepository(FoodDiaryDbContext context) : IFavori
         return favorites.ToDictionary(favorite => favorite.MealId);
     }
 
+    public async Task<IReadOnlyDictionary<MealId, FavoriteMealId>> GetFavoriteIdsByMealIdsAsync(
+        UserId userId,
+        IReadOnlyCollection<MealId> mealIds,
+        CancellationToken cancellationToken = default) {
+        if (mealIds.Count == 0) {
+            return new Dictionary<MealId, FavoriteMealId>();
+        }
+
+        List<FavoriteMealIdByMealIdReadModel> favorites = await context.FavoriteMeals
+            .AsNoTracking()
+            .Where(f => f.UserId == userId && mealIds.Contains(f.MealId))
+            .Select(f => new FavoriteMealIdByMealIdReadModel(MealId: f.MealId, FavoriteMealId: f.Id))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+
+        return favorites.ToDictionary(favorite => favorite.MealId, favorite => favorite.FavoriteMealId);
+    }
+
     public async Task<IReadOnlyList<FavoriteMeal>> GetAllAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
@@ -107,4 +124,6 @@ public sealed class FavoriteMealRepository(FoodDiaryDbContext context) : IFavori
                 f.Meal.Items.Count))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
+
+    private sealed record FavoriteMealIdByMealIdReadModel(MealId MealId, FavoriteMealId FavoriteMealId);
 }

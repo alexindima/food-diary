@@ -16,48 +16,26 @@ public interface IFavoriteMealReadRepository {
         UserId userId,
         CancellationToken cancellationToken = default);
 
-    async Task<bool> ExistsByMealIdAsync(
+    Task<bool> ExistsByMealIdAsync(
         MealId mealId,
         UserId userId,
-        CancellationToken cancellationToken = default) =>
-        await GetByMealIdAsync(mealId, userId, cancellationToken).ConfigureAwait(false) is not null;
+        CancellationToken cancellationToken = default);
 
     Task<IReadOnlyDictionary<MealId, FavoriteMeal>> GetByMealIdsAsync(
         UserId userId,
         IReadOnlyCollection<MealId> mealIds,
         CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyDictionary<MealId, FavoriteMealId>> GetFavoriteIdsByMealIdsAsync(
+    Task<IReadOnlyDictionary<MealId, FavoriteMealId>> GetFavoriteIdsByMealIdsAsync(
         UserId userId,
         IReadOnlyCollection<MealId> mealIds,
-        CancellationToken cancellationToken = default) {
-        IReadOnlyDictionary<MealId, FavoriteMeal> favorites = await GetByMealIdsAsync(
-            userId,
-            mealIds,
-            cancellationToken).ConfigureAwait(false);
-
-        return favorites.ToDictionary(static item => item.Key, static item => item.Value.Id);
-    }
+        CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<FavoriteMeal>> GetAllAsync(
         UserId userId,
         CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyList<FavoriteMealReadModel>> GetAllReadModelsAsync(
+    Task<IReadOnlyList<FavoriteMealReadModel>> GetAllReadModelsAsync(
         UserId userId,
-        CancellationToken cancellationToken = default) {
-        IReadOnlyList<FavoriteMeal> favorites = await GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
-        return [.. favorites.Select(static favorite => new FavoriteMealReadModel(
-            favorite.Id.Value,
-            favorite.MealId.Value,
-            favorite.Name,
-            favorite.CreatedAtUtc,
-            favorite.Meal.Date,
-            favorite.Meal.MealType?.ToString(),
-            favorite.Meal.TotalCalories,
-            favorite.Meal.TotalProteins,
-            favorite.Meal.TotalFats,
-            favorite.Meal.TotalCarbs,
-            favorite.Meal.Items.Count))];
-    }
+        CancellationToken cancellationToken = default);
 }

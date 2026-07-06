@@ -16,6 +16,7 @@ using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.FavoriteMeals;
@@ -2961,15 +2962,47 @@ public class ConsumptionsFeatureTests {
         public Task DeleteAsync(FavoriteMeal favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<FavoriteMeal>> GetAllAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult(_favorites);
+
+        public Task<IReadOnlyList<FavoriteMealReadModel>> GetAllReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<FavoriteMealReadModel>>([.. _favorites.Select(ToReadModel)]);
+
         public Task<FavoriteMeal?> GetByIdAsync(FavoriteMealId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) =>
             Task.FromResult<FavoriteMeal?>(null);
+
         public Task<FavoriteMeal?> GetByMealIdAsync(MealId mealId, UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult(_favorites.FirstOrDefault(x => x.MealId == mealId));
+
+        public Task<bool> ExistsByMealIdAsync(MealId mealId, UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_favorites.Any(x => x.MealId == mealId));
+
         public Task<IReadOnlyDictionary<MealId, FavoriteMeal>> GetByMealIdsAsync(
             UserId userId,
             IReadOnlyCollection<MealId> mealIds,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<MealId, FavoriteMeal>>(_favorites.Where(x => mealIds.Contains(x.MealId)).ToDictionary(x => x.MealId));
+
+        public Task<IReadOnlyDictionary<MealId, FavoriteMealId>> GetFavoriteIdsByMealIdsAsync(
+            UserId userId,
+            IReadOnlyCollection<MealId> mealIds,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<MealId, FavoriteMealId>>(
+                _favorites
+                    .Where(x => mealIds.Contains(x.MealId))
+                    .ToDictionary(x => x.MealId, x => x.Id));
+
+        private static FavoriteMealReadModel ToReadModel(FavoriteMeal favorite) =>
+            new(
+                favorite.Id.Value,
+                favorite.MealId.Value,
+                favorite.Name,
+                favorite.CreatedAtUtc,
+                favorite.Meal.Date,
+                favorite.Meal.MealType?.ToString(),
+                favorite.Meal.TotalCalories,
+                favorite.Meal.TotalProteins,
+                favorite.Meal.TotalFats,
+                favorite.Meal.TotalCarbs,
+                favorite.Meal.Items.Count);
     }
 
     private static void SetFavoriteMealNavigation(FavoriteMeal favorite, Meal meal) {
