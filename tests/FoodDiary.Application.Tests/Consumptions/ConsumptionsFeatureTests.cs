@@ -2409,6 +2409,93 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             imageAccess ?? FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
+    private static MealConsumptionReadModel ToMealConsumptionReadModel(Meal meal) =>
+        new(
+            meal.Id.Value,
+            meal.Date,
+            meal.MealType,
+            meal.Comment,
+            meal.ImageUrl,
+            meal.ImageAssetId?.Value,
+            meal.TotalCalories,
+            meal.TotalProteins,
+            meal.TotalFats,
+            meal.TotalCarbs,
+            meal.TotalFiber,
+            meal.TotalAlcohol,
+            meal.IsNutritionAutoCalculated,
+            meal.ManualCalories,
+            meal.ManualProteins,
+            meal.ManualFats,
+            meal.ManualCarbs,
+            meal.ManualFiber,
+            meal.ManualAlcohol,
+            meal.PreMealSatietyLevel,
+            meal.PostMealSatietyLevel,
+            [.. meal.Items.Select(ToMealConsumptionItemReadModel)],
+            [.. meal.AiSessions.Select(ToMealConsumptionAiSessionReadModel)]);
+
+    private static MealConsumptionItemReadModel ToMealConsumptionItemReadModel(MealItem item) {
+        bool hasSnapshot = item.HasNutritionSnapshot;
+        return new MealConsumptionItemReadModel(
+            item.Id.Value,
+            item.MealId.Value,
+            item.Amount,
+            item.ProductId?.Value,
+            item.SnapshotName ?? item.Product?.Name,
+            item.SnapshotImageUrl ?? item.Product?.ImageUrl,
+            item.SnapshotUnit ?? item.Product?.BaseUnit.ToString(),
+            item.SnapshotBaseAmount ?? item.Product?.BaseAmount,
+            item.SnapshotCaloriesPerBase ?? item.Product?.CaloriesPerBase,
+            item.SnapshotProteinsPerBase ?? item.Product?.ProteinsPerBase,
+            item.SnapshotFatsPerBase ?? item.Product?.FatsPerBase,
+            item.SnapshotCarbsPerBase ?? item.Product?.CarbsPerBase,
+            item.SnapshotFiberPerBase ?? item.Product?.FiberPerBase,
+            item.SnapshotAlcoholPerBase ?? item.Product?.AlcoholPerBase,
+            item.Product?.ProductType,
+            item.RecipeId?.Value,
+            item.SnapshotName ?? item.Recipe?.Name,
+            item.SnapshotImageUrl ?? item.Recipe?.ImageUrl,
+            hasSnapshot ? 1 : item.Recipe?.Servings,
+            item.SnapshotCaloriesPerBase ?? item.Recipe?.TotalCalories,
+            item.SnapshotProteinsPerBase ?? item.Recipe?.TotalProteins,
+            item.SnapshotFatsPerBase ?? item.Recipe?.TotalFats,
+            item.SnapshotCarbsPerBase ?? item.Recipe?.TotalCarbs,
+            item.SnapshotFiberPerBase ?? item.Recipe?.TotalFiber,
+            item.SnapshotAlcoholPerBase ?? item.Recipe?.TotalAlcohol,
+            item.SourceAiItemId?.Value,
+            item.Origin);
+    }
+
+    private static MealConsumptionAiSessionReadModel ToMealConsumptionAiSessionReadModel(MealAiSession session) =>
+        new(
+            session.Id.Value,
+            session.MealId.Value,
+            session.ImageAssetId?.Value,
+            session.ImageAsset?.Url,
+            session.Source,
+            session.Status,
+            session.RecognizedAtUtc,
+            session.Notes,
+            [.. session.Items.Select(ToMealConsumptionAiItemReadModel)]);
+
+    private static MealConsumptionAiItemReadModel ToMealConsumptionAiItemReadModel(MealAiItem item) =>
+        new(
+            item.Id.Value,
+            item.MealAiSessionId.Value,
+            item.NameEn,
+            item.NameLocal,
+            item.Amount,
+            item.Unit,
+            item.Calories,
+            item.Proteins,
+            item.Fats,
+            item.Carbs,
+            item.Fiber,
+            item.Alcohol,
+            item.Confidence,
+            item.Resolution);
+
     [ExcludeFromCodeCoverage]
     private sealed class FailingNonNullImageAssetAccessService : IImageAssetAccessService {
         public Task<Result<ImageAsset?>> ResolveOptionalAsync(
@@ -2450,6 +2537,14 @@ public class ConsumptionsFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult(FindById(id, userId));
 
+        public Task<MealConsumptionReadModel?> GetByIdConsumptionReadModelAsync(
+            MealId id,
+            UserId userId,
+            CancellationToken cancellationToken = default) {
+            Meal? found = FindById(id, userId);
+            return Task.FromResult(found is null ? null : ToMealConsumptionReadModel(found));
+        }
+
         private Meal? FindById(MealId id, UserId userId) {
             if (LastAddedMeal is not null && LastAddedMeal.Id == id && LastAddedMeal.UserId == userId) {
                 return LastAddedMeal;
@@ -2465,7 +2560,20 @@ public class ConsumptionsFeatureTests {
             MealQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task<(IReadOnlyList<MealConsumptionReadModel> Items, int TotalItems)> GetPagedConsumptionReadModelsAsync(
+            UserId userId,
+            int page,
+            int limit,
+            MealQueryFilters filters,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
         public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<MealConsumptionReadModel>> GetByPeriodConsumptionReadModelsAsync(
             UserId userId,
             DateTime dateFrom,
             DateTime dateTo,
@@ -2481,6 +2589,11 @@ public class ConsumptionsFeatureTests {
 
         public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
             UserId userId, DateTime date,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<MealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
+            UserId userId,
+            DateTime date,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
@@ -2507,6 +2620,12 @@ public class ConsumptionsFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult<Meal?>(_reloadStarted ? null : meal);
 
+        public Task<MealConsumptionReadModel?> GetByIdConsumptionReadModelAsync(
+            MealId id,
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<MealConsumptionReadModel?>(_reloadStarted ? null : ToMealConsumptionReadModel(meal));
+
         public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
             UserId userId,
             int page,
@@ -2514,7 +2633,20 @@ public class ConsumptionsFeatureTests {
             MealQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task<(IReadOnlyList<MealConsumptionReadModel> Items, int TotalItems)> GetPagedConsumptionReadModelsAsync(
+            UserId userId,
+            int page,
+            int limit,
+            MealQueryFilters filters,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
         public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<MealConsumptionReadModel>> GetByPeriodConsumptionReadModelsAsync(
             UserId userId,
             DateTime dateFrom,
             DateTime dateTo,
@@ -2530,6 +2662,11 @@ public class ConsumptionsFeatureTests {
 
         public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
             UserId userId, DateTime date,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<MealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
+            UserId userId,
+            DateTime date,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
@@ -2554,6 +2691,14 @@ public class ConsumptionsFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult<Meal?>(StoredMeal is not null && StoredMeal.Id == id && StoredMeal.UserId == userId ? StoredMeal : null);
 
+        public Task<MealConsumptionReadModel?> GetByIdConsumptionReadModelAsync(
+            MealId id,
+            UserId userId,
+            CancellationToken cancellationToken = default) {
+            Meal? found = StoredMeal is not null && StoredMeal.Id == id && StoredMeal.UserId == userId ? StoredMeal : null;
+            return Task.FromResult(found is null ? null : ToMealConsumptionReadModel(found));
+        }
+
         public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
             UserId userId,
             int page,
@@ -2561,7 +2706,20 @@ public class ConsumptionsFeatureTests {
             MealQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task<(IReadOnlyList<MealConsumptionReadModel> Items, int TotalItems)> GetPagedConsumptionReadModelsAsync(
+            UserId userId,
+            int page,
+            int limit,
+            MealQueryFilters filters,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
         public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<MealConsumptionReadModel>> GetByPeriodConsumptionReadModelsAsync(
             UserId userId,
             DateTime dateFrom,
             DateTime dateTo,
@@ -2577,6 +2735,11 @@ public class ConsumptionsFeatureTests {
 
         public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
             UserId userId, DateTime date,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<MealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
+            UserId userId,
+            DateTime date,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
@@ -2602,6 +2765,11 @@ public class ConsumptionsFeatureTests {
             bool asTracking = false,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task<MealConsumptionReadModel?> GetByIdConsumptionReadModelAsync(
+            MealId id,
+            UserId userId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
         public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
             UserId userId,
             int page,
@@ -2614,7 +2782,26 @@ public class ConsumptionsFeatureTests {
             return Task.FromResult((_items, totalItems));
         }
 
+        public Task<(IReadOnlyList<MealConsumptionReadModel> Items, int TotalItems)> GetPagedConsumptionReadModelsAsync(
+            UserId userId,
+            int page,
+            int limit,
+            MealQueryFilters filters,
+            CancellationToken cancellationToken = default) {
+            LastDateFrom = filters.DateFrom;
+            LastDateTo = filters.DateTo;
+            LastMealTypes = filters.MealTypes;
+            IReadOnlyList<MealConsumptionReadModel> models = [.. _items.Select(ToMealConsumptionReadModel)];
+            return Task.FromResult((models, totalItems));
+        }
+
         public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<MealConsumptionReadModel>> GetByPeriodConsumptionReadModelsAsync(
             UserId userId,
             DateTime dateFrom,
             DateTime dateTo,
@@ -2630,6 +2817,11 @@ public class ConsumptionsFeatureTests {
 
         public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
             UserId userId, DateTime date,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<MealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
+            UserId userId,
+            DateTime date,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
