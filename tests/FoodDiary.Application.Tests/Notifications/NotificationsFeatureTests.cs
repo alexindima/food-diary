@@ -1098,7 +1098,7 @@ public class NotificationsFeatureTests {
         new NotificationFeedReadService(notificationRepository, notificationTextRenderer);
 
     private static IWebPushSubscriptionReadService CreateWebPushSubscriptionReadService(
-        IWebPushSubscriptionReadRepository webPushSubscriptionRepository) =>
+        IWebPushSubscriptionReadModelRepository webPushSubscriptionRepository) =>
         new WebPushSubscriptionReadService(webPushSubscriptionRepository);
 
     [ExcludeFromCodeCoverage]

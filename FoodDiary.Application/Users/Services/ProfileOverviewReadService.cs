@@ -15,7 +15,7 @@ namespace FoodDiary.Application.Users.Services;
 
 public sealed class ProfileOverviewReadService(
     IUserProfileReadService userProfileReadService,
-    IWebPushSubscriptionReadRepository webPushSubscriptionRepository,
+    IWebPushSubscriptionReadModelRepository webPushSubscriptionRepository,
     IDietologistInvitationReadModelRepository dietologistInvitationRepository)
     : IProfileOverviewReadService {
     public async Task<Result<ProfileOverviewModel>> GetAsync(UserId userId, CancellationToken cancellationToken) {

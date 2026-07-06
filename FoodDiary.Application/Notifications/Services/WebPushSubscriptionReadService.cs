@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Notifications.Services;
 
 internal sealed class WebPushSubscriptionReadService(
-    IWebPushSubscriptionReadRepository webPushSubscriptionRepository) : IWebPushSubscriptionReadService {
+    IWebPushSubscriptionReadModelRepository webPushSubscriptionRepository) : IWebPushSubscriptionReadService {
     public async Task<IReadOnlyList<WebPushSubscriptionModel>> GetActiveSubscriptionsAsync(
         UserId userId,
         DateTime utcNow,

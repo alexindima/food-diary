@@ -17,6 +17,7 @@ public static partial class DependencyInjection {
         services.AddScoped<INotificationWebPushOutboxProcessor, NotificationWebPushOutboxProcessor>();
         services.AddScoped<IWebPushSubscriptionRepository, WebPushSubscriptionRepository>();
         services.AddScoped<IWebPushSubscriptionReadRepository>(static provider => provider.GetRequiredService<IWebPushSubscriptionRepository>());
+        services.AddScoped<IWebPushSubscriptionReadModelRepository>(static provider => provider.GetRequiredService<IWebPushSubscriptionRepository>());
         services.AddScoped<IWebPushSubscriptionWriteRepository>(static provider => provider.GetRequiredService<IWebPushSubscriptionRepository>());
 
         return services;

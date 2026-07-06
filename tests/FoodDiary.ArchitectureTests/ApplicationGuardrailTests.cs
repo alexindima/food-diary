@@ -1554,6 +1554,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Notifications"),
+            .. FindReferencesInFiles(root, serviceFiles, "IWebPushSubscriptionReadRepository"),
             .. FindReferencesInFiles(root, serviceFiles, "GetByUserAsync"),
         ];
 
@@ -1708,6 +1709,25 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void WebPushSubscriptionReadContract_DoesNotExposeReadModels() {
+        string root = GetRepositoryRoot();
+        string contractPath = Path.Combine(
+            root,
+            "FoodDiary.Application.Abstractions",
+            "Notifications",
+            "Common",
+            "IWebPushSubscriptionReadRepository.cs");
+        string[] contractFiles = [contractPath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, contractFiles, "GetByUserReadModelsAsync"),
+            .. FindReferencesInFiles(root, contractFiles, "WebPushSubscriptionReadModel"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void WebPushSubscriptionReadService_UsesReadModelsInsteadOfSubscriptionAggregates() {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
@@ -1720,6 +1740,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Notifications"),
+            .. FindReferencesInFiles(root, serviceFiles, "IWebPushSubscriptionReadRepository"),
             .. FindReferencesInFiles(root, serviceFiles, "GetByUserAsync"),
         ];
 
@@ -1739,6 +1760,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Notifications"),
+            .. FindReferencesInFiles(root, serviceFiles, "IWebPushSubscriptionReadRepository"),
             .. FindReferencesInFiles(root, serviceFiles, "GetByUserAsync"),
         ];
 

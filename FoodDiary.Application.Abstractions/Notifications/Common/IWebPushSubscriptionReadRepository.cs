@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -11,10 +10,6 @@ public interface IWebPushSubscriptionReadRepository {
         CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<WebPushSubscription>> GetByUserAsync(
-        UserId userId,
-        CancellationToken cancellationToken = default);
-
-    Task<IReadOnlyList<WebPushSubscriptionReadModel>> GetByUserReadModelsAsync(
         UserId userId,
         CancellationToken cancellationToken = default);
 }

@@ -1,3 +1,3 @@
 namespace FoodDiary.Application.Abstractions.Notifications.Common;
 
-public interface IWebPushSubscriptionRepository : IWebPushSubscriptionReadRepository, IWebPushSubscriptionWriteRepository;
+public interface IWebPushSubscriptionRepository : IWebPushSubscriptionReadRepository, IWebPushSubscriptionReadModelRepository, IWebPushSubscriptionWriteRepository;
