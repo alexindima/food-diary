@@ -63,6 +63,29 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<IReadOnlyList<LessonAdminReadModel>> GetAdminReadModelsAsync(
+        CancellationToken cancellationToken = default) {
+        return await context.Set<NutritionLesson>()
+            .AsNoTracking()
+            .OrderBy(l => l.Locale)
+            .ThenBy(l => l.Category)
+            .ThenBy(l => l.SortOrder)
+            .ThenBy(l => l.CreatedOnUtc)
+            .Select(l => new LessonAdminReadModel(
+                l.Id.Value,
+                l.Title,
+                l.Content,
+                l.Summary,
+                l.Locale,
+                l.Category.ToString(),
+                l.Difficulty.ToString(),
+                l.EstimatedReadMinutes,
+                l.SortOrder,
+                l.CreatedOnUtc,
+                l.ModifiedOnUtc))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<NutritionLesson?> GetByIdAsync(
         NutritionLessonId id,
         CancellationToken cancellationToken = default) {

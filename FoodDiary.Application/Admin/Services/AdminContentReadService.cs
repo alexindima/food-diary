@@ -3,13 +3,13 @@ using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
+using FoodDiary.Application.Abstractions.ContentReports.Models;
 using FoodDiary.Application.Abstractions.Lessons.Common;
+using FoodDiary.Application.Abstractions.Lessons.Models;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Models;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Admin.Services;
@@ -21,7 +21,9 @@ public sealed class AdminContentReadService(
     IContentReportReadRepository contentReportRepository)
     : IAdminContentReadService {
     public async Task<IReadOnlyList<AdminLessonModel>> GetLessonsAsync(CancellationToken cancellationToken) {
-        IReadOnlyList<NutritionLesson> lessons = await lessonRepository.GetAllAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<LessonAdminReadModel> lessons = await lessonRepository
+            .GetAdminReadModelsAsync(cancellationToken)
+            .ConfigureAwait(false);
         return lessons.Select(static lesson => lesson.ToAdminModel()).ToList();
     }
 
@@ -44,8 +46,8 @@ public sealed class AdminContentReadService(
         int page,
         int limit,
         CancellationToken cancellationToken) {
-        (IReadOnlyList<ContentReport> items, int total) = await contentReportRepository
-            .GetPagedAsync(status, page, limit, cancellationToken)
+        (IReadOnlyList<ContentReportAdminReadModel> items, int total) = await contentReportRepository
+            .GetPagedAdminReadModelsAsync(status, page, limit, cancellationToken)
             .ConfigureAwait(false);
 
         IReadOnlyList<AdminContentReportModel> models = [

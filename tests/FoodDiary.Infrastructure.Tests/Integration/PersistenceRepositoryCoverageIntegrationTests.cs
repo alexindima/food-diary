@@ -1,8 +1,10 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Application.Abstractions.ContentReports.Models;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Exercises.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Fasting.Common;
+using FoodDiary.Application.Abstractions.Lessons.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
@@ -94,6 +96,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         IReadOnlyList<NutritionLesson> nutritionLessons =
             await repository.GetByLocaleAsync("en", LessonCategory.NutritionBasics);
         IReadOnlyList<NutritionLesson> allLessons = await repository.GetAllAsync();
+        IReadOnlyList<LessonAdminReadModel> adminLessons = await repository.GetAdminReadModelsAsync();
         NutritionLesson? saved = await repository.GetByIdAsync(basics.Id);
         NutritionLesson? tracked = await repository.GetByIdTrackingAsync(basics.Id);
         Assert.NotNull(tracked);
@@ -112,6 +115,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         Assert.Single(nutritionLessons);
         Assert.Equal(2, allLessons.Count);
+        Assert.Contains(adminLessons, lesson => string.Equals(lesson.Title, "Basics", StringComparison.Ordinal));
         Assert.NotNull(saved);
         Assert.Equal("Basics updated", tracked.Title);
         Assert.Equal(progress.Id, Assert.Single(allProgress).Id);
@@ -141,6 +145,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         bool hasReported = await repository.HasUserReportedAsync(user.Id, ReportTargetType.Recipe, targetId);
         (IReadOnlyList<ContentReport> pendingItems, int pendingTotal) =
             await repository.GetPagedAsync(ReportStatus.Pending, page: 1, limit: 10);
+        (IReadOnlyList<ContentReportAdminReadModel> pendingReadModels, int pendingReadModelTotal) =
+            await repository.GetPagedAdminReadModelsAsync(ReportStatus.Pending, page: 1, limit: 10);
         (IReadOnlyList<ContentReport> allItems, int allTotal) =
             await repository.GetPagedAsync(status: null, page: 1, limit: 1);
         int dismissedCount = await repository.CountByStatusAsync(ReportStatus.Dismissed);
@@ -148,6 +154,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.True(hasReported);
         Assert.Equal(otherReport.Id, Assert.Single(pendingItems).Id);
         Assert.Equal(1, pendingTotal);
+        Assert.Equal(otherReport.Id.Value, Assert.Single(pendingReadModels).Id);
+        Assert.Equal(1, pendingReadModelTotal);
         Assert.Single(allItems);
         Assert.Equal(2, allTotal);
         Assert.Equal(1, dismissedCount);

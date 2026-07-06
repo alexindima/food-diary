@@ -22,6 +22,12 @@ public interface INutritionLessonReadRepository {
     Task<IReadOnlyList<NutritionLesson>> GetAllAsync(
         CancellationToken cancellationToken = default);
 
+    async Task<IReadOnlyList<LessonAdminReadModel>> GetAdminReadModelsAsync(
+        CancellationToken cancellationToken = default) {
+        IReadOnlyList<NutritionLesson> lessons = await GetAllAsync(cancellationToken).ConfigureAwait(false);
+        return [.. lessons.Select(ToAdminReadModel)];
+    }
+
     Task<NutritionLesson?> GetByIdAsync(
         NutritionLessonId id,
         CancellationToken cancellationToken = default);
@@ -76,4 +82,18 @@ public interface INutritionLessonReadRepository {
             lesson.Category.ToString(),
             lesson.Difficulty.ToString(),
             lesson.EstimatedReadMinutes);
+
+    private static LessonAdminReadModel ToAdminReadModel(NutritionLesson lesson) =>
+        new(
+            lesson.Id.Value,
+            lesson.Title,
+            lesson.Content,
+            lesson.Summary,
+            lesson.Locale,
+            lesson.Category.ToString(),
+            lesson.Difficulty.ToString(),
+            lesson.EstimatedReadMinutes,
+            lesson.SortOrder,
+            lesson.CreatedOnUtc,
+            lesson.ModifiedOnUtc);
 }

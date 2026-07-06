@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.ContentReports.Common;
+using FoodDiary.Application.Abstractions.ContentReports.Models;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -44,6 +45,38 @@ internal sealed class ContentReportRepository(FoodDiaryDbContext context) : ICon
             .OrderByDescending(r => r.CreatedOnUtc)
             .Skip((page - 1) * limit)
             .Take(limit)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+
+        return (items, total);
+    }
+
+    public async Task<(IReadOnlyList<ContentReportAdminReadModel> Items, int Total)> GetPagedAdminReadModelsAsync(
+        ReportStatus? status,
+        int page,
+        int limit,
+        CancellationToken cancellationToken = default) {
+        IQueryable<ContentReport> query = context.ContentReports.AsNoTracking();
+
+        if (status.HasValue) {
+            query = query.Where(r => r.Status == status.Value);
+        }
+
+        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+
+        List<ContentReportAdminReadModel> items = await query
+            .OrderByDescending(r => r.CreatedOnUtc)
+            .Skip((page - 1) * limit)
+            .Take(limit)
+            .Select(r => new ContentReportAdminReadModel(
+                r.Id.Value,
+                r.UserId.Value,
+                r.TargetType.ToString(),
+                r.TargetId,
+                r.Reason,
+                r.Status.ToString(),
+                r.AdminNote,
+                r.CreatedOnUtc,
+                r.ReviewedAtUtc))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, total);
