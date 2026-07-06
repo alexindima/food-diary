@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Cycles.Common;
+using FoodDiary.Application.Abstractions.Cycles.Models;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Cycles.Common;
 using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -20,7 +20,7 @@ public sealed class CycleReadService(
     public async Task<CycleModel?> GetCurrentAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        CycleProfile? profile = await GetCurrentProfileAsync(userId, cancellationToken).ConfigureAwait(false);
+        CycleProfileReadModel? profile = await GetCurrentProfileAsync(userId, cancellationToken).ConfigureAwait(false);
         if (profile is null) {
             return null;
         }
@@ -34,7 +34,7 @@ public sealed class CycleReadService(
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken) {
-        CycleProfile? profile = await GetCurrentProfileAsync(userId, cancellationToken).ConfigureAwait(false);
+        CycleProfileReadModel? profile = await GetCurrentProfileAsync(userId, cancellationToken).ConfigureAwait(false);
         if (profile is null) {
             return Result.Success<CycleNutritionSummaryModel?>(value: null);
         }
@@ -52,13 +52,13 @@ public sealed class CycleReadService(
         return Result.Success<CycleNutritionSummaryModel?>(BuildSummary(profile, nutritionResult.Value, dateFrom, dateTo));
     }
 
-    private Task<CycleProfile?> GetCurrentProfileAsync(
+    private Task<CycleProfileReadModel?> GetCurrentProfileAsync(
         UserId userId,
         CancellationToken cancellationToken) =>
-        cycleRepository.GetCurrentAsync(userId, includeDetails: true, cancellationToken: cancellationToken);
+        cycleRepository.GetCurrentReadModelAsync(userId, cancellationToken);
 
     private static CycleNutritionSummaryModel BuildSummary(
-        CycleProfile profile,
+        CycleProfileReadModel profile,
         IReadOnlyCollection<DashboardStatisticsBucketReadModel> nutritionBuckets,
         DateTime dateFrom,
         DateTime dateTo) {
@@ -84,7 +84,7 @@ public sealed class CycleReadService(
     }
 
     private static List<CycleNutritionDay> BuildCycleDays(
-        CycleProfile profile,
+        CycleProfileReadModel profile,
         IReadOnlyDictionary<DateTime, DashboardStatisticsBucketReadModel> nutritionByDate,
         DateTime dateFrom,
         DateTime dateTo) {
@@ -104,11 +104,11 @@ public sealed class CycleReadService(
     }
 
     private static CycleNutritionDay BuildDay(
-        CycleProfile profile,
+        CycleProfileReadModel profile,
         IReadOnlyDictionary<DateTime, DashboardStatisticsBucketReadModel> nutritionByDate,
         DateTime date) {
         nutritionByDate.TryGetValue(date, out DashboardStatisticsBucketReadModel? nutrition);
-        IReadOnlyCollection<BleedingEntry> bleedingEntries = [
+        IReadOnlyCollection<BleedingEntryReadModel> bleedingEntries = [
             .. profile.BleedingEntries
             .Where(entry => entry.Date.Date == date),
         ];

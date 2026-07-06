@@ -1,5 +1,5 @@
 using System.Globalization;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 
@@ -7,7 +7,7 @@ namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
     private static void ComposeMealsCards(IContainer container, DiaryReportData report) {
-        IReadOnlyList<Meal> meals = report.Meals;
+        IReadOnlyList<MealConsumptionReadModel> meals = report.Meals;
 
         container.Background(PanelBackground).Border(1).BorderColor(BorderColor).Padding(12).Column(column => {
             column.Spacing(10);
@@ -20,13 +20,13 @@ internal sealed partial class DiaryPdfGenerator {
                 return;
             }
 
-            foreach (Meal meal in meals) {
+            foreach (MealConsumptionReadModel meal in meals) {
                 column.Item().ShowEntire().Element(c => ComposeMealCard(c, report, meal));
             }
         });
     }
 
-    private static void ComposeMealCard(IContainer container, DiaryReportData report, Meal meal) {
+    private static void ComposeMealCard(IContainer container, DiaryReportData report, MealConsumptionReadModel meal) {
         bool hasImage = report.MealImages.TryGetValue(meal.Id, out byte[]? imageBytes);
 
         container.Background(CardBackground).Border(1).BorderColor(BorderColor).Padding(8).Row(row => {
@@ -76,7 +76,7 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     private static void ComposeMealsTable(IContainer container, DiaryReportData report) {
-        IReadOnlyList<Meal> meals = report.Meals;
+        IReadOnlyList<MealConsumptionReadModel> meals = report.Meals;
 
         container.Background(PanelBackground).Border(1).BorderColor(BorderColor).Padding(12).Column(column => {
             column.Spacing(10);
@@ -109,7 +109,7 @@ internal sealed partial class DiaryPdfGenerator {
                     }
                 });
 
-                foreach (Meal meal in meals) {
+                foreach (MealConsumptionReadModel meal in meals) {
                     foreach (string value in GetMealTableValues(meal, report)) {
                         DataCell(table.Cell(), value);
                     }
@@ -131,7 +131,7 @@ internal sealed partial class DiaryPdfGenerator {
         report.Texts.CommentColumn,
     ];
 
-    private static string[] GetMealTableValues(Meal meal, DiaryReportData report) => [
+    private static string[] GetMealTableValues(MealConsumptionReadModel meal, DiaryReportData report) => [
         report.FormatMealDate(meal.Date),
         report.FormatMealType(meal.MealType),
         FormatMealItemsList(meal, report),
@@ -144,7 +144,7 @@ internal sealed partial class DiaryPdfGenerator {
         string.IsNullOrWhiteSpace(meal.Comment) ? "" : Truncate(meal.Comment, 90),
     ];
 
-    private static void ComposeMealItemsList(IContainer container, DiaryReportData report, Meal meal) {
+    private static void ComposeMealItemsList(IContainer container, DiaryReportData report, MealConsumptionReadModel meal) {
         IReadOnlyList<MealCompositionItem> compositionItems = GetMealCompositionItems(meal, report);
         container.Column(column => {
             column.Spacing(3);

@@ -43,6 +43,15 @@ public interface IMealReadRepository {
         DateTime dateTo,
         CancellationToken cancellationToken = default);
 
+    async Task<IReadOnlyList<MealConsumptionReadModel>> GetByPeriodConsumptionReadModelsAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken = default) {
+        IReadOnlyList<Meal> meals = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
+        return [.. meals.Select(ToConsumptionReadModel)];
+    }
+
     async Task<MealConsumptionReadModel?> GetByIdConsumptionReadModelAsync(
         MealId id,
         UserId userId,

@@ -1,15 +1,15 @@
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Fasting.Services;
 
 internal static class FastingHistoryResponseBuilder {
     public static PagedResponse<FastingSessionModel> Build(
-        IReadOnlyList<FastingOccurrence> occurrences,
-        IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>> checkInsByOccurrence,
+        IReadOnlyList<FastingOccurrenceReadModel> occurrences,
+        IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckInReadModel>> checkInsByOccurrence,
         int page,
         int limit,
         int totalItems) {

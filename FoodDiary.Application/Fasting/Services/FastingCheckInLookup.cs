@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -9,4 +10,10 @@ internal static class FastingCheckInLookup {
         checkIns
             .GroupBy(static checkIn => checkIn.OccurrenceId)
             .ToDictionary(static group => group.Key, static group => (IReadOnlyList<FastingCheckIn>)[.. group]);
+
+    public static IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckInReadModel>> Create(
+        IEnumerable<FastingCheckInReadModel> checkIns) =>
+        checkIns
+            .GroupBy(static checkIn => checkIn.OccurrenceId)
+            .ToDictionary(static group => group.Key, static group => (IReadOnlyList<FastingCheckInReadModel>)[.. group]);
 }

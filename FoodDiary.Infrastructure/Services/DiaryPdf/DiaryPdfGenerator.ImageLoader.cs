@@ -1,13 +1,12 @@
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 
 namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
-    private async Task<IReadOnlyDictionary<MealId, byte[]>> LoadMealImagesAsync(
-        IReadOnlyList<Meal> meals,
+    private async Task<IReadOnlyDictionary<Guid, byte[]>> LoadMealImagesAsync(
+        IReadOnlyList<MealConsumptionReadModel> meals,
         CancellationToken cancellationToken) {
         using var gate = new SemaphoreSlim(MaxParallelMealImageDownloads);
         var cache = new Dictionary<string, Lazy<Task<byte[]?>>>(StringComparer.Ordinal);
@@ -19,11 +18,11 @@ internal sealed partial class DiaryPdfGenerator {
 
         return entries
             .Where(entry => entry.Image is not null)
-            .ToDictionary(entry => entry.MealId, entry => entry.Image!, EqualityComparer<MealId>.Default);
+            .ToDictionary(entry => entry.MealId, entry => entry.Image!);
     }
 
     private async Task<MealImageEntry> LoadMealImageEntryAsync(
-        Meal meal,
+        MealConsumptionReadModel meal,
         Dictionary<string, Lazy<Task<byte[]?>>> cache,
         SemaphoreSlim gate,
         CancellationToken cancellationToken) {
@@ -53,7 +52,7 @@ internal sealed partial class DiaryPdfGenerator {
         };
 
     private async Task<byte[]?> LoadMealImageForReportAsync(
-        Meal meal,
+        MealConsumptionReadModel meal,
         Dictionary<string, Lazy<Task<byte[]?>>> cache,
         SemaphoreSlim gate,
         CancellationToken cancellationToken) {
@@ -141,15 +140,15 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     [StructLayout(LayoutKind.Auto)]
-    private readonly record struct MealImageEntry(MealId MealId, byte[]? Image);
+    private readonly record struct MealImageEntry(Guid MealId, byte[]? Image);
 
-    private static IReadOnlyList<string> GetCompositionImageUrls(Meal meal) =>
+    private static IReadOnlyList<string> GetCompositionImageUrls(MealConsumptionReadModel meal) =>
         meal.Items
-            .OrderBy(item => item.CreatedOnUtc)
-            .Select(item => item.Product?.ImageUrl ?? item.Recipe?.ImageUrl)
+            .OrderBy(item => item.Id)
+            .Select(item => item.ProductImageUrl ?? item.RecipeImageUrl)
             .Concat(meal.AiSessions
                 .OrderBy(session => session.RecognizedAtUtc)
-                .Select(session => session.ImageAsset?.Url))
+                .Select(session => session.ImageUrl))
             .Where(url => !string.IsNullOrWhiteSpace(url))
             .Distinct(StringComparer.Ordinal)
             .Cast<string>()

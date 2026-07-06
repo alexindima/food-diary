@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Fasting.Common;
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -27,6 +28,51 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context) : IF
         return await query
             .Where(occurrence => occurrence.UserId == userId && occurrence.Status == FastingOccurrenceStatus.Active)
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
+            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<FastingOccurrenceReadModel?> GetCurrentReadModelAsync(UserId userId, CancellationToken cancellationToken = default) {
+        return await context.FastingOccurrences
+            .AsNoTracking()
+            .Where(occurrence => occurrence.UserId == userId && occurrence.Status == FastingOccurrenceStatus.Active)
+            .OrderByDescending(occurrence => occurrence.StartedAtUtc)
+            .Select(occurrence => new FastingOccurrenceReadModel(
+                occurrence.Id,
+                occurrence.PlanId,
+                new FastingPlanReadModel(
+                    occurrence.Plan.Id,
+                    occurrence.Plan.UserId,
+                    occurrence.Plan.Type,
+                    occurrence.Plan.Status,
+                    occurrence.Plan.Protocol,
+                    occurrence.Plan.Title,
+                    occurrence.Plan.StartedAtUtc,
+                    occurrence.Plan.StoppedAtUtc,
+                    occurrence.Plan.IntermittentFastHours,
+                    occurrence.Plan.IntermittentEatingWindowHours,
+                    occurrence.Plan.ExtendedTargetHours,
+                    occurrence.Plan.CyclicFastDays,
+                    occurrence.Plan.CyclicEatDays,
+                    occurrence.Plan.CyclicEatDayFastHours,
+                    occurrence.Plan.CyclicEatDayEatingWindowHours,
+                    occurrence.Plan.CyclicAnchorDateUtc,
+                    occurrence.Plan.CyclicNextPhaseDateUtc),
+                occurrence.UserId,
+                occurrence.Kind,
+                occurrence.Status,
+                occurrence.SequenceNumber,
+                occurrence.ScheduledForUtc,
+                occurrence.StartedAtUtc,
+                occurrence.EndedAtUtc,
+                occurrence.InitialTargetHours,
+                occurrence.AddedTargetHours,
+                occurrence.Notes,
+                occurrence.CheckInAtUtc,
+                occurrence.HungerLevel,
+                occurrence.EnergyLevel,
+                occurrence.MoodLevel,
+                occurrence.Symptoms,
+                occurrence.CheckInNotes))
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -75,6 +121,54 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context) : IF
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<IReadOnlyList<FastingOccurrenceReadModel>> GetByUserReadModelsAsync(
+        UserId userId,
+        DateTime? from = null,
+        DateTime? to = null,
+        FastingOccurrenceStatus? status = null,
+        CancellationToken cancellationToken = default) {
+        return await BuildByUserQuery(userId, from, to, status)
+            .OrderByDescending(occurrence => occurrence.StartedAtUtc)
+            .Select(occurrence => new FastingOccurrenceReadModel(
+                occurrence.Id,
+                occurrence.PlanId,
+                new FastingPlanReadModel(
+                    occurrence.Plan.Id,
+                    occurrence.Plan.UserId,
+                    occurrence.Plan.Type,
+                    occurrence.Plan.Status,
+                    occurrence.Plan.Protocol,
+                    occurrence.Plan.Title,
+                    occurrence.Plan.StartedAtUtc,
+                    occurrence.Plan.StoppedAtUtc,
+                    occurrence.Plan.IntermittentFastHours,
+                    occurrence.Plan.IntermittentEatingWindowHours,
+                    occurrence.Plan.ExtendedTargetHours,
+                    occurrence.Plan.CyclicFastDays,
+                    occurrence.Plan.CyclicEatDays,
+                    occurrence.Plan.CyclicEatDayFastHours,
+                    occurrence.Plan.CyclicEatDayEatingWindowHours,
+                    occurrence.Plan.CyclicAnchorDateUtc,
+                    occurrence.Plan.CyclicNextPhaseDateUtc),
+                occurrence.UserId,
+                occurrence.Kind,
+                occurrence.Status,
+                occurrence.SequenceNumber,
+                occurrence.ScheduledForUtc,
+                occurrence.StartedAtUtc,
+                occurrence.EndedAtUtc,
+                occurrence.InitialTargetHours,
+                occurrence.AddedTargetHours,
+                occurrence.Notes,
+                occurrence.CheckInAtUtc,
+                occurrence.HungerLevel,
+                occurrence.EnergyLevel,
+                occurrence.MoodLevel,
+                occurrence.Symptoms,
+                occurrence.CheckInNotes))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)> GetPagedByUserAsync(
         UserId userId,
         int page,
@@ -91,6 +185,64 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context) : IF
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
             .Skip((normalizedPage - 1) * normalizedLimit)
             .Take(normalizedLimit)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+
+        return (items, totalItems);
+    }
+
+    public async Task<(IReadOnlyList<FastingOccurrenceReadModel> Items, int TotalItems)> GetPagedByUserReadModelsAsync(
+        UserId userId,
+        int page,
+        int limit,
+        DateTime? from = null,
+        DateTime? to = null,
+        FastingOccurrenceStatus? status = null,
+        CancellationToken cancellationToken = default) {
+        int normalizedPage = Math.Max(page, 1);
+        int normalizedLimit = Math.Max(limit, 1);
+        IQueryable<FastingOccurrence> query = BuildByUserQuery(userId, from, to, status);
+        int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        List<FastingOccurrenceReadModel> items = await query
+            .OrderByDescending(occurrence => occurrence.StartedAtUtc)
+            .Skip((normalizedPage - 1) * normalizedLimit)
+            .Take(normalizedLimit)
+            .Select(occurrence => new FastingOccurrenceReadModel(
+                occurrence.Id,
+                occurrence.PlanId,
+                new FastingPlanReadModel(
+                    occurrence.Plan.Id,
+                    occurrence.Plan.UserId,
+                    occurrence.Plan.Type,
+                    occurrence.Plan.Status,
+                    occurrence.Plan.Protocol,
+                    occurrence.Plan.Title,
+                    occurrence.Plan.StartedAtUtc,
+                    occurrence.Plan.StoppedAtUtc,
+                    occurrence.Plan.IntermittentFastHours,
+                    occurrence.Plan.IntermittentEatingWindowHours,
+                    occurrence.Plan.ExtendedTargetHours,
+                    occurrence.Plan.CyclicFastDays,
+                    occurrence.Plan.CyclicEatDays,
+                    occurrence.Plan.CyclicEatDayFastHours,
+                    occurrence.Plan.CyclicEatDayEatingWindowHours,
+                    occurrence.Plan.CyclicAnchorDateUtc,
+                    occurrence.Plan.CyclicNextPhaseDateUtc),
+                occurrence.UserId,
+                occurrence.Kind,
+                occurrence.Status,
+                occurrence.SequenceNumber,
+                occurrence.ScheduledForUtc,
+                occurrence.StartedAtUtc,
+                occurrence.EndedAtUtc,
+                occurrence.InitialTargetHours,
+                occurrence.AddedTargetHours,
+                occurrence.Notes,
+                occurrence.CheckInAtUtc,
+                occurrence.HungerLevel,
+                occurrence.EnergyLevel,
+                occurrence.MoodLevel,
+                occurrence.Symptoms,
+                occurrence.CheckInNotes))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, totalItems);

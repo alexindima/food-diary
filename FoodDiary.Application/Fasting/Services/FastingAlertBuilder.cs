@@ -1,11 +1,11 @@
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Fasting.Models;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Application.Fasting.Services;
 
 internal static class FastingAlertBuilder {
     public static IReadOnlyList<FastingMessageModel> Build(
-        FastingOccurrence? current,
+        FastingOccurrenceReadModel? current,
         FastingCheckInSnapshot? latestCheckIn,
         DateTime nowUtc) {
         var alerts = new List<FastingMessageModel>();
@@ -52,7 +52,7 @@ internal static class FastingAlertBuilder {
         return alerts;
     }
 
-    private static FastingMessageModel? BuildCurrentWarning(FastingOccurrence? current, FastingCheckInSnapshot? latestCheckIn) {
+    private static FastingMessageModel? BuildCurrentWarning(FastingOccurrenceReadModel? current, FastingCheckInSnapshot? latestCheckIn) {
         if (current is null || !HasRiskyCurrentCheckIn(current, latestCheckIn)) {
             return null;
         }
@@ -64,7 +64,7 @@ internal static class FastingAlertBuilder {
             "warning");
     }
 
-    private static bool HasRiskyCurrentCheckIn(FastingOccurrence occurrence, FastingCheckInSnapshot? latestCheckIn) {
+    private static bool HasRiskyCurrentCheckIn(FastingOccurrenceReadModel occurrence, FastingCheckInSnapshot? latestCheckIn) {
         if (latestCheckIn is null) {
             return false;
         }

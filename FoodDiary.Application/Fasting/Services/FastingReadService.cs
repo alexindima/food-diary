@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Fasting.Common;
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Fasting.Services;
@@ -19,12 +19,12 @@ public sealed class FastingReadService(
     public async Task<FastingSessionModel?> GetCurrentAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        FastingOccurrence? current = await GetCurrentOccurrenceAsync(userId, cancellationToken).ConfigureAwait(false);
+        FastingOccurrenceReadModel? current = await GetCurrentOccurrenceAsync(userId, cancellationToken).ConfigureAwait(false);
         if (current is null) {
             return null;
         }
 
-        IReadOnlyList<FastingCheckIn> checkIns = await GetCheckInsAsync(current, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FastingCheckInReadModel> checkIns = await GetCheckInsAsync(current, cancellationToken).ConfigureAwait(false);
         return current.ToModel(current.Plan, checkIns);
     }
 
@@ -32,7 +32,7 @@ public sealed class FastingReadService(
         UserId userId,
         CancellationToken cancellationToken) {
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
-        FastingOccurrence? current = await GetCurrentOccurrenceAsync(userId, cancellationToken).ConfigureAwait(false);
+        FastingOccurrenceReadModel? current = await GetCurrentOccurrenceAsync(userId, cancellationToken).ConfigureAwait(false);
         return await fastingAnalyticsService.GetInsightsAsync(userId, now, current, cancellationToken).ConfigureAwait(false);
     }
 
@@ -40,8 +40,8 @@ public sealed class FastingReadService(
         UserId userId,
         CancellationToken cancellationToken) {
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
-        FastingOccurrence? current = await GetCurrentOccurrenceAsync(userId, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<FastingCheckIn> currentCheckIns = current is null
+        FastingOccurrenceReadModel? current = await GetCurrentOccurrenceAsync(userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FastingCheckInReadModel> currentCheckIns = current is null
             ? []
             : await GetCheckInsAsync(current, cancellationToken).ConfigureAwait(false);
         FastingStatsModel stats = await fastingAnalyticsService.GetStatsAsync(userId, now, cancellationToken).ConfigureAwait(false);
@@ -62,13 +62,13 @@ public sealed class FastingReadService(
             history);
     }
 
-    private Task<FastingOccurrence?> GetCurrentOccurrenceAsync(
+    private Task<FastingOccurrenceReadModel?> GetCurrentOccurrenceAsync(
         UserId userId,
         CancellationToken cancellationToken) =>
-        fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken);
+        fastingOccurrenceRepository.GetCurrentReadModelAsync(userId, cancellationToken);
 
-    private Task<IReadOnlyList<FastingCheckIn>> GetCheckInsAsync(
-        FastingOccurrence occurrence,
+    private Task<IReadOnlyList<FastingCheckInReadModel>> GetCheckInsAsync(
+        FastingOccurrenceReadModel occurrence,
         CancellationToken cancellationToken) =>
-        fastingCheckInRepository.GetByOccurrenceIdsAsync([occurrence.Id], cancellationToken);
+        fastingCheckInRepository.GetByOccurrenceIdReadModelsAsync([occurrence.Id], cancellationToken);
 }

@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Abstractions.Export.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Export.Services;
@@ -12,7 +12,7 @@ public sealed class ExportDiaryReadService(IMealReadRepository mealRepository) :
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken) {
-        IReadOnlyList<Meal> meals = await mealRepository.GetByPeriodAsync(
+        IReadOnlyList<MealConsumptionReadModel> meals = await mealRepository.GetByPeriodConsumptionReadModelsAsync(
             userId,
             dateFrom,
             dateTo,

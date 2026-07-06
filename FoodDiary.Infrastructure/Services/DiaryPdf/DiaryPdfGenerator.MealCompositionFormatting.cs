@@ -1,25 +1,25 @@
 using System.Globalization;
 using System.Runtime.InteropServices;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Application.Abstractions.Meals.Models;
 
 namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
-    private static string FormatMealItems(Meal meal, DiaryReportData report) {
+    private static string FormatMealItems(MealConsumptionReadModel meal, DiaryReportData report) {
         string items = FormatMealItemsList(meal, report);
         return string.Equals(items, report.Texts.ItemsNotSpecified, StringComparison.Ordinal)
             ? $"{report.Texts.ItemsPrefix}: {report.Texts.ItemsNotSpecified}"
             : $"{report.Texts.ItemsPrefix}: {items}";
     }
 
-    private static string FormatMealItemsList(Meal meal, DiaryReportData report) {
+    private static string FormatMealItemsList(MealConsumptionReadModel meal, DiaryReportData report) {
         IReadOnlyList<string> itemLabels = FormatMealItemLabels(meal, report, maxItems: 6);
         return itemLabels.Count == 0
             ? report.Texts.ItemsNotSpecified
             : Truncate(string.Join(", ", itemLabels), 220);
     }
 
-    private static IReadOnlyList<string> FormatMealItemLabels(Meal meal, DiaryReportData report, int maxItems) {
+    private static IReadOnlyList<string> FormatMealItemLabels(MealConsumptionReadModel meal, DiaryReportData report, int maxItems) {
         IReadOnlyList<MealCompositionItem> compositionItems = GetMealCompositionItems(meal, report);
         string[] itemLabels = [.. compositionItems
             .Select(item => item.Label)
@@ -39,27 +39,28 @@ internal sealed partial class DiaryPdfGenerator {
             : [.. itemLabels, suffix.TrimStart()];
     }
 
-    private static IReadOnlyList<MealCompositionItem> GetMealCompositionItems(Meal meal, DiaryReportData report) {
+    private static IReadOnlyList<MealCompositionItem> GetMealCompositionItems(MealConsumptionReadModel meal, DiaryReportData report) {
         MealCompositionItem[] manualItems = [.. meal.Items
-            .OrderBy(item => item.CreatedOnUtc)
+            .OrderBy(item => item.Id)
             .Select(item => FormatMealItem(item, report))];
 
         MealCompositionItem[] aiItems = [.. meal.AiSessions
             .OrderBy(session => session.RecognizedAtUtc)
-            .SelectMany(session => session.Items.OrderBy(item => item.CreatedOnUtc))
+            .SelectMany(session => session.Items.OrderBy(item => item.Id))
             .Select(item => FormatMealAiItem(item, report))];
 
         return [.. manualItems, .. aiItems];
     }
 
-    private static MealCompositionItem FormatMealItem(MealItem item, DiaryReportData report) {
-        string? name = item.Product?.Name ?? item.Recipe?.Name;
+    private static MealCompositionItem FormatMealItem(MealConsumptionItemReadModel item, DiaryReportData report) {
+        bool isRecipe = item.RecipeId.HasValue;
+        string? name = item.ProductName ?? item.RecipeName;
         if (string.IsNullOrWhiteSpace(name)) {
-            name = item.IsRecipe ? report.Texts.RecipeFallback : report.Texts.ProductFallback;
+            name = isRecipe ? report.Texts.RecipeFallback : report.Texts.ProductFallback;
         }
 
-        string amountUnit = item.IsRecipe ? report.Texts.ServingUnit : FormatProductUnit(item, report);
-        string amount = $"{FormatNumber(item.Amount, item.IsRecipe ? 1 : 0, report.Culture)} {amountUnit}";
+        string amountUnit = isRecipe ? report.Texts.ServingUnit : FormatProductUnit(item, report);
+        string amount = $"{FormatNumber(item.Amount, isRecipe ? 1 : 0, report.Culture)} {amountUnit}";
         MealCompositionNutrition nutrition = CalculateMealItemNutrition(item);
 
         return new MealCompositionItem(
@@ -73,10 +74,10 @@ internal sealed partial class DiaryPdfGenerator {
             Fiber: nutrition.Fiber);
     }
 
-    private static string FormatProductUnit(MealItem item, DiaryReportData report) =>
-        FormatUnit(item.Product?.BaseUnit.ToString(), report);
+    private static string FormatProductUnit(MealConsumptionItemReadModel item, DiaryReportData report) =>
+        FormatUnit(item.ProductBaseUnit, report);
 
-    private static MealCompositionItem FormatMealAiItem(MealAiItem item, DiaryReportData report) {
+    private static MealCompositionItem FormatMealAiItem(MealConsumptionAiItemReadModel item, DiaryReportData report) {
         string name = ResolveAiItemName(item, report);
         string unit = FormatUnit(item.Unit, report);
         string amount = $"{FormatNumber(item.Amount, 0, report.Culture)} {unit}";
@@ -92,7 +93,7 @@ internal sealed partial class DiaryPdfGenerator {
             Fiber: item.Fiber);
     }
 
-    private static string ResolveAiItemName(MealAiItem item, DiaryReportData report) {
+    private static string ResolveAiItemName(MealConsumptionAiItemReadModel item, DiaryReportData report) {
         if (!string.Equals(report.Culture.TwoLetterISOLanguageName, "en", StringComparison.Ordinal) && !string.IsNullOrWhiteSpace(item.NameLocal)) {
             return item.NameLocal.Trim();
         }
@@ -125,27 +126,27 @@ internal sealed partial class DiaryPdfGenerator {
         return firstTextElement.ToUpper(culture) + normalized[firstTextElement.Length..];
     }
 
-    private static MealCompositionNutrition CalculateMealItemNutrition(MealItem item) {
-        if (item.Product is not null) {
-            double baseAmount = item.Product.BaseAmount <= 0 ? 1 : item.Product.BaseAmount;
+    private static MealCompositionNutrition CalculateMealItemNutrition(MealConsumptionItemReadModel item) {
+        if (item.ProductId.HasValue) {
+            double baseAmount = item.ProductBaseAmount is > 0 ? item.ProductBaseAmount.Value : 1;
             double multiplier = item.Amount / baseAmount;
             return new MealCompositionNutrition(
-                item.Product.CaloriesPerBase * multiplier,
-                item.Product.ProteinsPerBase * multiplier,
-                item.Product.FatsPerBase * multiplier,
-                item.Product.CarbsPerBase * multiplier,
-                item.Product.FiberPerBase * multiplier);
+                (item.ProductCaloriesPerBase ?? 0) * multiplier,
+                (item.ProductProteinsPerBase ?? 0) * multiplier,
+                (item.ProductFatsPerBase ?? 0) * multiplier,
+                (item.ProductCarbsPerBase ?? 0) * multiplier,
+                (item.ProductFiberPerBase ?? 0) * multiplier);
         }
 
-        if (item.Recipe is not null) {
-            int servings = item.Recipe.Servings <= 0 ? 1 : item.Recipe.Servings;
+        if (item.RecipeId.HasValue) {
+            int servings = item.RecipeServings is > 0 ? item.RecipeServings.Value : 1;
             double multiplier = item.Amount / servings;
             return new MealCompositionNutrition(
-                (item.Recipe.TotalCalories ?? 0) * multiplier,
-                (item.Recipe.TotalProteins ?? 0) * multiplier,
-                (item.Recipe.TotalFats ?? 0) * multiplier,
-                (item.Recipe.TotalCarbs ?? 0) * multiplier,
-                (item.Recipe.TotalFiber ?? 0) * multiplier);
+                (item.RecipeTotalCalories ?? 0) * multiplier,
+                (item.RecipeTotalProteins ?? 0) * multiplier,
+                (item.RecipeTotalFats ?? 0) * multiplier,
+                (item.RecipeTotalCarbs ?? 0) * multiplier,
+                (item.RecipeTotalFiber ?? 0) * multiplier);
         }
 
         return new MealCompositionNutrition(0, 0, 0, 0, 0);

@@ -1,22 +1,22 @@
 using System.Globalization;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Application.Abstractions.Meals.Models;
 
 namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
-    private static double EffectiveCalories(Meal meal) =>
+    private static double EffectiveCalories(MealConsumptionReadModel meal) =>
         meal.IsNutritionAutoCalculated ? meal.TotalCalories : meal.ManualCalories ?? meal.TotalCalories;
 
-    private static double EffectiveProteins(Meal meal) =>
+    private static double EffectiveProteins(MealConsumptionReadModel meal) =>
         meal.IsNutritionAutoCalculated ? meal.TotalProteins : meal.ManualProteins ?? meal.TotalProteins;
 
-    private static double EffectiveFats(Meal meal) =>
+    private static double EffectiveFats(MealConsumptionReadModel meal) =>
         meal.IsNutritionAutoCalculated ? meal.TotalFats : meal.ManualFats ?? meal.TotalFats;
 
-    private static double EffectiveCarbs(Meal meal) =>
+    private static double EffectiveCarbs(MealConsumptionReadModel meal) =>
         meal.IsNutritionAutoCalculated ? meal.TotalCarbs : meal.ManualCarbs ?? meal.TotalCarbs;
 
-    private static double EffectiveFiber(Meal meal) =>
+    private static double EffectiveFiber(MealConsumptionReadModel meal) =>
         meal.IsNutritionAutoCalculated ? meal.TotalFiber : meal.ManualFiber ?? meal.TotalFiber;
 
     private static string FormatNumber(double value, int decimals) =>

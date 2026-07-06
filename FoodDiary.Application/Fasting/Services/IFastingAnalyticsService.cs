@@ -1,6 +1,6 @@
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Fasting.Models;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Fasting.Services;
@@ -13,7 +13,7 @@ public interface IFastingAnalyticsService {
     Task<FastingInsightsModel> GetInsightsAsync(
         UserId userId,
         DateTime nowUtc,
-        FastingOccurrence? current,
+        FastingOccurrenceReadModel? current,
         CancellationToken cancellationToken);
 
     Task<PagedResponse<FastingSessionModel>> GetHistoryAsync(

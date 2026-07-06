@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Fasting.Common;
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Models;
@@ -179,7 +180,7 @@ public partial class FastingFeatureTests {
         public Task<FastingInsightsModel> GetInsightsAsync(
             UserId userId,
             DateTime nowUtc,
-            FastingOccurrence? current,
+            FastingOccurrenceReadModel? current,
             CancellationToken cancellationToken) =>
             throw new NotSupportedException();
 

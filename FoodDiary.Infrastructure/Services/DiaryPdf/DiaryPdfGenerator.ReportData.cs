@@ -1,21 +1,20 @@
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Export.Common;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
     private sealed record DiaryReportData(
-        IReadOnlyList<Meal> Meals,
+        IReadOnlyList<MealConsumptionReadModel> Meals,
         IReadOnlyList<DiaryDay> Days,
         string PeriodStartLabel,
         string PeriodEndLabel,
         TimeSpan DisplayOffset,
         string TimeZoneOffsetLabel,
         string ReportHost,
-        IReadOnlyDictionary<MealId, byte[]> MealImages,
+        IReadOnlyDictionary<Guid, byte[]> MealImages,
         bool UseCompactMealsMode,
         DiaryPdfReportTexts Texts,
         CultureInfo Culture,
@@ -52,10 +51,10 @@ internal sealed partial class DiaryPdfGenerator {
             };
 
         public static DiaryReportData Create(
-            IReadOnlyList<Meal> meals,
+            IReadOnlyList<MealConsumptionReadModel> meals,
             DateTime dateFrom,
             DateTime dateTo,
-            IReadOnlyDictionary<MealId, byte[]> mealImages,
+            IReadOnlyDictionary<Guid, byte[]> mealImages,
             bool useCompactMealsMode,
             DiaryPdfReportTexts texts,
             int? timeZoneOffsetMinutes,
@@ -70,7 +69,7 @@ internal sealed partial class DiaryPdfGenerator {
             CultureInfo culture = ResolveCulture(texts.CultureName);
             TimeSpan displayOffset = ResolveDisplayOffset(normalizedFrom, timeZoneOffsetMinutes);
             IReadOnlyList<DiaryDay> days = BuildDays(meals, normalizedFrom, normalizedTo, displayOffset, culture);
-            Meal[] orderedMeals = [.. meals.OrderBy(meal => meal.Date)];
+            MealConsumptionReadModel[] orderedMeals = [.. meals.OrderBy(meal => meal.Date)];
             string firstDayLabel = days.Count > 0
                 ? days[0].Label
                 : normalizedFrom.ToString("yyyy-MM-dd", culture);
@@ -93,7 +92,7 @@ internal sealed partial class DiaryPdfGenerator {
         }
 
         private static IReadOnlyList<DiaryDay> BuildDays(
-            IReadOnlyList<Meal> meals,
+            IReadOnlyList<MealConsumptionReadModel> meals,
             DateTime dateFrom,
             DateTime dateTo,
             TimeSpan displayOffset,
@@ -105,7 +104,7 @@ internal sealed partial class DiaryPdfGenerator {
             for (int index = 0; index < dayCount; index++) {
                 DateTime start = dateFrom.AddDays(index);
                 DateTime end = index == dayCount - 1 ? dateTo : start.AddDays(1).AddTicks(-1);
-                Meal[] bucketMeals = [.. meals.Where(meal => meal.Date >= start && meal.Date <= end)];
+                MealConsumptionReadModel[] bucketMeals = [.. meals.Where(meal => meal.Date >= start && meal.Date <= end)];
 
                 DateTime labelDate = start.Add(displayOffset).Date;
                 result.Add(new DiaryDay(

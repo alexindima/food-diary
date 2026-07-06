@@ -1,6 +1,5 @@
 using FoodDiary.Application.Abstractions.Export.Common;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -20,7 +19,7 @@ internal sealed partial class DiaryPdfGenerator(
     }
 
     public async Task<byte[]> GenerateAsync(
-        IReadOnlyList<Meal> meals,
+        IReadOnlyList<MealConsumptionReadModel> meals,
         DateTime dateFrom,
         DateTime dateTo,
         string? locale,
@@ -31,8 +30,8 @@ internal sealed partial class DiaryPdfGenerator(
 
         DiaryPdfReportTexts texts = textProvider.GetTexts(locale);
         bool useCompactMealsMode = ShouldUseCompactMealsMode(dateFrom, dateTo);
-        IReadOnlyDictionary<MealId, byte[]> mealImages = useCompactMealsMode
-            ? new Dictionary<MealId, byte[]>()
+        IReadOnlyDictionary<Guid, byte[]> mealImages = useCompactMealsMode
+            ? new Dictionary<Guid, byte[]>()
             : await LoadMealImagesAsync(meals, cancellationToken).ConfigureAwait(false);
         var report = DiaryReportData.Create(
             meals,

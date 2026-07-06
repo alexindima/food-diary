@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Fasting.Services;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
@@ -23,7 +24,7 @@ public sealed class FastingInsightBuilderTests {
             targetHours: 36);
 
         IReadOnlyList<FastingMessageModel> alerts = FastingInsightBuilder.BuildAlerts(
-            occurrence,
+            ToReadModel(occurrence, plan),
             latestCheckIn: null,
             FixedNow);
 
@@ -46,7 +47,7 @@ public sealed class FastingInsightBuilderTests {
         var checkIn = new FastingCheckInSnapshot(FixedNow, HungerLevel: 4, EnergyLevel: 1, MoodLevel: 2, Symptoms: ["dizziness"], Notes: null);
 
         IReadOnlyList<FastingMessageModel> alerts = FastingInsightBuilder.BuildAlerts(
-            occurrence,
+            ToReadModel(occurrence, plan),
             checkIn,
             FixedNow);
 
@@ -118,6 +119,45 @@ public sealed class FastingInsightBuilderTests {
         var checkIn = new FastingCheckInSnapshot(FixedNow, HungerLevel: 3, EnergyLevel: energy, MoodLevel: mood, Symptoms: symptoms, Notes: null);
         IReadOnlyList<FastingCheckInSnapshot> timeline = [checkIn];
 
-        return new FastingOccurrenceAnalysis(occurrence, timeline, checkIn);
+        return new FastingOccurrenceAnalysis(ToReadModel(occurrence, plan), timeline, checkIn);
     }
+
+    private static FastingOccurrenceReadModel ToReadModel(FastingOccurrence occurrence, FastingPlan plan) =>
+        new(
+            occurrence.Id,
+            occurrence.PlanId,
+            new FastingPlanReadModel(
+                plan.Id,
+                plan.UserId,
+                plan.Type,
+                plan.Status,
+                plan.Protocol,
+                plan.Title,
+                plan.StartedAtUtc,
+                plan.StoppedAtUtc,
+                plan.IntermittentFastHours,
+                plan.IntermittentEatingWindowHours,
+                plan.ExtendedTargetHours,
+                plan.CyclicFastDays,
+                plan.CyclicEatDays,
+                plan.CyclicEatDayFastHours,
+                plan.CyclicEatDayEatingWindowHours,
+                plan.CyclicAnchorDateUtc,
+                plan.CyclicNextPhaseDateUtc),
+            occurrence.UserId,
+            occurrence.Kind,
+            occurrence.Status,
+            occurrence.SequenceNumber,
+            occurrence.ScheduledForUtc,
+            occurrence.StartedAtUtc,
+            occurrence.EndedAtUtc,
+            occurrence.InitialTargetHours,
+            occurrence.AddedTargetHours,
+            occurrence.Notes,
+            occurrence.CheckInAtUtc,
+            occurrence.HungerLevel,
+            occurrence.EnergyLevel,
+            occurrence.MoodLevel,
+            occurrence.Symptoms,
+            occurrence.CheckInNotes);
 }

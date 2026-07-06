@@ -1,10 +1,10 @@
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Application.Abstractions.Meals.Models;
 
 namespace FoodDiary.Application.Abstractions.Export.Common;
 
 public interface IDiaryPdfGenerator {
     Task<byte[]> GenerateAsync(
-        IReadOnlyList<Meal> meals,
+        IReadOnlyList<MealConsumptionReadModel> meals,
         DateTime dateFrom,
         DateTime dateTo,
         string? locale,

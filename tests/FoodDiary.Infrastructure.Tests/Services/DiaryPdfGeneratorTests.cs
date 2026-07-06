@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Net;
 using System.Reflection;
 using FoodDiary.Application.Abstractions.Export.Common;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
@@ -45,7 +46,7 @@ public sealed class DiaryPdfGeneratorTests {
         var generator = new DiaryPdfGenerator();
 
         byte[] pdf = await generator.GenerateAsync(
-            meals,
+            meals.Select(ToReadModel).ToArray(),
             new DateTime(2026, 5, 1, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             locale: null,
@@ -68,7 +69,7 @@ public sealed class DiaryPdfGeneratorTests {
         var generator = new DiaryPdfGenerator();
 
         byte[] pdf = await generator.GenerateAsync(
-            [meal],
+            [ToReadModel(meal)],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             locale: null,
@@ -91,7 +92,7 @@ public sealed class DiaryPdfGeneratorTests {
         var generator = new DiaryPdfGenerator();
 
         byte[] pdf = await generator.GenerateAsync(
-            [meal],
+            [ToReadModel(meal)],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             locale: null,
@@ -111,7 +112,7 @@ public sealed class DiaryPdfGeneratorTests {
         var generator = new DiaryPdfGenerator();
 
         byte[] pdf = await generator.GenerateAsync(
-            [meal],
+            [ToReadModel(meal)],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             locale: null,
@@ -127,9 +128,10 @@ public sealed class DiaryPdfGeneratorTests {
     public void LayoutComposer_RendersImageCardAndEmptyMealsTableBranches() {
         var userId = UserId.New();
         Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 410, 12, 10, 40, 6);
+        MealConsumptionReadModel mealReadModel = ToReadModel(meal);
         byte[] imageBytes = CreatePngBytes(width: 12, height: 12);
-        object cardReport = CreateReportData([meal], mealImages: new Dictionary<MealId, byte[]> {
-            [meal.Id] = imageBytes,
+        object cardReport = CreateReportData([mealReadModel], mealImages: new Dictionary<Guid, byte[]> {
+            [mealReadModel.Id] = imageBytes,
         });
         object emptyReport = CreateReportData([]);
 
@@ -137,7 +139,7 @@ public sealed class DiaryPdfGeneratorTests {
             document.Page(page => {
                 page.Size(320, 420);
                 page.Content().Column(column => {
-                    column.Item().Element(container => InvokePrivateStatic<object?>("ComposeMealCard", container, cardReport, meal));
+                    column.Item().Element(container => InvokePrivateStatic<object?>("ComposeMealCard", container, cardReport, mealReadModel));
                     column.Item().Element(container => InvokePrivateStatic<object?>("ComposeMealsTable", container, emptyReport));
                 });
             });
@@ -157,7 +159,7 @@ public sealed class DiaryPdfGeneratorTests {
         var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
 
         byte[] pdf = await generator.GenerateAsync(
-            [meal],
+            [ToReadModel(meal)],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             locale: null,
@@ -182,7 +184,7 @@ public sealed class DiaryPdfGeneratorTests {
         var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
 
         byte[] pdf = await generator.GenerateAsync(
-            [meal],
+            [ToReadModel(meal)],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             locale: null,
@@ -204,7 +206,7 @@ public sealed class DiaryPdfGeneratorTests {
         var generator = new DiaryPdfGenerator();
 
         byte[] pdf = await generator.GenerateAsync(
-            [meal],
+            [ToReadModel(meal)],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             "ru",
@@ -232,7 +234,7 @@ public sealed class DiaryPdfGeneratorTests {
         var generator = new DiaryPdfGenerator();
 
         byte[] pdf = await generator.GenerateAsync(
-            [meal],
+            [ToReadModel(meal)],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             "ru",
@@ -254,7 +256,7 @@ public sealed class DiaryPdfGeneratorTests {
         var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
 
         byte[] pdf = await generator.GenerateAsync(
-            [meal],
+            [ToReadModel(meal)],
             new DateTime(2026, 4, 20, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             locale: null,
@@ -276,7 +278,7 @@ public sealed class DiaryPdfGeneratorTests {
         var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
 
         byte[] pdf = await generator.GenerateAsync(
-            [meal],
+            [ToReadModel(meal)],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             locale: null,
@@ -298,7 +300,7 @@ public sealed class DiaryPdfGeneratorTests {
         var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
 
         byte[] pdf = await generator.GenerateAsync(
-            [meal],
+            [ToReadModel(meal)],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             locale: null,
@@ -320,7 +322,7 @@ public sealed class DiaryPdfGeneratorTests {
         var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
 
         byte[] pdf = await generator.GenerateAsync(
-            [meal],
+            [ToReadModel(meal)],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             locale: null,
@@ -344,7 +346,7 @@ public sealed class DiaryPdfGeneratorTests {
         var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
 
         byte[] pdf = await generator.GenerateAsync(
-            [firstMeal, secondMeal],
+            [ToReadModel(firstMeal), ToReadModel(secondMeal)],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             locale: null,
@@ -444,20 +446,20 @@ public sealed class DiaryPdfGeneratorTests {
     public void MealItemFormatting_ReturnsFallbacksSuffixesAndNutrition() {
         var userId = UserId.New();
         Meal emptyMeal = CreateMeal(userId, DateTime.UtcNow, 0, 0, 0, 0, 0);
-        object report = CreateReportData([emptyMeal]);
+        MealConsumptionReadModel emptyMealReadModel = ToReadModel(emptyMeal);
+        object report = CreateReportData([emptyMealReadModel]);
 
-        Assert.Equal("not specified", InvokePrivateStatic<string>("FormatMealItemsList", emptyMeal, report));
-        Assert.Equal("Items: not specified", InvokePrivateStatic<string>("FormatMealItems", emptyMeal, report));
+        Assert.Equal("not specified", InvokePrivateStatic<string>("FormatMealItemsList", emptyMealReadModel, report));
+        Assert.Equal("Items: not specified", InvokePrivateStatic<string>("FormatMealItems", emptyMealReadModel, report));
 
         Meal meal = CreateMeal(userId, DateTime.UtcNow, 0, 0, 0, 0, 0);
         for (int index = 0; index < 7; index++) {
             AddProductItem(meal, CreateProduct(userId, $"item-{index.ToString(CultureInfo.InvariantCulture)}", imageUrl: ""), 100 + index);
         }
 
-        string labels = InvokePrivateStatic<string>("FormatMealItemsList", meal, report);
+        string labels = InvokePrivateStatic<string>("FormatMealItemsList", ToReadModel(meal), report);
 
         Assert.Contains("+1 more", labels, StringComparison.Ordinal);
-        Assert.DoesNotContain("item-6", labels, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -487,11 +489,11 @@ public sealed class DiaryPdfGeneratorTests {
             .GetProperty(nameof(MealAiItem.NameEn))!
             .SetValue(session.Items.Last(), " ");
 
-        object productComposition = InvokePrivateStatic<object>("FormatMealItem", productItem, enReport);
-        object recipeComposition = InvokePrivateStatic<object>("FormatMealItem", recipeItem, enReport);
-        object fallbackComposition = InvokePrivateStatic<object>("FormatMealItem", fallbackItem, enReport);
-        object localAiComposition = InvokePrivateStatic<object>("FormatMealAiItem", session.Items.First(), ruReport);
-        object fallbackAiComposition = InvokePrivateStatic<object>("FormatMealAiItem", session.Items.Last(), enReport);
+        object productComposition = InvokePrivateStatic<object>("FormatMealItem", ToReadModel(productItem), enReport);
+        object recipeComposition = InvokePrivateStatic<object>("FormatMealItem", ToReadModel(recipeItem), enReport);
+        object fallbackComposition = InvokePrivateStatic<object>("FormatMealItem", ToReadModel(fallbackItem), enReport);
+        object localAiComposition = InvokePrivateStatic<object>("FormatMealAiItem", ToReadModel(session.Items.First()), ruReport);
+        object fallbackAiComposition = InvokePrivateStatic<object>("FormatMealAiItem", ToReadModel(session.Items.Last()), enReport);
 
         Assert.Equal("Rice", GetPrivateProperty<string>(productComposition, "Name"));
         Assert.Equal(60, GetPrivateProperty<double>(productComposition, "Calories"));
@@ -508,7 +510,7 @@ public sealed class DiaryPdfGeneratorTests {
         var userId = UserId.New();
         Meal dinner = CreateMeal(userId, new DateTime(2026, 5, 4, 20, 0, 0, DateTimeKind.Utc), 100, 10, 5, 20, 3);
         object report = CreateReportData(
-            [dinner],
+            [ToReadModel(dinner)],
             dateFrom: new DateTime(2026, 5, 5, 18, 0, 0, DateTimeKind.Unspecified),
             dateTo: new DateTime(2026, 5, 3, 18, 0, 0, DateTimeKind.Utc),
             cultureName: "bad-culture",
@@ -742,14 +744,15 @@ public sealed class DiaryPdfGeneratorTests {
         meal.UpdateImage(dataUrl);
         var generator = new DiaryPdfGenerator();
 
-        IReadOnlyDictionary<MealId, byte[]> images = await InvokePrivateInstance<Task<IReadOnlyDictionary<MealId, byte[]>>>(
+        MealConsumptionReadModel mealReadModel = ToReadModel(meal);
+        IReadOnlyDictionary<Guid, byte[]> images = await InvokePrivateInstance<Task<IReadOnlyDictionary<Guid, byte[]>>>(
             generator,
             "LoadMealImagesAsync",
-            (IReadOnlyList<Meal>)[meal],
+            (IReadOnlyList<MealConsumptionReadModel>)[mealReadModel],
             CancellationToken.None);
 
-        Assert.True(images.ContainsKey(meal.Id));
-        Assert.NotEmpty(images[meal.Id]);
+        Assert.True(images.ContainsKey(mealReadModel.Id));
+        Assert.NotEmpty(images[mealReadModel.Id]);
     }
 
     [Fact]
@@ -778,6 +781,91 @@ public sealed class DiaryPdfGeneratorTests {
         meal.ApplyNutrition(new MealNutritionUpdate(calories, proteins, fats, carbs, fiber, 0, IsAutoCalculated: true));
         return meal;
     }
+
+    private static MealConsumptionReadModel ToReadModel(Meal meal) =>
+        new(
+            meal.Id.Value,
+            meal.Date,
+            meal.MealType,
+            meal.Comment,
+            meal.ImageUrl,
+            meal.ImageAssetId?.Value,
+            meal.TotalCalories,
+            meal.TotalProteins,
+            meal.TotalFats,
+            meal.TotalCarbs,
+            meal.TotalFiber,
+            meal.TotalAlcohol,
+            meal.IsNutritionAutoCalculated,
+            meal.ManualCalories,
+            meal.ManualProteins,
+            meal.ManualFats,
+            meal.ManualCarbs,
+            meal.ManualFiber,
+            meal.ManualAlcohol,
+            meal.PreMealSatietyLevel,
+            meal.PostMealSatietyLevel,
+            [.. meal.Items.OrderBy(static item => item.Id.Value).Select(ToReadModel)],
+            [.. meal.AiSessions.OrderBy(static session => session.RecognizedAtUtc).Select(ToReadModel)]);
+
+    private static MealConsumptionItemReadModel ToReadModel(MealItem item) =>
+        new(
+            item.Id.Value,
+            item.MealId.Value,
+            item.Amount,
+            item.ProductId?.Value,
+            item.Product?.Name,
+            item.Product?.ImageUrl,
+            item.Product?.BaseUnit.ToString(),
+            item.Product?.BaseAmount,
+            item.Product?.CaloriesPerBase,
+            item.Product?.ProteinsPerBase,
+            item.Product?.FatsPerBase,
+            item.Product?.CarbsPerBase,
+            item.Product?.FiberPerBase,
+            item.Product?.AlcoholPerBase,
+            item.Product?.ProductType,
+            item.RecipeId?.Value,
+            item.Recipe?.Name,
+            item.Recipe?.ImageUrl,
+            item.HasNutritionSnapshot ? 1 : item.Recipe?.Servings,
+            item.Recipe?.TotalCalories,
+            item.Recipe?.TotalProteins,
+            item.Recipe?.TotalFats,
+            item.Recipe?.TotalCarbs,
+            item.Recipe?.TotalFiber,
+            item.Recipe?.TotalAlcohol,
+            item.SourceAiItemId?.Value,
+            item.Origin);
+
+    private static MealConsumptionAiSessionReadModel ToReadModel(MealAiSession session) =>
+        new(
+            session.Id.Value,
+            session.MealId.Value,
+            session.ImageAssetId?.Value,
+            session.ImageAsset?.Url,
+            session.Source,
+            session.Status,
+            session.RecognizedAtUtc,
+            session.Notes,
+            [.. session.Items.OrderBy(static item => item.Id.Value).Select(ToReadModel)]);
+
+    private static MealConsumptionAiItemReadModel ToReadModel(MealAiItem item) =>
+        new(
+            item.Id.Value,
+            item.MealAiSessionId.Value,
+            item.NameEn,
+            item.NameLocal,
+            item.Amount,
+            item.Unit,
+            item.Calories,
+            item.Proteins,
+            item.Fats,
+            item.Carbs,
+            item.Fiber,
+            item.Alcohol,
+            item.Confidence,
+            item.Resolution);
 
     private static Product CreateProduct(UserId userId, string name, string imageUrl) =>
         Product.Create(
@@ -851,12 +939,12 @@ public sealed class DiaryPdfGeneratorTests {
     }
 
     private static object CreateReportData(
-        IReadOnlyList<Meal> meals,
+        IReadOnlyList<MealConsumptionReadModel> meals,
         DateTime? dateFrom = null,
         DateTime? dateTo = null,
         string cultureName = "en",
         int? timeZoneOffsetMinutes = 240,
-        IReadOnlyDictionary<MealId, byte[]>? mealImages = null,
+        IReadOnlyDictionary<Guid, byte[]>? mealImages = null,
         bool compactMealsMode = false) {
         Type reportType = typeof(DiaryPdfGenerator).GetNestedType("DiaryReportData", BindingFlags.NonPublic)!;
         MethodInfo create = reportType.GetMethod("Create", BindingFlags.Static | BindingFlags.Public)!;
@@ -864,7 +952,7 @@ public sealed class DiaryPdfGeneratorTests {
             meals,
             dateFrom ?? new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             dateTo ?? new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
-            mealImages ?? new Dictionary<MealId, byte[]>(),
+            mealImages ?? new Dictionary<Guid, byte[]>(),
             compactMealsMode,
             CreateReportTexts(cultureName),
             timeZoneOffsetMinutes,

@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Fasting.Common;
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Fasting.Models;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Fasting.Services;
@@ -18,9 +18,9 @@ public sealed class FastingAnalyticsService(
     }
 
     public async Task<FastingStatsModel> GetStatsAsync(UserId userId, DateTime nowUtc, CancellationToken cancellationToken) {
-        IReadOnlyList<FastingOccurrence> allOccurrences = await fastingOccurrenceRepository.GetByUserAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FastingOccurrenceReadModel> allOccurrences = await fastingOccurrenceRepository.GetByUserReadModelsAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         IReadOnlyList<FastingOccurrenceAnalysis> allAnalyses = await BuildAnalysesAsync(allOccurrences, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<FastingOccurrence> last30Occurrences = await fastingOccurrenceRepository.GetByUserAsync(
+        IReadOnlyList<FastingOccurrenceReadModel> last30Occurrences = await fastingOccurrenceRepository.GetByUserReadModelsAsync(
             userId,
             from: nowUtc.AddDays(-30),
             to: nowUtc,
@@ -32,9 +32,9 @@ public sealed class FastingAnalyticsService(
     public async Task<FastingInsightsModel> GetInsightsAsync(
         UserId userId,
         DateTime nowUtc,
-        FastingOccurrence? current,
+        FastingOccurrenceReadModel? current,
         CancellationToken cancellationToken) {
-        IReadOnlyList<FastingOccurrence> history = await fastingOccurrenceRepository.GetByUserAsync(
+        IReadOnlyList<FastingOccurrenceReadModel> history = await fastingOccurrenceRepository.GetByUserReadModelsAsync(
             userId,
             from: nowUtc.AddDays(-AnalysisDays),
             to: nowUtc,
@@ -57,37 +57,37 @@ public sealed class FastingAnalyticsService(
         DateTime fromUtc,
         DateTime toUtc,
         CancellationToken cancellationToken) {
-        (IReadOnlyList<FastingOccurrence> occurrences, int totalItems) = await fastingOccurrenceRepository.GetPagedByUserAsync(
+        (IReadOnlyList<FastingOccurrenceReadModel> occurrences, int totalItems) = await fastingOccurrenceRepository.GetPagedByUserReadModelsAsync(
             userId,
             page: page,
             limit: limit,
             from: fromUtc,
             to: toUtc,
             cancellationToken: cancellationToken).ConfigureAwait(false);
-        IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>> checkInsByOccurrence = await GetCheckInsByOccurrenceAsync(occurrences.Select(static occurrence => occurrence.Id).ToArray(), cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckInReadModel>> checkInsByOccurrence = await GetCheckInsByOccurrenceAsync(occurrences.Select(static occurrence => occurrence.Id).ToArray(), cancellationToken).ConfigureAwait(false);
         return FastingHistoryResponseBuilder.Build(occurrences, checkInsByOccurrence, page, limit, totalItems);
     }
 
     private async Task<IReadOnlyList<FastingOccurrenceAnalysis>> BuildAnalysesAsync(
-        IReadOnlyList<FastingOccurrence> occurrences,
+        IReadOnlyList<FastingOccurrenceReadModel> occurrences,
         CancellationToken cancellationToken) {
         if (occurrences.Count == 0) {
             return [];
         }
 
-        IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>> checkInsByOccurrence = await GetCheckInsByOccurrenceAsync(occurrences.Select(static occurrence => occurrence.Id).ToArray(), cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckInReadModel>> checkInsByOccurrence = await GetCheckInsByOccurrenceAsync(occurrences.Select(static occurrence => occurrence.Id).ToArray(), cancellationToken).ConfigureAwait(false);
         return FastingOccurrenceAnalysisBuilder.Build(occurrences, checkInsByOccurrence);
     }
 
-    private async Task<IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>>> GetCheckInsByOccurrenceAsync(
+    private async Task<IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckInReadModel>>> GetCheckInsByOccurrenceAsync(
         IReadOnlyCollection<FastingOccurrenceId> occurrenceIds,
         CancellationToken cancellationToken) {
         if (occurrenceIds.Count == 0) {
-            return new Dictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>>();
+            return new Dictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckInReadModel>>();
         }
 
-        IReadOnlyList<FastingCheckIn> checkIns = await fastingCheckInRepository
-            .GetByOccurrenceIdsAsync(occurrenceIds, cancellationToken)
+        IReadOnlyList<FastingCheckInReadModel> checkIns = await fastingCheckInRepository
+            .GetByOccurrenceIdReadModelsAsync(occurrenceIds, cancellationToken)
             .ConfigureAwait(false);
 
         return FastingCheckInLookup.Create(checkIns);

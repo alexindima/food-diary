@@ -1,14 +1,14 @@
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Fasting.Models;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Fasting.Services;
 
 internal static class FastingStatsCalculator {
     public static FastingStatsModel Create(
-        IReadOnlyList<FastingOccurrence> allOccurrences,
+        IReadOnlyList<FastingOccurrenceReadModel> allOccurrences,
         IReadOnlyList<FastingOccurrenceAnalysis> allAnalyses,
-        IReadOnlyList<FastingOccurrence> last30Occurrences,
+        IReadOnlyList<FastingOccurrenceReadModel> last30Occurrences,
         IReadOnlyList<FastingOccurrenceAnalysis> last30Analyses,
         DateTime nowUtc) {
         var completedOccurrences = allOccurrences
@@ -40,7 +40,7 @@ internal static class FastingStatsCalculator {
             GetTopSymptom(last30Analyses));
     }
 
-    private static int CalculateCurrentStreak(IReadOnlyList<FastingOccurrence> completedOccurrences, DateTime todayUtcDate) {
+    private static int CalculateCurrentStreak(IReadOnlyList<FastingOccurrenceReadModel> completedOccurrences, DateTime todayUtcDate) {
         if (completedOccurrences.Count == 0) {
             return 0;
         }
@@ -48,7 +48,7 @@ internal static class FastingStatsCalculator {
         int streak = 0;
         DateTime expectedDate = todayUtcDate;
 
-        foreach (FastingOccurrence occurrence in completedOccurrences.OrderByDescending(static occurrence => occurrence.StartedAtUtc)) {
+        foreach (FastingOccurrenceReadModel occurrence in completedOccurrences.OrderByDescending(static occurrence => occurrence.StartedAtUtc)) {
             DateTime occurrenceDate = occurrence.StartedAtUtc.Date;
             if (occurrenceDate == expectedDate || occurrenceDate == expectedDate.AddDays(-1)) {
                 streak++;

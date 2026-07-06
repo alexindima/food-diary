@@ -1,18 +1,18 @@
 using System.Globalization;
 using System.Text;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Application.Abstractions.Meals.Models;
 
 namespace FoodDiary.Application.Export.Services;
 
 public static class DiaryCsvGenerator {
-    public static byte[] Generate(IReadOnlyList<Meal> meals, int? timeZoneOffsetMinutes = null) =>
+    public static byte[] Generate(IReadOnlyList<MealConsumptionReadModel> meals, int? timeZoneOffsetMinutes = null) =>
         Generate(meals, ResolveDisplayOffset(timeZoneOffsetMinutes));
 
-    public static byte[] Generate(IReadOnlyList<Meal> meals, TimeSpan displayOffset) {
+    public static byte[] Generate(IReadOnlyList<MealConsumptionReadModel> meals, TimeSpan displayOffset) {
         var sb = new StringBuilder();
         sb.AppendLine("Date,MealType,Calories,Proteins,Fats,Carbs,Fiber,Alcohol,Comment");
 
-        foreach (Meal meal in meals) {
+        foreach (MealConsumptionReadModel meal in meals) {
             double calories = meal.IsNutritionAutoCalculated ? meal.TotalCalories : meal.ManualCalories ?? meal.TotalCalories;
             double proteins = meal.IsNutritionAutoCalculated ? meal.TotalProteins : meal.ManualProteins ?? meal.TotalProteins;
             double fats = meal.IsNutritionAutoCalculated ? meal.TotalFats : meal.ManualFats ?? meal.TotalFats;

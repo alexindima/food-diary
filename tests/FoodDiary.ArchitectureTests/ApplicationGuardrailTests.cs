@@ -1157,6 +1157,65 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void CycleReadService_UsesCycleReadModelsInsteadOfProfileAggregates() {
+        string root = GetRepositoryRoot();
+        string servicePath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Cycles",
+            "Services",
+            "CycleReadService.cs");
+        string[] serviceFiles = [servicePath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Tracking"),
+            .. FindReferencesInFiles(root, serviceFiles, "cycleRepository.GetCurrentAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void FastingReadServices_UseFastingReadModelsInsteadOfOccurrenceAggregates() {
+        string root = GetRepositoryRoot();
+        string[] serviceFiles = [
+            Path.Combine(root, "FoodDiary.Application", "Fasting", "Services", "FastingReadService.cs"),
+            Path.Combine(root, "FoodDiary.Application", "Fasting", "Services", "FastingAnalyticsService.cs"),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Tracking.Fasting"),
+            .. FindReferencesInFiles(root, serviceFiles, "FastingOccurrence>"),
+            .. FindReferencesInFiles(root, serviceFiles, "FastingCheckIn>"),
+            .. FindReferencesInFiles(root, serviceFiles, "fastingOccurrenceRepository.GetCurrentAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "fastingOccurrenceRepository.GetByUserAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "fastingOccurrenceRepository.GetPagedByUserAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "fastingCheckInRepository.GetByOccurrenceIdsAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ExportDiaryReadAndGenerationServices_UseMealReadModelsInsteadOfMealAggregates() {
+        string root = GetRepositoryRoot();
+        string[] serviceFiles = [
+            Path.Combine(root, "FoodDiary.Application", "Export", "Services", "ExportDiaryReadService.cs"),
+            Path.Combine(root, "FoodDiary.Application", "Export", "Services", "DiaryCsvGenerator.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Export", "Common", "IDiaryPdfGenerator.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Export", "Models", "ExportDiaryMealsReadModel.cs"),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Meals"),
+            .. FindReferencesInFiles(root, serviceFiles, "IReadOnlyList<Meal>"),
+            .. FindReferencesInFiles(root, serviceFiles, "mealRepository.GetByPeriodAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void UserQueries_UseProfileReadServiceModelsInsteadOfUserAggregates() {
         string root = GetRepositoryRoot();
         string userQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Users", "Queries");

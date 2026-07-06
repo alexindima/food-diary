@@ -1,12 +1,12 @@
-using FoodDiary.Domain.Entities.Tracking.Fasting;
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Fasting.Services;
 
 internal static class FastingOccurrenceAnalysisBuilder {
     public static IReadOnlyList<FastingOccurrenceAnalysis> Build(
-        IReadOnlyList<FastingOccurrence> occurrences,
-        IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>> checkInsByOccurrence) =>
+        IReadOnlyList<FastingOccurrenceReadModel> occurrences,
+        IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckInReadModel>> checkInsByOccurrence) =>
         [.. occurrences.Select(occurrence => {
             IReadOnlyList<FastingCheckInSnapshot> timeline = FastingCheckInTimelineBuilder.Build(
                 occurrence,

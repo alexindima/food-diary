@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Abstractions.Cycles.Common;
+using FoodDiary.Application.Abstractions.Cycles.Models;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Cycles.Services;
 using FoodDiary.Application.Export.Models;
@@ -7,6 +8,7 @@ using FoodDiary.Application.Export.Queries.ExportCycle;
 using FoodDiary.Application.Export.Queries.ExportDiary;
 using FoodDiary.Application.Export.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
@@ -31,6 +33,32 @@ public class ExportFeatureTests {
         meal.ApplyNutrition(new MealNutritionUpdate(500, 30, 20, 60, 5, 0, IsAutoCalculated: true));
         return meal;
     }
+
+    private static MealConsumptionReadModel ToReadModel(Meal meal) =>
+        new(
+            meal.Id.Value,
+            meal.Date,
+            meal.MealType,
+            meal.Comment,
+            meal.ImageUrl,
+            meal.ImageAssetId?.Value,
+            meal.TotalCalories,
+            meal.TotalProteins,
+            meal.TotalFats,
+            meal.TotalCarbs,
+            meal.TotalFiber,
+            meal.TotalAlcohol,
+            meal.IsNutritionAutoCalculated,
+            meal.ManualCalories,
+            meal.ManualProteins,
+            meal.ManualFats,
+            meal.ManualCarbs,
+            meal.ManualFiber,
+            meal.ManualAlcohol,
+            meal.PreMealSatietyLevel,
+            meal.PostMealSatietyLevel,
+            [],
+            []);
 
     private static ExportDiaryQueryHandler CreateHandler(IReadOnlyList<Meal> meals) =>
         CreateHandler(CreateExportDiaryReadService(meals));
@@ -348,7 +376,7 @@ public class ExportFeatureTests {
     public void CsvGenerator_WithAutoCalculated_UsesTotals() {
         Meal meal = CreateMeal();
 
-        byte[] csv = DiaryCsvGenerator.Generate([meal]);
+        byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)]);
         string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("500", content, StringComparison.Ordinal);
@@ -365,7 +393,7 @@ public class ExportFeatureTests {
             ManualCalories: 400, ManualProteins: 25, ManualFats: 15,
             ManualCarbs: 50, ManualFiber: 3, ManualAlcohol: 0));
 
-        byte[] csv = DiaryCsvGenerator.Generate([meal]);
+        byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)]);
         string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("400", content, StringComparison.Ordinal);
@@ -376,7 +404,7 @@ public class ExportFeatureTests {
     public void CsvGenerator_WithCommaInComment_EscapesProperly() {
         Meal meal = CreateMeal(comment: "eggs, bacon");
 
-        byte[] csv = DiaryCsvGenerator.Generate([meal]);
+        byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)]);
         string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("\"eggs, bacon\"", content, StringComparison.Ordinal);
@@ -386,7 +414,7 @@ public class ExportFeatureTests {
     public void CsvGenerator_WithQuoteInComment_EscapesProperly() {
         Meal meal = CreateMeal(comment: "she said \"hello\"");
 
-        byte[] csv = DiaryCsvGenerator.Generate([meal]);
+        byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)]);
         string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("\"she said \"\"hello\"\"\"", content, StringComparison.Ordinal);
@@ -396,7 +424,7 @@ public class ExportFeatureTests {
     public void CsvGenerator_WithNewlineInComment_EscapesProperly() {
         Meal meal = CreateMeal(comment: "first line\nsecond line");
 
-        byte[] csv = DiaryCsvGenerator.Generate([meal]);
+        byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)]);
         string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("\"first line\nsecond line\"", content, StringComparison.Ordinal);
@@ -406,7 +434,7 @@ public class ExportFeatureTests {
     public void CsvGenerator_WithNoMealType_WritesEmptyField() {
         Meal meal = CreateMeal(mealType: null);
 
-        byte[] csv = DiaryCsvGenerator.Generate([meal]);
+        byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)]);
         string[] lines = System.Text.Encoding.UTF8.GetString(csv).Split('\n', StringSplitOptions.RemoveEmptyEntries);
 
         Assert.True(lines.Length >= 2);
@@ -418,7 +446,7 @@ public class ExportFeatureTests {
     public void CsvGenerator_WithTimeZoneOffset_WritesDisplayDate() {
         Meal meal = CreateMeal(date: new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Utc));
 
-        byte[] csv = DiaryCsvGenerator.Generate([meal], timeZoneOffsetMinutes: 240);
+        byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)], timeZoneOffsetMinutes: 240);
         string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
@@ -428,7 +456,7 @@ public class ExportFeatureTests {
     public void CsvGenerator_WithInvalidTimeZoneOffset_FallsBackToUtc() {
         Meal meal = CreateMeal(date: new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Utc));
 
-        byte[] csv = DiaryCsvGenerator.Generate([meal], timeZoneOffsetMinutes: 900);
+        byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)], timeZoneOffsetMinutes: 900);
         string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("2026-05-03,Breakfast", content, StringComparison.Ordinal);
@@ -439,7 +467,7 @@ public class ExportFeatureTests {
         Meal meal = CreateMeal();
         SetMealDate(meal, new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Unspecified));
 
-        byte[] csv = DiaryCsvGenerator.Generate([meal], TimeSpan.FromHours(4));
+        byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)], TimeSpan.FromHours(4));
         string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
@@ -451,7 +479,7 @@ public class ExportFeatureTests {
         Meal meal = CreateMeal();
         SetMealDate(meal, localDate);
 
-        byte[] csv = DiaryCsvGenerator.Generate([meal], TimeSpan.Zero);
+        byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)], TimeSpan.Zero);
         string content = System.Text.Encoding.UTF8.GetString(csv);
         string expectedDate = localDate.ToUniversalTime().ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
 
@@ -483,11 +511,11 @@ public class ExportFeatureTests {
 
         IMealRepository repository = Substitute.For<IMealRepository>();
         repository
-            .GetByPeriodAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .GetByPeriodConsumptionReadModelsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 lastDateFrom = call.ArgAt<DateTime>(1);
                 lastDateTo = call.ArgAt<DateTime>(2);
-                return Task.FromResult(meals);
+                return Task.FromResult<IReadOnlyList<MealConsumptionReadModel>>([.. meals.Select(ToReadModel)]);
             });
 
         return repository;
@@ -519,9 +547,63 @@ public class ExportFeatureTests {
                 UserId userId = call.ArgAt<UserId>(0);
                 return Task.FromResult(profile is null || profile.UserId != userId ? null : profile);
             });
+        repository
+            .GetCurrentReadModelAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId userId = call.ArgAt<UserId>(0);
+                return Task.FromResult(profile is null || profile.UserId != userId ? null : ToReadModel(profile));
+            });
 
         return repository;
     }
+
+    private static CycleProfileReadModel ToReadModel(CycleProfile profile) =>
+        new(
+            profile.Id.Value,
+            profile.UserId.Value,
+            profile.Mode,
+            profile.Confidence,
+            profile.TrackingStartDate,
+            profile.AverageCycleLength,
+            profile.AveragePeriodLength,
+            profile.LutealLength,
+            profile.IsRegular,
+            profile.IsOnboardingComplete,
+            profile.ShowFertilityEstimates,
+            profile.DiscreetNotifications,
+            profile.Notes,
+            [.. profile.BleedingEntries.Select(static entry => new BleedingEntryReadModel(
+                entry.Id.Value,
+                entry.CycleProfileId.Value,
+                entry.Date,
+                entry.Type,
+                entry.Flow,
+                entry.PainImpact,
+                entry.Notes))],
+            [.. profile.SymptomEntries.Select(static entry => new CycleSymptomEntryReadModel(
+                entry.Id.Value,
+                entry.CycleProfileId.Value,
+                entry.Date,
+                entry.Category,
+                entry.Intensity,
+                entry.Tags,
+                entry.Note))],
+            [.. profile.Factors.Select(static factor => new CycleFactorReadModel(
+                factor.Id.Value,
+                factor.CycleProfileId.Value,
+                factor.Type,
+                factor.StartDate,
+                factor.EndDate,
+                factor.Notes))],
+            [.. profile.FertilitySignals.Select(static signal => new FertilitySignalReadModel(
+                signal.Id.Value,
+                signal.CycleProfileId.Value,
+                signal.Date,
+                signal.BasalBodyTemperatureCelsius,
+                signal.OvulationTestResult,
+                signal.CervicalFluid,
+                signal.HadSex,
+                signal.Notes))]);
 
     private static ExportCycleQueryHandler CreateExportCycleHandler(
         CycleProfile? profile,
@@ -540,7 +622,7 @@ public class ExportFeatureTests {
         IDiaryPdfGenerator generator = Substitute.For<IDiaryPdfGenerator>();
         generator
             .GenerateAsync(
-                Arg.Any<IReadOnlyList<Meal>>(),
+                Arg.Any<IReadOnlyList<MealConsumptionReadModel>>(),
                 Arg.Any<DateTime>(),
                 Arg.Any<DateTime>(),
                 Arg.Any<string?>(),

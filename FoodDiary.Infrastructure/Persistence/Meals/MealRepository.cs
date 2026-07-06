@@ -250,6 +250,15 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<IReadOnlyList<MealConsumptionReadModel>> GetByPeriodConsumptionReadModelsAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken = default) {
+        IReadOnlyList<Meal> meals = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
+        return [.. meals.Select(ToConsumptionReadModel)];
+    }
+
     public async Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
         UserId userId,
         DateTime dateFrom,
