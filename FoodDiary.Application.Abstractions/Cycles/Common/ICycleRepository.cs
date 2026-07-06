@@ -1,3 +1,3 @@
 namespace FoodDiary.Application.Abstractions.Cycles.Common;
 
-public interface ICycleRepository : ICycleReadRepository, ICycleWriteRepository;
+public interface ICycleRepository : ICycleReadRepository, ICycleReadModelRepository, ICycleWriteRepository;

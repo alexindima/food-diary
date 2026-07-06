@@ -516,7 +516,7 @@ public class WearablesFeatureTests {
 
     private static IWearableReadService CreateWearableReadService(
         IWearableConnectionReadRepository? connectionRepository = null,
-        IWearableSyncReadRepository? syncRepository = null) =>
+        IWearableSyncReadModelRepository? syncRepository = null) =>
         new WearableReadService(
             connectionRepository ?? new InMemoryWearableConnectionRepository(),
             syncRepository ?? new InMemoryWearableSyncRepository());

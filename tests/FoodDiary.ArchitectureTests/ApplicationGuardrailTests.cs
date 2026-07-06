@@ -1195,10 +1195,13 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, contractFiles, "FastingCheckInReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "GetByOccurrenceIdReadModelsAsync"),
             .. FindReferencesInFiles(root, contractFiles, "new FastingCheckInReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "BillingSubscriptionOverviewReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new BillingSubscriptionOverviewReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new UserAdminReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new NotificationReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new WebPushSubscriptionReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "WearableSyncEntryReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "GetDailySummaryReadModelsAsync"),
             .. FindReferencesInFiles(root, contractFiles, "new WearableSyncEntryReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new WearableConnectionModel"),
             .. FindReferencesInFiles(root, contractFiles, "UsdaFoodReadModel"),
@@ -1482,6 +1485,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Tracking"),
+            .. FindReferencesInFiles(root, serviceFiles, "ICycleReadRepository"),
             .. FindReferencesInFiles(root, serviceFiles, "cycleRepository.GetCurrentAsync"),
         ];
 
@@ -2016,6 +2020,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.MealPlans"),
             .. FindReferencesInFiles(root, serviceFiles, "mealPlanRepository.GetCuratedAsync"),
             .. FindReferencesInFiles(root, serviceFiles, "mealPlanRepository.GetByUserAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "IMealPlanReadRepository"),
             .. FindReferencesInFiles(root, serviceFiles, "mealPlanRepository.GetByIdAsync"),
         ];
 

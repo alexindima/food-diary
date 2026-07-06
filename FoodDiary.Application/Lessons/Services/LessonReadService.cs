@@ -8,19 +8,21 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Lessons.Services;
 
-public sealed class LessonReadService(INutritionLessonReadRepository repository)
+public sealed class LessonReadService(
+    INutritionLessonReadModelRepository readModelRepository,
+    INutritionLessonReadRepository repository)
     : ILessonReadService {
     public async Task<IReadOnlyList<LessonSummaryModel>> GetByLocaleAsync(
         UserId userId,
         string locale,
         LessonCategory? categoryFilter,
         CancellationToken cancellationToken) {
-        IReadOnlyList<LessonSummaryReadModel> lessons = await repository
+        IReadOnlyList<LessonSummaryReadModel> lessons = await readModelRepository
             .GetSummaryReadModelsByLocaleAsync(locale, categoryFilter, cancellationToken)
             .ConfigureAwait(false);
 
         if (lessons.Count == 0 && !string.Equals(locale, "en", StringComparison.Ordinal)) {
-            lessons = await repository.GetSummaryReadModelsByLocaleAsync("en", categoryFilter, cancellationToken).ConfigureAwait(false);
+            lessons = await readModelRepository.GetSummaryReadModelsByLocaleAsync("en", categoryFilter, cancellationToken).ConfigureAwait(false);
         }
 
         IReadOnlyList<Guid> readLessonIds = await repository.GetReadLessonIdsAsync(userId, cancellationToken).ConfigureAwait(false);
@@ -37,7 +39,7 @@ public sealed class LessonReadService(INutritionLessonReadRepository repository)
         UserId userId,
         NutritionLessonId lessonId,
         CancellationToken cancellationToken) {
-        LessonDetailReadModel? lesson = await repository.GetDetailReadModelByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
+        LessonDetailReadModel? lesson = await readModelRepository.GetDetailReadModelByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
             return null;
         }

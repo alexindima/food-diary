@@ -15,10 +15,10 @@ using FoodDiary.Domain.Enums;
 namespace FoodDiary.Application.Admin.Services;
 
 public sealed class AdminContentReadService(
-    INutritionLessonReadRepository lessonRepository,
-    IEmailTemplateReadRepository emailTemplateRepository,
-    IAiPromptTemplateReadRepository aiPromptTemplateRepository,
-    IContentReportReadRepository contentReportRepository)
+    INutritionLessonReadModelRepository lessonRepository,
+    IEmailTemplateReadModelRepository emailTemplateRepository,
+    IAiPromptTemplateReadModelRepository aiPromptTemplateRepository,
+    IContentReportReadModelRepository contentReportRepository)
     : IAdminContentReadService {
     public async Task<IReadOnlyList<AdminLessonModel>> GetLessonsAsync(CancellationToken cancellationToken) {
         IReadOnlyList<LessonAdminReadModel> lessons = await lessonRepository

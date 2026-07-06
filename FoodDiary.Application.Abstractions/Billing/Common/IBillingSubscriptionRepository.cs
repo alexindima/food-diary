@@ -1,3 +1,3 @@
 namespace FoodDiary.Application.Abstractions.Billing.Common;
 
-public interface IBillingSubscriptionRepository : IBillingSubscriptionReadRepository, IBillingSubscriptionWriteRepository;
+public interface IBillingSubscriptionRepository : IBillingSubscriptionReadRepository, IBillingSubscriptionReadModelRepository, IBillingSubscriptionWriteRepository;

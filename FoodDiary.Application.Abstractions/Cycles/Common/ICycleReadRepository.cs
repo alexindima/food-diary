@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Cycles.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -15,10 +14,6 @@ public interface ICycleReadRepository {
     Task<CycleProfile?> GetCurrentAsync(
         UserId userId,
         bool includeDetails = false,
-        CancellationToken cancellationToken = default);
-
-    Task<CycleProfileReadModel?> GetCurrentReadModelAsync(
-        UserId userId,
         CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<CycleProfile>> GetByUserAsync(

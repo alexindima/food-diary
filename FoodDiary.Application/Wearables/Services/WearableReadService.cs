@@ -8,7 +8,7 @@ namespace FoodDiary.Application.Wearables.Services;
 
 internal sealed class WearableReadService(
     IWearableConnectionReadRepository connectionRepository,
-    IWearableSyncReadRepository syncRepository) : IWearableReadService {
+    IWearableSyncReadModelRepository syncRepository) : IWearableReadService {
     public async Task<IReadOnlyList<WearableConnectionModel>> GetConnectionsAsync(
         UserId userId,
         CancellationToken cancellationToken) {

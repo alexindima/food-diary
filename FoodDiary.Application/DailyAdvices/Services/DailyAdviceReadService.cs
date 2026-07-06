@@ -6,7 +6,7 @@ using FoodDiary.Application.DailyAdvices.Models;
 
 namespace FoodDiary.Application.DailyAdvices.Services;
 
-public sealed class DailyAdviceReadService(IDailyAdviceReadRepository adviceRepository)
+public sealed class DailyAdviceReadService(IDailyAdviceReadModelRepository adviceRepository)
     : IDailyAdviceReadService {
     public async Task<Result<DailyAdviceModel>> GetForDateAsync(
         DateTime date,

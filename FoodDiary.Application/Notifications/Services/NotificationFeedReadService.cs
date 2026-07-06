@@ -8,13 +8,14 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Notifications.Services;
 
 internal sealed class NotificationFeedReadService(
+    INotificationReadModelRepository notificationReadModelRepository,
     INotificationReadRepository notificationRepository,
     INotificationTextRenderer notificationTextRenderer) : INotificationFeedReadService {
     public async Task<IReadOnlyList<NotificationModel>> GetVisibleNotificationsAsync(
         UserId userId,
         NotificationUserContext context,
         CancellationToken cancellationToken) {
-        IReadOnlyList<NotificationReadModel> notifications = await notificationRepository
+        IReadOnlyList<NotificationReadModel> notifications = await notificationReadModelRepository
             .GetByUserReadModelsAsync(userId, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 

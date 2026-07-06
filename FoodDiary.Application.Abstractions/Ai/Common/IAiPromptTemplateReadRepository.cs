@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -6,8 +5,6 @@ namespace FoodDiary.Application.Abstractions.Ai.Common;
 
 public interface IAiPromptTemplateReadRepository {
     Task<IReadOnlyList<AiPromptTemplate>> GetAllAsync(CancellationToken cancellationToken = default);
-
-    Task<IReadOnlyList<AiPromptTemplateReadModel>> GetAllReadModelsAsync(CancellationToken cancellationToken = default);
 
     Task<AiPromptTemplate?> GetByKeyAsync(
         string key,

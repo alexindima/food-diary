@@ -1,3 +1,3 @@
 namespace FoodDiary.Application.Abstractions.Wearables.Common;
 
-public interface IWearableSyncRepository : IWearableSyncReadRepository, IWearableSyncWriteRepository;
+public interface IWearableSyncRepository : IWearableSyncReadRepository, IWearableSyncReadModelRepository, IWearableSyncWriteRepository;

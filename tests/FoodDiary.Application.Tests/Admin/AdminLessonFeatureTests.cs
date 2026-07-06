@@ -493,10 +493,10 @@ public class AdminLessonFeatureTests {
     }
 
     private static IAdminContentReadService CreateAdminContentReadService(
-        INutritionLessonReadRepository lessonRepository) =>
+        INutritionLessonReadModelRepository lessonRepository) =>
         new AdminContentReadService(
             lessonRepository,
-            Substitute.For<IEmailTemplateReadRepository>(),
-            Substitute.For<IAiPromptTemplateReadRepository>(),
-            Substitute.For<IContentReportReadRepository>());
+            Substitute.For<IEmailTemplateReadModelRepository>(),
+            Substitute.For<IAiPromptTemplateReadModelRepository>(),
+            Substitute.For<IContentReportReadModelRepository>());
 }

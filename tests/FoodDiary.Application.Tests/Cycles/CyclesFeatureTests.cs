@@ -807,12 +807,12 @@ public class CyclesFeatureTests {
         new(date, date, calories, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: fiber, TotalFiber: fiber);
 
     private static GetCurrentCycleQueryHandler CreateCurrentCycleHandler(
-        ICycleReadRepository cycleRepository,
+        ICycleReadModelRepository cycleRepository,
         ICurrentUserAccessService currentUserAccessService) =>
         new(new CycleReadService(cycleRepository, CreateStatisticsReadService([])), currentUserAccessService);
 
     private static GetCycleNutritionSummaryQueryHandler CreateCycleNutritionSummaryHandler(
-        ICycleReadRepository cycleRepository,
+        ICycleReadModelRepository cycleRepository,
         IDashboardStatisticsReadService statisticsReadService,
         ICurrentUserAccessService currentUserAccessService) =>
         new(new CycleReadService(cycleRepository, statisticsReadService), currentUserAccessService);

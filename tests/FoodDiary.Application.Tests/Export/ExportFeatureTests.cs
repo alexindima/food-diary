@@ -539,14 +539,8 @@ public class ExportFeatureTests {
         return service;
     }
 
-    private static ICycleReadRepository CreateCycleRepository(CycleProfile? profile) {
-        ICycleReadRepository repository = Substitute.For<ICycleReadRepository>();
-        repository
-            .GetCurrentAsync(Arg.Any<UserId>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
-            .Returns(call => {
-                UserId userId = call.ArgAt<UserId>(0);
-                return Task.FromResult(profile is null || profile.UserId != userId ? null : profile);
-            });
+    private static ICycleReadModelRepository CreateCycleRepository(CycleProfile? profile) {
+        ICycleRepository repository = Substitute.For<ICycleRepository>();
         repository
             .GetCurrentReadModelAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {

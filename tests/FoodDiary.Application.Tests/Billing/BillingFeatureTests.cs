@@ -1526,7 +1526,7 @@ public sealed class BillingFeatureTests {
 
     private static GetBillingOverviewQueryHandler CreateBillingOverviewHandler(
         IBillingUserContextService billingUserContextService,
-        IBillingSubscriptionReadRepository billingSubscriptionRepository,
+        IBillingSubscriptionReadModelRepository billingSubscriptionRepository,
         IBillingPublicConfigProvider billingPublicConfigProvider,
         TimeProvider dateTimeProvider) =>
         new(new BillingOverviewReadService(

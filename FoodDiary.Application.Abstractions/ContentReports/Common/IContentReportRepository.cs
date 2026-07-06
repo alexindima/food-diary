@@ -1,3 +1,3 @@
 namespace FoodDiary.Application.Abstractions.ContentReports.Common;
 
-public interface IContentReportRepository : IContentReportReadRepository, IContentReportWriteRepository;
+public interface IContentReportRepository : IContentReportReadRepository, IContentReportReadModelRepository, IContentReportWriteRepository;

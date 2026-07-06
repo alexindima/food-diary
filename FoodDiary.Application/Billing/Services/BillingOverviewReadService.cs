@@ -9,7 +9,7 @@ namespace FoodDiary.Application.Billing.Services;
 
 public sealed class BillingOverviewReadService(
     IBillingUserContextService billingUserContextService,
-    IBillingSubscriptionReadRepository billingSubscriptionRepository,
+    IBillingSubscriptionReadModelRepository billingSubscriptionRepository,
     IBillingPublicConfigProvider billingPublicConfigProvider,
     TimeProvider dateTimeProvider)
     : IBillingOverviewReadService {

@@ -1,3 +1,3 @@
 namespace FoodDiary.Application.Abstractions.Notifications.Common;
 
-public interface INotificationRepository : INotificationReadRepository, INotificationWriteRepository;
+public interface INotificationRepository : INotificationReadRepository, INotificationReadModelRepository, INotificationWriteRepository;

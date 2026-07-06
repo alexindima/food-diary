@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -6,10 +5,6 @@ namespace FoodDiary.Application.Abstractions.Billing.Common;
 
 public interface IBillingSubscriptionReadRepository {
     Task<BillingSubscription?> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default);
-
-    Task<BillingSubscriptionOverviewReadModel?> GetOverviewReadModelByUserIdAsync(
-        UserId userId,
-        CancellationToken cancellationToken = default);
 
     Task<BillingSubscription?> GetByExternalCustomerIdAsync(string provider, string externalCustomerId, CancellationToken cancellationToken = default);
 

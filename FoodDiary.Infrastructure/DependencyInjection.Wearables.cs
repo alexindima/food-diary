@@ -12,6 +12,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IWearableConnectionWriteRepository>(static provider => provider.GetRequiredService<IWearableConnectionRepository>());
         services.AddScoped<IWearableSyncRepository, WearableSyncRepository>();
         services.AddScoped<IWearableSyncReadRepository>(static provider => provider.GetRequiredService<IWearableSyncRepository>());
+        services.AddScoped<IWearableSyncReadModelRepository>(static provider => provider.GetRequiredService<IWearableSyncRepository>());
         services.AddScoped<IWearableSyncWriteRepository>(static provider => provider.GetRequiredService<IWearableSyncRepository>());
         services.AddSingleton<IWearableOAuthStateService, WearableOAuthStateService>();
 

@@ -400,16 +400,16 @@ public class LessonsFeatureTests {
             lesson.EstimatedReadMinutes);
 
     private static GetLessonsQueryHandler CreateGetLessonsHandler(
-        INutritionLessonReadRepository repository) =>
+        INutritionLessonRepository repository) =>
         new(CreateLessonReadService(repository));
 
     private static GetLessonByIdQueryHandler CreateGetLessonByIdHandler(
-        INutritionLessonReadRepository repository) =>
+        INutritionLessonRepository repository) =>
         new(CreateLessonReadService(repository));
 
     private static ILessonReadService CreateLessonReadService(
-        INutritionLessonReadRepository repository) =>
-        new LessonReadService(repository);
+        INutritionLessonRepository repository) =>
+        new LessonReadService(repository, repository);
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider : TimeProvider {

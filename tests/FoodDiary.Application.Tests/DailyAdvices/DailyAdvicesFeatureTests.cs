@@ -233,12 +233,12 @@ public class DailyAdvicesFeatureTests {
     }
 
     private static GetDailyAdviceQueryHandler CreateGetDailyAdviceHandler(
-        IDailyAdviceReadRepository repository,
+        IDailyAdviceReadModelRepository repository,
         ICurrentUserAccessService currentUserAccessService) =>
         new(CreateDailyAdviceReadService(repository), currentUserAccessService);
 
     private static IDailyAdviceReadService CreateDailyAdviceReadService(
-        IDailyAdviceReadRepository repository) =>
+        IDailyAdviceReadModelRepository repository) =>
         new DailyAdviceReadService(repository);
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) {

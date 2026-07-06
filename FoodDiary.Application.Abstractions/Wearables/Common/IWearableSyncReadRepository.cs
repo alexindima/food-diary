@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -14,11 +13,6 @@ public interface IWearableSyncReadRepository {
         CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<WearableSyncEntry>> GetDailySummaryAsync(
-        UserId userId,
-        DateTime date,
-        CancellationToken cancellationToken = default);
-
-    Task<IReadOnlyList<WearableSyncEntryReadModel>> GetDailySummaryReadModelsAsync(
         UserId userId,
         DateTime date,
         CancellationToken cancellationToken = default);

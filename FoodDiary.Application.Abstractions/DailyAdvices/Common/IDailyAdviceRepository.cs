@@ -1,3 +1,3 @@
 namespace FoodDiary.Application.Abstractions.DailyAdvices.Common;
 
-public interface IDailyAdviceRepository : IDailyAdviceReadRepository;
+public interface IDailyAdviceRepository : IDailyAdviceReadRepository, IDailyAdviceReadModelRepository;

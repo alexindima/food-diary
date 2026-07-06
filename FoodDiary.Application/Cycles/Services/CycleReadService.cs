@@ -12,7 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Cycles.Services;
 
 public sealed class CycleReadService(
-    ICycleReadRepository cycleRepository,
+    ICycleReadModelRepository cycleRepository,
     IDashboardStatisticsReadService statisticsReadService)
     : ICycleReadService {
     private const int MinComparisonDaysPerGroup = 2;

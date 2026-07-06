@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.ContentReports.Models;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -18,12 +17,6 @@ public interface IContentReportReadRepository {
         CancellationToken cancellationToken = default);
 
     Task<(IReadOnlyList<ContentReport> Items, int Total)> GetPagedAsync(
-        ReportStatus? status,
-        int page,
-        int limit,
-        CancellationToken cancellationToken = default);
-
-    Task<(IReadOnlyList<ContentReportAdminReadModel> Items, int Total)> GetPagedAdminReadModelsAsync(
         ReportStatus? status,
         int page,
         int limit,

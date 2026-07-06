@@ -1093,9 +1093,9 @@ public class NotificationsFeatureTests {
         new NotificationUserContextService(new SingleUserRepository(user));
 
     private static INotificationFeedReadService CreateNotificationFeedReadService(
-        INotificationReadRepository notificationRepository,
+        INotificationRepository notificationRepository,
         INotificationTextRenderer notificationTextRenderer) =>
-        new NotificationFeedReadService(notificationRepository, notificationTextRenderer);
+        new NotificationFeedReadService(notificationRepository, notificationRepository, notificationTextRenderer);
 
     private static IWebPushSubscriptionReadService CreateWebPushSubscriptionReadService(
         IWebPushSubscriptionReadModelRepository webPushSubscriptionRepository) =>

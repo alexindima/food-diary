@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.MealPlans.Services;
 
-public sealed class MealPlanReadService(IMealPlanReadRepository mealPlanRepository)
+public sealed class MealPlanReadService(IMealPlanReadModelRepository mealPlanRepository)
     : IMealPlanReadService {
     public async Task<IReadOnlyList<MealPlanSummaryModel>> GetAllAsync(
         UserId userId,

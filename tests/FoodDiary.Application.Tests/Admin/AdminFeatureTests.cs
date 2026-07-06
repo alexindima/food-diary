@@ -1839,15 +1839,15 @@ public class AdminFeatureTests {
     }
 
     private static IAdminContentReadService CreateAdminContentReadService(
-        INutritionLessonReadRepository? lessonRepository = null,
-        IEmailTemplateReadRepository? emailTemplateRepository = null,
-        IAiPromptTemplateReadRepository? aiPromptTemplateRepository = null,
-        IContentReportReadRepository? contentReportRepository = null) =>
+        INutritionLessonReadModelRepository? lessonRepository = null,
+        IEmailTemplateReadModelRepository? emailTemplateRepository = null,
+        IAiPromptTemplateReadModelRepository? aiPromptTemplateRepository = null,
+        IContentReportReadModelRepository? contentReportRepository = null) =>
         new AdminContentReadService(
-            lessonRepository ?? Substitute.For<INutritionLessonReadRepository>(),
-            emailTemplateRepository ?? Substitute.For<IEmailTemplateReadRepository>(),
-            aiPromptTemplateRepository ?? Substitute.For<IAiPromptTemplateReadRepository>(),
-            contentReportRepository ?? Substitute.For<IContentReportReadRepository>());
+            lessonRepository ?? Substitute.For<INutritionLessonReadModelRepository>(),
+            emailTemplateRepository ?? Substitute.For<IEmailTemplateReadModelRepository>(),
+            aiPromptTemplateRepository ?? Substitute.For<IAiPromptTemplateReadModelRepository>(),
+            contentReportRepository ?? Substitute.For<IContentReportReadModelRepository>());
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryEmailTemplateRepository(params EmailTemplate[] templates) : IEmailTemplateRepository {
