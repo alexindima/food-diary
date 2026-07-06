@@ -141,7 +141,7 @@
         "husky": "^9.1.7",
         "jsdom": "^29.1.1",
         "ng-morph": "^5.0.1",
-        "ng-packagr": "^22.0.0",
+        "ng-packagr": "^22.0.1",
         "postcss-scss": "^4.0.9",
         "prettier": "^3.9.1",
         "storybook": "^10.4.6",
