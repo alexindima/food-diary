@@ -191,6 +191,10 @@ public class LayeringTests {
     public void InfrastructureProject_PackageReferencesStayLimitedToPersistenceAndTechnicalImplementations() {
         string[] allowedPackages = [
             "BCrypt.Net-Next",
+            "Microsoft.CodeAnalysis.CSharp",
+            "Microsoft.CodeAnalysis.CSharp.Workspaces",
+            "Microsoft.CodeAnalysis.Common",
+            "Microsoft.CodeAnalysis.Workspaces.MSBuild",
             "Microsoft.EntityFrameworkCore",
             "Microsoft.EntityFrameworkCore.Design",
             "Microsoft.Extensions.Configuration",
