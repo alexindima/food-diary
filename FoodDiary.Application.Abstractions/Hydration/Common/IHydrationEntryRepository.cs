@@ -1,3 +1,3 @@
 namespace FoodDiary.Application.Abstractions.Hydration.Common;
 
-public interface IHydrationEntryRepository : IHydrationEntryReadRepository, IHydrationEntryWriteRepository;
+public interface IHydrationEntryRepository : IHydrationEntryReadRepository, IHydrationEntryReadModelRepository, IHydrationEntryWriteRepository;

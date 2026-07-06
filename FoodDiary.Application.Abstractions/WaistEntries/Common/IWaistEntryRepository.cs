@@ -1,3 +1,3 @@
 namespace FoodDiary.Application.Abstractions.WaistEntries.Common;
 
-public interface IWaistEntryRepository : IWaistEntryReadRepository, IWaistEntryWriteRepository;
+public interface IWaistEntryRepository : IWaistEntryReadRepository, IWaistEntryReadModelRepository, IWaistEntryWriteRepository;

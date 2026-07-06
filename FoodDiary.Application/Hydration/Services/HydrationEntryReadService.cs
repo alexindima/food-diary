@@ -7,12 +7,14 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Hydration.Services;
 
-internal sealed class HydrationEntryReadService(IHydrationEntryReadRepository hydrationEntryRepository) : IHydrationEntryReadService {
+internal sealed class HydrationEntryReadService(
+    IHydrationEntryReadModelRepository hydrationEntryReadModelRepository,
+    IHydrationEntryReadRepository hydrationEntryRepository) : IHydrationEntryReadService {
     public async Task<IReadOnlyList<HydrationEntryModel>> GetEntriesByDateAsync(
         UserId userId,
         DateTime dateUtc,
         CancellationToken cancellationToken) {
-        IReadOnlyList<HydrationEntryReadModel> entries = await hydrationEntryRepository
+        IReadOnlyList<HydrationEntryReadModel> entries = await hydrationEntryReadModelRepository
             .GetByDateReadModelsAsync(userId, dateUtc, cancellationToken)
             .ConfigureAwait(false);
 

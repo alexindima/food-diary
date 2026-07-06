@@ -36,8 +36,8 @@ public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
     public DashboardSnapshotBuilder(
         ISender sender,
         IDashboardUserContextService dashboardUserContextService,
-        IWeightEntryReadRepository weightEntryRepository,
-        IWaistEntryReadRepository waistEntryRepository,
+        IWeightEntryReadModelRepository weightEntryRepository,
+        IWaistEntryReadModelRepository waistEntryRepository,
         IHydrationEntryReadRepository hydrationEntryRepository,
         IFastingReadService fastingReadService,
         IExerciseEntryReadRepository exerciseEntryRepository,

@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Exercises.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -12,12 +11,6 @@ public interface IExerciseEntryReadRepository {
         CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<ExerciseEntry>> GetByDateRangeAsync(
-        UserId userId,
-        DateTime dateFrom,
-        DateTime dateTo,
-        CancellationToken cancellationToken = default);
-
-    Task<IReadOnlyList<ExerciseEntryReadModel>> GetByDateRangeReadModelsAsync(
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,

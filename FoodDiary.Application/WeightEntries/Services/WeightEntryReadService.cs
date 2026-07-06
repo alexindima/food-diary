@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Services;
 
-internal sealed class WeightEntryReadService(IWeightEntryReadRepository weightEntryRepository) : IWeightEntryReadService {
+internal sealed class WeightEntryReadService(IWeightEntryReadModelRepository weightEntryRepository) : IWeightEntryReadService {
     public async Task<IReadOnlyList<WeightEntryModel>> GetEntriesAsync(
         UserId userId,
         DateTime? dateFrom,

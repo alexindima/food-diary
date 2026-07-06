@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -24,21 +23,7 @@ public interface IWeightEntryReadRepository {
         bool descending,
         CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyList<WeightEntryReadModel>> GetEntryReadModelsAsync(
-        UserId userId,
-        DateTime? dateFrom,
-        DateTime? dateTo,
-        int? limit,
-        bool descending,
-        CancellationToken cancellationToken = default);
-
     Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(
-        UserId userId,
-        DateTime dateFrom,
-        DateTime dateTo,
-        CancellationToken cancellationToken = default);
-
-    Task<IReadOnlyList<WeightEntryReadModel>> GetByPeriodReadModelsAsync(
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,

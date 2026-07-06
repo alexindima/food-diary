@@ -1178,9 +1178,17 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, contractFiles, "async Task<"),
             .. FindReferencesInFiles(root, contractFiles, "private static"),
             .. FindReferencesInFiles(root, contractFiles, "ToReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "WeightEntryReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "GetEntryReadModelsAsync"),
+            .. FindReferencesInFiles(root, contractFiles, "GetByPeriodReadModelsAsync"),
             .. FindReferencesInFiles(root, contractFiles, "new WeightEntryReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "WaistEntryReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new WaistEntryReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "ExerciseEntryReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "GetByDateRangeReadModelsAsync"),
             .. FindReferencesInFiles(root, contractFiles, "new ExerciseEntryReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "HydrationEntryReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "GetByDateReadModelsAsync"),
             .. FindReferencesInFiles(root, contractFiles, "new HydrationEntryReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new FastingOccurrenceReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new FastingCheckInReadModel"),
@@ -1839,6 +1847,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Tracking"),
+            .. FindReferencesInFiles(root, serviceFiles, "IExerciseEntryReadRepository"),
             .. FindReferencesInFiles(root, serviceFiles, "GetByDateRangeAsync"),
         ];
 
@@ -1858,6 +1867,8 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Tracking"),
+            .. FindReferencesInFiles(root, serviceFiles, "IWeightEntryReadRepository"),
+            .. FindReferencesInFiles(root, serviceFiles, "IWaistEntryReadRepository"),
             .. FindReferencesInFiles(root, serviceFiles, "GetEntriesAsync"),
             .. FindReferencesInFiles(root, serviceFiles, "GetByPeriodAsync"),
         ];
