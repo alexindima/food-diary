@@ -1028,6 +1028,28 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void AdminContentReadContracts_DoNotFallbackToAggregateDefaultReadModels() {
+        string root = GetRepositoryRoot();
+        string[] contractFiles = [
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Lessons", "Common", "INutritionLessonReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Admin", "Common", "IEmailTemplateReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "ContentReports", "Common", "IContentReportReadRepository.cs"),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<LessonSummaryReadModel>>"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<LessonAdminReadModel>>"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<LessonDetailReadModel?>"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<EmailTemplateReadModel>>"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<(IReadOnlyList<ContentReportAdminReadModel>"),
+            .. FindReferencesInFiles(root, contractFiles, "private static"),
+            .. FindReferencesInFiles(root, contractFiles, ".Select(To"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ConsumptionMappings_DoNotExposePagedMealAggregateReadModels() {
         string root = GetRepositoryRoot();
         string mappingPath = Path.Combine(

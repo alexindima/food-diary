@@ -29,6 +29,7 @@ using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
+using FoodDiary.Application.Abstractions.ContentReports.Models;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Ai;
@@ -1685,6 +1686,29 @@ public class AdminFeatureTests {
 
         public Task<bool> HasUserReportedAsync(UserId userId, ReportTargetType targetType, Guid targetId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task<(IReadOnlyList<ContentReportAdminReadModel> Items, int Total)> GetPagedAdminReadModelsAsync(
+            ReportStatus? status,
+            int page,
+            int limit,
+            CancellationToken cancellationToken = default) {
+            LastStatus = status;
+            LastPage = page;
+            LastLimit = limit;
+            IReadOnlyList<ContentReport> filtered = reports ?? [];
+            IReadOnlyList<ContentReportAdminReadModel> models = [
+                .. filtered.Select(static report => new ContentReportAdminReadModel(
+                    report.Id.Value,
+                    report.UserId.Value,
+                    report.TargetType.ToString(),
+                    report.TargetId,
+                    report.Reason,
+                    report.Status.ToString(),
+                    report.AdminNote,
+                    report.CreatedOnUtc,
+                    report.ReviewedAtUtc)),
+            ];
+            return Task.FromResult((models, models.Count));
+        }
         public Task<(IReadOnlyList<ContentReport> Items, int Total)> GetPagedAsync(
             ReportStatus? status,
             int page,
@@ -1831,6 +1855,20 @@ public class AdminFeatureTests {
 
         public Task<IReadOnlyList<EmailTemplate>> GetAllAsync(CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<EmailTemplate>>(templates);
+
+        public Task<IReadOnlyList<EmailTemplateReadModel>> GetAllReadModelsAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<EmailTemplateReadModel>>([
+                .. templates.Select(static template => new EmailTemplateReadModel(
+                    template.Id,
+                    template.Key,
+                    template.Locale,
+                    template.Subject,
+                    template.HtmlBody,
+                    template.TextBody,
+                    template.IsActive,
+                    template.CreatedOnUtc,
+                    template.ModifiedOnUtc)),
+            ]);
 
         public Task<EmailTemplate?> GetByKeyAsync(
             string key,

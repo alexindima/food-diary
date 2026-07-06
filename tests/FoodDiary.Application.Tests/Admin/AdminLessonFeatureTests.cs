@@ -9,6 +9,7 @@ using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Application.Abstractions.Lessons.Common;
+using FoodDiary.Application.Abstractions.Lessons.Models;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -422,11 +423,67 @@ public class AdminLessonFeatureTests {
             return Task.CompletedTask;
         }
 
+        public Task<IReadOnlyList<LessonSummaryReadModel>> GetSummaryReadModelsByLocaleAsync(
+            string locale,
+            LessonCategory? category = null,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<LessonSummaryReadModel>>([
+                .. _lessons
+                    .Where(lesson => string.Equals(lesson.Locale, locale, StringComparison.Ordinal)
+                        && (!category.HasValue || lesson.Category == category.Value))
+                    .Select(static lesson => new LessonSummaryReadModel(
+                        lesson.Id.Value,
+                        lesson.Title,
+                        lesson.Summary,
+                        lesson.Category.ToString(),
+                        lesson.Difficulty.ToString(),
+                        lesson.EstimatedReadMinutes,
+                        lesson.SortOrder)),
+            ]);
+
+        public Task<IReadOnlyList<LessonAdminReadModel>> GetAdminReadModelsAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<LessonAdminReadModel>>([
+                .. _lessons.Select(static lesson => new LessonAdminReadModel(
+                    lesson.Id.Value,
+                    lesson.Title,
+                    lesson.Content,
+                    lesson.Summary,
+                    lesson.Locale,
+                    lesson.Category.ToString(),
+                    lesson.Difficulty.ToString(),
+                    lesson.EstimatedReadMinutes,
+                    lesson.SortOrder,
+                    lesson.CreatedOnUtc,
+                    lesson.ModifiedOnUtc)),
+            ]);
+
+        public Task<LessonDetailReadModel?> GetDetailReadModelByIdAsync(
+            NutritionLessonId id,
+            CancellationToken cancellationToken = default) {
+            NutritionLesson? lesson = _lessons.FirstOrDefault(l => l.Id == id);
+            return Task.FromResult(lesson is null
+                ? null
+                : new LessonDetailReadModel(
+                    lesson.Id.Value,
+                    lesson.Title,
+                    lesson.Content,
+                    lesson.Summary,
+                    lesson.Category.ToString(),
+                    lesson.Difficulty.ToString(),
+                    lesson.EstimatedReadMinutes));
+        }
+
         public Task<IReadOnlyList<NutritionLesson>> GetByLocaleAsync(string locale, LessonCategory? category = null, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
+        public Task<IReadOnlyList<Guid>> GetReadLessonIdsAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Guid>>([]);
+
         public Task<IReadOnlyList<UserLessonProgress>> GetUserProgressAsync(UserId userId, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+
+        public Task<bool> IsLessonReadAsync(UserId userId, NutritionLessonId lessonId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(false);
 
         public Task<UserLessonProgress?> GetUserProgressForLessonAsync(UserId userId, NutritionLessonId lessonId, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
