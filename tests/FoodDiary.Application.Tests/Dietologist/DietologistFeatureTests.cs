@@ -236,10 +236,10 @@ public class DietologistFeatureTests {
             new ImmediatePostCommitActionQueue());
     }
 
-    // â”€â”€ InviteDietologist â”€â”€
+    // InviteDietologist
 
     private static GetInvitationForCurrentUserQueryHandler CreateGetInvitationForCurrentUserHandler(
-        IDietologistInvitationReadRepository? invitationRepository = null,
+        IDietologistInvitationReadModelRepository? invitationRepository = null,
         IDietologistUserContextService? userContextService = null) =>
         new(CreateDietologistInvitationReadService(
             invitationRepository ?? new InMemoryInvitationRepository(),
@@ -247,7 +247,7 @@ public class DietologistFeatureTests {
             Substitute.For<ICurrentUserAccessService>()));
 
     private static GetInvitationByTokenQueryHandler CreateGetInvitationByTokenHandler(
-        IDietologistInvitationReadRepository? invitationRepository = null,
+        IDietologistInvitationReadModelRepository? invitationRepository = null,
         IDietologistUserContextService? userContextService = null) =>
         new(CreateDietologistInvitationReadService(
             invitationRepository ?? new InMemoryInvitationRepository(),
@@ -255,7 +255,7 @@ public class DietologistFeatureTests {
             Substitute.For<ICurrentUserAccessService>()));
 
     private static GetMyDietologistQueryHandler CreateGetMyDietologistHandler(
-        IDietologistInvitationReadRepository? invitationRepository = null,
+        IDietologistInvitationReadModelRepository? invitationRepository = null,
         ICurrentUserAccessService? currentUserAccessService = null) =>
         new(CreateDietologistInvitationReadService(
             invitationRepository ?? new InMemoryInvitationRepository(),
@@ -263,7 +263,7 @@ public class DietologistFeatureTests {
             currentUserAccessService ?? new InMemoryUserRepository()));
 
     private static GetMyClientsQueryHandler CreateGetMyClientsHandler(
-        IDietologistInvitationReadRepository? invitationRepository = null,
+        IDietologistInvitationReadModelRepository? invitationRepository = null,
         ICurrentUserAccessService? currentUserAccessService = null) =>
         new(CreateDietologistInvitationReadService(
             invitationRepository ?? new InMemoryInvitationRepository(),
@@ -271,7 +271,7 @@ public class DietologistFeatureTests {
             currentUserAccessService ?? new InMemoryUserRepository()));
 
     private static GetMyDietologistRelationshipQueryHandler CreateGetMyDietologistRelationshipHandler(
-        IDietologistInvitationReadRepository? invitationRepository = null,
+        IDietologistInvitationReadModelRepository? invitationRepository = null,
         ICurrentUserAccessService? currentUserAccessService = null) =>
         new(CreateDietologistInvitationReadService(
             invitationRepository ?? new InMemoryInvitationRepository(),
@@ -279,13 +279,13 @@ public class DietologistFeatureTests {
             currentUserAccessService ?? new InMemoryUserRepository()));
 
     private static IDietologistInvitationReadService CreateDietologistInvitationReadService(
-        IDietologistInvitationReadRepository invitationRepository,
+        IDietologistInvitationReadModelRepository invitationRepository,
         IDietologistUserContextService userContextService,
         ICurrentUserAccessService currentUserAccessService) =>
         new DietologistInvitationReadService(invitationRepository, userContextService, currentUserAccessService, TimeProvider.System);
 
     private static GetClientDashboardQueryHandler CreateGetClientDashboardHandler(
-        IDietologistInvitationReadRepository? invitationRepository = null,
+        IDietologistInvitationReadModelRepository? invitationRepository = null,
         IDashboardSnapshotBuilder? snapshotBuilder = null,
         InMemoryUserRepository? userRepository = null) =>
         new(CreateDietologistClientReadService(
@@ -294,7 +294,7 @@ public class DietologistFeatureTests {
             userRepository ?? new InMemoryUserRepository()));
 
     private static GetClientGoalsQueryHandler CreateGetClientGoalsHandler(
-        IDietologistInvitationReadRepository? invitationRepository = null,
+        IDietologistInvitationReadModelRepository? invitationRepository = null,
         InMemoryUserRepository? userRepository = null) =>
         new(CreateDietologistClientReadService(
             invitationRepository ?? new InMemoryInvitationRepository(),
@@ -302,13 +302,13 @@ public class DietologistFeatureTests {
             userRepository ?? new InMemoryUserRepository()));
 
     private static IDietologistClientReadService CreateDietologistClientReadService(
-        IDietologistInvitationReadRepository invitationRepository,
+        IDietologistInvitationReadModelRepository invitationRepository,
         IDashboardSnapshotBuilder snapshotBuilder,
         InMemoryUserRepository userRepository) =>
         new DietologistClientReadService(invitationRepository, snapshotBuilder, userRepository, userRepository);
 
     private static GetMyRecommendationsQueryHandler CreateGetMyRecommendationsHandler(
-        IRecommendationReadRepository? recommendationRepository = null,
+        IRecommendationReadModelRepository? recommendationRepository = null,
         ICurrentUserAccessService? currentUserAccessService = null) =>
         new(CreateDietologistRecommendationReadService(
             new InMemoryInvitationRepository(),
@@ -316,8 +316,8 @@ public class DietologistFeatureTests {
             currentUserAccessService ?? new InMemoryUserRepository()));
 
     private static GetRecommendationsForClientQueryHandler CreateGetRecommendationsForClientHandler(
-        IDietologistInvitationReadRepository? invitationRepository = null,
-        IRecommendationReadRepository? recommendationRepository = null,
+        IDietologistInvitationReadModelRepository? invitationRepository = null,
+        IRecommendationReadModelRepository? recommendationRepository = null,
         ICurrentUserAccessService? currentUserAccessService = null) =>
         new(CreateDietologistRecommendationReadService(
             invitationRepository ?? new InMemoryInvitationRepository(),
@@ -325,8 +325,8 @@ public class DietologistFeatureTests {
             currentUserAccessService ?? new InMemoryUserRepository()));
 
     private static IDietologistRecommendationReadService CreateDietologistRecommendationReadService(
-        IDietologistInvitationReadRepository invitationRepository,
-        IRecommendationReadRepository recommendationRepository,
+        IDietologistInvitationReadModelRepository invitationRepository,
+        IRecommendationReadModelRepository recommendationRepository,
         ICurrentUserAccessService currentUserAccessService) =>
         new DietologistRecommendationReadService(invitationRepository, recommendationRepository, currentUserAccessService);
 
@@ -502,7 +502,7 @@ public class DietologistFeatureTests {
         Assert.Empty(notificationRepo.Added);
     }
 
-    // â”€â”€ AcceptInvitation â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ AcceptInvitation ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task AcceptInvitation_WithNullUserId_ReturnsFailure() {
@@ -946,7 +946,7 @@ public class DietologistFeatureTests {
         Assert.Equal("Dietologist.AccessDenied", result.Error.Code);
     }
 
-    // â”€â”€ DeclineInvitation â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ DeclineInvitation ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task DeclineInvitation_WhenNotFound_ReturnsFailure() {
@@ -1041,7 +1041,7 @@ public class DietologistFeatureTests {
         Assert.True(webPushSender.SendCalled);
     }
 
-    // â”€â”€ RevokeInvitation â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ RevokeInvitation ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task DeclineInvitationForCurrentUser_WithNullUserId_ReturnsFailure() {
@@ -1247,7 +1247,7 @@ public class DietologistFeatureTests {
         ResultAssert.Success(result);
     }
 
-    // â”€â”€ DisconnectDietologist â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ DisconnectDietologist ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task DisconnectDietologist_WithNullUserId_ReturnsFailure() {
@@ -1315,7 +1315,7 @@ public class DietologistFeatureTests {
         ResultAssert.Success(result);
     }
 
-    // â”€â”€ UpdateDietologistPermissions â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ UpdateDietologistPermissions ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task UpdatePermissions_WithNullUserId_ReturnsFailure() {
@@ -1384,7 +1384,7 @@ public class DietologistFeatureTests {
         ResultAssert.Success(result);
     }
 
-    // â”€â”€ CreateRecommendation â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ CreateRecommendation ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task CreateRecommendation_WithNullUserId_ReturnsFailure() {
@@ -1516,7 +1516,7 @@ public class DietologistFeatureTests {
         Assert.Empty(recRepo.Added);
     }
 
-    // â”€â”€ MarkRecommendationRead â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ MarkRecommendationRead ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task MarkRecommendationRead_WithNullUserId_ReturnsFailure() {
@@ -1602,7 +1602,7 @@ public class DietologistFeatureTests {
         Assert.False(recommendation.IsRead);
     }
 
-    // â”€â”€ GetMyDietologist â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ GetMyDietologist ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task GetMyDietologist_WithNullUserId_ReturnsFailure() {
@@ -1645,7 +1645,7 @@ public class DietologistFeatureTests {
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
-    // â”€â”€ GetMyClients â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ GetMyClients ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task GetMyClients_WithNullUserId_ReturnsFailure() {
@@ -1740,7 +1740,7 @@ public class DietologistFeatureTests {
         Assert.False(clientSummary.Permissions.ShareProfile);
     }
 
-    // â”€â”€ GetInvitationByToken â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ GetInvitationByToken ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task GetInvitationByToken_WhenNotFound_ReturnsFailure() {
@@ -1843,7 +1843,7 @@ public class DietologistFeatureTests {
         Assert.Equal(DietologistInvitationStatus.Pending.ToString(), result.Value.Status);
     }
 
-    // â”€â”€ GetClientDashboard â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ GetClientDashboard ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task GetClientDashboard_WithNullUserId_ReturnsFailure() {
@@ -1979,7 +1979,7 @@ public class DietologistFeatureTests {
         Assert.Equal("Dietologist.AccessDenied", result.Error.Code);
     }
 
-    // â”€â”€ GetClientGoals â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ GetClientGoals ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task GetClientGoals_WithNullUserId_ReturnsFailure() {
@@ -2096,7 +2096,7 @@ public class DietologistFeatureTests {
         Assert.Equal("Dietologist.AccessDenied", result.Error.Code);
     }
 
-    // â”€â”€ GetMyRecommendations â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ GetMyRecommendations ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task GetMyRecommendations_WithNullUserId_ReturnsFailure() {
@@ -2145,7 +2145,7 @@ public class DietologistFeatureTests {
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
-    // â”€â”€ GetRecommendationsForClient â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ GetRecommendationsForClient ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task GetRecommendationsForClient_WithNullUserId_ReturnsFailure() {
@@ -2215,7 +2215,7 @@ public class DietologistFeatureTests {
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
-    // â”€â”€ RecommendationCreatedEventHandler â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ RecommendationCreatedEventHandler ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task RecommendationCreatedEventHandler_CreatesNotificationAndPushes() {
@@ -2279,7 +2279,7 @@ public class DietologistFeatureTests {
         Assert.Equal($"/recommendations?recommendationId={recommendationId}", targetUrl);
     }
 
-    // â”€â”€ Test Doubles â”€â”€
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ Test Doubles ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 
     [Fact]
     public async Task GetMyDietologistRelationship_WithNullUserId_ReturnsFailure() {

@@ -1,3 +1,6 @@
 namespace FoodDiary.Application.Abstractions.Dietologist.Common;
 
-public interface IRecommendationRepository : IRecommendationReadRepository, IRecommendationWriteRepository;
+public interface IRecommendationRepository :
+    IRecommendationReadRepository,
+    IRecommendationReadModelRepository,
+    IRecommendationWriteRepository;

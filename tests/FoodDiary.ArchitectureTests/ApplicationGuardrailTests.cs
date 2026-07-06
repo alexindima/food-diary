@@ -1576,14 +1576,18 @@ public sealed class ApplicationGuardrailTests {
     public void DietologistReadServices_UseReadModelsInsteadOfDietologistAggregates() {
         string root = GetRepositoryRoot();
         string dietologistServicesRoot = Path.Combine(root, "FoodDiary.Application", "Dietologist", "Services");
+        string userServicesRoot = Path.Combine(root, "FoodDiary.Application", "Users", "Services");
         string[] readServiceFiles = [
             Path.Combine(dietologistServicesRoot, "DietologistInvitationReadService.cs"),
             Path.Combine(dietologistServicesRoot, "DietologistClientReadService.cs"),
             Path.Combine(dietologistServicesRoot, "DietologistRecommendationReadService.cs"),
+            Path.Combine(userServicesRoot, "ProfileOverviewReadService.cs"),
         ];
 
         string[] violations = [
             .. FindReferencesInFiles(root, readServiceFiles, "FoodDiary.Domain.Entities.Dietologist"),
+            .. FindReferencesInFiles(root, readServiceFiles, "IDietologistInvitationReadRepository"),
+            .. FindReferencesInFiles(root, readServiceFiles, "IRecommendationReadRepository"),
             .. FindReferencesInFiles(root, readServiceFiles, "GetByIdAsync"),
             .. FindReferencesInFiles(root, readServiceFiles, "GetByClientAndStatusAsync"),
             .. FindReferencesInFiles(root, readServiceFiles, "GetActiveByClientAsync"),

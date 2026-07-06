@@ -9,8 +9,8 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Dietologist.Services;
 
 public sealed class DietologistRecommendationReadService(
-    IDietologistInvitationReadRepository invitationRepository,
-    IRecommendationReadRepository recommendationRepository,
+    IDietologistInvitationReadModelRepository invitationRepository,
+    IRecommendationReadModelRepository recommendationRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IDietologistRecommendationReadService {
     public async Task<Result<IReadOnlyList<RecommendationModel>>> GetForCurrentUserAsync(

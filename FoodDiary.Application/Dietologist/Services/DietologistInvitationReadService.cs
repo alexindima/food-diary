@@ -10,7 +10,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Dietologist.Services;
 
 public sealed class DietologistInvitationReadService(
-    IDietologistInvitationReadRepository invitationRepository,
+    IDietologistInvitationReadModelRepository invitationRepository,
     IDietologistUserContextService dietologistUserContextService,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider timeProvider)

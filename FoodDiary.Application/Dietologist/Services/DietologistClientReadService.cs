@@ -11,7 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Dietologist.Services;
 
 public sealed class DietologistClientReadService(
-    IDietologistInvitationReadRepository invitationRepository,
+    IDietologistInvitationReadModelRepository invitationRepository,
     IDashboardSnapshotBuilder snapshotBuilder,
     ICurrentUserAccessService currentUserAccessService,
     IDietologistUserContextService dietologistUserContextService)

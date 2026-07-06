@@ -34,7 +34,7 @@ public static class DietologistAccessPolicy {
     }
 
     public static async Task<Result<DietologistPermissionsModel>> EnsureCanAccessClientReadModelAsync(
-        IDietologistInvitationReadRepository repository,
+        IDietologistInvitationReadModelRepository repository,
         UserId dietologistUserId,
         UserId clientUserId,
         CancellationToken cancellationToken) {
