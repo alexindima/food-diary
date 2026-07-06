@@ -2,6 +2,7 @@ using FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
 using FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
 using FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
 using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Application.Abstractions.Hydration.Models;
 using FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 using FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
 using FoodDiary.Application.Hydration.Validators;
@@ -498,6 +499,12 @@ public class HydrationFeatureTests {
         public Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<HydrationEntry>>([]);
 
+        public Task<IReadOnlyList<HydrationEntryReadModel>> GetByDateReadModelsAsync(
+            UserId userId,
+            DateTime dateUtc,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<HydrationEntryReadModel>>([]);
+
         public Task<int> GetDailyTotalAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) {
             LastDailyTotalDateUtc = dateUtc;
             return Task.FromResult(0);
@@ -599,6 +606,14 @@ public class HydrationFeatureTests {
                 .Where(entry => entry.UserId == userId && entry.Timestamp.Date == dateUtc.Date)
                 .ToList();
             return Task.FromResult<IReadOnlyList<HydrationEntry>>(entries);
+        }
+
+        public async Task<IReadOnlyList<HydrationEntryReadModel>> GetByDateReadModelsAsync(
+            UserId userId,
+            DateTime dateUtc,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<HydrationEntry> entries = await GetByDateAsync(userId, dateUtc, cancellationToken).ConfigureAwait(false);
+            return [.. entries.Select(entry => new HydrationEntryReadModel(entry.Id.Value, entry.Timestamp, entry.AmountMl))];
         }
 
         public Task<int> GetDailyTotalAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) =>

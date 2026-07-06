@@ -17,33 +17,14 @@ public interface IExerciseEntryReadRepository {
         DateTime dateTo,
         CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyList<ExerciseEntryReadModel>> GetByDateRangeReadModelsAsync(
+    Task<IReadOnlyList<ExerciseEntryReadModel>> GetByDateRangeReadModelsAsync(
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
-        CancellationToken cancellationToken = default) {
-        IReadOnlyList<ExerciseEntry> entries = await GetByDateRangeAsync(
-            userId,
-            dateFrom,
-            dateTo,
-            cancellationToken).ConfigureAwait(false);
-
-        return [.. entries.Select(ToReadModel)];
-    }
+        CancellationToken cancellationToken = default);
 
     Task<double> GetTotalCaloriesBurnedAsync(
         UserId userId,
         DateTime date,
         CancellationToken cancellationToken = default);
-
-    private static ExerciseEntryReadModel ToReadModel(ExerciseEntry entry) {
-        return new ExerciseEntryReadModel(
-            entry.Id.Value,
-            entry.Date,
-            entry.ExerciseType.ToString(),
-            entry.Name,
-            entry.DurationMinutes,
-            entry.CaloriesBurned,
-            entry.Notes);
-    }
 }

@@ -2,6 +2,7 @@ using FoodDiary.Application.WaistEntries.Commands.CreateWaistEntry;
 using FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
 using FoodDiary.Application.WaistEntries.Commands.UpdateWaistEntry;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Application.WaistEntries.Queries.GetLatestWaistEntry;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
@@ -594,6 +595,33 @@ public class WaistEntriesFeatureTests {
                 .OrderBy(x => x.Date)
                 .ToList();
             return Task.FromResult<IReadOnlyList<WaistEntry>>(items);
+        }
+
+        public async Task<IReadOnlyList<WaistEntryReadModel>> GetEntryReadModelsAsync(
+            UserId userId,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            int? limit,
+            bool descending,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<WaistEntry> entries = await GetEntriesAsync(
+                userId,
+                dateFrom,
+                dateTo,
+                limit,
+                descending,
+                cancellationToken).ConfigureAwait(false);
+
+            return [.. entries.Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Circumference))];
+        }
+
+        public async Task<IReadOnlyList<WaistEntryReadModel>> GetByPeriodReadModelsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<WaistEntry> entries = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
+            return [.. entries.Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Circumference))];
         }
 
         async Task<IReadOnlyList<WaistEntryModel>> IWaistEntryReadService.GetEntriesAsync(

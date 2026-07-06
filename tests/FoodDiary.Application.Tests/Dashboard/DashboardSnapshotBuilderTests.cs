@@ -3,9 +3,13 @@ using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Application.Abstractions.Exercises.Models;
 using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Application.Abstractions.Hydration.Models;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
@@ -602,6 +606,26 @@ public sealed class DashboardSnapshotBuilderTests {
                 .Where(entry => entry.UserId == userId)
                 .Where(entry => entry.Date.Date >= dateFrom.Date && entry.Date.Date <= dateTo.Date)
                 .OrderBy(entry => entry.Date)]);
+
+        public async Task<IReadOnlyList<WeightEntryReadModel>> GetEntryReadModelsAsync(
+            UserId userId,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            int? limit,
+            bool descending,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<WeightEntry> filtered = await GetEntriesAsync(userId, dateFrom, dateTo, limit, descending, cancellationToken).ConfigureAwait(false);
+            return [.. filtered.Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Weight))];
+        }
+
+        public async Task<IReadOnlyList<WeightEntryReadModel>> GetByPeriodReadModelsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<WeightEntry> filtered = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
+            return [.. filtered.Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Weight))];
+        }
     }
 
     [ExcludeFromCodeCoverage]
@@ -643,6 +667,26 @@ public sealed class DashboardSnapshotBuilderTests {
                 .Where(entry => entry.UserId == userId)
                 .Where(entry => entry.Date.Date >= dateFrom.Date && entry.Date.Date <= dateTo.Date)
                 .OrderBy(entry => entry.Date)]);
+
+        public async Task<IReadOnlyList<WaistEntryReadModel>> GetEntryReadModelsAsync(
+            UserId userId,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            int? limit,
+            bool descending,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<WaistEntry> filtered = await GetEntriesAsync(userId, dateFrom, dateTo, limit, descending, cancellationToken).ConfigureAwait(false);
+            return [.. filtered.Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Circumference))];
+        }
+
+        public async Task<IReadOnlyList<WaistEntryReadModel>> GetByPeriodReadModelsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<WaistEntry> filtered = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
+            return [.. filtered.Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Circumference))];
+        }
     }
 
     [ExcludeFromCodeCoverage]
@@ -679,6 +723,8 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task<WeightEntry?> GetByDateAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<WeightEntry>> GetEntriesAsync(UserId userId, DateTime? dateFrom, DateTime? dateTo, int? limit, bool descending, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<WeightEntryReadModel>> GetEntryReadModelsAsync(UserId userId, DateTime? dateFrom, DateTime? dateTo, int? limit, bool descending, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<WeightEntryReadModel>> GetByPeriodReadModelsAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]
@@ -688,6 +734,7 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task DeleteAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<ExerciseEntry?> GetByIdAsync(ExerciseEntryId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<ExerciseEntry>> GetByDateRangeAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<ExerciseEntryReadModel>> GetByDateRangeReadModelsAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<double> GetTotalCaloriesBurnedAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => Task.FromResult(0.0);
     }
 
@@ -698,6 +745,7 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<HydrationEntry?> GetByIdAsync(HydrationEntryId id, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<HydrationEntryReadModel>> GetByDateReadModelsAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<int> GetDailyTotalAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
             UserId userId,
@@ -728,5 +776,7 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task<WaistEntry?> GetByDateAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<WaistEntry>> GetEntriesAsync(UserId userId, DateTime? dateFrom, DateTime? dateTo, int? limit, bool descending, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<WaistEntry>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<WaistEntryReadModel>> GetEntryReadModelsAsync(UserId userId, DateTime? dateFrom, DateTime? dateTo, int? limit, bool descending, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<WaistEntryReadModel>> GetByPeriodReadModelsAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

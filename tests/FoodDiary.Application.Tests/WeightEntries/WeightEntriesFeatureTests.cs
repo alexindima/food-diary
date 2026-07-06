@@ -2,6 +2,7 @@ using FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
 using FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
 using FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
@@ -594,6 +595,33 @@ public class WeightEntriesFeatureTests {
                 .OrderBy(x => x.Date)
                 .ToList();
             return Task.FromResult<IReadOnlyList<WeightEntry>>(items);
+        }
+
+        public async Task<IReadOnlyList<WeightEntryReadModel>> GetEntryReadModelsAsync(
+            UserId userId,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            int? limit,
+            bool descending,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<WeightEntry> entries = await GetEntriesAsync(
+                userId,
+                dateFrom,
+                dateTo,
+                limit,
+                descending,
+                cancellationToken).ConfigureAwait(false);
+
+            return [.. entries.Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Weight))];
+        }
+
+        public async Task<IReadOnlyList<WeightEntryReadModel>> GetByPeriodReadModelsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<WeightEntry> entries = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
+            return [.. entries.Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Weight))];
         }
 
         async Task<IReadOnlyList<WeightEntryModel>> IWeightEntryReadService.GetEntriesAsync(

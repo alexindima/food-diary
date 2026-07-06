@@ -1120,6 +1120,31 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void TrackingReadContracts_DoNotFallbackToAggregateDefaultReadModels() {
+        string root = GetRepositoryRoot();
+        string[] contractFiles = [
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "WeightEntries", "Common", "IWeightEntryReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "WaistEntries", "Common", "IWaistEntryReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Exercises", "Common", "IExerciseEntryReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Hydration", "Common", "IHydrationEntryReadRepository.cs"),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<WeightEntryReadModel>>"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<WaistEntryReadModel>>"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<ExerciseEntryReadModel>>"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<HydrationEntryReadModel>>"),
+            .. FindReferencesInFiles(root, contractFiles, "private static"),
+            .. FindReferencesInFiles(root, contractFiles, "ToReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new WeightEntryReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new WaistEntryReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new ExerciseEntryReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new HydrationEntryReadModel"),
+        ];
+
+        Assert.Empty(violations);
+    }
+    [Fact]
     public void FavoriteProductReadContract_DoesNotFallbackToAggregateDefaultReadModels() {
         string root = GetRepositoryRoot();
         string contractPath = Path.Combine(

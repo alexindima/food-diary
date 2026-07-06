@@ -2,6 +2,7 @@ using FoodDiary.Application.Exercises.Commands.CreateExerciseEntry;
 using FoodDiary.Application.Exercises.Commands.DeleteExerciseEntry;
 using FoodDiary.Application.Exercises.Commands.UpdateExerciseEntry;
 using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Application.Abstractions.Exercises.Models;
 using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Exercises.Mappings;
 using FoodDiary.Application.Exercises.Queries.GetExerciseEntries;
@@ -179,6 +180,22 @@ public class ExercisesFeatureTests {
 
         public Task<IReadOnlyList<ExerciseEntry>> GetByDateRangeAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) =>
             Task.FromResult<IReadOnlyList<ExerciseEntry>>(_entries.Where(e => e.UserId == userId).ToList());
+
+        public Task<IReadOnlyList<ExerciseEntryReadModel>> GetByDateRangeReadModelsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken ct = default) =>
+            Task.FromResult<IReadOnlyList<ExerciseEntryReadModel>>([.. _entries
+                .Where(entry => entry.UserId == userId)
+                .Select(entry => new ExerciseEntryReadModel(
+                    entry.Id.Value,
+                    entry.Date,
+                    entry.ExerciseType.ToString(),
+                    entry.Name,
+                    entry.DurationMinutes,
+                    entry.CaloriesBurned,
+                    entry.Notes))]);
 
         public Task<double> GetTotalCaloriesBurnedAsync(UserId userId, DateTime date, CancellationToken ct = default) => Task.FromResult(0.0);
 

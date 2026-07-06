@@ -24,23 +24,13 @@ public interface IWeightEntryReadRepository {
         bool descending,
         CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyList<WeightEntryReadModel>> GetEntryReadModelsAsync(
+    Task<IReadOnlyList<WeightEntryReadModel>> GetEntryReadModelsAsync(
         UserId userId,
         DateTime? dateFrom,
         DateTime? dateTo,
         int? limit,
         bool descending,
-        CancellationToken cancellationToken = default) {
-        IReadOnlyList<WeightEntry> entries = await GetEntriesAsync(
-            userId,
-            dateFrom,
-            dateTo,
-            limit,
-            descending,
-            cancellationToken).ConfigureAwait(false);
-
-        return [.. entries.Select(static entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Weight))];
-    }
+        CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(
         UserId userId,
@@ -48,17 +38,9 @@ public interface IWeightEntryReadRepository {
         DateTime dateTo,
         CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyList<WeightEntryReadModel>> GetByPeriodReadModelsAsync(
+    Task<IReadOnlyList<WeightEntryReadModel>> GetByPeriodReadModelsAsync(
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
-        CancellationToken cancellationToken = default) {
-        IReadOnlyList<WeightEntry> entries = await GetByPeriodAsync(
-            userId,
-            dateFrom,
-            dateTo,
-            cancellationToken).ConfigureAwait(false);
-
-        return [.. entries.Select(static entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Weight))];
-    }
+        CancellationToken cancellationToken = default);
 }
