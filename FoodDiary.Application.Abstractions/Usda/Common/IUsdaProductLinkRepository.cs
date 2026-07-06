@@ -1,3 +1,3 @@
 namespace FoodDiary.Application.Abstractions.Usda.Common;
 
-public interface IUsdaProductLinkRepository : IUsdaProductLinkWriteRepository;
+public interface IUsdaProductLinkRepository : IUsdaProductLinkReadRepository, IUsdaProductLinkWriteRepository;

@@ -245,7 +245,7 @@ public class FavoriteMealsFeatureTests {
         FavoriteMeal? existingById = null,
         IReadOnlyList<FavoriteMeal>? favorites = null) {
         IFavoriteMealRepository repository = Substitute.For<IFavoriteMealRepository>();
-        repository
+        ((IFavoriteMealWriteRepository)repository)
             .GetByMealIdAsync(Arg.Any<MealId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(existingByMealId));
         repository
@@ -257,7 +257,7 @@ public class FavoriteMealsFeatureTests {
                     existingByMealId.MealId == mealId &&
                     existingByMealId.UserId == userId);
             });
-        repository
+        ((IFavoriteMealWriteRepository)repository)
             .GetByIdAsync(Arg.Any<FavoriteMealId>(), Arg.Any<UserId>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(existingById));
         repository
@@ -299,7 +299,7 @@ public class FavoriteMealsFeatureTests {
 
     private static IMealRepository CreateMealRepository(Meal? meal) {
         IMealRepository repository = Substitute.For<IMealRepository>();
-        repository
+        ((IMealReadRepository)repository)
             .GetByIdAsync(Arg.Any<MealId>(), Arg.Any<UserId>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(meal));
         return repository;

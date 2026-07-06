@@ -125,7 +125,7 @@ public class DietologistAccessPolicyTests {
 
     private static IDietologistInvitationRepository CreateInvitationRepository(DietologistInvitation? invitation) {
         IDietologistInvitationRepository repository = Substitute.For<IDietologistInvitationRepository>();
-        repository
+        ((IDietologistInvitationReadRepository)repository)
             .GetActiveByClientAndDietologistAsync(Arg.Any<UserId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(invitation));
         return repository;

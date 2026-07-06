@@ -429,7 +429,7 @@ public class AiValidatorsTests {
 
     private static IImageAssetRepository CreateImageAssetRepository(ImageAsset? asset = null) {
         IImageAssetRepository repository = Substitute.For<IImageAssetRepository>();
-        repository
+        ((IImageAssetReadRepository)repository)
             .GetByIdAsync(Arg.Any<ImageAssetId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 ImageAssetId id = call.Arg<ImageAssetId>();
@@ -512,7 +512,7 @@ public class AiValidatorsTests {
         DateTime lastFromUtc = default;
         DateTime lastToUtc = default;
         IAiUsageRepository repository = Substitute.For<IAiUsageRepository>();
-        repository
+        ((IAiUsageReadRepository)repository)
             .GetUserTotalsAsync(
                 Arg.Any<UserId>(),
                 Arg.Any<DateTime>(),

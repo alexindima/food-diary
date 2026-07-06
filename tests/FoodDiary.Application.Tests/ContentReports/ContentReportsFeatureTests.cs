@@ -70,7 +70,7 @@ public class ContentReportsFeatureTests {
         repository
             .AddAsync(Arg.Any<ContentReport>(), Arg.Any<CancellationToken>())
             .Returns(call => Task.FromResult(call.ArgAt<ContentReport>(0)));
-        repository
+        ((IContentReportWriteRepository)repository)
             .HasUserReportedAsync(Arg.Any<UserId>(), Arg.Any<ReportTargetType>(), Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId userId = call.ArgAt<UserId>(0);

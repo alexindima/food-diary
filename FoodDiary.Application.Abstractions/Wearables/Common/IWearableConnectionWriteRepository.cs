@@ -1,8 +1,15 @@
 using FoodDiary.Domain.Entities.Wearables;
+using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Abstractions.Wearables.Common;
 
-public interface IWearableConnectionWriteRepository : IWearableConnectionReadRepository {
+public interface IWearableConnectionWriteRepository {
+    Task<WearableConnection?> GetAsync(
+        UserId userId,
+        WearableProvider provider,
+        CancellationToken cancellationToken = default);
+
     Task<WearableConnection> AddAsync(
         WearableConnection connection,
         CancellationToken cancellationToken = default);

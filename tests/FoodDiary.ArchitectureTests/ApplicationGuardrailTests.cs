@@ -30,6 +30,23 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationAbstractionWriteRepositories_DoNotInheritReadRepositories() {
+        string root = GetRepositoryRoot();
+        string abstractionsRoot = Path.Combine(root, "FoodDiary.Application.Abstractions");
+        string[] files = [.. SourceScanner.SourceFiles(abstractionsRoot)
+            .Where(path => Path.GetFileName(path).EndsWith("WriteRepository.cs", StringComparison.Ordinal))];
+
+        string[] violations = [.. files
+            .SelectMany(file => File.ReadLines(file)
+                .Select((line, index) => new { Line = line, LineNumber = index + 1 })
+                .Where(item => item.Line.Contains("WriteRepository :", StringComparison.Ordinal)
+                    && item.Line.Contains("ReadRepository", StringComparison.Ordinal))
+                .Select(item => $"{Path.GetRelativePath(root, file)}:{item.LineNumber.ToString(CultureInfo.InvariantCulture)}: {item.Line.Trim()}"))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseEnumParseDirectly() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

@@ -95,7 +95,7 @@ public sealed class WebPushNotificationSender(
     }
 
     private async Task<List<WebPushSubscription>> GetActiveSubscriptionsAsync(Notification notification, CancellationToken cancellationToken) {
-        IReadOnlyList<WebPushSubscription> subscriptions = await subscriptionRepository.GetByUserAsync(notification.UserId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WebPushSubscription> subscriptions = await ((IWebPushSubscriptionReadRepository)subscriptionRepository).GetByUserAsync(notification.UserId, cancellationToken).ConfigureAwait(false);
         if (subscriptions.Count == 0) {
             logger.LogDebug(
                 "Skipping web push notification {NotificationId} for user {UserId} because there are no subscriptions.",

@@ -25,7 +25,7 @@ public class UsdaFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        await productRepo.Received(1).GetForLinkUpdateAsync(
+        await ((IUsdaProductLinkWriteRepository)productRepo).Received(1).GetForLinkUpdateAsync(
             product.Id,
             userId,
             Arg.Any<CancellationToken>());
@@ -72,7 +72,7 @@ public class UsdaFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        await productRepo.Received(1).GetForLinkUpdateAsync(
+        await ((IUsdaProductLinkWriteRepository)productRepo).Received(1).GetForLinkUpdateAsync(
             product.Id,
             userId,
             Arg.Any<CancellationToken>());
@@ -113,7 +113,7 @@ public class UsdaFeatureTests {
 
     private static IUsdaProductLinkRepository CreateProductLinkRepository(Product? product) {
         IUsdaProductLinkRepository repository = Substitute.For<IUsdaProductLinkRepository>();
-        repository
+        ((IUsdaProductLinkWriteRepository)repository)
             .GetForLinkUpdateAsync(Arg.Any<ProductId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(product));
         repository
