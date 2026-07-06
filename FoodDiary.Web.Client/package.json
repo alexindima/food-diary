@@ -111,7 +111,7 @@
         "@angular/build": "^22.0.0",
         "@angular/cli": "^22.0.5",
         "@angular/compiler-cli": "^22.0.5",
-        "@emnapi/core": "^1.11.1",
+        "@emnapi/core": "^1.11.2",
         "@emnapi/runtime": "^1.11.2",
         "@emnapi/wasi-threads": "^2.0.0",
         "@eslint-community/eslint-plugin-eslint-comments": "^4.7.2",
