@@ -8,15 +8,7 @@ public interface IDailyAdviceReadRepository {
         string locale,
         CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyList<DailyAdviceReadModel>> GetByLocaleReadModelsAsync(
+    Task<IReadOnlyList<DailyAdviceReadModel>> GetByLocaleReadModelsAsync(
         string locale,
-        CancellationToken cancellationToken = default) {
-        IReadOnlyList<DailyAdvice> advices = await GetByLocaleAsync(locale, cancellationToken).ConfigureAwait(false);
-        return [.. advices.Select(static advice => new DailyAdviceReadModel(
-            advice.Id.Value,
-            advice.Locale,
-            advice.Value,
-            advice.Tag,
-            advice.Weight))];
-    }
+        CancellationToken cancellationToken = default);
 }

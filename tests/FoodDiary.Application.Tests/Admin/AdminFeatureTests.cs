@@ -26,6 +26,7 @@ using FoodDiary.Application.Admin.Queries.GetAdminUser;
 using FoodDiary.Application.Admin.Queries.GetAdminUserRoleAudit;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
@@ -1771,6 +1772,9 @@ public class AdminFeatureTests {
         public Task<IReadOnlyList<AiPromptTemplate>> GetAllAsync(CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<AiPromptTemplate>>(_templates);
 
+        public Task<IReadOnlyList<AiPromptTemplateReadModel>> GetAllReadModelsAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<AiPromptTemplateReadModel>>([.. _templates.Select(ToReadModel)]);
+
         public Task<AiPromptTemplate?> GetByKeyAsync(string key, string locale, CancellationToken cancellationToken = default) =>
             Task.FromResult(_templates.FirstOrDefault(template =>
                 string.Equals(template.Key, key, StringComparison.Ordinal) &&
@@ -1791,6 +1795,16 @@ public class AdminFeatureTests {
             UpdateCallCount++;
             return Task.CompletedTask;
         }
+        private static AiPromptTemplateReadModel ToReadModel(AiPromptTemplate template) =>
+            new(
+                template.Id.Value,
+                template.Key,
+                template.Locale,
+                template.PromptText,
+                template.Version,
+                template.IsActive,
+                template.CreatedOnUtc,
+                template.ModifiedOnUtc);
     }
 
     [ExcludeFromCodeCoverage]

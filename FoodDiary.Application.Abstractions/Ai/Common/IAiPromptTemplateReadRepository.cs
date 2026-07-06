@@ -7,10 +7,7 @@ namespace FoodDiary.Application.Abstractions.Ai.Common;
 public interface IAiPromptTemplateReadRepository {
     Task<IReadOnlyList<AiPromptTemplate>> GetAllAsync(CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyList<AiPromptTemplateReadModel>> GetAllReadModelsAsync(CancellationToken cancellationToken = default) {
-        IReadOnlyList<AiPromptTemplate> templates = await GetAllAsync(cancellationToken).ConfigureAwait(false);
-        return [.. templates.Select(ToReadModel)];
-    }
+    Task<IReadOnlyList<AiPromptTemplateReadModel>> GetAllReadModelsAsync(CancellationToken cancellationToken = default);
 
     Task<AiPromptTemplate?> GetByKeyAsync(
         string key,
@@ -21,15 +18,4 @@ public interface IAiPromptTemplateReadRepository {
         AiPromptTemplateId id,
         bool asTracking = false,
         CancellationToken cancellationToken = default);
-
-    private static AiPromptTemplateReadModel ToReadModel(AiPromptTemplate template) =>
-        new(
-            template.Id.Value,
-            template.Key,
-            template.Locale,
-            template.PromptText,
-            template.Version,
-            template.IsActive,
-            template.CreatedOnUtc,
-            template.ModifiedOnUtc);
 }

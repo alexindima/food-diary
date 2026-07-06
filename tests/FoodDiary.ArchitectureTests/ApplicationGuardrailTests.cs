@@ -1097,6 +1097,29 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ContentPromptAndCycleReadContracts_DoNotFallbackToAggregateDefaultReadModels() {
+        string root = GetRepositoryRoot();
+        string[] contractFiles = [
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "DailyAdvices", "Common", "IDailyAdviceReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Cycles", "Common", "ICycleReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Ai", "Common", "IAiPromptTemplateReadRepository.cs"),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<DailyAdviceReadModel>>"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<CycleProfileReadModel?>"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<AiPromptTemplateReadModel>>"),
+            .. FindReferencesInFiles(root, contractFiles, "private static"),
+            .. FindReferencesInFiles(root, contractFiles, "ToReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new DailyAdviceReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new AiPromptTemplateReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new CycleProfileReadModel"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void FavoriteProductReadContract_DoesNotFallbackToAggregateDefaultReadModels() {
         string root = GetRepositoryRoot();
         string contractPath = Path.Combine(
