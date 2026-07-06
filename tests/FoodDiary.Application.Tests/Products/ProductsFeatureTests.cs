@@ -1437,7 +1437,7 @@ public class ProductsFeatureTests {
         new(
             overviewReadService,
             new RecentProductReadService(recentRepository, overviewReadService),
-            new FavoriteProductReadService(favoriteRepository),
+            new FavoriteProductReadService(favoriteRepository, favoriteRepository),
             currentUserAccessService);
 
     private static GetRecentProductsQueryHandler CreateRecentProductsHandler(

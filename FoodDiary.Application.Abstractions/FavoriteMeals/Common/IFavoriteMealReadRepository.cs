@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -32,10 +31,6 @@ public interface IFavoriteMealReadRepository {
         CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<FavoriteMeal>> GetAllAsync(
-        UserId userId,
-        CancellationToken cancellationToken = default);
-
-    Task<IReadOnlyList<FavoriteMealReadModel>> GetAllReadModelsAsync(
         UserId userId,
         CancellationToken cancellationToken = default);
 }

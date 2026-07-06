@@ -2956,8 +2956,10 @@ public class ConsumptionsFeatureTests {
 
     private static IConsumptionReadService CreateConsumptionReadService(
         IMealConsumptionReadRepository mealRepository,
-        IFavoriteMealReadRepository? favoriteMealRepository = null) =>
-        new ConsumptionReadService(mealRepository, favoriteMealRepository ?? new StubFavoriteMealRepository());
+        IFavoriteMealRepository? favoriteMealRepository = null) {
+        IFavoriteMealRepository repository = favoriteMealRepository ?? new StubFavoriteMealRepository();
+        return new ConsumptionReadService(mealRepository, repository, repository);
+    }
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) =>
         new StubCurrentUserAccessService(user);

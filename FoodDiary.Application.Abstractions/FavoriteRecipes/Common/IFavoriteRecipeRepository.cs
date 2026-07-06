@@ -1,3 +1,3 @@
 namespace FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 
-public interface IFavoriteRecipeRepository : IFavoriteRecipeReadRepository, IFavoriteRecipeWriteRepository;
+public interface IFavoriteRecipeRepository : IFavoriteRecipeReadRepository, IFavoriteRecipeReadModelRepository, IFavoriteRecipeWriteRepository;

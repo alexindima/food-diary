@@ -1164,7 +1164,7 @@ public class RecipesFeatureTests {
         new(
             overviewReadService,
             new RecentRecipeReadService(recentRepository, overviewReadService),
-            new FavoriteRecipeReadService(favoriteRepository),
+            new FavoriteRecipeReadService(favoriteRepository, favoriteRepository),
             currentUserAccessService);
 
     private static GetRecentRecipesQueryHandler CreateRecentRecipesHandler(

@@ -13,7 +13,8 @@ namespace FoodDiary.Application.Consumptions.Services;
 
 public sealed class ConsumptionReadService(
     IMealConsumptionReadRepository mealRepository,
-    IFavoriteMealReadRepository favoriteMealRepository) : IConsumptionReadService {
+    IFavoriteMealReadRepository favoriteMealRepository,
+    IFavoriteMealReadModelRepository favoriteMealReadModelRepository) : IConsumptionReadService {
     public async Task<PagedResponse<ConsumptionModel>> GetPagedAsync(
         UserId userId,
         int page,
@@ -49,7 +50,7 @@ public sealed class ConsumptionReadService(
             filters,
             cancellationToken).ConfigureAwait(false);
 
-        IReadOnlyList<FavoriteMealReadModel> favorites = await favoriteMealRepository.GetAllReadModelsAsync(userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteMealReadModel> favorites = await favoriteMealReadModelRepository.GetAllReadModelsAsync(userId, cancellationToken).ConfigureAwait(false);
         var favoriteItems = favorites
             .Take(favoriteLimit)
             .Select(static favorite => favorite.ToModel())

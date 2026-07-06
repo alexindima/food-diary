@@ -1122,6 +1122,7 @@ public sealed class ApplicationGuardrailTests {
         string[] violations = [
             .. FindReferencesInFiles(root, contractFiles, "async Task<bool> ExistsByMealIdAsync"),
             .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyDictionary<MealId, FavoriteMealId>>"),
+            .. FindReferencesInFiles(root, contractFiles, "GetAllReadModelsAsync"),
             .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<FavoriteMealReadModel>>"),
             .. FindReferencesInFiles(root, contractFiles, "new FavoriteMealReadModel"),
             .. FindReferencesInFiles(root, contractFiles, ".Select(static favorite"),
@@ -1215,6 +1216,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, contractFiles, "async Task<bool> ExistsByProductIdAsync"),
+            .. FindReferencesInFiles(root, contractFiles, "GetAllReadModelsAsync"),
             .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<FavoriteProductReadModel>>"),
             .. FindReferencesInFiles(root, contractFiles, "new FavoriteProductReadModel"),
             .. FindReferencesInFiles(root, contractFiles, ".Select(static favorite"),
@@ -1236,6 +1238,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, contractFiles, "async Task<bool> ExistsByRecipeIdAsync"),
+            .. FindReferencesInFiles(root, contractFiles, "GetAllReadModelsAsync"),
             .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<FavoriteRecipeReadModel>>"),
             .. FindReferencesInFiles(root, contractFiles, "new FavoriteRecipeReadModel"),
             .. FindReferencesInFiles(root, contractFiles, ".Select(static favorite"),

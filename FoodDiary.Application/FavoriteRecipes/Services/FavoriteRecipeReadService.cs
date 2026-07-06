@@ -7,12 +7,14 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.FavoriteRecipes.Services;
 
-public sealed class FavoriteRecipeReadService(IFavoriteRecipeReadRepository favoriteRecipeRepository)
+public sealed class FavoriteRecipeReadService(
+    IFavoriteRecipeReadModelRepository favoriteRecipeReadModelRepository,
+    IFavoriteRecipeReadRepository favoriteRecipeRepository)
     : IFavoriteRecipeReadService {
     public async Task<IReadOnlyList<FavoriteRecipeModel>> GetAllAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        IReadOnlyList<FavoriteRecipeReadModel> favorites = await favoriteRecipeRepository.GetAllReadModelsAsync(userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteRecipeReadModel> favorites = await favoriteRecipeReadModelRepository.GetAllReadModelsAsync(userId, cancellationToken).ConfigureAwait(false);
         return [.. favorites.Select(favorite => favorite.ToModel())];
     }
 
