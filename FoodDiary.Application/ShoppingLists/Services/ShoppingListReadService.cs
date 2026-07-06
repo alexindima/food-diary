@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.ShoppingLists.Services;
 
-public sealed class ShoppingListReadService(IShoppingListReadRepository shoppingListRepository)
+public sealed class ShoppingListReadService(IShoppingListReadModelRepository shoppingListRepository)
     : IShoppingListReadService {
     public async Task<IReadOnlyList<ShoppingListSummaryModel>> GetAllAsync(
         UserId userId,

@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Application.Usda.Services;
 
 public sealed class UsdaFoodReadService(
-    IUsdaFoodReadRepository repository,
+    IUsdaFoodReadModelRepository repository,
     IUsdaFoodSearchService brandedSearchService)
     : IUsdaFoodReadService {
     public async Task<Result<IReadOnlyList<UsdaFoodModel>>> SearchAsync(

@@ -1,3 +1,3 @@
 namespace FoodDiary.Application.Abstractions.Fasting.Common;
 
-public interface IFastingCheckInRepository : IFastingCheckInReadRepository, IFastingCheckInWriteRepository;
+public interface IFastingCheckInRepository : IFastingCheckInReadRepository, IFastingCheckInReadModelRepository, IFastingCheckInWriteRepository;

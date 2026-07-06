@@ -11,9 +11,11 @@ public static partial class DependencyInjection {
         services.AddScoped<IFastingPlanWriteRepository>(static provider => provider.GetRequiredService<IFastingPlanRepository>());
         services.AddScoped<IFastingOccurrenceRepository, FastingOccurrenceRepository>();
         services.AddScoped<IFastingOccurrenceReadRepository>(static provider => provider.GetRequiredService<IFastingOccurrenceRepository>());
+        services.AddScoped<IFastingOccurrenceReadModelRepository>(static provider => provider.GetRequiredService<IFastingOccurrenceRepository>());
         services.AddScoped<IFastingOccurrenceWriteRepository>(static provider => provider.GetRequiredService<IFastingOccurrenceRepository>());
         services.AddScoped<IFastingCheckInRepository, FastingCheckInRepository>();
         services.AddScoped<IFastingCheckInReadRepository>(static provider => provider.GetRequiredService<IFastingCheckInRepository>());
+        services.AddScoped<IFastingCheckInReadModelRepository>(static provider => provider.GetRequiredService<IFastingCheckInRepository>());
         services.AddScoped<IFastingCheckInWriteRepository>(static provider => provider.GetRequiredService<IFastingCheckInRepository>());
         services.AddScoped<IFastingSessionRepository, FastingSessionRepository>();
         services.AddScoped<IFastingSessionReadRepository>(static provider => provider.GetRequiredService<IFastingSessionRepository>());

@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.RecipeComments.Services;
 
-public sealed class RecipeCommentReadService(IRecipeCommentReadRepository commentRepository)
+public sealed class RecipeCommentReadService(IRecipeCommentReadModelRepository commentRepository)
     : IRecipeCommentReadService {
     public async Task<PagedResponse<RecipeCommentModel>> GetPagedByRecipeAsync(
         RecipeId recipeId,

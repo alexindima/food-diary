@@ -895,17 +895,17 @@ public class ShoppingListsFeatureTests {
     }
 
     private static GetCurrentShoppingListQueryHandler CreateCurrentShoppingListHandler(
-        IShoppingListReadRepository shoppingListRepository,
+        IShoppingListReadModelRepository shoppingListRepository,
         ICurrentUserAccessService currentUserAccessService) =>
         new(new ShoppingListReadService(shoppingListRepository), currentUserAccessService);
 
     private static GetShoppingListByIdQueryHandler CreateShoppingListByIdHandler(
-        IShoppingListReadRepository shoppingListRepository,
+        IShoppingListReadModelRepository shoppingListRepository,
         ICurrentUserAccessService currentUserAccessService) =>
         new(new ShoppingListReadService(shoppingListRepository), currentUserAccessService);
 
     private static GetShoppingListsQueryHandler CreateShoppingListsHandler(
-        IShoppingListReadRepository shoppingListRepository,
+        IShoppingListReadModelRepository shoppingListRepository,
         ICurrentUserAccessService currentUserAccessService) =>
         new(new ShoppingListReadService(shoppingListRepository), currentUserAccessService);
 }

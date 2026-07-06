@@ -1190,7 +1190,10 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, contractFiles, "HydrationEntryReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "GetByDateReadModelsAsync"),
             .. FindReferencesInFiles(root, contractFiles, "new HydrationEntryReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "FastingOccurrenceReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new FastingOccurrenceReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "FastingCheckInReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "GetByOccurrenceIdReadModelsAsync"),
             .. FindReferencesInFiles(root, contractFiles, "new FastingCheckInReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new BillingSubscriptionOverviewReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new UserAdminReadModel"),
@@ -1198,14 +1201,28 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, contractFiles, "new WebPushSubscriptionReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new WearableSyncEntryReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new WearableConnectionModel"),
+            .. FindReferencesInFiles(root, contractFiles, "UsdaFoodReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "SearchReadModelsAsync"),
+            .. FindReferencesInFiles(root, contractFiles, "GetByFdcIdReadModelAsync"),
             .. FindReferencesInFiles(root, contractFiles, "new UsdaFoodReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "UsdaNutrientReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "GetNutrientReadModels"),
             .. FindReferencesInFiles(root, contractFiles, "new UsdaNutrientReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "UsdaFoodPortionModel"),
+            .. FindReferencesInFiles(root, contractFiles, "GetPortionReadModelsAsync"),
             .. FindReferencesInFiles(root, contractFiles, "new UsdaFoodPortionModel"),
+            .. FindReferencesInFiles(root, contractFiles, "UsdaDailyReferenceValueReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "GetDailyReferenceValueReadModelsAsync"),
             .. FindReferencesInFiles(root, contractFiles, "new UsdaDailyReferenceValueReadModel"),
-            .. FindReferencesInFiles(root, contractFiles, "new ShoppingListReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "ShoppingListReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "GetReadModelByIdAsync"),            .. FindReferencesInFiles(root, contractFiles, "new ShoppingListReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "ShoppingListSummaryReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "GetAllSummaryReadModelsAsync"),
             .. FindReferencesInFiles(root, contractFiles, "new ShoppingListSummaryReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new ShoppingListItemReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new ShoppingListItemSourceReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "RecipeCommentReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "GetPagedReadModelsByRecipeAsync"),
             .. FindReferencesInFiles(root, contractFiles, "new RecipeCommentReadModel"),
         ];
 
@@ -1727,9 +1744,7 @@ public sealed class ApplicationGuardrailTests {
             "IWebPushSubscriptionReadRepository.cs");
         string[] contractFiles = [contractPath];
 
-        string[] violations = [
-            .. FindReferencesInFiles(root, contractFiles, "GetByUserReadModelsAsync"),
-            .. FindReferencesInFiles(root, contractFiles, "WebPushSubscriptionReadModel"),
+        string[] violations = [            .. FindReferencesInFiles(root, contractFiles, "WebPushSubscriptionReadModel"),
         ];
 
         Assert.Empty(violations);
@@ -1914,6 +1929,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Users"),
             .. FindReferencesInFiles(root, serviceFiles, "FastingOccurrence"),
             .. FindReferencesInFiles(root, serviceFiles, "IFastingOccurrenceReadRepository"),
+            .. FindReferencesInFiles(root, serviceFiles, "IFastingCheckInReadRepository"),
         ];
 
         Assert.Empty(violations);
@@ -1979,6 +1995,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "shoppingListRepository.GetAllAsync"),
             .. FindReferencesInFiles(root, serviceFiles, "shoppingListRepository.GetByIdAsync"),
             .. FindReferencesInFiles(root, serviceFiles, "shoppingListRepository.GetCurrentAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "IShoppingListReadRepository"),
         ];
 
         Assert.Empty(violations);

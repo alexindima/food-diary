@@ -1,3 +1,3 @@
 namespace FoodDiary.Application.Abstractions.RecipeComments.Common;
 
-public interface IRecipeCommentRepository : IRecipeCommentReadRepository, IRecipeCommentWriteRepository;
+public interface IRecipeCommentRepository : IRecipeCommentReadRepository, IRecipeCommentReadModelRepository, IRecipeCommentWriteRepository;

@@ -10,6 +10,7 @@ public static partial class DependencyInjection {
     private static IServiceCollection AddRecipeInteractionPersistence(this IServiceCollection services) {
         services.AddScoped<IRecipeCommentRepository, RecipeCommentRepository>();
         services.AddScoped<IRecipeCommentReadRepository>(static provider => provider.GetRequiredService<IRecipeCommentRepository>());
+        services.AddScoped<IRecipeCommentReadModelRepository>(static provider => provider.GetRequiredService<IRecipeCommentRepository>());
         services.AddScoped<IRecipeCommentWriteRepository>(static provider => provider.GetRequiredService<IRecipeCommentRepository>());
         services.AddScoped<IRecipeLikeRepository, RecipeLikeRepository>();
         services.AddScoped<IRecipeLikeReadRepository>(static provider => provider.GetRequiredService<IRecipeLikeRepository>());

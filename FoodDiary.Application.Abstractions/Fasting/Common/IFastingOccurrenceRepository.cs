@@ -1,3 +1,3 @@
 namespace FoodDiary.Application.Abstractions.Fasting.Common;
 
-public interface IFastingOccurrenceRepository : IFastingOccurrenceReadRepository, IFastingOccurrenceWriteRepository;
+public interface IFastingOccurrenceRepository : IFastingOccurrenceReadRepository, IFastingOccurrenceReadModelRepository, IFastingOccurrenceWriteRepository;

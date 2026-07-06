@@ -9,8 +9,8 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Fasting.Services;
 
 public sealed class FastingReadService(
-    IFastingOccurrenceReadRepository fastingOccurrenceRepository,
-    IFastingCheckInReadRepository fastingCheckInRepository,
+    IFastingOccurrenceReadModelRepository fastingOccurrenceRepository,
+    IFastingCheckInReadModelRepository fastingCheckInRepository,
     IFastingAnalyticsService fastingAnalyticsService,
     TimeProvider dateTimeProvider)
     : IFastingReadService {

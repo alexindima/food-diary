@@ -354,10 +354,10 @@ public class RecipeCommentsFeatureTests {
     }
 
     private static GetRecipeCommentsQueryHandler CreateRecipeCommentsHandler(
-        IRecipeCommentReadRepository commentRepository) =>
+        IRecipeCommentReadModelRepository commentRepository) =>
         new(CreateRecipeCommentReadService(commentRepository));
 
     private static IRecipeCommentReadService CreateRecipeCommentReadService(
-        IRecipeCommentReadRepository commentRepository) =>
+        IRecipeCommentReadModelRepository commentRepository) =>
         new RecipeCommentReadService(commentRepository);
 }

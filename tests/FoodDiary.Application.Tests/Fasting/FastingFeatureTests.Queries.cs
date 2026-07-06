@@ -603,26 +603,26 @@ public partial class FastingFeatureTests {
     }
 
     private static GetCurrentFastingQueryHandler CreateCurrentFastingHandler(
-        IFastingOccurrenceReadRepository occurrenceRepository,
-        IFastingCheckInReadRepository checkInRepository,
+        IFastingOccurrenceReadModelRepository occurrenceRepository,
+        IFastingCheckInReadModelRepository checkInRepository,
         ICurrentUserAccessService currentUserAccessService) =>
         new(CreateFastingReadService(occurrenceRepository, checkInRepository), currentUserAccessService);
 
     private static GetFastingInsightsQueryHandler CreateFastingInsightsHandler(
-        IFastingOccurrenceReadRepository occurrenceRepository,
-        IFastingCheckInReadRepository checkInRepository,
+        IFastingOccurrenceReadModelRepository occurrenceRepository,
+        IFastingCheckInReadModelRepository checkInRepository,
         ICurrentUserAccessService currentUserAccessService) =>
         new(CreateFastingReadService(occurrenceRepository, checkInRepository), currentUserAccessService);
 
     private static GetFastingOverviewQueryHandler CreateFastingOverviewHandler(
-        IFastingOccurrenceReadRepository occurrenceRepository,
-        IFastingCheckInReadRepository checkInRepository,
+        IFastingOccurrenceReadModelRepository occurrenceRepository,
+        IFastingCheckInReadModelRepository checkInRepository,
         ICurrentUserAccessService currentUserAccessService) =>
         new(CreateFastingReadService(occurrenceRepository, checkInRepository), currentUserAccessService);
 
     private static FastingReadService CreateFastingReadService(
-        IFastingOccurrenceReadRepository occurrenceRepository,
-        IFastingCheckInReadRepository checkInRepository) =>
+        IFastingOccurrenceReadModelRepository occurrenceRepository,
+        IFastingCheckInReadModelRepository checkInRepository) =>
         new(
             occurrenceRepository,
             checkInRepository,

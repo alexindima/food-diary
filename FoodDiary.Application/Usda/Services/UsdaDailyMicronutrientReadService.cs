@@ -10,7 +10,7 @@ namespace FoodDiary.Application.Usda.Services;
 
 public sealed class UsdaDailyMicronutrientReadService(
     IMealProductNutritionReadRepository mealRepository,
-    IUsdaFoodReadRepository usdaFoodRepository) : IUsdaDailyMicronutrientReadService {
+    IUsdaFoodReadModelRepository usdaFoodRepository) : IUsdaDailyMicronutrientReadService {
     public async Task<DailyMicronutrientSummaryModel> GetDailySummaryAsync(
         UserId userId,
         DateTime date,
