@@ -5,6 +5,7 @@ using FoodDiary.Application.Notifications.Commands.ScheduleTestNotification;
 using FoodDiary.Application.Notifications.Commands.UpdateNotificationPreferences;
 using FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Queries.GetNotificationPreferences;
 using FoodDiary.Application.Notifications.Queries.GetNotifications;
@@ -26,6 +27,11 @@ namespace FoodDiary.Application.Tests.Notifications;
 
 [ExcludeFromCodeCoverage]
 public class NotificationsFeatureTests {
+    private static NotificationReadModel ToReadModel(Notification notification) =>
+        new(notification.Id.Value, notification.Type, notification.ReferenceId, notification.PayloadJson, notification.IsRead, notification.CreatedOnUtc);
+
+    private static WebPushSubscriptionReadModel ToReadModel(WebPushSubscription subscription) =>
+        new(subscription.Endpoint, subscription.ExpirationTimeUtc, subscription.Locale, subscription.UserAgent, subscription.CreatedOnUtc, subscription.ModifiedOnUtc);
     private static User CreateUser(UserId? id = null, string email = "notifications@example.com") {
         var user = User.Create(email, "hash");
         if (id is not null) {
@@ -911,6 +917,11 @@ public class NotificationsFeatureTests {
             return Task.FromResult<IReadOnlyList<Notification>>(items);
         }
 
+        public Task<IReadOnlyList<NotificationReadModel>> GetByUserReadModelsAsync(UserId userId, int limit = 50, CancellationToken ct = default) {
+            var items = _notifications.Where(n => n.UserId == userId).Take(limit).Select(ToReadModel).ToList();
+            return Task.FromResult<IReadOnlyList<NotificationReadModel>>(items);
+        }
+
         public Task<int> DeleteExpiredBatchAsync(
             IReadOnlyCollection<string> transientTypes,
             DateTime transientReadOlderThanUtc,
@@ -1001,6 +1012,12 @@ public class NotificationsFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<WebPushSubscription>>(
                 _subscriptions.Where(subscription => subscription.UserId == userId).ToList());
+
+        public Task<IReadOnlyList<WebPushSubscriptionReadModel>> GetByUserReadModelsAsync(
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<WebPushSubscriptionReadModel>>(
+                [.. _subscriptions.Where(subscription => subscription.UserId == userId).Select(ToReadModel)]);
 
         public Task<WebPushSubscription> AddAsync(
             WebPushSubscription subscription,

@@ -2,6 +2,7 @@ using FoodDiary.Application.MealPlans.Commands.AdoptMealPlan;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.MealPlans.Models;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Application.Abstractions.ShoppingLists.Models;
 using FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
 using FoodDiary.Application.MealPlans.Common;
 using FoodDiary.Application.MealPlans.Mappings;
@@ -22,6 +23,45 @@ namespace FoodDiary.Application.Tests.MealPlans;
 
 [ExcludeFromCodeCoverage]
 public class MealPlansFeatureTests {
+    private static ShoppingListReadModel ToReadModel(ShoppingList list) =>
+        new(
+            list.Id.Value,
+            list.Name,
+            list.CreatedOnUtc,
+            [.. list.Items
+                .OrderBy(item => item.SortOrder)
+                .ThenBy(item => item.Id.Value)
+                .Select(item => new ShoppingListItemReadModel(
+                    item.Id.Value,
+                    item.ShoppingListId.Value,
+                    item.ProductId?.Value,
+                    item.Name,
+                    item.Amount,
+                    item.Unit?.ToString(),
+                    item.Category,
+                    item.Aisle,
+                    item.Note,
+                    item.IsChecked,
+                    item.CheckedOnUtc,
+                    item.SortOrder,
+                    [.. item.Sources
+                        .OrderBy(source => source.DayNumber ?? int.MaxValue)
+                        .ThenBy(source => source.Label, StringComparer.Ordinal)
+                        .Select(source => new ShoppingListItemSourceReadModel(
+                            source.Id.Value,
+                            source.SourceType.ToString(),
+                            source.MealPlanId?.Value,
+                            source.MealPlanMealId?.Value,
+                            source.RecipeId?.Value,
+                            source.Label,
+                            source.DayNumber,
+                            source.MealType,
+                            source.Amount,
+                            source.Unit?.ToString()))]))]);
+
+    private static ShoppingListSummaryReadModel ToSummaryReadModel(ShoppingList list) =>
+        new(list.Id.Value, list.Name, list.CreatedOnUtc, list.Items.Count);
+
     [Fact]
     public async Task AdoptMealPlan_WhenPlanNotFound_ReturnsFailure() {
         var repo = new StubMealPlanRepository(plan: null);
@@ -411,6 +451,18 @@ public class MealPlansFeatureTests {
             bool includeItems = false,
             CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+        public Task<ShoppingListReadModel?> GetReadModelByIdAsync(
+            ShoppingListId id,
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<ShoppingListReadModel?> GetCurrentReadModelAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
 
         public Task UpdateAsync(ShoppingList list, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();

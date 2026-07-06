@@ -21,6 +21,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -1142,6 +1143,18 @@ public sealed class AuthenticationCommandHandlerTests {
 
         public Task<IReadOnlyList<Notification>> GetByUserAsync(UserId userId, int limit = 50, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<Notification>>(Notifications.Where(x => x.UserId == userId).Take(limit).ToList());
+
+        public Task<IReadOnlyList<NotificationReadModel>> GetByUserReadModelsAsync(UserId userId, int limit = 50, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<NotificationReadModel>>([.. Notifications
+                .Where(notification => notification.UserId == userId)
+                .Take(limit)
+                .Select(notification => new NotificationReadModel(
+                    notification.Id.Value,
+                    notification.Type,
+                    notification.ReferenceId,
+                    notification.PayloadJson,
+                    notification.IsRead,
+                    notification.CreatedOnUtc))]);
 
         public Task<Notification?> GetByIdAsync(NotificationId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
             Task.FromResult<Notification?>(Notifications.FirstOrDefault(x => x.Id == id));

@@ -9,98 +9,50 @@ public interface IUsdaFoodReadRepository {
         int limit = 20,
         CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyList<UsdaFoodReadModel>> SearchReadModelsAsync(
+    Task<IReadOnlyList<UsdaFoodReadModel>> SearchReadModelsAsync(
         string query,
         int limit = 20,
-        CancellationToken cancellationToken = default) {
-        IReadOnlyList<UsdaFood> foods = await SearchAsync(query, limit, cancellationToken).ConfigureAwait(false);
-        return [.. foods.Select(static food => new UsdaFoodReadModel(food.FdcId, food.Description, food.FoodCategory))];
-    }
+        CancellationToken cancellationToken = default);
 
     Task<UsdaFood?> GetByFdcIdAsync(
         int fdcId,
         CancellationToken cancellationToken = default);
 
-    async Task<UsdaFoodReadModel?> GetByFdcIdReadModelAsync(
+    Task<UsdaFoodReadModel?> GetByFdcIdReadModelAsync(
         int fdcId,
-        CancellationToken cancellationToken = default) {
-        UsdaFood? food = await GetByFdcIdAsync(fdcId, cancellationToken).ConfigureAwait(false);
-        return food is null ? null : new UsdaFoodReadModel(food.FdcId, food.Description, food.FoodCategory);
-    }
+        CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<UsdaFoodNutrient>> GetNutrientsAsync(
         int fdcId,
         CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyList<UsdaNutrientReadModel>> GetNutrientReadModelsAsync(
+    Task<IReadOnlyList<UsdaNutrientReadModel>> GetNutrientReadModelsAsync(
         int fdcId,
-        CancellationToken cancellationToken = default) {
-        IReadOnlyList<UsdaFoodNutrient> nutrients = await GetNutrientsAsync(fdcId, cancellationToken).ConfigureAwait(false);
-        return [.. nutrients.Select(static nutrient => new UsdaNutrientReadModel(
-            nutrient.NutrientId,
-            nutrient.Nutrient.Name,
-            nutrient.Nutrient.UnitName,
-            nutrient.Amount))];
-    }
+        CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<UsdaFoodPortion>> GetPortionsAsync(
         int fdcId,
         CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyList<UsdaFoodPortionModel>> GetPortionReadModelsAsync(
+    Task<IReadOnlyList<UsdaFoodPortionModel>> GetPortionReadModelsAsync(
         int fdcId,
-        CancellationToken cancellationToken = default) {
-        IReadOnlyList<UsdaFoodPortion> portions = await GetPortionsAsync(fdcId, cancellationToken).ConfigureAwait(false);
-        return [.. portions.Select(static portion => new UsdaFoodPortionModel(
-            portion.Id,
-            portion.Amount,
-            portion.MeasureUnitName,
-            portion.GramWeight,
-            portion.PortionDescription,
-            portion.Modifier))];
-    }
+        CancellationToken cancellationToken = default);
 
     Task<IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>>> GetNutrientsByFdcIdsAsync(
         IEnumerable<int> fdcIds,
         CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>>> GetNutrientReadModelsByFdcIdsAsync(
+    Task<IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>>> GetNutrientReadModelsByFdcIdsAsync(
         IEnumerable<int> fdcIds,
-        CancellationToken cancellationToken = default) {
-        IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>> nutrientsByFdcId = await GetNutrientsByFdcIdsAsync(
-            fdcIds,
-            cancellationToken).ConfigureAwait(false);
-
-        return nutrientsByFdcId.ToDictionary(
-            static item => item.Key,
-            static item => (IReadOnlyList<UsdaNutrientReadModel>)[
-                .. item.Value.Select(static nutrient => new UsdaNutrientReadModel(
-                    nutrient.NutrientId,
-                    nutrient.Nutrient.Name,
-                    nutrient.Nutrient.UnitName,
-                    nutrient.Amount)),
-            ]);
-    }
+        CancellationToken cancellationToken = default);
 
     Task<IReadOnlyDictionary<int, DailyReferenceValue>> GetDailyReferenceValuesAsync(
         string ageGroup = "adult",
         string gender = "all",
         CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel>> GetDailyReferenceValueReadModelsAsync(
+    Task<IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel>> GetDailyReferenceValueReadModelsAsync(
         string ageGroup = "adult",
         string gender = "all",
-        CancellationToken cancellationToken = default) {
-        IReadOnlyDictionary<int, DailyReferenceValue> values = await GetDailyReferenceValuesAsync(
-            ageGroup,
-            gender,
-            cancellationToken).ConfigureAwait(false);
-
-        return values.ToDictionary(
-            static item => item.Key,
-            static item => new UsdaDailyReferenceValueReadModel(
-                item.Value.NutrientId,
-                item.Value.Value,
-                item.Value.Unit));
-    }
+        CancellationToken cancellationToken = default);
 }

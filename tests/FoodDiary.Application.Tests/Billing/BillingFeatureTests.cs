@@ -2039,6 +2039,25 @@ public sealed class BillingFeatureTests {
         public Task<BillingSubscription?> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult(Subscriptions.FirstOrDefault(subscription => subscription.UserId == userId));
 
+        public Task<BillingSubscriptionOverviewReadModel?> GetOverviewReadModelByUserIdAsync(
+            UserId userId,
+            CancellationToken cancellationToken = default) {
+            BillingSubscription? subscription = Subscriptions.FirstOrDefault(subscription => subscription.UserId == userId);
+            return Task.FromResult(subscription is null
+                ? null
+                : new BillingSubscriptionOverviewReadModel(
+                    subscription.Id,
+                    subscription.UserId.Value,
+                    subscription.Provider,
+                    subscription.ExternalCustomerId,
+                    subscription.Plan,
+                    subscription.Status,
+                    subscription.CurrentPeriodStartUtc,
+                    subscription.CurrentPeriodEndUtc,
+                    subscription.CancelAtPeriodEnd,
+                    subscription.NextBillingAttemptUtc));
+        }
+
         public Task<BillingSubscription?> GetByExternalCustomerIdAsync(
             string provider,
             string externalCustomerId,

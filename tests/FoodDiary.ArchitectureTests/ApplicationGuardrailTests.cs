@@ -1120,26 +1120,50 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void TrackingReadContracts_DoNotFallbackToAggregateDefaultReadModels() {
+    public void ReadModelContracts_DoNotFallbackToAggregateDefaultReadModels() {
         string root = GetRepositoryRoot();
         string[] contractFiles = [
             Path.Combine(root, "FoodDiary.Application.Abstractions", "WeightEntries", "Common", "IWeightEntryReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "WaistEntries", "Common", "IWaistEntryReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Exercises", "Common", "IExerciseEntryReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Hydration", "Common", "IHydrationEntryReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Fasting", "Common", "IFastingOccurrenceReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Fasting", "Common", "IFastingCheckInReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Billing", "Common", "IBillingSubscriptionReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Users", "Common", "IUserAdminReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Notifications", "Common", "INotificationReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Notifications", "Common", "IWebPushSubscriptionReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Wearables", "Common", "IWearableSyncReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "Usda", "Common", "IUsdaFoodReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "ShoppingLists", "Common", "IShoppingListReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "RecipeComments", "Common", "IRecipeCommentReadRepository.cs"),
         ];
 
         string[] violations = [
-            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<WeightEntryReadModel>>"),
-            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<WaistEntryReadModel>>"),
-            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<ExerciseEntryReadModel>>"),
-            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<HydrationEntryReadModel>>"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<"),
             .. FindReferencesInFiles(root, contractFiles, "private static"),
             .. FindReferencesInFiles(root, contractFiles, "ToReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new WeightEntryReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new WaistEntryReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new ExerciseEntryReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new HydrationEntryReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new FastingOccurrenceReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new FastingCheckInReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new BillingSubscriptionOverviewReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new UserAdminReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new NotificationReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new WebPushSubscriptionReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new WearableSyncEntryReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new WearableConnectionModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new UsdaFoodReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new UsdaNutrientReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new UsdaFoodPortionModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new UsdaDailyReferenceValueReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new ShoppingListReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new ShoppingListSummaryReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new ShoppingListItemReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new ShoppingListItemSourceReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "new RecipeCommentReadModel"),
         ];
 
         Assert.Empty(violations);

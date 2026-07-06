@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
@@ -392,6 +393,19 @@ public sealed class WebPushNotificationSenderTests {
         public Task<IReadOnlyList<WebPushSubscription>> GetByUserAsync(UserId userId, CancellationToken cancellationToken = default) {
             GetByUserCalls++;
             return Task.FromResult<IReadOnlyList<WebPushSubscription>>(subscriptions?.ToList() ?? []);
+        }
+
+        public Task<IReadOnlyList<WebPushSubscriptionReadModel>> GetByUserReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) {
+            IReadOnlyList<WebPushSubscriptionReadModel> items = [.. (subscriptions?.ToList() ?? [])
+                .Where(subscription => subscription.UserId == userId)
+                .Select(subscription => new WebPushSubscriptionReadModel(
+                    subscription.Endpoint,
+                    subscription.ExpirationTimeUtc,
+                    subscription.Locale,
+                    subscription.UserAgent,
+                    subscription.CreatedOnUtc,
+                    subscription.ModifiedOnUtc))];
+            return Task.FromResult(items);
         }
 
         public Task<WebPushSubscription> AddAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) =>

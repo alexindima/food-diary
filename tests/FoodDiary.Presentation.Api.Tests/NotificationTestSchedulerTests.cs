@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Services;
@@ -217,6 +218,18 @@ public sealed class NotificationTestSchedulerTests {
 
         public Task<IReadOnlyList<Notification>> GetByUserAsync(UserId userId, int limit = 50, CancellationToken ct = default) =>
             Task.FromResult<IReadOnlyList<Notification>>(Notifications.Where(x => x.UserId == userId).Take(limit).ToList());
+
+        public Task<IReadOnlyList<NotificationReadModel>> GetByUserReadModelsAsync(UserId userId, int limit = 50, CancellationToken ct = default) =>
+            Task.FromResult<IReadOnlyList<NotificationReadModel>>([.. Notifications
+                .Where(notification => notification.UserId == userId)
+                .Take(limit)
+                .Select(notification => new NotificationReadModel(
+                    notification.Id.Value,
+                    notification.Type,
+                    notification.ReferenceId,
+                    notification.PayloadJson,
+                    notification.IsRead,
+                    notification.CreatedOnUtc))]);
 
         public Task<int> DeleteExpiredBatchAsync(
             IReadOnlyCollection<string> transientTypes,

@@ -567,6 +567,16 @@ public class WearablesFeatureTests {
         public Task<IReadOnlyList<WearableConnection>> GetAllForUserAsync(UserId userId, CancellationToken ct = default) =>
             Task.FromResult<IReadOnlyList<WearableConnection>>(_connections.Where(c => c.UserId == userId).ToList());
 
+        public Task<IReadOnlyList<WearableConnectionModel>> GetConnectionModelsAsync(UserId userId, CancellationToken ct = default) =>
+            Task.FromResult<IReadOnlyList<WearableConnectionModel>>([.. _connections
+                .Where(connection => connection.UserId == userId)
+                .Select(connection => new WearableConnectionModel(
+                    connection.Provider.ToString(),
+                    connection.ExternalUserId,
+                    connection.IsActive,
+                    connection.LastSyncedAtUtc,
+                    connection.CreatedOnUtc))]);
+
         public Task<WearableConnection> AddAsync(WearableConnection connection, CancellationToken ct = default) {
             _connections.Add(connection);
             return Task.FromResult(connection);
@@ -605,6 +615,15 @@ public class WearablesFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<WearableSyncEntry>>(
                 _entries.Where(e => e.UserId == userId && e.Date == date.Date).ToList());
+
+        public Task<IReadOnlyList<WearableSyncEntryReadModel>> GetDailySummaryReadModelsAsync(
+            UserId userId,
+            DateTime date,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<WearableSyncEntryReadModel>>(
+                [.. _entries
+                    .Where(entry => entry.UserId == userId && entry.Date == date.Date)
+                    .Select(entry => new WearableSyncEntryReadModel(entry.DataType, entry.Value))]);
 
         public Task<WearableSyncEntry> AddAsync(WearableSyncEntry entry, CancellationToken cancellationToken = default) {
             AddedCount++;

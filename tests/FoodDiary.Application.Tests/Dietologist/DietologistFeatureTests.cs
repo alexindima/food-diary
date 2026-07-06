@@ -28,6 +28,7 @@ using FoodDiary.Application.Dietologist.Queries.GetMyRecommendations;
 using FoodDiary.Application.Dietologist.Queries.GetRecommendationsForClient;
 using FoodDiary.Application.Dietologist.Services;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
@@ -2771,6 +2772,18 @@ public class DietologistFeatureTests {
             throw new NotSupportedException();
         public Task<IReadOnlyList<Notification>> GetByUserAsync(UserId userId, int limit = 50, CancellationToken ct = default) =>
             throw new NotSupportedException();
+
+        public Task<IReadOnlyList<NotificationReadModel>> GetByUserReadModelsAsync(UserId userId, int limit = 50, CancellationToken ct = default) =>
+            Task.FromResult<IReadOnlyList<NotificationReadModel>>([.. _notifications
+                .Where(notification => notification.UserId == userId)
+                .Take(limit)
+                .Select(notification => new NotificationReadModel(
+                    notification.Id.Value,
+                    notification.Type,
+                    notification.ReferenceId,
+                    notification.PayloadJson,
+                    notification.IsRead,
+                    notification.CreatedOnUtc))]);
         public Task<int> DeleteExpiredBatchAsync(
             IReadOnlyCollection<string> transientTypes,
             DateTime transientReadOlderThanUtc,

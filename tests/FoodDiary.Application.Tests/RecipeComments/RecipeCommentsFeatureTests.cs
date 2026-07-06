@@ -3,6 +3,7 @@ using FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
 using FoodDiary.Application.RecipeComments.Commands.DeleteRecipeComment;
 using FoodDiary.Application.RecipeComments.Commands.UpdateRecipeComment;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
+using FoodDiary.Application.Abstractions.RecipeComments.Models;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.RecipeComments.Common;
 using FoodDiary.Application.RecipeComments.Queries.GetRecipeComments;
@@ -300,6 +301,28 @@ public class RecipeCommentsFeatureTests {
             var matching = _comments.Where(c => c.RecipeId == recipeId).ToList();
             var items = matching.Skip((page - 1) * limit).Take(limit).ToList();
             return Task.FromResult<(IReadOnlyList<RecipeComment>, int)>((items, matching.Count));
+        }
+
+        public Task<(IReadOnlyList<RecipeCommentReadModel> Items, int Total)> GetPagedReadModelsByRecipeAsync(
+            RecipeId recipeId,
+            int page,
+            int limit,
+            CancellationToken ct = default) {
+            var matching = _comments.Where(c => c.RecipeId == recipeId).ToList();
+            var items = matching
+                .Skip((page - 1) * limit)
+                .Take(limit)
+                .Select(comment => new RecipeCommentReadModel(
+                    comment.Id.Value,
+                    comment.RecipeId.Value,
+                    comment.UserId.Value,
+                    comment.User?.Username,
+                    comment.User?.FirstName,
+                    comment.Text,
+                    comment.CreatedOnUtc,
+                    comment.ModifiedOnUtc))
+                .ToList();
+            return Task.FromResult<(IReadOnlyList<RecipeCommentReadModel> Items, int Total)>((items, matching.Count));
         }
     }
 

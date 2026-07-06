@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Fasting.Models;
@@ -16,6 +17,47 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Tests.Fasting;
 
 public partial class FastingFeatureTests {
+    private static FastingOccurrenceReadModel ToReadModel(FastingOccurrence occurrence) =>
+        new(
+            occurrence.Id,
+            occurrence.PlanId,
+            Plan: null,
+            occurrence.UserId,
+            occurrence.Kind,
+            occurrence.Status,
+            occurrence.SequenceNumber,
+            occurrence.ScheduledForUtc,
+            occurrence.StartedAtUtc,
+            occurrence.EndedAtUtc,
+            occurrence.InitialTargetHours,
+            occurrence.AddedTargetHours,
+            occurrence.Notes,
+            occurrence.CheckInAtUtc,
+            occurrence.HungerLevel,
+            occurrence.EnergyLevel,
+            occurrence.MoodLevel,
+            occurrence.Symptoms,
+            occurrence.CheckInNotes);
+
+    private static FastingCheckInReadModel ToReadModel(FastingCheckIn checkIn) =>
+        new(
+            checkIn.Id,
+            checkIn.OccurrenceId,
+            checkIn.CheckedInAtUtc,
+            checkIn.HungerLevel,
+            checkIn.EnergyLevel,
+            checkIn.MoodLevel,
+            checkIn.Symptoms,
+            checkIn.Notes);
+
+    private static NotificationReadModel ToReadModel(Notification notification) =>
+        new(
+            notification.Id.Value,
+            notification.Type,
+            notification.ReferenceId,
+            notification.PayloadJson,
+            notification.IsRead,
+            notification.CreatedOnUtc);
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryFastingPlanRepository(FastingPlan? active = null) : IFastingPlanRepository {
         public List<FastingPlan> StoredPlans { get; } = active is null ? [] : [active];
@@ -34,6 +76,11 @@ public partial class FastingFeatureTests {
         public List<FastingOccurrence> StoredOccurrences { get; } = current is null ? [] : [current];
 
         public Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken ct = default) => Task.FromResult(StoredOccurrences.LastOrDefault(x => x.Status == FastingOccurrenceStatus.Active));
+        public async Task<FastingOccurrenceReadModel?> GetCurrentReadModelAsync(UserId userId, CancellationToken ct = default) {
+            FastingOccurrence? occurrence = await GetCurrentAsync(userId, ct: ct).ConfigureAwait(false);
+            return occurrence is null ? null : ToReadModel(occurrence);
+        }
+
         public Task<FastingOccurrence?> GetByIdAsync(FastingOccurrenceId id, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<FastingOccurrence>> GetActiveAsync(CancellationToken ct = default) =>
             Task.FromResult<IReadOnlyList<FastingOccurrence>>(StoredOccurrences.Where(x => x.Status == FastingOccurrenceStatus.Active).ToList());
@@ -64,6 +111,16 @@ public partial class FastingFeatureTests {
 
             return Task.FromResult(occurrences);
         }
+        public async Task<IReadOnlyList<FastingOccurrenceReadModel>> GetByUserReadModelsAsync(
+            UserId userId,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken ct = default) {
+            IReadOnlyList<FastingOccurrence> occurrences = await GetByUserAsync(userId, from, to, status, ct).ConfigureAwait(false);
+            return [.. occurrences.Select(ToReadModel)];
+        }
+
         public Task<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)> GetPagedByUserAsync(
             UserId userId,
             int page,
@@ -97,6 +154,18 @@ public partial class FastingFeatureTests {
 
             return Task.FromResult<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)>((items, ordered.Count));
         }
+        public async Task<(IReadOnlyList<FastingOccurrenceReadModel> Items, int TotalItems)> GetPagedByUserReadModelsAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken ct = default) {
+            (IReadOnlyList<FastingOccurrence> items, int totalItems) = await GetPagedByUserAsync(userId, page, limit, from, to, status, ct).ConfigureAwait(false);
+            return ([.. items.Select(ToReadModel)], totalItems);
+        }
+
         public Task AddAsync(FastingOccurrence occurrence, CancellationToken ct = default) {
             StoredOccurrences.Add(occurrence);
             return Task.CompletedTask;
@@ -110,6 +179,9 @@ public partial class FastingFeatureTests {
 
         public Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken ct = default) =>
             Task.FromResult<FastingOccurrence?>(current);
+
+        public Task<FastingOccurrenceReadModel?> GetCurrentReadModelAsync(UserId userId, CancellationToken ct = default) =>
+            Task.FromResult<FastingOccurrenceReadModel?>(ToReadModel(current));
 
         public Task<FastingOccurrence?> GetByIdAsync(FastingOccurrenceId id, bool asTracking = false, CancellationToken ct = default) =>
             throw new NotSupportedException();
@@ -128,7 +200,27 @@ public partial class FastingFeatureTests {
             CancellationToken ct = default) =>
             throw new NotSupportedException();
 
+        public async Task<IReadOnlyList<FastingOccurrenceReadModel>> GetByUserReadModelsAsync(
+            UserId userId,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken ct = default) {
+            IReadOnlyList<FastingOccurrence> occurrences = await GetByUserAsync(userId, from, to, status, ct).ConfigureAwait(false);
+            return [.. occurrences.Select(ToReadModel)];
+        }
+
         public Task<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)> GetPagedByUserAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken ct = default) =>
+            throw new NotSupportedException();
+
+        public Task<(IReadOnlyList<FastingOccurrenceReadModel> Items, int TotalItems)> GetPagedByUserReadModelsAsync(
             UserId userId,
             int page,
             int limit,
@@ -163,6 +255,13 @@ public partial class FastingFeatureTests {
                 .ToList();
 
             return Task.FromResult(items);
+        }
+
+        public async Task<IReadOnlyList<FastingCheckInReadModel>> GetByOccurrenceIdReadModelsAsync(
+            IReadOnlyCollection<FastingOccurrenceId> occurrenceIds,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<FastingCheckIn> checkIns = await GetByOccurrenceIdsAsync(occurrenceIds, cancellationToken).ConfigureAwait(false);
+            return [.. checkIns.Select(ToReadModel)];
         }
     }
 
@@ -203,6 +302,9 @@ public partial class FastingFeatureTests {
 
         public Task<IReadOnlyList<Notification>> GetByUserAsync(UserId userId, int limit = 50, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<Notification>>(Stored.Where(x => x.UserId == userId).Take(limit).ToList());
+
+        public Task<IReadOnlyList<NotificationReadModel>> GetByUserReadModelsAsync(UserId userId, int limit = 50, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<NotificationReadModel>>([.. Stored.Where(x => x.UserId == userId).Take(limit).Select(ToReadModel)]);
 
         public Task<Notification?> GetByIdAsync(NotificationId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
             Task.FromResult<Notification?>(Stored.FirstOrDefault(x => x.Id == id));

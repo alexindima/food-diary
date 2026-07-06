@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence.Users;
 
-public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository {
+public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository, IUserAdminReadRepository {
     private const string LikeEscapeCharacter = "\\";
 
     private IQueryable<User> UsersWithRoles() =>

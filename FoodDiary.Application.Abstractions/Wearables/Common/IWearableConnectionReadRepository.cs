@@ -15,15 +15,7 @@ public interface IWearableConnectionReadRepository {
         UserId userId,
         CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyList<WearableConnectionModel>> GetConnectionModelsAsync(
+    Task<IReadOnlyList<WearableConnectionModel>> GetConnectionModelsAsync(
         UserId userId,
-        CancellationToken cancellationToken = default) {
-        IReadOnlyList<WearableConnection> connections = await GetAllForUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        return [.. connections.Select(static connection => new WearableConnectionModel(
-            connection.Provider.ToString(),
-            connection.ExternalUserId,
-            connection.IsActive,
-            connection.LastSyncedAtUtc,
-            connection.CreatedOnUtc))];
-    }
+        CancellationToken cancellationToken = default);
 }

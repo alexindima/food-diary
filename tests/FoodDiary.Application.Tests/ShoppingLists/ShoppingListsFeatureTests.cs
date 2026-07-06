@@ -5,6 +5,7 @@ using FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
 using FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
 using FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Application.Abstractions.ShoppingLists.Models;
 using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
 using FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
@@ -22,6 +23,45 @@ namespace FoodDiary.Application.Tests.ShoppingLists;
 
 [ExcludeFromCodeCoverage]
 public class ShoppingListsFeatureTests {
+    private static ShoppingListReadModel ToReadModel(ShoppingList list) =>
+        new(
+            list.Id.Value,
+            list.Name,
+            list.CreatedOnUtc,
+            [.. list.Items
+                .OrderBy(item => item.SortOrder)
+                .ThenBy(item => item.Id.Value)
+                .Select(item => new ShoppingListItemReadModel(
+                    item.Id.Value,
+                    item.ShoppingListId.Value,
+                    item.ProductId?.Value,
+                    item.Name,
+                    item.Amount,
+                    item.Unit?.ToString(),
+                    item.Category,
+                    item.Aisle,
+                    item.Note,
+                    item.IsChecked,
+                    item.CheckedOnUtc,
+                    item.SortOrder,
+                    [.. item.Sources
+                        .OrderBy(source => source.DayNumber ?? int.MaxValue)
+                        .ThenBy(source => source.Label, StringComparer.Ordinal)
+                        .Select(source => new ShoppingListItemSourceReadModel(
+                            source.Id.Value,
+                            source.SourceType.ToString(),
+                            source.MealPlanId?.Value,
+                            source.MealPlanMealId?.Value,
+                            source.RecipeId?.Value,
+                            source.Label,
+                            source.DayNumber,
+                            source.MealType,
+                            source.Amount,
+                            source.Unit?.ToString()))]))]);
+
+    private static ShoppingListSummaryReadModel ToSummaryReadModel(ShoppingList list) =>
+        new(list.Id.Value, list.Name, list.CreatedOnUtc, list.Items.Count);
+
     [Fact]
     public async Task GetCurrentShoppingListQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         GetCurrentShoppingListQueryHandler handler = CreateCurrentShoppingListHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
@@ -688,10 +728,19 @@ public class ShoppingListsFeatureTests {
             bool asTracking = false,
             CancellationToken cancellationToken = default) => Task.FromResult<ShoppingList?>(null);
 
+        public Task<ShoppingListReadModel?> GetReadModelByIdAsync(ShoppingListId id, UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<ShoppingListReadModel?>(null);
+
+        public Task<ShoppingListReadModel?> GetCurrentReadModelAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<ShoppingListReadModel?>(null);
+
         public Task<IReadOnlyList<ShoppingList>> GetAllAsync(
             UserId userId,
             bool includeItems = false,
             CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<ShoppingList>>([]);
+
+        public Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<ShoppingListSummaryReadModel>>([]);
 
         public Task UpdateAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task DeleteAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.CompletedTask;
@@ -719,10 +768,19 @@ public class ShoppingListsFeatureTests {
             bool asTracking = false,
             CancellationToken cancellationToken = default) => Task.FromResult<ShoppingList?>(null);
 
+        public Task<ShoppingListReadModel?> GetReadModelByIdAsync(ShoppingListId id, UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<ShoppingListReadModel?>(null);
+
+        public Task<ShoppingListReadModel?> GetCurrentReadModelAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<ShoppingListReadModel?>(null);
+
         public Task<IReadOnlyList<ShoppingList>> GetAllAsync(
             UserId userId,
             bool includeItems = false,
             CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<ShoppingList>>([]);
+
+        public Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<ShoppingListSummaryReadModel>>([]);
 
         public Task UpdateAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task DeleteAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.CompletedTask;
@@ -751,11 +809,20 @@ public class ShoppingListsFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult<ShoppingList?>(userId == list.UserId ? list : null);
 
+        public Task<ShoppingListReadModel?> GetReadModelByIdAsync(ShoppingListId id, UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(id == list.Id && userId == list.UserId ? ToReadModel(list) : null);
+
+        public Task<ShoppingListReadModel?> GetCurrentReadModelAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(userId == list.UserId ? ToReadModel(list) : null);
+
         public Task<IReadOnlyList<ShoppingList>> GetAllAsync(
             UserId userId,
             bool includeItems = false,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<ShoppingList>>(userId == list.UserId ? [list] : []);
+
+        public Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<ShoppingListSummaryReadModel>>(userId == list.UserId ? [ToSummaryReadModel(list)] : []);
 
         public Task UpdateAsync(ShoppingList updatedList, CancellationToken cancellationToken = default) {
             UpdateCalled = true;

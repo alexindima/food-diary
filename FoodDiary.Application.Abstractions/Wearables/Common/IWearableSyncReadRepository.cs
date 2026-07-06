@@ -18,11 +18,8 @@ public interface IWearableSyncReadRepository {
         DateTime date,
         CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyList<WearableSyncEntryReadModel>> GetDailySummaryReadModelsAsync(
+    Task<IReadOnlyList<WearableSyncEntryReadModel>> GetDailySummaryReadModelsAsync(
         UserId userId,
         DateTime date,
-        CancellationToken cancellationToken = default) {
-        IReadOnlyList<WearableSyncEntry> entries = await GetDailySummaryAsync(userId, date, cancellationToken).ConfigureAwait(false);
-        return [.. entries.Select(static entry => new WearableSyncEntryReadModel(entry.DataType, entry.Value))];
-    }
+        CancellationToken cancellationToken = default);
 }

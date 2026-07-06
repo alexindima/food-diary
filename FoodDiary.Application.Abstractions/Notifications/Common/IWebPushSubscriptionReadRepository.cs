@@ -14,16 +14,7 @@ public interface IWebPushSubscriptionReadRepository {
         UserId userId,
         CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyList<WebPushSubscriptionReadModel>> GetByUserReadModelsAsync(
+    Task<IReadOnlyList<WebPushSubscriptionReadModel>> GetByUserReadModelsAsync(
         UserId userId,
-        CancellationToken cancellationToken = default) {
-        IReadOnlyList<WebPushSubscription> subscriptions = await GetByUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        return [.. subscriptions.Select(static subscription => new WebPushSubscriptionReadModel(
-            subscription.Endpoint,
-            subscription.ExpirationTimeUtc,
-            subscription.Locale,
-            subscription.UserAgent,
-            subscription.CreatedOnUtc,
-            subscription.ModifiedOnUtc))];
-    }
+        CancellationToken cancellationToken = default);
 }

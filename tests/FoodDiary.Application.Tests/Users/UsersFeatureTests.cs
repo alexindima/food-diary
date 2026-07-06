@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.DeleteUser;
@@ -859,6 +860,17 @@ public class UsersFeatureTests {
 
         public Task<IReadOnlyList<WebPushSubscription>> GetByUserAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<WebPushSubscription>>(subscriptions.Where(item => item.UserId == userId).ToList());
+
+        public Task<IReadOnlyList<WebPushSubscriptionReadModel>> GetByUserReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<WebPushSubscriptionReadModel>>([.. subscriptions
+                .Where(subscription => subscription.UserId == userId)
+                .Select(subscription => new WebPushSubscriptionReadModel(
+                    subscription.Endpoint,
+                    subscription.ExpirationTimeUtc,
+                    subscription.Locale,
+                    subscription.UserAgent,
+                    subscription.CreatedOnUtc,
+                    subscription.ModifiedOnUtc))]);
 
         public Task<WebPushSubscription> AddAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
