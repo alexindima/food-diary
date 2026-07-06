@@ -928,6 +928,22 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void MealApplicationReadServices_UseNarrowMealReadContracts() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] serviceFiles = [
+            Path.Combine(applicationRoot, "Consumptions", "Services", "ConsumptionReadService.cs"),
+            Path.Combine(applicationRoot, "Export", "Services", "ExportDiaryReadService.cs"),
+            Path.Combine(applicationRoot, "Gamification", "Services", "GamificationReadService.cs"),
+            Path.Combine(applicationRoot, "Usda", "Services", "UsdaDailyMicronutrientReadService.cs"),
+            Path.Combine(applicationRoot, "WeeklyCheckIn", "Services", "WeeklyCheckInReadService.cs"),
+        ];
+
+        string[] violations = FindReferencesInFiles(root, serviceFiles, "IMealReadRepository");
+
+        Assert.Empty(violations);
+    }
+    [Fact]
     public void DailyMicronutrientReadService_UsesMealProductReadModelsInsteadOfMealAggregates() {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
@@ -1050,15 +1066,16 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void MealReadContract_DoesNotFallbackToAggregateDefaultReadModels() {
+    public void MealReadContracts_DoNotFallbackToAggregateDefaultReadModels() {
         string root = GetRepositoryRoot();
-        string contractPath = Path.Combine(
-            root,
-            "FoodDiary.Application.Abstractions",
-            "Meals",
-            "Common",
-            "IMealReadRepository.cs");
-        string[] contractFiles = [contractPath];
+        string contractRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Meals", "Common");
+        string[] contractFiles = [
+            Path.Combine(contractRoot, "IMealReadRepository.cs"),
+            Path.Combine(contractRoot, "IMealConsumptionReadRepository.cs"),
+            Path.Combine(contractRoot, "IMealActivityReadRepository.cs"),
+            Path.Combine(contractRoot, "IMealProductNutritionReadRepository.cs"),
+            Path.Combine(contractRoot, "IMealRepository.cs"),
+        ];
 
         string[] violations = [
             .. FindReferencesInFiles(root, contractFiles, "async Task<(IReadOnlyList<MealConsumptionReadModel>"),

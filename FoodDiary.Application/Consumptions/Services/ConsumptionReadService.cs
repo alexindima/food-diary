@@ -12,7 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Consumptions.Services;
 
 public sealed class ConsumptionReadService(
-    IMealReadRepository mealRepository,
+    IMealConsumptionReadRepository mealRepository,
     IFavoriteMealReadRepository favoriteMealRepository) : IConsumptionReadService {
     public async Task<PagedResponse<ConsumptionModel>> GetPagedAsync(
         UserId userId,

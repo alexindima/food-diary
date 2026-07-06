@@ -9,7 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Gamification.Services;
 
 public sealed class GamificationReadService(
-    IMealReadRepository mealRepository,
+    IMealActivityReadRepository mealRepository,
     IDashboardStatisticsReadService statisticsReadService,
     IGamificationUserProfileService userProfileService,
     TimeProvider dateTimeProvider)

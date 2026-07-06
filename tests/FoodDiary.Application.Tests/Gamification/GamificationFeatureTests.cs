@@ -111,7 +111,7 @@ public class GamificationFeatureTests {
     }
 
     private static IGamificationReadService CreateGamificationReadService(
-        IMealReadRepository mealRepository,
+        IMealActivityReadRepository mealRepository,
         IDashboardStatisticsReadService statisticsReadService,
         IGamificationUserProfileService userProfileService) =>
         new GamificationReadService(mealRepository, statisticsReadService, userProfileService, new StubDateTimeProvider());

@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Export.Services;
 
-public sealed class ExportDiaryReadService(IMealReadRepository mealRepository) : IExportDiaryReadService {
+public sealed class ExportDiaryReadService(IMealConsumptionReadRepository mealRepository) : IExportDiaryReadService {
     public async Task<ExportDiaryMealsReadModel> GetMealsAsync(
         UserId userId,
         DateTime dateFrom,

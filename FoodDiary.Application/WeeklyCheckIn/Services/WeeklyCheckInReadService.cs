@@ -14,7 +14,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.WeeklyCheckIn.Services;
 
 public sealed class WeeklyCheckInReadService(
-    IMealReadRepository mealRepository,
+    IMealActivityReadRepository mealRepository,
     IDashboardStatisticsReadService statisticsReadService,
     IWeightEntryReadService weightEntryReadService,
     IWaistEntryReadService waistEntryReadService,

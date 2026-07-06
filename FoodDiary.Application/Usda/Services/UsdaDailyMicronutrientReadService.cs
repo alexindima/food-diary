@@ -9,7 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Usda.Services;
 
 public sealed class UsdaDailyMicronutrientReadService(
-    IMealReadRepository mealRepository,
+    IMealProductNutritionReadRepository mealRepository,
     IUsdaFoodReadRepository usdaFoodRepository) : IUsdaDailyMicronutrientReadService {
     public async Task<DailyMicronutrientSummaryModel> GetDailySummaryAsync(
         UserId userId,

@@ -34,6 +34,9 @@ public static partial class DependencyInjection {
 
         services.AddScoped<IMealRepository, MealRepository>();
         services.AddScoped<IMealReadRepository>(static provider => provider.GetRequiredService<IMealRepository>());
+        services.AddScoped<IMealConsumptionReadRepository>(static provider => provider.GetRequiredService<IMealRepository>());
+        services.AddScoped<IMealActivityReadRepository>(static provider => provider.GetRequiredService<IMealRepository>());
+        services.AddScoped<IMealProductNutritionReadRepository>(static provider => provider.GetRequiredService<IMealRepository>());
         services.AddScoped<IMealWriteRepository>(static provider => provider.GetRequiredService<IMealRepository>());
 
         return services;

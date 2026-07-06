@@ -1811,7 +1811,7 @@ public class ConsumptionsFeatureTests {
             recognizedAtUtc: new DateTime(2026, 3, 26, 20, 1, 0, DateTimeKind.Utc),
             notes: "photo",
             items: [
-                MealAiItemData.Create("Pasta", "ÐŸÐ°ÑÑ‚Ð°", 250, "g", 420, 14, 8, 72, 4, 0),
+                MealAiItemData.Create("Pasta", "Паста", 250, "g", 420, 14, 8, 72, 4, 0),
             ]);
         sourceMeal.ApplyNutrition(new MealNutritionUpdate(
             TotalCalories: 430,
@@ -2580,6 +2580,11 @@ public class ConsumptionsFeatureTests {
             DateTime dateTo,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task<int> GetCountAsync(
+            UserId userId,
+            MealQueryFilters filters,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
         public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
             UserId userId, DateTime dateFrom, DateTime dateTo,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -2653,6 +2658,11 @@ public class ConsumptionsFeatureTests {
             DateTime dateTo,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task<int> GetCountAsync(
+            UserId userId,
+            MealQueryFilters filters,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
         public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
             UserId userId, DateTime dateFrom, DateTime dateTo,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -2724,6 +2734,11 @@ public class ConsumptionsFeatureTests {
             UserId userId,
             DateTime dateFrom,
             DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<int> GetCountAsync(
+            UserId userId,
+            MealQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
@@ -2806,6 +2821,11 @@ public class ConsumptionsFeatureTests {
             UserId userId,
             DateTime dateFrom,
             DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<int> GetCountAsync(
+            UserId userId,
+            MealQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
@@ -2935,7 +2955,7 @@ public class ConsumptionsFeatureTests {
     }
 
     private static IConsumptionReadService CreateConsumptionReadService(
-        IMealReadRepository mealRepository,
+        IMealConsumptionReadRepository mealRepository,
         IFavoriteMealReadRepository? favoriteMealRepository = null) =>
         new ConsumptionReadService(mealRepository, favoriteMealRepository ?? new StubFavoriteMealRepository());
 
