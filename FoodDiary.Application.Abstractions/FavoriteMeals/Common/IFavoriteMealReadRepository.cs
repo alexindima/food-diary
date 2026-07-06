@@ -27,6 +27,18 @@ public interface IFavoriteMealReadRepository {
         IReadOnlyCollection<MealId> mealIds,
         CancellationToken cancellationToken = default);
 
+    async Task<IReadOnlyDictionary<MealId, FavoriteMealId>> GetFavoriteIdsByMealIdsAsync(
+        UserId userId,
+        IReadOnlyCollection<MealId> mealIds,
+        CancellationToken cancellationToken = default) {
+        IReadOnlyDictionary<MealId, FavoriteMeal> favorites = await GetByMealIdsAsync(
+            userId,
+            mealIds,
+            cancellationToken).ConfigureAwait(false);
+
+        return favorites.ToDictionary(static item => item.Key, static item => item.Value.Id);
+    }
+
     Task<IReadOnlyList<FavoriteMeal>> GetAllAsync(
         UserId userId,
         CancellationToken cancellationToken = default);

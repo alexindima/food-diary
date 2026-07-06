@@ -1,12 +1,12 @@
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.FavoriteMeals.Mappings;
-using FoodDiary.Domain.Entities.FavoriteMeals;
-using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Services;
@@ -20,14 +20,14 @@ public sealed class ConsumptionReadService(
         int limit,
         MealQueryFilters filters,
         CancellationToken cancellationToken) {
-        (IReadOnlyList<Meal> Items, int TotalItems) = await mealRepository.GetPagedAsync(
+        (IReadOnlyList<MealConsumptionReadModel> Items, int TotalItems) = await mealRepository.GetPagedConsumptionReadModelsAsync(
             userId,
             page,
             limit,
             filters,
             cancellationToken).ConfigureAwait(false);
 
-        IReadOnlyDictionary<MealId, FavoriteMeal> favoritesByMealId = await GetFavoritesByMealIdAsync(
+        IReadOnlyDictionary<MealId, FavoriteMealId> favoritesByMealId = await GetFavoritesByMealIdAsync(
             userId,
             Items,
             cancellationToken).ConfigureAwait(false);
@@ -42,19 +42,19 @@ public sealed class ConsumptionReadService(
         int favoriteLimit,
         MealQueryFilters filters,
         CancellationToken cancellationToken) {
-        (IReadOnlyList<Meal> Items, int TotalItems) = await mealRepository.GetPagedAsync(
+        (IReadOnlyList<MealConsumptionReadModel> Items, int TotalItems) = await mealRepository.GetPagedConsumptionReadModelsAsync(
             userId,
             page,
             limit,
             filters,
             cancellationToken).ConfigureAwait(false);
 
-        IReadOnlyList<FavoriteMeal> favorites = await favoriteMealRepository.GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteMealReadModel> favorites = await favoriteMealRepository.GetAllReadModelsAsync(userId, cancellationToken).ConfigureAwait(false);
         var favoriteItems = favorites
             .Take(favoriteLimit)
             .Select(static favorite => favorite.ToModel())
             .ToList();
-        IReadOnlyDictionary<MealId, FavoriteMeal> favoritesByMealId = await GetFavoritesByMealIdAsync(
+        IReadOnlyDictionary<MealId, FavoriteMealId> favoritesByMealId = await GetFavoritesByMealIdAsync(
             userId,
             Items,
             cancellationToken).ConfigureAwait(false);
@@ -68,39 +68,38 @@ public sealed class ConsumptionReadService(
         UserId userId,
         MealId consumptionId,
         CancellationToken cancellationToken) {
-        Meal? meal = await mealRepository.GetByIdAsync(
+        MealConsumptionReadModel? meal = await mealRepository.GetByIdConsumptionReadModelAsync(
             consumptionId,
             userId,
-            includeItems: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken).ConfigureAwait(false);
 
         return meal?.ToModel();
     }
 
-    private async Task<IReadOnlyDictionary<MealId, FavoriteMeal>> GetFavoritesByMealIdAsync(
+    private async Task<IReadOnlyDictionary<MealId, FavoriteMealId>> GetFavoritesByMealIdAsync(
         UserId userId,
-        IReadOnlyList<Meal> meals,
+        IReadOnlyList<MealConsumptionReadModel> meals,
         CancellationToken cancellationToken) {
         MealId[] mealIds = [.. meals
-            .Select(static meal => meal.Id)
+            .Select(static meal => (MealId)meal.Id)
             .Distinct()];
 
-        return await favoriteMealRepository.GetByMealIdsAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
+        return await favoriteMealRepository.GetFavoriteIdsByMealIdsAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
     }
 
     private static PagedResponse<ConsumptionModel> ToPagedResponse(
-        IReadOnlyList<Meal> meals,
-        IReadOnlyDictionary<MealId, FavoriteMeal> favoritesByMealId,
+        IReadOnlyList<MealConsumptionReadModel> meals,
+        IReadOnlyDictionary<MealId, FavoriteMealId> favoritesByMealId,
         int page,
         int limit,
         int totalItems) {
         int totalPages = (int)Math.Ceiling(totalItems / (double)limit);
         var items = meals
             .Select(meal => {
-                FavoriteMeal? favorite = favoritesByMealId.GetValueOrDefault(meal.Id);
+                bool isFavorite = favoritesByMealId.TryGetValue((MealId)meal.Id, out FavoriteMealId favoriteMealId);
                 return meal.ToModel(
-                    isFavorite: favorite is not null,
-                    favoriteMealId: favorite?.Id.Value);
+                    isFavorite: isFavorite,
+                    favoriteMealId: isFavorite ? favoriteMealId.Value : null);
             })
             .ToList();
 

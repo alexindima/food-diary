@@ -940,6 +940,28 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ConsumptionReadService_UsesReadModelsInsteadOfMealAggregates() {
+        string root = GetRepositoryRoot();
+        string servicePath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Consumptions",
+            "Services",
+            "ConsumptionReadService.cs");
+        string[] serviceFiles = [servicePath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Meals"),
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.FavoriteMeals"),
+            .. FindReferencesInFiles(root, serviceFiles, "mealRepository.GetPagedAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "mealRepository.GetByIdAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "favoriteMealRepository.GetByMealIdsAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void AdminQueries_UseAdminUserReadServiceModelsInsteadOfUserAggregates() {
         string root = GetRepositoryRoot();
         string adminQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Admin", "Queries");

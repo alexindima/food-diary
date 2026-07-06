@@ -48,6 +48,21 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         Meal item = Assert.Single(items);
         Assert.Equal(2, totalItems);
         Assert.Equal(newerMeal.Id, item.Id);
+
+        (IReadOnlyList<MealConsumptionReadModel> readModels, int readModelTotalItems) = await repository.GetPagedConsumptionReadModelsAsync(
+            user.Id,
+            page: 1,
+            limit: 1,
+            filters: new MealQueryFilters(
+                new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc),
+                new DateTime(2026, 3, 31, 0, 0, 0, DateTimeKind.Utc)));
+        MealConsumptionReadModel readModel = Assert.Single(readModels);
+        Assert.Equal(2, readModelTotalItems);
+        Assert.Equal(newerMeal.Id.Value, readModel.Id);
+
+        MealConsumptionReadModel? byIdReadModel = await repository.GetByIdConsumptionReadModelAsync(newerMeal.Id, user.Id);
+        Assert.NotNull(byIdReadModel);
+        Assert.Equal(newerMeal.Id.Value, byIdReadModel.Id);
     }
 
     [RequiresDockerFact]
