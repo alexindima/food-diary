@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
@@ -20,6 +21,9 @@ public sealed class ApiWebApplicationFactory : WebApplicationFactory<Program> {
 
     protected override void ConfigureWebHost(IWebHostBuilder builder) {
         builder.UseEnvironment("Development");
+        builder.ConfigureLogging(logging => {
+            logging.Services.RemoveAll<ILoggerProvider>();
+        });
         builder.ConfigureAppConfiguration((_, configBuilder) => {
             configBuilder.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
