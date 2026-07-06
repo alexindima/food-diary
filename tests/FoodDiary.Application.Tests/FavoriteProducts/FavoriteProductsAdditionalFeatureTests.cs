@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.FavoriteProducts.Commands.AddFavoriteProduct;
@@ -416,8 +417,17 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult(_favorites.FirstOrDefault(f => f.ProductId == productId && f.UserId == userId));
 
+        public Task<bool> ExistsByProductIdAsync(
+            ProductId productId,
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(_favorites.Any(f => f.ProductId == productId && f.UserId == userId));
+
         public Task<IReadOnlyList<FavoriteProduct>> GetAllAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<FavoriteProduct>>(_favorites.Where(f => f.UserId == userId).ToList());
+
+        public Task<IReadOnlyList<FavoriteProductReadModel>> GetAllReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<FavoriteProductReadModel>>([.. _favorites.Where(f => f.UserId == userId).Select(ToReadModel)]);
 
         public Task<IReadOnlyDictionary<ProductId, FavoriteProduct>> GetByProductIdsAsync(
             UserId userId,
@@ -426,6 +436,29 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             Task.FromResult<IReadOnlyDictionary<ProductId, FavoriteProduct>>(
                 _favorites.Where(f => f.UserId == userId && productIds.Contains(f.ProductId)).ToDictionary(f => f.ProductId));
 
+        private static FavoriteProductReadModel ToReadModel(FavoriteProduct favorite) =>
+            new(
+                favorite.Id.Value,
+                favorite.ProductId.Value,
+                favorite.UserId.Value,
+                favorite.Name,
+                favorite.CreatedAtUtc,
+                favorite.Product.Name,
+                favorite.Product.Brand,
+                favorite.Product.Barcode,
+                favorite.Product.UserId == favorite.UserId ? favorite.Product.Comment : null,
+                favorite.Product.ImageUrl,
+                favorite.Product.CaloriesPerBase,
+                favorite.Product.ProteinsPerBase,
+                favorite.Product.FatsPerBase,
+                favorite.Product.CarbsPerBase,
+                favorite.Product.FiberPerBase,
+                favorite.Product.AlcoholPerBase,
+                favorite.Product.ProductType,
+                favorite.Product.BaseUnit,
+                favorite.PreferredPortionAmount,
+                favorite.Product.DefaultPortionAmount,
+                favorite.Product.UserId.Value);
         async Task<IReadOnlyList<FavoriteProductModel>> IFavoriteProductReadService.GetAllAsync(
             UserId userId,
             CancellationToken cancellationToken) {

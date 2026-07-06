@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
@@ -1679,10 +1680,37 @@ public class ProductsFeatureTests {
         public Task DeleteAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<FavoriteProduct?> GetByIdAsync(FavoriteProductId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<FavoriteProduct?> GetByProductIdAsync(ProductId productId, UserId userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<bool> ExistsByProductIdAsync(ProductId productId, UserId userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyDictionary<ProductId, FavoriteProduct>> GetByProductIdsAsync(UserId userId, IReadOnlyCollection<ProductId> productIds, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<ProductId, FavoriteProduct>>(_favorites.Where(f => productIds.Contains(f.ProductId)).ToDictionary(f => f.ProductId));
         public Task<IReadOnlyList<FavoriteProduct>> GetAllAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult(_favorites);
+        public Task<IReadOnlyList<FavoriteProductReadModel>> GetAllReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<FavoriteProductReadModel>>([.. _favorites.Select(ToReadModel)]);
+
+        private static FavoriteProductReadModel ToReadModel(FavoriteProduct favorite) =>
+            new(
+                favorite.Id.Value,
+                favorite.ProductId.Value,
+                favorite.UserId.Value,
+                favorite.Name,
+                favorite.CreatedAtUtc,
+                favorite.Product.Name,
+                favorite.Product.Brand,
+                favorite.Product.Barcode,
+                favorite.Product.UserId == favorite.UserId ? favorite.Product.Comment : null,
+                favorite.Product.ImageUrl,
+                favorite.Product.CaloriesPerBase,
+                favorite.Product.ProteinsPerBase,
+                favorite.Product.FatsPerBase,
+                favorite.Product.CarbsPerBase,
+                favorite.Product.FiberPerBase,
+                favorite.Product.AlcoholPerBase,
+                favorite.Product.ProductType,
+                favorite.Product.BaseUnit,
+                favorite.PreferredPortionAmount,
+                favorite.Product.DefaultPortionAmount,
+                favorite.Product.UserId.Value);
     }
 
     [ExcludeFromCodeCoverage]

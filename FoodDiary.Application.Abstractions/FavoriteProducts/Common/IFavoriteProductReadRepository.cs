@@ -16,43 +16,18 @@ public interface IFavoriteProductReadRepository {
         UserId userId,
         CancellationToken cancellationToken = default);
 
-    async Task<bool> ExistsByProductIdAsync(
+    Task<bool> ExistsByProductIdAsync(
         ProductId productId,
         UserId userId,
-        CancellationToken cancellationToken = default) =>
-        await GetByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false) is not null;
+        CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<FavoriteProduct>> GetAllAsync(
         UserId userId,
         CancellationToken cancellationToken = default);
 
-    async Task<IReadOnlyList<FavoriteProductReadModel>> GetAllReadModelsAsync(
+    Task<IReadOnlyList<FavoriteProductReadModel>> GetAllReadModelsAsync(
         UserId userId,
-        CancellationToken cancellationToken = default) {
-        IReadOnlyList<FavoriteProduct> favorites = await GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
-        return [.. favorites.Select(static favorite => new FavoriteProductReadModel(
-            favorite.Id.Value,
-            favorite.ProductId.Value,
-            favorite.UserId.Value,
-            favorite.Name,
-            favorite.CreatedAtUtc,
-            favorite.Product.Name,
-            favorite.Product.Brand,
-            favorite.Product.Barcode,
-            favorite.Product.UserId == favorite.UserId ? favorite.Product.Comment : null,
-            favorite.Product.ImageUrl,
-            favorite.Product.CaloriesPerBase,
-            favorite.Product.ProteinsPerBase,
-            favorite.Product.FatsPerBase,
-            favorite.Product.CarbsPerBase,
-            favorite.Product.FiberPerBase,
-            favorite.Product.AlcoholPerBase,
-            favorite.Product.ProductType,
-            favorite.Product.BaseUnit,
-            favorite.PreferredPortionAmount,
-            favorite.Product.DefaultPortionAmount,
-            favorite.Product.UserId.Value))];
-    }
+        CancellationToken cancellationToken = default);
 
     Task<IReadOnlyDictionary<ProductId, FavoriteProduct>> GetByProductIdsAsync(
         UserId userId,

@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
+using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
@@ -1709,10 +1710,27 @@ public class RecipesFeatureTests {
         public Task DeleteAsync(FavoriteRecipe favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<FavoriteRecipe?> GetByIdAsync(FavoriteRecipeId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<FavoriteRecipe?> GetByRecipeIdAsync(RecipeId recipeId, UserId userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<bool> ExistsByRecipeIdAsync(RecipeId recipeId, UserId userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyDictionary<RecipeId, FavoriteRecipe>> GetByRecipeIdsAsync(UserId userId, IReadOnlyCollection<RecipeId> recipeIds, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<RecipeId, FavoriteRecipe>>(_favorites.Where(f => recipeIds.Contains(f.RecipeId)).ToDictionary(f => f.RecipeId));
         public Task<IReadOnlyList<FavoriteRecipe>> GetAllAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult(_favorites);
+        public Task<IReadOnlyList<FavoriteRecipeReadModel>> GetAllReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<FavoriteRecipeReadModel>>([.. _favorites.Select(ToReadModel)]);
+
+        private static FavoriteRecipeReadModel ToReadModel(FavoriteRecipe favorite) =>
+            new(
+                favorite.Id.Value,
+                favorite.RecipeId.Value,
+                favorite.Name,
+                favorite.CreatedAtUtc,
+                favorite.Recipe.Name,
+                favorite.Recipe.ImageUrl,
+                favorite.Recipe.TotalCalories ?? favorite.Recipe.ManualCalories,
+                favorite.Recipe.Servings,
+                favorite.Recipe.PrepTime,
+                favorite.Recipe.CookTime,
+                favorite.Recipe.Steps.Sum(step => step.Ingredients.Count));
     }
 
     [ExcludeFromCodeCoverage]

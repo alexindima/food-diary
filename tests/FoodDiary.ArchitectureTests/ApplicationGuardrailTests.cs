@@ -1097,6 +1097,48 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void FavoriteProductReadContract_DoesNotFallbackToAggregateDefaultReadModels() {
+        string root = GetRepositoryRoot();
+        string contractPath = Path.Combine(
+            root,
+            "FoodDiary.Application.Abstractions",
+            "FavoriteProducts",
+            "Common",
+            "IFavoriteProductReadRepository.cs");
+        string[] contractFiles = [contractPath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, contractFiles, "async Task<bool> ExistsByProductIdAsync"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<FavoriteProductReadModel>>"),
+            .. FindReferencesInFiles(root, contractFiles, "new FavoriteProductReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, ".Select(static favorite"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void FavoriteRecipeReadContract_DoesNotFallbackToAggregateDefaultReadModels() {
+        string root = GetRepositoryRoot();
+        string contractPath = Path.Combine(
+            root,
+            "FoodDiary.Application.Abstractions",
+            "FavoriteRecipes",
+            "Common",
+            "IFavoriteRecipeReadRepository.cs");
+        string[] contractFiles = [contractPath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, contractFiles, "async Task<bool> ExistsByRecipeIdAsync"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<FavoriteRecipeReadModel>>"),
+            .. FindReferencesInFiles(root, contractFiles, "new FavoriteRecipeReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, ".Select(static favorite"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void MealPlanReadContract_DoesNotFallbackToAggregateDefaultReadModels() {
         string root = GetRepositoryRoot();
         string contractPath = Path.Combine(
