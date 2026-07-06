@@ -1,5 +1,6 @@
 using FoodDiary.Application.MealPlans.Commands.AdoptMealPlan;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
+using FoodDiary.Application.Abstractions.MealPlans.Models;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
 using FoodDiary.Application.MealPlans.Common;
@@ -317,8 +318,68 @@ public class MealPlansFeatureTests {
             return Task.FromResult(curatedPlans ?? []);
         }
 
+        public Task<IReadOnlyList<MealPlanSummaryReadModel>> GetCuratedSummaryReadModelsAsync(DietType? dietType = null, CancellationToken ct = default) {
+            LastDietTypeFilter = dietType;
+            return Task.FromResult<IReadOnlyList<MealPlanSummaryReadModel>>([.. (curatedPlans ?? []).Select(ToSummaryReadModel)]);
+        }
+
         public Task<IReadOnlyList<MealPlan>> GetByUserAsync(UserId userId, CancellationToken ct = default) =>
             Task.FromResult(userPlans ?? []);
+
+        public Task<IReadOnlyList<MealPlanSummaryReadModel>> GetByUserSummaryReadModelsAsync(UserId userId, CancellationToken ct = default) =>
+            Task.FromResult<IReadOnlyList<MealPlanSummaryReadModel>>([.. (userPlans ?? []).Select(ToSummaryReadModel)]);
+
+        public Task<MealPlanReadModel?> GetReadModelByIdAsync(MealPlanId id, CancellationToken ct = default) {
+            MealPlan? found = FindById(id);
+            return Task.FromResult(found is null ? null : ToReadModel(found));
+        }
+
+        private static MealPlanSummaryReadModel ToSummaryReadModel(MealPlan plan) =>
+            new(
+                plan.Id.Value,
+                plan.Name,
+                plan.Description,
+                plan.DietType.ToString(),
+                plan.DurationDays,
+                plan.TargetCaloriesPerDay,
+                plan.IsCurated,
+                plan.Days.SelectMany(static day => day.Meals).Select(static meal => meal.RecipeId).Distinct().Count());
+
+        private static MealPlanReadModel ToReadModel(MealPlan plan) {
+            IReadOnlyList<MealPlanDayReadModel> days = [
+                .. plan.Days
+                    .OrderBy(static day => day.DayNumber)
+                    .Select(static day => new MealPlanDayReadModel(
+                        day.Id.Value,
+                        day.DayNumber,
+                        [
+                            .. day.Meals
+                                .OrderBy(static meal => meal.MealType)
+                                .Select(static meal => new MealPlanMealReadModel(
+                                    meal.Id.Value,
+                                    meal.MealType.ToString(),
+                                    meal.RecipeId.Value,
+                                    meal.Recipe?.Name,
+                                    meal.Servings,
+                                    meal.Recipe is { Servings: > 0 } ? meal.Recipe.Servings : 1,
+                                    meal.Recipe?.TotalCalories,
+                                    meal.Recipe?.TotalProteins,
+                                    meal.Recipe?.TotalFats,
+                                    meal.Recipe?.TotalCarbs)),
+                        ])),
+            ];
+
+            return new MealPlanReadModel(
+                plan.Id.Value,
+                plan.UserId?.Value,
+                plan.Name,
+                plan.Description,
+                plan.DietType.ToString(),
+                plan.DurationDays,
+                plan.TargetCaloriesPerDay,
+                plan.IsCurated,
+                days);
+        }
     }
 
     [ExcludeFromCodeCoverage]
