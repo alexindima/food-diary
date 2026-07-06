@@ -2820,6 +2820,29 @@ public sealed class ApplicationGuardrailTests {
         throw new InvalidOperationException("Repository root was not found.");
     }
 
+    [Fact]
+    public void AggregateReadRepositories_DoNotExposeReadModelsOutsideApprovedProjectionContracts() {
+        string root = GetRepositoryRoot();
+        string abstractionsRoot = Path.Combine(root, "FoodDiary.Application.Abstractions");
+        string[] allowedRelativePaths = [
+            Path.Combine("Admin", "Common", "IAdminBillingReadRepository.cs"),
+            Path.Combine("Admin", "Common", "IAdminImpersonationSessionReadRepository.cs"),
+            Path.Combine("Admin", "Common", "IAdminUserRoleAuditReadRepository.cs"),
+            Path.Combine("Authentication", "Common", "IUserLoginEventReadRepository.cs"),
+            Path.Combine("Meals", "Common", "IMealConsumptionReadRepository.cs"),
+            Path.Combine("Meals", "Common", "IMealProductNutritionReadRepository.cs"),
+        ];
+        HashSet<string> allowed = [.. allowedRelativePaths.Select(path => Path.Combine(abstractionsRoot, path))];
+
+        string[] violations = [.. Directory.GetFiles(abstractionsRoot, "I*ReadRepository.cs", SearchOption.AllDirectories)
+            .Where(path => !allowed.Contains(path))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line })
+                .Where(entry => entry.line.Contains("ReadModel", StringComparison.Ordinal))
+                .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))];
+
+        Assert.Empty(violations);
+    }
     private static string[] GetFilesIfDirectoryExists(string path, string searchPattern, SearchOption searchOption) =>
         Directory.Exists(path) ? Directory.GetFiles(path, searchPattern, searchOption) : [];
 

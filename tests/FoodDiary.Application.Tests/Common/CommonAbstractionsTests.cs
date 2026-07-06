@@ -537,7 +537,7 @@ public class CommonAbstractionsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingUserRepository : IUserRepository, IUserAdminReadRepository {
+    private sealed class RecordingUserRepository : IUserRepository, IUserAdminReadRepository, IUserAdminReadModelRepository {
         public string? CapturedSearch { get; private set; }
         public int CapturedPage { get; private set; }
         public int CapturedLimit { get; private set; }

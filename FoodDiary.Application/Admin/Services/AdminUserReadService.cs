@@ -9,7 +9,7 @@ namespace FoodDiary.Application.Admin.Services;
 
 internal sealed class AdminUserReadService(
     IUserLookupRepository userLookupRepository,
-    IUserAdminReadRepository userAdminReadRepository) : IAdminUserReadService {
+    IUserAdminReadModelRepository userAdminReadRepository) : IAdminUserReadService {
     public async Task<AdminUserModel?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) {
         UserAdminReadModel? user = await userAdminReadRepository
             .GetByIdIncludingDeletedReadModelAsync(userId, cancellationToken)

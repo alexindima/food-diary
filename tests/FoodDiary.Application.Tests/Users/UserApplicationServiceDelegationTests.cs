@@ -88,7 +88,7 @@ public sealed class UserApplicationServiceDelegationTests {
     [Fact]
     public async Task AdminUserReadService_DelegatesReadMethodsToRepositories() {
         IUserLookupRepository lookupRepository = Substitute.For<IUserLookupRepository>();
-        IUserAdminReadRepository adminReadRepository = Substitute.For<IUserAdminReadRepository>();
+        IUserAdminReadModelRepository adminReadRepository = Substitute.For<IUserAdminReadModelRepository>();
         var service = new AdminUserReadService(lookupRepository, adminReadRepository);
         var userId = UserId.New();
         var user = User.Create("admin@test.com", "hashed-password");
