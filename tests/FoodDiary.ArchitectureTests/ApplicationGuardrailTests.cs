@@ -1028,6 +1028,26 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ConsumptionMappings_DoNotExposePagedMealAggregateReadModels() {
+        string root = GetRepositoryRoot();
+        string mappingPath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Consumptions",
+            "Mappings",
+            "ConsumptionMappings.cs");
+        string[] mappingFiles = [mappingPath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, mappingFiles, "IReadOnlyList<Meal>"),
+            .. FindReferencesInFiles(root, mappingFiles, "(IReadOnlyList<Meal> Items, int TotalItems)"),
+            .. FindReferencesInFiles(root, mappingFiles, "PagedResponse<ConsumptionModel>"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void AdminQueries_UseAdminUserReadServiceModelsInsteadOfUserAggregates() {
         string root = GetRepositoryRoot();
         string adminQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Admin", "Queries");

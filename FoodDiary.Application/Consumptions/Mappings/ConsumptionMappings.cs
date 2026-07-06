@@ -1,4 +1,3 @@
-using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Domain.Entities.Meals;
@@ -270,12 +269,4 @@ public static class ConsumptionMappings {
             aiItem.Resolution.ToString());
     }
 
-    public static PagedResponse<ConsumptionModel> ToPagedResponse(
-        this (IReadOnlyList<Meal> Items, int TotalItems) pageData,
-        int page,
-        int limit) {
-        int totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)limit);
-        var items = pageData.Items.Select(item => item.ToModel()).ToList();
-        return new PagedResponse<ConsumptionModel>(items, page, limit, totalPages, pageData.TotalItems);
-    }
 }

@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
@@ -2290,18 +2291,44 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
-    public void ConsumptionMappings_ToPagedResponse_MapsItemsAndPagination() {
-        var userId = UserId.New();
-        var meal = Meal.Create(userId, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+    public void ConsumptionMappings_ToModel_MapsReadModelAndFavoriteState() {
+        var mealId = Guid.NewGuid();
+        var favoriteMealId = Guid.NewGuid();
+        var meal = new MealConsumptionReadModel(
+            mealId,
+            new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
+            MealType.Lunch,
+            "Read model meal",
+            ImageUrl: null,
+            ImageAssetId: null,
+            TotalCalories: 500,
+            TotalProteins: 30,
+            TotalFats: 20,
+            TotalCarbs: 45,
+            TotalFiber: 8,
+            TotalAlcohol: 0,
+            IsNutritionAutoCalculated: true,
+            ManualCalories: null,
+            ManualProteins: null,
+            ManualFats: null,
+            ManualCarbs: null,
+            ManualFiber: null,
+            ManualAlcohol: null,
+            PreMealSatietyLevel: 4,
+            PostMealSatietyLevel: 7,
+            Items: [],
+            AiSessions: []);
 
-        var response = (Items: (IReadOnlyList<Meal>)[meal], TotalItems: 25).ToPagedResponse(page: 2, limit: 10);
+        ConsumptionModel model = meal.ToModel(isFavorite: true, favoriteMealId: favoriteMealId);
 
-        Assert.Single(response.Data);
-        Assert.Equal(meal.Id.Value, response.Data[0].Id);
-        Assert.Equal(2, response.Page);
-        Assert.Equal(10, response.Limit);
-        Assert.Equal(3, response.TotalPages);
-        Assert.Equal(25, response.TotalItems);
+        Assert.Multiple(
+            () => Assert.Equal(mealId, model.Id),
+            () => Assert.Equal("Read model meal", model.Comment),
+            () => Assert.True(model.IsFavorite),
+            () => Assert.Equal(favoriteMealId, model.FavoriteMealId),
+            () => Assert.Equal(500, model.TotalCalories),
+            () => Assert.Empty(model.Items),
+            () => Assert.Empty(model.AiSessions));
     }
 
     private static CreateConsumptionCommand CreateConsumptionCommand(
