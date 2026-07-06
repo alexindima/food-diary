@@ -1115,6 +1115,25 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void AdminContentReadService_UsesEmailTemplateReadModelsInsteadOfTemplateAggregates() {
+        string root = GetRepositoryRoot();
+        string servicePath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Admin",
+            "Services",
+            "AdminContentReadService.cs");
+        string[] serviceFiles = [servicePath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "EmailTemplate>"),
+            .. FindReferencesInFiles(root, serviceFiles, "emailTemplateRepository.GetAllAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void UserQueries_UseProfileReadServiceModelsInsteadOfUserAggregates() {
         string root = GetRepositoryRoot();
         string userQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Users", "Queries");

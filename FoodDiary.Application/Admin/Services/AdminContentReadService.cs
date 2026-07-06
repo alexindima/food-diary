@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
@@ -25,7 +26,9 @@ public sealed class AdminContentReadService(
     }
 
     public async Task<IReadOnlyList<AdminEmailTemplateModel>> GetEmailTemplatesAsync(CancellationToken cancellationToken) {
-        IReadOnlyList<EmailTemplate> templates = await emailTemplateRepository.GetAllAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<EmailTemplateReadModel> templates = await emailTemplateRepository
+            .GetAllReadModelsAsync(cancellationToken)
+            .ConfigureAwait(false);
         return templates.Select(static template => template.ToAdminModel()).ToList();
     }
 

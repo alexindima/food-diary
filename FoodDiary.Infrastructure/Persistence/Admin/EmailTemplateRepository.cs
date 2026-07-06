@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Domain.Entities.Content;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,24 @@ public sealed class EmailTemplateRepository(FoodDiaryDbContext context) : IEmail
             .AsNoTracking()
             .OrderBy(t => t.Key)
             .ThenBy(t => t.Locale)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<EmailTemplateReadModel>> GetAllReadModelsAsync(CancellationToken cancellationToken = default) {
+        return await context.EmailTemplates
+            .AsNoTracking()
+            .OrderBy(t => t.Key)
+            .ThenBy(t => t.Locale)
+            .Select(t => new EmailTemplateReadModel(
+                t.Id,
+                t.Key,
+                t.Locale,
+                t.Subject,
+                t.HtmlBody,
+                t.TextBody,
+                t.IsActive,
+                t.CreatedOnUtc,
+                t.ModifiedOnUtc))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

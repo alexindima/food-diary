@@ -422,6 +422,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await context.SaveChangesAsync();
 
         IReadOnlyList<FoodDiary.Domain.Entities.Content.EmailTemplate> templates = await repository.GetAllAsync();
+        IReadOnlyList<EmailTemplateReadModel> templateReadModels = await repository.GetAllReadModelsAsync();
         FoodDiary.Domain.Entities.Content.EmailTemplate? template = await repository.GetByKeyAsync("welcome", "en");
 
         Assert.Contains(
@@ -433,6 +434,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             item => string.Equals(item.Key, "welcome", StringComparison.Ordinal) &&
                     string.Equals(item.Locale, "en", StringComparison.Ordinal));
         Assert.NotNull(template);
+        Assert.Contains(templateReadModels, item => string.Equals(item.Subject, "Welcome back", StringComparison.Ordinal));
         Assert.Equal("Welcome back", template.Subject);
         Assert.False(template.IsActive);
     }
