@@ -14,6 +14,10 @@ env:
   SERVER_IP: 193.109.69.58
   IMAGE_PREFIX: ghcr.io/alexindima/food-diary
 
+concurrency:
+  group: fooddiary-production-deploy
+  cancel-in-progress: true
+
 jobs:
   deploy:
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
@@ -290,7 +294,7 @@ jobs:
       - name: Verify server env file
         id: verify_server_env
         run: |
-          SSH_CMD="ssh -T -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }}"
+          SSH_CMD="ssh -T -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30 -o ServerAliveInterval=30 -o ServerAliveCountMax=6 root@${{ env.SERVER_IP }}"
           $SSH_CMD "test -f /etc/fooddiary/fooddiary.env"
 
       - name: Record failure step
@@ -306,8 +310,8 @@ jobs:
         id: deploy_server
         run: |
           DEPLOY_IMAGE_TAG="sha-${{ github.sha }}"
-          SSH_CMD="ssh -T -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }}"
-          SCP_CMD="scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no"
+          SSH_CMD="ssh -T -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30 -o ServerAliveInterval=30 -o ServerAliveCountMax=6 root@${{ env.SERVER_IP }}"
+          SCP_CMD="scp -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30"
 
           echo "${{ secrets.GITHUB_TOKEN }}" | $SSH_CMD "docker login ghcr.io -u ${{ github.actor }} --password-stdin"
           $SSH_CMD "mkdir -p /opt/fooddiary/nginx/sites-enabled /var/www/storybook.fooddiary.club /var/log/nginx"
@@ -322,6 +326,13 @@ jobs:
           cat > "${RUNNER_TEMP}/deploy.sh" << 'SCRIPT_EOF'
           #!/bin/bash
           set -e
+          lock_file=/var/lock/fooddiary-deploy.lock
+          exec 9>"$lock_file"
+          if ! flock -n 9; then
+            echo "Another FoodDiary deploy is already running on this server."
+            exit 75
+          fi
+
           cd /opt/fooddiary
 
           cp /etc/fooddiary/fooddiary.env .env
@@ -346,6 +357,7 @@ jobs:
           export MAIL_INBOX_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
           export MAIL_INBOX_INITIALIZER_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
           export CLIENT_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
+          export COMPOSE_PARALLEL_LIMIT="${COMPOSE_PARALLEL_LIMIT:-2}"
 
           docker compose --profile backend --profile full --profile mail-inbox pull
 
