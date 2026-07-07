@@ -115,6 +115,26 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationRootCommon_StaysLimitedToTechnicalApplicationPrimitives() {
+        string root = GetRepositoryRoot();
+        string commonRoot = Path.Combine(root, "FoodDiary.Application", "Common");
+        string[] allowedDirectories = [
+            "Abstractions",
+            "Behaviors",
+            "Models",
+            "Services",
+            "Time",
+            "Validation",
+        ];
+
+        string?[] actualDirectories = [.. Directory.GetDirectories(commonRoot)
+            .Select(Path.GetFileName)
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Equal(allowedDirectories, actualDirectories);
+    }
+
+    [Fact]
     public void ApplicationRootCommon_DoesNotRegrowFeatureSpecificNutritionHelpers() {
         string root = GetRepositoryRoot();
         string nutritionRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Nutrition");

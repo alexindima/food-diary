@@ -31,6 +31,7 @@ Feature-specific error factories should move incrementally to feature folders wh
 ## Guardrails
 
 - `ApplicationRootCommon_DoesNotRegrowFeatureSpecificNutritionHelpers` prevents `FoodDiary.Application/Common/Nutrition` from returning.
+- `ApplicationRootCommon_StaysLimitedToTechnicalApplicationPrimitives` keeps the root `FoodDiary.Application/Common` folder on the approved technical-directory allow-list.
 - `ApplicationCommonValidation_StaysLimitedToSharedLowLevelParsers` prevents image and other feature-purpose helpers from returning to root validation.
 - `ApplicationAbstractionsCommonPersistenceInterfaces_StayLimitedToCurrentCrossFeatureContracts` prevents root persistence contracts from regrowing.
 - `ApplicationCommonServiceInterfaces_StayLimitedToTrueCrossCuttingAbstractions` prevents root service contracts from regrowing.
