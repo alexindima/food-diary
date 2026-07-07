@@ -6,6 +6,7 @@ using FoodDiary.Application.Hydration.Mappings;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Hydration.Validators;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Tracking;
 
@@ -17,16 +18,15 @@ public sealed class CreateHydrationEntryCommandHandler(
     public async Task<Result<HydrationEntryModel>> Handle(
         CreateHydrationEntryCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<HydrationEntryModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return Result.Failure<HydrationEntryModel>(userIdResult.Error);
         }
 
-        var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<HydrationEntryModel>(accessError);
-        }
-
+        UserId userId = userIdResult.Value;
         Result validation = HydrationValidators.ValidateAmount(command.AmountMl);
         if (validation.IsFailure) {
             return Result.Failure<HydrationEntryModel>(validation.Error);

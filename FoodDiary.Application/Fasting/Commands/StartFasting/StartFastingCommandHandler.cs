@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Fasting.Common;
+using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -17,16 +18,15 @@ public sealed class StartFastingCommandHandler(
     : ICommandHandler<StartFastingCommand, Result<FastingSessionModel>> {
     public async Task<Result<FastingSessionModel>> Handle(
         StartFastingCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<FastingSessionModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await FastingCurrentUserResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return FastingCurrentUserResolver.ToSessionFailure(userIdResult);
         }
 
-        var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<FastingSessionModel>(accessError);
-        }
-
+        UserId userId = userIdResult.Value;
         FastingPlan? currentPlan = await fastingPlanRepository.GetActiveAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (currentPlan is not null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.AlreadyActive);
