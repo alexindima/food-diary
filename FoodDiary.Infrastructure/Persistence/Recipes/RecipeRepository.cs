@@ -35,8 +35,6 @@ public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeReposi
             query = query.AsNoTracking();
         }
 
-        query = query.AsSplitQuery();
-
         if (includeSteps) {
             query = IncludeStepsAndIngredients(query);
         }

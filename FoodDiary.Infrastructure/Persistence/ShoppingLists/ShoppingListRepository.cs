@@ -25,9 +25,7 @@ public sealed class ShoppingListRepository(FoodDiaryDbContext context) : IShoppi
         }
 
         if (includeItems) {
-            query = query.AsSplitQuery()
-                .Include(l => l.Items)
-                .ThenInclude(i => i.Sources);
+            query = IncludeItemsAndSources(query);
         }
 
         return await query.FirstOrDefaultAsync(
@@ -58,9 +56,7 @@ public sealed class ShoppingListRepository(FoodDiaryDbContext context) : IShoppi
         }
 
         if (includeItems) {
-            query = query.AsSplitQuery()
-                .Include(l => l.Items)
-                .ThenInclude(i => i.Sources);
+            query = IncludeItemsAndSources(query);
         }
 
         return await query
@@ -87,9 +83,7 @@ public sealed class ShoppingListRepository(FoodDiaryDbContext context) : IShoppi
         IQueryable<ShoppingList> query = context.ShoppingLists.AsNoTracking();
 
         if (includeItems) {
-            query = query.AsSplitQuery()
-                .Include(l => l.Items)
-                .ThenInclude(i => i.Sources);
+            query = IncludeItemsAndSources(query);
         }
 
         return await query
@@ -125,6 +119,12 @@ public sealed class ShoppingListRepository(FoodDiaryDbContext context) : IShoppi
             context.ShoppingLists.Remove(tracked);
         }
     }
+
+    private static IQueryable<ShoppingList> IncludeItemsAndSources(IQueryable<ShoppingList> query) =>
+        query
+            .AsSplitQuery()
+            .Include(list => list.Items)
+            .ThenInclude(item => item.Sources);
 
     private static IQueryable<ShoppingListReadModel> ProjectReadModel(IQueryable<ShoppingList> query) {
         return query
