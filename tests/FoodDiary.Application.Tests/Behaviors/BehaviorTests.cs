@@ -180,9 +180,9 @@ public class BehaviorTests {
     public async Task PostCommitActionQueue_FlushAsync_DrainsActionsEnqueuedDuringFlush() {
         var postCommitActionQueue = new PostCommitActionQueue(NullLogger<PostCommitActionQueue>.Instance);
         var callOrder = new List<string>();
-        postCommitActionQueue.Enqueue(_ => {
+        postCommitActionQueue.Enqueue("test.first", _ => {
             callOrder.Add("first");
-            postCommitActionQueue.Enqueue(_ => {
+            postCommitActionQueue.Enqueue("test.second", _ => {
                 callOrder.Add("second");
                 return Task.CompletedTask;
             });

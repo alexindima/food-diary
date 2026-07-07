@@ -59,7 +59,7 @@ public sealed class FastingNotificationScheduler(
 
         if (usersToPush.Count > 0) {
             UserId[] pushUserIds = [.. usersToPush];
-            postCommitActionQueue.Enqueue(ct => FastingNotificationPushDispatcher.PushAsync(
+            postCommitActionQueue.Enqueue("fasting.notifications.push", ct => FastingNotificationPushDispatcher.PushAsync(
                 pushUserIds,
                 notificationRepository,
                 notificationPusher,

@@ -11,7 +11,7 @@ internal static class NotificationPostCommitActions {
         INotificationPusher notificationPusher,
         UserId userId,
         bool pushChanged = true) {
-        postCommitActionQueue.Enqueue(async cancellationToken => {
+        postCommitActionQueue.Enqueue("notifications.unread-count-push", async cancellationToken => {
             int unreadCount = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
             await notificationPusher.PushUnreadCountAsync(userId.Value, unreadCount, cancellationToken).ConfigureAwait(false);
 

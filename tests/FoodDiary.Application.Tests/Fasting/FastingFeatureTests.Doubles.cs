@@ -383,7 +383,7 @@ public partial class FastingFeatureTests {
     private sealed class ImmediatePostCommitActionQueue : IPostCommitActionQueue {
         public bool HasActions => false;
 
-        public void Enqueue(Func<CancellationToken, Task> action) {
+        public void Enqueue(string actionName, Func<CancellationToken, Task> action) {
             action(CancellationToken.None).GetAwaiter().GetResult();
         }
 
@@ -395,7 +395,7 @@ public partial class FastingFeatureTests {
         public bool HasActions => hasActions;
         public int FlushCallCount { get; private set; }
 
-        public void Enqueue(Func<CancellationToken, Task> action) {
+        public void Enqueue(string actionName, Func<CancellationToken, Task> action) {
         }
 
         public Task FlushAsync(CancellationToken cancellationToken = default) {

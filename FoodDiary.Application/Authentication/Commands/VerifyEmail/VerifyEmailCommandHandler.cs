@@ -45,7 +45,7 @@ public sealed class VerifyEmailCommandHandler(
         user.CompleteEmailVerification();
         await userMutationService.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
 
-        postCommitActionQueue.Enqueue(async ct => {
+        postCommitActionQueue.Enqueue("auth.email-verification.hub-notify", async ct => {
             try {
                 await emailVerificationNotifier.NotifyEmailVerifiedAsync(user.Id.Value, ct).ConfigureAwait(false);
             } catch {

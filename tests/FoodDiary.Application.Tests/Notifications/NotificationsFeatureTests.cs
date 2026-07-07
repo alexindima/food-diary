@@ -976,7 +976,7 @@ public class NotificationsFeatureTests {
 
         public bool HasActions => actions.Count > 0;
 
-        public void Enqueue(Func<CancellationToken, Task> action) => actions.Add(action);
+        public void Enqueue(string actionName, Func<CancellationToken, Task> action) => actions.Add(action);
 
         public async Task FlushAsync(CancellationToken cancellationToken = default) {
             Func<CancellationToken, Task>[] pendingActions = [.. actions];

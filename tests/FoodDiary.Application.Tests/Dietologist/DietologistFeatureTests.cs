@@ -2857,7 +2857,7 @@ public class DietologistFeatureTests {
     private sealed class ImmediatePostCommitActionQueue : IPostCommitActionQueue {
         public bool HasActions => false;
 
-        public void Enqueue(Func<CancellationToken, Task> action) {
+        public void Enqueue(string actionName, Func<CancellationToken, Task> action) {
             action(CancellationToken.None).GetAwaiter().GetResult();
         }
 
