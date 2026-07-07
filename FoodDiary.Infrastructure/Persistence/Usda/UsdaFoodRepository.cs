@@ -23,12 +23,11 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
         string query,
         int limit = 20,
         CancellationToken cancellationToken = default) {
-        return await dbContext.UsdaFoods
-            .AsNoTracking()
-            .Where(f => EF.Functions.ILike(f.Description, $"%{query}%"))
-            .OrderBy(f => f.Description.Length)
-            .ThenBy(f => f.Description)
-            .Select(f => new UsdaFoodReadModel(f.FdcId, f.Description, f.FoodCategory))
+        return await ProjectReadModels(dbContext.UsdaFoods
+                .AsNoTracking()
+                .Where(f => EF.Functions.ILike(f.Description, $"%{query}%"))
+                .OrderBy(f => f.Description.Length)
+                .ThenBy(f => f.Description))
             .Take(limit)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
@@ -44,10 +43,9 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
     public async Task<UsdaFoodReadModel?> GetByFdcIdReadModelAsync(
         int fdcId,
         CancellationToken cancellationToken = default) {
-        return await dbContext.UsdaFoods
-            .AsNoTracking()
-            .Where(f => f.FdcId == fdcId)
-            .Select(f => new UsdaFoodReadModel(f.FdcId, f.Description, f.FoodCategory))
+        return await ProjectReadModels(dbContext.UsdaFoods
+                .AsNoTracking()
+                .Where(f => f.FdcId == fdcId))
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -172,4 +170,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
             .Select(d => new UsdaDailyReferenceValueReadModel(d.NutrientId, d.Value, d.Unit))
             .ToDictionaryAsync(d => d.NutrientId, cancellationToken).ConfigureAwait(false);
     }
+
+    private static IQueryable<UsdaFoodReadModel> ProjectReadModels(IQueryable<UsdaFood> query) =>
+        query.Select(food => new UsdaFoodReadModel(food.FdcId, food.Description, food.FoodCategory));
 }

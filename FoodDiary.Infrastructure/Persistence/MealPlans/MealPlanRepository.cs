@@ -101,22 +101,9 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
             query = query.Where(p => p.DietType == dietType.Value);
         }
 
-        return await query
-            .OrderBy(p => p.DietType)
-            .ThenBy(p => p.Name)
-            .Select(p => new MealPlanSummaryReadModel(
-                p.Id.Value,
-                p.Name,
-                p.Description,
-                p.DietType.ToString(),
-                p.DurationDays,
-                p.TargetCaloriesPerDay,
-                p.IsCurated,
-                p.Days
-                    .SelectMany(d => d.Meals)
-                    .Select(m => m.RecipeId)
-                    .Distinct()
-                    .Count()))
+        return await ProjectSummaryReadModels(query
+                .OrderBy(p => p.DietType)
+                .ThenBy(p => p.Name))
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
     }
@@ -137,24 +124,26 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
     public async Task<IReadOnlyList<MealPlanSummaryReadModel>> GetByUserSummaryReadModelsAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return await context.Set<MealPlan>()
-            .AsNoTracking()
-            .Where(p => p.UserId == userId)
-            .OrderByDescending(p => p.CreatedOnUtc)
-            .Select(p => new MealPlanSummaryReadModel(
-                p.Id.Value,
-                p.Name,
-                p.Description,
-                p.DietType.ToString(),
-                p.DurationDays,
-                p.TargetCaloriesPerDay,
-                p.IsCurated,
-                p.Days
-                    .SelectMany(d => d.Meals)
-                    .Select(m => m.RecipeId)
-                    .Distinct()
-                    .Count()))
+        return await ProjectSummaryReadModels(context.Set<MealPlan>()
+                .AsNoTracking()
+                .Where(p => p.UserId == userId)
+                .OrderByDescending(p => p.CreatedOnUtc))
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
     }
+
+    private static IQueryable<MealPlanSummaryReadModel> ProjectSummaryReadModels(IQueryable<MealPlan> query) =>
+        query.Select(plan => new MealPlanSummaryReadModel(
+            plan.Id.Value,
+            plan.Name,
+            plan.Description,
+            plan.DietType.ToString(),
+            plan.DurationDays,
+            plan.TargetCaloriesPerDay,
+            plan.IsCurated,
+            plan.Days
+                .SelectMany(day => day.Meals)
+                .Select(meal => meal.RecipeId)
+                .Distinct()
+                .Count()));
 }
