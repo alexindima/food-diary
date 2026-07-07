@@ -55,6 +55,26 @@ public class PresentationConventionsTests {
     }
 
     [Fact]
+    public void PresentationFeatureFolders_StayLimitedToTransportPurposeFolders() {
+        string root = GetRepositoryRoot();
+        string featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
+        var allowedPurposeFolders = new HashSet<string>(StringComparer.Ordinal) {
+            "Mappings",
+            "Models",
+            "Requests",
+            "Responses",
+        };
+
+        string[] violations = [.. Directory.GetDirectories(featuresPath)
+            .SelectMany(featurePath => Directory.GetDirectories(featurePath))
+            .Where(path => !allowedPurposeFolders.Contains(Path.GetFileName(path)))
+            .Select(path => Path.GetRelativePath(root, path))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void PresentationHttpRequestsAndQueries_LiveUnderFeatureRequestsFolders() {
         string root = GetRepositoryRoot();
         string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
@@ -101,6 +121,27 @@ public class PresentationConventionsTests {
         string featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
 
         string[] violations = SourceScanner.FindLinePatternViolations(featuresPath, ["Mediator.Send("]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void PresentationControllers_InjectOnlyPresentationSafeDependencies() {
+        string root = GetRepositoryRoot();
+        string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
+
+        string[] violations = [.. Directory.GetFiles(presentationRoot, "*Controller.cs", SearchOption.AllDirectories)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line = line.Trim() }))
+            .Where(static entry => entry.line.StartsWith("public ", StringComparison.Ordinal) &&
+                                   entry.line.Contains(" class ", StringComparison.Ordinal) &&
+                                   entry.line.Contains("Controller(", StringComparison.Ordinal))
+            .SelectMany(entry => ExtractPrimaryConstructorParameters(entry.line)
+                .Where(static parameterType => !IsPresentationSafeControllerDependency(parameterType))
+                .Select(parameterType => string.Create(
+                    CultureInfo.InvariantCulture,
+                    $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}: {parameterType}")))
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -224,5 +265,27 @@ public class PresentationConventionsTests {
         }
 
         throw new InvalidOperationException("Repository root was not found.");
+    }
+
+    private static string[] ExtractPrimaryConstructorParameters(string classDeclarationLine) {
+        int openParenthesisIndex = classDeclarationLine.IndexOf('(', StringComparison.Ordinal);
+        int closeParenthesisIndex = classDeclarationLine.IndexOf(')', openParenthesisIndex + 1);
+        if (openParenthesisIndex < 0 || closeParenthesisIndex < 0 || closeParenthesisIndex <= openParenthesisIndex + 1) {
+            return [];
+        }
+
+        string parameters = classDeclarationLine[(openParenthesisIndex + 1)..closeParenthesisIndex];
+
+        return [.. parameters
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(static parameter => {
+                string[] parts = parameter.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                return parts.Length >= 2 ? string.Join(' ', parts[..^1]) : parameter;
+            })];
+    }
+
+    private static bool IsPresentationSafeControllerDependency(string parameterType) {
+        return parameterType is "ISender" or "TimeProvider" or "IApiVersionInfo" ||
+               parameterType.StartsWith("ILogger<", StringComparison.Ordinal);
     }
 }
