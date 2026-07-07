@@ -63,7 +63,7 @@ public sealed class GetProductsOverviewQueryHandler(
         var favoriteItems = allFavorites
             .Take(options.FavoriteLimit)
             .ToList();
-        var favoriteLookup = allFavorites.ToDictionary(favorite => new ProductId(favorite.ProductId));
+        var favoriteLookup = allFavorites.ToDictionary(ToFavoriteProductId);
 
         IReadOnlyList<ProductOverviewReadItem> recentItems = await recentProductReadService.GetRecentOverviewItemsAsync(
             options.UserId,
@@ -88,6 +88,9 @@ public sealed class GetProductsOverviewQueryHandler(
 
         return Result.Success(new ProductOverviewModel(recentResponses, allPaged, favoriteItems, allFavorites.Count));
     }
+
+    private static ProductId ToFavoriteProductId(FavoriteProductModel favorite) =>
+        new(favorite.ProductId);
 
     private static ProductOverviewOptions CreateOptions(GetProductsOverviewQuery query, UserId userId) {
         ProductType[]? productTypes = EnumFilterParser.ParseMany<ProductType>(query.ProductTypes);

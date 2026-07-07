@@ -25,7 +25,8 @@ Keep namespaces aligned with folder paths.
 - FluentValidation validators per request model.
 - Prefer a dedicated `{RequestName}Validator` for request-shape validation instead of embedding those checks in handlers.
 - Keep handler-side validation only for runtime/domain guards that depend on repository state, strongly typed ID construction, enum parsing, or aggregate/value-object invariants.
-- Reuse feature-level common models from `Feature/Common/`.
+- Reuse feature-level `Feature/Common/` only for feature contracts, policies, parsers, factories, and models shared by multiple use cases in that feature.
+- Do not use feature-level `Common` helpers to hide request/input `Guid` to typed-id construction; parse request ids through `Common/Validation` and keep trusted read-model/domain mappings explicitly named near the use case.
 
 ## Domain Interaction
 - Respect strongly typed IDs/value objects.
@@ -33,6 +34,7 @@ Keep namespaces aligned with folder paths.
 - Prefer `Enum.TryParse(..., out ...)` in handlers/services and return validation errors instead of relying on `Enum.Parse` exceptions.
 - Do not rely only on FluentValidation for request safety when a handler/service constructs value objects or parses enums; guard invalid or empty IDs in the handler/service path and return a normal failure instead of letting exceptions define control flow.
 - Use shared `Common/Validation` parsers for recurring user id and required entity id guard logic instead of duplicating `Guid.Empty` checks across handlers.
+- Keep root `Common/Validation` limited to low-level reusable parsers. If a parser becomes feature-specific, move it under that feature's `Common`.
 - Propagate the incoming `CancellationToken` to all async service/repository calls (avoid `CancellationToken.None` in request flow).
 - Async methods should use the `Async` suffix.
 - For time-dependent logic in handlers/services, prefer `TimeProvider` over direct `DateTime.UtcNow`.

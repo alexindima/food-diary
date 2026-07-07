@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Users.Common;
@@ -27,8 +28,13 @@ public sealed class DietologistInvitationReadService(
             return Result.Failure<DietologistInvitationForCurrentUserModel>(userEmailResult.Error);
         }
 
+        Result<DietologistInvitationId> invitationIdResult = ParseInvitationId(invitationId);
+        if (invitationIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<DietologistInvitationForCurrentUserModel, DietologistInvitationId>(invitationIdResult);
+        }
+
         DietologistInvitationReadModel? invitation = await invitationRepository.GetByIdReadModelAsync(
-            new DietologistInvitationId(invitationId),
+            invitationIdResult.Value,
             cancellationToken).ConfigureAwait(false);
         if (invitation is null) {
             return Result.Failure<DietologistInvitationForCurrentUserModel>(Errors.Dietologist.InvitationNotFound);
@@ -45,8 +51,12 @@ public sealed class DietologistInvitationReadService(
         UserId userId,
         Guid invitationId,
         CancellationToken cancellationToken) {
-        var typedInvitationId = new DietologistInvitationId(invitationId);
-        DietologistInvitationReadModel? invitation = await invitationRepository.GetByIdReadModelAsync(typedInvitationId, cancellationToken).ConfigureAwait(false);
+        Result<DietologistInvitationId> invitationIdResult = ParseInvitationId(invitationId);
+        if (invitationIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<InvitationModel, DietologistInvitationId>(invitationIdResult);
+        }
+
+        DietologistInvitationReadModel? invitation = await invitationRepository.GetByIdReadModelAsync(invitationIdResult.Value, cancellationToken).ConfigureAwait(false);
 
         if (invitation is null || invitation.Status != DietologistInvitationStatus.Pending) {
             return Result.Failure<InvitationModel>(Errors.Dietologist.InvitationNotFound);
@@ -113,6 +123,13 @@ public sealed class DietologistInvitationReadService(
 
         return Result.Success(pending is null ? null : ToRelationshipModel(pending));
     }
+
+    private static Result<DietologistInvitationId> ParseInvitationId(Guid invitationId) =>
+        RequiredIdParser.Parse(
+            invitationId,
+            nameof(invitationId),
+            "Invitation id must not be empty.",
+            value => new DietologistInvitationId(value));
 
     private static DietologistRelationshipModel ToRelationshipModel(DietologistInvitationReadModel invitation) =>
         new(

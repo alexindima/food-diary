@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
@@ -24,7 +25,7 @@ internal static class RecipeUpdateAssetCleanup {
         var newStepAssetIds = values.Steps
             .Select(step => step.ImageAssetId)
             .Where(id => id.HasValue)
-            .Select(id => new ImageAssetId(id!.Value))
+            .Select(ToStepImageAssetId)
             .ToHashSet();
 
         foreach (ImageAssetId assetId in values.OldStepAssetIds) {
@@ -33,4 +34,7 @@ internal static class RecipeUpdateAssetCleanup {
             }
         }
     }
+
+    private static ImageAssetId ToStepImageAssetId(Guid? imageAssetId) =>
+        ImageAssetIdParser.ParseOptional(imageAssetId, "ImageAssetId").Value!.Value;
 }

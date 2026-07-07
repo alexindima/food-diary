@@ -55,7 +55,7 @@ public sealed class GetRecipesOverviewQueryHandler(
         var favoriteItems = allFavorites
             .Take(options.FavoriteLimit)
             .ToList();
-        var favoriteLookup = allFavorites.ToDictionary(favorite => new RecipeId(favorite.RecipeId));
+        var favoriteLookup = allFavorites.ToDictionary(ToFavoriteRecipeId);
 
         IReadOnlyList<RecipeOverviewReadItem> recentItems = await recentRecipeReadService.GetRecentOverviewItemsAsync(
             options.UserId,
@@ -80,6 +80,9 @@ public sealed class GetRecipesOverviewQueryHandler(
 
         return Result.Success(new RecipeOverviewModel(recentResponses, allPaged, favoriteItems, allFavorites.Count));
     }
+
+    private static RecipeId ToFavoriteRecipeId(FavoriteRecipeModel favorite) =>
+        new(favorite.RecipeId);
 
     private static RecipeOverviewOptions CreateOptions(GetRecipesOverviewQuery query, UserId userId) =>
         new(
