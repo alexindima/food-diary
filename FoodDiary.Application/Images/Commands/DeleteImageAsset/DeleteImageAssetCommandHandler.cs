@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -10,15 +11,18 @@ public sealed class DeleteImageAssetCommandHandler(
     IImageAssetReadRepository imageAssetRepository,
     IImageAssetCleanupService cleanupService) : ICommandHandler<DeleteImageAssetCommand, Result> {
     public async Task<Result> Handle(DeleteImageAssetCommand request, CancellationToken cancellationToken) {
-        if (request.UserId == Guid.Empty) {
-            return Result.Failure(Errors.Image.InvalidData("UserId is required."));
+        Result<UserId> userIdResult = UserIdParser.Parse(
+            request.UserId,
+            Errors.Image.InvalidData("UserId is required."));
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure(userIdResult);
         }
 
         if (request.AssetId == Guid.Empty) {
             return Result.Failure(Errors.Image.InvalidData("AssetId is required."));
         }
 
-        var userId = new UserId(request.UserId);
+        UserId userId = userIdResult.Value;
         var assetId = new ImageAssetId(request.AssetId);
 
         ImageAsset? asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken).ConfigureAwait(false);

@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Users;
@@ -16,12 +17,14 @@ public sealed class AdminSsoStartCommandHandler(
     public async Task<Result<AdminSsoStartModel>> Handle(
         AdminSsoStartCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId == Guid.Empty) {
-            return Result.Failure<AdminSsoStartModel>(
-                Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
+        Result<UserId> userIdResult = UserIdParser.Parse(
+            command.UserId,
+            Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<AdminSsoStartModel>(userIdResult);
         }
 
-        var userId = new UserId(command.UserId);
+        UserId userId = userIdResult.Value;
         User? user = await userLookupService.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         Error? accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
         if (accessError is not null) {

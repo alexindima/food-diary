@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -11,12 +12,14 @@ public sealed class GetUserAiUsageSummaryQueryHandler(IUserAiUsageSummaryReadSer
     public async Task<Result<UserAiUsageModel>> Handle(
         GetUserAiUsageSummaryQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId == Guid.Empty) {
-            return Result.Failure<UserAiUsageModel>(
-                Errors.Validation.Invalid(nameof(query.UserId), "User id must not be empty."));
+        Result<UserId> userIdResult = UserIdParser.Parse(
+            query.UserId,
+            Errors.Validation.Invalid(nameof(query.UserId), "User id must not be empty."));
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<UserAiUsageModel>(userIdResult);
         }
 
-        var userId = new UserId(query.UserId);
+        UserId userId = userIdResult.Value;
         return await readService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
     }
 }

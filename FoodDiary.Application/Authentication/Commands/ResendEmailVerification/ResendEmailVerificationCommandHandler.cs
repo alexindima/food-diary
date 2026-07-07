@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -17,13 +18,15 @@ public sealed class ResendEmailVerificationCommandHandler(
     private static readonly TimeSpan ResendCooldown = TimeSpan.FromMinutes(1);
 
     public async Task<Result> Handle(ResendEmailVerificationCommand command, CancellationToken cancellationToken) {
-        if (command.UserId == Guid.Empty) {
-            return Result.Failure(
-                Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
+        Result<UserId> userIdResult = UserIdParser.Parse(
+            command.UserId,
+            Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure(userIdResult);
         }
 
         Result<User> userResult = await userContextService
-            .GetAccessibleUserAsync(new UserId(command.UserId), cancellationToken)
+            .GetAccessibleUserAsync(userIdResult.Value, cancellationToken)
             .ConfigureAwait(false);
         if (!userResult.IsSuccess) {
             return Result.Failure(userResult.Error);

@@ -10,9 +10,15 @@ public static class UserIdParser {
             : Result.Success(new UserId(value.Value));
     }
 
+    public static Result<UserId> Parse(Guid value, Error emptyError) {
+        return value == Guid.Empty
+            ? Result.Failure<UserId>(emptyError)
+            : Result.Success(new UserId(value));
+    }
+
     public static Result ToFailure(Result<UserId> userIdResult) =>
-        UserIdParser.ToFailure(userIdResult);
+        Result.Failure(userIdResult.Error);
 
     public static Result<T> ToFailure<T>(Result<UserId> userIdResult) =>
-        UserIdParser.ToFailure<T>(userIdResult);
+        Result.Failure<T>(userIdResult.Error);
 }

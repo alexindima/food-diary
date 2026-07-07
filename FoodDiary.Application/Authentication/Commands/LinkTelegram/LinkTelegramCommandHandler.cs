@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Application.Users.Common;
@@ -15,9 +16,11 @@ public sealed class LinkTelegramCommandHandler(
     IAuthenticationUserMutationService userMutationService,
     ITelegramAuthValidator telegramAuthValidator) : ICommandHandler<LinkTelegramCommand, Result<UserModel>> {
     public async Task<Result<UserModel>> Handle(LinkTelegramCommand command, CancellationToken cancellationToken) {
-        if (command.UserId == Guid.Empty) {
-            return Result.Failure<UserModel>(
-                Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
+        Result<UserId> userIdResult = UserIdParser.Parse(
+            command.UserId,
+            Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<UserModel>(userIdResult);
         }
 
         Result<TelegramInitData> initDataResult = telegramAuthValidator.ValidateInitData(command.InitData);
@@ -27,7 +30,7 @@ public sealed class LinkTelegramCommandHandler(
 
         TelegramInitData initData = initDataResult.Value;
         Result<User> currentUserResult = await userContextService
-            .GetAccessibleUserAsync(new UserId(command.UserId), cancellationToken)
+            .GetAccessibleUserAsync(userIdResult.Value, cancellationToken)
             .ConfigureAwait(false);
         if (!currentUserResult.IsSuccess) {
             return Result.Failure<UserModel>(currentUserResult.Error);

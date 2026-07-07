@@ -4,6 +4,7 @@ using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -30,12 +31,14 @@ public sealed class UpdateAdminUserCommandHandler(
     public async Task<Result<AdminUserModel>> Handle(
         UpdateAdminUserCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId == Guid.Empty) {
-            return Result.Failure<AdminUserModel>(
-                Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
+        Result<UserId> userIdResult = UserIdParser.Parse(
+            command.UserId,
+            Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<AdminUserModel>(userIdResult);
         }
 
-        var userId = new UserId(command.UserId);
+        UserId userId = userIdResult.Value;
         User? user = await userManagementService.GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<AdminUserModel>(Errors.User.NotFound(command.UserId));
