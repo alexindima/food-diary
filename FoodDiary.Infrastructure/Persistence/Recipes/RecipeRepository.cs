@@ -38,13 +38,7 @@ public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeReposi
         query = query.AsSplitQuery();
 
         if (includeSteps) {
-            query = query
-                .Include(r => r.Steps)
-                .ThenInclude(s => s.Ingredients)
-                .ThenInclude(i => i.Product)
-                .Include(r => r.Steps)
-                .ThenInclude(s => s.Ingredients)
-                .ThenInclude(i => i.NestedRecipe);
+            query = IncludeStepsAndIngredients(query);
         }
 
         return await query.FirstOrDefaultAsync(

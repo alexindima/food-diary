@@ -53,16 +53,7 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         IQueryable<Meal> query = context.Meals;
 
         if (includeItems) {
-            query = query
-                .AsSplitQuery()
-                .Include(m => m.Items)
-                .ThenInclude(i => i.Product)
-                .Include(m => m.Items)
-                .ThenInclude(i => i.Recipe)
-                .Include(m => m.AiSessions)
-                .ThenInclude(s => s.Items)
-                .Include(m => m.AiSessions)
-                .ThenInclude(s => s.ImageAsset);
+            query = IncludeConsumptionGraph(query);
         }
 
         if (!asTracking) {
@@ -92,16 +83,7 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         int totalItems = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
         int skip = (pageNumber - 1) * pageSize;
 
-        IOrderedQueryable<Meal> itemsQuery = filteredQuery
-            .AsSplitQuery()
-            .Include(m => m.Items)
-            .ThenInclude(i => i.Product)
-            .Include(m => m.Items)
-            .ThenInclude(i => i.Recipe)
-            .Include(m => m.AiSessions)
-            .ThenInclude(s => s.Items)
-            .Include(m => m.AiSessions)
-            .ThenInclude(s => s.ImageAsset)
+        IOrderedQueryable<Meal> itemsQuery = IncludeConsumptionGraph(filteredQuery)
             .OrderByDescending(m => m.Date)
             .ThenByDescending(m => m.CreatedOnUtc);
 
@@ -131,16 +113,7 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         int totalItems = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
         int skip = (pageNumber - 1) * pageSize;
 
-        List<Meal> meals = await filteredQuery
-            .AsSplitQuery()
-            .Include(m => m.Items)
-            .ThenInclude(i => i.Product)
-            .Include(m => m.Items)
-            .ThenInclude(i => i.Recipe)
-            .Include(m => m.AiSessions)
-            .ThenInclude(s => s.Items)
-            .Include(m => m.AiSessions)
-            .ThenInclude(s => s.ImageAsset)
+        List<Meal> meals = await IncludeConsumptionGraph(filteredQuery)
             .OrderByDescending(m => m.Date)
             .ThenByDescending(m => m.CreatedOnUtc)
             .Skip(skip)
@@ -154,17 +127,7 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         MealId id,
         UserId userId,
         CancellationToken cancellationToken = default) {
-        Meal? meal = await context.Meals
-            .AsNoTracking()
-            .AsSplitQuery()
-            .Include(m => m.Items)
-            .ThenInclude(i => i.Product)
-            .Include(m => m.Items)
-            .ThenInclude(i => i.Recipe)
-            .Include(m => m.AiSessions)
-            .ThenInclude(s => s.Items)
-            .Include(m => m.AiSessions)
-            .ThenInclude(s => s.ImageAsset)
+        Meal? meal = await IncludeConsumptionGraph(context.Meals.AsNoTracking())
             .Where(m => m.Id == id && m.UserId == userId)
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
@@ -225,16 +188,8 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         return query;
     }
 
-    public async Task<IReadOnlyList<Meal>> GetByPeriodAsync(
-        UserId userId,
-        DateTime dateFrom,
-        DateTime dateTo,
-        CancellationToken cancellationToken = default) {
-        DateTime from = StartOfUtcDay(dateFrom);
-        DateTime toExclusive = StartOfNextUtcDay(dateTo);
-
-        return await context.Meals
-            .AsNoTracking()
+    private static IQueryable<Meal> IncludeConsumptionGraph(IQueryable<Meal> query) =>
+        query
             .AsSplitQuery()
             .Include(m => m.Items)
             .ThenInclude(i => i.Product)
@@ -243,7 +198,17 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             .Include(m => m.AiSessions)
             .ThenInclude(s => s.Items)
             .Include(m => m.AiSessions)
-            .ThenInclude(s => s.ImageAsset)
+            .ThenInclude(s => s.ImageAsset);
+
+    public async Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken = default) {
+        DateTime from = StartOfUtcDay(dateFrom);
+        DateTime toExclusive = StartOfNextUtcDay(dateTo);
+
+        return await IncludeConsumptionGraph(context.Meals.AsNoTracking())
             .Where(m => m.UserId == userId && m.Date >= from && m.Date < toExclusive)
             .OrderBy(m => m.Date)
             .ThenBy(m => m.CreatedOnUtc)
