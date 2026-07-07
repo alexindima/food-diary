@@ -74,31 +74,31 @@ internal static class RecipeStepAppender {
 
     private static Result AddIngredients(RecipeStep step, IEnumerable<RecipeIngredientInput> ingredients) {
         foreach (RecipeIngredientInput ingredient in ingredients) {
-            Result ingredientIdResult = ValidateIngredientIdentifiers(ingredient);
-            if (ingredientIdResult.IsFailure) {
-                return ingredientIdResult;
+            Result<ProductId?> productIdResult = OptionalEntityIdValidator.Parse(
+                ingredient.ProductId,
+                nameof(ingredient.ProductId),
+                "Product id",
+                value => new ProductId(value));
+            if (productIdResult.IsFailure) {
+                return productIdResult;
             }
 
-            if (ingredient.ProductId.HasValue) {
-                step.AddProductIngredient(new ProductId(ingredient.ProductId.Value), ingredient.Amount);
-            } else if (ingredient.NestedRecipeId.HasValue) {
-                step.AddNestedRecipeIngredient(new RecipeId(ingredient.NestedRecipeId.Value), ingredient.Amount);
+            Result<RecipeId?> nestedRecipeIdResult = OptionalEntityIdValidator.Parse(
+                ingredient.NestedRecipeId,
+                nameof(ingredient.NestedRecipeId),
+                "Nested recipe id",
+                value => new RecipeId(value));
+            if (nestedRecipeIdResult.IsFailure) {
+                return nestedRecipeIdResult;
+            }
+
+            if (productIdResult.Value.HasValue) {
+                step.AddProductIngredient(productIdResult.Value.Value, ingredient.Amount);
+            } else if (nestedRecipeIdResult.Value.HasValue) {
+                step.AddNestedRecipeIngredient(nestedRecipeIdResult.Value.Value, ingredient.Amount);
             }
         }
 
         return Result.Success();
-    }
-
-    private static Result ValidateIngredientIdentifiers(RecipeIngredientInput ingredient) {
-        Result productIdResult = OptionalEntityIdValidator.EnsureNotEmpty(ingredient.ProductId, nameof(ingredient.ProductId), "Product id");
-        if (productIdResult.IsFailure) {
-            return productIdResult;
-        }
-
-        Result nestedRecipeIdResult = OptionalEntityIdValidator.EnsureNotEmpty(
-            ingredient.NestedRecipeId,
-            nameof(ingredient.NestedRecipeId),
-            "Nested recipe id");
-        return nestedRecipeIdResult.IsFailure ? nestedRecipeIdResult : Result.Success();
     }
 }

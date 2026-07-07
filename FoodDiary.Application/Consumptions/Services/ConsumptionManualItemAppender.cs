@@ -15,19 +15,32 @@ internal static class ConsumptionManualItemAppender {
                 return validation;
             }
 
-            Result itemIdValidation = ValidateItemIdentifiers(item);
-            if (itemIdValidation.IsFailure) {
-                return itemIdValidation;
+            Result<ProductId?> productIdResult = OptionalEntityIdValidator.Parse(
+                item.ProductId,
+                nameof(item.ProductId),
+                "Product id",
+                value => new ProductId(value));
+            if (productIdResult.IsFailure) {
+                return productIdResult;
             }
 
-            if (item.ProductId.HasValue) {
-                MealItem mealItem = meal.AddProduct(new ProductId(item.ProductId.Value), item.Amount);
+            Result<RecipeId?> recipeIdResult = OptionalEntityIdValidator.Parse(
+                item.RecipeId,
+                nameof(item.RecipeId),
+                "Recipe id",
+                value => new RecipeId(value));
+            if (recipeIdResult.IsFailure) {
+                return recipeIdResult;
+            }
+
+            if (productIdResult.Value.HasValue) {
+                MealItem mealItem = meal.AddProduct(productIdResult.Value.Value, item.Amount);
                 Result sourceResult = ApplySource(mealItem, item);
                 if (sourceResult.IsFailure) {
                     return sourceResult;
                 }
-            } else if (item.RecipeId.HasValue) {
-                MealItem mealItem = meal.AddRecipe(new RecipeId(item.RecipeId.Value), item.Amount);
+            } else if (recipeIdResult.Value.HasValue) {
+                MealItem mealItem = meal.AddRecipe(recipeIdResult.Value.Value, item.Amount);
                 Result sourceResult = ApplySource(mealItem, item);
                 if (sourceResult.IsFailure) {
                     return sourceResult;
@@ -38,32 +51,23 @@ internal static class ConsumptionManualItemAppender {
         return Result.Success();
     }
 
-    private static Result ValidateItemIdentifiers(ConsumptionItemInput item) {
-        Result productIdResult = OptionalEntityIdValidator.EnsureNotEmpty(item.ProductId, nameof(item.ProductId), "Product id");
-        if (productIdResult.IsFailure) {
-            return productIdResult;
-        }
-
-        Result recipeIdResult = OptionalEntityIdValidator.EnsureNotEmpty(item.RecipeId, nameof(item.RecipeId), "Recipe id");
-        return recipeIdResult.IsFailure ? recipeIdResult : Result.Success();
-    }
-
     private static Result ApplySource(MealItem mealItem, ConsumptionItemInput item) {
         if (!TryParseMealItemOrigin(item.Origin, out MealItemOrigin origin)) {
             return Result.Failure(
                 Errors.Validation.Invalid(nameof(item.Origin), "Unknown meal item origin value."));
         }
 
-        if (item.SourceAiItemId == Guid.Empty) {
-            return Result.Failure(
-                Errors.Validation.Invalid(nameof(item.SourceAiItemId), "Source AI item id must not be empty."));
+        Result<MealAiItemId?> sourceAiItemIdResult = OptionalEntityIdValidator.Parse(
+            item.SourceAiItemId,
+            nameof(item.SourceAiItemId),
+            "Source AI item id",
+            value => new MealAiItemId(value));
+        if (sourceAiItemIdResult.IsFailure) {
+            return sourceAiItemIdResult;
         }
 
         try {
-            MealAiItemId? sourceAiItemId = item.SourceAiItemId.HasValue
-                ? new MealAiItemId(item.SourceAiItemId.Value)
-                : null;
-            mealItem.ApplySource(sourceAiItemId, origin);
+            mealItem.ApplySource(sourceAiItemIdResult.Value, origin);
         } catch (ArgumentException ex) {
             return Result.Failure(Errors.Validation.Invalid("Items", ex.Message));
         }

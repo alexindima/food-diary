@@ -18,33 +18,45 @@ public static class ShoppingListItemBuilder {
             return Result.Success<IReadOnlyList<ShoppingListItemData>>([]);
         }
 
-        var productIds = items
-            .Where(item => item.ProductId.HasValue)
-            .Select(item => item.ProductId!.Value)
-            .ToList();
-
         if (items.Any(item => item.Id == Guid.Empty)) {
             return Result.Failure<IReadOnlyList<ShoppingListItemData>>(
                 Errors.Validation.Invalid(nameof(ShoppingListItemInput.Id), "Id must not be empty."));
         }
 
-        if (productIds.Any(id => id == Guid.Empty)) {
-            return Result.Failure<IReadOnlyList<ShoppingListItemData>>(
-                Errors.Validation.Invalid(nameof(ShoppingListItemInput.ProductId), "ProductId must not be empty."));
+        Result<IReadOnlyList<ProductId>> productIdsResult = ParseProductIds(items);
+        if (productIdsResult.IsFailure) {
+            return Result.Failure<IReadOnlyList<ShoppingListItemData>>(productIdsResult.Error);
         }
 
-        var normalizedProductIds = productIds
-            .Select(id => new ProductId(id))
-            .Distinct()
-            .ToList();
+        IReadOnlyList<ProductId> productIds = productIdsResult.Value;
 
-        IReadOnlyDictionary<ProductId, Product> products = await productLookupService.GetAccessibleByIdsAsync(normalizedProductIds, userId, cancellationToken).ConfigureAwait(false);
-        if (products.Count == normalizedProductIds.Count) {
+        IReadOnlyDictionary<ProductId, Product> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
+        if (products.Count == productIds.Count) {
             return BuildNormalizedItems(items, products);
         }
 
-        ProductId missing = normalizedProductIds.First(id => !products.ContainsKey(id));
+        ProductId missing = productIds.First(id => !products.ContainsKey(id));
         return Result.Failure<IReadOnlyList<ShoppingListItemData>>(Errors.Product.NotAccessible(missing.Value));
+    }
+
+    private static Result<IReadOnlyList<ProductId>> ParseProductIds(IReadOnlyList<ShoppingListItemInput> items) {
+        var productIds = new HashSet<ProductId>();
+        foreach (ShoppingListItemInput item in items) {
+            Result<ProductId?> productIdResult = OptionalEntityIdValidator.Parse(
+                item.ProductId,
+                nameof(ShoppingListItemInput.ProductId),
+                "ProductId",
+                value => new ProductId(value));
+            if (productIdResult.IsFailure) {
+                return Result.Failure<IReadOnlyList<ProductId>>(productIdResult.Error);
+            }
+
+            if (productIdResult.Value.HasValue) {
+                productIds.Add(productIdResult.Value.Value);
+            }
+        }
+
+        return Result.Success<IReadOnlyList<ProductId>>(productIds.ToList());
     }
 
     private static Result<IReadOnlyList<ShoppingListItemData>> BuildNormalizedItems(
@@ -93,7 +105,11 @@ public static class ShoppingListItemBuilder {
         ShoppingListItemInput item,
         int index,
         IReadOnlyDictionary<ProductId, Product> products) {
-        var productId = new ProductId(item.ProductId!.Value);
+        ProductId productId = OptionalEntityIdValidator.Parse(
+            item.ProductId,
+            nameof(ShoppingListItemInput.ProductId),
+            "ProductId",
+            value => new ProductId(value)).Value!.Value;
         Product product = products[productId];
         return new ShoppingListItemData(
             ToItemId(item.Id),
