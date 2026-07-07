@@ -1,10 +1,12 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Recipes.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -13,14 +15,10 @@ namespace FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 public sealed class DuplicateRecipeCommandHandler(
     IRecipeReadRepository recipeReadRepository,
     IRecipeWriteRepository recipeWriteRepository,
-    IRecipeNutritionWriter recipeNutritionWriter)
+    IRecipeNutritionWriter recipeNutritionWriter,
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DuplicateRecipeCommand, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(DuplicateRecipeCommand command, CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
-        if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<RecipeModel>(userIdResult);
-        }
-
         Result<RecipeId> recipeIdResult = RequiredIdParser.Parse(
             command.RecipeId,
             nameof(command.RecipeId),
@@ -28,6 +26,14 @@ public sealed class DuplicateRecipeCommandHandler(
             value => new RecipeId(value));
         if (recipeIdResult.IsFailure) {
             return RequiredIdParser.ToFailure<RecipeModel, RecipeId>(recipeIdResult);
+        }
+
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<RecipeModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

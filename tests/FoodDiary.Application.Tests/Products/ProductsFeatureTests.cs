@@ -446,7 +446,10 @@ public class ProductsFeatureTests {
     [Fact]
     public async Task DuplicateProductCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
         var repository = new NoopProductRepository();
-        var handler = new DuplicateProductCommandHandler(repository, repository);
+        var handler = new DuplicateProductCommandHandler(
+            repository,
+            repository,
+            new StubUserRepository(User.Create("duplicate-product-empty-id@example.com", "hash")));
 
         Result<ProductModel> result = await handler.Handle(
             new DuplicateProductCommand(Guid.NewGuid(), Guid.Empty),
@@ -460,7 +463,10 @@ public class ProductsFeatureTests {
     [Fact]
     public async Task DuplicateProductCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var repository = new NoopProductRepository();
-        var handler = new DuplicateProductCommandHandler(repository, repository);
+        var handler = new DuplicateProductCommandHandler(
+            repository,
+            repository,
+            new StubUserRepository(User.Create("duplicate-product-missing-user@example.com", "hash")));
 
         Result<ProductModel> result = await handler.Handle(
             new DuplicateProductCommand(UserId: null, ProductId.New().Value),
@@ -472,15 +478,31 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task DuplicateProductCommandHandler_WhenOriginalMissing_ReturnsNotAccessible() {
+        var user = User.Create("duplicate-product-missing-original@example.com", "hash");
         var repository = new NoopProductRepository();
-        var handler = new DuplicateProductCommandHandler(repository, repository);
+        var handler = new DuplicateProductCommandHandler(repository, repository, new StubUserRepository(user));
 
         Result<ProductModel> result = await handler.Handle(
-            new DuplicateProductCommand(Guid.NewGuid(), ProductId.New().Value),
+            new DuplicateProductCommand(user.Id.Value, ProductId.New().Value),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Product.NotAccessible", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DuplicateProductCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("duplicate-product-deleted@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var repository = new NoopProductRepository();
+        var handler = new DuplicateProductCommandHandler(repository, repository, new StubUserRepository(user));
+
+        Result<ProductModel> result = await handler.Handle(
+            new DuplicateProductCommand(user.Id.Value, ProductId.New().Value),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     [Fact]
@@ -1125,7 +1147,7 @@ public class ProductsFeatureTests {
             visibility: Visibility.Public);
 
         var repository = new SingleProductRepository(original);
-        var handler = new DuplicateProductCommandHandler(repository, repository);
+        var handler = new DuplicateProductCommandHandler(repository, repository, new StubUserRepository(user));
 
         Result<ProductModel> result = await handler.Handle(new DuplicateProductCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
 

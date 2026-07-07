@@ -25,6 +25,8 @@ Keep namespaces aligned with folder paths.
 - FluentValidation validators per request model.
 - Prefer a dedicated `{RequestName}Validator` for request-shape validation instead of embedding those checks in handlers.
 - Keep handler-side validation only for runtime/domain guards that depend on repository state, strongly typed ID construction, enum parsing, or aggregate/value-object invariants.
+- Keep validators stateless: do not inject repositories/read services/write services, and do not use async FluentValidation hooks for runtime state checks.
+- For current-user scoped commands, resolve `command.UserId` through `CurrentUserAccessResolver`/`ICurrentUserAccessService` so deleted or inactive users fail before domain mutations.
 - Reuse feature-level `Feature/Common/` only for feature contracts, policies, parsers, factories, and models shared by multiple use cases in that feature.
 - Do not use feature-level `Common` helpers to hide request/input `Guid` to typed-id construction; parse request ids through `Common/Validation` and keep trusted read-model/domain mappings explicitly named near the use case.
 

@@ -55,7 +55,10 @@ public class RecipesFeatureTests {
             currentUserAccessService ?? new StubUserRepository(User.Create("recipe-deleter@example.com", "hash")));
 
     private static DuplicateRecipeCommandHandler DuplicateRecipeHandler(IRecipeRepository repository) =>
-        new(repository, repository, repository);
+        new(repository, repository, repository, new StubUserRepository(User.Create("recipe-duplicator@example.com", "hash")));
+
+    private static DuplicateRecipeCommandHandler DuplicateRecipeHandler(IRecipeRepository repository, ICurrentUserAccessService currentUserAccessService) =>
+        new(repository, repository, repository, currentUserAccessService);
 
     private static UpdateRecipeCommandHandler UpdateRecipeHandler(
         IRecipeRepository repository,
@@ -807,15 +810,33 @@ public class RecipesFeatureTests {
 
     [Fact]
     public async Task DuplicateRecipeCommandHandler_WhenOriginalRecipeIsMissing_ReturnsNotAccessible() {
-        var userId = Guid.NewGuid();
-        DuplicateRecipeCommandHandler handler = DuplicateRecipeHandler(new SingleRecipeRepositoryForCreate());
+        var user = User.Create("duplicate-recipe-missing-original@example.com", "hash");
+        DuplicateRecipeCommandHandler handler = DuplicateRecipeHandler(
+            new SingleRecipeRepositoryForCreate(),
+            new StubUserRepository(user));
 
         Result<RecipeModel> result = await handler.Handle(
-            new DuplicateRecipeCommand(userId, Guid.NewGuid()),
+            new DuplicateRecipeCommand(user.Id.Value, Guid.NewGuid()),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Recipe.NotAccessible", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DuplicateRecipeCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("duplicate-recipe-deleted@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        DuplicateRecipeCommandHandler handler = DuplicateRecipeHandler(
+            new SingleRecipeRepositoryForCreate(),
+            new StubUserRepository(user));
+
+        Result<RecipeModel> result = await handler.Handle(
+            new DuplicateRecipeCommand(user.Id.Value, Guid.NewGuid()),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     [Fact]
