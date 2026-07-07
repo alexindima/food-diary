@@ -28,8 +28,17 @@ public sealed class AddFavoriteRecipeCommandHandler(
             return UserIdParser.ToFailure<FavoriteRecipeModel>(userIdResult);
         }
 
+        Result<RecipeId> recipeIdResult = RequiredIdParser.Parse(
+            command.RecipeId,
+            nameof(command.RecipeId),
+            "Recipe id must not be empty.",
+            value => new RecipeId(value));
+        if (recipeIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<FavoriteRecipeModel, RecipeId>(recipeIdResult);
+        }
+
         UserId userId = userIdResult.Value;
-        var recipeId = new RecipeId(command.RecipeId);
+        RecipeId recipeId = recipeIdResult.Value;
         Recipe? recipe = await recipeAccessService.GetAccessibleByIdAsync(
             recipeId,
             userId,

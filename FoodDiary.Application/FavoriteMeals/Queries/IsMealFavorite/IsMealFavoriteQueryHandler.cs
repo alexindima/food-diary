@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.FavoriteMeals.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -22,8 +23,17 @@ public sealed class IsMealFavoriteQueryHandler(
             return CurrentUserAccessResolver.ToFailure<bool>(userIdResult);
         }
 
+        Result<MealId> mealIdResult = RequiredIdParser.Parse(
+            query.MealId,
+            nameof(query.MealId),
+            "Meal id must not be empty.",
+            value => new MealId(value));
+        if (mealIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<bool, MealId>(mealIdResult);
+        }
+
         UserId userId = userIdResult.Value;
-        var mealId = new MealId(query.MealId);
+        MealId mealId = mealIdResult.Value;
         bool isFavorite = await favoriteMealReadService.ExistsByMealIdAsync(mealId, userId, cancellationToken).ConfigureAwait(false);
         return Result.Success(isFavorite);
     }

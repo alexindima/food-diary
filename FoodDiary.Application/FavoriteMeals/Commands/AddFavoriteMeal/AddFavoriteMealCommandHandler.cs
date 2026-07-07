@@ -28,8 +28,17 @@ public sealed class AddFavoriteMealCommandHandler(
             return UserIdParser.ToFailure<FavoriteMealModel>(userIdResult);
         }
 
+        Result<MealId> mealIdResult = RequiredIdParser.Parse(
+            command.MealId,
+            nameof(command.MealId),
+            "Meal id must not be empty.",
+            value => new MealId(value));
+        if (mealIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<FavoriteMealModel, MealId>(mealIdResult);
+        }
+
         UserId userId = userIdResult.Value;
-        var mealId = new MealId(command.MealId);
+        MealId mealId = mealIdResult.Value;
         Meal? meal = await mealRepository.GetByIdAsync(mealId, userId, includeItems: true, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (meal is null) {
             return Result.Failure<FavoriteMealModel>(Errors.Consumption.NotFound(command.MealId));

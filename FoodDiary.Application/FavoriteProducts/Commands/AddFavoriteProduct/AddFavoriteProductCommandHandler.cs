@@ -28,8 +28,17 @@ public sealed class AddFavoriteProductCommandHandler(
             return UserIdParser.ToFailure<FavoriteProductModel>(userIdResult);
         }
 
+        Result<ProductId> productIdResult = RequiredIdParser.Parse(
+            command.ProductId,
+            nameof(command.ProductId),
+            "Product id must not be empty.",
+            value => new ProductId(value));
+        if (productIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<FavoriteProductModel, ProductId>(productIdResult);
+        }
+
         UserId userId = userIdResult.Value;
-        var productId = new ProductId(command.ProductId);
+        ProductId productId = productIdResult.Value;
         IReadOnlyDictionary<ProductId, Product> products = await productLookupService
             .GetAccessibleByIdsAsync([productId], userId, cancellationToken)
             .ConfigureAwait(false);

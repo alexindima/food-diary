@@ -54,8 +54,17 @@ public sealed class RepeatMealCommandHandler(
             return UserIdParser.ToFailure<RepeatMealValues>(userIdResult);
         }
 
+        Result<MealId> sourceMealIdResult = RequiredIdParser.Parse(
+            command.MealId,
+            nameof(command.MealId),
+            "Meal id must not be empty.",
+            value => new MealId(value));
+        if (sourceMealIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<RepeatMealValues, MealId>(sourceMealIdResult);
+        }
+
         UserId userId = userIdResult.Value;
-        var sourceMealId = new MealId(command.MealId);
+        MealId sourceMealId = sourceMealIdResult.Value;
         Meal? sourceMeal = await mealReadRepository.GetByIdAsync(
             sourceMealId,
             userId,

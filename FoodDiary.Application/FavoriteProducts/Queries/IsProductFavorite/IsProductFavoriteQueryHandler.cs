@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.FavoriteProducts.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -22,8 +23,17 @@ public sealed class IsProductFavoriteQueryHandler(
             return CurrentUserAccessResolver.ToFailure<bool>(userIdResult);
         }
 
+        Result<ProductId> productIdResult = RequiredIdParser.Parse(
+            query.ProductId,
+            nameof(query.ProductId),
+            "Product id must not be empty.",
+            value => new ProductId(value));
+        if (productIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<bool, ProductId>(productIdResult);
+        }
+
         UserId userId = userIdResult.Value;
-        var productId = new ProductId(query.ProductId);
+        ProductId productId = productIdResult.Value;
         bool isFavorite = await favoriteProductReadService.ExistsByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false);
         return Result.Success(isFavorite);
     }
