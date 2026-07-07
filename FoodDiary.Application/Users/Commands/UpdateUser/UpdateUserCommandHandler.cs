@@ -118,20 +118,11 @@ public sealed class UpdateUserCommandHandler(
             return Result.Failure<ParsedUserPreferences>(languageResult.Error);
         }
 
-        Result<string?> themeResult = UserPreferenceCodeParser.ParseOptionalTheme(
+        Result<UserAppearancePreferences> appearancePreferencesResult = UserAppearancePreferencesParser.ParseOptional(
             command.Theme,
-            nameof(UpdateUserCommand.Theme),
-            "Invalid theme value.");
-        if (themeResult.IsFailure) {
-            return Result.Failure<ParsedUserPreferences>(themeResult.Error);
-        }
-
-        Result<string?> uiStyleResult = UserPreferenceCodeParser.ParseOptionalUiStyle(
-            command.UiStyle,
-            nameof(UpdateUserCommand.UiStyle),
-            "Invalid UI style value.");
-        if (uiStyleResult.IsFailure) {
-            return Result.Failure<ParsedUserPreferences>(uiStyleResult.Error);
+            command.UiStyle);
+        if (appearancePreferencesResult.IsFailure) {
+            return Result.Failure<ParsedUserPreferences>(appearancePreferencesResult.Error);
         }
 
         Result<string?> genderResult = UserPreferenceCodeParser.ParseOptionalGender(
@@ -145,8 +136,8 @@ public sealed class UpdateUserCommandHandler(
         return Result.Success(new ParsedUserPreferences(
             activityLevelResult.Value,
             languageResult.Value,
-            themeResult.Value,
-            uiStyleResult.Value,
+            appearancePreferencesResult.Value.Theme,
+            appearancePreferencesResult.Value.UiStyle,
             genderResult.Value));
     }
 

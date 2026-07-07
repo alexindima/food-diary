@@ -21,26 +21,18 @@ public sealed class UpdateUserAppearanceCommandHandler(IUserContextService userC
             return Result.Failure<UserModel>(userResult.Error);
         }
 
-        Result<string?> themeResult = UserPreferenceCodeParser.ParseOptionalTheme(
+        Result<UserAppearancePreferences> preferencesResult = UserAppearancePreferencesParser.ParseOptional(
             command.Theme,
-            nameof(UpdateUserAppearanceCommand.Theme),
-            "Invalid theme value.");
-        if (themeResult.IsFailure) {
-            return Result.Failure<UserModel>(themeResult.Error);
-        }
-
-        Result<string?> uiStyleResult = UserPreferenceCodeParser.ParseOptionalUiStyle(
-            command.UiStyle,
-            nameof(UpdateUserAppearanceCommand.UiStyle),
-            "Invalid UI style value.");
-        if (uiStyleResult.IsFailure) {
-            return Result.Failure<UserModel>(uiStyleResult.Error);
+            command.UiStyle);
+        if (preferencesResult.IsFailure) {
+            return Result.Failure<UserModel>(preferencesResult.Error);
         }
 
         User user = userResult.Value;
+        UserAppearancePreferences preferences = preferencesResult.Value;
         user.UpdatePreferences(new UserPreferenceUpdate(
-            Theme: themeResult.Value,
-            UiStyle: uiStyleResult.Value));
+            Theme: preferences.Theme,
+            UiStyle: preferences.UiStyle));
 
         await userContextService.UpdateUserAsync(user, cancellationToken).ConfigureAwait(false);
 
