@@ -216,6 +216,31 @@ public class LayeringTests {
     }
 
     [Fact]
+    public void InfrastructureRootFolders_StayLimitedToTechnicalImplementationAreas() {
+        string infrastructureRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure");
+        string[] allowedDirectories = [
+            "Authentication",
+            "Events",
+            "Migrations",
+            "Options",
+            "Persistence",
+            "Properties",
+            "Services",
+        ];
+
+        string[] unexpectedDirectories = [.. Directory.GetDirectories(infrastructureRoot)
+            .Select(Path.GetFileName)
+            .Where(name => name is not null)
+            .Select(name => name!)
+            .Where(name => !name.Equals("bin", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !name.Equals("obj", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !allowedDirectories.Contains(name, StringComparer.Ordinal))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(unexpectedDirectories);
+    }
+
+    [Fact]
     public void InfrastructureCompositionRoot_StaysLimitedToApprovedTechnicalModules() {
         string dependencyInjectionPath = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "DependencyInjection.cs");
         string[] expectedRegistrations = [

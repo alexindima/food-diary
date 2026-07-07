@@ -14,6 +14,70 @@ public sealed class ApplicationAbstractionsBoundaryTests {
     }
 
     [Fact]
+    public void ApplicationAbstractions_SourceFiles_AreKeptOutOfProjectRoot() {
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
+
+        string[] violations = [.. Directory.GetFiles(abstractionsRoot, "*.cs", SearchOption.TopDirectoryOnly)
+            .Select(path => Path.GetRelativePath(root, path))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationAbstractions_FeatureFolders_HaveCommonContractsFolder() {
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
+        var excludedDirectories = new HashSet<string>(StringComparer.Ordinal) {
+            "bin",
+            "Common",
+            "obj",
+        };
+
+        string[] violations = [.. Directory.GetDirectories(abstractionsRoot)
+            .Where(path => !excludedDirectories.Contains(Path.GetFileName(path)))
+            .Where(path => !Directory.Exists(Path.Combine(path, "Common")))
+            .Select(path => Path.GetRelativePath(root, path))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationAbstractions_FeatureSourceFiles_StayInPurposeFolders() {
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
+        var excludedDirectories = new HashSet<string>(StringComparer.Ordinal) {
+            "bin",
+            "Common",
+            "obj",
+        };
+        var allowedPurposeFolders = new HashSet<string>(StringComparer.Ordinal) {
+            "Abstractions",
+            "Common",
+            "Models",
+            "Services",
+        };
+
+        string[] violations = [.. Directory.GetDirectories(abstractionsRoot)
+            .Where(path => !excludedDirectories.Contains(Path.GetFileName(path)))
+            .SelectMany(featurePath => SourceScanner.SourceFiles(featurePath)
+                .Where(sourcePath => {
+                    string relativeDirectory = Path.GetDirectoryName(Path.GetRelativePath(featurePath, sourcePath)) ?? string.Empty;
+                    string firstSegment = relativeDirectory
+                        .Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                        .FirstOrDefault() ?? string.Empty;
+
+                    return !allowedPurposeFolders.Contains(firstSegment);
+                }))
+            .Select(path => Path.GetRelativePath(root, path))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationAbstractions_Interfaces_AreKeptInPurposeFolders() {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
