@@ -1,25 +1,15 @@
+using FoodDiary.Application.Abstractions.Fasting.Common;
+
 namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
 public static partial class Errors {
     public static class Fasting {
-        public static Error AlreadyActive => new(
-            "Fasting.AlreadyActive",
-            "A fasting session is already active.",
-            Kind: ErrorKind.Conflict);
+        public static Error AlreadyActive => FastingErrors.AlreadyActive;
 
-        public static Error NoActiveSession => new(
-            "Fasting.NoActiveSession",
-            "No active fasting session found.",
-            Kind: ErrorKind.NotFound);
+        public static Error NoActiveSession => FastingErrors.NoActiveSession;
 
-        public static Error InvalidProtocol => new(
-            "Fasting.InvalidProtocol",
-            "Invalid fasting protocol.",
-            Kind: ErrorKind.Validation);
+        public static Error InvalidProtocol => FastingErrors.InvalidProtocol;
 
-        public static Error InvalidCyclicAction(string message) => new(
-            "Fasting.InvalidCyclicAction",
-            message,
-            Kind: ErrorKind.Validation);
+        public static Error InvalidCyclicAction(string message) => FastingErrors.InvalidCyclicAction(message);
     }
 }

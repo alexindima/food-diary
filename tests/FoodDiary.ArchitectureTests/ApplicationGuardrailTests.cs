@@ -517,6 +517,12 @@ public sealed class ApplicationGuardrailTests {
     [InlineData("Errors.CycleDay.cs", "Cycles", "Common", "CycleDayErrors.cs", "CycleDayErrors.", "CycleDay.")]
     [InlineData("Errors.Lesson.cs", "Lessons", "Common", "LessonErrors.cs", "LessonErrors.", "Lesson.")]
     [InlineData("Errors.Image.cs", "Images", "Common", "ImageErrors.cs", "ImageErrors.", "Image.")]
+    [InlineData("Errors.Fasting.cs", "Fasting", "Common", "FastingErrors.cs", "FastingErrors.", "Fasting.")]
+    [InlineData("Errors.Wearable.cs", "Wearables", "Common", "WearableErrors.cs", "WearableErrors.", "Wearable.")]
+    [InlineData("Errors.Usda.cs", "Usda", "Common", "UsdaErrors.cs", "UsdaErrors.", "Usda.")]
+    [InlineData("Errors.FavoriteMeal.cs", "FavoriteMeals", "Common", "FavoriteMealErrors.cs", "FavoriteMealErrors.", "FavoriteMeal.")]
+    [InlineData("Errors.Recipe.cs", "Recipes", "Common", "RecipeErrors.cs", "RecipeErrors.", "Recipe.")]
+    [InlineData("Errors.ContentReport.cs", "ContentReports", "Common", "ContentReportErrors.cs", "ContentReportErrors.", "ContentReport.")]
     public void MigratedErrorsFacades_DelegateToFeatureOwnedErrorFactories(
         string facadeFileName,
         string featureDirectory,

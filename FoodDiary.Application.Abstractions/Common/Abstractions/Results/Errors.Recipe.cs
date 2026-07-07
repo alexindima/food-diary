@@ -1,20 +1,13 @@
+using FoodDiary.Application.Abstractions.Recipes.Common;
+
 namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
 public static partial class Errors {
     public static class Recipe {
-        public static Error NotFound(Guid id) => new(
-            "Recipe.NotFound",
-            $"Recipe with ID {id} was not found.",
-            Kind: ErrorKind.NotFound);
+        public static Error NotFound(Guid id) => RecipeErrors.NotFound(id);
 
-        public static Error NotAccessible(Guid id) => new(
-            "Recipe.NotAccessible",
-            $"Recipe with ID {id} does not belong to the current user or was not found.",
-            Kind: ErrorKind.NotFound);
+        public static Error NotAccessible(Guid id) => RecipeErrors.NotAccessible(id);
 
-        public static Error InvalidData(string message) => new(
-            "Recipe.InvalidData",
-            message,
-            Kind: ErrorKind.Internal);
+        public static Error InvalidData(string message) => RecipeErrors.InvalidData(message);
     }
 }

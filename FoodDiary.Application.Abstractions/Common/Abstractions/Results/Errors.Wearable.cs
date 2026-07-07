@@ -1,30 +1,17 @@
+using FoodDiary.Application.Abstractions.Wearables.Common;
+
 namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
 public static partial class Errors {
     public static class Wearable {
-        public static Error InvalidProvider(string provider) => new(
-            "Wearable.InvalidProvider",
-            $"'{provider}' is not a valid wearable provider.",
-            Kind: ErrorKind.Validation);
+        public static Error InvalidProvider(string provider) => WearableErrors.InvalidProvider(provider);
 
-        public static Error ProviderNotConfigured(string provider) => new(
-            "Wearable.ProviderNotConfigured",
-            $"Wearable provider '{provider}' is not configured.",
-            Kind: ErrorKind.Internal);
+        public static Error ProviderNotConfigured(string provider) => WearableErrors.ProviderNotConfigured(provider);
 
-        public static Error NotConnected(string provider) => new(
-            "Wearable.NotConnected",
-            $"No active connection found for provider '{provider}'.",
-            Kind: ErrorKind.NotFound);
+        public static Error NotConnected(string provider) => WearableErrors.NotConnected(provider);
 
-        public static Error AuthFailed(string provider) => new(
-            "Wearable.AuthFailed",
-            $"Authentication with '{provider}' failed.",
-            Kind: ErrorKind.Unauthorized);
+        public static Error AuthFailed(string provider) => WearableErrors.AuthFailed(provider);
 
-        public static Error InvalidState => new(
-            "Wearable.InvalidState",
-            "Wearable authentication state is invalid or expired.",
-            Kind: ErrorKind.Unauthorized);
+        public static Error InvalidState => WearableErrors.InvalidState;
     }
 }
