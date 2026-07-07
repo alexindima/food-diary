@@ -115,6 +115,16 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationRootCommon_DoesNotRegrowFeatureSpecificNutritionHelpers() {
+        string root = GetRepositoryRoot();
+        string nutritionRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Nutrition");
+
+        Assert.False(
+            Directory.Exists(nutritionRoot),
+            "Nutrition helpers should live under FoodDiary.Application/Nutrition/Common instead of the root Common folder.");
+    }
+
+    [Fact]
     public void MigratedSmallApplicationFeatureHandlersAndValidators_AreSealed() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

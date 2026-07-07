@@ -19,7 +19,7 @@ using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
-using FoodDiary.Application.Common.Nutrition;
+using FoodDiary.Application.Nutrition.Common;
 using FoodDiary.Application.Recipes.Services;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.FavoriteRecipes;

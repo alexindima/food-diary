@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Common.Nutrition;
+using FoodDiary.Application.Nutrition.Common;
 using FoodDiary.Application.Consumptions.Common;
 
 namespace FoodDiary.Application.Consumptions.Services;

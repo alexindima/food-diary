@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Common.Nutrition;
+namespace FoodDiary.Application.Nutrition.Common;
 
 public static class ManualNutritionLimits {
     public const double MaxCalories = 100_000;

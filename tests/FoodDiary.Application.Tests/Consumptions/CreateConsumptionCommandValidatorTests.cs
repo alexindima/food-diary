@@ -1,5 +1,5 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Common.Nutrition;
+using FoodDiary.Application.Nutrition.Common;
 using FoodDiary.Application.Consumptions.Commands.CreateConsumption;
 using FoodDiary.Application.Consumptions.Common;
 

@@ -14,6 +14,7 @@ This directory contains long-form repository documentation. Keep root-level mark
 - `backend/BACKEND_CRITICAL_FLOW_MATRIX.md`
 - `backend/BACKEND_DEFINITION_OF_DONE.md`
 - `backend/BACKEND_EVENT_TAXONOMY.md`
+- `backend/BACKEND_FEATURE_FIRST_COMMON_INVENTORY.md`
 - `backend/BACKEND_MIGRATION_SAFETY.md`
 - `backend/BACKEND_OBSERVABILITY_BASELINE.md`
 - `backend/BACKEND_PERFORMANCE_REVIEW.md`

@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.Common.Nutrition;
+using FoodDiary.Application.Nutrition.Common;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Domain.Entities.Meals;
