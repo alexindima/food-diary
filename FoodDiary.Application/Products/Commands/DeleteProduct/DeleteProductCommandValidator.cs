@@ -25,11 +25,13 @@ public sealed class DeleteProductCommandValidator : AbstractValidator<DeleteProd
 
         RuleFor(x => x)
             .CustomAsync(async (command, context, cancellationToken) => {
-                if (command.UserId is null || command.UserId.Value == Guid.Empty) {
+                if (command.UserId is null || command.UserId.Value == Guid.Empty || command.ProductId == Guid.Empty) {
                     return;
                 }
 
-                Product? product = await productRepository.GetByIdAsync(new ProductId(command.ProductId), new UserId(command.UserId.Value), includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
+                var productId = new ProductId(command.ProductId);
+                var userId = new UserId(command.UserId.Value);
+                Product? product = await productRepository.GetByIdAsync(productId, userId, includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
                 if (product is null) {
                     context.AddFailure(new ValidationFailure(nameof(command.ProductId), "Product not found or you do not have permission to delete it") {
                         ErrorCode = "Product.NotFound",

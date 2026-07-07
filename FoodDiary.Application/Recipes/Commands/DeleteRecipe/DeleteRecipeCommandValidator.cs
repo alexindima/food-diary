@@ -34,13 +34,15 @@ public sealed class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecip
         DeleteRecipeCommand command,
         ValidationContext<DeleteRecipeCommand> context,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId.Value == Guid.Empty) {
+        if (command.UserId is null || command.UserId.Value == Guid.Empty || command.RecipeId == Guid.Empty) {
             return;
         }
 
+        var recipeId = new RecipeId(command.RecipeId);
+        var userId = new UserId(command.UserId.Value);
         Recipe? recipe = await _recipeRepository.GetByIdAsync(
-            new RecipeId(command.RecipeId),
-            new UserId(command.UserId.Value),
+            recipeId,
+            userId,
             includePublic: false,
             includeSteps: false,
             cancellationToken: cancellationToken).ConfigureAwait(false);

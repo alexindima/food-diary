@@ -155,11 +155,13 @@ public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProd
         var product = cached as Product;
 
         if (product is null) {
-            if (command.UserId is null || command.UserId.Value == Guid.Empty) {
+            if (command.UserId is null || command.UserId.Value == Guid.Empty || command.ProductId == Guid.Empty) {
                 return;
             }
 
-            product = await _productRepository.GetByIdAsync(new ProductId(command.ProductId), new UserId(command.UserId.Value), includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
+            var productId = new ProductId(command.ProductId);
+            var userId = new UserId(command.UserId.Value);
+            product = await _productRepository.GetByIdAsync(productId, userId, includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
             if (product is not null) {
                 context.RootContextData[ProductContextKey] = product;
             }

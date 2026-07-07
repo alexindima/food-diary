@@ -173,13 +173,15 @@ public sealed class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecip
             return;
         }
 
-        if (command.UserId is null || command.UserId.Value == Guid.Empty) {
+        if (command.UserId is null || command.UserId.Value == Guid.Empty || command.RecipeId == Guid.Empty) {
             return;
         }
 
+        var recipeId = new RecipeId(command.RecipeId);
+        var userId = new UserId(command.UserId.Value);
         Recipe? existing = await _recipeRepository.GetByIdAsync(
-            new RecipeId(command.RecipeId),
-            new UserId(command.UserId.Value),
+            recipeId,
+            userId,
             includePublic: false,
             includeSteps: false,
             cancellationToken: cancellationToken).ConfigureAwait(false);
