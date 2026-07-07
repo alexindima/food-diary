@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Meals;
 
@@ -11,15 +12,16 @@ public sealed class DeleteConsumptionCommandHandler(
     IMealWriteRepository mealWriteRepository)
     : ICommandHandler<DeleteConsumptionCommand, Result> {
     public async Task<Result> Handle(DeleteConsumptionCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        if (userIdResult.IsFailure) {
+            return Result.Failure(userIdResult.Error);
         }
 
         if (command.ConsumptionId == Guid.Empty) {
             return Result.Failure(Errors.Validation.Invalid(nameof(command.ConsumptionId), "Consumption id must not be empty."));
         }
 
-        var userId = new UserId(command.UserId!.Value);
+        UserId userId = userIdResult.Value;
         var consumptionId = new MealId(command.ConsumptionId);
 
         Meal? meal = await mealReadRepository.GetByIdAsync(

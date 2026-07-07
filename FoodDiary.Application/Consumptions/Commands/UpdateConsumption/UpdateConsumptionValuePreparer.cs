@@ -4,7 +4,7 @@ using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Images.Common;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -23,12 +23,15 @@ internal static class UpdateConsumptionValuePreparer {
             return Result.Failure<UpdateConsumptionValues>(commandValidation.Error);
         }
 
-        var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<UpdateConsumptionValues>(accessError);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return Result.Failure<UpdateConsumptionValues>(userIdResult.Error);
         }
 
+        UserId userId = userIdResult.Value;
         var consumptionId = new MealId(command.ConsumptionId);
         Meal? meal = await mealReadRepository.GetByIdAsync(
             consumptionId,
@@ -48,15 +51,12 @@ internal static class UpdateConsumptionValuePreparer {
             return Result.Failure<UpdateConsumptionValues>(mealTypeResult.Error);
         }
 
-        Result<ImageAssetId?> imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
-        if (imageAssetIdResult.IsFailure) {
-            return Result.Failure<UpdateConsumptionValues>(imageAssetIdResult.Error);
-        }
-
         ImageAssetId? oldAssetId = meal.ImageAssetId;
-        Result<ImageAsset?> imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
-            imageAssetIdResult.Value,
+        Result<ImageAssetResolution> imageAssetResult = await ImageAssetResolver.ResolveOptionalAsync(
+            command.ImageAssetId,
+            nameof(command.ImageAssetId),
             userId,
+            imageAssetAccessService,
             cancellationToken).ConfigureAwait(false);
         if (imageAssetResult.IsFailure) {
             return Result.Failure<UpdateConsumptionValues>(imageAssetResult.Error);
@@ -67,16 +67,12 @@ internal static class UpdateConsumptionValuePreparer {
             consumptionId,
             meal,
             mealTypeResult.Value,
-            imageAssetIdResult.Value,
-            imageAssetResult.Value,
+            imageAssetResult.Value.ImageAssetId,
+            imageAssetResult.Value.ImageAsset,
             oldAssetId));
     }
 
     private static Result ValidateCommand(UpdateConsumptionCommand command) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure(Errors.Authentication.InvalidToken);
-        }
-
         if (command.ConsumptionId == Guid.Empty) {
             return Result.Failure(
                 Errors.Validation.Invalid(nameof(command.ConsumptionId), "Consumption id must not be empty."));

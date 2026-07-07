@@ -162,7 +162,10 @@ public static class DependencyInjection {
         services.AddScoped<IBillingUserContextService, BillingUserContextService>();
         services.AddScoped<IBillingUserLookupService, BillingUserLookupService>();
         services.AddScoped<BillingAccessService>();
+        services.AddScoped<BillingWebhookContextResolver>();
         services.AddScoped<BillingWebhookPaymentRecorder>();
+        services.AddScoped<BillingWebhookPremiumRoleSyncer>();
+        services.AddScoped<BillingWebhookSubscriptionWriter>();
         services.AddScoped<BillingRenewalService>();
         services.AddSingleton(TimeProvider.System);
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();

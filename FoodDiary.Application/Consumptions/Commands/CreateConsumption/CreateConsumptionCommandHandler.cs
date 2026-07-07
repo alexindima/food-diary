@@ -3,15 +3,11 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Commands.CreateConsumption;
@@ -24,14 +20,12 @@ public sealed class CreateConsumptionCommandHandler(
     TimeProvider dateTimeProvider,
     IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<CreateConsumptionCommand, Result<ConsumptionModel>> {
-    private sealed record CreateConsumptionValues(
-        UserId UserId,
-        MealType? MealType,
-        ImageAssetId? ImageAssetId,
-        ImageAsset? ImageAsset);
-
     public async Task<Result<ConsumptionModel>> Handle(CreateConsumptionCommand command, CancellationToken cancellationToken) {
-        Result<CreateConsumptionValues> valuesResult = await PrepareCreateValuesAsync(command, cancellationToken).ConfigureAwait(false);
+        Result<CreateConsumptionValues> valuesResult = await CreateConsumptionValuePreparer.PrepareAsync(
+            command,
+            currentUserAccessService,
+            imageAssetAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (valuesResult.IsFailure) {
             return Result.Failure<ConsumptionModel>(valuesResult.Error);
         }
@@ -73,47 +67,6 @@ public sealed class CreateConsumptionCommandHandler(
         }
 
         return await SaveAsync(meal, values.UserId, cancellationToken).ConfigureAwait(false);
-    }
-
-    private async Task<Result<CreateConsumptionValues>> PrepareCreateValuesAsync(
-        CreateConsumptionCommand command,
-        CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<CreateConsumptionValues>(Errors.Authentication.InvalidToken);
-        }
-
-        Result<ImageAssetId?> imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
-        if (imageAssetIdResult.IsFailure) {
-            return Result.Failure<CreateConsumptionValues>(imageAssetIdResult.Error);
-        }
-
-        var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<CreateConsumptionValues>(accessError);
-        }
-
-        Result<ImageAsset?> imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
-            imageAssetIdResult.Value,
-            userId,
-            cancellationToken).ConfigureAwait(false);
-        if (imageAssetResult.IsFailure) {
-            return Result.Failure<CreateConsumptionValues>(imageAssetResult.Error);
-        }
-
-        Result<MealType?> mealTypeResult = EnumValueParser.ParseOptional<MealType>(
-            command.MealType,
-            nameof(command.MealType),
-            "Unknown meal type value.");
-        if (mealTypeResult.IsFailure) {
-            return Result.Failure<CreateConsumptionValues>(mealTypeResult.Error);
-        }
-
-        return Result.Success(new CreateConsumptionValues(
-            userId,
-            mealTypeResult.Value,
-            imageAssetIdResult.Value,
-            imageAssetResult.Value));
     }
 
     private static ConsumptionNutritionInput CreateNutritionInput(CreateConsumptionCommand command) =>

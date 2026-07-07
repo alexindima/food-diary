@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Recipes;
 
@@ -13,15 +14,16 @@ public sealed class DeleteRecipeCommandHandler(
     IImageAssetCleanupService imageAssetCleanupService)
     : ICommandHandler<DeleteRecipeCommand, Result> {
     public async Task<Result> Handle(DeleteRecipeCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        if (userIdResult.IsFailure) {
+            return Result.Failure(userIdResult.Error);
         }
 
         if (command.RecipeId == Guid.Empty) {
             return Result.Failure(Errors.Validation.Invalid(nameof(command.RecipeId), "Recipe id must not be empty."));
         }
 
-        var userId = new UserId(command.UserId!.Value);
+        UserId userId = userIdResult.Value;
         var recipeId = new RecipeId(command.RecipeId);
 
         Recipe? recipe = await recipeReadRepository.GetByIdAsync(

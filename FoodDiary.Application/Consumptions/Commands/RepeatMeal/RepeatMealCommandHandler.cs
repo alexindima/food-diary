@@ -6,6 +6,7 @@ using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -45,16 +46,15 @@ public sealed class RepeatMealCommandHandler(
     private async Task<Result<RepeatMealValues>> PrepareRepeatValuesAsync(
         RepeatMealCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<RepeatMealValues>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return Result.Failure<RepeatMealValues>(userIdResult.Error);
         }
 
-        var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<RepeatMealValues>(accessError);
-        }
-
+        UserId userId = userIdResult.Value;
         var sourceMealId = new MealId(command.MealId);
         Meal? sourceMeal = await mealReadRepository.GetByIdAsync(
             sourceMealId,

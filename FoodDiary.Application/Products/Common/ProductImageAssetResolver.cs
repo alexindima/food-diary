@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Images.Common;
-using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Common;
@@ -14,20 +13,17 @@ internal static class ProductImageAssetResolver {
         UserId userId,
         IImageAssetAccessService imageAssetAccessService,
         CancellationToken cancellationToken) {
-        Result<ImageAssetId?> imageAssetIdResult = ImageAssetIdParser.ParseOptional(imageAssetId, propertyName);
-        if (imageAssetIdResult.IsFailure) {
-            return Result.Failure<ProductImageAssetResolution>(imageAssetIdResult.Error);
-        }
-
-        Result<ImageAsset?> imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
-            imageAssetIdResult.Value,
+        Result<ImageAssetResolution> resolutionResult = await ImageAssetResolver.ResolveOptionalAsync(
+            imageAssetId,
+            propertyName,
             userId,
+            imageAssetAccessService,
             cancellationToken).ConfigureAwait(false);
-        return imageAssetResult.IsFailure
-            ? Result.Failure<ProductImageAssetResolution>(imageAssetResult.Error)
+        return resolutionResult.IsFailure
+            ? Result.Failure<ProductImageAssetResolution>(resolutionResult.Error)
             : Result.Success(new ProductImageAssetResolution(
-                imageAssetIdResult.Value,
-                imageAssetResult.Value?.Url ?? fallbackImageUrl,
-                imageAssetResult.Value is not null));
+                resolutionResult.Value.ImageAssetId,
+                resolutionResult.Value.ImageAsset?.Url ?? fallbackImageUrl,
+                resolutionResult.Value.ImageAsset is not null));
     }
 }

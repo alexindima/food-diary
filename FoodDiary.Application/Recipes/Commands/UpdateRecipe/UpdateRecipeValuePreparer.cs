@@ -7,7 +7,7 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Services;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -28,16 +28,15 @@ internal static class UpdateRecipeValuePreparer {
             return Result.Failure<UpdateRecipeValues>(commandValidation.Error);
         }
 
-        Result<ImageAssetId?> imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
-        if (imageAssetIdResult.IsFailure) {
-            return Result.Failure<UpdateRecipeValues>(imageAssetIdResult.Error);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return Result.Failure<UpdateRecipeValues>(userIdResult.Error);
         }
 
-        var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<UpdateRecipeValues>(accessError);
-        }
+        UserId userId = userIdResult.Value;
 
         var recipeId = new RecipeId(command.RecipeId);
         Result<Recipe> recipeResult = await ResolveEditableRecipeAsync(command, recipeId, userId, recipeRepository, cancellationToken).ConfigureAwait(false);
@@ -62,8 +61,9 @@ internal static class UpdateRecipeValuePreparer {
             return Result.Failure<UpdateRecipeValues>(ingredientAccessResult.Error);
         }
 
-        Result<ImageAsset?> imageAssetResult = await ResolveImageAssetAsync(
-            imageAssetIdResult.Value,
+        Result<ImageAssetResolution> imageAssetResult = await ImageAssetResolver.ResolveOptionalAsync(
+            command.ImageAssetId,
+            nameof(command.ImageAssetId),
             userId,
             imageAssetAccessService,
             cancellationToken).ConfigureAwait(false);
@@ -77,19 +77,12 @@ internal static class UpdateRecipeValuePreparer {
             recipeId,
             recipe,
             visibilityResult.Value,
-            imageAssetIdResult.Value,
-            imageAssetResult.Value,
+            imageAssetResult.Value.ImageAssetId,
+            imageAssetResult.Value.ImageAsset,
             recipe.ImageAssetId,
             GetStepAssetIds(recipe),
             steps));
     }
-
-    private static Task<Result<ImageAsset?>> ResolveImageAssetAsync(
-        ImageAssetId? imageAssetId,
-        UserId userId,
-        IImageAssetAccessService imageAssetAccessService,
-        CancellationToken cancellationToken) =>
-        imageAssetAccessService.ResolveOptionalAsync(imageAssetId, userId, cancellationToken);
 
     private static IReadOnlyList<ImageAssetId> GetStepAssetIds(Recipe recipe) =>
         recipe.Steps
@@ -100,10 +93,6 @@ internal static class UpdateRecipeValuePreparer {
             .ToList();
 
     private static Result ValidateCommand(UpdateRecipeCommand command) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure(Errors.Authentication.InvalidToken);
-        }
-
         return command.RecipeId == Guid.Empty
             ? Result.Failure(Errors.Validation.Invalid(nameof(command.RecipeId), "Recipe id must not be empty."))
             : Result.Success();

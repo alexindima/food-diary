@@ -1784,15 +1784,19 @@ public sealed class BillingFeatureTests {
         RecordingBillingPaymentRepository paymentRepository,
         RecordingBillingWebhookEventRepository webhookEventRepository) {
         var dateTimeProvider = new FixedDateTimeProvider(Now);
+        var billingAccessService = new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider);
         return new ProcessBillingWebhookCommandHandler(
             new FakeBillingProviderGatewayAccessor(gateway, gateway),
-            subscriptionRepository,
             webhookEventRepository,
             new NoOpBillingTransactionRunner(),
-            userRepository,
-            new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
+            new BillingWebhookContextResolver(subscriptionRepository, userRepository),
+            new BillingWebhookSubscriptionWriter(subscriptionRepository, dateTimeProvider),
             new BillingWebhookPaymentRecorder(paymentRepository),
-            dateTimeProvider);
+            new BillingWebhookPremiumRoleSyncer(
+                subscriptionRepository,
+                userRepository,
+                billingAccessService,
+                dateTimeProvider));
     }
 
     private static User CreatePremiumUser(string email) {

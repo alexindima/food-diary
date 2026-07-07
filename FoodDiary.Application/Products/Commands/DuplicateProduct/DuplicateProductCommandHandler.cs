@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Domain.Entities.Products;
@@ -13,15 +14,16 @@ public sealed class DuplicateProductCommandHandler(
     IProductWriteRepository productWriteRepository)
     : ICommandHandler<DuplicateProductCommand, Result<ProductModel>> {
     public async Task<Result<ProductModel>> Handle(DuplicateProductCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<ProductModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        if (userIdResult.IsFailure) {
+            return Result.Failure<ProductModel>(userIdResult.Error);
         }
 
         if (command.ProductId == Guid.Empty) {
             return Result.Failure<ProductModel>(Errors.Validation.Invalid(nameof(command.ProductId), "Product id must not be empty."));
         }
 
-        var userId = new UserId(command.UserId!.Value);
+        UserId userId = userIdResult.Value;
         var productId = new ProductId(command.ProductId);
 
         Product? original = await productReadRepository.GetByIdAsync(

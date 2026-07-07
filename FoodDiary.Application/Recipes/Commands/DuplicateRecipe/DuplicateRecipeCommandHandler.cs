@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Recipes.Services;
@@ -15,15 +16,16 @@ public sealed class DuplicateRecipeCommandHandler(
     IRecipeNutritionWriter recipeNutritionWriter)
     : ICommandHandler<DuplicateRecipeCommand, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(DuplicateRecipeCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        if (userIdResult.IsFailure) {
+            return Result.Failure<RecipeModel>(userIdResult.Error);
         }
 
         if (command.RecipeId == Guid.Empty) {
             return Result.Failure<RecipeModel>(Errors.Validation.Invalid(nameof(command.RecipeId), "Recipe id must not be empty."));
         }
 
-        var userId = new UserId(command.UserId!.Value);
+        UserId userId = userIdResult.Value;
         var recipeId = new RecipeId(command.RecipeId);
 
         Recipe? original = await recipeReadRepository.GetByIdAsync(

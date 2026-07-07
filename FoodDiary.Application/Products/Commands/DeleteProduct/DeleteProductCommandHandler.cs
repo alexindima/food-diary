@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Products;
 
@@ -14,20 +15,19 @@ public sealed class DeleteProductCommandHandler(
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DeleteProductCommand, Result> {
     public async Task<Result> Handle(DeleteProductCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure(Errors.Authentication.InvalidToken);
-        }
-
         if (command.ProductId == Guid.Empty) {
             return Result.Failure(Errors.Validation.Invalid(nameof(command.ProductId), "Product id must not be empty."));
         }
 
-        var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure(accessError);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return Result.Failure(userIdResult.Error);
         }
 
+        UserId userId = userIdResult.Value;
         var productId = new ProductId(command.ProductId);
 
         Product? product = await productRepository.GetByIdForUpdateAsync(

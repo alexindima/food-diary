@@ -7,11 +7,11 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
+namespace FoodDiary.Application.Consumptions.Commands.CreateConsumption;
 
-internal static class CreateRecipeValuePreparer {
-    public static async Task<Result<CreateRecipeValues>> PrepareAsync(
-        CreateRecipeCommand command,
+internal static class CreateConsumptionValuePreparer {
+    public static async Task<Result<CreateConsumptionValues>> PrepareAsync(
+        CreateConsumptionCommand command,
         ICurrentUserAccessService currentUserAccessService,
         IImageAssetAccessService imageAssetAccessService,
         CancellationToken cancellationToken) {
@@ -20,7 +20,7 @@ internal static class CreateRecipeValuePreparer {
             currentUserAccessService,
             cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return Result.Failure<CreateRecipeValues>(userIdResult.Error);
+            return Result.Failure<CreateConsumptionValues>(userIdResult.Error);
         }
 
         UserId userId = userIdResult.Value;
@@ -31,20 +31,20 @@ internal static class CreateRecipeValuePreparer {
             imageAssetAccessService,
             cancellationToken).ConfigureAwait(false);
         if (imageAssetResult.IsFailure) {
-            return Result.Failure<CreateRecipeValues>(imageAssetResult.Error);
+            return Result.Failure<CreateConsumptionValues>(imageAssetResult.Error);
         }
 
-        Result<Visibility> visibilityResult = EnumValueParser.ParseRequired<Visibility>(
-            command.Visibility,
-            nameof(command.Visibility),
-            "Unknown visibility value.");
-        if (visibilityResult.IsFailure) {
-            return Result.Failure<CreateRecipeValues>(visibilityResult.Error);
+        Result<MealType?> mealTypeResult = EnumValueParser.ParseOptional<MealType>(
+            command.MealType,
+            nameof(command.MealType),
+            "Unknown meal type value.");
+        if (mealTypeResult.IsFailure) {
+            return Result.Failure<CreateConsumptionValues>(mealTypeResult.Error);
         }
 
-        return Result.Success(new CreateRecipeValues(
+        return Result.Success(new CreateConsumptionValues(
             userId,
-            visibilityResult.Value,
+            mealTypeResult.Value,
             imageAssetResult.Value.ImageAssetId,
             imageAssetResult.Value.ImageAsset));
     }
