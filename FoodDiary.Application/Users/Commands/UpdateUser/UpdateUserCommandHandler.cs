@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;

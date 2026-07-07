@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Common.Validation;
+namespace FoodDiary.Application.Images.Common;
 
 public static class ImageAssetIdParser {
     public static Result<ImageAssetId?> ParseOptional(Guid? value, string fieldName) {

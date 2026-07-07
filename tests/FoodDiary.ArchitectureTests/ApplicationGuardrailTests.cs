@@ -257,6 +257,25 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationCommonValidation_StaysLimitedToSharedLowLevelParsers() {
+        string root = GetRepositoryRoot();
+        string validationRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Validation");
+        string[] allowedFiles = [
+            "EnumFilterParser.cs",
+            "EnumValueParser.cs",
+            "OptionalEntityIdValidator.cs",
+            "StringCodeParser.cs",
+            "UserIdParser.cs",
+        ];
+
+        string?[] actualFiles = [.. Directory.GetFiles(validationRoot, "*.cs", SearchOption.TopDirectoryOnly)
+            .Select(Path.GetFileName)
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Equal(allowedFiles, actualFiles);
+    }
+
+    [Fact]
     public void ApplicationHandlersAndServices_DoNotUseDateTimeUtcNow_Directly() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

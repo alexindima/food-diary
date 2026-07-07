@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Services;
 using FoodDiary.Domain.Entities.Assets;

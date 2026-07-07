@@ -11,9 +11,10 @@ This inventory tracks backend `Common` areas that should stay cross-cutting vers
 - `Models/PagedResponse.cs`: shared paging result model used across application and presentation mappings.
 - `Services/PostCommitActionQueue.cs`: cross-cutting post-commit execution queue.
 - `Time/UtcDateNormalizer.cs`: shared request date normalization.
-- `Validation`: shared low-level parsers and value-object validation helpers.
+- `Validation`: shared low-level enum, user id, optional entity id, and string-code parsers.
 
 Feature or domain-purpose helpers should not live under root `Common`. `ManualNutritionLimits` was moved to `FoodDiary.Application/Nutrition/Common` because it is a nutrition-domain policy shared by consumption and recipe features, not a generic application primitive.
+`ImageAssetIdParser` was moved to `FoodDiary.Application/Images/Common` because it is an image-domain helper shared by product, recipe, consumption, and user flows.
 
 ## Application Abstractions
 
@@ -29,5 +30,6 @@ Feature-specific repository and service contracts should continue to live under 
 ## Guardrails
 
 - `ApplicationRootCommon_DoesNotRegrowFeatureSpecificNutritionHelpers` prevents `FoodDiary.Application/Common/Nutrition` from returning.
+- `ApplicationCommonValidation_StaysLimitedToSharedLowLevelParsers` prevents image and other feature-purpose helpers from returning to root validation.
 - `ApplicationAbstractionsCommonPersistenceInterfaces_StayLimitedToCurrentCrossFeatureContracts` prevents root persistence contracts from regrowing.
 - `ApplicationCommonServiceInterfaces_StayLimitedToTrueCrossCuttingAbstractions` prevents root service contracts from regrowing.
