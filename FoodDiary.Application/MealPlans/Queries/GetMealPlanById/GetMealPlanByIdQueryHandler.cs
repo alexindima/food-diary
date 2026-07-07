@@ -17,7 +17,16 @@ public sealed class GetMealPlanByIdQueryHandler(IMealPlanReadService mealPlanRea
             return UserIdParser.ToFailure<MealPlanModel>(userIdResult);
         }
 
-        var planId = new MealPlanId(query.PlanId);
+        Result<MealPlanId> planIdResult = RequiredIdParser.Parse(
+            query.PlanId,
+            nameof(query.PlanId),
+            "Meal plan id must not be empty.",
+            value => new MealPlanId(value));
+        if (planIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<MealPlanModel, MealPlanId>(planIdResult);
+        }
+
+        MealPlanId planId = planIdResult.Value;
         MealPlanModel? plan = await mealPlanReadService
             .GetAccessibleByIdAsync(planId, userIdResult.Value, cancellationToken)
             .ConfigureAwait(false);

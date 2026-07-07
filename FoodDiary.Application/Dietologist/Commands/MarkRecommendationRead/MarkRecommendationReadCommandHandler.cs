@@ -22,7 +22,16 @@ public sealed class MarkRecommendationReadCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var recommendationId = new RecommendationId(command.RecommendationId);
+        Result<RecommendationId> recommendationIdResult = RequiredIdParser.Parse(
+            command.RecommendationId,
+            nameof(command.RecommendationId),
+            "Recommendation id must not be empty.",
+            value => new RecommendationId(value));
+        if (recommendationIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(recommendationIdResult);
+        }
+
+        RecommendationId recommendationId = recommendationIdResult.Value;
 
         Recommendation? recommendation = await recommendationRepository.GetByIdAsync(
             recommendationId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);

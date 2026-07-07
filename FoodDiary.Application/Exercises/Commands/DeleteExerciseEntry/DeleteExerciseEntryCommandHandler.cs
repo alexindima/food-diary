@@ -17,7 +17,16 @@ public sealed class DeleteExerciseEntryCommandHandler(IExerciseEntryWriteReposit
             return UserIdParser.ToFailure(userIdResult);
         }
 
-        var entryId = new ExerciseEntryId(command.EntryId);
+        Result<ExerciseEntryId> entryIdResult = RequiredIdParser.Parse(
+            command.EntryId,
+            nameof(command.EntryId),
+            "Exercise entry id must not be empty.",
+            value => new ExerciseEntryId(value));
+        if (entryIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(entryIdResult);
+        }
+
+        ExerciseEntryId entryId = entryIdResult.Value;
         ExerciseEntry? entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (entry is null) {
             return Result.Failure(Errors.Exercise.NotFound(command.EntryId));

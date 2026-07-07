@@ -36,7 +36,12 @@ public sealed class AcceptInvitationCommandHandler(
             return Result.Failure(userResult.Error);
         }
 
-        var invitationId = new DietologistInvitationId(command.InvitationId);
+        Result<DietologistInvitationId> invitationIdResult = ParseInvitationId(command);
+        if (invitationIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(invitationIdResult);
+        }
+
+        DietologistInvitationId invitationId = invitationIdResult.Value;
         DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(invitationId, asTracking: true, cancellationToken).ConfigureAwait(false);
 
         if (invitation is null) {
@@ -78,6 +83,13 @@ public sealed class AcceptInvitationCommandHandler(
             cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
+
+    private static Result<DietologistInvitationId> ParseInvitationId(AcceptInvitationCommand command) =>
+        RequiredIdParser.Parse(
+            command.InvitationId,
+            nameof(command.InvitationId),
+            "Invitation id must not be empty.",
+            value => new DietologistInvitationId(value));
 
     private static string ResolveDietologistDisplayName(User user) {
         string fullName = $"{user.FirstName} {user.LastName}".Trim();

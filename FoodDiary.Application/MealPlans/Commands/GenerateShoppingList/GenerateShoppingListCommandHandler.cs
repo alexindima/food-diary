@@ -24,7 +24,16 @@ public sealed class GenerateShoppingListCommandHandler(
             return UserIdParser.ToFailure<ShoppingListModel>(userIdResult);
         }
 
-        var planId = new MealPlanId(command.PlanId);
+        Result<MealPlanId> planIdResult = RequiredIdParser.Parse(
+            command.PlanId,
+            nameof(command.PlanId),
+            "Meal plan id must not be empty.",
+            value => new MealPlanId(value));
+        if (planIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<ShoppingListModel, MealPlanId>(planIdResult);
+        }
+
+        MealPlanId planId = planIdResult.Value;
         MealPlan? plan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
         if (plan is null || (!plan.IsCurated && plan.UserId != userIdResult.Value)) {
             return Result.Failure<ShoppingListModel>(Errors.MealPlan.NotFound(command.PlanId));

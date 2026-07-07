@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -17,10 +18,13 @@ public sealed class ExploreRecipesQueryHandler(IRecipeOverviewReadService recipe
         int pageNumber = Math.Max(query.Page, 1);
         int pageSize = Math.Max(query.Limit, 1);
 
-        UserId currentUserId = query.UserId.HasValue ? new UserId(query.UserId.Value) : UserId.Empty;
+        Result<UserId> currentUserIdResult = ResolveCurrentUserId(query);
+        if (currentUserIdResult.IsFailure) {
+            return UserIdParser.ToFailure<PagedResponse<RecipeModel>>(currentUserIdResult);
+        }
 
         (IReadOnlyList<RecipeOverviewReadItem> items, int totalItems) = await recipeOverviewReadService.GetExplorePagedAsync(
-            currentUserId, pageNumber, pageSize, query.Search, query.Category,
+            currentUserIdResult.Value, pageNumber, pageSize, query.Search, query.Category,
             query.MaxPrepTime, query.SortBy, cancellationToken).ConfigureAwait(false);
 
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
@@ -33,4 +37,11 @@ public sealed class ExploreRecipesQueryHandler(IRecipeOverviewReadService recipe
 
         return Result.Success(response);
     }
+
+    private static Result<UserId> ResolveCurrentUserId(ExploreRecipesQuery query) =>
+        query.UserId.HasValue
+            ? UserIdParser.Parse(
+                query.UserId.Value,
+                Errors.Validation.Invalid(nameof(query.UserId), "User id must not be empty."))
+            : Result.Success(UserId.Empty);
 }

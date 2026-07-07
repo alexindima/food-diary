@@ -24,7 +24,16 @@ public sealed class RemoveFavoriteMealCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var favoriteMealId = new FavoriteMealId(command.FavoriteMealId);
+        Result<FavoriteMealId> favoriteMealIdResult = RequiredIdParser.Parse(
+            command.FavoriteMealId,
+            nameof(command.FavoriteMealId),
+            "Favorite meal id must not be empty.",
+            value => new FavoriteMealId(value));
+        if (favoriteMealIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(favoriteMealIdResult);
+        }
+
+        FavoriteMealId favoriteMealId = favoriteMealIdResult.Value;
         FavoriteMeal? favorite = await favoriteMealRepository.GetByIdAsync(
             favoriteMealId, userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 

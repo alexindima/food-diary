@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
@@ -20,7 +21,16 @@ public sealed class DeclineInvitationCommandHandler(
     IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<DeclineInvitationCommand, Result> {
     public async Task<Result> Handle(DeclineInvitationCommand command, CancellationToken cancellationToken) {
-        var invitationId = new DietologistInvitationId(command.InvitationId);
+        Result<DietologistInvitationId> invitationIdResult = RequiredIdParser.Parse(
+            command.InvitationId,
+            nameof(command.InvitationId),
+            "Invitation id must not be empty.",
+            value => new DietologistInvitationId(value));
+        if (invitationIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(invitationIdResult);
+        }
+
+        DietologistInvitationId invitationId = invitationIdResult.Value;
         DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(invitationId, asTracking: true, cancellationToken).ConfigureAwait(false);
 
         if (invitation is null || invitation.Status != DietologistInvitationStatus.Pending) {

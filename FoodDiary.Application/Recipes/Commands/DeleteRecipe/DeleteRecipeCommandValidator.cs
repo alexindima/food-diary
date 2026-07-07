@@ -1,6 +1,8 @@
 using FluentValidation;
 using FluentValidation.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -34,15 +36,19 @@ public sealed class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecip
         DeleteRecipeCommand command,
         ValidationContext<DeleteRecipeCommand> context,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId.Value == Guid.Empty || command.RecipeId == Guid.Empty) {
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<RecipeId> recipeIdResult = RequiredIdParser.Parse(
+            command.RecipeId,
+            nameof(command.RecipeId),
+            "Recipe id must not be empty.",
+            value => new RecipeId(value));
+        if (userIdResult.IsFailure || recipeIdResult.IsFailure) {
             return;
         }
 
-        var recipeId = new RecipeId(command.RecipeId);
-        var userId = new UserId(command.UserId.Value);
         Recipe? recipe = await _recipeRepository.GetByIdAsync(
-            recipeId,
-            userId,
+            recipeIdResult.Value,
+            userIdResult.Value,
             includePublic: false,
             includeSteps: false,
             cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -51,19 +57,6 @@ public sealed class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecip
             context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
                 "Recipe not found or you do not have permission to delete it") {
                 ErrorCode = "Recipe.NotFound",
-            });
-            return;
-        }
-
-        int usageCount = await _recipeRepository.GetUsageCountAsync(
-            recipe.Id,
-            recipe.UserId,
-            includePublic: false,
-            cancellationToken).ConfigureAwait(false);
-        if (usageCount > 0) {
-            context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
-                "Recipe is already used and cannot be deleted") {
-                ErrorCode = "Validation.Invalid",
             });
         }
     }

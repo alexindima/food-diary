@@ -12,6 +12,7 @@ namespace FoodDiary.Application.Products.Commands.DeleteProduct;
 
 public sealed class DeleteProductCommandHandler(
     IProductWriteRepository productRepository,
+    IProductReadRepository productReadRepository,
     IImageAssetCleanupService imageAssetCleanupService,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DeleteProductCommand, Result> {
@@ -43,6 +44,17 @@ public sealed class DeleteProductCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (product is null) {
             return Result.Failure(Errors.Product.NotAccessible(command.ProductId));
+        }
+
+        int usageCount = await productReadRepository.GetUsageCountAsync(
+            product.Id,
+            product.UserId,
+            includePublic: false,
+            cancellationToken).ConfigureAwait(false);
+        if (usageCount > 0) {
+            return Result.Failure(Errors.Validation.Invalid(
+                nameof(command.ProductId),
+                "Product is already used and cannot be deleted"));
         }
 
         ImageAssetId? assetId = product.ImageAssetId;

@@ -114,10 +114,19 @@ public sealed class UpdateAdminUserCommandHandler(
                 Errors.Validation.Invalid("roles", "One or more roles are not configured in the system."));
         }
 
+        Result<UserId?> actorUserIdResult = OptionalEntityIdValidator.Parse(
+            command.ActorUserId,
+            nameof(command.ActorUserId),
+            "Actor user id",
+            value => new UserId(value));
+        if (actorUserIdResult.IsFailure) {
+            return Result.Failure<RoleUpdate?>(actorUserIdResult.Error);
+        }
+
         IReadOnlyList<UserRoleAuditEvent> roleAuditEvents = CreateRoleAuditEvents(
             user,
             roleEntities,
-            command.ActorUserId.HasValue ? new UserId(command.ActorUserId.Value) : null,
+            actorUserIdResult.Value,
             dateTimeProvider.GetUtcNow().UtcDateTime);
 
         return Result.Success<RoleUpdate?>(new RoleUpdate(roleEntities, roleAuditEvents));

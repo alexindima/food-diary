@@ -28,7 +28,16 @@ public sealed class MarkNotificationReadCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var notificationId = new NotificationId(command.NotificationId);
+        Result<NotificationId> notificationIdResult = RequiredIdParser.Parse(
+            command.NotificationId,
+            nameof(command.NotificationId),
+            "Notification id must not be empty.",
+            value => new NotificationId(value));
+        if (notificationIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(notificationIdResult);
+        }
+
+        NotificationId notificationId = notificationIdResult.Value;
 
         Notification? notification = await notificationWriteRepository.GetByIdAsync(
             notificationId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);

@@ -87,7 +87,7 @@ public static class ShoppingListItemBuilder {
         }
 
         return item.ProductId.HasValue
-            ? Result.Success(BuildProductItem(item, index, products))
+            ? BuildProductItem(item, index, products)
             : BuildCustomItem(item, index);
     }
 
@@ -101,17 +101,22 @@ public static class ShoppingListItemBuilder {
             : null;
     }
 
-    private static ShoppingListItemData BuildProductItem(
+    private static Result<ShoppingListItemData> BuildProductItem(
         ShoppingListItemInput item,
         int index,
         IReadOnlyDictionary<ProductId, Product> products) {
-        ProductId productId = OptionalEntityIdValidator.Parse(
+        Result<ProductId?> productIdResult = OptionalEntityIdValidator.Parse(
             item.ProductId,
             nameof(ShoppingListItemInput.ProductId),
             "ProductId",
-            value => new ProductId(value)).Value!.Value;
+            value => new ProductId(value));
+        if (productIdResult.IsFailure) {
+            return Result.Failure<ShoppingListItemData>(productIdResult.Error);
+        }
+
+        ProductId productId = productIdResult.Value!.Value;
         Product product = products[productId];
-        return new ShoppingListItemData(
+        return Result.Success(new ShoppingListItemData(
             ToItemId(item.Id),
             product.Name,
             productId,
@@ -122,7 +127,7 @@ public static class ShoppingListItemBuilder {
             item.Note,
             item.IsChecked,
             item.CheckedOnUtc,
-            ResolveSortOrder(item.SortOrder, index));
+            ResolveSortOrder(item.SortOrder, index)));
     }
 
     private static Result<ShoppingListItemData> BuildCustomItem(ShoppingListItemInput item, int index) {

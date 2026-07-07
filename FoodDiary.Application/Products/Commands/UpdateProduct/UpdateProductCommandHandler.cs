@@ -12,6 +12,7 @@ namespace FoodDiary.Application.Products.Commands.UpdateProduct;
 
 public sealed class UpdateProductCommandHandler(
     IProductWriteRepository productRepository,
+    IProductReadRepository productReadRepository,
     IImageAssetCleanupService imageAssetCleanupService,
     ICurrentUserAccessService currentUserAccessService,
     IImageAssetAccessService imageAssetAccessService)
@@ -35,6 +36,17 @@ public sealed class UpdateProductCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (product is null) {
             return Result.Failure<ProductModel>(Errors.Product.NotAccessible(command.ProductId));
+        }
+
+        int usageCount = await productReadRepository.GetUsageCountAsync(
+            product.Id,
+            product.UserId,
+            includePublic: false,
+            cancellationToken).ConfigureAwait(false);
+        if (usageCount > 0) {
+            return Result.Failure<ProductModel>(Errors.Validation.Invalid(
+                nameof(command.ProductId),
+                "Product is already used in consumptions or recipes and cannot be updated"));
         }
 
         ImageAssetId? oldAssetId = product.ImageAssetId;

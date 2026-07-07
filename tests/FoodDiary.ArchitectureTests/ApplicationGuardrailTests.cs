@@ -325,6 +325,58 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationSourceFiles_DoNotConstructTypedIdsDirectlyFromRequestObjects() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        var requestVariableNames = new HashSet<string>(StringComparer.Ordinal) {
+            "command",
+            "query",
+            "request",
+        };
+
+        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+            .SelectMany(path => FindDirectTypedIdConstructionFromRequestObjects(root, path, requestVariableNames))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    private static IEnumerable<string> FindDirectTypedIdConstructionFromRequestObjects(
+        string root,
+        string path,
+        IReadOnlySet<string> requestVariableNames) {
+        SyntaxTree tree = CSharpSyntaxTree.ParseText(File.ReadAllText(path));
+        CompilationUnitSyntax rootNode = tree.GetCompilationUnitRoot();
+        return rootNode.DescendantNodes()
+            .OfType<ObjectCreationExpressionSyntax>()
+            .Where(IsTypedIdCreation)
+            .Where(expression => expression.ArgumentList?.Arguments.Any(argument =>
+                IsRequestObjectMemberAccess(argument.Expression, requestVariableNames)) == true)
+            .Select(expression => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, path)}:{expression.GetLocation().GetLineSpan().StartLinePosition.Line + 1}"));
+    }
+
+    private static bool IsTypedIdCreation(ObjectCreationExpressionSyntax expression) {
+        string typeName = expression.Type switch {
+            IdentifierNameSyntax identifier => identifier.Identifier.ValueText,
+            QualifiedNameSyntax qualified => qualified.Right.Identifier.ValueText,
+            _ => expression.Type.ToString(),
+        };
+
+        return typeName.EndsWith("Id", StringComparison.Ordinal);
+    }
+
+    private static bool IsRequestObjectMemberAccess(ExpressionSyntax expression, IReadOnlySet<string> requestVariableNames) {
+        return expression switch {
+            MemberAccessExpressionSyntax memberAccess => IsRequestObjectMemberAccess(memberAccess.Expression, requestVariableNames),
+            IdentifierNameSyntax identifier => requestVariableNames.Contains(identifier.Identifier.ValueText),
+            ParenthesizedExpressionSyntax parenthesized => IsRequestObjectMemberAccess(parenthesized.Expression, requestVariableNames),
+            _ => false,
+        };
+    }
+
+    [Fact]
     public void ApplicationCommonValidation_StaysLimitedToSharedLowLevelParsers() {
         string root = GetRepositoryRoot();
         string validationRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Validation");

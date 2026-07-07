@@ -24,7 +24,16 @@ public sealed class RemoveFavoriteProductCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var favoriteProductId = new FavoriteProductId(command.FavoriteProductId);
+        Result<FavoriteProductId> favoriteProductIdResult = RequiredIdParser.Parse(
+            command.FavoriteProductId,
+            nameof(command.FavoriteProductId),
+            "Favorite product id must not be empty.",
+            value => new FavoriteProductId(value));
+        if (favoriteProductIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(favoriteProductIdResult);
+        }
+
+        FavoriteProductId favoriteProductId = favoriteProductIdResult.Value;
         FavoriteProduct? favorite = await favoriteProductRepository.GetByIdAsync(
             favoriteProductId, userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 

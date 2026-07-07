@@ -26,7 +26,16 @@ public sealed class UpdateFavoriteProductCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var favoriteProductId = new FavoriteProductId(command.FavoriteProductId);
+        Result<FavoriteProductId> favoriteProductIdResult = RequiredIdParser.Parse(
+            command.FavoriteProductId,
+            nameof(command.FavoriteProductId),
+            "Favorite product id must not be empty.",
+            value => new FavoriteProductId(value));
+        if (favoriteProductIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<FavoriteProductModel, FavoriteProductId>(favoriteProductIdResult);
+        }
+
+        FavoriteProductId favoriteProductId = favoriteProductIdResult.Value;
         FavoriteProduct? favorite = await favoriteProductRepository.GetByIdAsync(
             favoriteProductId,
             userId,

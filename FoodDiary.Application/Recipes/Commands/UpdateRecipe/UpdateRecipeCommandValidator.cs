@@ -1,5 +1,6 @@
 using FluentValidation;
 using FluentValidation.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Nutrition.Common;
 using FoodDiary.Application.Common.Validation;
@@ -158,30 +159,22 @@ public sealed class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecip
         CancellationToken cancellationToken) {
         context.RootContextData.TryGetValue(RecipeContextKey, out object? cached);
         if (cached is Recipe recipe) {
-            int cachedUsageCount = await _recipeRepository.GetUsageCountAsync(
-                recipe.Id,
-                recipe.UserId,
-                includePublic: false,
-                cancellationToken).ConfigureAwait(false);
-            if (cachedUsageCount > 0) {
-                context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
-                    "Recipe is already used and cannot be modified") {
-                    ErrorCode = "Validation.Invalid",
-                });
-            }
-
             return;
         }
 
-        if (command.UserId is null || command.UserId.Value == Guid.Empty || command.RecipeId == Guid.Empty) {
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<RecipeId> recipeIdResult = RequiredIdParser.Parse(
+            command.RecipeId,
+            nameof(command.RecipeId),
+            "Recipe id must not be empty.",
+            value => new RecipeId(value));
+        if (userIdResult.IsFailure || recipeIdResult.IsFailure) {
             return;
         }
 
-        var recipeId = new RecipeId(command.RecipeId);
-        var userId = new UserId(command.UserId.Value);
         Recipe? existing = await _recipeRepository.GetByIdAsync(
-            recipeId,
-            userId,
+            recipeIdResult.Value,
+            userIdResult.Value,
             includePublic: false,
             includeSteps: false,
             cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -195,18 +188,6 @@ public sealed class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecip
         }
 
         context.RootContextData[RecipeContextKey] = existing;
-
-        int usageCount = await _recipeRepository.GetUsageCountAsync(
-            existing.Id,
-            existing.UserId,
-            includePublic: false,
-            cancellationToken).ConfigureAwait(false);
-        if (usageCount > 0) {
-            context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
-                "Recipe is already used and cannot be modified") {
-                ErrorCode = "Validation.Invalid",
-            });
-        }
     }
 
     private static bool BeValidVisibility(string? visibility) =>

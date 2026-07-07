@@ -1,6 +1,8 @@
 using FoodDiary.Application.Abstractions.Products.Common;
 using FluentValidation;
 using FluentValidation.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -25,28 +27,25 @@ public sealed class DeleteProductCommandValidator : AbstractValidator<DeleteProd
 
         RuleFor(x => x)
             .CustomAsync(async (command, context, cancellationToken) => {
-                if (command.UserId is null || command.UserId.Value == Guid.Empty || command.ProductId == Guid.Empty) {
+                Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+                Result<ProductId> productIdResult = RequiredIdParser.Parse(
+                    command.ProductId,
+                    nameof(command.ProductId),
+                    "Product id must not be empty.",
+                    value => new ProductId(value));
+                if (userIdResult.IsFailure || productIdResult.IsFailure) {
                     return;
                 }
 
-                var productId = new ProductId(command.ProductId);
-                var userId = new UserId(command.UserId.Value);
-                Product? product = await productRepository.GetByIdAsync(productId, userId, includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
+                Product? product = await productRepository.GetByIdAsync(
+                    productIdResult.Value,
+                    userIdResult.Value,
+                    includePublic: false,
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
                 if (product is null) {
                     context.AddFailure(new ValidationFailure(nameof(command.ProductId), "Product not found or you do not have permission to delete it") {
                         ErrorCode = "Product.NotFound",
                     });
-                } else {
-                    int usageCount = await productRepository.GetUsageCountAsync(
-                        product.Id,
-                        product.UserId,
-                        includePublic: false,
-                        cancellationToken).ConfigureAwait(false);
-                    if (usageCount > 0) {
-                        context.AddFailure(new ValidationFailure(nameof(command.ProductId), "Product is already used and cannot be deleted") {
-                            ErrorCode = "Validation.Invalid",
-                        });
-                    }
                 }
             });
     }

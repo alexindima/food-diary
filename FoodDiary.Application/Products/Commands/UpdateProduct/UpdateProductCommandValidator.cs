@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Products.Common;
 using FluentValidation;
 using FluentValidation.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Domain.Entities.Products;
@@ -155,13 +156,21 @@ public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProd
         var product = cached as Product;
 
         if (product is null) {
-            if (command.UserId is null || command.UserId.Value == Guid.Empty || command.ProductId == Guid.Empty) {
+            Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+            Result<ProductId> productIdResult = RequiredIdParser.Parse(
+                command.ProductId,
+                nameof(command.ProductId),
+                "Product id must not be empty.",
+                value => new ProductId(value));
+            if (userIdResult.IsFailure || productIdResult.IsFailure) {
                 return;
             }
 
-            var productId = new ProductId(command.ProductId);
-            var userId = new UserId(command.UserId.Value);
-            product = await _productRepository.GetByIdAsync(productId, userId, includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
+            product = await _productRepository.GetByIdAsync(
+                productIdResult.Value,
+                userIdResult.Value,
+                includePublic: false,
+                cancellationToken: cancellationToken).ConfigureAwait(false);
             if (product is not null) {
                 context.RootContextData[ProductContextKey] = product;
             }
@@ -172,18 +181,6 @@ public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProd
                 ErrorCode = "Product.NotFound",
             });
             return;
-        }
-
-        int usageCount = await _productRepository.GetUsageCountAsync(
-            product.Id,
-            product.UserId,
-            includePublic: false,
-            cancellationToken).ConfigureAwait(false);
-        if (usageCount > 0) {
-            context.AddFailure(new ValidationFailure(nameof(command.ProductId),
-                "Product is already used in consumptions or recipes and cannot be updated") {
-                ErrorCode = "Validation.Invalid",
-            });
         }
 
         EnsureDefaultPortionAmountWithinLimit(command, product, context);

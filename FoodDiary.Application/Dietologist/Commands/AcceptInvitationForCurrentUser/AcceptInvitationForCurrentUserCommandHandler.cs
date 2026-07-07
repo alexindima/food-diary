@@ -35,8 +35,17 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
         }
 
         User user = userResult.Value;
+        Result<DietologistInvitationId> invitationIdResult = RequiredIdParser.Parse(
+            command.InvitationId,
+            nameof(command.InvitationId),
+            "Invitation id must not be empty.",
+            value => new DietologistInvitationId(value));
+        if (invitationIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(invitationIdResult);
+        }
+
         DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(
-            new DietologistInvitationId(command.InvitationId),
+            invitationIdResult.Value,
             asTracking: true,
             cancellationToken).ConfigureAwait(false);
         if (invitation is null || invitation.Status != DietologistInvitationStatus.Pending) {

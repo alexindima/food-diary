@@ -19,7 +19,16 @@ public sealed class AdoptMealPlanCommandHandler(IMealPlanWriteRepository mealPla
             return UserIdParser.ToFailure<MealPlanModel>(userIdResult);
         }
 
-        var planId = new MealPlanId(command.PlanId);
+        Result<MealPlanId> planIdResult = RequiredIdParser.Parse(
+            command.PlanId,
+            nameof(command.PlanId),
+            "Meal plan id must not be empty.",
+            value => new MealPlanId(value));
+        if (planIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<MealPlanModel, MealPlanId>(planIdResult);
+        }
+
+        MealPlanId planId = planIdResult.Value;
         MealPlan? sourcePlan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
         if (sourcePlan is null) {
             return Result.Failure<MealPlanModel>(Errors.MealPlan.NotFound(command.PlanId));

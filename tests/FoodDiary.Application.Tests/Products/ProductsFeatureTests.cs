@@ -303,6 +303,7 @@ public class ProductsFeatureTests {
     public async Task DeleteProductCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new DeleteProductCommandHandler(
             new NoopProductRepository(),
+            new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("delete-product-invalid-token@example.com", "hash")));
 
@@ -321,6 +322,7 @@ public class ProductsFeatureTests {
         var repository = new NoopProductRepository();
         var handler = new DeleteProductCommandHandler(
             repository,
+            repository,
             new RecordingCleanupService(),
             new StubUserRepository(user));
 
@@ -337,6 +339,7 @@ public class ProductsFeatureTests {
         var user = User.Create("delete-product-missing@example.com", "hash");
         var repository = new NoopProductRepository();
         var handler = new DeleteProductCommandHandler(
+            repository,
             repository,
             new RecordingCleanupService(),
             new StubUserRepository(user));
@@ -370,7 +373,7 @@ public class ProductsFeatureTests {
 
         var repository = new SingleProductRepository(product);
         var cleanup = new RecordingCleanupService("storage_error");
-        var handler = new DeleteProductCommandHandler(repository, cleanup, new StubUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new DeleteProductCommandHandler(repository, repository, cleanup, new StubUserRepository(User.Create("user@example.com", "hash")));
 
         Result result = await handler.Handle(new DeleteProductCommand(userId.Value, product.Id.Value), CancellationToken.None);
 
@@ -383,6 +386,7 @@ public class ProductsFeatureTests {
     [Fact]
     public async Task DeleteProductCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
         var handler = new DeleteProductCommandHandler(
+            new NoopProductRepository(),
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")));
@@ -501,7 +505,7 @@ public class ProductsFeatureTests {
 
         var repository = new SingleProductRepository(product);
         var cleanup = new RecordingCleanupService("storage_error");
-        var handler = new UpdateProductCommandHandler(repository, cleanup, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+        var handler = new UpdateProductCommandHandler(repository, repository, cleanup, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var command = new UpdateProductCommand(
             userId.Value,
@@ -572,6 +576,7 @@ public class ProductsFeatureTests {
         var cleanup = new RecordingCleanupService();
         var handler = new UpdateProductCommandHandler(
             repository,
+            repository,
             cleanup,
             new StubUserRepository(user),
             new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
@@ -618,6 +623,7 @@ public class ProductsFeatureTests {
         var repository = new SingleProductRepository(product);
         var handler = new UpdateProductCommandHandler(
             repository,
+            repository,
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
@@ -662,6 +668,7 @@ public class ProductsFeatureTests {
     [Fact]
     public async Task UpdateProductCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
         var handler = new UpdateProductCommandHandler(
+            new NoopProductRepository(),
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
@@ -723,6 +730,7 @@ public class ProductsFeatureTests {
         var repository = new SingleProductRepository(product);
         var handler = new UpdateProductCommandHandler(
             repository,
+            repository,
             new RecordingCleanupService(),
             new StubUserRepository(user),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
@@ -768,6 +776,7 @@ public class ProductsFeatureTests {
     public async Task UpdateProductCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new UpdateProductCommandHandler(
             new NoopProductRepository(),
+            new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
@@ -784,6 +793,7 @@ public class ProductsFeatureTests {
     public async Task UpdateProductCommandHandler_WithInvalidBaseUnit_ReturnsValidationFailure() {
         var user = User.Create("update-product-invalid-unit@example.com", "hash");
         var handler = new UpdateProductCommandHandler(
+            new NoopProductRepository(),
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(user),
@@ -802,6 +812,7 @@ public class ProductsFeatureTests {
     public async Task UpdateProductCommandHandler_WithInvalidVisibility_ReturnsValidationFailure() {
         var user = User.Create("update-product-invalid-visibility@example.com", "hash");
         var handler = new UpdateProductCommandHandler(
+            new NoopProductRepository(),
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(user),
@@ -822,6 +833,7 @@ public class ProductsFeatureTests {
         var productId = ProductId.New();
         var handler = new UpdateProductCommandHandler(
             new NoopProductRepository(),
+            new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(user),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
@@ -840,6 +852,7 @@ public class ProductsFeatureTests {
         RecordingImageAssetAccessService access = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
             .WithFailure(Errors.Image.Forbidden());
         var handler = new UpdateProductCommandHandler(
+            new NoopProductRepository(),
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(user),
@@ -1074,7 +1087,7 @@ public class ProductsFeatureTests {
 
         var repository = new SingleProductRepository(product);
         var cleanup = new RecordingCleanupService();
-        var handler = new UpdateProductCommandHandler(repository, cleanup, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+        var handler = new UpdateProductCommandHandler(repository, repository, cleanup, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         Result<ProductModel> result = await handler.Handle(
             new UpdateProductCommand(

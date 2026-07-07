@@ -20,7 +20,16 @@ public sealed class MarkLessonReadCommandHandler(
             return UserIdParser.ToFailure(userIdResult);
         }
 
-        var lessonId = new NutritionLessonId(command.LessonId);
+        Result<NutritionLessonId> lessonIdResult = RequiredIdParser.Parse(
+            command.LessonId,
+            nameof(command.LessonId),
+            "Lesson id must not be empty.",
+            value => new NutritionLessonId(value));
+        if (lessonIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(lessonIdResult);
+        }
+
+        NutritionLessonId lessonId = lessonIdResult.Value;
         NutritionLesson? lesson = await readRepository.GetByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
             return Result.Failure(Errors.Lesson.NotFound(command.LessonId));
