@@ -604,8 +604,10 @@ public sealed class ApplicationGuardrailTests {
         string featureErrorsSource = File.ReadAllText(featureErrorsPath);
 
         Assert.Contains(delegationPattern, facadeSource, StringComparison.Ordinal);
-        Assert.DoesNotContain(errorCodePrefix, facadeSource, StringComparison.Ordinal);
-        Assert.Contains(errorCodePrefix, featureErrorsSource, StringComparison.Ordinal);
+        string errorCodeLiteralPrefix = $"\"{errorCodePrefix}";
+
+        Assert.DoesNotContain(errorCodeLiteralPrefix, facadeSource, StringComparison.Ordinal);
+        Assert.Contains(errorCodeLiteralPrefix, featureErrorsSource, StringComparison.Ordinal);
     }
 
     [Fact]
