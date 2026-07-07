@@ -36,6 +36,7 @@ Feature-specific error factories should move incrementally to feature folders wh
 - `ApplicationRootCommon_DoesNotRegrowFeatureSpecificNutritionHelpers` prevents `FoodDiary.Application/Common/Nutrition` from returning.
 - `ApplicationRootCommon_StaysLimitedToTechnicalApplicationPrimitives` keeps the root `FoodDiary.Application/Common` folder on the approved technical-directory allow-list.
 - `ApplicationCommonValidation_StaysLimitedToSharedLowLevelParsers` prevents image and other feature-purpose helpers from returning to root validation.
+- `ApplicationAbstractionsErrorsRoot_ContainsOnlyCommonTaxonomyOrMigratedFacades` prevents new root error catalogs from appearing without an explicit common-taxonomy or migrated-facade decision.
 - `MigratedErrorsFacades_DelegateToFeatureOwnedErrorFactories` requires migrated `Errors.<Feature>` facades to delegate to feature-owned error factories instead of owning inline error codes.
 - `ApplicationCommonModels_StayLimitedToSharedApplicationResponsePrimitives` keeps root models limited to `PagedResponse<T>`.
 - `ApplicationCommonTime_StaysLimitedToSharedRequestTimeNormalization` keeps root time helpers limited to request UTC normalization.

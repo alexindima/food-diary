@@ -501,6 +501,56 @@ public sealed class ApplicationGuardrailTests {
         Assert.NotEmpty(featureErrorFiles);
     }
 
+    [Fact]
+    public void ApplicationAbstractionsErrorsRoot_ContainsOnlyCommonTaxonomyOrMigratedFacades() {
+        string root = GetRepositoryRoot();
+        string resultsRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Abstractions", "Results");
+        string[] commonTaxonomyFiles = [
+            "Errors.Authentication.cs",
+            "Errors.Billing.cs",
+            "Errors.Validation.cs",
+        ];
+        string[] migratedFacadeFiles = [
+            "Errors.Ai.cs",
+            "Errors.Consumption.cs",
+            "Errors.ContentReport.cs",
+            "Errors.Cycle.cs",
+            "Errors.CycleDay.cs",
+            "Errors.DailyAdvice.cs",
+            "Errors.Dietologist.cs",
+            "Errors.Exercise.cs",
+            "Errors.Fasting.cs",
+            "Errors.FavoriteMeal.cs",
+            "Errors.FavoriteProduct.cs",
+            "Errors.FavoriteRecipe.cs",
+            "Errors.HydrationEntry.cs",
+            "Errors.Image.cs",
+            "Errors.Lesson.cs",
+            "Errors.MailInbox.cs",
+            "Errors.MealPlan.cs",
+            "Errors.Product.cs",
+            "Errors.Recipe.cs",
+            "Errors.RecipeComment.cs",
+            "Errors.ShoppingList.cs",
+            "Errors.Usda.cs",
+            "Errors.User.cs",
+            "Errors.WaistEntry.cs",
+            "Errors.Wearable.cs",
+            "Errors.WeightEntry.cs",
+        ];
+        var allowedFiles = commonTaxonomyFiles
+            .Concat(migratedFacadeFiles)
+            .ToHashSet(StringComparer.Ordinal);
+
+        string[] violations = [.. Directory.GetFiles(resultsRoot, "Errors.*.cs", SearchOption.TopDirectoryOnly)
+            .Select(Path.GetFileName)
+            .Where(fileName => fileName is not null && !allowedFiles.Contains(fileName))
+            .Select(fileName => fileName!)
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
     [Theory]
     [InlineData("Errors.Product.cs", "Products", "Common", "ProductErrors.cs", "ProductErrors.", "Product.")]
     [InlineData("Errors.WeightEntry.cs", "WeightEntries", "Common", "WeightEntryErrors.cs", "WeightEntryErrors.", "WeightEntry.")]
