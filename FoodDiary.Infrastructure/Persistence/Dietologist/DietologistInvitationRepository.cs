@@ -5,45 +5,49 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Linq.Expressions;
 
 namespace FoodDiary.Infrastructure.Persistence.Dietologist;
 
 public sealed class DietologistInvitationRepository(FoodDiaryDbContext context) : IDietologistInvitationRepository {
+    private static readonly Expression<Func<DietologistInvitation, DietologistInvitationReadModel>> ReadModelProjection =
+        invitation => new DietologistInvitationReadModel(
+            invitation.Id.Value,
+            invitation.ClientUserId.Value,
+            invitation.DietologistUserId.HasValue ? invitation.DietologistUserId.Value.Value : null,
+            invitation.DietologistEmail,
+            invitation.ClientUser.Email,
+            invitation.ClientUser.FirstName,
+            invitation.ClientUser.LastName,
+            invitation.ClientUser.ProfileImage,
+            invitation.ClientUser.BirthDate,
+            invitation.ClientUser.Gender,
+            invitation.ClientUser.Height,
+            invitation.ClientUser.ActivityLevel,
+            invitation.DietologistUser == null ? null : invitation.DietologistUser.Email,
+            invitation.DietologistUser == null ? null : invitation.DietologistUser.FirstName,
+            invitation.DietologistUser == null ? null : invitation.DietologistUser.LastName,
+            invitation.Status,
+            new DietologistPermissionsReadModel(
+                invitation.ShareMeals,
+                invitation.ShareStatistics,
+                invitation.ShareWeight,
+                invitation.ShareWaist,
+                invitation.ShareGoals,
+                invitation.ShareHydration,
+                invitation.ShareProfile,
+                invitation.ShareFasting),
+            invitation.CreatedOnUtc,
+            invitation.ExpiresAtUtc,
+            invitation.AcceptedAtUtc);
+
     public async Task<DietologistInvitationReadModel?> GetByIdReadModelAsync(
         DietologistInvitationId id,
         CancellationToken cancellationToken = default) {
         return await context.DietologistInvitations
             .AsNoTracking()
             .Where(i => i.Id == id)
-            .Select(i => new DietologistInvitationReadModel(
-                i.Id.Value,
-                i.ClientUserId.Value,
-                i.DietologistUserId.HasValue ? i.DietologistUserId.Value.Value : null,
-                i.DietologistEmail,
-                i.ClientUser.Email,
-                i.ClientUser.FirstName,
-                i.ClientUser.LastName,
-                i.ClientUser.ProfileImage,
-                i.ClientUser.BirthDate,
-                i.ClientUser.Gender,
-                i.ClientUser.Height,
-                i.ClientUser.ActivityLevel,
-                i.DietologistUser == null ? null : i.DietologistUser.Email,
-                i.DietologistUser == null ? null : i.DietologistUser.FirstName,
-                i.DietologistUser == null ? null : i.DietologistUser.LastName,
-                i.Status,
-                new DietologistPermissionsReadModel(
-                    i.ShareMeals,
-                    i.ShareStatistics,
-                    i.ShareWeight,
-                    i.ShareWaist,
-                    i.ShareGoals,
-                    i.ShareHydration,
-                    i.ShareProfile,
-                    i.ShareFasting),
-                i.CreatedOnUtc,
-                i.ExpiresAtUtc,
-                i.AcceptedAtUtc))
+            .Select(ReadModelProjection)
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -86,35 +90,7 @@ public sealed class DietologistInvitationRepository(FoodDiaryDbContext context) 
         return await context.DietologistInvitations
             .AsNoTracking()
             .Where(i => i.ClientUserId == clientUserId && i.Status == status)
-            .Select(i => new DietologistInvitationReadModel(
-                i.Id.Value,
-                i.ClientUserId.Value,
-                i.DietologistUserId.HasValue ? i.DietologistUserId.Value.Value : null,
-                i.DietologistEmail,
-                i.ClientUser.Email,
-                i.ClientUser.FirstName,
-                i.ClientUser.LastName,
-                i.ClientUser.ProfileImage,
-                i.ClientUser.BirthDate,
-                i.ClientUser.Gender,
-                i.ClientUser.Height,
-                i.ClientUser.ActivityLevel,
-                i.DietologistUser == null ? null : i.DietologistUser.Email,
-                i.DietologistUser == null ? null : i.DietologistUser.FirstName,
-                i.DietologistUser == null ? null : i.DietologistUser.LastName,
-                i.Status,
-                new DietologistPermissionsReadModel(
-                    i.ShareMeals,
-                    i.ShareStatistics,
-                    i.ShareWeight,
-                    i.ShareWaist,
-                    i.ShareGoals,
-                    i.ShareHydration,
-                    i.ShareProfile,
-                    i.ShareFasting),
-                i.CreatedOnUtc,
-                i.ExpiresAtUtc,
-                i.AcceptedAtUtc))
+            .Select(ReadModelProjection)
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -144,35 +120,7 @@ public sealed class DietologistInvitationRepository(FoodDiaryDbContext context) 
                 i.ClientUserId == clientUserId
                 && i.DietologistUserId == dietologistUserId
                 && i.Status == DietologistInvitationStatus.Accepted)
-            .Select(i => new DietologistInvitationReadModel(
-                i.Id.Value,
-                i.ClientUserId.Value,
-                i.DietologistUserId.HasValue ? i.DietologistUserId.Value.Value : null,
-                i.DietologistEmail,
-                i.ClientUser.Email,
-                i.ClientUser.FirstName,
-                i.ClientUser.LastName,
-                i.ClientUser.ProfileImage,
-                i.ClientUser.BirthDate,
-                i.ClientUser.Gender,
-                i.ClientUser.Height,
-                i.ClientUser.ActivityLevel,
-                i.DietologistUser == null ? null : i.DietologistUser.Email,
-                i.DietologistUser == null ? null : i.DietologistUser.FirstName,
-                i.DietologistUser == null ? null : i.DietologistUser.LastName,
-                i.Status,
-                new DietologistPermissionsReadModel(
-                    i.ShareMeals,
-                    i.ShareStatistics,
-                    i.ShareWeight,
-                    i.ShareWaist,
-                    i.ShareGoals,
-                    i.ShareHydration,
-                    i.ShareProfile,
-                    i.ShareFasting),
-                i.CreatedOnUtc,
-                i.ExpiresAtUtc,
-                i.AcceptedAtUtc))
+            .Select(ReadModelProjection)
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -198,35 +146,7 @@ public sealed class DietologistInvitationRepository(FoodDiaryDbContext context) 
             .AsNoTracking()
             .Where(i => i.DietologistUserId == dietologistUserId && i.Status == DietologistInvitationStatus.Accepted)
             .OrderByDescending(i => i.AcceptedAtUtc)
-            .Select(i => new DietologistInvitationReadModel(
-                i.Id.Value,
-                i.ClientUserId.Value,
-                i.DietologistUserId.HasValue ? i.DietologistUserId.Value.Value : null,
-                i.DietologistEmail,
-                i.ClientUser.Email,
-                i.ClientUser.FirstName,
-                i.ClientUser.LastName,
-                i.ClientUser.ProfileImage,
-                i.ClientUser.BirthDate,
-                i.ClientUser.Gender,
-                i.ClientUser.Height,
-                i.ClientUser.ActivityLevel,
-                i.DietologistUser == null ? null : i.DietologistUser.Email,
-                i.DietologistUser == null ? null : i.DietologistUser.FirstName,
-                i.DietologistUser == null ? null : i.DietologistUser.LastName,
-                i.Status,
-                new DietologistPermissionsReadModel(
-                    i.ShareMeals,
-                    i.ShareStatistics,
-                    i.ShareWeight,
-                    i.ShareWaist,
-                    i.ShareGoals,
-                    i.ShareHydration,
-                    i.ShareProfile,
-                    i.ShareFasting),
-                i.CreatedOnUtc,
-                i.ExpiresAtUtc,
-                i.AcceptedAtUtc))
+            .Select(ReadModelProjection)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

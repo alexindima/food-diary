@@ -5,10 +5,50 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Linq.Expressions;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
 public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingOccurrenceRepository {
+    private static readonly Expression<Func<FastingOccurrence, FastingOccurrenceReadModel>> ReadModelProjection =
+        occurrence => new FastingOccurrenceReadModel(
+            occurrence.Id,
+            occurrence.PlanId,
+            new FastingPlanReadModel(
+                occurrence.Plan.Id,
+                occurrence.Plan.UserId,
+                occurrence.Plan.Type,
+                occurrence.Plan.Status,
+                occurrence.Plan.Protocol,
+                occurrence.Plan.Title,
+                occurrence.Plan.StartedAtUtc,
+                occurrence.Plan.StoppedAtUtc,
+                occurrence.Plan.IntermittentFastHours,
+                occurrence.Plan.IntermittentEatingWindowHours,
+                occurrence.Plan.ExtendedTargetHours,
+                occurrence.Plan.CyclicFastDays,
+                occurrence.Plan.CyclicEatDays,
+                occurrence.Plan.CyclicEatDayFastHours,
+                occurrence.Plan.CyclicEatDayEatingWindowHours,
+                occurrence.Plan.CyclicAnchorDateUtc,
+                occurrence.Plan.CyclicNextPhaseDateUtc),
+            occurrence.UserId,
+            occurrence.Kind,
+            occurrence.Status,
+            occurrence.SequenceNumber,
+            occurrence.ScheduledForUtc,
+            occurrence.StartedAtUtc,
+            occurrence.EndedAtUtc,
+            occurrence.InitialTargetHours,
+            occurrence.AddedTargetHours,
+            occurrence.Notes,
+            occurrence.CheckInAtUtc,
+            occurrence.HungerLevel,
+            occurrence.EnergyLevel,
+            occurrence.MoodLevel,
+            occurrence.Symptoms,
+            occurrence.CheckInNotes);
+
     public async Task<IReadOnlyList<FastingOccurrence>> GetActiveAsync(CancellationToken cancellationToken = default) {
         return await context.FastingOccurrences
             .AsNoTracking()
@@ -36,43 +76,7 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context) : IF
             .AsNoTracking()
             .Where(occurrence => occurrence.UserId == userId && occurrence.Status == FastingOccurrenceStatus.Active)
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
-            .Select(occurrence => new FastingOccurrenceReadModel(
-                occurrence.Id,
-                occurrence.PlanId,
-                new FastingPlanReadModel(
-                    occurrence.Plan.Id,
-                    occurrence.Plan.UserId,
-                    occurrence.Plan.Type,
-                    occurrence.Plan.Status,
-                    occurrence.Plan.Protocol,
-                    occurrence.Plan.Title,
-                    occurrence.Plan.StartedAtUtc,
-                    occurrence.Plan.StoppedAtUtc,
-                    occurrence.Plan.IntermittentFastHours,
-                    occurrence.Plan.IntermittentEatingWindowHours,
-                    occurrence.Plan.ExtendedTargetHours,
-                    occurrence.Plan.CyclicFastDays,
-                    occurrence.Plan.CyclicEatDays,
-                    occurrence.Plan.CyclicEatDayFastHours,
-                    occurrence.Plan.CyclicEatDayEatingWindowHours,
-                    occurrence.Plan.CyclicAnchorDateUtc,
-                    occurrence.Plan.CyclicNextPhaseDateUtc),
-                occurrence.UserId,
-                occurrence.Kind,
-                occurrence.Status,
-                occurrence.SequenceNumber,
-                occurrence.ScheduledForUtc,
-                occurrence.StartedAtUtc,
-                occurrence.EndedAtUtc,
-                occurrence.InitialTargetHours,
-                occurrence.AddedTargetHours,
-                occurrence.Notes,
-                occurrence.CheckInAtUtc,
-                occurrence.HungerLevel,
-                occurrence.EnergyLevel,
-                occurrence.MoodLevel,
-                occurrence.Symptoms,
-                occurrence.CheckInNotes))
+            .Select(ReadModelProjection)
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -129,43 +133,7 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context) : IF
         CancellationToken cancellationToken = default) {
         return await BuildByUserQuery(userId, from, to, status)
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
-            .Select(occurrence => new FastingOccurrenceReadModel(
-                occurrence.Id,
-                occurrence.PlanId,
-                new FastingPlanReadModel(
-                    occurrence.Plan.Id,
-                    occurrence.Plan.UserId,
-                    occurrence.Plan.Type,
-                    occurrence.Plan.Status,
-                    occurrence.Plan.Protocol,
-                    occurrence.Plan.Title,
-                    occurrence.Plan.StartedAtUtc,
-                    occurrence.Plan.StoppedAtUtc,
-                    occurrence.Plan.IntermittentFastHours,
-                    occurrence.Plan.IntermittentEatingWindowHours,
-                    occurrence.Plan.ExtendedTargetHours,
-                    occurrence.Plan.CyclicFastDays,
-                    occurrence.Plan.CyclicEatDays,
-                    occurrence.Plan.CyclicEatDayFastHours,
-                    occurrence.Plan.CyclicEatDayEatingWindowHours,
-                    occurrence.Plan.CyclicAnchorDateUtc,
-                    occurrence.Plan.CyclicNextPhaseDateUtc),
-                occurrence.UserId,
-                occurrence.Kind,
-                occurrence.Status,
-                occurrence.SequenceNumber,
-                occurrence.ScheduledForUtc,
-                occurrence.StartedAtUtc,
-                occurrence.EndedAtUtc,
-                occurrence.InitialTargetHours,
-                occurrence.AddedTargetHours,
-                occurrence.Notes,
-                occurrence.CheckInAtUtc,
-                occurrence.HungerLevel,
-                occurrence.EnergyLevel,
-                occurrence.MoodLevel,
-                occurrence.Symptoms,
-                occurrence.CheckInNotes))
+            .Select(ReadModelProjection)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -206,43 +174,7 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context) : IF
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
             .Skip((normalizedPage - 1) * normalizedLimit)
             .Take(normalizedLimit)
-            .Select(occurrence => new FastingOccurrenceReadModel(
-                occurrence.Id,
-                occurrence.PlanId,
-                new FastingPlanReadModel(
-                    occurrence.Plan.Id,
-                    occurrence.Plan.UserId,
-                    occurrence.Plan.Type,
-                    occurrence.Plan.Status,
-                    occurrence.Plan.Protocol,
-                    occurrence.Plan.Title,
-                    occurrence.Plan.StartedAtUtc,
-                    occurrence.Plan.StoppedAtUtc,
-                    occurrence.Plan.IntermittentFastHours,
-                    occurrence.Plan.IntermittentEatingWindowHours,
-                    occurrence.Plan.ExtendedTargetHours,
-                    occurrence.Plan.CyclicFastDays,
-                    occurrence.Plan.CyclicEatDays,
-                    occurrence.Plan.CyclicEatDayFastHours,
-                    occurrence.Plan.CyclicEatDayEatingWindowHours,
-                    occurrence.Plan.CyclicAnchorDateUtc,
-                    occurrence.Plan.CyclicNextPhaseDateUtc),
-                occurrence.UserId,
-                occurrence.Kind,
-                occurrence.Status,
-                occurrence.SequenceNumber,
-                occurrence.ScheduledForUtc,
-                occurrence.StartedAtUtc,
-                occurrence.EndedAtUtc,
-                occurrence.InitialTargetHours,
-                occurrence.AddedTargetHours,
-                occurrence.Notes,
-                occurrence.CheckInAtUtc,
-                occurrence.HungerLevel,
-                occurrence.EnergyLevel,
-                occurrence.MoodLevel,
-                occurrence.Symptoms,
-                occurrence.CheckInNotes))
+            .Select(ReadModelProjection)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, totalItems);
