@@ -15,7 +15,7 @@ public sealed class GetLessonsQueryHandler(ILessonReadService lessonReadService)
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<IReadOnlyList<LessonSummaryModel>>(userIdResult.Error);
+            return UserIdParser.ToFailure<IReadOnlyList<LessonSummaryModel>>(userIdResult);
         }
 
         LessonCategory? categoryFilter = EnumFilterParser.ParseOptional<LessonCategory>(query.Category);

@@ -14,7 +14,7 @@ public sealed class GetWearableConnectionsQueryHandler(IWearableReadService wear
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<IReadOnlyList<WearableConnectionModel>>(userIdResult.Error);
+            return UserIdParser.ToFailure<IReadOnlyList<WearableConnectionModel>>(userIdResult);
         }
 
         IReadOnlyList<WearableConnectionModel> models = await wearableReadService

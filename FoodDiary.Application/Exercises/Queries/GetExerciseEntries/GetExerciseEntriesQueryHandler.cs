@@ -14,7 +14,7 @@ public sealed class GetExerciseEntriesQueryHandler(IExerciseEntryReadService exe
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<IReadOnlyList<ExerciseEntryModel>>(userIdResult.Error);
+            return UserIdParser.ToFailure<IReadOnlyList<ExerciseEntryModel>>(userIdResult);
         }
 
         IReadOnlyList<ExerciseEntryModel> models = await exerciseEntryReadService.GetEntriesAsync(

@@ -15,7 +15,7 @@ public sealed class GetRecipeCommentsQueryHandler(IRecipeCommentReadService comm
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<PagedResponse<RecipeCommentModel>>(userIdResult.Error);
+            return UserIdParser.ToFailure<PagedResponse<RecipeCommentModel>>(userIdResult);
         }
 
         int pageNumber = Math.Max(query.Page, 1);

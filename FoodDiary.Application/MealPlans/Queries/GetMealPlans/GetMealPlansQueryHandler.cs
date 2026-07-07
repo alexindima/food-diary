@@ -15,7 +15,7 @@ public sealed class GetMealPlansQueryHandler(IMealPlanReadService mealPlanReadSe
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<IReadOnlyList<MealPlanSummaryModel>>(userIdResult.Error);
+            return UserIdParser.ToFailure<IReadOnlyList<MealPlanSummaryModel>>(userIdResult);
         }
 
         DietType? dietTypeFilter = EnumFilterParser.ParseOptional<DietType>(query.DietType);
