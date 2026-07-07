@@ -15,13 +15,22 @@ internal static class ProductUpdateValuePreparer {
         ICurrentUserAccessService currentUserAccessService,
         IImageAssetAccessService imageAssetAccessService,
         CancellationToken cancellationToken) {
+        Result<ProductId> productIdResult = RequiredIdParser.Parse(
+            command.ProductId,
+            nameof(command.ProductId),
+            "Product id must not be empty.",
+            value => new ProductId(value));
+        if (productIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<ProductUpdateValues, ProductId>(productIdResult);
+        }
+
         Result<UserId> userIdResult = await ResolveUserIdAsync(command, currentUserAccessService, cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<ProductUpdateValues>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        var productId = new ProductId(command.ProductId);
+        ProductId productId = productIdResult.Value;
         Result<MeasurementUnit?> unitResult = ProductCommandParsers.ParseOptionalBaseUnit(
             command.BaseUnit,
             nameof(command.BaseUnit));
@@ -71,11 +80,6 @@ internal static class ProductUpdateValuePreparer {
         CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<UserId>(Errors.Authentication.InvalidToken);
-        }
-
-        if (command.ProductId == Guid.Empty) {
-            return Result.Failure<UserId>(
-                Errors.Validation.Invalid(nameof(command.ProductId), "Product id must not be empty."));
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(

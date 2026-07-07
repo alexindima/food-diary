@@ -19,12 +19,17 @@ public sealed class DuplicateProductCommandHandler(
             return UserIdParser.ToFailure<ProductModel>(userIdResult);
         }
 
-        if (command.ProductId == Guid.Empty) {
-            return Result.Failure<ProductModel>(Errors.Validation.Invalid(nameof(command.ProductId), "Product id must not be empty."));
+        Result<ProductId> productIdResult = RequiredIdParser.Parse(
+            command.ProductId,
+            nameof(command.ProductId),
+            "Product id must not be empty.",
+            value => new ProductId(value));
+        if (productIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<ProductModel, ProductId>(productIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        var productId = new ProductId(command.ProductId);
+        ProductId productId = productIdResult.Value;
 
         Product? original = await productReadRepository.GetByIdAsync(
             productId,

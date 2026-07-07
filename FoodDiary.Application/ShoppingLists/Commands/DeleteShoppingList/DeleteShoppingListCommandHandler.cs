@@ -16,8 +16,13 @@ public sealed class DeleteShoppingListCommandHandler(
     public async Task<Result> Handle(
         DeleteShoppingListCommand command,
         CancellationToken cancellationToken) {
-        if (command.ShoppingListId == Guid.Empty) {
-            return Result.Failure(Errors.Validation.Invalid(nameof(command.ShoppingListId), "Shopping list id must not be empty."));
+        Result<ShoppingListId> shoppingListIdResult = RequiredIdParser.Parse(
+            command.ShoppingListId,
+            nameof(command.ShoppingListId),
+            "Shopping list id must not be empty.",
+            value => new ShoppingListId(value));
+        if (shoppingListIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(shoppingListIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
@@ -29,7 +34,7 @@ public sealed class DeleteShoppingListCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var shoppingListId = new ShoppingListId(command.ShoppingListId);
+        ShoppingListId shoppingListId = shoppingListIdResult.Value;
 
         ShoppingList? list = await shoppingListRepository.GetByIdAsync(
             shoppingListId,

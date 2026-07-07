@@ -17,12 +17,17 @@ public sealed class DeleteConsumptionCommandHandler(
             return UserIdParser.ToFailure(userIdResult);
         }
 
-        if (command.ConsumptionId == Guid.Empty) {
-            return Result.Failure(Errors.Validation.Invalid(nameof(command.ConsumptionId), "Consumption id must not be empty."));
+        Result<MealId> consumptionIdResult = RequiredIdParser.Parse(
+            command.ConsumptionId,
+            nameof(command.ConsumptionId),
+            "Consumption id must not be empty.",
+            value => new MealId(value));
+        if (consumptionIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(consumptionIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        var consumptionId = new MealId(command.ConsumptionId);
+        MealId consumptionId = consumptionIdResult.Value;
 
         Meal? meal = await mealReadRepository.GetByIdAsync(
             consumptionId,

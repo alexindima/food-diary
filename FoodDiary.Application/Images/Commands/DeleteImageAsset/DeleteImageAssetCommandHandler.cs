@@ -18,12 +18,16 @@ public sealed class DeleteImageAssetCommandHandler(
             return UserIdParser.ToFailure(userIdResult);
         }
 
-        if (request.AssetId == Guid.Empty) {
-            return Result.Failure(Errors.Image.InvalidData("AssetId is required."));
+        Result<ImageAssetId> assetIdResult = RequiredIdParser.Parse(
+            request.AssetId,
+            Errors.Image.InvalidData("AssetId is required."),
+            value => new ImageAssetId(value));
+        if (assetIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(assetIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        var assetId = new ImageAssetId(request.AssetId);
+        ImageAssetId assetId = assetIdResult.Value;
 
         ImageAsset? asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken).ConfigureAwait(false);
         if (asset is null) {

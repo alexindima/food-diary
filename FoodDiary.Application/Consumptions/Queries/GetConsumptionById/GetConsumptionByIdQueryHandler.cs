@@ -15,13 +15,17 @@ public sealed class GetConsumptionByIdQueryHandler(IConsumptionReadService consu
             return UserIdParser.ToFailure<ConsumptionModel>(userIdResult);
         }
 
-        if (request.ConsumptionId == Guid.Empty) {
-            return Result.Failure<ConsumptionModel>(
-                Errors.Validation.Invalid(nameof(request.ConsumptionId), "Consumption id must not be empty."));
+        Result<MealId> consumptionIdResult = RequiredIdParser.Parse(
+            request.ConsumptionId,
+            nameof(request.ConsumptionId),
+            "Consumption id must not be empty.",
+            value => new MealId(value));
+        if (consumptionIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<ConsumptionModel, MealId>(consumptionIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        var consumptionId = new MealId(request.ConsumptionId);
+        MealId consumptionId = consumptionIdResult.Value;
 
         ConsumptionModel? consumption = await consumptionReadService.GetByIdAsync(
             userId,

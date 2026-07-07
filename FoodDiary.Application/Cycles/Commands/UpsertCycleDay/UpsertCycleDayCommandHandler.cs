@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Cycles.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -18,9 +19,13 @@ public sealed class UpsertCycleDayCommandHandler(
     public async Task<Result<CycleLogDayModel>> Handle(
         UpsertCycleDayCommand command,
         CancellationToken cancellationToken) {
-        if (command.CycleProfileId == Guid.Empty) {
-            return Result.Failure<CycleLogDayModel>(
-                Errors.Validation.Invalid(nameof(command.CycleProfileId), "Cycle profile id must not be empty."));
+        Result<CycleProfileId> profileIdResult = RequiredIdParser.Parse(
+            command.CycleProfileId,
+            nameof(command.CycleProfileId),
+            "Cycle profile id must not be empty.",
+            value => new CycleProfileId(value));
+        if (profileIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<CycleLogDayModel, CycleProfileId>(profileIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
@@ -32,7 +37,7 @@ public sealed class UpsertCycleDayCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var profileId = new CycleProfileId(command.CycleProfileId);
+        CycleProfileId profileId = profileIdResult.Value;
 
         CycleProfile? profile = await cycleRepository.GetByIdAsync(
             profileId,

@@ -14,9 +14,13 @@ public sealed class ClearCycleDayCommandHandler(
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<ClearCycleDayCommand, Result> {
     public async Task<Result> Handle(ClearCycleDayCommand command, CancellationToken cancellationToken) {
-        if (command.CycleProfileId == Guid.Empty) {
-            return Result.Failure(
-                Errors.Validation.Invalid(nameof(command.CycleProfileId), "Cycle profile id must not be empty."));
+        Result<CycleProfileId> profileIdResult = RequiredIdParser.Parse(
+            command.CycleProfileId,
+            nameof(command.CycleProfileId),
+            "Cycle profile id must not be empty.",
+            value => new CycleProfileId(value));
+        if (profileIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(profileIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
@@ -28,7 +32,7 @@ public sealed class ClearCycleDayCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var profileId = new CycleProfileId(command.CycleProfileId);
+        CycleProfileId profileId = profileIdResult.Value;
         CycleProfile? profile = await cycleRepository.GetByIdAsync(
             profileId,
             userId,

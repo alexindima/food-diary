@@ -21,12 +21,17 @@ public sealed class DuplicateRecipeCommandHandler(
             return UserIdParser.ToFailure<RecipeModel>(userIdResult);
         }
 
-        if (command.RecipeId == Guid.Empty) {
-            return Result.Failure<RecipeModel>(Errors.Validation.Invalid(nameof(command.RecipeId), "Recipe id must not be empty."));
+        Result<RecipeId> recipeIdResult = RequiredIdParser.Parse(
+            command.RecipeId,
+            nameof(command.RecipeId),
+            "Recipe id must not be empty.",
+            value => new RecipeId(value));
+        if (recipeIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<RecipeModel, RecipeId>(recipeIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        var recipeId = new RecipeId(command.RecipeId);
+        RecipeId recipeId = recipeIdResult.Value;
 
         Recipe? original = await recipeReadRepository.GetByIdAsync(
             recipeId,

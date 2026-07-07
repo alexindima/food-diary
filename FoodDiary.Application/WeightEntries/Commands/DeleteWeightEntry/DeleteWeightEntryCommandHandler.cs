@@ -14,8 +14,13 @@ public sealed class DeleteWeightEntryCommandHandler(
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DeleteWeightEntryCommand, Result> {
     public async Task<Result> Handle(DeleteWeightEntryCommand command, CancellationToken cancellationToken) {
-        if (command.WeightEntryId == Guid.Empty) {
-            return Result.Failure(Errors.Validation.Invalid(nameof(command.WeightEntryId), "Weight entry id must not be empty."));
+        Result<WeightEntryId> weightEntryIdResult = RequiredIdParser.Parse(
+            command.WeightEntryId,
+            nameof(command.WeightEntryId),
+            "Weight entry id must not be empty.",
+            value => new WeightEntryId(value));
+        if (weightEntryIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(weightEntryIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
@@ -27,7 +32,7 @@ public sealed class DeleteWeightEntryCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var weightEntryId = new WeightEntryId(command.WeightEntryId);
+        WeightEntryId weightEntryId = weightEntryIdResult.Value;
         WeightEntry? entry = await weightEntryRepository.GetByIdAsync(
             weightEntryId,
             userId,

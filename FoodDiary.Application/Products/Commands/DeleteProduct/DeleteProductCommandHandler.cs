@@ -16,8 +16,13 @@ public sealed class DeleteProductCommandHandler(
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DeleteProductCommand, Result> {
     public async Task<Result> Handle(DeleteProductCommand command, CancellationToken cancellationToken) {
-        if (command.ProductId == Guid.Empty) {
-            return Result.Failure(Errors.Validation.Invalid(nameof(command.ProductId), "Product id must not be empty."));
+        Result<ProductId> productIdResult = RequiredIdParser.Parse(
+            command.ProductId,
+            nameof(command.ProductId),
+            "Product id must not be empty.",
+            value => new ProductId(value));
+        if (productIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(productIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
@@ -29,7 +34,7 @@ public sealed class DeleteProductCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var productId = new ProductId(command.ProductId);
+        ProductId productId = productIdResult.Value;
 
         Product? product = await productRepository.GetByIdForUpdateAsync(
             productId,

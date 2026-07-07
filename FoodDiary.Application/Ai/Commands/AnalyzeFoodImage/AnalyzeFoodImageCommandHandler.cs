@@ -26,13 +26,17 @@ public sealed class AnalyzeFoodImageCommandHandler(
             return UserIdParser.ToFailure<FoodVisionModel>(userIdResult);
         }
 
-        if (query.ImageAssetId == Guid.Empty) {
-            return Result.Failure<FoodVisionModel>(
-                Errors.Validation.Invalid(nameof(query.ImageAssetId), "Image asset id must not be empty."));
+        Result<ImageAssetId> imageAssetIdResult = RequiredIdParser.Parse(
+            query.ImageAssetId,
+            nameof(query.ImageAssetId),
+            "Image asset id must not be empty.",
+            value => new ImageAssetId(value));
+        if (imageAssetIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<FoodVisionModel, ImageAssetId>(imageAssetIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        var imageAssetId = new ImageAssetId(query.ImageAssetId);
+        ImageAssetId imageAssetId = imageAssetIdResult.Value;
         ImageAsset? asset = await imageAssetRepository.GetByIdAsync(imageAssetId, cancellationToken).ConfigureAwait(false);
         if (asset is null) {
             return Result.Failure<FoodVisionModel>(Errors.Ai.ImageNotFound(query.ImageAssetId));

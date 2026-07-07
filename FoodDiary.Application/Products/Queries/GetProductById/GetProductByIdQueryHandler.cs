@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -17,8 +18,13 @@ public sealed class GetProductByIdQueryHandler(
     public async Task<Result<ProductModel>> Handle(
         GetProductByIdQuery query,
         CancellationToken cancellationToken) {
-        if (query.ProductId == Guid.Empty) {
-            return Result.Failure<ProductModel>(Errors.Validation.Invalid(nameof(query.ProductId), "Product id must not be empty."));
+        Result<ProductId> productIdResult = RequiredIdParser.Parse(
+            query.ProductId,
+            nameof(query.ProductId),
+            "Product id must not be empty.",
+            value => new ProductId(value));
+        if (productIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<ProductModel, ProductId>(productIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
@@ -30,7 +36,7 @@ public sealed class GetProductByIdQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var productId = new ProductId(query.ProductId);
+        ProductId productId = productIdResult.Value;
         IReadOnlyDictionary<ProductId, ProductOverviewReadItem> productsById = await productOverviewReadService.GetByIdsWithUsageAsync(
             [productId],
             userId,

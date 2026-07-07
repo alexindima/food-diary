@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Application.ShoppingLists.Services;
@@ -20,13 +21,22 @@ public sealed class UpdateShoppingListCommandHandler(
     public async Task<Result<ShoppingListModel>> Handle(
         UpdateShoppingListCommand command,
         CancellationToken cancellationToken) {
+        Result<ShoppingListId> shoppingListIdResult = RequiredIdParser.Parse(
+            command.ShoppingListId,
+            nameof(command.ShoppingListId),
+            "Shopping list id must not be empty.",
+            value => new ShoppingListId(value));
+        if (shoppingListIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<ShoppingListModel, ShoppingListId>(shoppingListIdResult);
+        }
+
         Result<UserId> validationResult = await ValidateCommandAsync(command, cancellationToken).ConfigureAwait(false);
         if (validationResult.IsFailure) {
             return Result.Failure<ShoppingListModel>(validationResult.Error);
         }
 
         UserId userId = validationResult.Value;
-        var shoppingListId = new ShoppingListId(command.ShoppingListId);
+        ShoppingListId shoppingListId = shoppingListIdResult.Value;
         ShoppingList? list = await shoppingListRepository.GetByIdAsync(
             shoppingListId,
             userId,
@@ -52,11 +62,6 @@ public sealed class UpdateShoppingListCommandHandler(
     }
 
     private static Result ValidateCommandShape(UpdateShoppingListCommand command) {
-        if (command.ShoppingListId == Guid.Empty) {
-            return Result.Failure(
-                Errors.Validation.Invalid(nameof(command.ShoppingListId), "Shopping list id must not be empty."));
-        }
-
         if (string.IsNullOrWhiteSpace(command.Name) && command.Items is null) {
             return Result.Failure(Errors.Validation.Required(nameof(command.Items)));
         }

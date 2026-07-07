@@ -32,6 +32,7 @@ Keep namespaces aligned with folder paths.
 - Preserve aggregate invariants; avoid leaking primitives in public contracts.
 - Prefer `Enum.TryParse(..., out ...)` in handlers/services and return validation errors instead of relying on `Enum.Parse` exceptions.
 - Do not rely only on FluentValidation for request safety when a handler/service constructs value objects or parses enums; guard invalid or empty IDs in the handler/service path and return a normal failure instead of letting exceptions define control flow.
+- Use shared `Common/Validation` parsers for recurring user id and required entity id guard logic instead of duplicating `Guid.Empty` checks across handlers.
 - Propagate the incoming `CancellationToken` to all async service/repository calls (avoid `CancellationToken.None` in request flow).
 - Async methods should use the `Async` suffix.
 - For time-dependent logic in handlers/services, prefer `TimeProvider` over direct `DateTime.UtcNow`.

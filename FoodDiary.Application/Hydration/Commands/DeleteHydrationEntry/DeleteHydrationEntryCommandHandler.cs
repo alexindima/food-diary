@@ -14,8 +14,13 @@ public sealed class DeleteHydrationEntryCommandHandler(
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DeleteHydrationEntryCommand, Result> {
     public async Task<Result> Handle(DeleteHydrationEntryCommand command, CancellationToken cancellationToken) {
-        if (command.HydrationEntryId == Guid.Empty) {
-            return Result.Failure(Errors.Validation.Invalid(nameof(command.HydrationEntryId), "Hydration entry id must not be empty."));
+        Result<HydrationEntryId> hydrationEntryIdResult = RequiredIdParser.Parse(
+            command.HydrationEntryId,
+            nameof(command.HydrationEntryId),
+            "Hydration entry id must not be empty.",
+            value => new HydrationEntryId(value));
+        if (hydrationEntryIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(hydrationEntryIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
@@ -27,7 +32,7 @@ public sealed class DeleteHydrationEntryCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var hydrationEntryId = new HydrationEntryId(command.HydrationEntryId);
+        HydrationEntryId hydrationEntryId = hydrationEntryIdResult.Value;
 
         HydrationEntry? entry = await repository.GetByIdAsync(hydrationEntryId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (entry is null || entry.UserId != userId) {

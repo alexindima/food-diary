@@ -19,9 +19,13 @@ public sealed class UpdateWaistEntryCommandHandler(
     public async Task<Result<WaistEntryModel>> Handle(
         UpdateWaistEntryCommand command,
         CancellationToken cancellationToken) {
-        if (command.WaistEntryId == Guid.Empty) {
-            return Result.Failure<WaistEntryModel>(
-                Errors.Validation.Invalid(nameof(command.WaistEntryId), "Waist entry id must not be empty."));
+        Result<WaistEntryId> waistEntryIdResult = RequiredIdParser.Parse(
+            command.WaistEntryId,
+            nameof(command.WaistEntryId),
+            "Waist entry id must not be empty.",
+            value => new WaistEntryId(value));
+        if (waistEntryIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<WaistEntryModel, WaistEntryId>(waistEntryIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
@@ -33,7 +37,7 @@ public sealed class UpdateWaistEntryCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var waistEntryId = new WaistEntryId(command.WaistEntryId);
+        WaistEntryId waistEntryId = waistEntryIdResult.Value;
         WaistEntry? entry = await waistEntryRepository.GetByIdAsync(
             waistEntryId,
             userId,

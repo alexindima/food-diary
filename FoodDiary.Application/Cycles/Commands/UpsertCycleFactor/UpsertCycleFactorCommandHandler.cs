@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Cycles.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Services;
@@ -17,9 +18,13 @@ public sealed class UpsertCycleFactorCommandHandler(
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpsertCycleFactorCommand, Result<CycleModel>> {
     public async Task<Result<CycleModel>> Handle(UpsertCycleFactorCommand command, CancellationToken cancellationToken) {
-        if (command.CycleProfileId == Guid.Empty) {
-            return Result.Failure<CycleModel>(
-                Errors.Validation.Invalid(nameof(command.CycleProfileId), "Cycle profile id must not be empty."));
+        Result<CycleProfileId> profileIdResult = RequiredIdParser.Parse(
+            command.CycleProfileId,
+            nameof(command.CycleProfileId),
+            "Cycle profile id must not be empty.",
+            value => new CycleProfileId(value));
+        if (profileIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<CycleModel, CycleProfileId>(profileIdResult);
         }
 
         if (!Enum.IsDefined((CycleFactorType)command.Type)) {
@@ -37,7 +42,7 @@ public sealed class UpsertCycleFactorCommandHandler(
 
         UserId userId = userIdResult.Value;
         CycleProfile? profile = await cycleRepository.GetByIdAsync(
-            new CycleProfileId(command.CycleProfileId),
+            profileIdResult.Value,
             userId,
             includeDetails: true,
             asTracking: true,

@@ -19,9 +19,13 @@ public sealed class UpdateWeightEntryCommandHandler(
     public async Task<Result<WeightEntryModel>> Handle(
         UpdateWeightEntryCommand command,
         CancellationToken cancellationToken) {
-        if (command.WeightEntryId == Guid.Empty) {
-            return Result.Failure<WeightEntryModel>(
-                Errors.Validation.Invalid(nameof(command.WeightEntryId), "Weight entry id must not be empty."));
+        Result<WeightEntryId> weightEntryIdResult = RequiredIdParser.Parse(
+            command.WeightEntryId,
+            nameof(command.WeightEntryId),
+            "Weight entry id must not be empty.",
+            value => new WeightEntryId(value));
+        if (weightEntryIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<WeightEntryModel, WeightEntryId>(weightEntryIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
@@ -33,7 +37,7 @@ public sealed class UpdateWeightEntryCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var weightEntryId = new WeightEntryId(command.WeightEntryId);
+        WeightEntryId weightEntryId = weightEntryIdResult.Value;
         WeightEntry? existingEntry = await weightEntryRepository.GetByIdAsync(
             weightEntryId,
             userId,

@@ -18,9 +18,14 @@ internal static class UpdateConsumptionValuePreparer {
         ICurrentUserAccessService currentUserAccessService,
         IImageAssetAccessService imageAssetAccessService,
         CancellationToken cancellationToken) {
-        Result commandValidation = ValidateCommand(command);
-        if (commandValidation.IsFailure) {
-            return Result.Failure<UpdateConsumptionValues>(commandValidation.Error);
+        Result<MealId> consumptionIdResult = ParseConsumptionId(command);
+        if (consumptionIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<UpdateConsumptionValues, MealId>(consumptionIdResult);
+        }
+
+        Result itemsValidation = ValidateItems(command);
+        if (itemsValidation.IsFailure) {
+            return Result.Failure<UpdateConsumptionValues>(itemsValidation.Error);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
@@ -32,7 +37,7 @@ internal static class UpdateConsumptionValuePreparer {
         }
 
         UserId userId = userIdResult.Value;
-        var consumptionId = new MealId(command.ConsumptionId);
+        MealId consumptionId = consumptionIdResult.Value;
         Meal? meal = await mealReadRepository.GetByIdAsync(
             consumptionId,
             userId,
@@ -72,12 +77,14 @@ internal static class UpdateConsumptionValuePreparer {
             oldAssetId));
     }
 
-    private static Result ValidateCommand(UpdateConsumptionCommand command) {
-        if (command.ConsumptionId == Guid.Empty) {
-            return Result.Failure(
-                Errors.Validation.Invalid(nameof(command.ConsumptionId), "Consumption id must not be empty."));
-        }
+    private static Result<MealId> ParseConsumptionId(UpdateConsumptionCommand command) =>
+        RequiredIdParser.Parse(
+            command.ConsumptionId,
+            nameof(command.ConsumptionId),
+            "Consumption id must not be empty.",
+            value => new MealId(value));
 
+    private static Result ValidateItems(UpdateConsumptionCommand command) {
         bool hasManualItems = command.Items is { Count: > 0 };
         bool hasAiItems = command.AiSessions is { Count: > 0 } && command.AiSessions.Any(session => session.Items.Count > 0);
         return hasManualItems || hasAiItems

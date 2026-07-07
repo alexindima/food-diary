@@ -332,6 +332,7 @@ public sealed class ApplicationGuardrailTests {
             "EnumFilterParser.cs",
             "EnumValueParser.cs",
             "OptionalEntityIdValidator.cs",
+            "RequiredIdParser.cs",
             "UserIdParser.cs",
         ];
 

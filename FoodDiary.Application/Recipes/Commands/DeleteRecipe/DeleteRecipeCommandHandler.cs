@@ -19,12 +19,17 @@ public sealed class DeleteRecipeCommandHandler(
             return UserIdParser.ToFailure(userIdResult);
         }
 
-        if (command.RecipeId == Guid.Empty) {
-            return Result.Failure(Errors.Validation.Invalid(nameof(command.RecipeId), "Recipe id must not be empty."));
+        Result<RecipeId> recipeIdResult = RequiredIdParser.Parse(
+            command.RecipeId,
+            nameof(command.RecipeId),
+            "Recipe id must not be empty.",
+            value => new RecipeId(value));
+        if (recipeIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure(recipeIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        var recipeId = new RecipeId(command.RecipeId);
+        RecipeId recipeId = recipeIdResult.Value;
 
         Recipe? recipe = await recipeReadRepository.GetByIdAsync(
             recipeId,

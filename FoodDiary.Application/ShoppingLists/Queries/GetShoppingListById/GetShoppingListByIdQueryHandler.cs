@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Application.Users.Common;
@@ -15,9 +16,13 @@ public sealed class GetShoppingListByIdQueryHandler(
     public async Task<Result<ShoppingListModel>> Handle(
         GetShoppingListByIdQuery query,
         CancellationToken cancellationToken) {
-        if (query.ShoppingListId == Guid.Empty) {
-            return Result.Failure<ShoppingListModel>(
-                Errors.Validation.Invalid(nameof(query.ShoppingListId), "Shopping list id must not be empty."));
+        Result<ShoppingListId> shoppingListIdResult = RequiredIdParser.Parse(
+            query.ShoppingListId,
+            nameof(query.ShoppingListId),
+            "Shopping list id must not be empty.",
+            value => new ShoppingListId(value));
+        if (shoppingListIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<ShoppingListModel, ShoppingListId>(shoppingListIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
@@ -29,7 +34,7 @@ public sealed class GetShoppingListByIdQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var shoppingListId = new ShoppingListId(query.ShoppingListId);
+        ShoppingListId shoppingListId = shoppingListIdResult.Value;
 
         ShoppingListModel? list = await shoppingListReadService.GetByIdAsync(
             shoppingListId,

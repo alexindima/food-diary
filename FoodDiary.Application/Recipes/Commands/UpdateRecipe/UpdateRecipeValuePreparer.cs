@@ -23,9 +23,9 @@ internal static class UpdateRecipeValuePreparer {
         IProductLookupService productLookupService,
         IRecipeLookupService recipeLookupService,
         CancellationToken cancellationToken) {
-        Result commandValidation = ValidateCommand(command);
-        if (commandValidation.IsFailure) {
-            return Result.Failure<UpdateRecipeValues>(commandValidation.Error);
+        Result<RecipeId> recipeIdResult = ParseRecipeId(command);
+        if (recipeIdResult.IsFailure) {
+            return RequiredIdParser.ToFailure<UpdateRecipeValues, RecipeId>(recipeIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
@@ -37,8 +37,7 @@ internal static class UpdateRecipeValuePreparer {
         }
 
         UserId userId = userIdResult.Value;
-
-        var recipeId = new RecipeId(command.RecipeId);
+        RecipeId recipeId = recipeIdResult.Value;
         Result<Recipe> recipeResult = await ResolveEditableRecipeAsync(command, recipeId, userId, recipeRepository, cancellationToken).ConfigureAwait(false);
         if (recipeResult.IsFailure) {
             return Result.Failure<UpdateRecipeValues>(recipeResult.Error);
@@ -92,11 +91,12 @@ internal static class UpdateRecipeValuePreparer {
             .Distinct()
             .ToList();
 
-    private static Result ValidateCommand(UpdateRecipeCommand command) {
-        return command.RecipeId == Guid.Empty
-            ? Result.Failure(Errors.Validation.Invalid(nameof(command.RecipeId), "Recipe id must not be empty."))
-            : Result.Success();
-    }
+    private static Result<RecipeId> ParseRecipeId(UpdateRecipeCommand command) =>
+        RequiredIdParser.Parse(
+            command.RecipeId,
+            nameof(command.RecipeId),
+            "Recipe id must not be empty.",
+            value => new RecipeId(value));
 
     private static async Task<Result<Recipe>> ResolveEditableRecipeAsync(
         UpdateRecipeCommand command,
