@@ -1,7 +1,9 @@
+using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -34,19 +36,19 @@ public class CommonValidationTests {
     [InlineData(null)]
     [InlineData("")]
     [InlineData(" ")]
-    public void StringCodeParser_ParseOptionalLanguage_WithBlankValue_ReturnsNull(string? value) {
-        Result<string?> result = StringCodeParser.ParseOptionalLanguage(value, "language", "invalid language");
+    public void UserPreferenceCodeParser_ParseOptionalLanguage_WithBlankValue_ReturnsNull(string? value) {
+        Result<string?> result = UserPreferenceCodeParser.ParseOptionalLanguage(value, "language", "invalid language");
 
         ResultAssert.Success(result);
         Assert.Null(result.Value);
     }
 
     [Fact]
-    public void StringCodeParser_ParseOptionalCodes_WithSupportedValues_ReturnsNormalizedCode() {
-        Result<string?> language = StringCodeParser.ParseOptionalLanguage("ru", "language", "invalid language");
-        Result<string?> gender = StringCodeParser.ParseOptionalGender("f", "gender", "invalid gender");
-        Result<string?> theme = StringCodeParser.ParseOptionalTheme("dark", "theme", "invalid theme");
-        Result<string?> uiStyle = StringCodeParser.ParseOptionalUiStyle("modern", "uiStyle", "invalid ui style");
+    public void UserPreferenceCodeParser_ParseOptionalCodes_WithSupportedValues_ReturnsNormalizedCode() {
+        Result<string?> language = UserPreferenceCodeParser.ParseOptionalLanguage("ru", "language", "invalid language");
+        Result<string?> gender = UserPreferenceCodeParser.ParseOptionalGender("f", "gender", "invalid gender");
+        Result<string?> theme = UserPreferenceCodeParser.ParseOptionalTheme("dark", "theme", "invalid theme");
+        Result<string?> uiStyle = UserPreferenceCodeParser.ParseOptionalUiStyle("modern", "uiStyle", "invalid ui style");
 
         ResultAssert.Success(language);
         ResultAssert.Success(gender);
@@ -59,11 +61,11 @@ public class CommonValidationTests {
     }
 
     [Fact]
-    public void StringCodeParser_ParseOptionalCodes_WithUnsupportedValues_ReturnsValidationFailure() {
-        Result<string?> language = StringCodeParser.ParseOptionalLanguage("de", "language", "invalid language");
-        Result<string?> gender = StringCodeParser.ParseOptionalGender("unknown", "gender", "invalid gender");
-        Result<string?> theme = StringCodeParser.ParseOptionalTheme("neon", "theme", "invalid theme");
-        Result<string?> uiStyle = StringCodeParser.ParseOptionalUiStyle("retro", "uiStyle", "invalid ui style");
+    public void UserPreferenceCodeParser_ParseOptionalCodes_WithUnsupportedValues_ReturnsValidationFailure() {
+        Result<string?> language = UserPreferenceCodeParser.ParseOptionalLanguage("de", "language", "invalid language");
+        Result<string?> gender = UserPreferenceCodeParser.ParseOptionalGender("unknown", "gender", "invalid gender");
+        Result<string?> theme = UserPreferenceCodeParser.ParseOptionalTheme("neon", "theme", "invalid theme");
+        Result<string?> uiStyle = UserPreferenceCodeParser.ParseOptionalUiStyle("retro", "uiStyle", "invalid ui style");
 
         Assert.All([language, gender, theme, uiStyle], result => {
             ResultAssert.Failure(result);
@@ -72,9 +74,9 @@ public class CommonValidationTests {
     }
 
     [Fact]
-    public void StringCodeParser_ParseRequiredLanguage_ReturnsSuccessOrValidationFailure() {
-        Result<string> success = StringCodeParser.ParseRequiredLanguage("en", "language", "invalid language");
-        Result<string> failure = StringCodeParser.ParseRequiredLanguage("de-DE", "language", "invalid language");
+    public void AdminLocaleParser_ParseRequiredLanguage_ReturnsSuccessOrValidationFailure() {
+        Result<string> success = AdminLocaleParser.ParseRequiredLanguage("en", "language", "invalid language");
+        Result<string> failure = AdminLocaleParser.ParseRequiredLanguage("de-DE", "language", "invalid language");
 
         ResultAssert.Success(success);
         Assert.Equal("en", success.Value);

@@ -284,7 +284,6 @@ public sealed class ApplicationGuardrailTests {
             "EnumFilterParser.cs",
             "EnumValueParser.cs",
             "OptionalEntityIdValidator.cs",
-            "StringCodeParser.cs",
             "UserIdParser.cs",
         ];
 
@@ -508,6 +507,10 @@ public sealed class ApplicationGuardrailTests {
     [InlineData("Errors.WaistEntry.cs", "WaistEntries", "Common", "WaistEntryErrors.cs", "WaistEntryErrors.", "WaistEntry.")]
     [InlineData("Errors.HydrationEntry.cs", "Hydration", "Common", "HydrationEntryErrors.cs", "HydrationEntryErrors.", "HydrationEntry.")]
     [InlineData("Errors.Exercise.cs", "Exercises", "Common", "ExerciseErrors.cs", "ExerciseErrors.", "Exercise.")]
+    [InlineData("Errors.FavoriteProduct.cs", "FavoriteProducts", "Common", "FavoriteProductErrors.cs", "FavoriteProductErrors.", "FavoriteProduct.")]
+    [InlineData("Errors.FavoriteRecipe.cs", "FavoriteRecipes", "Common", "FavoriteRecipeErrors.cs", "FavoriteRecipeErrors.", "FavoriteRecipe.")]
+    [InlineData("Errors.RecipeComment.cs", "RecipeComments", "Common", "RecipeCommentErrors.cs", "RecipeCommentErrors.", "RecipeComment.")]
+    [InlineData("Errors.ShoppingList.cs", "ShoppingLists", "Common", "ShoppingListErrors.cs", "ShoppingListErrors.", "ShoppingList.")]
     public void MigratedErrorsFacades_DelegateToFeatureOwnedErrorFactories(
         string facadeFileName,
         string featureDirectory,

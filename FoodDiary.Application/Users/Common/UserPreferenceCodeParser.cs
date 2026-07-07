@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Application.Common.Validation;
+namespace FoodDiary.Application.Users.Common;
 
-public static class StringCodeParser {
+public static class UserPreferenceCodeParser {
     public static Result<string?> ParseOptionalLanguage(string? value, string fieldName, string message) {
         if (string.IsNullOrWhiteSpace(value)) {
             return Result.Success<string?>(value: null);
@@ -42,11 +42,5 @@ public static class StringCodeParser {
         return UiStyleCode.TryParse(value, out UiStyleCode uiStyle)
             ? Result.Success<string?>(uiStyle.Value)
             : Result.Failure<string?>(Errors.Validation.Invalid(fieldName, message));
-    }
-
-    public static Result<string> ParseRequiredLanguage(string value, string fieldName, string message) {
-        return LanguageCode.TryParse(value, out LanguageCode language)
-            ? Result.Success(language.Value)
-            : Result.Failure<string>(Errors.Validation.Invalid(fieldName, message));
     }
 }

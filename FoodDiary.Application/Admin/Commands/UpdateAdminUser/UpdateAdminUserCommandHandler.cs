@@ -4,7 +4,7 @@ using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -41,7 +41,7 @@ public sealed class UpdateAdminUserCommandHandler(
             return Result.Failure<AdminUserModel>(Errors.User.NotFound(command.UserId));
         }
 
-        Result<string?> languageResult = StringCodeParser.ParseOptionalLanguage(
+        Result<string?> languageResult = UserPreferenceCodeParser.ParseOptionalLanguage(
             command.Language,
             "language",
             "Invalid language value.");

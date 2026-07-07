@@ -1,6 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
@@ -22,7 +21,7 @@ public sealed class UpdateUserAppearanceCommandHandler(IUserContextService userC
             return Result.Failure<UserModel>(userResult.Error);
         }
 
-        Result<string?> themeResult = StringCodeParser.ParseOptionalTheme(
+        Result<string?> themeResult = UserPreferenceCodeParser.ParseOptionalTheme(
             command.Theme,
             nameof(UpdateUserAppearanceCommand.Theme),
             "Invalid theme value.");
@@ -30,7 +29,7 @@ public sealed class UpdateUserAppearanceCommandHandler(IUserContextService userC
             return Result.Failure<UserModel>(themeResult.Error);
         }
 
-        Result<string?> uiStyleResult = StringCodeParser.ParseOptionalUiStyle(
+        Result<string?> uiStyleResult = UserPreferenceCodeParser.ParseOptionalUiStyle(
             command.UiStyle,
             nameof(UpdateUserAppearanceCommand.UiStyle),
             "Invalid UI style value.");

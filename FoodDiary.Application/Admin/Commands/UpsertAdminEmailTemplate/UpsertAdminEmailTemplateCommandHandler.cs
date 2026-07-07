@@ -1,9 +1,9 @@
 using FoodDiary.Application.Admin.Mappings;
+using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
@@ -15,7 +15,7 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
         UpsertAdminEmailTemplateCommand command,
         CancellationToken cancellationToken) {
         string key = NormalizeKey(command.Key);
-        Result<string> localeResult = StringCodeParser.ParseRequiredLanguage(
+        Result<string> localeResult = AdminLocaleParser.ParseRequiredLanguage(
             command.Locale,
             nameof(command.Locale),
             "Locale must be one of the supported codes.");
