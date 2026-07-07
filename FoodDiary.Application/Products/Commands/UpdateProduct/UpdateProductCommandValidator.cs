@@ -33,22 +33,27 @@ public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProd
         ConfigureCaloriesRule();
         ConfigureNutrientRule(
             x => x.ProteinsPerBase,
+            x => x.ProteinsPerBase.HasValue,
             "ProteinsPerBase must be non-negative",
             "ProteinsPerBase exceeds the maximum for the selected unit");
         ConfigureNutrientRule(
             x => x.FatsPerBase,
+            x => x.FatsPerBase.HasValue,
             "FatsPerBase must be non-negative",
             "FatsPerBase exceeds the maximum for the selected unit");
         ConfigureNutrientRule(
             x => x.CarbsPerBase,
+            x => x.CarbsPerBase.HasValue,
             "CarbsPerBase must be non-negative",
             "CarbsPerBase exceeds the maximum for the selected unit");
         ConfigureNutrientRule(
             x => x.FiberPerBase,
+            x => x.FiberPerBase.HasValue,
             "FiberPerBase must be non-negative",
             "FiberPerBase exceeds the maximum for the selected unit");
         ConfigureNutrientRule(
             x => x.AlcoholPerBase,
+            x => x.AlcoholPerBase.HasValue,
             "AlcoholPerBase must be non-negative",
             "AlcoholPerBase exceeds the maximum for the selected unit");
     }
@@ -83,6 +88,7 @@ public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProd
 
     private void ConfigureNutrientRule(
         Expression<Func<UpdateProductCommand, double?>> property,
+        Func<UpdateProductCommand, bool> condition,
         string nonNegativeMessage,
         string limitMessage) {
         RuleFor(property)
@@ -92,7 +98,7 @@ public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProd
             .Must((command, value) => ProductCommandValidation.BeWithinNutrientLimit(command.BaseUnit, value!.Value))
             .WithErrorCode("Validation.Invalid")
             .WithMessage(limitMessage)
-            .When(command => property.Compile().Invoke(command).HasValue);
+            .When(condition);
     }
 
     private void ConfigureEnumRules() {

@@ -2,7 +2,9 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Recipes;
 
@@ -11,14 +13,10 @@ namespace FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 public sealed class DeleteRecipeCommandHandler(
     IRecipeReadRepository recipeReadRepository,
     IRecipeWriteRepository recipeWriteRepository,
-    IImageAssetCleanupService imageAssetCleanupService)
+    IImageAssetCleanupService imageAssetCleanupService,
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DeleteRecipeCommand, Result> {
     public async Task<Result> Handle(DeleteRecipeCommand command, CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
-        if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure(userIdResult);
-        }
-
         Result<RecipeId> recipeIdResult = RequiredIdParser.Parse(
             command.RecipeId,
             nameof(command.RecipeId),
@@ -26,6 +24,14 @@ public sealed class DeleteRecipeCommandHandler(
             value => new RecipeId(value));
         if (recipeIdResult.IsFailure) {
             return RequiredIdParser.ToFailure(recipeIdResult);
+        }
+
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
@@ -53,17 +59,12 @@ public sealed class DeleteRecipeCommandHandler(
                 "Recipe is already used and cannot be deleted"));
         }
 
-        ImageAssetId? assetId = recipe.ImageAssetId;
-        var stepAssetIds = recipe.Steps
-            .Select(step => step.ImageAssetId)
-            .Where(id => id.HasValue)
-            .Select(id => id!.Value)
-            .Distinct()
-            .ToList();
+        ImageAssetId? recipeAssetId = recipe.ImageAssetId;
+        IReadOnlyList<ImageAssetId> stepAssetIds = GetStepAssetIds(recipe);
         await recipeWriteRepository.DeleteAsync(recipe, cancellationToken).ConfigureAwait(false);
 
-        if (assetId.HasValue) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(assetId.Value, cancellationToken).ConfigureAwait(false);
+        if (recipeAssetId.HasValue) {
+            await imageAssetCleanupService.DeleteIfUnusedAsync(recipeAssetId.Value, cancellationToken).ConfigureAwait(false);
         }
 
         foreach (ImageAssetId stepAssetId in stepAssetIds) {
@@ -72,4 +73,12 @@ public sealed class DeleteRecipeCommandHandler(
 
         return Result.Success();
     }
+
+    private static IReadOnlyList<ImageAssetId> GetStepAssetIds(Recipe recipe) =>
+        recipe.Steps
+            .Select(step => step.ImageAssetId)
+            .Where(id => id.HasValue)
+            .Select(id => id!.Value)
+            .Distinct()
+            .ToList();
 }

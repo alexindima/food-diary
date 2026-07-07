@@ -46,8 +46,13 @@ public class RecipesFeatureTests {
 
     private static DeleteRecipeCommandHandler DeleteRecipeHandler(
         IRecipeRepository repository,
-        IImageAssetCleanupService imageAssetCleanupService) =>
-        new(repository, repository, imageAssetCleanupService);
+        IImageAssetCleanupService imageAssetCleanupService,
+        ICurrentUserAccessService? currentUserAccessService = null) =>
+        new(
+            repository,
+            repository,
+            imageAssetCleanupService,
+            currentUserAccessService ?? new StubUserRepository(User.Create("recipe-deleter@example.com", "hash")));
 
     private static DuplicateRecipeCommandHandler DuplicateRecipeHandler(IRecipeRepository repository) =>
         new(repository, repository, repository);
@@ -144,16 +149,36 @@ public class RecipesFeatureTests {
 
     [Fact]
     public async Task DeleteRecipeCommandHandler_WhenRecipeIsMissing_ReturnsNotAccessible() {
-        var userId = UserId.New();
-        var repository = new SingleRecipeRepository(Recipe.Create(userId, "Soup", servings: 2));
-        DeleteRecipeCommandHandler handler = DeleteRecipeHandler(repository, new RecordingCleanupService());
+        var user = User.Create("delete-recipe-missing@example.com", "hash");
+        var repository = new SingleRecipeRepository(Recipe.Create(user.Id, "Soup", servings: 2));
+        DeleteRecipeCommandHandler handler = DeleteRecipeHandler(repository, new RecordingCleanupService(), new StubUserRepository(user));
 
         Result result = await handler.Handle(
-            new DeleteRecipeCommand(userId.Value, RecipeId.New().Value),
+            new DeleteRecipeCommand(user.Id.Value, RecipeId.New().Value),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Recipe.NotAccessible", result.Error.Code);
+        Assert.False(repository.DeleteCalled);
+    }
+
+    [Fact]
+    public async Task DeleteRecipeCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-delete-recipe@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var recipe = Recipe.Create(user.Id, "Soup", servings: 2);
+        var repository = new SingleRecipeRepository(recipe);
+        DeleteRecipeCommandHandler handler = DeleteRecipeHandler(
+            repository,
+            new RecordingCleanupService(),
+            new StubUserRepository(user));
+
+        Result result = await handler.Handle(
+            new DeleteRecipeCommand(user.Id.Value, recipe.Id.Value),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.False(repository.DeleteCalled);
     }
 
@@ -781,7 +806,7 @@ public class RecipesFeatureTests {
     }
 
     [Fact]
-    public async Task DuplicateRecipeCommandHandler_WhenOriginalRecipeIsMissing_ReturnsNotFound() {
+    public async Task DuplicateRecipeCommandHandler_WhenOriginalRecipeIsMissing_ReturnsNotAccessible() {
         var userId = Guid.NewGuid();
         DuplicateRecipeCommandHandler handler = DuplicateRecipeHandler(new SingleRecipeRepositoryForCreate());
 
@@ -790,7 +815,7 @@ public class RecipesFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal("Recipe.NotFound", result.Error.Code);
+        Assert.Equal("Recipe.NotAccessible", result.Error.Code);
     }
 
     [Fact]

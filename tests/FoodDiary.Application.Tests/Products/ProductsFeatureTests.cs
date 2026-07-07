@@ -471,7 +471,7 @@ public class ProductsFeatureTests {
     }
 
     [Fact]
-    public async Task DuplicateProductCommandHandler_WhenOriginalMissing_ReturnsNotFound() {
+    public async Task DuplicateProductCommandHandler_WhenOriginalMissing_ReturnsNotAccessible() {
         var repository = new NoopProductRepository();
         var handler = new DuplicateProductCommandHandler(repository, repository);
 
@@ -480,7 +480,7 @@ public class ProductsFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal("Product.NotFound", result.Error.Code);
+        Assert.Equal("Product.NotAccessible", result.Error.Code);
     }
 
     [Fact]

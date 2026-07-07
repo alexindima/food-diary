@@ -41,7 +41,7 @@ public sealed class DuplicateRecipeCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (original is null) {
-            return Result.Failure<RecipeModel>(Errors.Recipe.NotFound(command.RecipeId));
+            return Result.Failure<RecipeModel>(Errors.Recipe.NotAccessible(command.RecipeId));
         }
 
         Recipe duplicate = CreateDuplicate(userId, original);

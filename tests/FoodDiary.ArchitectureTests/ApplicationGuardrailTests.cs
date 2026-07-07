@@ -75,6 +75,35 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationValidators_AreStatelessRequestShapeValidators() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] validators = [.. SourceScanner.SourceFiles(applicationRoot)
+            .Where(path => path.EndsWith("Validator.cs", StringComparison.Ordinal))];
+        string[] forbiddenPatterns = [
+            "CustomAsync",
+            "MustAsync",
+            "Repository",
+            "ReadService",
+            "WriteService",
+            "GetBy",
+            "ExistsAsync",
+            "CountAsync",
+        ];
+
+        string[] violations = [.. validators
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line })
+                .Where(entry => forbiddenPatterns.Any(pattern => entry.line.Contains(pattern, StringComparison.Ordinal)))
+                .Select(entry => string.Create(
+                    CultureInfo.InvariantCulture,
+                    $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationEngagementCalculators_UseReadModelsInsteadOfDomainAggregates() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

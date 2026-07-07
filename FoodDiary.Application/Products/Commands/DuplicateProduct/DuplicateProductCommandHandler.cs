@@ -38,7 +38,7 @@ public sealed class DuplicateProductCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (original is null) {
-            return Result.Failure<ProductModel>(Errors.Product.NotFound(command.ProductId));
+            return Result.Failure<ProductModel>(Errors.Product.NotAccessible(command.ProductId));
         }
 
         var duplicate = Product.Create(
