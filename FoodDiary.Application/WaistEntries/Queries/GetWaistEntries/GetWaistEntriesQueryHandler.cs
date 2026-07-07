@@ -1,8 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Time;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -16,17 +16,15 @@ public sealed class GetWaistEntriesQueryHandler(
     public async Task<Result<IReadOnlyList<WaistEntryModel>>> Handle(
         GetWaistEntriesQuery query,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return Result.Failure<IReadOnlyList<WaistEntryModel>>(userIdResult.Error);
+            return CurrentUserAccessResolver.ToFailure<IReadOnlyList<WaistEntryModel>>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<IReadOnlyList<WaistEntryModel>>(accessError);
-        }
-
         DateTime? normalizedFrom = query.DateFrom.HasValue
             ? UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom.Value)
             : null;

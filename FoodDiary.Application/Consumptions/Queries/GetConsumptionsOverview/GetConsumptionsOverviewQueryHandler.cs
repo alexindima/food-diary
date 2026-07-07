@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Enums;
 
@@ -18,16 +19,15 @@ public sealed class GetConsumptionsOverviewQueryHandler(
     public async Task<Result<ConsumptionOverviewModel>> Handle(
         GetConsumptionsOverviewQuery request,
         CancellationToken cancellationToken) {
-        if (request.UserId is null || request.UserId == Guid.Empty) {
-            return Result.Failure<ConsumptionOverviewModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            request.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<ConsumptionOverviewModel>(userIdResult);
         }
 
-        var userId = new UserId(request.UserId.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<ConsumptionOverviewModel>(accessError);
-        }
-
+        UserId userId = userIdResult.Value;
         int sanitizedPage = Math.Max(request.Page, 1);
         int sanitizedLimit = Math.Clamp(request.Limit, 1, 100);
         int favoriteLimit = Math.Clamp(request.FavoriteLimit, 1, 50);

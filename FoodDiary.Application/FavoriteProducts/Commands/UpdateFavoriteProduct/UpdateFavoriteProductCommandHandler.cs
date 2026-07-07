@@ -1,10 +1,10 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.FavoriteProducts.Mappings;
 using FoodDiary.Application.FavoriteProducts.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -17,17 +17,14 @@ public sealed class UpdateFavoriteProductCommandHandler(
     public async Task<Result<FavoriteProductModel>> Handle(
         UpdateFavoriteProductCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver
+            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken)
+            .ConfigureAwait(false);
         if (userIdResult.IsFailure) {
             return Result.Failure<FavoriteProductModel>(userIdResult.Error);
         }
 
         UserId userId = userIdResult.Value;
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<FavoriteProductModel>(accessError);
-        }
-
         var favoriteProductId = new FavoriteProductId(command.FavoriteProductId);
         FavoriteProduct? favorite = await favoriteProductRepository.GetByIdAsync(
             favoriteProductId,

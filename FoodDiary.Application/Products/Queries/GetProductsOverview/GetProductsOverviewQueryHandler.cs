@@ -10,6 +10,7 @@ using FoodDiary.Application.FavoriteProducts.Models;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Products.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -38,16 +39,15 @@ public sealed class GetProductsOverviewQueryHandler(
     public async Task<Result<ProductOverviewModel>> Handle(
         GetProductsOverviewQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<ProductOverviewModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<ProductOverviewModel>(userIdResult);
         }
 
-        var userId = new UserId(query.UserId.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<ProductOverviewModel>(accessError);
-        }
-
+        UserId userId = userIdResult.Value;
         ProductOverviewOptions options = CreateOptions(query, userId);
 
         (IReadOnlyList<ProductOverviewReadItem> items, int totalItems) = await productOverviewReadService.GetPagedAsync(

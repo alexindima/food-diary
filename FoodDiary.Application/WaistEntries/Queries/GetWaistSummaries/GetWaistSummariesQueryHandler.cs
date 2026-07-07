@@ -1,8 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Time;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -16,9 +16,12 @@ public sealed class GetWaistSummariesQueryHandler(
     public async Task<Result<IReadOnlyList<WaistEntrySummaryModel>>> Handle(
         GetWaistSummariesQuery query,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return Result.Failure<IReadOnlyList<WaistEntrySummaryModel>>(userIdResult.Error);
+            return CurrentUserAccessResolver.ToFailure<IReadOnlyList<WaistEntrySummaryModel>>(userIdResult);
         }
 
         if (query.DateFrom > query.DateTo) {
@@ -32,11 +35,6 @@ public sealed class GetWaistSummariesQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<IReadOnlyList<WaistEntrySummaryModel>>(accessError);
-        }
-
         DateTime normalizedFrom = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom);
         DateTime normalizedTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo);
 

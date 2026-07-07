@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Dietologist;
 
@@ -12,16 +13,14 @@ public sealed class DisconnectDietologistCommandHandler(
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DisconnectDietologistCommand, Result> {
     public async Task<Result> Handle(DisconnectDietologistCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure(Errors.Authentication.InvalidToken);
+        Result<UserId> dietologistUserIdResult = await CurrentUserAccessResolver
+            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken)
+            .ConfigureAwait(false);
+        if (dietologistUserIdResult.IsFailure) {
+            return Result.Failure(dietologistUserIdResult.Error);
         }
 
-        var dietologistUserId = new UserId(command.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure(accessError);
-        }
-
+        UserId dietologistUserId = dietologistUserIdResult.Value;
         var clientUserId = new UserId(command.ClientUserId);
         DietologistInvitation? invitation = await invitationRepository.GetActiveByClientAndDietologistAsync(
             clientUserId, dietologistUserId, cancellationToken).ConfigureAwait(false);

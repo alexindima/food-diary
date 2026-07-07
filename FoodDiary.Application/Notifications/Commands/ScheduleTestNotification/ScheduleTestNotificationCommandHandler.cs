@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Commands.ScheduleTestNotification;
@@ -17,16 +18,15 @@ public sealed class ScheduleTestNotificationCommandHandler(
     public async Task<Result<ScheduledNotificationModel>> Handle(
         ScheduleTestNotificationCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<ScheduledNotificationModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<ScheduledNotificationModel>(userIdResult);
         }
 
-        var userId = new UserId(command.UserId.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<ScheduledNotificationModel>(accessError);
-        }
-
+        UserId userId = userIdResult.Value;
         ScheduledNotificationData scheduled = await notificationTestScheduler.ScheduleAsync(
             userId.Value,
             command.DelaySeconds,

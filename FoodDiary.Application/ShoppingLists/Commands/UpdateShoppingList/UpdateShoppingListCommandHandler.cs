@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Application.ShoppingLists.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Shopping;
 
@@ -50,33 +51,29 @@ public sealed class UpdateShoppingListCommandHandler(
         return Result.Success(list.ToModel());
     }
 
-    private static Result<UserId> ValidateUser(UpdateShoppingListCommand command) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<UserId>(Errors.Authentication.InvalidToken);
-        }
-
+    private static Result ValidateCommandShape(UpdateShoppingListCommand command) {
         if (command.ShoppingListId == Guid.Empty) {
-            return Result.Failure<UserId>(
+            return Result.Failure(
                 Errors.Validation.Invalid(nameof(command.ShoppingListId), "Shopping list id must not be empty."));
         }
 
         if (string.IsNullOrWhiteSpace(command.Name) && command.Items is null) {
-            return Result.Failure<UserId>(Errors.Validation.Required(nameof(command.Items)));
+            return Result.Failure(Errors.Validation.Required(nameof(command.Items)));
         }
 
-        return Result.Success(new UserId(command.UserId.Value));
+        return Result.Success();
     }
 
     private async Task<Result<UserId>> ValidateCommandAsync(UpdateShoppingListCommand command, CancellationToken cancellationToken) {
-        Result<UserId> userResult = ValidateUser(command);
-        if (userResult.IsFailure) {
-            return userResult;
+        Result commandResult = ValidateCommandShape(command);
+        if (commandResult.IsFailure) {
+            return Result.Failure<UserId>(commandResult.Error);
         }
 
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userResult.Value, cancellationToken).ConfigureAwait(false);
-        return accessError is null
-            ? userResult
-            : Result.Failure<UserId>(accessError);
+        return await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<Result> ApplyItemsAsync(

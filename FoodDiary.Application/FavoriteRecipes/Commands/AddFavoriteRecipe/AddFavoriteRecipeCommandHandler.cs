@@ -1,11 +1,11 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.FavoriteRecipes.Mappings;
 using FoodDiary.Application.FavoriteRecipes.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Recipes;
@@ -20,17 +20,14 @@ public sealed class AddFavoriteRecipeCommandHandler(
     public async Task<Result<FavoriteRecipeModel>> Handle(
         AddFavoriteRecipeCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver
+            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken)
+            .ConfigureAwait(false);
         if (userIdResult.IsFailure) {
             return Result.Failure<FavoriteRecipeModel>(userIdResult.Error);
         }
 
         UserId userId = userIdResult.Value;
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<FavoriteRecipeModel>(accessError);
-        }
-
         var recipeId = new RecipeId(command.RecipeId);
         Recipe? recipe = await recipeAccessService.GetAccessibleByIdAsync(
             recipeId,

@@ -9,6 +9,7 @@ using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
@@ -30,16 +31,15 @@ public sealed class GetRecipesOverviewQueryHandler(
     public async Task<Result<RecipeOverviewModel>> Handle(
         GetRecipesOverviewQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<RecipeOverviewModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<RecipeOverviewModel>(userIdResult);
         }
 
-        var userId = new UserId(query.UserId.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<RecipeOverviewModel>(accessError);
-        }
-
+        UserId userId = userIdResult.Value;
         RecipeOverviewOptions options = CreateOptions(query, userId);
 
         (IReadOnlyList<RecipeOverviewReadItem> items, int totalItems) = await recipeOverviewReadService.GetPagedAsync(

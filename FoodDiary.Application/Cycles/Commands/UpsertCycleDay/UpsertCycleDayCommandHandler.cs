@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
@@ -17,21 +18,20 @@ public sealed class UpsertCycleDayCommandHandler(
     public async Task<Result<CycleLogDayModel>> Handle(
         UpsertCycleDayCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<CycleLogDayModel>(Errors.Authentication.InvalidToken);
-        }
-
         if (command.CycleProfileId == Guid.Empty) {
             return Result.Failure<CycleLogDayModel>(
                 Errors.Validation.Invalid(nameof(command.CycleProfileId), "Cycle profile id must not be empty."));
         }
 
-        var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<CycleLogDayModel>(accessError);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<CycleLogDayModel>(userIdResult);
         }
 
+        UserId userId = userIdResult.Value;
         var profileId = new CycleProfileId(command.CycleProfileId);
 
         CycleProfile? profile = await cycleRepository.GetByIdAsync(

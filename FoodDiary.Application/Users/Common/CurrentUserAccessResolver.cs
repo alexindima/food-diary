@@ -22,4 +22,19 @@ internal static class CurrentUserAccessResolver {
             ? userIdResult
             : Result.Failure<UserId>(accessError);
     }
+
+    public static async Task<Result<UserId>> ResolveAsync(
+        UserId userId,
+        ICurrentUserAccessService currentUserAccessService,
+        CancellationToken cancellationToken) {
+        Error? accessError = await currentUserAccessService
+            .EnsureCanAccessAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+        return accessError is null
+            ? Result.Success(userId)
+            : Result.Failure<UserId>(accessError);
+    }
+
+    public static Result<T> ToFailure<T>(Result<UserId> userIdResult) =>
+        Result.Failure<T>(userIdResult.Error);
 }

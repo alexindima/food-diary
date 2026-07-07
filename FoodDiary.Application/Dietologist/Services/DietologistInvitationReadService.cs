@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -67,9 +68,10 @@ public sealed class DietologistInvitationReadService(
     public async Task<Result<DietologistInfoModel?>> GetMyDietologistAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<DietologistInfoModel?>(accessError);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            userId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<DietologistInfoModel?>(userIdResult);
         }
 
         DietologistInvitationReadModel? invitation = await invitationRepository.GetActiveByClientReadModelAsync(userId, cancellationToken).ConfigureAwait(false);
@@ -79,9 +81,10 @@ public sealed class DietologistInvitationReadService(
     public async Task<Result<IReadOnlyList<ClientSummaryModel>>> GetMyClientsAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<IReadOnlyList<ClientSummaryModel>>(accessError);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            userId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<IReadOnlyList<ClientSummaryModel>>(userIdResult);
         }
 
         IReadOnlyList<DietologistInvitationReadModel> invitations = await invitationRepository.GetActiveByDietologistReadModelsAsync(userId, cancellationToken).ConfigureAwait(false);
@@ -92,9 +95,10 @@ public sealed class DietologistInvitationReadService(
     public async Task<Result<DietologistRelationshipModel?>> GetMyRelationshipAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<DietologistRelationshipModel?>(accessError);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            userId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<DietologistRelationshipModel?>(userIdResult);
         }
 
         DietologistInvitationReadModel? accepted = await invitationRepository.GetActiveByClientReadModelAsync(userId, cancellationToken).ConfigureAwait(false);

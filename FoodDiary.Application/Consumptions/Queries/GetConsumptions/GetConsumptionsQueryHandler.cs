@@ -7,6 +7,7 @@ using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Enums;
 
@@ -17,16 +18,15 @@ public sealed class GetConsumptionsQueryHandler(
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetConsumptionsQuery, Result<PagedResponse<ConsumptionModel>>> {
     public async Task<Result<PagedResponse<ConsumptionModel>>> Handle(GetConsumptionsQuery request, CancellationToken cancellationToken) {
-        if (request.UserId is null || request.UserId == Guid.Empty) {
-            return Result.Failure<PagedResponse<ConsumptionModel>>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            request.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<PagedResponse<ConsumptionModel>>(userIdResult);
         }
 
-        var userId = new UserId(request.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<PagedResponse<ConsumptionModel>>(accessError);
-        }
-
+        UserId userId = userIdResult.Value;
         int sanitizedPage = Math.Max(request.Page, 1);
         int sanitizedLimit = Math.Clamp(request.Limit, 1, 100);
         DateTime? normalizedFrom = request.DateFrom.HasValue

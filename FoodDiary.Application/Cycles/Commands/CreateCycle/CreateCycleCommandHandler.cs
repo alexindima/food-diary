@@ -5,6 +5,7 @@ using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
@@ -18,16 +19,15 @@ public sealed class CreateCycleCommandHandler(
     public async Task<Result<CycleModel>> Handle(
         CreateCycleCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<CycleModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<CycleModel>(userIdResult);
         }
 
-        var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<CycleModel>(accessError);
-        }
-
+        UserId userId = userIdResult.Value;
         CycleProfile? existing = await cycleRepository.GetCurrentAsync(
             userId,
             includeDetails: true,

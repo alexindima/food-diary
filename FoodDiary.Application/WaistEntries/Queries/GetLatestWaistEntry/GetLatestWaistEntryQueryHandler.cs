@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -14,16 +15,15 @@ public sealed class GetLatestWaistEntryQueryHandler(
     public async Task<Result<WaistEntryModel?>> Handle(
         GetLatestWaistEntryQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<WaistEntryModel?>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<WaistEntryModel?>(userIdResult);
         }
 
-        var userId = new UserId(query.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<WaistEntryModel?>(accessError);
-        }
-
+        UserId userId = userIdResult.Value;
         WaistEntryModel? latest = await waistEntryReadService.GetLatestAsync(userId, cancellationToken).ConfigureAwait(false);
         return Result.Success(latest);
     }

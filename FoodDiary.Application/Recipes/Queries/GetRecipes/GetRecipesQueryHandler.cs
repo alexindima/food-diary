@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipes;
@@ -15,18 +16,17 @@ public sealed class GetRecipesQueryHandler(
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipesQuery, Result<PagedResponse<RecipeModel>>> {
     public async Task<Result<PagedResponse<RecipeModel>>> Handle(GetRecipesQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<PagedResponse<RecipeModel>>(Errors.Authentication.InvalidToken);
-        }
-
         int pageNumber = Math.Max(query.Page, 1);
         int pageSize = Math.Max(query.Limit, 1);
-        var userId = new UserId(query.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<PagedResponse<RecipeModel>>(accessError);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<PagedResponse<RecipeModel>>(userIdResult);
         }
 
+        UserId userId = userIdResult.Value;
         (IReadOnlyList<RecipeOverviewReadItem> items, int totalItems) = await recipeOverviewReadService.GetPagedAsync(
             userId,
             query.IncludePublic,

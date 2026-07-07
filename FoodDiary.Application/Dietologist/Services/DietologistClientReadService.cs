@@ -5,6 +5,7 @@ using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -26,9 +27,10 @@ public sealed class DietologistClientReadService(
         int page,
         int pageSize,
         CancellationToken cancellationToken) {
-        Error? currentUserAccessError = await currentUserAccessService.EnsureCanAccessAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
-        if (currentUserAccessError is not null) {
-            return Result.Failure<DashboardSnapshotModel>(currentUserAccessError);
+        Result<UserId> dietologistUserIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            dietologistUserId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+        if (dietologistUserIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<DashboardSnapshotModel>(dietologistUserIdResult);
         }
 
         var client = new UserId(clientUserId);

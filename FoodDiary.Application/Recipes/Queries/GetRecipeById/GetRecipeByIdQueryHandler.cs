@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipeById;
@@ -14,19 +15,19 @@ public sealed class GetRecipeByIdQueryHandler(
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipeByIdQuery, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(GetRecipeByIdQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
-        }
-
         if (query.RecipeId == Guid.Empty) {
             return Result.Failure<RecipeModel>(Errors.Validation.Invalid(nameof(query.RecipeId), "Recipe id must not be empty."));
         }
 
-        var userId = new UserId(query.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<RecipeModel>(accessError);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<RecipeModel>(userIdResult);
         }
+
+        UserId userId = userIdResult.Value;
         var recipeId = new RecipeId(query.RecipeId);
 
         IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> recipesById = await recipeOverviewReadService.GetByIdsWithUsageAsync(

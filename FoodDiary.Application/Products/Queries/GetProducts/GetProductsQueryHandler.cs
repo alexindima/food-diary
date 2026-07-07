@@ -7,6 +7,7 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -19,17 +20,17 @@ public sealed class GetProductsQueryHandler(
     public async Task<Result<PagedResponse<ProductModel>>> Handle(
         GetProductsQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<PagedResponse<ProductModel>>(Errors.Authentication.InvalidToken);
-        }
-
         int pageNumber = Math.Max(query.Page, 1);
         int pageSize = Math.Max(query.Limit, 1);
-        var userId = new UserId(query.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<PagedResponse<ProductModel>>(accessError);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<PagedResponse<ProductModel>>(userIdResult);
         }
+
+        UserId userId = userIdResult.Value;
         ProductType[]? productTypes = EnumFilterParser.ParseMany<ProductType>(query.ProductTypes);
 
         (IReadOnlyList<ProductOverviewReadItem> items, int totalItems) = await productOverviewReadService.GetPagedAsync(

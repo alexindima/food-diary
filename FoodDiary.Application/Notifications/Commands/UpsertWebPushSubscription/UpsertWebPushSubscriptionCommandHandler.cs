@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -15,16 +16,15 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
     IAuditLogger auditLogger)
     : ICommandHandler<UpsertWebPushSubscriptionCommand, Result> {
     public async Task<Result> Handle(UpsertWebPushSubscriptionCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return Result.Failure(userIdResult.Error);
         }
 
-        var userId = new UserId(command.UserId.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure(accessError);
-        }
-
+        UserId userId = userIdResult.Value;
         WebPushSubscription? existing = await webPushSubscriptionRepository.GetByEndpointAsync(
             command.Endpoint,
             asTracking: true,

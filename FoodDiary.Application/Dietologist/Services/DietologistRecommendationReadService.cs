@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dietologist.Services;
@@ -16,9 +17,10 @@ public sealed class DietologistRecommendationReadService(
     public async Task<Result<IReadOnlyList<RecommendationModel>>> GetForCurrentUserAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<IReadOnlyList<RecommendationModel>>(accessError);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            userId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<IReadOnlyList<RecommendationModel>>(userIdResult);
         }
 
         IReadOnlyList<RecommendationReadModel> recommendations = await recommendationRepository.GetByClientReadModelsAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -30,9 +32,10 @@ public sealed class DietologistRecommendationReadService(
         UserId dietologistUserId,
         Guid clientUserId,
         CancellationToken cancellationToken) {
-        Error? currentUserAccessError = await currentUserAccessService.EnsureCanAccessAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
-        if (currentUserAccessError is not null) {
-            return Result.Failure<IReadOnlyList<RecommendationModel>>(currentUserAccessError);
+        Result<UserId> dietologistUserIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            dietologistUserId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+        if (dietologistUserIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<IReadOnlyList<RecommendationModel>>(dietologistUserIdResult);
         }
 
         var client = new UserId(clientUserId);

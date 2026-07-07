@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Commands.MarkRecommendationRead;
@@ -12,16 +13,14 @@ public sealed class MarkRecommendationReadCommandHandler(
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<MarkRecommendationReadCommand, Result> {
     public async Task<Result> Handle(MarkRecommendationReadCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver
+            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken)
+            .ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return Result.Failure(userIdResult.Error);
         }
 
-        var userId = new UserId(command.UserId!.Value);
-        Error? currentUserAccessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (currentUserAccessError is not null) {
-            return Result.Failure(currentUserAccessError);
-        }
-
+        UserId userId = userIdResult.Value;
         var recommendationId = new RecommendationId(command.RecommendationId);
 
         Recommendation? recommendation = await recommendationRepository.GetByIdAsync(

@@ -3,11 +3,11 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Time;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Cycles.Common;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Export.Queries.ExportCycle;
@@ -21,17 +21,15 @@ public sealed class ExportCycleQueryHandler(
     public async Task<Result<FileExportResult>> Handle(
         ExportCycleQuery query,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return Result.Failure<FileExportResult>(userIdResult.Error);
+            return CurrentUserAccessResolver.ToFailure<FileExportResult>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<FileExportResult>(accessError);
-        }
-
         DateTime normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(query.DateFrom);
         DateTime normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(query.DateTo);
         if (normalizedFrom > normalizedTo) {

@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
@@ -16,16 +17,15 @@ public sealed class MarkAllNotificationsReadCommandHandler(
     IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<MarkAllNotificationsReadCommand, Result> {
     public async Task<Result> Handle(MarkAllNotificationsReadCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return Result.Failure(userIdResult.Error);
         }
 
-        var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure(accessError);
-        }
-
+        UserId userId = userIdResult.Value;
         await notificationWriteRepository.MarkAllReadAsync(userId, cancellationToken).ConfigureAwait(false);
         NotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,

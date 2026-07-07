@@ -4,6 +4,7 @@ using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Fasting.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Fasting.Queries.GetFastingHistory;
@@ -14,16 +15,15 @@ public sealed class GetFastingHistoryQueryHandler(
     : IQueryHandler<GetFastingHistoryQuery, Result<PagedResponse<FastingSessionModel>>> {
     public async Task<Result<PagedResponse<FastingSessionModel>>> Handle(
         GetFastingHistoryQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<PagedResponse<FastingSessionModel>>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<PagedResponse<FastingSessionModel>>(userIdResult);
         }
 
-        var userId = new UserId(query.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<PagedResponse<FastingSessionModel>>(accessError);
-        }
-
+        UserId userId = userIdResult.Value;
         return Result.Success(await fastingAnalyticsService.GetHistoryAsync(
             userId,
             query.Page,

@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Fasting.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Fasting.Queries.GetFastingStats;
@@ -14,12 +15,17 @@ public sealed class GetFastingStatsQueryHandler(
     : IQueryHandler<GetFastingStatsQuery, Result<FastingStatsModel>> {
     public async Task<Result<FastingStatsModel>> Handle(
         GetFastingStatsQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<FastingStatsModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<FastingStatsModel>(userIdResult);
         }
 
-        var userId = new UserId(query.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        return accessError is not null ? Result.Failure<FastingStatsModel>(accessError) : Result.Success(await fastingAnalyticsService.GetStatsAsync(userId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false));
+        FastingStatsModel stats = await fastingAnalyticsService
+            .GetStatsAsync(userIdResult.Value, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
+            .ConfigureAwait(false);
+        return Result.Success(stats);
     }
 }

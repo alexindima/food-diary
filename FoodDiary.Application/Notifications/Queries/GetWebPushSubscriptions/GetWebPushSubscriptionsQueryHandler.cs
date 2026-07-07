@@ -3,6 +3,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Queries.GetWebPushSubscriptions;
@@ -15,16 +16,15 @@ public sealed class GetWebPushSubscriptionsQueryHandler(
     public async Task<Result<IReadOnlyList<WebPushSubscriptionModel>>> Handle(
         GetWebPushSubscriptionsQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<IReadOnlyList<WebPushSubscriptionModel>>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<IReadOnlyList<WebPushSubscriptionModel>>(userIdResult);
         }
 
-        var userId = new UserId(query.UserId.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<IReadOnlyList<WebPushSubscriptionModel>>(accessError);
-        }
-
+        UserId userId = userIdResult.Value;
         DateTime utcNow = dateTimeProvider.GetUtcNow().UtcDateTime;
         IReadOnlyList<WebPushSubscriptionModel> activeSubscriptions = await webPushSubscriptionReadService
             .GetActiveSubscriptionsAsync(userId, utcNow, cancellationToken)

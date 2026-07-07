@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Application.ShoppingLists.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -19,16 +20,15 @@ public sealed class CreateShoppingListCommandHandler(
     public async Task<Result<ShoppingListModel>> Handle(
         CreateShoppingListCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<ShoppingListModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<ShoppingListModel>(userIdResult);
         }
 
-        var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<ShoppingListModel>(accessError);
-        }
-
+        UserId userId = userIdResult.Value;
         if (string.IsNullOrWhiteSpace(command.Name)) {
             return Result.Failure<ShoppingListModel>(
                 Errors.Validation.Required(nameof(command.Name)));

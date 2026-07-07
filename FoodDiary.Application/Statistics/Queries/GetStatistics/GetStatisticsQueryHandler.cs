@@ -3,9 +3,9 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Common.Time;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Statistics.Queries.GetStatistics;
@@ -17,9 +17,12 @@ public sealed class GetStatisticsQueryHandler(
     public async Task<Result<IReadOnlyList<AggregatedStatisticsModel>>> Handle(
         GetStatisticsQuery request,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(request.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            request.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(userIdResult.Error);
+            return CurrentUserAccessResolver.ToFailure<IReadOnlyList<AggregatedStatisticsModel>>(userIdResult);
         }
 
         if (request.DateFrom > request.DateTo) {
@@ -28,11 +31,6 @@ public sealed class GetStatisticsQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(accessError);
-        }
-
         DateTime normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateFrom);
         DateTime normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateTo);
 
