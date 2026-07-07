@@ -1,7 +1,5 @@
 using FluentValidation;
-using FoodDiary.Application.Common.Validation;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Application.Products.Common;
 
 namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
@@ -33,7 +31,7 @@ public sealed class CreateProductCommandValidator : AbstractValidator<CreateProd
             .NotEmpty()
             .WithErrorCode("Validation.Required")
             .WithMessage("BaseUnit is required")
-            .Must(BeValidUnit)
+            .Must(ProductCommandValidation.BeValidUnit)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Invalid measurement unit");
 
@@ -41,7 +39,7 @@ public sealed class CreateProductCommandValidator : AbstractValidator<CreateProd
             .NotEmpty()
             .WithErrorCode("Validation.Required")
             .WithMessage("Visibility is required")
-            .Must(BeValidVisibility)
+            .Must(ProductCommandValidation.BeValidVisibility)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Invalid visibility level");
 
@@ -49,7 +47,7 @@ public sealed class CreateProductCommandValidator : AbstractValidator<CreateProd
             .NotEmpty()
             .WithErrorCode("Validation.Required")
             .WithMessage("ProductType is required")
-            .Must(BeValidProductType)
+            .Must(ProductCommandValidation.BeValidProductType)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Invalid product type");
     }
@@ -64,7 +62,7 @@ public sealed class CreateProductCommandValidator : AbstractValidator<CreateProd
             .GreaterThan(0)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("DefaultPortionAmount must be greater than 0")
-            .Must((command, amount) => BeWithinDefaultPortionLimit(command.BaseUnit, amount))
+            .Must((command, amount) => ProductCommandValidation.BeWithinDefaultPortionLimit(command.BaseUnit, amount))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("DefaultPortionAmount exceeds the maximum for the selected unit");
     }
@@ -74,7 +72,7 @@ public sealed class CreateProductCommandValidator : AbstractValidator<CreateProd
             .GreaterThanOrEqualTo(0)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("CaloriesPerBase must be non-negative")
-            .Must((command, value) => BeWithinCaloriesLimit(command.BaseUnit, value))
+            .Must((command, value) => ProductCommandValidation.BeWithinCaloriesLimit(command.BaseUnit, value))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("CaloriesPerBase exceeds the maximum for the selected unit");
 
@@ -82,7 +80,7 @@ public sealed class CreateProductCommandValidator : AbstractValidator<CreateProd
             .GreaterThanOrEqualTo(0)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("ProteinsPerBase must be non-negative")
-            .Must((command, value) => BeWithinNutrientLimit(command.BaseUnit, value))
+            .Must((command, value) => ProductCommandValidation.BeWithinNutrientLimit(command.BaseUnit, value))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("ProteinsPerBase exceeds the maximum for the selected unit");
 
@@ -90,7 +88,7 @@ public sealed class CreateProductCommandValidator : AbstractValidator<CreateProd
             .GreaterThanOrEqualTo(0)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("FatsPerBase must be non-negative")
-            .Must((command, value) => BeWithinNutrientLimit(command.BaseUnit, value))
+            .Must((command, value) => ProductCommandValidation.BeWithinNutrientLimit(command.BaseUnit, value))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("FatsPerBase exceeds the maximum for the selected unit");
 
@@ -98,7 +96,7 @@ public sealed class CreateProductCommandValidator : AbstractValidator<CreateProd
             .GreaterThanOrEqualTo(0)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("CarbsPerBase must be non-negative")
-            .Must((command, value) => BeWithinNutrientLimit(command.BaseUnit, value))
+            .Must((command, value) => ProductCommandValidation.BeWithinNutrientLimit(command.BaseUnit, value))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("CarbsPerBase exceeds the maximum for the selected unit");
 
@@ -106,7 +104,7 @@ public sealed class CreateProductCommandValidator : AbstractValidator<CreateProd
             .GreaterThanOrEqualTo(0)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("FiberPerBase must be non-negative")
-            .Must((command, value) => BeWithinNutrientLimit(command.BaseUnit, value))
+            .Must((command, value) => ProductCommandValidation.BeWithinNutrientLimit(command.BaseUnit, value))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("FiberPerBase exceeds the maximum for the selected unit");
 
@@ -114,36 +112,9 @@ public sealed class CreateProductCommandValidator : AbstractValidator<CreateProd
             .GreaterThanOrEqualTo(0)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("AlcoholPerBase must be non-negative")
-            .Must((command, value) => BeWithinNutrientLimit(command.BaseUnit, value))
+            .Must((command, value) => ProductCommandValidation.BeWithinNutrientLimit(command.BaseUnit, value))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("AlcoholPerBase exceeds the maximum for the selected unit");
-    }
-
-    private static bool BeValidUnit(string unit) {
-        return EnumValueParser.CanParse<MeasurementUnit>(unit);
-    }
-
-    private static bool BeWithinDefaultPortionLimit(string unit, double amount) {
-        return !EnumValueParser.TryParse(unit, out MeasurementUnit parsedUnit) ||
-               amount <= Product.GetMaxDefaultPortionAmount(parsedUnit);
-    }
-
-    private static bool BeWithinCaloriesLimit(string unit, double amount) {
-        return !EnumValueParser.TryParse(unit, out MeasurementUnit parsedUnit) ||
-               amount <= Product.GetMaxCaloriesPerBase(parsedUnit);
-    }
-
-    private static bool BeWithinNutrientLimit(string unit, double amount) {
-        return !EnumValueParser.TryParse(unit, out MeasurementUnit parsedUnit) ||
-               amount <= Product.GetMaxNutrientPerBase(parsedUnit);
-    }
-
-    private static bool BeValidVisibility(string visibility) {
-        return EnumValueParser.CanParse<Visibility>(visibility);
-    }
-
-    private static bool BeValidProductType(string? productType) {
-        return productType is not null && EnumValueParser.CanParseDefined<ProductType>(productType);
     }
 
 }

@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Products.Common;
 using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Products.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -91,19 +92,19 @@ public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProd
 
     private void ConfigureEnumRules() {
         RuleFor(x => x.BaseUnit)
-            .Must(BeValidUnit)
+            .Must(ProductCommandValidation.BeValidUnit)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Invalid measurement unit")
             .When(x => !string.IsNullOrWhiteSpace(x.BaseUnit));
 
         RuleFor(x => x.Visibility)
-            .Must(BeValidVisibility)
+            .Must(ProductCommandValidation.BeValidVisibility)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Invalid visibility level")
             .When(x => !string.IsNullOrWhiteSpace(x.Visibility));
 
         RuleFor(x => x.ProductType)
-            .Must(BeValidProductType)
+            .Must(ProductCommandValidation.BeValidProductType)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Invalid product type")
             .When(x => !string.IsNullOrWhiteSpace(x.ProductType));
@@ -145,15 +146,6 @@ public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProd
             .WithErrorCode("Validation.Invalid")
             .WithMessage("ImageAssetId cannot be provided when ClearImageAssetId is true");
     }
-
-    private bool BeValidUnit(string? unit) =>
-        unit != null && EnumValueParser.CanParse<MeasurementUnit>(unit);
-
-    private bool BeValidVisibility(string? visibility) =>
-        visibility != null && EnumValueParser.CanParse<Visibility>(visibility);
-
-    private bool BeValidProductType(string? productType) =>
-        productType != null && EnumValueParser.CanParseDefined<ProductType>(productType);
 
     private async Task EnsureProductEditableAsync(
         UpdateProductCommand command,
