@@ -144,6 +144,30 @@ public class LayeringTests {
     }
 
     [Fact]
+    public void IntegrationsRootFolders_StayLimitedToProviderAdapterAreas() {
+        string integrationsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Integrations");
+        string[] allowedDirectories = [
+            "Authentication",
+            "Billing",
+            "Options",
+            "Properties",
+            "Services",
+            "Wearables",
+        ];
+
+        string[] unexpectedDirectories = [.. Directory.GetDirectories(integrationsRoot)
+            .Select(Path.GetFileName)
+            .Where(name => name is not null)
+            .Select(name => name!)
+            .Where(name => !name.Equals("bin", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !name.Equals("obj", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !allowedDirectories.Contains(name, StringComparer.Ordinal))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(unexpectedDirectories);
+    }
+
+    [Fact]
     public void IntegrationsOptions_AreKeptInOptionsFolder() {
         string integrationsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Integrations");
         string optionsRoot = Path.Combine(integrationsRoot, "Options");
