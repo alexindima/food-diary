@@ -19,8 +19,7 @@ public sealed class FastingNotificationJobTests {
         var job = new FastingNotificationJob(
             scheduler,
             Options.Create(new FastingNotificationOptions { Enabled = false }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<FastingNotificationJob>.Instance);
 
         await job.Execute();
@@ -51,8 +50,7 @@ public sealed class FastingNotificationJobTests {
         var job = new FastingNotificationJob(
             scheduler,
             Options.Create(new FastingNotificationOptions { Enabled = true }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<FastingNotificationJob>.Instance);
 
         await job.Execute();
@@ -87,8 +85,7 @@ public sealed class FastingNotificationJobTests {
         var job = new FastingNotificationJob(
             scheduler,
             Options.Create(new FastingNotificationOptions { Enabled = true }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             logger);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute());
@@ -121,8 +118,7 @@ public sealed class FastingNotificationJobTests {
         var job = new FastingNotificationJob(
             scheduler,
             Options.Create(new FastingNotificationOptions { Enabled = true }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<FastingNotificationJob>.Instance);
         using var cts = new CancellationTokenSource();
         await cts.CancelAsync();

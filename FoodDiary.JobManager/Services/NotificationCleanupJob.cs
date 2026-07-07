@@ -8,30 +8,20 @@ namespace FoodDiary.JobManager.Services;
 public sealed class NotificationCleanupJob(
     INotificationCleanupService notificationCleanupService,
     IOptions<NotificationCleanupOptions> options,
-    TimeProvider dateTimeProvider,
-    IJobExecutionStateTracker executionStateTracker,
+    JobExecutionObserver observer,
     ILogger<NotificationCleanupJob> logger) {
+    private const string JobName = "notifications.cleanup";
+
     [AutomaticRetry(Attempts = RecurringJobExecutionPolicy.CleanupRetryAttempts, OnAttemptsExceeded = AttemptsExceededAction.Fail)]
     [DisableConcurrentExecution(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds)]
     public async Task Execute(CancellationToken cancellationToken = default) {
-        var stopwatch = Stopwatch.StartNew();
+        Stopwatch stopwatch = observer.Start(JobName);
         NotificationCleanupOptions settings = options.Value;
-        int totalDeleted = 0;
-        const string jobName = "notifications.cleanup";
-        executionStateTracker.RecordStarted(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
-
         NotificationCleanupPolicy policy = CreatePolicy(settings);
+        int totalDeleted = 0;
 
         try {
-            while (true) {
-                cancellationToken.ThrowIfCancellationRequested();
-                int deleted = await notificationCleanupService.CleanupExpiredNotificationsAsync(policy, cancellationToken).ConfigureAwait(false);
-                totalDeleted += deleted;
-
-                if (deleted < settings.BatchSize) {
-                    break;
-                }
-            }
+            totalDeleted = await DeleteNotificationsAsync(policy, settings.BatchSize, cancellationToken).ConfigureAwait(false);
 
             if (totalDeleted > 0) {
                 logger.LogInformation(
@@ -43,39 +33,35 @@ public sealed class NotificationCleanupJob(
                     settings.StandardUnreadRetentionDays);
             }
 
-            JobManagerTelemetry.JobExecutionCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-                new KeyValuePair<string, object?>("fooddiary.job.outcome", "success"));
-            JobManagerTelemetry.JobDeletedItemsCounter.Add(
-                totalDeleted,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
-            executionStateTracker.RecordSuccess(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
+            observer.RecordSuccess(JobName, deleted: totalDeleted);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
-            RecordCanceled(totalDeleted);
+            logger.LogInformation("Notification cleanup job was canceled after deleting {DeletedCount} notifications.", totalDeleted);
+            observer.RecordCanceled(JobName);
             throw;
         } catch (Exception ex) {
             logger.LogError(ex, "Notification cleanup job failed after deleting {DeletedCount} notifications so far.", totalDeleted);
-            JobManagerTelemetry.JobExecutionCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-                new KeyValuePair<string, object?>("fooddiary.job.outcome", "failure"));
-            executionStateTracker.RecordFailure(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
+            observer.RecordFailure(JobName);
             throw;
         } finally {
-            stopwatch.Stop();
-            JobManagerTelemetry.JobExecutionDuration.Record(
-                stopwatch.Elapsed.TotalMilliseconds,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
+            JobExecutionObserver.RecordDuration(JobName, stopwatch);
         }
     }
 
-    private void RecordCanceled(int totalDeleted) {
-        logger.LogInformation("Notification cleanup job was canceled after deleting {DeletedCount} notifications.", totalDeleted);
-        JobManagerTelemetry.JobExecutionCounter.Add(
-            1,
-            new KeyValuePair<string, object?>("fooddiary.job.name", "notifications.cleanup"),
-            new KeyValuePair<string, object?>("fooddiary.job.outcome", "canceled"));
+    private async Task<int> DeleteNotificationsAsync(
+        NotificationCleanupPolicy policy,
+        int batchSize,
+        CancellationToken cancellationToken) {
+        int totalDeleted = 0;
+
+        while (true) {
+            cancellationToken.ThrowIfCancellationRequested();
+            int deleted = await notificationCleanupService.CleanupExpiredNotificationsAsync(policy, cancellationToken).ConfigureAwait(false);
+            totalDeleted += deleted;
+
+            if (deleted < batchSize) {
+                return totalDeleted;
+            }
+        }
     }
 
     private static NotificationCleanupPolicy CreatePolicy(NotificationCleanupOptions settings) =>

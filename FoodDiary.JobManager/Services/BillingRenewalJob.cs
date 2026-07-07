@@ -9,26 +9,21 @@ namespace FoodDiary.JobManager.Services;
 public sealed class BillingRenewalJob(
     BillingRenewalService billingRenewalService,
     IOptions<BillingRenewalOptions> options,
-    TimeProvider dateTimeProvider,
-    IJobExecutionStateTracker executionStateTracker,
+    JobExecutionObserver observer,
     ILogger<BillingRenewalJob> logger) {
+    private const string JobName = "billing.renewal";
+
     [AutomaticRetry(Attempts = RecurringJobExecutionPolicy.CleanupRetryAttempts, OnAttemptsExceeded = AttemptsExceededAction.Fail)]
     [DisableConcurrentExecution(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds)]
     public async Task Execute(CancellationToken cancellationToken = default) {
-        var stopwatch = Stopwatch.StartNew();
+        Stopwatch stopwatch = observer.Start(JobName);
         BillingRenewalOptions settings = options.Value;
-        const string jobName = "billing.renewal";
-        executionStateTracker.RecordStarted(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
 
         try {
             cancellationToken.ThrowIfCancellationRequested();
 
             if (!settings.Enabled) {
-                JobManagerTelemetry.JobExecutionCounter.Add(
-                    1,
-                    new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-                    new KeyValuePair<string, object?>("fooddiary.job.outcome", "success"));
-                executionStateTracker.RecordSuccess(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
+                observer.RecordSuccess(JobName, processed: 0);
                 return;
             }
 
@@ -46,31 +41,17 @@ public sealed class BillingRenewalJob(
                     result.Failed);
             }
 
-            JobManagerTelemetry.JobExecutionCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-                new KeyValuePair<string, object?>("fooddiary.job.outcome", "success"));
-            executionStateTracker.RecordSuccess(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
+            observer.RecordSuccess(JobName, processed: result.Processed);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             logger.LogInformation("Billing renewal job was canceled.");
-            JobManagerTelemetry.JobExecutionCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-                new KeyValuePair<string, object?>("fooddiary.job.outcome", "canceled"));
+            observer.RecordCanceled(JobName);
             throw;
         } catch (Exception ex) {
             logger.LogError(ex, "Billing renewal job failed.");
-            JobManagerTelemetry.JobExecutionCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-                new KeyValuePair<string, object?>("fooddiary.job.outcome", "failure"));
-            executionStateTracker.RecordFailure(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
+            observer.RecordFailure(JobName);
             throw;
         } finally {
-            stopwatch.Stop();
-            JobManagerTelemetry.JobExecutionDuration.Record(
-                stopwatch.Elapsed.TotalMilliseconds,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
+            JobExecutionObserver.RecordDuration(JobName, stopwatch);
         }
     }
 }

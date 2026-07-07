@@ -73,8 +73,7 @@ public sealed class UserCleanupJobTests : IDisposable {
         return new UserCleanupJob(
             cleanupService,
             Options.Create(options ?? new UserCleanupOptions()),
-            new FixedDateTimeProvider(),
-            _stateTracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(), _stateTracker),
             NullLogger<UserCleanupJob>.Instance);
     }
 

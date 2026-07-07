@@ -48,8 +48,7 @@ public sealed class JobsTests {
         var job = new ImageCleanupJob(
             cleanupService,
             options,
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<ImageCleanupJob>.Instance);
 
         await job.Execute();
@@ -84,8 +83,7 @@ public sealed class JobsTests {
         var job = new ImageCleanupJob(
             cleanupService,
             Options.Create(new ImageCleanupOptions { BatchSize = 1, OlderThanHours = 12 }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<ImageCleanupJob>.Instance);
         using var cts = new CancellationTokenSource();
         await cts.CancelAsync();
@@ -126,8 +124,7 @@ public sealed class JobsTests {
         var job = new UserCleanupJob(
             cleanupService,
             options,
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<UserCleanupJob>.Instance);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute());
@@ -162,8 +159,7 @@ public sealed class JobsTests {
         var job = new ImageObjectDeletionOutboxJob(
             processor,
             Options.Create(new ImageObjectDeletionOutboxOptions { Enabled = true, BatchSize = 7 }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<ImageObjectDeletionOutboxJob>.Instance);
 
         await job.Execute(CancellationToken.None);
@@ -186,8 +182,7 @@ public sealed class JobsTests {
         var job = new ImageObjectDeletionOutboxJob(
             processor,
             Options.Create(new ImageObjectDeletionOutboxOptions { Enabled = false, BatchSize = 7 }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<ImageObjectDeletionOutboxJob>.Instance);
 
         await job.Execute(CancellationToken.None);
@@ -220,8 +215,7 @@ public sealed class JobsTests {
         var job = new ImageObjectDeletionOutboxJob(
             processor,
             Options.Create(new ImageObjectDeletionOutboxOptions { Enabled = true, BatchSize = 7 }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<ImageObjectDeletionOutboxJob>.Instance);
         using var cts = new CancellationTokenSource();
         await cts.CancelAsync();
@@ -263,8 +257,7 @@ public sealed class JobsTests {
         var job = new ImageObjectDeletionOutboxJob(
             processor,
             Options.Create(new ImageObjectDeletionOutboxOptions { Enabled = true, BatchSize = 7 }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<ImageObjectDeletionOutboxJob>.Instance);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute(CancellationToken.None));
@@ -300,8 +293,7 @@ public sealed class JobsTests {
         var job = new NotificationWebPushOutboxJob(
             processor,
             Options.Create(new NotificationWebPushOutboxOptions { Enabled = true, BatchSize = 9 }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<NotificationWebPushOutboxJob>.Instance);
 
         await job.Execute(CancellationToken.None);
@@ -324,8 +316,7 @@ public sealed class JobsTests {
         var job = new NotificationWebPushOutboxJob(
             processor,
             Options.Create(new NotificationWebPushOutboxOptions { Enabled = false, BatchSize = 9 }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<NotificationWebPushOutboxJob>.Instance);
 
         await job.Execute(CancellationToken.None);
@@ -358,8 +349,7 @@ public sealed class JobsTests {
         var job = new NotificationWebPushOutboxJob(
             processor,
             Options.Create(new NotificationWebPushOutboxOptions { Enabled = true, BatchSize = 9 }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<NotificationWebPushOutboxJob>.Instance);
         using var cts = new CancellationTokenSource();
         await cts.CancelAsync();
@@ -401,8 +391,7 @@ public sealed class JobsTests {
         var job = new NotificationWebPushOutboxJob(
             processor,
             Options.Create(new NotificationWebPushOutboxOptions { Enabled = true, BatchSize = 9 }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<NotificationWebPushOutboxJob>.Instance);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute(CancellationToken.None));
@@ -435,8 +424,7 @@ public sealed class JobsTests {
         var job = new ImageCleanupJob(
             cleanupService,
             options,
-            new FixedDateTimeProvider(now),
-            new JobExecutionStateTracker(),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), new JobExecutionStateTracker()),
             NullLogger<ImageCleanupJob>.Instance);
 
         await job.Execute();
@@ -453,8 +441,7 @@ public sealed class JobsTests {
         var job = new ImageCleanupJob(
             cleanupService,
             options,
-            new FixedDateTimeProvider(now),
-            new JobExecutionStateTracker(),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), new JobExecutionStateTracker()),
             NullLogger<ImageCleanupJob>.Instance);
 
         await job.Execute();
@@ -475,8 +462,7 @@ public sealed class JobsTests {
         var job = new UserCleanupJob(
             cleanupService,
             options,
-            new FixedDateTimeProvider(now),
-            new JobExecutionStateTracker(),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), new JobExecutionStateTracker()),
             NullLogger<UserCleanupJob>.Instance);
 
         await job.Execute();
@@ -499,8 +485,7 @@ public sealed class JobsTests {
         var job = new UserCleanupJob(
             cleanupService,
             options,
-            new FixedDateTimeProvider(now),
-            new JobExecutionStateTracker(),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), new JobExecutionStateTracker()),
             NullLogger<UserCleanupJob>.Instance);
 
         await job.Execute();
@@ -520,8 +505,7 @@ public sealed class JobsTests {
         var job = new UserCleanupJob(
             cleanupService,
             options,
-            new FixedDateTimeProvider(now),
-            new JobExecutionStateTracker(),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), new JobExecutionStateTracker()),
             NullLogger<UserCleanupJob>.Instance);
 
         await job.Execute();
@@ -551,8 +535,7 @@ public sealed class JobsTests {
         var job = new UserCleanupJob(
             cleanupService,
             Options.Create(new UserCleanupOptions { BatchSize = 1, RetentionDays = 30 }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<UserCleanupJob>.Instance);
         using var cts = new CancellationTokenSource();
         await cts.CancelAsync();
@@ -601,8 +584,7 @@ public sealed class JobsTests {
         var job = new NotificationCleanupJob(
             cleanupService,
             options,
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<NotificationCleanupJob>.Instance);
 
         await job.Execute();
@@ -646,8 +628,7 @@ public sealed class JobsTests {
         var job = new NotificationCleanupJob(
             cleanupService,
             Options.Create(new NotificationCleanupOptions { TransientTypes = ["Test"], BatchSize = 10 }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<NotificationCleanupJob>.Instance);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute());
@@ -681,8 +662,7 @@ public sealed class JobsTests {
         var job = new NotificationCleanupJob(
             cleanupService,
             Options.Create(new NotificationCleanupOptions { TransientTypes = ["Test"], BatchSize = 1 }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<NotificationCleanupJob>.Instance);
         using var cts = new CancellationTokenSource();
         await cts.CancelAsync();
@@ -721,8 +701,7 @@ public sealed class JobsTests {
         var job = new BillingRenewalJob(
             null!,
             Options.Create(new BillingRenewalOptions { Enabled = false }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<BillingRenewalJob>.Instance);
 
         await job.Execute();
@@ -759,8 +738,7 @@ public sealed class JobsTests {
                 Provider = "MissingProvider",
                 BatchSize = 10,
             }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<BillingRenewalJob>.Instance);
 
         await job.Execute();
@@ -835,8 +813,7 @@ public sealed class JobsTests {
                 Provider = BillingProviderNames.YooKassa,
                 BatchSize = 10,
             }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<BillingRenewalJob>.Instance);
 
         await job.Execute();
@@ -875,8 +852,7 @@ public sealed class JobsTests {
                 Provider = "YooKassa",
                 BatchSize = 10,
             }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<BillingRenewalJob>.Instance);
 
         await Assert.ThrowsAsync<NullReferenceException>(() => job.Execute());
@@ -913,8 +889,7 @@ public sealed class JobsTests {
                 Provider = "YooKassa",
                 BatchSize = 10,
             }),
-            new FixedDateTimeProvider(now),
-            tracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<BillingRenewalJob>.Instance);
         using var cts = new CancellationTokenSource();
         await cts.CancelAsync();
@@ -1065,8 +1040,7 @@ public sealed class JobsTests {
         new(
             null!,
             Options.Create(new BillingRenewalOptions()),
-            new FixedDateTimeProvider(DateTime.UtcNow),
-            new JobExecutionStateTracker(),
+            new JobExecutionObserver(new FixedDateTimeProvider(DateTime.UtcNow), new JobExecutionStateTracker()),
             NullLogger<BillingRenewalJob>.Instance);
 
     private static void AssertCancellationTokenParameter(MethodInfo method) {

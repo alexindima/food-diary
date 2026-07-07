@@ -65,8 +65,7 @@ public sealed class UserLoginEventCleanupJobTests : IDisposable {
         new(
             repository,
             Options.Create(options ?? new UserLoginEventCleanupOptions()),
-            timeProvider ?? new FixedTimeProvider(new DateTime(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc)),
-            _stateTracker,
+            new JobExecutionObserver(timeProvider ?? new FixedTimeProvider(new DateTime(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc)), _stateTracker),
             NullLogger<UserLoginEventCleanupJob>.Instance);
 
     public void Dispose() => _stateTracker.Dispose();

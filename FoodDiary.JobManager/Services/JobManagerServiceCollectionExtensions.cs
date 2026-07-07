@@ -60,8 +60,14 @@ public static class JobManagerServiceCollectionExtensions {
         services.AddTransient<NotificationCleanupJob>();
         services.AddTransient<UserCleanupJob>();
         services.AddTransient<UserLoginEventCleanupJob>();
-        services.AddSingleton<IJobExecutionStateTracker, JobExecutionStateTracker>();
+        services.AddJobExecutionState();
 
+        return services;
+    }
+
+    private static IServiceCollection AddJobExecutionState(this IServiceCollection services) {
+        services.AddSingleton<IJobExecutionStateTracker, JobExecutionStateTracker>();
+        services.AddSingleton<JobExecutionObserver>();
         return services;
     }
 }

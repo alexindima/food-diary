@@ -89,6 +89,76 @@ public sealed class JobManagerGuardrailTests {
     }
 
     [Fact]
+    public void JobManagerSource_DoesNotOwnPersistenceOrMediatorWorkflows() {
+        string jobManagerRoot = ArchitectureTestPaths.FromRoot("FoodDiary.JobManager");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(jobManagerRoot, [
+            "FoodDiary.Infrastructure.Persistence",
+            "DbContext",
+            "IUnitOfWork",
+            "SaveChangesAsync(",
+            "ISender",
+            "IMediator",
+            ".Send(",
+            ".Publish(",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void RecurringJobIds_AllIncludesEveryRecurringJobIdConstant() {
+        string recurringJobIdsPath = ArchitectureTestPaths.FromRoot(
+            "FoodDiary.JobManager",
+            "Services",
+            "RecurringJobIds.cs");
+        string source = File.ReadAllText(recurringJobIdsPath);
+        string allInitializer = source[source.IndexOf("public static readonly string[] All", StringComparison.Ordinal)..];
+
+        string[] constants = [.. File.ReadLines(recurringJobIdsPath)
+            .Select(static line => line.Trim())
+            .Where(static line => line.StartsWith("public const string ", StringComparison.Ordinal))
+            .Select(static line => line.Split(' ', StringSplitOptions.RemoveEmptyEntries)[3])];
+
+        string[] missing = [.. constants
+            .Where(constantName => !allInitializer.Contains(constantName, StringComparison.Ordinal))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(missing);
+    }
+
+    [Fact]
+    public void MigratedJobManagerJobs_UseSharedExecutionObserver() {
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string servicesRoot = ArchitectureTestPaths.FromRoot("FoodDiary.JobManager", "Services");
+        string[] migratedJobFiles = [
+            Path.Combine(servicesRoot, "BillingRenewalJob.cs"),
+            Path.Combine(servicesRoot, "EmailOutboxJob.cs"),
+            Path.Combine(servicesRoot, "FastingNotificationJob.cs"),
+            Path.Combine(servicesRoot, "ImageCleanupJob.cs"),
+            Path.Combine(servicesRoot, "ImageObjectDeletionOutboxJob.cs"),
+            Path.Combine(servicesRoot, "NotificationCleanupJob.cs"),
+            Path.Combine(servicesRoot, "NotificationWebPushOutboxJob.cs"),
+            Path.Combine(servicesRoot, "UserCleanupJob.cs"),
+            Path.Combine(servicesRoot, "UserLoginEventCleanupJob.cs"),
+        ];
+
+        string[] violations = [.. migratedJobFiles
+            .Where(path => {
+                string source = File.ReadAllText(path);
+                return !source.Contains("JobExecutionObserver observer", StringComparison.Ordinal) ||
+                       !source.Contains("observer.Start(JobName)", StringComparison.Ordinal) ||
+                       !source.Contains("observer.RecordSuccess", StringComparison.Ordinal) ||
+                       !source.Contains("observer.RecordFailure", StringComparison.Ordinal) ||
+                       !source.Contains("observer.RecordCanceled", StringComparison.Ordinal) ||
+                       !source.Contains("JobExecutionObserver.RecordDuration", StringComparison.Ordinal);
+            })
+            .Select(path => Path.GetRelativePath(root, path))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+    [Fact]
     public void JobManager_RegistersBackgroundWorkMigratedOutOfPrimaryApiHost() {
         string recurringJobIdsPath = ArchitectureTestPaths.FromRoot(
             "FoodDiary.JobManager",
@@ -101,12 +171,16 @@ public sealed class JobManagerGuardrailTests {
         string recurringJobIdsSource = File.ReadAllText(recurringJobIdsPath);
         string recurringJobsHostedServiceSource = File.ReadAllText(recurringJobsHostedServicePath);
         string[] expectedJobIds = [
+            "BillingRenewal",
+            "EmailOutbox",
             "FastingNotifications",
             "ImageObjectDeletionOutbox",
             "NotificationWebPushOutbox",
             "UserLoginEventsCleanup",
         ];
         string[] expectedJobTypes = [
+            "BillingRenewalJob",
+            "EmailOutboxJob",
             "FastingNotificationJob",
             "ImageObjectDeletionOutboxJob",
             "NotificationWebPushOutboxJob",

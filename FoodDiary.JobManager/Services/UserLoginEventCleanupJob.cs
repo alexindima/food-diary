@@ -8,36 +8,27 @@ namespace FoodDiary.JobManager.Services;
 public sealed class UserLoginEventCleanupJob(
     IUserLoginEventRepository repository,
     IOptions<UserLoginEventCleanupOptions> options,
-    TimeProvider timeProvider,
-    IJobExecutionStateTracker executionStateTracker,
+    JobExecutionObserver observer,
     ILogger<UserLoginEventCleanupJob> logger) {
+    private const string JobName = "users.login_events_cleanup";
+
     [AutomaticRetry(Attempts = RecurringJobExecutionPolicy.CleanupRetryAttempts, OnAttemptsExceeded = AttemptsExceededAction.Fail)]
     [DisableConcurrentExecution(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds)]
     public async Task Execute(CancellationToken cancellationToken = default) {
-        var stopwatch = Stopwatch.StartNew();
+        Stopwatch stopwatch = observer.Start(JobName);
         UserLoginEventCleanupOptions settings = options.Value;
-        const string jobName = "users.login_events_cleanup";
-        executionStateTracker.RecordStarted(jobName, timeProvider.GetUtcNow().UtcDateTime);
         int totalDeletedCount = 0;
 
         try {
             cancellationToken.ThrowIfCancellationRequested();
 
             if (!settings.Enabled) {
-                RecordSuccess(jobName, totalDeletedCount);
+                observer.RecordSuccess(JobName, deleted: totalDeletedCount);
                 return;
             }
 
-            DateTime cutoffUtc = timeProvider.GetUtcNow().UtcDateTime.AddDays(-settings.RetentionDays);
-            int deletedCount;
-            do {
-                cancellationToken.ThrowIfCancellationRequested();
-                deletedCount = await repository.DeleteOlderThanAsync(
-                    cutoffUtc,
-                    settings.BatchSize,
-                    cancellationToken).ConfigureAwait(false);
-                totalDeletedCount += deletedCount;
-            } while (deletedCount == settings.BatchSize);
+            DateTime cutoffUtc = observer.UtcNow.AddDays(-settings.RetentionDays);
+            totalDeletedCount = await DeleteEventsAsync(cutoffUtc, settings.BatchSize, cancellationToken).ConfigureAwait(false);
 
             if (totalDeletedCount > 0) {
                 logger.LogInformation(
@@ -46,43 +37,38 @@ public sealed class UserLoginEventCleanupJob(
                     cutoffUtc);
             }
 
-            RecordSuccess(jobName, totalDeletedCount);
+            observer.RecordSuccess(JobName, deleted: totalDeletedCount);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             logger.LogInformation(
                 "User login event cleanup job was canceled after deleting {DeletedCount} events.",
                 totalDeletedCount);
-            JobManagerTelemetry.JobExecutionCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-                new KeyValuePair<string, object?>("fooddiary.job.outcome", "canceled"));
+            observer.RecordCanceled(JobName);
             throw;
         } catch (Exception ex) {
             logger.LogError(
                 ex,
                 "User login event cleanup job failed after deleting {DeletedCount} events.",
                 totalDeletedCount);
-            JobManagerTelemetry.JobExecutionCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-                new KeyValuePair<string, object?>("fooddiary.job.outcome", "failure"));
-            executionStateTracker.RecordFailure(jobName, timeProvider.GetUtcNow().UtcDateTime);
+            observer.RecordFailure(JobName);
             throw;
         } finally {
-            stopwatch.Stop();
-            JobManagerTelemetry.JobExecutionDuration.Record(
-                stopwatch.Elapsed.TotalMilliseconds,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
+            JobExecutionObserver.RecordDuration(JobName, stopwatch);
         }
     }
 
-    private void RecordSuccess(string jobName, int totalDeletedCount) {
-        JobManagerTelemetry.JobExecutionCounter.Add(
-            1,
-            new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-            new KeyValuePair<string, object?>("fooddiary.job.outcome", "success"));
-        JobManagerTelemetry.JobDeletedItemsCounter.Add(
-            totalDeletedCount,
-            new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
-        executionStateTracker.RecordSuccess(jobName, timeProvider.GetUtcNow().UtcDateTime);
+    private async Task<int> DeleteEventsAsync(DateTime cutoffUtc, int batchSize, CancellationToken cancellationToken) {
+        int totalDeletedCount = 0;
+        int deletedCount;
+
+        do {
+            cancellationToken.ThrowIfCancellationRequested();
+            deletedCount = await repository.DeleteOlderThanAsync(
+                cutoffUtc,
+                batchSize,
+                cancellationToken).ConfigureAwait(false);
+            totalDeletedCount += deletedCount;
+        } while (deletedCount == batchSize);
+
+        return totalDeletedCount;
     }
 }

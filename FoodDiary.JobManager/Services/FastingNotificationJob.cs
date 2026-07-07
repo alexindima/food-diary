@@ -8,22 +8,21 @@ namespace FoodDiary.JobManager.Services;
 public sealed class FastingNotificationJob(
     IFastingNotificationScheduler scheduler,
     IOptions<FastingNotificationOptions> options,
-    TimeProvider dateTimeProvider,
-    IJobExecutionStateTracker executionStateTracker,
+    JobExecutionObserver observer,
     ILogger<FastingNotificationJob> logger) {
+    private const string JobName = "fasting.notifications";
+
     [AutomaticRetry(Attempts = RecurringJobExecutionPolicy.CleanupRetryAttempts, OnAttemptsExceeded = AttemptsExceededAction.Fail)]
     [DisableConcurrentExecution(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds)]
     public async Task Execute(CancellationToken cancellationToken = default) {
-        var stopwatch = Stopwatch.StartNew();
         FastingNotificationOptions settings = options.Value;
-        const string jobName = "fasting.notifications";
-        executionStateTracker.RecordStarted(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
+        Stopwatch stopwatch = observer.Start(JobName);
 
         try {
             cancellationToken.ThrowIfCancellationRequested();
 
             if (!settings.Enabled) {
-                RecordSuccess(jobName, processed: 0);
+                observer.RecordSuccess(JobName, processed: 0);
                 return;
             }
 
@@ -32,38 +31,17 @@ public sealed class FastingNotificationJob(
                 logger.LogInformation("Created {NotificationCount} fasting notifications.", processed);
             }
 
-            RecordSuccess(jobName, processed);
+            observer.RecordSuccess(JobName, processed: processed);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             logger.LogInformation("Fasting notification job was canceled.");
-            JobManagerTelemetry.JobExecutionCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-                new KeyValuePair<string, object?>("fooddiary.job.outcome", "canceled"));
+            observer.RecordCanceled(JobName);
             throw;
         } catch (Exception ex) {
             logger.LogError(ex, "Fasting notification job failed.");
-            JobManagerTelemetry.JobExecutionCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-                new KeyValuePair<string, object?>("fooddiary.job.outcome", "failure"));
-            executionStateTracker.RecordFailure(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
+            observer.RecordFailure(JobName);
             throw;
         } finally {
-            stopwatch.Stop();
-            JobManagerTelemetry.JobExecutionDuration.Record(
-                stopwatch.Elapsed.TotalMilliseconds,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
+            JobExecutionObserver.RecordDuration(JobName, stopwatch);
         }
-    }
-
-    private void RecordSuccess(string jobName, int processed) {
-        JobManagerTelemetry.JobExecutionCounter.Add(
-            1,
-            new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-            new KeyValuePair<string, object?>("fooddiary.job.outcome", "success"));
-        JobManagerTelemetry.JobProcessedItemsCounter.Add(
-            processed,
-            new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
-        executionStateTracker.RecordSuccess(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
     }
 }

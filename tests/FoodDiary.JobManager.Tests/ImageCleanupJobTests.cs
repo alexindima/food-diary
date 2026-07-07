@@ -51,8 +51,7 @@ public sealed class ImageCleanupJobTests : IDisposable {
         return new ImageCleanupJob(
             cleanupService,
             Options.Create(options ?? new ImageCleanupOptions()),
-            new FixedDateTimeProvider(),
-            _stateTracker,
+            new JobExecutionObserver(new FixedDateTimeProvider(), _stateTracker),
             NullLogger<ImageCleanupJob>.Instance);
     }
 

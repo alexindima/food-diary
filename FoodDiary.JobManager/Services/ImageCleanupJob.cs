@@ -1,71 +1,59 @@
+using System.Diagnostics;
 using FoodDiary.Application.Abstractions.Images.Common;
 using Hangfire;
 using Microsoft.Extensions.Options;
-using System.Diagnostics;
 
 namespace FoodDiary.JobManager.Services;
 
 public sealed class ImageCleanupJob(
     IImageAssetCleanupService cleanupService,
     IOptions<ImageCleanupOptions> options,
-    TimeProvider dateTimeProvider,
-    IJobExecutionStateTracker executionStateTracker,
+    JobExecutionObserver observer,
     ILogger<ImageCleanupJob> logger) {
+    private const string JobName = "images.cleanup";
+
     [AutomaticRetry(Attempts = RecurringJobExecutionPolicy.CleanupRetryAttempts, OnAttemptsExceeded = AttemptsExceededAction.Fail)]
     [DisableConcurrentExecution(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds)]
     public async Task Execute(CancellationToken cancellationToken = default) {
-        var stopwatch = Stopwatch.StartNew();
+        Stopwatch stopwatch = observer.Start(JobName);
         ImageCleanupOptions settings = options.Value;
         int olderThanHours = settings.OlderThanHours > 0 ? settings.OlderThanHours : 12;
         int batchSize = settings.BatchSize > 0 ? settings.BatchSize : 1;
-        DateTime olderThanUtc = dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(-olderThanHours);
+        DateTime olderThanUtc = observer.UtcNow.AddHours(-olderThanHours);
         int totalDeleted = 0;
-        const string jobName = "images.cleanup";
-        executionStateTracker.RecordStarted(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
 
         try {
-            while (true) {
-                cancellationToken.ThrowIfCancellationRequested();
-                int deleted = await cleanupService.CleanupOrphansAsync(olderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);
-                totalDeleted += deleted;
-
-                if (deleted < batchSize) {
-                    break;
-                }
-            }
+            totalDeleted = await DeleteOrphansAsync(olderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);
 
             if (totalDeleted > 0) {
                 logger.LogInformation("Removed {Count} orphaned image assets older than {OlderThan}", totalDeleted, olderThanUtc);
             }
 
-            JobManagerTelemetry.JobExecutionCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-                new KeyValuePair<string, object?>("fooddiary.job.outcome", "success"));
-            JobManagerTelemetry.JobDeletedItemsCounter.Add(
-                totalDeleted,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
-            executionStateTracker.RecordSuccess(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
+            observer.RecordSuccess(JobName, deleted: totalDeleted);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             logger.LogInformation("Image cleanup job was canceled after processing {DeletedCount} items.", totalDeleted);
-            JobManagerTelemetry.JobExecutionCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-                new KeyValuePair<string, object?>("fooddiary.job.outcome", "canceled"));
+            observer.RecordCanceled(JobName);
             throw;
         } catch (Exception ex) {
             logger.LogError(ex, "Image cleanup job failed after processing {DeletedCount} items so far.", totalDeleted);
-            JobManagerTelemetry.JobExecutionCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-                new KeyValuePair<string, object?>("fooddiary.job.outcome", "failure"));
-            executionStateTracker.RecordFailure(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
+            observer.RecordFailure(JobName);
             throw;
         } finally {
-            stopwatch.Stop();
-            JobManagerTelemetry.JobExecutionDuration.Record(
-                stopwatch.Elapsed.TotalMilliseconds,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
+            JobExecutionObserver.RecordDuration(JobName, stopwatch);
+        }
+    }
+
+    private async Task<int> DeleteOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken) {
+        int totalDeleted = 0;
+
+        while (true) {
+            cancellationToken.ThrowIfCancellationRequested();
+            int deleted = await cleanupService.CleanupOrphansAsync(olderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);
+            totalDeleted += deleted;
+
+            if (deleted < batchSize) {
+                return totalDeleted;
+            }
         }
     }
 }

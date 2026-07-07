@@ -1,83 +1,70 @@
-using Hangfire;
-using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using FoodDiary.Application.Abstractions.Users.Common;
+using Hangfire;
+using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;
 
 public sealed class UserCleanupJob(
     IUserCleanupService cleanupService,
     IOptions<UserCleanupOptions> options,
-    TimeProvider dateTimeProvider,
-    IJobExecutionStateTracker executionStateTracker,
+    JobExecutionObserver observer,
     ILogger<UserCleanupJob> logger) {
+    private const string JobName = "users.cleanup";
+
     [AutomaticRetry(Attempts = RecurringJobExecutionPolicy.CleanupRetryAttempts, OnAttemptsExceeded = AttemptsExceededAction.Fail)]
     [DisableConcurrentExecution(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds)]
     public async Task Execute(CancellationToken cancellationToken = default) {
-        var stopwatch = Stopwatch.StartNew();
+        Stopwatch stopwatch = observer.Start(JobName);
         UserCleanupOptions settings = options.Value;
         int retentionDays = settings.RetentionDays > 0 ? settings.RetentionDays : 30;
         int batchSize = settings.BatchSize > 0 ? settings.BatchSize : 1;
-        DateTime olderThanUtc = dateTimeProvider.GetUtcNow().UtcDateTime.AddDays(-retentionDays);
-        int totalDeleted = 0;
-        const string jobName = "users.cleanup";
-        executionStateTracker.RecordStarted(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
-
+        DateTime olderThanUtc = observer.UtcNow.AddDays(-retentionDays);
         Guid? reassignUserId = ParseReassignUserId(settings);
+        int totalDeleted = 0;
 
         try {
-            while (true) {
-                cancellationToken.ThrowIfCancellationRequested();
-                int deleted = await cleanupService.CleanupDeletedUsersAsync(
-                    olderThanUtc,
-                    batchSize,
-                    reassignUserId,
-                    cancellationToken).ConfigureAwait(false);
-
-                totalDeleted += deleted;
-
-                if (deleted < batchSize) {
-                    break;
-                }
-            }
+            totalDeleted = await DeleteUsersAsync(olderThanUtc, batchSize, reassignUserId, cancellationToken).ConfigureAwait(false);
 
             if (totalDeleted > 0) {
                 logger.LogInformation("Removed {Count} users deleted before {OlderThan}", totalDeleted, olderThanUtc);
             }
 
-            JobManagerTelemetry.JobExecutionCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-                new KeyValuePair<string, object?>("fooddiary.job.outcome", "success"));
-            JobManagerTelemetry.JobDeletedItemsCounter.Add(
-                totalDeleted,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
-            executionStateTracker.RecordSuccess(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
+            observer.RecordSuccess(JobName, deleted: totalDeleted);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
-            RecordCanceled(totalDeleted);
+            logger.LogInformation("User cleanup job was canceled after processing {DeletedCount} users.", totalDeleted);
+            observer.RecordCanceled(JobName);
             throw;
         } catch (Exception ex) {
             logger.LogError(ex, "User cleanup job failed after processing {DeletedCount} users so far.", totalDeleted);
-            JobManagerTelemetry.JobExecutionCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
-                new KeyValuePair<string, object?>("fooddiary.job.outcome", "failure"));
-            executionStateTracker.RecordFailure(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
+            observer.RecordFailure(JobName);
             throw;
         } finally {
-            stopwatch.Stop();
-            JobManagerTelemetry.JobExecutionDuration.Record(
-                stopwatch.Elapsed.TotalMilliseconds,
-                new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
+            JobExecutionObserver.RecordDuration(JobName, stopwatch);
         }
     }
 
-    private void RecordCanceled(int totalDeleted) {
-        logger.LogInformation("User cleanup job was canceled after processing {DeletedCount} users.", totalDeleted);
-        JobManagerTelemetry.JobExecutionCounter.Add(
-            1,
-            new KeyValuePair<string, object?>("fooddiary.job.name", "users.cleanup"),
-            new KeyValuePair<string, object?>("fooddiary.job.outcome", "canceled"));
+    private async Task<int> DeleteUsersAsync(
+        DateTime olderThanUtc,
+        int batchSize,
+        Guid? reassignUserId,
+        CancellationToken cancellationToken) {
+        int totalDeleted = 0;
+
+        while (true) {
+            cancellationToken.ThrowIfCancellationRequested();
+            int deleted = await cleanupService.CleanupDeletedUsersAsync(
+                olderThanUtc,
+                batchSize,
+                reassignUserId,
+                cancellationToken).ConfigureAwait(false);
+
+            totalDeleted += deleted;
+
+            if (deleted < batchSize) {
+                return totalDeleted;
+            }
+        }
     }
 
     private static Guid? ParseReassignUserId(UserCleanupOptions settings) {
