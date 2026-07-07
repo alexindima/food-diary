@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Dietologist;
@@ -21,7 +22,14 @@ public sealed class DisconnectDietologistCommandHandler(
         }
 
         UserId dietologistUserId = dietologistUserIdResult.Value;
-        var clientUserId = new UserId(command.ClientUserId);
+        Result<UserId> clientUserIdResult = UserIdParser.Parse(
+            command.ClientUserId,
+            Errors.Validation.Invalid(nameof(command.ClientUserId), "Client user ID is required"));
+        if (clientUserIdResult.IsFailure) {
+            return UserIdParser.ToFailure(clientUserIdResult);
+        }
+
+        UserId clientUserId = clientUserIdResult.Value;
         DietologistInvitation? invitation = await invitationRepository.GetActiveByClientAndDietologistAsync(
             clientUserId, dietologistUserId, cancellationToken).ConfigureAwait(false);
 

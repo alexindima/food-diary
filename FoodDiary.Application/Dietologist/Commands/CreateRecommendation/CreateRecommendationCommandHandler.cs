@@ -37,7 +37,14 @@ public sealed class CreateRecommendationCommandHandler(
             return Result.Failure<RecommendationModel>(dietologistResult.Error);
         }
 
-        var clientUserId = new UserId(command.ClientUserId);
+        Result<UserId> clientUserIdResult = UserIdParser.Parse(
+            command.ClientUserId,
+            Errors.Validation.Invalid(nameof(command.ClientUserId), "Client user ID is required"));
+        if (clientUserIdResult.IsFailure) {
+            return UserIdParser.ToFailure<RecommendationModel>(clientUserIdResult);
+        }
+
+        UserId clientUserId = clientUserIdResult.Value;
 
         Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
             invitationRepository, dietologistUserId, clientUserId, cancellationToken).ConfigureAwait(false);
