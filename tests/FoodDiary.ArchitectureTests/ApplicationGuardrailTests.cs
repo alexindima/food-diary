@@ -296,6 +296,36 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationCommonModels_StayLimitedToSharedApplicationResponsePrimitives() {
+        string root = GetRepositoryRoot();
+        string modelsRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Models");
+        string[] allowedFiles = [
+            "PagedResponse.cs",
+        ];
+
+        string?[] actualFiles = [.. Directory.GetFiles(modelsRoot, "*.cs", SearchOption.TopDirectoryOnly)
+            .Select(Path.GetFileName)
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Equal(allowedFiles, actualFiles);
+    }
+
+    [Fact]
+    public void ApplicationCommonTime_StaysLimitedToSharedRequestTimeNormalization() {
+        string root = GetRepositoryRoot();
+        string timeRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Time");
+        string[] allowedFiles = [
+            "UtcDateNormalizer.cs",
+        ];
+
+        string?[] actualFiles = [.. Directory.GetFiles(timeRoot, "*.cs", SearchOption.TopDirectoryOnly)
+            .Select(Path.GetFileName)
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Equal(allowedFiles, actualFiles);
+    }
+
+    [Fact]
     public void ApplicationHandlersAndServices_DoNotUseDateTimeUtcNow_Directly() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
@@ -472,8 +502,19 @@ public sealed class ApplicationGuardrailTests {
         Assert.NotEmpty(featureErrorFiles);
     }
 
-    [Fact]
-    public void ProductErrorsFacade_DelegatesToFeatureOwnedErrorFactories() {
+    [Theory]
+    [InlineData("Errors.Product.cs", "Products", "Common", "ProductErrors.cs", "ProductErrors.", "Product.")]
+    [InlineData("Errors.WeightEntry.cs", "WeightEntries", "Common", "WeightEntryErrors.cs", "WeightEntryErrors.", "WeightEntry.")]
+    [InlineData("Errors.WaistEntry.cs", "WaistEntries", "Common", "WaistEntryErrors.cs", "WaistEntryErrors.", "WaistEntry.")]
+    [InlineData("Errors.HydrationEntry.cs", "Hydration", "Common", "HydrationEntryErrors.cs", "HydrationEntryErrors.", "HydrationEntry.")]
+    [InlineData("Errors.Exercise.cs", "Exercises", "Common", "ExerciseErrors.cs", "ExerciseErrors.", "Exercise.")]
+    public void MigratedErrorsFacades_DelegateToFeatureOwnedErrorFactories(
+        string facadeFileName,
+        string featureDirectory,
+        string featureCommonDirectory,
+        string featureErrorsFileName,
+        string delegationPattern,
+        string errorCodePrefix) {
         string root = GetRepositoryRoot();
         string facadePath = Path.Combine(
             root,
@@ -481,26 +522,20 @@ public sealed class ApplicationGuardrailTests {
             "Common",
             "Abstractions",
             "Results",
-            "Errors.Product.cs");
+            facadeFileName);
         string featureErrorsPath = Path.Combine(
             root,
             "FoodDiary.Application.Abstractions",
-            "Products",
-            "Common",
-            "ProductErrors.cs");
+            featureDirectory,
+            featureCommonDirectory,
+            featureErrorsFileName);
 
         string facadeSource = File.ReadAllText(facadePath);
         string featureErrorsSource = File.ReadAllText(featureErrorsPath);
 
-        Assert.Contains("ProductErrors.", facadeSource, StringComparison.Ordinal);
-        Assert.DoesNotContain("Product.NotFound", facadeSource, StringComparison.Ordinal);
-        Assert.DoesNotContain("Product.NotAccessible", facadeSource, StringComparison.Ordinal);
-        Assert.DoesNotContain("Product.AlreadyExists", facadeSource, StringComparison.Ordinal);
-        Assert.DoesNotContain("Product.InvalidData", facadeSource, StringComparison.Ordinal);
-        Assert.Contains("Product.NotFound", featureErrorsSource, StringComparison.Ordinal);
-        Assert.Contains("Product.NotAccessible", featureErrorsSource, StringComparison.Ordinal);
-        Assert.Contains("Product.AlreadyExists", featureErrorsSource, StringComparison.Ordinal);
-        Assert.Contains("Product.InvalidData", featureErrorsSource, StringComparison.Ordinal);
+        Assert.Contains(delegationPattern, facadeSource, StringComparison.Ordinal);
+        Assert.DoesNotContain(errorCodePrefix, facadeSource, StringComparison.Ordinal);
+        Assert.Contains(errorCodePrefix, featureErrorsSource, StringComparison.Ordinal);
     }
 
     [Fact]

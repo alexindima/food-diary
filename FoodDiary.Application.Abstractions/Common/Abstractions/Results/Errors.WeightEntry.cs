@@ -1,17 +1,11 @@
-using System.Globalization;
+using FoodDiary.Application.Abstractions.WeightEntries.Common;
 
 namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
 public static partial class Errors {
     public static class WeightEntry {
-        public static Error NotFound(Guid id) => new(
-            "WeightEntry.NotFound",
-            $"Weight entry with ID {id} was not found.",
-            Kind: ErrorKind.NotFound);
+        public static Error NotFound(Guid id) => WeightEntryErrors.NotFound(id);
 
-        public static Error AlreadyExists(DateTime date) => new(
-            "WeightEntry.AlreadyExists",
-            string.Create(CultureInfo.InvariantCulture, $"Weight entry for {date:yyyy-MM-dd} already exists."),
-            Kind: ErrorKind.Conflict);
+        public static Error AlreadyExists(DateTime date) => WeightEntryErrors.AlreadyExists(date);
     }
 }
