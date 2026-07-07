@@ -1,6 +1,8 @@
+using FoodDiary.Infrastructure.Persistence.Outbox;
+
 namespace FoodDiary.Infrastructure.Persistence.Images;
 
-public sealed class ImageObjectDeletionOutboxMessage {
+public sealed class ImageObjectDeletionOutboxMessage : IOutboxMessage {
     private const int ObjectKeyMaxLength = 1024;
     private const int ErrorMaxLength = 2048;
 
@@ -10,6 +12,7 @@ public sealed class ImageObjectDeletionOutboxMessage {
     public DateTime NextAttemptOnUtc { get; private set; }
     public int AttemptCount { get; private set; }
     public DateTime? ProcessedOnUtc { get; private set; }
+    public DateTime? DeadLetteredOnUtc { get; private set; }
     public DateTime? LockedUntilUtc { get; private set; }
     public string? LockedBy { get; private set; }
     public string? LastError { get; private set; }
@@ -46,6 +49,14 @@ public sealed class ImageObjectDeletionOutboxMessage {
         LockedUntilUtc = null;
         LockedBy = null;
         LastError = null;
+    }
+
+    public void MarkDeadLettered(string error, DateTime deadLetteredOnUtc) {
+        AttemptCount++;
+        DeadLetteredOnUtc = NormalizeUtc(deadLetteredOnUtc);
+        LockedUntilUtc = null;
+        LockedBy = null;
+        LastError = TruncateOptional(error, ErrorMaxLength);
     }
 
     public void MarkFailed(string error, DateTime nextAttemptOnUtc) {

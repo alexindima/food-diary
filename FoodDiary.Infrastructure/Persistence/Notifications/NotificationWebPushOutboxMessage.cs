@@ -1,9 +1,10 @@
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Infrastructure.Persistence.Outbox;
 
 namespace FoodDiary.Infrastructure.Persistence.Notifications;
 
-public sealed class NotificationWebPushOutboxMessage {
+public sealed class NotificationWebPushOutboxMessage : IOutboxMessage {
     private const int ErrorMaxLength = 2048;
 
     public Guid Id { get; private set; }
@@ -12,6 +13,7 @@ public sealed class NotificationWebPushOutboxMessage {
     public DateTime NextAttemptOnUtc { get; private set; }
     public int AttemptCount { get; private set; }
     public DateTime? ProcessedOnUtc { get; private set; }
+    public DateTime? DeadLetteredOnUtc { get; private set; }
     public DateTime? LockedUntilUtc { get; private set; }
     public string? LockedBy { get; private set; }
     public string? LastError { get; private set; }
@@ -45,6 +47,14 @@ public sealed class NotificationWebPushOutboxMessage {
         LockedUntilUtc = null;
         LockedBy = null;
         LastError = null;
+    }
+
+    public void MarkDeadLettered(string error, DateTime deadLetteredOnUtc) {
+        AttemptCount++;
+        DeadLetteredOnUtc = NormalizeUtc(deadLetteredOnUtc);
+        LockedUntilUtc = null;
+        LockedBy = null;
+        LastError = TruncateOptional(error, ErrorMaxLength);
     }
 
     public void MarkFailed(string error, DateTime nextAttemptOnUtc) {

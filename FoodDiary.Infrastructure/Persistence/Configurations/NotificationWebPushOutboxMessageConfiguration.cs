@@ -28,7 +28,7 @@ internal sealed class NotificationWebPushOutboxMessageConfiguration : IEntityTyp
             .HasForeignKey(message => message.NotificationId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasIndex(message => new { message.ProcessedOnUtc, message.NextAttemptOnUtc, message.LockedUntilUtc })
+        builder.HasIndex(message => new { message.ProcessedOnUtc, message.DeadLetteredOnUtc, message.NextAttemptOnUtc, message.LockedUntilUtc })
             .HasDatabaseName("IX_NotificationWebPushOutbox_DueLease");
         builder.HasIndex(message => message.NotificationId);
     }

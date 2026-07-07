@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Npgsql;
@@ -17,7 +16,7 @@ internal static class OutboxMessageClaimer {
         DateTime nowUtc,
         IQueryable<TMessage>? claimedQuery = null,
         CancellationToken cancellationToken = default)
-        where TMessage : class {
+        where TMessage : class, IOutboxMessage {
         string workerId = TruncateWorkerId(string.Create(
             CultureInfo.InvariantCulture,
             $"{Environment.MachineName}:{Environment.ProcessId}:{Guid.NewGuid():N}"));
@@ -55,7 +54,7 @@ internal static class OutboxMessageClaimer {
         string workerId,
         IQueryable<TMessage>? claimedQuery,
         CancellationToken cancellationToken)
-        where TMessage : class {
+        where TMessage : class, IOutboxMessage {
         IDbContextTransaction transaction = await context.Database
             .BeginTransactionAsync(cancellationToken)
             .ConfigureAwait(false);
@@ -67,6 +66,7 @@ internal static class OutboxMessageClaimer {
                     SELECT "Id" AS "Value"
                     FROM {tableName}
                     WHERE "ProcessedOnUtc" IS NULL
+                      AND "DeadLetteredOnUtc" IS NULL
                       AND "NextAttemptOnUtc" <= @nowUtc
                       AND ("LockedUntilUtc" IS NULL OR "LockedUntilUtc" <= @nowUtc)
                     ORDER BY "CreatedOnUtc"
@@ -130,10 +130,11 @@ internal static class OutboxMessageClaimer {
         DateTime lockedUntilUtc,
         string workerId,
         CancellationToken cancellationToken)
-        where TMessage : class {
+        where TMessage : class, IOutboxMessage {
         List<TMessage> claimed = await messages
             .Where(message =>
                 EF.Property<DateTime?>(message, "ProcessedOnUtc") == null &&
+                EF.Property<DateTime?>(message, "DeadLetteredOnUtc") == null &&
                 EF.Property<DateTime>(message, "NextAttemptOnUtc") <= nowUtc &&
                 (EF.Property<DateTime?>(message, "LockedUntilUtc") == null ||
                  EF.Property<DateTime?>(message, "LockedUntilUtc") <= nowUtc))
@@ -143,8 +144,7 @@ internal static class OutboxMessageClaimer {
             .ConfigureAwait(false);
 
         foreach (TMessage message in claimed) {
-            typeof(TMessage).GetMethod("MarkClaimed", BindingFlags.Instance | BindingFlags.Public)!
-                .Invoke(message, [lockedUntilUtc, workerId]);
+            message.MarkClaimed(lockedUntilUtc, workerId);
         }
 
         return claimed;

@@ -22,6 +22,13 @@ internal static class InfrastructureTelemetry {
     public static readonly Counter<long> StorageOperationCounter = Meter.CreateCounter<long>(
         "fooddiary.storage.operations");
 
+    public static readonly Counter<long> OutboxMessageCounter = Meter.CreateCounter<long>(
+        "fooddiary.outbox.messages");
+
+    public static readonly Histogram<double> OutboxProcessingDuration = Meter.CreateHistogram<double>(
+        "fooddiary.outbox.processing.duration",
+        unit: "ms");
+
     internal static void RecordDatabaseCommandFailure(string operation, string source, string errorType) {
         DatabaseCommandFailureCounter.Add(
             1,
@@ -29,6 +36,23 @@ internal static class InfrastructureTelemetry {
             new KeyValuePair<string, object?>("fooddiary.db.operation", operation),
             new KeyValuePair<string, object?>("fooddiary.db.source", source),
             new KeyValuePair<string, object?>("error.type", errorType));
+    }
+
+    internal static void RecordOutboxMessages(string outboxName, string outcome, int count) {
+        if (count <= 0) {
+            return;
+        }
+
+        OutboxMessageCounter.Add(
+            count,
+            new KeyValuePair<string, object?>("fooddiary.outbox.name", outboxName),
+            new KeyValuePair<string, object?>("fooddiary.outbox.outcome", outcome));
+    }
+
+    internal static void RecordOutboxProcessingDuration(string outboxName, double elapsedMilliseconds) {
+        OutboxProcessingDuration.Record(
+            elapsedMilliseconds,
+            new KeyValuePair<string, object?>("fooddiary.outbox.name", outboxName));
     }
 
     internal static void RecordStorageOperation(string operation, string outcome, string? errorType = null) {

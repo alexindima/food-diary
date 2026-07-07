@@ -25,7 +25,7 @@ internal sealed class EmailOutboxMessageConfiguration : IEntityTypeConfiguration
         builder.Property(message => message.LockedBy)
             .HasMaxLength(128);
 
-        builder.HasIndex(message => new { message.ProcessedOnUtc, message.NextAttemptOnUtc, message.LockedUntilUtc })
+        builder.HasIndex(message => new { message.ProcessedOnUtc, message.DeadLetteredOnUtc, message.NextAttemptOnUtc, message.LockedUntilUtc })
             .HasDatabaseName("IX_EmailOutbox_DueLease");
     }
 }
