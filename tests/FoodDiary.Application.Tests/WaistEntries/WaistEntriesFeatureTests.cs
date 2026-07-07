@@ -100,10 +100,11 @@ public class WaistEntriesFeatureTests {
 
     [Fact]
     public async Task GetWaistSummariesQueryHandler_WithDateFromAfterDateTo_ReturnsValidationError() {
+        var user = User.Create("waist-summary-invalid-date-range@example.com", "hash");
         var handler = new GetWaistSummariesQueryHandler(
             new InMemoryWaistEntryRepository(),
-            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
-        var query = new GetWaistSummariesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 7);
+            CreateCurrentUserAccessService(user));
+        var query = new GetWaistSummariesQuery(user.Id.Value, DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 7);
 
         Result<IReadOnlyList<WaistEntrySummaryModel>> result = await handler.Handle(query, CancellationToken.None);
 
@@ -127,12 +128,13 @@ public class WaistEntriesFeatureTests {
 
     [Fact]
     public async Task GetWaistSummariesQueryHandler_WithNonPositiveQuantization_ReturnsValidationError() {
+        var user = User.Create("waist-summary-invalid-step@example.com", "hash");
         var handler = new GetWaistSummariesQueryHandler(
             new InMemoryWaistEntryRepository(),
-            CreateCurrentUserAccessService(User.Create("waist-summary-invalid-step@example.com", "hash")));
+            CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<WaistEntrySummaryModel>> result = await handler.Handle(
-            new GetWaistSummariesQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 0),
+            new GetWaistSummariesQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 0),
             CancellationToken.None);
 
         ResultAssert.Failure(result);

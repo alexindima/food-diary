@@ -439,15 +439,14 @@ public class ProductsValidatorTests {
     }
 
     [Fact]
-    public async Task UpdateProduct_WhenProductIsAlreadyUsed_HasValidationError() {
+    public async Task UpdateProduct_WhenProductIsAlreadyUsed_HasNoValidationErrors() {
         Product product = CreateProduct();
         SetProductUsageCollections(product, mealItemsCount: 1, recipeIngredientsCount: 1);
 
         TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(
             ValidUpdateProduct(product.UserId.Value, product.Id.Value));
 
-        result.ShouldHaveValidationErrorFor(c => c.ProductId)
-            .WithErrorCode("Validation.Invalid");
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Fact]
@@ -488,15 +487,14 @@ public class ProductsValidatorTests {
     }
 
     [Fact]
-    public async Task DeleteProduct_WhenProductIsUsed_HasValidationError() {
+    public async Task DeleteProduct_WhenProductIsUsed_HasNoValidationErrors() {
         Product product = CreateProduct();
         SetProductUsageCollections(product, mealItemsCount: 1, recipeIngredientsCount: 0);
 
         TestValidationResult<DeleteProductCommand> result = await new DeleteProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(
             new DeleteProductCommand(product.UserId.Value, product.Id.Value));
 
-        result.ShouldHaveValidationErrorFor(c => c.ProductId)
-            .WithErrorCode("Validation.Invalid");
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Fact]

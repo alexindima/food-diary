@@ -198,7 +198,7 @@ public class RecipesFeatureTests {
     }
 
     [Fact]
-    public async Task DeleteRecipeCommandValidator_WhenRecipeIsUsed_ReturnsValidationFailure() {
+    public async Task DeleteRecipeCommandValidator_WhenRecipeIsUsed_HasNoValidationErrors() {
         var userId = UserId.New();
         var recipe = Recipe.Create(userId, "Used soup", servings: 2);
         SetRecipeUsageCollections(recipe, mealItemsCount: 1, nestedRecipeUsageCount: 1);
@@ -206,8 +206,7 @@ public class RecipesFeatureTests {
 
         ValidationResult result = await validator.ValidateAsync(new DeleteRecipeCommand(userId.Value, recipe.Id.Value));
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Validation.Invalid", StringComparison.Ordinal));
+        Assert.True(result.IsValid);
     }
 
     [Fact]

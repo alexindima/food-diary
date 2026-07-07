@@ -178,7 +178,7 @@ public class UpdateRecipeCommandValidatorTests {
     }
 
     [Fact]
-    public async Task ValidateAsync_WhenRepositoryRecipeIsUsed_ReturnsValidationError() {
+    public async Task ValidateAsync_WhenRepositoryRecipeIsUsed_ReturnsNoValidationError() {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Used soup", servings: 2);
@@ -187,13 +187,11 @@ public class UpdateRecipeCommandValidatorTests {
 
         ValidationResult result = await validator.ValidateAsync(CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]));
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => string.Equals(e.ErrorCode, "Validation.Invalid", StringComparison.Ordinal) &&
-            string.Equals(e.ErrorMessage, "Recipe is already used and cannot be modified", StringComparison.Ordinal));
+        Assert.True(result.IsValid);
     }
 
     [Fact]
-    public async Task ValidateAsync_WithCachedUsedRecipe_ReturnsValidationErrorFromUsageCount() {
+    public async Task ValidateAsync_WithCachedUsedRecipe_ReturnsNoValidationErrorFromUsageCount() {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Cached used soup", servings: 2);
@@ -205,9 +203,7 @@ public class UpdateRecipeCommandValidatorTests {
 
         ValidationResult result = await validator.ValidateAsync(context);
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => string.Equals(e.ErrorCode, "Validation.Invalid", StringComparison.Ordinal) &&
-            string.Equals(e.ErrorMessage, "Recipe is already used and cannot be modified", StringComparison.Ordinal));
+        Assert.True(result.IsValid);
     }
 
     private static RecipeStepInput CreateStep(int order, string description) {

@@ -24,8 +24,9 @@ public class StatisticsFeatureTests {
 
     [Fact]
     public async Task GetStatisticsQueryHandler_WithDateFromAfterDateTo_ReturnsValidationError() {
-        var handler = new GetStatisticsQueryHandler(new StaticStatisticsReadService([]), CreateCurrentUserAccessService(user: null));
-        var query = new GetStatisticsQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 1);
+        var user = User.Create("statistics-invalid-date-range@example.com", "hash");
+        var handler = new GetStatisticsQueryHandler(new StaticStatisticsReadService([]), CreateCurrentUserAccessService(user));
+        var query = new GetStatisticsQuery(user.Id.Value, DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 1);
 
         Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
 

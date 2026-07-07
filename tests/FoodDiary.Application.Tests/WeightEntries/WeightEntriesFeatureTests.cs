@@ -100,10 +100,11 @@ public class WeightEntriesFeatureTests {
 
     [Fact]
     public async Task GetWeightSummariesQueryHandler_WithDateFromAfterDateTo_ReturnsValidationError() {
+        var user = User.Create("weight-summary-invalid-date-range@example.com", "hash");
         var handler = new GetWeightSummariesQueryHandler(
             new InMemoryWeightEntryRepository(),
-            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
-        var query = new GetWeightSummariesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 7);
+            CreateCurrentUserAccessService(user));
+        var query = new GetWeightSummariesQuery(user.Id.Value, DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 7);
 
         Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(query, CancellationToken.None);
 
@@ -127,12 +128,13 @@ public class WeightEntriesFeatureTests {
 
     [Fact]
     public async Task GetWeightSummariesQueryHandler_WithNonPositiveQuantization_ReturnsValidationError() {
+        var user = User.Create("weight-summary-invalid-step@example.com", "hash");
         var handler = new GetWeightSummariesQueryHandler(
             new InMemoryWeightEntryRepository(),
-            CreateCurrentUserAccessService(User.Create("weight-summary-invalid-step@example.com", "hash")));
+            CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(
-            new GetWeightSummariesQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 0),
+            new GetWeightSummariesQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 0),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
