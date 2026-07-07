@@ -1,30 +1,17 @@
+using FoodDiary.Application.Abstractions.Images.Common;
+
 namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
 public static partial class Errors {
     public static class Image {
-        public static Error InvalidData(string message) => new(
-            "Image.InvalidData",
-            message,
-            Kind: ErrorKind.Validation);
+        public static Error InvalidData(string message) => ImageErrors.InvalidData(message);
 
-        public static Error NotFound(Guid id) => new(
-            "Image.NotFound",
-            $"Image asset with ID {id} was not found.",
-            Kind: ErrorKind.NotFound);
+        public static Error NotFound(Guid id) => ImageErrors.NotFound(id);
 
-        public static Error Forbidden() => new(
-            "Image.Forbidden",
-            "Image asset does not belong to the current user.",
-            Kind: ErrorKind.Forbidden);
+        public static Error Forbidden() => ImageErrors.Forbidden();
 
-        public static Error InUse() => new(
-            "Image.InUse",
-            "Image asset is already in use.",
-            Kind: ErrorKind.Conflict);
+        public static Error InUse() => ImageErrors.InUse();
 
-        public static Error StorageError() => new(
-            "Image.StorageError",
-            "Failed to remove image from storage.",
-            Kind: ErrorKind.ExternalFailure);
+        public static Error StorageError() => ImageErrors.StorageError();
     }
 }
