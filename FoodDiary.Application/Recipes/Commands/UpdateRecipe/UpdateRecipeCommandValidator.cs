@@ -1,31 +1,19 @@
 using FluentValidation;
-using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.Nutrition.Common;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Nutrition.Common;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Common.Validators;
-using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 
 public sealed class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeCommand> {
-    private const string RecipeContextKey = "__recipe";
-    private readonly IRecipeReadRepository _recipeRepository;
-
-    public UpdateRecipeCommandValidator(IRecipeReadRepository recipeRepository) {
-        _recipeRepository = recipeRepository;
+    public UpdateRecipeCommandValidator() {
         ConfigureIdentityRules();
         ConfigureBaseRecipeRules();
         ConfigureClearRules();
         ConfigureStepRules();
         ConfigureNutritionRules();
-
-        RuleFor(x => x)
-            .CustomAsync(EnsureRecipeEditableAsync);
     }
 
     private void ConfigureIdentityRules() {
@@ -151,43 +139,6 @@ public sealed class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecip
             .GreaterThanOrEqualTo(0)
             .LessThanOrEqualTo(ManualNutritionLimits.MaxNutrient)
             .When(x => !x.CalculateNutritionAutomatically && x.ManualAlcohol.HasValue);
-    }
-
-    private async Task EnsureRecipeEditableAsync(
-        UpdateRecipeCommand command,
-        ValidationContext<UpdateRecipeCommand> context,
-        CancellationToken cancellationToken) {
-        context.RootContextData.TryGetValue(RecipeContextKey, out object? cached);
-        if (cached is Recipe recipe) {
-            return;
-        }
-
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
-        Result<RecipeId> recipeIdResult = RequiredIdParser.Parse(
-            command.RecipeId,
-            nameof(command.RecipeId),
-            "Recipe id must not be empty.",
-            value => new RecipeId(value));
-        if (userIdResult.IsFailure || recipeIdResult.IsFailure) {
-            return;
-        }
-
-        Recipe? existing = await _recipeRepository.GetByIdAsync(
-            recipeIdResult.Value,
-            userIdResult.Value,
-            includePublic: false,
-            includeSteps: false,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
-
-        if (existing is null) {
-            context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
-                "Recipe not found or you do not have permission to modify it") {
-                ErrorCode = "Recipe.NotFound",
-            });
-            return;
-        }
-
-        context.RootContextData[RecipeContextKey] = existing;
     }
 
     private static bool BeValidVisibility(string? visibility) =>

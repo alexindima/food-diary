@@ -1,5 +1,4 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.DuplicateProduct;
@@ -11,7 +10,6 @@ using FoodDiary.Application.Products.Queries.GetRecentProducts;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using System.Reflection;
 
 namespace FoodDiary.Application.Tests.Products;
 
@@ -220,7 +218,7 @@ public class ProductsValidatorTests {
 
     [Fact]
     public async Task UpdateProduct_WithNullUserId_HasInvalidTokenError() {
-        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub()).TestValidateAsync(
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(
             ValidUpdateProduct(userId: null) with { UserId = null });
 
         result.ShouldHaveValidationErrorFor(c => c.UserId)
@@ -229,7 +227,7 @@ public class ProductsValidatorTests {
 
     [Fact]
     public async Task UpdateProduct_WithEmptyProductId_HasRequiredError() {
-        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub()).TestValidateAsync(
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(
             ValidUpdateProduct(productId: Guid.Empty));
 
         result.ShouldHaveValidationErrorFor(c => c.ProductId)
@@ -252,7 +250,7 @@ public class ProductsValidatorTests {
             Visibility = visibility,
         };
 
-        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(command);
 
         Assert.Contains(result.Errors, error =>
             string.Equals(error.PropertyName, propertyName, StringComparison.Ordinal) &&
@@ -290,7 +288,7 @@ public class ProductsValidatorTests {
             AlcoholPerBase = alcohol,
         };
 
-        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(command);
 
         Assert.Contains(result.Errors, error =>
             string.Equals(error.PropertyName, propertyName, StringComparison.Ordinal) &&
@@ -309,7 +307,7 @@ public class ProductsValidatorTests {
             DefaultPortionAmount = defaultPortionAmount,
         };
 
-        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.DefaultPortionAmount)
             .WithErrorCode("Validation.Invalid");
@@ -327,7 +325,7 @@ public class ProductsValidatorTests {
             CaloriesPerBase = caloriesPerBase,
         };
 
-        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.CaloriesPerBase)
             .WithErrorCode("Validation.Invalid");
@@ -345,63 +343,9 @@ public class ProductsValidatorTests {
             ProteinsPerBase = nutrientPerBase,
         };
 
-        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.ProteinsPerBase)
-            .WithErrorCode("Validation.Invalid");
-    }
-
-    [Fact]
-    public async Task UpdateProduct_ToStricterUnitWithExistingNutritionAboveLimit_HasValidationError() {
-        var product = Product.Create(
-            UserId.New(),
-            name: "Large piece",
-            baseUnit: MeasurementUnit.Pcs,
-            baseAmount: 1,
-            defaultPortionAmount: 1,
-            caloriesPerBase: Product.MaxWeightOrVolumeCaloriesPerBase + 1,
-            proteinsPerBase: 0,
-            fatsPerBase: 0,
-            carbsPerBase: 0,
-            fiberPerBase: 0,
-            alcoholPerBase: 0,
-            visibility: Visibility.Private);
-        UpdateProductCommand command = ValidUpdateProduct(product.UserId.Value, product.Id.Value) with {
-            BaseUnit = "g",
-            BaseAmount = 100,
-            CaloriesPerBase = null,
-        };
-
-        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);
-
-        result.ShouldHaveValidationErrorFor(c => c.CaloriesPerBase)
-            .WithErrorCode("Validation.Invalid");
-    }
-
-    [Fact]
-    public async Task UpdateProduct_WithPieceUnitAndDefaultPortionAbovePieceLimit_HasValidationError() {
-        var product = Product.Create(
-            UserId.New(),
-            name: "Vitamin",
-            baseUnit: MeasurementUnit.Pcs,
-            baseAmount: 1,
-            defaultPortionAmount: 1,
-            caloriesPerBase: 1,
-            proteinsPerBase: 0,
-            fatsPerBase: 0,
-            carbsPerBase: 0,
-            fiberPerBase: 0,
-            alcoholPerBase: 0,
-            visibility: Visibility.Private);
-        UpdateProductCommand command = ValidUpdateProduct(product.UserId.Value, product.Id.Value) with {
-            BaseUnit = null,
-            BaseAmount = null,
-            DefaultPortionAmount = Product.MaxPieceDefaultPortionAmount + 1,
-        };
-
-        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);
-
-        result.ShouldHaveValidationErrorFor(c => c.DefaultPortionAmount)
             .WithErrorCode("Validation.Invalid");
     }
 
@@ -425,25 +369,16 @@ public class ProductsValidatorTests {
             ClearImageAssetId = true,
         };
 
-        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(command);
 
         Assert.Equal(7, result.Errors.Count(error => string.Equals(error.ErrorCode, "Validation.Invalid", StringComparison.Ordinal)));
     }
 
     [Fact]
-    public async Task UpdateProduct_WhenProductIsMissing_HasProductNotFoundError() {
-        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub()).TestValidateAsync(ValidUpdateProduct());
-
-        result.ShouldHaveValidationErrorFor(c => c.ProductId)
-            .WithErrorCode("Product.NotFound");
-    }
-
-    [Fact]
     public async Task UpdateProduct_WhenProductIsAlreadyUsed_HasNoValidationErrors() {
         Product product = CreateProduct();
-        SetProductUsageCollections(product, mealItemsCount: 1, recipeIngredientsCount: 1);
 
-        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(
             ValidUpdateProduct(product.UserId.Value, product.Id.Value));
 
         result.ShouldNotHaveAnyValidationErrors();
@@ -453,7 +388,7 @@ public class ProductsValidatorTests {
     public async Task UpdateProduct_WithEditableProduct_HasNoValidationErrors() {
         Product product = CreateProduct();
 
-        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(
             ValidUpdateProduct(product.UserId.Value, product.Id.Value));
 
         result.ShouldNotHaveAnyValidationErrors();
@@ -461,7 +396,7 @@ public class ProductsValidatorTests {
 
     [Fact]
     public async Task DeleteProduct_WithNullUserId_HasInvalidTokenError() {
-        TestValidationResult<DeleteProductCommand> result = await new DeleteProductCommandValidator(new ProductRepositoryStub()).TestValidateAsync(
+        TestValidationResult<DeleteProductCommand> result = await new DeleteProductCommandValidator().TestValidateAsync(
             new DeleteProductCommand(UserId: null, Guid.NewGuid()));
 
         result.ShouldHaveValidationErrorFor(c => c.UserId)
@@ -470,7 +405,7 @@ public class ProductsValidatorTests {
 
     [Fact]
     public async Task DeleteProduct_WithEmptyProductId_HasRequiredError() {
-        TestValidationResult<DeleteProductCommand> result = await new DeleteProductCommandValidator(new ProductRepositoryStub()).TestValidateAsync(
+        TestValidationResult<DeleteProductCommand> result = await new DeleteProductCommandValidator().TestValidateAsync(
             new DeleteProductCommand(Guid.NewGuid(), Guid.Empty));
 
         result.ShouldHaveValidationErrorFor(c => c.ProductId)
@@ -478,20 +413,10 @@ public class ProductsValidatorTests {
     }
 
     [Fact]
-    public async Task DeleteProduct_WhenProductIsMissing_HasProductNotFoundError() {
-        TestValidationResult<DeleteProductCommand> result = await new DeleteProductCommandValidator(new ProductRepositoryStub()).TestValidateAsync(
-            new DeleteProductCommand(Guid.NewGuid(), Guid.NewGuid()));
-
-        result.ShouldHaveValidationErrorFor(c => c.ProductId)
-            .WithErrorCode("Product.NotFound");
-    }
-
-    [Fact]
     public async Task DeleteProduct_WhenProductIsUsed_HasNoValidationErrors() {
         Product product = CreateProduct();
-        SetProductUsageCollections(product, mealItemsCount: 1, recipeIngredientsCount: 0);
 
-        TestValidationResult<DeleteProductCommand> result = await new DeleteProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(
+        TestValidationResult<DeleteProductCommand> result = await new DeleteProductCommandValidator().TestValidateAsync(
             new DeleteProductCommand(product.UserId.Value, product.Id.Value));
 
         result.ShouldNotHaveAnyValidationErrors();
@@ -501,7 +426,7 @@ public class ProductsValidatorTests {
     public async Task DeleteProduct_WithUnusedProduct_HasNoValidationErrors() {
         Product product = CreateProduct();
 
-        TestValidationResult<DeleteProductCommand> result = await new DeleteProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(
+        TestValidationResult<DeleteProductCommand> result = await new DeleteProductCommandValidator().TestValidateAsync(
             new DeleteProductCommand(product.UserId.Value, product.Id.Value));
 
         result.ShouldNotHaveAnyValidationErrors();
@@ -522,47 +447,4 @@ public class ProductsValidatorTests {
             alcoholPerBase: 0,
             visibility: Visibility.Private);
 
-    private static void SetProductUsageCollections(Product product, int mealItemsCount, int recipeIngredientsCount) {
-        var mealItems = Enumerable.Range(0, mealItemsCount)
-            .Select(static _ => (FoodDiary.Domain.Entities.Meals.MealItem)null!)
-            .ToList();
-        var recipeIngredients = Enumerable.Range(0, recipeIngredientsCount)
-            .Select(static _ => (FoodDiary.Domain.Entities.Recipes.RecipeIngredient)null!)
-            .ToList();
-
-        typeof(Product)
-            .GetField("_mealItems", BindingFlags.Instance | BindingFlags.NonPublic)!
-            .SetValue(product, mealItems);
-        typeof(Product)
-            .GetField("_recipeIngredients", BindingFlags.Instance | BindingFlags.NonPublic)!
-            .SetValue(product, recipeIngredients);
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class ProductRepositoryStub(Product? product = null) : IProductRepository {
-        public Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<Product?> GetByIdAsync(
-            ProductId id,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(product is not null && product.Id == id && product.UserId == userId ? product : null);
-
-        public Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(
-            IEnumerable<ProductId> ids,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<int> GetUsageCountAsync(
-            ProductId id,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(product?.MealItems.Count + product?.RecipeIngredients.Count ?? 0);
-
-        public Task UpdateAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task DeleteAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-    }
 }

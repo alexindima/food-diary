@@ -1,12 +1,8 @@
-using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Nutrition.Common;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FluentValidation;
 using FluentValidation.Results;
 
 namespace FoodDiary.Application.Tests.Recipes;
@@ -17,8 +13,7 @@ public class UpdateRecipeCommandValidatorTests {
     public async Task ValidateAsync_WithDuplicateStepOrder_ReturnsValidationError() {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
-        var recipe = Recipe.Create(userId, "Soup", servings: 2);
-        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe));
+        var validator = new UpdateRecipeCommandValidator();
 
         UpdateRecipeCommand command = CreateCommand(
             userId.Value,
@@ -40,8 +35,7 @@ public class UpdateRecipeCommandValidatorTests {
     public async Task ValidateAsync_WithDistinctEffectiveStepOrder_Passes() {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
-        var recipe = Recipe.Create(userId, "Soup", servings: 2);
-        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe));
+        var validator = new UpdateRecipeCommandValidator();
 
         UpdateRecipeCommand command = CreateCommand(
             userId.Value,
@@ -60,8 +54,7 @@ public class UpdateRecipeCommandValidatorTests {
     public async Task ValidateAsync_WithManualNutritionAboveMaximum_ReturnsValidationError() {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
-        var recipe = Recipe.Create(userId, "Soup", servings: 2);
-        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe, usageCount: 2));
+        var validator = new UpdateRecipeCommandValidator();
         UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step")]) with {
             CalculateNutritionAutomatically = false,
             ManualCalories = ManualNutritionLimits.MaxCalories + 1,
@@ -115,8 +108,7 @@ public class UpdateRecipeCommandValidatorTests {
     public async Task ValidateAsync_WithClearDescriptionAndValue_ReturnsValidationError() {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
-        var recipe = Recipe.Create(userId, "Soup", servings: 2);
-        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe));
+        var validator = new UpdateRecipeCommandValidator();
 
         UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]) with {
             ClearDescription = true,
@@ -132,8 +124,7 @@ public class UpdateRecipeCommandValidatorTests {
     public async Task ValidateAsync_WithRemainingClearConflicts_ReturnsValidationErrors() {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
-        var recipe = Recipe.Create(userId, "Soup", servings: 2);
-        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe));
+        var validator = new UpdateRecipeCommandValidator();
 
         UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]) with {
             ClearComment = true,
@@ -157,8 +148,7 @@ public class UpdateRecipeCommandValidatorTests {
     public async Task ValidateAsync_WithEmptySteps_ReturnsValidationErrorWithoutDuplicateOrderError() {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
-        var recipe = Recipe.Create(userId, "Soup", servings: 2);
-        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe));
+        var validator = new UpdateRecipeCommandValidator();
 
         ValidationResult result = await validator.ValidateAsync(CreateCommand(userId.Value, recipeId, []));
 
@@ -168,42 +158,13 @@ public class UpdateRecipeCommandValidatorTests {
     }
 
     [Fact]
-    public async Task ValidateAsync_WithInvalidUserId_DoesNotQueryRecipeRepository() {
-        var validator = new UpdateRecipeCommandValidator(CreateThrowingRecipeRepository());
+    public async Task ValidateAsync_WithInvalidUserId_ReturnsInvalidToken() {
+        var validator = new UpdateRecipeCommandValidator();
 
         ValidationResult result = await validator.ValidateAsync(CreateCommand(Guid.Empty, RecipeId.New(), [CreateStep(order: 1, "Step 1")]));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.ErrorCode, "Authentication.InvalidToken", StringComparison.Ordinal));
-    }
-
-    [Fact]
-    public async Task ValidateAsync_WhenRepositoryRecipeIsUsed_ReturnsNoValidationError() {
-        var userId = UserId.New();
-        var recipeId = RecipeId.New();
-        var recipe = Recipe.Create(userId, "Used soup", servings: 2);
-        SetRecipeUsageCollections(recipe, mealItemsCount: 1, nestedRecipeUsageCount: 1);
-        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe, usageCount: 2));
-
-        ValidationResult result = await validator.ValidateAsync(CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]));
-
-        Assert.True(result.IsValid);
-    }
-
-    [Fact]
-    public async Task ValidateAsync_WithCachedUsedRecipe_ReturnsNoValidationErrorFromUsageCount() {
-        var userId = UserId.New();
-        var recipeId = RecipeId.New();
-        var recipe = Recipe.Create(userId, "Cached used soup", servings: 2);
-        SetRecipeUsageCollections(recipe, mealItemsCount: 1, nestedRecipeUsageCount: 0);
-        var validator = new UpdateRecipeCommandValidator(CreateUsageCountRecipeRepository(recipe.Id, userId, usageCount: 1));
-        UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]);
-        var context = new ValidationContext<UpdateRecipeCommand>(command);
-        context.RootContextData["__recipe"] = recipe;
-
-        ValidationResult result = await validator.ValidateAsync(context);
-
-        Assert.True(result.IsValid);
     }
 
     private static RecipeStepInput CreateStep(int order, string description) {
@@ -216,97 +177,4 @@ public class UpdateRecipeCommandValidatorTests {
             Ingredients: [new RecipeIngredientInput(ProductId: Guid.NewGuid(), NestedRecipeId: null, Amount: 100)]);
     }
 
-    private static void SetRecipeUsageCollections(Recipe recipe, int mealItemsCount, int nestedRecipeUsageCount) {
-        var mealItems = Enumerable.Range(0, mealItemsCount)
-            .Select(_ => (MealItem)null!)
-            .ToList();
-        var nestedRecipeUsages = Enumerable.Range(0, nestedRecipeUsageCount)
-            .Select(_ => (RecipeIngredient)null!)
-            .ToList();
-
-        typeof(Recipe)
-            .GetField("_mealItems", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
-            .SetValue(recipe, mealItems);
-        typeof(Recipe)
-            .GetField("_nestedRecipeUsages", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
-            .SetValue(recipe, nestedRecipeUsages);
-    }
-
-    private static IRecipeRepository CreateRecipeRepository(RecipeId recipeId, UserId userId, Recipe recipe, int usageCount = 0) {
-        IRecipeRepository repository = Substitute.For<IRecipeRepository>();
-        repository
-            .GetByIdAsync(
-                Arg.Any<RecipeId>(),
-                Arg.Any<UserId>(),
-                Arg.Any<bool>(),
-                Arg.Any<bool>(),
-                Arg.Any<bool>(),
-                Arg.Any<CancellationToken>())
-            .Returns(call => {
-                RecipeId id = call.ArgAt<RecipeId>(0);
-                UserId requestedUserId = call.ArgAt<UserId>(1);
-                return Task.FromResult(id == recipeId && requestedUserId == userId ? recipe : null);
-            });
-        repository
-            .GetUsageCountAsync(
-                Arg.Any<RecipeId>(),
-                Arg.Any<UserId>(),
-                Arg.Any<bool>(),
-                Arg.Any<CancellationToken>())
-            .Returns(call => {
-                RecipeId id = call.ArgAt<RecipeId>(0);
-                UserId requestedUserId = call.ArgAt<UserId>(1);
-                bool isRequestedRecipe = id == recipeId || id == recipe.Id;
-                return Task.FromResult(isRequestedRecipe && requestedUserId == userId ? usageCount : 0);
-            });
-
-        return repository;
-    }
-
-    private static IRecipeRepository CreateUsageCountRecipeRepository(RecipeId recipeId, UserId userId, int usageCount) {
-        IRecipeRepository repository = Substitute.For<IRecipeRepository>();
-        repository
-            .GetByIdAsync(
-                Arg.Any<RecipeId>(),
-                Arg.Any<UserId>(),
-                Arg.Any<bool>(),
-                Arg.Any<bool>(),
-                Arg.Any<bool>(),
-                Arg.Any<CancellationToken>())
-            .Returns<Task<Recipe?>>(_ => throw new InvalidOperationException("Recipe should be read from validator context."));
-        repository
-            .GetUsageCountAsync(
-                Arg.Any<RecipeId>(),
-                Arg.Any<UserId>(),
-                Arg.Any<bool>(),
-                Arg.Any<CancellationToken>())
-            .Returns(call => {
-                RecipeId id = call.ArgAt<RecipeId>(0);
-                UserId requestedUserId = call.ArgAt<UserId>(1);
-                return Task.FromResult(id == recipeId && requestedUserId == userId ? usageCount : 0);
-            });
-        return repository;
-    }
-
-    private static IRecipeRepository CreateThrowingRecipeRepository() {
-        IRecipeRepository repository = Substitute.For<IRecipeRepository>();
-        repository
-            .GetByIdAsync(
-                Arg.Any<RecipeId>(),
-                Arg.Any<UserId>(),
-                Arg.Any<bool>(),
-                Arg.Any<bool>(),
-                Arg.Any<bool>(),
-                Arg.Any<CancellationToken>())
-            .Returns<Task<Recipe?>>(_ => throw new InvalidOperationException("Repository should not be queried."));
-        repository
-            .GetUsageCountAsync(
-                Arg.Any<RecipeId>(),
-                Arg.Any<UserId>(),
-                Arg.Any<bool>(),
-                Arg.Any<CancellationToken>())
-            .Returns<Task<int>>(_ => throw new InvalidOperationException("Repository should not be queried."));
-
-        return repository;
-    }
 }

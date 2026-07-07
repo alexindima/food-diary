@@ -49,6 +49,11 @@ public sealed class UpdateProductCommandHandler(
                 "Product is already used in consumptions or recipes and cannot be updated"));
         }
 
+        Result limitsResult = ProductUpdateLimitValidator.Validate(product, command, values);
+        if (limitsResult.IsFailure) {
+            return Result.Failure<ProductModel>(limitsResult.Error);
+        }
+
         ImageAssetId? oldAssetId = product.ImageAssetId;
         DateTime? modifiedOnBefore = product.ModifiedOnUtc;
         ProductUpdateApplier.Apply(product, command, values);

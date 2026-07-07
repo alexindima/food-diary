@@ -175,9 +175,8 @@ public class RecipesFeatureTests {
     }
 
     [Fact]
-    public async Task DeleteRecipeCommandValidator_WithEmptyUserId_DoesNotCheckRepositoryAndReturnsInvalidToken() {
-        var validator = new DeleteRecipeCommandValidator(
-            new SingleRecipeRepository(Recipe.Create(UserId.New(), "Soup", servings: 2)));
+    public async Task DeleteRecipeCommandValidator_WithEmptyUserId_ReturnsInvalidToken() {
+        var validator = new DeleteRecipeCommandValidator();
 
         ValidationResult result = await validator.ValidateAsync(new DeleteRecipeCommand(Guid.Empty, RecipeId.New().Value));
 
@@ -186,23 +185,10 @@ public class RecipesFeatureTests {
     }
 
     [Fact]
-    public async Task DeleteRecipeCommandValidator_WhenRecipeMissing_ReturnsNotFound() {
-        var userId = UserId.New();
-        var validator = new DeleteRecipeCommandValidator(
-            new SingleRecipeRepository(Recipe.Create(userId, "Soup", servings: 2)));
-
-        ValidationResult result = await validator.ValidateAsync(new DeleteRecipeCommand(userId.Value, RecipeId.New().Value));
-
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Recipe.NotFound", StringComparison.Ordinal));
-    }
-
-    [Fact]
     public async Task DeleteRecipeCommandValidator_WhenRecipeIsUsed_HasNoValidationErrors() {
         var userId = UserId.New();
         var recipe = Recipe.Create(userId, "Used soup", servings: 2);
-        SetRecipeUsageCollections(recipe, mealItemsCount: 1, nestedRecipeUsageCount: 1);
-        var validator = new DeleteRecipeCommandValidator(new SingleRecipeRepository(recipe));
+        var validator = new DeleteRecipeCommandValidator();
 
         ValidationResult result = await validator.ValidateAsync(new DeleteRecipeCommand(userId.Value, recipe.Id.Value));
 
@@ -213,7 +199,7 @@ public class RecipesFeatureTests {
     public async Task DeleteRecipeCommandValidator_WhenRecipeIsUnused_HasNoErrors() {
         var userId = UserId.New();
         var recipe = Recipe.Create(userId, "Unused soup", servings: 2);
-        var validator = new DeleteRecipeCommandValidator(new SingleRecipeRepository(recipe));
+        var validator = new DeleteRecipeCommandValidator();
 
         ValidationResult result = await validator.ValidateAsync(new DeleteRecipeCommand(userId.Value, recipe.Id.Value));
 
@@ -221,45 +207,10 @@ public class RecipesFeatureTests {
     }
 
     [Fact]
-    public async Task UpdateRecipeCommandValidator_WhenRecipeIsMissing_ReturnsNotFoundError() {
-        var validator = new UpdateRecipeCommandValidator(new SingleRecipeRepositoryForCreate());
-
-        ValidationResult result = await validator.ValidateAsync(new UpdateRecipeCommand(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            Name: "Soup",
-            Description: null,
-            ClearDescription: false,
-            Comment: null,
-            ClearComment: false,
-            Category: null,
-            ClearCategory: false,
-            ImageUrl: null,
-            ClearImageUrl: false,
-            ImageAssetId: null,
-            ClearImageAssetId: false,
-            PrepTime: null,
-            CookTime: null,
-            Servings: 2,
-            Visibility: Visibility.Private.ToString(),
-            CalculateNutritionAutomatically: true,
-            ManualCalories: null,
-            ManualProteins: null,
-            ManualFats: null,
-            ManualCarbs: null,
-            ManualFiber: null,
-            ManualAlcohol: null,
-            Steps: [CreateRecipeCreateStep(order: 1, "Mix")]));
-
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Recipe.NotFound", StringComparison.Ordinal));
-    }
-
-    [Fact]
     public async Task UpdateRecipeCommandValidator_WithConflictingClearFlagsDuplicateStepsAndMissingManualNutrition_ReturnsErrors() {
         var userId = UserId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
-        var validator = new UpdateRecipeCommandValidator(new SingleRecipeRepository(recipe));
+        var validator = new UpdateRecipeCommandValidator();
 
         ValidationResult result = await validator.ValidateAsync(new UpdateRecipeCommand(
             userId.Value,

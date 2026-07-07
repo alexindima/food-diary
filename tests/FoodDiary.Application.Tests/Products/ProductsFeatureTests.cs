@@ -828,6 +828,78 @@ public class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateProductCommandHandler_ToStricterUnitWithExistingNutritionAboveLimit_ReturnsValidationFailure() {
+        var user = User.Create("update-product-stricter-unit@example.com", "hash");
+        var product = Product.Create(
+            user.Id,
+            name: "Large piece",
+            baseUnit: MeasurementUnit.Pcs,
+            baseAmount: 1,
+            defaultPortionAmount: 1,
+            caloriesPerBase: Product.MaxWeightOrVolumeCaloriesPerBase + 1,
+            proteinsPerBase: 0,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private);
+        var repository = new SingleProductRepository(product);
+        var handler = new UpdateProductCommandHandler(
+            repository,
+            repository,
+            new RecordingCleanupService(),
+            new StubUserRepository(user),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        Result<ProductModel> result = await handler.Handle(
+            CreateUpdateProductCommand(user.Id.Value, product.Id.Value, baseUnit: "g") with {
+                BaseAmount = 100,
+            },
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains(nameof(UpdateProductCommand.CaloriesPerBase), result.Error.Message, StringComparison.Ordinal);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateProductCommandHandler_WithCurrentPieceUnitAndDefaultPortionAboveLimit_ReturnsValidationFailure() {
+        var user = User.Create("update-product-piece-limit@example.com", "hash");
+        var product = Product.Create(
+            user.Id,
+            name: "Vitamin",
+            baseUnit: MeasurementUnit.Pcs,
+            baseAmount: 1,
+            defaultPortionAmount: 1,
+            caloriesPerBase: 1,
+            proteinsPerBase: 0,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private);
+        var repository = new SingleProductRepository(product);
+        var handler = new UpdateProductCommandHandler(
+            repository,
+            repository,
+            new RecordingCleanupService(),
+            new StubUserRepository(user),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        Result<ProductModel> result = await handler.Handle(
+            CreateUpdateProductCommand(user.Id.Value, product.Id.Value) with {
+                DefaultPortionAmount = Product.MaxPieceDefaultPortionAmount + 1,
+            },
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains(nameof(UpdateProductCommand.DefaultPortionAmount), result.Error.Message, StringComparison.Ordinal);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
     public async Task UpdateProductCommandHandler_WhenProductIsMissing_ReturnsNotAccessible() {
         var user = User.Create("update-product-missing@example.com", "hash");
         var productId = ProductId.New();

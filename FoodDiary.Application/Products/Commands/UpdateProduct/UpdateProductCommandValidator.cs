@@ -1,28 +1,15 @@
-using FoodDiary.Application.Abstractions.Products.Common;
 using FluentValidation;
-using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Products.Common;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using System.Linq.Expressions;
 
 namespace FoodDiary.Application.Products.Commands.UpdateProduct;
 
 public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand> {
-    private const string ProductContextKey = "__product";
-    private readonly IProductReadRepository _productRepository;
-
-    public UpdateProductCommandValidator(IProductReadRepository productRepository) {
-        _productRepository = productRepository;
+    public UpdateProductCommandValidator() {
         ConfigureIdentityRules();
         ConfigureNutritionRules();
         ConfigureEnumRules();
         ConfigureClearRules();
-
-        RuleFor(x => x)
-            .CustomAsync(EnsureProductEditableAsync);
     }
 
     private void ConfigureIdentityRules() {
@@ -42,6 +29,31 @@ public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProd
     }
 
     private void ConfigureNutritionRules() {
+        ConfigureMeasurementRules();
+        ConfigureCaloriesRule();
+        ConfigureNutrientRule(
+            x => x.ProteinsPerBase,
+            "ProteinsPerBase must be non-negative",
+            "ProteinsPerBase exceeds the maximum for the selected unit");
+        ConfigureNutrientRule(
+            x => x.FatsPerBase,
+            "FatsPerBase must be non-negative",
+            "FatsPerBase exceeds the maximum for the selected unit");
+        ConfigureNutrientRule(
+            x => x.CarbsPerBase,
+            "CarbsPerBase must be non-negative",
+            "CarbsPerBase exceeds the maximum for the selected unit");
+        ConfigureNutrientRule(
+            x => x.FiberPerBase,
+            "FiberPerBase must be non-negative",
+            "FiberPerBase exceeds the maximum for the selected unit");
+        ConfigureNutrientRule(
+            x => x.AlcoholPerBase,
+            "AlcoholPerBase must be non-negative",
+            "AlcoholPerBase exceeds the maximum for the selected unit");
+    }
+
+    private void ConfigureMeasurementRules() {
         RuleFor(x => x.BaseAmount)
             .GreaterThan(0)
             .WithErrorCode("Validation.Invalid")
@@ -52,43 +64,35 @@ public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProd
             .GreaterThan(0)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("DefaultPortionAmount must be greater than 0")
+            .Must((command, amount) => ProductCommandValidation.BeWithinDefaultPortionLimit(command.BaseUnit, amount!.Value))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("DefaultPortionAmount exceeds the maximum for the selected unit")
             .When(x => x.DefaultPortionAmount.HasValue);
+    }
 
+    private void ConfigureCaloriesRule() {
         RuleFor(x => x.CaloriesPerBase)
             .GreaterThanOrEqualTo(0)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("CaloriesPerBase must be non-negative")
+            .Must((command, value) => ProductCommandValidation.BeWithinCaloriesLimit(command.BaseUnit, value!.Value))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("CaloriesPerBase exceeds the maximum for the selected unit")
             .When(x => x.CaloriesPerBase.HasValue);
+    }
 
-        RuleFor(x => x.ProteinsPerBase)
+    private void ConfigureNutrientRule(
+        Expression<Func<UpdateProductCommand, double?>> property,
+        string nonNegativeMessage,
+        string limitMessage) {
+        RuleFor(property)
             .GreaterThanOrEqualTo(0)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("ProteinsPerBase must be non-negative")
-            .When(x => x.ProteinsPerBase.HasValue);
-
-        RuleFor(x => x.FatsPerBase)
-            .GreaterThanOrEqualTo(0)
+            .WithMessage(nonNegativeMessage)
+            .Must((command, value) => ProductCommandValidation.BeWithinNutrientLimit(command.BaseUnit, value!.Value))
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("FatsPerBase must be non-negative")
-            .When(x => x.FatsPerBase.HasValue);
-
-        RuleFor(x => x.CarbsPerBase)
-            .GreaterThanOrEqualTo(0)
-            .WithErrorCode("Validation.Invalid")
-            .WithMessage("CarbsPerBase must be non-negative")
-            .When(x => x.CarbsPerBase.HasValue);
-
-        RuleFor(x => x.FiberPerBase)
-            .GreaterThanOrEqualTo(0)
-            .WithErrorCode("Validation.Invalid")
-            .WithMessage("FiberPerBase must be non-negative")
-            .When(x => x.FiberPerBase.HasValue);
-
-        RuleFor(x => x.AlcoholPerBase)
-            .GreaterThanOrEqualTo(0)
-            .WithErrorCode("Validation.Invalid")
-            .WithMessage("AlcoholPerBase must be non-negative")
-            .When(x => x.AlcoholPerBase.HasValue);
+            .WithMessage(limitMessage)
+            .When(command => property.Compile().Invoke(command).HasValue);
     }
 
     private void ConfigureEnumRules() {
@@ -146,105 +150,5 @@ public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProd
             .Must(x => !(x.ClearImageAssetId && x.ImageAssetId.HasValue))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("ImageAssetId cannot be provided when ClearImageAssetId is true");
-    }
-
-    private async Task EnsureProductEditableAsync(
-        UpdateProductCommand command,
-        ValidationContext<UpdateProductCommand> context,
-        CancellationToken cancellationToken) {
-        context.RootContextData.TryGetValue(ProductContextKey, out object? cached);
-        var product = cached as Product;
-
-        if (product is null) {
-            Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
-            Result<ProductId> productIdResult = RequiredIdParser.Parse(
-                command.ProductId,
-                nameof(command.ProductId),
-                "Product id must not be empty.",
-                value => new ProductId(value));
-            if (userIdResult.IsFailure || productIdResult.IsFailure) {
-                return;
-            }
-
-            product = await _productRepository.GetByIdAsync(
-                productIdResult.Value,
-                userIdResult.Value,
-                includePublic: false,
-                cancellationToken: cancellationToken).ConfigureAwait(false);
-            if (product is not null) {
-                context.RootContextData[ProductContextKey] = product;
-            }
-        }
-
-        if (product is null) {
-            context.AddFailure(new ValidationFailure(nameof(command.ProductId), "Product not found or you do not have permission to modify it") {
-                ErrorCode = "Product.NotFound",
-            });
-            return;
-        }
-
-        EnsureDefaultPortionAmountWithinLimit(command, product, context);
-        EnsureNutritionWithinLimit(command, product, context);
-    }
-
-    private static void EnsureDefaultPortionAmountWithinLimit(
-        UpdateProductCommand command,
-        Product product,
-        ValidationContext<UpdateProductCommand> context) {
-        if (!command.DefaultPortionAmount.HasValue) {
-            return;
-        }
-
-        MeasurementUnit unit = product.BaseUnit;
-        if (!string.IsNullOrWhiteSpace(command.BaseUnit)) {
-            if (!EnumValueParser.TryParse(command.BaseUnit, out unit)) {
-                return;
-            }
-        }
-
-        double maxAmount = Product.GetMaxDefaultPortionAmount(unit);
-        if (command.DefaultPortionAmount.Value > maxAmount) {
-            context.AddFailure(new ValidationFailure(nameof(command.DefaultPortionAmount),
-                "DefaultPortionAmount exceeds the maximum for the selected unit") {
-                ErrorCode = "Validation.Invalid",
-            });
-        }
-    }
-
-    private static void EnsureNutritionWithinLimit(
-        UpdateProductCommand command,
-        Product product,
-        ValidationContext<UpdateProductCommand> context) {
-        MeasurementUnit unit = product.BaseUnit;
-        if (!string.IsNullOrWhiteSpace(command.BaseUnit)) {
-            if (!EnumValueParser.TryParse(command.BaseUnit, out unit)) {
-                return;
-            }
-        }
-
-        double maxCalories = Product.GetMaxCaloriesPerBase(unit);
-        EnsureNutritionValueWithinLimit(context, nameof(command.CaloriesPerBase), command.CaloriesPerBase ?? product.CaloriesPerBase, maxCalories);
-
-        double maxNutrient = Product.GetMaxNutrientPerBase(unit);
-        EnsureNutritionValueWithinLimit(context, nameof(command.ProteinsPerBase), command.ProteinsPerBase ?? product.ProteinsPerBase, maxNutrient);
-        EnsureNutritionValueWithinLimit(context, nameof(command.FatsPerBase), command.FatsPerBase ?? product.FatsPerBase, maxNutrient);
-        EnsureNutritionValueWithinLimit(context, nameof(command.CarbsPerBase), command.CarbsPerBase ?? product.CarbsPerBase, maxNutrient);
-        EnsureNutritionValueWithinLimit(context, nameof(command.FiberPerBase), command.FiberPerBase ?? product.FiberPerBase, maxNutrient);
-        EnsureNutritionValueWithinLimit(context, nameof(command.AlcoholPerBase), command.AlcoholPerBase ?? product.AlcoholPerBase, maxNutrient);
-    }
-
-    private static void EnsureNutritionValueWithinLimit(
-        ValidationContext<UpdateProductCommand> context,
-        string propertyName,
-        double value,
-        double maxValue) {
-        if (value <= maxValue) {
-            return;
-        }
-
-        context.AddFailure(new ValidationFailure(propertyName,
-            $"{propertyName} exceeds the maximum for the selected unit") {
-            ErrorCode = "Validation.Invalid",
-        });
     }
 }
