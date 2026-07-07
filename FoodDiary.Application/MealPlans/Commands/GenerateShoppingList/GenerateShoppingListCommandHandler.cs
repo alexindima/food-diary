@@ -3,8 +3,10 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.ShoppingLists.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -14,14 +16,18 @@ namespace FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
 
 public sealed class GenerateShoppingListCommandHandler(
     IMealPlanReadRepository mealPlanRepository,
-    IShoppingListWriteRepository shoppingListRepository)
+    IShoppingListWriteRepository shoppingListRepository,
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<GenerateShoppingListCommand, Result<ShoppingListModel>> {
     public async Task<Result<ShoppingListModel>> Handle(
         GenerateShoppingListCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<ShoppingListModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<ShoppingListModel>(userIdResult);
         }
 
         Result<MealPlanId> planIdResult = RequiredIdParser.Parse(
@@ -35,8 +41,12 @@ public sealed class GenerateShoppingListCommandHandler(
 
         MealPlanId planId = planIdResult.Value;
         MealPlan? plan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
-        if (plan is null || (!plan.IsCurated && plan.UserId != userIdResult.Value)) {
+        if (plan is null) {
             return Result.Failure<ShoppingListModel>(Errors.MealPlan.NotFound(command.PlanId));
+        }
+
+        if (!plan.IsCurated && plan.UserId != userIdResult.Value) {
+            return Result.Failure<ShoppingListModel>(Errors.MealPlan.NotAccessible(command.PlanId));
         }
 
         ShoppingList shoppingList = CreateShoppingList(userIdResult.Value, plan);

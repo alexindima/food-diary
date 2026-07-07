@@ -3,6 +3,7 @@ using FoodDiary.Application.Exercises.Commands.DeleteExerciseEntry;
 using FoodDiary.Application.Exercises.Commands.UpdateExerciseEntry;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Exercises.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Exercises.Mappings;
 using FoodDiary.Application.Exercises.Queries.GetExerciseEntries;
@@ -19,7 +20,7 @@ public class ExercisesFeatureTests {
     [Fact]
     public async Task CreateExerciseEntry_WithValidData_Succeeds() {
         var repo = new InMemoryExerciseEntryRepository();
-        var handler = new CreateExerciseEntryCommandHandler(repo);
+        var handler = new CreateExerciseEntryCommandHandler(repo, CreateCurrentUserAccessService());
 
         Result<ExerciseEntryModel> result = await handler.Handle(
             new CreateExerciseEntryCommand(Guid.NewGuid(), DateTime.UtcNow, "Running", 30, 250, "Jog", Notes: null),
@@ -34,7 +35,7 @@ public class ExercisesFeatureTests {
     [Fact]
     public async Task CreateExerciseEntry_WithInvalidExerciseType_DefaultsToOther() {
         var repo = new InMemoryExerciseEntryRepository();
-        var handler = new CreateExerciseEntryCommandHandler(repo);
+        var handler = new CreateExerciseEntryCommandHandler(repo, CreateCurrentUserAccessService());
 
         Result<ExerciseEntryModel> result = await handler.Handle(
             new CreateExerciseEntryCommand(Guid.NewGuid(), DateTime.UtcNow, "UnknownType", 30, 100, Name: null, Notes: null),
@@ -46,7 +47,7 @@ public class ExercisesFeatureTests {
 
     [Fact]
     public async Task CreateExerciseEntry_WithNullUserId_ReturnsFailure() {
-        var handler = new CreateExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
+        var handler = new CreateExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository(), CreateCurrentUserAccessService());
 
         Result<ExerciseEntryModel> result = await handler.Handle(
             new CreateExerciseEntryCommand(UserId: null, DateTime.UtcNow, "Running", 30, 100, Name: null, Notes: null),
@@ -56,13 +57,26 @@ public class ExercisesFeatureTests {
     }
 
     [Fact]
+    public async Task CreateExerciseEntry_WhenUserCannotAccess_ReturnsInvalidToken() {
+        var handler = new CreateExerciseEntryCommandHandler(
+            new InMemoryExerciseEntryRepository(),
+            CreateCurrentUserAccessService(Errors.Authentication.InvalidToken));
+
+        Result<ExerciseEntryModel> result = await handler.Handle(
+            new CreateExerciseEntryCommand(Guid.NewGuid(), DateTime.UtcNow, "Running", 30, 100, Name: null, Notes: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Authentication.InvalidToken");
+    }
+
+    [Fact]
     public async Task DeleteExerciseEntry_WhenExists_Succeeds() {
         var userId = UserId.New();
         var entry = ExerciseEntry.Create(userId, DateTime.UtcNow, ExerciseType.Running, 30, 200);
         var repo = new InMemoryExerciseEntryRepository();
         repo.Seed(entry);
 
-        var handler = new DeleteExerciseEntryCommandHandler(repo);
+        var handler = new DeleteExerciseEntryCommandHandler(repo, CreateCurrentUserAccessService());
         Result result = await handler.Handle(
             new DeleteExerciseEntryCommand(userId.Value, entry.Id.Value), CancellationToken.None);
 
@@ -72,22 +86,35 @@ public class ExercisesFeatureTests {
 
     [Fact]
     public async Task DeleteExerciseEntry_WhenNotFound_ReturnsFailure() {
-        var handler = new DeleteExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
+        var handler = new DeleteExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository(), CreateCurrentUserAccessService());
 
         Result result = await handler.Handle(
             new DeleteExerciseEntryCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
         ResultAssert.Failure(result);
+        Assert.Equal("Exercise.NotAccessible", result.Error.Code);
     }
 
     [Fact]
     public async Task DeleteExerciseEntry_WithNullUserId_ReturnsFailure() {
-        var handler = new DeleteExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
+        var handler = new DeleteExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository(), CreateCurrentUserAccessService());
 
         Result result = await handler.Handle(
             new DeleteExerciseEntryCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task DeleteExerciseEntry_WhenUserCannotAccess_ReturnsInvalidToken() {
+        var handler = new DeleteExerciseEntryCommandHandler(
+            new InMemoryExerciseEntryRepository(),
+            CreateCurrentUserAccessService(Errors.Authentication.InvalidToken));
+
+        Result result = await handler.Handle(
+            new DeleteExerciseEntryCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
+
+        ResultAssert.Failure(result, "Authentication.InvalidToken");
     }
 
     [Fact]
@@ -97,7 +124,7 @@ public class ExercisesFeatureTests {
         var repo = new InMemoryExerciseEntryRepository();
         repo.Seed(entry);
 
-        var handler = new UpdateExerciseEntryCommandHandler(repo);
+        var handler = new UpdateExerciseEntryCommandHandler(repo, CreateCurrentUserAccessService());
         Result<ExerciseEntryModel> result = await handler.Handle(
             new UpdateExerciseEntryCommand(userId.Value, entry.Id.Value, "Swimming", 45, CaloriesBurned: null, Name: null, ClearName: false, Notes: null, ClearNotes: false, Date: null),
             CancellationToken.None);
@@ -108,24 +135,38 @@ public class ExercisesFeatureTests {
 
     [Fact]
     public async Task UpdateExerciseEntry_WhenNotFound_ReturnsFailure() {
-        var handler = new UpdateExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
+        var handler = new UpdateExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository(), CreateCurrentUserAccessService());
 
         Result<ExerciseEntryModel> result = await handler.Handle(
             new UpdateExerciseEntryCommand(Guid.NewGuid(), Guid.NewGuid(), ExerciseType: null, DurationMinutes: null, CaloriesBurned: null, Name: null, ClearName: false, Notes: null, ClearNotes: false, Date: null),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
+        Assert.Equal("Exercise.NotAccessible", result.Error.Code);
     }
 
     [Fact]
     public async Task UpdateExerciseEntry_WithNullUserId_ReturnsFailure() {
-        var handler = new UpdateExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
+        var handler = new UpdateExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository(), CreateCurrentUserAccessService());
 
         Result<ExerciseEntryModel> result = await handler.Handle(
             new UpdateExerciseEntryCommand(UserId: null, Guid.NewGuid(), ExerciseType: null, DurationMinutes: null, CaloriesBurned: null, Name: null, ClearName: false, Notes: null, ClearNotes: false, Date: null),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task UpdateExerciseEntry_WhenUserCannotAccess_ReturnsInvalidToken() {
+        var handler = new UpdateExerciseEntryCommandHandler(
+            new InMemoryExerciseEntryRepository(),
+            CreateCurrentUserAccessService(Errors.Authentication.InvalidToken));
+
+        Result<ExerciseEntryModel> result = await handler.Handle(
+            new UpdateExerciseEntryCommand(Guid.NewGuid(), Guid.NewGuid(), ExerciseType: null, DurationMinutes: null, CaloriesBurned: null, Name: null, ClearName: false, Notes: null, ClearNotes: false, Date: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Authentication.InvalidToken");
     }
 
     [Fact]
@@ -207,5 +248,14 @@ public class ExercisesFeatureTests {
             IReadOnlyList<ExerciseEntry> entries = await GetByDateRangeAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
             return [.. entries.Select(entry => entry.ToModel())];
         }
+    }
+
+    private static ICurrentUserAccessService CreateCurrentUserAccessService(Error? accessError = null) =>
+        new StubCurrentUserAccessService(accessError);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubCurrentUserAccessService(Error? accessError) : ICurrentUserAccessService {
+        public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(accessError);
     }
 }

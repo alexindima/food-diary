@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.MealPlans.Models;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
 using FoodDiary.Application.MealPlans.Common;
 using FoodDiary.Application.MealPlans.Mappings;
@@ -65,7 +66,7 @@ public class MealPlansFeatureTests {
     [Fact]
     public async Task AdoptMealPlan_WhenPlanNotFound_ReturnsFailure() {
         var repo = new StubMealPlanRepository(plan: null);
-        var handler = new AdoptMealPlanCommandHandler(repo);
+        var handler = new AdoptMealPlanCommandHandler(repo, CreateCurrentUserAccessService());
 
         Result<MealPlanModel> result = await handler.Handle(
             new AdoptMealPlanCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
@@ -79,7 +80,7 @@ public class MealPlansFeatureTests {
         var userId = UserId.New();
         var plan = MealPlan.CreateForUser(userId, "My Plan", description: null, DietType.Balanced, 7, targetCaloriesPerDay: null);
         var repo = new StubMealPlanRepository(plan);
-        var handler = new AdoptMealPlanCommandHandler(repo);
+        var handler = new AdoptMealPlanCommandHandler(repo, CreateCurrentUserAccessService());
 
         Result<MealPlanModel> result = await handler.Handle(
             new AdoptMealPlanCommand(Guid.NewGuid(), plan.Id.Value), CancellationToken.None);
@@ -90,12 +91,24 @@ public class MealPlansFeatureTests {
 
     [Fact]
     public async Task AdoptMealPlan_WithNullUserId_ReturnsFailure() {
-        var handler = new AdoptMealPlanCommandHandler(new StubMealPlanRepository(plan: null));
+        var handler = new AdoptMealPlanCommandHandler(new StubMealPlanRepository(plan: null), CreateCurrentUserAccessService());
 
         Result<MealPlanModel> result = await handler.Handle(
             new AdoptMealPlanCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task AdoptMealPlan_WhenUserCannotAccess_ReturnsInvalidToken() {
+        var handler = new AdoptMealPlanCommandHandler(
+            new StubMealPlanRepository(plan: null),
+            CreateCurrentUserAccessService(Errors.Authentication.InvalidToken));
+
+        Result<MealPlanModel> result = await handler.Handle(
+            new AdoptMealPlanCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
+
+        ResultAssert.Failure(result, "Authentication.InvalidToken");
     }
 
     [Fact]
@@ -129,7 +142,10 @@ public class MealPlansFeatureTests {
         SetProperty(dinner, nameof(dinner.Recipe), recipe);
 
         var shoppingLists = new RecordingShoppingListRepository();
-        var handler = new GenerateShoppingListCommandHandler(new StubMealPlanRepository(plan), shoppingLists);
+        var handler = new GenerateShoppingListCommandHandler(
+            new StubMealPlanRepository(plan),
+            shoppingLists,
+            CreateCurrentUserAccessService());
 
         Result<ShoppingListModel> result = await handler.Handle(new GenerateShoppingListCommand(userId.Value, plan.Id.Value), CancellationToken.None);
 
@@ -148,7 +164,8 @@ public class MealPlansFeatureTests {
     public async Task GenerateShoppingList_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GenerateShoppingListCommandHandler(
             new StubMealPlanRepository(plan: null),
-            new RecordingShoppingListRepository());
+            new RecordingShoppingListRepository(),
+            CreateCurrentUserAccessService());
 
         Result<ShoppingListModel> result = await handler.Handle(
             new GenerateShoppingListCommand(Guid.Empty, Guid.NewGuid()),
@@ -162,7 +179,8 @@ public class MealPlansFeatureTests {
     public async Task GenerateShoppingList_WhenPlanMissing_ReturnsNotFound() {
         var handler = new GenerateShoppingListCommandHandler(
             new StubMealPlanRepository(plan: null),
-            new RecordingShoppingListRepository());
+            new RecordingShoppingListRepository(),
+            CreateCurrentUserAccessService());
         var planId = Guid.NewGuid();
 
         Result<ShoppingListModel> result = await handler.Handle(new GenerateShoppingListCommand(Guid.NewGuid(), planId), CancellationToken.None);
@@ -172,17 +190,34 @@ public class MealPlansFeatureTests {
     }
 
     [Fact]
-    public async Task GenerateShoppingList_WhenUserDoesNotOwnPrivatePlan_ReturnsNotFound() {
+    public async Task GenerateShoppingList_WhenUserDoesNotOwnPrivatePlan_ReturnsNotAccessible() {
         var ownerId = UserId.New();
         var plan = MealPlan.CreateForUser(ownerId, "Private plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         var shoppingLists = new RecordingShoppingListRepository();
-        var handler = new GenerateShoppingListCommandHandler(new StubMealPlanRepository(plan), shoppingLists);
+        var handler = new GenerateShoppingListCommandHandler(
+            new StubMealPlanRepository(plan),
+            shoppingLists,
+            CreateCurrentUserAccessService());
 
         Result<ShoppingListModel> result = await handler.Handle(new GenerateShoppingListCommand(Guid.NewGuid(), plan.Id.Value), CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
+        Assert.Equal("MealPlan.NotAccessible", result.Error.Code);
         Assert.Null(shoppingLists.Added);
+    }
+
+    [Fact]
+    public async Task GenerateShoppingList_WhenUserCannotAccess_ReturnsInvalidToken() {
+        var handler = new GenerateShoppingListCommandHandler(
+            new StubMealPlanRepository(plan: null),
+            new RecordingShoppingListRepository(),
+            CreateCurrentUserAccessService(Errors.Authentication.InvalidToken));
+
+        Result<ShoppingListModel> result = await handler.Handle(
+            new GenerateShoppingListCommand(Guid.NewGuid(), Guid.NewGuid()),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Authentication.InvalidToken");
     }
 
     [Fact]
@@ -205,7 +240,7 @@ public class MealPlansFeatureTests {
         var curated = MealPlan.CreateCurated("Starter plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         curated.AddDay(1).AddMeal(MealType.Breakfast, RecipeId.New(), servings: 1);
         var repository = new StubMealPlanRepository(curated);
-        var handler = new AdoptMealPlanCommandHandler(repository);
+        var handler = new AdoptMealPlanCommandHandler(repository, CreateCurrentUserAccessService());
 
         Result<MealPlanModel> result = await handler.Handle(new AdoptMealPlanCommand(userId.Value, curated.Id.Value), CancellationToken.None);
 
@@ -486,4 +521,13 @@ public class MealPlansFeatureTests {
     private static IMealPlanReadService CreateMealPlanReadService(
         IMealPlanReadModelRepository mealPlanRepository) =>
         new MealPlanReadService(mealPlanRepository);
+
+    private static ICurrentUserAccessService CreateCurrentUserAccessService(Error? accessError = null) =>
+        new StubCurrentUserAccessService(accessError);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubCurrentUserAccessService(Error? accessError) : ICurrentUserAccessService {
+        public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(accessError);
+    }
 }

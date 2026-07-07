@@ -8,6 +8,11 @@ public static class MealPlanErrors {
         $"Meal plan with ID {id} was not found.",
         Kind: ErrorKind.NotFound);
 
+    public static Error NotAccessible(Guid id) => new(
+        "MealPlan.NotAccessible",
+        $"Meal plan with ID {id} was not found or is not accessible.",
+        Kind: ErrorKind.NotFound);
+
     public static Error InvalidId => new(
         "MealPlan.InvalidId",
         "Meal plan ID is required.",

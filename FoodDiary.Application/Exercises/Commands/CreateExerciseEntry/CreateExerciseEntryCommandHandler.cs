@@ -2,22 +2,29 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Exercises.Mappings;
 using FoodDiary.Application.Exercises.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Exercises.Commands.CreateExerciseEntry;
 
-public sealed class CreateExerciseEntryCommandHandler(IExerciseEntryWriteRepository repository)
+public sealed class CreateExerciseEntryCommandHandler(
+    IExerciseEntryWriteRepository repository,
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<CreateExerciseEntryCommand, Result<ExerciseEntryModel>> {
     public async Task<Result<ExerciseEntryModel>> Handle(
         CreateExerciseEntryCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<ExerciseEntryModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<ExerciseEntryModel>(userIdResult);
         }
 
         if (!EnumValueParser.TryParse(command.ExerciseType, out ExerciseType exerciseType)) {

@@ -1120,6 +1120,39 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void MigratedCurrentUserScopedCommands_UseCurrentUserAccessResolver() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] migratedFiles = [
+            Path.Combine(applicationRoot, "Products", "Commands", "CreateProduct", "CreateProductValuePreparer.cs"),
+            Path.Combine(applicationRoot, "Products", "Commands", "DeleteProduct", "DeleteProductCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Products", "Commands", "DuplicateProduct", "DuplicateProductCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Products", "Commands", "UpdateProduct", "ProductUpdateValuePreparer.cs"),
+            Path.Combine(applicationRoot, "Recipes", "Commands", "CreateRecipe", "CreateRecipeValuePreparer.cs"),
+            Path.Combine(applicationRoot, "Recipes", "Commands", "DeleteRecipe", "DeleteRecipeCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Recipes", "Commands", "DuplicateRecipe", "DuplicateRecipeCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Recipes", "Commands", "UpdateRecipe", "UpdateRecipeValuePreparer.cs"),
+            Path.Combine(applicationRoot, "Exercises", "Commands", "CreateExerciseEntry", "CreateExerciseEntryCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Exercises", "Commands", "DeleteExerciseEntry", "DeleteExerciseEntryCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Exercises", "Commands", "UpdateExerciseEntry", "UpdateExerciseEntryCommandHandler.cs"),
+            Path.Combine(applicationRoot, "MealPlans", "Commands", "AdoptMealPlan", "AdoptMealPlanCommandHandler.cs"),
+            Path.Combine(applicationRoot, "MealPlans", "Commands", "GenerateShoppingList", "GenerateShoppingListCommandHandler.cs"),
+        ];
+
+        string[] directParseViolations = [
+            .. FindReferencesInFiles(root, migratedFiles, "UserIdParser.Parse(command.UserId)"),
+            .. FindReferencesInFiles(root, migratedFiles, "UserIdParser.Parse(request.UserId)"),
+        ];
+        string[] missingResolverViolations = [.. migratedFiles
+            .Where(path => !File.ReadAllText(path).Contains("CurrentUserAccessResolver.ResolveAsync", StringComparison.Ordinal))
+            .Select(path => Path.GetRelativePath(root, path))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(directParseViolations);
+        Assert.Empty(missingResolverViolations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullMealRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

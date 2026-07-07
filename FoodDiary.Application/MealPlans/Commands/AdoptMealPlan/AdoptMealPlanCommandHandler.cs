@@ -2,21 +2,28 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.MealPlans.Mappings;
 using FoodDiary.Application.MealPlans.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.MealPlans;
 
 namespace FoodDiary.Application.MealPlans.Commands.AdoptMealPlan;
 
-public sealed class AdoptMealPlanCommandHandler(IMealPlanWriteRepository mealPlanRepository)
+public sealed class AdoptMealPlanCommandHandler(
+    IMealPlanWriteRepository mealPlanRepository,
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<AdoptMealPlanCommand, Result<MealPlanModel>> {
     public async Task<Result<MealPlanModel>> Handle(
         AdoptMealPlanCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<MealPlanModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<MealPlanModel>(userIdResult);
         }
 
         Result<MealPlanId> planIdResult = RequiredIdParser.Parse(

@@ -8,6 +8,11 @@ public static class ExerciseErrors {
         $"Exercise entry with ID {id} was not found.",
         Kind: ErrorKind.NotFound);
 
+    public static Error NotAccessible(Guid id) => new(
+        "Exercise.NotAccessible",
+        $"Exercise entry with ID {id} was not found or is not accessible.",
+        Kind: ErrorKind.NotFound);
+
     public static Error InvalidDuration => new(
         "Exercise.InvalidDuration",
         "Exercise duration must be positive.",

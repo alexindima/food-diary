@@ -2,22 +2,29 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Exercises.Mappings;
 using FoodDiary.Application.Exercises.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Exercises.Commands.UpdateExerciseEntry;
 
-public sealed class UpdateExerciseEntryCommandHandler(IExerciseEntryWriteRepository repository)
+public sealed class UpdateExerciseEntryCommandHandler(
+    IExerciseEntryWriteRepository repository,
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpdateExerciseEntryCommand, Result<ExerciseEntryModel>> {
     public async Task<Result<ExerciseEntryModel>> Handle(
         UpdateExerciseEntryCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<ExerciseEntryModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<ExerciseEntryModel>(userIdResult);
         }
 
         Result<ExerciseEntryId> entryIdResult = RequiredIdParser.Parse(
@@ -32,7 +39,7 @@ public sealed class UpdateExerciseEntryCommandHandler(IExerciseEntryWriteReposit
         ExerciseEntryId entryId = entryIdResult.Value;
         ExerciseEntry? entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (entry is null) {
-            return Result.Failure<ExerciseEntryModel>(Errors.Exercise.NotFound(command.EntryId));
+            return Result.Failure<ExerciseEntryModel>(Errors.Exercise.NotAccessible(command.EntryId));
         }
 
         ExerciseType? exerciseType = null;

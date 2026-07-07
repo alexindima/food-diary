@@ -6,6 +6,8 @@ public static partial class Errors {
     public static class MealPlan {
         public static Error NotFound(Guid id) => MealPlanErrors.NotFound(id);
 
+        public static Error NotAccessible(Guid id) => MealPlanErrors.NotAccessible(id);
+
         public static Error InvalidId => MealPlanErrors.InvalidId;
 
         public static Error NotCurated => MealPlanErrors.NotCurated;
