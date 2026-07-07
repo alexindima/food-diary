@@ -6,40 +6,39 @@ using FoodDiary.Application.Products.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Commands.UpdateProduct;
+namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
-internal static class ProductUpdateValuePreparer {
-    public static async Task<Result<ProductUpdateValues>> PrepareAsync(
-        UpdateProductCommand command,
+internal static class CreateProductValuePreparer {
+    public static async Task<Result<CreateProductValues>> PrepareAsync(
+        CreateProductCommand command,
         ICurrentUserAccessService currentUserAccessService,
         IImageAssetAccessService imageAssetAccessService,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await ResolveUserIdAsync(command, currentUserAccessService, cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return Result.Failure<ProductUpdateValues>(userIdResult.Error);
+            return Result.Failure<CreateProductValues>(userIdResult.Error);
         }
 
         UserId userId = userIdResult.Value;
-        var productId = new ProductId(command.ProductId);
-        Result<MeasurementUnit?> unitResult = ProductCommandParsers.ParseOptionalBaseUnit(
+        Result<MeasurementUnit> baseUnitResult = ProductCommandParsers.ParseRequiredBaseUnit(
             command.BaseUnit,
             nameof(command.BaseUnit));
-        if (unitResult.IsFailure) {
-            return Result.Failure<ProductUpdateValues>(unitResult.Error);
+        if (baseUnitResult.IsFailure) {
+            return Result.Failure<CreateProductValues>(baseUnitResult.Error);
         }
 
-        Result<Visibility?> visibilityResult = ProductCommandParsers.ParseOptionalVisibility(
+        Result<Visibility> visibilityResult = ProductCommandParsers.ParseRequiredVisibility(
             command.Visibility,
             nameof(command.Visibility));
         if (visibilityResult.IsFailure) {
-            return Result.Failure<ProductUpdateValues>(visibilityResult.Error);
+            return Result.Failure<CreateProductValues>(visibilityResult.Error);
         }
 
-        Result<ProductType?> productTypeResult = ProductCommandParsers.ParseOptionalProductType(
+        Result<ProductType> productTypeResult = ProductCommandParsers.ParseRequiredProductType(
             command.ProductType,
             nameof(command.ProductType));
         if (productTypeResult.IsFailure) {
-            return Result.Failure<ProductUpdateValues>(productTypeResult.Error);
+            return Result.Failure<CreateProductValues>(productTypeResult.Error);
         }
 
         Result<ProductImageAssetResolution> imageAssetResult = await ProductImageAssetResolver.ResolveOptionalAsync(
@@ -50,33 +49,22 @@ internal static class ProductUpdateValuePreparer {
             imageAssetAccessService,
             cancellationToken).ConfigureAwait(false);
         if (imageAssetResult.IsFailure) {
-            return Result.Failure<ProductUpdateValues>(imageAssetResult.Error);
+            return Result.Failure<CreateProductValues>(imageAssetResult.Error);
         }
 
-        return Result.Success(new ProductUpdateValues(
+        return Result.Success(new CreateProductValues(
             userId,
-            productId,
-            unitResult.Value,
+            baseUnitResult.Value,
             visibilityResult.Value,
             productTypeResult.Value,
             imageAssetResult.Value.ImageAssetId,
-            imageAssetResult.Value.ImageUrl,
-            imageAssetResult.Value.HasResolvedImageAsset));
+            imageAssetResult.Value.ImageUrl));
     }
 
     private static async Task<Result<UserId>> ResolveUserIdAsync(
-        UpdateProductCommand command,
+        CreateProductCommand command,
         ICurrentUserAccessService currentUserAccessService,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<UserId>(Errors.Authentication.InvalidToken);
-        }
-
-        if (command.ProductId == Guid.Empty) {
-            return Result.Failure<UserId>(
-                Errors.Validation.Invalid(nameof(command.ProductId), "Product id must not be empty."));
-        }
-
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return userIdResult;
