@@ -21,7 +21,7 @@ public sealed class GenerateShoppingListCommandHandler(
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<ShoppingListModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<ShoppingListModel>(userIdResult);
         }
 
         var planId = new MealPlanId(command.PlanId);

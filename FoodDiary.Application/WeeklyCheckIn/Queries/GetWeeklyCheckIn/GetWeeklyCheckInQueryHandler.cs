@@ -18,7 +18,7 @@ public sealed class GetWeeklyCheckInQueryHandler(
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<WeeklyCheckInModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<WeeklyCheckInModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

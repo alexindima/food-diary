@@ -17,7 +17,7 @@ public sealed class GetWearableAuthUrlQueryHandler(
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Task.FromResult(Result.Failure<string>(userIdResult.Error));
+            return Task.FromResult(UserIdParser.ToFailure<string>(userIdResult));
         }
 
         Result<WearableProvider> providerResult = WearableProviderParser.Parse(query.Provider);

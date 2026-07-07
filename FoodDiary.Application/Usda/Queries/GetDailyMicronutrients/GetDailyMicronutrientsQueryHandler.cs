@@ -14,7 +14,7 @@ public sealed class GetDailyMicronutrientsQueryHandler(IUsdaDailyMicronutrientRe
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<DailyMicronutrientSummaryModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<DailyMicronutrientSummaryModel>(userIdResult);
         }
 
         DailyMicronutrientSummaryModel summary = await dailyMicronutrientReadService.GetDailySummaryAsync(

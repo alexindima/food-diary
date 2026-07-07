@@ -17,7 +17,7 @@ public sealed class DeleteRecipeCommentCommandHandler(
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure(userIdResult.Error);
+            return UserIdParser.ToFailure(userIdResult);
         }
 
         var recipeId = (RecipeId)command.RecipeId;

@@ -22,7 +22,7 @@ public sealed class CreateRecipeCommentCommandHandler(
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<RecipeCommentModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<RecipeCommentModel>(userIdResult);
         }
 
         var recipeId = (RecipeId)command.RecipeId;

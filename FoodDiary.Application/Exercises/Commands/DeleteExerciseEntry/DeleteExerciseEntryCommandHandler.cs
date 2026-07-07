@@ -14,7 +14,7 @@ public sealed class DeleteExerciseEntryCommandHandler(IExerciseEntryWriteReposit
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure(userIdResult.Error);
+            return UserIdParser.ToFailure(userIdResult);
         }
 
         var entryId = new ExerciseEntryId(command.EntryId);

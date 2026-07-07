@@ -14,7 +14,7 @@ public sealed class GetRecipeLikeStatusQueryHandler(IRecipeLikeReadService likeR
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<RecipeLikeStatusModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<RecipeLikeStatusModel>(userIdResult);
         }
 
         var recipeId = (RecipeId)query.RecipeId;

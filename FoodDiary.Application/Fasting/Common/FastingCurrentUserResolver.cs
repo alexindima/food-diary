@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Users.Common;
@@ -16,10 +17,10 @@ internal static class FastingCurrentUserResolver {
             currentUserAccessService,
             cancellationToken).ConfigureAwait(false);
         return userIdResult.IsFailure
-            ? Result.Failure<UserId>(userIdResult.Error)
+            ? UserIdParser.ToFailure<UserId>(userIdResult)
             : userIdResult;
     }
 
     public static Result<FastingSessionModel> ToSessionFailure(Result<UserId> userIdResult) =>
-        Result.Failure<FastingSessionModel>(userIdResult.Error);
+        UserIdParser.ToFailure<FastingSessionModel>(userIdResult);
 }

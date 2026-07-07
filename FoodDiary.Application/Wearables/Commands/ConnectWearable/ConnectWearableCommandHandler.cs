@@ -20,7 +20,7 @@ public sealed class ConnectWearableCommandHandler(
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<WearableConnectionModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<WearableConnectionModel>(userIdResult);
         }
 
         Result<WearableProvider> providerResult = WearableProviderParser.Parse(command.Provider);

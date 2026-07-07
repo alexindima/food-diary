@@ -10,6 +10,9 @@ public static class UserIdParser {
             : Result.Success(new UserId(value.Value));
     }
 
+    public static Result ToFailure(Result<UserId> userIdResult) =>
+        UserIdParser.ToFailure(userIdResult);
+
     public static Result<T> ToFailure<T>(Result<UserId> userIdResult) =>
-        Result.Failure<T>(userIdResult.Error);
+        UserIdParser.ToFailure<T>(userIdResult);
 }

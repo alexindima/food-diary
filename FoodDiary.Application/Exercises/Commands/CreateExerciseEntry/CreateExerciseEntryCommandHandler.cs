@@ -17,7 +17,7 @@ public sealed class CreateExerciseEntryCommandHandler(IExerciseEntryWriteReposit
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<ExerciseEntryModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<ExerciseEntryModel>(userIdResult);
         }
 
         if (!EnumValueParser.TryParse(command.ExerciseType, out ExerciseType exerciseType)) {

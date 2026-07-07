@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -24,7 +25,7 @@ public sealed class AddFavoriteProductCommandHandler(
             .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken)
             .ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return Result.Failure<FavoriteProductModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<FavoriteProductModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

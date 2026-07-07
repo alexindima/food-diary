@@ -25,7 +25,7 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
     public async Task<Result> Handle(AcceptInvitationForCurrentUserCommand command, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure(userIdResult.Error);
+            return UserIdParser.ToFailure(userIdResult);
         }
 
         UserId dietologistUserId = userIdResult.Value;

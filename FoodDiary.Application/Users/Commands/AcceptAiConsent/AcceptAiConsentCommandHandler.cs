@@ -12,7 +12,7 @@ public sealed class AcceptAiConsentCommandHandler(IUserContextService userContex
     public async Task<Result> Handle(AcceptAiConsentCommand command, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure(userIdResult.Error);
+            return UserIdParser.ToFailure(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

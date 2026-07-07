@@ -20,7 +20,7 @@ public sealed class SyncWearableDataCommandHandler(
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<WearableDailySummaryModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<WearableDailySummaryModel>(userIdResult);
         }
 
         Result<WearableProvider> providerResult = WearableProviderParser.Parse(command.Provider);

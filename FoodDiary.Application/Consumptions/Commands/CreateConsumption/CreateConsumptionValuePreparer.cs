@@ -20,7 +20,7 @@ internal static class CreateConsumptionValuePreparer {
             currentUserAccessService,
             cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return Result.Failure<CreateConsumptionValues>(userIdResult.Error);
+            return UserIdParser.ToFailure<CreateConsumptionValues>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

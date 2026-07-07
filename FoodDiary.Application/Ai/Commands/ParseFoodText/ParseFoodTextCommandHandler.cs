@@ -17,7 +17,7 @@ public sealed class ParseFoodTextCommandHandler(
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<FoodVisionModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<FoodVisionModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

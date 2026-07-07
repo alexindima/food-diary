@@ -14,7 +14,7 @@ public sealed class GetWearableDailySummaryQueryHandler(IWearableReadService wea
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<WearableDailySummaryModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<WearableDailySummaryModel>(userIdResult);
         }
 
         WearableDailySummaryModel summary = await wearableReadService

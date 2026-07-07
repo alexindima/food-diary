@@ -19,7 +19,7 @@ public sealed class ToggleRecipeLikeCommandHandler(
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<RecipeLikeStatusModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<RecipeLikeStatusModel>(userIdResult);
         }
 
         var recipeId = (RecipeId)command.RecipeId;

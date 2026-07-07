@@ -16,7 +16,7 @@ public sealed class DuplicateProductCommandHandler(
     public async Task<Result<ProductModel>> Handle(DuplicateProductCommand command, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<ProductModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<ProductModel>(userIdResult);
         }
 
         if (command.ProductId == Guid.Empty) {

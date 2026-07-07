@@ -16,7 +16,7 @@ public sealed class AdoptMealPlanCommandHandler(IMealPlanWriteRepository mealPla
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<MealPlanModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<MealPlanModel>(userIdResult);
         }
 
         var planId = new MealPlanId(command.PlanId);

@@ -16,7 +16,7 @@ public sealed class CreateContentReportCommandHandler(IContentReportWriteReposit
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<ContentReportModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<ContentReportModel>(userIdResult);
         }
 
         Result<ReportTargetType> targetTypeResult = EnumValueParser.ParseRequired<ReportTargetType>(

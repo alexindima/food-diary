@@ -23,7 +23,7 @@ public sealed class DeclineInvitationForCurrentUserCommandHandler(
     public async Task<Result> Handle(DeclineInvitationForCurrentUserCommand command, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure(userIdResult.Error);
+            return UserIdParser.ToFailure(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

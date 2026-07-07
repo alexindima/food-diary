@@ -18,7 +18,7 @@ public sealed class DuplicateRecipeCommandHandler(
     public async Task<Result<RecipeModel>> Handle(DuplicateRecipeCommand command, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<RecipeModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<RecipeModel>(userIdResult);
         }
 
         if (command.RecipeId == Guid.Empty) {

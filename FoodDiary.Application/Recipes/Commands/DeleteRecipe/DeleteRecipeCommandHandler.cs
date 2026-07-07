@@ -16,7 +16,7 @@ public sealed class DeleteRecipeCommandHandler(
     public async Task<Result> Handle(DeleteRecipeCommand command, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure(userIdResult.Error);
+            return UserIdParser.ToFailure(userIdResult);
         }
 
         if (command.RecipeId == Guid.Empty) {

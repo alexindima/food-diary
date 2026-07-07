@@ -20,7 +20,7 @@ internal static class CreateRecipeValuePreparer {
             currentUserAccessService,
             cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return Result.Failure<CreateRecipeValues>(userIdResult.Error);
+            return UserIdParser.ToFailure<CreateRecipeValues>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

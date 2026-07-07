@@ -14,7 +14,7 @@ public sealed class GetLessonByIdQueryHandler(ILessonReadService lessonReadServi
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<LessonDetailModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<LessonDetailModel>(userIdResult);
         }
 
         var lessonId = new NutritionLessonId(query.LessonId);

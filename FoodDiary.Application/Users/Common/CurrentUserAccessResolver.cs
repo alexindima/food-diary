@@ -36,5 +36,5 @@ internal static class CurrentUserAccessResolver {
     }
 
     public static Result<T> ToFailure<T>(Result<UserId> userIdResult) =>
-        Result.Failure<T>(userIdResult.Error);
+        UserIdParser.ToFailure<T>(userIdResult);
 }

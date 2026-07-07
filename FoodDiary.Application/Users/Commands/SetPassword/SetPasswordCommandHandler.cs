@@ -15,7 +15,7 @@ public sealed class SetPasswordCommandHandler(
     public async Task<Result> Handle(SetPasswordCommand command, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure(userIdResult.Error);
+            return UserIdParser.ToFailure(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

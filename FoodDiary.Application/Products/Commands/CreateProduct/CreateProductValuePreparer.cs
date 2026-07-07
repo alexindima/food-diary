@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Products.Common;
@@ -16,7 +17,7 @@ internal static class CreateProductValuePreparer {
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await ResolveUserIdAsync(command, currentUserAccessService, cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return Result.Failure<CreateProductValues>(userIdResult.Error);
+            return UserIdParser.ToFailure<CreateProductValues>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

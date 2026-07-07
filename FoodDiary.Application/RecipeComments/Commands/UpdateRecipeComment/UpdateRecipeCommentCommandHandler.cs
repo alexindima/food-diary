@@ -15,7 +15,7 @@ public sealed class UpdateRecipeCommentCommandHandler(IRecipeCommentWriteReposit
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<RecipeCommentModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<RecipeCommentModel>(userIdResult);
         }
 
         var commentId = (RecipeCommentId)command.CommentId;

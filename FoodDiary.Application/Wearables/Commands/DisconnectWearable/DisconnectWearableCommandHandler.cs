@@ -16,7 +16,7 @@ public sealed class DisconnectWearableCommandHandler(IWearableConnectionWriteRep
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure(userIdResult.Error);
+            return UserIdParser.ToFailure(userIdResult);
         }
 
         Result<WearableProvider> providerResult = WearableProviderParser.Parse(command.Provider);

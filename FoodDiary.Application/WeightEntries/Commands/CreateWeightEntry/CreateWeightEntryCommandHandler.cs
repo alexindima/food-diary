@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
@@ -23,7 +24,7 @@ public sealed class CreateWeightEntryCommandHandler(
             currentUserAccessService,
             cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return Result.Failure<WeightEntryModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<WeightEntryModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

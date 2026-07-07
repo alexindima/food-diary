@@ -51,7 +51,7 @@ public sealed class RepeatMealCommandHandler(
             currentUserAccessService,
             cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return Result.Failure<RepeatMealValues>(userIdResult.Error);
+            return UserIdParser.ToFailure<RepeatMealValues>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

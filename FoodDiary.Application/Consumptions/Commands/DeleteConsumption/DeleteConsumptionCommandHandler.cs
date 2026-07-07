@@ -14,7 +14,7 @@ public sealed class DeleteConsumptionCommandHandler(
     public async Task<Result> Handle(DeleteConsumptionCommand command, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure(userIdResult.Error);
+            return UserIdParser.ToFailure(userIdResult);
         }
 
         if (command.ConsumptionId == Guid.Empty) {

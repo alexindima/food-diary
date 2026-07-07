@@ -33,7 +33,7 @@ internal static class UpdateRecipeValuePreparer {
             currentUserAccessService,
             cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return Result.Failure<UpdateRecipeValues>(userIdResult.Error);
+            return UserIdParser.ToFailure<UpdateRecipeValues>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

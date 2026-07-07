@@ -28,7 +28,7 @@ internal static class UpdateConsumptionValuePreparer {
             currentUserAccessService,
             cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return Result.Failure<UpdateConsumptionValues>(userIdResult.Error);
+            return UserIdParser.ToFailure<UpdateConsumptionValues>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

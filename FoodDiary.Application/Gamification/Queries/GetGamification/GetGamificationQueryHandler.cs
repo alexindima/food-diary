@@ -14,7 +14,7 @@ public sealed class GetGamificationQueryHandler(IGamificationReadService readSer
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<GamificationModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<GamificationModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

@@ -18,7 +18,7 @@ public sealed class GetHydrationDailyTotalQueryHandler(
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<HydrationDailyModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<HydrationDailyModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

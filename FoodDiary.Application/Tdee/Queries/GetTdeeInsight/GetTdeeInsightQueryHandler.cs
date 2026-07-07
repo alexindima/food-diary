@@ -28,7 +28,7 @@ public sealed class GetTdeeInsightQueryHandler(
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<TdeeInsightModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<TdeeInsightModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

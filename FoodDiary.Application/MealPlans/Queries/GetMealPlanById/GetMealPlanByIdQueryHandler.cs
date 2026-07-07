@@ -14,7 +14,7 @@ public sealed class GetMealPlanByIdQueryHandler(IMealPlanReadService mealPlanRea
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<MealPlanModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<MealPlanModel>(userIdResult);
         }
 
         var planId = new MealPlanId(query.PlanId);
