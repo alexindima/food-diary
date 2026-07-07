@@ -37,6 +37,22 @@ public sealed class HostCompositionBoundaryTests {
     }
 
     [Fact]
+    public void PrimaryWebApiHost_SourceFiles_AreKeptOutOfProjectRootExceptProgram() {
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string hostRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api");
+        string[] allowedRootFiles = [
+            "Program.cs",
+        ];
+
+        string[] unexpectedRootFiles = [.. Directory.GetFiles(hostRoot, "*.cs", SearchOption.TopDirectoryOnly)
+            .Where(path => !allowedRootFiles.Contains(Path.GetFileName(path), StringComparer.Ordinal))
+            .Select(path => Path.GetRelativePath(root, path))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(unexpectedRootFiles);
+    }
+
+    [Fact]
     public void PrimaryWebApiHost_DoesNotDeclareFeatureControllersOrTransportModels() {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string hostRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api");
