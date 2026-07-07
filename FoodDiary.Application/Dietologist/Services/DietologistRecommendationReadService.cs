@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Users.Common;
@@ -38,7 +39,14 @@ public sealed class DietologistRecommendationReadService(
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<RecommendationModel>>(dietologistUserIdResult);
         }
 
-        var client = new UserId(clientUserId);
+        Result<UserId> clientResult = UserIdParser.Parse(
+            clientUserId,
+            Errors.Validation.Invalid(nameof(clientUserId), "Client user id must not be empty."));
+        if (clientResult.IsFailure) {
+            return UserIdParser.ToFailure<IReadOnlyList<RecommendationModel>>(clientResult);
+        }
+
+        UserId client = clientResult.Value;
         Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(
             invitationRepository, dietologistUserId, client, cancellationToken).ConfigureAwait(false);
 

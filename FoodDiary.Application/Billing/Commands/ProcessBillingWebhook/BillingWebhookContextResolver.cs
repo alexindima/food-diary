@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Billing.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.ValueObjects.Ids;
 using User = FoodDiary.Domain.Entities.Users.User;
@@ -69,10 +70,17 @@ public sealed class BillingWebhookContextResolver(
             return await billingUserContextService.GetUserIncludingDeletedAsync(subscription.UserId, cancellationToken).ConfigureAwait(false);
         }
 
-        if (!webhookUserId.HasValue || webhookUserId == Guid.Empty) {
+        if (!webhookUserId.HasValue) {
             return null;
         }
 
-        return await billingUserContextService.GetUserIncludingDeletedAsync(new UserId(webhookUserId.Value), cancellationToken).ConfigureAwait(false);
+        Result<UserId> webhookUserIdResult = UserIdParser.Parse(
+            webhookUserId.Value,
+            Errors.Billing.WebhookValidationFailed("Webhook user could not be resolved."));
+        if (webhookUserIdResult.IsFailure) {
+            return null;
+        }
+
+        return await billingUserContextService.GetUserIncludingDeletedAsync(webhookUserIdResult.Value, cancellationToken).ConfigureAwait(false);
     }
 }

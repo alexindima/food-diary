@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Dietologist.Common;
@@ -33,7 +34,14 @@ public sealed class DietologistClientReadService(
             return CurrentUserAccessResolver.ToFailure<DashboardSnapshotModel>(dietologistUserIdResult);
         }
 
-        var client = new UserId(clientUserId);
+        Result<UserId> clientResult = UserIdParser.Parse(
+            clientUserId,
+            Errors.Validation.Invalid(nameof(clientUserId), "Client user id must not be empty."));
+        if (clientResult.IsFailure) {
+            return UserIdParser.ToFailure<DashboardSnapshotModel>(clientResult);
+        }
+
+        UserId client = clientResult.Value;
         Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(
             invitationRepository, dietologistUserId, client, cancellationToken).ConfigureAwait(false);
 
@@ -86,7 +94,14 @@ public sealed class DietologistClientReadService(
             return Result.Failure<UserModel>(dietologistResult.Error);
         }
 
-        var client = new UserId(clientUserId);
+        Result<UserId> clientResult = UserIdParser.Parse(
+            clientUserId,
+            Errors.Validation.Invalid(nameof(clientUserId), "Client user id must not be empty."));
+        if (clientResult.IsFailure) {
+            return UserIdParser.ToFailure<UserModel>(clientResult);
+        }
+
+        UserId client = clientResult.Value;
         Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(
             invitationRepository, dietologistUserId, client, cancellationToken).ConfigureAwait(false);
 

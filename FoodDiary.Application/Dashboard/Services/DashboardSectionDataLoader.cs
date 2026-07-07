@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Common.Time;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 using FoodDiary.Application.DailyAdvices.Models;
@@ -33,9 +34,11 @@ internal sealed class DashboardSectionDataLoader(
     public async Task<Result<DashboardBuildContext>> CreateBuildContextAsync(
         DashboardSnapshotRequest request,
         CancellationToken cancellationToken) {
-        if (request.UserId == Guid.Empty) {
-            return Result.Failure<DashboardBuildContext>(
-                Errors.Validation.Invalid(nameof(request.UserId), "User id must not be empty."));
+        Result<UserId> userIdResult = UserIdParser.Parse(
+            request.UserId,
+            Errors.Validation.Invalid(nameof(request.UserId), "User id must not be empty."));
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<DashboardBuildContext>(userIdResult);
         }
 
         DateTime dayStart = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.Date);
@@ -45,7 +48,7 @@ internal sealed class DashboardSectionDataLoader(
                 Errors.Validation.Invalid(nameof(request.DateTo), "DateTo must be later than or equal to Date."));
         }
 
-        var userId = new UserId(request.UserId);
+        UserId userId = userIdResult.Value;
         Result<DashboardUserContextModel> userResult = await dashboardUserContextService.GetAccessibleDashboardUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure<DashboardBuildContext>(userResult.Error);

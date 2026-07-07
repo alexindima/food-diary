@@ -79,7 +79,7 @@ public sealed class UpdateAdminUserCommandHandler(
 
         auditLogger.Log(
             "admin.user.update",
-            new UserId(command.UserId),
+            userId,
             "User",
             command.UserId.ToString(),
             $"roles={command.Roles?.Count.ToString() ?? "unchanged"} isActive={command.IsActive?.ToString() ?? "unchanged"}");

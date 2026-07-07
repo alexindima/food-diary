@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Admin.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -35,12 +36,14 @@ public sealed class AdminAuditReadService(
         Guid userId,
         int limit,
         CancellationToken cancellationToken) {
-        if (userId == Guid.Empty) {
-            return Result.Failure<IReadOnlyList<AdminUserRoleAuditEventReadModel>>(
-                Errors.Validation.Invalid(nameof(userId), "User id must not be empty."));
+        Result<UserId> userIdResult = UserIdParser.Parse(
+            userId,
+            Errors.Validation.Invalid(nameof(userId), "User id must not be empty."));
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<IReadOnlyList<AdminUserRoleAuditEventReadModel>>(userIdResult);
         }
 
-        bool userExists = await userReadService.ExistsIncludingDeletedAsync(new UserId(userId), cancellationToken).ConfigureAwait(false);
+        bool userExists = await userReadService.ExistsIncludingDeletedAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
         if (!userExists) {
             return Result.Failure<IReadOnlyList<AdminUserRoleAuditEventReadModel>>(Errors.User.NotFound(userId));
         }

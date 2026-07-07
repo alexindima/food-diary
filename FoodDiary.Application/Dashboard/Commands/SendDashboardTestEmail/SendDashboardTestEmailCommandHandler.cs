@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
@@ -13,8 +14,15 @@ public sealed class SendDashboardTestEmailCommandHandler(
     IEmailSender emailSender,
     ILogger<SendDashboardTestEmailCommandHandler> logger) : ICommandHandler<SendDashboardTestEmailCommand, Result> {
     public async Task<Result> Handle(SendDashboardTestEmailCommand command, CancellationToken cancellationToken) {
+        Result<UserId> userIdResult = UserIdParser.Parse(
+            command.UserId,
+            Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure(userIdResult);
+        }
+
         Result<User> userResult = await dashboardUserContextService
-            .GetAccessibleUserAsync(new UserId(command.UserId), cancellationToken)
+            .GetAccessibleUserAsync(userIdResult.Value, cancellationToken)
             .ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);
