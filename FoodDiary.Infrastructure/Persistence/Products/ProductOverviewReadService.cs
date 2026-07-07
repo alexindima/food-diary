@@ -24,35 +24,10 @@ internal sealed class ProductOverviewReadService(FoodDiaryDbContext context) : I
         IQueryable<Product> query = ApplyFilters(CreateBaseQuery(userId, includePublic), filters);
 
         int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        List<ProductOverviewReadRow> rows = await query
-            .OrderByDescending(p => p.CreatedOnUtc)
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .Select(p => new ProductOverviewReadRow(
-                p.Id,
-                p.UserId,
-                p.Barcode,
-                p.Name,
-                p.Brand,
-                p.ProductType,
-                p.Category,
-                p.Description,
-                p.Comment,
-                p.ImageUrl,
-                p.ImageAssetId,
-                p.BaseUnit,
-                p.BaseAmount,
-                p.DefaultPortionAmount,
-                p.CaloriesPerBase,
-                p.ProteinsPerBase,
-                p.FatsPerBase,
-                p.CarbsPerBase,
-                p.FiberPerBase,
-                p.AlcoholPerBase,
-                p.MealItems.Count + p.RecipeIngredients.Count,
-                p.Visibility,
-                p.CreatedOnUtc,
-                p.UsdaFdcId))
+        List<ProductOverviewReadRow> rows = await ProjectRows(query
+                .OrderByDescending(p => p.CreatedOnUtc)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (rows.ConvertAll(row => ToReadItem(row, userId)), totalItems);
@@ -68,33 +43,8 @@ internal sealed class ProductOverviewReadService(FoodDiaryDbContext context) : I
             return new Dictionary<ProductId, ProductOverviewReadItem>();
         }
 
-        List<ProductOverviewReadRow> rows = await CreateBaseQuery(userId, includePublic)
-            .Where(p => productIds.Contains(p.Id))
-            .Select(p => new ProductOverviewReadRow(
-                p.Id,
-                p.UserId,
-                p.Barcode,
-                p.Name,
-                p.Brand,
-                p.ProductType,
-                p.Category,
-                p.Description,
-                p.Comment,
-                p.ImageUrl,
-                p.ImageAssetId,
-                p.BaseUnit,
-                p.BaseAmount,
-                p.DefaultPortionAmount,
-                p.CaloriesPerBase,
-                p.ProteinsPerBase,
-                p.FatsPerBase,
-                p.CarbsPerBase,
-                p.FiberPerBase,
-                p.AlcoholPerBase,
-                p.MealItems.Count + p.RecipeIngredients.Count,
-                p.Visibility,
-                p.CreatedOnUtc,
-                p.UsdaFdcId))
+        List<ProductOverviewReadRow> rows = await ProjectRows(CreateBaseQuery(userId, includePublic)
+                .Where(p => productIds.Contains(p.Id)))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return rows.ToDictionary(row => row.Id, row => ToReadItem(row, userId));
@@ -137,6 +87,33 @@ internal sealed class ProductOverviewReadService(FoodDiaryDbContext context) : I
 
         return query;
     }
+
+    private static IQueryable<ProductOverviewReadRow> ProjectRows(IQueryable<Product> query) =>
+        query.Select(product => new ProductOverviewReadRow(
+            product.Id,
+            product.UserId,
+            product.Barcode,
+            product.Name,
+            product.Brand,
+            product.ProductType,
+            product.Category,
+            product.Description,
+            product.Comment,
+            product.ImageUrl,
+            product.ImageAssetId,
+            product.BaseUnit,
+            product.BaseAmount,
+            product.DefaultPortionAmount,
+            product.CaloriesPerBase,
+            product.ProteinsPerBase,
+            product.FatsPerBase,
+            product.CarbsPerBase,
+            product.FiberPerBase,
+            product.AlcoholPerBase,
+            product.MealItems.Count + product.RecipeIngredients.Count,
+            product.Visibility,
+            product.CreatedOnUtc,
+            product.UsdaFdcId));
 
     private static ProductOverviewReadItem ToReadItem(ProductOverviewReadRow row, UserId currentUserId) {
         var quality = FoodQualityScore.Calculate(

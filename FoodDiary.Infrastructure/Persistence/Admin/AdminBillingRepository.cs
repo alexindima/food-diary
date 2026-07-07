@@ -33,7 +33,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
         }
 
         if (!string.IsNullOrWhiteSpace(filter.Search)) {
-            string term = $"%{EscapeLikePattern(filter.Search)}%";
+            string term = BuildSearchPattern(filter.Search);
             query = query.Where(item =>
                 EF.Functions.ILike(item.user.Email, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.subscription.ExternalCustomerId, term, LikeEscapeCharacter) ||
@@ -44,7 +44,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
         int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         List<AdminBillingSubscriptionReadModel> items = await query
             .OrderByDescending(item => item.subscription.CreatedOnUtc)
-            .Skip((filter.Page - 1) * filter.Limit)
+            .Skip(GetSkipCount(filter))
             .Take(filter.Limit)
             .Select(item => new AdminBillingSubscriptionReadModel(
                 item.subscription.Id,
@@ -93,7 +93,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
             query = query.Where(item => item.payment.CreatedOnUtc <= filter.ToUtc.Value);
         }
         if (!string.IsNullOrWhiteSpace(filter.Search)) {
-            string term = $"%{EscapeLikePattern(filter.Search)}%";
+            string term = BuildSearchPattern(filter.Search);
             query = query.Where(item =>
                 EF.Functions.ILike(item.user.Email, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.payment.ExternalPaymentId, term, LikeEscapeCharacter) ||
@@ -103,7 +103,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
         int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         List<AdminBillingPaymentReadModel> items = await query
             .OrderByDescending(item => item.payment.CreatedOnUtc)
-            .Skip((filter.Page - 1) * filter.Limit)
+            .Skip(GetSkipCount(filter))
             .Take(filter.Limit)
             .Select(item => new AdminBillingPaymentReadModel(
                 item.payment.Id,
@@ -153,7 +153,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
         }
 
         if (!string.IsNullOrWhiteSpace(filter.Search)) {
-            string term = $"%{EscapeLikePattern(filter.Search)}%";
+            string term = BuildSearchPattern(filter.Search);
             query = query.Where(webhookEvent =>
                 EF.Functions.ILike(webhookEvent.EventId, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(webhookEvent.EventType, term, LikeEscapeCharacter) ||
@@ -163,7 +163,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
         int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         List<AdminBillingWebhookEventReadModel> items = await query
             .OrderByDescending(webhookEvent => webhookEvent.ProcessedAtUtc)
-            .Skip((filter.Page - 1) * filter.Limit)
+            .Skip(GetSkipCount(filter))
             .Take(filter.Limit)
             .Select(webhookEvent => new AdminBillingWebhookEventReadModel(
                 webhookEvent.Id,
@@ -181,6 +181,12 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
 
         return (items, total);
     }
+
+    private static int GetSkipCount(AdminBillingListFilter filter) =>
+        (filter.Page - 1) * filter.Limit;
+
+    private static string BuildSearchPattern(string value) =>
+        $"%{EscapeLikePattern(value)}%";
 
     private static string EscapeLikePattern(string value) {
         return value
