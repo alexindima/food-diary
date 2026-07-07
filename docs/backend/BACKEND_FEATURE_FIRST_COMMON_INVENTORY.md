@@ -26,6 +26,7 @@ Feature or domain-purpose helpers should not live under root `Common`. `ManualNu
 - `Results`: `Result`, `Error`, error kind mapping, and the existing error facade.
 
 Feature-specific repository and service contracts should continue to live under feature folders, usually `Feature/Common`. Existing architecture tests already prevent regrowth of root `Common/Interfaces/Services` and `Common/Interfaces/Persistence`.
+Feature-specific error factories should move incrementally to feature folders while preserving the existing `Errors.<Feature>` facade where call-site compatibility matters. Product errors now live in `FoodDiary.Application.Abstractions/Products/Common/ProductErrors.cs`, with `Errors.Product` delegating to that feature-owned implementation.
 
 ## Guardrails
 

@@ -453,6 +453,37 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ProductErrorsFacade_DelegatesToFeatureOwnedErrorFactories() {
+        string root = GetRepositoryRoot();
+        string facadePath = Path.Combine(
+            root,
+            "FoodDiary.Application.Abstractions",
+            "Common",
+            "Abstractions",
+            "Results",
+            "Errors.Product.cs");
+        string featureErrorsPath = Path.Combine(
+            root,
+            "FoodDiary.Application.Abstractions",
+            "Products",
+            "Common",
+            "ProductErrors.cs");
+
+        string facadeSource = File.ReadAllText(facadePath);
+        string featureErrorsSource = File.ReadAllText(featureErrorsPath);
+
+        Assert.Contains("ProductErrors.", facadeSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("Product.NotFound", facadeSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("Product.NotAccessible", facadeSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("Product.AlreadyExists", facadeSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("Product.InvalidData", facadeSource, StringComparison.Ordinal);
+        Assert.Contains("Product.NotFound", featureErrorsSource, StringComparison.Ordinal);
+        Assert.Contains("Product.NotAccessible", featureErrorsSource, StringComparison.Ordinal);
+        Assert.Contains("Product.AlreadyExists", featureErrorsSource, StringComparison.Ordinal);
+        Assert.Contains("Product.InvalidData", featureErrorsSource, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullProductRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
