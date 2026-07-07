@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -11,11 +12,12 @@ public sealed class GetRecentRecipesQueryHandler(IRecentRecipeReadService recent
     public async Task<Result<IReadOnlyList<RecipeModel>>> Handle(
         GetRecentRecipesQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<IReadOnlyList<RecipeModel>>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<IReadOnlyList<RecipeModel>>(userIdResult);
         }
 
-        var userId = new UserId(query.UserId!.Value);
+        UserId userId = userIdResult.Value;
         int recentLimit = Math.Clamp(query.Limit, 1, 50);
 
         IReadOnlyList<RecipeModel> response = await recentRecipeReadService.GetRecentAsync(
