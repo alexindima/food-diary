@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -11,11 +12,12 @@ public sealed class GetInvitationForCurrentUserQueryHandler(IDietologistInvitati
     public async Task<Result<DietologistInvitationForCurrentUserModel>> Handle(
         GetInvitationForCurrentUserQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<DietologistInvitationForCurrentUserModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<DietologistInvitationForCurrentUserModel>(userIdResult);
         }
 
-        var userId = new UserId(query.UserId!.Value);
+        UserId userId = userIdResult.Value;
         return await readService.GetForCurrentUserAsync(userId, query.InvitationId, cancellationToken).ConfigureAwait(false);
     }
 }

@@ -62,11 +62,12 @@ public sealed class UpdateUserCommandHandler(
     private async Task<Result<UpdateUserValues>> PrepareUpdateValuesAsync(
         UpdateUserCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<UpdateUserValues>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<UpdateUserValues>(userIdResult);
         }
 
-        var userId = new UserId(command.UserId!.Value);
+        UserId userId = userIdResult.Value;
         Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure<UpdateUserValues>(userResult.Error);

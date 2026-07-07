@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -20,11 +21,12 @@ public sealed class DeclineInvitationForCurrentUserCommandHandler(
     IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<DeclineInvitationForCurrentUserCommand, Result> {
     public async Task<Result> Handle(DeclineInvitationForCurrentUserCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        if (userIdResult.IsFailure) {
+            return Result.Failure(userIdResult.Error);
         }
 
-        var userId = new UserId(command.UserId!.Value);
+        UserId userId = userIdResult.Value;
         Result<User> userResult = await dietologistUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);

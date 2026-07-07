@@ -11,7 +11,7 @@ public sealed class GetUserGoalsQueryHandler(IUserProfileReadService userProfile
     public async Task<Result<GoalsModel>> Handle(GetUserGoalsQuery query, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<GoalsModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<GoalsModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

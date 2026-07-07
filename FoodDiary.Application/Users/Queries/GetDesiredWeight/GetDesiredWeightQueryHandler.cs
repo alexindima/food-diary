@@ -14,7 +14,7 @@ public sealed class GetDesiredWeightQueryHandler(IUserProfileReadService userPro
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<UserDesiredWeightModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<UserDesiredWeightModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

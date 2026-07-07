@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Dietologist.Models;
@@ -25,11 +26,12 @@ public sealed class CreateRecommendationCommandHandler(
     : ICommandHandler<CreateRecommendationCommand, Result<RecommendationModel>> {
     public async Task<Result<RecommendationModel>> Handle(
         CreateRecommendationCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<RecommendationModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<RecommendationModel>(userIdResult);
         }
 
-        var dietologistUserId = new UserId(command.UserId!.Value);
+        UserId dietologistUserId = userIdResult.Value;
         Result<User> dietologistResult = await dietologistUserContextService.GetAccessibleUserAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
         if (dietologistResult.IsFailure) {
             return Result.Failure<RecommendationModel>(dietologistResult.Error);

@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -12,11 +13,12 @@ public sealed class GetNotificationsQueryHandler(
     : IQueryHandler<GetNotificationsQuery, Result<IReadOnlyList<NotificationModel>>> {
     public async Task<Result<IReadOnlyList<NotificationModel>>> Handle(
         GetNotificationsQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<IReadOnlyList<NotificationModel>>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<IReadOnlyList<NotificationModel>>(userIdResult);
         }
 
-        var userId = new UserId(query.UserId!.Value);
+        UserId userId = userIdResult.Value;
         Result<NotificationUserContext> contextResult = await notificationUserContextService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
         if (contextResult.IsFailure) {
             return Result.Failure<IReadOnlyList<NotificationModel>>(contextResult.Error);

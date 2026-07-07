@@ -9,4 +9,7 @@ public static class UserIdParser {
             ? Result.Failure<UserId>(Errors.Authentication.InvalidToken)
             : Result.Success(new UserId(value.Value));
     }
+
+    public static Result<T> ToFailure<T>(Result<UserId> userIdResult) =>
+        Result.Failure<T>(userIdResult.Error);
 }

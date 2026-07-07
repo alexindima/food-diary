@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -10,11 +11,12 @@ public sealed class GetRecommendationsForClientQueryHandler(IDietologistRecommen
     : IQueryHandler<GetRecommendationsForClientQuery, Result<IReadOnlyList<RecommendationModel>>> {
     public async Task<Result<IReadOnlyList<RecommendationModel>>> Handle(
         GetRecommendationsForClientQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<IReadOnlyList<RecommendationModel>>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<IReadOnlyList<RecommendationModel>>(userIdResult);
         }
 
-        var dietologistUserId = new UserId(query.UserId!.Value);
+        UserId dietologistUserId = userIdResult.Value;
         return await readService.GetForClientAsync(dietologistUserId, query.ClientUserId, cancellationToken).ConfigureAwait(false);
     }
 }

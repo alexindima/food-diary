@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Billing;
 
@@ -16,11 +17,12 @@ public sealed class CreatePortalSessionCommandHandler(
     public async Task<Result<BillingPortalSessionModel>> Handle(
         CreatePortalSessionCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<BillingPortalSessionModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<BillingPortalSessionModel>(userIdResult);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        UserId userId = userIdResult.Value;
         Result<Domain.Entities.Users.User> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure<BillingPortalSessionModel>(userResult.Error);

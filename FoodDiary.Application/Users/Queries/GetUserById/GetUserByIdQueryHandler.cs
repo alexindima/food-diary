@@ -11,7 +11,7 @@ public sealed class GetUserByIdQueryHandler(IUserProfileReadService userProfileR
     public async Task<Result<UserModel>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<UserModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<UserModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

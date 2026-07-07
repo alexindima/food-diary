@@ -12,7 +12,7 @@ public sealed class GetInvitationByTokenQueryHandler(IDietologistInvitationReadS
     public async Task<Result<InvitationModel>> Handle(GetInvitationByTokenQuery query, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<InvitationModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<InvitationModel>(userIdResult);
         }
 
         return await readService.GetByTokenAsync(userIdResult.Value, query.InvitationId, cancellationToken).ConfigureAwait(false);

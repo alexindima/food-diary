@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -20,11 +21,12 @@ public sealed class CreateCheckoutSessionCommandHandler(
     public async Task<Result<BillingCheckoutSessionModel>> Handle(
         CreateCheckoutSessionCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<BillingCheckoutSessionModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<BillingCheckoutSessionModel>(userIdResult);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        UserId userId = userIdResult.Value;
         Result<User> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(userResult.Error);
@@ -45,7 +47,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
         string plan = command.Plan.Trim().ToLowerInvariant();
         Result<BillingCheckoutSessionModel> sessionResult = await billingProvider.CreateCheckoutSessionAsync(
             new BillingCheckoutSessionRequestModel(
-                command.UserId.Value,
+                userId.Value,
                 user.Email,
                 plan,
                 existingSubscription?.ExternalCustomerId),

@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Domain.ValueObjects;
@@ -16,11 +17,12 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
     public async Task<Result<NotificationPreferencesModel>> Handle(
         UpdateNotificationPreferencesCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<NotificationPreferencesModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<NotificationPreferencesModel>(userIdResult);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        UserId userId = userIdResult.Value;
         Result<NotificationPreferencesModel> currentPreferencesResult =
             await notificationPreferencesService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
         if (currentPreferencesResult.IsFailure) {

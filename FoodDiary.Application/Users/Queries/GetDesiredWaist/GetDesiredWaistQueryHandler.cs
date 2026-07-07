@@ -14,7 +14,7 @@ public sealed class GetDesiredWaistQueryHandler(IUserProfileReadService userProf
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
-            return Result.Failure<UserDesiredWaistModel>(userIdResult.Error);
+            return UserIdParser.ToFailure<UserDesiredWaistModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

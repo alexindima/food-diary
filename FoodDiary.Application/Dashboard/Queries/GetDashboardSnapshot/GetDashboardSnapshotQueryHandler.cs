@@ -1,20 +1,23 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Services;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 
 public sealed class GetDashboardSnapshotQueryHandler(IDashboardSnapshotBuilder snapshotBuilder)
     : IQueryHandler<GetDashboardSnapshotQuery, Result<DashboardSnapshotModel>> {
     public async Task<Result<DashboardSnapshotModel>> Handle(GetDashboardSnapshotQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<DashboardSnapshotModel>(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
+        if (userIdResult.IsFailure) {
+            return UserIdParser.ToFailure<DashboardSnapshotModel>(userIdResult);
         }
 
         return await snapshotBuilder.BuildAsync(
             new DashboardSnapshotRequest(
-                query.UserId.Value,
+                userIdResult.Value.Value,
                 query.Date,
                 DateTo: null,
                 query.Locale,

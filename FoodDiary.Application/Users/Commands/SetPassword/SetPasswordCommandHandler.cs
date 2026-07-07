@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using static FoodDiary.Application.Abstractions.Common.Abstractions.Results.Errors;
@@ -12,11 +13,12 @@ public sealed class SetPasswordCommandHandler(
     IPasswordHasher passwordHasher)
     : ICommandHandler<SetPasswordCommand, Result> {
     public async Task<Result> Handle(SetPasswordCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure(Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        if (userIdResult.IsFailure) {
+            return Result.Failure(userIdResult.Error);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        UserId userId = userIdResult.Value;
         Result<Domain.Entities.Users.User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);
