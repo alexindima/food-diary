@@ -25,6 +25,14 @@ The backend now has first-pass guardrails for the reliability split:
 - event taxonomy is documented with `IIntegrationEvent` for committed cross-process facts,
 - JobManager jobs use `JobExecutionObserver` for execution state, metrics, and duration recording.
 
+The backend also has structural guardrails for the main ownership boundaries:
+
+- `FoodDiary.Application.Abstractions` keeps feature contracts in feature folders and does not place contracts in the project root.
+- `FoodDiary.Application` keeps feature source files in use-case purpose folders and keeps only composition files in the project root.
+- `FoodDiary.Infrastructure` and `FoodDiary.Integrations` keep root folders limited to technical implementation and provider-adapter areas.
+- `FoodDiary.Presentation.Api` keeps HTTP controllers thin by limiting feature purpose folders and controller constructor dependencies.
+- `FoodDiary.Web.Api` and `FoodDiary.JobManager` keep executable-host code out of project roots except `Program.cs`.
+
 ## Priority 1: Durable Side Effects
 
 Critical side effects must be represented as durable state before a command completes. Use transactional outbox records for work that must eventually happen, including:
@@ -66,11 +74,15 @@ Avoid adding one-off processor behavior unless the provider truly requires it.
 
 Jobs should be idempotent where possible. Re-running a job after a crash or timeout should not create duplicate user-visible state.
 
+Keep job classes under `FoodDiary.JobManager/Services`. The project root should remain a host entrypoint only, and jobs should not call MediatR, EF `DbContext`, or HTTP presentation code directly.
+
 ## Priority 5: Continue Feature-First Migration
 
 Keep reducing global shared areas. `Application/Common` should stay limited to cross-cutting pipeline, result, validation, and mediator infrastructure. Feature-specific models, services, mappings, and helper policies should live under their feature folders.
 
 Do not add new legacy flat folders. New backend work should follow the feature-first layout immediately.
+
+For `FoodDiary.Application`, use the established feature purpose folders: `Commands`, `Queries`, `Services`, `Mappings`, `Models`, `Validators`, `EventHandlers`, `SearchSuggestions`, and feature-local `Common`.
 
 ## Guardrail Direction
 

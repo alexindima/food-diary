@@ -115,6 +115,54 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationFeatureFolders_StayLimitedToUseCasePurposeFolders() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        var excludedFeatureFolders = new HashSet<string>(StringComparer.Ordinal) {
+            "bin",
+            "Common",
+            "obj",
+        };
+        var allowedPurposeFolders = new HashSet<string>(StringComparer.Ordinal) {
+            "Commands",
+            "Common",
+            "EventHandlers",
+            "Mappings",
+            "Models",
+            "Queries",
+            "SearchSuggestions",
+            "Services",
+            "Validators",
+        };
+
+        string[] violations = [.. Directory.GetDirectories(applicationRoot)
+            .Where(featurePath => !excludedFeatureFolders.Contains(Path.GetFileName(featurePath)))
+            .SelectMany(featurePath => Directory.GetDirectories(featurePath)
+                .Where(purposePath => !allowedPurposeFolders.Contains(Path.GetFileName(purposePath))))
+            .Select(path => Path.GetRelativePath(root, path))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_AreKeptOutOfProjectRootExceptCompositionFiles() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] allowedRootFiles = [
+            "AssemblyInfo.cs",
+            "DependencyInjection.cs",
+        ];
+
+        string[] violations = [.. Directory.GetFiles(applicationRoot, "*.cs", SearchOption.TopDirectoryOnly)
+            .Where(path => !allowedRootFiles.Contains(Path.GetFileName(path), StringComparer.Ordinal))
+            .Select(path => Path.GetRelativePath(root, path))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationRootCommon_StaysLimitedToTechnicalApplicationPrimitives() {
         string root = GetRepositoryRoot();
         string commonRoot = Path.Combine(root, "FoodDiary.Application", "Common");

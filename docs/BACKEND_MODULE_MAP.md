@@ -66,3 +66,9 @@ Before adding a file:
 - Is it feature UI? Put it in the frontend feature folder.
 
 If the answer is "shared", first ask whether it is truly cross-feature. Many things belong in a feature-specific `Common/`, `Models/`, `api/`, or `lib/` folder instead of a global bucket.
+
+Backend structure guardrails now enforce the high-level placement rules. In particular:
+- application feature code belongs in feature purpose folders, not new flat folders;
+- presentation controllers should depend only on presentation-safe collaborators;
+- executable hosts keep only `Program.cs` in the project root;
+- JobManager remains a scheduler/worker host and must not own persistence, mediator, or HTTP workflows directly.

@@ -50,6 +50,22 @@ public sealed class JobManagerGuardrailTests {
     }
 
     [Fact]
+    public void JobManagerSourceFiles_AreKeptOutOfProjectRootExceptProgram() {
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string jobManagerRoot = ArchitectureTestPaths.FromRoot("FoodDiary.JobManager");
+        string[] allowedRootFiles = [
+            "Program.cs",
+        ];
+
+        string[] unexpectedRootFiles = [.. Directory.GetFiles(jobManagerRoot, "*.cs", SearchOption.TopDirectoryOnly)
+            .Where(path => !allowedRootFiles.Contains(Path.GetFileName(path), StringComparer.Ordinal))
+            .Select(path => Path.GetRelativePath(root, path))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(unexpectedRootFiles);
+    }
+
+    [Fact]
     public void JobManagerSource_DoesNotReferenceHttpPresentationOrHostApiSurface() {
         string jobManagerRoot = ArchitectureTestPaths.FromRoot("FoodDiary.JobManager");
 
