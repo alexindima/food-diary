@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Admin;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -23,14 +24,14 @@ public sealed class StartAdminImpersonationCommandHandler(
     public async Task<Result<AdminImpersonationStartModel>> Handle(
         StartAdminImpersonationCommand command,
         CancellationToken cancellationToken) {
-        Error? validationError = ValidateCommand(command);
-        if (validationError is not null) {
-            return Result.Failure<AdminImpersonationStartModel>(validationError);
+        Result<ImpersonationUserIds> userIdsResult = ValidateCommand(command);
+        if (userIdsResult.IsFailure) {
+            return Result.Failure<AdminImpersonationStartModel>(userIdsResult.Error);
         }
 
         string reason = command.Reason.Trim();
-        var actorUserId = new UserId(command.ActorUserId);
-        var targetUserId = new UserId(command.TargetUserId);
+        UserId actorUserId = userIdsResult.Value.ActorUserId;
+        UserId targetUserId = userIdsResult.Value.TargetUserId;
         Result<User> actorResult = await LoadActorAsync(actorUserId, cancellationToken).ConfigureAwait(false);
         if (actorResult.IsFailure) {
             return Result.Failure<AdminImpersonationStartModel>(actorResult.Error);
@@ -54,20 +55,29 @@ public sealed class StartAdminImpersonationCommandHandler(
             reason));
     }
 
-    private static Error? ValidateCommand(StartAdminImpersonationCommand command) {
-        if (command.ActorUserId == Guid.Empty) {
-            return Errors.Validation.Invalid(nameof(command.ActorUserId), "Actor user id must not be empty.");
+    private sealed record ImpersonationUserIds(UserId ActorUserId, UserId TargetUserId);
+
+    private static Result<ImpersonationUserIds> ValidateCommand(StartAdminImpersonationCommand command) {
+        Result<UserId> actorUserIdResult = UserIdParser.Parse(
+            command.ActorUserId,
+            Errors.Validation.Invalid(nameof(command.ActorUserId), "Actor user id must not be empty."));
+        if (actorUserIdResult.IsFailure) {
+            return UserIdParser.ToFailure<ImpersonationUserIds>(actorUserIdResult);
         }
 
-        if (command.TargetUserId == Guid.Empty) {
-            return Errors.Validation.Invalid(nameof(command.TargetUserId), "Target user id must not be empty.");
+        Result<UserId> targetUserIdResult = UserIdParser.Parse(
+            command.TargetUserId,
+            Errors.Validation.Invalid(nameof(command.TargetUserId), "Target user id must not be empty."));
+        if (targetUserIdResult.IsFailure) {
+            return UserIdParser.ToFailure<ImpersonationUserIds>(targetUserIdResult);
         }
 
         if (command.ActorUserId == command.TargetUserId) {
-            return Errors.Validation.Invalid(nameof(command.TargetUserId), "Actor and target users must be different.");
+            return Result.Failure<ImpersonationUserIds>(
+                Errors.Validation.Invalid(nameof(command.TargetUserId), "Actor and target users must be different."));
         }
 
-        return null;
+        return Result.Success(new ImpersonationUserIds(actorUserIdResult.Value, targetUserIdResult.Value));
     }
 
     private async Task<Result<User>> LoadActorAsync(UserId actorUserId, CancellationToken cancellationToken) {
