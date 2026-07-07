@@ -187,6 +187,51 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [Fact]
+    public async Task RegisterHandler_WhenEmailAlreadyExists_ReturnsConflict() {
+        var existingUser = User.Create("taken@example.com", "hashed");
+        var repository = new StubUserRepository(existingUser);
+        var tokenService = new StubAuthenticationTokenService();
+        var handler = new RegisterCommandHandler(
+            repository,
+            new StubPasswordHasher(),
+            new StubEmailSender(),
+            new StubDateTimeProvider(),
+            tokenService);
+
+        Result<AuthenticationModel> result = await handler.Handle(
+            new RegisterCommand("taken@example.com", "secret", Language: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Conflict", result.Error.Code);
+        Assert.Equal(0, repository.AddCallCount);
+        Assert.Null(tokenService.LastUser);
+    }
+
+    [Fact]
+    public async Task RegisterHandler_WhenEmailBelongsToDeletedAccount_ReturnsAccountDeleted() {
+        var deletedUser = User.Create("deleted-register@example.com", "hashed");
+        deletedUser.DeleteAccount(DateTime.UtcNow);
+        var repository = new StubUserRepository(deletedUser);
+        var tokenService = new StubAuthenticationTokenService();
+        var handler = new RegisterCommandHandler(
+            repository,
+            new StubPasswordHasher(),
+            new StubEmailSender(),
+            new StubDateTimeProvider(),
+            tokenService);
+
+        Result<AuthenticationModel> result = await handler.Handle(
+            new RegisterCommand("deleted-register@example.com", "secret", Language: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.Equal(0, repository.AddCallCount);
+        Assert.Null(tokenService.LastUser);
+    }
+
+    [Fact]
     public async Task RegisterHandler_WhenVerificationEmailEnqueueFails_Throws() {
         var handler = new RegisterCommandHandler(
             new StubUserRepository(),
@@ -1052,6 +1097,8 @@ public sealed class AuthenticationCommandHandlerTests {
             IUserContextService {
         private readonly List<User> _users = user is null ? [.. otherUsers] : [user, .. otherUsers];
 
+        public int AddCallCount { get; private set; }
+
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
             Task.FromResult<User?>(_users.FirstOrDefault(candidate => string.Equals(candidate.Email, email, StringComparison.OrdinalIgnoreCase)));
@@ -1075,6 +1122,7 @@ public sealed class AuthenticationCommandHandlerTests {
             GetRolesByNamesAsync(names, cancellationToken);
 
         public Task<User> AddAsync(User userToAdd, CancellationToken cancellationToken = default) {
+            AddCallCount++;
             _users.Add(userToAdd);
             return Task.FromResult(userToAdd);
         }

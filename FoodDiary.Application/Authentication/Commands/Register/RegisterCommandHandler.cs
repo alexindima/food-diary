@@ -19,6 +19,17 @@ public sealed class RegisterCommandHandler(
     : ICommandHandler<RegisterCommand, Result<AuthenticationModel>> {
 
     public async Task<Result<AuthenticationModel>> Handle(RegisterCommand command, CancellationToken cancellationToken) {
+        User? existingUser = await userRegistrationService
+            .GetByEmailIncludingDeletedAsync(command.Email, cancellationToken)
+            .ConfigureAwait(false);
+
+        if (existingUser is not null) {
+            return Result.Failure<AuthenticationModel>(
+                existingUser.DeletedAt is not null
+                    ? Errors.Authentication.AccountDeleted
+                    : EmailAlreadyExists);
+        }
+
         string hashedPassword = passwordHasher.Hash(command.Password);
         var user = User.Create(command.Email, hashedPassword);
         string normalizedLanguage = LanguageCode.FromPreferred(command.Language).Value;
@@ -47,4 +58,12 @@ public sealed class RegisterCommandHandler(
 
         return Result.Success(user.ToAuthenticationModel(tokens));
     }
+
+    private static Error EmailAlreadyExists => new(
+        "Validation.Conflict",
+        "User with this email already exists.",
+        new Dictionary<string, string[]>(StringComparer.Ordinal) {
+            [nameof(RegisterCommand.Email)] = ["User with this email already exists."],
+        },
+        ErrorKind.Conflict);
 }
