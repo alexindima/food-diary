@@ -157,7 +157,6 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             new FakeImageAssetRepository(),
             new FakeImageObjectDeletionOutbox(),
-            CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
             CreateUnitOfWork());
 
@@ -177,7 +176,6 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             repository,
             new FakeImageObjectDeletionOutbox(),
-            CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
             CreateUnitOfWork());
 
@@ -197,7 +195,6 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             repository,
             new FakeImageObjectDeletionOutbox(),
-            CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
             CreateUnitOfWork());
         var localCutoff = new DateTime(2026, 5, 20, 12, 30, 0, DateTimeKind.Local);
@@ -219,7 +216,6 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             repo,
             new FakeImageObjectDeletionOutbox(),
-            CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
             CreateUnitOfWork());
 
@@ -234,7 +230,6 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             new FakeImageAssetRepository(),
             new FakeImageObjectDeletionOutbox(),
-            CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
             CreateUnitOfWork());
 
@@ -249,7 +244,6 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             new FakeImageAssetRepository(),
             new FakeImageObjectDeletionOutbox(),
-            CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
             CreateUnitOfWork());
 
@@ -269,7 +263,6 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             repo,
             outbox,
-            CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
             CreateUnitOfWork());
 
@@ -291,7 +284,6 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             repo,
             new FakeImageObjectDeletionOutbox(),
-            CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
             unitOfWork);
 
@@ -311,8 +303,7 @@ public class ImagesFeatureTests {
         await repo.AddAsync(removable, CancellationToken.None);
         var service = new ImageAssetCleanupService(
             repo,
-            new FakeImageObjectDeletionOutbox(),
-            CreateSelectivelyThrowingImageStorageService("images/fail.jpg"),
+            new SelectivelyThrowingImageObjectDeletionOutbox("images/fail.jpg"),
             NullLogger<ImageAssetCleanupService>.Instance,
             CreateUnitOfWork());
 
@@ -463,6 +454,16 @@ public class ImagesFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
+    private sealed class SelectivelyThrowingImageObjectDeletionOutbox(string failingObjectKey) : IImageObjectDeletionOutbox {
+        public Task EnqueueAsync(string objectKey, CancellationToken cancellationToken = default) {
+            if (string.Equals(objectKey, failingObjectKey, StringComparison.Ordinal)) {
+                throw new InvalidOperationException("Object deletion outbox enqueue failed.");
+            }
+
+            return Task.CompletedTask;
+        }
+    }
     [ExcludeFromCodeCoverage]
     private sealed class FakeImageAssetRepository : IImageAssetRepository {
         private readonly Dictionary<ImageAssetId, ImageAsset> _assets = [];

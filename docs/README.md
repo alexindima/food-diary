@@ -9,9 +9,11 @@ This directory contains long-form repository documentation. Keep root-level mark
 - `adr/` - architecture decision records.
 
 ## Backend Operations And Governance
+- `backend/ARCHITECTURE_IMPROVEMENT_ROADMAP.md`
 - `backend/BACKEND_API_CONTRACT_GOVERNANCE.md`
 - `backend/BACKEND_CRITICAL_FLOW_MATRIX.md`
 - `backend/BACKEND_DEFINITION_OF_DONE.md`
+- `backend/BACKEND_EVENT_TAXONOMY.md`
 - `backend/BACKEND_MIGRATION_SAFETY.md`
 - `backend/BACKEND_OBSERVABILITY_BASELINE.md`
 - `backend/BACKEND_PERFORMANCE_REVIEW.md`

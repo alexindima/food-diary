@@ -9,7 +9,6 @@ namespace FoodDiary.Application.Images.Services;
 public sealed class ImageAssetCleanupService(
     IImageAssetWriteRepository imageAssetRepository,
     IImageObjectDeletionOutbox imageObjectDeletionOutbox,
-    IImageStorageService imageStorageService,
     ILogger<ImageAssetCleanupService> logger,
     IUnitOfWork unitOfWork) : IImageAssetCleanupService {
     public async Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
@@ -27,8 +26,8 @@ public sealed class ImageAssetCleanupService(
             return new DeleteImageAssetResult(Deleted: false, "in_use");
         }
 
-        await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);
         await imageObjectDeletionOutbox.EnqueueAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
+        await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);
         return new DeleteImageAssetResult(Deleted: true);
     }
 
@@ -47,7 +46,7 @@ public sealed class ImageAssetCleanupService(
 
         foreach (ImageAsset asset in candidates) {
             try {
-                await imageStorageService.DeleteAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
+                await imageObjectDeletionOutbox.EnqueueAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
                 await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);
                 await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                 removed++;
