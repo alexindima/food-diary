@@ -2,12 +2,13 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Exercises.Models;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -19,16 +20,20 @@ public sealed class GetTdeeInsightQueryHandler(
     IWeightEntryReadService weightEntryReadService,
     IDashboardStatisticsReadService statisticsReadService,
     IExerciseEntryReadService exerciseEntryReadService,
-    TimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider,
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetTdeeInsightQuery, Result<TdeeInsightModel>> {
     private const int AnalysisPeriodDays = 28;
 
     public async Task<Result<TdeeInsightModel>> Handle(
         GetTdeeInsightQuery query,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<TdeeInsightModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<TdeeInsightModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

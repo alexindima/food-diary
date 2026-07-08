@@ -13,6 +13,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Services;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Tests.Tdee;
@@ -60,7 +61,9 @@ public class TdeeFeatureTests {
         var userId = UserId.New();
         var user = User.Create("disappearing-tdee-user@example.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
-        GetTdeeInsightQueryHandler handler = CreateHandler(profileService: CreateFailingProfileService(Errors.User.NotFound()));
+        GetTdeeInsightQueryHandler handler = CreateHandler(
+            profileService: CreateFailingProfileService(Errors.User.NotFound()),
+            currentUserAccessService: CreateCurrentUserAccessService(user));
 
         Result<TdeeInsightModel> result = await handler.Handle(
             new GetTdeeInsightQuery(userId.Value), CancellationToken.None);
@@ -75,7 +78,9 @@ public class TdeeFeatureTests {
         var user = User.Create("user@test.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
 
-        GetTdeeInsightQueryHandler handler = CreateHandler(profileService: CreateProfileService(user));
+        GetTdeeInsightQueryHandler handler = CreateHandler(
+            profileService: CreateProfileService(user),
+            currentUserAccessService: CreateCurrentUserAccessService(user));
 
         Result<TdeeInsightModel> result = await handler.Handle(
             new GetTdeeInsightQuery(userId.Value), CancellationToken.None);
@@ -85,13 +90,15 @@ public class TdeeFeatureTests {
     }
 
     private static GetTdeeInsightQueryHandler CreateHandler(
-        ITdeeUserProfileService? profileService = null) =>
+        ITdeeUserProfileService? profileService = null,
+        ICurrentUserAccessService? currentUserAccessService = null) =>
         new(
             profileService ?? CreateProfileService(user: null),
             new WeightEntryReadService(CreateWeightEntryRepository()),
             CreateStatisticsReadService(),
             new ExerciseEntryReadService(CreateExerciseEntryRepository()),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            currentUserAccessService ?? CreateCurrentUserAccessService(user: null));
 
     private static ITdeeUserProfileService CreateProfileService(User? user) {
         ITdeeUserProfileService service = Substitute.For<ITdeeUserProfileService>();
@@ -122,6 +129,21 @@ public class TdeeFeatureTests {
         service
             .GetAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Failure<TdeeUserProfile>(error)));
+        return service;
+    }
+
+    private static ICurrentUserAccessService CreateCurrentUserAccessService(User? user) {
+        ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
+        service
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                if (user is null || user.Id != id) {
+                    return Task.FromResult<Error?>(Errors.Authentication.InvalidToken);
+                }
+
+                return Task.FromResult(user.DeletedAt is null ? null : Errors.Authentication.AccountDeleted);
+            });
         return service;
     }
 

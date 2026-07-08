@@ -5,6 +5,7 @@ using FoodDiary.Application.RecipeComments.Commands.UpdateRecipeComment;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.Abstractions.RecipeComments.Models;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.RecipeComments.Common;
 using FoodDiary.Application.RecipeComments.Queries.GetRecipeComments;
 using FoodDiary.Application.RecipeComments.Services;
@@ -31,7 +32,8 @@ public class RecipeCommentsFeatureTests {
         var handler = new CreateRecipeCommentCommandHandler(
             commentRepo,
             CreateRecipeAccessService(recipe),
-            notificationWriter);
+            notificationWriter,
+            CreateCurrentUserAccessService());
         Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(userId.Value, recipe.Id.Value, "Delicious!"),
             CancellationToken.None);
@@ -51,7 +53,8 @@ public class RecipeCommentsFeatureTests {
         var handler = new CreateRecipeCommentCommandHandler(
             new InMemoryRecipeCommentRepository(),
             CreateRecipeAccessService(recipe),
-            notificationWriter);
+            notificationWriter,
+            CreateCurrentUserAccessService());
         Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(userId.Value, recipe.Id.Value, "My note"),
             CancellationToken.None);
@@ -65,7 +68,8 @@ public class RecipeCommentsFeatureTests {
         var handler = new CreateRecipeCommentCommandHandler(
             new InMemoryRecipeCommentRepository(),
             CreateRecipeAccessService(recipe: null),
-            CreateNotificationWriter());
+            CreateNotificationWriter(),
+            CreateCurrentUserAccessService());
 
         Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "Text"),
@@ -79,7 +83,8 @@ public class RecipeCommentsFeatureTests {
         var handler = new CreateRecipeCommentCommandHandler(
             new InMemoryRecipeCommentRepository(),
             CreateRecipeAccessService(Recipe.Create(UserId.New(), "Pasta", 1)),
-            CreateNotificationWriter());
+            CreateNotificationWriter(),
+            CreateCurrentUserAccessService());
 
         Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), "Text"),
@@ -96,7 +101,7 @@ public class RecipeCommentsFeatureTests {
         var repo = new InMemoryRecipeCommentRepository();
         repo.Seed(comment);
 
-        var handler = new UpdateRecipeCommentCommandHandler(repo);
+        var handler = new UpdateRecipeCommentCommandHandler(repo, CreateCurrentUserAccessService());
         Result<RecipeCommentModel> result = await handler.Handle(
             new UpdateRecipeCommentCommand(userId.Value, comment.Id.Value, "New text"),
             CancellationToken.None);
@@ -113,7 +118,7 @@ public class RecipeCommentsFeatureTests {
         var repo = new InMemoryRecipeCommentRepository();
         repo.Seed(comment);
 
-        var handler = new UpdateRecipeCommentCommandHandler(repo);
+        var handler = new UpdateRecipeCommentCommandHandler(repo, CreateCurrentUserAccessService());
         Result<RecipeCommentModel> result = await handler.Handle(
             new UpdateRecipeCommentCommand(otherUserId.Value, comment.Id.Value, "Hacked"),
             CancellationToken.None);
@@ -124,7 +129,7 @@ public class RecipeCommentsFeatureTests {
 
     [Fact]
     public async Task UpdateRecipeComment_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new UpdateRecipeCommentCommandHandler(new InMemoryRecipeCommentRepository());
+        var handler = new UpdateRecipeCommentCommandHandler(new InMemoryRecipeCommentRepository(), CreateCurrentUserAccessService());
 
         Result<RecipeCommentModel> result = await handler.Handle(
             new UpdateRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), "Text"),
@@ -136,7 +141,7 @@ public class RecipeCommentsFeatureTests {
 
     [Fact]
     public async Task UpdateRecipeComment_WhenCommentMissing_ReturnsNotFound() {
-        var handler = new UpdateRecipeCommentCommandHandler(new InMemoryRecipeCommentRepository());
+        var handler = new UpdateRecipeCommentCommandHandler(new InMemoryRecipeCommentRepository(), CreateCurrentUserAccessService());
 
         Result<RecipeCommentModel> result = await handler.Handle(
             new UpdateRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "Text"),
@@ -154,7 +159,7 @@ public class RecipeCommentsFeatureTests {
         var repo = new InMemoryRecipeCommentRepository();
         repo.Seed(comment);
 
-        var handler = new DeleteRecipeCommentCommandHandler(repo, CreateRecipeAccessService(recipe: null));
+        var handler = new DeleteRecipeCommentCommandHandler(repo, CreateRecipeAccessService(recipe: null), CreateCurrentUserAccessService());
         Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(userId.Value, recipeId.Value, comment.Id.Value),
             CancellationToken.None);
@@ -165,7 +170,7 @@ public class RecipeCommentsFeatureTests {
     [Fact]
     public async Task DeleteRecipeComment_CommentNotFound_ReturnsFailure() {
         var handler = new DeleteRecipeCommentCommandHandler(
-            new InMemoryRecipeCommentRepository(), CreateRecipeAccessService(recipe: null));
+            new InMemoryRecipeCommentRepository(), CreateRecipeAccessService(recipe: null), CreateCurrentUserAccessService());
 
         Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()),
@@ -183,7 +188,7 @@ public class RecipeCommentsFeatureTests {
         var repo = new InMemoryRecipeCommentRepository();
         repo.Seed(comment);
 
-        var handler = new DeleteRecipeCommentCommandHandler(repo, CreateRecipeAccessService(ownedRecipe));
+        var handler = new DeleteRecipeCommentCommandHandler(repo, CreateRecipeAccessService(ownedRecipe), CreateCurrentUserAccessService());
         Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(ownerId.Value, ownedRecipe.Id.Value, comment.Id.Value),
             CancellationToken.None);
@@ -197,7 +202,8 @@ public class RecipeCommentsFeatureTests {
     public async Task DeleteRecipeComment_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new DeleteRecipeCommentCommandHandler(
             new InMemoryRecipeCommentRepository(),
-            CreateRecipeAccessService(recipe: null));
+            CreateRecipeAccessService(recipe: null),
+            CreateCurrentUserAccessService());
 
         Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), Guid.NewGuid()),
@@ -214,7 +220,7 @@ public class RecipeCommentsFeatureTests {
         var repo = new InMemoryRecipeCommentRepository();
         repo.Seed(comment);
 
-        var handler = new DeleteRecipeCommentCommandHandler(repo, CreateRecipeAccessService(recipe: null));
+        var handler = new DeleteRecipeCommentCommandHandler(repo, CreateRecipeAccessService(recipe: null), CreateCurrentUserAccessService());
         Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(Guid.NewGuid(), recipeId.Value, comment.Id.Value),
             CancellationToken.None);
@@ -231,7 +237,7 @@ public class RecipeCommentsFeatureTests {
         var repo = new InMemoryRecipeCommentRepository();
         repo.Seed(comment);
 
-        var handler = new DeleteRecipeCommentCommandHandler(repo, CreateRecipeAccessService(recipe));
+        var handler = new DeleteRecipeCommentCommandHandler(repo, CreateRecipeAccessService(recipe), CreateCurrentUserAccessService());
         Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(ownerId.Value, recipe.Id.Value, comment.Id.Value),
             CancellationToken.None);
@@ -355,9 +361,17 @@ public class RecipeCommentsFeatureTests {
 
     private static GetRecipeCommentsQueryHandler CreateRecipeCommentsHandler(
         IRecipeCommentReadModelRepository commentRepository) =>
-        new(CreateRecipeCommentReadService(commentRepository));
+        new(CreateRecipeCommentReadService(commentRepository), CreateCurrentUserAccessService());
 
     private static IRecipeCommentReadService CreateRecipeCommentReadService(
         IRecipeCommentReadModelRepository commentRepository) =>
         new RecipeCommentReadService(commentRepository);
+
+    private static ICurrentUserAccessService CreateCurrentUserAccessService(Error? accessError = null) {
+        ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
+        service
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(accessError));
+        return service;
+    }
 }

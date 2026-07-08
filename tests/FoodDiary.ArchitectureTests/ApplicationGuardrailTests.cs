@@ -1154,6 +1154,22 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "WaistEntries", "Queries", "GetLatestWaistEntry", "GetLatestWaistEntryQueryHandler.cs"),
             Path.Combine(applicationRoot, "WaistEntries", "Queries", "GetWaistEntries", "GetWaistEntriesQueryHandler.cs"),
             Path.Combine(applicationRoot, "WaistEntries", "Queries", "GetWaistSummaries", "GetWaistSummariesQueryHandler.cs"),
+            Path.Combine(applicationRoot, "MealPlans", "Queries", "GetMealPlanById", "GetMealPlanByIdQueryHandler.cs"),
+            Path.Combine(applicationRoot, "MealPlans", "Queries", "GetMealPlans", "GetMealPlansQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Tdee", "Queries", "GetTdeeInsight", "GetTdeeInsightQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Gamification", "Queries", "GetGamification", "GetGamificationQueryHandler.cs"),
+            Path.Combine(applicationRoot, "RecipeLikes", "Commands", "ToggleRecipeLike", "ToggleRecipeLikeCommandHandler.cs"),
+            Path.Combine(applicationRoot, "RecipeLikes", "Queries", "GetRecipeLikeStatus", "GetRecipeLikeStatusQueryHandler.cs"),
+            Path.Combine(applicationRoot, "RecipeComments", "Commands", "CreateRecipeComment", "CreateRecipeCommentCommandHandler.cs"),
+            Path.Combine(applicationRoot, "RecipeComments", "Commands", "DeleteRecipeComment", "DeleteRecipeCommentCommandHandler.cs"),
+            Path.Combine(applicationRoot, "RecipeComments", "Commands", "UpdateRecipeComment", "UpdateRecipeCommentCommandHandler.cs"),
+            Path.Combine(applicationRoot, "RecipeComments", "Queries", "GetRecipeComments", "GetRecipeCommentsQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Wearables", "Commands", "ConnectWearable", "ConnectWearableCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Wearables", "Commands", "DisconnectWearable", "DisconnectWearableCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Wearables", "Commands", "SyncWearableData", "SyncWearableDataCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Wearables", "Queries", "GetWearableAuthUrl", "GetWearableAuthUrlQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Wearables", "Queries", "GetWearableConnections", "GetWearableConnectionsQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Wearables", "Queries", "GetWearableDailySummary", "GetWearableDailySummaryQueryHandler.cs"),
         ];
 
         string[] directParseViolations = [

@@ -1,10 +1,11 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.RecipeLikes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.RecipeLikes.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Recipes;
@@ -13,14 +14,18 @@ namespace FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
 
 public sealed class ToggleRecipeLikeCommandHandler(
     IRecipeLikeWriteRepository likeRepository,
-    IRecipeAccessService recipeAccessService)
+    IRecipeAccessService recipeAccessService,
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<ToggleRecipeLikeCommand, Result<RecipeLikeStatusModel>> {
     public async Task<Result<RecipeLikeStatusModel>> Handle(
         ToggleRecipeLikeCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<RecipeLikeStatusModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<RecipeLikeStatusModel>(userIdResult);
         }
 
         var recipeId = (RecipeId)command.RecipeId;

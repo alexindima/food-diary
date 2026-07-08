@@ -9,6 +9,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Application.Gamification.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Tests.Gamification;
@@ -20,7 +21,8 @@ public class GamificationFeatureTests {
     [Fact]
     public async Task GetGamification_WithNullUserId_ReturnsFailure() {
         var handler = new GetGamificationQueryHandler(CreateGamificationReadService(
-            CreateMealRepository(), CreateStatisticsReadService(), CreateUserProfileService(user: null)));
+            CreateMealRepository(), CreateStatisticsReadService(), CreateUserProfileService(user: null)),
+            CreateCurrentUserAccessService(user: null));
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(UserId: null), CancellationToken.None);
@@ -31,7 +33,8 @@ public class GamificationFeatureTests {
     [Fact]
     public async Task GetGamification_WhenUserNotFound_ReturnsFailure() {
         var handler = new GetGamificationQueryHandler(CreateGamificationReadService(
-            CreateMealRepository(), CreateStatisticsReadService(), CreateUserProfileService(user: null)));
+            CreateMealRepository(), CreateStatisticsReadService(), CreateUserProfileService(user: null)),
+            CreateCurrentUserAccessService(user: null));
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(Guid.NewGuid()), CancellationToken.None);
@@ -48,7 +51,8 @@ public class GamificationFeatureTests {
         IMealRepository mealRepo = CreateMealRepository([Today, Today.AddDays(-1), Today.AddDays(-2)], totalMealCount: 15);
 
         var handler = new GetGamificationQueryHandler(CreateGamificationReadService(
-            mealRepo, CreateStatisticsReadService(), CreateUserProfileService(user)));
+            mealRepo, CreateStatisticsReadService(), CreateUserProfileService(user)),
+            CreateCurrentUserAccessService(user));
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(userId.Value), CancellationToken.None);
@@ -65,7 +69,8 @@ public class GamificationFeatureTests {
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
 
         var handler = new GetGamificationQueryHandler(CreateGamificationReadService(
-            CreateMealRepository(), CreateStatisticsReadService(), CreateUserProfileService(user)));
+            CreateMealRepository(), CreateStatisticsReadService(), CreateUserProfileService(user)),
+            CreateCurrentUserAccessService(user));
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(userId.Value), CancellationToken.None);
@@ -148,6 +153,21 @@ public class GamificationFeatureTests {
                 return Task.FromResult(user is not null && user.Id == id
                     ? Result.Success<IGamificationUserProfile>(new StubGamificationUserProfile(user))
                     : Result.Failure<IGamificationUserProfile>(Errors.Authentication.InvalidToken));
+            });
+        return service;
+    }
+
+    private static ICurrentUserAccessService CreateCurrentUserAccessService(User? user) {
+        ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
+        service
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                if (user is null || user.Id != id) {
+                    return Task.FromResult<Error?>(Errors.Authentication.InvalidToken);
+                }
+
+                return Task.FromResult(user.DeletedAt is null ? null : Errors.Authentication.AccountDeleted);
             });
         return service;
     }

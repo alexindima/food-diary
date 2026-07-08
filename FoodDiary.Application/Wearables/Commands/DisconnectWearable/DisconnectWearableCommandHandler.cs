@@ -2,7 +2,9 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Wearables.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -10,12 +12,17 @@ using FoodDiary.Domain.Entities.Wearables;
 
 namespace FoodDiary.Application.Wearables.Commands.DisconnectWearable;
 
-public sealed class DisconnectWearableCommandHandler(IWearableConnectionWriteRepository connectionRepository)
+public sealed class DisconnectWearableCommandHandler(
+    IWearableConnectionWriteRepository connectionRepository,
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DisconnectWearableCommand, Result> {
     public async Task<Result> Handle(
         DisconnectWearableCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }

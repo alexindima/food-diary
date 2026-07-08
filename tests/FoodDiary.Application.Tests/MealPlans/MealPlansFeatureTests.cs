@@ -513,11 +513,11 @@ public class MealPlansFeatureTests {
 
     private static GetMealPlanByIdQueryHandler CreateMealPlanByIdHandler(
         IMealPlanReadModelRepository mealPlanRepository) =>
-        new(CreateMealPlanReadService(mealPlanRepository));
+        new(CreateMealPlanReadService(mealPlanRepository), CreateCurrentUserAccessService());
 
     private static GetMealPlansQueryHandler CreateMealPlansHandler(
         IMealPlanReadModelRepository mealPlanRepository) =>
-        new(CreateMealPlanReadService(mealPlanRepository));
+        new(CreateMealPlanReadService(mealPlanRepository), CreateCurrentUserAccessService());
 
     private static IMealPlanReadService CreateMealPlanReadService(
         IMealPlanReadModelRepository mealPlanRepository) =>

@@ -1,9 +1,10 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Wearables.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Wearables.Common;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
@@ -14,14 +15,18 @@ namespace FoodDiary.Application.Wearables.Commands.SyncWearableData;
 public sealed class SyncWearableDataCommandHandler(
     IEnumerable<IWearableClient> wearableClients,
     IWearableConnectionWriteRepository connectionRepository,
-    IWearableSyncWriteRepository syncRepository)
+    IWearableSyncWriteRepository syncRepository,
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<SyncWearableDataCommand, Result<WearableDailySummaryModel>> {
     public async Task<Result<WearableDailySummaryModel>> Handle(
         SyncWearableDataCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<WearableDailySummaryModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<WearableDailySummaryModel>(userIdResult);
         }
 
         Result<WearableProvider> providerResult = WearableProviderParser.Parse(command.Provider);

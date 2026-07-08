@@ -2,7 +2,8 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Wearables.Common;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Wearables.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -11,30 +12,34 @@ namespace FoodDiary.Application.Wearables.Queries.GetWearableAuthUrl;
 
 public sealed class GetWearableAuthUrlQueryHandler(
     IEnumerable<IWearableClient> wearableClients,
-    IWearableOAuthStateService stateService)
+    IWearableOAuthStateService stateService,
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWearableAuthUrlQuery, Result<string>> {
-    public Task<Result<string>> Handle(
+    public async Task<Result<string>> Handle(
         GetWearableAuthUrlQuery query,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return Task.FromResult(UserIdParser.ToFailure<string>(userIdResult));
+            return CurrentUserAccessResolver.ToFailure<string>(userIdResult);
         }
 
         Result<WearableProvider> providerResult = WearableProviderParser.Parse(query.Provider);
         if (providerResult.IsFailure) {
-            return Task.FromResult(Result.Failure<string>(providerResult.Error));
+            return Result.Failure<string>(providerResult.Error);
         }
 
         WearableProvider provider = providerResult.Value;
 
         IWearableClient? client = wearableClients.FirstOrDefault(c => c.Provider == provider);
         if (client is null) {
-            return Task.FromResult(Result.Failure<string>(Errors.Wearable.ProviderNotConfigured(query.Provider)));
+            return Result.Failure<string>(Errors.Wearable.ProviderNotConfigured(query.Provider));
         }
 
         string state = stateService.CreateState(userIdResult.Value, provider, query.State);
         string url = client.GetAuthorizationUrl(state);
-        return Task.FromResult(Result.Success(url));
+        return Result.Success(url);
     }
 }
