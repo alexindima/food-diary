@@ -242,7 +242,7 @@ public class FavoriteMealsFeatureTests {
     }
 
     private static FavoriteMealReadService CreateFavoriteMealReadService(IFavoriteMealRepository favoriteMealRepository) =>
-        new(favoriteMealRepository, favoriteMealRepository);
+        new(favoriteMealRepository);
     private static IFavoriteMealRepository CreateFavoriteMealRepository(
         FavoriteMeal? existingByMealId = null,
         FavoriteMeal? existingById = null,
@@ -251,7 +251,7 @@ public class FavoriteMealsFeatureTests {
         ((IFavoriteMealWriteRepository)repository)
             .GetByMealIdAsync(Arg.Any<MealId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(existingByMealId));
-        repository
+        ((IFavoriteMealReadModelRepository)repository)
             .ExistsByMealIdAsync(Arg.Any<MealId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 MealId mealId = call.Arg<MealId>();

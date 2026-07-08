@@ -7,4 +7,9 @@ public interface IFavoriteMealReadModelRepository {
     Task<IReadOnlyList<FavoriteMealReadModel>> GetAllReadModelsAsync(
         UserId userId,
         CancellationToken cancellationToken = default);
+
+    Task<bool> ExistsByMealIdAsync(
+        MealId mealId,
+        UserId userId,
+        CancellationToken cancellationToken = default);
 }

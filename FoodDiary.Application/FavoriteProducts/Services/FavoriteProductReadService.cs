@@ -8,8 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.FavoriteProducts.Services;
 
 public sealed class FavoriteProductReadService(
-    IFavoriteProductReadModelRepository favoriteProductReadModelRepository,
-    IFavoriteProductReadRepository favoriteProductRepository)
+    IFavoriteProductReadModelRepository favoriteProductReadModelRepository)
     : IFavoriteProductReadService {
     public async Task<IReadOnlyList<FavoriteProductModel>> GetAllAsync(
         UserId userId,
@@ -22,5 +21,5 @@ public sealed class FavoriteProductReadService(
         ProductId productId,
         UserId userId,
         CancellationToken cancellationToken = default) =>
-        favoriteProductRepository.ExistsByProductIdAsync(productId, userId, cancellationToken);
+        favoriteProductReadModelRepository.ExistsByProductIdAsync(productId, userId, cancellationToken);
 }

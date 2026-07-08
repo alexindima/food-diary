@@ -2152,6 +2152,9 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Favorite"),
+            .. FindReferencesInFiles(root, serviceFiles, "IFavoriteMealReadRepository"),
+            .. FindReferencesInFiles(root, serviceFiles, "IFavoriteProductReadRepository"),
+            .. FindReferencesInFiles(root, serviceFiles, "IFavoriteRecipeReadRepository"),
             .. FindReferencesInFiles(root, serviceFiles, "GetAllAsync(userId"),
         ];
 

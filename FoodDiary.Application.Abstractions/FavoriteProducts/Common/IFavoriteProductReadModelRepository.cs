@@ -7,4 +7,9 @@ public interface IFavoriteProductReadModelRepository {
     Task<IReadOnlyList<FavoriteProductReadModel>> GetAllReadModelsAsync(
         UserId userId,
         CancellationToken cancellationToken = default);
+
+    Task<bool> ExistsByProductIdAsync(
+        ProductId productId,
+        UserId userId,
+        CancellationToken cancellationToken = default);
 }
