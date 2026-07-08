@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.MealPlans.Commands.AdoptMealPlan;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.MealPlans.Models;
@@ -16,7 +17,7 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.MealPlans.Models;
 using FoodDiary.Application.ShoppingLists.Models;
 

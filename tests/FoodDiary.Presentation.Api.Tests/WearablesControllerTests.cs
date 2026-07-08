@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Application.Wearables.Commands.ConnectWearable;
 using FoodDiary.Application.Wearables.Commands.DisconnectWearable;

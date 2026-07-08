@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Authentication.Commands.GoogleLogin;
 using FoodDiary.Application.Authentication.Commands.Login;
 using FoodDiary.Application.Authentication.Commands.RefreshToken;

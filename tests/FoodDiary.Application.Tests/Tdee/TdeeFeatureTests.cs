@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
@@ -9,7 +10,7 @@ using FoodDiary.Application.WeightEntries.Services;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Services;
 using FoodDiary.Application.Users.Common;

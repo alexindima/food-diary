@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Dietologist.Commands.InviteDietologist;
 using FoodDiary.Application.Dietologist.Commands.RevokeInvitation;
 using FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;

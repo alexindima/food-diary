@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
@@ -6,7 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

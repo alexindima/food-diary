@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Fasting.Commands.PostponeCyclicDay;
 using FoodDiary.Application.Fasting.Commands.SkipCyclicDay;
 using FoodDiary.Application.Fasting.Models;

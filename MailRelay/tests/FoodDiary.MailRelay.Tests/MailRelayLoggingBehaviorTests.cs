@@ -1,5 +1,5 @@
 using FoodDiary.MailRelay.Application.Common.Behaviors;
-using FoodDiary.MailRelay.Application.Common.Results;
+using FoodDiary.Results;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -22,7 +22,7 @@ public sealed class MailRelayLoggingBehaviorTests {
     [Fact]
     public async Task Handle_WhenNextReturnsFailure_ReturnsFailureResult() {
         MailRelayLoggingBehavior<TestRequest, Result> behavior = CreateBehavior();
-        MailRelayError error = new("test", "failed", ErrorKind.Validation);
+        Error error = new("test", "failed", ErrorKind.Validation);
 
         Result result = await behavior.Handle(
             new TestRequest(),

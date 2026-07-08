@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Social;
 
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.RecipeLikes.Models;
 
 namespace FoodDiary.Application.Tests.RecipeLikes;

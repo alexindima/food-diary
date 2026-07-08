@@ -1,9 +1,10 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Domain.Entities.Users;
 

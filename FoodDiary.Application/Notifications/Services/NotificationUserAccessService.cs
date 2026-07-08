@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Users;

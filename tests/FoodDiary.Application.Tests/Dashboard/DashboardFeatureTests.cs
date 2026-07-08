@@ -1,8 +1,9 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FluentValidation.Results;
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Models;

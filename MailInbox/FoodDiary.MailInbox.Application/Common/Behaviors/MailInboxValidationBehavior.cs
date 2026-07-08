@@ -1,9 +1,9 @@
 using System.Reflection;
 using FluentValidation;
 using FluentValidation.Results;
-using FoodDiary.MailInbox.Application.Common.Results;
+using FoodDiary.Results;
 using FoodDiary.Mediator;
-using MailInboxResult = FoodDiary.MailInbox.Application.Common.Results.Result;
+using MailInboxResult = FoodDiary.Results.Result;
 
 namespace FoodDiary.MailInbox.Application.Common.Behaviors;
 
@@ -50,11 +50,11 @@ public sealed class MailInboxValidationBehavior<TRequest, TResponse>(IEnumerable
         string errorMessage = details.Count > 1 || details.Values.Any(static messages => messages.Length > 1)
             ? "One or more validation errors occurred."
             : firstError.ErrorMessage;
-        var error = new MailInboxError(
+        var error = new Error(
             errorCode,
             errorMessage,
-            ErrorKind.Validation,
-            details.Count > 0 ? details : null);
+            Kind: ErrorKind.Validation,
+            Details: details.Count > 0 ? details : null);
 
         if (typeof(TResponse) == typeof(MailInboxResult)) {
             return (TResponse)MailInboxResult.Failure(error);
@@ -63,7 +63,7 @@ public sealed class MailInboxValidationBehavior<TRequest, TResponse>(IEnumerable
         return CreateTypedFailure(error);
     }
 
-    private static TResponse CreateTypedFailure(MailInboxError error) {
+    private static TResponse CreateTypedFailure(Error error) {
         Type resultType = typeof(TResponse);
         if (!resultType.IsGenericType || resultType.GetGenericTypeDefinition() != typeof(Result<>)) {
             throw new InvalidOperationException($"Unable to create failure result for type {typeof(TResponse).Name}.");
@@ -76,7 +76,7 @@ public sealed class MailInboxValidationBehavior<TRequest, TResponse>(IEnumerable
                 string.Equals(method.Name, nameof(MailInboxResult.Failure), StringComparison.Ordinal) &&
                 method.IsGenericMethodDefinition &&
                 method.GetParameters() is [{ ParameterType: Type parameterType }] &&
-                parameterType == typeof(MailInboxError))
+                parameterType == typeof(Error))
             ?.MakeGenericMethod(valueType);
 
         return failureMethod is null

@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Admin.Models;
@@ -10,7 +11,7 @@ using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;

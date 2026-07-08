@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Billing.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 
 namespace FoodDiary.Application.Abstractions.Billing.Common;
 

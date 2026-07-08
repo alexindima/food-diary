@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Billing.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
 using FoodDiary.Application.Billing.Commands.CreatePortalSession;
 using FoodDiary.Application.Billing.Commands.StartPremiumTrial;

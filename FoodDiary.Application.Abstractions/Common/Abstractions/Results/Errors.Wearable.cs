@@ -1,3 +1,5 @@
+using FoodDiary.Results;
+
 using FoodDiary.Application.Abstractions.Wearables.Common;
 
 namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;

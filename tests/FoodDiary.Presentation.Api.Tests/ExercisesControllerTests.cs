@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Exercises.Commands.CreateExerciseEntry;
 using FoodDiary.Application.Exercises.Commands.DeleteExerciseEntry;
 using FoodDiary.Application.Exercises.Commands.UpdateExerciseEntry;

@@ -1,7 +1,8 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Diagnostics;
 using System.Reflection;
 using System.Security.Claims;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Telemetry;

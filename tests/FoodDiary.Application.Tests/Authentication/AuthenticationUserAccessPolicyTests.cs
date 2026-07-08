@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 
 namespace FoodDiary.Application.Tests.Authentication;
 

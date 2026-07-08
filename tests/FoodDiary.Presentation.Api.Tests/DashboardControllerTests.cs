@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 using FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;

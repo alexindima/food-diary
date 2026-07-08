@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using System.Collections.Concurrent;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;

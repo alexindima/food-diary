@@ -13,7 +13,7 @@ using FoodDiary.Application.Abstractions.Lessons.Models;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Admin.Models;
 using FluentValidation.Results;
 

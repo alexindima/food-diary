@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 
 namespace FoodDiary.Application.Abstractions.Consumptions.Common;
 

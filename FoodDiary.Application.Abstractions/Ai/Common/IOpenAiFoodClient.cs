@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 
 namespace FoodDiary.Application.Abstractions.Ai.Common;
 

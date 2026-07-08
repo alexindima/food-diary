@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Notifications.Commands.RemoveWebPushSubscription;
 using FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription;
 using FoodDiary.Application.Notifications.Models;

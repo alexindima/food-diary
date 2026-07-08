@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text.Json;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services.OpenAi;
 using Microsoft.Extensions.Logging.Abstractions;

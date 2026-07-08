@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
 using FoodDiary.Application.RecipeComments.Commands.DeleteRecipeComment;

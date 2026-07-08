@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 using FoodDiary.Mediator;

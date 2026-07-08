@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Users.Commands.UpdateGoals;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Application.Users.Queries.GetUserGoals;

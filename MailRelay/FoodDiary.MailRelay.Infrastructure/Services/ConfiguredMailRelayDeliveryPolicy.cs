@@ -1,3 +1,4 @@
+using FoodDiary.Results;
 using FoodDiary.MailRelay.Application.Common.Results;
 using Microsoft.Extensions.Options;
 using MimeKit;

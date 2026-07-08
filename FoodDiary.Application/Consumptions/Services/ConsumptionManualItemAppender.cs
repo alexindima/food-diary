@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Domain.Entities.Meals;

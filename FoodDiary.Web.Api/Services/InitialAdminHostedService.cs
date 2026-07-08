@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Web.Api.Options;
 using FoodDiary.Mediator;

@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Exercises.Commands.CreateExerciseEntry;
 using FoodDiary.Application.Exercises.Commands.DeleteExerciseEntry;
 using FoodDiary.Application.Exercises.Commands.UpdateExerciseEntry;
@@ -10,7 +11,7 @@ using FoodDiary.Application.Exercises.Queries.GetExerciseEntries;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Exercises.Models;
 
 namespace FoodDiary.Application.Tests.Exercises;

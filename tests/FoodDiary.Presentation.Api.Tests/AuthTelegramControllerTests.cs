@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Authentication.Commands.LinkTelegram;
 using FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
 using FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;

@@ -1,10 +1,11 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
 using FoodDiary.Application.Ai.Commands.ParseFoodText;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.Users.Common;

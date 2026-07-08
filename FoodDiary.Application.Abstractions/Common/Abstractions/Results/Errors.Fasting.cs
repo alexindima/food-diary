@@ -1,3 +1,5 @@
+using FoodDiary.Results;
+
 using FoodDiary.Application.Abstractions.Fasting.Common;
 
 namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;

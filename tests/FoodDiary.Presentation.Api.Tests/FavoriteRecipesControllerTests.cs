@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.FavoriteRecipes.Commands.AddFavoriteRecipe;
 using FoodDiary.Application.FavoriteRecipes.Commands.RemoveFavoriteRecipe;
 using FoodDiary.Application.FavoriteRecipes.Models;

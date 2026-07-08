@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Products.Queries.SearchProductSuggestions;
 using FoodDiary.Mediator;

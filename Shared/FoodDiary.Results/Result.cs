@@ -1,11 +1,11 @@
-namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+namespace FoodDiary.Results;
 
 public abstract class Result {
     public bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
     public Error Error { get; }
 
-    private protected Result(bool isSuccess, Error error) {
+    protected Result(bool isSuccess, Error error) {
         switch (isSuccess) {
             case true when error != Error.None:
                 throw new InvalidOperationException("A successful result cannot contain an error.");

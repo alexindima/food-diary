@@ -7,7 +7,7 @@ Rules for `MailRelay/FoodDiary.MailRelay.Application/`.
 - Own relay use cases, application models, and abstractions.
 - Keep HTTP, PostgreSQL, RabbitMQ, SMTP, DNS, and host configuration out of this project.
 - Application services may coordinate abstractions such as queue storage, delivery transport, and dispatch notification.
-- Depend only on `MailRelay/FoodDiary.MailRelay.Domain` and `Shared/FoodDiary.Mediator` among local production projects.
+- Depend only on `MailRelay/FoodDiary.MailRelay.Domain`, `Shared/FoodDiary.Results`, and `Shared/FoodDiary.Mediator` among local production projects.
 
 ## Structure
 - Organize by feature or purpose folders, not a flat `Services/` bucket.

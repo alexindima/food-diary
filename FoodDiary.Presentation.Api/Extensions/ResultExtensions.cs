@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Export.Models;
 using Microsoft.AspNetCore.Mvc;
 using FoodDiary.Presentation.Api.Responses;

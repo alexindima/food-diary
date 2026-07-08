@@ -1,6 +1,6 @@
 using FoodDiary.MailRelay.Application;
 using FoodDiary.MailRelay.Application.Abstractions;
-using FoodDiary.MailRelay.Application.Common.Results;
+using FoodDiary.Results;
 using FoodDiary.MailRelay.Application.Emails.Commands;
 using FoodDiary.MailRelay.Application.Emails.Queries;
 using FoodDiary.MailRelay.Application.Health;

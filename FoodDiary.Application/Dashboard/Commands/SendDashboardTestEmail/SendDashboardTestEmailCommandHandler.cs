@@ -1,6 +1,7 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Domain.ValueObjects.Ids;

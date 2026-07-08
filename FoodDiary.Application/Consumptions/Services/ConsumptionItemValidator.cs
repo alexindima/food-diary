@@ -1,5 +1,6 @@
-using System.Globalization;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using System.Globalization;
+using FoodDiary.Results;
 using FoodDiary.Application.Consumptions.Common;
 
 namespace FoodDiary.Application.Consumptions.Services;

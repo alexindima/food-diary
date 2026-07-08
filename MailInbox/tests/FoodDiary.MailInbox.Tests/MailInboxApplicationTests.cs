@@ -4,6 +4,7 @@ using System.Globalization;
 using FoodDiary.MailInbox.Application;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Application.Common.Behaviors;
+using FoodDiary.Results;
 using FoodDiary.MailInbox.Application.Common.Results;
 using FoodDiary.MailInbox.Application.Health;
 using FoodDiary.MailInbox.Application.Messages.Commands;
@@ -332,7 +333,7 @@ public sealed class MailInboxApplicationTests {
 
     [Fact]
     public void ResultFailure_CreatesFailedResult() {
-        MailInboxError error = MailInboxErrors.MessageNotFound(Guid.NewGuid());
+        Error error = MailInboxErrors.MessageNotFound(Guid.NewGuid());
 
         var result = Result.Failure(error);
 
@@ -344,7 +345,7 @@ public sealed class MailInboxApplicationTests {
     [Fact]
     public void ResultConstructor_WhenStateIsInvalid_Throws() {
         Assert.Throws<InvalidOperationException>(() => new ExposedResult(isSuccess: true, MailInboxErrors.MessageNotFound(Guid.NewGuid())));
-        Assert.Throws<InvalidOperationException>(() => new ExposedResult(isSuccess: false, error: null));
+        Assert.Throws<InvalidOperationException>(() => new ExposedResult(isSuccess: false, Error.None));
     }
 
     [Fact]
@@ -452,10 +453,10 @@ public sealed class MailInboxApplicationTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class ExposedResult(bool isSuccess, MailInboxError? error) : Result(isSuccess, error);
+    private sealed class ExposedResult(bool isSuccess, Error error) : Result(isSuccess, error);
 
     [ExcludeFromCodeCoverage]
-    private sealed class UnsupportedResult() : Result(isSuccess: true, error: null);
+    private sealed class UnsupportedResult() : Result(isSuccess: true, Error.None);
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider(DateTimeOffset now) : TimeProvider {

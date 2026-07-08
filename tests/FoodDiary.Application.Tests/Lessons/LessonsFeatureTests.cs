@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Application.Abstractions.Lessons.Models;
 using FoodDiary.Application.Lessons.Commands.MarkLessonRead;

@@ -11,6 +11,7 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.Application.Abstractions"] = [
                 "FoodDiary.Domain",
+                "FoodDiary.Results",
             ],
             ["FoodDiary.Domain"] = [],
             ["FoodDiary.Infrastructure"] = [
@@ -37,6 +38,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.MailInbox.Application"] = [
                 "FoodDiary.MailInbox.Domain",
                 "FoodDiary.Mediator",
+                "FoodDiary.Results",
             ],
             ["FoodDiary.MailInbox.Client"] = [],
             ["FoodDiary.MailInbox.Domain"] = [],
@@ -58,6 +60,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.MailRelay.Application"] = [
                 "FoodDiary.MailRelay.Domain",
                 "FoodDiary.Mediator",
+                "FoodDiary.Results",
             ],
             ["FoodDiary.MailRelay.Client"] = [],
             ["FoodDiary.MailRelay.Domain"] = [],
@@ -84,6 +87,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Resources"] = [
                 "FoodDiary.Application.Abstractions",
             ],
+            ["FoodDiary.Results"] = [],
             ["FoodDiary.Telegram.Bot"] = [],
             ["FoodDiary.Web.Api"] = [
                 "FoodDiary.Application",
@@ -158,7 +162,9 @@ public sealed class ProjectDependencyMatrixTests {
     }
 
     private static string ProjectFolderFromProjectName(string projectName) =>
-        string.Equals(projectName, "FoodDiary.Mediator", StringComparison.Ordinal)
-            ? Path.Combine("Shared", "FoodDiary.Mediator")
-            : projectName;
+        projectName switch {
+            "FoodDiary.Mediator" => Path.Combine("Shared", "FoodDiary.Mediator"),
+            "FoodDiary.Results" => Path.Combine("Shared", "FoodDiary.Results"),
+            _ => projectName,
+        };
 }

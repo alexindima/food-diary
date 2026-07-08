@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;

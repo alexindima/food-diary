@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 
 namespace FoodDiary.Application.Authentication.Commands.GoogleLogin;
 

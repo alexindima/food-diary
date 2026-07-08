@@ -37,6 +37,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Mail relay presentation layer: `MailRelay/FoodDiary.MailRelay.Presentation/AGENTS.md`
 - Mail relay Web API host: `MailRelay/FoodDiary.MailRelay.WebApi/AGENTS.md`
 - Telegram bot: `FoodDiary.Telegram.Bot/AGENTS.md`
+- Shared result primitives: `Shared/FoodDiary.Results/AGENTS.md`
 
 ## Cross-Repo Rules
 - Keep architecture feature-first and move legacy flat areas incrementally.

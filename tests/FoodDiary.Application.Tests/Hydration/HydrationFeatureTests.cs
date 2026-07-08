@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
 using FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
 using FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
@@ -10,7 +11,7 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.Hydration.Mappings;

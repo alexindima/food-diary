@@ -1,7 +1,8 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Options;

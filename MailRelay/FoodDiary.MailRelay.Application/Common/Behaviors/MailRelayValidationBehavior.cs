@@ -2,7 +2,7 @@ using System.Reflection;
 using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Mediator;
-using MailRelayResult = FoodDiary.MailRelay.Application.Common.Results.Result;
+using MailRelayResult = FoodDiary.Results.Result;
 
 namespace FoodDiary.MailRelay.Application.Common.Behaviors;
 
@@ -49,11 +49,11 @@ public sealed class MailRelayValidationBehavior<TRequest, TResponse>(IEnumerable
         string errorMessage = details.Count > 1 || details.Values.Any(static messages => messages.Length > 1)
             ? "One or more validation errors occurred."
             : firstError.ErrorMessage;
-        var error = new MailRelayError(
+        var error = new Error(
             errorCode,
             errorMessage,
-            ErrorKind.Validation,
-            details.Count > 0 ? details : null);
+            Kind: ErrorKind.Validation,
+            Details: details.Count > 0 ? details : null);
 
         if (typeof(TResponse) == typeof(MailRelayResult)) {
             return (TResponse)MailRelayResult.Failure(error);
@@ -62,7 +62,7 @@ public sealed class MailRelayValidationBehavior<TRequest, TResponse>(IEnumerable
         return CreateTypedFailure(error);
     }
 
-    private static TResponse CreateTypedFailure(MailRelayError error) {
+    private static TResponse CreateTypedFailure(Error error) {
         Type resultType = typeof(TResponse);
         if (!resultType.IsGenericType || resultType.GetGenericTypeDefinition() != typeof(Result<>)) {
             throw new InvalidOperationException($"Unable to create failure result for type {typeof(TResponse).Name}.");
@@ -75,7 +75,7 @@ public sealed class MailRelayValidationBehavior<TRequest, TResponse>(IEnumerable
                 string.Equals(method.Name, nameof(MailRelayResult.Failure), StringComparison.Ordinal) &&
                 method.IsGenericMethodDefinition &&
                 method.GetParameters() is [{ ParameterType: Type parameterType }] &&
-                parameterType == typeof(MailRelayError))
+                parameterType == typeof(Error))
             ?.MakeGenericMethod(valueType);
 
         return failureMethod is null

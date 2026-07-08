@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
 using FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
 using FoodDiary.Application.Notifications.Commands.RemoveWebPushSubscription;
@@ -20,7 +21,7 @@ using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Notifications.Models;
 
 namespace FoodDiary.Application.Tests.Notifications;

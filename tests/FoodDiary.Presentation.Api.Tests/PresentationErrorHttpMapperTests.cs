@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.Http;
 

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FoodDiary.MailInbox.Domain\FoodDiary.MailInbox.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\FoodDiary.Results\FoodDiary.Results.csproj" />
     <ProjectReference Include="..\..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
   </ItemGroup>
 

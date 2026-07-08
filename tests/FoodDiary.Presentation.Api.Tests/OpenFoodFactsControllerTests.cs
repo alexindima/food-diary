@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Application.OpenFoodFacts.Queries.SearchByBarcode;
 using FoodDiary.Application.OpenFoodFacts.Queries.SearchProducts;

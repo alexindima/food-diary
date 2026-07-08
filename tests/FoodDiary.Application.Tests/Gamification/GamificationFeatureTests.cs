@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Gamification.Queries.GetGamification;
 using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Services;
@@ -6,7 +7,7 @@ using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Application.Users.Common;
 

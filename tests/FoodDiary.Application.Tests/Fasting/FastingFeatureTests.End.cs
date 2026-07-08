@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Fasting.Commands.EndFasting;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Domain.Entities.Tracking.Fasting;

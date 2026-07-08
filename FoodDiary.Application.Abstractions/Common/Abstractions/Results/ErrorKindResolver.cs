@@ -1,3 +1,5 @@
+using FoodDiary.Results;
+
 namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
 public static class ErrorKindResolver {

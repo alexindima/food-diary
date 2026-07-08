@@ -1,5 +1,5 @@
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Fasting.Commands.RecordFastingTelemetry;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Fasting.Models;

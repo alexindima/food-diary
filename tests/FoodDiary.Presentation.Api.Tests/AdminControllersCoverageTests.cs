@@ -1,6 +1,6 @@
 using System.Net;
 using FoodDiary.Application.Abstractions.Admin.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
 using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
 using FoodDiary.Application.Admin.Commands.DismissContentReport;

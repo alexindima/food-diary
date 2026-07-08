@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
 using FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
 using FoodDiary.Application.Notifications.Commands.ScheduleTestNotification;

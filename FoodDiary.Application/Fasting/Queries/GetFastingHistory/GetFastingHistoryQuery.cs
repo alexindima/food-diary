@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Fasting.Models;
 
 namespace FoodDiary.Application.Fasting.Queries.GetFastingHistory;

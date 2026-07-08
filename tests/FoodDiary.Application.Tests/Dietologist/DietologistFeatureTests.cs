@@ -1,6 +1,7 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
 using FoodDiary.Application.Dietologist.Commands.AcceptInvitationForCurrentUser;
 using FoodDiary.Application.Dietologist.Commands.CreateRecommendation;

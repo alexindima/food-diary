@@ -1,4 +1,5 @@
 using System.Globalization;
+using FoodDiary.Results;
 using FoodDiary.MailInbox.Application.Common.Results;
 using FoodDiary.MailInbox.Application.Health;
 using FoodDiary.MailInbox.Application.Messages.Commands;
@@ -230,7 +231,7 @@ public sealed class MailInboxPresentationTests {
     [InlineData(ErrorKind.Internal, StatusCodes.Status500InternalServerError)]
     public void MailInboxResultExtensions_ErrorResult_MapsErrorKindToStatusCode(ErrorKind kind, int expectedStatusCode) {
         IActionResult result = MailInboxResultExtensions.ErrorResult(
-            new MailInboxError("code", "message", kind, new Dictionary<string, string[]>(StringComparer.Ordinal) {
+            new Error("code", "message", kind, new Dictionary<string, string[]>(StringComparer.Ordinal) {
                 ["Request.RawMime"] = ["Required"],
             }),
             "trace-123");
@@ -248,7 +249,7 @@ public sealed class MailInboxPresentationTests {
     [Fact]
     public void MailInboxResultExtensions_ErrorResult_WhenErrorKindIsUnknown_ReturnsInternalServerError() {
         IActionResult result = MailInboxResultExtensions.ErrorResult(
-            new MailInboxError("code", "message", (ErrorKind)999, Details: null),
+            new Error("code", "message", (ErrorKind)999, Details: null),
             traceId: null);
 
         ObjectResult objectResult = Assert.IsType<ObjectResult>(result);

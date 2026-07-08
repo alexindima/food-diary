@@ -1,4 +1,4 @@
-using FoodDiary.MailInbox.Application.Common.Results;
+using FoodDiary.Results;
 using FoodDiary.MailInbox.Presentation.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,13 +29,13 @@ public static class MailInboxResultExtensions {
             ? controller.NoContent()
             : ErrorResult(result.Error!, controller.HttpContext.TraceIdentifier);
 
-    public static IActionResult ErrorResult(MailInboxError error, string? traceId) =>
+    public static IActionResult ErrorResult(Error error, string? traceId) =>
         new ObjectResult(new MailInboxApiErrorHttpResponse(
             error.Code,
             error.Message,
             traceId,
             error.Details)) {
-            StatusCode = MapStatusCode(error.Kind),
+            StatusCode = MapStatusCode(error.Kind ?? ErrorKind.Internal),
         };
 
     private static int MapStatusCode(ErrorKind kind) =>

@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessageDetails;
 

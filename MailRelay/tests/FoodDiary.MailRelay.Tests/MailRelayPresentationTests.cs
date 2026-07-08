@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using FoodDiary.MailRelay.Client.Models;
-using FoodDiary.MailRelay.Application.Common.Results;
+using FoodDiary.Results;
 using FoodDiary.MailRelay.Application.Emails.Commands;
 using FoodDiary.MailRelay.Application.Emails.Models;
 using FoodDiary.MailRelay.Application.Emails.Queries;
@@ -49,7 +49,7 @@ public sealed class MailRelayPresentationTests {
     [InlineData(ErrorKind.Internal, StatusCodes.Status500InternalServerError)]
     public void ErrorResult_MapsErrorKindToHttpStatus(ErrorKind kind, int expectedStatusCode) {
         IActionResult result = MailRelayResultExtensions.ErrorResult(
-            new MailRelayError("code", "message", kind),
+            new Error("code", "message", kind),
             "trace");
 
         ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
@@ -84,7 +84,7 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public void ResultExtensions_WhenResultFails_ReturnErrorActionResults() {
         var controller = new TestController();
-        var error = new MailRelayError("code", "message", ErrorKind.Conflict);
+        var error = new Error("code", "message", ErrorKind.Conflict);
 
         IActionResult ok = Result.Failure<int>(error).ToOkActionResult(controller, static value => new { Value = value });
         IActionResult created = Result.Failure<int>(error).ToCreatedActionResult(

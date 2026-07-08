@@ -1,6 +1,6 @@
 using FluentValidation;
 using FoodDiary.MailRelay.Application.Common.Behaviors;
-using FoodDiary.MailRelay.Application.Common.Results;
+using FoodDiary.Results;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.MailRelay.Tests;
@@ -11,7 +11,7 @@ public sealed class MailRelayResultAndValidationBehaviorTests {
     public void Result_WhenStateIsInvalid_Throws() {
         InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => new InvalidResult());
 
-        Assert.Contains("Result state is invalid", ex.Message, StringComparison.Ordinal);
+        Assert.Contains("A successful result cannot contain an error.", ex.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -69,13 +69,13 @@ public sealed class MailRelayResultAndValidationBehaviorTests {
 
     private sealed class InvalidResult : Result {
         public InvalidResult()
-            : base(isSuccess: true, new MailRelayError("invalid", "invalid")) {
+            : base(isSuccess: true, new Error("invalid", "invalid")) {
         }
     }
 
     private sealed class UnsupportedResult : Result {
         public UnsupportedResult()
-            : base(isSuccess: false, new MailRelayError("unsupported", "unsupported")) {
+            : base(isSuccess: false, new Error("unsupported", "unsupported")) {
         }
     }
 }

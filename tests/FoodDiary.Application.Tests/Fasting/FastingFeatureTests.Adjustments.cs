@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
 using FoodDiary.Application.Fasting.Commands.ReduceActiveFastingTarget;
 using FoodDiary.Application.Fasting.Commands.UpdateCurrentFastingCheckIn;

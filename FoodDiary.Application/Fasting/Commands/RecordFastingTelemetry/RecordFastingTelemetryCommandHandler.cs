@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 

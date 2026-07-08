@@ -2,6 +2,7 @@ using System.Reflection;
 using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Common.Behaviors;
@@ -54,8 +55,8 @@ public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidat
         var error = new Error(
             errorCode,
             errorMessage,
-            groupedDetails.Count > 0 ? groupedDetails : null,
-            ErrorKindResolver.Resolve(errorCode));
+            Kind: ErrorKindResolver.Resolve(errorCode),
+            Details: groupedDetails.Count > 0 ? groupedDetails : null);
 
         if (typeof(TResponse) == typeof(Result)) {
             return (TResponse)Result.Failure(error);

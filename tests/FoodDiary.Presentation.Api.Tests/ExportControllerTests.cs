@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Queries.ExportCycle;
 using FoodDiary.Application.Export.Queries.ExportDiary;

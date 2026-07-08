@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Fasting.Commands.RecordFastingTelemetry;
 using FoodDiary.Presentation.Api.Features.Logs;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;

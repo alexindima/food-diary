@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+namespace FoodDiary.Results;
 
 public enum ErrorKind {
     Validation = 0,

@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
@@ -175,10 +176,10 @@ public sealed class ResultExtensionsTests {
         var error = new Error(
             "Validation.Invalid",
             "Invalid email format",
-            new Dictionary<string, string[]>(StringComparer.Ordinal) {
+            Kind: ErrorKindResolver.Resolve("Validation.Invalid"),
+            Details: new Dictionary<string, string[]>(StringComparer.Ordinal) {
                 ["Email"] = ["Invalid email format"],
-            },
-            ErrorKindResolver.Resolve("Validation.Invalid"));
+            });
         var result = Result.Failure(error);
 
         IActionResult actionResult = result.ToActionResult();

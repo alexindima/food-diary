@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
 using FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
 using FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
@@ -10,7 +11,7 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Mappings;

@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Recipes.Services;

@@ -1,3 +1,5 @@
+using FoodDiary.Results;
+
 using FoodDiary.Application.Abstractions.Usda.Common;
 
 namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;

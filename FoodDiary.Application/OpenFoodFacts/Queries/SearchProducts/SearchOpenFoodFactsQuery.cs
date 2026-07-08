@@ -1,5 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 
 namespace FoodDiary.Application.OpenFoodFacts.Queries.SearchProducts;

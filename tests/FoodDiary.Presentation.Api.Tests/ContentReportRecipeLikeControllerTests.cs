@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.ContentReports.Commands.CreateContentReport;
 using FoodDiary.Application.ContentReports.Models;
 using FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;

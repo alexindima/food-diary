@@ -1,9 +1,10 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Integrations.Options;
 using Microsoft.AspNetCore.WebUtilities;

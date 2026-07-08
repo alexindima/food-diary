@@ -1,7 +1,7 @@
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Models;
 using FoodDiary.Domain.Entities.Billing;

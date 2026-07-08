@@ -5,7 +5,7 @@ using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 
 namespace FoodDiary.Application.Tests.Usda;
 

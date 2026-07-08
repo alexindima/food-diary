@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using FoodDiary.Results;
 using FoodDiary.Presentation.Api.Options;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
@@ -54,7 +55,7 @@ public sealed class TelegramBotSecretAuthorizationFilter(
 
     private static ObjectResult CreateErrorResult(
         AuthorizationFilterContext context,
-        Application.Abstractions.Common.Abstractions.Results.Error error) =>
+        Error error) =>
         new(new ApiErrorHttpResponse(
             error.Code,
             error.Message,

@@ -1,5 +1,5 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 using FoodDiary.Application.Nutrition.Common;
 using FoodDiary.Application.Consumptions.Commands.RepeatMeal;
 using FoodDiary.Application.Consumptions.Common;

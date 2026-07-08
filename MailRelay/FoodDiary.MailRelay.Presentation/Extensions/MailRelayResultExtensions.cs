@@ -1,4 +1,4 @@
-using FoodDiary.MailRelay.Application.Common.Results;
+using FoodDiary.Results;
 using FoodDiary.MailRelay.Presentation.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -38,13 +38,13 @@ public static class MailRelayResultExtensions {
                 : ErrorResult(result.Error!, controller.HttpContext.TraceIdentifier);
     }
 
-    public static IActionResult ErrorResult(MailRelayError error, string? traceId) =>
+    public static IActionResult ErrorResult(Error error, string? traceId) =>
         new ObjectResult(new MailRelayApiErrorHttpResponse(
             error.Code,
             error.Message,
             traceId,
             error.Details)) {
-            StatusCode = MapStatusCode(error.Kind),
+            StatusCode = MapStatusCode(error.Kind ?? ErrorKind.Internal),
         };
 
     private static int MapStatusCode(ErrorKind kind) =>
