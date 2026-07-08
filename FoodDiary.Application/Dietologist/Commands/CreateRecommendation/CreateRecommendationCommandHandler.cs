@@ -13,6 +13,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
 
@@ -27,9 +28,12 @@ public sealed class CreateRecommendationCommandHandler(
     : ICommandHandler<CreateRecommendationCommand, Result<RecommendationModel>> {
     public async Task<Result<RecommendationModel>> Handle(
         CreateRecommendationCommand command, CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            dietologistUserContextService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<RecommendationModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<RecommendationModel>(userIdResult);
         }
 
         UserId dietologistUserId = userIdResult.Value;

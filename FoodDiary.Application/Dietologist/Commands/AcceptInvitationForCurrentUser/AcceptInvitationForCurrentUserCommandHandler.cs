@@ -4,6 +4,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -24,9 +25,12 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
     IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<AcceptInvitationForCurrentUserCommand, Result> {
     public async Task<Result> Handle(AcceptInvitationForCurrentUserCommand command, CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            dietologistUserContextService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure(userIdResult);
+            return Result.Failure(userIdResult.Error);
         }
 
         UserId dietologistUserId = userIdResult.Value;

@@ -335,7 +335,7 @@ public class DashboardFeatureTests {
         IDashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
             out Func<DashboardSnapshotRequest?> getLastRequest,
             out Func<CancellationToken> getLastCancellationToken);
-        GetDashboardSnapshotQueryHandler handler = new(builder);
+        GetDashboardSnapshotQueryHandler handler = new(builder, CreateUserRepository(User.Create("dashboard-forward@example.com", "hash")));
         using var cts = new CancellationTokenSource();
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
@@ -358,7 +358,7 @@ public class DashboardFeatureTests {
     [InlineData("00000000-0000-0000-0000-000000000000")]
     public async Task GetDashboardSnapshotQueryHandler_WithMissingUserId_ReturnsInvalidToken(string? userIdText) {
         IDashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(out Func<DashboardSnapshotRequest?> getLastRequest, out _);
-        GetDashboardSnapshotQueryHandler handler = new(builder);
+        GetDashboardSnapshotQueryHandler handler = new(builder, CreateUserRepository(User.Create("dashboard-missing@example.com", "hash")));
         Guid? userId = userIdText is null ? (Guid?)null : Guid.Parse(userIdText);
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
@@ -461,6 +461,14 @@ public class DashboardFeatureTests {
                 return Task.FromResult(user is not null && user.Id == id
                     ? Result.Success(user)
                     : Result.Failure<User>(Errors.Authentication.InvalidToken));
+            });
+        repository
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                Error? error = user is not null
+                    ? null
+                    : Errors.Authentication.InvalidToken;
+                return Task.FromResult(error);
             });
         return repository;
     }

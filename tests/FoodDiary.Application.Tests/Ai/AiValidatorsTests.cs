@@ -10,6 +10,7 @@ using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -333,7 +334,8 @@ public class AiValidatorsTests {
     public async Task ParseFoodTextHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new ParseFoodTextCommandHandler(
             CreateOpenAiFoodService(),
-            CreateAiUserContextService(User.Create("ai-empty-text-user@example.com", "hash")));
+            CreateAiUserContextService(User.Create("ai-empty-text-user@example.com", "hash")),
+            CreateCurrentUserAccessService(User.Create("ai-empty-text-user@example.com", "hash")));
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.Empty, "apple"), CancellationToken.None);
 
@@ -344,7 +346,10 @@ public class AiValidatorsTests {
     [Fact]
     public async Task ParseFoodTextHandler_WhenUserMissing_ReturnsInvalidToken() {
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
-        var handler = new ParseFoodTextCommandHandler(openAiFoodService, CreateAiUserContextService(user: null));
+        var handler = new ParseFoodTextCommandHandler(
+            openAiFoodService,
+            CreateAiUserContextService(user: null),
+            CreateCurrentUserAccessService(user: null));
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.NewGuid(), "apple"), CancellationToken.None);
 
@@ -358,7 +363,7 @@ public class AiValidatorsTests {
         var user = User.Create("active-ai-text@example.com", "hash");
         user.SetLanguage("ru");
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
-        var handler = new ParseFoodTextCommandHandler(openAiFoodService, CreateAiUserContextService(user));
+        var handler = new ParseFoodTextCommandHandler(openAiFoodService, CreateAiUserContextService(user), CreateCurrentUserAccessService(user));
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(user.Id.Value, "apple 100g"), CancellationToken.None);
 
@@ -418,6 +423,20 @@ public class AiValidatorsTests {
                     user.Language,
                     user.AiInputTokenLimit,
                     user.AiOutputTokenLimit)));
+            });
+        return service;
+    }
+
+    private static ICurrentUserAccessService CreateCurrentUserAccessService(User? user) {
+        ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
+        service
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                Error? error = user is null || user.Id != id || !user.IsActive || user.DeletedAt is not null
+                    ? Errors.Authentication.InvalidToken
+                    : null;
+                return Task.FromResult(error);
             });
         return service;
     }

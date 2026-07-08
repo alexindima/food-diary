@@ -1,4 +1,5 @@
 using FoodDiary.Results;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
@@ -6,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dashboard.Common;
 
-public interface IDashboardUserContextService {
+public interface IDashboardUserContextService : ICurrentUserAccessService {
     Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken);
 
     async Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(

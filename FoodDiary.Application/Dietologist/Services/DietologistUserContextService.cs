@@ -38,6 +38,9 @@ internal sealed class DietologistUserContextService(
     public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) =>
         userContextService.GetAccessibleUserAsync(userId, cancellationToken);
 
+    public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
+        userContextService.EnsureCanAccessAsync(userId, cancellationToken);
+
     public Task<User?> GetAccessibleUserByEmailAsync(string email, CancellationToken cancellationToken) =>
         userLookupService.GetAccessibleUserByEmailAsync(email, cancellationToken);
 

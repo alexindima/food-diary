@@ -1276,6 +1276,11 @@ public sealed class JobsTests {
                 : Result.Success(user));
         }
 
+        public async Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
+            Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            return result.IsFailure ? result.Error : null;
+        }
+
         public Task<Result<BillingUserProfileModel>> GetAccessibleUserProfileAsync(
             UserId userId,
             CancellationToken cancellationToken) {

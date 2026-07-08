@@ -8,6 +8,7 @@ using FoodDiary.Application.Lessons.Models;
 using FoodDiary.Application.Lessons.Queries.GetLessonById;
 using FoodDiary.Application.Lessons.Queries.GetLessons;
 using FoodDiary.Application.Lessons.Services;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -21,7 +22,7 @@ public class LessonsFeatureTests {
         var lesson = NutritionLesson.Create("Proteins", "Content", summary: null, "en",
             LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5);
         INutritionLessonRepository repo = CreateLessonRepository(lesson, hasProgress: false, out Func<bool> wasProgressAdded);
-        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider());
+        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider(), Substitute.For<ICurrentUserAccessService>());
 
         Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), lesson.Id.Value), CancellationToken.None);
@@ -35,7 +36,7 @@ public class LessonsFeatureTests {
         var lesson = NutritionLesson.Create("Proteins", "Content", summary: null, "en",
             LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5);
         INutritionLessonRepository repo = CreateLessonRepository(lesson, hasProgress: true, out Func<bool> wasProgressAdded);
-        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider());
+        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider(), Substitute.For<ICurrentUserAccessService>());
 
         Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), lesson.Id.Value), CancellationToken.None);
@@ -47,7 +48,7 @@ public class LessonsFeatureTests {
     [Fact]
     public async Task MarkLessonRead_WhenLessonNotFound_ReturnsFailure() {
         INutritionLessonRepository repo = CreateLessonRepository(lesson: null, hasProgress: false);
-        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider());
+        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider(), Substitute.For<ICurrentUserAccessService>());
 
         Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
@@ -61,7 +62,8 @@ public class LessonsFeatureTests {
         var handler = new MarkLessonReadCommandHandler(
             CreateLessonRepository(lesson: null, hasProgress: false),
             CreateLessonRepository(lesson: null, hasProgress: false),
-            new FixedDateTimeProvider());
+            new FixedDateTimeProvider(),
+            Substitute.For<ICurrentUserAccessService>());
 
         Result result = await handler.Handle(
             new MarkLessonReadCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
@@ -401,11 +403,11 @@ public class LessonsFeatureTests {
 
     private static GetLessonsQueryHandler CreateGetLessonsHandler(
         INutritionLessonRepository repository) =>
-        new(CreateLessonReadService(repository));
+        new(CreateLessonReadService(repository), Substitute.For<ICurrentUserAccessService>());
 
     private static GetLessonByIdQueryHandler CreateGetLessonByIdHandler(
         INutritionLessonRepository repository) =>
-        new(CreateLessonReadService(repository));
+        new(CreateLessonReadService(repository), Substitute.For<ICurrentUserAccessService>());
 
     private static ILessonReadService CreateLessonReadService(
         INutritionLessonRepository repository) =>

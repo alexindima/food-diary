@@ -177,7 +177,7 @@ public class ExercisesFeatureTests {
         var repo = new InMemoryExerciseEntryRepository();
         repo.Seed(entry);
 
-        var handler = new GetExerciseEntriesQueryHandler(repo);
+        var handler = new GetExerciseEntriesQueryHandler(repo, Substitute.For<ICurrentUserAccessService>());
         Result<IReadOnlyList<ExerciseEntryModel>> result = await handler.Handle(
             new GetExerciseEntriesQuery(userId.Value, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(1)),
             CancellationToken.None);
@@ -188,7 +188,7 @@ public class ExercisesFeatureTests {
 
     [Fact]
     public async Task GetExerciseEntries_WithNullUserId_ReturnsFailure() {
-        var handler = new GetExerciseEntriesQueryHandler(new InMemoryExerciseEntryRepository());
+        var handler = new GetExerciseEntriesQueryHandler(new InMemoryExerciseEntryRepository(), Substitute.For<ICurrentUserAccessService>());
 
         Result<IReadOnlyList<ExerciseEntryModel>> result = await handler.Handle(
             new GetExerciseEntriesQuery(UserId: null, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow),

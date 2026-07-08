@@ -4,7 +4,7 @@ using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -22,9 +22,9 @@ public sealed class CreateCheckoutSessionCommandHandler(
     public async Task<Result<BillingCheckoutSessionModel>> Handle(
         CreateCheckoutSessionCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await ResolveUserIdAsync(command, cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<BillingCheckoutSessionModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<BillingCheckoutSessionModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
@@ -80,6 +80,11 @@ public sealed class CreateCheckoutSessionCommandHandler(
 
         return Result.Success(session);
     }
+
+    private Task<Result<UserId>> ResolveUserIdAsync(
+        CreateCheckoutSessionCommand command,
+        CancellationToken cancellationToken) =>
+        CurrentUserAccessResolver.ResolveAsync(command.UserId, billingUserContextService, cancellationToken);
 
     private IBillingProviderGateway? ResolveBillingProvider(string? provider) {
         string? normalizedProvider = provider?.Trim();

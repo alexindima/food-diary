@@ -7,6 +7,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.WeeklyCheckIn.Services;
 
 public sealed class WeeklyCheckInUserProfileService(IUserContextService userContextService) : IWeeklyCheckInUserProfileService {
+    public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
+        userContextService.EnsureCanAccessAsync(userId, cancellationToken);
+
     public async Task<Result<WeeklyCheckInUserProfile>> GetAsync(UserId userId, CancellationToken cancellationToken = default) {
         Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {

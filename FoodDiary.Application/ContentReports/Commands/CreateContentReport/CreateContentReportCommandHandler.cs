@@ -1,23 +1,30 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.ContentReports.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.ContentReports.Commands.CreateContentReport;
 
-public sealed class CreateContentReportCommandHandler(IContentReportWriteRepository reportRepository)
+public sealed class CreateContentReportCommandHandler(
+    IContentReportWriteRepository reportRepository,
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<CreateContentReportCommand, Result<ContentReportModel>> {
     public async Task<Result<ContentReportModel>> Handle(
         CreateContentReportCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<ContentReportModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<ContentReportModel>(userIdResult);
         }
 
         Result<ReportTargetType> targetTypeResult = EnumValueParser.ParseRequired<ReportTargetType>(

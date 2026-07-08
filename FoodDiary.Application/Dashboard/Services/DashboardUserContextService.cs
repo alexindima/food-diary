@@ -12,6 +12,9 @@ internal sealed class DashboardUserContextService(IUserContextService userContex
     public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) =>
         userContextService.GetAccessibleUserAsync(userId, cancellationToken);
 
+    public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
+        userContextService.EnsureCanAccessAsync(userId, cancellationToken);
+
     public async Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(
         UserId userId,
         CancellationToken cancellationToken) {

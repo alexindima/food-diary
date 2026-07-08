@@ -57,7 +57,7 @@ public class ConsumptionsFeatureTests {
             imageAssetAccessService);
 
     private static DeleteConsumptionCommandHandler DeleteConsumptionHandler(IMealRepository repository) =>
-        new(repository, repository);
+        new(repository, repository, Substitute.For<ICurrentUserAccessService>());
 
     private static RepeatMealCommandHandler RepeatMealHandler(
         IMealRepository repository,
@@ -1565,7 +1565,9 @@ public class ConsumptionsFeatureTests {
             new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
             MealType.Lunch);
 
-        var handler = new GetConsumptionByIdQueryHandler(CreateConsumptionReadService(new SingleMealRepository(meal)));
+        var handler = new GetConsumptionByIdQueryHandler(
+            CreateConsumptionReadService(new SingleMealRepository(meal)),
+            CreateCurrentUserAccessService(User.Create("consumption-empty-id@example.com", "hash")));
 
         Result<ConsumptionModel> result = await handler.Handle(
             new GetConsumptionByIdQuery(userId.Value, Guid.Empty),
@@ -1587,7 +1589,9 @@ public class ConsumptionsFeatureTests {
         meal.AddProduct(ProductId.New(), 150);
         meal.ApplyNutrition(new MealNutritionUpdate(350, 20, 12, 30, 4, 0, IsAutoCalculated: true));
 
-        var handler = new GetConsumptionByIdQueryHandler(CreateConsumptionReadService(new SingleMealRepository(meal)));
+        var handler = new GetConsumptionByIdQueryHandler(
+            CreateConsumptionReadService(new SingleMealRepository(meal)),
+            CreateCurrentUserAccessService(User.Create("consumption-existing@example.com", "hash")));
 
         Result<ConsumptionModel> result = await handler.Handle(new GetConsumptionByIdQuery(userId.Value, meal.Id.Value), CancellationToken.None);
 
@@ -2252,7 +2256,9 @@ public class ConsumptionsFeatureTests {
 
     [Fact]
     public async Task GetConsumptionByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetConsumptionByIdQueryHandler(CreateConsumptionReadService(new CreatingMealRepository()));
+        var handler = new GetConsumptionByIdQueryHandler(
+            CreateConsumptionReadService(new CreatingMealRepository()),
+            Substitute.For<ICurrentUserAccessService>());
 
         Result<ConsumptionModel> result = await handler.Handle(
             new GetConsumptionByIdQuery(UserId: null, Guid.NewGuid()),

@@ -10,6 +10,9 @@ internal sealed class NotificationUserAccessService(IUserContextService userCont
     public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) =>
         userContextService.GetAccessibleUserAsync(userId, cancellationToken);
 
+    public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
+        userContextService.EnsureCanAccessAsync(userId, cancellationToken);
+
     public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
         userContextService.UpdateUserAsync(user, cancellationToken);
 }

@@ -210,7 +210,8 @@ public class NotificationsFeatureTests {
 
         var handler = new GetUnreadCountQueryHandler(
             CreateNotificationFeedReadService(repo, new RecordingNotificationTextRenderer()),
-            CreateNotificationUserContextService(CreateUser(userId)));
+            CreateNotificationUserContextService(CreateUser(userId)),
+            CreateNotificationUserAccessService(CreateUser(userId)));
         Result<int> result = await handler.Handle(
             new GetUnreadCountQuery(userId.Value),
             CancellationToken.None);
@@ -223,7 +224,8 @@ public class NotificationsFeatureTests {
     public async Task GetUnreadCount_WithNullUserId_ReturnsInvalidToken() {
         var handler = new GetUnreadCountQueryHandler(
             CreateNotificationFeedReadService(new InMemoryNotificationRepository(), new RecordingNotificationTextRenderer()),
-            CreateNotificationUserContextService(CreateUser()));
+            CreateNotificationUserContextService(CreateUser()),
+            CreateNotificationUserAccessService(CreateUser()));
 
         Result<int> result = await handler.Handle(new GetUnreadCountQuery(UserId: null), CancellationToken.None);
 
@@ -240,7 +242,8 @@ public class NotificationsFeatureTests {
         repo.Seed(Notification.Create(userId, NotificationTypes.FastingCompleted, "{}"));
         var handler = new GetUnreadCountQueryHandler(
             CreateNotificationFeedReadService(repo, new RecordingNotificationTextRenderer()),
-            CreateNotificationUserContextService(user));
+            CreateNotificationUserContextService(user),
+            CreateNotificationUserAccessService(user));
 
         Result<int> result = await handler.Handle(
             new GetUnreadCountQuery(userId.Value),
@@ -257,7 +260,8 @@ public class NotificationsFeatureTests {
         repo.Seed(Notification.Create(userId, "info", "{}"));
         var handler = new GetUnreadCountQueryHandler(
             CreateNotificationFeedReadService(repo, new RecordingNotificationTextRenderer()),
-            CreateNotificationUserContextService(CreateDeletedUser(userId)));
+            CreateNotificationUserContextService(CreateDeletedUser(userId)),
+            CreateNotificationUserAccessService(CreateDeletedUser(userId)));
 
         Result<int> result = await handler.Handle(
             new GetUnreadCountQuery(userId.Value),
@@ -271,7 +275,7 @@ public class NotificationsFeatureTests {
     public async Task UpdateNotificationPreferences_UpdatesUserAndWritesAuditLog() {
         User user = CreateUser(email: "notifications@example.com");
         var auditLogger = new RecordingAuditLogger();
-        var handler = new UpdateNotificationPreferencesCommandHandler(CreateNotificationPreferencesService(user), auditLogger);
+        var handler = new UpdateNotificationPreferencesCommandHandler(CreateNotificationPreferencesService(user), auditLogger, CreateNotificationUserAccessService(user));
 
         Result<NotificationPreferencesModel> result = await handler.Handle(
             new UpdateNotificationPreferencesCommand(user.Id.Value, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: false, SocialPushNotificationsEnabled: true, 12, 20),
@@ -296,7 +300,7 @@ public class NotificationsFeatureTests {
     public async Task UpdateNotificationPreferences_WhenPartialReminderUpdateWouldInvertOrder_ReturnsValidationFailure() {
         User user = CreateUser(email: "partial-reminders@example.com");
         var auditLogger = new RecordingAuditLogger();
-        var handler = new UpdateNotificationPreferencesCommandHandler(CreateNotificationPreferencesService(user), auditLogger);
+        var handler = new UpdateNotificationPreferencesCommandHandler(CreateNotificationPreferencesService(user), auditLogger, CreateNotificationUserAccessService(user));
 
         Result<NotificationPreferencesModel> result = await handler.Handle(
             new UpdateNotificationPreferencesCommand(user.Id.Value, PushNotificationsEnabled: null, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, 20, FastingCheckInFollowUpReminderHours: null),
@@ -313,7 +317,8 @@ public class NotificationsFeatureTests {
     public async Task UpdateNotificationPreferences_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new UpdateNotificationPreferencesCommandHandler(
             CreateNotificationPreferencesService(CreateUser()),
-            new RecordingAuditLogger());
+            new RecordingAuditLogger(),
+            CreateNotificationUserAccessService(CreateUser()));
 
         Result<NotificationPreferencesModel> result = await handler.Handle(
             new UpdateNotificationPreferencesCommand(Guid.Empty, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, FastingCheckInReminderHours: null, FastingCheckInFollowUpReminderHours: null),
@@ -329,7 +334,8 @@ public class NotificationsFeatureTests {
         var auditLogger = new RecordingAuditLogger();
         var handler = new UpdateNotificationPreferencesCommandHandler(
             CreateNotificationPreferencesService(CreateDeletedUser(userId)),
-            auditLogger);
+            auditLogger,
+            CreateNotificationUserAccessService(CreateDeletedUser(userId)));
 
         Result<NotificationPreferencesModel> result = await handler.Handle(
             new UpdateNotificationPreferencesCommand(userId.Value, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, FastingCheckInReminderHours: null, FastingCheckInFollowUpReminderHours: null),
@@ -357,7 +363,7 @@ public class NotificationsFeatureTests {
             .UpdateAsync(user.Id, Arg.Any<UserPreferenceUpdate>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Failure<NotificationPreferencesUpdateResult>(error)));
         RecordingAuditLogger auditLogger = new();
-        var handler = new UpdateNotificationPreferencesCommandHandler(preferencesService, auditLogger);
+        var handler = new UpdateNotificationPreferencesCommandHandler(preferencesService, auditLogger, Substitute.For<INotificationUserAccessService>());
 
         Result<NotificationPreferencesModel> result = await handler.Handle(
             new UpdateNotificationPreferencesCommand(user.Id.Value, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, FastingCheckInReminderHours: null, FastingCheckInFollowUpReminderHours: null),
@@ -394,7 +400,7 @@ public class NotificationsFeatureTests {
     public async Task GetNotificationPreferences_WithDeletedUser_ReturnsAccountDeleted() {
         User user = CreateUser(email: "deleted-notifications@example.com");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetNotificationPreferencesQueryHandler(CreateNotificationPreferencesService(user));
+        var handler = new GetNotificationPreferencesQueryHandler(CreateNotificationPreferencesService(user), CreateNotificationUserAccessService(user));
 
         Result<NotificationPreferencesModel> result = await handler.Handle(new GetNotificationPreferencesQuery(user.Id.Value), CancellationToken.None);
 
@@ -404,7 +410,9 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task GetNotificationPreferences_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetNotificationPreferencesQueryHandler(CreateNotificationPreferencesService(CreateUser()));
+        var handler = new GetNotificationPreferencesQueryHandler(
+            CreateNotificationPreferencesService(CreateUser()),
+            CreateNotificationUserAccessService(CreateUser()));
 
         Result<NotificationPreferencesModel> result = await handler.Handle(new GetNotificationPreferencesQuery(Guid.Empty), CancellationToken.None);
 
@@ -416,7 +424,8 @@ public class NotificationsFeatureTests {
     public async Task GetNotifications_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetNotificationsQueryHandler(
             CreateNotificationUserContextService(CreateUser()),
-            CreateNotificationFeedReadService(new InMemoryNotificationRepository(), new RecordingNotificationTextRenderer()));
+            CreateNotificationFeedReadService(new InMemoryNotificationRepository(), new RecordingNotificationTextRenderer()),
+            CreateNotificationUserAccessService(CreateUser()));
 
         Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(Guid.Empty), CancellationToken.None);
 
@@ -429,7 +438,8 @@ public class NotificationsFeatureTests {
         var userId = UserId.New();
         var handler = new GetNotificationsQueryHandler(
             CreateNotificationUserContextService(CreateDeletedUser(userId)),
-            CreateNotificationFeedReadService(new InMemoryNotificationRepository(), new RecordingNotificationTextRenderer()));
+            CreateNotificationFeedReadService(new InMemoryNotificationRepository(), new RecordingNotificationTextRenderer()),
+            CreateNotificationUserAccessService(CreateDeletedUser(userId)));
 
         Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(userId.Value), CancellationToken.None);
 
@@ -446,7 +456,8 @@ public class NotificationsFeatureTests {
         var renderer = new RecordingNotificationTextRenderer();
         var handler = new GetNotificationsQueryHandler(
             CreateNotificationUserContextService(user),
-            CreateNotificationFeedReadService(repo, renderer));
+            CreateNotificationFeedReadService(repo, renderer),
+            CreateNotificationUserAccessService(user));
 
         Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(user.Id.Value), CancellationToken.None);
 
@@ -1093,6 +1104,9 @@ public class NotificationsFeatureTests {
     private static INotificationUserContextService CreateNotificationUserContextService(User user) =>
         new NotificationUserContextService(new SingleUserRepository(user));
 
+    private static INotificationUserAccessService CreateNotificationUserAccessService(User user) =>
+        new SingleUserRepository(user);
+
     private static INotificationFeedReadService CreateNotificationFeedReadService(
         INotificationRepository notificationRepository,
         INotificationTextRenderer notificationTextRenderer) =>
@@ -1119,6 +1133,11 @@ public class NotificationsFeatureTests {
             }
 
             return Task.FromResult(Result.Success(foundUser));
+        }
+
+        public async Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
+            Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            return result.IsFailure ? result.Error : null;
         }
 
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);

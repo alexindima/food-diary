@@ -1551,7 +1551,7 @@ public class ProductsFeatureTests {
     private static GetRecentProductsQueryHandler CreateRecentProductsHandler(
         StubRecentItemRepository recentRepository,
         IProductOverviewReadService overviewReadService) =>
-        new(new RecentProductReadService(recentRepository, overviewReadService));
+        new(new RecentProductReadService(recentRepository, overviewReadService), Substitute.For<ICurrentUserAccessService>());
 
     [ExcludeFromCodeCoverage]
     private sealed class NoopProductRepository : IProductRepository {

@@ -1,19 +1,23 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Queries.GetUnreadCount;
 
 public sealed class GetUnreadCountQueryHandler(
     INotificationFeedReadService notificationFeedReadService,
-    INotificationUserContextService notificationUserContextService)
+    INotificationUserContextService notificationUserContextService,
+    INotificationUserAccessService notificationUserAccessService)
     : IQueryHandler<GetUnreadCountQuery, Result<int>> {
     public async Task<Result<int>> Handle(GetUnreadCountQuery query, CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            notificationUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<int>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<int>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

@@ -1,6 +1,7 @@
 using FoodDiary.Application.Usda.Commands.LinkProductToUsdaFood;
 using FoodDiary.Application.Usda.Commands.UnlinkProductFromUsdaFood;
 using FoodDiary.Application.Abstractions.Usda.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Enums;
@@ -19,7 +20,7 @@ public class UsdaFeatureTests {
         IUsdaProductLinkRepository productRepo = CreateProductLinkRepository(product);
         IUsdaFoodRepository usdaRepo = CreateUsdaFoodRepository(usdaFood);
 
-        var handler = new LinkProductToUsdaFoodCommandHandler(productRepo, usdaRepo);
+        var handler = new LinkProductToUsdaFoodCommandHandler(productRepo, usdaRepo, Substitute.For<ICurrentUserAccessService>());
         Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(userId.Value, product.Id.Value, 171077),
             CancellationToken.None);
@@ -35,7 +36,7 @@ public class UsdaFeatureTests {
     [Fact]
     public async Task LinkProductToUsdaFood_WhenProductNotFound_ReturnsFailure() {
         var handler = new LinkProductToUsdaFoodCommandHandler(
-            CreateProductLinkRepository(product: null), CreateUsdaFoodRepository(food: null));
+            CreateProductLinkRepository(product: null), CreateUsdaFoodRepository(food: null), Substitute.For<ICurrentUserAccessService>());
 
         Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(Guid.NewGuid(), Guid.NewGuid(), 171077),
@@ -50,7 +51,7 @@ public class UsdaFeatureTests {
         var userId = UserId.New();
         var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, defaultPortionAmount: null, 165, 31, 3.6, 0, 0, 0);
         var handler = new LinkProductToUsdaFoodCommandHandler(
-            CreateProductLinkRepository(product), CreateUsdaFoodRepository(food: null));
+            CreateProductLinkRepository(product), CreateUsdaFoodRepository(food: null), Substitute.For<ICurrentUserAccessService>());
 
         Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(userId.Value, product.Id.Value, 999999),
@@ -66,7 +67,7 @@ public class UsdaFeatureTests {
         var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, defaultPortionAmount: null, 165, 31, 3.6, 0, 0, 0);
         IUsdaProductLinkRepository productRepo = CreateProductLinkRepository(product);
 
-        var handler = new UnlinkProductFromUsdaFoodCommandHandler(productRepo);
+        var handler = new UnlinkProductFromUsdaFoodCommandHandler(productRepo, Substitute.For<ICurrentUserAccessService>());
         Result result = await handler.Handle(
             new UnlinkProductFromUsdaFoodCommand(userId.Value, product.Id.Value),
             CancellationToken.None);
@@ -81,7 +82,7 @@ public class UsdaFeatureTests {
 
     [Fact]
     public async Task UnlinkProductFromUsdaFood_WhenProductNotFound_ReturnsFailure() {
-        var handler = new UnlinkProductFromUsdaFoodCommandHandler(CreateProductLinkRepository(product: null));
+        var handler = new UnlinkProductFromUsdaFoodCommandHandler(CreateProductLinkRepository(product: null), Substitute.For<ICurrentUserAccessService>());
 
         Result result = await handler.Handle(
             new UnlinkProductFromUsdaFoodCommand(Guid.NewGuid(), Guid.NewGuid()),
@@ -93,7 +94,7 @@ public class UsdaFeatureTests {
     [Fact]
     public async Task LinkProductToUsdaFood_WithNullUserId_ReturnsFailure() {
         var handler = new LinkProductToUsdaFoodCommandHandler(
-            CreateProductLinkRepository(product: null), CreateUsdaFoodRepository(food: null));
+            CreateProductLinkRepository(product: null), CreateUsdaFoodRepository(food: null), Substitute.For<ICurrentUserAccessService>());
 
         Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(UserId: null, Guid.NewGuid(), 1), CancellationToken.None);
@@ -103,7 +104,7 @@ public class UsdaFeatureTests {
 
     [Fact]
     public async Task UnlinkProductFromUsdaFood_WithNullUserId_ReturnsFailure() {
-        var handler = new UnlinkProductFromUsdaFoodCommandHandler(CreateProductLinkRepository(product: null));
+        var handler = new UnlinkProductFromUsdaFoodCommandHandler(CreateProductLinkRepository(product: null), Substitute.For<ICurrentUserAccessService>());
 
         Result result = await handler.Handle(
             new UnlinkProductFromUsdaFoodCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);

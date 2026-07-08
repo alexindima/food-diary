@@ -3,6 +3,8 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Lessons.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -11,14 +13,18 @@ namespace FoodDiary.Application.Lessons.Commands.MarkLessonRead;
 public sealed class MarkLessonReadCommandHandler(
     INutritionLessonReadRepository readRepository,
     INutritionLessonWriteRepository writeRepository,
-    TimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider,
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<MarkLessonReadCommand, Result> {
     public async Task<Result> Handle(
         MarkLessonReadCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure(userIdResult);
+            return Result.Failure(userIdResult.Error);
         }
 
         Result<NutritionLessonId> lessonIdResult = RequiredIdParser.Parse(

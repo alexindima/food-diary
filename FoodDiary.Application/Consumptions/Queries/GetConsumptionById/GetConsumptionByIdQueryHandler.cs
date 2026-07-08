@@ -1,19 +1,26 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
 
-public sealed class GetConsumptionByIdQueryHandler(IConsumptionReadService consumptionReadService)
+public sealed class GetConsumptionByIdQueryHandler(
+    IConsumptionReadService consumptionReadService,
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetConsumptionByIdQuery, Result<ConsumptionModel>> {
     public async Task<Result<ConsumptionModel>> Handle(GetConsumptionByIdQuery request, CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(request.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            request.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<ConsumptionModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<ConsumptionModel>(userIdResult);
         }
 
         Result<MealId> consumptionIdResult = RequiredIdParser.Parse(

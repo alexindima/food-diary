@@ -31,6 +31,9 @@ internal sealed class BillingUserContextService(
     public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) =>
         userContextService.GetAccessibleUserAsync(userId, cancellationToken);
 
+    public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
+        userContextService.EnsureCanAccessAsync(userId, cancellationToken);
+
     public Task<User?> GetUserIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
         userLookupService.GetUserIncludingDeletedAsync(userId, cancellationToken);
 

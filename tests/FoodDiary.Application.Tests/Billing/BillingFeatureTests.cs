@@ -1534,7 +1534,8 @@ public sealed class BillingFeatureTests {
             billingUserContextService,
             billingSubscriptionRepository,
             billingPublicConfigProvider,
-            dateTimeProvider));
+            dateTimeProvider),
+            billingUserContextService);
 
     [Fact]
     public async Task CreatePortalSession_WhenUserIdIsInvalid_ReturnsInvalidToken() {

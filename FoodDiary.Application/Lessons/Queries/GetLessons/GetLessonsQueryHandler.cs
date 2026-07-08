@@ -1,21 +1,28 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Lessons.Common;
 using FoodDiary.Application.Lessons.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Lessons.Queries.GetLessons;
 
-public sealed class GetLessonsQueryHandler(ILessonReadService lessonReadService)
+public sealed class GetLessonsQueryHandler(
+    ILessonReadService lessonReadService,
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetLessonsQuery, Result<IReadOnlyList<LessonSummaryModel>>> {
     public async Task<Result<IReadOnlyList<LessonSummaryModel>>> Handle(
         GetLessonsQuery query,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<IReadOnlyList<LessonSummaryModel>>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<IReadOnlyList<LessonSummaryModel>>(userIdResult);
         }
 
         LessonCategory? categoryFilter = EnumFilterParser.ParseOptional<LessonCategory>(query.Category);

@@ -1,11 +1,12 @@
 using FoodDiary.Results;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dietologist.Common;
 
-public interface IDietologistUserContextService {
+public interface IDietologistUserContextService : ICurrentUserAccessService {
     Task<Result<string>> GetAccessibleUserEmailAsync(UserId userId, CancellationToken cancellationToken);
     Task<string?> GetUserEmailByIdAsync(UserId userId, CancellationToken cancellationToken);
     Task<Result<UserModel>> GetUserModelByIdAsync(UserId userId, CancellationToken cancellationToken);

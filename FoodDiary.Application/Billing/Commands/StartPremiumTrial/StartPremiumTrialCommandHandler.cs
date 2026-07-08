@@ -5,7 +5,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -24,9 +24,12 @@ public sealed class StartPremiumTrialCommandHandler(
     public async Task<Result<BillingOverviewModel>> Handle(
         StartPremiumTrialCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            billingUserContextService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<BillingOverviewModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<BillingOverviewModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

@@ -2,7 +2,9 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Meals;
 
@@ -10,12 +12,16 @@ namespace FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 
 public sealed class DeleteConsumptionCommandHandler(
     IMealReadRepository mealReadRepository,
-    IMealWriteRepository mealWriteRepository)
+    IMealWriteRepository mealWriteRepository,
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DeleteConsumptionCommand, Result> {
     public async Task<Result> Handle(DeleteConsumptionCommand command, CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure(userIdResult);
+            return Result.Failure(userIdResult.Error);
         }
 
         Result<MealId> consumptionIdResult = RequiredIdParser.Parse(

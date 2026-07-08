@@ -1,5 +1,6 @@
 using FoodDiary.Application.ContentReports.Commands.CreateContentReport;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -13,7 +14,7 @@ public class ContentReportsFeatureTests {
     [Fact]
     public async Task CreateContentReport_WithValidData_Succeeds() {
         IContentReportRepository repository = CreateContentReportRepository();
-        var handler = new CreateContentReportCommandHandler(repository);
+        var handler = new CreateContentReportCommandHandler(repository, Substitute.For<ICurrentUserAccessService>());
 
         Result<ContentReportModel> result = await handler.Handle(
             new CreateContentReportCommand(Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam content"),
@@ -31,7 +32,7 @@ public class ContentReportsFeatureTests {
         var targetId = Guid.NewGuid();
         IContentReportRepository repository = CreateContentReportRepository((new UserId(userId), ReportTargetType.Recipe, targetId));
 
-        var handler = new CreateContentReportCommandHandler(repository);
+        var handler = new CreateContentReportCommandHandler(repository, Substitute.For<ICurrentUserAccessService>());
         Result<ContentReportModel> result = await handler.Handle(
             new CreateContentReportCommand(userId, "Recipe", targetId, "Spam"),
             CancellationToken.None);
@@ -42,7 +43,7 @@ public class ContentReportsFeatureTests {
 
     [Fact]
     public async Task CreateContentReport_WithNullUserId_ReturnsFailure() {
-        var handler = new CreateContentReportCommandHandler(CreateContentReportRepository());
+        var handler = new CreateContentReportCommandHandler(CreateContentReportRepository(), Substitute.For<ICurrentUserAccessService>());
 
         Result<ContentReportModel> result = await handler.Handle(
             new CreateContentReportCommand(UserId: null, "Recipe", Guid.NewGuid(), "Spam"),
@@ -53,7 +54,7 @@ public class ContentReportsFeatureTests {
 
     [Fact]
     public async Task CreateContentReport_WithInvalidTargetType_ReturnsValidationFailure() {
-        var handler = new CreateContentReportCommandHandler(CreateContentReportRepository());
+        var handler = new CreateContentReportCommandHandler(CreateContentReportRepository(), Substitute.For<ICurrentUserAccessService>());
 
         Result<ContentReportModel> result = await handler.Handle(
             new CreateContentReportCommand(Guid.NewGuid(), "Unknown", Guid.NewGuid(), "Spam"),

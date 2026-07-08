@@ -241,43 +241,57 @@ public class DietologistFeatureTests {
 
     private static GetInvitationForCurrentUserQueryHandler CreateGetInvitationForCurrentUserHandler(
         IDietologistInvitationReadModelRepository? invitationRepository = null,
-        IDietologistUserContextService? userContextService = null) =>
-        new(CreateDietologistInvitationReadService(
-            invitationRepository ?? new InMemoryInvitationRepository(),
-            userContextService ?? new InMemoryUserRepository(),
-            Substitute.For<ICurrentUserAccessService>()));
+        IDietologistUserContextService? userContextService = null) {
+        IDietologistUserContextService resolvedUserContextService = userContextService ?? new InMemoryUserRepository();
+        return new(
+            CreateDietologistInvitationReadService(
+                invitationRepository ?? new InMemoryInvitationRepository(),
+                resolvedUserContextService,
+                Substitute.For<ICurrentUserAccessService>()),
+            resolvedUserContextService);
+    }
 
     private static GetInvitationByTokenQueryHandler CreateGetInvitationByTokenHandler(
         IDietologistInvitationReadModelRepository? invitationRepository = null,
-        IDietologistUserContextService? userContextService = null) =>
-        new(CreateDietologistInvitationReadService(
-            invitationRepository ?? new InMemoryInvitationRepository(),
-            userContextService ?? new InMemoryUserRepository(),
-            Substitute.For<ICurrentUserAccessService>()));
+        IDietologistUserContextService? userContextService = null) {
+        IDietologistUserContextService resolvedUserContextService = userContextService ?? new InMemoryUserRepository();
+        return new(
+            CreateDietologistInvitationReadService(
+                invitationRepository ?? new InMemoryInvitationRepository(),
+                resolvedUserContextService,
+                Substitute.For<ICurrentUserAccessService>()),
+            resolvedUserContextService);
+    }
 
     private static GetMyDietologistQueryHandler CreateGetMyDietologistHandler(
         IDietologistInvitationReadModelRepository? invitationRepository = null,
         ICurrentUserAccessService? currentUserAccessService = null) =>
-        new(CreateDietologistInvitationReadService(
+        new(
+            CreateDietologistInvitationReadService(
             invitationRepository ?? new InMemoryInvitationRepository(),
             Substitute.For<IDietologistUserContextService>(),
-            currentUserAccessService ?? new InMemoryUserRepository()));
+            currentUserAccessService ?? new InMemoryUserRepository()),
+            currentUserAccessService ?? new InMemoryUserRepository());
 
     private static GetMyClientsQueryHandler CreateGetMyClientsHandler(
         IDietologistInvitationReadModelRepository? invitationRepository = null,
         ICurrentUserAccessService? currentUserAccessService = null) =>
-        new(CreateDietologistInvitationReadService(
+        new(
+            CreateDietologistInvitationReadService(
             invitationRepository ?? new InMemoryInvitationRepository(),
             Substitute.For<IDietologistUserContextService>(),
-            currentUserAccessService ?? new InMemoryUserRepository()));
+            currentUserAccessService ?? new InMemoryUserRepository()),
+            currentUserAccessService ?? new InMemoryUserRepository());
 
     private static GetMyDietologistRelationshipQueryHandler CreateGetMyDietologistRelationshipHandler(
         IDietologistInvitationReadModelRepository? invitationRepository = null,
         ICurrentUserAccessService? currentUserAccessService = null) =>
-        new(CreateDietologistInvitationReadService(
+        new(
+            CreateDietologistInvitationReadService(
             invitationRepository ?? new InMemoryInvitationRepository(),
             Substitute.For<IDietologistUserContextService>(),
-            currentUserAccessService ?? new InMemoryUserRepository()));
+            currentUserAccessService ?? new InMemoryUserRepository()),
+            currentUserAccessService ?? new InMemoryUserRepository());
 
     private static IDietologistInvitationReadService CreateDietologistInvitationReadService(
         IDietologistInvitationReadModelRepository invitationRepository,
@@ -289,18 +303,22 @@ public class DietologistFeatureTests {
         IDietologistInvitationReadModelRepository? invitationRepository = null,
         IDashboardSnapshotBuilder? snapshotBuilder = null,
         InMemoryUserRepository? userRepository = null) =>
-        new(CreateDietologistClientReadService(
+        new(
+            CreateDietologistClientReadService(
             invitationRepository ?? new InMemoryInvitationRepository(),
             snapshotBuilder ?? new ThrowingDashboardSnapshotBuilder(),
-            userRepository ?? new InMemoryUserRepository()));
+            userRepository ?? new InMemoryUserRepository()),
+            userRepository ?? new InMemoryUserRepository());
 
     private static GetClientGoalsQueryHandler CreateGetClientGoalsHandler(
         IDietologistInvitationReadModelRepository? invitationRepository = null,
         InMemoryUserRepository? userRepository = null) =>
-        new(CreateDietologistClientReadService(
+        new(
+            CreateDietologistClientReadService(
             invitationRepository ?? new InMemoryInvitationRepository(),
             new ThrowingDashboardSnapshotBuilder(),
-            userRepository ?? new InMemoryUserRepository()));
+            userRepository ?? new InMemoryUserRepository()),
+            userRepository ?? new InMemoryUserRepository());
 
     private static IDietologistClientReadService CreateDietologistClientReadService(
         IDietologistInvitationReadModelRepository invitationRepository,
@@ -311,19 +329,23 @@ public class DietologistFeatureTests {
     private static GetMyRecommendationsQueryHandler CreateGetMyRecommendationsHandler(
         IRecommendationReadModelRepository? recommendationRepository = null,
         ICurrentUserAccessService? currentUserAccessService = null) =>
-        new(CreateDietologistRecommendationReadService(
+        new(
+            CreateDietologistRecommendationReadService(
             new InMemoryInvitationRepository(),
             recommendationRepository ?? new InMemoryRecommendationRepository(),
-            currentUserAccessService ?? new InMemoryUserRepository()));
+            currentUserAccessService ?? new InMemoryUserRepository()),
+            currentUserAccessService ?? new InMemoryUserRepository());
 
     private static GetRecommendationsForClientQueryHandler CreateGetRecommendationsForClientHandler(
         IDietologistInvitationReadModelRepository? invitationRepository = null,
         IRecommendationReadModelRepository? recommendationRepository = null,
         ICurrentUserAccessService? currentUserAccessService = null) =>
-        new(CreateDietologistRecommendationReadService(
+        new(
+            CreateDietologistRecommendationReadService(
             invitationRepository ?? new InMemoryInvitationRepository(),
             recommendationRepository ?? new InMemoryRecommendationRepository(),
-            currentUserAccessService ?? new InMemoryUserRepository()));
+            currentUserAccessService ?? new InMemoryUserRepository()),
+            currentUserAccessService ?? new InMemoryUserRepository());
 
     private static IDietologistRecommendationReadService CreateDietologistRecommendationReadService(
         IDietologistInvitationReadModelRepository invitationRepository,
@@ -2625,6 +2647,17 @@ public class DietologistFeatureTests {
                 _ => null,
             };
             return Task.FromResult(error is not null ? Result.Failure<User>(error) : Result.Success(user!));
+        }
+
+        public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
+            User? user = _users.Count > 0 ? _users.Peek() : null;
+            Error? error = user switch {
+                null => Errors.Authentication.InvalidToken,
+                { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                { IsActive: false } => Errors.Authentication.InvalidToken,
+                _ => null,
+            };
+            return Task.FromResult(error);
         }
 
         public async Task<Result<string>> GetAccessibleUserEmailAsync(

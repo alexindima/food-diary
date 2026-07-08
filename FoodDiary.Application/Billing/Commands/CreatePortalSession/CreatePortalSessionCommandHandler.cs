@@ -4,7 +4,7 @@ using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Billing;
 
@@ -18,9 +18,12 @@ public sealed class CreatePortalSessionCommandHandler(
     public async Task<Result<BillingPortalSessionModel>> Handle(
         CreatePortalSessionCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            billingUserContextService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<BillingPortalSessionModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<BillingPortalSessionModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

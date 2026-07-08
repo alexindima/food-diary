@@ -1,9 +1,9 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Models;
 using FoodDiary.Application.WeeklyCheckIn.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
@@ -16,9 +16,12 @@ public sealed class GetWeeklyCheckInQueryHandler(
     public async Task<Result<WeeklyCheckInModel>> Handle(
         GetWeeklyCheckInQuery query,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            weeklyCheckInUserProfileService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<WeeklyCheckInModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<WeeklyCheckInModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

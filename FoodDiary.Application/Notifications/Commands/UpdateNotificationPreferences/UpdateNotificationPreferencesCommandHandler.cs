@@ -2,9 +2,9 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Globalization;
@@ -13,14 +13,18 @@ namespace FoodDiary.Application.Notifications.Commands.UpdateNotificationPrefere
 
 public sealed class UpdateNotificationPreferencesCommandHandler(
     INotificationPreferencesService notificationPreferencesService,
-    IAuditLogger auditLogger)
+    IAuditLogger auditLogger,
+    INotificationUserAccessService notificationUserAccessService)
     : ICommandHandler<UpdateNotificationPreferencesCommand, Result<NotificationPreferencesModel>> {
     public async Task<Result<NotificationPreferencesModel>> Handle(
         UpdateNotificationPreferencesCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            notificationUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<NotificationPreferencesModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<NotificationPreferencesModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

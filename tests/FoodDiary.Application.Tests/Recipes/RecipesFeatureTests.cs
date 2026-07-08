@@ -1167,7 +1167,7 @@ public class RecipesFeatureTests {
     private static GetRecentRecipesQueryHandler CreateRecentRecipesHandler(
         StubRecentItemRepository recentRepository,
         IRecipeOverviewReadService overviewReadService) =>
-        new(new RecentRecipeReadService(recentRepository, overviewReadService));
+        new(new RecentRecipeReadService(recentRepository, overviewReadService), Substitute.For<ICurrentUserAccessService>());
 
     [Fact]
     public async Task ExploreRecipesQueryHandler_ReturnsPagedPublicRecipesAndOwnerFlags() {

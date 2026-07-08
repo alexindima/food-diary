@@ -566,6 +566,9 @@ public sealed class DashboardSnapshotBuilderTests {
             Task.FromResult(user.Id == userId
                 ? Result.Success(user)
                 : Result.Failure<User>(Errors.Authentication.InvalidToken));
+
+        public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<Error?>(user.Id == userId ? null : Errors.Authentication.InvalidToken);
     }
 
     [ExcludeFromCodeCoverage]
@@ -713,6 +716,9 @@ public sealed class DashboardSnapshotBuilderTests {
     private sealed class MissingUserContextService : IDashboardUserContextService {
         public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) =>
             Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken));
+
+        public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<Error?>(Errors.Authentication.InvalidToken);
     }
 
     [ExcludeFromCodeCoverage]
