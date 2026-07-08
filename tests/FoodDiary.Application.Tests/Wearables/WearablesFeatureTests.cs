@@ -299,6 +299,30 @@ public class WearablesFeatureTests {
     }
 
     [Fact]
+    public async Task GetWearableDailySummary_WithAllDataTypes_AggregatesTotalsAndLatestScalar() {
+        var userId = UserId.New();
+        var date = new DateTime(2026, 5, 8, 0, 0, 0, DateTimeKind.Utc);
+        var repository = new InMemoryWearableSyncRepository();
+        repository.Seed(WearableSyncEntry.Create(userId, WearableProvider.Fitbit, WearableDataType.Steps, date, 1000));
+        repository.Seed(WearableSyncEntry.Create(userId, WearableProvider.Fitbit, WearableDataType.Steps, date, 250));
+        repository.Seed(WearableSyncEntry.Create(userId, WearableProvider.Fitbit, WearableDataType.HeartRate, date, 72));
+        repository.Seed(WearableSyncEntry.Create(userId, WearableProvider.Fitbit, WearableDataType.CaloriesBurned, date, 75));
+        repository.Seed(WearableSyncEntry.Create(userId, WearableProvider.Fitbit, WearableDataType.ActiveMinutes, date, 20));
+        repository.Seed(WearableSyncEntry.Create(userId, WearableProvider.Fitbit, WearableDataType.ActiveMinutes, date, 5));
+        repository.Seed(WearableSyncEntry.Create(userId, WearableProvider.Fitbit, WearableDataType.SleepMinutes, date, 420));
+        var handler = new GetWearableDailySummaryQueryHandler(CreateWearableReadService(syncRepository: repository), CreateCurrentUserAccessService());
+
+        Result<WearableDailySummaryModel> result = await handler.Handle(new GetWearableDailySummaryQuery(userId.Value, date), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(1250, result.Value.Steps);
+        Assert.Equal(72, result.Value.HeartRate);
+        Assert.Equal(75, result.Value.CaloriesBurned);
+        Assert.Equal(25, result.Value.ActiveMinutes);
+        Assert.Equal(420, result.Value.SleepMinutes);
+    }
+
+    [Fact]
     public async Task GetWearableConnections_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetWearableConnectionsQueryHandler(CreateWearableReadService(), CreateCurrentUserAccessService());
 

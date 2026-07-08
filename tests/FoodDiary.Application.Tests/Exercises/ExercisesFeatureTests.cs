@@ -8,6 +8,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Exercises.Mappings;
 using FoodDiary.Application.Exercises.Queries.GetExerciseEntries;
+using FoodDiary.Application.Exercises.Services;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -107,6 +108,18 @@ public class ExercisesFeatureTests {
     }
 
     [Fact]
+    public async Task DeleteExerciseEntry_WithEmptyEntryId_ReturnsValidationFailure() {
+        var handler = new DeleteExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository(), CreateCurrentUserAccessService());
+
+        Result result = await handler.Handle(
+            new DeleteExerciseEntryCommand(Guid.NewGuid(), Guid.Empty),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains("EntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task DeleteExerciseEntry_WhenUserCannotAccess_ReturnsInvalidToken() {
         var handler = new DeleteExerciseEntryCommandHandler(
             new InMemoryExerciseEntryRepository(),
@@ -158,6 +171,18 @@ public class ExercisesFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateExerciseEntry_WithEmptyEntryId_ReturnsValidationFailure() {
+        var handler = new UpdateExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository(), CreateCurrentUserAccessService());
+
+        Result<ExerciseEntryModel> result = await handler.Handle(
+            new UpdateExerciseEntryCommand(Guid.NewGuid(), Guid.Empty, ExerciseType: null, DurationMinutes: null, CaloriesBurned: null, Name: null, ClearName: false, Notes: null, ClearNotes: false, Date: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains("EntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task UpdateExerciseEntry_WhenUserCannotAccess_ReturnsInvalidToken() {
         var handler = new UpdateExerciseEntryCommandHandler(
             new InMemoryExerciseEntryRepository(),
@@ -184,6 +209,30 @@ public class ExercisesFeatureTests {
 
         ResultAssert.Success(result);
         Assert.Single(result.Value);
+    }
+
+    [Fact]
+    public async Task ExerciseEntryReadService_MapsReadModels() {
+        var userId = UserId.New();
+        var entry = ExerciseEntry.Create(userId, new DateTime(2026, 5, 1, 12, 0, 0, DateTimeKind.Utc), ExerciseType.Cycling, 45, 320, "Bike", "Outdoor");
+        var repo = new InMemoryExerciseEntryRepository();
+        repo.Seed(entry);
+        var service = new ExerciseEntryReadService(repo);
+
+        IReadOnlyList<ExerciseEntryModel> result = await service.GetEntriesAsync(
+            userId,
+            DateTime.UtcNow.AddDays(-1),
+            DateTime.UtcNow.AddDays(1),
+            CancellationToken.None);
+
+        ExerciseEntryModel model = Assert.Single(result);
+        Assert.Multiple(
+            () => Assert.Equal(entry.Id.Value, model.Id),
+            () => Assert.Equal("Cycling", model.ExerciseType),
+            () => Assert.Equal("Bike", model.Name),
+            () => Assert.Equal(45, model.DurationMinutes),
+            () => Assert.Equal(320, model.CaloriesBurned),
+            () => Assert.Equal("Outdoor", model.Notes));
     }
 
     [Fact]

@@ -16,8 +16,10 @@ using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using StackExchange.Redis;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
@@ -223,6 +225,32 @@ public sealed class ExtensionsTests {
     }
 
     [Fact]
+    public async Task AddApiServices_WithRedisConnection_ConfiguresRedisConnectionFactory() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = CreateApiConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:Redis"] = "localhost:0,connectTimeout=1,abortConnect=true",
+        });
+
+        services.AddApiServices(configuration);
+        await using ServiceProvider provider = services.BuildServiceProvider();
+        RedisCacheOptions options = provider.GetRequiredService<IOptions<RedisCacheOptions>>().Value;
+
+        Assert.NotNull(options.ConnectionMultiplexerFactory);
+        await Assert.ThrowsAsync<RedisConnectionException>(() => options.ConnectionMultiplexerFactory());
+    }
+
+    [Fact]
+    public void AddApiServices_WithoutRedisConnectionOutsideDevelopment_Throws() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = CreateApiConfiguration([]);
+
+        InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() =>
+            services.AddApiServices(configuration, new StubHostEnvironment(Environments.Production)));
+
+        Assert.Equal("ConnectionStrings:Redis is required outside Development.", ex.Message);
+    }
+
+    [Fact]
     public void UseApiPipeline_OperationalEndpointsSuppressSuccessfulAccessLogs() {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(new WebApplicationOptions {
             EnvironmentName = Environments.Production,
@@ -296,5 +324,13 @@ public sealed class ExtensionsTests {
             HealthCheckContext context,
             CancellationToken cancellationToken = default) =>
             Task.FromResult(HealthCheckResult.Healthy());
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubHostEnvironment(string environmentName) : IHostEnvironment {
+        public string EnvironmentName { get; set; } = environmentName;
+        public string ApplicationName { get; set; } = "FoodDiary.Web.Api.IntegrationTests";
+        public string ContentRootPath { get; set; } = AppContext.BaseDirectory;
+        public IFileProvider ContentRootFileProvider { get; set; } = new NullFileProvider();
     }
 }

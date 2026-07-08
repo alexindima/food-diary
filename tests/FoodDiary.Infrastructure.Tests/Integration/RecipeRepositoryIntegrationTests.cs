@@ -10,6 +10,7 @@ using FoodDiary.Infrastructure.Persistence.FavoriteRecipes;
 using FoodDiary.Infrastructure.Persistence.Recipes;
 using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -20,6 +21,51 @@ namespace FoodDiary.Infrastructure.Tests.Integration;
 public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     private const int PerformanceSeedCount = 1500;
     private static readonly TimeSpan FirstPageLatencyBudget = TimeSpan.FromMilliseconds(250);
+
+    [Fact]
+    public void CalculateAutoNutrition_WithNestedRecipeIngredient_UsesNestedRecipeNutritionPerServing() {
+        var ingredient = new RecipeOverviewIngredientReadItem(
+            Guid.NewGuid(),
+            Amount: 2,
+            ProductId: null,
+            ProductName: null,
+            ProductBaseUnit: null,
+            ProductBaseAmount: null,
+            ProductCaloriesPerBase: null,
+            ProductProteinsPerBase: null,
+            ProductFatsPerBase: null,
+            ProductCarbsPerBase: null,
+            ProductFiberPerBase: null,
+            ProductAlcoholPerBase: null,
+            NestedRecipeId: Guid.NewGuid(),
+            NestedRecipeName: "Sauce",
+            NestedRecipeServings: 4,
+            NestedRecipeTotalCalories: 320,
+            NestedRecipeTotalProteins: 12,
+            NestedRecipeTotalFats: 20,
+            NestedRecipeTotalCarbs: 24,
+            NestedRecipeTotalFiber: 6,
+            NestedRecipeTotalAlcohol: 2);
+        var step = new RecipeOverviewStepReadItem(
+            Guid.NewGuid(),
+            StepNumber: 1,
+            Title: null,
+            "Mix nested recipe",
+            ImageUrl: null,
+            ImageAssetId: null,
+            [ingredient]);
+
+        IReadOnlyList<RecipeOverviewStepReadItem> steps = [step];
+        object summary = InvokeRecipeOverviewStatic<object>("CalculateAutoNutrition", steps);
+
+        Assert.Multiple(
+            () => Assert.Equal(160d, GetPrivateProperty<double?>(summary, "TotalCalories")),
+            () => Assert.Equal(6d, GetPrivateProperty<double?>(summary, "TotalProteins")),
+            () => Assert.Equal(10d, GetPrivateProperty<double?>(summary, "TotalFats")),
+            () => Assert.Equal(12d, GetPrivateProperty<double?>(summary, "TotalCarbs")),
+            () => Assert.Equal(3d, GetPrivateProperty<double?>(summary, "TotalFiber")),
+            () => Assert.Equal(1d, GetPrivateProperty<double?>(summary, "TotalAlcohol")));
+    }
 
     [RequiresDockerFact]
     public async Task GetPagedAsync_EscapesLikePatternAndReturnsExactRecipeMatch() {
@@ -217,4 +263,20 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         Assert.Equal(
             [.. expected.Select(id => id.Value).Order()],
             [.. actual.Select(id => id.Value).Order()]);
+
+    private static T InvokeRecipeOverviewStatic<T>(string methodName, params object?[] arguments) {
+        MethodInfo method = typeof(RecipeOverviewReadService)
+            .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
+            .Single(candidate =>
+                string.Equals(candidate.Name, methodName, StringComparison.Ordinal) &&
+                candidate.GetParameters().Length == arguments.Length);
+        return (T)method.Invoke(null, arguments)!;
+    }
+
+    private static T GetPrivateProperty<T>(object instance, string propertyName) {
+        PropertyInfo property = instance.GetType().GetProperty(
+            propertyName,
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!;
+        return (T)property.GetValue(instance)!;
+    }
 }

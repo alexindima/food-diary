@@ -26,6 +26,19 @@ public sealed class S3HealthCheckTests {
     }
 
     [Fact]
+    public async Task CheckHealthAsync_WhenBucketIsBlankOutsideDevelopment_ReturnsUnhealthyWithoutCallingS3() {
+        var check = new S3HealthCheck(
+            CreateS3Client((_, _) => throw new InvalidOperationException("S3 should not be called.")),
+            OptionsFactory.Create(new S3Options { Bucket = string.Empty }),
+            new StubHostEnvironment(Environments.Production));
+
+        HealthCheckResult result = await check.CheckHealthAsync(new HealthCheckContext());
+
+        Assert.Equal(HealthStatus.Unhealthy, result.Status);
+        Assert.Equal("S3 bucket is not configured.", result.Description);
+    }
+
+    [Fact]
     public async Task CheckHealthAsync_WhenBucketIsReachable_ReturnsHealthy() {
         GetBucketLocationRequest? capturedRequest = null;
         var check = new S3HealthCheck(

@@ -572,6 +572,23 @@ public class CyclesFeatureTests {
     }
 
     [Fact]
+    public async Task GetCycleNutritionSummaryQueryHandler_WhenStatisticsFails_ReturnsFailure() {
+        var user = User.Create("cycle-statistics-failure@example.com", "hash");
+        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
+            new InMemoryCycleRepository(profile),
+            CreateFailingStatisticsReadService(Errors.Validation.Invalid("statistics", "Statistics unavailable.")),
+            CreateCurrentUserAccessService(user));
+
+        Result<CycleNutritionSummaryModel?> result = await handler.Handle(
+            new GetCycleNutritionSummaryQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetCycleNutritionSummaryQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
         GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
             new NoopCycleRepository(),
@@ -747,6 +764,40 @@ public class CyclesFeatureTests {
     }
 
     [Fact]
+    public void CyclePredictionService_ForReadModel_UsesLatestBleedingAsAnchor() {
+        var profileId = Guid.NewGuid();
+        DateTime trackingStart = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateTime latestBleeding = new(2026, 4, 10, 0, 0, 0, DateTimeKind.Utc);
+        var profile = new CycleProfileReadModel(
+            profileId,
+            UserId.New().Value,
+            CycleTrackingMode.PeriodTracking,
+            CycleConfidence.High,
+            trackingStart,
+            AverageCycleLength: 28,
+            AveragePeriodLength: 5,
+            LutealLength: 14,
+            IsRegular: true,
+            IsOnboardingComplete: true,
+            ShowFertilityEstimates: true,
+            DiscreetNotifications: false,
+            Notes: null,
+            BleedingEntries: [
+                new BleedingEntryReadModel(Guid.NewGuid(), profileId, trackingStart.AddDays(3), BleedingType.Spotting, CycleFlowLevel.Light, PainImpact: null, Notes: null),
+                new BleedingEntryReadModel(Guid.NewGuid(), profileId, latestBleeding, BleedingType.Bleeding, CycleFlowLevel.Medium, PainImpact: null, Notes: null),
+            ],
+            SymptomEntries: [],
+            Factors: [],
+            FertilitySignals: []);
+
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile);
+
+        DateTime expectedNextPeriodStart = latestBleeding.AddDays(profile.AverageCycleLength);
+        Assert.Equal(expectedNextPeriodStart.AddDays(-1), predictions.NextPeriodStartFrom);
+        Assert.Equal(expectedNextPeriodStart.AddDays(1), predictions.NextPeriodStartTo);
+    }
+
+    [Fact]
     public void FertilitySignalModel_ConstructsExpectedValues() {
         var id = Guid.NewGuid();
         var profileId = Guid.NewGuid();
@@ -916,6 +967,14 @@ public class CyclesFeatureTests {
         service
             .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Success(buckets)));
+        return service;
+    }
+
+    private static IDashboardStatisticsReadService CreateFailingStatisticsReadService(Error error) {
+        IDashboardStatisticsReadService service = Substitute.For<IDashboardStatisticsReadService>();
+        service
+            .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(error)));
         return service;
     }
 

@@ -196,6 +196,34 @@ public class BehaviorTests {
         Assert.False(postCommitActionQueue.HasActions);
     }
 
+    [Fact]
+    public async Task PostCommitActionQueue_FlushAsync_WhenActionFails_LogsWarningAndContinues() {
+        var logger = new RecordingLogger<PostCommitActionQueue>();
+        var postCommitActionQueue = new PostCommitActionQueue(logger);
+        var callOrder = new List<string>();
+        postCommitActionQueue.Enqueue("test.failing", _ => throw new InvalidOperationException("failed"));
+        postCommitActionQueue.Enqueue("test.next", _ => {
+            callOrder.Add("next");
+            return Task.CompletedTask;
+        });
+
+        await postCommitActionQueue.FlushAsync(CancellationToken.None);
+
+        Assert.Equal(LogLevel.Warning, logger.LastLogLevel);
+        Assert.Equal(["next"], callOrder);
+        Assert.False(postCommitActionQueue.HasActions);
+    }
+
+    [Fact]
+    public async Task PostCommitActionQueue_FlushAsync_WhenCancellationRequested_PropagatesCancellation() {
+        var postCommitActionQueue = new PostCommitActionQueue(NullLogger<PostCommitActionQueue>.Instance);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+        postCommitActionQueue.Enqueue("test.cancel", cancellationToken => Task.FromCanceled(cancellationToken));
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => postCommitActionQueue.FlushAsync(cts.Token));
+    }
+
     [ExcludeFromCodeCoverage]
     private record TestQuery : IQuery<Result<string>>;
 

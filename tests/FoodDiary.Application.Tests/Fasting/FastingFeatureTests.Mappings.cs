@@ -1,5 +1,7 @@
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Application.Fasting.Services;
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -24,6 +26,87 @@ public partial class FastingFeatureTests {
         Assert.Equal("Active", model.Status);
         Assert.Equal("morning fast", model.Notes);
         Assert.Empty(model.CheckIns);
+        Assert.Null(model.CheckInAtUtc);
+        Assert.Empty(model.Symptoms);
+    }
+
+    [Fact]
+    public void FastingMappings_ToModel_WithCheckInDomainEntity_MapsSymptomsAndNotes() {
+        var occurrenceId = FastingOccurrenceId.New();
+        var checkIn = FastingCheckIn.Create(
+            occurrenceId,
+            UserId.New(),
+            hungerLevel: 2,
+            energyLevel: 4,
+            moodLevel: 3,
+            symptoms: ["headache", "Headache", "focused"],
+            notes: "steady",
+            checkedInAtUtc: FixedNow);
+
+        FastingCheckInModel model = checkIn.ToModel();
+
+        Assert.Equal(checkIn.Id.Value, model.Id);
+        Assert.Equal(FixedNow, model.CheckedInAtUtc);
+        Assert.Equal(2, model.HungerLevel);
+        Assert.Equal(4, model.EnergyLevel);
+        Assert.Equal(3, model.MoodLevel);
+        Assert.Equal(["headache", "focused"], model.Symptoms);
+        Assert.Equal("steady", model.Notes);
+    }
+
+    [Fact]
+    public void FastingCheckInTimelineBuilder_WithCheckIns_ReturnsNewestFirst() {
+        var occurrence = FastingOccurrence.Create(
+            FastingPlanId.New(),
+            UserId.New(),
+            FastingOccurrenceKind.FastDay,
+            FixedNow.AddHours(-4),
+            sequenceNumber: 1);
+        var older = FastingCheckIn.Create(occurrence.Id, occurrence.UserId, 2, 3, 4, ["tired"], "older", FixedNow.AddHours(-2));
+        var latest = FastingCheckIn.Create(occurrence.Id, occurrence.UserId, 4, 5, 3, ["focused", "Focused"], "latest", FixedNow.AddHours(-1));
+
+        IReadOnlyList<FastingCheckInSnapshot> timeline = FastingCheckInTimelineBuilder.Build(occurrence, [older, latest]);
+
+        Assert.Collection(
+            timeline,
+            snapshot => {
+                Assert.Equal(FixedNow.AddHours(-1), snapshot.CheckedInAtUtc);
+                Assert.Equal(["focused"], snapshot.Symptoms);
+                Assert.Equal("latest", snapshot.Notes);
+            },
+            snapshot => Assert.Equal(FixedNow.AddHours(-2), snapshot.CheckedInAtUtc));
+    }
+
+    [Fact]
+    public void FastingCheckInTimelineBuilder_WithoutCheckIns_UsesOccurrenceFallback() {
+        var occurrence = FastingOccurrence.Create(
+            FastingPlanId.New(),
+            UserId.New(),
+            FastingOccurrenceKind.FastDay,
+            FixedNow.AddHours(-4),
+            sequenceNumber: 1);
+        occurrence.UpdateCheckIn(3, 4, 5, ["weakness", "Weakness"], "fallback", FixedNow.AddHours(-1));
+
+        FastingCheckInSnapshot snapshot = Assert.Single(FastingCheckInTimelineBuilder.Build(occurrence, checkIns: null));
+
+        Assert.Equal(FixedNow.AddHours(-1), snapshot.CheckedInAtUtc);
+        Assert.Equal(3, snapshot.HungerLevel);
+        Assert.Equal(4, snapshot.EnergyLevel);
+        Assert.Equal(5, snapshot.MoodLevel);
+        Assert.Equal(["weakness"], snapshot.Symptoms);
+        Assert.Equal("fallback", snapshot.Notes);
+    }
+
+    [Fact]
+    public void FastingCheckInTimelineBuilder_WithoutAnyCheckIn_ReturnsEmptyTimeline() {
+        var occurrence = FastingOccurrence.Create(
+            FastingPlanId.New(),
+            UserId.New(),
+            FastingOccurrenceKind.FastDay,
+            FixedNow.AddHours(-4),
+            sequenceNumber: 1);
+
+        Assert.Empty(FastingCheckInTimelineBuilder.Build(occurrence, checkIns: null));
     }
 
     [Fact]
@@ -201,4 +284,151 @@ public partial class FastingFeatureTests {
         Assert.Equal(["weakness"], model.Symptoms);
         Assert.Equal("fallback", model.CheckInNotes);
     }
+
+    [Fact]
+    public void FastingMappings_ToModel_WithReadModelOccurrence_UsesLatestCheckInAndCyclicProgress() {
+        var userId = UserId.New();
+        FastingPlanReadModel plan = CreateCyclicPlanReadModel(userId);
+        FastingOccurrenceReadModel occurrence = CreateCompletedEatDayReadModel(userId, plan);
+        var checkIn = new FastingCheckInReadModel(
+            FastingCheckInId.New(),
+            occurrence.Id,
+            FixedNow.AddHours(-1),
+            HungerLevel: 4,
+            EnergyLevel: 5,
+            MoodLevel: 3,
+            Symptoms: "calm,Calm,focused",
+            Notes: "latest");
+        var olderCheckIn = new FastingCheckInReadModel(
+            FastingCheckInId.New(),
+            occurrence.Id,
+            FixedNow.AddHours(-3),
+            HungerLevel: 2,
+            EnergyLevel: 2,
+            MoodLevel: 2,
+            Symptoms: "tired",
+            Notes: "older");
+
+        FastingSessionModel model = occurrence.ToModel(plan, [olderCheckIn, checkIn]);
+
+        Assert.Equal("Custom", model.Protocol);
+        Assert.Equal("Cyclic", model.PlanType);
+        Assert.True(model.IsCompleted);
+        Assert.Equal(7, model.PlannedDurationHours);
+        Assert.Equal(2, model.CyclicPhaseDayNumber);
+        Assert.Equal(3, model.CyclicPhaseDayTotal);
+        Assert.Equal(FixedNow.AddHours(-1), model.CheckInAtUtc);
+        Assert.Equal(["calm", "focused"], model.Symptoms);
+        Assert.Equal("latest", model.CheckInNotes);
+        Assert.Equal(2, model.CheckIns.Count);
+        Assert.Equal("latest", model.CheckIns[0].Notes);
+        Assert.Equal("older", model.CheckIns[1].Notes);
+    }
+
+    [Fact]
+    public void FastingMappings_ToModel_WithReadModelOccurrenceOverload_UsesCustomDefaults() {
+        var userId = UserId.New();
+        var occurrence = new FastingOccurrenceReadModel(
+            FastingOccurrenceId.New(),
+            FastingPlanId.New(),
+            Plan: null,
+            userId,
+            FastingOccurrenceKind.FastDay,
+            FastingOccurrenceStatus.Active,
+            SequenceNumber: 1,
+            ScheduledForUtc: null,
+            StartedAtUtc: FixedNow.AddHours(-3),
+            EndedAtUtc: null,
+            InitialTargetHours: null,
+            AddedTargetHours: 0,
+            Notes: "read model",
+            CheckInAtUtc: null,
+            HungerLevel: null,
+            EnergyLevel: null,
+            MoodLevel: null,
+            Symptoms: null,
+            CheckInNotes: null);
+
+        FastingSessionModel model = occurrence.ToModel();
+
+        Assert.Equal("Custom", model.Protocol);
+        Assert.Equal("Extended", model.PlanType);
+        Assert.Equal(16, model.InitialPlannedDurationHours);
+        Assert.Null(model.CyclicPhaseDayNumber);
+        Assert.Empty(model.CheckIns);
+    }
+
+    [Fact]
+    public void FastingMappings_ToModel_WithReadModelCyclicFastDay_UsesFastDayPhaseProgress() {
+        var userId = UserId.New();
+        FastingPlanReadModel plan = CreateCyclicPlanReadModel(userId);
+        var occurrence = new FastingOccurrenceReadModel(
+            FastingOccurrenceId.New(),
+            plan.Id,
+            plan,
+            userId,
+            FastingOccurrenceKind.FastDay,
+            FastingOccurrenceStatus.Active,
+            SequenceNumber: 2,
+            ScheduledForUtc: null,
+            StartedAtUtc: FixedNow.AddHours(-18),
+            EndedAtUtc: null,
+            InitialTargetHours: null,
+            AddedTargetHours: 0,
+            Notes: null,
+            CheckInAtUtc: null,
+            HungerLevel: null,
+            EnergyLevel: null,
+            MoodLevel: null,
+            Symptoms: null,
+            CheckInNotes: null);
+
+        FastingSessionModel model = occurrence.ToModel(plan);
+
+        Assert.Equal(18, model.InitialPlannedDurationHours);
+        Assert.Equal(2, model.CyclicPhaseDayNumber);
+        Assert.Equal(2, model.CyclicPhaseDayTotal);
+    }
+
+    private static FastingPlanReadModel CreateCyclicPlanReadModel(UserId userId) =>
+        new(
+            FastingPlanId.New(),
+            userId,
+            FastingPlanType.Cyclic,
+            FastingPlanStatus.Active,
+            Protocol: null,
+            Title: "Cycle",
+            FixedNow.AddDays(-5),
+            StoppedAtUtc: null,
+            IntermittentFastHours: null,
+            IntermittentEatingWindowHours: null,
+            ExtendedTargetHours: null,
+            CyclicFastDays: 2,
+            CyclicEatDays: 3,
+            CyclicEatDayFastHours: 18,
+            CyclicEatDayEatingWindowHours: 6,
+            CyclicAnchorDateUtc: FixedNow.AddDays(-5),
+            CyclicNextPhaseDateUtc: FixedNow);
+
+    private static FastingOccurrenceReadModel CreateCompletedEatDayReadModel(UserId userId, FastingPlanReadModel plan) =>
+        new(
+            FastingOccurrenceId.New(),
+            plan.Id,
+            plan,
+            userId,
+            FastingOccurrenceKind.EatDay,
+            FastingOccurrenceStatus.Completed,
+            SequenceNumber: 4,
+            ScheduledForUtc: null,
+            StartedAtUtc: FixedNow.AddHours(-6),
+            EndedAtUtc: FixedNow,
+            InitialTargetHours: null,
+            AddedTargetHours: 1,
+            Notes: "done",
+            CheckInAtUtc: FixedNow.AddHours(-2),
+            HungerLevel: 2,
+            EnergyLevel: 2,
+            MoodLevel: 2,
+            Symptoms: "old",
+            CheckInNotes: "old note");
 }

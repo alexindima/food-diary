@@ -78,6 +78,13 @@ public class DailyAdvicesFeatureTests {
     }
 
     [Fact]
+    public void DailyAdviceSelector_SelectReadModelForDate_WithEmptyAdviceList_ReturnsNull() {
+        DailyAdviceReadModel? selected = InvokeSelectReadModelForDate([], DateTime.UtcNow, "en");
+
+        Assert.Null(selected);
+    }
+
+    [Fact]
     public void DailyAdviceSelector_SelectForDate_WhenPreviousDaySelectsSameAdvice_UsesNextAdvice() {
         var advices = new List<DailyAdvice> {
             DailyAdvice.Create("Hydrate", "en", weight: 1),
@@ -97,6 +104,27 @@ public class DailyAdvicesFeatureTests {
 
         Assert.NotNull(selected);
         Assert.Equal(ordered[(todayIndex + 1) % ordered.Count].Id, selected!.Id);
+    }
+
+    [Fact]
+    public void DailyAdviceSelector_SelectReadModelForDate_WhenPreviousDaySelectsSameAdvice_UsesNextAdvice() {
+        IReadOnlyList<DailyAdviceReadModel> advices = [
+            new DailyAdviceReadModel(Guid.Parse("11111111-1111-1111-1111-111111111111"), "en", "Hydrate", "water", 1),
+            new DailyAdviceReadModel(Guid.Parse("22222222-2222-2222-2222-222222222222"), "en", "Walk", "movement", 1),
+            new DailyAdviceReadModel(Guid.Parse("33333333-3333-3333-3333-333333333333"), "en", "Sleep", "recovery", 1),
+        ];
+        DateTime date = Enumerable
+            .Range(0, 10_000)
+            .Select(offset => new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddDays(offset))
+            .First(candidate =>
+                InvokeGetReadModelWeightedIndex(advices, candidate, "en") ==
+                InvokeGetReadModelWeightedIndex(advices, candidate.AddDays(-1), "en"));
+        int todayIndex = InvokeGetReadModelWeightedIndex(advices, date, "en");
+
+        DailyAdviceReadModel? selected = InvokeSelectReadModelForDate(advices, date, "en");
+
+        Assert.NotNull(selected);
+        Assert.Equal(advices[(todayIndex + 1) % advices.Count].Id, selected!.Id);
     }
 
     [Fact]
@@ -180,9 +208,25 @@ public class DailyAdvicesFeatureTests {
         return (DailyAdvice?)method!.Invoke(null, [advices, date, locale]);
     }
 
+    private static DailyAdviceReadModel? InvokeSelectReadModelForDate(IReadOnlyList<DailyAdviceReadModel> advices, DateTime date, string locale) {
+        Type selectorType = GetSelectorType();
+        MethodInfo? method = selectorType.GetMethod("SelectReadModelForDate", BindingFlags.Static | BindingFlags.Public);
+        Assert.NotNull(method);
+
+        return (DailyAdviceReadModel?)method!.Invoke(null, [advices, date, locale]);
+    }
+
     private static int InvokeGetWeightedIndex(IReadOnlyList<DailyAdvice> advices, DateTime date, string locale) {
         Type selectorType = GetSelectorType();
         MethodInfo? method = selectorType.GetMethod("GetWeightedIndex", BindingFlags.Static | BindingFlags.NonPublic);
+        Assert.NotNull(method);
+
+        return (int)method!.Invoke(null, [advices, date, locale])!;
+    }
+
+    private static int InvokeGetReadModelWeightedIndex(IReadOnlyList<DailyAdviceReadModel> advices, DateTime date, string locale) {
+        Type selectorType = GetSelectorType();
+        MethodInfo? method = selectorType.GetMethod("GetReadModelWeightedIndex", BindingFlags.Static | BindingFlags.NonPublic);
         Assert.NotNull(method);
 
         return (int)method!.Invoke(null, [advices, date, locale])!;

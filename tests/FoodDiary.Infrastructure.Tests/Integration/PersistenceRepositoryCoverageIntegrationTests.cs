@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.ContentReports.Models;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
+using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Application.Abstractions.Exercises.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Fasting.Common;
@@ -35,12 +36,14 @@ using FoodDiary.Infrastructure.Persistence.Billing;
 using FoodDiary.Infrastructure.Persistence.Content;
 using FoodDiary.Infrastructure.Persistence.ContentReports;
 using FoodDiary.Infrastructure.Persistence.Dietologist;
+using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.FavoriteMeals;
 using FoodDiary.Infrastructure.Persistence.FavoriteProducts;
 using FoodDiary.Infrastructure.Persistence.FavoriteRecipes;
 using FoodDiary.Infrastructure.Persistence.Images;
 using FoodDiary.Infrastructure.Persistence.Meals;
 using FoodDiary.Infrastructure.Persistence.Notifications;
+using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Infrastructure.Persistence.Products;
 using FoodDiary.Infrastructure.Persistence.Recommendations;
 using FoodDiary.Infrastructure.Persistence.RecentItems;
@@ -55,6 +58,7 @@ using Npgsql;
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
 #pragma warning disable MA0004
+#pragma warning disable MA0051
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
@@ -95,9 +99,15 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         IReadOnlyList<NutritionLesson> nutritionLessons =
             await repository.GetByLocaleAsync("en", LessonCategory.NutritionBasics);
+        IReadOnlyList<NutritionLesson> allLocaleLessons = await repository.GetByLocaleAsync("en");
+        IReadOnlyList<LessonSummaryReadModel> summaryLessons =
+            await repository.GetSummaryReadModelsByLocaleAsync("en", LessonCategory.NutritionBasics);
+        IReadOnlyList<LessonSummaryReadModel> allSummaryLessons =
+            await repository.GetSummaryReadModelsByLocaleAsync("en");
         IReadOnlyList<NutritionLesson> allLessons = await repository.GetAllAsync();
         IReadOnlyList<LessonAdminReadModel> adminLessons = await repository.GetAdminReadModelsAsync();
         NutritionLesson? saved = await repository.GetByIdAsync(basics.Id);
+        LessonDetailReadModel? detail = await repository.GetDetailReadModelByIdAsync(basics.Id);
         NutritionLesson? tracked = await repository.GetByIdTrackingAsync(basics.Id);
         Assert.NotNull(tracked);
         tracked.Update("Basics updated", "Updated content", "Updated", "en", LessonCategory.NutritionBasics, LessonDifficulty.Advanced, 5, 3);
@@ -108,19 +118,126 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             UserLessonProgress.Create(user.Id, basics.Id, DateTime.UtcNow));
         await context.SaveChangesAsync();
         IReadOnlyList<UserLessonProgress> allProgress = await repository.GetUserProgressAsync(user.Id);
+        IReadOnlyList<Guid> readLessonIds = await repository.GetReadLessonIdsAsync(user.Id);
         UserLessonProgress? lessonProgress = await repository.GetUserProgressForLessonAsync(user.Id, basics.Id);
+        bool isBasicsRead = await repository.IsLessonReadAsync(user.Id, basics.Id);
+        bool isHydrationRead = await repository.IsLessonReadAsync(user.Id, hydration.Id);
 
         await repository.DeleteAsync(hydration);
         await context.SaveChangesAsync();
 
         Assert.Single(nutritionLessons);
+        Assert.Equal(2, allLocaleLessons.Count);
+        LessonSummaryReadModel summary = Assert.Single(summaryLessons);
+        Assert.Equal(2, allSummaryLessons.Count);
         Assert.Equal(2, allLessons.Count);
         Assert.Contains(adminLessons, lesson => string.Equals(lesson.Title, "Basics", StringComparison.Ordinal));
         Assert.NotNull(saved);
+        Assert.NotNull(detail);
         Assert.Equal("Basics updated", tracked.Title);
         Assert.Equal(progress.Id, Assert.Single(allProgress).Id);
+        Assert.Equal(basics.Id.Value, Assert.Single(readLessonIds));
         Assert.Equal(progress.Id, lessonProgress?.Id);
+        Assert.True(isBasicsRead);
+        Assert.False(isHydrationRead);
+        Assert.Multiple(
+            () => Assert.Equal(basics.Id.Value, summary.Id),
+            () => Assert.Equal("Basics", summary.Title),
+            () => Assert.Equal("Summary", summary.Summary),
+            () => Assert.Equal(LessonCategory.NutritionBasics.ToString(), summary.Category),
+            () => Assert.Equal(LessonDifficulty.Beginner.ToString(), summary.Difficulty),
+            () => Assert.Equal(1, summary.EstimatedReadMinutes),
+            () => Assert.Equal(0, summary.SortOrder),
+            () => Assert.Equal("Basics", detail.Title),
+            () => Assert.Equal("Content", detail.Content),
+            () => Assert.Equal("Summary", detail.Summary));
         Assert.Null(await repository.GetByIdAsync(hydration.Id));
+    }
+
+    [RequiresDockerFact]
+    public async Task OutboxMessageClaimer_WithRelationalDatabase_ClaimsDueMessagesAndSkipsLockedRows() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var firstDue = EmailOutboxMessage.Create(
+            new EmailMessage("sender@example.com", "Sender", ["first@example.com"], "First", "<p>First</p>", "First"),
+            FixedNow.AddMinutes(-2));
+        var secondDue = EmailOutboxMessage.Create(
+            new EmailMessage("sender@example.com", "Sender", ["second@example.com"], "Second", "<p>Second</p>", "Second"),
+            FixedNow.AddMinutes(-1));
+        var future = EmailOutboxMessage.Create(
+            new EmailMessage("sender@example.com", "Sender", ["future@example.com"], "Future", "<p>Future</p>", "Future"),
+            FixedNow.AddMinutes(1));
+        context.EmailOutbox.AddRange(secondDue, future, firstDue);
+        await context.SaveChangesAsync();
+
+        List<EmailOutboxMessage> firstClaim = await OutboxMessageClaimer.ClaimDueAsync(
+            context,
+            context.EmailOutbox,
+            "\"EmailOutbox\"",
+            batchSize: 1,
+            FixedNow,
+            claimedQuery: context.EmailOutbox.AsNoTracking(),
+            cancellationToken: CancellationToken.None);
+        List<EmailOutboxMessage> secondClaim = await OutboxMessageClaimer.ClaimDueAsync(
+            context,
+            context.EmailOutbox,
+            "\"EmailOutbox\"",
+            batchSize: 10,
+            FixedNow,
+            claimedQuery: context.EmailOutbox.AsNoTracking(),
+            cancellationToken: CancellationToken.None);
+        List<EmailOutboxMessage> emptyClaim = await OutboxMessageClaimer.ClaimDueAsync(
+            context,
+            context.EmailOutbox,
+            "\"EmailOutbox\"",
+            batchSize: 10,
+            FixedNow,
+            claimedQuery: context.EmailOutbox.AsNoTracking(),
+            cancellationToken: CancellationToken.None);
+        var user = User.Create($"outbox-{Guid.NewGuid():N}@example.com", "hash");
+        var notification = Notification.Create(user.Id, "info", "{}");
+        context.Users.Add(user);
+        context.Notifications.Add(notification);
+        context.ImageObjectDeletionOutbox.Add(ImageObjectDeletionOutboxMessage.Create("users/test/outbox.webp", FixedNow.AddMinutes(-1)));
+        context.NotificationWebPushOutbox.Add(NotificationWebPushOutboxMessage.Create(notification.Id, FixedNow.AddMinutes(-1)));
+        await context.SaveChangesAsync();
+        List<ImageObjectDeletionOutboxMessage> imageClaim = await OutboxMessageClaimer.ClaimDueAsync(
+            context,
+            context.ImageObjectDeletionOutbox,
+            "\"ImageObjectDeletionOutbox\"",
+            batchSize: 10,
+            FixedNow,
+            claimedQuery: context.ImageObjectDeletionOutbox.AsNoTracking(),
+            cancellationToken: CancellationToken.None);
+        List<NotificationWebPushOutboxMessage> notificationClaim = await OutboxMessageClaimer.ClaimDueAsync(
+            context,
+            context.NotificationWebPushOutbox,
+            "\"NotificationWebPushOutbox\"",
+            batchSize: 10,
+            FixedNow,
+            claimedQuery: context.NotificationWebPushOutbox.AsNoTracking(),
+            cancellationToken: CancellationToken.None);
+
+        EmailOutboxMessage firstClaimed = Assert.Single(firstClaim);
+        EmailOutboxMessage secondClaimed = Assert.Single(secondClaim);
+        Assert.Multiple(
+            () => Assert.Equal("First", firstClaimed.Subject),
+            () => Assert.Equal("Second", secondClaimed.Subject),
+            () => Assert.NotNull(firstClaimed.LockedBy),
+            () => Assert.NotNull(secondClaimed.LockedBy),
+            () => Assert.Empty(emptyClaim),
+            () => Assert.Single(imageClaim),
+            () => Assert.Single(notificationClaim),
+            () => Assert.True(firstClaimed.LockedUntilUtc > FixedNow),
+            () => Assert.True(secondClaimed.LockedUntilUtc > FixedNow));
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            OutboxMessageClaimer.ClaimDueAsync(
+                context,
+                context.EmailOutbox,
+                "\"UnsupportedOutbox\"",
+                batchSize: 1,
+                FixedNow,
+                cancellationToken: CancellationToken.None));
     }
 
     [RequiresDockerFact]
@@ -180,6 +297,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
 
         ShoppingList? byId = await repository.GetByIdAsync(list.Id, user.Id, includeItems: true);
+        ShoppingList? currentNoTracking = await repository.GetCurrentAsync(user.Id);
         ShoppingList? current = await repository.GetCurrentAsync(user.Id, includeItems: true, asTracking: true);
         IReadOnlyList<ShoppingList> allLists = await repository.GetAllAsync(user.Id, includeItems: true);
         await AssertShoppingListReadModelsAsync(repository, list.Id, user.Id, otherUser.Id);
@@ -205,6 +323,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
 
         Assert.Contains(byId!.Items, savedItem => savedItem.Id == item.Id);
+        Assert.Equal(list.Id, currentNoTracking?.Id);
         Assert.Equal(2, byId.Items.Count);
         Assert.Single(allLists);
         Assert.Null(await repository.GetByIdAsync(list.Id, user.Id));
@@ -301,6 +420,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(await hydrationRepository.GetByIdAsync(hydration.Id));
         Assert.NotNull(await hydrationRepository.GetByIdAsync(hydration.Id, asTracking: true));
         Assert.Equal(2, (await hydrationRepository.GetByDateAsync(user.Id, today)).Count);
+        Assert.Equal(2, (await hydrationRepository.GetByDateReadModelsAsync(user.Id, today)).Count);
         Assert.Equal(800, await hydrationRepository.GetDailyTotalAsync(user.Id, today));
         Assert.Single(await hydrationRepository.GetDailyTotalsAsync(user.Id, today.AddDays(-1), today.AddDays(1)));
 
@@ -342,7 +462,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(await weightRepository.GetByDateAsync(userId, today.AddDays(-1)));
         Assert.Single(await weightRepository.GetEntriesAsync(userId, today.AddDays(-2), today, limit: 1, descending: true));
         Assert.NotEmpty(await weightRepository.GetEntriesAsync(userId, dateFrom: null, dateTo: null, limit: null, descending: false));
+        Assert.Single(await weightRepository.GetEntryReadModelsAsync(userId, today.AddDays(-2), today, limit: 1, descending: true));
         Assert.Single(await weightRepository.GetByPeriodAsync(userId, today.AddDays(-2), today));
+        Assert.Single(await weightRepository.GetByPeriodReadModelsAsync(userId, today.AddDays(-2), today));
 
         var waistRepository = new WaistEntryRepository(context);
         WaistEntry waist = await waistRepository.AddAsync(WaistEntry.Create(userId, today, 90));
@@ -355,7 +477,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(await waistRepository.GetByDateAsync(userId, today.AddDays(-1)));
         Assert.Single(await waistRepository.GetEntriesAsync(userId, today.AddDays(-2), today, limit: 1, descending: false));
         Assert.NotEmpty(await waistRepository.GetEntriesAsync(userId, dateFrom: null, dateTo: null, limit: null, descending: true));
+        Assert.Single(await waistRepository.GetEntryReadModelsAsync(userId, today.AddDays(-2), today, limit: 1, descending: false));
         Assert.Single(await waistRepository.GetByPeriodAsync(userId, today.AddDays(-2), today));
+        Assert.Single(await waistRepository.GetByPeriodReadModelsAsync(userId, today.AddDays(-2), today));
 
         return (weight, waist);
     }
@@ -684,6 +808,14 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         var repository = new MealRepository(context);
         DateTime now = DateTime.UtcNow;
         var meal = Meal.Create(userId, DateTime.SpecifyKind(now.Date.AddHours(8), DateTimeKind.Unspecified), MealType.Breakfast, "Start");
+        meal.AddAiSession(
+            imageAssetId: null,
+            AiRecognitionSource.Text,
+            now.Date.AddHours(8).AddMinutes(5),
+            notes: "Recognized",
+            [
+                MealAiItemData.Create("Oats", nameLocal: null, 50, "g", 190, 6, 4, 32, 5, 0),
+            ]);
         await repository.AddAsync(meal);
         await context.SaveChangesAsync();
 
@@ -697,7 +829,11 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotEmpty((await repository.GetPagedAsync(userId, page: 1, limit: 10, filters: new MealQueryFilters(DateFrom: DateTime.SpecifyKind(now.Date, DateTimeKind.Local), DateTo: null))).Items);
         Assert.NotEmpty((await repository.GetPagedAsync(userId, page: 1, limit: 10, filters: new MealQueryFilters(DateFrom: null, DateTo: now.Date.AddHours(23)))).Items);
         Assert.NotEmpty((await repository.GetPagedAsync(userId, page: 1, limit: 10, filters: new MealQueryFilters(DateFrom: DateTime.SpecifyKind(now.Date, DateTimeKind.Unspecified), DateTo: null))).Items);
+        Assert.NotEmpty((await repository.GetPagedConsumptionReadModelsAsync(userId, page: 1, limit: 10, filters: new MealQueryFilters(DateFrom: null, DateTo: null))).Items);
+        Assert.NotNull(await repository.GetByIdConsumptionReadModelAsync(meal.Id, userId));
+        Assert.True(await repository.GetCountAsync(userId, new MealQueryFilters(DateFrom: null, DateTo: null)) >= 1);
         Assert.NotEmpty(await repository.GetByPeriodAsync(userId, now.Date.AddDays(-1), now.Date.AddDays(1)));
+        Assert.NotEmpty(await repository.GetByPeriodConsumptionReadModelsAsync(userId, now.Date.AddDays(-1), now.Date.AddDays(1)));
         Assert.NotEmpty(await repository.GetDistinctMealDatesAsync(userId, now.Date.AddDays(-1), now.Date.AddDays(1)));
         Assert.True(await repository.GetTotalMealCountAsync(userId) >= 1);
         Assert.NotNull(await repository.GetWithItemsAndProductsAsync(userId, now.Date));
@@ -1103,7 +1239,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
 
         Assert.NotNull(await repository.GetByIdAsync(recommendation.Id));
+        Assert.Single(await repository.GetByClientReadModelsAsync(clientUserId, limit: 5));
         Assert.Single(await repository.GetByClientAsync(clientUserId, limit: 5));
+        Assert.Single(await repository.GetByDietologistAndClientReadModelsAsync(dietologistUserId, clientUserId, limit: 5));
         Assert.Single(await repository.GetByDietologistAndClientAsync(dietologistUserId, clientUserId, limit: 5));
         Assert.Equal(0, await repository.GetUnreadCountAsync(clientUserId));
     }
@@ -1141,8 +1279,10 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         Assert.NotNull(await repository.GetByIdAsync(invitation.Id, asTracking: true));
         Assert.NotNull(await repository.GetActiveByClientAsync(clientUserId, asTracking: true));
+        Assert.NotNull(await repository.GetActiveByClientAndDietologistReadModelAsync(clientUserId, dietologistUserId));
         Assert.NotNull(await repository.GetActiveByClientAndDietologistAsync(clientUserId, dietologistUserId));
         Assert.True(await repository.HasActiveRelationshipAsync(clientUserId, dietologistUserId));
+        Assert.Single(await repository.GetActiveByDietologistReadModelsAsync(dietologistUserId));
         Assert.Single(await repository.GetActiveByDietologistAsync(dietologistUserId));
         Assert.NotNull(await repository.GetByClientAndStatusAsync(clientUserId, DietologistInvitationStatus.Accepted));
 
@@ -1206,6 +1346,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
 
         Assert.NotNull(await repository.GetByProductIdAsync(productId, userId));
+        Assert.True(await repository.ExistsByProductIdAsync(productId, userId));
         Assert.Single(await repository.GetAllAsync(userId));
         Assert.True((await repository.GetByProductIdsAsync(userId, [productId])).ContainsKey(productId));
 
@@ -1213,6 +1354,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
 
         Assert.Null(await repository.GetByProductIdAsync(productId, userId));
+        Assert.False(await repository.ExistsByProductIdAsync(productId, userId));
     }
 
     private static async Task CoverFavoriteRecipeRepositoryAsync(
@@ -1229,6 +1371,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
 
         Assert.NotNull(await repository.GetByRecipeIdAsync(recipeId, userId));
+        Assert.True(await repository.ExistsByRecipeIdAsync(recipeId, userId));
         Assert.Single(await repository.GetAllAsync(userId));
         Assert.True((await repository.GetByRecipeIdsAsync(userId, [recipeId])).ContainsKey(recipeId));
 
@@ -1236,6 +1379,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
 
         Assert.Null(await repository.GetByRecipeIdAsync(recipeId, userId));
+        Assert.False(await repository.ExistsByRecipeIdAsync(recipeId, userId));
     }
 
     private static async Task CoverFavoriteMealRepositoryAsync(
@@ -1254,13 +1398,18 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
 
         Assert.NotNull(await repository.GetByMealIdAsync(mealId, userId));
+        Assert.True(await repository.ExistsByMealIdAsync(mealId, userId));
         Assert.Single(await repository.GetAllAsync(userId));
+        Assert.Single(await repository.GetAllReadModelsAsync(userId));
         Assert.True((await repository.GetByMealIdsAsync(userId, [mealId])).ContainsKey(mealId));
+        Assert.True((await repository.GetFavoriteIdsByMealIdsAsync(userId, [mealId])).ContainsKey(mealId));
+        Assert.Empty(await repository.GetFavoriteIdsByMealIdsAsync(userId, []));
 
         await repository.DeleteAsync(tracked);
         await context.SaveChangesAsync();
 
         Assert.Null(await repository.GetByMealIdAsync(mealId, userId));
+        Assert.False(await repository.ExistsByMealIdAsync(mealId, userId));
     }
 
     private static async Task CoverFastingOccurrenceAndCheckInsAsync(
@@ -1289,9 +1438,11 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         var checkInRepository = new FastingCheckInRepository(context);
         Assert.Empty(await checkInRepository.GetByOccurrenceIdsAsync([]));
+        Assert.Empty(await checkInRepository.GetByOccurrenceIdReadModelsAsync([]));
         await checkInRepository.AddAsync(FastingCheckIn.Create(active.Id, userId, 2, 4, 5, ["hungry"], "Ok", now));
         await context.SaveChangesAsync();
         Assert.Single(await checkInRepository.GetByOccurrenceIdsAsync([active.Id]));
+        Assert.Single(await checkInRepository.GetByOccurrenceIdReadModelsAsync([active.Id]));
     }
 
     private static async Task<FastingSession> CoverFastingSessionsAsync(

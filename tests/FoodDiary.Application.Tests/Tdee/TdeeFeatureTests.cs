@@ -89,13 +89,31 @@ public class TdeeFeatureTests {
         Assert.Equal(0, result.Value.DataDaysUsed);
     }
 
+    [Fact]
+    public async Task GetTdeeInsight_WhenStatisticsReadFails_ReturnsFailure() {
+        var userId = UserId.New();
+        var user = User.Create("tdee-statistics-fail@example.com", "hashed");
+        typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
+        GetTdeeInsightQueryHandler handler = CreateHandler(
+            profileService: CreateProfileService(user),
+            statisticsReadService: CreateFailingStatisticsReadService(Errors.Validation.Invalid("statistics", "Statistics unavailable.")),
+            currentUserAccessService: CreateCurrentUserAccessService(user));
+
+        Result<TdeeInsightModel> result = await handler.Handle(
+            new GetTdeeInsightQuery(userId.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
     private static GetTdeeInsightQueryHandler CreateHandler(
         ITdeeUserProfileService? profileService = null,
+        IDashboardStatisticsReadService? statisticsReadService = null,
         ICurrentUserAccessService? currentUserAccessService = null) =>
         new(
             profileService ?? CreateProfileService(user: null),
             new WeightEntryReadService(CreateWeightEntryRepository()),
-            CreateStatisticsReadService(),
+            statisticsReadService ?? CreateStatisticsReadService(),
             new ExerciseEntryReadService(CreateExerciseEntryRepository()),
             new StubDateTimeProvider(),
             currentUserAccessService ?? CreateCurrentUserAccessService(user: null));
@@ -160,6 +178,14 @@ public class TdeeFeatureTests {
         service
             .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([])));
+        return service;
+    }
+
+    private static IDashboardStatisticsReadService CreateFailingStatisticsReadService(Error error) {
+        IDashboardStatisticsReadService service = Substitute.For<IDashboardStatisticsReadService>();
+        service
+            .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(error)));
         return service;
     }
 

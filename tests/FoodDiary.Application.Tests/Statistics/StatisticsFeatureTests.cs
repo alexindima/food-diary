@@ -82,6 +82,26 @@ public class StatisticsFeatureTests {
     }
 
     [Fact]
+    public async Task GetStatisticsQueryHandler_WhenStatisticsReadFails_ReturnsFailure() {
+        var user = User.Create("statistics-read-failure@example.com", "hash");
+        DateTime from = new(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateTime to = new(2026, 2, 2, 0, 0, 0, DateTimeKind.Utc);
+        IDashboardStatisticsReadService statisticsReadService = Substitute.For<IDashboardStatisticsReadService>();
+        statisticsReadService
+            .GetStatisticsAsync(user.Id, from, to, 1, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
+                Errors.Validation.Invalid("statistics", "Statistics unavailable."))));
+        var handler = new GetStatisticsQueryHandler(statisticsReadService, CreateCurrentUserAccessService(user));
+
+        Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(
+            new GetStatisticsQuery(user.Id.Value, from, to, 1),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetStatisticsQueryHandler_WithMultiDayBucket_ReturnsTotalsAndDailyAverages() {
         var user = User.Create("statistics-multiday@example.com", "hash");
         var from = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);

@@ -125,6 +125,47 @@ public sealed class DiaryPdfGeneratorTests {
     }
 
     [Fact]
+    public void CalculateMealItemNutrition_WhenItemHasNoProductOrRecipe_ReturnsZeroNutrition() {
+        var item = new MealConsumptionItemReadModel(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Amount: 1,
+            ProductId: null,
+            ProductName: null,
+            ProductImageUrl: null,
+            ProductBaseUnit: null,
+            ProductBaseAmount: null,
+            ProductCaloriesPerBase: null,
+            ProductProteinsPerBase: null,
+            ProductFatsPerBase: null,
+            ProductCarbsPerBase: null,
+            ProductFiberPerBase: null,
+            ProductAlcoholPerBase: null,
+            ProductType: null,
+            RecipeId: null,
+            RecipeName: null,
+            RecipeImageUrl: null,
+            RecipeServings: null,
+            RecipeTotalCalories: null,
+            RecipeTotalProteins: null,
+            RecipeTotalFats: null,
+            RecipeTotalCarbs: null,
+            RecipeTotalFiber: null,
+            RecipeTotalAlcohol: null,
+            SourceAiItemId: null,
+            MealItemOrigin.Manual);
+
+        object nutrition = InvokePrivateStatic<object>("CalculateMealItemNutrition", item);
+
+        Assert.Multiple(
+            () => Assert.Equal(0d, GetPrivateProperty<double>(nutrition, "Calories")),
+            () => Assert.Equal(0d, GetPrivateProperty<double>(nutrition, "Proteins")),
+            () => Assert.Equal(0d, GetPrivateProperty<double>(nutrition, "Fats")),
+            () => Assert.Equal(0d, GetPrivateProperty<double>(nutrition, "Carbs")),
+            () => Assert.Equal(0d, GetPrivateProperty<double>(nutrition, "Fiber")));
+    }
+
+    [Fact]
     public void LayoutComposer_RendersImageCardAndEmptyMealsTableBranches() {
         var userId = UserId.New();
         Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 410, 12, 10, 40, 6);

@@ -16,6 +16,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Mappings;
 using FoodDiary.Application.WeightEntries.Models;
+using FoodDiary.Application.WeightEntries.Services;
 
 namespace FoodDiary.Application.Tests.WeightEntries;
 
@@ -510,6 +511,36 @@ public class WeightEntriesFeatureTests {
         Assert.NotNull(result.Value);
         Assert.Equal(latest.Id.Value, result.Value.Id);
         Assert.Equal(81, result.Value.Weight);
+    }
+
+    [Fact]
+    public async Task WeightEntryReadService_MapsEntriesLatestAndSummariesFromReadModels() {
+        var userId = UserId.New();
+        var repository = new InMemoryWeightEntryRepository();
+        WeightEntry older = await repository.AddAsync(WeightEntry.Create(userId, new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), 80.23));
+        WeightEntry newer = await repository.AddAsync(WeightEntry.Create(userId, new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), 81.78));
+        var service = new WeightEntryReadService(repository);
+
+        IReadOnlyList<WeightEntryModel> entries = await service.GetEntriesAsync(
+            userId,
+            dateFrom: null,
+            dateTo: null,
+            limit: null,
+            descending: true,
+            CancellationToken.None);
+        WeightEntryModel? latest = await service.GetLatestAsync(userId, CancellationToken.None);
+        IReadOnlyList<WeightEntrySummaryModel> summaries = await service.GetSummariesAsync(
+            userId,
+            new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 5, 22, 0, 0, 0, DateTimeKind.Utc),
+            quantizationDays: 2,
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal([newer.Id.Value, older.Id.Value], entries.Select(entry => entry.Id)),
+            () => Assert.Equal(newer.Id.Value, latest?.Id),
+            () => Assert.Equal(81, summaries[0].AverageWeight),
+            () => Assert.Equal(0, summaries[1].AverageWeight));
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {

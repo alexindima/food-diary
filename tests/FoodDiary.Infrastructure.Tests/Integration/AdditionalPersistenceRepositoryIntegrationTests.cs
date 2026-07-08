@@ -1,7 +1,10 @@
 using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.MealPlans.Models;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
+using FoodDiary.Application.Abstractions.RecipeComments.Models;
 using FoodDiary.Application.Abstractions.Usda.Models;
+using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.Entities.Admin;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.MealPlans;
@@ -22,6 +25,8 @@ using FoodDiary.Infrastructure.Persistence.Usda;
 using FoodDiary.Infrastructure.Persistence.Wearables;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
+
+#pragma warning disable MA0051
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
@@ -52,10 +57,12 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
 
         WearableConnection? savedConnection = await connectionRepository.GetAsync(user.Id, WearableProvider.Fitbit);
         IReadOnlyList<WearableConnection> allConnections = await connectionRepository.GetAllForUserAsync(user.Id);
+        IReadOnlyList<WearableConnectionModel> connectionModels = await connectionRepository.GetConnectionModelsAsync(user.Id);
 
         Assert.NotNull(savedConnection);
         Assert.Equal("access-token-2", savedConnection.AccessToken);
         Assert.Single(allConnections);
+        Assert.Equal("Fitbit", Assert.Single(connectionModels).Provider);
 
         var syncRepository = new WearableSyncRepository(context);
         DateTime date = DateTime.UtcNow.Date;
@@ -69,10 +76,13 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
 
         WearableSyncEntry? savedEntry = await syncRepository.GetAsync(user.Id, WearableProvider.Fitbit, WearableDataType.Steps, date);
         IReadOnlyList<WearableSyncEntry> summary = await syncRepository.GetDailySummaryAsync(user.Id, date.AddHours(12));
+        IReadOnlyList<WearableSyncEntryReadModel> summaryReadModels =
+            await syncRepository.GetDailySummaryReadModelsAsync(user.Id, date.AddHours(12));
 
         Assert.NotNull(savedEntry);
         Assert.Equal(1500, savedEntry.Value);
         Assert.Single(summary);
+        Assert.Equal(1500, Assert.Single(summaryReadModels).Value);
     }
 
     [RequiresDockerFact]
@@ -153,6 +163,8 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         IReadOnlyList<UsdaNutrientReadModel> nutrientReadModels = await repository.GetNutrientReadModelsAsync(1001);
         IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>> nutrientReadModelMap =
             await repository.GetNutrientReadModelsByFdcIdsAsync([1001, 1002]);
+        IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>> emptyNutrientReadModelMap =
+            await repository.GetNutrientReadModelsByFdcIdsAsync([]);
         IReadOnlyList<UsdaFoodPortionModel> portionReadModels = await repository.GetPortionReadModelsAsync(1001);
         IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel> referenceValueReadModels = await repository.GetDailyReferenceValueReadModelsAsync();
 
@@ -168,6 +180,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.NotNull(foodReadModel);
         Assert.Equal("Apple raw", foodReadModel.Description);
         AssertUsdaNutrientReadModels(nutrientReadModels, nutrientReadModelMap);
+        Assert.Empty(emptyNutrientReadModelMap);
         Assert.Equal(182, Assert.Single(portionReadModels).GramWeight);
         Assert.Equal(275, referenceValueReadModels[1].Value);
     }
@@ -199,10 +212,12 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await context.SaveChangesAsync();
 
         Assert.NotNull(await likeRepository.GetByUserAndRecipeAsync(user.Id, recipe.Id));
+        Assert.True(await likeRepository.ExistsByUserAndRecipeAsync(user.Id, recipe.Id));
         Assert.Equal(1, await likeRepository.CountByRecipeAsync(recipe.Id));
 
         await likeRepository.DeleteAsync(like);
         await context.SaveChangesAsync();
+        Assert.False(await likeRepository.ExistsByUserAndRecipeAsync(user.Id, recipe.Id));
         Assert.Equal(0, await likeRepository.CountByRecipeAsync(recipe.Id));
 
         var commentRepository = new RecipeCommentRepository(context);
@@ -214,11 +229,15 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
 
         RecipeComment? savedComment = await commentRepository.GetByIdAsync(comment.Id, asTracking: false);
         (IReadOnlyList<RecipeComment> comments, int totalComments) = await commentRepository.GetPagedByRecipeAsync(recipe.Id, page: 1, limit: 10);
+        (IReadOnlyList<RecipeCommentReadModel> readModelComments, int totalReadModelComments) =
+            await commentRepository.GetPagedReadModelsByRecipeAsync(recipe.Id, page: 1, limit: 10);
 
         Assert.NotNull(savedComment);
         Assert.Equal("Updated comment", savedComment.Text);
         Assert.Single(comments);
         Assert.Equal(1, totalComments);
+        Assert.Equal("Updated comment", Assert.Single(readModelComments).Text);
+        Assert.Equal(1, totalReadModelComments);
 
         await commentRepository.DeleteAsync(comment);
         await context.SaveChangesAsync();
@@ -303,10 +322,16 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await context.SaveChangesAsync();
 
         Assert.NotNull(await subscriptionRepository.GetByUserIdAsync(target.Id));
+        BillingSubscriptionOverviewReadModel? overview = await subscriptionRepository.GetOverviewReadModelByUserIdAsync(target.Id);
         Assert.NotNull(await subscriptionRepository.GetByExternalCustomerIdAsync(BillingProviderNames.Stripe, "customer-1"));
         Assert.NotNull(await subscriptionRepository.GetByExternalSubscriptionIdAsync(BillingProviderNames.Stripe, "subscription-1"));
         Assert.NotNull(await subscriptionRepository.GetByExternalPaymentMethodIdAsync(BillingProviderNames.Stripe, "payment-method-1"));
         Assert.Single(await subscriptionRepository.GetDueForRenewalAsync(BillingProviderNames.Stripe, DateTime.UtcNow.AddDays(30), limit: 10));
+        Assert.NotNull(overview);
+        BillingSubscriptionOverviewReadModel overviewValue = overview;
+        Assert.Equal(target.Id.Value, overviewValue.UserId);
+        Assert.Equal(BillingProviderNames.Stripe, overviewValue.Provider);
+        Assert.Equal("active", overviewValue.Status);
 
         var paymentRepository = new BillingPaymentRepository(context);
         BillingPayment payment = await paymentRepository.AddAsync(CreatePayment(target, subscription.Id));

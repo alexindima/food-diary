@@ -17,6 +17,7 @@ using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Statistics.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -386,6 +387,21 @@ public class DashboardFeatureTests {
     }
 
     [Fact]
+    public async Task SendDashboardTestEmail_WithEmptyUserId_ReturnsValidationFailure() {
+        IEmailSender emailSender = CreateEmailSender(out Func<TestEmailMessage?> getLastMessage);
+        var handler = new SendDashboardTestEmailCommandHandler(
+            CreateUserRepository(User.Create("dashboard-empty-email@example.com", "hash")),
+            emailSender,
+            NullLogger<SendDashboardTestEmailCommandHandler>.Instance);
+
+        Result result = await handler.Handle(new SendDashboardTestEmailCommand(Guid.Empty), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Null(getLastMessage());
+    }
+
+    [Fact]
     public async Task SendDashboardTestEmail_WithAccessibleUser_SendsToUserEmailAndLanguage() {
         var user = User.Create("dashboard-email-ok@example.com", "hash");
         user.SetLanguage("ru");
@@ -416,6 +432,28 @@ public class DashboardFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Null(getLastMessage());
+    }
+
+    [Fact]
+    public async Task DashboardUserContextService_ForwardsAccessibleUserRequest() {
+        var user = User.Create("dashboard-context@example.com", "hash");
+        IUserContextService userContextService = Substitute.For<IUserContextService>();
+        using var cts = new CancellationTokenSource();
+        UserId? capturedUserId = null;
+        CancellationToken capturedCancellationToken = default;
+        userContextService
+            .GetAccessibleUserAsync(
+                Arg.Do<UserId>(userId => capturedUserId = userId),
+                Arg.Do<CancellationToken>(cancellationToken => capturedCancellationToken = cancellationToken))
+            .Returns(Task.FromResult(Result.Success(user)));
+        var service = new DashboardUserContextService(userContextService);
+
+        Result<User> result = await service.GetAccessibleUserAsync(user.Id, cts.Token);
+
+        ResultAssert.Success(result);
+        Assert.Same(user, result.Value);
+        Assert.Equal(user.Id, capturedUserId);
+        Assert.Equal(cts.Token, capturedCancellationToken);
     }
 
     private static IDashboardSnapshotBuilder CreateDashboardSnapshotBuilder(

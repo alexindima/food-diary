@@ -376,6 +376,31 @@ public sealed class DependencyInjectionTests {
             () => Assert.Same(exerciseRepository, scope.ServiceProvider.GetRequiredService<IExerciseEntryWriteRepository>()));
     }
 
+    [Theory]
+    [MemberData(nameof(SplitRepositoryRegistrationCases))]
+    public void AddInfrastructure_SplitRepositoriesResolveThroughSameScopedInstance(string primaryTypeName, string[] aliasTypeNames) {
+        var services = new ServiceCollection();
+        services.AddSingleton(Substitute.For<IPublisher>());
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
+            ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
+            ["Jwt:Issuer"] = "FoodDiary",
+            ["Jwt:Audience"] = "FoodDiaryClients",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
+        });
+
+        services.AddInfrastructure(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+
+        object primary = scope.ServiceProvider.GetRequiredService(FindType(primaryTypeName));
+
+        Assert.Multiple([.. aliasTypeNames.Select<string, Action>(aliasTypeName => () =>
+            Assert.Same(primary, scope.ServiceProvider.GetRequiredService(FindType(aliasTypeName))))]);
+    }
+
     [Fact]
     public void AddInfrastructure_CanResolveDiaryPdfGeneratorTypedClient() {
         var services = new ServiceCollection();
@@ -648,11 +673,302 @@ public sealed class DependencyInjectionTests {
         });
     }
 
+    public static TheoryData<string, string[]> SplitRepositoryRegistrationCases() => new() {
+        {
+            "FoodDiary.Application.Abstractions.Products.Common.IProductRepository",
+            [
+                "FoodDiary.Application.Abstractions.Products.Common.IProductReadRepository",
+                "FoodDiary.Application.Abstractions.Products.Common.IProductWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Recipes.Common.IRecipeRepository",
+            [
+                "FoodDiary.Application.Abstractions.Recipes.Common.IRecipeReadRepository",
+                "FoodDiary.Application.Abstractions.Recipes.Common.IRecipeWriteRepository",
+                "FoodDiary.Application.Abstractions.Recipes.Common.IRecipeNutritionWriter",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.RecentItems.Common.IRecentItemRepository",
+            [
+                "FoodDiary.Application.Abstractions.RecentItems.Common.IRecentItemReadRepository",
+                "FoodDiary.Application.Abstractions.RecentItems.Common.IRecentItemWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Meals.Common.IMealRepository",
+            [
+                "FoodDiary.Application.Abstractions.Meals.Common.IMealReadRepository",
+                "FoodDiary.Application.Abstractions.Meals.Common.IMealConsumptionReadRepository",
+                "FoodDiary.Application.Abstractions.Meals.Common.IMealActivityReadRepository",
+                "FoodDiary.Application.Abstractions.Meals.Common.IMealProductNutritionReadRepository",
+                "FoodDiary.Application.Abstractions.Meals.Common.IMealWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.FavoriteMeals.Common.IFavoriteMealRepository",
+            [
+                "FoodDiary.Application.Abstractions.FavoriteMeals.Common.IFavoriteMealReadRepository",
+                "FoodDiary.Application.Abstractions.FavoriteMeals.Common.IFavoriteMealReadModelRepository",
+                "FoodDiary.Application.Abstractions.FavoriteMeals.Common.IFavoriteMealWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.FavoriteProducts.Common.IFavoriteProductRepository",
+            [
+                "FoodDiary.Application.Abstractions.FavoriteProducts.Common.IFavoriteProductReadRepository",
+                "FoodDiary.Application.Abstractions.FavoriteProducts.Common.IFavoriteProductReadModelRepository",
+                "FoodDiary.Application.Abstractions.FavoriteProducts.Common.IFavoriteProductWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.FavoriteRecipes.Common.IFavoriteRecipeRepository",
+            [
+                "FoodDiary.Application.Abstractions.FavoriteRecipes.Common.IFavoriteRecipeReadRepository",
+                "FoodDiary.Application.Abstractions.FavoriteRecipes.Common.IFavoriteRecipeReadModelRepository",
+                "FoodDiary.Application.Abstractions.FavoriteRecipes.Common.IFavoriteRecipeWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Dietologist.Common.IDietologistInvitationRepository",
+            [
+                "FoodDiary.Application.Abstractions.Dietologist.Common.IDietologistInvitationReadRepository",
+                "FoodDiary.Application.Abstractions.Dietologist.Common.IDietologistInvitationReadModelRepository",
+                "FoodDiary.Application.Abstractions.Dietologist.Common.IDietologistInvitationWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Dietologist.Common.IRecommendationRepository",
+            [
+                "FoodDiary.Application.Abstractions.Dietologist.Common.IRecommendationReadRepository",
+                "FoodDiary.Application.Abstractions.Dietologist.Common.IRecommendationReadModelRepository",
+                "FoodDiary.Application.Abstractions.Dietologist.Common.IRecommendationWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.RecipeComments.Common.IRecipeCommentRepository",
+            [
+                "FoodDiary.Application.Abstractions.RecipeComments.Common.IRecipeCommentReadRepository",
+                "FoodDiary.Application.Abstractions.RecipeComments.Common.IRecipeCommentReadModelRepository",
+                "FoodDiary.Application.Abstractions.RecipeComments.Common.IRecipeCommentWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.RecipeLikes.Common.IRecipeLikeRepository",
+            [
+                "FoodDiary.Application.Abstractions.RecipeLikes.Common.IRecipeLikeReadRepository",
+                "FoodDiary.Application.Abstractions.RecipeLikes.Common.IRecipeLikeWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Usda.Common.IUsdaFoodRepository",
+            [
+                "FoodDiary.Application.Abstractions.Usda.Common.IUsdaFoodReadRepository",
+                "FoodDiary.Application.Abstractions.Usda.Common.IUsdaFoodReadModelRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Usda.Common.IUsdaProductLinkRepository",
+            [
+                "FoodDiary.Application.Abstractions.Usda.Common.IUsdaProductLinkReadRepository",
+                "FoodDiary.Application.Abstractions.Usda.Common.IUsdaProductLinkWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.OpenFoodFacts.Common.IOpenFoodFactsProductCacheRepository",
+            [
+                "FoodDiary.Application.Abstractions.OpenFoodFacts.Common.IOpenFoodFactsProductCacheReadRepository",
+                "FoodDiary.Application.Abstractions.OpenFoodFacts.Common.IOpenFoodFactsProductCacheWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Lessons.Common.INutritionLessonRepository",
+            [
+                "FoodDiary.Application.Abstractions.Lessons.Common.INutritionLessonReadRepository",
+                "FoodDiary.Application.Abstractions.Lessons.Common.INutritionLessonReadModelRepository",
+                "FoodDiary.Application.Abstractions.Lessons.Common.INutritionLessonWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.MealPlans.Common.IMealPlanRepository",
+            [
+                "FoodDiary.Application.Abstractions.MealPlans.Common.IMealPlanReadRepository",
+                "FoodDiary.Application.Abstractions.MealPlans.Common.IMealPlanReadModelRepository",
+                "FoodDiary.Application.Abstractions.MealPlans.Common.IMealPlanWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Billing.Common.IBillingSubscriptionRepository",
+            [
+                "FoodDiary.Application.Abstractions.Billing.Common.IBillingSubscriptionReadRepository",
+                "FoodDiary.Application.Abstractions.Billing.Common.IBillingSubscriptionReadModelRepository",
+                "FoodDiary.Application.Abstractions.Billing.Common.IBillingSubscriptionWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Billing.Common.IBillingPaymentRepository",
+            [
+                "FoodDiary.Application.Abstractions.Billing.Common.IBillingPaymentReadRepository",
+                "FoodDiary.Application.Abstractions.Billing.Common.IBillingPaymentWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Billing.Common.IBillingWebhookEventRepository",
+            [
+                "FoodDiary.Application.Abstractions.Billing.Common.IBillingWebhookEventReadRepository",
+                "FoodDiary.Application.Abstractions.Billing.Common.IBillingWebhookEventWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Ai.Common.IAiPromptTemplateRepository",
+            [
+                "FoodDiary.Application.Abstractions.Ai.Common.IAiPromptTemplateReadRepository",
+                "FoodDiary.Application.Abstractions.Ai.Common.IAiPromptTemplateReadModelRepository",
+                "FoodDiary.Application.Abstractions.Ai.Common.IAiPromptTemplateWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Fasting.Common.IFastingPlanRepository",
+            [
+                "FoodDiary.Application.Abstractions.Fasting.Common.IFastingPlanReadRepository",
+                "FoodDiary.Application.Abstractions.Fasting.Common.IFastingPlanWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Fasting.Common.IFastingSessionRepository",
+            [
+                "FoodDiary.Application.Abstractions.Fasting.Common.IFastingSessionReadRepository",
+                "FoodDiary.Application.Abstractions.Fasting.Common.IFastingSessionWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Fasting.Common.IFastingTelemetryEventRepository",
+            [
+                "FoodDiary.Application.Abstractions.Fasting.Common.IFastingTelemetryEventReadRepository",
+                "FoodDiary.Application.Abstractions.Fasting.Common.IFastingTelemetryEventWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.ShoppingLists.Common.IShoppingListRepository",
+            [
+                "FoodDiary.Application.Abstractions.ShoppingLists.Common.IShoppingListReadRepository",
+                "FoodDiary.Application.Abstractions.ShoppingLists.Common.IShoppingListReadModelRepository",
+                "FoodDiary.Application.Abstractions.ShoppingLists.Common.IShoppingListWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportRepository",
+            [
+                "FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportReadRepository",
+                "FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportReadModelRepository",
+                "FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.WaistEntries.Common.IWaistEntryRepository",
+            [
+                "FoodDiary.Application.Abstractions.WaistEntries.Common.IWaistEntryReadRepository",
+                "FoodDiary.Application.Abstractions.WaistEntries.Common.IWaistEntryReadModelRepository",
+                "FoodDiary.Application.Abstractions.WaistEntries.Common.IWaistEntryWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Wearables.Common.IWearableConnectionRepository",
+            [
+                "FoodDiary.Application.Abstractions.Wearables.Common.IWearableConnectionReadRepository",
+                "FoodDiary.Application.Abstractions.Wearables.Common.IWearableConnectionWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Wearables.Common.IWearableSyncRepository",
+            [
+                "FoodDiary.Application.Abstractions.Wearables.Common.IWearableSyncReadRepository",
+                "FoodDiary.Application.Abstractions.Wearables.Common.IWearableSyncReadModelRepository",
+                "FoodDiary.Application.Abstractions.Wearables.Common.IWearableSyncWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Authentication.Common.IUserLoginEventRepository",
+            [
+                "FoodDiary.Application.Abstractions.Authentication.Common.IUserLoginEventReadRepository",
+                "FoodDiary.Application.Abstractions.Authentication.Common.IUserLoginEventWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Authentication.Common.IRefreshTokenSessionRepository",
+            [
+                "FoodDiary.Application.Abstractions.Authentication.Common.IRefreshTokenSessionReadRepository",
+                "FoodDiary.Application.Abstractions.Authentication.Common.IRefreshTokenSessionWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Admin.Common.IAdminBillingRepository",
+            [
+                "FoodDiary.Application.Abstractions.Admin.Common.IAdminBillingReadRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Admin.Common.IAdminImpersonationSessionRepository",
+            [
+                "FoodDiary.Application.Abstractions.Admin.Common.IAdminImpersonationSessionReadRepository",
+                "FoodDiary.Application.Abstractions.Admin.Common.IAdminImpersonationSessionWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Admin.Common.IAdminUserRoleAuditRepository",
+            [
+                "FoodDiary.Application.Abstractions.Admin.Common.IAdminUserRoleAuditReadRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Admin.Common.IEmailTemplateRepository",
+            [
+                "FoodDiary.Application.Abstractions.Admin.Common.IEmailTemplateReadRepository",
+                "FoodDiary.Application.Abstractions.Admin.Common.IEmailTemplateReadModelRepository",
+                "FoodDiary.Application.Abstractions.Admin.Common.IEmailTemplateWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Notifications.Common.INotificationRepository",
+            [
+                "FoodDiary.Application.Abstractions.Notifications.Common.INotificationReadRepository",
+                "FoodDiary.Application.Abstractions.Notifications.Common.INotificationLookupRepository",
+                "FoodDiary.Application.Abstractions.Notifications.Common.INotificationReadModelRepository",
+                "FoodDiary.Application.Abstractions.Notifications.Common.INotificationWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Notifications.Common.IWebPushSubscriptionRepository",
+            [
+                "FoodDiary.Application.Abstractions.Notifications.Common.IWebPushSubscriptionReadRepository",
+                "FoodDiary.Application.Abstractions.Notifications.Common.IWebPushSubscriptionReadModelRepository",
+                "FoodDiary.Application.Abstractions.Notifications.Common.IWebPushSubscriptionWriteRepository",
+            ]
+        },
+        {
+            "FoodDiary.Application.Abstractions.Users.Common.IUserRepository",
+            [
+                "FoodDiary.Application.Abstractions.Users.Common.IUserLookupRepository",
+                "FoodDiary.Application.Abstractions.Users.Common.IUserAdminReadRepository",
+                "FoodDiary.Application.Abstractions.Users.Common.IUserAdminReadModelRepository",
+                "FoodDiary.Application.Abstractions.Users.Common.IUserWriteRepository",
+            ]
+        },
+    };
+
     private static T InvokePrivateStatic<T>(string methodName, params object[] args) {
         MethodInfo method = typeof(FoodDiary.Infrastructure.DependencyInjection).GetMethod(
             methodName,
             BindingFlags.Static | BindingFlags.NonPublic)!;
         return (T)method.Invoke(null, args)!;
+    }
+
+    private static Type FindType(string fullName) {
+        return AppDomain.CurrentDomain.GetAssemblies()
+            .Select(assembly => assembly.GetType(fullName, throwOnError: false))
+            .FirstOrDefault(type => type is not null)
+            ?? throw new InvalidOperationException($"Type '{fullName}' was not found.");
     }
 
     private static SocketsHttpConnectionContext CreateSocketsHttpConnectionContext(

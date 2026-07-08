@@ -14,6 +14,7 @@ using FoodDiary.Application.Notifications.Queries.GetWebPushConfiguration;
 using FoodDiary.Application.Notifications.Queries.GetWebPushSubscriptions;
 using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Application.Notifications.Queries.GetUnreadCount;
+using FoodDiary.Application.Notifications.Mappings;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -125,6 +126,26 @@ public class NotificationsFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task MarkNotificationRead_WithEmptyNotificationId_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var repo = new InMemoryNotificationRepository();
+        var handler = new MarkNotificationReadCommandHandler(
+            repo,
+            repo,
+            CreateCurrentUserAccessService(CreateUser(userId)),
+            new RecordingNotificationPusher(),
+            CreatePostCommitActionQueue());
+
+        Result result = await handler.Handle(
+            new MarkNotificationReadCommand(userId.Value, Guid.Empty),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("NotificationId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -375,6 +396,29 @@ public class NotificationsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateNotificationPreferences_WhenCurrentPreferencesFail_ReturnsFailureWithoutAuditLog() {
+        var userId = UserId.New();
+        Error error = Errors.Authentication.InvalidToken;
+        INotificationPreferencesService preferencesService = Substitute.For<INotificationPreferencesService>();
+        preferencesService
+            .GetAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<NotificationPreferencesModel>(error)));
+        INotificationUserAccessService accessService = Substitute.For<INotificationUserAccessService>();
+        accessService.EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>()).Returns(Task.FromResult<Error?>(null));
+        RecordingAuditLogger auditLogger = new();
+        var handler = new UpdateNotificationPreferencesCommandHandler(preferencesService, auditLogger, accessService);
+
+        Result<NotificationPreferencesModel> result = await handler.Handle(
+            new UpdateNotificationPreferencesCommand(userId.Value, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, FastingCheckInReminderHours: null, FastingCheckInFollowUpReminderHours: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal(error, result.Error);
+        Assert.Equal(string.Empty, auditLogger.Action);
+        await preferencesService.DidNotReceive().UpdateAsync(Arg.Any<UserId>(), Arg.Any<UserPreferenceUpdate>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task NotificationPreferencesService_UpdateAsync_WhenUserMissing_ReturnsAccessFailure() {
         INotificationUserAccessService userAccessService = Substitute.For<INotificationUserAccessService>();
         userAccessService
@@ -391,6 +435,34 @@ public class NotificationsFeatureTests {
                 FastingCheckInReminderHours: null,
                 FastingCheckInFollowUpReminderHours: null),
             CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task NotificationPreferencesService_GetAsync_WhenUserMissing_ReturnsAccessFailure() {
+        INotificationUserAccessService userAccessService = Substitute.For<INotificationUserAccessService>();
+        userAccessService
+            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+        var service = new NotificationPreferencesService(userAccessService);
+
+        Result<NotificationPreferencesModel> result = await service.GetAsync(UserId.New(), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task NotificationUserContextService_WhenUserMissing_ReturnsAccessFailure() {
+        INotificationUserAccessService userAccessService = Substitute.For<INotificationUserAccessService>();
+        userAccessService
+            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+        var service = new NotificationUserContextService(userAccessService);
+
+        Result<NotificationUserContext> result = await service.GetAsync(UserId.New(), CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -448,6 +520,24 @@ public class NotificationsFeatureTests {
     }
 
     [Fact]
+    public async Task GetNotifications_WhenContextFailsAfterAccessCheck_ReturnsFailure() {
+        var userId = UserId.New();
+        INotificationUserContextService contextService = Substitute.For<INotificationUserContextService>();
+        contextService
+            .GetAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<NotificationUserContext>(Errors.Authentication.InvalidToken)));
+        var handler = new GetNotificationsQueryHandler(
+            contextService,
+            CreateNotificationFeedReadService(new InMemoryNotificationRepository(), new RecordingNotificationTextRenderer()),
+            CreateNotificationUserAccessService(CreateUser(userId)));
+
+        Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(userId.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetNotifications_WithPasswordUser_HidesPasswordSetupSuggestion() {
         var user = User.Create("password-notifications@example.com", "hash");
         var repo = new InMemoryNotificationRepository();
@@ -465,6 +555,67 @@ public class NotificationsFeatureTests {
         Assert.Single(result.Value);
         Assert.Equal(NotificationTypes.FastingCompleted, result.Value[0].Type);
         Assert.Equal([NotificationTypes.FastingCompleted], renderer.RenderedTypes);
+    }
+
+    [Fact]
+    public async Task GetUnreadCount_WhenContextFailsAfterAccessCheck_ReturnsFailure() {
+        var userId = UserId.New();
+        INotificationUserContextService contextService = Substitute.For<INotificationUserContextService>();
+        contextService
+            .GetAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<NotificationUserContext>(Errors.Authentication.InvalidToken)));
+        var handler = new GetUnreadCountQueryHandler(
+            CreateNotificationFeedReadService(new InMemoryNotificationRepository(), new RecordingNotificationTextRenderer()),
+            contextService,
+            CreateNotificationUserAccessService(CreateUser(userId)));
+
+        Result<int> result = await handler.Handle(new GetUnreadCountQuery(userId.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public void NotificationMappings_ToModel_MapsDomainNotification() {
+        var notification = Notification.Create(
+            UserId.New(),
+            NotificationTypes.FastingCompleted,
+            "{}",
+            referenceId: "fasting-123");
+        notification.MarkAsRead();
+        var text = new NotificationText("Fast completed", "Nice work");
+
+        NotificationModel model = notification.ToModel(text);
+
+        Assert.Equal(notification.Id.Value, model.Id);
+        Assert.Equal(NotificationTypes.FastingCompleted, model.Type);
+        Assert.Equal("Fast completed", model.Title);
+        Assert.Equal("Nice work", model.Body);
+        Assert.Equal(notification.ReferenceId, model.ReferenceId);
+        Assert.True(model.IsRead);
+        Assert.Equal(notification.CreatedOnUtc, model.CreatedAtUtc);
+    }
+
+    [Fact]
+    public void NotificationMappings_ToModel_MapsDomainWebPushSubscription() {
+        var subscription = WebPushSubscription.Create(
+            UserId.New(),
+            "https://updates.push.example.com/subscriptions/123",
+            "p256",
+            "auth",
+            expirationTimeUtc: new DateTime(2026, 5, 29, 8, 0, 0, DateTimeKind.Utc),
+            locale: "ru",
+            userAgent: "Firefox");
+
+        WebPushSubscriptionModel model = subscription.ToModel();
+
+        Assert.Equal(subscription.Endpoint, model.Endpoint);
+        Assert.Equal("updates.push.example.com", model.EndpointHost);
+        Assert.Equal(subscription.ExpirationTimeUtc, model.ExpirationTimeUtc);
+        Assert.Equal("ru", model.Locale);
+        Assert.Equal("Firefox", model.UserAgent);
+        Assert.Equal(subscription.CreatedOnUtc, model.CreatedAtUtc);
+        Assert.Equal(subscription.ModifiedOnUtc, model.UpdatedAtUtc);
     }
 
     [Fact]

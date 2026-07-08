@@ -354,6 +354,35 @@ public class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task DeleteProductCommandHandler_WhenProductIsUsed_ReturnsValidationFailure() {
+        var user = User.Create("delete-product-used@example.com", "hash");
+        var product = Product.Create(
+            user.Id,
+            name: "Apple",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private);
+        SetProductUsageCollections(product, mealItemsCount: 1, recipeIngredientsCount: 0);
+        var repository = new SingleProductRepository(product);
+        var cleanup = new RecordingCleanupService();
+        var handler = new DeleteProductCommandHandler(repository, repository, cleanup, new StubUserRepository(user));
+
+        Result result = await handler.Handle(new DeleteProductCommand(user.Id.Value, product.Id.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.False(repository.DeleteCalled);
+        Assert.Empty(cleanup.RequestedAssetIds);
+    }
+
+    [Fact]
     public async Task DeleteProductCommandHandler_WhenCleanupFails_StillDeletesProductAndReturnsSuccess() {
         var userId = UserId.New();
         var assetId = ImageAssetId.New();
@@ -813,6 +842,25 @@ public class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateProductCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("update-product-deleted-user@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new UpdateProductCommandHandler(
+            new NoopProductRepository(),
+            new NoopProductRepository(),
+            new RecordingCleanupService(),
+            new StubUserRepository(user),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        Result<ProductModel> result = await handler.Handle(
+            CreateUpdateProductCommand(user.Id.Value, ProductId.New().Value, name: "Updated"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
     public async Task UpdateProductCommandHandler_WithInvalidBaseUnit_ReturnsValidationFailure() {
         var user = User.Create("update-product-invalid-unit@example.com", "hash");
         var handler = new UpdateProductCommandHandler(
@@ -939,6 +987,42 @@ public class ProductsFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Product.NotAccessible", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateProductCommandHandler_WhenProductIsUsed_ReturnsValidationFailure() {
+        var user = User.Create("update-product-used@example.com", "hash");
+        var product = Product.Create(
+            user.Id,
+            name: "Apple",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private);
+        SetProductUsageCollections(product, mealItemsCount: 0, recipeIngredientsCount: 1);
+        var repository = new SingleProductRepository(product);
+        var cleanup = new RecordingCleanupService();
+        var handler = new UpdateProductCommandHandler(
+            repository,
+            repository,
+            cleanup,
+            new StubUserRepository(user),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        Result<ProductModel> result = await handler.Handle(
+            CreateUpdateProductCommand(user.Id.Value, product.Id.Value, name: "Updated"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.False(repository.UpdateCalled);
+        Assert.Empty(cleanup.RequestedAssetIds);
     }
 
     [Fact]

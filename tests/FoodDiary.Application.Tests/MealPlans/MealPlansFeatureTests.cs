@@ -113,6 +113,20 @@ public class MealPlansFeatureTests {
     }
 
     [Fact]
+    public async Task AdoptMealPlan_WithEmptyPlanId_ReturnsValidationFailure() {
+        var handler = new AdoptMealPlanCommandHandler(
+            new StubMealPlanRepository(plan: null),
+            CreateCurrentUserAccessService());
+
+        Result<MealPlanModel> result = await handler.Handle(
+            new AdoptMealPlanCommand(Guid.NewGuid(), Guid.Empty),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains("PlanId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task GenerateShoppingList_WithCuratedPlan_AggregatesRecipeIngredients() {
         var userId = UserId.New();
         var product = Product.Create(
@@ -174,6 +188,23 @@ public class MealPlansFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GenerateShoppingList_WithEmptyPlanId_ReturnsValidationFailure() {
+        var shoppingLists = new RecordingShoppingListRepository();
+        var handler = new GenerateShoppingListCommandHandler(
+            new StubMealPlanRepository(plan: null),
+            shoppingLists,
+            CreateCurrentUserAccessService());
+
+        Result<ShoppingListModel> result = await handler.Handle(
+            new GenerateShoppingListCommand(Guid.NewGuid(), Guid.Empty),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains("PlanId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Null(shoppingLists.Added);
     }
 
     [Fact]
@@ -260,6 +291,18 @@ public class MealPlansFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetMealPlanById_WithEmptyPlanId_ReturnsValidationFailure() {
+        GetMealPlanByIdQueryHandler handler = CreateMealPlanByIdHandler(new StubMealPlanRepository(plan: null));
+
+        Result<MealPlanModel> result = await handler.Handle(
+            new GetMealPlanByIdQuery(Guid.NewGuid(), Guid.Empty),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains("PlanId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -363,6 +406,37 @@ public class MealPlansFeatureTests {
         Assert.Equal(nameof(DietType.LowCarb), model.DietType);
         Assert.False(model.IsCurated);
         Assert.Equal(2, model.TotalRecipes);
+    }
+
+    [Fact]
+    public void MealPlanReadModel_ToModel_OrdersMealsAndScalesRecipeNutrition() {
+        var readModel = new MealPlanReadModel(
+            Guid.NewGuid(),
+            UserId: null,
+            "Read model plan",
+            "Description",
+            "Balanced",
+            DurationDays: 1,
+            TargetCaloriesPerDay: 2100,
+            IsCurated: true,
+            [
+                new MealPlanDayReadModel(
+                    Guid.NewGuid(),
+                    DayNumber: 1,
+                    [
+                        new MealPlanMealReadModel(Guid.NewGuid(), "Dinner", Guid.NewGuid(), "Dinner recipe", Servings: 2, RecipeServings: 4, 800, 40, 20, 100),
+                        new MealPlanMealReadModel(Guid.NewGuid(), "Breakfast", Guid.NewGuid(), "Breakfast recipe", Servings: 1, RecipeServings: 0, 200, 20, 8, 18),
+                    ]),
+            ]);
+
+        MealPlanModel model = readModel.ToModel();
+
+        Assert.Equal("Read model plan", model.Name);
+        MealPlanDayModel day = Assert.Single(model.Days);
+        Assert.Equal(["Breakfast", "Dinner"], day.Meals.Select(meal => meal.MealType));
+        Assert.Equal(200, day.Meals[0].Calories);
+        Assert.Equal(20, day.Meals[1].Proteins);
+        Assert.Equal(50, day.Meals[1].Carbs);
     }
 
     [ExcludeFromCodeCoverage]

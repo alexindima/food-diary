@@ -1,4 +1,5 @@
 using System.Text.Json;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
@@ -197,6 +198,20 @@ public class UsersFeatureTests {
     }
 
     [Fact]
+    public async Task DeleteUserHandler_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var userId = UserId.New();
+        var handler = new DeleteUserCommandHandler(
+            CreateAccessCheckedFailingUserContext(userId),
+            new FixedDateTimeProvider(DateTime.UtcNow),
+            new NullAuditLogger());
+
+        Result result = await handler.Handle(new DeleteUserCommand(userId.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task ChangePasswordHandler_WithInactiveUser_ReturnsInvalidToken() {
         var user = User.Create("inactive@example.com", "hash");
         user.Deactivate();
@@ -206,6 +221,28 @@ public class UsersFeatureTests {
 
         Result result = await handler.Handle(
             new ChangePasswordCommand(user.Id.Value, "hash", "new"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ChangePasswordHandler_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var userId = UserId.New();
+        IUserContextService userContextService = Substitute.For<IUserContextService>();
+        userContextService
+            .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Error?>(null));
+        userContextService
+            .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+        var handler = new ChangePasswordCommandHandler(
+            userContextService,
+            new PassthroughPasswordHasher());
+
+        Result result = await handler.Handle(
+            new ChangePasswordCommand(userId.Value, "old", "new"),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -290,6 +327,21 @@ public class UsersFeatureTests {
     }
 
     [Fact]
+    public async Task SetPasswordHandler_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var userId = UserId.New();
+        var handler = new SetPasswordCommandHandler(
+            CreateAccessCheckedFailingUserContext(userId),
+            new PassthroughPasswordHasher());
+
+        Result result = await handler.Handle(
+            new SetPasswordCommand(userId.Value, "new-password"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task UpdateUserAppearanceHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new UpdateUserAppearanceCommandHandler(new SingleUserRepository(User.Create("user@example.com", "hash")));
 
@@ -309,6 +361,17 @@ public class UsersFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateUserAppearanceHandler_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var userId = UserId.New();
+        var handler = new UpdateUserAppearanceCommandHandler(CreateAccessCheckedFailingUserContext(userId));
+
+        Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(userId.Value, "dark", UiStyle: null), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
     [Fact]
@@ -370,6 +433,17 @@ public class UsersFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateDesiredWeightHandler_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var userId = UserId.New();
+        var handler = new UpdateDesiredWeightCommandHandler(CreateAccessCheckedFailingUserContext(userId));
+
+        Result<UserDesiredWeightModel> result = await handler.Handle(new UpdateDesiredWeightCommand(userId.Value, 75), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task UpdateDesiredWeightHandler_WithValidValue_UpdatesUser() {
         var user = User.Create("desired-weight-success@example.com", "hash");
         var handler = new UpdateDesiredWeightCommandHandler(new SingleUserRepository(user));
@@ -401,6 +475,17 @@ public class UsersFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateDesiredWaistHandler_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var userId = UserId.New();
+        var handler = new UpdateDesiredWaistCommandHandler(CreateAccessCheckedFailingUserContext(userId));
+
+        Result<UserDesiredWaistModel> result = await handler.Handle(new UpdateDesiredWaistCommand(userId.Value, 80), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
     [Fact]
@@ -555,6 +640,35 @@ public class UsersFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateGoalsHandler_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var userId = UserId.New();
+        IUserContextService userContextService = Substitute.For<IUserContextService>();
+        userContextService
+            .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Error?>(null));
+        userContextService
+            .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+        var handler = new UpdateGoalsCommandHandler(userContextService);
+
+        Result<GoalsModel> result = await handler.Handle(
+            new UpdateGoalsCommand(
+                userId.Value,
+                DailyCalorieTarget: 2000,
+                ProteinTarget: null,
+                FatTarget: null,
+                CarbTarget: null,
+                FiberTarget: null,
+                WaterGoal: null,
+                DesiredWeight: null,
+                DesiredWaist: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetProfileOverviewHandler_ReturnsAggregatedProfileState() {
         var user = User.Create("user@example.com", "hash");
         var invitation = DietologistInvitation.Create(
@@ -623,6 +737,45 @@ public class UsersFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ProfileOverviewReadService_WhenUserReadFails_ReturnsFailure() {
+        var userId = UserId.New();
+        IUserProfileReadService userProfileReadService = Substitute.For<IUserProfileReadService>();
+        userProfileReadService
+            .GetUserAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<UserModel>(Errors.Authentication.InvalidToken)));
+        var service = new ProfileOverviewReadService(
+            userProfileReadService,
+            new FixedWebPushSubscriptionRepository([]),
+            new FixedDietologistInvitationRepository(invitation: null));
+
+        Result<ProfileOverviewModel> result = await service.GetAsync(userId, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ProfileOverviewReadService_WhenPreferencesReadFails_ReturnsFailure() {
+        var user = User.Create("overview-preferences-failure@example.com", "hash");
+        IUserProfileReadService userProfileReadService = Substitute.For<IUserProfileReadService>();
+        userProfileReadService
+            .GetUserAsync(user.Id, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success(user.ToModel())));
+        userProfileReadService
+            .GetNotificationPreferencesAsync(user.Id, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<NotificationPreferencesModel>(Errors.Authentication.InvalidToken)));
+        var service = new ProfileOverviewReadService(
+            userProfileReadService,
+            new FixedWebPushSubscriptionRepository([]),
+            new FixedDietologistInvitationRepository(invitation: null));
+
+        Result<ProfileOverviewModel> result = await service.GetAsync(user.Id, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
     [Fact]
@@ -765,6 +918,67 @@ public class UsersFeatureTests {
         Assert.Equal(2100, result.Value.DailyCalorieTarget);
         Assert.Equal(73, result.Value.DesiredWeight);
         Assert.Equal(78, result.Value.DesiredWaist);
+    }
+
+    [Fact]
+    public async Task UserContextService_GetGoalsAsync_WhenUserMissing_ReturnsFailure() {
+        var userId = UserId.New();
+        IUserLookupRepository userLookupRepository = Substitute.For<IUserLookupRepository>();
+        userLookupRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns(Task.FromResult<User?>(null));
+        var service = new UserContextService(userLookupRepository, Substitute.For<IUserWriteRepository>());
+
+        Result<GoalsModel> result = await service.GetGoalsAsync(userId, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UserContextService_GetNotificationPreferencesAsync_WhenUserMissing_ReturnsFailure() {
+        var userId = UserId.New();
+        IUserLookupRepository userLookupRepository = Substitute.For<IUserLookupRepository>();
+        userLookupRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns(Task.FromResult<User?>(null));
+        var service = new UserContextService(userLookupRepository, Substitute.For<IUserWriteRepository>());
+
+        Result<NotificationPreferencesModel> result = await service.GetNotificationPreferencesAsync(userId, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UserContextService_GetGoalsAsync_WhenUserAccessible_ReturnsGoals() {
+        var user = User.Create("goals-context@example.com", "hash");
+        user.UpdateGoals(new UserGoalUpdate(
+            DailyCalorieTarget: 2150,
+            ProteinTarget: 125,
+            FatTarget: 65,
+            CarbTarget: 250,
+            FiberTarget: 28,
+            WaterGoal: 2.2,
+            DesiredWeight: 72,
+            DesiredWaist: 77));
+        IUserLookupRepository userLookupRepository = Substitute.For<IUserLookupRepository>();
+        userLookupRepository.GetByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Task.FromResult<User?>(user));
+        var service = new UserContextService(userLookupRepository, Substitute.For<IUserWriteRepository>());
+
+        Result<GoalsModel> result = await service.GetGoalsAsync(user.Id, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(2150, result.Value.DailyCalorieTarget);
+        Assert.Equal(72, result.Value.DesiredWeight);
+        Assert.Equal(77, result.Value.DesiredWaist);
+    }
+
+    private static IUserContextService CreateAccessCheckedFailingUserContext(UserId userId) {
+        IUserContextService userContextService = Substitute.For<IUserContextService>();
+        userContextService
+            .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Error?>(null));
+        userContextService
+            .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+        return userContextService;
     }
 
     [ExcludeFromCodeCoverage]

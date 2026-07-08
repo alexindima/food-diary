@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
@@ -269,6 +270,140 @@ public sealed class JobsTests {
             () => Assert.NotNull(duration),
             () => Assert.Equal(1, tracker.GetSnapshot("images.object_deletion_outbox")?.ConsecutiveFailures),
             () => Assert.Equal(now, tracker.GetSnapshot("images.object_deletion_outbox")?.LastFailedAtUtc));
+    }
+
+    [Fact]
+    public async Task EmailOutboxJob_WhenEnabled_ProcessesDueMessagesAndRecordsSuccess() {
+        long? executionCount = null;
+        string? outcome = null;
+        long? processedItems = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "email.outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: (value, _) => processedItems = value,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new RecordingEmailOutboxProcessor(processed: 5);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new EmailOutboxJob(
+            processor,
+            Options.Create(new EmailOutboxOptions { Enabled = true, BatchSize = 11 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<EmailOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(11, processor.BatchSize),
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("success", outcome),
+            () => Assert.Equal(5, processedItems),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(0, tracker.GetSnapshot("email.outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("email.outbox")?.LastSucceededAtUtc));
+    }
+
+    [Fact]
+    public async Task EmailOutboxJob_WhenDisabled_RecordsSuccessWithoutProcessing() {
+        var processor = new RecordingEmailOutboxProcessor(processed: 5);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new EmailOutboxJob(
+            processor,
+            Options.Create(new EmailOutboxOptions { Enabled = false, BatchSize = 11 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<EmailOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Null(processor.BatchSize),
+            () => Assert.Equal(0, tracker.GetSnapshot("email.outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("email.outbox")?.LastSucceededAtUtc));
+    }
+
+    [Fact]
+    public async Task EmailOutboxJob_WhenCanceledBeforeWork_RecordsCanceledMetricAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "email.outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new RecordingEmailOutboxProcessor(processed: 5);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new EmailOutboxJob(
+            processor,
+            Options.Create(new EmailOutboxOptions { Enabled = true, BatchSize = 11 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<EmailOutboxJob>.Instance);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cts.Token));
+
+        JobExecutionStateSnapshot? snapshot = tracker.GetSnapshot("email.outbox");
+        Assert.NotNull(snapshot);
+        Assert.Multiple(
+            () => Assert.Null(processor.BatchSize),
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("canceled", outcome),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(now, snapshot.Value.LastStartedAtUtc),
+            () => Assert.Null(snapshot.Value.LastSucceededAtUtc),
+            () => Assert.Null(snapshot.Value.LastFailedAtUtc),
+            () => Assert.Equal(0, snapshot.Value.ConsecutiveFailures));
+    }
+
+    [Fact]
+    public async Task EmailOutboxJob_WhenProcessorFails_RecordsFailureAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "email.outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new ThrowingEmailOutboxProcessor();
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new EmailOutboxJob(
+            processor,
+            Options.Create(new EmailOutboxOptions { Enabled = true, BatchSize = 11 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<EmailOutboxJob>.Instance);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute(CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("failure", outcome),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(1, tracker.GetSnapshot("email.outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("email.outbox")?.LastFailedAtUtc));
     }
 
     [Fact]
@@ -1199,6 +1334,22 @@ public sealed class JobsTests {
     private sealed class ThrowingImageObjectDeletionOutboxProcessor : IImageObjectDeletionOutboxProcessor {
         public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) =>
             throw new InvalidOperationException("Image object deletion outbox processor failed.");
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingEmailOutboxProcessor(int processed) : IEmailOutboxProcessor {
+        public int? BatchSize { get; private set; }
+
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) {
+            BatchSize = batchSize;
+            return Task.FromResult(processed);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingEmailOutboxProcessor : IEmailOutboxProcessor {
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) =>
+            throw new InvalidOperationException("Email outbox processor failed.");
     }
 
     [ExcludeFromCodeCoverage]

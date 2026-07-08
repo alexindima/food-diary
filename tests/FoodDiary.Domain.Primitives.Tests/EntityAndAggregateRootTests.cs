@@ -15,6 +15,13 @@ public sealed class EntityAndAggregateRootTests {
     }
 
     [Fact]
+    public void DomainEvent_EventType_DefaultsToConcreteTypeName() {
+        IDomainEvent domainEvent = new TestDomainEvent(DateTime.UtcNow);
+
+        Assert.Equal(nameof(TestDomainEvent), domainEvent.EventType);
+    }
+
+    [Fact]
     public void Entity_Equals_NullEntity_ReturnsFalse() {
         var entity = TestEntity.WithId(Guid.NewGuid());
 

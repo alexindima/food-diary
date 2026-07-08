@@ -1206,6 +1206,53 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithoutManualOrAiItems_ReturnsRequiredItemsFailure() {
+        var user = User.Create("update-without-items@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(new SingleMealRepository(meal), user);
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            new UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Updated",
+                ImageUrl: null,
+                ImageAssetId: null,
+                Items: null!,
+                AiSessions: null!,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
+                PreMealSatietyLevel: 3,
+                PostMealSatietyLevel: 4),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Required", result.Error.Code);
+        Assert.Contains("Items", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WhenMealMissing_ReturnsNotFound() {
+        var user = User.Create("update-missing-meal@example.com", "hash");
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(new CreatingMealRepository(), user);
+        var missingMealId = Guid.NewGuid();
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            UpdateConsumptionCommand(user.Id.Value, missingMealId),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Consumption.NotFound", result.Error.Code);
+    }
+
+    [Fact]
     public async Task UpdateConsumptionCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-update-consumption@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
@@ -2227,6 +2274,23 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
+    public async Task RepeatMealCommandHandler_WithEmptyMealId_ReturnsValidationFailure() {
+        var user = User.Create("repeat-empty-meal-id@example.com", "hash");
+        RepeatMealCommandHandler handler = RepeatMealHandler(
+            new CreatingMealRepository(),
+            new NoopMealNutritionService(),
+            CreateCurrentUserAccessService(user));
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            new RepeatMealCommand(user.Id.Value, Guid.Empty, DateTime.UtcNow, MealType.Lunch.ToString()),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("MealId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task RepeatMealCommandHandler_WhenSourceMealMissing_ReturnsNotFound() {
         var user = User.Create("repeat-missing-source@example.com", "hash");
         RepeatMealCommandHandler handler = RepeatMealHandler(
@@ -2240,6 +2304,26 @@ public class ConsumptionsFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Consumption.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task RepeatMealCommandHandler_WithInvalidMealType_ReturnsValidationFailure() {
+        var user = User.Create("repeat-invalid-meal-type@example.com", "hash");
+        var sourceMeal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new CreatingMealRepository();
+        await repository.AddAsync(sourceMeal);
+        RepeatMealCommandHandler handler = RepeatMealHandler(
+            repository,
+            new NoopMealNutritionService(),
+            CreateCurrentUserAccessService(user));
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            new RepeatMealCommand(user.Id.Value, sourceMeal.Id.Value, DateTime.UtcNow, "Brunch"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("MealType", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -2338,6 +2422,83 @@ public class ConsumptionsFeatureTests {
             () => Assert.Empty(model.Items),
             () => Assert.Empty(model.AiSessions));
     }
+
+    [Fact]
+    public void ConsumptionMappings_ToModel_MapsReadModelAiSessionsAndItems() {
+        var mealId = Guid.NewGuid();
+        var sessionId = Guid.NewGuid();
+        var aiItemId = Guid.NewGuid();
+        MealConsumptionReadModel meal = CreateReadModelWithAiItem(mealId, sessionId, aiItemId);
+
+        ConsumptionModel model = meal.ToModel();
+
+        ConsumptionAiSessionModel session = Assert.Single(model.AiSessions);
+        ConsumptionAiItemModel item = Assert.Single(session.Items);
+        Assert.Equal(sessionId, session.Id);
+        Assert.Equal("Text", session.Source);
+        Assert.Equal("Completed", session.Status);
+        Assert.Equal("recognized", session.Notes);
+        Assert.Equal(aiItemId, item.Id);
+        Assert.Equal("Soup", item.NameEn);
+        Assert.Equal("Soup local", item.NameLocal);
+        Assert.Equal(0.91, item.Confidence);
+        Assert.Equal("Candidate", item.Resolution);
+    }
+
+    private static MealConsumptionReadModel CreateReadModelWithAiItem(Guid mealId, Guid sessionId, Guid aiItemId) =>
+        new(
+            mealId,
+            new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
+            MealType.Lunch,
+            Comment: null,
+            ImageUrl: null,
+            ImageAssetId: null,
+            TotalCalories: 120,
+            TotalProteins: 8,
+            TotalFats: 3,
+            TotalCarbs: 16,
+            TotalFiber: 2,
+            TotalAlcohol: 0,
+            IsNutritionAutoCalculated: true,
+            ManualCalories: null,
+            ManualProteins: null,
+            ManualFats: null,
+            ManualCarbs: null,
+            ManualFiber: null,
+            ManualAlcohol: null,
+            PreMealSatietyLevel: 0,
+            PostMealSatietyLevel: 0,
+            Items: [],
+            AiSessions: [CreateAiSessionReadModel(mealId, sessionId, aiItemId)]);
+
+    private static MealConsumptionAiSessionReadModel CreateAiSessionReadModel(Guid mealId, Guid sessionId, Guid aiItemId) =>
+        new(
+            sessionId,
+            mealId,
+            ImageAssetId: Guid.NewGuid(),
+            ImageUrl: "https://cdn.test/meal.webp",
+            AiRecognitionSource.Text,
+            MealAiSessionStatus.Completed,
+            new DateTime(2026, 3, 26, 12, 5, 0, DateTimeKind.Utc),
+            "recognized",
+            [CreateAiItemReadModel(sessionId, aiItemId)]);
+
+    private static MealConsumptionAiItemReadModel CreateAiItemReadModel(Guid sessionId, Guid aiItemId) =>
+        new(
+            aiItemId,
+            sessionId,
+            "Soup",
+            NameLocal: "Soup local",
+            Amount: 250,
+            Unit: "g",
+            Calories: 120,
+            Proteins: 8,
+            Fats: 3,
+            Carbs: 16,
+            Fiber: 2,
+            Alcohol: 0,
+            Confidence: 0.91,
+            MealAiItemResolution.Candidate);
 
     private static CreateConsumptionCommand CreateConsumptionCommand(
         Guid? userId,

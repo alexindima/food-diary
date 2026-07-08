@@ -359,6 +359,22 @@ public class AiValidatorsTests {
     }
 
     [Fact]
+    public async Task ParseFoodTextHandler_WhenAiUserContextFails_ReturnsFailureWithoutCallingOpenAi() {
+        var user = User.Create("ai-context-fails@example.com", "hash");
+        IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
+        var handler = new ParseFoodTextCommandHandler(
+            openAiFoodService,
+            CreateAiUserContextService(user: null),
+            CreateCurrentUserAccessService(user));
+
+        Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(user.Id.Value, "apple"), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.False(openAiCalls.WasParseFoodTextCalled);
+    }
+
+    [Fact]
     public async Task ParseFoodTextHandler_WithActiveUser_ParsesText() {
         var user = User.Create("active-ai-text@example.com", "hash");
         user.SetLanguage("ru");

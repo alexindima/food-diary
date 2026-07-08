@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Users.Commands.AcceptAiConsent;
 using FoodDiary.Application.Users.Commands.RevokeAiConsent;
@@ -57,6 +58,17 @@ public class AiConsentTests {
     }
 
     [Fact]
+    public async Task AcceptAiConsent_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var userId = UserId.New();
+        var handler = new AcceptAiConsentCommandHandler(CreateAccessCheckedFailingUserContext(userId));
+
+        Result result = await handler.Handle(new AcceptAiConsentCommand(userId.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task RevokeAiConsent_WithAcceptedConsent_ClearsTimestamp() {
         var user = User.Create("user@example.com", "hash");
         user.AcceptAiConsent();
@@ -100,6 +112,28 @@ public class AiConsentTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task RevokeAiConsent_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var userId = UserId.New();
+        var handler = new RevokeAiConsentCommandHandler(CreateAccessCheckedFailingUserContext(userId));
+
+        Result result = await handler.Handle(new RevokeAiConsentCommand(userId.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    private static IUserContextService CreateAccessCheckedFailingUserContext(UserId userId) {
+        IUserContextService userContextService = Substitute.For<IUserContextService>();
+        userContextService
+            .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Error?>(null));
+        userContextService
+            .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+        return userContextService;
     }
 
     [ExcludeFromCodeCoverage]

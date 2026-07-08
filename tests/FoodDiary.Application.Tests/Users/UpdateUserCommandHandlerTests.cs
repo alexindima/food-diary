@@ -164,6 +164,27 @@ public sealed class UpdateUserCommandHandlerTests {
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
+    [Fact]
+    public async Task Handle_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var userId = UserId.New();
+        IUserContextService userContextService = Substitute.For<IUserContextService>();
+        userContextService
+            .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Error?>(null));
+        userContextService
+            .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+        var handler = new UpdateUserCommandHandler(
+            userContextService,
+            CreateImageAssetCleanupService(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        Result<UserModel> result = await handler.Handle(CreateCommand(userId.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
     [Theory]
     [InlineData("not-activity", null, null, null, null, "ActivityLevel")]
     [InlineData(null, "not-language", null, null, null, "Language")]

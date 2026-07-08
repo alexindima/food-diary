@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 using FoodDiary.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
+using FoodDiary.Application.FavoriteMeals.Mappings;
 using FoodDiary.Application.FavoriteMeals.Queries.GetFavoriteMeals;
 using FoodDiary.Application.FavoriteMeals.Queries.IsMealFavorite;
 using FoodDiary.Application.FavoriteMeals.Services;
@@ -41,6 +42,22 @@ public class FavoriteMealsFeatureTests {
             new AddFavoriteMealCommand(Guid.NewGuid(), Guid.NewGuid(), Name: null), CancellationToken.None);
 
         ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task AddFavoriteMeal_WithEmptyMealId_ReturnsValidationFailure() {
+        var user = User.Create("favorite-empty-meal@example.com", "hash");
+        var handler = new AddFavoriteMealCommandHandler(
+            CreateFavoriteMealRepository(),
+            CreateMealRepository(meal: null),
+            CreateCurrentUserAccessService(user));
+
+        Result<FavoriteMealModel> result = await handler.Handle(
+            new AddFavoriteMealCommand(user.Id.Value, Guid.Empty, Name: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains("MealId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -107,6 +124,21 @@ public class FavoriteMealsFeatureTests {
             new RemoveFavoriteMealCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
         ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task RemoveFavoriteMeal_WithEmptyFavoriteMealId_ReturnsValidationFailure() {
+        var user = User.Create("favorite-empty-id@example.com", "hash");
+        var handler = new RemoveFavoriteMealCommandHandler(
+            CreateFavoriteMealRepository(),
+            CreateCurrentUserAccessService(user));
+
+        Result result = await handler.Handle(
+            new RemoveFavoriteMealCommand(user.Id.Value, Guid.Empty),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains("FavoriteMealId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -179,6 +211,21 @@ public class FavoriteMealsFeatureTests {
     }
 
     [Fact]
+    public async Task IsMealFavorite_WithEmptyMealId_ReturnsValidationFailure() {
+        var user = User.Create("favorite-empty-meal-query@example.com", "hash");
+        var handler = new IsMealFavoriteQueryHandler(
+            CreateFavoriteMealReadService(CreateFavoriteMealRepository()),
+            CreateCurrentUserAccessService(user));
+
+        Result<bool> result = await handler.Handle(
+            new IsMealFavoriteQuery(user.Id.Value, Guid.Empty),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains("MealId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task GetFavoriteMeals_WhenUserCanAccess_ReturnsMappedMeals() {
         var user = User.Create("user@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 5, 1, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
@@ -216,6 +263,60 @@ public class FavoriteMealsFeatureTests {
         Assert.Equal(35, model.TotalProteins);
         Assert.Equal(12, model.TotalFats);
         Assert.Equal(42, model.TotalCarbs);
+        Assert.Equal(1, model.ItemCount);
+    }
+
+    [Fact]
+    public async Task AddFavoriteMeal_WhenMealExists_ReturnsFavoriteMappedThroughMealNavigation() {
+        var user = User.Create("favorite-add-success@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 5, 1, 12, 0, 0, DateTimeKind.Utc), MealType.Dinner);
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 500,
+            TotalProteins: 35,
+            TotalFats: 18,
+            TotalCarbs: 44,
+            TotalFiber: 6,
+            TotalAlcohol: 0,
+            IsAutoCalculated: false,
+            ManualCalories: null,
+            ManualProteins: null,
+            ManualFats: null,
+            ManualCarbs: null,
+            ManualFiber: null,
+            ManualAlcohol: null));
+        meal.AddProduct(ProductId.New(), 100);
+        var handler = new AddFavoriteMealCommandHandler(
+            CreateFavoriteMealRepository(),
+            CreateMealRepository(meal),
+            CreateCurrentUserAccessService(user));
+
+        Result<FavoriteMealModel> result = await handler.Handle(
+            new AddFavoriteMealCommand(user.Id.Value, meal.Id.Value, "Dinner copy"),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(meal.Id.Value, result.Value.MealId),
+            () => Assert.Equal("Dinner copy", result.Value.Name),
+            () => Assert.Equal("Dinner", result.Value.MealType),
+            () => Assert.Equal(500, result.Value.TotalCalories),
+            () => Assert.Equal(1, result.Value.ItemCount));
+    }
+
+    [Fact]
+    public void FavoriteMealMappings_ToModel_UsesFavoriteMealNavigation() {
+        var user = User.Create("favorite-navigation@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 5, 2, 8, 0, 0, DateTimeKind.Utc), MealType.Breakfast);
+        meal.AddProduct(ProductId.New(), 100);
+        var favorite = FavoriteMeal.Create(user.Id, meal.Id, "Morning");
+        SetFavoriteMealNavigation(favorite, meal);
+
+        FavoriteMealModel model = favorite.ToModel();
+
+        Assert.Equal(favorite.Id.Value, model.Id);
+        Assert.Equal(meal.Id.Value, model.MealId);
+        Assert.Equal("Morning", model.Name);
+        Assert.Equal("Breakfast", model.MealType);
         Assert.Equal(1, model.ItemCount);
     }
 

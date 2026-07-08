@@ -1,8 +1,10 @@
 using FoodDiary.Application.Admin.Commands.DismissContentReport;
+using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
 using FoodDiary.Application.Admin.Commands.MarkAdminMailInboxMessageRead;
 using FoodDiary.Application.Admin.Commands.ReviewContentReport;
 using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
+using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
@@ -48,6 +50,72 @@ namespace FoodDiary.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public class AdminFeatureTests {
+    [Fact]
+    public async Task AdminImpersonationUserService_ForwardsGetById() {
+        var user = User.Create("admin-impersonation-service@example.com", "hash");
+        IUserLookupRepository repository = Substitute.For<IUserLookupRepository>();
+        using var cts = new CancellationTokenSource();
+        UserId? capturedUserId = null;
+        CancellationToken capturedCancellationToken = default;
+        repository
+            .GetByIdAsync(
+                Arg.Do<UserId>(userId => capturedUserId = userId),
+                Arg.Do<CancellationToken>(cancellationToken => capturedCancellationToken = cancellationToken))
+            .Returns(Task.FromResult<User?>(user));
+        var service = new AdminImpersonationUserService(repository);
+
+        User? result = await service.GetByIdAsync(user.Id, cts.Token);
+
+        Assert.Same(user, result);
+        Assert.Equal(user.Id, capturedUserId);
+        Assert.Equal(cts.Token, capturedCancellationToken);
+    }
+
+    [Fact]
+    public async Task AdminUserManagementService_ForwardsLookupRolesAndUpdate() {
+        var user = User.Create("admin-management-service@example.com", "hash");
+        var role = Role.Create("Premium");
+        IUserLookupRepository lookupRepository = Substitute.For<IUserLookupRepository>();
+        IUserWriteRepository writeRepository = Substitute.For<IUserWriteRepository>();
+        IUserRoleCatalogService roleCatalogService = Substitute.For<IUserRoleCatalogService>();
+        using var cts = new CancellationTokenSource();
+        lookupRepository
+            .GetByIdIncludingDeletedAsync(user.Id, cts.Token)
+            .Returns(Task.FromResult<User?>(user));
+        roleCatalogService
+            .GetRolesByNamesAsync(Arg.Is<IReadOnlyList<string>>(names => names.Count == 1 && names[0] == "Premium"), cts.Token)
+            .Returns(Task.FromResult<IReadOnlyList<Role>>([role]));
+        var service = new AdminUserManagementService(lookupRepository, writeRepository, roleCatalogService);
+
+        User? loadedUser = await service.GetByIdIncludingDeletedAsync(user.Id, cts.Token);
+        IReadOnlyList<Role> roles = await service.GetRolesByNamesAsync(["Premium"], cts.Token);
+        await service.UpdateAsync(user, [], cts.Token);
+
+        Assert.Same(user, loadedUser);
+        Assert.Equal(role, Assert.Single(roles));
+        await writeRepository.Received(1).UpdateAsync(user, Arg.Is<IReadOnlyCollection<UserRoleAuditEvent>>(events => events.Count == 0), cts.Token);
+    }
+
+    [Fact]
+    public void AdminContentReportMappings_ToAdminModel_MapsDomainReport() {
+        var userId = UserId.New();
+        var targetId = Guid.NewGuid();
+        var report = ContentReport.Create(userId, ReportTargetType.Recipe, targetId, " spam ");
+        report.MarkReviewed(" reviewed ");
+
+        AdminContentReportModel model = report.ToAdminModel();
+
+        Assert.Equal(report.Id.Value, model.Id);
+        Assert.Equal(userId.Value, model.ReporterId);
+        Assert.Equal("Recipe", model.TargetType);
+        Assert.Equal(targetId, model.TargetId);
+        Assert.Equal("spam", model.Reason);
+        Assert.Equal("Reviewed", model.Status);
+        Assert.Equal("reviewed", model.AdminNote);
+        Assert.Equal(report.CreatedOnUtc, model.CreatedAtUtc);
+        Assert.Equal(report.ReviewedAtUtc, model.ReviewedAtUtc);
+    }
+
     [Fact]
     public async Task GetAdminBillingPaymentsHandler_NormalizesFiltersAndReturnsPagedPayments() {
         var repository = new RecordingAdminBillingRepository();
@@ -217,6 +285,18 @@ public class AdminFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("roles", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task AdminUserReadService_ExistsIncludingDeletedAsync_UsesLookupRepository() {
+        User user = CreateUserWithRoles("admin-read-exists@example.com", [RoleNames.Admin]);
+        IUserLookupRepository lookupRepository = Substitute.For<IUserLookupRepository>();
+        lookupRepository.GetByIdIncludingDeletedAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Task.FromResult<User?>(user));
+        var service = new AdminUserReadService(lookupRepository, Substitute.For<IUserAdminReadModelRepository>());
+
+        bool exists = await service.ExistsIncludingDeletedAsync(user.Id, CancellationToken.None);
+
+        Assert.True(exists);
     }
 
     [Fact]
@@ -601,6 +681,31 @@ public class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateAdminUserHandler_WithEmptyActorUserId_ReturnsValidationFailure() {
+        User user = CreateUserWithRoles("admin-empty-actor@example.com", [RoleNames.Admin]);
+        var userRepository = new InMemoryUserRepository(
+            user,
+            availableRoles: [RoleNames.Admin, RoleNames.Premium]);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
+
+        Result<AdminUserModel> result = await handler.Handle(
+            new UpdateAdminUserCommand(
+                user.Id.Value,
+                IsActive: null,
+                IsEmailConfirmed: null,
+                Roles: [RoleNames.Admin, RoleNames.Premium],
+                Language: null,
+                AiInputTokenLimit: null,
+                AiOutputTokenLimit: null,
+                ActorUserId: Guid.Empty),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ActorUserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task UpdateAdminUserHandler_WithUnchangedAdminAccountFields_DoesNotSetModifiedOnUtc() {
         User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         user.SetEmailConfirmed(isConfirmed: true);
@@ -696,6 +801,39 @@ public class AdminFeatureTests {
 
         ResultAssert.Success(result);
         Assert.False(user.IsActive);
+    }
+
+    [Fact]
+    public async Task UpdateAdminLessonHandler_WithEmptyLessonId_ReturnsValidationFailure() {
+        var handler = new UpdateAdminLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>());
+
+        Result<AdminLessonModel> result = await handler.Handle(
+            new UpdateAdminLessonCommand(
+                Guid.Empty,
+                "Title",
+                "Content",
+                Summary: null,
+                "en",
+                LessonCategory.NutritionBasics.ToString(),
+                LessonDifficulty.Beginner.ToString(),
+                EstimatedReadMinutes: 5,
+                SortOrder: 1),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Id", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task DeleteAdminLessonHandler_WithEmptyLessonId_ReturnsValidationFailure() {
+        var handler = new DeleteAdminLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>());
+
+        Result result = await handler.Handle(new DeleteAdminLessonCommand(Guid.Empty), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Id", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

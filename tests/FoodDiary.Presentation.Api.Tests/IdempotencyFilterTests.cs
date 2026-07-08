@@ -116,6 +116,75 @@ public sealed class IdempotencyFilterTests {
     }
 
     [Fact]
+    public async Task StoreReserveAsync_WhenInProgressReservationExpires_AllowsNewReservation() {
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 7, 8, 10, 0, 0, DateTimeKind.Utc));
+        var store = new InMemoryIdempotencyStore(timeProvider);
+
+        IdempotencyReservation first = await store.ReserveAsync(
+            "key-expired-processing",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(10),
+            processingTtl: TimeSpan.FromMinutes(1));
+        timeProvider.Advance(TimeSpan.FromMinutes(2));
+
+        IdempotencyReservation second = await store.ReserveAsync(
+            "key-expired-processing",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(10),
+            processingTtl: TimeSpan.FromMinutes(1));
+
+        Assert.Equal(IdempotencyReservationStatus.Acquired, first.Status);
+        Assert.Equal(IdempotencyReservationStatus.Acquired, second.Status);
+    }
+
+    [Fact]
+    public async Task StoreReserveAsync_WhenSameReservationIsStillProcessing_ReturnsInProgress() {
+        var store = new InMemoryIdempotencyStore(TimeProvider.System);
+
+        IdempotencyReservation first = await store.ReserveAsync(
+            "key-processing",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(10),
+            processingTtl: TimeSpan.FromMinutes(1));
+        IdempotencyReservation second = await store.ReserveAsync(
+            "key-processing",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(10),
+            processingTtl: TimeSpan.FromMinutes(1));
+
+        Assert.Equal(IdempotencyReservationStatus.Acquired, first.Status);
+        Assert.Equal(IdempotencyReservationStatus.InProgress, second.Status);
+    }
+
+    [Fact]
+    public async Task StoreReserveAsync_WhenCompletedReservationExpires_AllowsNewReservation() {
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 7, 8, 10, 0, 0, DateTimeKind.Utc));
+        var store = new InMemoryIdempotencyStore(timeProvider);
+
+        IdempotencyReservation first = await store.ReserveAsync(
+            "key-expired-response",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(1),
+            processingTtl: TimeSpan.FromMinutes(10));
+        await store.CompleteAsync(
+            "key-expired-response",
+            "hash",
+            StatusCodes.Status201Created,
+            "{\"id\":1}",
+            responseTtl: TimeSpan.FromMinutes(1));
+        timeProvider.Advance(TimeSpan.FromMinutes(2));
+
+        IdempotencyReservation second = await store.ReserveAsync(
+            "key-expired-response",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(1),
+            processingTtl: TimeSpan.FromMinutes(10));
+
+        Assert.Equal(IdempotencyReservationStatus.Acquired, first.Status);
+        Assert.Equal(IdempotencyReservationStatus.Acquired, second.Status);
+    }
+
+    [Fact]
     public async Task OnActionExecutionAsync_WithoutIdempotencyKey_DoesNotReserve() {
         var store = new RecordingIdempotencyStore();
         var filter = new IdempotencyFilter(store);
@@ -146,6 +215,37 @@ public sealed class IdempotencyFilterTests {
         }));
 
         Assert.Equal(0, store.ReserveCalls);
+        Assert.Equal(0, store.CompleteCalls);
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WhenActionReturnsNonObjectResult_DoesNotCompleteReservation() {
+        var store = new RecordingIdempotencyStore();
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-non-object", userId: "user-000");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        await filter.OnActionExecutionAsync(context, () => Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+            Result = new EmptyResult(),
+        }));
+
+        Assert.Equal(1, store.ReserveCalls);
+        Assert.Equal(0, store.CompleteCalls);
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WhenActionThrows_DoesNotCompleteReservation() {
+        var store = new RecordingIdempotencyStore();
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-exception", userId: "user-000");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        await filter.OnActionExecutionAsync(context, () => Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+            Exception = new InvalidOperationException("failed"),
+            Result = new ObjectResult(new { ignored = true }),
+        }));
+
+        Assert.Equal(1, store.ReserveCalls);
         Assert.Equal(0, store.CompleteCalls);
     }
 
@@ -233,5 +333,14 @@ public sealed class IdempotencyFilterTests {
             CompleteCalls++;
             return Task.CompletedTask;
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class MutableTimeProvider(DateTime utcNow) : TimeProvider {
+        private DateTime _utcNow = utcNow;
+
+        public override DateTimeOffset GetUtcNow() => new(_utcNow);
+
+        public void Advance(TimeSpan interval) => _utcNow = _utcNow.Add(interval);
     }
 }

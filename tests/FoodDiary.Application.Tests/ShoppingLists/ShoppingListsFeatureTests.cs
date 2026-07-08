@@ -19,6 +19,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Application.ShoppingLists.Models;
+using System.Reflection;
 
 namespace FoodDiary.Application.Tests.ShoppingLists;
 
@@ -696,6 +697,94 @@ public class ShoppingListsFeatureTests {
         ShoppingListItemData item = Assert.Single(result.Value);
         Assert.Equal("Sale", item.Category);
         Assert.Equal(1, item.SortOrder);
+    }
+
+    [Fact]
+    public void ShoppingListItemBuilder_BuildProductItem_WithInvalidProductId_ReturnsValidationFailure() {
+        MethodInfo method = typeof(ShoppingListItemBuilder).GetMethod(
+            "BuildProductItem",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        var input = new ShoppingListItemInput(
+            Id: null,
+            ProductId: Guid.Empty,
+            Name: null,
+            Amount: 1,
+            Unit: null,
+            Category: null,
+            Aisle: null,
+            Note: null,
+            IsChecked: false,
+            CheckedOnUtc: null,
+            SortOrder: null);
+
+        var result = (Result<ShoppingListItemData>)method.Invoke(
+            obj: null,
+            [input, 0, new Dictionary<ProductId, Product>()])!;
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ProductId", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ShoppingListMappings_ReadModelToModel_MapsAndSortsSources() {
+        var listId = Guid.NewGuid();
+        var itemId = Guid.NewGuid();
+        var firstSource = new ShoppingListItemSourceReadModel(
+            Guid.NewGuid(),
+            "MealPlan",
+            MealPlanId: Guid.NewGuid(),
+            MealPlanMealId: Guid.NewGuid(),
+            RecipeId: Guid.NewGuid(),
+            "Breakfast",
+            DayNumber: 1,
+            MealType: "Breakfast",
+            Amount: 2,
+            Unit: "Pcs");
+        var secondSource = new ShoppingListItemSourceReadModel(
+            Guid.NewGuid(),
+            "MealPlan",
+            MealPlanId: Guid.NewGuid(),
+            MealPlanMealId: Guid.NewGuid(),
+            RecipeId: Guid.NewGuid(),
+            "Any day",
+            DayNumber: null,
+            MealType: null,
+            Amount: 1,
+            Unit: null);
+        var list = new ShoppingListReadModel(
+            listId,
+            "Weekly",
+            new DateTime(2026, 7, 8, 10, 0, 0, DateTimeKind.Utc),
+            [
+                new ShoppingListItemReadModel(
+                    itemId,
+                    listId,
+                    ProductId: null,
+                    "Eggs",
+                    Amount: 2,
+                    Unit: "Pcs",
+                    Category: "Protein",
+                    Aisle: "Cold",
+                    Note: "organic",
+                    IsChecked: true,
+                    CheckedOnUtc: new DateTime(2026, 7, 8, 12, 0, 0, DateTimeKind.Utc),
+                    SortOrder: 1,
+                    Sources: [secondSource, firstSource]),
+            ]);
+
+        ShoppingListModel model = list.ToModel();
+
+        ShoppingListItemModel item = Assert.Single(model.Items);
+        Assert.Equal(itemId, item.Id);
+        Assert.Equal("Eggs", item.Name);
+        Assert.Equal([firstSource.Id, secondSource.Id], [.. item.Sources.Select(source => source.Id)]);
+        Assert.Equal(firstSource.MealPlanId, item.Sources[0].MealPlanId);
+        Assert.Equal(firstSource.MealPlanMealId, item.Sources[0].MealPlanMealId);
+        Assert.Equal(firstSource.RecipeId, item.Sources[0].RecipeId);
+        Assert.Equal("Breakfast", item.Sources[0].MealType);
+        Assert.Equal(2, item.Sources[0].Amount);
+        Assert.Equal("Pcs", item.Sources[0].Unit);
     }
 
     [Fact]

@@ -16,6 +16,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Mappings;
 using FoodDiary.Application.WaistEntries.Models;
+using FoodDiary.Application.WaistEntries.Services;
 
 namespace FoodDiary.Application.Tests.WaistEntries;
 
@@ -510,6 +511,36 @@ public class WaistEntriesFeatureTests {
         Assert.NotNull(result.Value);
         Assert.Equal(latest.Id.Value, result.Value.Id);
         Assert.Equal(81, result.Value.Circumference);
+    }
+
+    [Fact]
+    public async Task WaistEntryReadService_MapsEntriesLatestAndSummariesFromReadModels() {
+        var userId = UserId.New();
+        var repository = new InMemoryWaistEntryRepository();
+        WaistEntry older = await repository.AddAsync(WaistEntry.Create(userId, new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), 81.23));
+        WaistEntry newer = await repository.AddAsync(WaistEntry.Create(userId, new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), 82.78));
+        var service = new WaistEntryReadService(repository);
+
+        IReadOnlyList<WaistEntryModel> entries = await service.GetEntriesAsync(
+            userId,
+            dateFrom: null,
+            dateTo: null,
+            limit: null,
+            descending: true,
+            CancellationToken.None);
+        WaistEntryModel? latest = await service.GetLatestAsync(userId, CancellationToken.None);
+        IReadOnlyList<WaistEntrySummaryModel> summaries = await service.GetSummariesAsync(
+            userId,
+            new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 5, 22, 0, 0, 0, DateTimeKind.Utc),
+            quantizationDays: 2,
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal([newer.Id.Value, older.Id.Value], entries.Select(entry => entry.Id)),
+            () => Assert.Equal(newer.Id.Value, latest?.Id),
+            () => Assert.Equal(82, summaries[0].AverageCircumference),
+            () => Assert.Equal(0, summaries[1].AverageCircumference));
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {

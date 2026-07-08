@@ -58,6 +58,29 @@ public sealed class UserLoginEventCleanupJobTests : IDisposable {
         Assert.Equal(1, snapshot!.Value.ConsecutiveFailures);
     }
 
+    [Fact]
+    public async Task Execute_WhenCanceledAfterPartialDelete_RecordsCanceledAndRethrows() {
+        using var cts = new CancellationTokenSource();
+        var repository = new CancelingUserLoginEventRepository(cts, 10);
+        UserLoginEventCleanupJob job = CreateJob(
+            repository,
+            new UserLoginEventCleanupOptions {
+                Enabled = true,
+                RetentionDays = 30,
+                BatchSize = 10,
+            });
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cts.Token));
+
+        Assert.Equal([10], repository.DeletedCounts);
+        JobExecutionStateSnapshot? snapshot = _stateTracker.GetSnapshot("users.login_events_cleanup");
+        Assert.NotNull(snapshot);
+        Assert.Multiple(
+            () => Assert.Equal(0, snapshot.Value.ConsecutiveFailures),
+            () => Assert.Null(snapshot.Value.LastFailedAtUtc),
+            () => Assert.Null(snapshot.Value.LastSucceededAtUtc));
+    }
+
     private UserLoginEventCleanupJob CreateJob(
         IUserLoginEventRepository repository,
         UserLoginEventCleanupOptions? options = null,
@@ -121,5 +144,19 @@ public sealed class UserLoginEventCleanupJobTests : IDisposable {
             int batchSize,
             CancellationToken cancellationToken = default) =>
             throw new InvalidOperationException("cleanup failed");
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class CancelingUserLoginEventRepository(
+        CancellationTokenSource cancellationTokenSource,
+        params int[] deleteCounts) : RecordingUserLoginEventRepository(deleteCounts) {
+        public override async Task<int> DeleteOlderThanAsync(
+            DateTime olderThanUtc,
+            int batchSize,
+            CancellationToken cancellationToken = default) {
+            int deleted = await base.DeleteOlderThanAsync(olderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);
+            await cancellationTokenSource.CancelAsync().ConfigureAwait(false);
+            return deleted;
+        }
     }
 }

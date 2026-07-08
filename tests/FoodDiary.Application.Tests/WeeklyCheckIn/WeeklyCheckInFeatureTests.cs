@@ -64,6 +64,73 @@ public class WeeklyCheckInFeatureTests {
     }
 
     [Fact]
+    public async Task GetWeeklyCheckIn_WhenProfileLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var userId = UserId.New();
+        IWeeklyCheckInUserProfileService profileService = Substitute.For<IWeeklyCheckInUserProfileService>();
+        profileService
+            .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Error?>(null));
+        profileService
+            .GetAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<WeeklyCheckInUserProfile>(Errors.Authentication.InvalidToken)));
+        GetWeeklyCheckInQueryHandler handler = CreateHandler(profileService: profileService);
+
+        Result<WeeklyCheckInModel> result = await handler.Handle(
+            new GetWeeklyCheckInQuery(userId.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetWeeklyCheckIn_WhenCurrentWeekSummaryFails_ReturnsFailure() {
+        var userId = UserId.New();
+        var user = User.Create("weekly-current-summary-fails@example.com", "hashed");
+        typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
+        IDashboardStatisticsReadService statisticsReadService = Substitute.For<IDashboardStatisticsReadService>();
+        statisticsReadService
+            .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
+                Errors.Validation.Invalid("statistics", "Statistics unavailable."))));
+        GetWeeklyCheckInQueryHandler handler = CreateHandler(
+            statisticsReadService: statisticsReadService,
+            profileService: CreateProfileService(user));
+
+        Result<WeeklyCheckInModel> result = await handler.Handle(
+            new GetWeeklyCheckInQuery(userId.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetWeeklyCheckIn_WhenLastWeekSummaryFails_ReturnsFailure() {
+        var userId = UserId.New();
+        var user = User.Create("weekly-last-summary-fails@example.com", "hashed");
+        typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
+        DateTime thisWeekStart = Today.AddDays(-6);
+        DateTime lastWeekStart = thisWeekStart.AddDays(-7);
+        DateTime lastWeekEnd = thisWeekStart.AddDays(-1);
+        IDashboardStatisticsReadService statisticsReadService = Substitute.For<IDashboardStatisticsReadService>();
+        statisticsReadService
+            .GetStatisticsAsync(userId, thisWeekStart, Today, 1, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([])));
+        statisticsReadService
+            .GetStatisticsAsync(userId, lastWeekStart, lastWeekEnd, 1, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
+                Errors.Validation.Invalid("statistics", "Last week unavailable."))));
+        GetWeeklyCheckInQueryHandler handler = CreateHandler(
+            statisticsReadService: statisticsReadService,
+            profileService: CreateProfileService(user));
+
+        Result<WeeklyCheckInModel> result = await handler.Handle(
+            new GetWeeklyCheckInQuery(userId.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetWeeklyCheckIn_WithNoData_ReturnsZeroSummaries() {
         var userId = UserId.New();
         var user = User.Create("user@example.com", "hashed");
@@ -144,6 +211,20 @@ public class WeeklyCheckInFeatureTests {
         Result<WeeklyCheckInUserProfile> result = await service.GetAsync(UserId.New(), CancellationToken.None);
 
         ResultAssert.Failure(result, "Authentication.InvalidToken");
+    }
+
+    [Fact]
+    public async Task WeeklyCheckInUserProfileService_EnsureCanAccessAsync_ForwardsToUserContextService() {
+        var userId = UserId.New();
+        IUserContextService userContextService = Substitute.For<IUserContextService>();
+        userContextService
+            .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Error?>(Errors.Authentication.AccountDeleted));
+        var service = new WeeklyCheckInUserProfileService(userContextService);
+
+        Error? error = await service.EnsureCanAccessAsync(userId, CancellationToken.None);
+
+        Assert.Equal(Errors.Authentication.AccountDeleted, error);
     }
 
     private static GetWeeklyCheckInQueryHandler CreateHandler(

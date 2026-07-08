@@ -59,6 +59,19 @@ public class LessonsFeatureTests {
     }
 
     [Fact]
+    public async Task MarkLessonRead_WithEmptyLessonId_ReturnsValidationFailure() {
+        INutritionLessonRepository repo = CreateLessonRepository(lesson: null, hasProgress: false);
+        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider(), Substitute.For<ICurrentUserAccessService>());
+
+        Result result = await handler.Handle(
+            new MarkLessonReadCommand(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("LessonId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task MarkLessonRead_WithNullUserId_ReturnsFailure() {
         var handler = new MarkLessonReadCommandHandler(
             CreateLessonRepository(lesson: null, hasProgress: false),
@@ -174,6 +187,18 @@ public class LessonsFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task GetLessonById_WithEmptyLessonId_ReturnsValidationFailure() {
+        GetLessonByIdQueryHandler handler = CreateGetLessonByIdHandler(CreateLessonRepository([], []));
+
+        Result<LessonDetailModel> result = await handler.Handle(
+            new GetLessonByIdQuery(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("LessonId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

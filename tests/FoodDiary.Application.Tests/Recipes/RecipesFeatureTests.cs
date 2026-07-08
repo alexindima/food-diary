@@ -1193,6 +1193,19 @@ public class RecipesFeatureTests {
     }
 
     [Fact]
+    public async Task ExploreRecipesQueryHandler_WithEmptyUserId_ReturnsValidationFailure() {
+        var handler = new ExploreRecipesQueryHandler(new OverviewRecipeReadService());
+
+        Result<PagedResponse<RecipeModel>> result = await handler.Handle(
+            new ExploreRecipesQuery(Guid.Empty, Page: 1, Limit: 10, Search: null, Category: null, MaxPrepTime: null, SortBy: "popular"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task CreateRecipeCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new SingleRecipeRepositoryForCreate();

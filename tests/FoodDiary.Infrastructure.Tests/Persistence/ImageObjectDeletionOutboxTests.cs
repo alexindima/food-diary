@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Images;
@@ -65,6 +66,33 @@ public sealed class ImageObjectDeletionOutboxTests {
     }
 
     [Fact]
+    public async Task ProcessDueAsync_WhenMaxAttemptReached_DeadLettersMessage() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var message = ImageObjectDeletionOutboxMessage.Create("users/test/dead-letter.webp", DateTime.UtcNow.AddMinutes(-1));
+        for (int i = 0; i < 9; i++) {
+            message.MarkFailed(string.Create(CultureInfo.InvariantCulture, $"failure {i}"), DateTime.UtcNow.AddMinutes(-1));
+        }
+
+        context.ImageObjectDeletionOutbox.Add(message);
+        await context.SaveChangesAsync();
+        var processor = new ImageObjectDeletionOutboxProcessor(
+            context,
+            new ThrowingImageStorageService(),
+            TimeProvider.System,
+            NullLogger<ImageObjectDeletionOutboxProcessor>.Instance);
+
+        int processed = await processor.ProcessDueAsync(batchSize: 10, CancellationToken.None);
+
+        Assert.Equal(0, processed);
+        ImageObjectDeletionOutboxMessage saved = Assert.Single(context.ImageObjectDeletionOutbox);
+        Assert.Equal(10, saved.AttemptCount);
+        Assert.NotNull(saved.DeadLetteredOnUtc);
+        Assert.Null(saved.LockedUntilUtc);
+        Assert.Null(saved.LockedBy);
+        Assert.Contains("Simulated", saved.LastError, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task ProcessDueAsync_WhenBatchSizeIsNotPositive_ReturnsZero() {
         await using FoodDiaryDbContext context = CreateContext();
         var processor = new ImageObjectDeletionOutboxProcessor(
@@ -117,6 +145,21 @@ public sealed class ImageObjectDeletionOutboxTests {
         Assert.Multiple(
             () => Assert.Equal(1, message.AttemptCount),
             () => Assert.Null(message.LastError));
+    }
+
+    [Fact]
+    public void MarkDeadLettered_ClearsLockAndStoresTrimmedError() {
+        var message = ImageObjectDeletionOutboxMessage.Create("users/test/image.webp", DateTime.UtcNow);
+        message.MarkClaimed(DateTime.UtcNow.AddMinutes(5), "worker");
+
+        message.MarkDeadLettered(" final failure ", DateTime.UtcNow.AddMinutes(1));
+
+        Assert.Multiple(
+            () => Assert.Equal(1, message.AttemptCount),
+            () => Assert.NotNull(message.DeadLetteredOnUtc),
+            () => Assert.Null(message.LockedUntilUtc),
+            () => Assert.Null(message.LockedBy),
+            () => Assert.Equal("final failure", message.LastError));
     }
 
     private static FoodDiaryDbContext CreateContext() {

@@ -75,6 +75,35 @@ public sealed class NotificationWebPushOutboxTests {
     }
 
     [Fact]
+    public async Task ProcessDueAsync_WhenMaxAttemptReached_DeadLettersMessage() {
+        await using FoodDiaryDbContext context = CreateContext();
+        Notification notification = await SeedNotificationAsync(context, "notification-outbox-dead-letter@example.com");
+        var message = NotificationWebPushOutboxMessage.Create(notification.Id, DateTime.UtcNow.AddMinutes(-1));
+        for (int i = 0; i < 9; i++) {
+            message.MarkFailed("previous failure", DateTime.UtcNow.AddMinutes(-1));
+        }
+
+        context.NotificationWebPushOutbox.Add(message);
+        await context.SaveChangesAsync();
+        var processor = new NotificationWebPushOutboxProcessor(
+            context,
+            new ThrowingWebPushNotificationSender(),
+            TimeProvider.System,
+            NullLogger<NotificationWebPushOutboxProcessor>.Instance);
+
+        int processed = await processor.ProcessDueAsync(batchSize: 10, CancellationToken.None);
+
+        NotificationWebPushOutboxMessage stored = Assert.Single(context.NotificationWebPushOutbox);
+        Assert.Multiple(
+            () => Assert.Equal(0, processed),
+            () => Assert.Equal(10, stored.AttemptCount),
+            () => Assert.NotNull(stored.DeadLetteredOnUtc),
+            () => Assert.Null(stored.LockedUntilUtc),
+            () => Assert.Null(stored.LockedBy),
+            () => Assert.Contains("Simulated", stored.LastError, StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task ProcessDueAsync_WhenBatchSizeIsNotPositive_ReturnsZero() {
         await using FoodDiaryDbContext context = CreateContext();
         var processor = new NotificationWebPushOutboxProcessor(
@@ -118,6 +147,21 @@ public sealed class NotificationWebPushOutboxTests {
         Assert.Multiple(
             () => Assert.Equal(1, message.AttemptCount),
             () => Assert.Null(message.LastError));
+    }
+
+    [Fact]
+    public void MarkDeadLettered_ClearsLockAndStoresTrimmedError() {
+        var message = NotificationWebPushOutboxMessage.Create(NotificationId.New(), DateTime.UtcNow);
+        message.MarkClaimed(DateTime.UtcNow.AddMinutes(5), "worker");
+
+        message.MarkDeadLettered("  dead-letter reason  ", DateTime.UtcNow);
+
+        Assert.Multiple(
+            () => Assert.Equal(1, message.AttemptCount),
+            () => Assert.NotNull(message.DeadLetteredOnUtc),
+            () => Assert.Null(message.LockedUntilUtc),
+            () => Assert.Null(message.LockedBy),
+            () => Assert.Equal("dead-letter reason", message.LastError));
     }
 
     private static async Task<Notification> SeedNotificationAsync(FoodDiaryDbContext context, string email) {

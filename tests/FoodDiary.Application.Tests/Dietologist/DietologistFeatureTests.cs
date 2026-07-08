@@ -127,6 +127,41 @@ public class DietologistFeatureTests {
         Assert.Same(user, result);
     }
 
+    [Fact]
+    public async Task DietologistUserContextService_GetUserEmailAndModelById_ReturnsLookupResults() {
+        var user = User.Create("dietologist-context-model@example.com", "hash");
+        IDietologistUserLookupService userLookupService = Substitute.For<IDietologistUserLookupService>();
+        userLookupService.GetUserByIdAsync(user.Id, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<User?>(user));
+        userLookupService.GetUserByIdAsync(Arg.Is<UserId>(id => id != user.Id), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<User?>(null));
+        IUserContextService userContextService = Substitute.For<IUserContextService>();
+        var service = new DietologistUserContextService(userContextService, userLookupService);
+
+        string? email = await service.GetUserEmailByIdAsync(user.Id, CancellationToken.None);
+        Result<UserModel> model = await service.GetUserModelByIdAsync(user.Id, CancellationToken.None);
+        Result<UserModel> missing = await service.GetUserModelByIdAsync(UserId.New(), CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(user.Email, email),
+            () => ResultAssert.Success(model),
+            () => Assert.Equal(user.Email, model.Value.Email),
+            () => ResultAssert.Failure(missing, "Dietologist.AccessDenied"));
+    }
+
+    [Fact]
+    public async Task DietologistUserLookupService_GetUserByIdAsync_ReturnsRepositoryUser() {
+        User user = CreateUser(UserId.New(), "lookup@example.com");
+        IUserLookupRepository userRepository = Substitute.For<IUserLookupRepository>();
+        userRepository.GetByIdAsync(user.Id, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<User?>(user));
+        var service = new DietologistUserLookupService(userRepository);
+
+        User? result = await service.GetUserByIdAsync(user.Id, CancellationToken.None);
+
+        Assert.Same(user, result);
+    }
+
     private static InviteDietologistCommandHandler CreateInviteHandler(
         IDietologistInvitationRepository? invitationRepository = null,
         IDietologistUserContextService? userRepository = null,
@@ -376,6 +411,20 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
+    public async Task InviteDietologist_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var userId = UserId.New();
+        InviteDietologistCommandHandler handler = CreateInviteHandler(
+            userRepository: CreateAccessCheckedFailingDietologistUserContext(userId));
+
+        Result result = await handler.Handle(
+            new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task InviteDietologist_WhenInvitingSelf_ReturnsFailure() {
         var userId = UserId.New();
         User user = CreateUser(userId, "user@example.com");
@@ -552,6 +601,36 @@ public class DietologistFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task AcceptInvitation_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        AcceptInvitationCommandHandler handler = CreateAcceptHandler(
+            userRepository: CreateAccessCheckedFailingDietologistUserContext(dietologistId));
+
+        Result result = await handler.Handle(
+            new AcceptInvitationCommand(Guid.NewGuid(), "token", dietologistId.Value),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task AcceptInvitation_WithEmptyInvitationId_ReturnsValidationFailure() {
+        var dietologistId = UserId.New();
+        User user = CreateUser(dietologistId);
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(user);
+        AcceptInvitationCommandHandler handler = CreateAcceptHandler(userRepository: userRepo);
+
+        Result result = await handler.Handle(
+            new AcceptInvitationCommand(Guid.Empty, "token", dietologistId.Value),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains("InvitationId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -774,6 +853,35 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
+    public async Task AcceptInvitationForCurrentUser_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        AcceptInvitationForCurrentUserCommandHandler handler = CreateAcceptCurrentUserHandler(
+            userRepository: CreateAccessCheckedFailingDietologistUserContext(dietologistId));
+
+        Result result = await handler.Handle(
+            new AcceptInvitationForCurrentUserCommand(dietologistId.Value, Guid.NewGuid()),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task AcceptInvitationForCurrentUser_WithEmptyInvitationId_ReturnsValidationFailure() {
+        var dietologistId = UserId.New();
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
+        AcceptInvitationForCurrentUserCommandHandler handler = CreateAcceptCurrentUserHandler(userRepository: userRepo);
+
+        Result result = await handler.Handle(
+            new AcceptInvitationForCurrentUserCommand(dietologistId.Value, Guid.Empty),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains("InvitationId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task AcceptInvitationForCurrentUser_WhenInvitationMissingAfterUserAccess_ReturnsFailure() {
         var dietologistId = UserId.New();
         User user = CreateUser(dietologistId, "diet@example.com");
@@ -983,6 +1091,19 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
+    public async Task DeclineInvitation_WithEmptyInvitationId_ReturnsValidationFailure() {
+        DeclineInvitationCommandHandler handler = CreateDeclineHandler();
+
+        Result result = await handler.Handle(
+            new DeclineInvitationCommand(Guid.Empty, "token", UserId: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("InvitationId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task DeclineInvitation_WithInvalidToken_ReturnsFailure() {
         var clientId = UserId.New();
         DietologistInvitation invitation = CreatePendingInvitation(clientId);
@@ -1092,6 +1213,35 @@ public class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task DeclineInvitationForCurrentUser_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        DeclineInvitationForCurrentUserCommandHandler handler = CreateDeclineCurrentUserHandler(
+            userRepository: CreateAccessCheckedFailingDietologistUserContext(dietologistId));
+
+        Result result = await handler.Handle(
+            new DeclineInvitationForCurrentUserCommand(dietologistId.Value, Guid.NewGuid()),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeclineInvitationForCurrentUser_WithEmptyInvitationId_ReturnsValidationFailure() {
+        var dietologistId = UserId.New();
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
+        DeclineInvitationForCurrentUserCommandHandler handler = CreateDeclineCurrentUserHandler(userRepository: userRepo);
+
+        Result result = await handler.Handle(
+            new DeclineInvitationForCurrentUserCommand(dietologistId.Value, Guid.Empty),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains("InvitationId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -1301,6 +1451,22 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
+    public async Task DisconnectDietologist_WithEmptyClientUserId_ReturnsValidationFailure() {
+        var dietologistId = UserId.New();
+        User user = CreateUser(dietologistId);
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(user);
+        var handler = new DisconnectDietologistCommandHandler(new InMemoryInvitationRepository(), userRepo);
+
+        Result result = await handler.Handle(
+            new DisconnectDietologistCommand(dietologistId.Value, Guid.Empty),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains("ClientUserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task DisconnectDietologist_WhenUserDeleted_ReturnsFailure() {
         var dietologistId = UserId.New();
         var userRepo = new InMemoryUserRepository();
@@ -1432,6 +1598,35 @@ public class DietologistFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task CreateRecommendation_WhenDietologistLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        CreateRecommendationCommandHandler handler = CreateRecommendationHandler(
+            userRepository: CreateAccessCheckedFailingDietologistUserContext(dietologistId));
+
+        Result<RecommendationModel> result = await handler.Handle(
+            new CreateRecommendationCommand(dietologistId.Value, Guid.NewGuid(), "Eat more veggies"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateRecommendation_WithEmptyClientUserId_ReturnsValidationFailure() {
+        var dietologistId = UserId.New();
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
+        CreateRecommendationCommandHandler handler = CreateRecommendationHandler(userRepository: userRepo);
+
+        Result<RecommendationModel> result = await handler.Handle(
+            new CreateRecommendationCommand(dietologistId.Value, Guid.Empty, "Eat more veggies"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains("ClientUserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -1568,6 +1763,21 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
+    public async Task MarkRecommendationRead_WithEmptyRecommendationId_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(userId));
+        var handler = new MarkRecommendationReadCommandHandler(new InMemoryRecommendationRepository(), userRepo);
+
+        Result result = await handler.Handle(
+            new MarkRecommendationReadCommand(userId.Value, Guid.Empty),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains("RecommendationId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task MarkRecommendationRead_WhenNotOwned_ReturnsFailure() {
         var clientId = UserId.New();
         var otherId = UserId.New();
@@ -1666,6 +1876,36 @@ public class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task GetMyDietologist_WithAcceptedInvitation_ReturnsDietologistInfo() {
+        var clientId = UserId.New();
+        var dietologistId = UserId.New();
+        User client = CreateUser(clientId, "client@example.com");
+        User dietologist = CreateUser(dietologistId, "diet@example.com");
+        typeof(User).GetProperty(nameof(User.FirstName))!.SetValue(dietologist, "Dana");
+        typeof(User).GetProperty(nameof(User.LastName))!.SetValue(dietologist, "Smith");
+
+        DietologistInvitation invitation = CreateAcceptedInvitation(clientId, dietologistId);
+        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.ClientUser))!.SetValue(invitation, client);
+        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.DietologistUser))!.SetValue(invitation, dietologist);
+        var invRepo = new InMemoryInvitationRepository();
+        invRepo.Seed(invitation);
+
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(client);
+        GetMyDietologistQueryHandler handler = CreateGetMyDietologistHandler(invRepo, userRepo);
+
+        Result<DietologistInfoModel?> result = await handler.Handle(
+            new GetMyDietologistQuery(clientId.Value), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.NotNull(result.Value);
+        Assert.Equal(dietologistId.Value, result.Value.DietologistUserId);
+        Assert.Equal("diet@example.com", result.Value.Email);
+        Assert.Equal("Dana", result.Value.FirstName);
+        Assert.Equal("Smith", result.Value.LastName);
     }
 
     // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ GetMyClients ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
@@ -1787,6 +2027,16 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
+    public async Task GetInvitationByToken_WithEmptyInvitationId_ReturnsFailure() {
+        GetInvitationByTokenQueryHandler handler = CreateGetInvitationByTokenHandler();
+
+        Result<InvitationModel> result = await handler.Handle(
+            new GetInvitationByTokenQuery(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
     public async Task GetInvitationByToken_WhenExpired_ReturnsFailure() {
         var clientId = UserId.New();
         var invitation = DietologistInvitation.Create(
@@ -1888,6 +2138,53 @@ public class DietologistFeatureTests {
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
             new GetClientDashboardQuery(dietologistId.Value, Guid.NewGuid(), DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task GetClientDashboard_WhenDietologistAccessFails_ReturnsFailure() {
+        var service = new DietologistClientReadService(
+            new InMemoryInvitationRepository(),
+            new ThrowingDashboardSnapshotBuilder(),
+            new InMemoryUserRepository(),
+            new InMemoryUserRepository());
+
+        Result<DashboardSnapshotModel> result = await service.GetDashboardAsync(
+            UserId.New(),
+            Guid.NewGuid(),
+            DateTime.UtcNow,
+            dateTo: null,
+            "en",
+            trendDays: 7,
+            page: 1,
+            pageSize: 10,
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task GetClientDashboard_WithEmptyClientId_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
+        var service = new DietologistClientReadService(
+            new InMemoryInvitationRepository(),
+            new ThrowingDashboardSnapshotBuilder(),
+            userRepo,
+            userRepo);
+
+        Result<DashboardSnapshotModel> result = await service.GetDashboardAsync(
+            dietologistId,
+            Guid.Empty,
+            DateTime.UtcNow,
+            dateTo: null,
+            "en",
+            trendDays: 7,
+            page: 1,
+            pageSize: 10,
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -2020,6 +2317,41 @@ public class DietologistFeatureTests {
 
         Result<UserModel> result = await handler.Handle(
             new GetClientGoalsQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task GetClientGoals_WhenDietologistEmailLookupFails_ReturnsFailure() {
+        var service = new DietologistClientReadService(
+            new InMemoryInvitationRepository(),
+            new ThrowingDashboardSnapshotBuilder(),
+            new InMemoryUserRepository(),
+            new InMemoryUserRepository());
+
+        Result<UserModel> result = await service.GetGoalsAsync(
+            UserId.New(),
+            Guid.NewGuid(),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task GetClientGoals_WithEmptyClientId_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
+        var service = new DietologistClientReadService(
+            new InMemoryInvitationRepository(),
+            new ThrowingDashboardSnapshotBuilder(),
+            userRepo,
+            userRepo);
+
+        Result<UserModel> result = await service.GetGoalsAsync(
+            dietologistId,
+            Guid.Empty,
+            CancellationToken.None);
 
         ResultAssert.Failure(result);
     }
@@ -2176,6 +2508,53 @@ public class DietologistFeatureTests {
 
         Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
             new GetRecommendationsForClientQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task GetMyRecommendations_WhenCurrentUserAccessFails_ReturnsFailure() {
+        var service = new DietologistRecommendationReadService(
+            new InMemoryInvitationRepository(),
+            new InMemoryRecommendationRepository(),
+            new InMemoryUserRepository());
+
+        Result<IReadOnlyList<RecommendationModel>> result = await service.GetForCurrentUserAsync(
+            UserId.New(),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task GetRecommendationsForClient_WhenDietologistAccessFails_ReturnsFailure() {
+        var service = new DietologistRecommendationReadService(
+            new InMemoryInvitationRepository(),
+            new InMemoryRecommendationRepository(),
+            new InMemoryUserRepository());
+
+        Result<IReadOnlyList<RecommendationModel>> result = await service.GetForClientAsync(
+            UserId.New(),
+            Guid.NewGuid(),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task GetRecommendationsForClient_WithEmptyClientId_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
+        var service = new DietologistRecommendationReadService(
+            new InMemoryInvitationRepository(),
+            new InMemoryRecommendationRepository(),
+            userRepo);
+
+        Result<IReadOnlyList<RecommendationModel>> result = await service.GetForClientAsync(
+            dietologistId,
+            Guid.Empty,
+            CancellationToken.None);
 
         ResultAssert.Failure(result);
     }
@@ -2352,6 +2731,107 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
+    public async Task GetInvitationForCurrentUser_WhenEmailLookupFails_ReturnsFailure() {
+        GetInvitationForCurrentUserQueryHandler handler = CreateGetInvitationForCurrentUserHandler();
+
+        Result<DietologistInvitationForCurrentUserModel> result = await handler.Handle(
+            new GetInvitationForCurrentUserQuery(UserId.New().Value, Guid.NewGuid()), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task DietologistInvitationReadService_GetForCurrentUser_WhenEmailLookupFails_ReturnsFailure() {
+        var service = new DietologistInvitationReadService(
+            new InMemoryInvitationRepository(),
+            new InMemoryUserRepository(),
+            new InMemoryUserRepository(),
+            TimeProvider.System);
+
+        Result<DietologistInvitationForCurrentUserModel> result = await service.GetForCurrentUserAsync(
+            UserId.New(),
+            Guid.NewGuid(),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task GetInvitationForCurrentUser_WithEmptyInvitationId_ReturnsFailure() {
+        var userId = UserId.New();
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(userId, "diet@example.com"));
+        GetInvitationForCurrentUserQueryHandler handler = CreateGetInvitationForCurrentUserHandler(
+            userContextService: userRepo);
+
+        Result<DietologistInvitationForCurrentUserModel> result = await handler.Handle(
+            new GetInvitationForCurrentUserQuery(userId.Value, Guid.Empty), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task DietologistInvitationReadService_GetByToken_WithEmptyInvitationId_ReturnsFailure() {
+        var service = new DietologistInvitationReadService(
+            new InMemoryInvitationRepository(),
+            new InMemoryUserRepository(),
+            new InMemoryUserRepository(),
+            TimeProvider.System);
+
+        Result<InvitationModel> result = await service.GetByTokenAsync(
+            UserId.New(),
+            Guid.Empty,
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task GetMyDietologist_WhenCurrentUserAccessFails_ReturnsFailure() {
+        var service = new DietologistInvitationReadService(
+            new InMemoryInvitationRepository(),
+            new InMemoryUserRepository(),
+            new InMemoryUserRepository(),
+            TimeProvider.System);
+
+        Result<DietologistInfoModel?> result = await service.GetMyDietologistAsync(
+            UserId.New(),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task GetMyClients_WhenCurrentUserAccessFails_ReturnsFailure() {
+        var service = new DietologistInvitationReadService(
+            new InMemoryInvitationRepository(),
+            new InMemoryUserRepository(),
+            new InMemoryUserRepository(),
+            TimeProvider.System);
+
+        Result<IReadOnlyList<ClientSummaryModel>> result = await service.GetMyClientsAsync(
+            UserId.New(),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task GetMyRelationship_WhenCurrentUserAccessFails_ReturnsFailure() {
+        var service = new DietologistInvitationReadService(
+            new InMemoryInvitationRepository(),
+            new InMemoryUserRepository(),
+            new InMemoryUserRepository(),
+            TimeProvider.System);
+
+        Result<DietologistRelationshipModel?> result = await service.GetMyRelationshipAsync(
+            UserId.New(),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
     public void DietologistMappings_ToDietologistInfoModel_MapsAcceptedInvitation() {
         var dietologistId = UserId.New();
         User dietologist = CreateUser(dietologistId, "diet@example.com");
@@ -2370,6 +2850,81 @@ public class DietologistFeatureTests {
         Assert.Equal("Dana", model.FirstName);
         Assert.Equal("Smith", model.LastName);
         Assert.True(model.Permissions.ShareMeals);
+    }
+
+    [Fact]
+    public void DietologistMappings_ToRelationshipModel_MapsDomainInvitation() {
+        var dietologistId = UserId.New();
+        User dietologist = CreateUser(dietologistId, "diet@example.com");
+        typeof(User).GetProperty(nameof(User.FirstName))!.SetValue(dietologist, "Dana");
+        typeof(User).GetProperty(nameof(User.LastName))!.SetValue(dietologist, "Smith");
+
+        DietologistInvitation invitation = CreateAcceptedInvitation(UserId.New(), dietologistId);
+        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.DietologistUser))!
+            .SetValue(invitation, dietologist);
+
+        DietologistRelationshipModel model = invitation.ToRelationshipModel();
+
+        Assert.Equal(invitation.Id.Value, model.InvitationId);
+        Assert.Equal(DietologistInvitationStatus.Accepted.ToString(), model.Status);
+        Assert.Equal("diet@example.com", model.Email);
+        Assert.Equal("Dana", model.FirstName);
+        Assert.Equal("Smith", model.LastName);
+        Assert.Equal(dietologistId.Value, model.DietologistUserId);
+        Assert.Equal(invitation.AcceptedAtUtc, model.AcceptedAtUtc);
+    }
+
+    [Fact]
+    public void DietologistMappings_ToClientSummaryModel_MapsProfileWhenShared() {
+        var clientId = UserId.New();
+        var dietologistId = UserId.New();
+        User client = CreateUser(clientId, "client@example.com");
+        typeof(User).GetProperty(nameof(User.FirstName))!.SetValue(client, "Casey");
+        typeof(User).GetProperty(nameof(User.LastName))!.SetValue(client, "Jones");
+        typeof(User).GetProperty(nameof(User.ProfileImage))!.SetValue(client, "https://cdn.example.com/avatar.jpg");
+        typeof(User).GetProperty(nameof(User.Gender))!.SetValue(client, "F");
+        typeof(User).GetProperty(nameof(User.Height))!.SetValue(client, 170d);
+        typeof(User).GetProperty(nameof(User.ActivityLevel))!.SetValue(client, ActivityLevel.High);
+        DateTime birthDate = new(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        typeof(User).GetProperty(nameof(User.BirthDate))!.SetValue(client, birthDate);
+
+        DietologistInvitation invitation = CreateAcceptedInvitation(clientId, dietologistId);
+        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.ClientUser))!
+            .SetValue(invitation, client);
+
+        var model = invitation.ToClientSummaryModel();
+
+        Assert.Equal(clientId.Value, model.UserId);
+        Assert.Equal("client@example.com", model.Email);
+        Assert.Equal("Casey", model.FirstName);
+        Assert.Equal("Jones", model.LastName);
+        Assert.Equal("https://cdn.example.com/avatar.jpg", model.ProfileImage);
+        Assert.Equal(birthDate, model.BirthDate);
+        Assert.Equal("F", model.Gender);
+        Assert.Equal(170d, model.Height);
+        Assert.Equal(ActivityLevel.High.ToString(), model.ActivityLevel);
+        Assert.Equal(invitation.AcceptedAtUtc, model.AcceptedAtUtc);
+    }
+
+    [Fact]
+    public void DietologistMappings_ToCurrentUserInvitationModel_MapsExpiredDomainInvitation() {
+        var clientId = UserId.New();
+        var invitation = DietologistInvitation.Create(
+            clientId,
+            "diet@example.com",
+            "hash",
+            DateTime.UtcNow.AddDays(-1),
+            AllDomainPermissions);
+        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.ClientUser))!
+            .SetValue(invitation, CreateUser(clientId, "client@example.com"));
+
+        DietologistInvitationForCurrentUserModel model = invitation.ToCurrentUserInvitationModel();
+
+        Assert.Equal(invitation.Id.Value, model.InvitationId);
+        Assert.Equal(clientId.Value, model.ClientUserId);
+        Assert.Equal("client@example.com", model.ClientEmail);
+        Assert.Equal("Expired", model.Status);
+        Assert.Equal(invitation.ExpiresAtUtc, model.ExpiresAtUtc);
     }
 
     [Fact]
@@ -2533,6 +3088,18 @@ public class DietologistFeatureTests {
 
         public Task RemoveRoleAsync(UserId userId, string roleName, CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private static IDietologistUserContextService CreateAccessCheckedFailingDietologistUserContext(UserId userId) {
+        IDietologistUserContextService userContextService = Substitute.For<IDietologistUserContextService>();
+        userContextService
+            .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Error?>(null));
+        userContextService
+            .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+        return userContextService;
     }
 
     [ExcludeFromCodeCoverage]

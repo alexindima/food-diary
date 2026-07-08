@@ -176,6 +176,56 @@ public class HydrationFeatureTests {
     }
 
     [Fact]
+    public async Task GetHydrationDailyTotalQueryHandler_WhenGoalReadFails_ReturnsFailure() {
+        var user = User.Create("hydration-goal-failure@example.com", "hash");
+        IHydrationGoalService hydrationGoalService = Substitute.For<IHydrationGoalService>();
+        hydrationGoalService
+            .GetCurrentGoalAsync(user.Id, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<double?>(Errors.Authentication.InvalidToken)));
+        var handler = new GetHydrationDailyTotalQueryHandler(
+            new RecordingHydrationEntryRepository(),
+            hydrationGoalService,
+            CreateCurrentUserAccessService(user));
+
+        Result<HydrationDailyModel> result = await handler.Handle(
+            new GetHydrationDailyTotalQuery(user.Id.Value, DateTime.UtcNow),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task HydrationEntryReadService_MapsReadModelsAndForwardsDailyTotals() {
+        var userId = UserId.New();
+        var date = new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc);
+        Guid entryId = HydrationEntryId.New().Value;
+        IHydrationEntryReadModelRepository repository = Substitute.For<IHydrationEntryReadModelRepository>();
+        repository
+            .GetByDateReadModelsAsync(userId, date, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<HydrationEntryReadModel>>([
+                new HydrationEntryReadModel(entryId, date.AddHours(9), 300),
+            ]));
+        repository
+            .GetDailyTotalsAsync(userId, date, date.AddDays(1), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<(DateTime Date, int TotalMl)>>([
+                (date, 300),
+                (date.AddDays(1), 500),
+            ]));
+        var service = new HydrationEntryReadService(repository);
+
+        IReadOnlyList<HydrationEntryModel> entries = await service.GetEntriesByDateAsync(userId, date, CancellationToken.None);
+        IReadOnlyList<(DateTime Date, int TotalMl)> totals = await service.GetDailyTotalsAsync(userId, date, date.AddDays(1), CancellationToken.None);
+
+        HydrationEntryModel entry = Assert.Single(entries);
+        Assert.Equal(entryId, entry.Id);
+        Assert.Equal(date.AddHours(9), entry.TimestampUtc);
+        Assert.Equal(300, entry.AmountMl);
+        Assert.Equal(2, totals.Count);
+        Assert.Equal(500, totals[1].TotalMl);
+    }
+
+    [Fact]
     public async Task CreateHydrationEntryCommandHandler_WithUnspecifiedTimestamp_PreservesInstantAsUtc() {
         var user = User.Create("hydration-create@example.com", "hash");
         var repository = new InMemoryHydrationEntryRepository();

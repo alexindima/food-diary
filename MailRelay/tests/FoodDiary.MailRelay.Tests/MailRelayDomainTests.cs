@@ -127,6 +127,29 @@ public sealed class MailRelayDomainTests {
     }
 
     [Fact]
+    public void QueuedEmail_FromPersistence_WithModifiedTimestamp_SetsModifiedAuditTimestamp() {
+        var createdAtUtc = new DateTimeOffset(2026, 6, 14, 10, 15, 0, TimeSpan.Zero);
+        var modifiedAtUtc = new DateTimeOffset(2026, 6, 14, 10, 20, 0, TimeSpan.Zero);
+
+        var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(
+            Guid.NewGuid(),
+            "relay@example.com",
+            "FoodDiary",
+            ["user@example.com"],
+            "Subject",
+            "<p>Body</p>",
+            TextBody: null,
+            "correlation",
+            1,
+            3,
+            createdAtUtc,
+            modifiedAtUtc));
+
+        Assert.Equal(modifiedAtUtc.UtcDateTime, email.ModifiedOnUtc);
+        Assert.Equal(DateTimeKind.Utc, email.ModifiedOnUtc?.Kind);
+    }
+
+    [Fact]
     public void QueuedEmail_MarkSent_UpdatesModifiedAuditTimestamp() {
         var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(
             Guid.NewGuid(),

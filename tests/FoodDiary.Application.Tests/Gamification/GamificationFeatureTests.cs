@@ -81,6 +81,67 @@ public class GamificationFeatureTests {
     }
 
     [Fact]
+    public async Task GamificationReadService_IgnoresNonPositiveDailyCaloriesBuckets() {
+        var userId = UserId.New();
+        var user = User.Create("gamification-calories@example.com", "hashed");
+        typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
+        user.UpdateGoals(dailyCalorieTarget: 2000);
+        IReadOnlyList<DashboardStatisticsBucketReadModel> buckets = [
+            CreateStatisticsBucket(Today.AddDays(-2), totalCalories: 1800),
+            CreateStatisticsBucket(Today.AddDays(-1), totalCalories: 0),
+            CreateStatisticsBucket(Today, totalCalories: -100),
+        ];
+        IGamificationReadService service = CreateGamificationReadService(
+            CreateMealRepository([Today], totalMealCount: 1),
+            CreateStatisticsReadService(buckets),
+            CreateUserProfileService(user));
+
+        Result<GamificationModel> result = await service.GetAsync(userId, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.InRange(result.Value.WeeklyAdherence, 0.14, 0.15);
+    }
+
+    [Fact]
+    public async Task GamificationReadService_WhenProfileFails_ReturnsFailure() {
+        var userId = UserId.New();
+        IGamificationUserProfileService userProfileService = Substitute.For<IGamificationUserProfileService>();
+        userProfileService
+            .GetAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<IGamificationUserProfile>(Errors.Authentication.InvalidToken)));
+        IGamificationReadService service = CreateGamificationReadService(
+            CreateMealRepository(),
+            CreateStatisticsReadService(),
+            userProfileService);
+
+        Result<GamificationModel> result = await service.GetAsync(userId, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GamificationReadService_WhenStatisticsFail_ReturnsFailure() {
+        var userId = UserId.New();
+        var user = User.Create("gamification-statistics-failure@example.com", "hashed");
+        typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
+        IDashboardStatisticsReadService statisticsReadService = Substitute.For<IDashboardStatisticsReadService>();
+        statisticsReadService
+            .GetStatisticsAsync(userId, Today.AddDays(-6), Today, 1, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
+                Errors.Validation.Invalid("statistics", "Statistics unavailable."))));
+        IGamificationReadService service = CreateGamificationReadService(
+            CreateMealRepository(),
+            statisticsReadService,
+            CreateUserProfileService(user));
+
+        Result<GamificationModel> result = await service.GetAsync(userId, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GamificationUserProfileService_WithAccessibleUser_ReturnsProfile() {
         var user = User.Create("profile@example.com", "hashed");
         user.UpdateGoals(dailyCalorieTarget: 2100);
@@ -130,6 +191,9 @@ public class GamificationFeatureTests {
             .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>(buckets ?? [])));
         return service;
     }
+
+    private static DashboardStatisticsBucketReadModel CreateStatisticsBucket(DateTime date, double totalCalories) =>
+        new(date, date.AddDays(1), totalCalories, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: 0);
 
     private static IUserContextService CreateUserContextService(User? user) {
         IUserContextService service = Substitute.For<IUserContextService>();

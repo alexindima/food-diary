@@ -149,6 +149,26 @@ public sealed class OptionsValidationTests {
     [InlineData(true, 0, "* * * * *", false)]
     [InlineData(true, 50, "", false)]
     [InlineData(true, 50, " ", false)]
+    public void EmailOutboxOptions_ReturnExpectedValidationResult(
+        bool enabled,
+        int batchSize,
+        string cron,
+        bool expected) {
+        var options = new EmailOutboxOptions {
+            Enabled = enabled,
+            BatchSize = batchSize,
+            Cron = cron,
+        };
+
+        Assert.Equal(expected, EmailOutboxOptions.HasValidConfiguration(options));
+    }
+
+    [Theory]
+    [InlineData(true, 50, "* * * * *", true)]
+    [InlineData(false, 0, "", true)]
+    [InlineData(true, 0, "* * * * *", false)]
+    [InlineData(true, 50, "", false)]
+    [InlineData(true, 50, " ", false)]
     public void NotificationWebPushOutboxOptions_ReturnExpectedValidationResult(
         bool enabled,
         int batchSize,
