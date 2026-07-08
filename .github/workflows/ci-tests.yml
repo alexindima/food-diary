@@ -86,7 +86,14 @@ jobs:
         run: |
           set -euo pipefail
           shopt -s nullglob
-          projects=(tests/*/*.csproj)
+          all_projects=(tests/*/*.csproj)
+          projects=()
+          for project in "${all_projects[@]}"; do
+            if [ "$(basename "$project")" = "FoodDiary.Testing.csproj" ]; then
+              continue
+            fi
+            projects+=("$project")
+          done
           if [ ${#projects[@]} -eq 0 ]; then
             echo "No test projects found in tests/*/*.csproj"
             exit 1
@@ -163,7 +170,14 @@ jobs:
             echo "| Build | Solution build | $(status_for_log "${logs_dir}/build.log") | dotnet build Release |"
 
             shopt -s nullglob
-            projects=(tests/*/*.csproj)
+            all_projects=(tests/*/*.csproj)
+            projects=()
+            for project in "${all_projects[@]}"; do
+              if [ "$(basename "$project")" = "FoodDiary.Testing.csproj" ]; then
+                continue
+              fi
+              projects+=("$project")
+            done
             for project in "${projects[@]}"; do
               safe_name="${project//\//_}"
               safe_name="${safe_name//\\/_}"
