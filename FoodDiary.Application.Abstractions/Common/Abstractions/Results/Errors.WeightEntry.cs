@@ -8,6 +8,8 @@ public static partial class Errors {
     public static class WeightEntry {
         public static Error NotFound(Guid id) => WeightEntryErrors.NotFound(id);
 
+        public static Error NotAccessible(Guid id) => WeightEntryErrors.NotAccessible(id);
+
         public static Error AlreadyExists(DateTime date) => WeightEntryErrors.AlreadyExists(date);
     }
 }

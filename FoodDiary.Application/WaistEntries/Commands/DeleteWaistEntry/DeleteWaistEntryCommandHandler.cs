@@ -41,7 +41,7 @@ public sealed class DeleteWaistEntryCommandHandler(
             cancellationToken).ConfigureAwait(false);
 
         if (entry is null) {
-            return Result.Failure(Errors.WaistEntry.NotFound(command.WaistEntryId));
+            return Result.Failure(Errors.WaistEntry.NotAccessible(command.WaistEntryId));
         }
 
         await waistEntryRepository.DeleteAsync(entry, cancellationToken).ConfigureAwait(false);

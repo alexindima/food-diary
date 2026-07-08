@@ -37,7 +37,7 @@ public sealed class DeleteHydrationEntryCommandHandler(
 
         HydrationEntry? entry = await repository.GetByIdAsync(hydrationEntryId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (entry is null || entry.UserId != userId) {
-            return Result.Failure(Errors.HydrationEntry.NotFound(command.HydrationEntryId));
+            return Result.Failure(Errors.HydrationEntry.NotAccessible(command.HydrationEntryId));
         }
 
         await repository.DeleteAsync(entry, cancellationToken).ConfigureAwait(false);

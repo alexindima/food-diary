@@ -45,7 +45,7 @@ public sealed class UpdateHydrationEntryCommandHandler(
             asTracking: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (entry is null || entry.UserId != userId) {
-            return Result.Failure<HydrationEntryModel>(Errors.HydrationEntry.NotFound(command.HydrationEntryId));
+            return Result.Failure<HydrationEntryModel>(Errors.HydrationEntry.NotAccessible(command.HydrationEntryId));
         }
 
         if (command.AmountMl.HasValue) {

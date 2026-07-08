@@ -307,7 +307,7 @@ public class WeightEntriesFeatureTests {
     }
 
     [Fact]
-    public async Task DeleteWeightEntryCommandHandler_WhenEntryMissing_ReturnsNotFound() {
+    public async Task DeleteWeightEntryCommandHandler_WhenEntryMissing_ReturnsNotAccessible() {
         var user = User.Create("delete-weight-missing-entry@example.com", "hash");
         var handler = new DeleteWeightEntryCommandHandler(
             new InMemoryWeightEntryRepository(),
@@ -318,7 +318,7 @@ public class WeightEntriesFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal("WeightEntry.NotFound", result.Error.Code);
+        Assert.Equal("WeightEntry.NotAccessible", result.Error.Code);
     }
 
     [Fact]
@@ -386,7 +386,7 @@ public class WeightEntriesFeatureTests {
     }
 
     [Fact]
-    public async Task UpdateWeightEntryCommandHandler_WhenEntryMissing_ReturnsNotFound() {
+    public async Task UpdateWeightEntryCommandHandler_WhenEntryMissing_ReturnsNotAccessible() {
         var user = User.Create("weight-update-missing-entry@example.com", "hash");
         var handler = new UpdateWeightEntryCommandHandler(
             new InMemoryWeightEntryRepository(),
@@ -397,7 +397,7 @@ public class WeightEntriesFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal("WeightEntry.NotFound", result.Error.Code);
+        Assert.Equal("WeightEntry.NotAccessible", result.Error.Code);
     }
 
     [Fact]

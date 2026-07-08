@@ -2,23 +2,28 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Common.Time;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.Hydration.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 
 public sealed class GetHydrationDailyTotalQueryHandler(
     IHydrationEntryReadService hydrationEntryReadService,
-    IHydrationGoalService hydrationGoalService)
+    IHydrationGoalService hydrationGoalService,
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetHydrationDailyTotalQuery, Result<HydrationDailyModel>> {
     public async Task<Result<HydrationDailyModel>> Handle(
         GetHydrationDailyTotalQuery query,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<HydrationDailyModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<HydrationDailyModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

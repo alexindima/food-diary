@@ -46,7 +46,7 @@ public sealed class UpdateWaistEntryCommandHandler(
             cancellationToken).ConfigureAwait(false);
 
         if (entry is null) {
-            return Result.Failure<WaistEntryModel>(Errors.WaistEntry.NotFound(command.WaistEntryId));
+            return Result.Failure<WaistEntryModel>(Errors.WaistEntry.NotAccessible(command.WaistEntryId));
         }
 
         DateTime normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);

@@ -46,7 +46,7 @@ public sealed class UpdateWeightEntryCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (existingEntry is null) {
-            return Result.Failure<WeightEntryModel>(Errors.WeightEntry.NotFound(command.WeightEntryId));
+            return Result.Failure<WeightEntryModel>(Errors.WeightEntry.NotAccessible(command.WeightEntryId));
         }
 
         DateTime normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);

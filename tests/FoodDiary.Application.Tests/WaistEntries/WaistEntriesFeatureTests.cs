@@ -244,7 +244,7 @@ public class WaistEntriesFeatureTests {
     }
 
     [Fact]
-    public async Task DeleteWaistEntryCommandHandler_WhenEntryMissing_ReturnsNotFound() {
+    public async Task DeleteWaistEntryCommandHandler_WhenEntryMissing_ReturnsNotAccessible() {
         var user = User.Create("delete-waist-missing-entry@example.com", "hash");
         var handler = new DeleteWaistEntryCommandHandler(
             new InMemoryWaistEntryRepository(),
@@ -255,7 +255,7 @@ public class WaistEntriesFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal("WaistEntry.NotFound", result.Error.Code);
+        Assert.Equal("WaistEntry.NotAccessible", result.Error.Code);
     }
 
     [Fact]
@@ -382,7 +382,7 @@ public class WaistEntriesFeatureTests {
     }
 
     [Fact]
-    public async Task UpdateWaistEntryCommandHandler_WhenEntryMissing_ReturnsNotFound() {
+    public async Task UpdateWaistEntryCommandHandler_WhenEntryMissing_ReturnsNotAccessible() {
         var user = User.Create("waist-update-missing-entry@example.com", "hash");
         var handler = new UpdateWaistEntryCommandHandler(
             new InMemoryWaistEntryRepository(),
@@ -393,7 +393,7 @@ public class WaistEntriesFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal("WaistEntry.NotFound", result.Error.Code);
+        Assert.Equal("WaistEntry.NotAccessible", result.Error.Code);
     }
 
     [Fact]

@@ -41,7 +41,7 @@ public sealed class DeleteWeightEntryCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (entry is null) {
-            return Result.Failure(Errors.WeightEntry.NotFound(command.WeightEntryId));
+            return Result.Failure(Errors.WeightEntry.NotAccessible(command.WeightEntryId));
         }
 
         await weightEntryRepository.DeleteAsync(entry, cancellationToken).ConfigureAwait(false);

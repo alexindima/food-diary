@@ -9,6 +9,11 @@ public static class WeightEntryErrors {
         $"Weight entry with ID {id} was not found.",
         Kind: ErrorKind.NotFound);
 
+    public static Error NotAccessible(Guid id) => new(
+        "WeightEntry.NotAccessible",
+        $"Weight entry with ID {id} was not found or is not accessible.",
+        Kind: ErrorKind.NotFound);
+
     public static Error AlreadyExists(DateTime date) => new(
         "WeightEntry.AlreadyExists",
         string.Create(CultureInfo.InvariantCulture, $"Weight entry for {date:yyyy-MM-dd} already exists."),

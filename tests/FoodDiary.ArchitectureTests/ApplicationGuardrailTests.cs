@@ -1120,7 +1120,7 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void MigratedCurrentUserScopedCommands_UseCurrentUserAccessResolver() {
+    public void MigratedCurrentUserScopedHandlers_UseCurrentUserAccessResolver() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] migratedFiles = [
@@ -1137,10 +1137,28 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Exercises", "Commands", "UpdateExerciseEntry", "UpdateExerciseEntryCommandHandler.cs"),
             Path.Combine(applicationRoot, "MealPlans", "Commands", "AdoptMealPlan", "AdoptMealPlanCommandHandler.cs"),
             Path.Combine(applicationRoot, "MealPlans", "Commands", "GenerateShoppingList", "GenerateShoppingListCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Hydration", "Commands", "CreateHydrationEntry", "CreateHydrationEntryCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Hydration", "Commands", "DeleteHydrationEntry", "DeleteHydrationEntryCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Hydration", "Commands", "UpdateHydrationEntry", "UpdateHydrationEntryCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Hydration", "Queries", "GetHydrationDailyTotal", "GetHydrationDailyTotalQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Hydration", "Queries", "GetHydrationEntries", "GetHydrationEntriesQueryHandler.cs"),
+            Path.Combine(applicationRoot, "WeightEntries", "Commands", "CreateWeightEntry", "CreateWeightEntryCommandHandler.cs"),
+            Path.Combine(applicationRoot, "WeightEntries", "Commands", "DeleteWeightEntry", "DeleteWeightEntryCommandHandler.cs"),
+            Path.Combine(applicationRoot, "WeightEntries", "Commands", "UpdateWeightEntry", "UpdateWeightEntryCommandHandler.cs"),
+            Path.Combine(applicationRoot, "WeightEntries", "Queries", "GetLatestWeightEntry", "GetLatestWeightEntryQueryHandler.cs"),
+            Path.Combine(applicationRoot, "WeightEntries", "Queries", "GetWeightEntries", "GetWeightEntriesQueryHandler.cs"),
+            Path.Combine(applicationRoot, "WeightEntries", "Queries", "GetWeightSummaries", "GetWeightSummariesQueryHandler.cs"),
+            Path.Combine(applicationRoot, "WaistEntries", "Commands", "CreateWaistEntry", "CreateWaistEntryCommandHandler.cs"),
+            Path.Combine(applicationRoot, "WaistEntries", "Commands", "DeleteWaistEntry", "DeleteWaistEntryCommandHandler.cs"),
+            Path.Combine(applicationRoot, "WaistEntries", "Commands", "UpdateWaistEntry", "UpdateWaistEntryCommandHandler.cs"),
+            Path.Combine(applicationRoot, "WaistEntries", "Queries", "GetLatestWaistEntry", "GetLatestWaistEntryQueryHandler.cs"),
+            Path.Combine(applicationRoot, "WaistEntries", "Queries", "GetWaistEntries", "GetWaistEntriesQueryHandler.cs"),
+            Path.Combine(applicationRoot, "WaistEntries", "Queries", "GetWaistSummaries", "GetWaistSummariesQueryHandler.cs"),
         ];
 
         string[] directParseViolations = [
             .. FindReferencesInFiles(root, migratedFiles, "UserIdParser.Parse(command.UserId)"),
+            .. FindReferencesInFiles(root, migratedFiles, "UserIdParser.Parse(query.UserId)"),
             .. FindReferencesInFiles(root, migratedFiles, "UserIdParser.Parse(request.UserId)"),
         ];
         string[] missingResolverViolations = [.. migratedFiles
