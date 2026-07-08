@@ -21,7 +21,7 @@ public sealed class CreateRecommendationCommandHandler(
     IDietologistInvitationReadRepository invitationRepository,
     IRecommendationWriteRepository recommendationRepository,
     INotificationWriter notificationWriter,
-    INotificationReadRepository notificationRepository,
+    INotificationReadModelRepository notificationReadModelRepository,
     INotificationPusher notificationPusher,
     IDietologistUserContextService dietologistUserContextService,
     IPostCommitActionQueue postCommitActionQueue)
@@ -79,7 +79,7 @@ public sealed class CreateRecommendationCommandHandler(
         await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
         NotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,
-            notificationRepository,
+            notificationReadModelRepository,
             notificationPusher,
             recommendation.ClientUserId,
             pushChanged: false);

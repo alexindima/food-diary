@@ -13,7 +13,7 @@ using FoodDiary.Domain.Entities.Notifications;
 namespace FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
 
 public sealed class MarkNotificationReadCommandHandler(
-    INotificationReadRepository notificationReadRepository,
+    INotificationReadModelRepository notificationReadModelRepository,
     INotificationWriteRepository notificationWriteRepository,
     ICurrentUserAccessService currentUserAccessService,
     INotificationPusher notificationPusher,
@@ -51,7 +51,7 @@ public sealed class MarkNotificationReadCommandHandler(
         await notificationWriteRepository.UpdateAsync(notification, cancellationToken).ConfigureAwait(false);
         NotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,
-            notificationReadRepository,
+            notificationReadModelRepository,
             notificationPusher,
             userId);
         return Result.Success();

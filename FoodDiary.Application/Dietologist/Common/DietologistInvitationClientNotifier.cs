@@ -9,7 +9,7 @@ namespace FoodDiary.Application.Dietologist.Common;
 internal static class DietologistInvitationClientNotifier {
     public static Task NotifyAcceptedAsync(
         INotificationWriter notificationWriter,
-        INotificationReadRepository notificationRepository,
+        INotificationReadModelRepository notificationReadModelRepository,
         INotificationPusher notificationPusher,
         IPostCommitActionQueue postCommitActionQueue,
         UserId clientUserId,
@@ -18,7 +18,7 @@ internal static class DietologistInvitationClientNotifier {
         CancellationToken cancellationToken) =>
         NotifyAsync(
             notificationWriter,
-            notificationRepository,
+            notificationReadModelRepository,
             notificationPusher,
             postCommitActionQueue,
             NotificationFactory.CreateDietologistInvitationAccepted(
@@ -29,7 +29,7 @@ internal static class DietologistInvitationClientNotifier {
 
     public static Task NotifyDeclinedAsync(
         INotificationWriter notificationWriter,
-        INotificationReadRepository notificationRepository,
+        INotificationReadModelRepository notificationReadModelRepository,
         INotificationPusher notificationPusher,
         IPostCommitActionQueue postCommitActionQueue,
         UserId clientUserId,
@@ -38,7 +38,7 @@ internal static class DietologistInvitationClientNotifier {
         CancellationToken cancellationToken) =>
         NotifyAsync(
             notificationWriter,
-            notificationRepository,
+            notificationReadModelRepository,
             notificationPusher,
             postCommitActionQueue,
             NotificationFactory.CreateDietologistInvitationDeclined(
@@ -49,7 +49,7 @@ internal static class DietologistInvitationClientNotifier {
 
     private static async Task NotifyAsync(
         INotificationWriter notificationWriter,
-        INotificationReadRepository notificationRepository,
+        INotificationReadModelRepository notificationReadModelRepository,
         INotificationPusher notificationPusher,
         IPostCommitActionQueue postCommitActionQueue,
         Notification notification,
@@ -57,7 +57,7 @@ internal static class DietologistInvitationClientNotifier {
         await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
         NotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,
-            notificationRepository,
+            notificationReadModelRepository,
             notificationPusher,
             notification.UserId);
     }

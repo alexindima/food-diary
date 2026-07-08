@@ -38,7 +38,7 @@ public sealed class NotificationTestScheduler(
 
             using IServiceScope scope = serviceScopeFactory.CreateScope();
             INotificationWriter notificationWriter = scope.ServiceProvider.GetRequiredService<INotificationWriter>();
-            INotificationRepository notificationRepository = scope.ServiceProvider.GetRequiredService<INotificationRepository>();
+            INotificationReadModelRepository notificationReadModelRepository = scope.ServiceProvider.GetRequiredService<INotificationReadModelRepository>();
             INotificationPusher notificationPusher = scope.ServiceProvider.GetRequiredService<INotificationPusher>();
             IUnitOfWork unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
             IPostCommitActionQueue postCommitActionQueue = scope.ServiceProvider.GetRequiredService<IPostCommitActionQueue>();
@@ -73,7 +73,7 @@ public sealed class NotificationTestScheduler(
 
             await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
             await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            int unreadCount = await notificationRepository.GetUnreadCountAsync(domainUserId, cancellationToken).ConfigureAwait(false);
+            int unreadCount = await notificationReadModelRepository.GetUnreadCountAsync(domainUserId, cancellationToken).ConfigureAwait(false);
             await notificationPusher.PushUnreadCountAsync(userId, unreadCount, cancellationToken).ConfigureAwait(false);
             await notificationPusher.PushNotificationsChangedAsync(userId, cancellationToken).ConfigureAwait(false);
             await postCommitActionQueue.FlushAsync(cancellationToken).ConfigureAwait(false);

@@ -173,6 +173,7 @@ public sealed class NotificationTestSchedulerTests {
         var services = new ServiceCollection();
         services.AddSingleton(repository);
         services.AddSingleton<INotificationRepository>(repository);
+        services.AddSingleton<INotificationReadModelRepository>(repository);
         services.AddSingleton(pusher);
         services.AddSingleton<INotificationPusher>(pusher);
         services.AddSingleton(sender);

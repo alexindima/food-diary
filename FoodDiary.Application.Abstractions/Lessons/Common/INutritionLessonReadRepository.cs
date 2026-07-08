@@ -21,16 +21,7 @@ public interface INutritionLessonReadRepository {
         UserId userId,
         CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyList<Guid>> GetReadLessonIdsAsync(
-        UserId userId,
-        CancellationToken cancellationToken = default);
-
     Task<UserLessonProgress?> GetUserProgressForLessonAsync(
-        UserId userId,
-        NutritionLessonId lessonId,
-        CancellationToken cancellationToken = default);
-
-    Task<bool> IsLessonReadAsync(
         UserId userId,
         NutritionLessonId lessonId,
         CancellationToken cancellationToken = default);

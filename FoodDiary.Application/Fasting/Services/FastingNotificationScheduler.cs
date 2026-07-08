@@ -12,6 +12,7 @@ public sealed class FastingNotificationScheduler(
     IFastingOccurrenceReadRepository fastingOccurrenceRepository,
     IFastingCheckInReadRepository fastingCheckInRepository,
     INotificationReadRepository notificationRepository,
+    INotificationReadModelRepository notificationReadModelRepository,
     INotificationWriter notificationWriter,
     INotificationPusher notificationPusher,
     IUnitOfWork unitOfWork,
@@ -61,7 +62,7 @@ public sealed class FastingNotificationScheduler(
             UserId[] pushUserIds = [.. usersToPush];
             postCommitActionQueue.Enqueue("fasting.notifications.push", ct => FastingNotificationPushDispatcher.PushAsync(
                 pushUserIds,
-                notificationRepository,
+                notificationReadModelRepository,
                 notificationPusher,
                 ct));
         }

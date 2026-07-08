@@ -7,12 +7,12 @@ namespace FoodDiary.Application.Notifications.Common;
 internal static class NotificationPostCommitActions {
     public static void EnqueueUnreadCountPush(
         IPostCommitActionQueue postCommitActionQueue,
-        INotificationReadRepository notificationRepository,
+        INotificationReadModelRepository notificationReadModelRepository,
         INotificationPusher notificationPusher,
         UserId userId,
         bool pushChanged = true) {
         postCommitActionQueue.Enqueue("notifications.unread-count-push", async cancellationToken => {
-            int unreadCount = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
+            int unreadCount = await notificationReadModelRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
             await notificationPusher.PushUnreadCountAsync(userId.Value, unreadCount, cancellationToken).ConfigureAwait(false);
 
             if (pushChanged) {

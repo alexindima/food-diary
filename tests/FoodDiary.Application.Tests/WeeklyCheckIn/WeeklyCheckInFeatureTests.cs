@@ -242,7 +242,7 @@ public class WeeklyCheckInFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class HydrationReadServiceAdapter(IHydrationEntryReadRepository repository) : IHydrationEntryReadService {
+    private sealed class HydrationReadServiceAdapter(IHydrationEntryReadModelRepository repository) : IHydrationEntryReadService {
         public Task<IReadOnlyList<HydrationEntryModel>> GetEntriesByDateAsync(
             UserId userId,
             DateTime dateUtc,
