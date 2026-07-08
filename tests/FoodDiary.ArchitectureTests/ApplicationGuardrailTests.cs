@@ -1170,6 +1170,21 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Wearables", "Queries", "GetWearableAuthUrl", "GetWearableAuthUrlQueryHandler.cs"),
             Path.Combine(applicationRoot, "Wearables", "Queries", "GetWearableConnections", "GetWearableConnectionsQueryHandler.cs"),
             Path.Combine(applicationRoot, "Wearables", "Queries", "GetWearableDailySummary", "GetWearableDailySummaryQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "AcceptAiConsent", "AcceptAiConsentCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "ChangePassword", "ChangePasswordCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "DeleteUser", "DeleteUserCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "RevokeAiConsent", "RevokeAiConsentCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "SetPassword", "SetPasswordCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "UpdateDesiredWaist", "UpdateDesiredWaistCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "UpdateDesiredWeight", "UpdateDesiredWeightCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "UpdateGoals", "UpdateGoalsCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "UpdateUser", "UpdateUserCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "UpdateUserAppearance", "UpdateUserAppearanceCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Queries", "GetDesiredWaist", "GetDesiredWaistQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Queries", "GetDesiredWeight", "GetDesiredWeightQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Queries", "GetProfileOverview", "GetProfileOverviewQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Queries", "GetUserById", "GetUserByIdQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
         ];
 
         string[] directParseViolations = [

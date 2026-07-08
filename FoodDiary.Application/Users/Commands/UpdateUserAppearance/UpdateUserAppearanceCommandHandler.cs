@@ -1,6 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
@@ -13,9 +12,12 @@ namespace FoodDiary.Application.Users.Commands.UpdateUserAppearance;
 public sealed class UpdateUserAppearanceCommandHandler(IUserContextService userContextService)
     : ICommandHandler<UpdateUserAppearanceCommand, Result<UserModel>> {
     public async Task<Result<UserModel>> Handle(UpdateUserAppearanceCommand command, CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            userContextService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<UserModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<UserModel>(userIdResult);
         }
 
         Result<User> userResult = await userContextService.GetAccessibleUserAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);

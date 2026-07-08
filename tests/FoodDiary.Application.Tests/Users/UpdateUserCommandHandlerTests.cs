@@ -335,6 +335,13 @@ public sealed class UpdateUserCommandHandlerTests {
                 return Task.FromResult(error is not null ? Result.Failure<User>(error) : Result.Success(foundUser!));
             });
         userContextService
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                User? foundUser = user.Id == id ? user : null;
+                return Task.FromResult(CurrentUserAccessPolicy.EnsureCanAccess(foundUser));
+            });
+        userContextService
             .UpdateUserAsync(Arg.Any<User>(), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
         return userContextService;

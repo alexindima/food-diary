@@ -1138,6 +1138,11 @@ public sealed class AuthenticationCommandHandlerTests {
                 : Result.Success(accessibleUser!));
         }
 
+        public async Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
+            Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            return result.IsFailure ? result.Error : null;
+        }
+
         public Task UpdateUserAsync(User userToUpdate, CancellationToken cancellationToken) => UpdateAsync(userToUpdate, cancellationToken);
     }
 

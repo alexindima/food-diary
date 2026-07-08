@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Users;
@@ -14,9 +13,12 @@ public sealed class DeleteUserCommandHandler(
     IAuditLogger auditLogger)
     : ICommandHandler<DeleteUserCommand, Result> {
     public async Task<Result> Handle(DeleteUserCommand command, CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            userContextService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure(userIdResult);
+            return Result.Failure(userIdResult.Error);
         }
 
         UserId userId = userIdResult.Value;

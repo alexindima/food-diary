@@ -62,9 +62,12 @@ public sealed class UpdateUserCommandHandler(
     private async Task<Result<UpdateUserValues>> PrepareUpdateValuesAsync(
         UpdateUserCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            userContextService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<UpdateUserValues>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<UpdateUserValues>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

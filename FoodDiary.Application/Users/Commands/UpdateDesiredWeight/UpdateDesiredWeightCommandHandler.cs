@@ -1,6 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -13,9 +12,12 @@ public sealed class UpdateDesiredWeightCommandHandler(IUserContextService userCo
     public async Task<Result<UserDesiredWeightModel>> Handle(
         UpdateDesiredWeightCommand command,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            userContextService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<UserDesiredWeightModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<UserDesiredWeightModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;

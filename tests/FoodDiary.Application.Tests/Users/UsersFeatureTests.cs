@@ -419,7 +419,7 @@ public class UsersFeatureTests {
     public async Task GetUserByIdHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetUserByIdQueryHandler(new SingleUserRepository(user));
+        var handler = new GetUserByIdQueryHandler(new SingleUserRepository(user), new SingleUserRepository(user));
 
         Result<UserModel> result = await handler.Handle(new GetUserByIdQuery(user.Id.Value), CancellationToken.None);
 
@@ -429,7 +429,9 @@ public class UsersFeatureTests {
 
     [Fact]
     public async Task GetUserByIdHandler_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetUserByIdQueryHandler(new SingleUserRepository(User.Create("query-empty@example.com", "hash")));
+        var handler = new GetUserByIdQueryHandler(
+            new SingleUserRepository(User.Create("query-empty@example.com", "hash")),
+            new SingleUserRepository(User.Create("query-empty@example.com", "hash")));
 
         Result<UserModel> result = await handler.Handle(new GetUserByIdQuery(Guid.Empty), CancellationToken.None);
 
@@ -569,10 +571,12 @@ public class UsersFeatureTests {
             locale: "en",
             userAgent: "Chrome");
 
-        var handler = new GetProfileOverviewQueryHandler(new ProfileOverviewReadService(
-            new SingleUserRepository(user),
-            new FixedWebPushSubscriptionRepository([subscription]),
-            new FixedDietologistInvitationRepository(invitation)));
+        var handler = new GetProfileOverviewQueryHandler(
+            new ProfileOverviewReadService(
+                new SingleUserRepository(user),
+                new FixedWebPushSubscriptionRepository([subscription]),
+                new FixedDietologistInvitationRepository(invitation)),
+            new SingleUserRepository(user));
 
         Result<ProfileOverviewModel> result = await handler.Handle(new GetProfileOverviewQuery(user.Id.Value), CancellationToken.None);
 
@@ -591,10 +595,12 @@ public class UsersFeatureTests {
     [Fact]
     public async Task GetProfileOverviewHandler_WithMissingUserId_ReturnsInvalidToken() {
         var user = User.Create("overview-missing@example.com", "hash");
-        var handler = new GetProfileOverviewQueryHandler(new ProfileOverviewReadService(
-            new SingleUserRepository(user),
-            new FixedWebPushSubscriptionRepository([]),
-            new FixedDietologistInvitationRepository(invitation: null)));
+        var handler = new GetProfileOverviewQueryHandler(
+            new ProfileOverviewReadService(
+                new SingleUserRepository(user),
+                new FixedWebPushSubscriptionRepository([]),
+                new FixedDietologistInvitationRepository(invitation: null)),
+            new SingleUserRepository(user));
 
         Result<ProfileOverviewModel> result = await handler.Handle(new GetProfileOverviewQuery(UserId: null), CancellationToken.None);
 
@@ -606,10 +612,12 @@ public class UsersFeatureTests {
     public async Task GetProfileOverviewHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("overview-deleted@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetProfileOverviewQueryHandler(new ProfileOverviewReadService(
-            new SingleUserRepository(user),
-            new FixedWebPushSubscriptionRepository([]),
-            new FixedDietologistInvitationRepository(invitation: null)));
+        var handler = new GetProfileOverviewQueryHandler(
+            new ProfileOverviewReadService(
+                new SingleUserRepository(user),
+                new FixedWebPushSubscriptionRepository([]),
+                new FixedDietologistInvitationRepository(invitation: null)),
+            new SingleUserRepository(user));
 
         Result<ProfileOverviewModel> result = await handler.Handle(new GetProfileOverviewQuery(user.Id.Value), CancellationToken.None);
 
@@ -635,7 +643,9 @@ public class UsersFeatureTests {
 
     [Fact]
     public async Task GetDesiredWeightHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetDesiredWeightQueryHandler(new SingleUserRepository(User.Create("desired-weight-query@example.com", "hash")));
+        var handler = new GetDesiredWeightQueryHandler(
+            new SingleUserRepository(User.Create("desired-weight-query@example.com", "hash")),
+            new SingleUserRepository(User.Create("desired-weight-query@example.com", "hash")));
 
         Result<UserDesiredWeightModel> result = await handler.Handle(new GetDesiredWeightQuery(UserId: null), CancellationToken.None);
 
@@ -647,7 +657,7 @@ public class UsersFeatureTests {
     public async Task GetDesiredWeightHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-desired-weight-query@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetDesiredWeightQueryHandler(new SingleUserRepository(user));
+        var handler = new GetDesiredWeightQueryHandler(new SingleUserRepository(user), new SingleUserRepository(user));
 
         Result<UserDesiredWeightModel> result = await handler.Handle(new GetDesiredWeightQuery(user.Id.Value), CancellationToken.None);
 
@@ -659,7 +669,7 @@ public class UsersFeatureTests {
     public async Task GetDesiredWeightHandler_ReturnsCurrentDesiredWeight() {
         var user = User.Create("desired-weight-query-success@example.com", "hash");
         user.UpdateDesiredWeight(74.5);
-        var handler = new GetDesiredWeightQueryHandler(new SingleUserRepository(user));
+        var handler = new GetDesiredWeightQueryHandler(new SingleUserRepository(user), new SingleUserRepository(user));
 
         Result<UserDesiredWeightModel> result = await handler.Handle(new GetDesiredWeightQuery(user.Id.Value), CancellationToken.None);
 
@@ -677,7 +687,9 @@ public class UsersFeatureTests {
 
     [Fact]
     public async Task GetDesiredWaistHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetDesiredWaistQueryHandler(new SingleUserRepository(User.Create("desired-waist-query@example.com", "hash")));
+        var handler = new GetDesiredWaistQueryHandler(
+            new SingleUserRepository(User.Create("desired-waist-query@example.com", "hash")),
+            new SingleUserRepository(User.Create("desired-waist-query@example.com", "hash")));
 
         Result<UserDesiredWaistModel> result = await handler.Handle(new GetDesiredWaistQuery(Guid.Empty), CancellationToken.None);
 
@@ -689,7 +701,7 @@ public class UsersFeatureTests {
     public async Task GetDesiredWaistHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-desired-waist-query@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetDesiredWaistQueryHandler(new SingleUserRepository(user));
+        var handler = new GetDesiredWaistQueryHandler(new SingleUserRepository(user), new SingleUserRepository(user));
 
         Result<UserDesiredWaistModel> result = await handler.Handle(new GetDesiredWaistQuery(user.Id.Value), CancellationToken.None);
 
@@ -701,7 +713,7 @@ public class UsersFeatureTests {
     public async Task GetDesiredWaistHandler_ReturnsCurrentDesiredWaist() {
         var user = User.Create("desired-waist-query-success@example.com", "hash");
         user.UpdateDesiredWaist(79.5);
-        var handler = new GetDesiredWaistQueryHandler(new SingleUserRepository(user));
+        var handler = new GetDesiredWaistQueryHandler(new SingleUserRepository(user), new SingleUserRepository(user));
 
         Result<UserDesiredWaistModel> result = await handler.Handle(new GetDesiredWaistQuery(user.Id.Value), CancellationToken.None);
 
@@ -711,7 +723,9 @@ public class UsersFeatureTests {
 
     [Fact]
     public async Task GetUserGoalsHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetUserGoalsQueryHandler(new SingleUserRepository(User.Create("goals-query@example.com", "hash")));
+        var handler = new GetUserGoalsQueryHandler(
+            new SingleUserRepository(User.Create("goals-query@example.com", "hash")),
+            new SingleUserRepository(User.Create("goals-query@example.com", "hash")));
 
         Result<GoalsModel> result = await handler.Handle(new GetUserGoalsQuery(Guid.Empty), CancellationToken.None);
 
@@ -723,7 +737,7 @@ public class UsersFeatureTests {
     public async Task GetUserGoalsHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-goals-query@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetUserGoalsQueryHandler(new SingleUserRepository(user));
+        var handler = new GetUserGoalsQueryHandler(new SingleUserRepository(user), new SingleUserRepository(user));
 
         Result<GoalsModel> result = await handler.Handle(new GetUserGoalsQuery(user.Id.Value), CancellationToken.None);
 
@@ -743,7 +757,7 @@ public class UsersFeatureTests {
             WaterGoal: 2.1,
             DesiredWeight: 73,
             DesiredWaist: 78));
-        var handler = new GetUserGoalsQueryHandler(new SingleUserRepository(user));
+        var handler = new GetUserGoalsQueryHandler(new SingleUserRepository(user), new SingleUserRepository(user));
 
         Result<GoalsModel> result = await handler.Handle(new GetUserGoalsQuery(user.Id.Value), CancellationToken.None);
 
@@ -781,6 +795,11 @@ public class UsersFeatureTests {
             User? foundUser = user.Id == userId ? user : null;
             Error? error = CurrentUserAccessPolicy.EnsureCanAccess(foundUser);
             return Task.FromResult(error is not null ? Result.Failure<User>(error) : Result.Success(foundUser!));
+        }
+
+        public async Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
+            Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            return result.IsFailure ? result.Error : null;
         }
 
         public async Task<Result<UserModel>> GetUserAsync(UserId userId, CancellationToken cancellationToken) {

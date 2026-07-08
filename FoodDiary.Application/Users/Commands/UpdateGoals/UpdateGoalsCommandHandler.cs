@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
@@ -14,9 +13,12 @@ namespace FoodDiary.Application.Users.Commands.UpdateGoals;
 public sealed class UpdateGoalsCommandHandler(IUserContextService userContextService)
     : ICommandHandler<UpdateGoalsCommand, Result<GoalsModel>> {
     public async Task<Result<GoalsModel>> Handle(UpdateGoalsCommand command, CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            command.UserId,
+            userContextService,
+            cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return UserIdParser.ToFailure<GoalsModel>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<GoalsModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
