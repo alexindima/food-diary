@@ -27,7 +27,4 @@ This directory contains long-form repository documentation. Keep root-level mark
 - `frontend/FRONTEND_OBSERVABILITY_BASELINE.md`
 
 ## Plans
-`plans/` contains active product, feature, SEO, and integration plans. Historical implemented plans are retained under `archive/plans/`.
-
-## Archive
-`archive/` contains outdated or historical root documents that are not current operational guidance. Do not use archived files as source of truth unless a current guide explicitly references them.
+`plans/` contains active product, feature, SEO, and integration plans. Remove implemented or stale plans once durable decisions are captured in ADRs, current guides, or project instructions.

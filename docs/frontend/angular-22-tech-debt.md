@@ -9,13 +9,14 @@ This document tracks temporary follow-up work after the Angular 22 upgrade.
 - `ChangeDetectionStrategy.Eager` is not used in the codebase.
 - ESLint blocks `changeDetection: ChangeDetectionStrategy.Eager`.
 - `$safeNavigationMigration(...)` is not used in the codebase.
+- Angular ESLint packages are on the Angular 22-compatible `22.x` line.
 - Angular template diagnostics for `nullishCoalescingNotNullable` and `optionalChainNotNullable` are enforced as errors.
 
 ## Temporary Debt
 
 ### Storybook still needs `@angular-devkit/build-angular`
 
-`@angular-devkit/build-angular` is deprecated for application builds in Angular 22, but the current `@storybook/angular@10.4.2` preview builder still resolves `@angular-devkit/build-angular/package.json`.
+`@angular-devkit/build-angular` is deprecated for application builds in Angular 22, but the current `@storybook/angular@10.4.6` preview builder still resolves `@angular-devkit/build-angular/package.json`.
 
 Without this dev dependency, `npm run build:storybook` fails with:
 
@@ -33,18 +34,6 @@ Close this when:
 - `npm run build:storybook` works without `@angular-devkit/build-angular`.
 - `@angular-devkit/build-angular` is removed from `devDependencies`.
 - `FoodDiary.Web.Client/.npmrc` is removed, or at least no longer needs `legacy-peer-deps=true`.
-
-### Angular ESLint has no Angular 22 peer range yet
-
-`angular-eslint@21.4.0` currently declares `@angular/cli >= 21.0.0 < 22.0.0`.
-
-Keep the current version only as a temporary lint tooling bridge.
-
-Close this when:
-
-- Angular ESLint publishes an Angular 22-compatible version.
-- `@angular-eslint/*` and `angular-eslint` are upgraded together.
-- `npm run lint` still passes.
 
 ### Incremental hydration is explicitly disabled
 

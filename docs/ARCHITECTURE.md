@@ -78,8 +78,6 @@ Full composite `*Repository` contracts are primarily adapter conveniences. Avoid
 
 Current guardrails protect the migrated read-model boundaries for favorites, notifications, tracking/body metrics, lessons/content, dashboard body reads, and notification lookup checks. When adding a new read use case, prefer a dedicated read service backed by read-model contracts instead of reusing aggregate repositories directly from query handlers.
 
-The latest audit is recorded in `docs/backend-architecture-audit-2026-07-08.md`.
-
 ## Supporting Service Boundaries
 MailRelay and MailInbox repeat the same basic layer pattern:
 

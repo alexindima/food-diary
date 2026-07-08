@@ -69,7 +69,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Long-form documentation lives under `docs/`.
 - Start with `docs/README.md`, `docs/ARCHITECTURE.md`, `docs/BACKEND_MODULE_MAP.md`, and `docs/TESTING_STRATEGY.md` for broad context.
 - Product and feature plans live under `docs/plans/`; treat them as planning context unless referenced by current guides.
-- Historical or stale documents live under `docs/archive/` and are not current source of truth.
+- Historical or stale documents should be removed once durable decisions are captured in current guides or ADRs. Git history is the repository history.
 
 ## EF Core Migrations
 - Always commit both migration files: `*.cs` and `*.Designer.cs`.

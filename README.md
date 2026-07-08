@@ -18,7 +18,7 @@ FoodDiary is a food tracking platform with a .NET backend, Angular frontend, Tel
 - `FoodDiary.Web.Client` - Angular web client, admin frontend, and UI kit
 - `Shared/FoodDiary.Mediator` - lightweight shared mediator
 - `tests` - application, architecture, infrastructure, API, bot, jobs, and integration tests
-- `docs` - architecture, testing, backend governance, frontend architecture, ADRs, plans, and archived docs
+- `docs` - architecture, testing, backend governance, frontend architecture, ADRs, and active plans
 
 ## Backend Architecture
 
