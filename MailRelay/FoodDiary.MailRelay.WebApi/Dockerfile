@@ -3,7 +3,9 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 WORKDIR /src
 
 COPY .editorconfig Directory.Build.props Directory.Packages.props FoodDiary.slnx ./
+COPY Shared/FoodDiary.Domain.Primitives/*.csproj Shared/FoodDiary.Domain.Primitives/
 COPY Shared/FoodDiary.Mediator/*.csproj Shared/FoodDiary.Mediator/
+COPY Shared/FoodDiary.Results/*.csproj Shared/FoodDiary.Results/
 COPY MailRelay/FoodDiary.MailRelay.Client/*.csproj MailRelay/FoodDiary.MailRelay.Client/
 COPY MailRelay/FoodDiary.MailRelay.Application/*.csproj MailRelay/FoodDiary.MailRelay.Application/
 COPY MailRelay/FoodDiary.MailRelay.Domain/*.csproj MailRelay/FoodDiary.MailRelay.Domain/
@@ -13,7 +15,9 @@ COPY MailRelay/FoodDiary.MailRelay.WebApi/*.csproj MailRelay/FoodDiary.MailRelay
 
 RUN dotnet restore MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj
 
+COPY Shared/FoodDiary.Domain.Primitives/ Shared/FoodDiary.Domain.Primitives/
 COPY Shared/FoodDiary.Mediator/ Shared/FoodDiary.Mediator/
+COPY Shared/FoodDiary.Results/ Shared/FoodDiary.Results/
 COPY MailRelay/FoodDiary.MailRelay.Client/ MailRelay/FoodDiary.MailRelay.Client/
 COPY MailRelay/FoodDiary.MailRelay.Application/ MailRelay/FoodDiary.MailRelay.Application/
 COPY MailRelay/FoodDiary.MailRelay.Domain/ MailRelay/FoodDiary.MailRelay.Domain/
