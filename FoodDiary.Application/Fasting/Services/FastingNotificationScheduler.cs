@@ -11,7 +11,7 @@ namespace FoodDiary.Application.Fasting.Services;
 public sealed class FastingNotificationScheduler(
     IFastingOccurrenceReadRepository fastingOccurrenceRepository,
     IFastingCheckInReadRepository fastingCheckInRepository,
-    INotificationReadRepository notificationRepository,
+    INotificationLookupRepository notificationLookupRepository,
     INotificationReadModelRepository notificationReadModelRepository,
     INotificationWriter notificationWriter,
     INotificationPusher notificationPusher,
@@ -43,7 +43,7 @@ public sealed class FastingNotificationScheduler(
             foreach (FastingNotificationCandidate notification in FastingNotificationCandidatePlanner.GetDueNotifications(occurrence, plan, occurrenceCheckIns, now)) {
                 bool created = await FastingNotificationCreationService.TryCreateAsync(
                     notification,
-                    notificationRepository,
+                    notificationLookupRepository,
                     notificationWriter,
                     cancellationToken).ConfigureAwait(false);
 

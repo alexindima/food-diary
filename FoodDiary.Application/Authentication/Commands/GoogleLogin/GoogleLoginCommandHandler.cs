@@ -16,7 +16,7 @@ namespace FoodDiary.Application.Authentication.Commands.GoogleLogin;
 
 public sealed class GoogleLoginCommandHandler(
     IAuthenticationUserMutationService userMutationService,
-    INotificationReadRepository notificationRepository,
+    INotificationLookupRepository notificationLookupRepository,
     INotificationWriter notificationWriter,
     IGoogleTokenValidator googleTokenValidator,
     IPasswordHasher passwordHasher,
@@ -44,7 +44,7 @@ public sealed class GoogleLoginCommandHandler(
             await userMutationService.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
         }
 
-        await EnsurePasswordSetupReminderAsync(user, notificationRepository, notificationWriter, cancellationToken).ConfigureAwait(false);
+        await EnsurePasswordSetupReminderAsync(user, notificationLookupRepository, notificationWriter, cancellationToken).ConfigureAwait(false);
 
         IssuedAuthenticationTokens tokens = await authenticationTokenService
             .IssueAndStoreAsync(user, cancellationToken, command.ClientContext, command.RememberMe)
@@ -85,7 +85,7 @@ public sealed class GoogleLoginCommandHandler(
 
     private static async Task EnsurePasswordSetupReminderAsync(
         User user,
-        INotificationReadRepository notificationRepository,
+        INotificationLookupRepository notificationLookupRepository,
         INotificationWriter notificationWriter,
         CancellationToken cancellationToken) {
         if (user.HasPassword) {
@@ -93,7 +93,7 @@ public sealed class GoogleLoginCommandHandler(
         }
 
         string referenceId = $"password-setup:{user.Id.Value}";
-        bool exists = await notificationRepository.ExistsAsync(user.Id, NotificationTypes.PasswordSetupSuggested, referenceId, cancellationToken).ConfigureAwait(false);
+        bool exists = await notificationLookupRepository.ExistsAsync(user.Id, NotificationTypes.PasswordSetupSuggested, referenceId, cancellationToken).ConfigureAwait(false);
         if (exists) {
             return;
         }

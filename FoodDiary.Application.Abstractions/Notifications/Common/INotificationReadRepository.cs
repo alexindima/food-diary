@@ -5,6 +5,4 @@ namespace FoodDiary.Application.Abstractions.Notifications.Common;
 
 public interface INotificationReadRepository {
     Task<IReadOnlyList<Notification>> GetByUserAsync(UserId userId, int limit = 50, CancellationToken cancellationToken = default);
-
-    Task<bool> ExistsAsync(UserId userId, string type, string referenceId, CancellationToken cancellationToken = default);
 }

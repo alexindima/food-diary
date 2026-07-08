@@ -1192,11 +1192,9 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubNotificationRepository(params Notification[] notifications) : INotificationRepository {
+    private sealed class StubNotificationRepository(params Notification[] notifications)
+        : INotificationLookupRepository, INotificationReadModelRepository, INotificationWriteRepository {
         public List<Notification> Notifications { get; } = [.. notifications];
-
-        public Task<IReadOnlyList<Notification>> GetByUserAsync(UserId userId, int limit = 50, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<Notification>>(Notifications.Where(x => x.UserId == userId).Take(limit).ToList());
 
         public Task<IReadOnlyList<NotificationReadModel>> GetByUserReadModelsAsync(UserId userId, int limit = 50, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<NotificationReadModel>>([.. Notifications
@@ -1242,7 +1240,7 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubNotificationWriter(INotificationRepository notificationRepository) : INotificationWriter {
+    private sealed class StubNotificationWriter(INotificationWriteRepository notificationRepository) : INotificationWriter {
         public async Task AddAsync(
             Notification notification,
             bool sendWebPush = false,

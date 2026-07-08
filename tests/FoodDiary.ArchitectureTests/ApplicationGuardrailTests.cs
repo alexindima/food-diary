@@ -1639,6 +1639,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, contractFiles, "new BillingSubscriptionOverviewReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new UserAdminReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "new NotificationReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "ExistsAsync(UserId"),
             .. FindReferencesInFiles(root, contractFiles, "GetUnreadCountAsync"),
             .. FindReferencesInFiles(root, contractFiles, "new WebPushSubscriptionReadModel"),
             .. FindReferencesInFiles(root, contractFiles, "WearableSyncEntryReadModel"),
@@ -2177,6 +2178,19 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, notificationQueryFiles, "FoodDiary.Domain.Entities.Notifications"),
             .. FindReferencesInFiles(root, notificationQueryFiles, "INotificationReadRepository"),
             .. FindReferencesInFiles(root, notificationQueryFiles, "IWebPushSubscriptionReadRepository"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void NotificationApplicationCode_UsesLookupOrReadModelsInsteadOfNotificationReadRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] applicationFiles = [.. SourceScanner.SourceFiles(applicationRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, applicationFiles, "INotificationReadRepository"),
         ];
 
         Assert.Empty(violations);

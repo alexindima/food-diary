@@ -10,6 +10,7 @@ public static partial class DependencyInjection {
     private static IServiceCollection AddNotificationPersistence(this IServiceCollection services) {
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<INotificationReadRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
+        services.AddScoped<INotificationLookupRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
         services.AddScoped<INotificationReadModelRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
         services.AddScoped<INotificationWriteRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
         services.AddScoped<IEmailOutbox, EmailOutbox>();
