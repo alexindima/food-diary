@@ -3,7 +3,7 @@ using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Infrastructure.Services;
 using Npgsql;
 
-namespace FoodDiary.MailInbox.Tests;
+namespace FoodDiary.MailInbox.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class NpgsqlInboundMailStoreHelperTests {

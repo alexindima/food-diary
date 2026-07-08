@@ -1,10 +1,10 @@
 using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Domain.Messages;
 using FoodDiary.MailInbox.Infrastructure.Services;
-using FoodDiary.MailInbox.Tests.TestInfrastructure;
+using FoodDiary.MailInbox.IntegrationTests.TestInfrastructure;
 using Npgsql;
 
-namespace FoodDiary.MailInbox.Tests;
+namespace FoodDiary.MailInbox.IntegrationTests;
 
 [Collection("mailinbox-postgres")]
 [ExcludeFromCodeCoverage]

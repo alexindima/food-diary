@@ -7,12 +7,11 @@ using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Emails;
 using FoodDiary.MailRelay.Infrastructure.Options;
 using FoodDiary.MailRelay.Infrastructure.Services;
-using FoodDiary.MailRelay.Tests.TestInfrastructure;
+using FoodDiary.MailRelay.IntegrationTests.TestInfrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.IntegrationTests;
 
 [Collection("mailrelay-environment")]
 [ExcludeFromCodeCoverage]
@@ -22,7 +21,7 @@ public sealed class RabbitMqMailRelayConsumerIntegrationTests(MailRelayEnvironme
         fixture.EnsureAvailable();
         MailRelayBrokerOptions options = CreateOptions();
         var broker = new RabbitMqMailRelayBroker(
-            Options.Create(options),
+            Microsoft.Extensions.Options.Options.Create(options),
             NullLogger<RabbitMqMailRelayBroker>.Instance);
         var queueStore = new RecordingQueueStore();
         var processor = new MailRelayMessageProcessor(
@@ -30,7 +29,7 @@ public sealed class RabbitMqMailRelayConsumerIntegrationTests(MailRelayEnvironme
             new SmtpSubmissionService(new RecordingRelayDeliveryTransport()),
             NullLogger<MailRelayMessageProcessor>.Instance);
         var consumer = new RabbitMqMailRelayConsumerHostedService(
-            Options.Create(options),
+            Microsoft.Extensions.Options.Options.Create(options),
             broker,
             queueStore,
             processor,
@@ -57,7 +56,7 @@ public sealed class RabbitMqMailRelayConsumerIntegrationTests(MailRelayEnvironme
         fixture.EnsureAvailable();
         MailRelayBrokerOptions options = CreateOptions();
         var broker = new RabbitMqMailRelayBroker(
-            Options.Create(options),
+            Microsoft.Extensions.Options.Options.Create(options),
             NullLogger<RabbitMqMailRelayBroker>.Instance);
         var id = Guid.NewGuid();
         var queueStore = new RecordingQueueStore {
@@ -69,7 +68,7 @@ public sealed class RabbitMqMailRelayConsumerIntegrationTests(MailRelayEnvironme
             new SmtpSubmissionService(new RecordingRelayDeliveryTransport()),
             NullLogger<MailRelayMessageProcessor>.Instance);
         var consumer = new RabbitMqMailRelayConsumerHostedService(
-            Options.Create(options),
+            Microsoft.Extensions.Options.Options.Create(options),
             broker,
             queueStore,
             processor,
@@ -92,7 +91,7 @@ public sealed class RabbitMqMailRelayConsumerIntegrationTests(MailRelayEnvironme
         fixture.EnsureAvailable();
         MailRelayBrokerOptions options = CreateOptions();
         var broker = new RabbitMqMailRelayBroker(
-            Options.Create(options),
+            Microsoft.Extensions.Options.Options.Create(options),
             NullLogger<RabbitMqMailRelayBroker>.Instance);
         var queueStore = new RecordingQueueStore {
             ClaimException = new InvalidOperationException("claim failed"),
@@ -102,7 +101,7 @@ public sealed class RabbitMqMailRelayConsumerIntegrationTests(MailRelayEnvironme
             new SmtpSubmissionService(new RecordingRelayDeliveryTransport()),
             NullLogger<MailRelayMessageProcessor>.Instance);
         var consumer = new RabbitMqMailRelayConsumerHostedService(
-            Options.Create(options),
+            Microsoft.Extensions.Options.Options.Create(options),
             broker,
             queueStore,
             processor,

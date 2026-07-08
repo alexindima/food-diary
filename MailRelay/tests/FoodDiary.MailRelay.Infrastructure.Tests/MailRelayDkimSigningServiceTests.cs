@@ -1,10 +1,9 @@
 using System.Security.Cryptography;
 using FoodDiary.MailRelay.Infrastructure.Options;
 using FoodDiary.MailRelay.Infrastructure.Services;
-using Microsoft.Extensions.Options;
 using MimeKit;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayDkimSigningServiceTests {
@@ -108,7 +107,7 @@ public sealed class MailRelayDkimSigningServiceTests {
     private static readonly TimeProvider FixedTime = new FixedTimeProvider();
 
     private static DkimSigningService CreateService(MailRelayDkimOptions options) =>
-        new(Options.Create(options), FixedTime);
+        new(Microsoft.Extensions.Options.Options.Create(options), FixedTime);
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider : TimeProvider {

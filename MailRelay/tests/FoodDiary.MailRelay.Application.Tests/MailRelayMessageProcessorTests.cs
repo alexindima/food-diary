@@ -6,7 +6,7 @@ using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Emails;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayMessageProcessorTests {

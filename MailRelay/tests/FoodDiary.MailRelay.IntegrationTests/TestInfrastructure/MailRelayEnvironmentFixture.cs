@@ -2,7 +2,7 @@ using Npgsql;
 using Testcontainers.PostgreSql;
 using Testcontainers.RabbitMq;
 
-namespace FoodDiary.MailRelay.Tests.TestInfrastructure;
+namespace FoodDiary.MailRelay.IntegrationTests.TestInfrastructure;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayEnvironmentFixture : IAsyncLifetime {

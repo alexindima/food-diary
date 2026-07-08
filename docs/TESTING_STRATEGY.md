@@ -8,6 +8,7 @@ dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj
 ```
 
 These tests are also the best executable documentation for backend boundaries.
+They also guard the allowed reference graph between test projects, so shared test helpers should be added through `tests/FoodDiary.Testing` instead of ad hoc cross-test-project references.
 
 ## Backend Test Projects
 
@@ -18,6 +19,7 @@ These tests are also the best executable documentation for backend boundaries.
 | `tests/FoodDiary.Domain.Tests` | Core domain invariants, value objects, entities, and domain events. |
 | `tests/FoodDiary.Infrastructure.Tests` | Infrastructure unit behavior without external services. |
 | `tests/FoodDiary.Infrastructure.IntegrationTests` | PostgreSQL/Testcontainers persistence and migration behavior. |
+| `tests/FoodDiary.Testing` | Shared test-only helpers reused by multiple test projects, including Docker-gated test attributes. |
 | `tests/FoodDiary.Presentation.Api.Tests` | Controller flow, HTTP mapping, presentation error behavior. |
 | `tests/FoodDiary.Web.Api.Tests` | API host options, middleware, health checks, and host service unit behavior. |
 | `tests/FoodDiary.Web.Api.IntegrationTests` | API host behavior, OpenAPI/Swagger snapshots, HTTP contract snapshots. |

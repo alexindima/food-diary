@@ -1,4 +1,4 @@
-namespace FoodDiary.MailRelay.Tests.TestInfrastructure;
+namespace FoodDiary.MailRelay.IntegrationTests.TestInfrastructure;
 
 [CollectionDefinition("mailrelay-environment")]
 [ExcludeFromCodeCoverage]

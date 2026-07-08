@@ -4,7 +4,7 @@ using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Infrastructure.Services;
 using MimeKit;
 
-namespace FoodDiary.MailInbox.Tests;
+namespace FoodDiary.MailInbox.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class DmarcReportParserTests {

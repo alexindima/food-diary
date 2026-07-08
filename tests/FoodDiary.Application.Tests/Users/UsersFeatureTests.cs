@@ -38,7 +38,8 @@ using FluentValidation.Results;
 namespace FoodDiary.Application.Tests.Users;
 
 [ExcludeFromCodeCoverage]
-public class UsersFeatureTests {
+public partial class UsersFeatureTests {
+
     [Fact]
     public void UserMappings_ToModel_UsesDefaultPreferencesWhenMissing() {
         var user = User.Create("default-preferences@example.com", "hash");

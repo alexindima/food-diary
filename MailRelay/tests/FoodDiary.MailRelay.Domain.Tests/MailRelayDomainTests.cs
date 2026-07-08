@@ -1,7 +1,7 @@
 using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Emails;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayDomainTests {

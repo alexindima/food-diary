@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayInfrastructureOptionsTests {
@@ -66,7 +66,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
 
     [Fact]
     public void ConfiguredMailRelayDeliveryPolicy_WhenDirectMxRecipientsSpanDomains_ReturnsValidationFailure() {
-        var policy = new ConfiguredMailRelayDeliveryPolicy(Options.Create(new MailRelayDeliveryOptions {
+        var policy = new ConfiguredMailRelayDeliveryPolicy(Microsoft.Extensions.Options.Options.Create(new MailRelayDeliveryOptions {
             Mode = MailRelayDeliveryOptions.DirectMxMode,
         }));
 
@@ -84,7 +84,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
 
     [Fact]
     public void ConfiguredMailRelayDeliveryPolicy_WhenModeIsNotDirectMx_AllowsMultipleDomains() {
-        var policy = new ConfiguredMailRelayDeliveryPolicy(Options.Create(new MailRelayDeliveryOptions {
+        var policy = new ConfiguredMailRelayDeliveryPolicy(Microsoft.Extensions.Options.Options.Create(new MailRelayDeliveryOptions {
             Mode = MailRelayDeliveryOptions.SmtpSubmissionMode,
         }));
 
@@ -109,7 +109,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
     [Fact]
     public async Task RabbitMqMailRelayDispatchNotifier_WhenBrokerIsDisabled_CompletesWithoutPublishing() {
         var broker = new RabbitMqMailRelayBroker(
-            Options.Create(new MailRelayBrokerOptions {
+            Microsoft.Extensions.Options.Options.Create(new MailRelayBrokerOptions {
                 Backend = MailRelayBrokerOptions.PostgresPollingBackend,
             }),
             NullLogger<RabbitMqMailRelayBroker>.Instance);
@@ -123,7 +123,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
     [Fact]
     public async Task RabbitMqMailRelayBroker_WhenDisabled_SkipsReadyTopologyAndPublishOperations() {
         var broker = new RabbitMqMailRelayBroker(
-            Options.Create(new MailRelayBrokerOptions {
+            Microsoft.Extensions.Options.Options.Create(new MailRelayBrokerOptions {
                 Backend = MailRelayBrokerOptions.PostgresPollingBackend,
             }),
             NullLogger<RabbitMqMailRelayBroker>.Instance);
@@ -138,13 +138,13 @@ public sealed class MailRelayInfrastructureOptionsTests {
     [Fact]
     public async Task RabbitMqMailRelayBootstrapHostedService_WhenBrokerIsDisabled_StartsAndStopsWithoutDeclaringTopology() {
         var broker = new RabbitMqMailRelayBroker(
-            Options.Create(new MailRelayBrokerOptions {
+            Microsoft.Extensions.Options.Options.Create(new MailRelayBrokerOptions {
                 Backend = MailRelayBrokerOptions.PostgresPollingBackend,
             }),
             NullLogger<RabbitMqMailRelayBroker>.Instance);
         var service = new RabbitMqMailRelayBootstrapHostedService(
             broker,
-            Options.Create(new MailRelayBrokerOptions {
+            Microsoft.Extensions.Options.Options.Create(new MailRelayBrokerOptions {
                 Backend = MailRelayBrokerOptions.PostgresPollingBackend,
             }),
             NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance);
@@ -158,7 +158,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
         var transport = new ConfigurableRelayDeliveryTransport(
             smtpTransport: null!,
             directMxTransport: null!,
-            Options.Create(new MailRelayDeliveryOptions {
+            Microsoft.Extensions.Options.Options.Create(new MailRelayDeliveryOptions {
                 Mode = "Unknown",
             }));
 
@@ -255,7 +255,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
     public void AddMailRelayTelemetry_WhenOtlpEndpointIsEmpty_RegistersMeterProvider() {
         var services = new ServiceCollection();
 
-        services.AddSingleton<IOptions<OpenTelemetryOptions>>(Options.Create(new OpenTelemetryOptions {
+        services.AddSingleton<IOptions<OpenTelemetryOptions>>(Microsoft.Extensions.Options.Options.Create(new OpenTelemetryOptions {
             Otlp = new OpenTelemetryOptions.OtlpOptions {
                 Endpoint = "",
             },
@@ -270,7 +270,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
     public void AddMailRelayTelemetry_WhenOtlpEndpointIsConfigured_RegistersMeterProvider() {
         var services = new ServiceCollection();
 
-        services.AddSingleton<IOptions<OpenTelemetryOptions>>(Options.Create(new OpenTelemetryOptions {
+        services.AddSingleton<IOptions<OpenTelemetryOptions>>(Microsoft.Extensions.Options.Options.Create(new OpenTelemetryOptions {
             Otlp = new OpenTelemetryOptions.OtlpOptions {
                 Endpoint = "http://localhost:4317",
             },

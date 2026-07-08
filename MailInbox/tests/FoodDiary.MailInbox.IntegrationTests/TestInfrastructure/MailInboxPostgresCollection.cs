@@ -1,4 +1,4 @@
-namespace FoodDiary.MailInbox.Tests.TestInfrastructure;
+namespace FoodDiary.MailInbox.IntegrationTests.TestInfrastructure;
 
 [CollectionDefinition("mailinbox-postgres")]
 [ExcludeFromCodeCoverage]

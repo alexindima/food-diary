@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace FoodDiary.MailRelay.Tests.TestInfrastructure;
+namespace FoodDiary.MailRelay.IntegrationTests.TestInfrastructure;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayWebApplicationFactory(

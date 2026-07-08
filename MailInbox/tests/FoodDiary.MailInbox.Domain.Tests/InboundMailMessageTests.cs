@@ -2,7 +2,7 @@ using FoodDiary.MailInbox.Domain.Events;
 using FoodDiary.MailInbox.Domain.Messages;
 using System.Globalization;
 
-namespace FoodDiary.MailInbox.Tests;
+namespace FoodDiary.MailInbox.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class InboundMailMessageTests {

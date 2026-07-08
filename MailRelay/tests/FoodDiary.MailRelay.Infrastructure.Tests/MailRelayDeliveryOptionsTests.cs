@@ -1,6 +1,6 @@
 using FoodDiary.MailRelay.Infrastructure.Options;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayDeliveryOptionsTests {

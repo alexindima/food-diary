@@ -4,12 +4,11 @@ using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Emails;
 using FoodDiary.MailRelay.Infrastructure.Options;
 using FoodDiary.MailRelay.Infrastructure.Services;
-using FoodDiary.MailRelay.Tests.TestInfrastructure;
+using FoodDiary.MailRelay.IntegrationTests.TestInfrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
 using Npgsql;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.IntegrationTests;
 
 [Collection("mailrelay-environment")]
 [ExcludeFromCodeCoverage]
@@ -261,9 +260,9 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
         var checker = new MailRelayReadinessChecker(
             dataSource,
             new RabbitMqMailRelayBroker(
-                Options.Create(brokerOptions),
+                Microsoft.Extensions.Options.Options.Create(brokerOptions),
                 NullLogger<RabbitMqMailRelayBroker>.Instance),
-            Options.Create(brokerOptions));
+            Microsoft.Extensions.Options.Options.Create(brokerOptions));
 
         await checker.CheckReadyAsync(CancellationToken.None);
     }
@@ -276,7 +275,7 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
     }
 
     private static MailRelayQueueStore CreateStore(NpgsqlDataSource dataSource) =>
-        new(dataSource, Options.Create(new MailRelayQueueOptions {
+        new(dataSource, Microsoft.Extensions.Options.Options.Create(new MailRelayQueueOptions {
             BatchSize = 10,
             MaxAttempts = 2,
             BaseRetryDelaySeconds = 1,

@@ -36,7 +36,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayPresentationTests {
@@ -112,7 +112,7 @@ public sealed class MailRelayPresentationTests {
 
     [Fact]
     public void RelayApiKeyAuthorizationFilter_WhenApiKeyIsRequiredAndMissing_ReturnsUnauthorized() {
-        var filter = new RelayApiKeyAuthorizationFilter(Options.Create(new MailRelayOptions {
+        var filter = new RelayApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
             RequireApiKey = true,
             ApiKey = "secret",
         }));
@@ -127,7 +127,7 @@ public sealed class MailRelayPresentationTests {
 
     [Fact]
     public void RelayApiKeyAuthorizationFilter_WhenApiKeyRequirementIsDisabled_ReturnsUnauthorized() {
-        var filter = new RelayApiKeyAuthorizationFilter(Options.Create(new MailRelayOptions {
+        var filter = new RelayApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
             RequireApiKey = false,
             ApiKey = "secret",
         }));
@@ -143,7 +143,7 @@ public sealed class MailRelayPresentationTests {
 
     [Fact]
     public void RelayApiKeyAuthorizationFilter_WhenApiKeyMatches_AllowsRequest() {
-        var filter = new RelayApiKeyAuthorizationFilter(Options.Create(new MailRelayOptions {
+        var filter = new RelayApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
             RequireApiKey = true,
             ApiKey = "secret",
         }));
@@ -194,7 +194,7 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public void ProviderWebhookAuthorizer_WhenMailgunSignatureRequirementIsDisabled_AllowsRequest() {
         var authorizer = new ProviderWebhookAuthorizer(
-            Options.Create(new MailRelayOptions {
+            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
                 RequireMailgunWebhookSignature = false,
             }),
             new HttpClient(new RecordingHttpMessageHandler()),
@@ -208,7 +208,7 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public void ProviderWebhookAuthorizer_WhenMailgunKeyOrSignatureIsMissing_RejectsRequest() {
         var missingKey = new ProviderWebhookAuthorizer(
-            Options.Create(new MailRelayOptions {
+            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
                 RequireMailgunWebhookSignature = true,
             }),
             new HttpClient(new RecordingHttpMessageHandler()),
@@ -238,7 +238,7 @@ public sealed class MailRelayPresentationTests {
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsCertHostIsNotTrusted_RejectsBeforeDownloadingCertificate() {
         var handler = new RecordingHttpMessageHandler();
         var authorizer = new ProviderWebhookAuthorizer(
-            Options.Create(new MailRelayOptions()),
+            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
             new HttpClient(handler),
             FixedTime);
         var request = new AwsSesSnsWebhookHttpRequest(
@@ -258,7 +258,7 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsSignatureRequirementIsDisabled_AllowsRequest() {
         var authorizer = new ProviderWebhookAuthorizer(
-            Options.Create(new MailRelayOptions {
+            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
                 RequireAwsSesSnsSignature = false,
             }),
             new HttpClient(new RecordingHttpMessageHandler()),
@@ -272,7 +272,7 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsRequiredFieldsAreMissing_RejectsRequest() {
         var authorizer = new ProviderWebhookAuthorizer(
-            Options.Create(new MailRelayOptions()),
+            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
             new HttpClient(new RecordingHttpMessageHandler()),
             FixedTime);
 
@@ -285,7 +285,7 @@ public sealed class MailRelayPresentationTests {
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsSignatureIsNotBase64_RejectsRequest() {
         var handler = new RecordingHttpMessageHandler();
         var authorizer = new ProviderWebhookAuthorizer(
-            Options.Create(new MailRelayOptions()),
+            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
             new HttpClient(handler),
             FixedTime);
 
@@ -298,7 +298,7 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsCertificateDownloadFails_RejectsRequest() {
         var authorizer = new ProviderWebhookAuthorizer(
-            Options.Create(new MailRelayOptions()),
+            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
             new HttpClient(new RecordingHttpMessageHandler(_ => throw new HttpRequestException("download failed"))),
             FixedTime);
 
@@ -310,7 +310,7 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsCertificatePemIsInvalid_RejectsRequest() {
         var authorizer = new ProviderWebhookAuthorizer(
-            Options.Create(new MailRelayOptions()),
+            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
             new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
                 Content = new StringContent("not a pem"),
             })),
@@ -337,7 +337,7 @@ public sealed class MailRelayPresentationTests {
             Signature = Convert.ToBase64String(signature),
         };
         var authorizer = new ProviderWebhookAuthorizer(
-            Options.Create(new MailRelayOptions()),
+            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
             new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
                 Content = new StringContent(certificate.ExportCertificatePem()),
             })),
@@ -353,7 +353,7 @@ public sealed class MailRelayPresentationTests {
         CertificateRequest certificateRequest = new("CN=sns.amazonaws.com", ecdsa, HashAlgorithmName.SHA256);
         using X509Certificate2 certificate = certificateRequest.CreateSelfSigned(DateTimeOffset.UtcNow.AddMinutes(-1), DateTimeOffset.UtcNow.AddMinutes(10));
         var authorizer = new ProviderWebhookAuthorizer(
-            Options.Create(new MailRelayOptions()),
+            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
             new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
                 Content = new StringContent(certificate.ExportCertificatePem()),
             })),
@@ -370,7 +370,7 @@ public sealed class MailRelayPresentationTests {
         using var rsa = RSA.Create(2048);
         using X509Certificate2 certificate = CreateSelfSignedCertificate(rsa);
         var authorizer = new ProviderWebhookAuthorizer(
-            Options.Create(new MailRelayOptions()),
+            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
             new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
                 Content = new StringContent(certificate.ExportCertificatePem()),
             })),
@@ -384,7 +384,7 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsConfirmationMessageHasInvalidPem_BuildsConfirmationCanonicalString() {
         var authorizer = new ProviderWebhookAuthorizer(
-            Options.Create(new MailRelayOptions()),
+            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
             new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
                 Content = new StringContent("not a pem"),
             })),
@@ -458,7 +458,7 @@ public sealed class MailRelayPresentationTests {
         MailRelayProviderEventsController controller = CreateProviderEventsController(
             new RecordingSender(),
             new ProviderWebhookAuthorizer(
-                Options.Create(new MailRelayOptions {
+                Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
                     RequireMailgunWebhookSignature = true,
                     MailgunWebhookSigningKey = "mailgun-secret",
                 }),
@@ -483,7 +483,7 @@ public sealed class MailRelayPresentationTests {
         MailRelayProviderEventsController controller = CreateProviderEventsController(
             sender,
             new ProviderWebhookAuthorizer(
-                Options.Create(new MailRelayOptions {
+                Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
                     RequireMailgunWebhookSignature = false,
                 }),
                 new HttpClient(new RecordingHttpMessageHandler()),
@@ -505,7 +505,7 @@ public sealed class MailRelayPresentationTests {
         MailRelayProviderEventsController controller = CreateProviderEventsController(
             new RecordingSender(),
             new ProviderWebhookAuthorizer(
-                Options.Create(new MailRelayOptions {
+                Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
                     RequireAwsSesSnsSignature = true,
                 }),
                 new HttpClient(new RecordingHttpMessageHandler()),
@@ -529,7 +529,7 @@ public sealed class MailRelayPresentationTests {
         MailRelayProviderEventsController controller = CreateProviderEventsController(
             sender,
             new ProviderWebhookAuthorizer(
-                Options.Create(new MailRelayOptions {
+                Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
                     RequireAwsSesSnsSignature = false,
                 }),
                 new HttpClient(new RecordingHttpMessageHandler()),
@@ -563,7 +563,7 @@ public sealed class MailRelayPresentationTests {
         MailRelayProviderEventsController controller = CreateProviderEventsController(
             new RecordingSender(),
             new ProviderWebhookAuthorizer(
-                Options.Create(new MailRelayOptions {
+                Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
                     RequireAwsSesSnsSignature = false,
                 }),
                 new HttpClient(new RecordingHttpMessageHandler()),
@@ -811,7 +811,7 @@ public sealed class MailRelayPresentationTests {
 
     private static ProviderWebhookAuthorizer CreateProviderWebhookAuthorizer(string mailgunSigningKey) =>
         new(
-            Options.Create(new MailRelayOptions {
+            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
                 RequireMailgunWebhookSignature = true,
                 MailgunWebhookSigningKey = mailgunSigningKey,
             }),

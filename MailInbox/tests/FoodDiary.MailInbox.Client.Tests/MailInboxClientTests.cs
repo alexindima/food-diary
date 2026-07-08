@@ -1,13 +1,12 @@
 using System.Net;
 using System.Net.Http.Json;
-using FoodDiary.MailInbox.Client;
 using FoodDiary.MailInbox.Client.Extensions;
 using FoodDiary.MailInbox.Client.Models;
 using FoodDiary.MailInbox.Client.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.MailInbox.Tests;
+namespace FoodDiary.MailInbox.Client.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxClientTests {
@@ -19,7 +18,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions {
+        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions {
             BaseUrl = "https://inbox.example.test",
             ApiKey = "secret",
         }));
@@ -36,7 +35,7 @@ public sealed class MailInboxClientTests {
     [Fact]
     public async Task GetMessageAsync_WhenBaseAddressIsMissing_Throws() {
         using var httpClient = new HttpClient(new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK)));
-        var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => client.GetMessageAsync(Guid.NewGuid(), CancellationToken.None));
     }
@@ -49,7 +48,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
             () => client.GetMessagesAsync(limit: null, CancellationToken.None));
@@ -66,7 +65,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
             () => client.GetMessagesAsync(limit: null, CancellationToken.None));
@@ -80,7 +79,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
 
         InboundMailMessageDetailsResponse? message = await client.GetMessageAsync(Guid.Parse("11111111-1111-1111-1111-111111111111"), CancellationToken.None);
 
@@ -95,7 +94,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
             () => client.GetMessageAsync(Guid.NewGuid(), CancellationToken.None));
@@ -125,7 +124,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
 
         InboundMailMessageDetailsResponse? message = await client.GetMessageAsync(id, CancellationToken.None);
 
@@ -146,7 +145,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
             () => client.GetMessageAsync(Guid.NewGuid(), CancellationToken.None));
@@ -161,7 +160,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions {
+        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions {
             ApiKey = "secret",
         }));
 
@@ -180,7 +179,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
 
         bool result = await client.MarkMessageReadAsync(Guid.NewGuid(), CancellationToken.None);
 

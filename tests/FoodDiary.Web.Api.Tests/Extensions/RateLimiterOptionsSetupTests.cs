@@ -2,7 +2,7 @@ using System.Reflection;
 using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Http;
 
-namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
+namespace FoodDiary.Web.Api.Tests.Extensions;
 
 [ExcludeFromCodeCoverage]
 public sealed class RateLimiterOptionsSetupTests {

@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 using FoodDiary.MailRelay.Application.Abstractions;
 using FoodDiary.MailRelay.Domain.Emails;
 
-namespace FoodDiary.MailRelay.Tests.TestInfrastructure;
+namespace FoodDiary.MailRelay.IntegrationTests.TestInfrastructure;
 
 [ExcludeFromCodeCoverage]
 public sealed class RecordingRelayDeliveryTransport(int remainingFailures = 0) : IRelayDeliveryTransport {

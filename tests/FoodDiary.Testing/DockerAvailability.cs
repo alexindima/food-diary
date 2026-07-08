@@ -1,9 +1,9 @@
 using System.IO.Pipes;
 
-namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
+namespace FoodDiary.Testing;
 
 [ExcludeFromCodeCoverage]
-internal static class DockerAvailability {
+public static class DockerAvailability {
     private static readonly Lazy<DockerAvailabilityResult> CachedResult = new(CheckAvailability);
 
     public static bool IsAvailable(out string? reason) {

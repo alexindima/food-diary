@@ -17,6 +17,7 @@ Rules for `tests/`.
 - `FoodDiary.Domain.Primitives.Tests`: shared domain primitive behavior.
 - `FoodDiary.Infrastructure.Tests`: infrastructure unit behavior that does not require external services.
 - `FoodDiary.Infrastructure.IntegrationTests`: PostgreSQL/Testcontainers infrastructure behavior.
+- `FoodDiary.Testing`: shared test-only helpers reused by multiple test projects, such as Docker availability attributes.
 - `FoodDiary.Results.Tests`: shared result and error primitive behavior.
 - Mail relay/inbox tests: split by domain, application, client, infrastructure, initializer, presentation, and integration behavior.
 
@@ -31,7 +32,8 @@ Rules for `tests/`.
 - Do not replace persistence, HTTP contract, or other integration coverage with mocks; keep Testcontainers/Postgres and WebApplicationFactory tests for behavior that depends on real infrastructure.
 - For HTTP contract changes, update snapshots under `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`.
 - Do not weaken architecture tests to make a feature pass; update the architecture intentionally and document why.
-- Keep test helpers local to the test project unless reuse is clear.
+- Keep test helpers local to the test project unless reuse is clear; shared helpers belong in `FoodDiary.Testing`.
+- Keep test project references aligned with the architecture-test dependency matrix.
 - Mark every test type and test-only helper type with `[ExcludeFromCodeCoverage]` so test implementation details stay out of dotCover reports.
 
 ## Commands

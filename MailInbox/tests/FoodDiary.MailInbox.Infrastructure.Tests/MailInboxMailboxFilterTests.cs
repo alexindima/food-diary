@@ -1,15 +1,14 @@
 using FoodDiary.MailInbox.Infrastructure.Options;
 using FoodDiary.MailInbox.Infrastructure.Services;
-using Microsoft.Extensions.Options;
 using SmtpServer.Mail;
 
-namespace FoodDiary.MailInbox.Tests;
+namespace FoodDiary.MailInbox.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxMailboxFilterTests {
     [Fact]
     public async Task CanAcceptFromAsync_ReturnsTrue() {
-        var filter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions {
+        var filter = new MailInboxMailboxFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
             AllowedRecipients = ["admin@fooddiary.club"],
         }));
 
@@ -24,7 +23,7 @@ public sealed class MailInboxMailboxFilterTests {
 
     [Fact]
     public async Task CanDeliverToAsync_WhenRecipientIsAllowed_ReturnsTrue() {
-        var filter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions {
+        var filter = new MailInboxMailboxFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
             AllowedRecipients = ["admin@fooddiary.club"],
         }));
 
@@ -39,7 +38,7 @@ public sealed class MailInboxMailboxFilterTests {
 
     [Fact]
     public async Task CanDeliverToAsync_WhenRecipientIsNotAllowed_ReturnsFalse() {
-        var filter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions {
+        var filter = new MailInboxMailboxFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
             AllowedRecipients = ["admin@fooddiary.club"],
         }));
 

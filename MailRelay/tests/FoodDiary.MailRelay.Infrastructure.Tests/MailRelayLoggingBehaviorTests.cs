@@ -3,7 +3,7 @@ using FoodDiary.Results;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayLoggingBehaviorTests {

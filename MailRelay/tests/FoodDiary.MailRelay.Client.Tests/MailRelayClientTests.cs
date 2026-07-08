@@ -1,11 +1,9 @@
 using System.Net;
 using System.Net.Http.Json;
-using FoodDiary.MailRelay.Client;
 using FoodDiary.MailRelay.Client.Models;
 using FoodDiary.MailRelay.Client.Options;
-using Microsoft.Extensions.Options;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.Client.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayClientTests {
@@ -22,7 +20,7 @@ public sealed class MailRelayClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://relay.example.test"),
         };
-        var client = new MailRelayClient(httpClient, Options.Create(new MailRelayClientOptions {
+        var client = new MailRelayClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailRelayClientOptions {
             BaseUrl = "https://relay.example.test",
             ApiKey = "secret",
         }));
@@ -43,7 +41,7 @@ public sealed class MailRelayClientTests {
     [Fact]
     public async Task EnqueueAsync_WhenBaseAddressIsMissing_Throws() {
         using var httpClient = new HttpClient(new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK)));
-        var client = new MailRelayClient(httpClient, Options.Create(new MailRelayClientOptions()));
+        var client = new MailRelayClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailRelayClientOptions()));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => client.EnqueueAsync(CreateRequest(), CancellationToken.None));
     }
@@ -53,7 +51,7 @@ public sealed class MailRelayClientTests {
         using var httpClient = new HttpClient(new RecordingHandler(new HttpResponseMessage(HttpStatusCode.Accepted))) {
             BaseAddress = new Uri("https://relay.example.test"),
         };
-        var client = new MailRelayClient(httpClient, Options.Create(new MailRelayClientOptions {
+        var client = new MailRelayClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailRelayClientOptions {
             BaseUrl = "https://relay.example.test",
         }));
 
@@ -67,7 +65,7 @@ public sealed class MailRelayClientTests {
         })) {
             BaseAddress = new Uri("https://relay.example.test"),
         };
-        var client = new MailRelayClient(httpClient, Options.Create(new MailRelayClientOptions {
+        var client = new MailRelayClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailRelayClientOptions {
             BaseUrl = "https://relay.example.test",
         }));
 

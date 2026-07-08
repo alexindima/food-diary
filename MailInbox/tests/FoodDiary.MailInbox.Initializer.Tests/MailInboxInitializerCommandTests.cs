@@ -1,9 +1,8 @@
 using FoodDiary.MailInbox.Application.Abstractions;
-using FoodDiary.MailInbox.Initializer;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace FoodDiary.MailInbox.Tests;
+namespace FoodDiary.MailInbox.Initializer.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxInitializerCommandTests {

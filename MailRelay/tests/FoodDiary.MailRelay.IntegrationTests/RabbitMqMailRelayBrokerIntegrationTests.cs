@@ -1,13 +1,12 @@
 using System.Text;
 using FoodDiary.MailRelay.Infrastructure.Options;
 using FoodDiary.MailRelay.Infrastructure.Services;
-using FoodDiary.MailRelay.Tests.TestInfrastructure;
+using FoodDiary.MailRelay.IntegrationTests.TestInfrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
 using Npgsql;
 using RabbitMQ.Client;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.IntegrationTests;
 
 [Collection("mailrelay-environment")]
 [ExcludeFromCodeCoverage]
@@ -17,7 +16,7 @@ public sealed class RabbitMqMailRelayBrokerIntegrationTests(MailRelayEnvironment
         fixture.EnsureAvailable();
         MailRelayBrokerOptions options = CreateOptions();
         var broker = new RabbitMqMailRelayBroker(
-            Options.Create(options),
+            Microsoft.Extensions.Options.Options.Create(options),
             NullLogger<RabbitMqMailRelayBroker>.Instance);
 
         await broker.DeclareTopologyAsync(CancellationToken.None);
@@ -41,7 +40,7 @@ public sealed class RabbitMqMailRelayBrokerIntegrationTests(MailRelayEnvironment
         fixture.EnsureAvailable();
         MailRelayBrokerOptions options = CreateOptions();
         var broker = new RabbitMqMailRelayBroker(
-            Options.Create(options),
+            Microsoft.Extensions.Options.Options.Create(options),
             NullLogger<RabbitMqMailRelayBroker>.Instance);
         await broker.DeclareTopologyAsync(CancellationToken.None).ConfigureAwait(false);
         var dataSource = NpgsqlDataSource.Create(await fixture.CreateIsolatedDatabaseAsync().ConfigureAwait(false));
@@ -49,7 +48,7 @@ public sealed class RabbitMqMailRelayBrokerIntegrationTests(MailRelayEnvironment
             var checker = new MailRelayReadinessChecker(
                 dataSource,
                 broker,
-                Options.Create(options));
+                Microsoft.Extensions.Options.Options.Create(options));
 
             await checker.CheckReadyAsync(CancellationToken.None).ConfigureAwait(false);
         }

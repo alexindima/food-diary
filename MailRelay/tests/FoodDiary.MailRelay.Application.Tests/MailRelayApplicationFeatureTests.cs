@@ -10,7 +10,7 @@ using FoodDiary.MailRelay.Application.Queue.Models;
 using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Emails;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayApplicationFeatureTests {

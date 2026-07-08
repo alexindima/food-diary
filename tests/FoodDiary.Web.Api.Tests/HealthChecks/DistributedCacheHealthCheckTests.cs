@@ -2,7 +2,7 @@ using FoodDiary.Web.Api.HealthChecks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace FoodDiary.Web.Api.IntegrationTests.HealthChecks;
+namespace FoodDiary.Web.Api.Tests.HealthChecks;
 
 [ExcludeFromCodeCoverage]
 public sealed class DistributedCacheHealthCheckTests {

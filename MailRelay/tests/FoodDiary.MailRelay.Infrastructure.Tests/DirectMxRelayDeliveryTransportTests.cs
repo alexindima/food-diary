@@ -6,17 +6,16 @@ using FoodDiary.MailRelay.Domain.Emails;
 using FoodDiary.MailRelay.Infrastructure.Options;
 using FoodDiary.MailRelay.Infrastructure.Services;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
 using MimeKit;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class DirectMxRelayDeliveryTransportTests {
     [Fact]
     public async Task SendAsync_WhenMxHostIsLoopbackAddress_RejectsBeforeDelivery() {
         var transport = new DirectMxRelayDeliveryTransport(
-            Options.Create(new DirectMxOptions {
+            Microsoft.Extensions.Options.Options.Create(new DirectMxOptions {
                 Port = 25,
                 ConnectTimeoutSeconds = 1,
                 UseStartTlsWhenAvailable = false,
@@ -42,7 +41,7 @@ public sealed class DirectMxRelayDeliveryTransportTests {
     [Fact]
     public async Task SendAsync_WhenRecipientsSpanMultipleDomains_RejectsBeforeDelivery() {
         var transport = new DirectMxRelayDeliveryTransport(
-            Options.Create(new DirectMxOptions {
+            Microsoft.Extensions.Options.Options.Create(new DirectMxOptions {
                 Port = 25,
                 ConnectTimeoutSeconds = 1,
                 UseStartTlsWhenAvailable = false,
@@ -70,7 +69,7 @@ public sealed class DirectMxRelayDeliveryTransportTests {
         var connector = new RecordingEndpointConnector();
         var smtpClient = new RecordingDirectMxSmtpClient();
         var transport = new DirectMxRelayDeliveryTransport(
-            Options.Create(new DirectMxOptions {
+            Microsoft.Extensions.Options.Options.Create(new DirectMxOptions {
                 Port = 2525,
                 ConnectTimeoutSeconds = 1,
                 UseStartTlsWhenAvailable = false,
@@ -281,7 +280,7 @@ public sealed class DirectMxRelayDeliveryTransportTests {
 
     private static DirectMxRelayDeliveryTransport CreateTransport(DkimSigningService dkimSigningService) =>
         new(
-            Options.Create(new DirectMxOptions {
+            Microsoft.Extensions.Options.Options.Create(new DirectMxOptions {
                 Port = 25,
                 ConnectTimeoutSeconds = 1,
                 UseStartTlsWhenAvailable = false,
@@ -309,7 +308,7 @@ public sealed class DirectMxRelayDeliveryTransportTests {
     private static readonly TimeProvider FixedTime = new FixedTimeProvider();
 
     private static DkimSigningService CreateDkimSigningService(MailRelayDkimOptions? options = null) =>
-        new(Options.Create(options ?? new MailRelayDkimOptions()), FixedTime);
+        new(Microsoft.Extensions.Options.Options.Create(options ?? new MailRelayDkimOptions()), FixedTime);
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider : TimeProvider {

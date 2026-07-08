@@ -1,7 +1,7 @@
 using Npgsql;
 using Testcontainers.PostgreSql;
 
-namespace FoodDiary.MailInbox.Tests.TestInfrastructure;
+namespace FoodDiary.MailInbox.IntegrationTests.TestInfrastructure;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxPostgresFixture : IAsyncLifetime {

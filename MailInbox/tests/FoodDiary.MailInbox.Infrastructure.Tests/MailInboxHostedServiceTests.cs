@@ -5,12 +5,11 @@ using FoodDiary.MailInbox.Infrastructure.Options;
 using FoodDiary.MailInbox.Infrastructure.Services;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net.Sockets;
 
-namespace FoodDiary.MailInbox.Tests;
+namespace FoodDiary.MailInbox.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxHostedServiceTests {
@@ -35,9 +34,9 @@ public sealed class MailInboxHostedServiceTests {
             new ThrowingInboundMailStore(),
             TimeProvider.System,
             NullLogger<SmtpInboundMessageStore>.Instance);
-        var mailboxFilter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions()));
+        var mailboxFilter = new MailInboxMailboxFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions()));
         var service = new MailInboxSmtpHostedService(
-            Options.Create(new MailInboxSmtpOptions {
+            Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
                 Enabled = false,
             }),
             messageStore,
@@ -54,9 +53,9 @@ public sealed class MailInboxHostedServiceTests {
             new ThrowingInboundMailStore(),
             TimeProvider.System,
             NullLogger<SmtpInboundMessageStore>.Instance);
-        var mailboxFilter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions()));
+        var mailboxFilter = new MailInboxMailboxFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions()));
         var service = new MailInboxSmtpHostedService(
-            Options.Create(new MailInboxSmtpOptions {
+            Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
                 Enabled = false,
             }),
             messageStore,
@@ -73,9 +72,9 @@ public sealed class MailInboxHostedServiceTests {
             new ThrowingInboundMailStore(),
             TimeProvider.System,
             NullLogger<SmtpInboundMessageStore>.Instance);
-        var mailboxFilter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions()));
+        var mailboxFilter = new MailInboxMailboxFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions()));
         var service = new MailInboxSmtpHostedService(
-            Options.Create(new MailInboxSmtpOptions {
+            Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
                 Enabled = true,
                 ServerName = "localhost",
                 Port = port,

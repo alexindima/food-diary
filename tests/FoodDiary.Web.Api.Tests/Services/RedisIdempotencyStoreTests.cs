@@ -2,7 +2,7 @@ using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Web.Api.Services;
 using StackExchange.Redis;
 
-namespace FoodDiary.Web.Api.IntegrationTests.Services;
+namespace FoodDiary.Web.Api.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class RedisIdempotencyStoreTests {

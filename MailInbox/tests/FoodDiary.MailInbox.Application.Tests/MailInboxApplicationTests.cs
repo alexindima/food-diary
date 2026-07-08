@@ -1,7 +1,6 @@
 using FluentValidation;
 using FluentValidation.Results;
 using System.Globalization;
-using FoodDiary.MailInbox.Application;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Application.Common.Behaviors;
 using FoodDiary.Results;
@@ -15,7 +14,7 @@ using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace FoodDiary.MailInbox.Tests;
+namespace FoodDiary.MailInbox.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxApplicationTests {

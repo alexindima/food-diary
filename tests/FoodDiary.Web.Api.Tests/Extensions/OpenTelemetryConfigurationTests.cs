@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
-namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
+namespace FoodDiary.Web.Api.Tests.Extensions;
 
 [ExcludeFromCodeCoverage]
 public sealed class OpenTelemetryConfigurationTests {

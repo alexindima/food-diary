@@ -1,6 +1,6 @@
 using FoodDiary.Web.Api.Options;
 
-namespace FoodDiary.Web.Api.IntegrationTests.Options;
+namespace FoodDiary.Web.Api.Tests.Options;
 
 [ExcludeFromCodeCoverage]
 public sealed class InitialAdminOptionsTests {

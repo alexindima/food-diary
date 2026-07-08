@@ -9,7 +9,7 @@ using FoodDiary.MailRelay.Presentation.Features.Email.Mappings;
 using FoodDiary.MailRelay.Presentation.Features.Email.Requests;
 using FoodDiary.MailRelay.Presentation.Features.Email.Responses;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayEmailHttpMappingsTests {

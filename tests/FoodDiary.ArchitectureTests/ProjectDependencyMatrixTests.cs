@@ -106,6 +106,130 @@ public sealed class ProjectDependencyMatrixTests {
             ],
         };
 
+    private static readonly IReadOnlyDictionary<string, string[]> AllowedTestProjectReferences =
+        new Dictionary<string, string[]>(StringComparer.Ordinal) {
+            ["FoodDiary.Application.Tests"] = [
+                "FoodDiary.Application",
+                "FoodDiary.Domain",
+            ],
+            ["FoodDiary.ArchitectureTests"] = [
+                "FoodDiary.Domain",
+                "FoodDiary.Infrastructure",
+            ],
+            ["FoodDiary.Domain.Primitives.Tests"] = [
+                "FoodDiary.Domain.Primitives",
+            ],
+            ["FoodDiary.Domain.Tests"] = [
+                "FoodDiary.Domain",
+            ],
+            ["FoodDiary.Infrastructure.IntegrationTests"] = [
+                "FoodDiary.Application",
+                "FoodDiary.Infrastructure",
+                "FoodDiary.Initializer",
+                "FoodDiary.Integrations",
+                "FoodDiary.Testing",
+            ],
+            ["FoodDiary.Infrastructure.Tests"] = [
+                "FoodDiary.Application",
+                "FoodDiary.Infrastructure",
+                "FoodDiary.Initializer",
+                "FoodDiary.Integrations",
+            ],
+            ["FoodDiary.JobManager.Tests"] = [
+                "FoodDiary.JobManager",
+            ],
+            ["FoodDiary.MailInbox.Application.Tests"] = [
+                "FoodDiary.MailInbox.Application",
+                "FoodDiary.MailInbox.Domain",
+            ],
+            ["FoodDiary.MailInbox.Client.Tests"] = [
+                "FoodDiary.MailInbox.Client",
+            ],
+            ["FoodDiary.MailInbox.Domain.Tests"] = [
+                "FoodDiary.MailInbox.Domain",
+            ],
+            ["FoodDiary.MailInbox.Infrastructure.Tests"] = [
+                "FoodDiary.MailInbox.Application",
+                "FoodDiary.MailInbox.Domain",
+                "FoodDiary.MailInbox.Infrastructure",
+            ],
+            ["FoodDiary.MailInbox.Initializer.Tests"] = [
+                "FoodDiary.MailInbox.Initializer",
+            ],
+            ["FoodDiary.MailInbox.IntegrationTests"] = [
+                "FoodDiary.MailInbox.Application",
+                "FoodDiary.MailInbox.Domain",
+                "FoodDiary.MailInbox.Infrastructure",
+                "FoodDiary.Testing",
+            ],
+            ["FoodDiary.MailInbox.Presentation.Tests"] = [
+                "FoodDiary.MailInbox.Application",
+                "FoodDiary.MailInbox.Domain",
+                "FoodDiary.MailInbox.Presentation",
+            ],
+            ["FoodDiary.MailRelay.Application.Tests"] = [
+                "FoodDiary.MailRelay.Application",
+                "FoodDiary.MailRelay.Domain",
+            ],
+            ["FoodDiary.MailRelay.Client.Tests"] = [
+                "FoodDiary.MailRelay.Client",
+            ],
+            ["FoodDiary.MailRelay.Domain.Tests"] = [
+                "FoodDiary.MailRelay.Domain",
+            ],
+            ["FoodDiary.MailRelay.Infrastructure.Tests"] = [
+                "FoodDiary.MailRelay.Application",
+                "FoodDiary.MailRelay.Client",
+                "FoodDiary.MailRelay.Domain",
+                "FoodDiary.MailRelay.Infrastructure",
+            ],
+            ["FoodDiary.MailRelay.Initializer.Tests"] = [
+                "FoodDiary.MailRelay.Initializer",
+            ],
+            ["FoodDiary.MailRelay.IntegrationTests"] = [
+                "FoodDiary.MailRelay.Application",
+                "FoodDiary.MailRelay.Domain",
+                "FoodDiary.MailRelay.Infrastructure",
+                "FoodDiary.MailRelay.WebApi",
+                "FoodDiary.Testing",
+            ],
+            ["FoodDiary.MailRelay.Presentation.Tests"] = [
+                "FoodDiary.MailRelay.Application",
+                "FoodDiary.MailRelay.Client",
+                "FoodDiary.MailRelay.Domain",
+                "FoodDiary.MailRelay.Presentation",
+            ],
+            ["FoodDiary.Mediator.Tests"] = [
+                "FoodDiary.Mediator",
+            ],
+            ["FoodDiary.Presentation.Api.Tests"] = [
+                "FoodDiary.Application",
+                "FoodDiary.Domain",
+                "FoodDiary.Presentation.Api",
+            ],
+            ["FoodDiary.Resources.Tests"] = [
+                "FoodDiary.Resources",
+            ],
+            ["FoodDiary.Results.Tests"] = [
+                "FoodDiary.Results",
+            ],
+            ["FoodDiary.Telegram.Bot.Tests"] = [
+                "FoodDiary.Telegram.Bot",
+            ],
+            ["FoodDiary.Testing"] = [],
+            ["FoodDiary.Web.Api.IntegrationTests"] = [
+                "FoodDiary.Infrastructure",
+                "FoodDiary.Presentation.Api",
+                "FoodDiary.Testing",
+                "FoodDiary.Web.Api",
+            ],
+            ["FoodDiary.Web.Api.Tests"] = [
+                "FoodDiary.Integrations",
+                "FoodDiary.Presentation.Api",
+                "FoodDiary.Web.Api",
+            ],
+        };
+
     [Fact]
     public void AllProductionProjects_AreCoveredByDependencyMatrix() {
         IReadOnlyList<string> actualProjects = ProjectReferenceReader.ReadProductionProjectNames();
@@ -122,6 +246,29 @@ public sealed class ProjectDependencyMatrixTests {
             Assert.True(
                 actualReferencesByProject.TryGetValue(projectName, out string[]? actualReferences),
                 $"Project '{projectName}' is missing from discovered production projects.");
+
+            Assert.Equal(
+                expectedReferences.Order(StringComparer.Ordinal).ToArray(),
+                actualReferences);
+        }
+    }
+
+    [Fact]
+    public void AllTestProjects_AreCoveredByDependencyMatrix() {
+        IReadOnlyList<string> actualProjects = ProjectReferenceReader.ReadTestProjectNames();
+        string[] expectedProjects = [.. AllowedTestProjectReferences.Keys.Order(StringComparer.Ordinal)];
+
+        Assert.Equal(expectedProjects, actualProjects);
+    }
+
+    [Fact]
+    public void TestProjectReferences_MatchDependencyMatrix() {
+        IReadOnlyDictionary<string, string[]> actualReferencesByProject = ProjectReferenceReader.ReadTestProjectReferences();
+
+        foreach ((string? projectName, string[]? expectedReferences) in AllowedTestProjectReferences) {
+            Assert.True(
+                actualReferencesByProject.TryGetValue(projectName, out string[]? actualReferences),
+                $"Test project '{projectName}' is missing from discovered test projects.");
 
             Assert.Equal(
                 expectedReferences.Order(StringComparer.Ordinal).ToArray(),

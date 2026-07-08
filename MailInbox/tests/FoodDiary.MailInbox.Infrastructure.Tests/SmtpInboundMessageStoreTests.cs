@@ -10,7 +10,7 @@ using SmtpServer;
 using SmtpServer.Mail;
 using SmtpServer.Protocol;
 
-namespace FoodDiary.MailInbox.Tests;
+namespace FoodDiary.MailInbox.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class SmtpInboundMessageStoreTests {

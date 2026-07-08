@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="FoodDiary.Testing" />
     <Using Include="Xunit" />
   </ItemGroup>
 
@@ -24,6 +25,7 @@
     <ProjectReference Include="..\..\FoodDiary.MailInbox.Application\FoodDiary.MailInbox.Application.csproj" />
     <ProjectReference Include="..\..\FoodDiary.MailInbox.Domain\FoodDiary.MailInbox.Domain.csproj" />
     <ProjectReference Include="..\..\FoodDiary.MailInbox.Infrastructure\FoodDiary.MailInbox.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\tests\FoodDiary.Testing\FoodDiary.Testing.csproj" />
   </ItemGroup>
 
 </Project>

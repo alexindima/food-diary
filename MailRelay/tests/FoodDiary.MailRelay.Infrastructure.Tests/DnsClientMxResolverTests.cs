@@ -1,6 +1,6 @@
 using FoodDiary.MailRelay.Infrastructure.Services;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class DnsClientMxResolverTests {

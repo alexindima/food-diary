@@ -11,8 +11,21 @@ internal static class ProjectReferenceReader {
                 path => ReadProjectReferences(path).Order(StringComparer.Ordinal).ToArray(),
                 StringComparer.Ordinal);
 
+    public static IReadOnlyDictionary<string, string[]> ReadTestProjectReferences() =>
+        ReadTestProjectPaths()
+            .ToDictionary(
+                GetProjectNameFromPath,
+                path => ReadProjectReferences(path).Order(StringComparer.Ordinal).ToArray(),
+                StringComparer.Ordinal);
+
     public static IReadOnlyList<string> ReadProductionProjectNames() =>
         ReadProductionProjectPaths()
+            .Select(GetProjectNameFromPath)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+    public static IReadOnlyList<string> ReadTestProjectNames() =>
+        ReadTestProjectPaths()
             .Select(GetProjectNameFromPath)
             .Order(StringComparer.Ordinal)
             .ToArray();
@@ -44,6 +57,12 @@ internal static class ProjectReferenceReader {
     private static IEnumerable<string> ReadProductionProjectPaths() =>
         Directory.GetFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj", SearchOption.AllDirectories)
             .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}tests{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
+            .Order(StringComparer.Ordinal);
+
+    private static IEnumerable<string> ReadTestProjectPaths() =>
+        Directory.GetFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj", SearchOption.AllDirectories)
+            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}tests{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
             .Order(StringComparer.Ordinal);
 

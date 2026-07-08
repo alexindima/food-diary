@@ -1,7 +1,7 @@
 using FoodDiary.Web.Api.Extensions;
 using Microsoft.AspNetCore.Http;
 
-namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
+namespace FoodDiary.Web.Api.Tests.Extensions;
 
 [ExcludeFromCodeCoverage]
 public sealed class SecurityHeadersMiddlewareTests {

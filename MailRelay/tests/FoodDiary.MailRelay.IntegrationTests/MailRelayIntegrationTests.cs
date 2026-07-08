@@ -6,9 +6,9 @@ using FoodDiary.MailRelay.Presentation.Features.Email.Requests;
 using FoodDiary.MailRelay.Application.Telemetry;
 using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Emails;
-using FoodDiary.MailRelay.Tests.TestInfrastructure;
+using FoodDiary.MailRelay.IntegrationTests.TestInfrastructure;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.IntegrationTests;
 
 [Collection("mailrelay-environment")]
 [ExcludeFromCodeCoverage]

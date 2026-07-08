@@ -8,7 +8,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using OptionsFactory = Microsoft.Extensions.Options.Options;
 
-namespace FoodDiary.Web.Api.IntegrationTests.HealthChecks;
+namespace FoodDiary.Web.Api.Tests.HealthChecks;
 
 [ExcludeFromCodeCoverage]
 public sealed class S3HealthCheckTests {

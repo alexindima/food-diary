@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Initializer::FoodDiary.MailRelay.Initializer;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.Initializer.Tests;
 
 public sealed class MailRelayInitializerCommandTests {
     [Fact]

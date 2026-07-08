@@ -1,4 +1,3 @@
-using FoodDiary.MailRelay.Application;
 using FoodDiary.MailRelay.Application.Abstractions;
 using FoodDiary.Results;
 using FoodDiary.MailRelay.Application.Emails.Commands;
@@ -11,7 +10,7 @@ using FoodDiary.MailRelay.Domain.Emails;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.MailRelay.Tests;
+namespace FoodDiary.MailRelay.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayApplicationValidationTests {

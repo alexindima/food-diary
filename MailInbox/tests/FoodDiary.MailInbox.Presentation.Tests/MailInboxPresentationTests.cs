@@ -27,7 +27,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.MailInbox.Tests;
+namespace FoodDiary.MailInbox.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxPresentationTests {
@@ -327,7 +327,7 @@ public sealed class MailInboxPresentationTests {
 
     [Fact]
     public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyIsMissing_ReturnsUnauthorized() {
-        var filter = new MailInboxApiKeyAuthorizationFilter(Options.Create(new MailInboxHttpOptions {
+        var filter = new MailInboxApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
             RequireApiKey = true,
             ApiKey = "secret",
         }));
@@ -342,7 +342,7 @@ public sealed class MailInboxPresentationTests {
 
     [Fact]
     public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyRequirementIsDisabled_ReturnsUnauthorized() {
-        var filter = new MailInboxApiKeyAuthorizationFilter(Options.Create(new MailInboxHttpOptions {
+        var filter = new MailInboxApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
             RequireApiKey = false,
             ApiKey = "secret",
         }));
@@ -356,7 +356,7 @@ public sealed class MailInboxPresentationTests {
 
     [Fact]
     public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyMatches_AllowsRequest() {
-        var filter = new MailInboxApiKeyAuthorizationFilter(Options.Create(new MailInboxHttpOptions {
+        var filter = new MailInboxApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
             RequireApiKey = true,
             ApiKey = "secret",
         }));

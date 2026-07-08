@@ -3,7 +3,7 @@ using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
-namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
+namespace FoodDiary.Web.Api.Tests.Extensions;
 
 [ExcludeFromCodeCoverage]
 public sealed class CorsOptionsSetupTests {
