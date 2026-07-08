@@ -11,9 +11,12 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.Application.Abstractions"] = [
                 "FoodDiary.Domain",
+                "FoodDiary.Domain.Primitives",
                 "FoodDiary.Results",
             ],
-            ["FoodDiary.Domain"] = [],
+            ["FoodDiary.Domain"] = [
+                "FoodDiary.Domain.Primitives",
+            ],
             ["FoodDiary.Infrastructure"] = [
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Domain",
@@ -41,7 +44,9 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Results",
             ],
             ["FoodDiary.MailInbox.Client"] = [],
-            ["FoodDiary.MailInbox.Domain"] = [],
+            ["FoodDiary.MailInbox.Domain"] = [
+                "FoodDiary.Domain.Primitives",
+            ],
             ["FoodDiary.MailInbox.Infrastructure"] = [
                 "FoodDiary.MailInbox.Application",
             ],
@@ -63,7 +68,9 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Results",
             ],
             ["FoodDiary.MailRelay.Client"] = [],
-            ["FoodDiary.MailRelay.Domain"] = [],
+            ["FoodDiary.MailRelay.Domain"] = [
+                "FoodDiary.Domain.Primitives",
+            ],
             ["FoodDiary.MailRelay.Infrastructure"] = [
                 "FoodDiary.MailRelay.Application",
             ],
@@ -84,6 +91,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Presentation.Api"] = [
                 "FoodDiary.Application",
             ],
+            ["FoodDiary.Domain.Primitives"] = [],
             ["FoodDiary.Resources"] = [
                 "FoodDiary.Application.Abstractions",
             ],
@@ -165,6 +173,7 @@ public sealed class ProjectDependencyMatrixTests {
         projectName switch {
             "FoodDiary.Mediator" => Path.Combine("Shared", "FoodDiary.Mediator"),
             "FoodDiary.Results" => Path.Combine("Shared", "FoodDiary.Results"),
+            "FoodDiary.Domain.Primitives" => Path.Combine("Shared", "FoodDiary.Domain.Primitives"),
             _ => projectName,
         };
 }

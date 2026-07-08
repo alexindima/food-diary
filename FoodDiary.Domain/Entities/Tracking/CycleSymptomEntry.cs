@@ -1,5 +1,5 @@
 using System.Text.Json;
-using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 

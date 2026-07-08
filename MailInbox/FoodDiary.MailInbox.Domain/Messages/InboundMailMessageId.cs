@@ -1,4 +1,4 @@
-using FoodDiary.MailInbox.Domain.Common;
+using FoodDiary.Domain.Primitives;
 
 namespace FoodDiary.MailInbox.Domain.Messages;
 

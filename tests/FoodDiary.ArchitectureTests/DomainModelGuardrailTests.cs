@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Reflection;
-using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Primitives;
 
 namespace FoodDiary.ArchitectureTests;
 
@@ -9,13 +10,13 @@ public class DomainModelGuardrailTests {
     private static readonly HashSet<string> AllowedWideMutators = new(StringComparer.Ordinal);
 
     [Fact]
-    public void DomainProject_StaysMinimalWithoutDirectDependencies() {
+    public void DomainProject_ReferencesOnlySharedDomainPrimitives() {
         const string relativeProjectPath = "FoodDiary.Domain/FoodDiary.Domain.csproj";
 
         string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
         string[] packageReferences = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
 
-        Assert.Empty(projectReferences);
+        Assert.Equal(["FoodDiary.Domain.Primitives"], projectReferences);
         Assert.Empty(packageReferences);
     }
 
@@ -120,7 +121,7 @@ public class DomainModelGuardrailTests {
 
     [Fact]
     public void DomainAggregates_DoNotIntroduceNewWidePublicMutators() {
-        string[] violations = [.. typeof(AggregateRoot<>).Assembly
+        string[] violations = [.. typeof(User).Assembly
             .GetTypes()
             .Where(IsConcreteAggregateRoot)
             .SelectMany(type => type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)

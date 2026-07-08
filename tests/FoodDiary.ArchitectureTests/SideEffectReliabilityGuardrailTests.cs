@@ -210,8 +210,8 @@ public sealed class SideEffectReliabilityGuardrailTests {
     [Fact]
     public void EventTaxonomyContracts_DocumentDomainAndIntegrationEventBoundaries() {
         string domainEventPath = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Domain",
-            "Common",
+            "Shared",
+            "FoodDiary.Domain.Primitives",
             "IDomainEvent.cs");
         string integrationEventPath = ArchitectureTestPaths.FromRoot(
             "FoodDiary.Application.Abstractions",

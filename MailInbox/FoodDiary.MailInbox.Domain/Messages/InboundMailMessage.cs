@@ -1,4 +1,4 @@
-using FoodDiary.MailInbox.Domain.Common;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.MailInbox.Domain.Events;
 using System.Diagnostics.CodeAnalysis;
 

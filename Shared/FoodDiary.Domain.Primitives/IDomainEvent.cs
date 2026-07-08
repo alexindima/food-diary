@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Common;
+namespace FoodDiary.Domain.Primitives;
 
 /// <summary>
 /// Represents a fact raised by the domain model while committing the current transaction.
@@ -9,4 +9,6 @@ namespace FoodDiary.Domain.Common;
 /// </remarks>
 public interface IDomainEvent {
     DateTime OccurredOnUtc { get; }
+
+    string EventType => GetType().Name;
 }

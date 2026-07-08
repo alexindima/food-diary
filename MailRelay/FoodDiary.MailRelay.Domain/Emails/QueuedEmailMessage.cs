@@ -10,4 +10,6 @@ public sealed record QueuedEmailMessage(
     string? TextBody,
     string? CorrelationId,
     int AttemptCount,
-    int MaxAttempts);
+    int MaxAttempts,
+    DateTimeOffset? CreatedAtUtc = null,
+    DateTimeOffset? ModifiedAtUtc = null);

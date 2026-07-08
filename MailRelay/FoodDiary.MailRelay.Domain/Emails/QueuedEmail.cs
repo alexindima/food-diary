@@ -1,4 +1,4 @@
-using FoodDiary.MailRelay.Domain.Common;
+using FoodDiary.Domain.Primitives;
 
 namespace FoodDiary.MailRelay.Domain.Emails;
 
@@ -38,8 +38,8 @@ public sealed class QueuedEmail : AggregateRoot<QueuedEmailId> {
     public int MaxAttempts { get; }
     public string Status { get; private set; }
 
-    public static QueuedEmail FromPersistence(QueuedEmailMessage message) =>
-        new(
+    public static QueuedEmail FromPersistence(QueuedEmailMessage message) {
+        var email = new QueuedEmail(
             (QueuedEmailId)message.Id,
             message.FromAddress,
             message.FromName,
@@ -51,6 +51,13 @@ public sealed class QueuedEmail : AggregateRoot<QueuedEmailId> {
             message.AttemptCount,
             message.MaxAttempts,
             QueuedEmailStatus.Processing);
+        email.SetCreated(message.CreatedAtUtc?.UtcDateTime ?? DomainTime.UtcNow);
+        if (message.ModifiedAtUtc is { } modifiedAtUtc) {
+            email.SetModified(modifiedAtUtc.UtcDateTime);
+        }
+
+        return email;
+    }
 
     public RelayEmailMessageRequest ToSubmissionRequest() =>
         new(
@@ -64,10 +71,12 @@ public sealed class QueuedEmail : AggregateRoot<QueuedEmailId> {
 
     public void MarkSent() {
         Status = QueuedEmailStatus.Sent;
+        SetModified();
     }
 
     public void MarkSuppressed() {
         Status = QueuedEmailStatus.Suppressed;
+        SetModified();
     }
 
     public QueuedEmailFailureDecision MarkFailedAttempt(string error) {
@@ -75,6 +84,7 @@ public sealed class QueuedEmail : AggregateRoot<QueuedEmailId> {
 
         bool isTerminalFailure = AttemptCount >= MaxAttempts;
         Status = isTerminalFailure ? QueuedEmailStatus.Failed : QueuedEmailStatus.Retry;
+        SetModified();
 
         return new QueuedEmailFailureDecision(
             Id,

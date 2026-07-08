@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
+    <ProjectReference Include="..\Shared\FoodDiary.Domain.Primitives\FoodDiary.Domain.Primitives.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Results\FoodDiary.Results.csproj" />
   </ItemGroup>
 

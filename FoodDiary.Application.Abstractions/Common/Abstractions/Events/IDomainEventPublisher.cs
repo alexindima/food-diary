@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Primitives;
 
 namespace FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 

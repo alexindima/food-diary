@@ -1,8 +1,8 @@
 using System.Runtime.CompilerServices;
 
-namespace FoodDiary.MailRelay.Domain.Common;
+namespace FoodDiary.Domain.Primitives;
 
-public abstract class Entity<TId> : IEquatable<Entity<TId>>
+public abstract class Entity<TId> : IAuditableEntity, IEquatable<Entity<TId>>
     where TId : notnull {
     private TId _id = default!;
     private int? _cachedHashCode;
@@ -17,12 +17,38 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
         }
     }
 
+    public DateTime CreatedOnUtc { get; private set; }
+
+    public DateTime? ModifiedOnUtc { get; private set; }
+
     protected Entity() {
     }
 
     protected Entity(TId id) {
         Id = id;
     }
+
+    protected void SetCreated() {
+        SetCreated(DomainTime.UtcNow);
+    }
+
+    protected void SetCreated(DateTime createdOnUtc) {
+        CreatedOnUtc = NormalizeUtc(createdOnUtc, nameof(createdOnUtc));
+    }
+
+    protected void SetModified() {
+        SetModified(DomainTime.UtcNow);
+    }
+
+    protected void SetModified(DateTime modifiedOnUtc) {
+        ModifiedOnUtc = NormalizeUtc(modifiedOnUtc, nameof(modifiedOnUtc));
+    }
+
+    private static DateTime NormalizeUtc(DateTime value, string paramName) {
+        return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.") : value.ToUniversalTime();
+    }
+
+    #region Equality
 
     public bool Equals(Entity<TId>? other) {
         if (other is null) {
@@ -60,6 +86,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
         return Equals((Entity<TId>)obj);
     }
 
+    // ReSharper disable NonReadonlyMemberInGetHashCode
     public override int GetHashCode() {
         if (_cachedHashCode.HasValue) {
             return _cachedHashCode.Value;
@@ -73,9 +100,17 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
         return _cachedHashCode.Value;
     }
 
-    public static bool operator ==(Entity<TId>? left, Entity<TId>? right) => Equals(left, right);
+    public static bool operator ==(Entity<TId>? left, Entity<TId>? right) {
+        return Equals(left, right);
+    }
 
-    public static bool operator !=(Entity<TId>? left, Entity<TId>? right) => !Equals(left, right);
+    public static bool operator !=(Entity<TId>? left, Entity<TId>? right) {
+        return !Equals(left, right);
+    }
 
-    private bool IsTransient() => EqualityComparer<TId>.Default.Equals(Id, default!);
+    private bool IsTransient() {
+        return EqualityComparer<TId>.Default.Equals(Id, default!);
+    }
+
+    #endregion Equality
 }

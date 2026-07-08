@@ -10,6 +10,7 @@ Rules for `MailInbox/FoodDiary.MailInbox.Domain/`.
 
 ## Rules
 - Do not reference MailInbox application, client, infrastructure, presentation, or host projects.
+- Only shared domain primitives belong as a project reference.
 - Keep framework/provider types out of domain code.
 - Keep namespaces aligned with folder paths.
 

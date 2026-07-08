@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
-using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Primitives;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;

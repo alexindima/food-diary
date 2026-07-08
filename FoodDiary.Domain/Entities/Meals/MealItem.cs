@@ -1,5 +1,6 @@
 using System.Globalization;
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;

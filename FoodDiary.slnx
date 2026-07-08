@@ -20,6 +20,7 @@
   <Project Path="FoodDiary.Integrations/FoodDiary.Integrations.csproj" />
   <Project Path="FoodDiary.JobManager/FoodDiary.JobManager.csproj" />
   <Folder Name="/Shared/">
+    <Project Path="Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
     <Project Path="Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
     <Project Path="Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
   </Folder>

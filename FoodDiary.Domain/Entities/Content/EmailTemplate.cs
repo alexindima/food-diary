@@ -1,5 +1,5 @@
 using System.Globalization;
-using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities.Content;

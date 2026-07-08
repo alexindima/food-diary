@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;

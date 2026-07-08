@@ -1,4 +1,4 @@
-namespace FoodDiary.MailRelay.Domain.Common;
+namespace FoodDiary.Domain.Primitives;
 
 public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateWithEvents
     where TId : notnull {

@@ -1,4 +1,4 @@
-using FoodDiary.MailRelay.Domain.Common;
+using FoodDiary.Domain.Primitives;
 
 namespace FoodDiary.MailRelay.Domain.Emails;
 

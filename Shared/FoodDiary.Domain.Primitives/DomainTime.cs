@@ -1,5 +1,5 @@
-namespace FoodDiary.Domain.Common;
+namespace FoodDiary.Domain.Primitives;
 
-internal static class DomainTime {
+public static class DomainTime {
     public static DateTime UtcNow => TimeProvider.System.GetUtcNow().UtcDateTime;
 }

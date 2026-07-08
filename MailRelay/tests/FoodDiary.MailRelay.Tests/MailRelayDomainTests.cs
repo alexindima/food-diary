@@ -1,5 +1,5 @@
 using System.Reflection;
-using FoodDiary.MailRelay.Domain.Common;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Emails;
 using System.Runtime.CompilerServices;
@@ -109,6 +109,48 @@ public sealed class MailRelayDomainTests {
     }
 
     [Fact]
+    public void QueuedEmail_FromPersistence_SetsAuditTimestamp() {
+        var createdAtUtc = new DateTimeOffset(2026, 6, 14, 10, 15, 0, TimeSpan.Zero);
+
+        var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(
+            Guid.NewGuid(),
+            "relay@example.com",
+            "FoodDiary",
+            ["user@example.com"],
+            "Subject",
+            "<p>Body</p>",
+            TextBody: null,
+            "correlation",
+            1,
+            3,
+            createdAtUtc));
+
+        Assert.Equal(createdAtUtc.UtcDateTime, email.CreatedOnUtc);
+        Assert.Equal(DateTimeKind.Utc, email.CreatedOnUtc.Kind);
+    }
+
+    [Fact]
+    public void QueuedEmail_MarkSent_UpdatesModifiedAuditTimestamp() {
+        var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(
+            Guid.NewGuid(),
+            "relay@example.com",
+            "FoodDiary",
+            ["user@example.com"],
+            "Subject",
+            "<p>Body</p>",
+            TextBody: null,
+            "correlation",
+            1,
+            3));
+
+        email.MarkSent();
+
+        Assert.Equal(QueuedEmailStatus.Sent, email.Status);
+        Assert.NotNull(email.ModifiedOnUtc);
+        Assert.Equal(DateTimeKind.Utc, email.ModifiedOnUtc?.Kind);
+    }
+
+    [Fact]
     public void QueuedEmailId_ToString_ReturnsWrappedGuid() {
         var value = Guid.Parse("11111111-1111-1111-1111-111111111111");
         var id = new QueuedEmailId(value);
@@ -206,6 +248,8 @@ public sealed class MailRelayDomainTests {
 
     [ExcludeFromCodeCoverage]
     private sealed record TestDomainEvent : IDomainEvent {
-        public DateTimeOffset OccurredOnUtc { get; } = DateTimeOffset.UtcNow;
+        public Guid EventId { get; } = Guid.NewGuid();
+
+        public DateTime OccurredOnUtc { get; } = DateTime.UtcNow;
     }
 }

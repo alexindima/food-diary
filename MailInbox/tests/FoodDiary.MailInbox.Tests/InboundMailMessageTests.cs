@@ -1,5 +1,5 @@
 using FoodDiary.MailInbox.Domain.Events;
-using FoodDiary.MailInbox.Domain.Common;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.MailInbox.Domain.Messages;
 using System.Globalization;
 
@@ -309,10 +309,7 @@ public sealed class InboundMailMessageTests {
 
     [Fact]
     public void DomainTime_UtcNow_ReturnsUtcTimestamp() {
-        Type? type = typeof(InboundMailMessage).Assembly.GetType("FoodDiary.MailInbox.Domain.Common.DomainTime");
-        var value = (DateTime)type!.GetProperty(
-            "UtcNow",
-            System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)!.GetValue(null)!;
+        DateTime value = DomainTime.UtcNow;
 
         Assert.Equal(DateTimeKind.Utc, value.Kind);
     }

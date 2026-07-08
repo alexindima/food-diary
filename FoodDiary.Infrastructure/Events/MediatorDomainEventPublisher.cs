@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
-using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Infrastructure.Events;

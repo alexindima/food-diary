@@ -1,6 +1,6 @@
 using System.Reflection;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
-using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;

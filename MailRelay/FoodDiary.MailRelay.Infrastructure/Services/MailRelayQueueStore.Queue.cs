@@ -98,7 +98,9 @@ public sealed partial class MailRelayQueueStore {
                                                 queue.text_body,
                                                 queue.correlation_id,
                                                 queue.attempt_count,
-                                                queue.max_attempts;
+                                                queue.max_attempts,
+                                                queue.created_at_utc,
+                                                null::timestamp with time zone as modified_at_utc;
                                             """;
 
     public async Task<Guid> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
@@ -227,7 +229,9 @@ public sealed partial class MailRelayQueueStore {
                                text_body,
                                correlation_id,
                                attempt_count,
-                               max_attempts;
+                               max_attempts,
+                               created_at_utc,
+                               null::timestamp with time zone as modified_at_utc;
                            """;
 
         return await _executor.QueryAsync(

@@ -1,3 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\FoodDiary.Domain.Primitives\FoodDiary.Domain.Primitives.csproj" />
+  </ItemGroup>
 </Project>

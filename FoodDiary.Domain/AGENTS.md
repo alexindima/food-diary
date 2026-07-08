@@ -11,6 +11,7 @@ Rules for `FoodDiary.Domain/`.
 ## Boundaries
 - No infrastructure concerns (EF, HTTP, external services).
 - No UI/API contracts.
+- Only shared domain primitives belong as a project reference.
 
 ## Design Rules
 - Prefer factory/static creation methods when invariants are non-trivial.
