@@ -16,8 +16,20 @@ dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj
 dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore --no-build || exit 1
 dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --no-restore --no-build || exit 1
 dotnet test tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj --no-restore --no-build || exit 1
-dotnet test MailInbox/tests/FoodDiary.MailInbox.Tests/FoodDiary.MailInbox.Tests.csproj --no-restore --no-build || exit 1
-dotnet test MailRelay/tests/FoodDiary.MailRelay.Tests/FoodDiary.MailRelay.Tests.csproj --no-restore --no-build || exit 1
+dotnet test MailInbox/tests/FoodDiary.MailInbox.Application.Tests/FoodDiary.MailInbox.Application.Tests.csproj --no-restore --no-build || exit 1
+dotnet test MailInbox/tests/FoodDiary.MailInbox.Client.Tests/FoodDiary.MailInbox.Client.Tests.csproj --no-restore --no-build || exit 1
+dotnet test MailInbox/tests/FoodDiary.MailInbox.Domain.Tests/FoodDiary.MailInbox.Domain.Tests.csproj --no-restore --no-build || exit 1
+dotnet test MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/FoodDiary.MailInbox.Infrastructure.Tests.csproj --no-restore --no-build || exit 1
+dotnet test MailInbox/tests/FoodDiary.MailInbox.Initializer.Tests/FoodDiary.MailInbox.Initializer.Tests.csproj --no-restore --no-build || exit 1
+dotnet test MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/FoodDiary.MailInbox.IntegrationTests.csproj --no-restore --no-build || exit 1
+dotnet test MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/FoodDiary.MailInbox.Presentation.Tests.csproj --no-restore --no-build || exit 1
+dotnet test MailRelay/tests/FoodDiary.MailRelay.Application.Tests/FoodDiary.MailRelay.Application.Tests.csproj --no-restore --no-build || exit 1
+dotnet test MailRelay/tests/FoodDiary.MailRelay.Client.Tests/FoodDiary.MailRelay.Client.Tests.csproj --no-restore --no-build || exit 1
+dotnet test MailRelay/tests/FoodDiary.MailRelay.Domain.Tests/FoodDiary.MailRelay.Domain.Tests.csproj --no-restore --no-build || exit 1
+dotnet test MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/FoodDiary.MailRelay.Infrastructure.Tests.csproj --no-restore --no-build || exit 1
+dotnet test MailRelay/tests/FoodDiary.MailRelay.Initializer.Tests/FoodDiary.MailRelay.Initializer.Tests.csproj --no-restore --no-build || exit 1
+dotnet test MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/FoodDiary.MailRelay.IntegrationTests.csproj --no-restore --no-build || exit 1
+dotnet test MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/FoodDiary.MailRelay.Presentation.Tests.csproj --no-restore --no-build || exit 1
 dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj --no-restore --no-build || exit 1
 dotnet test tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj --no-restore --no-build || exit 1
 
