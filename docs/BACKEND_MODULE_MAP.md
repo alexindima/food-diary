@@ -67,6 +67,12 @@ Before adding a file:
 
 If the answer is "shared", first ask whether it is truly cross-feature. Many things belong in a feature-specific `Common/`, `Models/`, `api/`, or `lib/` folder instead of a global bucket.
 
+For backend repository contracts:
+- Projection/counter/summary reads belong on `*ReadModelRepository`.
+- Existence-only checks belong on a narrow `*LookupRepository`.
+- Aggregate mutation paths should use `*WriteRepository`; add aggregate `*ReadRepository` only when the workflow needs domain aggregates.
+- Avoid injecting full composite `*Repository` contracts into application code when a narrower contract exists.
+
 Backend structure guardrails now enforce the high-level placement rules. In particular:
 - application feature code belongs in feature purpose folders, not new flat folders;
 - presentation controllers should depend only on presentation-safe collaborators;
