@@ -12,7 +12,9 @@ Rules for `tests/`.
 - `FoodDiary.Web.Api.IntegrationTests`: HTTP contract, OpenAPI, and end-to-end API host behavior.
 - `FoodDiary.Presentation.Api.Tests`: controller/presentation mapping and error response behavior.
 - `FoodDiary.Application.Tests`: use case and application service behavior.
+- `FoodDiary.Domain.Primitives.Tests`: shared domain primitive behavior.
 - `FoodDiary.Infrastructure.Tests`: persistence/infrastructure behavior.
+- `FoodDiary.Results.Tests`: shared result and error primitive behavior.
 - Mail relay/inbox tests: service-specific use case, infrastructure, presentation, and client behavior.
 
 ## Rules
@@ -31,5 +33,7 @@ Rules for `tests/`.
 
 ## Commands
 - Architecture tests: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+- Shared domain primitive tests: `dotnet test tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj`
+- Shared result tests: `dotnet test tests/FoodDiary.Results.Tests/FoodDiary.Results.Tests.csproj`
 - API integration tests: `dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj`
 - Full backend test/build baseline: `dotnet build FoodDiary.slnx`

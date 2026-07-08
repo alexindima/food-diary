@@ -85,29 +85,6 @@ public class CommonAbstractionsTests {
     }
 
     [Fact]
-    public void ResultFailure_WithGenericType_ThrowsOnValueAccess() {
-        var result = Result.Failure<string>(Errors.Validation.Required("name"));
-
-        ResultAssert.Failure(result);
-        Assert.Throws<InvalidOperationException>(() => _ = result.Value);
-    }
-
-    [Fact]
-    public void ResultGeneric_ImplicitValueConversion_ReturnsSuccessfulResult() {
-        Result<string> result = "value";
-
-        ResultAssert.Success(result);
-        Assert.Equal("value", result.Value);
-    }
-
-    [Fact]
-    public void Error_ImplicitStringConversion_ReturnsCode() {
-        string code = new Error("Custom.Code", "Custom message");
-
-        Assert.Equal("Custom.Code", code);
-    }
-
-    [Fact]
     public void ErrorKindResolver_ResolvesKnownFallbackPatterns() {
         Assert.Null(ErrorKindResolver.Resolve(errorCode: null));
         Assert.Null(ErrorKindResolver.Resolve(" "));
@@ -118,55 +95,6 @@ public class CommonAbstractionsTests {
         Assert.Equal(ErrorKind.NotFound, ErrorKindResolver.Resolve("User.NotFound"));
         Assert.Equal(ErrorKind.Conflict, ErrorKindResolver.Resolve("Recipe.AlreadyExists"));
         Assert.Null(ErrorKindResolver.Resolve("Custom.Unknown"));
-    }
-
-    [Fact]
-    public void Result_Success_ReturnsSuccessfulResultWithoutError() {
-        var result = Result.Success();
-
-        ResultAssert.Success(result);
-        Assert.Equal(Error.None, result.Error);
-    }
-
-    [Fact]
-    public void Result_Failure_ReturnsFailedResultWithError() {
-        Error error = Errors.Validation.Required("name");
-        var result = Result.Failure(error);
-
-        ResultAssert.Failure(result);
-        Assert.Equal(error, result.Error);
-    }
-
-    [Fact]
-    public void Result_WithSuccessfulStateAndError_ThrowsInvalidOperationException() {
-        Type resultType = typeof(Result).GetNestedType("NonGenericResult", BindingFlags.NonPublic)!;
-
-        TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() =>
-            Activator.CreateInstance(
-                resultType,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                binder: null,
-                args: [true, Errors.Validation.Required("name")],
-                culture: null));
-
-        Assert.IsType<InvalidOperationException>(ex.InnerException);
-        Assert.Equal("A successful result cannot contain an error.", ex.InnerException.Message);
-    }
-
-    [Fact]
-    public void Result_WithFailedStateAndNoError_ThrowsInvalidOperationException() {
-        Type resultType = typeof(Result).GetNestedType("NonGenericResult", BindingFlags.NonPublic)!;
-
-        TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() =>
-            Activator.CreateInstance(
-                resultType,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                binder: null,
-                args: [false, Error.None],
-                culture: null));
-
-        Assert.IsType<InvalidOperationException>(ex.InnerException);
-        Assert.Equal("A failed result must contain an error.", ex.InnerException.Message);
     }
 
     [Fact]

@@ -331,30 +331,6 @@ public sealed class MailInboxApplicationTests {
             validator => validator is MarkInboundMailMessageReadCommandValidator);
     }
 
-    [Fact]
-    public void ResultFailure_CreatesFailedResult() {
-        Error error = MailInboxErrors.MessageNotFound(Guid.NewGuid());
-
-        var result = Result.Failure(error);
-
-        Assert.False(result.IsSuccess);
-        Assert.True(result.IsFailure);
-        Assert.Same(error, result.Error);
-    }
-
-    [Fact]
-    public void ResultConstructor_WhenStateIsInvalid_Throws() {
-        Assert.Throws<InvalidOperationException>(() => new ExposedResult(isSuccess: true, MailInboxErrors.MessageNotFound(Guid.NewGuid())));
-        Assert.Throws<InvalidOperationException>(() => new ExposedResult(isSuccess: false, Error.None));
-    }
-
-    [Fact]
-    public void ResultValue_WhenResultIsFailure_Throws() {
-        var result = Result.Failure<string>(MailInboxErrors.MessageNotFound(Guid.NewGuid()));
-
-        Assert.Throws<InvalidOperationException>(() => result.Value);
-    }
-
     [ExcludeFromCodeCoverage]
     private sealed class RecordingInboundMailStore : IInboundMailStore {
         public Guid SavedId { get; } = Guid.NewGuid();
@@ -451,9 +427,6 @@ public sealed class MailInboxApplicationTests {
                 });
         }
     }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class ExposedResult(bool isSuccess, Error error) : Result(isSuccess, error);
 
     [ExcludeFromCodeCoverage]
     private sealed class UnsupportedResult() : Result(isSuccess: true, Error.None);

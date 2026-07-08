@@ -1,9 +1,10 @@
-using FoodDiary.Domain.Primitives;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
-namespace FoodDiary.Application.Tests.Domain;
+namespace FoodDiary.Domain.Primitives.Tests;
 
 [ExcludeFromCodeCoverage]
-public class EntityAndAggregateRootBaseTests {
+public sealed class EntityAndAggregateRootTests {
     [Fact]
     public void Entity_Equals_SameReference_ReturnsTrue() {
         var entity = TestEntity.Transient();
@@ -76,6 +77,7 @@ public class EntityAndAggregateRootBaseTests {
 
         Assert.False(left.Equals(right));
         Assert.True(left != right);
+        Assert.NotEqual(left.GetHashCode(), right.GetHashCode());
     }
 
     [Fact]
@@ -88,13 +90,22 @@ public class EntityAndAggregateRootBaseTests {
     }
 
     [Fact]
-    public void Entity_GetHashCode_Transient_IsStableForSameInstance() {
+    public void Entity_Operators_HandleNullSides() {
+        TestEntity? left = null;
+        var right = TestEntity.WithId(Guid.NewGuid());
+
+        Assert.False(left == right);
+        Assert.True(left != right);
+    }
+
+    [Fact]
+    public void Entity_GetHashCode_Transient_UsesRuntimeHashForSameInstance() {
         var entity = TestEntity.Transient();
 
-        int first = entity.GetHashCode();
-        int second = entity.GetHashCode();
+        int hashCode = entity.GetHashCode();
 
-        Assert.Equal(first, second);
+        Assert.Equal(RuntimeHelpers.GetHashCode(entity), hashCode);
+        Assert.Equal(hashCode, entity.GetHashCode());
     }
 
     [Fact]
@@ -109,12 +120,13 @@ public class EntityAndAggregateRootBaseTests {
 
     [Fact]
     public void Entity_GetHashCode_PersistedEntityWithoutCachedHash_CachesHashAfterFirstCall() {
-        var entity = TestEntity.MaterializedWithoutCachedHash(Guid.NewGuid());
+        var id = Guid.NewGuid();
+        var entity = TestEntity.MaterializedWithoutCachedHash(id);
 
-        int first = entity.GetHashCode();
-        int second = entity.GetHashCode();
+        int hashCode = entity.GetHashCode();
 
-        Assert.Equal(first, second);
+        Assert.Equal(HashCode.Combine(typeof(TestEntity), EqualityComparer<Guid>.Default.GetHashCode(id)), hashCode);
+        Assert.Equal(hashCode, entity.GetHashCode());
     }
 
     [Fact]
@@ -125,6 +137,7 @@ public class EntityAndAggregateRootBaseTests {
         entity.MarkCreated();
 
         Assert.True(entity.CreatedOnUtc >= before);
+        Assert.Equal(DateTimeKind.Utc, entity.CreatedOnUtc.Kind);
     }
 
     [Fact]
@@ -157,6 +170,7 @@ public class EntityAndAggregateRootBaseTests {
 
         Assert.NotNull(entity.ModifiedOnUtc);
         Assert.True(entity.ModifiedOnUtc >= entity.CreatedOnUtc);
+        Assert.Equal(DateTimeKind.Utc, entity.ModifiedOnUtc?.Kind);
     }
 
     [Fact]
@@ -217,6 +231,20 @@ public class EntityAndAggregateRootBaseTests {
         Assert.Empty(aggregate.DomainEvents);
     }
 
+    [Fact]
+    public void AggregateRoot_DefaultConstructor_CreatesTransientAggregate() {
+        var aggregate = new TestAggregateRoot();
+
+        Assert.Empty(aggregate.DomainEvents);
+    }
+
+    [Fact]
+    public void DomainTime_UtcNow_ReturnsUtcTimestamp() {
+        DateTime value = DomainTime.UtcNow;
+
+        Assert.Equal(DateTimeKind.Utc, value.Kind);
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class TestEntity : Entity<Guid> {
         private TestEntity() {
@@ -240,7 +268,7 @@ public class EntityAndAggregateRootBaseTests {
         public static TestEntity MaterializedWithoutCachedHash(Guid id) {
             var entity = new TestEntity();
             typeof(Entity<Guid>)
-                .GetField("_id", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
+                .GetField("_id", BindingFlags.Instance | BindingFlags.NonPublic)!
                 .SetValue(entity, id);
             return entity;
         }
@@ -264,6 +292,9 @@ public class EntityAndAggregateRootBaseTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class TestAggregateRoot : AggregateRoot<Guid> {
+        public TestAggregateRoot() {
+        }
+
         private TestAggregateRoot(Guid id) : base(id) {
         }
 

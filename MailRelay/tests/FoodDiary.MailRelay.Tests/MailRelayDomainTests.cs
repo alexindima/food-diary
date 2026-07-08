@@ -1,8 +1,5 @@
-using System.Reflection;
-using FoodDiary.Domain.Primitives;
 using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Emails;
-using System.Runtime.CompilerServices;
 
 namespace FoodDiary.MailRelay.Tests;
 
@@ -166,90 +163,4 @@ public sealed class MailRelayDomainTests {
         Assert.Equal(Guid.Empty, QueuedEmailId.Empty.Value);
     }
 
-    [Fact]
-    public void Entity_Equals_ReturnsExpectedResultsForCommonCases() {
-        var id = Guid.NewGuid();
-        var entity = new TestEntity(id);
-
-        Assert.True(entity.Equals((object)entity));
-        Assert.True(entity.Equals(entity));
-        Assert.False(entity.Equals((object?)null));
-        Assert.False(entity.Equals(other: null));
-        Assert.False(entity.Equals(new object()));
-        Assert.False(entity.Equals(new DifferentTestEntity(id)));
-        Assert.False(new TestEntity().Equals(new TestEntity()));
-        Assert.True(entity == new TestEntity(id));
-        Assert.False(entity != new TestEntity(id));
-    }
-
-    [Fact]
-    public void Entity_GetHashCode_CachesPersistedIdentityHashAndUsesRuntimeHashForTransientEntities() {
-        var persisted = new TestEntity(Guid.NewGuid());
-        int first = persisted.GetHashCode();
-
-        int second = persisted.GetHashCode();
-        var transient = new TestEntity();
-        var materialized = new TestEntity();
-        materialized.SetBackingId(Guid.NewGuid());
-
-        Assert.Equal(first, second);
-        Assert.Equal(RuntimeHelpers.GetHashCode(transient), transient.GetHashCode());
-        Assert.Equal(materialized.GetHashCode(), materialized.GetHashCode());
-    }
-
-    [Fact]
-    public void AggregateRoot_TracksAndClearsDomainEvents() {
-        var aggregate = new TestAggregate(Guid.NewGuid());
-        var domainEvent = new TestDomainEvent();
-
-        aggregate.Record(domainEvent);
-        aggregate.ClearDomainEvents();
-
-        Assert.Empty(aggregate.DomainEvents);
-    }
-
-    [Fact]
-    public void AggregateRoot_DefaultConstructor_CreatesTransientAggregate() {
-        var aggregate = new TestAggregate();
-
-        Assert.Empty(aggregate.DomainEvents);
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class TestEntity : Entity<Guid> {
-        public TestEntity() {
-        }
-
-        public TestEntity(Guid id) : base(id) {
-        }
-
-        public void SetBackingId(Guid id) {
-            typeof(Entity<Guid>)
-                .GetField("_id", BindingFlags.Instance | BindingFlags.NonPublic)!
-                .SetValue(this, id);
-        }
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class DifferentTestEntity(Guid id) : Entity<Guid>(id);
-
-    [ExcludeFromCodeCoverage]
-    private sealed class TestAggregate : AggregateRoot<Guid> {
-        public TestAggregate() {
-        }
-
-        public TestAggregate(Guid id) : base(id) {
-        }
-
-        public void Record(IDomainEvent domainEvent) {
-            RaiseDomainEvent(domainEvent);
-        }
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed record TestDomainEvent : IDomainEvent {
-        public Guid EventId { get; } = Guid.NewGuid();
-
-        public DateTime OccurredOnUtc { get; } = DateTime.UtcNow;
-    }
 }

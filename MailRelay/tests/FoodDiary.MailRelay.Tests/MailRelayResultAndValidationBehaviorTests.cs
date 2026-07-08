@@ -8,13 +8,6 @@ namespace FoodDiary.MailRelay.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayResultAndValidationBehaviorTests {
     [Fact]
-    public void Result_WhenStateIsInvalid_Throws() {
-        InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => new InvalidResult());
-
-        Assert.Contains("A successful result cannot contain an error.", ex.Message, StringComparison.Ordinal);
-    }
-
-    [Fact]
     public async Task ValidationBehavior_WhenNoValidators_InvokesNext() {
         var behavior = new MailRelayValidationBehavior<TestRequest, Result>([]);
 
@@ -64,12 +57,6 @@ public sealed class MailRelayResultAndValidationBehaviorTests {
     private sealed class UnsupportedRequestValidator : AbstractValidator<UnsupportedRequest> {
         public UnsupportedRequestValidator() {
             RuleFor(static request => request.Name).NotEmpty();
-        }
-    }
-
-    private sealed class InvalidResult : Result {
-        public InvalidResult()
-            : base(isSuccess: true, new Error("invalid", "invalid")) {
         }
     }
 
