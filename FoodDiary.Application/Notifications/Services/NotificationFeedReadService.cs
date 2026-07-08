@@ -9,7 +9,6 @@ namespace FoodDiary.Application.Notifications.Services;
 
 internal sealed class NotificationFeedReadService(
     INotificationReadModelRepository notificationReadModelRepository,
-    INotificationReadRepository notificationRepository,
     INotificationTextRenderer notificationTextRenderer) : INotificationFeedReadService {
     public async Task<IReadOnlyList<NotificationModel>> GetVisibleNotificationsAsync(
         UserId userId,
@@ -31,9 +30,9 @@ internal sealed class NotificationFeedReadService(
         UserId userId,
         NotificationUserContext context,
         CancellationToken cancellationToken) {
-        int count = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
+        int count = await notificationReadModelRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
         if (context.HasPassword) {
-            count -= await notificationRepository
+            count -= await notificationReadModelRepository
                 .GetUnreadCountAsync(userId, NotificationTypes.PasswordSetupSuggested, cancellationToken)
                 .ConfigureAwait(false);
         }

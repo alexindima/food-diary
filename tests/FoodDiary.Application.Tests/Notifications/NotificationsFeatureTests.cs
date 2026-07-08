@@ -1110,7 +1110,7 @@ public class NotificationsFeatureTests {
     private static INotificationFeedReadService CreateNotificationFeedReadService(
         INotificationRepository notificationRepository,
         INotificationTextRenderer notificationTextRenderer) =>
-        new NotificationFeedReadService(notificationRepository, notificationRepository, notificationTextRenderer);
+        new NotificationFeedReadService(notificationRepository, notificationTextRenderer);
 
     private static IWebPushSubscriptionReadService CreateWebPushSubscriptionReadService(
         IWebPushSubscriptionReadModelRepository webPushSubscriptionRepository) =>

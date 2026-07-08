@@ -8,4 +8,13 @@ public interface INotificationReadModelRepository {
         UserId userId,
         int limit = 50,
         CancellationToken cancellationToken = default);
+
+    Task<int> GetUnreadCountAsync(
+        UserId userId,
+        CancellationToken cancellationToken = default);
+
+    Task<int> GetUnreadCountAsync(
+        UserId userId,
+        string type,
+        CancellationToken cancellationToken = default);
 }

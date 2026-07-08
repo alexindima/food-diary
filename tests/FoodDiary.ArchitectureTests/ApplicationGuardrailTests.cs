@@ -2019,6 +2019,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Notifications"),
+            .. FindReferencesInFiles(root, serviceFiles, "INotificationReadRepository"),
             .. FindReferencesInFiles(root, serviceFiles, "IWebPushSubscriptionReadRepository"),
             .. FindReferencesInFiles(root, serviceFiles, "GetByUserAsync"),
         ];
@@ -2346,6 +2347,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Tracking"),
+            .. FindReferencesInFiles(root, serviceFiles, "IHydrationEntryReadRepository"),
             .. FindReferencesInFiles(root, serviceFiles, "GetByPeriodAsync"),
             .. FindReferencesInFiles(root, serviceFiles, "GetByDateAsync"),
         ];
@@ -2577,6 +2579,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Content"),
+            .. FindReferencesInFiles(root, serviceFiles, "INutritionLessonReadRepository"),
             .. FindReferencesInFiles(root, serviceFiles, "repository.GetByLocaleAsync"),
             .. FindReferencesInFiles(root, serviceFiles, "repository.GetByIdAsync"),
             .. FindReferencesInFiles(root, serviceFiles, "repository.GetUserProgressAsync"),

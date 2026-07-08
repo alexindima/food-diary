@@ -12,6 +12,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using NSubstitute.Core;
 
 namespace FoodDiary.Application.Tests.Lessons;
 
@@ -313,19 +314,6 @@ public class LessonsFeatureTests {
                 return Task.FromResult(foundProgress);
             });
         repository
-            .IsLessonReadAsync(
-                Arg.Any<UserId>(),
-                Arg.Any<NutritionLessonId>(),
-                Arg.Any<CancellationToken>())
-            .Returns(call => {
-                UserId userId = call.ArgAt<UserId>(0);
-                NutritionLessonId lessonId = call.ArgAt<NutritionLessonId>(1);
-                bool isRead = hasProgress ||
-                    storedProgress.Any(progress => progress.UserId == userId && progress.LessonId == lessonId);
-
-                return Task.FromResult(isRead);
-            });
-        repository
             .GetUserProgressAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId userId = call.Arg<UserId>();
@@ -335,17 +323,55 @@ public class LessonsFeatureTests {
 
                 return Task.FromResult(matchingProgress);
             });
+        ConfigureReadLessonLookups(repository, storedProgress, hasProgress);
+    }
+
+    private static void ConfigureReadLessonLookups(
+        INutritionLessonRepository repository,
+        IReadOnlyCollection<UserLessonProgress> storedProgress,
+        bool hasProgress) {
         repository
             .GetReadLessonIdsAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(call => {
-                UserId userId = call.Arg<UserId>();
-                IReadOnlyList<Guid> readLessonIds = storedProgress
-                    .Where(item => item.UserId == userId)
-                    .Select(item => item.LessonId.Value)
-                    .ToList();
+            .Returns(call => ResolveReadLessonIds(call, storedProgress));
+        ((INutritionLessonReadModelRepository)repository)
+            .GetReadLessonIdsAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => ResolveReadLessonIds(call, storedProgress));
+        repository
+            .IsLessonReadAsync(
+                Arg.Any<UserId>(),
+                Arg.Any<NutritionLessonId>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => ResolveIsLessonRead(call, storedProgress, hasProgress));
+        ((INutritionLessonReadModelRepository)repository)
+            .IsLessonReadAsync(
+                Arg.Any<UserId>(),
+                Arg.Any<NutritionLessonId>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => ResolveIsLessonRead(call, storedProgress, hasProgress));
+    }
 
-                return Task.FromResult(readLessonIds);
-            });
+    private static Task<IReadOnlyList<Guid>> ResolveReadLessonIds(
+        CallInfo call,
+        IReadOnlyCollection<UserLessonProgress> storedProgress) {
+        UserId userId = call.Arg<UserId>();
+        IReadOnlyList<Guid> readLessonIds = storedProgress
+            .Where(item => item.UserId == userId)
+            .Select(item => item.LessonId.Value)
+            .ToList();
+
+        return Task.FromResult(readLessonIds);
+    }
+
+    private static Task<bool> ResolveIsLessonRead(
+        CallInfo call,
+        IReadOnlyCollection<UserLessonProgress> storedProgress,
+        bool hasProgress) {
+        UserId userId = call.ArgAt<UserId>(0);
+        NutritionLessonId lessonId = call.ArgAt<NutritionLessonId>(1);
+        bool isRead = hasProgress ||
+            storedProgress.Any(progress => progress.UserId == userId && progress.LessonId == lessonId);
+
+        return Task.FromResult(isRead);
     }
 
     private static void ConfigureLocaleLookups(
@@ -411,7 +437,7 @@ public class LessonsFeatureTests {
 
     private static ILessonReadService CreateLessonReadService(
         INutritionLessonRepository repository) =>
-        new LessonReadService(repository, repository);
+        new LessonReadService(repository);
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider : TimeProvider {

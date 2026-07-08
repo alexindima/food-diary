@@ -8,8 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Hydration.Services;
 
 internal sealed class HydrationEntryReadService(
-    IHydrationEntryReadModelRepository hydrationEntryReadModelRepository,
-    IHydrationEntryReadRepository hydrationEntryRepository) : IHydrationEntryReadService {
+    IHydrationEntryReadModelRepository hydrationEntryReadModelRepository) : IHydrationEntryReadService {
     public async Task<IReadOnlyList<HydrationEntryModel>> GetEntriesByDateAsync(
         UserId userId,
         DateTime dateUtc,
@@ -25,12 +24,12 @@ internal sealed class HydrationEntryReadService(
         UserId userId,
         DateTime dateUtc,
         CancellationToken cancellationToken) =>
-        hydrationEntryRepository.GetDailyTotalAsync(userId, dateUtc, cancellationToken);
+        hydrationEntryReadModelRepository.GetDailyTotalAsync(userId, dateUtc, cancellationToken);
 
     public Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken) =>
-        hydrationEntryRepository.GetDailyTotalsAsync(userId, dateFrom, dateTo, cancellationToken);
+        hydrationEntryReadModelRepository.GetDailyTotalsAsync(userId, dateFrom, dateTo, cancellationToken);
 }

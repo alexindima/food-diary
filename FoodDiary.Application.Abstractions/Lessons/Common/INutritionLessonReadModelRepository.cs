@@ -16,4 +16,13 @@ public interface INutritionLessonReadModelRepository {
     Task<LessonDetailReadModel?> GetDetailReadModelByIdAsync(
         NutritionLessonId id,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<Guid>> GetReadLessonIdsAsync(
+        UserId userId,
+        CancellationToken cancellationToken = default);
+
+    Task<bool> IsLessonReadAsync(
+        UserId userId,
+        NutritionLessonId lessonId,
+        CancellationToken cancellationToken = default);
 }

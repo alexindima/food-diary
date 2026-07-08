@@ -9,8 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Lessons.Services;
 
 public sealed class LessonReadService(
-    INutritionLessonReadModelRepository readModelRepository,
-    INutritionLessonReadRepository repository)
+    INutritionLessonReadModelRepository readModelRepository)
     : ILessonReadService {
     public async Task<IReadOnlyList<LessonSummaryModel>> GetByLocaleAsync(
         UserId userId,
@@ -25,7 +24,7 @@ public sealed class LessonReadService(
             lessons = await readModelRepository.GetSummaryReadModelsByLocaleAsync("en", categoryFilter, cancellationToken).ConfigureAwait(false);
         }
 
-        IReadOnlyList<Guid> readLessonIds = await repository.GetReadLessonIdsAsync(userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<Guid> readLessonIds = await readModelRepository.GetReadLessonIdsAsync(userId, cancellationToken).ConfigureAwait(false);
         var readIds = new HashSet<Guid>(readLessonIds);
 
         return lessons
@@ -44,7 +43,7 @@ public sealed class LessonReadService(
             return null;
         }
 
-        bool isRead = await repository
+        bool isRead = await readModelRepository
             .IsLessonReadAsync(userId, lessonId, cancellationToken)
             .ConfigureAwait(false);
 
