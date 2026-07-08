@@ -1,6 +1,5 @@
 using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
-using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
