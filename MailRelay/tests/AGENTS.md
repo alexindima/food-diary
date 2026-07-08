@@ -15,5 +15,7 @@ Rules for `MailRelay/tests/`.
 - Add regression tests for retry, idempotency, suppression, and provider webhook behavior whenever those paths change.
 
 ## Commands
-- Service tests: `dotnet test MailRelay/tests/FoodDiary.MailRelay.Tests/FoodDiary.MailRelay.Tests.csproj`
+- Application tests: `dotnet test MailRelay/tests/FoodDiary.MailRelay.Application.Tests/FoodDiary.MailRelay.Application.Tests.csproj`
+- Infrastructure tests: `dotnet test MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/FoodDiary.MailRelay.Infrastructure.Tests.csproj`
+- Integration tests: `dotnet test MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/FoodDiary.MailRelay.IntegrationTests.csproj`
 - Architecture tests: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`

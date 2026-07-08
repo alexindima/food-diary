@@ -12,8 +12,6 @@ using FoodDiary.Application.Products.SearchSuggestions;
 using FoodDiary.Application.OpenFoodFacts.Common;
 using FoodDiary.Application.OpenFoodFacts.Services;
 using FoodDiary.Domain.Entities.Usda;
-using FoodDiary.Presentation.Api.Features.Products.Mappings;
-using FoodDiary.Presentation.Api.Features.Products.Responses;
 
 namespace FoodDiary.Application.Tests.Products;
 
@@ -172,48 +170,6 @@ public sealed class ProductSearchSuggestionTests {
         TestValidationResult<SearchProductSuggestionsQuery> result = await _validator.TestValidateAsync(new SearchProductSuggestionsQuery("fanta", 5));
 
         result.ShouldNotHaveAnyValidationErrors();
-    }
-
-    [Fact]
-    public void ProductSearchSuggestionHttpMapping_PreservesSourceSpecificFields() {
-        IReadOnlyList<ProductSearchSuggestionModel> models = [
-            new ProductSearchSuggestionModel(
-                "openFoodFacts",
-                "Fanta",
-                "Coca-Cola",
-                "Beverages",
-                "5449000054227",
-                UsdaFdcId: null,
-                "https://example.com/fanta.jpg",
-                48,
-                0,
-                0,
-                12,
-                0),
-            new ProductSearchSuggestionModel(
-                "usda",
-                "FANTA, SODA, ORANGE",
-                Brand: null,
-                "Soda",
-                Barcode: null,
-                539789,
-                ImageUrl: null,
-                CaloriesPer100G: null,
-                ProteinsPer100G: null,
-                FatsPer100G: null,
-                CarbsPer100G: null,
-                FiberPer100G: null),
-        ];
-
-        IReadOnlyList<ProductSearchSuggestionHttpResponse> responses = models.ToHttpResponse();
-
-        Assert.Equal(2, responses.Count);
-        Assert.Equal("openFoodFacts", responses[0].Source);
-        Assert.Equal("5449000054227", responses[0].Barcode);
-        Assert.Null(responses[0].UsdaFdcId);
-        Assert.Equal("usda", responses[1].Source);
-        Assert.Null(responses[1].Barcode);
-        Assert.Equal(539789, responses[1].UsdaFdcId);
     }
 
     private static OpenFoodFactsProductModel CreateOpenFoodFactsProduct(string barcode) =>

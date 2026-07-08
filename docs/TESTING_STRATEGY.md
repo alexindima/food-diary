@@ -15,13 +15,18 @@ These tests are also the best executable documentation for backend boundaries.
 | --- | --- |
 | `tests/FoodDiary.ArchitectureTests` | Project references, source conventions, layer boundaries, async/cancellation guardrails. |
 | `tests/FoodDiary.Application.Tests` | Application use cases, handlers, validation, application services. |
-| `tests/FoodDiary.Infrastructure.Tests` | EF Core, persistence, infrastructure implementations, initializer/integration wiring where needed. |
+| `tests/FoodDiary.Domain.Tests` | Core domain invariants, value objects, entities, and domain events. |
+| `tests/FoodDiary.Infrastructure.Tests` | Infrastructure unit behavior without external services. |
+| `tests/FoodDiary.Infrastructure.IntegrationTests` | PostgreSQL/Testcontainers persistence and migration behavior. |
 | `tests/FoodDiary.Presentation.Api.Tests` | Controller flow, HTTP mapping, presentation error behavior. |
+| `tests/FoodDiary.Web.Api.Tests` | API host options, middleware, health checks, and host service unit behavior. |
 | `tests/FoodDiary.Web.Api.IntegrationTests` | API host behavior, OpenAPI/Swagger snapshots, HTTP contract snapshots. |
 | `tests/FoodDiary.JobManager.Tests` | Job registration, recurring job behavior, job execution policy. |
 | `tests/FoodDiary.Telegram.Bot.Tests` | Bot parsing, command/callback behavior, worker edge cases. |
-| `MailRelay/tests/FoodDiary.MailRelay.Tests` | MailRelay application/client/host behavior. |
-| `MailInbox/tests/FoodDiary.MailInbox.Tests` | MailInbox application/infrastructure/presentation behavior. |
+| `MailRelay/tests/FoodDiary.MailRelay.*.Tests` | MailRelay unit tests split by domain, application, client, infrastructure, initializer, and presentation. |
+| `MailRelay/tests/FoodDiary.MailRelay.IntegrationTests` | MailRelay host, PostgreSQL, RabbitMQ, and queue behavior. |
+| `MailInbox/tests/FoodDiary.MailInbox.*.Tests` | MailInbox unit tests split by domain, application, client, infrastructure, initializer, and presentation. |
+| `MailInbox/tests/FoodDiary.MailInbox.IntegrationTests` | MailInbox PostgreSQL persistence behavior. |
 | `tests/FoodDiary.Mediator.Tests` | Shared mediator behavior. |
 
 ## Frontend Checks

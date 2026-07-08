@@ -1,4 +1,5 @@
 using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Commands.CreateConsumption;
 using FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 using FoodDiary.Application.Consumptions.Commands.RepeatMeal;
@@ -96,6 +97,23 @@ public sealed class ConsumptionHttpMappingsTests {
     }
 
     [Fact]
+    public void CreateRequest_ToCommand_WithNullLists_MapsEmptyCollections() {
+        var request = new CreateConsumptionHttpRequest(
+            DateTime.UtcNow,
+            MealType: "Breakfast",
+            Comment: null,
+            ImageUrl: null,
+            ImageAssetId: null,
+            Items: null!,
+            AiSessions: null);
+
+        CreateConsumptionCommand command = request.ToCommand(Guid.NewGuid());
+
+        Assert.Empty(command.Items);
+        Assert.Empty(command.AiSessions);
+    }
+
+    [Fact]
     public void UpdateRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
         var consumptionId = Guid.NewGuid();
@@ -121,6 +139,32 @@ public sealed class ConsumptionHttpMappingsTests {
             () => Assert.Equal(consumptionId, command.ConsumptionId),
             () => Assert.False(command.IsNutritionAutoCalculated),
             () => Assert.Equal(500, command.ManualCalories));
+    }
+
+    [Fact]
+    public void UpdateRequest_ToCommand_WithNullAiItems_MapsEmptyCollection() {
+        var request = new UpdateConsumptionHttpRequest(
+            DateTime.UtcNow,
+            "Dinner",
+            Comment: "ok",
+            ImageUrl: null,
+            ImageAssetId: null,
+            Items: [
+                new ConsumptionItemHttpRequest(Guid.NewGuid(), RecipeId: null, 150),
+            ],
+            AiSessions: [
+                new ConsumptionAiSessionHttpRequest(
+                    ImageAssetId: null,
+                    Source: "Text",
+                    RecognizedAtUtc: DateTime.UtcNow,
+                    Notes: null,
+                    Items: null!),
+            ]);
+
+        UpdateConsumptionCommand command = request.ToCommand(Guid.NewGuid(), Guid.NewGuid());
+
+        ConsumptionAiSessionInput aiSession = Assert.Single(command.AiSessions);
+        Assert.Empty(aiSession.Items);
     }
 
     [Fact]

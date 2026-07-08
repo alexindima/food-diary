@@ -10,12 +10,15 @@ Rules for `tests/`.
 ## Test Types
 - `FoodDiary.ArchitectureTests`: dependency, structure, naming, async, and boundary guardrails.
 - `FoodDiary.Web.Api.IntegrationTests`: HTTP contract, OpenAPI, and end-to-end API host behavior.
+- `FoodDiary.Web.Api.Tests`: Web.Api host options, middleware, health check, and service unit behavior.
 - `FoodDiary.Presentation.Api.Tests`: controller/presentation mapping and error response behavior.
 - `FoodDiary.Application.Tests`: use case and application service behavior.
+- `FoodDiary.Domain.Tests`: core domain entity, value object, domain event, and invariant behavior.
 - `FoodDiary.Domain.Primitives.Tests`: shared domain primitive behavior.
-- `FoodDiary.Infrastructure.Tests`: persistence/infrastructure behavior.
+- `FoodDiary.Infrastructure.Tests`: infrastructure unit behavior that does not require external services.
+- `FoodDiary.Infrastructure.IntegrationTests`: PostgreSQL/Testcontainers infrastructure behavior.
 - `FoodDiary.Results.Tests`: shared result and error primitive behavior.
-- Mail relay/inbox tests: service-specific use case, infrastructure, presentation, and client behavior.
+- Mail relay/inbox tests: split by domain, application, client, infrastructure, initializer, presentation, and integration behavior.
 
 ## Rules
 - Prefer focused tests near the layer being changed.
@@ -34,6 +37,10 @@ Rules for `tests/`.
 ## Commands
 - Architecture tests: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 - Shared domain primitive tests: `dotnet test tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj`
+- Core domain tests: `dotnet test tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj`
 - Shared result tests: `dotnet test tests/FoodDiary.Results.Tests/FoodDiary.Results.Tests.csproj`
+- Web API unit tests: `dotnet test tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj`
 - API integration tests: `dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj`
+- Infrastructure unit tests: `dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj`
+- Infrastructure integration tests: `dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj`
 - Full backend test/build baseline: `dotnet build FoodDiary.slnx`

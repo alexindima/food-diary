@@ -5,20 +5,38 @@
   - Verifies layering and feature-structure constraints.
   - Should not depend on runtime infrastructure or external services.
 - `FoodDiary.Application.Tests`:
-  - Unit tests for domain/application logic (invariants, validators, handlers, services).
+  - Unit tests for application logic (validators, handlers, services).
   - Keep tests fast and deterministic.
+- `FoodDiary.Domain.Tests`:
+  - Unit tests for core domain invariants, value objects, entities, and domain events.
+  - Keep tests fast and deterministic.
+- `FoodDiary.Infrastructure.Tests`:
+  - Unit tests for infrastructure services, EF helpers, dependency injection, and provider adapters.
+- `FoodDiary.Infrastructure.IntegrationTests`:
+  - PostgreSQL/Testcontainers tests for persistence and migration behavior.
+- `FoodDiary.Web.Api.Tests`:
+  - Unit tests for host options, middleware, health checks, and Web.Api services.
 - `FoodDiary.Web.Api.IntegrationTests`:
   - API-level integration tests via `WebApplicationFactory`.
   - Uses in-memory database setup in test host.
-- `MailRelay/tests/FoodDiary.MailRelay.Tests`:
+- `MailRelay/tests/FoodDiary.MailRelay.*.Tests`:
+  - Unit tests split by domain, application, client, infrastructure, initializer, and presentation layers.
+- `MailRelay/tests/FoodDiary.MailRelay.IntegrationTests`:
   - Relay-level integration tests via `WebApplicationFactory`.
   - Uses PostgreSQL + RabbitMQ Testcontainers and a fake delivery transport.
+- `MailInbox/tests/FoodDiary.MailInbox.*.Tests`:
+  - Unit tests split by domain, application, client, infrastructure, initializer, and presentation layers.
+- `MailInbox/tests/FoodDiary.MailInbox.IntegrationTests`:
+  - PostgreSQL-backed mail inbox persistence tests.
 
 ## Where To Add New Tests
-- New domain invariant/event behavior: `FoodDiary.Application.Tests/Domain/*`
+- New core domain invariant/event behavior: `FoodDiary.Domain.Tests/Domain/*`
 - New application use-case/handler logic: `FoodDiary.Application.Tests/<Feature>/*`
+- New infrastructure behavior without real PostgreSQL: `FoodDiary.Infrastructure.Tests/*`
+- New infrastructure behavior requiring PostgreSQL/Testcontainers: `FoodDiary.Infrastructure.IntegrationTests/Integration/*`
+- New Web.Api host/middleware/service unit behavior: `FoodDiary.Web.Api.Tests/*`
 - New API endpoint flow/auth contract: `FoodDiary.Web.Api.IntegrationTests/*`
-- New mail relay broker/queue flow: `MailRelay/tests/FoodDiary.MailRelay.Tests/*`
+- New mail relay broker/queue flow: `MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/*`
 - New architecture rule: `FoodDiary.ArchitectureTests/*`
 - Backend HTTP contract changes should also review/update snapshots and PR notes per `../docs/backend/BACKEND_API_CONTRACT_GOVERNANCE.md`
 - Swagger/OpenAPI contract changes must update the checked-in snapshot files in `FoodDiary.Web.Api.IntegrationTests/Snapshots/`
@@ -29,7 +47,10 @@
   - `dotnet restore FoodDiary.slnx`
   - `dotnet build FoodDiary.slnx --configuration Release --no-restore`
   - `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --configuration Release --no-restore`
+  - `dotnet test tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj --configuration Release --no-restore`
   - `dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --configuration Release --no-restore`
+  - `dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --configuration Release --no-restore`
+  - `dotnet test tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj --configuration Release --no-restore`
   - `dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --configuration Release --no-restore`
 
 ## CI

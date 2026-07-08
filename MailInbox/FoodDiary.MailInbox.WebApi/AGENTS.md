@@ -15,4 +15,4 @@ Rules for `MailInbox/FoodDiary.MailInbox.WebApi/`.
 ## Commands
 - Build: `dotnet build MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj`
 - Run: `dotnet run --project MailInbox/FoodDiary.MailInbox.WebApi`
-- Tests: `dotnet test MailInbox/tests/FoodDiary.MailInbox.Tests/FoodDiary.MailInbox.Tests.csproj`
+- Tests: `dotnet test MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/FoodDiary.MailInbox.IntegrationTests.csproj`

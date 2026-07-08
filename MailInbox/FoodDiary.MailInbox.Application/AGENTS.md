@@ -20,4 +20,4 @@ Rules for `MailInbox/FoodDiary.MailInbox.Application/`.
 
 ## Commands
 - Build: `dotnet build MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj`
-- Tests: `dotnet test MailInbox/tests/FoodDiary.MailInbox.Tests/FoodDiary.MailInbox.Tests.csproj`
+- Tests: `dotnet test MailInbox/tests/FoodDiary.MailInbox.Application.Tests/FoodDiary.MailInbox.Application.Tests.csproj`

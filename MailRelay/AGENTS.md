@@ -26,5 +26,5 @@ Rules for `MailRelay/`.
 
 ## Commands
 - Build service projects: `dotnet build FoodDiary.slnx`
-- Service tests: `dotnet test MailRelay/tests/FoodDiary.MailRelay.Tests/FoodDiary.MailRelay.Tests.csproj`
+- Service integration tests: `dotnet test MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/FoodDiary.MailRelay.IntegrationTests.csproj`
 - Architecture guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`

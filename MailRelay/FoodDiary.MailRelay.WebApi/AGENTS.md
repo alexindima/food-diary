@@ -39,7 +39,7 @@ Rules for `MailRelay/FoodDiary.MailRelay.WebApi/`.
 ## Commands
 - Build: `dotnet build MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj`
 - Run: `dotnet run --project MailRelay/FoodDiary.MailRelay.WebApi`
-- Tests: `dotnet test MailRelay/tests/FoodDiary.MailRelay.Tests/FoodDiary.MailRelay.Tests.csproj`
+- Tests: `dotnet test MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/FoodDiary.MailRelay.IntegrationTests.csproj`
 
 ## Near-Term Direction
 - Current broker is RabbitMQ with PostgreSQL as the delivery state store.

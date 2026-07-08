@@ -27,8 +27,6 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
-using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Consumptions.Models;
 using FluentValidation.Results;
@@ -152,49 +150,6 @@ public class ConsumptionsFeatureTests {
         Assert.Equal(0, result.Carbs);
         Assert.Equal(0, result.Fiber);
         Assert.Equal(0, result.Alcohol);
-    }
-
-    [Fact]
-    public void ConsumptionHttpMappings_CreateToCommand_WhenListsAreNull_MapsEmptyCollections() {
-        var request = new CreateConsumptionHttpRequest(
-            DateTime.UtcNow,
-            MealType.Breakfast.ToString(),
-            Comment: null,
-            ImageUrl: null,
-            ImageAssetId: null,
-            Items: null!,
-            AiSessions: null);
-
-        CreateConsumptionCommand command = request.ToCommand(Guid.NewGuid());
-
-        Assert.Empty(command.Items);
-        Assert.Empty(command.AiSessions);
-    }
-
-    [Fact]
-    public void ConsumptionHttpMappings_UpdateToCommand_WhenAiItemsAreNull_MapsEmptyCollection() {
-        var request = new UpdateConsumptionHttpRequest(
-            DateTime.UtcNow,
-            MealType.Dinner.ToString(),
-            Comment: "ok",
-            ImageUrl: null,
-            ImageAssetId: null,
-            Items: [
-                new ConsumptionItemHttpRequest(ProductId.New().Value, RecipeId: null, 150),
-            ],
-            AiSessions: [
-                new ConsumptionAiSessionHttpRequest(
-                    ImageAssetId: null,
-                    Source: "Text",
-                    RecognizedAtUtc: DateTime.UtcNow,
-                    Notes: null,
-                    Items: null!),
-            ]);
-
-        UpdateConsumptionCommand command = request.ToCommand(Guid.NewGuid(), Guid.NewGuid());
-
-        ConsumptionAiSessionInput aiSession = Assert.Single(command.AiSessions);
-        Assert.Empty(aiSession.Items);
     }
 
     [Fact]

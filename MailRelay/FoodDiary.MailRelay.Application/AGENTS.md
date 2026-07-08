@@ -22,4 +22,4 @@ Rules for `MailRelay/FoodDiary.MailRelay.Application/`.
 
 ## Commands
 - Build: `dotnet build MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj`
-- Tests: `dotnet test MailRelay/tests/FoodDiary.MailRelay.Tests/FoodDiary.MailRelay.Tests.csproj`
+- Tests: `dotnet test MailRelay/tests/FoodDiary.MailRelay.Application.Tests/FoodDiary.MailRelay.Application.Tests.csproj`

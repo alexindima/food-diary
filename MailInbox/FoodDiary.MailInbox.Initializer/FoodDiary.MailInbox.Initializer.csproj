@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>FoodDiary.MailInbox.Tests</_Parameter1>
+      <_Parameter1>FoodDiary.MailInbox.Initializer.Tests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
 

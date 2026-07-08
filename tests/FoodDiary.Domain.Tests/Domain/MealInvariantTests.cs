@@ -1,0 +1,953 @@
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Events;
+using FoodDiary.Domain.Enums;
+using System.Reflection;
+using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Domain.Tests.Domain;
+
+[ExcludeFromCodeCoverage]
+public class MealInvariantTests {
+    [Fact]
+    public void Create_WithEmptyUserId_Throws() {
+        Assert.Throws<ArgumentException>(() =>
+            Meal.Create(UserId.Empty, DateTime.UtcNow, MealType.Breakfast));
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(6)]
+    public void Create_WithOutOfRangeSatiety_Throws(int satietyLevel) {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            Meal.Create(
+                UserId.New(),
+                DateTime.UtcNow,
+                MealType.Breakfast,
+                preMealSatietyLevel: satietyLevel,
+                postMealSatietyLevel: 5));
+    }
+
+    [Fact]
+    public void Create_WithLegacyZeroSatiety_NormalizesToNeutral() {
+        var meal = Meal.Create(
+            UserId.New(),
+            DateTime.UtcNow,
+            MealType.Breakfast,
+            preMealSatietyLevel: 0,
+            postMealSatietyLevel: 0);
+
+        Assert.Equal(3, meal.PreMealSatietyLevel);
+        Assert.Equal(3, meal.PostMealSatietyLevel);
+    }
+
+    [Fact]
+    public void UpdateComment_WithTrimmedSameValue_DoesNotSetModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, comment: "Comment");
+
+        meal.UpdateComment("  Comment  ");
+
+        Assert.Null(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void Create_WithLocalDate_NormalizesToUtcDateTime() {
+        var localDate = new DateTime(2026, 3, 27, 23, 30, 0, DateTimeKind.Local);
+        var expectedDate = DateTime.SpecifyKind(localDate.ToUniversalTime(), DateTimeKind.Utc);
+
+        var meal = Meal.Create(UserId.New(), localDate);
+
+        Assert.Equal(expectedDate, meal.Date);
+        Assert.Equal(DateTimeKind.Utc, meal.Date.Kind);
+    }
+
+    [Fact]
+    public void Create_WithUnspecifiedDate_TreatsItAsUtcDateTime() {
+        var unspecifiedDate = new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Unspecified);
+
+        var meal = Meal.Create(UserId.New(), unspecifiedDate);
+
+        Assert.Equal(new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Utc), meal.Date);
+    }
+
+    [Fact]
+    public void UpdateDate_WithUnspecifiedDate_TreatsItAsUtcDateTime() {
+        var meal = Meal.Create(UserId.New(), new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Utc));
+
+        meal.UpdateDate(new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Unspecified));
+
+        Assert.Equal(new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Utc), meal.Date);
+    }
+
+    [Fact]
+    public void UpdateComment_WithWhitespace_ClearsValue() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, comment: "Comment");
+
+        meal.UpdateComment("   ");
+
+        Assert.Null(meal.Comment);
+        Assert.NotNull(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateImage_WithTrimmedSameImageAndNoAssetChange_DoesNotSetModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, imageUrl: "https://img", imageAssetId: ImageAssetId.New());
+
+        meal.UpdateImage("  https://img  ", imageAssetId: null);
+
+        Assert.Null(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateImage_WithAssetOnly_UpdatesImageAssetId() {
+        var initialAsset = ImageAssetId.New();
+        var nextAsset = ImageAssetId.New();
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, imageUrl: "https://img", imageAssetId: initialAsset);
+
+        meal.UpdateImage("https://img", nextAsset);
+
+        Assert.Equal(nextAsset, meal.ImageAssetId);
+        Assert.NotNull(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateImage_WithNewImageUrl_UpdatesImageUrl() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, imageUrl: "https://old");
+
+        meal.UpdateImage("  https://new  ");
+
+        Assert.Equal("https://new", meal.ImageUrl);
+        Assert.NotNull(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateDate_WithSameNormalizedDate_DoesNotSetModifiedOnUtc() {
+        var date = new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Utc);
+        var meal = Meal.Create(UserId.New(), date);
+
+        meal.UpdateDate(date);
+
+        Assert.Null(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateMealType_WithSameValue_DoesNotSetModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.Breakfast);
+
+        meal.UpdateMealType(MealType.Breakfast);
+
+        Assert.Null(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateMealType_WithDifferentValue_UpdatesMealType() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.Breakfast);
+
+        meal.UpdateMealType(MealType.Dinner);
+
+        Assert.Equal(MealType.Dinner, meal.MealType);
+        Assert.NotNull(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void AddProduct_WithEmptyProductId_Throws() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        Assert.Throws<ArgumentException>(() => meal.AddProduct(ProductId.Empty, 100));
+    }
+
+    [Fact]
+    public void AddRecipe_WithEmptyRecipeId_Throws() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        Assert.Throws<ArgumentException>(() => meal.AddRecipe(RecipeId.Empty, 1));
+    }
+
+    [Fact]
+    public void MealItem_CreateWithProduct_WithEmptyMealId_Throws() {
+        MethodInfo createMethod = typeof(MealItem).GetMethod(
+            "CreateWithProduct",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+
+        TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() =>
+            createMethod.Invoke(null, [MealId.Empty, ProductId.New(), 100d]));
+
+        Assert.IsType<ArgumentException>(ex.InnerException);
+    }
+
+    [Fact]
+    public void AddRecipe_WithValidValues_AddsRecipeItem() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        var recipeId = RecipeId.New();
+
+        MealItem item = meal.AddRecipe(recipeId, 2);
+
+        Assert.Multiple(
+            () => Assert.Equal(meal.Id, item.MealId),
+            () => Assert.Null(item.ProductId),
+            () => Assert.Equal(recipeId, item.RecipeId),
+            () => Assert.Equal(2, item.Amount),
+            () => Assert.False(item.IsProduct),
+            () => Assert.True(item.IsRecipe));
+        Assert.Contains(item, meal.Items);
+        Assert.NotNull(meal.ModifiedOnUtc);
+    }
+
+    [Theory]
+    [InlineData(0d)]
+    [InlineData(-1d)]
+    [InlineData(1000000.0001d)]
+    [InlineData(double.PositiveInfinity)]
+    [InlineData(double.NaN)]
+    public void AddProduct_WithInvalidAmount_Throws(double amount) {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => meal.AddProduct(ProductId.New(), amount));
+    }
+
+    [Theory]
+    [InlineData(0d)]
+    [InlineData(-1d)]
+    [InlineData(1000000.0001d)]
+    [InlineData(double.NegativeInfinity)]
+    public void AddRecipe_WithInvalidServings_Throws(double servings) {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => meal.AddRecipe(RecipeId.New(), servings));
+    }
+
+    [Fact]
+    public void RemoveItem_WithNull_Throws() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        Assert.Throws<ArgumentNullException>(() => meal.RemoveItem(null!));
+    }
+
+    [Fact]
+    public void RemoveItem_WhenItemNotInMeal_DoesNotSetModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        var anotherMeal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        MealItem foreignItem = anotherMeal.AddProduct(ProductId.New(), 100);
+
+        meal.RemoveItem(foreignItem);
+
+        Assert.Null(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void RemoveItem_WhenItemExists_RemovesItemAndSetsModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        MealItem item = meal.AddProduct(ProductId.New(), 100);
+
+        meal.RemoveItem(item);
+
+        Assert.Empty(meal.Items);
+        Assert.NotNull(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void MealItem_UpdateAmount_WithSameValue_DoesNotSetModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        MealItem item = meal.AddProduct(ProductId.New(), 100);
+
+        item.UpdateAmount(100);
+
+        Assert.Null(item.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void MealItem_UpdateAmount_WithCloseValue_DoesNotSetModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        MealItem item = meal.AddProduct(ProductId.New(), 100);
+
+        item.UpdateAmount(100.0000005);
+
+        Assert.Equal(100, item.Amount);
+        Assert.Null(item.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void MealItem_UpdateAmount_WithBoundaryValue_UpdatesAmount() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        MealItem item = meal.AddProduct(ProductId.New(), 100);
+
+        item.UpdateAmount(1000000d);
+
+        Assert.Equal(1000000d, item.Amount);
+        Assert.NotNull(item.ModifiedOnUtc);
+    }
+
+    [Theory]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    [InlineData(double.NegativeInfinity)]
+    public void MealItem_ApplyProductSnapshot_WithNonFiniteNutrition_Throws(double caloriesPerBase) {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        MealItem item = meal.AddProduct(ProductId.New(), 100);
+        Product product = CreateProduct();
+        SetPrivateProperty(product, nameof(Product.CaloriesPerBase), caloriesPerBase);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => item.ApplyProductSnapshot(product));
+    }
+
+    [Fact]
+    public void MealItem_ApplySource_WithSourceAndManualOrigin_Throws() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        MealItem item = meal.AddProduct(ProductId.New(), 100);
+
+        Assert.Throws<ArgumentException>(() => item.ApplySource(MealAiItemId.New(), MealItemOrigin.Manual));
+    }
+
+    [Fact]
+    public void MealItem_ApplySource_WithAiOrigin_UpdatesSourceOriginAndModifiedTimestamp() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        MealItem item = meal.AddProduct(ProductId.New(), 100);
+        var sourceAiItemId = MealAiItemId.New();
+
+        item.ApplySource(sourceAiItemId, MealItemOrigin.AIText);
+
+        Assert.Equal(sourceAiItemId, item.SourceAiItemId);
+        Assert.Equal(MealItemOrigin.AIText, item.Origin);
+        Assert.NotNull(item.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void ClearItems_WhenAlreadyEmpty_DoesNotSetModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        meal.ClearItems();
+
+        Assert.Null(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void ClearItems_WithExistingItems_RemovesItemsAndSetsModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        meal.AddProduct(ProductId.New(), 100);
+
+        meal.ClearItems();
+
+        Assert.Empty(meal.Items);
+        Assert.NotNull(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void ClearAiSessions_WhenAlreadyEmpty_DoesNotSetModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        meal.ClearAiSessions();
+
+        Assert.Null(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void ClearAiSessions_WithExistingSession_RemovesSessionsAndSetsModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        meal.AddAiSession(imageAssetId: null, AiRecognitionSource.Text, DateTime.UtcNow, notes: null, []);
+
+        meal.ClearAiSessions();
+
+        Assert.Empty(meal.AiSessions);
+        Assert.NotNull(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateSatietyLevels_WithOutOfRangeValue_Throws() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => meal.UpdateSatietyLevels(6, 5));
+    }
+
+    [Fact]
+    public void UpdateSatietyLevels_WithSameValues_DoesNotSetModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, preMealSatietyLevel: 2, postMealSatietyLevel: 4);
+
+        meal.UpdateSatietyLevels(2, 4);
+
+        Assert.Null(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateSatietyLevels_WithDifferentValues_UpdatesLevels() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        meal.UpdateSatietyLevels(1, 5);
+
+        Assert.Equal(1, meal.PreMealSatietyLevel);
+        Assert.Equal(5, meal.PostMealSatietyLevel);
+        Assert.NotNull(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void ApplyNutrition_WithNegativeTotal_Throws() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.Breakfast);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: -1,
+            TotalProteins: 10,
+            TotalFats: 10,
+            TotalCarbs: 10,
+            TotalFiber: 1,
+            TotalAlcohol: 0,
+            IsAutoCalculated: true)));
+    }
+
+    [Fact]
+    public void ApplyNutrition_WithDefaultAutoValues_DoesNotSetModifiedOrEvent() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        meal.ApplyNutrition(new MealNutritionUpdate(0, 0, 0, 0, 0, 0, IsAutoCalculated: true));
+
+        Assert.Null(meal.ModifiedOnUtc);
+        Assert.Empty(meal.DomainEvents);
+    }
+
+    [Fact]
+    public void ApplyNutrition_WithManualMode_SetsManualValuesAndRaisesEvent() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 500.123,
+            TotalProteins: 30.567,
+            TotalFats: 20.333,
+            TotalCarbs: 40.999,
+            TotalFiber: 8.111,
+            TotalAlcohol: 0,
+            IsAutoCalculated: false,
+            ManualCalories: 510,
+            ManualProteins: 31,
+            ManualFats: 21,
+            ManualCarbs: 41,
+            ManualFiber: 9,
+            ManualAlcohol: 0));
+
+        Assert.Multiple(
+            () => Assert.False(meal.IsNutritionAutoCalculated),
+            () => Assert.Equal(500.12, meal.TotalCalories),
+            () => Assert.Equal(30.57, meal.TotalProteins),
+            () => Assert.Equal(21, meal.ManualFats));
+        Assert.Single(meal.DomainEvents);
+        Assert.IsType<MealNutritionAppliedDomainEvent>(meal.DomainEvents[0]);
+    }
+
+    [Fact]
+    public void ApplyNutrition_WithSameValues_DoesNotRaiseDuplicateEvent() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        meal.ApplyNutrition(new MealNutritionUpdate(500, 30, 20, 40, 8, 0, IsAutoCalculated: true));
+        int eventCount = meal.DomainEvents.Count;
+        DateTime? modified = meal.ModifiedOnUtc;
+
+        meal.ApplyNutrition(new MealNutritionUpdate(500, 30, 20, 40, 8, 0, IsAutoCalculated: true));
+
+        Assert.Equal(eventCount, meal.DomainEvents.Count);
+        Assert.Equal(modified, meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void ApplyNutrition_ManualThenAuto_ClearsManualValuesAndRaisesEvent() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 500,
+            TotalProteins: 30,
+            TotalFats: 20,
+            TotalCarbs: 40,
+            TotalFiber: 8,
+            TotalAlcohol: 0,
+            IsAutoCalculated: false,
+            ManualCalories: 510,
+            ManualProteins: 31,
+            ManualFats: 21,
+            ManualCarbs: 41,
+            ManualFiber: 9,
+            ManualAlcohol: 0));
+        meal.ClearDomainEvents();
+
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 500,
+            TotalProteins: 30,
+            TotalFats: 20,
+            TotalCarbs: 40,
+            TotalFiber: 8,
+            TotalAlcohol: 0,
+            IsAutoCalculated: true));
+
+        Assert.Multiple(
+            () => Assert.True(meal.IsNutritionAutoCalculated),
+            () => Assert.Null(meal.ManualCalories),
+            () => Assert.Null(meal.ManualProteins),
+            () => Assert.Null(meal.ManualFats),
+            () => Assert.Null(meal.ManualCarbs),
+            () => Assert.Null(meal.ManualFiber),
+            () => Assert.Null(meal.ManualAlcohol));
+        Assert.Single(meal.DomainEvents);
+        Assert.IsType<MealNutritionAppliedDomainEvent>(meal.DomainEvents[0]);
+    }
+
+    [Fact]
+    public void ApplyNutrition_ManualModeWithFallbackThenExplicitManualValues_UpdatesManualValues() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 500,
+            TotalProteins: 30,
+            TotalFats: 20,
+            TotalCarbs: 40,
+            TotalFiber: 8,
+            TotalAlcohol: 0,
+            IsAutoCalculated: false));
+        meal.ClearDomainEvents();
+
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 500,
+            TotalProteins: 30,
+            TotalFats: 20,
+            TotalCarbs: 40,
+            TotalFiber: 8,
+            TotalAlcohol: 0,
+            IsAutoCalculated: false,
+            ManualCalories: 510,
+            ManualProteins: 31,
+            ManualFats: 21,
+            ManualCarbs: 41,
+            ManualFiber: 9,
+            ManualAlcohol: 1));
+
+        Assert.Multiple(
+            () => Assert.Equal(510, meal.ManualCalories),
+            () => Assert.Equal(31, meal.ManualProteins),
+            () => Assert.Equal(21, meal.ManualFats),
+            () => Assert.Equal(41, meal.ManualCarbs),
+            () => Assert.Equal(9, meal.ManualFiber),
+            () => Assert.Equal(1, meal.ManualAlcohol));
+        Assert.Single(meal.DomainEvents);
+    }
+
+    [Fact]
+    public void ApplyNutrition_WithOnlyRoundingDifference_DoesNotRaiseDuplicateEvent() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 100.004,
+            TotalProteins: 30.004,
+            TotalFats: 20.004,
+            TotalCarbs: 40.004,
+            TotalFiber: 8.004,
+            TotalAlcohol: 0.004,
+            IsAutoCalculated: true));
+        int eventCount = meal.DomainEvents.Count;
+        DateTime? modified = meal.ModifiedOnUtc;
+
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 100.003,
+            TotalProteins: 30.003,
+            TotalFats: 20.003,
+            TotalCarbs: 40.003,
+            TotalFiber: 8.003,
+            TotalAlcohol: 0.003,
+            IsAutoCalculated: true));
+
+        Assert.Equal(eventCount, meal.DomainEvents.Count);
+        Assert.Equal(modified, meal.ModifiedOnUtc);
+    }
+
+    [Theory]
+    [InlineData(null, null, true)]
+    [InlineData(null, 10d, false)]
+    [InlineData(10d, null, false)]
+    [InlineData(10d, 10.0000005d, true)]
+    [InlineData(10d, 10.01d, false)]
+    public void NullableAreClose_ReturnsExpectedResult(double? left, double? right, bool expected) {
+        MethodInfo method = typeof(Meal).GetMethod(
+            "NullableAreClose",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+
+        bool result = (bool)method.Invoke(null, [left, right])!;
+
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void AddAiSession_WithInvalidNameEn_Throws() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        Assert.Throws<ArgumentException>(() => meal.AddAiSession(
+            imageAssetId: null,
+            source: AiRecognitionSource.Text,
+            recognizedAtUtc: DateTime.UtcNow,
+            notes: null,
+            items: [
+                MealAiItemData.Create(
+                    nameEn: "   ",
+                    nameLocal: null,
+                    amount: 100,
+                    unit: "g",
+                    calories: 100,
+                    proteins: 10,
+                    fats: 10,
+                    carbs: 10,
+                    fiber: 1,
+                    alcohol: 0),
+            ]));
+    }
+
+    [Fact]
+    public void AddAiSession_WithInvalidAmount_Throws() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => meal.AddAiSession(
+            imageAssetId: null,
+            source: AiRecognitionSource.Text,
+            recognizedAtUtc: DateTime.UtcNow,
+            notes: null,
+            items: [
+                MealAiItemData.Create(
+                    nameEn: "Apple",
+                    nameLocal: null,
+                    amount: 0,
+                    unit: "g",
+                    calories: 100,
+                    proteins: 10,
+                    fats: 10,
+                    carbs: 10,
+                    fiber: 1,
+                    alcohol: 0),
+            ]));
+    }
+
+    [Fact]
+    public void AddAiSession_WithNegativeNutrition_Throws() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => meal.AddAiSession(
+            imageAssetId: null,
+            source: AiRecognitionSource.Text,
+            recognizedAtUtc: DateTime.UtcNow,
+            notes: null,
+            items: [
+                MealAiItemData.Create(
+                    nameEn: "Apple",
+                    nameLocal: null,
+                    amount: 100,
+                    unit: "g",
+                    calories: -1,
+                    proteins: 10,
+                    fats: 10,
+                    carbs: 10,
+                    fiber: 1,
+                    alcohol: 0),
+            ]));
+    }
+
+    [Fact]
+    public void AddAiSession_WithValidItem_NormalizesFieldsAndAttachesSession() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        MealAiSession session = meal.AddAiSession(
+            imageAssetId: null,
+            source: AiRecognitionSource.Text,
+            recognizedAtUtc: DateTime.UtcNow,
+            notes: null,
+            items: [
+                MealAiItemData.Create(
+                    nameEn: "  Apple  ",
+                    nameLocal: "  Ð¯Ð±Ð»Ð¾ÐºÐ¾  ",
+                    amount: 100,
+                    unit: "  g  ",
+                    calories: 52,
+                    proteins: 0.3,
+                    fats: 0.2,
+                    carbs: 14,
+                    fiber: 2.4,
+                    alcohol: 0),
+            ]);
+
+        MealAiItem aiItem = Assert.Single(session.Items);
+        Assert.Multiple(
+            () => Assert.Equal("Apple", aiItem.NameEn),
+            () => Assert.Equal("Ð¯Ð±Ð»Ð¾ÐºÐ¾", aiItem.NameLocal),
+            () => Assert.Equal("g", aiItem.Unit),
+            () => Assert.Equal(session.Id, aiItem.MealAiSessionId));
+    }
+
+    [Fact]
+    public void AddAiSession_WithWhitespaceNotes_NormalizesToNull() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        MealAiSession session = meal.AddAiSession(
+            imageAssetId: null,
+            source: AiRecognitionSource.Text,
+            recognizedAtUtc: DateTime.UtcNow,
+            notes: "   ",
+            items: []);
+
+        Assert.Null(session.Notes);
+    }
+
+    [Fact]
+    public void AddAiSession_WithTooLongNotes_Throws() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => meal.AddAiSession(
+            imageAssetId: null,
+            source: AiRecognitionSource.Text,
+            recognizedAtUtc: DateTime.UtcNow,
+            notes: new string('n', 2049),
+            items: []));
+    }
+
+    [Fact]
+    public void AddAiSession_WithLocalRecognizedAt_NormalizesToUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        var localTime = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Local);
+
+        MealAiSession session = meal.AddAiSession(
+            imageAssetId: null,
+            source: AiRecognitionSource.Text,
+            recognizedAtUtc: localTime,
+            notes: null,
+            items: []);
+
+        Assert.Equal(DateTimeKind.Utc, session.RecognizedAtUtc.Kind);
+    }
+
+    [Fact]
+    public void AddAiSession_WithUnspecifiedRecognizedAt_Throws() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => meal.AddAiSession(
+            imageAssetId: null,
+            source: AiRecognitionSource.Text,
+            recognizedAtUtc: new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Unspecified),
+            notes: null,
+            items: []));
+    }
+
+    [Fact]
+    public void AddAiSession_WithItems_SetsSessionModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        MealAiSession session = meal.AddAiSession(
+            imageAssetId: null,
+            source: AiRecognitionSource.Text,
+            recognizedAtUtc: DateTime.UtcNow,
+            notes: null,
+            items: [
+                MealAiItemData.Create(
+                    nameEn: "Apple",
+                    nameLocal: null,
+                    amount: 100,
+                    unit: "g",
+                    calories: 52,
+                    proteins: 0.3,
+                    fats: 0.2,
+                    carbs: 14,
+                    fiber: 2.4,
+                    alcohol: 0),
+            ]);
+
+        Assert.NotNull(session.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void MealAiItemData_TryCreate_WithInvalidData_ReturnsFalse() {
+        bool success = MealAiItemData.TryCreate(
+            nameEn: "  ",
+            nameLocal: null,
+            amount: -1,
+            unit: "  ",
+            calories: -1,
+            proteins: 0,
+            fats: 0,
+            carbs: 0,
+            fiber: 0,
+            alcohol: 0,
+            data: out MealAiItemData? data,
+            error: out string? error);
+
+        Assert.Multiple(
+            () => Assert.False(success),
+            () => Assert.Null(data),
+            () => Assert.False(string.IsNullOrWhiteSpace(error)));
+    }
+
+    [Fact]
+    public void MealAiItemData_Create_WithValidData_NormalizesValues() {
+        var data = MealAiItemData.Create(
+            nameEn: "  Apple  ",
+            nameLocal: "  Ð¯Ð±Ð»Ð¾ÐºÐ¾  ",
+            amount: 100,
+            unit: "  g  ",
+            calories: 52,
+            proteins: 0.3,
+            fats: 0.2,
+            carbs: 14,
+            fiber: 2.4,
+            alcohol: 0);
+
+        Assert.Multiple(
+            () => Assert.Equal("Apple", data.NameEn),
+            () => Assert.Equal("Ð¯Ð±Ð»Ð¾ÐºÐ¾", data.NameLocal),
+            () => Assert.Equal("g", data.Unit),
+            () => Assert.Equal(100, data.Amount));
+    }
+
+    [Fact]
+    public void MealAiItemData_TryCreate_WithValidData_ReturnsTrue() {
+        bool success = MealAiItemData.TryCreate(
+            nameEn: "  Apple  ",
+            nameLocal: "  Ð¯Ð±Ð»Ð¾ÐºÐ¾  ",
+            amount: 100,
+            unit: "  g  ",
+            calories: 52,
+            proteins: 0.3,
+            fats: 0.2,
+            carbs: 14,
+            fiber: 2.4,
+            alcohol: 0,
+            data: out MealAiItemData? data,
+            error: out string? error);
+
+        Assert.True(success);
+        Assert.NotNull(data);
+        Assert.Null(error);
+        Assert.Equal("Apple", data.NameEn);
+    }
+
+    [Fact]
+    public void MealAiSession_Create_WithEmptyMealId_Throws() {
+        MethodInfo createMethod = typeof(MealAiSession).GetMethod(
+            "Create",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+
+        TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() =>
+            createMethod.Invoke(null, [MealId.Empty, null, AiRecognitionSource.Text, DateTime.UtcNow, null]));
+
+        Assert.IsType<ArgumentException>(ex.InnerException);
+    }
+
+    [Fact]
+    public void MealAiSession_AddItems_WithNullItem_Throws() {
+        MethodInfo createMethod = typeof(MealAiSession).GetMethod(
+            "Create",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        MethodInfo addItemsMethod = typeof(MealAiSession).GetMethod(
+            "AddItems",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+        MethodInfo itemCreateMethod = typeof(MealAiItem).GetMethod(
+            "Create",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        MethodInfo attachMethod = typeof(MealAiItem).GetMethod(
+            "AttachToSession",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+        var session = (MealAiSession)createMethod.Invoke(null, [MealId.New(), null, AiRecognitionSource.Text, DateTime.UtcNow, null])!;
+        var item = (MealAiItem)itemCreateMethod.Invoke(
+            null,
+            ["Apple", null, 100d, "g", 52d, 0.3d, 0.2d, 14d, 2.4d, 0d])!;
+        attachMethod.Invoke(item, [session.Id]);
+
+        var listWithNull = new List<MealAiItem> { item, null! };
+
+        TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() => addItemsMethod.Invoke(session, [listWithNull]));
+
+        Assert.IsType<ArgumentException>(ex.InnerException);
+    }
+
+    [Fact]
+    public void MealAiSession_AddItems_WithItemAttachedToDifferentSession_Throws() {
+        MethodInfo createMethod = typeof(MealAiSession).GetMethod(
+            "Create",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        MethodInfo addItemsMethod = typeof(MealAiSession).GetMethod(
+            "AddItems",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+        MethodInfo itemCreateMethod = typeof(MealAiItem).GetMethod(
+            "Create",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        MethodInfo attachMethod = typeof(MealAiItem).GetMethod(
+            "AttachToSession",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+        var session = (MealAiSession)createMethod.Invoke(null, [MealId.New(), null, AiRecognitionSource.Text, DateTime.UtcNow, null])!;
+        var item = (MealAiItem)itemCreateMethod.Invoke(
+            null,
+            ["Apple", null, 100d, "g", 52d, 0.3d, 0.2d, 14d, 2.4d, 0d])!;
+        attachMethod.Invoke(item, [MealAiSessionId.New()]);
+
+        TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() => addItemsMethod.Invoke(session, [new List<MealAiItem> { item }]));
+
+        Assert.IsType<ArgumentException>(ex.InnerException);
+    }
+
+    [Fact]
+    public void MealAiSession_AddItems_WithEmptyList_DoesNotSetModifiedOnUtc() {
+        MethodInfo createMethod = typeof(MealAiSession).GetMethod(
+            "Create",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        MethodInfo addItemsMethod = typeof(MealAiSession).GetMethod(
+            "AddItems",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+        var session = (MealAiSession)createMethod.Invoke(null, [MealId.New(), null, AiRecognitionSource.Text, DateTime.UtcNow, null])!;
+
+        addItemsMethod.Invoke(session, [Array.Empty<MealAiItem>()]);
+
+        Assert.Empty(session.Items);
+        Assert.Null(session.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void MealAiItem_AttachToSession_WithEmptySessionId_Throws() {
+        MethodInfo itemCreateMethod = typeof(MealAiItem).GetMethod(
+            "Create",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        MethodInfo attachMethod = typeof(MealAiItem).GetMethod(
+            "AttachToSession",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+        var item = (MealAiItem)itemCreateMethod.Invoke(
+            null,
+            ["Apple", null, 100d, "g", 52d, 0.3d, 0.2d, 14d, 2.4d, 0d])!;
+
+        TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() => attachMethod.Invoke(item, [MealAiSessionId.Empty]));
+
+        Assert.IsType<ArgumentException>(ex.InnerException);
+    }
+
+    [Fact]
+    public void MealAiItem_AttachToSession_WithSameSessionId_DoesNotChangeSessionId() {
+        MethodInfo itemCreateMethod = typeof(MealAiItem).GetMethod(
+            "Create",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        MethodInfo attachMethod = typeof(MealAiItem).GetMethod(
+            "AttachToSession",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+        var item = (MealAiItem)itemCreateMethod.Invoke(
+            null,
+            ["Apple", null, 100d, "g", 52d, 0.3d, 0.2d, 14d, 2.4d, 0d])!;
+        var sessionId = MealAiSessionId.New();
+        attachMethod.Invoke(item, [sessionId]);
+
+        attachMethod.Invoke(item, [sessionId]);
+
+        Assert.Equal(sessionId, item.MealAiSessionId);
+    }
+
+    private static Product CreateProduct() =>
+        Product.Create(
+            UserId.New(),
+            "Apple",
+            MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0);
+
+    private static void SetPrivateProperty<TValue>(object instance, string propertyName, TValue value) {
+        instance.GetType()
+            .GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!
+            .SetValue(instance, value);
+    }
+}
