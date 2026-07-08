@@ -267,9 +267,12 @@ public sealed class EntityAndAggregateRootTests {
 
         public static TestEntity MaterializedWithoutCachedHash(Guid id) {
             var entity = new TestEntity();
-            typeof(Entity<Guid>)
-                .GetField("_id", BindingFlags.Instance | BindingFlags.NonPublic)!
+            typeof(TestEntity)
+                .GetProperty(nameof(Id))!
                 .SetValue(entity, id);
+            typeof(Entity<Guid>)
+                .GetField("_cachedHashCode", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .SetValue(entity, value: null);
             return entity;
         }
 

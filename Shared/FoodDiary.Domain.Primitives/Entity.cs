@@ -4,18 +4,17 @@ namespace FoodDiary.Domain.Primitives;
 
 public abstract class Entity<TId> : IAuditableEntity, IEquatable<Entity<TId>>
     where TId : notnull {
-    private TId _id = default!;
     private int? _cachedHashCode;
 
     public TId Id {
-        get => _id;
+        get;
         protected set {
-            _id = value;
+            field = value;
             _cachedHashCode = IsTransient()
                 ? null
                 : HashCode.Combine(GetType(), EqualityComparer<TId>.Default.GetHashCode(value));
         }
-    }
+    } = default!;
 
     public DateTime CreatedOnUtc { get; private set; }
 
@@ -96,7 +95,7 @@ public abstract class Entity<TId> : IAuditableEntity, IEquatable<Entity<TId>>
             return RuntimeHelpers.GetHashCode(this);
         }
 
-        _cachedHashCode = HashCode.Combine(GetType(), EqualityComparer<TId>.Default.GetHashCode(_id));
+        _cachedHashCode = HashCode.Combine(GetType(), EqualityComparer<TId>.Default.GetHashCode(Id));
         return _cachedHashCode.Value;
     }
 
