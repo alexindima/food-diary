@@ -71,7 +71,7 @@ export class GoogleIdentityService {
         this.initializedClientId = options.clientId;
     }
 
-    public renderButton(target: HTMLElement, theme: 'outline' | 'filled_blue' = 'outline'): void {
+    public renderButton(target: HTMLElement, theme: 'outline' | 'filled_blue' = 'outline', locale = 'en'): void {
         if (!this.isBrowser) {
             return;
         }
@@ -87,6 +87,7 @@ export class GoogleIdentityService {
             text: 'continue_with',
             shape: 'pill',
             logo_alignment: 'left',
+            locale,
         });
     }
 

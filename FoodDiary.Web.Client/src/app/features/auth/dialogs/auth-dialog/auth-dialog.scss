@@ -1,16 +1,39 @@
-@use 'variables' as variables;
-
 .auth-dialog__shell {
     --fd-dialog-shell-shadow: var(--fd-shadow-auth-dialog);
+    position: relative;
+}
+
+.auth-dialog__close {
+    position: absolute;
+    top: var(--fd-space-dialog-padding);
+    right: var(--fd-space-dialog-padding);
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--fd-size-control-sm);
+    height: var(--fd-size-control-sm);
+    padding: 0;
+    border: none;
+    border-radius: var(--fd-radius-pill);
+    background: var(--fd-bg-dialog-muted);
+    color: var(--fd-color-slate-500);
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+
+    &:hover {
+        background: var(--fd-bg-brand-soft);
+        color: var(--fd-color-primary-500);
+    }
+
+    &:where(:focus-visible) {
+        outline: none;
+        box-shadow: var(--fd-shadow-dialog-close-focus);
+    }
 }
 
 .auth-dialog__auth {
     display: block;
-    padding: var(--fd-space-lg) var(--fd-space-lg) var(--fd-space-xl);
-}
-
-@media #{variables.$media-compact} {
-    .auth-dialog__auth {
-        padding: calc(var(--fd-space-lg) - var(--fd-space-micro)) var(--fd-space-md) var(--fd-space-lg);
-    }
 }

@@ -3,6 +3,7 @@ import { DestroyRef, inject, PLATFORM_ID, RendererFactory2, Service, signal } fr
 import { TranslateService } from '@ngx-translate/core';
 
 import { environment } from '../../../../../../environments/environment';
+import { resolveTranslateLanguage } from '../../../../../shared/i18n/translate-language.utils';
 import { isMobileShellWindow } from '../../../../../shared/platform/mobile-shell-runtime';
 import { GoogleIdentityService } from '../../../lib/google-identity.service';
 
@@ -98,7 +99,11 @@ export class AuthGoogleManager {
             return;
         }
 
-        this.googleIdentityService.renderButton(target, 'filled_blue');
+        this.googleIdentityService.renderButton(target, 'filled_blue', this.getGoogleLocale());
+    }
+
+    private getGoogleLocale(): string {
+        return resolveTranslateLanguage(this.translateService) === 'ru' ? 'ru' : 'en';
     }
 
     private async tryInitializeNativeAsync(clientId: string): Promise<boolean> {

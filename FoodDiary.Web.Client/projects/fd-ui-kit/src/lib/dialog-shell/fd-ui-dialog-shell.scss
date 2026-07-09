@@ -25,18 +25,6 @@
     opacity: 1;
 }
 
-.fd-ui-dialog-shell--flush .fd-ui-dialog {
-    padding: 0;
-}
-
-.fd-ui-dialog-shell--flush .fd-ui-dialog__body {
-    padding: 0;
-    max-height: calc(var(--fd-size-dialog-max-height-detail) - var(--fd-size-control-sm));
-    overflow-y: auto;
-    min-height: 0;
-    scrollbar-gutter: stable;
-}
-
 @keyframes fd-dialog-shell-in {
     from {
         opacity: 0;

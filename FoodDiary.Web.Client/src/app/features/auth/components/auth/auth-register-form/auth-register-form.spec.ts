@@ -43,6 +43,29 @@ describe('AuthRegisterFormComponent', () => {
         expect(root.querySelector('fd-auth-register-fields')).not.toBeNull();
     });
 
+    it('should render terms acceptance error', () => {
+        const { fixture } = createComponent();
+        const errors = createEmptyRegisterFieldErrors();
+        errors.agreeTerms = 'Accept the privacy policy';
+        fixture.componentRef.setInput('errors', errors);
+        fixture.detectChanges();
+
+        const root = fixture.nativeElement as HTMLElement;
+
+        expect(root.querySelector('.fd-ui-form-error__text')?.textContent).toContain('Accept the privacy policy');
+    });
+
+    it('should render unavailable Google hint without reserving button space', () => {
+        const { fixture } = createComponent();
+        fixture.componentRef.setInput('googleReady', false);
+        fixture.detectChanges();
+
+        const root = fixture.nativeElement as HTMLElement;
+
+        expect(root.querySelector('.auth__google-button')).toBeNull();
+        expect(root.querySelector('.auth__google-hint')?.textContent).toContain('AUTH.GOOGLE.UNAVAILABLE');
+    });
+
     it('should cancel native submit and delegate to FormRoot submission', async () => {
         const submitRegisterFormAsync = vi.fn(async (): Promise<void> => {
             await waitForAsyncTasksAsync();

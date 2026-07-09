@@ -16,5 +16,4 @@ export class FdUiDialogShellComponent {
     public readonly size = input<FdUiDialogSize>('md');
     public readonly bodyScrollInset = input<FdUiDialogBodyScrollInset>('default');
     public readonly dismissible = input(true);
-    public readonly flush = input(false);
 }

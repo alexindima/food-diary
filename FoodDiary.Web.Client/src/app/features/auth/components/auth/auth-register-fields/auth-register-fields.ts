@@ -2,13 +2,14 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
+import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import type { RegisterFieldErrors, RegisterFormValues } from '../auth-lib/auth.types';
 
 @Component({
     selector: 'fd-auth-register-fields',
-    imports: [FormField, TranslatePipe, FdUiCheckboxComponent, FdUiInputComponent],
+    imports: [FormField, TranslatePipe, FdUiCheckboxComponent, FdUiFormErrorComponent, FdUiInputComponent],
     templateUrl: './auth-register-fields.html',
     styleUrl: '../auth.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

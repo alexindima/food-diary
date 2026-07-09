@@ -129,6 +129,10 @@
     }
 }
 
+:host(.auth-dialog__auth) .auth {
+    width: min(100%, 580px);
+}
+
 :host fd-ui-checkbox {
     --fd-checkbox-control-size: var(--fd-size-checkbox-control);
     --fd-checkbox-control-radius: var(--fd-radius-sm);

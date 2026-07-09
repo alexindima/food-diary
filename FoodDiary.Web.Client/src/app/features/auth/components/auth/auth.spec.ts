@@ -2,6 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { submit } from '@angular/forms/signals';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -25,7 +26,12 @@ type AuthComponentTestContext = {
     component: AuthComponent;
     fixture: ComponentFixture<AuthComponent>;
     formManager: AuthFormManager;
+    navigationServiceSpy: {
+        navigateToEmailVerificationPendingAsync: ReturnType<typeof vi.fn>;
+        navigateToReturnUrlAsync: ReturnType<typeof vi.fn>;
+    };
     routerSpy: { navigate: ReturnType<typeof vi.fn> };
+    dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 };
 
 function createComponent(mode = 'login'): AuthComponentTestContext {
@@ -47,6 +53,7 @@ function createComponent(mode = 'login'): AuthComponentTestContext {
         navigateToReturnUrlAsync: vi.fn().mockResolvedValue(void 0),
     };
     const routerSpy = { navigate: vi.fn().mockResolvedValue(true) };
+    const dialogRefSpy = { close: vi.fn() };
     const googleManagerSpy = {
         ready: vi.fn().mockReturnValue(false),
         initializeAsync: vi.fn().mockResolvedValue(void 0),
@@ -61,6 +68,7 @@ function createComponent(mode = 'login'): AuthComponentTestContext {
             { provide: AuthFlowFacade, useValue: authFlowFacadeSpy },
             { provide: NavigationService, useValue: navigationServiceSpy },
             { provide: Router, useValue: routerSpy },
+            { provide: FdUiDialogRef, useValue: dialogRefSpy },
             {
                 provide: ActivatedRoute,
                 useValue: {
@@ -88,7 +96,7 @@ function createComponent(mode = 'login'): AuthComponentTestContext {
     const formManager = fixture.debugElement.injector.get(AuthFormManager);
     fixture.detectChanges();
 
-    return { authFlowFacadeSpy, component, fixture, formManager, routerSpy };
+    return { authFlowFacadeSpy, component, fixture, formManager, navigationServiceSpy, routerSpy, dialogRefSpy };
 }
 
 beforeEach(() => {
@@ -210,6 +218,24 @@ describe('AuthComponent register', () => {
         expect(authFlowFacadeSpy.register).not.toHaveBeenCalled();
     });
 
+    it('should require privacy policy acceptance before registration', async () => {
+        const { authFlowFacadeSpy, component } = createComponent('register');
+        component['registerModel'].set({
+            email: 'user@example.com',
+            password: 'password123',
+            confirmPassword: 'password123',
+            agreeTerms: false,
+        });
+
+        await submit(component['registerForm']);
+
+        expect(component['registerForm'].agreeTerms().touched()).toBe(true);
+        expect(component['registerFieldErrors']().agreeTerms).toContain('FORM_ERRORS.REQUIRED');
+        expect(authFlowFacadeSpy.register).not.toHaveBeenCalled();
+    });
+});
+
+describe('AuthComponent register results', () => {
     it('should mark email as existing when register returns conflict', async () => {
         const { authFlowFacadeSpy, component } = createComponent('register');
         authFlowFacadeSpy.register.mockReturnValue(of('emailExists'));
@@ -240,6 +266,24 @@ describe('AuthComponent register', () => {
 
         expect(component['globalError']()).toBe('AUTH.REGISTER.ACCOUNT_DELETED');
         expect(component['isSubmitting']()).toBe(false);
+    });
+
+    it('should navigate to email verification and close dialog after successful registration', async () => {
+        const { authFlowFacadeSpy, component, dialogRefSpy, navigationServiceSpy } = createComponent('register');
+        authFlowFacadeSpy.register.mockReturnValue(of('success'));
+        component['registerModel'].set({
+            email: 'new@example.com',
+            password: 'password123',
+            confirmPassword: 'password123',
+            agreeTerms: true,
+        });
+
+        await submit(component['registerForm']);
+
+        expect(authFlowFacadeSpy.register).toHaveBeenCalledOnce();
+        expect(navigationServiceSpy.navigateToEmailVerificationPendingAsync).toHaveBeenCalledOnce();
+        expect(dialogRefSpy.close).toHaveBeenCalledOnce();
+        expect(component['globalError']()).toBeNull();
     });
 });
 

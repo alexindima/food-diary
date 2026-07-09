@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { submit } from '@angular/forms/signals';
 import type { LangChangeEvent } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
@@ -44,5 +45,20 @@ describe('AuthFormManager', () => {
         languageChanges.next({ lang: 'ru', translations: {} });
 
         expect(manager.registerFieldErrors().password).toBe('ru:FORM_ERRORS.PASSWORD.MIN_LENGTH');
+    });
+
+    it('shows terms acceptance error after invalid register submit', async () => {
+        const manager = TestBed.inject(AuthFormManager);
+
+        manager.registerModel.set({
+            email: 'user@example.com',
+            password: 'a'.repeat(AUTH_PASSWORD_MIN_LENGTH),
+            confirmPassword: 'a'.repeat(AUTH_PASSWORD_MIN_LENGTH),
+            agreeTerms: false,
+        });
+
+        await submit(manager.registerForm);
+
+        expect(manager.registerFieldErrors().agreeTerms).toBe('en:FORM_ERRORS.REQUIRED');
     });
 });

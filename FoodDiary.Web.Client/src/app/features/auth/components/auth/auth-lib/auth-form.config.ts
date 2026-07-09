@@ -6,5 +6,5 @@ export const AUTH_TABS: FdUiTab[] = [
 ];
 
 export const LOGIN_ERROR_FIELDS = ['email', 'password'] as const;
-export const REGISTER_ERROR_FIELDS = ['email', 'password', 'confirmPassword'] as const;
+export const REGISTER_ERROR_FIELDS = ['email', 'password', 'confirmPassword', 'agreeTerms'] as const;
 export const PASSWORD_RESET_ERROR_FIELDS = ['email'] as const;

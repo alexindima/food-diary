@@ -17,23 +17,16 @@ type GoogleIdentityApiMock = {
 
 type GoogleIdentityApi = NonNullable<NonNullable<NonNullable<Window['google']>['accounts']>['id']>;
 
-describe('GoogleIdentityService browser integration', () => {
+describe('GoogleIdentityService browser initialization', () => {
     let googleIdentityApi: GoogleIdentityApiMock;
 
     beforeEach(() => {
-        TestBed.resetTestingModule();
-        document.head.querySelectorAll('script[src="https://accounts.google.com/gsi/client"]').forEach(script => {
-            script.remove();
-        });
+        resetGoogleIdentityTestState();
         googleIdentityApi = createGoogleIdentityApiMock();
-        delete window.google;
     });
 
     afterEach(() => {
-        document.head.querySelectorAll('script[src="https://accounts.google.com/gsi/client"]').forEach(script => {
-            script.remove();
-        });
-        delete window.google;
+        resetGoogleIdentityTestState();
         vi.restoreAllMocks();
     });
 
@@ -82,6 +75,20 @@ describe('GoogleIdentityService browser integration', () => {
         expect(latestCallback).toHaveBeenCalledOnce();
         expect(latestCallback).toHaveBeenCalledWith(CREDENTIAL);
     });
+});
+
+describe('GoogleIdentityService browser controls', () => {
+    let googleIdentityApi: GoogleIdentityApiMock;
+
+    beforeEach(() => {
+        resetGoogleIdentityTestState();
+        googleIdentityApi = createGoogleIdentityApiMock();
+    });
+
+    afterEach(() => {
+        resetGoogleIdentityTestState();
+        vi.restoreAllMocks();
+    });
 
     it('renders button and forwards prompt/cancel when Google API is available', () => {
         const service = setupBrowserService();
@@ -97,10 +104,22 @@ describe('GoogleIdentityService browser integration', () => {
             expect.objectContaining({
                 theme: 'filled_blue',
                 shape: 'pill',
+                locale: 'en',
             }),
         );
         expect(googleIdentityApi.prompt).toHaveBeenCalledOnce();
         expect(googleIdentityApi.cancel).toHaveBeenCalledOnce();
+    });
+});
+
+describe('GoogleIdentityService browser script errors', () => {
+    beforeEach(() => {
+        resetGoogleIdentityTestState();
+    });
+
+    afterEach(() => {
+        resetGoogleIdentityTestState();
+        vi.restoreAllMocks();
     });
 
     it('rejects initialization when Google script fails to load', async () => {
@@ -160,6 +179,14 @@ function setupServerService(): GoogleIdentityService {
     });
 
     return TestBed.inject(GoogleIdentityService);
+}
+
+function resetGoogleIdentityTestState(): void {
+    TestBed.resetTestingModule();
+    document.head.querySelectorAll('script[src="https://accounts.google.com/gsi/client"]').forEach(script => {
+        script.remove();
+    });
+    delete window.google;
 }
 
 function createGoogleIdentityApiMock(): GoogleIdentityApiMock {

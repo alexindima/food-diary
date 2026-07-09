@@ -1,8 +1,13 @@
 import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { email, type FieldTree, form, minLength, required, validate } from '@angular/forms/signals';
+import { email, form, minLength, required, validate } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
-import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
+import {
+    FD_VALIDATION_ERRORS,
+    type FdSignalFormField,
+    type FdValidationErrors,
+    resolveSignalFormFieldError,
+} from 'fd-ui-kit/form-error/fd-ui-form-error';
 
 import { AUTH_PASSWORD_MIN_LENGTH } from '../../../lib/auth.constants';
 import type { LoginFieldErrors, PasswordResetFieldErrors, RegisterFieldErrors } from './auth.types';
@@ -77,6 +82,7 @@ export class AuthFormManager {
             submission: {
                 action: this.submitRegisterFormAsync,
                 onInvalid: () => {
+                    this.registerForm().markAsTouched();
                     this.updateFieldErrors();
                 },
             },
@@ -162,7 +168,7 @@ export class AuthFormManager {
         this.fieldErrorsVersion.update(version => version + 1);
     }
 
-    private resolveFieldError<T>(field: FieldTree<T>, options: { showOnDirty?: boolean } = {}): string | null {
+    private resolveFieldError(field: FdSignalFormField, options: { showOnDirty?: boolean } = {}): string | null {
         return resolveSignalFormFieldError(field, this.validationErrors, this.translateService, options);
     }
 }

@@ -42,6 +42,7 @@ export function createEmptyRegisterFieldErrors(): RegisterFieldErrors {
         email: null,
         password: null,
         confirmPassword: null,
+        agreeTerms: null,
     };
 }
 

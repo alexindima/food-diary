@@ -40,4 +40,5 @@
             [innerHTML]="'AUTH.REGISTER.AGREE_TO_TERMS' | translate: { privacyUrl: '/privacy-policy' }"
         ></span>
     </fd-ui-checkbox>
+    <fd-ui-form-error [error]="errors().agreeTerms" />
 </div>

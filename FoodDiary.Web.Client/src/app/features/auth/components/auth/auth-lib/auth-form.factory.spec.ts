@@ -33,7 +33,7 @@ describe('auth form factory', () => {
 
     it('should create empty field error maps', () => {
         expect(createEmptyLoginFieldErrors()).toEqual({ email: null, password: null });
-        expect(createEmptyRegisterFieldErrors()).toEqual({ email: null, password: null, confirmPassword: null });
+        expect(createEmptyRegisterFieldErrors()).toEqual({ email: null, password: null, confirmPassword: null, agreeTerms: null });
         expect(createEmptyPasswordResetFieldErrors()).toEqual({ email: null });
     });
 });
