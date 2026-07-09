@@ -26,6 +26,7 @@ import { LoggingApiService } from './services/logging-api.service';
 import { AppBootstrapService } from './shared/bootstrap/app-bootstrap.service';
 import { FoodDiaryTranslationLoader } from './shared/i18n/food-diary-translation.loader';
 import { LocalizationService } from './shared/i18n/localization.service';
+import { MarketingAttributionService } from './shared/marketing/marketing-attribution.service';
 import { isMobileShellWindow } from './shared/platform/mobile-shell-runtime';
 import { ThemeService } from './shared/theme/theme.service';
 
@@ -100,6 +101,7 @@ export const appConfig: ApplicationConfig = {
         LocalizationService,
         ThemeService,
         LoggingApiService,
+        MarketingAttributionService,
         provideClientHydration(withEventReplay(), withNoIncrementalHydration()),
     ],
 };

@@ -325,6 +325,7 @@ public class LayeringTests {
             "services.AddNotificationPersistence();",
             "services.AddProviderCachePersistence();",
             "services.AddFastingPersistence();",
+            "services.AddMarketingPersistence();",
             "services.AddFavoritesPersistence();",
             "services.AddLearningPersistence();",
             "services.AddRecipeInteractionPersistence();",

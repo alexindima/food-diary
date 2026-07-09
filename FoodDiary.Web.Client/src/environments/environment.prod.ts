@@ -12,6 +12,7 @@ export const environment: AppConfig = {
         users: `${apiBasePath}/users`,
         recipes: `${apiBasePath}/recipes`,
         logs: `${apiBasePath}/logs`,
+        marketing: `${apiBasePath}/marketing`,
         weights: `${apiBasePath}/weight-entries`,
         waists: `${apiBasePath}/waist-entries`,
         cycles: `${apiBasePath}/cycles`,

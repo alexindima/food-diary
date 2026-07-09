@@ -20,5 +20,6 @@ public sealed partial class FoodDiaryDbContext {
     public DbSet<FastingCheckIn> FastingCheckIns => Set<FastingCheckIn>();
     public DbSet<FastingSession> FastingSessions => Set<FastingSession>();
     public DbSet<FastingTelemetryEvent> FastingTelemetryEvents => Set<FastingTelemetryEvent>();
+    public DbSet<MarketingAttributionEvent> MarketingAttributionEvents => Set<MarketingAttributionEvent>();
     public DbSet<ExerciseEntry> ExerciseEntries => Set<ExerciseEntry>();
 }

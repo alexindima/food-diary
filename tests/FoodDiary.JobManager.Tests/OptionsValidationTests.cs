@@ -62,6 +62,29 @@ public sealed class OptionsValidationTests {
         Assert.Equal(expected, UserLoginEventCleanupOptions.HasValidConfiguration(options));
     }
 
+    [Theory]
+    [InlineData(true, 365, 500, "30 3 * * *", true)]
+    [InlineData(false, 0, 0, "", true)]
+    [InlineData(true, 0, 500, "30 3 * * *", false)]
+    [InlineData(true, 365, 0, "30 3 * * *", false)]
+    [InlineData(true, 365, 500, "", false)]
+    [InlineData(true, 365, 500, " ", false)]
+    public void MarketingAttributionCleanupOptions_ReturnExpectedValidationResult(
+        bool enabled,
+        int retentionDays,
+        int batchSize,
+        string cron,
+        bool expected) {
+        var options = new MarketingAttributionCleanupOptions {
+            Enabled = enabled,
+            RetentionDays = retentionDays,
+            BatchSize = batchSize,
+            Cron = cron,
+        };
+
+        Assert.Equal(expected, MarketingAttributionCleanupOptions.HasValidConfiguration(options));
+    }
+
     [Fact]
     public void BillingRenewalOptions_WhenDisabled_PassesValidation() {
         var options = new BillingRenewalOptions {

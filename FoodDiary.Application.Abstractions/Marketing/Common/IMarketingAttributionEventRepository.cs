@@ -1,0 +1,3 @@
+namespace FoodDiary.Application.Abstractions.Marketing.Common;
+
+public interface IMarketingAttributionEventRepository : IMarketingAttributionEventReadRepository, IMarketingAttributionEventWriteRepository;

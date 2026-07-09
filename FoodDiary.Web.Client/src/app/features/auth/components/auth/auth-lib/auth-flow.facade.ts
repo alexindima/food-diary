@@ -3,6 +3,7 @@ import { catchError, concatMap, from, map, type Observable, of } from 'rxjs';
 
 import { AuthService } from '../../../../../services/auth.service';
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
+import { MarketingAttributionService } from '../../../../../shared/marketing/marketing-attribution.service';
 import { type AuthResponse, LoginRequest, PasswordResetRequest, RegisterRequest, RestoreAccountRequest } from '../../../models/auth.data';
 import type { GoogleLoginRequest } from '../../../models/google-auth.data';
 
@@ -12,6 +13,7 @@ export type AuthRegisterResult = 'success' | 'emailExists' | 'accountDeleted' | 
 @Service()
 export class AuthFlowFacade {
     private readonly authService = inject(AuthService);
+    private readonly marketingAttribution = inject(MarketingAttributionService);
     private readonly localizationService = inject(LocalizationService);
 
     public login(formValue: Partial<LoginRequest>): Observable<AuthLoginResult> {
@@ -39,6 +41,10 @@ export class AuthFlowFacade {
                 }),
             )
             .pipe(
+                map(response => {
+                    this.marketingAttribution.recordSignupCompleted(response.user.id);
+                    return response;
+                }),
                 map(() => 'success' as const),
                 catchError((error: unknown) => of(this.mapRegisterError(this.getApiErrorCode(error)))),
             );

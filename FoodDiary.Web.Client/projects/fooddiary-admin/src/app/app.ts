@@ -41,6 +41,7 @@ export class AppComponent {
             id: 'admin-tools',
             items: [
                 { id: 'ai-usage', icon: 'smart_toy', label: 'AI Logs', route: '/ai-usage' },
+                { id: 'acquisition', icon: 'campaign', label: 'Acquisition', route: '/acquisition' },
                 { id: 'billing', icon: 'payments', label: 'Billing', route: '/billing' },
                 { id: 'email-templates', icon: 'mail', label: 'Email templates', route: '/email-templates' },
                 { id: 'mail-inbox', icon: 'inbox', label: 'Mail inbox', route: '/mail-inbox' },

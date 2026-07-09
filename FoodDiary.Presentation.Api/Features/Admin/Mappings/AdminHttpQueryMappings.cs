@@ -16,6 +16,7 @@ using FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminUsers;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Fasting.Queries.GetFastingTelemetrySummary;
+using FoodDiary.Application.Marketing.Queries.GetMarketingAttributionSummary;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
@@ -109,5 +110,9 @@ public static class AdminHttpQueryMappings {
 
     public static GetFastingTelemetrySummaryQuery ToQuery(this GetFastingTelemetrySummaryHttpQuery query) {
         return new GetFastingTelemetrySummaryQuery(query.Hours);
+    }
+
+    public static GetMarketingAttributionSummaryQuery ToQuery(this GetMarketingAttributionSummaryHttpQuery query) {
+        return new GetMarketingAttributionSummaryQuery(query.Hours);
     }
 }

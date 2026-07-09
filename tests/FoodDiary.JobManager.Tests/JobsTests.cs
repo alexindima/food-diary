@@ -1061,6 +1061,7 @@ public sealed class JobsTests {
                 Cron = "15 4 * * *",
             }),
             Options.Create(new UserLoginEventCleanupOptions { Cron = "0 3 * * *" }),
+            Options.Create(new MarketingAttributionCleanupOptions { Cron = "30 3 * * *" }),
             Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }));
 
         await service.StartAsync(CancellationToken.None);
@@ -1076,6 +1077,7 @@ public sealed class JobsTests {
                 RecurringJobIds.NotificationsCleanup,
                 RecurringJobIds.UsersCleanup,
                 RecurringJobIds.UserLoginEventsCleanup,
+                RecurringJobIds.MarketingAttributionCleanup,
             ],
             recurringJobManager.JobIds);
         Assert.Equal(
@@ -1089,6 +1091,7 @@ public sealed class JobsTests {
                 RecurringJobIds.EmailOutbox,
                 RecurringJobIds.NotificationWebPushOutbox,
                 RecurringJobIds.UserLoginEventsCleanup,
+                RecurringJobIds.MarketingAttributionCleanup,
             ],
             verifier.ExpectedJobIds);
     }
@@ -1111,6 +1114,7 @@ public sealed class JobsTests {
                 Cron = "15 4 * * *",
             }),
             Options.Create(new UserLoginEventCleanupOptions { Cron = "0 3 * * *" }),
+            Options.Create(new MarketingAttributionCleanupOptions { Cron = "30 3 * * *" }),
             Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.StartAsync(CancellationToken.None));
@@ -1119,6 +1123,7 @@ public sealed class JobsTests {
     [Fact]
     public async Task RecurringJobsHostedService_StopAsync_CompletesWithoutWork() {
         var service = new RecurringJobsHostedService(
+            null!,
             null!,
             null!,
             null!,
@@ -1144,6 +1149,7 @@ public sealed class JobsTests {
         MethodInfo? notificationWebPushOutboxMethod = typeof(NotificationWebPushOutboxJob).GetMethod(nameof(NotificationWebPushOutboxJob.Execute));
         MethodInfo? notificationMethod = typeof(NotificationCleanupJob).GetMethod(nameof(NotificationCleanupJob.Execute));
         MethodInfo? userLoginEventCleanupMethod = typeof(UserLoginEventCleanupJob).GetMethod(nameof(UserLoginEventCleanupJob.Execute));
+        MethodInfo? marketingAttributionCleanupMethod = typeof(MarketingAttributionCleanupJob).GetMethod(nameof(MarketingAttributionCleanupJob.Execute));
         MethodInfo? userMethod = typeof(UserCleanupJob).GetMethod(nameof(UserCleanupJob.Execute));
 
         Assert.NotNull(imageMethod);
@@ -1154,6 +1160,7 @@ public sealed class JobsTests {
         Assert.NotNull(notificationWebPushOutboxMethod);
         Assert.NotNull(notificationMethod);
         Assert.NotNull(userLoginEventCleanupMethod);
+        Assert.NotNull(marketingAttributionCleanupMethod);
         Assert.NotNull(userMethod);
 
         AssertExecutionPolicy(imageMethod!);
@@ -1164,11 +1171,14 @@ public sealed class JobsTests {
         AssertExecutionPolicy(notificationWebPushOutboxMethod!);
         AssertExecutionPolicy(notificationMethod!);
         AssertExecutionPolicy(userLoginEventCleanupMethod!);
+        AssertExecutionPolicy(marketingAttributionCleanupMethod!);
         AssertExecutionPolicy(userMethod!);
         AssertCancellationTokenParameter(imageMethod!);
         AssertCancellationTokenParameter(billingRenewalMethod!);
         AssertCancellationTokenParameter(fastingNotificationMethod!);
         AssertCancellationTokenParameter(notificationMethod!);
+        AssertCancellationTokenParameter(userLoginEventCleanupMethod!);
+        AssertCancellationTokenParameter(marketingAttributionCleanupMethod!);
         AssertCancellationTokenParameter(userMethod!);
     }
 

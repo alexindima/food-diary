@@ -15,6 +15,7 @@ public static partial class DependencyInjection {
         services.AddNotificationPersistence();
         services.AddProviderCachePersistence();
         services.AddFastingPersistence();
+        services.AddMarketingPersistence();
         services.AddFavoritesPersistence();
         services.AddLearningPersistence();
         services.AddRecipeInteractionPersistence();

@@ -78,6 +78,7 @@ public sealed class PersistenceTransactionGuardrailTests {
         string infrastructureRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure");
         string[] allowedFiles = [
             Path.Combine(infrastructureRoot, "Persistence", "Notifications", "NotificationRepository.cs"),
+            Path.Combine(infrastructureRoot, "Persistence", "Tracking", "MarketingAttributionEventRepository.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Users", "UserLoginEventRepository.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Users", "UserRoleMembershipService.cs"),
             Path.Combine(infrastructureRoot, "Services", "UserCleanupService.cs"),

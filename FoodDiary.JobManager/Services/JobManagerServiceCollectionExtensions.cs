@@ -4,6 +4,14 @@ namespace FoodDiary.JobManager.Services;
 
 public static class JobManagerServiceCollectionExtensions {
     public static IServiceCollection AddJobManagerServices(this IServiceCollection services, IConfiguration configuration) {
+        services.AddJobManagerOptions(configuration);
+        services.AddJobManagerJobs();
+        services.AddJobExecutionState();
+
+        return services;
+    }
+
+    private static IServiceCollection AddJobManagerOptions(this IServiceCollection services, IConfiguration configuration) {
         services.AddOptions<ImageCleanupOptions>()
             .Bind(configuration.GetSection(ImageCleanupOptions.SectionName))
             .Validate(ImageCleanupOptions.HasValidConfiguration,
@@ -18,6 +26,11 @@ public static class JobManagerServiceCollectionExtensions {
             .Bind(configuration.GetSection(UserLoginEventCleanupOptions.SectionName))
             .Validate(UserLoginEventCleanupOptions.HasValidConfiguration,
                 "UserLoginEventCleanup configuration requires positive RetentionDays/BatchSize and a non-empty Cron when enabled.")
+            .ValidateOnStart();
+        services.AddOptions<MarketingAttributionCleanupOptions>()
+            .Bind(configuration.GetSection(MarketingAttributionCleanupOptions.SectionName))
+            .Validate(MarketingAttributionCleanupOptions.HasValidConfiguration,
+                "MarketingAttributionCleanup configuration requires positive RetentionDays/BatchSize and a non-empty Cron when enabled.")
             .ValidateOnStart();
         services.AddOptions<NotificationCleanupOptions>()
             .Bind(configuration.GetSection(NotificationCleanupOptions.SectionName))
@@ -50,6 +63,10 @@ public static class JobManagerServiceCollectionExtensions {
                 "NotificationWebPushOutbox configuration requires a positive batch size and a non-empty cron when enabled.")
             .ValidateOnStart();
 
+        return services;
+    }
+
+    private static IServiceCollection AddJobManagerJobs(this IServiceCollection services) {
         services.AddScoped<INotificationPusher, NoOpNotificationPusher>();
         services.AddTransient<ImageCleanupJob>();
         services.AddTransient<BillingRenewalJob>();
@@ -60,7 +77,7 @@ public static class JobManagerServiceCollectionExtensions {
         services.AddTransient<NotificationCleanupJob>();
         services.AddTransient<UserCleanupJob>();
         services.AddTransient<UserLoginEventCleanupJob>();
-        services.AddJobExecutionState();
+        services.AddTransient<MarketingAttributionCleanupJob>();
 
         return services;
     }

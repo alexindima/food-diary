@@ -1,0 +1,186 @@
+@if (isLoading()) {
+    <p>Loading acquisition data...</p>
+} @else if (summary(); as data) {
+    <div class="admin-acquisition fd-grid fd-gap-md">
+        <div class="admin-acquisition__grid fd-grid fd-gap-md">
+            <fd-ui-card>
+                <div class="admin-acquisition__stat fd-grid fd-gap-xxs">
+                    <div class="fd-ui-body-xs fd-ui-text-muted">Visits</div>
+                    <div class="admin-acquisition__value fd-ui-metric-md">{{ data.visits }}</div>
+                </div>
+            </fd-ui-card>
+
+            <fd-ui-card>
+                <div class="admin-acquisition__stat fd-grid fd-gap-xxs">
+                    <div class="fd-ui-body-xs fd-ui-text-muted">Signups</div>
+                    <div class="admin-acquisition__value fd-ui-metric-md">{{ data.signups }}</div>
+                </div>
+            </fd-ui-card>
+
+            <fd-ui-card>
+                <div class="admin-acquisition__stat fd-grid fd-gap-xxs">
+                    <div class="fd-ui-body-xs fd-ui-text-muted">Visit to signup</div>
+                    <div class="admin-acquisition__value fd-ui-metric-md">{{ formatRate(data.signupRatePercent) }}%</div>
+                </div>
+            </fd-ui-card>
+
+            <fd-ui-card>
+                <div class="admin-acquisition__stat fd-grid fd-gap-xxs">
+                    <div class="fd-ui-body-xs fd-ui-text-muted">Signup to premium</div>
+                    <div class="admin-acquisition__value fd-ui-metric-md">{{ formatRate(data.premiumRatePercent) }}%</div>
+                </div>
+            </fd-ui-card>
+        </div>
+
+        <fd-ui-card>
+            <div class="admin-acquisition__section fd-grid fd-gap-sm">
+                <div>
+                    <div class="fd-ui-title-sm">Campaign URL builder</div>
+                    <div class="fd-ui-body-xs fd-ui-text-muted">
+                        Use lowercase sources, medium values like social/cpc/email/referral, and campaigns like 2026_07_launch.
+                    </div>
+                </div>
+
+                @let builder = builderModel();
+                <div class="admin-acquisition__builder fd-grid fd-gap-sm">
+                    <div class="admin-acquisition__field">
+                        <label for="admin-acquisition-base-url">Base URL</label>
+                        <input
+                            id="admin-acquisition-base-url"
+                            type="url"
+                            [value]="builder.baseUrl"
+                            (input)="updateBuilderField('baseUrl', $event)"
+                        />
+                    </div>
+                    <div class="admin-acquisition__field">
+                        <label for="admin-acquisition-source">Source</label>
+                        <input
+                            id="admin-acquisition-source"
+                            type="text"
+                            [value]="builder.source"
+                            (input)="updateBuilderField('source', $event)"
+                        />
+                    </div>
+                    <div class="admin-acquisition__field">
+                        <label for="admin-acquisition-medium">Medium</label>
+                        <input
+                            id="admin-acquisition-medium"
+                            type="text"
+                            [value]="builder.medium"
+                            (input)="updateBuilderField('medium', $event)"
+                        />
+                    </div>
+                    <div class="admin-acquisition__field">
+                        <label for="admin-acquisition-campaign">Campaign</label>
+                        <input
+                            id="admin-acquisition-campaign"
+                            type="text"
+                            [value]="builder.campaign"
+                            (input)="updateBuilderField('campaign', $event)"
+                        />
+                    </div>
+                    <div class="admin-acquisition__field">
+                        <label for="admin-acquisition-content">Content</label>
+                        <input
+                            id="admin-acquisition-content"
+                            type="text"
+                            [value]="builder.content"
+                            (input)="updateBuilderField('content', $event)"
+                        />
+                    </div>
+                    <div class="admin-acquisition__field">
+                        <label for="admin-acquisition-term">Term</label>
+                        <input
+                            id="admin-acquisition-term"
+                            type="text"
+                            [value]="builder.term"
+                            (input)="updateBuilderField('term', $event)"
+                        />
+                    </div>
+                </div>
+
+                <div class="admin-acquisition__url fd-ui-body-sm">{{ campaignUrl() }}</div>
+            </div>
+        </fd-ui-card>
+
+        <div class="admin-acquisition__columns fd-grid fd-gap-md">
+            <fd-ui-card>
+                <div class="admin-acquisition__section fd-grid fd-gap-sm">
+                    <div>
+                        <div class="fd-ui-title-sm">Top campaigns</div>
+                        <div class="fd-ui-body-xs fd-ui-text-muted">Last {{ data.windowHours }} hours</div>
+                    </div>
+
+                    @for (item of data.topCampaigns; track formatBreakdownLabel(item)) {
+                        <div class="admin-acquisition__row fd-grid fd-gap-xxs">
+                            <div class="admin-acquisition__row-main fd-row fd-justify-between fd-gap-md">
+                                <strong>{{ formatBreakdownLabel(item) }}</strong>
+                                <span>{{ item.visits }} visits</span>
+                            </div>
+                            <div class="fd-ui-body-xs fd-ui-text-muted">
+                                {{ item.signups }} signups, {{ formatRate(item.signupRatePercent) }}% signup rate,
+                                {{ item.premiumStarts }} premium starts
+                            </div>
+                        </div>
+                    } @empty {
+                        <p>No attributed campaigns yet.</p>
+                    }
+                </div>
+            </fd-ui-card>
+
+            <fd-ui-card>
+                <div class="admin-acquisition__section fd-grid fd-gap-sm">
+                    <div>
+                        <div class="fd-ui-title-sm">Top sources</div>
+                        <div class="fd-ui-body-xs fd-ui-text-muted">UTM sources and referral hosts</div>
+                    </div>
+
+                    @for (item of data.topSources; track formatBreakdownLabel(item)) {
+                        <div class="admin-acquisition__row fd-grid fd-gap-xxs">
+                            <div class="admin-acquisition__row-main fd-row fd-justify-between fd-gap-md">
+                                <strong>{{ formatBreakdownLabel(item) }}</strong>
+                                <span>{{ item.events }} events</span>
+                            </div>
+                            <div class="fd-ui-body-xs fd-ui-text-muted">
+                                {{ item.anonymousVisitors }} visitors, {{ item.sessions }} sessions,
+                                {{ formatRate(item.signupRatePercent) }}% signup rate
+                            </div>
+                        </div>
+                    } @empty {
+                        <p>No source data yet.</p>
+                    }
+                </div>
+            </fd-ui-card>
+        </div>
+
+        <fd-ui-card>
+            <div class="admin-acquisition__section fd-grid fd-gap-sm">
+                <div>
+                    <div class="fd-ui-title-sm">Recent attribution events</div>
+                    <div class="fd-ui-body-xs fd-ui-text-muted">
+                        Organic events: {{ data.organicEvents }}, attributed events: {{ data.attributedEvents }}
+                    </div>
+                </div>
+
+                <div class="admin-acquisition__events fd-grid fd-gap-xs">
+                    @for (event of data.recentEvents; track event.occurredAtUtc + event.sessionId) {
+                        <div class="admin-acquisition__event fd-grid fd-gap-xxs">
+                            <div class="admin-acquisition__row-main fd-row fd-justify-between fd-gap-md">
+                                <strong>{{ formatAttribution(event) }}</strong>
+                                <span>{{ formatRelativeDate(event.occurredAtUtc) }}</span>
+                            </div>
+                            <div class="fd-ui-body-xs fd-ui-text-muted">{{ event.eventType }} / {{ event.landingPath }}</div>
+                            <div class="fd-ui-body-xs fd-ui-text-muted">
+                                visitor {{ event.anonymousId }} / session {{ event.sessionId }}
+                            </div>
+                        </div>
+                    } @empty {
+                        <p>No attribution events yet.</p>
+                    }
+                </div>
+            </div>
+        </fd-ui-card>
+    </div>
+} @else {
+    <p>Acquisition data is unavailable.</p>
+}

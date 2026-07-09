@@ -1,12 +1,14 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Application.Abstractions.Marketing.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 using FoodDiary.Application.Billing.Queries.GetBillingOverview;
 using FoodDiary.Application.Billing.Services;
+using FoodDiary.Application.Marketing.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Users;
@@ -106,7 +108,8 @@ public partial class BillingFeatureTests {
         FakeUserRepository userRepository,
         InMemoryBillingSubscriptionRepository subscriptionRepository,
         RecordingBillingPaymentRepository paymentRepository,
-        RecordingBillingWebhookEventRepository webhookEventRepository) {
+        RecordingBillingWebhookEventRepository webhookEventRepository,
+        IMarketingConversionRecorder? marketingConversionRecorder = null) {
         var dateTimeProvider = new FixedDateTimeProvider(Now);
         var billingAccessService = new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider);
         return new ProcessBillingWebhookCommandHandler(
@@ -120,6 +123,7 @@ public partial class BillingFeatureTests {
                 subscriptionRepository,
                 userRepository,
                 billingAccessService,
+                marketingConversionRecorder ?? new NoOpMarketingConversionRecorder(),
                 dateTimeProvider));
     }
 
@@ -599,5 +603,55 @@ public partial class BillingFeatureTests {
     private sealed class NoOpBillingTransactionRunner : IBillingTransactionRunner {
         public Task ExecuteAsync(Func<CancellationToken, Task> operation, CancellationToken cancellationToken = default) =>
             operation(cancellationToken);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class NoOpMarketingConversionRecorder : IMarketingConversionRecorder {
+        public Task RecordPremiumStartedAsync(Guid userId, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingMarketingConversionRecorder : IMarketingConversionRecorder {
+        public List<Guid> PremiumStartedUserIds { get; } = [];
+
+        public Task RecordPremiumStartedAsync(Guid userId, CancellationToken cancellationToken = default) {
+            PremiumStartedUserIds.Add(userId);
+            return Task.CompletedTask;
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class InMemoryMarketingAttributionEventRepository(params MarketingAttributionEventRecord[] seedRecords)
+        : IMarketingAttributionEventRepository {
+        public List<MarketingAttributionEventRecord> Records { get; } = [.. seedRecords];
+
+        public Task AddAsync(MarketingAttributionEventRecord record, CancellationToken cancellationToken = default) {
+            Records.Add(record);
+            return Task.CompletedTask;
+        }
+
+        public Task<int> DeleteOlderThanAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyList<MarketingAttributionEventRecord>> GetSinceAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) {
+            IReadOnlyList<MarketingAttributionEventRecord> matchingRecords = [
+                .. Records
+                .Where(record => record.OccurredAtUtc >= sinceUtc)
+                .OrderByDescending(record => record.OccurredAtUtc),
+            ];
+            return Task.FromResult(matchingRecords);
+        }
+
+        public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Records
+                .Where(record => record.UserId == userId)
+                .OrderByDescending(record => record.OccurredAtUtc)
+                .FirstOrDefault());
+
+        public Task<bool> ExistsForUserAsync(Guid userId, string eventType, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Records.Any(record =>
+                record.UserId == userId &&
+                string.Equals(record.EventType, eventType, StringComparison.Ordinal)));
     }
 }

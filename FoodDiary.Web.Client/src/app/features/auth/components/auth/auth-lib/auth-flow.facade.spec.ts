@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../../../services/auth.service';
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
+import { MarketingAttributionService } from '../../../../../shared/marketing/marketing-attribution.service';
 import type { AuthResponse } from '../../../models/auth.data';
 import { AuthFlowFacade } from './auth-flow.facade';
 
@@ -19,6 +20,9 @@ let localizationServiceMock: {
     getCurrentLanguage: ReturnType<typeof vi.fn>;
     loadApplicationTranslationsAsync: ReturnType<typeof vi.fn>;
 };
+let marketingAttributionMock: {
+    recordSignupCompleted: ReturnType<typeof vi.fn>;
+};
 
 beforeEach(() => {
     authServiceMock = {
@@ -33,12 +37,16 @@ beforeEach(() => {
         getCurrentLanguage: vi.fn().mockReturnValue('en'),
         loadApplicationTranslationsAsync: vi.fn().mockResolvedValue(undefined),
     };
+    marketingAttributionMock = {
+        recordSignupCompleted: vi.fn(),
+    };
 
     TestBed.configureTestingModule({
         providers: [
             AuthFlowFacade,
             { provide: AuthService, useValue: authServiceMock },
             { provide: LocalizationService, useValue: localizationServiceMock },
+            { provide: MarketingAttributionService, useValue: marketingAttributionMock },
         ],
     });
 });
@@ -78,6 +86,15 @@ describe('AuthFlowFacade register', () => {
 
         await expect(firstValueFrom(facade.register({ email: 'taken@example.com', password: 'password' }))).resolves.toBe('emailExists');
         expect(authServiceMock.register).toHaveBeenCalledWith(expect.objectContaining({ language: 'en' }));
+    });
+
+    it('should record signup attribution after successful registration', async () => {
+        const facade = TestBed.inject(AuthFlowFacade);
+        authServiceMock.register.mockReturnValue(of(createAuthResponse('en')));
+
+        await expect(firstValueFrom(facade.register({ email: 'new@example.com', password: 'password' }))).resolves.toBe('success');
+
+        expect(marketingAttributionMock.recordSignupCompleted).toHaveBeenCalledWith('user-id');
     });
 });
 

@@ -42,6 +42,8 @@ using FoodDiary.Application.Lessons.Common;
 using FoodDiary.Application.Lessons.Services;
 using FoodDiary.Application.MealPlans.Common;
 using FoodDiary.Application.MealPlans.Services;
+using FoodDiary.Application.Marketing.Common;
+using FoodDiary.Application.Marketing.Services;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Services;
@@ -120,6 +122,8 @@ public static class DependencyInjection {
         services.AddScoped<ICycleReadService, CycleReadService>();
         services.AddScoped<IDailyAdviceReadService, DailyAdviceReadService>();
         services.AddScoped<ILessonReadService, LessonReadService>();
+        services.AddScoped<IMarketingConversionRecorder, MarketingConversionRecorder>();
+        services.AddScoped<IMarketingAttributionSummaryReadService, MarketingAttributionSummaryReadService>();
         services.AddScoped<IMealNutritionService, MealNutritionService>();
         services.AddScoped<IMealPlanReadService, MealPlanReadService>();
         services.TryAddScoped<IDashboardStatisticsReadService, MediatorDashboardStatisticsReadService>();

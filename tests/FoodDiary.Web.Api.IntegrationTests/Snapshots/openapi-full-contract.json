@@ -2,6 +2,21 @@
   "OpenApi": "3.0.4",
   "Endpoints": [
     {
+      "Path": "/api/v{version}/admin/acquisition/summary",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "403",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/ai-prompts",
       "Operations": [
         {

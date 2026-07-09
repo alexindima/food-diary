@@ -27,8 +27,16 @@ export class BrowserWindowService {
         return this.getWindow()?.location.href ?? null;
     }
 
+    public getSearch(): string | null {
+        return this.getWindow()?.location.search ?? null;
+    }
+
     public getPathname(): string | null {
         return this.getWindow()?.location.pathname ?? null;
+    }
+
+    public getReferrer(): string | null {
+        return this.document.referrer.length > 0 ? this.document.referrer : null;
     }
 
     public getHostname(): string | null {

@@ -19,6 +19,7 @@ This directory contains long-form repository documentation. Keep root-level mark
 - `backend/BACKEND_OBSERVABILITY_BASELINE.md`
 - `backend/BACKEND_PERFORMANCE_REVIEW.md`
 - `backend/BACKEND_RUNBOOKS.md`
+- `backend/MARKETING_ATTRIBUTION_RUNBOOK.md`
 - `backend/BACKEND_SECURITY_HARDENING.md`
 - `backend/BACKEND_TIME_POLICY.md`
 

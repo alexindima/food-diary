@@ -1,0 +1,56 @@
+.admin-acquisition {
+    &__grid,
+    &__columns {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    &__value {
+        color: var(--fd-color-primary-700);
+    }
+
+    &__builder {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    &__field {
+        display: grid;
+        gap: var(--fd-space-xxs);
+
+        span {
+            color: var(--fd-color-text-muted);
+            font-size: var(--fd-text-body-xs-size);
+        }
+
+        input {
+            min-width: 0;
+            padding: var(--fd-space-xs) var(--fd-space-sm);
+            border: var(--fd-border-width) solid var(--fd-color-border-subtle);
+            border-radius: var(--fd-radius-sm);
+            background: var(--fd-color-surface);
+            color: var(--fd-color-text);
+        }
+    }
+
+    &__url {
+        overflow-wrap: anywhere;
+        padding: var(--fd-space-sm);
+        border-radius: var(--fd-radius-sm);
+        background: var(--fd-color-surface-subtle);
+    }
+
+    &__row,
+    &__event {
+        padding: var(--fd-space-sm) 0;
+        border-top: var(--fd-border-width) solid var(--fd-color-border-subtle);
+    }
+
+    &__row-main {
+        min-width: 0;
+
+        strong,
+        span {
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+    }
+}

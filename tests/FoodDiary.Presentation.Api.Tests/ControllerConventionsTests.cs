@@ -362,6 +362,7 @@ public sealed class ControllerConventionsTests {
         type?.FullName is
             "FoodDiary.Presentation.Api.Features.Billing.BillingWebhookController" or
             "FoodDiary.Presentation.Api.Features.Logs.LogsController" or
+            "FoodDiary.Presentation.Api.Features.Marketing.MarketingAttributionController" or
             "FoodDiary.Presentation.Api.Features.Version.VersionController";
 
     private static bool IsNonStandardInfrastructureController(Type? type) =>
