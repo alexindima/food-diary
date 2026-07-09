@@ -1705,9 +1705,9 @@ $fd-theme-design-tokens: (
             var(--fd-shadow-lg), inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-teal-700) 28%, transparent);
         --fd-shadow-notification-security-hover:
             var(--fd-shadow-lg), inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-palette-warning-700) 28%, transparent);
-        --fd-landing-shadow-soft: 0 16px 36px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        --fd-landing-shadow-medium: 0 22px 48px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
-        --fd-landing-shadow-strong: 0 28px 60px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
+        --fd-landing-shadow-soft: 0 10px 24px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
+        --fd-landing-shadow-medium: 0 16px 36px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        --fd-landing-shadow-strong: 0 24px 52px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
         --fd-landing-shadow-highlight: inset 0 var(--fd-border-width) 0 color-mix(in srgb, var(--fd-color-white) 6%, transparent);
         --fd-landing-shadow-chip:
             inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 6%, transparent),
@@ -1880,8 +1880,8 @@ $fd-theme-design-tokens: (
         --fd-landing-hero-feature-title-compact-size: clamp(22px, 6vw, 30px);
         --fd-landing-seo-title-size: clamp(2.3rem, 5vw, 3.9rem);
         --fd-landing-seo-section-title-size: clamp(1.75rem, 3vw, 2.4rem);
-        --fd-landing-radius-panel: var(--fd-radius-panel);
-        --fd-landing-radius-card: var(--fd-radius-card);
+        --fd-landing-radius-panel: var(--fd-radius-xl);
+        --fd-landing-radius-card: var(--fd-radius-lg);
         --fd-landing-radius-chip: var(--fd-radius-chip);
         --fd-landing-surface: color-mix(in srgb, var(--fd-color-surface-raised) 82%, transparent);
         --fd-landing-surface-strong: color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent);

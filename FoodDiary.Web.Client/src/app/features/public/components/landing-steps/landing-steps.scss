@@ -71,7 +71,7 @@
     }
 
     &__title {
-        @include landing.marketing-title(1.08rem, 1.25, -0.01em, var(--fd-color-slate-900), 800);
+        @include landing.marketing-title(1.08rem, 1.25, 0, var(--fd-color-slate-900), 800);
     }
 
     &__text {
@@ -93,7 +93,7 @@
     }
 
     &__cta-title {
-        @include landing.marketing-title(var(--fd-landing-title-size-dark), 1.08, -0.02em, var(--fd-color-slate-50));
+        @include landing.marketing-title(var(--fd-landing-title-size-dark), 1.08, 0, var(--fd-color-slate-50));
     }
 
     &__cta-text {

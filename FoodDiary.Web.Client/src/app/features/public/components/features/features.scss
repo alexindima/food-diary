@@ -27,7 +27,7 @@
     }
 
     &__title {
-        @include landing.marketing-title(var(--fd-landing-title-size-sm), 1.08, -0.02em, var(--fd-color-text));
+        @include landing.marketing-title(var(--fd-landing-title-size-sm), 1.08, 0, var(--fd-color-text));
     }
 
     &__subtitle,
@@ -126,7 +126,7 @@
 
     &__panel-title {
         margin: var(--fd-space-lg) 0 0;
-        @include landing.marketing-title(var(--fd-landing-title-size-xs), 1.08, -0.02em, var(--fd-color-text));
+        @include landing.marketing-title(var(--fd-landing-title-size-xs), 1.08, 0, var(--fd-color-text));
     }
 
     &__panel-eyebrow + &__panel-title {
@@ -166,7 +166,7 @@
     }
 
     &__card-title {
-        @include landing.marketing-title(1.15rem, 1.25, -0.01em, var(--fd-color-text));
+        @include landing.marketing-title(1.15rem, 1.25, 0, var(--fd-color-text));
     }
 
     &__card-description {

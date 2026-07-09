@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, Injector, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router, RouterOutlet } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourHostComponent } from 'fd-tour';
 import { FdUiToastHostComponent, FdUiTopLoaderComponent } from 'fd-ui-kit';
 import { filter, from, mergeMap } from 'rxjs';
@@ -26,6 +27,7 @@ import { SidebarComponent } from './sidebar/sidebar';
         FdUiToastHostComponent,
         FdUiTopLoaderComponent,
         FdTourHostComponent,
+        TranslatePipe,
     ],
     templateUrl: './app.html',
     styleUrl: './app.scss',

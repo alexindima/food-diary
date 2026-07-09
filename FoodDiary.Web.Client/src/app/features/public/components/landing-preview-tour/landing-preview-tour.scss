@@ -126,7 +126,7 @@
     color: var(--fd-color-slate-600);
 
     strong {
-        @include landing.marketing-title(1rem, 1.3, -0.01em, var(--fd-color-slate-900));
+        @include landing.marketing-title(1rem, 1.3, 0, var(--fd-color-slate-900));
         color: var(--fd-color-slate-900);
     }
 
@@ -171,7 +171,7 @@
     }
 
     &__catalog-title {
-        @include landing.marketing-title(var(--fd-landing-title-size-dark-sm), 1.08, -0.02em, var(--fd-color-slate-900), 800);
+        @include landing.marketing-title(var(--fd-landing-title-size-dark-sm), 1.08, 0, var(--fd-color-slate-900), 800);
     }
 
     &__catalog-subtitle {
@@ -204,7 +204,7 @@
     }
 
     &__draft-title {
-        @include landing.marketing-title(var(--fd-landing-title-size-dark-lg), 1.06, -0.025em, var(--fd-color-slate-900));
+        @include landing.marketing-title(var(--fd-landing-title-size-dark-lg), 1.06, 0, var(--fd-color-slate-900));
     }
 
     &__draft-subtitle,

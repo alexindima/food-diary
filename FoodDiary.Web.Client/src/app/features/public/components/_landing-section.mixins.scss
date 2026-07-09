@@ -20,7 +20,7 @@
 
 @mixin marketing-eyebrow(
     $size: var(--fd-text-stat-value-size),
-    $letter-spacing: var(--fd-letter-spacing-emphasis),
+    $letter-spacing: 0,
     $weight: var(--fd-text-section-title-weight)
 ) {
     font-weight: $weight;
@@ -31,7 +31,7 @@
 @mixin marketing-title(
     $size: var(--fd-landing-title-size),
     $line-height: 1.08,
-    $letter-spacing: var(--fd-letter-spacing-tight),
+    $letter-spacing: 0,
     $color: var(--fd-color-slate-900),
     $weight: null
 ) {

@@ -38,9 +38,10 @@
     &__section-title {
         margin: 0;
         font-size: var(--fd-landing-seo-section-title-size);
-        line-height: 1.08;
-        letter-spacing: var(--fd-text-metric-hero-tracking);
+        line-height: 1.12;
+        letter-spacing: 0;
         color: inherit;
+        text-wrap: balance;
     }
 
     &__section-subtitle {
@@ -91,22 +92,33 @@
     &__feature-card,
     &__step-card,
     &__related-card {
-        border-radius: var(--fd-radius-panel);
+        border-radius: var(--fd-landing-radius-panel);
         padding: var(--fd-space-lg);
         background: var(--fd-bg-surface-panel);
         border: var(--fd-border-width) solid var(--fd-color-border-primary-faint);
-        box-shadow: var(--fd-shadow-lg);
+        box-shadow: var(--fd-landing-shadow-soft);
     }
 
     &__audience-card {
         background: var(--fd-bg-surface-solid);
+        border-color: color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent);
+    }
+
+    &__feature-card {
+        background: color-mix(in srgb, var(--fd-color-white) 92%, var(--fd-color-teal-500));
+        border-color: color-mix(in srgb, var(--fd-color-teal-500) 16%, transparent);
+    }
+
+    &__step-card {
+        background: color-mix(in srgb, var(--fd-color-white) 94%, var(--fd-color-amber-500));
+        border-color: color-mix(in srgb, var(--fd-color-amber-500) 18%, transparent);
     }
 
     &__trust-panel {
         display: grid;
         gap: var(--fd-space-sm);
         padding: var(--fd-space-lg);
-        border-radius: var(--fd-radius-panel);
+        border-radius: var(--fd-landing-radius-panel);
         background: color-mix(in srgb, var(--fd-color-primary-50) 68%, var(--fd-color-white));
         border: var(--fd-border-width) solid var(--fd-color-border-primary-subtle);
     }
@@ -130,7 +142,7 @@
         width: var(--fd-size-control-toolbar);
         height: var(--fd-size-control-toolbar);
         margin-bottom: var(--fd-space-sm);
-        border-radius: var(--fd-radius-lg);
+        border-radius: var(--fd-radius-md);
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -145,11 +157,11 @@
     }
 
     &__faq-item {
-        border-radius: var(--fd-radius-panel);
+        border-radius: var(--fd-landing-radius-panel);
         overflow: hidden;
         background: var(--fd-bg-surface-solid);
         border: var(--fd-border-width) solid var(--fd-color-border-primary-subtle);
-        box-shadow: var(--fd-shadow-md);
+        box-shadow: var(--fd-landing-shadow-soft);
     }
 
     &__faq-question {
@@ -206,7 +218,7 @@
         &:hover {
             transform: translateY(-2px);
             border-color: color-mix(in srgb, var(--fd-color-primary-500) 20%, transparent);
-            box-shadow: var(--fd-shadow-lg);
+            box-shadow: var(--fd-landing-shadow-medium);
         }
     }
 
@@ -220,5 +232,55 @@
     &__related-arrow {
         color: var(--fd-color-primary-700);
         font-weight: var(--fd-text-section-title-weight);
+    }
+
+    @media #{variables.$media-phablet} {
+        &__container {
+            width: min(var(--seo-landing-container-max-width), calc(100% - var(--fd-space-sm) - var(--fd-space-sm)));
+        }
+
+        &__section {
+            padding: var(--fd-space-xl) 0 var(--fd-space-xs);
+        }
+
+        &__section--steps,
+        &__section--faq,
+        &__section--trust,
+        &__section--related {
+            padding-top: var(--fd-space-xl);
+        }
+
+        &__section--cta {
+            padding: var(--fd-space-xl) 0 var(--fd-space-md);
+        }
+
+        &__section-copy {
+            margin-bottom: var(--fd-space-sm);
+        }
+
+        &__section-title {
+            font-size: var(--fd-text-display-sm-size);
+        }
+
+        &__section-subtitle {
+            font-size: var(--fd-text-body-size);
+            line-height: 1.58;
+        }
+
+        &__audience-grid,
+        &__feature-grid,
+        &__steps,
+        &__related-grid {
+            grid-template-columns: 1fr;
+            gap: var(--fd-space-sm);
+        }
+
+        &__audience-card,
+        &__feature-card,
+        &__step-card,
+        &__related-card,
+        &__trust-panel {
+            padding: var(--fd-space-md);
+        }
     }
 }

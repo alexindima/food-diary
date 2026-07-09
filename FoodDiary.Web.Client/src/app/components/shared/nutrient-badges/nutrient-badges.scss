@@ -10,18 +10,21 @@
 .nutrient-badges {
     --fd-nutrient-badges-border: var(--fd-border-default);
     --fd-nutrient-badges-shadow: var(--fd-shadow-none);
+    --fd-nutrient-badges-edge-padding-inline: var(--fd-space-xs);
     border-radius: var(--fd-radius-nutrient-bar);
     background: var(--fd-bg-surface);
     color: var(--fd-color-text);
     align-items: stretch;
     width: fit-content;
     max-width: 100%;
+    box-sizing: border-box;
     border: var(--fd-nutrient-badges-border);
     box-shadow: var(--fd-nutrient-badges-shadow);
 }
 
 .nutrient-badges__chip {
     align-self: stretch;
+    box-sizing: border-box;
     padding: var(--fd-space-chip-select-item-padding);
     border-radius: 0;
     background: transparent;
@@ -140,9 +143,18 @@
     width: 100%;
     min-width: 100%;
     height: 100%;
+    padding-inline: var(--fd-nutrient-badges-edge-padding-inline);
     border: 0;
     border-top: var(--fd-border-default);
     border-radius: 0 0 var(--fd-radius-card) 0;
+}
+
+.nutrient-badges--edge-to-edge .nutrient-badges__chip:first-child {
+    padding-left: var(--fd-space-sm);
+}
+
+.nutrient-badges--edge-to-edge .nutrient-badges__chip:last-child {
+    padding-right: var(--fd-space-sm);
 }
 
 .nutrient-badges--with-calories {
@@ -156,6 +168,7 @@
 
 @container (max-width: 760px) {
     .nutrient-badges {
+        --fd-nutrient-badges-edge-padding-inline: var(--fd-space-md);
         gap: 0;
         padding: var(--fd-space-status-badge-padding);
         border-radius: var(--fd-radius-nutrient-bar-compact);
@@ -174,6 +187,11 @@
         padding: var(--fd-space-status-badge-padding);
         border-right: var(--fd-border-width) solid var(--fd-color-border-divider-soft);
         min-width: 0;
+    }
+
+    .nutrient-badges--edge-to-edge .nutrient-badges__chip {
+        padding-top: var(--fd-space-xxs);
+        padding-bottom: var(--fd-space-xxs);
     }
 
     .nutrient-badges__chip:last-child {
@@ -197,7 +215,16 @@
         width: 100%;
         min-width: 100%;
         height: 100%;
+        padding-inline: var(--fd-nutrient-badges-edge-padding-inline);
         border-radius: 0 0 var(--fd-radius-card) var(--fd-radius-card);
+    }
+
+    .nutrient-badges--edge-to-edge .nutrient-badges__chip:first-child {
+        padding-left: var(--fd-space-md);
+    }
+
+    .nutrient-badges--edge-to-edge .nutrient-badges__chip:last-child {
+        padding-right: var(--fd-space-md);
     }
 
     .nutrient-badges--with-calories {

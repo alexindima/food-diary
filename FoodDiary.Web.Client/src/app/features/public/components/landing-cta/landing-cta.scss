@@ -13,7 +13,7 @@
     }
 
     &__title {
-        @include landing.marketing-title(var(--fd-landing-title-size), 1.05, -0.02em, var(--fd-color-slate-50));
+        @include landing.marketing-title(var(--fd-landing-title-size), 1.05, 0, var(--fd-color-slate-50));
     }
 
     &__subtitle {

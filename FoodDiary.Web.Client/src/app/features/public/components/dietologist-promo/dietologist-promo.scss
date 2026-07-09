@@ -30,7 +30,7 @@
 
     &__title {
         margin: var(--fd-space-lg) 0 0;
-        @include landing.marketing-title(var(--fd-landing-title-size), 1.08, -0.02em, var(--fd-color-text));
+        @include landing.marketing-title(var(--fd-landing-title-size), 1.08, 0, var(--fd-color-text));
     }
 
     &__eyebrow + &__title {

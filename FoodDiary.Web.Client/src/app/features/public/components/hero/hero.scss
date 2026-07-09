@@ -57,7 +57,7 @@
     }
 
     &__title {
-        @include landing.marketing-title(var(--fd-landing-hero-title-size), 1, -0.035em);
+        @include landing.marketing-title(var(--fd-landing-hero-title-size), 1.04, 0);
         text-wrap: balance;
     }
 
@@ -182,7 +182,7 @@
 
     &__feature-title {
         max-width: 100%;
-        @include landing.marketing-title(var(--fd-landing-hero-feature-title-compact-size), 1.08, -0.03em, var(--fd-color-slate-50), 800);
+        @include landing.marketing-title(var(--fd-landing-hero-feature-title-compact-size), 1.08, 0, var(--fd-color-slate-50), 800);
     }
 
     &__feature-description {
@@ -230,7 +230,7 @@
         flex-direction: column;
         gap: var(--fd-space-xxs);
         padding: var(--fd-space-sm);
-        border-radius: var(--fd-radius-panel);
+        border-radius: var(--fd-landing-radius-panel);
         background: var(--fd-bg-surface-glass-medium);
         color: var(--fd-color-landing-dark-note);
 
@@ -330,9 +330,26 @@
     }
 
     @media #{variables.$media-phablet} {
+        padding: var(--fd-space-lg) 0 var(--fd-space-xl);
+
+        &__title {
+            font-size: var(--fd-text-metric-hero-size);
+            line-height: 1.06;
+        }
+
+        &__subtitle,
+        &__search-text {
+            font-size: var(--fd-text-body-size);
+            line-height: 1.58;
+        }
+
+        &__actions {
+            gap: var(--fd-space-xs);
+        }
+
         &__visual {
             order: -1;
-            margin-bottom: var(--fd-space-md);
+            margin-bottom: var(--fd-space-sm);
         }
 
         &__grid {
