@@ -8,6 +8,32 @@ public sealed class MarketingConversionRecorderTests {
     private static readonly DateTime Now = new(2026, 7, 9, 10, 0, 0, DateTimeKind.Utc);
 
     [Fact]
+    public async Task RecordPremiumStartedAsync_WithEmptyUserId_DoesNotReadOrWriteAttribution() {
+        var repository = new InMemoryMarketingAttributionEventRepository();
+        var recorder = new MarketingConversionRecorder(repository, repository, new FixedDateTimeProvider(Now));
+
+        await recorder.RecordPremiumStartedAsync(Guid.Empty, CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(0, repository.ExistsForUserCallCount),
+            () => Assert.Equal(0, repository.GetLatestForUserCallCount),
+            () => Assert.Empty(repository.Records));
+    }
+
+    [Fact]
+    public async Task RecordPremiumStartedAsync_WithoutUserAttribution_DoesNotRecordEvent() {
+        var repository = new InMemoryMarketingAttributionEventRepository();
+        var recorder = new MarketingConversionRecorder(repository, repository, new FixedDateTimeProvider(Now));
+
+        await recorder.RecordPremiumStartedAsync(Guid.NewGuid(), CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(1, repository.ExistsForUserCallCount),
+            () => Assert.Equal(1, repository.GetLatestForUserCallCount),
+            () => Assert.Empty(repository.Records));
+    }
+
+    [Fact]
     public async Task RecordPremiumStartedAsync_WithUserAttribution_CopiesLatestAttributionContext() {
         var userId = Guid.NewGuid();
         var repository = new InMemoryMarketingAttributionEventRepository(
@@ -74,6 +100,8 @@ public sealed class MarketingConversionRecorderTests {
     private sealed class InMemoryMarketingAttributionEventRepository(params MarketingAttributionEventRecord[] seedRecords)
         : IMarketingAttributionEventRepository {
         public List<MarketingAttributionEventRecord> Records { get; } = [.. seedRecords];
+        public int ExistsForUserCallCount { get; private set; }
+        public int GetLatestForUserCallCount { get; private set; }
 
         public Task AddAsync(MarketingAttributionEventRecord record, CancellationToken cancellationToken = default) {
             Records.Add(record);
@@ -92,15 +120,19 @@ public sealed class MarketingConversionRecorderTests {
             return Task.FromResult(matchingRecords);
         }
 
-        public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default) =>
-            Task.FromResult(Records
+        public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default) {
+            GetLatestForUserCallCount++;
+            return Task.FromResult(Records
                 .Where(record => record.UserId == userId)
                 .OrderByDescending(record => record.OccurredAtUtc)
                 .FirstOrDefault());
+        }
 
-        public Task<bool> ExistsForUserAsync(Guid userId, string eventType, CancellationToken cancellationToken = default) =>
-            Task.FromResult(Records.Any(record =>
+        public Task<bool> ExistsForUserAsync(Guid userId, string eventType, CancellationToken cancellationToken = default) {
+            ExistsForUserCallCount++;
+            return Task.FromResult(Records.Any(record =>
                 record.UserId == userId &&
                 string.Equals(record.EventType, eventType, StringComparison.Ordinal)));
+        }
     }
 }

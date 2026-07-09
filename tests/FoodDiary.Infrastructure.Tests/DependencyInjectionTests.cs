@@ -896,6 +896,13 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
+            "FoodDiary.Application.Abstractions.Marketing.Common.IMarketingAttributionEventRepository",
+            [
+                "FoodDiary.Application.Abstractions.Marketing.Common.IMarketingAttributionEventReadRepository",
+                "FoodDiary.Application.Abstractions.Marketing.Common.IMarketingAttributionEventWriteRepository",
+            ]
+        },
+        {
             "FoodDiary.Application.Abstractions.Authentication.Common.IRefreshTokenSessionRepository",
             [
                 "FoodDiary.Application.Abstractions.Authentication.Common.IRefreshTokenSessionReadRepository",
