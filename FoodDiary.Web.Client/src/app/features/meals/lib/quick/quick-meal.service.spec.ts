@@ -131,6 +131,24 @@ describe('QuickMealService draft items', () => {
         expect(service.items()).toEqual([]);
     });
 
+    it('clears regular draft items when an authenticated session starts', () => {
+        service.addProduct(product);
+
+        sessionEvents.notifyAuthenticated();
+
+        expect(service.items()).toEqual([]);
+        expect(service.hasItems()).toBe(false);
+    });
+
+    it('clears regular draft items when the session ends', () => {
+        service.addProduct(product);
+
+        sessionEvents.notifySessionEnded();
+
+        expect(service.items()).toEqual([]);
+        expect(service.hasItems()).toBe(false);
+    });
+
     it('updates an existing draft item amount', () => {
         service.addProduct(product);
 

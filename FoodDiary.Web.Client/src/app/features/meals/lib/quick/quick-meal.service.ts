@@ -51,7 +51,10 @@ export class QuickMealService {
 
     public constructor() {
         this.sessionEvents.authenticated$.pipe(takeUntilDestroyed()).subscribe(() => {
-            this.exitPreview();
+            this.clearSessionDraft();
+        });
+        this.sessionEvents.sessionEnded$.pipe(takeUntilDestroyed()).subscribe(() => {
+            this.clearSessionDraft();
         });
     }
 
@@ -184,6 +187,12 @@ export class QuickMealService {
         }
 
         this.clear();
+        this.isPreviewMode = false;
+    }
+
+    private clearSessionDraft(): void {
+        this.clear();
+        this.isSavingSignal.set(false);
         this.isPreviewMode = false;
     }
 

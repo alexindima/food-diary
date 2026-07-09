@@ -53,7 +53,7 @@ let localizationServiceSpy: {
     applyLanguagePreferenceAsync: ReturnType<typeof vi.fn>;
     clearStoredLanguage: ReturnType<typeof vi.fn>;
 };
-let sessionEventsSpy: { notifyAuthenticated: ReturnType<typeof vi.fn> };
+let sessionEventsSpy: { notifyAuthenticated: ReturnType<typeof vi.fn>; notifySessionEnded: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
     localStorage.clear();
@@ -74,7 +74,7 @@ beforeEach(() => {
     };
     localizationServiceSpy.applyLanguagePreferenceAsync.mockResolvedValue(undefined);
 
-    sessionEventsSpy = { notifyAuthenticated: vi.fn() };
+    sessionEventsSpy = { notifyAuthenticated: vi.fn(), notifySessionEnded: vi.fn() };
 
     TestBed.configureTestingModule({
         providers: [
@@ -525,6 +525,12 @@ describe('logout', () => {
         await service.onLogoutAsync(false);
 
         expect(localizationServiceSpy.clearStoredLanguage).toHaveBeenCalled();
+    });
+
+    it('should publish session ended event', async () => {
+        await service.onLogoutAsync(false);
+
+        expect(sessionEventsSpy.notifySessionEnded).toHaveBeenCalledOnce();
     });
 });
 

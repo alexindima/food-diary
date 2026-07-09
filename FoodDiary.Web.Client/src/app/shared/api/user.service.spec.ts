@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
+import { SessionEventsService } from '../auth/session-events.service';
 import { type ChangePasswordRequest, UpdateUserAppearanceDto, UpdateUserDto, type User } from '../models/user.data';
 import { UserService } from './user.service';
 
@@ -32,6 +33,7 @@ const MOCK_USER: User = {
 };
 
 let service: UserService;
+let sessionEvents: SessionEventsService;
 let httpMock: HttpTestingController;
 
 beforeEach(() => {
@@ -40,6 +42,7 @@ beforeEach(() => {
     });
 
     service = TestBed.inject(UserService);
+    sessionEvents = TestBed.inject(SessionEventsService);
     httpMock = TestBed.inject(HttpTestingController);
 });
 
@@ -118,6 +121,22 @@ describe('UserService info', () => {
         setCurrentUser();
 
         service.clearUser();
+
+        expect(service.user()).toBeNull();
+    });
+
+    it('should clear cached user when session ends', () => {
+        setCurrentUser();
+
+        sessionEvents.notifySessionEnded();
+
+        expect(service.user()).toBeNull();
+    });
+
+    it('should clear cached user when a new authenticated session starts', () => {
+        setCurrentUser();
+
+        sessionEvents.notifyAuthenticated();
 
         expect(service.user()).toBeNull();
     });

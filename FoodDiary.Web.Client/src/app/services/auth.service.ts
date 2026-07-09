@@ -237,6 +237,7 @@ export class AuthService extends ApiService {
     }
 
     public async onLogoutAsync(redirectToAuth = false): Promise<void> {
+        this.sessionEvents.notifySessionEnded();
         this.authTokenSignal.set(null);
         this.userSignal.set(null);
         this.emailConfirmedSignal.set(null);

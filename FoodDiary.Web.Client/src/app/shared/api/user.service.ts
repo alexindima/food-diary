@@ -1,10 +1,12 @@
 import { HttpContext } from '@angular/common/http';
-import { Service, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, map, type Observable, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
 import { ApiService } from '../../services/api.service';
+import { SessionEventsService } from '../auth/session-events.service';
 import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
 import type { DietologistRelationship } from '../models/dietologist.data';
 import type {
@@ -29,9 +31,20 @@ export type UserProfileOverview = {
 @Service()
 export class UserService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.users;
+    private readonly sessionEvents = inject(SessionEventsService);
     private readonly silentLoadingContext = new HttpContext().set(SKIP_GLOBAL_LOADING, true);
     private readonly userSignal = signal<User | null>(null);
     public readonly user = this.userSignal.asReadonly();
+
+    public constructor() {
+        super();
+        this.sessionEvents.authenticated$.pipe(takeUntilDestroyed()).subscribe(() => {
+            this.clearUser();
+        });
+        this.sessionEvents.sessionEnded$.pipe(takeUntilDestroyed()).subscribe(() => {
+            this.clearUser();
+        });
+    }
 
     public clearUser(): void {
         this.userSignal.set(null);
