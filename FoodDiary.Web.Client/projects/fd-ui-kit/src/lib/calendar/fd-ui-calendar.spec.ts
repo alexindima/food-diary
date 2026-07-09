@@ -2,6 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../src/testing/async-testing';
+import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
 import { FdUiCalendarComponent } from './fd-ui-calendar';
 
 const TEST_YEAR = 2025;
@@ -32,6 +33,7 @@ describe('FdUiCalendarComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiCalendarComponent],
+            providers: [provideTranslateTesting()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FdUiCalendarComponent);
@@ -78,6 +80,13 @@ function registerRenderTests(): void {
 
             expect(labels[0]).toBe('Sun');
             expect(labels[CALENDAR_WEEKS_COUNT]).toBe('Sat');
+        });
+
+        it('should render translated month navigation labels', () => {
+            const controls = Array.from(host().querySelectorAll<HTMLButtonElement>('.fd-ui-calendar__header button'));
+
+            expect(controls[0].getAttribute('aria-label')).toBe('CALENDAR.PREVIOUS_MONTH');
+            expect(controls[1].getAttribute('aria-label')).toBe('CALENDAR.NEXT_MONTH');
         });
     });
 }

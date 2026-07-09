@@ -1,7 +1,7 @@
 @if (pageCount() > 1) {
-    <nav class="fd-ui-pagination" aria-label="Pagination">
+    <nav class="fd-ui-pagination" [attr.aria-label]="'PAGINATION.LABEL' | translate">
         <button class="fd-ui-pagination__button" type="button" [disabled]="pageIndex() <= 0" (click)="goToPage(pageIndex() - 1)">
-            Prev
+            {{ 'PAGINATION.PREVIOUS' | translate }}
         </button>
 
         @for (page of visiblePages(); track page) {
@@ -22,7 +22,7 @@
             [disabled]="pageIndex() >= pageCount() - 1"
             (click)="goToPage(pageIndex() + 1)"
         >
-            Next
+            {{ 'PAGINATION.NEXT' | translate }}
         </button>
     </nav>
 }

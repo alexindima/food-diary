@@ -5,7 +5,7 @@
             variant="secondary"
             fill="text"
             icon="chevron_left"
-            ariaLabel="Previous month"
+            [ariaLabel]="'CALENDAR.PREVIOUS_MONTH' | translate"
             (click)="showPreviousMonth()"
         />
 
@@ -16,7 +16,7 @@
             variant="secondary"
             fill="text"
             icon="chevron_right"
-            ariaLabel="Next month"
+            [ariaLabel]="'CALENDAR.NEXT_MONTH' | translate"
             (click)="showNextMonth()"
         />
     </div>

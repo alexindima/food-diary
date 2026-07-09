@@ -1,6 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
 import { FdUiPaginationComponent } from './fd-ui-pagination';
 
 const SHORT_TOTAL_ITEMS = 50;
@@ -20,6 +21,7 @@ describe('FdUiPaginationComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiPaginationComponent],
+            providers: [provideTranslateTesting()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FdUiPaginationComponent);
@@ -37,6 +39,19 @@ describe('FdUiPaginationComponent', () => {
         fixture.detectChanges();
 
         expect(pageButtons().length).toBe(EXPECTED_BUTTON_COUNT);
+    });
+
+    it('should render translated navigation labels', () => {
+        fixture.componentRef.setInput('length', SHORT_TOTAL_ITEMS);
+        fixture.componentRef.setInput('pageSize', PAGE_SIZE);
+        fixture.detectChanges();
+
+        const nav = host().querySelector<HTMLElement>('.fd-ui-pagination');
+        const buttons = pageButtons();
+
+        expect(nav?.getAttribute('aria-label')).toBe('PAGINATION.LABEL');
+        expect(buttons[0].textContent.trim()).toBe('PAGINATION.PREVIOUS');
+        expect(buttons.at(-1)?.textContent.trim()).toBe('PAGINATION.NEXT');
     });
 
     it('should set active page from pageIndex', () => {

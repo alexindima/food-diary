@@ -2,6 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminBillingFacade } from '../lib/admin-billing.facade';
 import type { AdminBillingSubscription } from '../models/admin-billing.models';
 import { AdminBillingComponent } from './admin-billing';
@@ -25,7 +26,7 @@ type BillingTestContext = {
 async function setupBillingAsync(billingService: BillingServiceMock = createBillingServiceMock()): Promise<BillingTestContext> {
     await TestBed.configureTestingModule({
         imports: [AdminBillingComponent],
-        providers: [{ provide: AdminBillingFacade, useValue: billingService }],
+        providers: [provideTranslateTesting(), { provide: AdminBillingFacade, useValue: billingService }],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AdminBillingComponent);

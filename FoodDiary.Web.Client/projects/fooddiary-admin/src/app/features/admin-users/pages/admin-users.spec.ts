@@ -3,6 +3,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type { AdminUser, PagedResponse } from '../models/admin-user.models';
@@ -137,6 +138,7 @@ async function setupComponentAsync(): Promise<void> {
     await TestBed.configureTestingModule({
         imports: [AdminUsersComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: AdminUsersFacade, useValue: usersService },
             { provide: FdUiDialogService, useValue: dialogService },
         ],

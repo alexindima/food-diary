@@ -30,6 +30,15 @@
         "MORE_ACTIONS": "More actions",
         "SKIP_TO_MAIN_CONTENT": "Skip to main content"
     },
+    "PAGINATION": {
+        "LABEL": "Pagination",
+        "PREVIOUS": "Previous",
+        "NEXT": "Next"
+    },
+    "CALENDAR": {
+        "PREVIOUS_MONTH": "Previous month",
+        "NEXT_MONTH": "Next month"
+    },
     "GENERAL": {
         "UNITS": {
             "KCAL": "kcal",

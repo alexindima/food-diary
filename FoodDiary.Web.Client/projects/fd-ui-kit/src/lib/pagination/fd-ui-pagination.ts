@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 const DEFAULT_PAGE_SIZE = 10;
 const VISIBLE_PAGE_RADIUS = 2;
@@ -6,6 +7,7 @@ const MAX_VISIBLE_PAGES = 5;
 
 @Component({
     selector: 'fd-ui-pagination',
+    imports: [TranslatePipe],
     templateUrl: './fd-ui-pagination.html',
     styleUrls: ['./fd-ui-pagination.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,6 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { ProductListPaginationComponent } from './product-list-pagination';
 
 const PAGE_INDEX = 2;
@@ -35,6 +36,7 @@ async function setupComponentAsync(
 ): Promise<{ component: ProductListPaginationComponent; fixture: ComponentFixture<ProductListPaginationComponent> }> {
     await TestBed.configureTestingModule({
         imports: [ProductListPaginationComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ProductListPaginationComponent);

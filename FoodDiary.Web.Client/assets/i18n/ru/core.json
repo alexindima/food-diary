@@ -30,6 +30,15 @@
         "MORE_ACTIONS": "Ещё действия",
         "SKIP_TO_MAIN_CONTENT": "Перейти к основному содержимому"
     },
+    "PAGINATION": {
+        "LABEL": "Пагинация",
+        "PREVIOUS": "Назад",
+        "NEXT": "Далее"
+    },
+    "CALENDAR": {
+        "PREVIOUS_MONTH": "Предыдущий месяц",
+        "NEXT_MONTH": "Следующий месяц"
+    },
     "GENERAL": {
         "UNITS": {
             "KCAL": "ккал",

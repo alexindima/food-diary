@@ -12,6 +12,7 @@ import {
     model,
     signal,
 } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { FdUiButtonComponent } from '../button/fd-ui-button';
 import {
@@ -48,7 +49,7 @@ type FdUiCalendarCell = {
 
 @Component({
     selector: 'fd-ui-calendar',
-    imports: [CommonModule, FdUiButtonComponent],
+    imports: [CommonModule, FdUiButtonComponent, TranslatePipe],
     templateUrl: './fd-ui-calendar.html',
     styleUrl: './fd-ui-calendar.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
