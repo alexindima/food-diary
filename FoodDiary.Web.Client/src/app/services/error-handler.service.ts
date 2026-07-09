@@ -1,5 +1,6 @@
 import { type ErrorHandler, inject, Service } from '@angular/core';
 
+import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { FrontendLoggerService } from './frontend-logger.service';
 import { FrontendObservabilityService } from './frontend-observability.service';
 
@@ -7,6 +8,7 @@ const DUPLICATE_ERROR_SUPPRESSION_MS = 10_000;
 
 @Service()
 export class GlobalErrorHandler implements ErrorHandler {
+    private readonly browserWindow = inject(BrowserWindowService);
     private readonly frontendObservabilityService = inject(FrontendObservabilityService);
     private readonly logger = inject(FrontendLoggerService);
     private lastErrorKey: string | null = null;
@@ -31,7 +33,7 @@ export class GlobalErrorHandler implements ErrorHandler {
         location: string;
         details?: Record<string, unknown>;
     } {
-        const location = typeof window !== 'undefined' ? window.location.href : '';
+        const location = this.browserWindow.getHref() ?? '';
 
         if (error instanceof Error) {
             return {

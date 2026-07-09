@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { GlobalErrorHandler } from './error-handler.service';
 import { FrontendObservabilityService } from './frontend-observability.service';
 
@@ -8,15 +9,25 @@ type FrontendObservabilityServiceMock = {
     recordClientError: ReturnType<typeof vi.fn<FrontendObservabilityService['recordClientError']>>;
 };
 
+type BrowserWindowServiceMock = {
+    getHref: ReturnType<typeof vi.fn<BrowserWindowService['getHref']>>;
+};
+
 describe('GlobalErrorHandler', () => {
     let handler: GlobalErrorHandler;
+    let browserWindowSpy: BrowserWindowServiceMock;
     let observabilitySpy: FrontendObservabilityServiceMock;
 
     beforeEach(() => {
+        browserWindowSpy = { getHref: vi.fn().mockReturnValue('https://fooddiary.test/dashboard') };
         observabilitySpy = { recordClientError: vi.fn() };
 
         TestBed.configureTestingModule({
-            providers: [GlobalErrorHandler, { provide: FrontendObservabilityService, useValue: observabilitySpy }],
+            providers: [
+                GlobalErrorHandler,
+                { provide: BrowserWindowService, useValue: browserWindowSpy },
+                { provide: FrontendObservabilityService, useValue: observabilitySpy },
+            ],
         });
 
         handler = TestBed.inject(GlobalErrorHandler);
@@ -28,7 +39,7 @@ describe('GlobalErrorHandler', () => {
 
         expect(observabilitySpy.recordClientError).toHaveBeenCalledTimes(1);
         const payload = observabilitySpy.recordClientError.mock.calls.at(-1)?.[0] as Record<string, unknown>;
-        expect(payload['location']).toBeDefined();
+        expect(payload['location']).toBe('https://fooddiary.test/dashboard');
     });
 
     it('should include error message in payload', () => {

@@ -7,6 +7,7 @@ import { filter, firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { BrowserStorageService } from '../platform/browser-storage.service';
+import { BrowserWindowService } from '../platform/browser-window.service';
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
 import { resolveTranslateLanguage } from './translate-language.utils';
 
@@ -17,6 +18,7 @@ export class LocalizationService {
     private readonly destroyRef = inject(DestroyRef);
     private readonly router = inject(Router);
     private readonly storage = inject(BrowserStorageService);
+    private readonly browserWindow = inject(BrowserWindowService);
     private readonly translationLoader = inject(FoodDiaryTranslationLoader);
     private readonly russianDefaultHosts = new Set(environment.russianDefaultHosts);
     private readonly storageKey = 'fd_language';
@@ -144,7 +146,7 @@ export class LocalizationService {
     }
 
     private getDomainDefaultLanguage(): string | null {
-        const hostname = this.document.location.hostname.toLowerCase();
+        const hostname = this.browserWindow.getHostname()?.toLowerCase() ?? '';
         if (hostname.length === 0) {
             return null;
         }

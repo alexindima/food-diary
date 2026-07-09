@@ -53,7 +53,7 @@ export const routes: Routes = [
     {
         path: 'dashboard',
         canActivate: [authGuard],
-        loadComponent: async () => import('./features/dashboard/pages/dashboard').then(m => m.DashboardComponent),
+        loadChildren: async () => import('./features/dashboard/dashboard.routes'),
         data: { preload: true, seo: { titleKey: 'SEO.DASHBOARD', descriptionKey: 'SEO.DASHBOARD_DESCRIPTION', noIndex: true } },
     },
     {
@@ -174,8 +174,7 @@ export const routes: Routes = [
     {
         path: 'recommendations',
         canActivate: [authGuard],
-        loadComponent: async () =>
-            import('./features/recommendations/pages/recommendations-page/recommendations-page').then(m => m.RecommendationsPageComponent),
+        loadChildren: async () => import('./features/recommendations/recommendations.routes'),
         data: { seo: { titleKey: 'RECOMMENDATIONS.TITLE', noIndex: true } },
     },
     {

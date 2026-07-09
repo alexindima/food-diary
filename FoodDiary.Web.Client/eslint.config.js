@@ -538,6 +538,8 @@ const noBrowserGlobalsRule = {
 const appBoundaryElements = [
     { type: 'app-shared-models', pattern: 'src/app/shared/models', mode: 'folder' },
     { type: 'app-shared-api', pattern: 'src/app/shared/api', mode: 'folder' },
+    { type: 'app-shared-auth', pattern: 'src/app/shared/auth', mode: 'folder' },
+    { type: 'app-shared-bootstrap', pattern: 'src/app/shared/bootstrap', mode: 'folder' },
     { type: 'app-shared-lib', pattern: 'src/app/shared/lib', mode: 'folder' },
     { type: 'app-shared-dialogs', pattern: 'src/app/shared/dialogs', mode: 'folder' },
     { type: 'app-shared-forms', pattern: 'src/app/shared/forms', mode: 'folder' },
@@ -1883,7 +1885,6 @@ export default [
             'src/app/components/shared/ai-input-bar/ai-input-bar.ts',
             'src/app/features/auth/lib/google-identity.service.ts',
             'src/app/features/premium/lib/paddle-checkout.service.ts',
-            'src/app/services/auth.service.ts',
         ],
         rules: {
             // These files augment the global Window interface for browser SDKs.
@@ -1913,13 +1914,11 @@ export default [
             'src/app/features/premium/lib/paddle-checkout.service.ts',
             'src/app/features/public/components/landing-preview-tour/landing-preview-tour.ts',
             'src/app/features/statistics/lib/statistics-chart-config.ts',
-            'src/app/services/auth.service.ts',
-            'src/app/services/error-handler.service.ts',
-            'src/app/services/frontend-observability.service.ts',
+            'src/app/shared/platform/browser-performance.service.ts',
+            'src/app/shared/platform/browser-window.service.ts',
             'src/app/shared/notifications/push-notification.service.ts',
             'src/app/shared/platform/browser-storage.service.ts',
             'src/app/shared/platform/viewport.service.ts',
-            'src/app/shared/theme/theme.service.ts',
             'src/app/shell/app.ts',
             'src/app/shell/sidebar/sidebar.ts',
         ],
@@ -2142,6 +2141,23 @@ export default [
         },
     },
     {
+        files: ['src/app/services/**/*.ts'],
+        ignores: ['src/app/services/**/*.spec.ts'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: ['../features/**', 'src/app/features/**'],
+                            message: 'Core app services must not depend on feature code. Publish shared events or use shared abstractions instead.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
         files: ['src/app/shared/models/**/*.ts'],
         rules: {
             'no-restricted-imports': [
@@ -2185,7 +2201,7 @@ export default [
         },
     },
     {
-        files: ['src/app/shared/{forms,i18n,notifications,platform,theme,ui}/**/*.ts'],
+        files: ['src/app/shared/{auth,bootstrap,forms,i18n,notifications,platform,theme,ui}/**/*.ts'],
         ignores: ['src/app/shared/**/*.spec.ts'],
         rules: {
             'no-restricted-imports': [

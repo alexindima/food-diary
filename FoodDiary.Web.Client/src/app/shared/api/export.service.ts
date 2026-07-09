@@ -5,10 +5,12 @@ import { map, type Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiService } from '../../services/api.service';
 import type { ExportCycleRequest, ExportDiaryRequest } from '../models/export.models';
+import { BrowserWindowService } from '../platform/browser-window.service';
 
 @Service()
 export class ExportService extends ApiService {
     private readonly document = inject(DOCUMENT);
+    private readonly browserWindow = inject(BrowserWindowService);
     private readonly platformId = inject(PLATFORM_ID);
     private readonly isBrowser = isPlatformBrowser(this.platformId);
 
@@ -17,7 +19,7 @@ export class ExportService extends ApiService {
     public exportDiary(request: ExportDiaryRequest): Observable<void> {
         const { dateFrom, dateTo, format = 'csv', locale, timeZoneOffsetMinutes } = request;
         const ext = format === 'pdf' ? 'pdf' : 'csv';
-        const reportOrigin = this.isBrowser ? this.document.location.origin : undefined;
+        const reportOrigin = this.browserWindow.getOrigin();
         return this.downloadBlob('diary', { dateFrom, dateTo, format, locale, timeZoneOffsetMinutes, reportOrigin }, `food-diary.${ext}`);
     }
 

@@ -61,6 +61,17 @@ module.exports = {
             },
         },
         {
+            name: 'app-services-must-not-import-features',
+            severity: 'error',
+            from: {
+                path: '^src/app/services/',
+                pathNot: '[.](?:spec|test)[.](?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$',
+            },
+            to: {
+                path: '^src/app/features/',
+            },
+        },
+        {
             name: 'shared-models-must-stay-pure',
             severity: 'error',
             from: {
@@ -97,7 +108,7 @@ module.exports = {
             name: 'shared-common-themes-must-not-import-features',
             severity: 'error',
             from: {
-                path: '^src/app/shared/(forms|i18n|notifications|platform|theme|ui)/',
+                path: '^src/app/shared/(auth|bootstrap|forms|i18n|notifications|platform|theme|ui)/',
                 pathNot: '[.](?:spec|test)[.](?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$',
             },
             to: {

@@ -1,4 +1,4 @@
-import { DOCUMENT, isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { inject, makeStateKey, PLATFORM_ID, Service, type StateKey, TransferState } from '@angular/core';
 import { TranslateLoader, type TranslationObject } from '@ngx-translate/core';
@@ -6,6 +6,7 @@ import { catchError, forkJoin, map, type Observable, of, shareReplay, tap } from
 
 import { environment } from '../../../environments/environment';
 import { PUBLIC_SEO_PATHS } from '../../config/public-seo-landing-routes.config';
+import { BrowserWindowService } from '../platform/browser-window.service';
 
 type TranslationDictionary = TranslationObject;
 type TranslationBundle = 'core' | 'landing' | 'seo' | 'privacy' | 'app';
@@ -17,13 +18,13 @@ function makeTranslationStateKey(lang: string, bundle: TranslationBundle): State
 @Service()
 export class FoodDiaryTranslationLoader extends TranslateLoader {
     private readonly http = inject(HttpClient);
-    private readonly document = inject(DOCUMENT);
+    private readonly browserWindow = inject(BrowserWindowService);
     private readonly platformId = inject(PLATFORM_ID);
     private readonly transferState = inject(TransferState);
     private readonly cache = new Map<string, Observable<TranslationDictionary>>();
 
     public getTranslation(lang: string): Observable<TranslationDictionary> {
-        return this.loadBundles(lang, this.getInitialBundles(this.document.location.pathname));
+        return this.loadBundles(lang, this.getInitialBundles(this.browserWindow.getPathname() ?? '/'));
     }
 
     public loadApplicationTranslations(lang: string): Observable<TranslationDictionary> {

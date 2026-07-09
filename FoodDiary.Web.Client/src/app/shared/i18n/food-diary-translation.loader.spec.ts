@@ -1,4 +1,3 @@
-import { DOCUMENT } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { makeStateKey, PLATFORM_ID, type StateKey, TransferState } from '@angular/core';
@@ -7,6 +6,7 @@ import { firstValueFrom } from 'rxjs';
 import { describe, expect, it } from 'vitest';
 
 import { environment } from '../../../environments/environment';
+import { BrowserWindowService } from '../platform/browser-window.service';
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
 
 const LANGUAGE = 'en';
@@ -112,9 +112,9 @@ function setup(
             { provide: PLATFORM_ID, useValue: platformId },
             { provide: TransferState, useFactory: (): TransferState => new TransferState() },
             {
-                provide: DOCUMENT,
+                provide: BrowserWindowService,
                 useValue: {
-                    location: { pathname },
+                    getPathname: (): string => pathname,
                 },
             },
         ],

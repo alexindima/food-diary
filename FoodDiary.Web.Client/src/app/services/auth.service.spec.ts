@@ -4,8 +4,8 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../environments/environment';
-import { LoginRequest, PasswordResetRequest, RegisterRequest } from '../features/auth/models/auth.data';
-import { QuickMealService } from '../features/meals/lib/quick/quick-meal.service';
+import { LoginRequest, PasswordResetRequest, RegisterRequest } from '../shared/auth/auth.data';
+import { SessionEventsService } from '../shared/auth/session-events.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { AuthService } from './auth.service';
 import { NavigationService } from './navigation.service';
@@ -53,7 +53,7 @@ let localizationServiceSpy: {
     applyLanguagePreferenceAsync: ReturnType<typeof vi.fn>;
     clearStoredLanguage: ReturnType<typeof vi.fn>;
 };
-let quickMealServiceSpy: { exitPreview: ReturnType<typeof vi.fn> };
+let sessionEventsSpy: { notifyAuthenticated: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
     localStorage.clear();
@@ -74,7 +74,7 @@ beforeEach(() => {
     };
     localizationServiceSpy.applyLanguagePreferenceAsync.mockResolvedValue(undefined);
 
-    quickMealServiceSpy = { exitPreview: vi.fn() };
+    sessionEventsSpy = { notifyAuthenticated: vi.fn() };
 
     TestBed.configureTestingModule({
         providers: [
@@ -83,7 +83,7 @@ beforeEach(() => {
             provideHttpClientTesting(),
             { provide: NavigationService, useValue: navigationServiceSpy },
             { provide: LocalizationService, useValue: localizationServiceSpy },
-            { provide: QuickMealService, useValue: quickMealServiceSpy },
+            { provide: SessionEventsService, useValue: sessionEventsSpy },
         ],
     });
 
@@ -211,13 +211,13 @@ describe('login', () => {
         expect(localizationServiceSpy.applyLanguagePreferenceAsync).not.toHaveBeenCalled();
     });
 
-    it('should call quickConsumptionService.exitPreview on login', () => {
+    it('should publish authenticated session event on login', () => {
         service.login(loginRequest).subscribe();
 
         const req = httpMock.expectOne(`${authBaseUrl}/login`);
         req.flush(loginAuthResponse);
 
-        expect(quickMealServiceSpy.exitPreview).toHaveBeenCalled();
+        expect(sessionEventsSpy.notifyAuthenticated).toHaveBeenCalled();
     });
 
     it('should set emailConfirmed from response', () => {

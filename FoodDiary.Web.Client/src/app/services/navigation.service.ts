@@ -1,7 +1,7 @@
 import { inject, Service } from '@angular/core';
 import { Router } from '@angular/router';
 
-import type { AuthMode } from '../features/auth/models/auth.data';
+import type { AuthMode } from '../shared/auth/auth.data';
 
 @Service()
 export class NavigationService {

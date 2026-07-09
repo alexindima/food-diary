@@ -1,4 +1,1 @@
-export type GoogleLoginRequest = {
-    credential: string;
-    rememberMe?: boolean;
-};
+export * from '../../../shared/auth/google-auth.data';

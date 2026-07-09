@@ -4,6 +4,8 @@ import { of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../environments/environment';
+import { BrowserPerformanceService } from '../shared/platform/browser-performance.service';
+import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { FrontendObservabilityService } from './frontend-observability.service';
 import { LoggingApiService } from './logging-api.service';
 
@@ -13,19 +15,52 @@ const ROUTE_DURATION_MS = 42.24;
 const ROUNDED_ROUTE_DURATION_MS = 42.2;
 const WEB_VITAL_LCP_INITIAL = 1000;
 const WEB_VITAL_LCP_DUPLICATE = 1200;
+const NAVIGATION_RESPONSE_START_MS = 100;
 const PREVIOUS_LOG_EVENT_CALL_INDEX = -2;
 
 let service: FrontendObservabilityService;
+let browserPerformanceSpy: {
+    getNavigationResponseStart: ReturnType<typeof vi.fn<BrowserPerformanceService['getNavigationResponseStart']>>;
+    now: ReturnType<typeof vi.fn<BrowserPerformanceService['now']>>;
+    observeLatestEntry: ReturnType<typeof vi.fn<BrowserPerformanceService['observeLatestEntry']>>;
+    observePaintMetric: ReturnType<typeof vi.fn<BrowserPerformanceService['observePaintMetric']>>;
+};
+let browserWindowSpy: {
+    getHref: ReturnType<typeof vi.fn<BrowserWindowService['getHref']>>;
+    getPathname: ReturnType<typeof vi.fn<BrowserWindowService['getPathname']>>;
+    isAvailable: ReturnType<typeof vi.fn<BrowserWindowService['isAvailable']>>;
+    onPageHideOnce: ReturnType<typeof vi.fn<BrowserWindowService['onPageHideOnce']>>;
+    onVisibilityHiddenOnce: ReturnType<typeof vi.fn<BrowserWindowService['onVisibilityHiddenOnce']>>;
+};
 let loggingSpy: { logEvent: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
     environment.enableClientObservability = true;
+    browserPerformanceSpy = {
+        getNavigationResponseStart: vi.fn().mockReturnValue(null),
+        now: vi.fn().mockReturnValue(0),
+        observeLatestEntry: vi.fn().mockReturnValue(null),
+        observePaintMetric: vi.fn().mockReturnValue(null),
+    };
+    browserWindowSpy = {
+        getHref: vi.fn().mockReturnValue('https://fooddiary.test/dashboard'),
+        getPathname: vi.fn().mockReturnValue('/dashboard'),
+        isAvailable: vi.fn().mockReturnValue(true),
+        onPageHideOnce: vi.fn(),
+        onVisibilityHiddenOnce: vi.fn(),
+    };
     loggingSpy = {
         logEvent: vi.fn().mockReturnValue(of(void 0)),
     };
 
     TestBed.configureTestingModule({
-        providers: [provideRouter([]), FrontendObservabilityService, { provide: LoggingApiService, useValue: loggingSpy }],
+        providers: [
+            provideRouter([]),
+            FrontendObservabilityService,
+            { provide: BrowserPerformanceService, useValue: browserPerformanceSpy },
+            { provide: BrowserWindowService, useValue: browserWindowSpy },
+            { provide: LoggingApiService, useValue: loggingSpy },
+        ],
     });
 
     service = TestBed.inject(FrontendObservabilityService);
@@ -123,6 +158,18 @@ describe('FrontendObservabilityService web vitals', () => {
         service.recordWebVital('lcp', WEB_VITAL_LCP_DUPLICATE);
 
         expect(loggingSpy.logEvent).toHaveBeenCalledTimes(1);
+    });
+
+    it('should record navigation timing during initialization for private routes', () => {
+        browserPerformanceSpy.getNavigationResponseStart.mockReturnValue(NAVIGATION_RESPONSE_START_MS);
+
+        service.initialize();
+
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
+        expect(payload['name']).toBe('ttfb');
+        expect(payload['value']).toBe(NAVIGATION_RESPONSE_START_MS);
+        expect(browserPerformanceSpy.observePaintMetric).toHaveBeenCalled();
+        expect(browserPerformanceSpy.observeLatestEntry).toHaveBeenCalledWith('largest-contentful-paint', expect.any(Function));
     });
 });
 

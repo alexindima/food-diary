@@ -10,11 +10,12 @@ import type {
     RegisterRequest,
     RestoreAccountRequest,
     TelegramAuthRequest,
-} from '../features/auth/models/auth.data';
-import type { GoogleLoginRequest } from '../features/auth/models/google-auth.data';
-import { QuickMealService } from '../features/meals/lib/quick/quick-meal.service';
+} from '../shared/auth/auth.data';
+import type { GoogleLoginRequest } from '../shared/auth/google-auth.data';
+import { SessionEventsService } from '../shared/auth/session-events.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils';
+import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { ThemeService } from '../shared/theme/theme.service';
 import { ApiService } from './api.service';
 import { FrontendLoggerService } from './frontend-logger.service';
@@ -22,22 +23,13 @@ import { JwtDecoderService } from './jwt-decoder.service';
 import { NavigationService } from './navigation.service';
 import { TokenStorageService } from './token-storage.service';
 
-declare global {
-    interface Window {
-        Telegram?: {
-            WebApp?: {
-                initData?: string;
-            };
-        };
-    }
-}
-
 const TOKEN_EXPIRATION_LEEWAY_SECONDS = 30;
 
 @Service()
 export class AuthService extends ApiService {
     private readonly navigationService = inject(NavigationService);
-    private readonly quickConsumptionService = inject(QuickMealService);
+    private readonly sessionEvents = inject(SessionEventsService);
+    private readonly browserWindow = inject(BrowserWindowService);
     private readonly localizationService = inject(LocalizationService);
     private readonly themeService = inject(ThemeService);
     private readonly tokenStorage = inject(TokenStorageService);
@@ -271,7 +263,7 @@ export class AuthService extends ApiService {
     }
 
     private onLogin(authResponse: AuthResponse, rememberMe: boolean): void {
-        this.quickConsumptionService.exitPreview();
+        this.sessionEvents.notifyAuthenticated();
         this.applyAuthenticatedSession(authResponse, rememberMe);
         this.linkTelegramIfAvailable();
     }
@@ -357,18 +349,7 @@ export class AuthService extends ApiService {
     }
 
     private getTelegramInitData(): string | null {
-        if (typeof window === 'undefined') {
-            return null;
-        }
-
-        const telegram = window.Telegram;
-        const initData = telegram?.WebApp?.initData;
-        if (typeof initData !== 'string' || initData.length === 0) {
-            return null;
-        }
-
-        const trimmed = initData.trim();
-        return trimmed.length > 0 ? trimmed : null;
+        return this.browserWindow.getTelegramInitData();
     }
 
     private hasRole(role: string): boolean {
@@ -381,15 +362,16 @@ export class AuthService extends ApiService {
     }
 
     private getClientOrigin(): string | undefined {
-        return typeof window === 'undefined' ? undefined : window.location.origin;
+        return this.browserWindow.getOrigin();
     }
 
     private captureImpersonationTokenFromQuery(): void {
-        if (typeof window === 'undefined') {
+        const currentHref = this.browserWindow.getHref();
+        if (currentHref === null) {
             return;
         }
 
-        const url = new URL(window.location.href);
+        const url = new URL(currentHref);
         const token = url.searchParams.get('impersonationToken');
         if (token === null || token.length === 0) {
             return;
@@ -401,7 +383,7 @@ export class AuthService extends ApiService {
 
         url.searchParams.delete('impersonationToken');
         const nextUrl = `${url.pathname}${url.search}${url.hash}`;
-        window.history.replaceState({}, '', nextUrl);
+        this.browserWindow.replaceCurrentUrl(nextUrl);
     }
 }
 

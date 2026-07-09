@@ -4,6 +4,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { SessionEventsService } from '../../../../shared/auth/session-events.service';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
 import { MealService } from '../../api/meal.service';
@@ -65,6 +66,7 @@ const recipe: Recipe = {
 };
 
 let service: QuickMealService;
+let sessionEvents: SessionEventsService;
 let mealService: { create: ReturnType<typeof vi.fn> };
 let toastService: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
 
@@ -92,6 +94,7 @@ beforeEach(() => {
     });
 
     service = TestBed.inject(QuickMealService);
+    sessionEvents = TestBed.inject(SessionEventsService);
 });
 
 describe('QuickMealService draft items', () => {
@@ -111,6 +114,21 @@ describe('QuickMealService draft items', () => {
         service.addProduct(product);
 
         expect(service.items()[0]?.amount).toBe(DOUBLE_DEFAULT_PORTION_AMOUNT);
+    });
+
+    it('clears preview items when an authenticated session starts', () => {
+        service.setPreviewItems([
+            {
+                key: 'product-product-1',
+                type: 'product',
+                product,
+                amount: DEFAULT_PORTION_AMOUNT,
+            },
+        ]);
+
+        sessionEvents.notifyAuthenticated();
+
+        expect(service.items()).toEqual([]);
     });
 
     it('updates an existing draft item amount', () => {

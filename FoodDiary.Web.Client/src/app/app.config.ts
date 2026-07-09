@@ -12,7 +12,6 @@ import { provideClientHydration, withEventReplay, withNoIncrementalHydration } f
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling, withPreloading } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
@@ -20,12 +19,11 @@ import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { FrontendObservabilityInterceptor } from './interceptor/frontend-observability.interceptor';
 import { GlobalLoadingInterceptor } from './interceptor/global-loading.interceptor';
 import { RetryInterceptor } from './interceptor/retry.interceptor';
-import { AuthService } from './services/auth.service';
 import { GlobalErrorHandler } from './services/error-handler.service';
 import { FrontendObservabilityService } from './services/frontend-observability.service';
 import { IdleSelectivePreloadingStrategy } from './services/idle-selective-preloading.strategy';
 import { LoggingApiService } from './services/logging-api.service';
-import { UserService } from './shared/api/user.service';
+import { AppBootstrapService } from './shared/bootstrap/app-bootstrap.service';
 import { FoodDiaryTranslationLoader } from './shared/i18n/food-diary-translation.loader';
 import { LocalizationService } from './shared/i18n/localization.service';
 import { isMobileShellWindow } from './shared/platform/mobile-shell-runtime';
@@ -67,30 +65,13 @@ export const appConfig: ApplicationConfig = {
             multi: true,
         },
         provideAppInitializer(() => {
-            inject(ThemeService).initializeTheme();
+            inject(AppBootstrapService).initializeTheme();
         }),
         provideAppInitializer(async () => {
-            const localizationService = inject(LocalizationService);
-            const authService = inject(AuthService);
-            const themeService = inject(ThemeService);
-            const userService = inject(UserService);
-
-            return localizationService.initializeLocalizationAsync().then(async () => {
-                await authService.restoreSessionAsync();
-
-                if (!authService.isAuthenticated()) {
-                    return;
-                }
-
-                await localizationService.loadApplicationTranslationsAsync();
-                const user = await firstValueFrom(userService.getInfoSilently());
-                await localizationService.applyLanguagePreferenceAsync(user?.language ?? null);
-                await localizationService.loadApplicationTranslationsAsync();
-                themeService.syncWithUserPreferences(user?.theme, user?.uiStyle);
-            });
+            await inject(AppBootstrapService).initializeSessionAsync();
         }),
         provideAppInitializer(() => {
-            inject(FrontendObservabilityService).initialize();
+            inject(AppBootstrapService).initializeObservability();
         }),
         provideZonelessChangeDetection(),
         provideRouter(
@@ -114,6 +95,7 @@ export const appConfig: ApplicationConfig = {
                   }),
               ]
             : []),
+        AppBootstrapService,
         FrontendObservabilityService,
         LocalizationService,
         ThemeService,

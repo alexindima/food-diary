@@ -4,12 +4,13 @@ import { filter } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { ClientTelemetrySessionService } from '../shared/observability/client-telemetry-session.service';
+import { BrowserPerformanceService } from '../shared/platform/browser-performance.service';
+import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { type ClientTelemetryEvent, LoggingApiService } from './logging-api.service';
 
 type HttpOutcome = 'success' | 'client_error' | 'server_error' | 'network_error';
 type RouteOutcome = 'success' | 'cancelled' | 'error';
 
-const FIRST_NAVIGATION_ENTRY_INDEX = 0;
 const DECIMAL_ROUNDING_FACTOR = 10;
 const DECIMAL_ROUNDING_DIVISOR = 10;
 const UUID_SEGMENT_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu;
@@ -20,19 +21,21 @@ const NORMALIZED_ID_SEGMENT = ':id';
 export class FrontendObservabilityService {
     private readonly router = inject(Router);
     private readonly loggingApiService = inject(LoggingApiService);
+    private readonly browserPerformance = inject(BrowserPerformanceService);
+    private readonly browserWindow = inject(BrowserWindowService);
     private readonly telemetrySession = inject(ClientTelemetrySessionService);
     private readonly navigationStarts = new Map<number, number>();
     private initialized = false;
     private readonly reportedVitals = new Set<string>();
 
     public initialize(): void {
-        if (this.initialized || environment.enableClientObservability !== true || typeof window === 'undefined') {
+        if (this.initialized || environment.enableClientObservability !== true || !this.browserWindow.isAvailable()) {
             return;
         }
 
         this.initialized = true;
         this.observeRouteTimings();
-        if (!this.isPublicRoute(window.location.pathname)) {
+        if (!this.isPublicRoute(this.browserWindow.getPathname() ?? '')) {
             this.observeWebVitals();
         }
     }
@@ -221,7 +224,7 @@ export class FrontendObservabilityService {
             )
             .subscribe(event => {
                 if (event instanceof NavigationStart) {
-                    this.navigationStarts.set(event.id, performance.now());
+                    this.navigationStarts.set(event.id, this.browserPerformance.now());
                     return;
                 }
 
@@ -231,7 +234,7 @@ export class FrontendObservabilityService {
                 }
 
                 this.navigationStarts.delete(event.id);
-                const durationMs = performance.now() - startedAt;
+                const durationMs = this.browserPerformance.now() - startedAt;
 
                 if (event instanceof NavigationEnd) {
                     if (!this.isPublicRoute(event.urlAfterRedirects)) {
@@ -255,72 +258,43 @@ export class FrontendObservabilityService {
 
     private observeWebVitals(): void {
         this.recordNavigationTiming();
-
-        if (typeof PerformanceObserver === 'undefined') {
-            return;
-        }
-
         this.observePaintMetrics();
         this.observeLargestContentfulPaint();
     }
 
     private recordNavigationTiming(): void {
-        const entry = performance.getEntriesByType('navigation')[FIRST_NAVIGATION_ENTRY_INDEX];
-        if (!(entry instanceof PerformanceNavigationTiming)) {
-            return;
-        }
-
-        if (entry.responseStart > 0) {
-            this.recordWebVital('ttfb', entry.responseStart);
+        const responseStart = this.browserPerformance.getNavigationResponseStart();
+        if (responseStart !== null) {
+            this.recordWebVital('ttfb', responseStart);
         }
     }
 
     private observePaintMetrics(): void {
-        try {
-            const observer = new PerformanceObserver(list => {
-                for (const entry of list.getEntries()) {
-                    if (entry.name === 'first-contentful-paint') {
-                        this.recordWebVital('fcp', entry.startTime);
-                    }
-                }
-            });
-
-            observer.observe({ type: 'paint', buffered: true });
-        } catch {
-            // Browser support is optional; observability should degrade silently.
-        }
+        this.browserPerformance.observePaintMetric(entry => {
+            if (entry.name === 'first-contentful-paint') {
+                this.recordWebVital('fcp', entry.startTime);
+            }
+        });
     }
 
     private observeLargestContentfulPaint(): void {
-        try {
-            let latestEntry: PerformanceEntry | null = null;
-            const observer = new PerformanceObserver(list => {
-                const entries = list.getEntries();
-                latestEntry = entries.at(-1) ?? latestEntry;
-            });
-
-            observer.observe({ type: 'largest-contentful-paint', buffered: true });
-
-            const flush = (): void => {
-                if (latestEntry !== null) {
-                    this.recordWebVital('lcp', latestEntry.startTime);
-                }
-                observer.disconnect();
-            };
-
-            window.addEventListener('pagehide', flush, { once: true });
-            document.addEventListener(
-                'visibilitychange',
-                () => {
-                    if (document.visibilityState === 'hidden') {
-                        flush();
-                    }
-                },
-                { once: true },
-            );
-        } catch {
-            // Browser support is optional; observability should degrade silently.
+        let latestEntry: PerformanceEntry | null = null;
+        const observer = this.browserPerformance.observeLatestEntry('largest-contentful-paint', entry => {
+            latestEntry = entry;
+        });
+        if (observer === null) {
+            return;
         }
+
+        const flush = (): void => {
+            if (latestEntry !== null) {
+                this.recordWebVital('lcp', latestEntry.startTime);
+            }
+            observer.disconnect();
+        };
+
+        this.browserWindow.onPageHideOnce(flush);
+        this.browserWindow.onVisibilityHiddenOnce(flush);
     }
 
     private send(event: ClientTelemetryEvent): void {
@@ -342,7 +316,7 @@ export class FrontendObservabilityService {
     }
 
     private getLocation(): string {
-        return typeof window !== 'undefined' ? window.location.href : '';
+        return this.browserWindow.getHref() ?? '';
     }
 
     private normalizeUrl(url: string): string {

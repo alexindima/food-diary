@@ -3,10 +3,12 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { BrowserWindowService } from '../platform/browser-window.service';
 import { ExportService } from './export.service';
 
 const BASE_URL = 'http://localhost:5300/api/v1/export';
 const BLOB_URL = 'blob:food-diary';
+const REPORT_ORIGIN = 'https://fooddiary.test';
 
 let service: ExportService;
 let httpMock: HttpTestingController;
@@ -16,7 +18,12 @@ let clickedDownloadName: string | null;
 
 beforeEach(() => {
     TestBed.configureTestingModule({
-        providers: [ExportService, provideHttpClient(), provideHttpClientTesting()],
+        providers: [
+            ExportService,
+            provideHttpClient(),
+            provideHttpClientTesting(),
+            { provide: BrowserWindowService, useValue: { getOrigin: (): string => REPORT_ORIGIN } },
+        ],
     });
     service = TestBed.inject(ExportService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -41,7 +48,7 @@ describe('ExportService', () => {
         expect(req.request.params.get('dateFrom')).toBe('2026-05-01');
         expect(req.request.params.get('dateTo')).toBe('2026-05-14');
         expect(req.request.params.get('format')).toBe('csv');
-        expect(req.request.params.get('reportOrigin')).toBe(window.location.origin);
+        expect(req.request.params.get('reportOrigin')).toBe(REPORT_ORIGIN);
 
         req.flush(new Blob(['csv'], { type: 'text/csv' }));
 

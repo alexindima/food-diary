@@ -6,6 +6,7 @@ import { type Observable, of, Subject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
+import { BrowserWindowService } from '../platform/browser-window.service';
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
 import { LocalizationService } from './localization.service';
 
@@ -27,7 +28,12 @@ type TranslationLoaderMock = {
     loadApplicationTranslations: ReturnType<typeof vi.fn>;
 };
 
+type BrowserWindowServiceMock = {
+    getHostname: ReturnType<typeof vi.fn<BrowserWindowService['getHostname']>>;
+};
+
 let service: LocalizationService;
+let browserWindowSpy: BrowserWindowServiceMock;
 let translateSpy: TranslateServiceMock;
 let langChangeSubject: Subject<LangChangeEvent>;
 let mockDocument: Document;
@@ -59,6 +65,9 @@ beforeEach(() => {
     translateSpy.getCurrentLang.mockReturnValue('en');
     translateSpy.getFallbackLang.mockReturnValue('en');
     translateSpy.getBrowserLang.mockReturnValue('en');
+    browserWindowSpy = {
+        getHostname: vi.fn().mockReturnValue('fooddiary.club'),
+    };
     translationLoaderSpy = {
         isPublicRoute: vi.fn().mockReturnValue(true),
         loadRouteTranslations: vi.fn().mockReturnValue(of({ SEO_PAGE: { TRUST_TITLE: 'Trust' } })),
@@ -83,6 +92,7 @@ beforeEach(() => {
         providers: [
             LocalizationService,
             { provide: TranslateService, useValue: translateSpy },
+            { provide: BrowserWindowService, useValue: browserWindowSpy },
             { provide: DOCUMENT, useValue: mockDocument },
             { provide: FoodDiaryTranslationLoader, useValue: translationLoaderSpy },
             { provide: Router, useValue: { events: routerEventsSubject.asObservable() } },
@@ -113,7 +123,7 @@ describe('LocalizationService initialization', () => {
     });
 
     it('should default to russian for the russian domain when no stored preference exists', async () => {
-        mockDocument.location.hostname = 'xn--b1adbcbrouc8l.xn--p1ai';
+        browserWindowSpy.getHostname.mockReturnValue('xn--b1adbcbrouc8l.xn--p1ai');
 
         await service.initializeLocalizationAsync();
 
@@ -122,7 +132,7 @@ describe('LocalizationService initialization', () => {
 
     it('should prefer stored language over domain default', async () => {
         localStorage.setItem('fd_language', 'en');
-        mockDocument.location.hostname = 'xn--b1adbcbrouc8l.xn--p1ai';
+        browserWindowSpy.getHostname.mockReturnValue('xn--b1adbcbrouc8l.xn--p1ai');
 
         await service.initializeLocalizationAsync();
 

@@ -1,7 +1,9 @@
 import { computed, inject, Service, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
+import { SessionEventsService } from '../../../../shared/auth/session-events.service';
 import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
 import type { Product } from '../../../products/models/product.data';
 import type { Recipe } from '../../../recipes/models/recipe.data';
@@ -32,6 +34,7 @@ export type QuickMealDetails = {
 @Service()
 export class QuickMealService {
     private readonly mealService = inject(MealService);
+    private readonly sessionEvents = inject(SessionEventsService);
     private readonly toastService = inject(FdUiToastService);
     private readonly translateService = inject(TranslateService);
 
@@ -45,6 +48,12 @@ export class QuickMealService {
     public readonly details = computed(() => this.detailsSignal());
     public readonly hasItems = computed(() => this.itemsSignal().length > 0);
     public readonly isSaving = computed(() => this.isSavingSignal());
+
+    public constructor() {
+        this.sessionEvents.authenticated$.pipe(takeUntilDestroyed()).subscribe(() => {
+            this.exitPreview();
+        });
+    }
 
     public addProduct(product: Product, preferredAmount?: number): void {
         if (product.id.length === 0) {

@@ -11,6 +11,8 @@ import {
     isAppThemeName,
     isAppUiStyleName,
 } from '../../theme/app-theme.config';
+import { BrowserStorageService } from '../platform/browser-storage.service';
+import { BrowserWindowService } from '../platform/browser-window.service';
 
 const PUBLIC_SEO_PATHS = new Set([
     '/food-diary',
@@ -34,9 +36,10 @@ const PUBLIC_SEO_PATHS = new Set([
 @Service()
 export class ThemeService {
     private readonly document = inject(DOCUMENT);
+    private readonly storage = inject(BrowserStorageService);
+    private readonly browserWindow = inject(BrowserWindowService);
     private readonly themeStorageKey = 'fd_theme';
     private readonly uiStyleStorageKey = 'fd_ui_style';
-    private readonly localStorageRef = this.getLocalStorage();
     private readonly themeState = signal<AppThemeName>(DEFAULT_APP_THEME);
     private readonly uiStyleState = signal<AppUiStyleName>(DEFAULT_APP_UI_STYLE);
 
@@ -45,7 +48,7 @@ export class ThemeService {
     public readonly themes = APP_THEMES;
 
     public initializeTheme(): void {
-        this.applyThemeForRoute(this.document.location.pathname);
+        this.applyThemeForRoute(this.browserWindow.getPathname() ?? '/');
     }
 
     public applyThemeForRoute(pathname: string): void {
@@ -77,7 +80,7 @@ export class ThemeService {
         const resolvedTheme = this.resolveTheme(theme);
         const resolvedUiStyle = this.resolveUiStyle(uiStyle);
 
-        if (this.isPublicRoute(this.document.location.pathname)) {
+        if (this.isPublicRoute(this.browserWindow.getPathname() ?? '/')) {
             this.persistThemePreference(resolvedTheme);
             this.persistUiStylePreference(resolvedUiStyle);
             return;
@@ -124,15 +127,15 @@ export class ThemeService {
     }
 
     private persistThemePreference(theme: AppThemeName): void {
-        this.localStorageRef?.setItem(this.themeStorageKey, theme);
+        this.storage.setItem('local', this.themeStorageKey, theme);
     }
 
     private persistUiStylePreference(uiStyle: AppUiStyleName): void {
-        this.localStorageRef?.setItem(this.uiStyleStorageKey, uiStyle);
+        this.storage.setItem('local', this.uiStyleStorageKey, uiStyle);
     }
 
     private getStoredTheme(): AppThemeName | null {
-        const value = this.localStorageRef?.getItem(this.themeStorageKey) ?? null;
+        const value = this.storage.getItem('local', this.themeStorageKey);
         if (value === null || value.length === 0 || value === 'undefined' || value === 'null' || !isAppThemeName(value)) {
             return null;
         }
@@ -141,7 +144,7 @@ export class ThemeService {
     }
 
     private getStoredUiStyle(): AppUiStyleName | null {
-        const value = this.localStorageRef?.getItem(this.uiStyleStorageKey) ?? null;
+        const value = this.storage.getItem('local', this.uiStyleStorageKey);
         if (value === null || value.length === 0 || value === 'undefined' || value === 'null' || !isAppUiStyleName(value)) {
             return null;
         }
@@ -170,14 +173,6 @@ export class ThemeService {
         const metaThemeColor = this.document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
         if (metaThemeColor !== null) {
             metaThemeColor.content = color;
-        }
-    }
-
-    private getLocalStorage(): Storage | null {
-        try {
-            return this.document.defaultView?.localStorage ?? null;
-        } catch {
-            return null;
         }
     }
 }
