@@ -40,6 +40,7 @@ type MealManageFacadeMock = {
     convertRecipeGramsToServings: ReturnType<typeof vi.fn>;
     convertRecipeServingsToGrams: ReturnType<typeof vi.fn>;
     configureItemType: ReturnType<typeof vi.fn>;
+    confirmDiscardChangesAsync: ReturnType<typeof vi.fn>;
     createConsumptionItem: ReturnType<typeof vi.fn>;
     ensurePremiumAccess: ReturnType<typeof vi.fn>;
     getManualNutritionTotalsFromValue: ReturnType<typeof vi.fn>;
@@ -339,6 +340,27 @@ describe('MealManageFormComponent navigation', () => {
 
         expect(navigationService.navigateToConsumptionListAsync).toHaveBeenCalled();
     });
+
+    it('should stay on the form when discarding dirty changes is cancelled', async () => {
+        const { component, mealManageFacade, navigationService } = await setupComponentAsync();
+        component['consumptionSignalForm'].comment().markAsDirty();
+        mealManageFacade.confirmDiscardChangesAsync.mockResolvedValueOnce(false);
+
+        await component['onCancelAsync']();
+
+        expect(mealManageFacade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        expect(navigationService.navigateToConsumptionListAsync).not.toHaveBeenCalled();
+    });
+
+    it('should leave the form when discarding dirty changes is confirmed', async () => {
+        const { component, mealManageFacade, navigationService } = await setupComponentAsync();
+        component['consumptionSignalForm'].comment().markAsDirty();
+
+        await component['onCancelAsync']();
+
+        expect(mealManageFacade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        expect(navigationService.navigateToConsumptionListAsync).toHaveBeenCalledOnce();
+    });
 });
 
 async function setupComponentAsync(): Promise<MealManageFormSetup> {
@@ -402,6 +424,7 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
             manualAlcohol: totals.alcohol,
         })),
         buildNutritionSummaryStateFromValues: vi.fn((_formValue, _aiSessions, _threshold) => createNutritionSummaryState()),
+        confirmDiscardChangesAsync: vi.fn().mockResolvedValue(true),
         configureItemType: vi.fn((item: ConsumptionItemFormValues) => item),
         convertRecipeGramsToServings: vi.fn((_recipe, amount: number) => amount),
         convertRecipeServingsToGrams: vi.fn((_recipe, amount: number) => amount),

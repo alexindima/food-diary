@@ -50,6 +50,14 @@ describe('ConfirmDeleteDialogComponent', () => {
         expect(component['data'].title).toBe('Remove item?');
     });
 
+    it('should use the configured confirm icon and localized close label', () => {
+        createComponent({ confirmIcon: 'logout' });
+
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelector('.fd-ui-button--danger .fd-ui-icon__glyph')?.textContent).toContain('logout');
+        expect(element.querySelector('.fd-ui-dialog__close-button')?.getAttribute('aria-label')).toBe('COMMON.CLOSE');
+    });
+
     it('should have default empty data when none provided', () => {
         createComponent();
         expect(component['data'].title).toBeUndefined();

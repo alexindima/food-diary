@@ -29,7 +29,7 @@
                     }
                 </div>
             </div>
-            <button type="button" class="consumption-detail__close-button" aria-label="Close dialog" (click)="close()">
+            <button type="button" class="consumption-detail__close-button" [attr.aria-label]="'COMMON.CLOSE' | translate" (click)="close()">
                 <span class="material-icons" aria-hidden="true">close</span>
             </button>
         </div>

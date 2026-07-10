@@ -4,6 +4,10 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom } from 'rxjs';
 
+import {
+    ConfirmDeleteDialogComponent,
+    type ConfirmDeleteDialogData,
+} from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -44,6 +48,19 @@ export class MealManageFacade {
     private readonly recipeWeight = inject(RecipeServingWeightService);
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
+
+    public async confirmDiscardChangesAsync(data: ConfirmDeleteDialogData): Promise<boolean> {
+        const confirmed = await firstValueFrom(
+            this.fdDialogService
+                .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
+                    preset: 'confirm',
+                    data,
+                })
+                .afterClosed(),
+        );
+
+        return confirmed === true;
+    }
 
     public ensurePremiumAccess(): boolean {
         if (this.authService.isPremium()) {

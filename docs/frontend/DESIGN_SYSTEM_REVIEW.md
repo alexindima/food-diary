@@ -88,11 +88,11 @@ When two screens show the same semantic object, they must use the same primitive
 | ---------------------------------------- | --------------------------------- | --- | ------- | ------------------------------------------------------------------------------------- |
 | `/dashboard`                             | dashboard card shell              | yes | yes     | Token-driven custom cards; candidate for gradual convergence on UI-kit card contracts |
 | `/meals`                                 | shared media/entity cards         | yes | yes     | Matches products and recipes                                                          |
-| `/meals/add`, `/meals/:id/edit`          | manage form cards                 | yes | yes     | Add flow and nested item dialogs checked; edit state still requires a stable fixture  |
+| `/meals/add`, `/meals/:id/edit`          | manage form cards                 | yes | yes     | Filled edit state, nested dialogs, unit copy, and discard protection checked          |
 | `/products`                              | shared media/entity cards         | yes | yes     | Matches meals and recipes                                                             |
-| `/products/add`, `/products/:id/edit`    | manage form cards                 | yes | yes     | Add flow checked; edit/delete states still require a stable fixture                   |
+| `/products/add`, `/products/:id/edit`    | manage form cards                 | yes | yes     | Filled edit state, delete confirmation, and discard protection checked                |
 | `/recipes`                               | shared media/entity cards         | yes | yes     | Matches meals and products                                                            |
-| `/recipes/add`, `/recipes/:id/edit`      | manage form cards                 | yes | yes     | Add flow checked; edit/delete states still require a stable fixture                   |
+| `/recipes/add`, `/recipes/:id/edit`      | manage form cards                 | yes | yes     | Add and discard flows checked; owned edit/delete state still needs a stable fixture   |
 | `/explore`                               | shared recipe results             | -   | yes     | No overflow                                                                           |
 | `/shopping-lists`                        | card/list workspace               | -   | yes     | No overflow                                                                           |
 | `/goals`                                 | metric cards and controls         | -   | yes     | No overflow                                                                           |
@@ -140,6 +140,10 @@ Review desktop at `1440x900` and a compact laptop width before mobile. Admin wor
 | P2       | Waist dashboard card reused the weight-specific empty-state copy                          | Fixed; trend blocks now accept a semantic empty-state key                 |
 | P2       | Shared dialog close control had a hardcoded English accessible name                       | Fixed API; audited manage-flow dialogs now provide the localized label    |
 | P2       | Russian manage-flow copy mixed `AI`, `Push`, and `прием` with localized terminology       | Fixed in the audited flows and adjacent settings copy                     |
+| P1       | Meal and recipe manage forms could discard dirty values without confirmation              | Fixed; both forms now share explicit stay/discard confirmation            |
+| P2       | Product discard confirmation reused the delete icon                                       | Fixed; destructive navigation now uses a logout icon                      |
+| P2       | Detail dialogs and form clear controls exposed English-only accessible names              | Fixed in product, recipe, and meal manage/detail flows                    |
+| P2       | Meal edit summary rendered measurement names as `180 граммы`                              | Fixed; compact amount summaries use localized unit symbols                |
 | P3       | Dashboard uses feature-specific card shells instead of `fd-ui-card`                       | Review gradually; current values are token-driven and visually consistent |
 
 ## Per-Page Checklist

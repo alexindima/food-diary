@@ -13,6 +13,7 @@ export type ConfirmDeleteDialogData = {
     entityType?: string | null;
     confirmLabel?: string;
     cancelLabel?: string;
+    confirmIcon?: string;
 };
 
 @Component({

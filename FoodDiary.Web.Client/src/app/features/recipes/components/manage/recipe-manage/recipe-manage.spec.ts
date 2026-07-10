@@ -38,6 +38,7 @@ type RecipeManageFacadeMock = {
     applyItemSelection: ReturnType<typeof vi.fn>;
     calculateAutoSummary: ReturnType<typeof vi.fn>;
     cancelManageAsync: ReturnType<typeof vi.fn>;
+    confirmDiscardChangesAsync: ReturnType<typeof vi.fn>;
     clearGlobalError: ReturnType<typeof vi.fn>;
     fromRecipeTotal: ReturnType<typeof vi.fn>;
     getSummaryFromRecipe: ReturnType<typeof vi.fn>;
@@ -185,6 +186,29 @@ describe('RecipeManageComponent submission', () => {
 
         expect(facade.addRecipe).not.toHaveBeenCalled();
         expect(facade.updateRecipe).not.toHaveBeenCalled();
+    });
+});
+
+describe('RecipeManageComponent navigation', () => {
+    it('should stay on the form when discarding dirty changes is cancelled', async () => {
+        const { component, facade } = await setupComponentAsync();
+        component['recipeSignalForm'].name().markAsDirty();
+        facade.confirmDiscardChangesAsync.mockResolvedValueOnce(false);
+
+        await component['onCancelAsync']();
+
+        expect(facade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        expect(facade.cancelManageAsync).not.toHaveBeenCalled();
+    });
+
+    it('should leave the form when discarding dirty changes is confirmed', async () => {
+        const { component, facade } = await setupComponentAsync();
+        component['recipeSignalForm'].name().markAsDirty();
+
+        await component['onCancelAsync']();
+
+        expect(facade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        expect(facade.cancelManageAsync).toHaveBeenCalledOnce();
     });
 });
 
@@ -358,6 +382,7 @@ function createRecipeManageFacadeMock(overrides: Partial<RecipeManageFacadeMock>
         applyItemSelection: vi.fn(),
         calculateAutoSummary: vi.fn().mockReturnValue(EMPTY_SUMMARY),
         cancelManageAsync: vi.fn().mockResolvedValue(void 0),
+        confirmDiscardChangesAsync: vi.fn().mockResolvedValue(true),
         clearGlobalError: vi.fn(),
         fromRecipeTotal: vi.fn((value: number | null | undefined) => Number(value ?? 0)),
         getSummaryFromRecipe: vi.fn((recipe: Recipe | null, fallback: RecipeNutritionSummary) =>

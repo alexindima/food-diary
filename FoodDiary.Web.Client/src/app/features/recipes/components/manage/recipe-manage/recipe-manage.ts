@@ -317,6 +317,19 @@ export class RecipeManageComponent {
     }
 
     protected async onCancelAsync(): Promise<void> {
+        if (this.recipeSignalForm().dirty()) {
+            const shouldLeave = await this.recipeManageFacade.confirmDiscardChangesAsync({
+                title: this.translateService.instant('UNSAVED_CHANGES.TITLE'),
+                message: this.translateService.instant('UNSAVED_CHANGES.MESSAGE'),
+                confirmLabel: this.translateService.instant('UNSAVED_CHANGES.DISCARD'),
+                cancelLabel: this.translateService.instant('UNSAVED_CHANGES.STAY'),
+                confirmIcon: 'logout',
+            });
+            if (!shouldLeave) {
+                return;
+            }
+        }
+
         await this.recipeManageFacade.cancelManageAsync();
     }
 

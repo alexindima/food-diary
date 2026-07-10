@@ -18,7 +18,7 @@
                 />
                 <h2 class="recipe-detail__title">{{ recipe.name }}</h2>
             </div>
-            <button type="button" class="recipe-detail__close-button" aria-label="Close dialog" (click)="close()">
+            <button type="button" class="recipe-detail__close-button" [attr.aria-label]="'COMMON.CLOSE' | translate" (click)="close()">
                 <span class="material-icons" aria-hidden="true">close</span>
             </button>
         </div>

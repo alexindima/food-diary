@@ -2,8 +2,12 @@ import { inject, Service, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { finalize, map, type Observable } from 'rxjs';
+import { finalize, firstValueFrom, map, type Observable } from 'rxjs';
 
+import {
+    ConfirmDeleteDialogComponent,
+    type ConfirmDeleteDialogData,
+} from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { NavigationService } from '../../../services/navigation.service';
 import { ItemSelectDialogComponent } from '../../../shared/dialogs/item-select-dialog/item-select-dialog';
 import type {
@@ -272,6 +276,19 @@ export class RecipeManageFacade {
         }
 
         await this.navigationService.navigateToRecipeListAsync();
+    }
+
+    public async confirmDiscardChangesAsync(data: ConfirmDeleteDialogData): Promise<boolean> {
+        const confirmed = await firstValueFrom(
+            this.dialogService
+                .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
+                    preset: 'confirm',
+                    data,
+                })
+                .afterClosed(),
+        );
+
+        return confirmed === true;
     }
 
     public clearGlobalError(): void {

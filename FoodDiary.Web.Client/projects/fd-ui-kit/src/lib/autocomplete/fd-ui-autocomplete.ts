@@ -55,6 +55,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
     public readonly options = input<Array<FdUiAutocompleteOption<T>>>([]);
     public readonly loading = input(false);
     public readonly emptyText = input<string>();
+    public readonly clearAriaLabel = input('Clear');
     public readonly showEmptyState = input(true);
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);

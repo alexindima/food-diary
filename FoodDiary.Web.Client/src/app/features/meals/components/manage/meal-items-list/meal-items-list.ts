@@ -212,10 +212,10 @@ export class MealItemsListComponent {
     private getAmountUnitLabelForItem(item: MealItemsListItemState): string | null {
         if (item.sourceType === ConsumptionSourceType.Product) {
             const unit = item.product?.baseUnit;
-            return unit !== undefined ? this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${unit.toUpperCase()}`) : null;
+            return unit !== undefined ? this.translateService.instant(`GENERAL.UNITS.${unit.toUpperCase()}`) : null;
         }
 
-        return this.translateService.instant('PRODUCT_AMOUNT_UNITS.G');
+        return this.translateService.instant('GENERAL.UNITS.G');
     }
 }
 

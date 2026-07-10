@@ -43,7 +43,7 @@
             <button
                 class="fd-ui-autocomplete__suffix fd-ui-autocomplete__suffix--button"
                 type="button"
-                aria-label="Clear"
+                [attr.aria-label]="clearAriaLabel()"
                 [disabled]="disabled()"
                 (click)="clearValue($event)"
             >

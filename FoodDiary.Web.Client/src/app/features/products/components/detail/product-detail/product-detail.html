@@ -18,7 +18,7 @@
                 />
                 <h2 class="product-detail__title">{{ product.name }}</h2>
             </div>
-            <button type="button" class="product-detail__close-button" aria-label="Close dialog" (click)="close()">
+            <button type="button" class="product-detail__close-button" [attr.aria-label]="'COMMON.CLOSE' | translate" (click)="close()">
                 <span class="material-icons" aria-hidden="true">close</span>
             </button>
         </div>

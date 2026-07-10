@@ -33,6 +33,7 @@
                 [options]="nameOptions()"
                 [loading]="isNameSearchLoading()"
                 [emptyText]="'PRODUCT_MANAGE.NAME_NO_SUGGESTIONS' | translate"
+                [clearAriaLabel]="'COMMON.CLEAR' | translate"
                 [showEmptyState]="false"
                 [displayWith]="displayNameValue"
                 (queryChange)="nameQueryChange.emit($event)"

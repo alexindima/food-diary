@@ -267,6 +267,19 @@ export class MealManageFormComponent {
     }
 
     protected async onCancelAsync(): Promise<void> {
+        if (this.consumptionSignalForm().dirty()) {
+            const shouldLeave = await this.mealManageFacade.confirmDiscardChangesAsync({
+                title: this.translateService.instant('UNSAVED_CHANGES.TITLE'),
+                message: this.translateService.instant('UNSAVED_CHANGES.MESSAGE'),
+                confirmLabel: this.translateService.instant('UNSAVED_CHANGES.DISCARD'),
+                cancelLabel: this.translateService.instant('UNSAVED_CHANGES.STAY'),
+                confirmIcon: 'logout',
+            });
+            if (!shouldLeave) {
+                return;
+            }
+        }
+
         await this.navigationService.navigateToConsumptionListAsync();
     }
 

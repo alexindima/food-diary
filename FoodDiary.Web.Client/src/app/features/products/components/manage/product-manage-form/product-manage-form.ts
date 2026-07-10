@@ -539,6 +539,7 @@ export class ProductManageFormComponent {
             message: this.translateService.instant('PRODUCT_MANAGE.LEAVE_CONFIRM_MESSAGE'),
             confirmLabel: this.translateService.instant('PRODUCT_MANAGE.LEAVE_CONFIRM_BUTTON'),
             cancelLabel: this.translateService.instant('PRODUCT_MANAGE.LEAVE_STAY_BUTTON'),
+            confirmIcon: 'logout',
         };
         return this.productManageFacade.confirmDiscardChangesAsync(data);
     }
