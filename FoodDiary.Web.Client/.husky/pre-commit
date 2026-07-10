@@ -1,4 +1,7 @@
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR)
+. FoodDiary.Web.Client/.husky/progress.sh
+hook_progress_init "pre-commit" 9
+
 STAGED_FRONTEND_FORMATTABLE_FILES=$(echo "$STAGED_FILES" | grep -E '^FoodDiary\.Web\.Client/(src|projects)/.*\.(ts|html)$' || true)
 STAGED_FRONTEND_LINT_FILES=$(echo "$STAGED_FILES" | grep -E '^FoodDiary\.Web\.Client/(src|projects)/.*\.(ts|html)$' || true)
 STAGED_FRONTEND_STYLE_FILES=$(echo "$STAGED_FILES" | grep -E '^FoodDiary\.Web\.Client/.*\.(css|scss)$' || true)
@@ -17,80 +20,95 @@ HAS_INFRA_MIGRATIONS=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Infrastructu
 cd FoodDiary.Web.Client
 
 if [ "$HAS_TS" -gt 0 ] || [ "$HAS_HTML" -gt 0 ]; then
-  echo "=== Running Prettier on staged frontend files ==="
   if [ -n "$STAGED_FRONTEND_FORMATTABLE_FILES" ]; then
-    printf '%s\n' "$STAGED_FRONTEND_FORMATTABLE_FILES" | sed 's#^FoodDiary\.Web\.Client/##' | xargs -n 50 npx prettier --check || exit 1
+    hook_step_start "Prettier on staged frontend files"
+    if printf '%s\n' "$STAGED_FRONTEND_FORMATTABLE_FILES" | sed 's#^FoodDiary\.Web\.Client/##' | xargs -n 50 npx prettier --check; then
+      hook_step_done
+    else
+      hook_step_fail
+      exit 1
+    fi
   else
-    echo "=== Skipping Prettier (no frontend .ts/.html files changed) ==="
+    hook_step_skip "Prettier" "no frontend .ts/.html files changed"
   fi
 else
-  echo "=== Skipping Prettier (no formattable files changed) ==="
+  hook_step_skip "Prettier" "no formattable files changed"
 fi
 
 if [ -n "$STAGED_FRONTEND_LINT_FILES" ]; then
-  echo "=== Running ESLint on staged frontend files ==="
-  printf '%s\n' "$STAGED_FRONTEND_LINT_FILES" | sed 's#^FoodDiary\.Web\.Client/##' | xargs -n 50 npx eslint || exit 1
+  hook_step_start "ESLint on staged frontend files"
+  if printf '%s\n' "$STAGED_FRONTEND_LINT_FILES" | sed 's#^FoodDiary\.Web\.Client/##' | xargs -n 50 npx eslint; then
+    hook_step_done
+  else
+    hook_step_fail
+    exit 1
+  fi
 else
-  echo "=== Skipping ESLint (no staged frontend .ts/.html files changed) ==="
+  hook_step_skip "ESLint" "no staged frontend .ts/.html files changed"
 fi
 
 if [ "$HAS_SCSS" -gt 0 ]; then
-  echo "=== Running Stylelint on staged styles ==="
   if [ -n "$STAGED_FRONTEND_STYLE_FILES" ]; then
-    printf '%s\n' "$STAGED_FRONTEND_STYLE_FILES" | sed 's#^FoodDiary\.Web\.Client/##' | xargs -n 50 npx stylelint || exit 1
+    hook_step_start "Stylelint on staged frontend styles"
+    if printf '%s\n' "$STAGED_FRONTEND_STYLE_FILES" | sed 's#^FoodDiary\.Web\.Client/##' | xargs -n 50 npx stylelint; then
+      hook_step_done
+    else
+      hook_step_fail
+      exit 1
+    fi
   else
-    echo "=== Skipping Stylelint (no frontend .css/.scss files changed) ==="
+    hook_step_skip "Stylelint" "no frontend .css/.scss files changed"
   fi
 else
-  echo "=== Skipping Stylelint (no .scss files changed) ==="
+  hook_step_skip "Stylelint" "no .scss files changed"
 fi
 
 if [ "$HAS_FRONTEND_DEPS" -gt 0 ]; then
-  echo "=== Running frontend dependency graph lint ==="
-  npm run lint:deps || exit 1
+  hook_run "Frontend dependency graph lint" npm run lint:deps || exit 1
 else
-  echo "=== Skipping frontend dependency graph lint (no dependency-relevant frontend files changed) ==="
+  hook_step_skip "Frontend dependency graph lint" "no dependency-relevant frontend files changed"
 fi
 
 if [ "$HAS_I18N" -gt 0 ]; then
-  echo "=== Running i18n consistency check ==="
-  npm run check:i18n || exit 1
+  hook_run "Frontend i18n consistency" npm run check:i18n || exit 1
 else
-  echo "=== Skipping i18n consistency check (no locale files changed) ==="
+  hook_step_skip "Frontend i18n consistency" "no locale files changed"
 fi
 
 echo "=== Skipping frontend tests in pre-commit (run before push) ==="
 
 if [ "$HAS_STORYBOOK" -gt 0 ]; then
-  echo "=== Running Storybook build ==="
-  npm run build:storybook || exit 1
+  hook_run "Storybook build" npm run build:storybook || exit 1
 else
-  echo "=== Skipping Storybook build (no Storybook files changed) ==="
+  hook_step_skip "Storybook build" "no Storybook files changed"
 fi
 
 cd ..
 
 if [ "$HAS_CS" -gt 0 ]; then
-  echo "=== Running backend solution build ==="
-  dotnet build FoodDiary.slnx --no-restore || exit 1
+  hook_run "Backend solution build" dotnet build FoodDiary.slnx --no-restore || exit 1
 
-  echo "=== Running dotnet format check on staged C# files ==="
   STAGED_CS_FILES=$(echo "$STAGED_FILES" | grep '\.cs$' | tr '\n' ',' | sed 's/,$//')
-  if ! dotnet format FoodDiary.slnx --verify-no-changes --include "$STAGED_CS_FILES"; then
+  hook_step_start "dotnet format check on staged C# files"
+  if dotnet format FoodDiary.slnx --verify-no-changes --include "$STAGED_CS_FILES"; then
+    hook_step_done
+  else
+    hook_step_fail
     echo "Run 'dotnet format FoodDiary.slnx' to fix formatting."
     exit 1
   fi
 
   echo "=== Skipping backend tests in pre-commit (full suite runs in CI) ==="
 else
-  echo "=== Skipping dotnet format (no .cs files changed) ==="
+  hook_step_skip "Backend solution build" "no .cs files changed"
+  hook_step_skip "dotnet format check" "no .cs files changed"
 fi
 
 if [ "$HAS_INFRA_MIGRATIONS" -gt 0 ]; then
-  echo "=== Running infrastructure migration build guard ==="
-  dotnet build FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj --no-restore || exit 1
+  hook_run "Infrastructure migration build guard" dotnet build FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj --no-restore || exit 1
 else
-  echo "=== Skipping infrastructure migration build guard (no migration files changed) ==="
+  hook_step_skip "Infrastructure migration build guard" "no migration files changed"
 fi
 
 echo "=== Skipping API contract integration tests in pre-commit (full suite runs in CI) ==="
+hook_progress_done

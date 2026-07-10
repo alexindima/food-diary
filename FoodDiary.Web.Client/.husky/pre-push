@@ -1,37 +1,36 @@
-echo "=== Running frontend verification before push ==="
+. FoodDiary.Web.Client/.husky/progress.sh
+hook_progress_init "pre-push" 28
+
 cd FoodDiary.Web.Client
-npm run lint || exit 1
-npm run lint:deps:strict || exit 1
-npm run check:depcruise-baseline || exit 1
-npm run stylelint || exit 1
-npm run test:ci:app || exit 1
-npm run check:i18n || exit 1
+hook_run "Frontend ESLint" npm run lint || exit 1
+hook_run "Frontend dependency graph lint" npm run lint:deps:strict || exit 1
+hook_run "Dependency graph baseline" npm run check:depcruise-baseline || exit 1
+hook_run "Frontend Stylelint" npm run stylelint || exit 1
+hook_run "Frontend application tests" npm run test:ci:app || exit 1
+hook_run "Frontend i18n consistency" npm run check:i18n || exit 1
 cd ..
 
-echo "=== Running backend build before push ==="
-dotnet build FoodDiary.slnx --no-restore || exit 1
+hook_run "Backend solution build" dotnet build FoodDiary.slnx --no-restore || exit 1
+hook_run "Application tests" dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore --no-build || exit 1
+hook_run "Architecture tests" dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore --no-build || exit 1
+hook_run "Infrastructure tests" dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --no-restore --no-build || exit 1
+hook_run "Job manager tests" dotnet test tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj --no-restore --no-build || exit 1
+hook_run "MailInbox application tests" dotnet test MailInbox/tests/FoodDiary.MailInbox.Application.Tests/FoodDiary.MailInbox.Application.Tests.csproj --no-restore --no-build || exit 1
+hook_run "MailInbox client tests" dotnet test MailInbox/tests/FoodDiary.MailInbox.Client.Tests/FoodDiary.MailInbox.Client.Tests.csproj --no-restore --no-build || exit 1
+hook_run "MailInbox domain tests" dotnet test MailInbox/tests/FoodDiary.MailInbox.Domain.Tests/FoodDiary.MailInbox.Domain.Tests.csproj --no-restore --no-build || exit 1
+hook_run "MailInbox infrastructure tests" dotnet test MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/FoodDiary.MailInbox.Infrastructure.Tests.csproj --no-restore --no-build || exit 1
+hook_run "MailInbox initializer tests" dotnet test MailInbox/tests/FoodDiary.MailInbox.Initializer.Tests/FoodDiary.MailInbox.Initializer.Tests.csproj --no-restore --no-build || exit 1
+hook_run "MailInbox integration tests" dotnet test MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/FoodDiary.MailInbox.IntegrationTests.csproj --no-restore --no-build || exit 1
+hook_run "MailInbox presentation tests" dotnet test MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/FoodDiary.MailInbox.Presentation.Tests.csproj --no-restore --no-build || exit 1
+hook_run "MailRelay application tests" dotnet test MailRelay/tests/FoodDiary.MailRelay.Application.Tests/FoodDiary.MailRelay.Application.Tests.csproj --no-restore --no-build || exit 1
+hook_run "MailRelay client tests" dotnet test MailRelay/tests/FoodDiary.MailRelay.Client.Tests/FoodDiary.MailRelay.Client.Tests.csproj --no-restore --no-build || exit 1
+hook_run "MailRelay domain tests" dotnet test MailRelay/tests/FoodDiary.MailRelay.Domain.Tests/FoodDiary.MailRelay.Domain.Tests.csproj --no-restore --no-build || exit 1
+hook_run "MailRelay infrastructure tests" dotnet test MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/FoodDiary.MailRelay.Infrastructure.Tests.csproj --no-restore --no-build || exit 1
+hook_run "MailRelay initializer tests" dotnet test MailRelay/tests/FoodDiary.MailRelay.Initializer.Tests/FoodDiary.MailRelay.Initializer.Tests.csproj --no-restore --no-build || exit 1
+hook_run "MailRelay integration tests" dotnet test MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/FoodDiary.MailRelay.IntegrationTests.csproj --no-restore --no-build || exit 1
+hook_run "MailRelay presentation tests" dotnet test MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/FoodDiary.MailRelay.Presentation.Tests.csproj --no-restore --no-build || exit 1
+hook_run "Presentation API tests" dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj --no-restore --no-build || exit 1
+hook_run "Telegram bot tests" dotnet test tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj --no-restore --no-build || exit 1
+hook_run "API contract integration tests" dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --no-restore --no-build --filter "FullyQualifiedName~PresentationBoundaryIntegrationTests|FullyQualifiedName~PresentationPayloadContractIntegrationTests" || exit 1
 
-echo "=== Running backend tests before push ==="
-dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore --no-build || exit 1
-dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore --no-build || exit 1
-dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --no-restore --no-build || exit 1
-dotnet test tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj --no-restore --no-build || exit 1
-dotnet test MailInbox/tests/FoodDiary.MailInbox.Application.Tests/FoodDiary.MailInbox.Application.Tests.csproj --no-restore --no-build || exit 1
-dotnet test MailInbox/tests/FoodDiary.MailInbox.Client.Tests/FoodDiary.MailInbox.Client.Tests.csproj --no-restore --no-build || exit 1
-dotnet test MailInbox/tests/FoodDiary.MailInbox.Domain.Tests/FoodDiary.MailInbox.Domain.Tests.csproj --no-restore --no-build || exit 1
-dotnet test MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/FoodDiary.MailInbox.Infrastructure.Tests.csproj --no-restore --no-build || exit 1
-dotnet test MailInbox/tests/FoodDiary.MailInbox.Initializer.Tests/FoodDiary.MailInbox.Initializer.Tests.csproj --no-restore --no-build || exit 1
-dotnet test MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/FoodDiary.MailInbox.IntegrationTests.csproj --no-restore --no-build || exit 1
-dotnet test MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/FoodDiary.MailInbox.Presentation.Tests.csproj --no-restore --no-build || exit 1
-dotnet test MailRelay/tests/FoodDiary.MailRelay.Application.Tests/FoodDiary.MailRelay.Application.Tests.csproj --no-restore --no-build || exit 1
-dotnet test MailRelay/tests/FoodDiary.MailRelay.Client.Tests/FoodDiary.MailRelay.Client.Tests.csproj --no-restore --no-build || exit 1
-dotnet test MailRelay/tests/FoodDiary.MailRelay.Domain.Tests/FoodDiary.MailRelay.Domain.Tests.csproj --no-restore --no-build || exit 1
-dotnet test MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/FoodDiary.MailRelay.Infrastructure.Tests.csproj --no-restore --no-build || exit 1
-dotnet test MailRelay/tests/FoodDiary.MailRelay.Initializer.Tests/FoodDiary.MailRelay.Initializer.Tests.csproj --no-restore --no-build || exit 1
-dotnet test MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/FoodDiary.MailRelay.IntegrationTests.csproj --no-restore --no-build || exit 1
-dotnet test MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/FoodDiary.MailRelay.Presentation.Tests.csproj --no-restore --no-build || exit 1
-dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj --no-restore --no-build || exit 1
-dotnet test tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj --no-restore --no-build || exit 1
-
-echo "=== Running API contract integration tests before push ==="
-dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --no-restore --no-build --filter "FullyQualifiedName~PresentationBoundaryIntegrationTests|FullyQualifiedName~PresentationPayloadContractIntegrationTests" || exit 1
+hook_progress_done
