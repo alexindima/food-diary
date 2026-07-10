@@ -8,7 +8,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 
-type VerificationState = 'pending' | 'success' | 'error';
+type VerificationState = 'pending' | 'success' | 'invalid' | 'error';
 
 @Component({
     selector: 'fd-email-verification',
@@ -50,6 +50,10 @@ export class EmailVerificationComponent {
         this.verify(userId, token);
     }
 
+    protected onBackToLogin(): void {
+        void this.navigationService.navigateToAuthAsync('login');
+    }
+
     private resolveAndVerify(): void {
         const params = this.route.snapshot.queryParamMap;
         const userId = params.get('userId') ?? params.get('user') ?? params.get('id');
@@ -57,7 +61,7 @@ export class EmailVerificationComponent {
         this.emailToken.set({ userId, token });
 
         if (userId === null || userId.length === 0 || token === null || token.length === 0) {
-            this.state.set('error');
+            this.state.set('invalid');
             this.errorMessage.set(this.translateService.instant('AUTH.VERIFY.ERROR_INVALID'));
             return;
         }

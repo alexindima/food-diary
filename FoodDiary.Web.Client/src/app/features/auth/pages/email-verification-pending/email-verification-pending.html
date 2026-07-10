@@ -1,5 +1,12 @@
-<div class="email-verify-pending fd-center">
-    <fd-ui-card class="email-verify-pending__card" [title]="'AUTH.VERIFY_PENDING.TITLE' | translate">
+<section class="email-verify-pending" aria-labelledby="email-verify-pending-title">
+    <fd-ui-card appearance="entry" density="relaxed" class="email-verify-pending__card">
+        <header class="email-verify-pending__header">
+            <p class="email-verify-pending__brand">Food Diary</p>
+            <h1 id="email-verify-pending-title" class="email-verify-pending__title fd-page-title">
+                {{ 'AUTH.VERIFY_PENDING.TITLE' | translate }}
+            </h1>
+        </header>
+
         <p class="email-verify-pending__description fd-ui-body-sm">
             @if (email()) {
                 {{ 'AUTH.VERIFY_PENDING.DESCRIPTION' | translate: { email: email() } }}
@@ -9,16 +16,24 @@
         </p>
 
         @if (statusMessage()) {
-            <div class="email-verify-pending__status fd-ui-body-sm">{{ statusMessage() }}</div>
+            <div class="email-verify-pending__status fd-ui-body-sm" role="status" aria-live="polite">{{ statusMessage() }}</div>
         }
 
-        <div class="email-verify-pending__actions fd-row fd-gap-sm">
-            <fd-ui-button type="button" variant="secondary" fill="outline" [loading]="isChecking()" (click)="onRefreshStatus()">
+        <div class="email-verify-pending__actions">
+            <fd-ui-button
+                type="button"
+                variant="secondary"
+                fill="outline"
+                [fullWidth]="true"
+                [loading]="isChecking()"
+                (click)="onRefreshStatus()"
+            >
                 {{ 'AUTH.VERIFY_PENDING.REFRESH' | translate }}
             </fd-ui-button>
             <fd-ui-button
                 type="button"
                 variant="primary"
+                [fullWidth]="true"
                 [disabled]="resendCooldownSeconds() > 0"
                 [loading]="isSending()"
                 [disabledReason]="resendCooldownSeconds() > 0 ? ('DISABLED_HINTS.COOLDOWN_ACTIVE' | translate) : null"
@@ -33,4 +48,4 @@
             </div>
         }
     </fd-ui-card>
-</div>
+</section>

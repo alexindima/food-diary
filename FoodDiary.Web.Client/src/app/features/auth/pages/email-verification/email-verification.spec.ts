@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { EmailVerificationComponent } from './email-verification';
@@ -41,8 +42,44 @@ describe('EmailVerificationComponent', () => {
         const component = createComponent({});
 
         expect(authServiceMock.verifyEmail).not.toHaveBeenCalled();
-        expect(component['state']()).toBe('error');
+        expect(component['state']()).toBe('invalid');
         expect(component['errorMessage']()).toBe('AUTH.VERIFY.ERROR_INVALID');
+    });
+
+    it('should navigate to login instead of retrying when token is missing', () => {
+        const component = createComponent({});
+
+        component['onBackToLogin']();
+
+        expect(authServiceMock.verifyEmail).not.toHaveBeenCalled();
+        expect(navigationServiceMock.navigateToAuthAsync).toHaveBeenCalledWith('login');
+    });
+
+    it('should render an h1 and a login action for an invalid link', () => {
+        TestBed.configureTestingModule({
+            imports: [EmailVerificationComponent],
+            providers: [
+                provideTranslateTesting(),
+                { provide: AuthService, useValue: authServiceMock },
+                { provide: NavigationService, useValue: navigationServiceMock },
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            queryParamMap: convertToParamMap({}),
+                        },
+                    },
+                },
+            ],
+        });
+
+        const fixture = TestBed.createComponent(EmailVerificationComponent);
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+
+        expect(root.querySelector('h1')?.textContent).toContain('AUTH.VERIFY.TITLE');
+        expect(root.querySelector('button')?.textContent).toContain('AUTH.VERIFY.BACK_TO_LOGIN');
+        expect(root.textContent).not.toContain('AUTH.VERIFY.RETRY');
     });
 
     it('should allow retry with the resolved token', () => {

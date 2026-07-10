@@ -34,12 +34,6 @@
     margin: 0;
     color: var(--fd-color-primary-700);
     font-size: var(--fd-text-body-lg-size);
+    line-height: var(--fd-text-body-lg-line-height);
     font-weight: var(--fd-font-weight-semibold);
-}
-
-.mobile-login__title {
-    margin: 0;
-    color: var(--fd-color-text);
-    --fd-page-title-size: 2rem;
-    --fd-page-title-line-height: 1.1;
 }

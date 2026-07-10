@@ -1,11 +1,10 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, ElementRef, inject } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
 
 import { AuthComponent } from '../../components/auth/auth';
 
 @Component({
     selector: 'fd-mobile-login',
-    imports: [AuthComponent, TranslatePipe],
+    imports: [AuthComponent],
     templateUrl: './mobile-login.html',
     styleUrl: './mobile-login.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

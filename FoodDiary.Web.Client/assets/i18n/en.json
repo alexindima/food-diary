@@ -157,7 +157,8 @@
             "ERROR_GENERIC": "We couldn't verify the email. Try again or request a new link.",
             "ERROR_INVALID": "Verification link is invalid or expired.",
             "CONTINUE": "Continue",
-            "RETRY": "Try again"
+            "RETRY": "Try again",
+            "BACK_TO_LOGIN": "Back to login"
         },
         "VERIFY_PENDING": {
             "TITLE": "Check your email",

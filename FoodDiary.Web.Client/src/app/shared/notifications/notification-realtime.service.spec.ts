@@ -1,4 +1,4 @@
-import { signal } from '@angular/core';
+import { signal, type WritableSignal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -20,7 +20,7 @@ const signalrMock = vi.hoisted(() => {
         on: vi.fn((eventName: string, handler: (...args: unknown[]) => void) => {
             handlers.set(eventName, handler);
         }),
-        onclose: vi.fn((handler: () => void) => {
+        onclose: vi.fn((handler: (error?: Error) => void) => {
             closeHandler = handler;
         }),
         onreconnected: vi.fn((handler: () => void) => {
@@ -152,12 +152,29 @@ describe('NotificationRealtimeService connection guards', () => {
         expect(service.connected()).toBe(false);
         expect(logger.error).toHaveBeenCalledWith('Notification SignalR connection failed', connectionError, { devOnly: true });
     });
+
+    it('does not warn when the connection closes during logout', async () => {
+        const { authenticated, logger, service } = setup(true, AUTH_TOKEN);
+        await waitForAsync(() => service.connected());
+        signalrMock.connection.stop.mockImplementationOnce(async () => {
+            signalrMock.triggerClose();
+            await waitForAsyncTasksAsync();
+        });
+
+        authenticated.set(false);
+        TestBed.tick();
+        await waitForAsync(() => signalrMock.connection.stop.mock.calls.length > 0);
+
+        expect(service.connected()).toBe(false);
+        expect(logger.warn).not.toHaveBeenCalled();
+    });
 });
 
 function setup(
     isAuthenticated: boolean,
     token: string | null,
 ): {
+    authenticated: WritableSignal<boolean>;
     logger: {
         error: ReturnType<typeof vi.fn>;
         warn: ReturnType<typeof vi.fn>;
@@ -197,6 +214,7 @@ function setup(
     });
 
     return {
+        authenticated,
         logger,
         service: TestBed.inject(NotificationRealtimeService),
         notificationService,

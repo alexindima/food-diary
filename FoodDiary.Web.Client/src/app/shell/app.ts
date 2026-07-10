@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, Injector, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router, RouterOutlet } from '@angular/router';
@@ -17,6 +18,8 @@ import { PushNotificationService } from '../shared/notifications/push-notificati
 import { ThemeService } from '../shared/theme/theme.service';
 import { parseRouteSeoData } from './app-lib/app-seo-data.utils';
 import { SidebarComponent } from './sidebar/sidebar';
+
+const SESSION_ROUTE_PENDING_CLASS = 'fd-session-route-pending';
 
 @Component({
     selector: 'fd-root',
@@ -44,6 +47,7 @@ export class AppComponent {
     private readonly globalLoadingService = inject(GlobalLoadingService);
     private readonly routeLoadingService = inject(RouteLoadingService);
     private readonly themeService = inject(ThemeService);
+    private readonly document = inject(DOCUMENT);
 
     protected isAuthenticated = this.authService.isAuthenticated;
     protected isImpersonating = this.authService.isImpersonating;
@@ -67,6 +71,7 @@ export class AppComponent {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(event => {
+                this.document.documentElement.classList.remove(SESSION_ROUTE_PENDING_CLASS);
                 this.currentPath.set(this.getCurrentPath(event.urlAfterRedirects));
             });
 

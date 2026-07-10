@@ -1,0 +1,31 @@
+@mixin shell {
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: max(var(--fd-space-xl), env(safe-area-inset-top)) var(--fd-space-md) max(var(--fd-space-xl), env(safe-area-inset-bottom));
+    background:
+        linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-50) 70%, var(--fd-bg-page)) 0%, var(--fd-bg-page) 42%),
+        var(--fd-bg-page);
+}
+
+@mixin card($max-width) {
+    width: min(100%, $max-width);
+}
+
+@mixin header {
+    display: grid;
+    gap: var(--fd-space-xxs);
+    margin-bottom: var(--fd-space-md);
+}
+
+@mixin brand {
+    margin: 0;
+    color: var(--fd-color-primary-700);
+    font-size: var(--fd-text-body-size);
+    font-weight: var(--fd-font-weight-semibold);
+}
+
+@mixin title {
+    margin: 0;
+    color: var(--fd-color-text);
+}

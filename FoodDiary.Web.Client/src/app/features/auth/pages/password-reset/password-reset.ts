@@ -20,7 +20,7 @@ import { NavigationService } from '../../../../services/navigation.service';
 import { AUTH_PASSWORD_MIN_LENGTH } from '../../lib/auth.constants';
 import { ConfirmPasswordResetRequest } from '../../models/auth.data';
 
-type ResetState = 'ready' | 'invalid' | 'error';
+type ResetState = 'ready' | 'invalid';
 const ERROR_FIELDS = ['password', 'confirmPassword'] as const;
 type ErrorField = (typeof ERROR_FIELDS)[number];
 type FieldErrors = Record<ErrorField, string | null>;
@@ -124,7 +124,6 @@ export class PasswordResetComponent {
             await this.navigationService.navigateToHomeAsync();
         } catch {
             this.isSubmitting.set(false);
-            this.state.set('error');
             this.errorMessage.set(this.translateService.instant('AUTH.RESET.ERROR_GENERIC'));
         }
     }

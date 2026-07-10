@@ -184,10 +184,27 @@ describe('PasswordResetComponent submit', () => {
         component['onSubmit']();
 
         await vi.waitFor(() => {
-            expect(component['state']()).toBe('error');
+            expect(component['state']()).toBe('ready');
         });
         expect(component['errorMessage']()).toBe('AUTH.RESET.ERROR_GENERIC');
         expect(component['isSubmitting']()).toBe(false);
+    });
+
+    it('should allow retry after a submit error', async () => {
+        const { authServiceSpy, component, navigationServiceSpy } = createComponent();
+        authServiceSpy.confirmPasswordReset.mockReturnValueOnce(throwError(() => new Error('fail'))).mockReturnValueOnce(of(AUTH_RESPONSE));
+        setValidPassword(component);
+
+        component['onSubmit']();
+        await vi.waitFor(() => {
+            expect(component['errorMessage']()).toBe('AUTH.RESET.ERROR_GENERIC');
+        });
+        component['onSubmit']();
+
+        await vi.waitFor(() => {
+            expect(navigationServiceSpy.navigateToHomeAsync).toHaveBeenCalled();
+        });
+        expect(authServiceSpy.confirmPasswordReset).toHaveBeenCalledTimes(2);
     });
 });
 

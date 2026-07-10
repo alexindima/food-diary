@@ -17,6 +17,7 @@ export class NotificationRealtimeService {
     private readonly notificationService = inject(NotificationService);
     private readonly logger = inject(FrontendLoggerService);
     private connection: HubConnection | null = null;
+    private disconnecting = false;
     private readonly connecting = signal(false);
     private readonly connectedSignal = signal(false);
 
@@ -78,9 +79,11 @@ export class NotificationRealtimeService {
             this.connectedSignal.set(true);
         });
 
-        this.connection.onclose(() => {
+        this.connection.onclose(error => {
             this.connectedSignal.set(false);
-            this.logger.warn('Notification SignalR connection closed', undefined, { devOnly: true });
+            if (!this.disconnecting && this.authService.isAuthenticated()) {
+                this.logger.warn('Notification SignalR connection closed', error, { devOnly: true });
+            }
         });
 
         try {
@@ -105,8 +108,10 @@ export class NotificationRealtimeService {
         }
 
         try {
+            this.disconnecting = true;
             await this.connection.stop();
         } finally {
+            this.disconnecting = false;
             this.connection = null;
             this.connectedSignal.set(false);
             this.connecting.set(false);

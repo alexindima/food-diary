@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { type Signal, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, NavigationEnd, type Route, RouteConfigLoadEnd, RouteConfigLoadStart, Router } from '@angular/router';
@@ -74,6 +75,20 @@ describe('AppComponent shell behavior', () => {
             routerEvents.next(new NavigationEnd(NAVIGATION_ID, '/dashboard?date=2026-06-11', '/dashboard?date=2026-06-11'));
 
             expect(compactNavigation()).toBe(true);
+        },
+        SHELL_TEST_TIMEOUT_MS,
+    );
+
+    it(
+        'reveals the app after the initial route resolves',
+        async () => {
+            const { routerEvents } = await createComponentAsync();
+            const documentRef = TestBed.inject(DOCUMENT);
+            documentRef.documentElement.classList.add('fd-session-route-pending');
+
+            routerEvents.next(new NavigationEnd(NAVIGATION_ID, '/', '/dashboard'));
+
+            expect(documentRef.documentElement.classList.contains('fd-session-route-pending')).toBe(false);
         },
         SHELL_TEST_TIMEOUT_MS,
     );

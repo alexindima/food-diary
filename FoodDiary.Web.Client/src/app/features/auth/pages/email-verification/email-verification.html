@@ -1,23 +1,34 @@
-<div class="email-verify fd-center">
-    <fd-ui-card class="email-verify__card" [title]="'AUTH.VERIFY.TITLE' | translate">
-        @if (state() === 'pending') {
-            <p class="email-verify__description fd-ui-body-sm">{{ 'AUTH.VERIFY.PENDING' | translate }}</p>
-        } @else if (state() === 'success') {
-            <p class="email-verify__description fd-ui-body-sm">{{ 'AUTH.VERIFY.SUCCESS' | translate }}</p>
-        } @else {
-            <p class="email-verify__description fd-ui-body-sm">{{ errorMessage() || ('AUTH.VERIFY.ERROR_GENERIC' | translate) }}</p>
-        }
+<section class="email-verify" aria-labelledby="email-verify-title">
+    <fd-ui-card appearance="entry" density="relaxed" class="email-verify__card">
+        <header class="email-verify__header">
+            <p class="email-verify__brand">Food Diary</p>
+            <h1 id="email-verify-title" class="email-verify__title fd-page-title">{{ 'AUTH.VERIFY.TITLE' | translate }}</h1>
+        </header>
 
-        <div class="email-verify__actions fd-row fd-gap-sm">
+        <div class="email-verify__state" role="status" aria-live="polite">
+            @if (state() === 'pending') {
+                <p class="email-verify__description fd-ui-body-sm">{{ 'AUTH.VERIFY.PENDING' | translate }}</p>
+            } @else if (state() === 'success') {
+                <p class="email-verify__description fd-ui-body-sm">{{ 'AUTH.VERIFY.SUCCESS' | translate }}</p>
+            } @else {
+                <p class="email-verify__description fd-ui-body-sm">{{ errorMessage() || ('AUTH.VERIFY.ERROR_GENERIC' | translate) }}</p>
+            }
+        </div>
+
+        <div class="email-verify__actions">
             @if (state() === 'success') {
-                <fd-ui-button type="button" variant="primary" (click)="onContinue()">
+                <fd-ui-button type="button" variant="primary" [fullWidth]="true" (click)="onContinue()">
                     {{ 'AUTH.VERIFY.CONTINUE' | translate }}
                 </fd-ui-button>
             } @else if (state() === 'error') {
-                <fd-ui-button type="button" variant="secondary" fill="outline" [loading]="isBusy()" (click)="onRetry()">
+                <fd-ui-button type="button" variant="secondary" fill="outline" [fullWidth]="true" [loading]="isBusy()" (click)="onRetry()">
                     {{ 'AUTH.VERIFY.RETRY' | translate }}
+                </fd-ui-button>
+            } @else if (state() === 'invalid') {
+                <fd-ui-button type="button" variant="secondary" fill="outline" [fullWidth]="true" (click)="onBackToLogin()">
+                    {{ 'AUTH.VERIFY.BACK_TO_LOGIN' | translate }}
                 </fd-ui-button>
             }
         </div>
     </fd-ui-card>
-</div>
+</section>

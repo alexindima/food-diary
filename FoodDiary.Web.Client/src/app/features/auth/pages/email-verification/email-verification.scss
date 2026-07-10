@@ -1,13 +1,31 @@
+@use '../auth-page';
+
 .email-verify {
-    min-height: 100dvh;
-    padding: var(--fd-space-xl) var(--fd-space-md);
+    @include auth-page.shell;
 }
 
 .email-verify__card {
-    width: min(520px, 100%);
+    @include auth-page.card(32.5rem);
+}
+
+.email-verify__header {
+    @include auth-page.header;
+}
+
+.email-verify__brand {
+    @include auth-page.brand;
+}
+
+.email-verify__title {
+    @include auth-page.title;
 }
 
 .email-verify__description {
-    margin: 0 0 var(--fd-space-md);
+    margin: 0;
     color: var(--fd-color-text-muted);
+}
+
+.email-verify__actions {
+    display: grid;
+    margin-top: var(--fd-space-md);
 }

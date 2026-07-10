@@ -2,6 +2,7 @@ import { expect, type Page, type Route, test } from '@playwright/test';
 
 const MS_PER_SECOND = 1000;
 const AUTH_TOKEN_TTL_SECONDS = 3600;
+const SESSION_RESTORE_DELAY_MS = 750;
 const TEST_IMAGE_URLS = [
     createSvgDataUrl('#f97316', '1'),
     createSvgDataUrl('#22c55e', '2'),
@@ -38,7 +39,92 @@ test.describe('client smoke', () => {
         await expect(page.locator('fd-auth-dialog fd-auth')).toBeVisible();
         await expect(page.locator('fd-auth .auth__form')).toBeVisible();
     });
+});
 
+test.describe('client auth smoke', () => {
+    test('renders standalone login and registration on mobile', async ({ page }) => {
+        await page.setViewportSize({ width: 390, height: 844 });
+        await page.goto('/mobile/login');
+
+        await expect(page.getByRole('heading', { name: 'Food Diary', level: 1 })).toBeVisible();
+        await expect(page.getByRole('tab', { name: 'Login' })).toHaveAttribute('aria-selected', 'true');
+        await page.getByRole('tab', { name: 'Register' }).click();
+        await expect(page.getByRole('checkbox', { name: 'I agree to the Privacy Policy' })).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Register' })).toBeVisible();
+        await expectNoHorizontalOverflowAsync(page);
+    });
+
+    test('routes an invalid email verification link back to login', async ({ page }) => {
+        await page.goto('/verify-email');
+
+        await expect(page.getByRole('heading', { name: 'Email verification', level: 1 })).toBeVisible();
+        await expect(page.getByText('Verification link is invalid or expired.')).toBeVisible();
+        await page.getByRole('button', { name: 'Back to login' }).click();
+
+        await expect(page).toHaveURL(/\?auth=login$/);
+        await expect(page.locator('fd-auth-dialog fd-auth')).toBeVisible();
+    });
+
+    test('keeps email verification request failures retryable', async ({ page }) => {
+        let verificationAttempts = 0;
+        await page.route('**/api/v1/auth/verify-email', async route => {
+            verificationAttempts += 1;
+            await route.fulfill({ status: 400, contentType: 'application/json', body: '{}' });
+        });
+
+        await page.goto('/verify-email?userId=user-1&token=invalid-token');
+        await expect(page.getByText("We couldn't verify the email. Try again or request a new link.")).toBeVisible();
+        await page.getByRole('button', { name: 'Try again' }).click();
+        await expect(page.getByRole('button', { name: 'Try again' })).toBeVisible();
+
+        expect(verificationAttempts).toBe(2);
+    });
+
+    test('keeps password reset form available after an API error', async ({ page }) => {
+        await page.route('**/api/v1/auth/password-reset/confirm', async route => {
+            await route.fulfill({ status: 400, contentType: 'application/json', body: '{}' });
+        });
+
+        await page.goto('/reset-password?userId=user-1&token=invalid-token');
+        await page.getByLabel('New password', { exact: true }).fill('reviewPass123');
+        await page.getByLabel('Confirm new password', { exact: true }).fill('reviewPass123');
+        await page.getByRole('button', { name: 'Save new password' }).click();
+
+        await expect(page.getByText("We couldn't reset the password. Please try again.")).toBeVisible();
+        await expect(page.getByLabel('New password', { exact: true })).toHaveValue('reviewPass123');
+        await expect(page.getByRole('button', { name: 'Save new password' })).toBeEnabled();
+    });
+
+    test('renders and updates email verification pending state on mobile', async ({ page }) => {
+        await page.setViewportSize({ width: 390, height: 844 });
+        await page.addInitScript((token: string) => {
+            window.localStorage.setItem('authToken', token);
+            window.localStorage.setItem('refreshToken', 'refresh-token');
+            window.localStorage.setItem('userId', 'u1');
+            window.localStorage.setItem('emailConfirmed', 'false');
+        }, createAuthenticatedUserJwt());
+        await page.route('**/hubs/**', async route => {
+            await route.abort('failed');
+        });
+        await page.route('**/api/v1/users/info', async route => {
+            await route.fulfill(jsonResponse({ ...createUser(), isEmailConfirmed: false }));
+        });
+        await page.route('**/api/v1/auth/verify-email/resend', async route => {
+            await route.fulfill({ status: 204 });
+        });
+
+        await page.goto('/verify-pending');
+        await expect(page.getByRole('heading', { name: 'Check your email', level: 1 })).toBeVisible();
+        await page.getByRole('button', { name: "I've verified, refresh status" }).click();
+        await expect(page.getByText('Still not confirmed. Please check your inbox or spam folder.')).toBeVisible();
+        await page.getByRole('button', { name: 'Send again' }).click();
+        await expect(page.getByText('Verification email sent.')).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Send again' })).toBeDisabled();
+        await expectNoHorizontalOverflowAsync(page);
+    });
+});
+
+test.describe('authenticated client smoke', () => {
     test('redirects authenticated user from landing to dashboard', async ({ page }) => {
         await page.addInitScript((token: string) => {
             window.localStorage.setItem('authToken', token);
@@ -55,7 +141,32 @@ test.describe('client smoke', () => {
         await expect(page.locator('fd-dashboard')).toBeVisible();
         await expect(page.getByRole('heading', { name: 'Consumption for today' })).toBeVisible();
     });
+});
 
+test.describe('session routing smoke', () => {
+    test('keeps prerendered landing hidden while an authenticated root route initializes', async ({ page }) => {
+        await page.addInitScript((token: string) => {
+            window.localStorage.setItem('authToken', token);
+            window.localStorage.setItem('refreshToken', 'refresh-token');
+            window.localStorage.setItem('userId', 'u1');
+            window.localStorage.setItem('emailConfirmed', 'true');
+        }, createAuthenticatedUserJwt());
+        await mockAuthenticatedClientApiAsync(page);
+        await page.route('**/api/v1/users/info', async route => {
+            await new Promise(resolve => setTimeout(resolve, SESSION_RESTORE_DELAY_MS));
+            await route.fulfill(jsonResponse(createUser()));
+        });
+
+        await page.goto('/', { waitUntil: 'domcontentloaded' });
+
+        await expect(page.locator('html')).toHaveClass(/fd-session-route-pending/);
+        await expect(page.locator('fd-hero')).toBeHidden();
+        await expect(page).toHaveURL(/\/dashboard$/);
+        await expect(page.locator('html')).not.toHaveClass(/fd-session-route-pending/);
+    });
+});
+
+test.describe('authenticated feature smoke', () => {
     test('renders not found page for unknown route', async ({ page }) => {
         await page.goto('/missing-page');
 
@@ -166,6 +277,15 @@ async function expectCollageFitsMediaSlotAsync(collage: ReturnType<Page['locator
         expect(imageRect.right).toBeLessThanOrEqual(dimensions.collageWidth + 1);
         expect(imageRect.bottom).toBeLessThanOrEqual(dimensions.collageHeight + 1);
     }
+}
+
+async function expectNoHorizontalOverflowAsync(page: Page): Promise<void> {
+    const dimensions = await page.evaluate(() => ({
+        clientWidth: document.documentElement.clientWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+    }));
+
+    expect(dimensions.scrollWidth).toBe(dimensions.clientWidth);
 }
 
 async function mockAuthenticatedClientApiAsync(page: Page): Promise<void> {

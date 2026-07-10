@@ -1,12 +1,9 @@
-<main class="mobile-login" aria-labelledby="mobile-login-title">
+<section class="mobile-login" aria-labelledby="mobile-login-brand">
     <section class="mobile-login__content">
         <div class="mobile-login__header">
-            <p class="mobile-login__brand">Food Diary</p>
-            <h1 id="mobile-login-title" class="mobile-login__title fd-page-title">
-                {{ 'AUTH.LOGIN.TITLE' | translate }}
-            </h1>
+            <h1 id="mobile-login-brand" class="mobile-login__brand">Food Diary</h1>
         </div>
 
         <fd-auth initialMode="login" [useRouting]="false" [initialReturnUrl]="dashboardReturnUrl" />
     </section>
-</main>
+</section>

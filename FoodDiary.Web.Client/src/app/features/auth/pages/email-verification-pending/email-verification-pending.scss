@@ -1,10 +1,24 @@
+@use 'variables' as variables;
+@use '../auth-page';
+
 .email-verify-pending {
-    min-height: 100dvh;
-    padding: var(--fd-space-xl) var(--fd-space-md);
+    @include auth-page.shell;
 }
 
 .email-verify-pending__card {
-    width: min(520px, 100%);
+    @include auth-page.card(32.5rem);
+}
+
+.email-verify-pending__header {
+    @include auth-page.header;
+}
+
+.email-verify-pending__brand {
+    @include auth-page.brand;
+}
+
+.email-verify-pending__title {
+    @include auth-page.title;
 }
 
 .email-verify-pending__description {
@@ -16,7 +30,23 @@
     margin-bottom: var(--fd-space-md);
 }
 
+.email-verify-pending__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--fd-space-sm);
+}
+
 .email-verify-pending__cooldown {
     margin-top: var(--fd-space-sm);
     color: var(--fd-color-text-muted);
+}
+
+@media #{variables.$media-compact} {
+    .email-verify-pending {
+        min-height: calc(100dvh - var(--fd-layout-shell-current-mobile-viewport-bottom-padding));
+    }
+
+    .email-verify-pending__actions {
+        grid-template-columns: minmax(0, 1fr);
+    }
 }

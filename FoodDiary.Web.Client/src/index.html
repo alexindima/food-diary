@@ -10,6 +10,11 @@
         <meta name="keywords" content="nutrition, food diary, health, food" />
         <base href="/" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>
+            html.fd-session-route-pending fd-root {
+                visibility: hidden;
+            }
+        </style>
         <script>
             (() => {
                 const isAndroidWebView = navigator.userAgent.includes('Android') && navigator.userAgent.includes('; wv');
@@ -17,6 +22,24 @@
 
                 if (isAndroidWebView && isCapacitorLocalHost && location.pathname === '/') {
                     location.replace('/mobile/login');
+                    return;
+                }
+
+                if (location.pathname !== '/') {
+                    return;
+                }
+
+                try {
+                    const hasStoredSession =
+                        localStorage.getItem('authToken') !== null ||
+                        sessionStorage.getItem('authToken') !== null ||
+                        localStorage.getItem('refreshToken') !== null;
+
+                    if (hasStoredSession) {
+                        document.documentElement.classList.add('fd-session-route-pending');
+                    }
+                } catch {
+                    // Storage can be unavailable in hardened browser contexts; the route guard remains authoritative.
                 }
             })();
         </script>
