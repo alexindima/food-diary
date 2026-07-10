@@ -28,6 +28,7 @@ export type FdUiDialogBodyScrollInset = 'default' | 'edge';
 export type FdUiDialogData = {
     title?: string;
     subtitle?: string;
+    closeAriaLabel?: string;
     size?: FdUiDialogSize;
     dismissible?: boolean;
     bodyScrollInset?: FdUiDialogBodyScrollInset;
@@ -55,6 +56,7 @@ export class FdUiDialogComponent {
 
     public readonly title = input<string | undefined>(this.injectedData?.title);
     public readonly subtitle = input<string | undefined>(this.injectedData?.subtitle);
+    public readonly closeAriaLabel = input(this.injectedData?.closeAriaLabel ?? 'Close dialog');
     public readonly size = input<FdUiDialogSize>(this.injectedData?.size ?? 'md');
     public readonly bodyScrollInset = input<FdUiDialogBodyScrollInset>(this.injectedData?.bodyScrollInset ?? 'default');
     public readonly dismissible = input(this.injectedData?.dismissible ?? true, {

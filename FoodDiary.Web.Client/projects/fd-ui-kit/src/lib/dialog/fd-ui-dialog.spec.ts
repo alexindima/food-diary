@@ -110,6 +110,13 @@ describe('FdUiDialogComponent dismiss button', () => {
         closeBtn?.click();
         expect(dialogRefSpy.close).toHaveBeenCalled();
     });
+
+    it('should expose a localized accessible name for the dismiss button', () => {
+        const { fixture } = createDialogComponent({ title: 'Title', closeAriaLabel: 'Закрыть диалог' });
+        const closeBtn = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.fd-ui-dialog__close-button');
+
+        expect(closeBtn?.getAttribute('aria-label')).toBe('Закрыть диалог');
+    });
 });
 
 describe('FdUiDialogComponent size classes', () => {

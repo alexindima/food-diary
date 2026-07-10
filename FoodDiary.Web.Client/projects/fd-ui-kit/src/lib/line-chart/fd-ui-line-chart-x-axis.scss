@@ -50,7 +50,7 @@
 }
 
 .fd-ui-line-chart__x-axis--angled .fd-ui-line-chart__x-axis-label--end {
-    transform: translateX(-0.35em) rotate(45deg);
+    transform: translateX(calc(-100% + 0.35em)) rotate(45deg);
 }
 
 @container (max-width: 560px) {
@@ -71,7 +71,7 @@
     }
 
     .fd-ui-line-chart__x-axis .fd-ui-line-chart__x-axis-label--end {
-        transform: translateX(-0.35em) rotate(45deg);
+        transform: translateX(calc(-100% + 0.35em)) rotate(45deg);
     }
 }
 

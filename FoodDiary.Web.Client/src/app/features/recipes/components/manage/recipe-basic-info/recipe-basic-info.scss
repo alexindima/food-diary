@@ -86,7 +86,9 @@
 
         &__image {
             width: 100%;
+            max-width: 240px;
             height: auto;
+            justify-self: center;
         }
     }
 }

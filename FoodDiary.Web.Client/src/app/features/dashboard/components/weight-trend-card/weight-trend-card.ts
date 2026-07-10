@@ -33,6 +33,7 @@ export class WeightTrendCardComponent {
     public readonly points = input.required<WeightTrendPoint[]>();
     public readonly isLoading = input.required<boolean>();
     public readonly unitKey = input<string>('WEIGHT_CARD.KG');
+    public readonly emptyStateKey = input<string>('WEIGHT_TREND_CARD.NO_DATA');
     public readonly iconName = input<string | null>('monitor_weight');
     public readonly accentColor = input<string>('var(--fd-color-blue-500)');
 

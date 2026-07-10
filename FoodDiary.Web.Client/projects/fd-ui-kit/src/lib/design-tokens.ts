@@ -82,6 +82,7 @@ const LAYOUT_HEADER = {
     horizontalPaddingRight: '16px',
 } as const;
 
+// Legacy static reference. Themed UI and documentation must use DESIGN_TOKEN_CSS_VARIABLES.
 export const DESIGN_TOKEN_VALUES = {
     color: {
         primary: COLOR_PRIMARY,

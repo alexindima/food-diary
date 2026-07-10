@@ -14,7 +14,7 @@
                 }
             </div>
             @if (dismissible()) {
-                <button type="button" class="fd-ui-dialog__close-button" aria-label="Close dialog" (click)="close()">
+                <button type="button" class="fd-ui-dialog__close-button" [attr.aria-label]="closeAriaLabel()" (click)="close()">
                     <fd-ui-icon name="close" />
                 </button>
             }

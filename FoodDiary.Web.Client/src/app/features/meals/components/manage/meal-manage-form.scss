@@ -79,7 +79,9 @@
     @media #{variables.$media-mobile} {
         &__image {
             width: 100%;
+            max-width: 240px;
             height: auto;
+            justify-self: center;
         }
     }
 

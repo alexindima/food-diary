@@ -13,6 +13,7 @@ import { type FdUiDialogBodyScrollInset, FdUiDialogComponent, type FdUiDialogSiz
 export class FdUiDialogShellComponent {
     public readonly title = input<string | undefined>();
     public readonly subtitle = input<string | undefined>();
+    public readonly closeAriaLabel = input('Close dialog');
     public readonly size = input<FdUiDialogSize>('md');
     public readonly bodyScrollInset = input<FdUiDialogBodyScrollInset>('default');
     public readonly dismissible = input(true);

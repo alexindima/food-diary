@@ -36,6 +36,16 @@ describe('WeightTrendCardComponent', () => {
         ]);
         expect(component['hasChartData']()).toBe(true);
     });
+
+    it('uses the configured empty-state translation key', async () => {
+        const { fixture } = await setupComponentAsync();
+        fixture.componentRef.setInput('emptyStateKey', 'WAIST_CARD.NO_DATA');
+
+        fixture.detectChanges();
+
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('WAIST_CARD.NO_DATA');
+        expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('WEIGHT_TREND_CARD.NO_DATA');
+    });
 });
 
 async function setupComponentAsync(

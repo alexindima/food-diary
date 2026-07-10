@@ -33,7 +33,7 @@ const bundleScopedEntryPoints = [
     },
 ];
 
-const mojibakePatterns = [/Ð[\u0080-\u00BF]/u, /Ñ[\u0080-\u00BF]/u, /â[\u0080-\u00BF]/u, /Â[\u0080-\u00BF]/u];
+const mojibakePatterns = [/Ð[\u0080-\u00BF]/u, /Ñ[\u0080-\u00BF]/u, /â[\u0080-\u00BF]/u, /Â[\u0080-\u00BF]/u, /\uFFFD/u, /\?{3,}/u];
 
 const issues = [];
 

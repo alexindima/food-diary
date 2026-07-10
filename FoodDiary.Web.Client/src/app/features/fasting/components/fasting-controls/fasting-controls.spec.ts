@@ -1,5 +1,7 @@
 import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { FdUiSegmentedToggleComponent } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -63,6 +65,15 @@ describe('FastingControlsComponent setup controls', () => {
         startButton.click();
 
         expect(facade.startFasting).toHaveBeenCalledTimes(1);
+    });
+
+    it('fits the mode selector to the available width', () => {
+        const toggles = fixture.debugElement.queryAll(By.directive(FdUiSegmentedToggleComponent));
+        const modeToggle = toggles[0].componentInstance as FdUiSegmentedToggleComponent;
+
+        expect(modeToggle.fullWidth()).toBe(true);
+        expect(modeToggle.shrinkItems()).toBe(false);
+        expect(modeToggle.stackOnNarrow()).toBe(true);
     });
 
     it('delegates mode and protocol changes to the shared facade', () => {

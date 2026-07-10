@@ -35,7 +35,7 @@
                 />
             </div>
         } @else {
-            <div class="weight-trend-card__empty fd-ui-body-sm fd-ui-text-muted">{{ 'WEIGHT_TREND_CARD.NO_DATA' | translate }}</div>
+            <div class="weight-trend-card__empty fd-ui-body-sm fd-ui-text-muted">{{ emptyStateKey() | translate }}</div>
         }
 
         <div class="weight-trend-card__footer fd-ui-body-sm fd-ui-text-muted">{{ timeframeLabel() }}</div>

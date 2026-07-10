@@ -3,12 +3,14 @@
 This directory contains long-form repository documentation. Keep root-level markdown limited to entrypoint files such as `README.md` and `AGENTS.md`.
 
 ## Architecture
+
 - `ARCHITECTURE.md` - system architecture, deployable units, and dependency boundaries.
 - `BACKEND_MODULE_MAP.md` - backend project/module map and placement guidance.
 - `TESTING_STRATEGY.md` - test project responsibilities and when to run each suite.
 - `adr/` - architecture decision records.
 
 ## Backend Operations And Governance
+
 - `backend/ARCHITECTURE_IMPROVEMENT_ROADMAP.md`
 - `backend/BACKEND_API_CONTRACT_GOVERNANCE.md`
 - `backend/BACKEND_CRITICAL_FLOW_MATRIX.md`
@@ -24,8 +26,11 @@ This directory contains long-form repository documentation. Keep root-level mark
 - `backend/BACKEND_TIME_POLICY.md`
 
 ## Frontend
+
 - `frontend/FRONTEND_ARCHITECTURE.md`
 - `frontend/FRONTEND_OBSERVABILITY_BASELINE.md`
+- `frontend/DESIGN_SYSTEM_REVIEW.md` - living page inventory, token contract, visual QA matrix, and findings ledger.
 
 ## Plans
+
 `plans/` contains active product, feature, SEO, and integration plans. Remove implemented or stale plans once durable decisions are captured in ADRs, current guides, or project instructions.

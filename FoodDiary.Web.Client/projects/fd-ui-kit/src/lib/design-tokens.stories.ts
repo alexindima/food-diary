@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { DESIGN_TOKEN_VALUES } from './design-tokens';
+import { DESIGN_TOKEN_CSS_VARIABLES } from './design-tokens';
 
 type TokenSwatch = { name: string; value: string };
 type TokenTableRow = { name: string; value: string };
@@ -17,13 +17,20 @@ type TokenTableRow = { name: string; value: string };
                 box-sizing: border-box;
                 padding: var(--fd-space-xl) var(--fd-space-xl) calc(var(--fd-space-xl) * 2);
                 font-family: var(--fd-font-family-base);
-                color: #1f2937;
-                background: #f8fafc;
+                color: var(--fd-color-text);
+                background: var(--fd-bg-page);
             "
         >
             <div style="max-width: 1080px;">
                 <h1 style="margin: 0 0 var(--fd-space-md); font-size: var(--fd-text-metric-lg-size);">{{ pageTitle() }}</h1>
-                <p style="margin: 0 0 var(--fd-space-lg); color: #4b5563; font-size: var(--fd-text-body-sm-size); line-height: 1.6;">
+                <p
+                    style="
+                        margin: 0 0 var(--fd-space-lg);
+                        color: var(--fd-color-text-muted);
+                        font-size: var(--fd-text-body-sm-size);
+                        line-height: var(--fd-text-body-sm-line-height);
+                    "
+                >
                     {{ intro() }}
                 </p>
 
@@ -33,24 +40,36 @@ type TokenTableRow = { name: string; value: string };
                             style="
                                 margin-bottom: var(--fd-space-lg);
                                 padding: var(--fd-space-lg);
-                                border: 1px solid #e5e7eb;
+                                border: var(--fd-border-default);
                                 border-radius: var(--fd-radius-card);
-                                background: #fff;
+                                background: var(--fd-bg-surface);
                             "
                         >
                             <h2 style="margin: 0 0 var(--fd-space-xs); font-size: var(--fd-text-section-title-size);">{{ group.title }}</h2>
                             @if (group.description) {
-                                <p style="margin: 0 0 var(--fd-space-md); color: #4b5563; line-height: 1.6;">{{ group.description }}</p>
+                                <p
+                                    style="
+                                        margin: 0 0 var(--fd-space-md);
+                                        color: var(--fd-color-text-muted);
+                                        line-height: var(--fd-text-body-line-height);
+                                    "
+                                >
+                                    {{ group.description }}
+                                </p>
                             }
                             <div style="display: flex; gap: var(--fd-space-xs); flex-wrap: wrap;">
                                 @for (swatch of group.items; track swatch.name) {
                                     <div style="text-align: center; min-width: 72px;">
                                         <div
                                             [style.background]="swatch.value"
-                                            style="height: 56px; border-radius: var(--fd-radius-lg); border: 1px solid #e5e7eb;"
+                                            style="height: 56px; border-radius: var(--fd-radius-lg); border: var(--fd-border-default);"
                                         ></div>
                                         <div
-                                            style="font-size: var(--fd-text-helper-size); margin-top: var(--fd-space-xxs); color: #4b5563;"
+                                            style="
+                                                font-size: var(--fd-text-helper-size);
+                                                margin-top: var(--fd-space-xxs);
+                                                color: var(--fd-color-text-muted);
+                                            "
                                         >
                                             {{ swatch.name }}
                                         </div>
@@ -66,25 +85,41 @@ type TokenTableRow = { name: string; value: string };
                         style="
                             margin-bottom: var(--fd-space-lg);
                             padding: var(--fd-space-lg);
-                            border: 1px solid #e5e7eb;
+                            border: var(--fd-border-default);
                             border-radius: var(--fd-radius-card);
-                            background: #fff;
+                            background: var(--fd-bg-surface);
                         "
                     >
                         <h2 style="margin: 0 0 var(--fd-space-xs); font-size: var(--fd-text-section-title-size);">{{ tableTitle() }}</h2>
                         @if (tableDescription()) {
-                            <p style="margin: 0 0 var(--fd-space-md); color: #4b5563; line-height: 1.6;">{{ tableDescription() }}</p>
+                            <p
+                                style="
+                                    margin: 0 0 var(--fd-space-md);
+                                    color: var(--fd-color-text-muted);
+                                    line-height: var(--fd-text-body-line-height);
+                                "
+                            >
+                                {{ tableDescription() }}
+                            </p>
                         }
                         <table style="border-collapse: collapse; width: 100%;">
                             <thead>
                                 <tr>
                                     <th
-                                        style="text-align: left; padding: var(--fd-space-xs) var(--fd-space-xs); border-bottom: 2px solid #e5e7eb;"
+                                        style="
+                                            text-align: left;
+                                            padding: var(--fd-space-xs) var(--fd-space-xs);
+                                            border-bottom: var(--fd-border-strong);
+                                        "
                                     >
                                         Token
                                     </th>
                                     <th
-                                        style="text-align: left; padding: var(--fd-space-xs) var(--fd-space-xs); border-bottom: 2px solid #e5e7eb;"
+                                        style="
+                                            text-align: left;
+                                            padding: var(--fd-space-xs) var(--fd-space-xs);
+                                            border-bottom: var(--fd-border-strong);
+                                        "
                                     >
                                         Value
                                     </th>
@@ -96,14 +131,19 @@ type TokenTableRow = { name: string; value: string };
                                         <td
                                             style="
                                                 padding: var(--fd-space-xs) var(--fd-space-xs);
-                                                border-bottom: 1px solid #f1f5f9;
+                                                border-bottom: var(--fd-border-muted);
                                                 font-family: var(--fd-font-family-monospace);
                                                 font-size: var(--fd-text-caption-size);
                                             "
                                         >
                                             {{ row.name }}
                                         </td>
-                                        <td style="padding: var(--fd-space-xs) var(--fd-space-xs); border-bottom: 1px solid #f1f5f9;">
+                                        <td
+                                            style="
+                                                padding: var(--fd-space-xs) var(--fd-space-xs);
+                                                border-bottom: var(--fd-border-muted);
+                                            "
+                                        >
                                             {{ row.value }}
                                         </td>
                                     </tr>
@@ -125,23 +165,26 @@ class DesignTokensDocsComponent {
     public readonly tableRows = input<TokenTableRow[]>([]);
 }
 
-const primaryShades: TokenSwatch[] = Object.entries(DESIGN_TOKEN_VALUES.color.primary).map(([name, value]) => ({ name, value }));
-const secondaryShades: TokenSwatch[] = Object.entries(DESIGN_TOKEN_VALUES.color.secondary).map(([name, value]) => ({ name, value }));
-const grayShades: TokenSwatch[] = Object.entries(DESIGN_TOKEN_VALUES.color.gray).map(([name, value]) => ({ name, value }));
-const semanticColors: TokenSwatch[] = Object.entries(DESIGN_TOKEN_VALUES.color.semantic).map(([name, value]) => ({ name, value }));
-const chartColors: TokenSwatch[] = Object.entries(DESIGN_TOKEN_VALUES.color.chart).map(([name, value]) => ({ name, value }));
+const toSwatches = (tokens: Readonly<Record<string, string>>): TokenSwatch[] =>
+    Object.entries(tokens).map(([name, variable]) => ({ name, value: `var(${variable})` }));
+
+const primaryShades = toSwatches(DESIGN_TOKEN_CSS_VARIABLES.color.primary);
+const secondaryShades = toSwatches(DESIGN_TOKEN_CSS_VARIABLES.color.secondary);
+const grayShades = toSwatches(DESIGN_TOKEN_CSS_VARIABLES.color.gray);
+const semanticColors = toSwatches(DESIGN_TOKEN_CSS_VARIABLES.color.semantic);
+const chartColors = toSwatches(DESIGN_TOKEN_CSS_VARIABLES.color.chart);
 
 const OVERVIEW_SHADE_COUNT = 5;
 
 const layoutTokens: TokenTableRow[] = [
-    { name: 'page.background', value: DESIGN_TOKEN_VALUES.layout.page.background },
-    { name: 'page.horizontalPadding', value: DESIGN_TOKEN_VALUES.layout.page.horizontalPadding },
-    { name: 'page.verticalPadding', value: DESIGN_TOKEN_VALUES.layout.page.verticalPadding },
-    { name: 'page.contentMaxWidth', value: DESIGN_TOKEN_VALUES.layout.page.contentMaxWidth },
-    { name: 'page.sectionSpacing', value: DESIGN_TOKEN_VALUES.layout.page.sectionSpacing },
-    { name: 'header.height', value: DESIGN_TOKEN_VALUES.layout.header.height },
-    { name: 'header.background', value: DESIGN_TOKEN_VALUES.layout.header.background },
-    { name: 'header.textColor', value: DESIGN_TOKEN_VALUES.layout.header.textColor },
+    { name: 'page.background', value: `var(${DESIGN_TOKEN_CSS_VARIABLES.layout.page.background})` },
+    { name: 'page.horizontalPadding', value: `var(${DESIGN_TOKEN_CSS_VARIABLES.layout.page.horizontalPadding})` },
+    { name: 'page.verticalPadding', value: `var(${DESIGN_TOKEN_CSS_VARIABLES.layout.page.verticalPadding})` },
+    { name: 'page.contentMaxWidth', value: `var(${DESIGN_TOKEN_CSS_VARIABLES.layout.page.contentMaxWidth})` },
+    { name: 'page.sectionSpacing', value: `var(${DESIGN_TOKEN_CSS_VARIABLES.layout.page.sectionSpacing})` },
+    { name: 'header.height', value: `var(${DESIGN_TOKEN_CSS_VARIABLES.layout.header.height})` },
+    { name: 'header.background', value: `var(${DESIGN_TOKEN_CSS_VARIABLES.layout.header.background})` },
+    { name: 'header.textColor', value: `var(${DESIGN_TOKEN_CSS_VARIABLES.layout.header.textColor})` },
 ];
 
 const meta: Meta<DesignTokensDocsComponent> = {

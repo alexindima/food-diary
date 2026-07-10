@@ -409,4 +409,10 @@
             width: 100%;
         }
     }
+
+    @media #{variables.$media-sm} {
+        &__account-row {
+            grid-template-columns: 1fr;
+        }
+    }
 }

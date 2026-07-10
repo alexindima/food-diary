@@ -4,8 +4,9 @@
         [options]="modeOptions()"
         [selectedValue]="selectedMode()"
         [ariaLabel]="'FASTING.MODE_GROUP' | translate"
-        [shrinkItems]="true"
-        [stackOnNarrow]="false"
+        [fullWidth]="true"
+        [shrinkItems]="false"
+        [stackOnNarrow]="true"
         (selectedValueChange)="modeChange.emit($event)"
     />
 </div>
