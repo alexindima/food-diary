@@ -10,6 +10,7 @@ import type {
     AdminUserLoginDeviceSummary,
     AdminUserLoginEvent,
     AdminUserRoleAuditEvent,
+    AdminUserSetPassword,
     AdminUserStatusFilter,
     AdminUserUpdate,
     PagedResponse,
@@ -55,6 +56,10 @@ export class AdminUsersService {
 
     public updateUser(userId: string, payload: AdminUserUpdate): Observable<AdminUser> {
         return this.http.patch<AdminUser>(`${this.baseUrl}/${userId}`, payload);
+    }
+
+    public setPassword(userId: string, payload: AdminUserSetPassword): Observable<void> {
+        return this.http.patch<void>(`${this.baseUrl}/${userId}/password`, payload);
     }
 
     public getUser(userId: string): Observable<AdminUser> {

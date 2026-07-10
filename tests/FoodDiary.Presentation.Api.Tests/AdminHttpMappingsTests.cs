@@ -6,6 +6,7 @@ using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
+using FoodDiary.Application.Admin.Commands.SetAdminUserPassword;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
@@ -70,6 +71,17 @@ public sealed class AdminHttpMappingsTests {
 
         Assert.NotNull(command.Roles);
         Assert.Empty(command.Roles);
+    }
+
+    [Fact]
+    public void AdminUserSetPasswordHttpRequest_ToCommand_MapsUserIdAndPassword() {
+        var userId = Guid.NewGuid();
+        var request = new AdminUserSetPasswordHttpRequest("NewPassword123!");
+
+        SetAdminUserPasswordCommand command = request.ToCommand(userId);
+
+        Assert.Equal(userId, command.UserId);
+        Assert.Equal("NewPassword123!", command.NewPassword);
     }
 
     [Fact]

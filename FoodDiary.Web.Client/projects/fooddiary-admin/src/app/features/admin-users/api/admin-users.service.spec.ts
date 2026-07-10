@@ -106,6 +106,17 @@ describe('AdminUsersService', () => {
         });
     });
 
+    it('should patch user password payload', () => {
+        service.setPassword('u1', { newPassword: 'NewPassword123!' }).subscribe(result => {
+            expect(result).toBeNull();
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/u1/password`);
+        expect(req.request.method).toBe('PATCH');
+        expect(req.request.body).toEqual({ newPassword: 'NewPassword123!' });
+        req.flush(null);
+    });
+
     it('should request user details by id', () => {
         service.getUser('u1').subscribe(result => {
             expect(result.id).toBe('u1');

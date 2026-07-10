@@ -5,6 +5,7 @@ using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 using FoodDiary.Application.Admin.Commands.MarkAdminMailInboxMessageRead;
 using FoodDiary.Application.Admin.Commands.ReviewContentReport;
 using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
+using FoodDiary.Application.Admin.Commands.SetAdminUserPassword;
 using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
 using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
@@ -59,6 +60,12 @@ public static class AdminHttpMappings {
             AiInputTokenLimit: request.AiInputTokenLimit,
             AiOutputTokenLimit: request.AiOutputTokenLimit,
             ActorUserId: actorUserId);
+    }
+
+    public static SetAdminUserPasswordCommand ToCommand(this AdminUserSetPasswordHttpRequest request, Guid userId) {
+        return new SetAdminUserPasswordCommand(
+            UserId: userId,
+            NewPassword: request.NewPassword);
     }
 
     public static StartAdminImpersonationCommand ToCommand(

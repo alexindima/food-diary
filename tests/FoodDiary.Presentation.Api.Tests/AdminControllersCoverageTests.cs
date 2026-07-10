@@ -7,6 +7,7 @@ using FoodDiary.Application.Admin.Commands.DismissContentReport;
 using FoodDiary.Application.Admin.Commands.MarkAdminMailInboxMessageRead;
 using FoodDiary.Application.Admin.Commands.ReviewContentReport;
 using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
+using FoodDiary.Application.Admin.Commands.SetAdminUserPassword;
 using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
 using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
@@ -191,6 +192,21 @@ public sealed class AdminControllersCoverageTests {
         UpdateAdminUserCommand updateCommand = Assert.IsType<UpdateAdminUserCommand>(updateSender.Request);
         Assert.Equal(targetUserId, updateCommand.UserId);
         Assert.Equal(actorUserId, updateCommand.ActorUserId);
+
+    }
+
+    [Fact]
+    public async Task AdminUserPasswordController_CoversSetPasswordEndpoint() {
+        CapturedSender sender = SubstituteSender.Capture(Result.Success());
+        AdminUserPasswordController controller = CreateController(new AdminUserPasswordController(sender));
+        var userId = Guid.NewGuid();
+
+        IActionResult result = await controller.SetPassword(userId, new AdminUserSetPasswordHttpRequest("NewPassword123!"));
+
+        Assert.IsType<NoContentResult>(result);
+        SetAdminUserPasswordCommand command = Assert.IsType<SetAdminUserPasswordCommand>(sender.Request);
+        Assert.Equal(userId, command.UserId);
+        Assert.Equal("NewPassword123!", command.NewPassword);
     }
 
     [Fact]

@@ -29,6 +29,7 @@
 
     <div class="admin-user-details__footer" fdUiDialogFooter>
         <fd-ui-button type="button" variant="secondary" (click)="edit()">Edit</fd-ui-button>
+        <fd-ui-button type="button" variant="secondary" (click)="setPassword()">Set password</fd-ui-button>
         <fd-ui-button
             type="button"
             [disabled]="!canImpersonate()"

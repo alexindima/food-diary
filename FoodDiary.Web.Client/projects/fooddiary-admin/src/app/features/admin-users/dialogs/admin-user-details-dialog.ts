@@ -13,7 +13,7 @@ import { AdminUserDetailsBodyComponent, type DetailSection } from './admin-user-
 
 const ACTIVITY_PREVIEW_LIMIT = 3;
 
-export type AdminUserDetailsDialogResult = 'edit' | 'impersonate' | null;
+export type AdminUserDetailsDialogResult = 'edit' | 'impersonate' | 'setPassword' | null;
 
 @Component({
     selector: 'fd-admin-user-details-dialog',
@@ -140,6 +140,10 @@ export class AdminUserDetailsDialogComponent {
 
     protected edit(): void {
         this.dialogRef.close('edit');
+    }
+
+    protected setPassword(): void {
+        this.dialogRef.close('setPassword');
     }
 
     protected impersonate(): void {

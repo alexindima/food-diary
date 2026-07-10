@@ -1,4 +1,5 @@
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
+using FoodDiary.Application.Admin.Commands.SetAdminUserPassword;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -9,6 +10,78 @@ using FoodDiary.Application.Admin.Models;
 namespace FoodDiary.Application.Tests.Admin;
 
 public partial class AdminFeatureTests {
+    [Fact]
+    public async Task SetAdminUserPasswordValidator_WithInvalidPayload_Fails() {
+        var validator = new SetAdminUserPasswordCommandValidator();
+
+        ValidationResult result = await validator.ValidateAsync(new SetAdminUserPasswordCommand(Guid.Empty, "123"));
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "UserId", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "NewPassword", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task SetAdminUserPasswordHandler_WithExistingPassword_ReplacesPassword() {
+        User user = CreateUserWithRoles("password-user@example.com", []);
+        var userRepository = new InMemoryUserRepository(user, availableRoles: []);
+        var handler = new SetAdminUserPasswordCommandHandler(userRepository, new PrefixPasswordHasher());
+
+        Result result = await handler.Handle(
+            new SetAdminUserPasswordCommand(user.Id.Value, "NewPassword123!"),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.True(user.HasPassword);
+        Assert.Equal("hashed:NewPassword123!", user.Password);
+        Assert.Equal(1, userRepository.UpdateCallCount);
+    }
+
+    [Fact]
+    public async Task SetAdminUserPasswordHandler_WithGoogleOnlyUser_SetsFirstPassword() {
+        var user = User.Create("google-user@example.com", "placeholder-hash", hasPassword: false);
+        var userRepository = new InMemoryUserRepository(user, availableRoles: []);
+        var handler = new SetAdminUserPasswordCommandHandler(userRepository, new PrefixPasswordHasher());
+
+        Result result = await handler.Handle(
+            new SetAdminUserPasswordCommand(user.Id.Value, "FirstPassword123!"),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.True(user.HasPassword);
+        Assert.Equal("hashed:FirstPassword123!", user.Password);
+        Assert.Equal(1, userRepository.UpdateCallCount);
+    }
+
+    [Fact]
+    public async Task SetAdminUserPasswordHandler_WithEmptyUserId_ReturnsValidationFailure() {
+        User user = CreateUserWithRoles("password-empty-user@example.com", []);
+        var userRepository = new InMemoryUserRepository(user, availableRoles: []);
+        var handler = new SetAdminUserPasswordCommandHandler(userRepository, new PrefixPasswordHasher());
+
+        Result result = await handler.Handle(
+            new SetAdminUserPasswordCommand(Guid.Empty, "NewPassword123!"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Equal(0, userRepository.UpdateCallCount);
+    }
+
+    [Fact]
+    public async Task SetAdminUserPasswordHandler_WhenUserMissing_ReturnsNotFound() {
+        User user = CreateUserWithRoles("password-missing-user@example.com", []);
+        var userRepository = new InMemoryUserRepository(user, availableRoles: []);
+        var handler = new SetAdminUserPasswordCommandHandler(userRepository, new PrefixPasswordHasher());
+
+        Result result = await handler.Handle(
+            new SetAdminUserPasswordCommand(Guid.NewGuid(), "NewPassword123!"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("User.NotFound", result.Error.Code);
+        Assert.Equal(0, userRepository.UpdateCallCount);
+    }
 
     [Fact]
     public async Task UpdateAdminUserValidator_WithInvalidRole_Fails() {

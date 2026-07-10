@@ -11,6 +11,7 @@ using FoodDiary.Application.Admin.Services;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
@@ -483,6 +484,7 @@ public partial class AdminFeatureTests {
             StringComparer.Ordinal);
 
         public List<UserRoleAuditEvent> RoleAuditEvents { get; } = [];
+        public int UpdateCallCount { get; private set; }
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
@@ -540,15 +542,27 @@ public partial class AdminFeatureTests {
 
         public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) {
+            UpdateCallCount++;
+            return Task.CompletedTask;
+        }
 
         public Task UpdateAsync(
             User user,
             IReadOnlyCollection<UserRoleAuditEvent> roleAuditEvents,
             CancellationToken cancellationToken = default) {
+            UpdateCallCount++;
             RoleAuditEvents.AddRange(roleAuditEvents);
             return Task.CompletedTask;
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class PrefixPasswordHasher : IPasswordHasher {
+        public string Hash(string password) => $"hashed:{password}";
+
+        public bool Verify(string password, string hashedPassword) =>
+            string.Equals(Hash(password), hashedPassword, StringComparison.Ordinal);
     }
 
     [ExcludeFromCodeCoverage]

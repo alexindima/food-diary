@@ -153,6 +153,46 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task AdminUserSetPassword_WithAdminRole_ReplacesUserPassword() {
+        HttpClient client = testAuthFactory.CreateClient();
+        string email = $"admin-password-{Guid.NewGuid():N}@example.com";
+        const string oldPassword = "Password123!";
+        const string newPassword = "NewPassword456!";
+
+        HttpResponseMessage registerResponse = await client.PostAsJsonAsync(
+            "/api/v1/auth/register",
+            new RegisterHttpRequest(email, oldPassword, "en"));
+        registerResponse.EnsureSuccessStatusCode();
+
+        using var registerJson = JsonDocument.Parse(await registerResponse.Content.ReadAsStringAsync());
+        Guid userId = registerJson.RootElement.GetProperty("user").GetProperty("id").GetGuid();
+
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.RoleHeader, PresentationRoleNames.Admin);
+
+        HttpResponseMessage setPasswordResponse = await client.PatchAsJsonAsync(
+            $"/api/v1/admin/users/{userId}/password",
+            new AdminUserSetPasswordHttpRequest(newPassword));
+
+        Assert.Equal(HttpStatusCode.NoContent, setPasswordResponse.StatusCode);
+
+        client.DefaultRequestHeaders.Remove(TestAuthenticationHandler.AuthenticateHeader);
+        client.DefaultRequestHeaders.Remove(TestAuthenticationHandler.UserIdHeader);
+        client.DefaultRequestHeaders.Remove(TestAuthenticationHandler.RoleHeader);
+
+        HttpResponseMessage oldLoginResponse = await client.PostAsJsonAsync(
+            "/api/v1/auth/login",
+            new LoginHttpRequest(email, oldPassword));
+        HttpResponseMessage newLoginResponse = await client.PostAsJsonAsync(
+            "/api/v1/auth/login",
+            new LoginHttpRequest(email, newPassword));
+
+        Assert.Equal(HttpStatusCode.Unauthorized, oldLoginResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, newLoginResponse.StatusCode);
+    }
+
+    [Fact]
     public async Task AdminLessonsImport_WithAdminRole_CreatesLessons() {
         HttpClient client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
@@ -597,6 +637,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             "/api/v{version}/admin/users/login-summary",
             "/api/v{version}/admin/users/{id}",
             "/api/v{version}/admin/users/{id}/impersonation",
+            "/api/v{version}/admin/users/{id}/password",
             "/api/v{version}/admin/billing/subscriptions",
             "/api/v{version}/admin/billing/payments",
             "/api/v{version}/admin/billing/webhook-events",

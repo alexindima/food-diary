@@ -9,6 +9,7 @@ import { environment } from '../../../../environments/environment';
 import { AdminUserDetailsDialogComponent, type AdminUserDetailsDialogResult } from '../dialogs/admin-user-details-dialog';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog';
+import { AdminUserSetPasswordDialogComponent } from '../dialogs/admin-user-set-password-dialog';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type { AdminImpersonationStart, AdminUser, AdminUserStatusFilter } from '../models/admin-user.models';
 import { AdminUsersTableComponent } from './admin-users-table';
@@ -101,6 +102,11 @@ export class AdminUsersComponent {
                     return;
                 }
 
+                if (action === 'setPassword') {
+                    this.openSetPassword(user);
+                    return;
+                }
+
                 if (action === 'impersonate') {
                     this.startImpersonation(user);
                 }
@@ -110,6 +116,20 @@ export class AdminUsersComponent {
     protected openEdit(user: AdminUser): void {
         this.dialogService
             .open(AdminUserEditDialogComponent, {
+                size: 'sm',
+                data: user,
+            })
+            .afterClosed()
+            .subscribe(updated => {
+                if (updated === true) {
+                    this.loadUsers();
+                }
+            });
+    }
+
+    protected openSetPassword(user: AdminUser): void {
+        this.dialogService
+            .open<AdminUserSetPasswordDialogComponent, AdminUser, boolean>(AdminUserSetPasswordDialogComponent, {
                 size: 'sm',
                 data: user,
             })

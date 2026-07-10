@@ -60,6 +60,10 @@ export type AdminUserUpdate = {
     language?: string | null;
 };
 
+export type AdminUserSetPassword = {
+    newPassword: string;
+};
+
 export type AdminImpersonationStart = {
     accessToken: string;
     targetUserId: string;

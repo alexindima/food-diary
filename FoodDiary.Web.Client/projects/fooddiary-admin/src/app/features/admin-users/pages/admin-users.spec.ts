@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog';
+import { AdminUserSetPasswordDialogComponent } from '../dialogs/admin-user-set-password-dialog';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type { AdminUser, PagedResponse } from '../models/admin-user.models';
 import { AdminUsersComponent } from './admin-users';
@@ -84,6 +85,12 @@ describe('AdminUsersComponent', () => {
         component['goToPage'](OUT_OF_RANGE_PAGE);
         expect(usersService.getUsers.mock.calls.length).toBe(callCount);
     });
+});
+
+describe('AdminUsersComponent dialogs', () => {
+    beforeEach(async () => {
+        await setupComponentAsync();
+    });
 
     it('should reload users after successful dialog close', () => {
         const close$ = new Subject<boolean>();
@@ -96,6 +103,23 @@ describe('AdminUsersComponent', () => {
         close$.complete();
 
         expect(dialogService.open).toHaveBeenCalled();
+        expect(usersService.getUsers).toHaveBeenCalledTimes(SECOND_PAGE);
+    });
+
+    it('should open set password dialog and reload after success', () => {
+        const close$ = new Subject<boolean>();
+        dialogService.open.mockReturnValue({
+            afterClosed: () => close$.asObservable(),
+        });
+
+        component['openSetPassword'](pagedUsers.items[0]);
+        close$.next(true);
+        close$.complete();
+
+        expect(dialogService.open).toHaveBeenCalledWith(AdminUserSetPasswordDialogComponent, {
+            size: 'sm',
+            data: pagedUsers.items[0],
+        });
         expect(usersService.getUsers).toHaveBeenCalledTimes(SECOND_PAGE);
     });
 

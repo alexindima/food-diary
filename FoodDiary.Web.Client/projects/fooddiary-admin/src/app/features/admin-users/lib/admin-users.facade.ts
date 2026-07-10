@@ -9,6 +9,7 @@ import type {
     AdminUserLoginDeviceSummary,
     AdminUserLoginEvent,
     AdminUserRoleAuditEvent,
+    AdminUserSetPassword,
     AdminUserStatusFilter,
     AdminUserUpdate,
     PagedResponse,
@@ -29,6 +30,10 @@ export class AdminUsersFacade {
 
     public updateUser(userId: string, payload: AdminUserUpdate): Observable<AdminUser> {
         return this.usersService.updateUser(userId, payload);
+    }
+
+    public setPassword(userId: string, payload: AdminUserSetPassword): Observable<void> {
+        return this.usersService.setPassword(userId, payload);
     }
 
     public getUser(userId: string): Observable<AdminUser> {

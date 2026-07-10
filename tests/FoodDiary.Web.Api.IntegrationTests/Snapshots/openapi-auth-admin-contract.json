@@ -237,6 +237,23 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/users/{id}/password",
+      "Operations": [
+        {
+          "Method": "patch",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "204",
+            "400",
+            "401",
+            "403",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/auth/admin-sso/exchange",
       "Operations": [
         {

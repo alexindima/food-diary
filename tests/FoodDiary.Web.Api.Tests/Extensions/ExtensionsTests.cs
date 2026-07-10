@@ -237,6 +237,7 @@ public sealed class ExtensionsTests {
 
         Assert.NotNull(options.ConnectionMultiplexerFactory);
         await Assert.ThrowsAsync<RedisConnectionException>(() => options.ConnectionMultiplexerFactory());
+        Assert.Throws<RedisConnectionException>(() => provider.GetRequiredService<IConnectionMultiplexer>());
     }
 
     [Fact]

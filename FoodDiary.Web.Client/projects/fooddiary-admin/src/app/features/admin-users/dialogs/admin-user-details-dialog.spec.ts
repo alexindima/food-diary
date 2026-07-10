@@ -187,10 +187,12 @@ describe('AdminUserDetailsDialogComponent', () => {
         const { component, dialogRef } = await createContextAsync();
 
         component['edit']();
+        component['setPassword']();
         component['impersonate']();
         component['close']();
 
         expect(dialogRef.close).toHaveBeenCalledWith('edit');
+        expect(dialogRef.close).toHaveBeenCalledWith('setPassword');
         expect(dialogRef.close).toHaveBeenCalledWith('impersonate');
         expect(dialogRef.close).toHaveBeenCalledWith(null);
     });
