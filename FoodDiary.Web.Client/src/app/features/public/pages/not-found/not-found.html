@@ -1,15 +1,18 @@
-<div class="not-found">
-    <div class="not-found__icon" aria-hidden="true">
-        <fd-ui-icon name="block" size="xl" />
+<section class="not-found" aria-labelledby="not-found-title">
+    <div class="not-found__container">
+        <div class="not-found__code" aria-hidden="true">404</div>
+        <div class="not-found__content">
+            <span class="not-found__eyebrow">Food Diary</span>
+            <h1 id="not-found-title" class="not-found__title">{{ 'NOT_FOUND.TITLE' | translate }}</h1>
+            <p class="not-found__description">{{ 'NOT_FOUND.DESCRIPTION' | translate }}</p>
+            <div class="not-found__actions">
+                <fd-ui-button routerLink="/" variant="primary" size="lg">
+                    {{ 'NOT_FOUND.GO_HOME' | translate }}
+                </fd-ui-button>
+                <fd-ui-button routerLink="/food-diary" variant="secondary" fill="outline" size="lg">
+                    {{ 'NOT_FOUND.VIEW_FOOD_DIARY' | translate }}
+                </fd-ui-button>
+            </div>
+        </div>
     </div>
-    <h1 class="not-found__title fd-page-title">{{ 'NOT_FOUND.TITLE' | translate }}</h1>
-    <p class="not-found__description fd-ui-body">{{ 'NOT_FOUND.DESCRIPTION' | translate }}</p>
-    <div class="not-found__actions">
-        <fd-ui-button routerLink="/" class="not-found__button not-found__button--primary" variant="primary">
-            {{ 'NOT_FOUND.GO_HOME' | translate }}
-        </fd-ui-button>
-        <fd-ui-button routerLink="/products" class="not-found__button not-found__button--secondary" variant="secondary" fill="outline">
-            {{ 'NOT_FOUND.VIEW_PRODUCTS' | translate }}
-        </fd-ui-button>
-    </div>
-</div>
+</section>

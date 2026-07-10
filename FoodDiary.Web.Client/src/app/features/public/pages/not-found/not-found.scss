@@ -1,79 +1,96 @@
-@use 'mixins' as mixins;
 @use 'variables' as variables;
 
 :host {
-    @include mixins.host-style('/assets/images/background.webp');
+    display: block;
+    min-height: 100dvh;
+    background: var(--fd-bg-page);
 }
 
 .not-found {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    min-height: 100dvh;
+    display: grid;
     align-items: center;
-    text-align: center;
-    padding: var(--fd-space-xxl);
-    position: relative;
+    padding: var(--fd-space-xl) var(--fd-space-md);
 }
 
-.not-found__icon {
-    color: var(--fd-color-danger);
-    margin-bottom: var(--fd-space-lg);
-    display: inline-flex;
+.not-found__container {
+    width: min(100%, 960px);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.2fr);
     align-items: center;
-    justify-content: center;
+    gap: var(--fd-space-xxl);
+}
+
+.not-found__code {
+    padding-right: var(--fd-space-xl);
+    border-right: var(--fd-border-width-strong) solid var(--fd-color-border-primary-prominent);
+    color: var(--fd-color-primary-600);
+    font-size: var(--fd-landing-seo-title-size);
+    font-weight: var(--fd-text-metric-lg-weight);
+    line-height: 1;
+    text-align: right;
+}
+
+.not-found__content {
+    display: grid;
+    gap: var(--fd-space-md);
+}
+
+.not-found__eyebrow {
+    width: fit-content;
+    padding: var(--fd-space-xs) var(--fd-space-sm);
+    border-radius: var(--fd-radius-pill);
+    background: color-mix(in srgb, var(--fd-color-primary-500) 10%, transparent);
+    color: var(--fd-color-primary-700);
+    font-size: var(--fd-text-body-tiny-size);
+    font-weight: var(--fd-text-metric-lg-weight);
+    letter-spacing: var(--fd-letter-spacing-label);
+    text-transform: uppercase;
 }
 
 .not-found__title {
-    color: var(--fd-color-danger);
-    margin-bottom: var(--fd-space-lg);
-    --fd-page-title-size: clamp(2rem, 4vw, 2.5rem);
-    --fd-page-title-line-height: 1.1;
+    margin: 0;
+    color: var(--fd-color-slate-900);
+    font-size: var(--fd-landing-seo-section-title-size);
+    line-height: 1.12;
+    letter-spacing: 0;
 }
 
 .not-found__description {
+    max-width: 52ch;
+    margin: 0;
     color: var(--fd-color-text-muted);
-    margin-bottom: var(--fd-space-lg);
+    font-size: var(--fd-text-body-lg-size);
+    line-height: 1.65;
 }
 
 .not-found__actions {
     display: flex;
-    gap: var(--fd-space-md);
-    justify-content: center;
-    margin-top: var(--fd-space-lg);
+    flex-wrap: wrap;
+    gap: var(--fd-space-sm);
+    padding-top: var(--fd-space-xs);
 }
 
-.not-found__button {
-    padding: var(--fd-space-xs) var(--fd-space-lg);
-    border: none;
-    border-radius: var(--fd-radius-xs);
-    cursor: pointer;
-    transition:
-        background-color 0.2s,
-        transform 0.2s;
-}
+@media #{variables.$media-phablet} {
+    .not-found {
+        align-items: start;
+        padding: var(--fd-space-xl) var(--fd-space-sm);
+    }
 
-.not-found__button--primary {
-    background: var(--fd-bg-brand);
-    color: var(--fd-color-white);
-    box-shadow: var(--fd-shadow-accent);
-}
+    .not-found__container {
+        grid-template-columns: 1fr;
+        gap: var(--fd-space-lg);
+    }
 
-.not-found__button--primary:hover {
-    background: var(--fd-bg-brand-hover);
-    transform: scale(1.05);
-}
+    .not-found__code {
+        padding: 0 0 var(--fd-space-md);
+        border-right: 0;
+        border-bottom: var(--fd-border-width-strong) solid var(--fd-color-border-primary-prominent);
+        text-align: left;
+    }
 
-.not-found__button--secondary {
-    background-color: transparent;
-    color: var(--fd-color-primary-600);
-    border: var(--fd-border-width-strong) solid var(--fd-color-border-primary-prominent);
-}
-
-.not-found__button--secondary:hover {
-    background-color: color-mix(in srgb, var(--fd-color-primary-100) 55%, var(--fd-bg-surface-raised));
-    transform: scale(1.05);
-}
-
-.not-found__button:active {
-    transform: scale(1);
+    .not-found__description {
+        font-size: var(--fd-text-body-size);
+    }
 }

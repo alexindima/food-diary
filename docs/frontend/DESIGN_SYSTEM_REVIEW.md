@@ -53,10 +53,10 @@ When two screens show the same semantic object, they must use the same primitive
 | Route                              | Shared pattern      | D   | M   | Notes                                                                                        |
 | ---------------------------------- | ------------------- | --- | --- | -------------------------------------------------------------------------------------------- |
 | `/`                                | main public landing | yes | yes | No overflow; stored sessions hide prerendered content until the root-route redirect resolves |
-| `/food-diary`                      | SEO landing         | -   | yes | Shared SEO composition                                                                       |
-| `/calorie-counter`                 | SEO landing         | -   | yes | Shared SEO composition                                                                       |
-| `/meal-planner`                    | SEO landing         | -   | yes | Shared SEO composition                                                                       |
-| `/macro-tracker`                   | SEO landing         | -   | yes | Shared SEO composition                                                                       |
+| `/food-diary`                      | SEO landing         | yes | yes | Shared composition; long Russian hero title uses the canonical 14ch measure                  |
+| `/calorie-counter`                 | SEO landing         | yes | yes | Shared composition; Russian copy and responsive hierarchy verified                           |
+| `/meal-planner`                    | SEO landing         | yes | yes | Shared composition; English search phrase removed from visible Russian copy                  |
+| `/macro-tracker`                   | SEO landing         | yes | yes | Shared composition; Russian terminology and responsive hierarchy verified                    |
 | `/intermittent-fasting`            | SEO landing         | -   | yes | Shared SEO composition                                                                       |
 | `/meal-tracker`                    | SEO landing         | -   | yes | Shared SEO composition                                                                       |
 | `/weight-loss-app`                 | SEO landing         | -   | yes | Shared SEO composition                                                                       |
@@ -70,7 +70,7 @@ When two screens show the same semantic object, they must use the same primitive
 | `/protein-tracker`                 | SEO landing         | -   | yes | Shared SEO composition                                                                       |
 | `/meal-prep-planner`               | SEO landing         | -   | yes | Shared SEO composition                                                                       |
 | `/privacy-policy`                  | legal page          | -   | yes | No overflow                                                                                  |
-| not-found route                    | public state page   | -   | -   | Pending copy and responsive review                                                           |
+| not-found route                    | public state page   | yes | yes | Shared public tokens; localized recovery actions and no broken icon glyph                    |
 
 ## Authentication
 
@@ -150,6 +150,9 @@ Review desktop at `1440x900` and a compact laptop width before mobile. Admin wor
 | P2       | Invalid email-verification links offered a retry action that could never succeed                          | Fixed; invalid links return to login while request failures remain retryable |
 | P1       | Verification pending used a full viewport inside the authenticated mobile shell, adding 126px of overflow | Fixed with the shell mobile-navigation spacing token                         |
 | P2       | Notification SignalR logged a warning during expected logout-driven disconnects                           | Fixed; only unexpected closes during an active session warn                  |
+| P2       | Long Russian SEO hero titles were constrained to a narrow 12ch measure on desktop                         | Fixed in the shared SEO composition with a 14ch title measure                |
+| P2       | Russian SEO copy exposed the English phrase `meal planner` and the malformed word `БЖУсах`                | Fixed with natural Russian wording                                           |
+| P1       | The public 404 rendered a broken `block` icon glyph and linked anonymous users to `/products`             | Fixed with a token-driven state layout and public recovery destinations      |
 
 ## Per-Page Checklist
 

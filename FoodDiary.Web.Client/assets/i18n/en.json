@@ -202,10 +202,10 @@
         }
     },
     "NOT_FOUND": {
-        "TITLE": "404 - Page Not Found",
-        "DESCRIPTION": "Sorry, the page you are looking for does not exist.",
+        "TITLE": "Page not found",
+        "DESCRIPTION": "The address may have changed or the link may be incorrect. Return home or open the food diary guide.",
         "GO_HOME": "Go to Homepage",
-        "VIEW_PRODUCTS": "View Products"
+        "VIEW_FOOD_DIARY": "Open the food diary"
     },
     "ERRORS": {
         "LOAD_FAILED_TITLE": "Something went wrong",
