@@ -57,18 +57,18 @@ When two screens show the same semantic object, they must use the same primitive
 | `/calorie-counter`                 | SEO landing         | yes | yes | Shared composition; Russian copy and responsive hierarchy verified                           |
 | `/meal-planner`                    | SEO landing         | yes | yes | Shared composition; English search phrase removed from visible Russian copy                  |
 | `/macro-tracker`                   | SEO landing         | yes | yes | Shared composition; Russian terminology and responsive hierarchy verified                    |
-| `/intermittent-fasting`            | SEO landing         | -   | yes | Shared SEO composition                                                                       |
-| `/meal-tracker`                    | SEO landing         | -   | yes | Shared SEO composition                                                                       |
-| `/weight-loss-app`                 | SEO landing         | -   | yes | Shared SEO composition                                                                       |
-| `/dietologist-collaboration`       | SEO landing         | -   | yes | Shared SEO composition                                                                       |
-| `/nutrition-planner`               | SEO landing         | -   | yes | Shared SEO composition                                                                       |
-| `/weight-tracker`                  | SEO landing         | -   | yes | Shared SEO composition                                                                       |
-| `/body-progress-tracker`           | SEO landing         | -   | yes | Shared SEO composition                                                                       |
-| `/shopping-list-for-meal-planning` | SEO landing         | -   | yes | Shared SEO composition                                                                       |
-| `/nutrition-tracker`               | SEO landing         | -   | yes | Shared SEO composition                                                                       |
-| `/food-log`                        | SEO landing         | -   | yes | Shared SEO composition                                                                       |
-| `/protein-tracker`                 | SEO landing         | -   | yes | Shared SEO composition                                                                       |
-| `/meal-prep-planner`               | SEO landing         | -   | yes | Shared SEO composition                                                                       |
+| `/intermittent-fasting`            | SEO landing         | yes | yes | Neutral health wording; explicitly separates tracking from medical assessment                |
+| `/meal-tracker`                    | SEO landing         | yes | yes | Shared composition; Russian grammar and visible search-term copy corrected                   |
+| `/weight-loss-app`                 | SEO landing         | yes | yes | Neutral product claims; English search phrases removed from visible Russian copy             |
+| `/dietologist-collaboration`       | SEO landing         | yes | yes | Shorter hero hierarchy; Russian workflow terminology used consistently                       |
+| `/nutrition-planner`               | SEO landing         | yes | yes | Shared composition; Russian search phrases and product jargon removed                        |
+| `/weight-tracker`                  | SEO landing         | yes | yes | Shared composition; Russian grammar and visible search-term copy corrected                   |
+| `/body-progress-tracker`           | SEO landing         | yes | yes | Shared composition; measurement terminology localized consistently                           |
+| `/shopping-list-for-meal-planning` | SEO landing         | yes | yes | Planning flow rewritten as concrete shopping and recipe actions                              |
+| `/nutrition-tracker`               | SEO landing         | yes | yes | Shared composition; FAQ grammar and visible search-term copy corrected                       |
+| `/food-log`                        | SEO landing         | yes | yes | `food log` replaced throughout with consistent Russian journal terminology                   |
+| `/protein-tracker`                 | SEO landing         | yes | yes | Shared composition; SEO jargon, duplication, and nutrition terminology corrected             |
+| `/meal-prep-planner`               | SEO landing         | yes | yes | Rewritten around natural Russian preparation, menu, recipe, and shopping terminology         |
 | `/privacy-policy`                  | legal page          | -   | yes | No overflow                                                                                  |
 | not-found route                    | public state page   | yes | yes | Shared public tokens; localized recovery actions and no broken icon glyph                    |
 
@@ -153,6 +153,11 @@ Review desktop at `1440x900` and a compact laptop width before mobile. Admin wor
 | P2       | Long Russian SEO hero titles were constrained to a narrow 12ch measure on desktop                         | Fixed in the shared SEO composition with a 14ch title measure                |
 | P2       | Russian SEO copy exposed the English phrase `meal planner` and the malformed word `БЖУсах`                | Fixed with natural Russian wording                                           |
 | P1       | The public 404 rendered a broken `block` icon glyph and linked anonymous users to `/products`             | Fixed with a token-driven state layout and public recovery destinations      |
+| P1       | Fasting and weight-loss SEO copy implied effectiveness without distinguishing tracking from medical care  | Fixed with neutral functional copy and an explicit fasting safety statement  |
+| P2       | Russian SEO pages exposed `meal tracker`, `weight loss app`, `nutrition app`, and `workflow`              | Fixed in the reviewed routes with natural Russian terminology                |
+| P2       | Planning and progress pages used `workflow`, English search phrases, `поток`, and `снижать трение`        | Fixed with concrete Russian task-oriented copy                               |
+| P1       | Meal-prep SEO copy contained repeated case, agreement, and terminology errors                             | Fixed by rewriting the complete visible scenario in natural Russian          |
+| P2       | Food-log and protein pages exposed English search language and internal SEO terminology                   | Fixed with user-facing journal and nutrition copy                            |
 
 ## Per-Page Checklist
 
