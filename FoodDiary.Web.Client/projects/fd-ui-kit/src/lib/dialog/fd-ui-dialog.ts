@@ -13,6 +13,7 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 import { FD_UI_DIALOG_DATA } from './fd-ui-dialog-data';
@@ -36,7 +37,7 @@ export type FdUiDialogData = {
 
 @Component({
     selector: 'fd-ui-dialog',
-    imports: [CommonModule, FdUiIconComponent],
+    imports: [CommonModule, TranslatePipe, FdUiIconComponent],
     templateUrl: './fd-ui-dialog.html',
     styleUrls: ['./fd-ui-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,7 +57,7 @@ export class FdUiDialogComponent {
 
     public readonly title = input<string | undefined>(this.injectedData?.title);
     public readonly subtitle = input<string | undefined>(this.injectedData?.subtitle);
-    public readonly closeAriaLabel = input(this.injectedData?.closeAriaLabel ?? 'Close dialog');
+    public readonly closeAriaLabel = input(this.injectedData?.closeAriaLabel ?? 'COMMON.CLOSE');
     public readonly size = input<FdUiDialogSize>(this.injectedData?.size ?? 'md');
     public readonly bodyScrollInset = input<FdUiDialogBodyScrollInset>(this.injectedData?.bodyScrollInset ?? 'default');
     public readonly dismissible = input(this.injectedData?.dismissible ?? true, {

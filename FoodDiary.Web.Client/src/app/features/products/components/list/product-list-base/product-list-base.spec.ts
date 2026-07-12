@@ -23,6 +23,7 @@ describe('ProductListBaseComponent', () => {
         component['retryLoad']();
         component['onAddProductClick']();
         component['openBarcodeScanner']();
+        component['clearSearch']();
         component['toggleOnlyMine']();
         component['toggleMobileSearch']();
         component['openFilters']();
@@ -37,6 +38,7 @@ describe('ProductListBaseComponent', () => {
         expect(facade.retryLoad).toHaveBeenCalled();
         expect(facade.onAddProductClick).toHaveBeenCalled();
         expect(facade.openBarcodeScanner).toHaveBeenCalled();
+        expect(facade.clearSearch).toHaveBeenCalled();
         expect(facade.toggleOnlyMine).toHaveBeenCalled();
         expect(facade.toggleMobileSearch).toHaveBeenCalled();
         expect(facade.openFilters).toHaveBeenCalled();
@@ -81,6 +83,7 @@ describe('ProductListBaseComponent', () => {
         expect(component['currentPageIndex']).toBe(PAGE_INDEX);
         expect(component['resolveImage'](createProduct())).toBe('https://example.test/image.jpg');
     });
+
 });
 
 function setupComponent(): {
@@ -165,6 +168,7 @@ function createProductListFacadeMock(): ProductListFacadeMock {
         onPageChange: vi.fn(),
         onAddProductClick: vi.fn(),
         openBarcodeScanner: vi.fn(),
+        clearSearch: vi.fn(),
         toggleOnlyMine: vi.fn(),
         toggleMobileSearch: vi.fn(),
         openFilters: vi.fn(),

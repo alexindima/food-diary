@@ -14,7 +14,12 @@
                 }
             </div>
             @if (dismissible()) {
-                <button type="button" class="fd-ui-dialog__close-button" [attr.aria-label]="closeAriaLabel()" (click)="close()">
+                <button
+                    type="button"
+                    class="fd-ui-dialog__close-button"
+                    [attr.aria-label]="closeAriaLabel() | translate"
+                    (click)="close()"
+                >
                     <fd-ui-icon name="close" />
                 </button>
             }

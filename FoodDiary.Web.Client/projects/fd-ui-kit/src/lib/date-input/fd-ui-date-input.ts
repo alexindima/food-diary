@@ -24,6 +24,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
 
     public readonly id = input(`fd-ui-date-input-${uniqueId++}`);
     public readonly label = input<string>();
+    public readonly pickerAriaLabel = input<string>();
     public readonly placeholder = input<string>();
     public readonly error = input<string | null>();
     public readonly required = input(false);

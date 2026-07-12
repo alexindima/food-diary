@@ -4,6 +4,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
 import { FdUiDialogComponent, type FdUiDialogData } from './fd-ui-dialog';
 import { FdUiDialogHeaderDirective } from './fd-ui-dialog-header.directive';
 
@@ -32,6 +33,7 @@ function createDialogComponent(data: FdUiDialogData): DialogTestContext {
     TestBed.configureTestingModule({
         imports: [FdUiDialogComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: FD_UI_DIALOG_DATA, useValue: data },
             { provide: FdUiDialogRef, useValue: dialogRefSpy },
         ],
@@ -47,7 +49,7 @@ function createDialogComponent(data: FdUiDialogData): DialogTestContext {
 function createDialogCustomHeaderElement(): HTMLElement {
     TestBed.configureTestingModule({
         imports: [DialogWithCustomHeaderHostComponent],
-        providers: [],
+        providers: [provideTranslateTesting()],
     });
 
     const hostFixture = TestBed.createComponent(DialogWithCustomHeaderHostComponent);
@@ -100,6 +102,13 @@ describe('FdUiDialogComponent dismiss button', () => {
         const closeBtn = (fixture.nativeElement as HTMLElement).querySelector('.fd-ui-dialog__close-button');
 
         expect(closeBtn).toBeNull();
+    });
+
+    it('should translate the default dismiss button label', () => {
+        const { fixture } = createDialogComponent({ title: 'Title' });
+        const closeBtn = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.fd-ui-dialog__close-button');
+
+        expect(closeBtn?.getAttribute('aria-label')).toBe('COMMON.CLOSE');
     });
 
     it('should call dialogRef.close() on dismiss', () => {

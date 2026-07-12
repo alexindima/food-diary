@@ -158,6 +158,14 @@ describe('ProductListFacade overview', () => {
 });
 
 describe('ProductListFacade search and filters', () => {
+    it('clears the current search', () => {
+        facade.searchForm.search().value.set('banana');
+
+        facade.clearSearch();
+
+        expect(facade.searchValue()).toBe('');
+    });
+
     it('loads searched products and Open Food Facts suggestions', async () => {
         await flushDebounceAsync();
         productService.query.mockClear();

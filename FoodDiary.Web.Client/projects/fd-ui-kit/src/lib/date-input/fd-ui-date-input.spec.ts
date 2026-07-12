@@ -78,6 +78,21 @@ function registerLabelTests(): void {
             expect(label).toBeNull();
         });
 
+        it('should use the field label as the calendar button accessible name', () => {
+            fixture.componentRef.setInput('label', 'Filter from');
+            fixture.detectChanges();
+
+            expect(requireButtonElement('.fd-ui-date-input__suffix').getAttribute('aria-label')).toBe('Filter from');
+        });
+
+        it('should support a dedicated calendar button accessible name', () => {
+            fixture.componentRef.setInput('label', 'Date');
+            fixture.componentRef.setInput('pickerAriaLabel', 'Open start date calendar');
+            fixture.detectChanges();
+
+            expect(requireButtonElement('.fd-ui-date-input__suffix').getAttribute('aria-label')).toBe('Open start date calendar');
+        });
+
         it('should show required asterisk', () => {
             fixture.componentRef.setInput('label', 'Date');
             fixture.componentRef.setInput('required', true);

@@ -133,6 +133,10 @@ export class ProductListFacade {
     private readonly isMobileSearchOpen = signal(false);
     private offSearchRequestId = 0;
 
+    public clearSearch(): void {
+        this.searchForm.search().value.set('');
+    }
+
     public constructor() {
         effect(() => {
             if (!this.isMobileView()) {

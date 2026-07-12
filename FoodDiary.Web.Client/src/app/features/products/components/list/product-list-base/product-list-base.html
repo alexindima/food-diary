@@ -93,17 +93,27 @@
         @if (!isMobileView()) {
             <div class="product-list__desktop-search" data-tour-id="product-list-search">
                 <form class="product-list__search-form product-list__search-form--desktop" [formRoot]="searchForm">
-                    <fd-ui-input
-                        class="product-list__search-input"
-                        size="md"
-                        prefixIcon="search"
-                        suffixButtonIcon="qr_code_scanner"
-                        [formField]="searchForm.search"
-                        [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
-                        [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
-                        [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
-                        (suffixButtonClicked)="openBarcodeScanner()"
-                    />
+                    <div class="product-list__search-control">
+                        <fd-ui-input
+                            class="product-list__search-input"
+                            size="md"
+                            prefixIcon="search"
+                            [suffixButtonIcon]="searchSuffixIcon()"
+                            [formField]="searchForm.search"
+                            [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
+                            [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
+                            [suffixButtonAriaLabel]="'PRODUCT_LIST.SEARCH_CLEAR' | translate"
+                            (suffixButtonClicked)="clearSearch()"
+                        />
+                        <fd-ui-button
+                            appearance="toolbar"
+                            fill="outline"
+                            size="md"
+                            icon="qr_code_scanner"
+                            [ariaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
+                            (click)="openBarcodeScanner()"
+                        />
+                    </div>
                 </form>
             </div>
         } @else {
@@ -113,17 +123,27 @@
                 [class.product-list__mobile-search--open]="isMobileSearchVisible()"
             >
                 <form class="product-list__search-form product-list__search-form--mobile" [formRoot]="searchForm">
-                    <fd-ui-input
-                        class="product-list__search-input"
-                        size="md"
-                        prefixIcon="search"
-                        suffixButtonIcon="qr_code_scanner"
-                        [formField]="searchForm.search"
-                        [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
-                        [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
-                        [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
-                        (suffixButtonClicked)="openBarcodeScanner()"
-                    />
+                    <div class="product-list__search-control">
+                        <fd-ui-input
+                            class="product-list__search-input"
+                            size="md"
+                            prefixIcon="search"
+                            [suffixButtonIcon]="searchSuffixIcon()"
+                            [formField]="searchForm.search"
+                            [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
+                            [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
+                            [suffixButtonAriaLabel]="'PRODUCT_LIST.SEARCH_CLEAR' | translate"
+                            (suffixButtonClicked)="clearSearch()"
+                        />
+                        <fd-ui-button
+                            appearance="toolbar"
+                            fill="outline"
+                            size="md"
+                            icon="qr_code_scanner"
+                            [ariaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
+                            (click)="openBarcodeScanner()"
+                        />
+                    </div>
                 </form>
             </div>
         }

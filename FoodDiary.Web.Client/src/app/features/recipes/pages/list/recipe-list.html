@@ -96,10 +96,10 @@
                     <fd-ui-input
                         class="recipe-list__search-input"
                         prefixIcon="search"
-                        suffixButtonIcon="close"
+                        [suffixButtonIcon]="searchModel().search?.length ? 'close' : undefined"
                         [formField]="searchForm.search"
                         [label]="'RECIPE_LIST.SEARCH_LABEL' | translate"
-                        [suffixButtonAriaLabel]="'COMMON.CLEAR' | translate"
+                        [suffixButtonAriaLabel]="'RECIPE_LIST.SEARCH_CLEAR' | translate"
                         [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
                         (suffixButtonClicked)="clearSearch()"
                     />
@@ -115,10 +115,10 @@
                     <fd-ui-input
                         class="recipe-list__search-input"
                         prefixIcon="search"
-                        suffixButtonIcon="close"
+                        [suffixButtonIcon]="searchModel().search?.length ? 'close' : undefined"
                         [formField]="searchForm.search"
                         [label]="'RECIPE_LIST.SEARCH_LABEL' | translate"
-                        [suffixButtonAriaLabel]="'COMMON.CLEAR' | translate"
+                        [suffixButtonAriaLabel]="'RECIPE_LIST.SEARCH_CLEAR' | translate"
                         [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
                         (suffixButtonClicked)="clearSearch()"
                     />

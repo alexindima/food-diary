@@ -57,6 +57,8 @@ export class ProductListBaseComponent {
     private readonly header = viewChild.required<PageHeaderComponent, ElementRef<HTMLElement>>(PageHeaderComponent, { read: ElementRef });
 
     protected readonly searchForm = this.productListFacade.searchForm;
+    protected readonly searchValue = this.productListFacade.searchValue;
+    protected readonly searchSuffixIcon = computed(() => (this.searchValue()?.length ? 'close' : undefined));
     protected readonly productData = this.productListFacade.productData;
     protected readonly favorites = this.productListFacade.favorites;
     protected readonly favoriteTotalCount = this.productListFacade.favoriteTotalCount;
@@ -125,6 +127,10 @@ export class ProductListBaseComponent {
 
     protected openBarcodeScanner(): void {
         this.productListFacade.openBarcodeScanner();
+    }
+
+    protected clearSearch(): void {
+        this.productListFacade.clearSearch();
     }
 
     protected toggleOnlyMine(): void {

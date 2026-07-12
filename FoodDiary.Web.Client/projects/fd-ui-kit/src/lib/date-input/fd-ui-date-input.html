@@ -25,7 +25,13 @@
                 (click)="openDatePicker()"
                 (keydown)="onInputKeydown($event)"
             />
-            <button type="button" class="fd-ui-date-input__suffix" [disabled]="disabled()" (click)="openDatePicker()">
+            <button
+                type="button"
+                class="fd-ui-date-input__suffix"
+                [disabled]="disabled()"
+                [attr.aria-label]="pickerAriaLabel() ?? label()"
+                (click)="openDatePicker()"
+            >
                 <fd-ui-icon name="calendar_today" />
             </button>
 
