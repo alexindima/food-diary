@@ -8,6 +8,30 @@
     />
 
     <main class="admin-shell__content">
+        <nav class="admin-shell__mobile-nav" aria-label="Admin sections">
+            <label for="admin-mobile-route">Section</label>
+            <select id="admin-mobile-route" [value]="currentPath()" (change)="onMobileRouteChange($event)">
+                <option value="/">Dashboard</option>
+                <optgroup label="Users">
+                    <option value="/users">Accounts</option>
+                    <option value="/users/login-activity">Login activity</option>
+                    <option value="/users/impersonation-sessions">Impersonation sessions</option>
+                </optgroup>
+                <option value="/ai-usage">AI logs</option>
+                <option value="/acquisition">Acquisition</option>
+                <option value="/billing">Billing</option>
+                <option value="/email-templates">Email templates</option>
+                <option value="/mail-inbox">Mail inbox</option>
+                <option value="/lessons">Lessons</option>
+                <option value="/moderation">Moderation</option>
+            </select>
+        </nav>
+        @if (pageHeader(); as header) {
+            <header class="admin-shell__page-header">
+                <h1 class="fd-page-title">{{ header.title }}</h1>
+                <p class="fd-page-subtitle">{{ header.subtitle }}</p>
+            </header>
+        }
         <router-outlet />
     </main>
 </div>

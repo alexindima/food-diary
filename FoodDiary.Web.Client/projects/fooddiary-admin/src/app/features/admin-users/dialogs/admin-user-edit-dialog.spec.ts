@@ -4,6 +4,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { NEVER, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import { AdminUserEditDialogComponent } from './admin-user-edit-dialog';
 
@@ -31,6 +32,7 @@ describe('AdminUserEditDialogComponent', () => {
         await TestBed.configureTestingModule({
             imports: [AdminUserEditDialogComponent],
             providers: [
+                provideTranslateTesting(),
                 { provide: AdminUsersFacade, useValue: usersService },
                 { provide: FdUiDialogRef, useValue: dialogRef },
                 { provide: FD_UI_DIALOG_DATA, useValue: user },

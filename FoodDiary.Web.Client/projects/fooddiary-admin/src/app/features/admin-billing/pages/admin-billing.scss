@@ -1,10 +1,7 @@
-.admin-billing__header h1 {
-    margin: 0;
-}
-
-.admin-billing__header p {
-    margin: var(--fd-space-xxs) 0 0;
-    color: var(--fd-color-text-muted);
+:host {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .admin-billing__tabs button {
@@ -48,7 +45,10 @@
 }
 
 .admin-billing__table {
+    display: block;
     width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
     border-collapse: collapse;
     background: var(--fd-color-white);
 }

@@ -4,6 +4,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type { AdminUser, AdminUserLoginEvent, AdminUserRoleAuditEvent, PagedResponse } from '../models/admin-user.models';
 import { AdminUserDetailsDialogComponent } from './admin-user-details-dialog';
@@ -135,6 +136,7 @@ async function createContextAsync(configure?: (usersFacade: UsersFacadeMock) => 
     await TestBed.configureTestingModule({
         imports: [AdminUserDetailsDialogComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: AdminUsersFacade, useValue: usersFacade },
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: FD_UI_DIALOG_DATA, useValue: initialUser },

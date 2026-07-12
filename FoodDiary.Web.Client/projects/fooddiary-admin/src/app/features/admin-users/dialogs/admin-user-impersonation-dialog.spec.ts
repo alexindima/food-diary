@@ -4,6 +4,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import { AdminUserImpersonationDialogComponent } from './admin-user-impersonation-dialog';
 
@@ -37,6 +38,7 @@ describe('AdminUserImpersonationDialogComponent', () => {
         await TestBed.configureTestingModule({
             imports: [AdminUserImpersonationDialogComponent],
             providers: [
+                provideTranslateTesting(),
                 { provide: AdminUsersFacade, useValue: usersService },
                 { provide: FdUiDialogRef, useValue: dialogRef },
                 { provide: FD_UI_DIALOG_DATA, useValue: user },

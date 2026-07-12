@@ -3,6 +3,28 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { FdUiSidebarComponent, type FdUiSidebarSection } from 'fd-ui-kit';
 
+type AdminPageHeader = {
+    title: string;
+    subtitle: string;
+};
+
+const ADMIN_PAGE_HEADERS: Readonly<Record<string, AdminPageHeader>> = {
+    '/': { title: 'Dashboard', subtitle: 'Product health and operational activity.' },
+    '/users': { title: 'Accounts', subtitle: 'Manage user access, status and profile data.' },
+    '/users/login-activity': { title: 'Login activity', subtitle: 'Review successful authentication events and clients.' },
+    '/users/impersonation-sessions': {
+        title: 'Impersonation sessions',
+        subtitle: 'Audit administrative access performed on behalf of users.',
+    },
+    '/ai-usage': { title: 'AI logs', subtitle: 'Monitor token usage and AI-assisted operations.' },
+    '/acquisition': { title: 'Acquisition', subtitle: 'Track campaign attribution and conversion activity.' },
+    '/billing': { title: 'Billing', subtitle: 'Review subscriptions, payments and webhook events.' },
+    '/email-templates': { title: 'Email templates', subtitle: 'Create and maintain transactional email content.' },
+    '/mail-inbox': { title: 'Mail inbox', subtitle: 'Inspect inbound messages and DMARC reports.' },
+    '/lessons': { title: 'Lessons', subtitle: 'Publish and maintain nutrition academy content.' },
+    '/moderation': { title: 'Moderation', subtitle: 'Review reports and resolve content issues.' },
+};
+
 @Component({
     selector: 'app-root',
     imports: [RouterOutlet, FdUiSidebarComponent],
@@ -15,6 +37,8 @@ export class AppComponent {
     private readonly destroyRef = inject(DestroyRef);
     protected readonly isUsersSectionExpanded = signal(true);
     protected readonly currentUrl = signal(this.router.url);
+    protected readonly currentPath = computed(() => this.currentUrl().split('?')[0] ?? '/');
+    protected readonly pageHeader = computed(() => ADMIN_PAGE_HEADERS[this.currentPath()] ?? null);
     protected readonly sidebarSections = computed<FdUiSidebarSection[]>(() => [
         {
             id: 'admin-primary',
@@ -65,6 +89,20 @@ export class AppComponent {
         }
 
         this.isUsersSectionExpanded.update(isExpanded => !isExpanded);
+    }
+
+    protected onMobileRouteChange(event: Event): void {
+        const target = event.target;
+        if (target === null || !('value' in target) || typeof target.value !== 'string') {
+            return;
+        }
+
+        const route = target.value;
+        if (route.length === 0 || route === this.currentPath()) {
+            return;
+        }
+
+        void this.router.navigateByUrl(route);
     }
 
     private isUsersRoute(): boolean {

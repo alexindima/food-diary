@@ -1,11 +1,7 @@
 <div class="admin-billing fd-grid fd-gap-md">
-    <header class="admin-billing__header fd-row fd-align-start fd-justify-between fd-gap-md">
-        <div>
-            <h1 class="fd-page-title">Billing</h1>
-            <p class="fd-page-subtitle">Subscriptions, payments, renewal attempts and webhook events.</p>
-        </div>
+    <div class="admin-billing__header fd-row fd-justify-end">
         <fd-ui-button type="button" variant="secondary" (click)="load()"> Refresh </fd-ui-button>
-    </header>
+    </div>
 
     <div class="admin-billing__tabs fd-row fd-gap-sm fd-wrap">
         <button type="button" [class.active]="activeTab() === 'subscriptions'" (click)="setTab('subscriptions')">Subscriptions</button>
