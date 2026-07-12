@@ -7,8 +7,7 @@ Reusable guided-tour engine for FoodDiary Angular applications.
 Render the host once near the application shell:
 
 ```html
-<router-outlet />
-<fd-tour-host />
+<router-outlet /> <fd-tour-host />
 ```
 
 Mark targets with the directive:

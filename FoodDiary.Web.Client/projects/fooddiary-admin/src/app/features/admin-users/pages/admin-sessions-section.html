@@ -4,7 +4,12 @@
             <h2 class="fd-ui-title-sm">Impersonation sessions</h2>
             <p class="fd-ui-body-xs">Recent admin access sessions started on behalf of users.</p>
         </div>
-        <fd-ui-input label="Search impersonation sessions" placeholder="User, admin or reason" [value]="search()" (valueChange)="searchChange.emit(getControlTextValue($event))" />
+        <fd-ui-input
+            label="Search impersonation sessions"
+            placeholder="User, admin or reason"
+            [value]="search()"
+            (valueChange)="searchChange.emit(getControlTextValue($event))"
+        />
     </div>
 
     @if (isLoading()) {

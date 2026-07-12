@@ -2150,7 +2150,8 @@ export default [
                     patterns: [
                         {
                             group: ['../features/**', 'src/app/features/**'],
-                            message: 'Core app services must not depend on feature code. Publish shared events or use shared abstractions instead.',
+                            message:
+                                'Core app services must not depend on feature code. Publish shared events or use shared abstractions instead.',
                         },
                     ],
                 },
