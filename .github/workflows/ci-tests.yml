@@ -629,7 +629,7 @@ jobs:
           set -euo pipefail
           log_file="${RUNNER_TEMP}/frontend-checks-logs/prettier.log"
           set +e
-          npx prettier --check "src/**/*.{ts,html}" "projects/**/*.{ts,html}" 2>&1 | tee "$log_file"
+          npm run check:format:ci 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
           set -e
           if [ "$status" -ne 0 ]; then

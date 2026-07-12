@@ -54,6 +54,7 @@
         "lint:deps": "depcruise --config .dependency-cruiser.cjs --ignore-known .dependency-cruiser-known-violations.json src/app projects/fooddiary-admin/src/app projects/fd-ui-kit/src/lib projects/fd-tour/src/lib",
         "lint:deps:strict": "depcruise --config .dependency-cruiser.cjs src/app projects/fooddiary-admin/src/app projects/fd-ui-kit/src/lib projects/fd-tour/src/lib",
         "check:depcruise-baseline": "node scripts/check-depcruise-baseline.mjs",
+        "check:format:ci": "prettier --check \"src/**/*.{ts,html}\" \"projects/**/*.{ts,html}\"",
         "verify": "npm run lint && npm run lint:deps:strict && npm run check:depcruise-baseline && npm run stylelint && npm run build && npm run check:seo-prerender && npm run test:ci:app && npm run check:i18n",
         "stylelint": "stylelint '**/*.{css,scss}'",
         "stylelint:fix": "stylelint '**/*.{css,scss}' --fix",

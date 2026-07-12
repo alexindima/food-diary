@@ -1,7 +1,8 @@
 . FoodDiary.Web.Client/.husky/progress.sh
-hook_progress_init "pre-push" 28
+hook_progress_init "pre-push" 29
 
 cd FoodDiary.Web.Client
+hook_run "Frontend formatting" npm run check:format:ci || exit 1
 hook_run "Frontend ESLint" npm run lint || exit 1
 hook_run "Frontend dependency graph lint" npm run lint:deps:strict || exit 1
 hook_run "Dependency graph baseline" npm run check:depcruise-baseline || exit 1
