@@ -280,7 +280,8 @@ public sealed class SideEffectReliabilityGuardrailTests {
             "ImageAssetCleanupService.cs");
         string userCleanupPath = ArchitectureTestPaths.FromRoot(
             "FoodDiary.Infrastructure",
-            "Services",
+            "Persistence",
+            "Users",
             "UserCleanupService.cs");
 
         string emailSenderSource = File.ReadAllText(emailSenderPath);

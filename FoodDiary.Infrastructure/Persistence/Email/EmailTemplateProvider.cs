@@ -1,10 +1,9 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.Services;
+namespace FoodDiary.Infrastructure.Persistence.Email;
 
 public sealed class EmailTemplateProvider(
     IServiceScopeFactory scopeFactory,

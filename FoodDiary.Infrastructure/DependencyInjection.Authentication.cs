@@ -4,6 +4,9 @@ using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Infrastructure.Authentication;
+using FoodDiary.Infrastructure.Persistence.Ai;
+using FoodDiary.Infrastructure.Persistence.Email;
+using FoodDiary.Infrastructure.Persistence.Users;
 using FoodDiary.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 

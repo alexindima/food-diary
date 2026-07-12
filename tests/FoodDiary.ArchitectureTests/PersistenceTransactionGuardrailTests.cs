@@ -26,6 +26,7 @@ public sealed class PersistenceTransactionGuardrailTests {
             Path.Combine(persistenceRoot, "Email", "EmailOutboxProcessor.cs"),
             Path.Combine(persistenceRoot, "Images", "ImageObjectDeletionOutboxProcessor.cs"),
             Path.Combine(persistenceRoot, "Notifications", "NotificationWebPushOutboxProcessor.cs"),
+            Path.Combine(persistenceRoot, "Users", "UserCleanupService.cs"),
         ];
 
         HashSet<string> allowed = allowedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);
@@ -49,7 +50,7 @@ public sealed class PersistenceTransactionGuardrailTests {
         string[] allowedFiles = [
             Path.Combine(infrastructureRoot, "Persistence", "Billing", "EfBillingTransactionRunner.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxMessageClaimer.cs"),
-            Path.Combine(infrastructureRoot, "Services", "UserCleanupService.cs"),
+            Path.Combine(infrastructureRoot, "Persistence", "Users", "UserCleanupService.cs"),
         ];
         string[] forbiddenPatterns = [
             "BeginTransaction(",
@@ -81,7 +82,7 @@ public sealed class PersistenceTransactionGuardrailTests {
             Path.Combine(infrastructureRoot, "Persistence", "Tracking", "MarketingAttributionEventRepository.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Users", "UserLoginEventRepository.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Users", "UserRoleMembershipService.cs"),
-            Path.Combine(infrastructureRoot, "Services", "UserCleanupService.cs"),
+            Path.Combine(infrastructureRoot, "Persistence", "Users", "UserCleanupService.cs"),
         ];
         string[] forbiddenPatterns = [
             "ExecuteDeleteAsync(",

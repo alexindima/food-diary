@@ -1,12 +1,11 @@
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 
-namespace FoodDiary.Infrastructure.Services;
+namespace FoodDiary.Infrastructure.Persistence.Users;
 
 public sealed class UserCleanupService(
     FoodDiaryDbContext dbContext,

@@ -3141,6 +3141,26 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void InfrastructureDbContext_IsOnlyAcquiredInsidePersistenceBoundary() {
+        string root = GetRepositoryRoot();
+        string infrastructureRoot = Path.Combine(root, "FoodDiary.Infrastructure");
+        string persistenceRoot = Path.Combine(infrastructureRoot, "Persistence");
+        string migrationsRoot = Path.Combine(infrastructureRoot, "Migrations");
+        string compositionFile = Path.Combine(infrastructureRoot, "DependencyInjection.Persistence.cs");
+
+        string[] violations = [.. SourceScanner.SourceFiles(infrastructureRoot)
+            .Where(path => !path.StartsWith(persistenceRoot, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.StartsWith(migrationsRoot, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.Equals(compositionFile, StringComparison.OrdinalIgnoreCase))
+            .SelectMany(path => File.ReadLines(path).Select((line, index) => new { path, line, index }))
+            .Where(entry => entry.line.Contains("FoodDiaryDbContext", StringComparison.Ordinal))
+            .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires FoodDiaryDbContext outside the persistence boundary")
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void DashboardRuntimeReadPath_UsesDedicatedInfrastructureReadService() {
         string root = GetRepositoryRoot();
         string dashboardPlanPath = Path.Combine(root, "FoodDiary.Application", "Dashboard", "Dashboard-Query-Plan.md");

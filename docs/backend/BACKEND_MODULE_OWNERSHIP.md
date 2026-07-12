@@ -297,6 +297,8 @@ Daily Advice is a read-oriented content module that owns `DailyAdvice` storage a
 
 ## Persistence configuration ownership
 
+Direct acquisition of `FoodDiaryDbContext` is confined to `FoodDiary.Infrastructure/Persistence`, EF migrations/design-time infrastructure and the persistence composition root. Provider caches and lifecycle jobs that query EF are persistence adapters and live under their owning module folders (`Persistence/Ai`, `Persistence/Email`, `Persistence/Users`). An architecture test prevents application-neutral `Services` or future technical folders from becoming alternate data-access layers.
+
 Every EF entity configuration is grouped under an owning module folder. The `Persistence/Configurations` root must contain no loose configuration classes; an architecture test enforces this invariant. Shared use of `FoodDiaryDbContext` therefore remains a physical deployment choice rather than an implicit shared-ownership signal.
 
 Technical and catalog adapters use explicit folders as well: `Admin`, `Ai`, `ContentReports`, `Email`, `Notifications`, `Nutrition`, `OpenFoodFacts` and `Usda`. Folder placement identifies the lifecycle owner or adapter boundary; it does not allow those modules to bypass the application dependency rules.

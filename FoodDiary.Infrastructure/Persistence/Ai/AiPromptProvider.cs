@@ -1,11 +1,10 @@
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.Services;
+namespace FoodDiary.Infrastructure.Persistence.Ai;
 
 internal sealed class AiPromptProvider(
     IMemoryCache cache,

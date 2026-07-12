@@ -1,4 +1,4 @@
-using FoodDiary.Infrastructure.Services;
+using FoodDiary.Infrastructure.Persistence.Users;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;
