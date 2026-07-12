@@ -191,7 +191,7 @@
             "BAR": "Totals"
         },
         "AVERAGE_CARD": {
-            "CONSUMPTION": "Intake",
+            "CONSUMPTION": "Meals",
             "STEPS": "Steps",
             "BURNED": "Burned"
         },
@@ -2121,6 +2121,9 @@
         "HIDE_HISTORY_CHECK_INS": "Hide check-ins",
         "LOAD_MORE_CHECK_INS": "Show more check-ins",
         "HISTORY_CHECK_INS_COUNT": "{{count}} check-ins",
+        "HISTORY_CHECK_INS_COUNT_ONE": "{{count}} check-in",
+        "HISTORY_CHECK_INS_COUNT_FEW": "{{count}} check-ins",
+        "HISTORY_CHECK_INS_COUNT_MANY": "{{count}} check-ins",
         "SHOW_CHECK_IN_CHART": "Show chart",
         "CHECK_IN": {
             "TITLE": "Today's check-in",
@@ -2314,7 +2317,7 @@
     },
     "GOALS_PAGE": {
         "TITLE": "Goals",
-        "SUBTITLE": "Customize your daily nutrition targets and body goals. Blocks use placeholder data for now.",
+        "SUBTITLE": "Set daily targets for calories, nutrients, water, and body measurements.",
         "STATUS_LOADING": "Loading goals…",
         "STATUS_PENDING": "Saving soon…",
         "STATUS_SAVING": "Saving…",

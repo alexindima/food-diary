@@ -39,7 +39,6 @@ export function buildWeeklyCheckInTrendCards(trends: WeekTrend | null | undefine
             value: trends.proteinChange,
             unitKey: 'GENERAL.UNITS.G',
             numberFormat: '1.1-1',
-            unitSeparator: '',
         }),
         buildWeeklyCheckInTrendCard({
             key: 'hydration',

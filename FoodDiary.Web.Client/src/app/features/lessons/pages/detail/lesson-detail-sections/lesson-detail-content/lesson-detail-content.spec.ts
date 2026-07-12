@@ -42,6 +42,14 @@ describe('LessonDetailContentComponent', () => {
         expect(element.querySelector('.lesson-detail__read-badge')).not.toBeNull();
         expect(element.querySelector('fd-ui-button')).toBeNull();
     });
+
+    it('renders the lesson title below the page heading level', () => {
+        const fixture = createComponent();
+        const element = getElement(fixture);
+
+        expect(element.querySelector('h1')).toBeNull();
+        expect(element.querySelector('h2')?.textContent).toContain('Macros');
+    });
 });
 
 function createComponent(

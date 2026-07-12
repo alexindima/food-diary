@@ -20,7 +20,7 @@ describe('WeeklyCheckInStatsCardComponent', () => {
         expect(text).toContain('2,000');
         expect(text).toContain('21');
         expect(text).toContain('7 / 7');
-        expect(text).toContain('110GENERAL.UNITS.G');
+        expect(text).toContain('110 GENERAL.UNITS.G');
         expect(text).toContain('73.5 GENERAL.UNITS.KG');
         expect(text).toContain('2000 GENERAL.UNITS.ML');
     });

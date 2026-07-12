@@ -30,6 +30,7 @@ describe('RecipeDetailSummaryComponent', () => {
 });
 
 describe('resolveServingsUnitKey', () => {
+    /* eslint-disable @typescript-eslint/no-magic-numbers -- The table covers Russian pluralization boundaries. */
     it.each([
         [1, 'SERVINGS_ONE'],
         [2, 'SERVINGS_FEW'],
@@ -42,6 +43,7 @@ describe('resolveServingsUnitKey', () => {
     ])('selects the correct plural form for %i servings', (count, suffix) => {
         expect(resolveServingsUnitKey(count)).toBe(`RECIPE_DETAIL.SUMMARY.${suffix}`);
     });
+    /* eslint-enable @typescript-eslint/no-magic-numbers -- Re-enable the rule after the boundary table. */
 });
 
 function setupComponent(): { fixture: ComponentFixture<RecipeDetailSummaryComponent>; component: RecipeDetailSummaryComponent } {

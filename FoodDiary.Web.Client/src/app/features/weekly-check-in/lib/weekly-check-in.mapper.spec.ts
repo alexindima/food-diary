@@ -42,6 +42,7 @@ describe('weekly check-in trend cards mapper', () => {
             icon: 'trending_up',
             color: 'var(--fd-color-green-500)',
         });
+        expect(cards[1]?.unitSeparator).toBe(' ');
         expect(cards[2]).toMatchObject({
             key: 'weight',
             icon: 'trending_down',

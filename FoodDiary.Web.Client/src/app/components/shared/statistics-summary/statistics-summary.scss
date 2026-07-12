@@ -96,6 +96,8 @@
     }
 
     .stats-summary-card__row--top > :where(:not(template)) {
+        flex: none;
+        width: 100%;
         min-width: 0;
     }
 

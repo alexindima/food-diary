@@ -65,13 +65,13 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
     protected readonly visiblePlaceholder = computed(() => (this.isFocused() ? null : this.placeholder()));
     protected readonly effectiveAriaLabel = computed(() => {
         const explicitLabel = this.ariaLabel()?.trim();
-        if (explicitLabel) {
+        if (explicitLabel !== undefined && explicitLabel.length > 0) {
             return explicitLabel;
         }
 
         const label = this.label().trim();
         const unit = this.unitLabel()?.trim();
-        return unit ? `${label}, ${unit}` : label || null;
+        return unit !== undefined && unit.length > 0 ? `${label}, ${unit}` : label.length > 0 ? label : null;
     });
 
     public constructor() {

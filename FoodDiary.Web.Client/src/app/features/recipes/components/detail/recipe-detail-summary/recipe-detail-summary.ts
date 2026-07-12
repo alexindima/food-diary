@@ -3,6 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface';
 
+import { resolveRussianPluralCategory } from '../../../../../shared/i18n/russian-plural.utils';
 import type { Recipe } from '../../../models/recipe.data';
 import { RecipeDetailIngredientPreviewComponent } from '../recipe-detail-ingredient-preview/recipe-detail-ingredient-preview';
 import type { IngredientPreviewItem, MacroBlock } from '../recipe-detail-lib/recipe-detail.types';
@@ -28,17 +29,5 @@ export class RecipeDetailSummaryComponent {
 }
 
 export function resolveServingsUnitKey(count: number): string {
-    const absoluteCount = Math.abs(count);
-    const modulo100 = absoluteCount % 100;
-    const modulo10 = absoluteCount % 10;
-
-    if (modulo10 === 1 && modulo100 !== 11) {
-        return 'RECIPE_DETAIL.SUMMARY.SERVINGS_ONE';
-    }
-
-    if (modulo10 >= 2 && modulo10 <= 4 && (modulo100 < 12 || modulo100 > 14)) {
-        return 'RECIPE_DETAIL.SUMMARY.SERVINGS_FEW';
-    }
-
-    return 'RECIPE_DETAIL.SUMMARY.SERVINGS_MANY';
+    return `RECIPE_DETAIL.SUMMARY.SERVINGS_${resolveRussianPluralCategory(count).toUpperCase()}`;
 }

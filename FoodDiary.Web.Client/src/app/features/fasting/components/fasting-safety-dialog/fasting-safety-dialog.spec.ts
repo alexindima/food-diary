@@ -4,6 +4,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { FastingSafetyDialogComponent, type FastingSafetyDialogData } from './fasting-safety-dialog';
 
 const data: FastingSafetyDialogData = {
@@ -22,6 +23,7 @@ describe('FastingSafetyDialogComponent', () => {
         TestBed.configureTestingModule({
             imports: [FastingSafetyDialogComponent],
             providers: [
+                provideTranslateTesting(),
                 { provide: FdUiDialogRef, useValue: dialogRef },
                 { provide: FD_UI_DIALOG_DATA, useValue: data },
             ],
@@ -53,6 +55,7 @@ describe('FastingSafetyDialogComponent', () => {
         TestBed.configureTestingModule({
             imports: [FastingSafetyDialogComponent],
             providers: [
+                provideTranslateTesting(),
                 { provide: FdUiDialogRef, useValue: dialogRef },
                 { provide: FD_UI_DIALOG_DATA, useValue: { title: 'Info', message: 'Too long.', cancelLabel: 'Ok' } },
             ],

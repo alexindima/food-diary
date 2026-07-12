@@ -46,6 +46,20 @@ describe('FastingHistoryItemComponent', () => {
         expect(text).not.toContain('FASTING.HISTORY_CHECK_INS_COUNT');
         expect(text).not.toContain('FASTING.SHOW_CHECK_IN_CHART');
     });
+
+    /* eslint-disable @typescript-eslint/no-magic-numbers -- The table covers Russian pluralization boundaries. */
+    it.each([
+        [1, 'ONE'],
+        [2, 'FEW'],
+        [5, 'MANY'],
+        [11, 'MANY'],
+        [21, 'ONE'],
+    ])('selects the correct check-in count form for %i', (count, suffix) => {
+        const fixture = createComponent(createHistoryItem({ checkInCount: count }));
+
+        expect(fixture.componentInstance['checkInCountKey']()).toBe(`FASTING.HISTORY_CHECK_INS_COUNT_${suffix}`);
+    });
+    /* eslint-enable @typescript-eslint/no-magic-numbers -- Re-enable the rule after the boundary table. */
 });
 
 function createComponent(historyItem: FastingHistorySessionViewModel): ComponentFixture<FastingHistoryItemComponent> {

@@ -58,7 +58,10 @@ export class ProductListBaseComponent {
 
     protected readonly searchForm = this.productListFacade.searchForm;
     protected readonly searchValue = this.productListFacade.searchValue;
-    protected readonly searchSuffixIcon = computed(() => (this.searchValue()?.length ? 'close' : undefined));
+    protected readonly searchSuffixIcon = computed(() => {
+        const searchLength = this.searchValue()?.length;
+        return searchLength !== undefined && searchLength > 0 ? 'close' : undefined;
+    });
     protected readonly productData = this.productListFacade.productData;
     protected readonly favorites = this.productListFacade.favorites;
     protected readonly favoriteTotalCount = this.productListFacade.favoriteTotalCount;

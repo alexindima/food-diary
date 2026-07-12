@@ -4,6 +4,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { FastingEndConfirmDialogComponent, type FastingEndConfirmDialogData } from './fasting-end-confirm-dialog';
 
 const data: FastingEndConfirmDialogData = {
@@ -21,6 +22,7 @@ describe('FastingEndConfirmDialogComponent', () => {
         TestBed.configureTestingModule({
             imports: [FastingEndConfirmDialogComponent],
             providers: [
+                provideTranslateTesting(),
                 { provide: FdUiDialogRef, useValue: dialogRef },
                 { provide: FD_UI_DIALOG_DATA, useValue: data },
             ],

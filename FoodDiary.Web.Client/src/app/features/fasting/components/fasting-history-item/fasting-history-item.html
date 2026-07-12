@@ -28,7 +28,7 @@
     @if (item.hasCheckIns) {
         <div class="fasting__history-toggle-row fd-row fd-wrap fd-justify-between fd-gap-sm">
             <span class="fasting__history-toggle-count fd-ui-caption">
-                {{ 'FASTING.HISTORY_CHECK_INS_COUNT' | translate: { count: item.checkInCount } }}
+                {{ checkInCountKey() | translate: { count: item.checkInCount } }}
             </span>
             <div class="fasting__history-toggle-buttons fd-row fd-wrap fd-justify-end fd-gap-card-profile">
                 @if (item.canViewChart) {
