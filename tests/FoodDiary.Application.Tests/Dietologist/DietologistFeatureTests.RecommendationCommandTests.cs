@@ -6,7 +6,6 @@ using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Domain.Entities.Dietologist;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects;
@@ -105,11 +104,9 @@ public partial class DietologistFeatureTests {
         invRepo.Seed(invitation);
 
         var recRepo = new InMemoryRecommendationRepository();
-        var notificationRepo = new InMemoryNotificationRepository();
-        var notificationPusher = new FakeNotificationPusher();
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
-        CreateRecommendationCommandHandler handler = CreateRecommendationHandler(invRepo, recRepo, notificationRepo, notificationPusher, userRepo);
+        CreateRecommendationCommandHandler handler = CreateRecommendationHandler(invRepo, recRepo, userRepo);
 
         Result<RecommendationModel> result = await handler.Handle(
             new CreateRecommendationCommand(dietologistId.Value, clientId.Value, "Eat more veggies"),
@@ -117,26 +114,25 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Success(result);
         Assert.Equal("Eat more veggies", result.Value.Text);
-        Assert.Single(recRepo.Added);
-        Notification notification = Assert.Single(notificationRepo.Added);
-        Assert.Equal(NotificationTypes.NewRecommendation, notification.Type);
-        Assert.True(notificationPusher.PushCalled);
+        Recommendation recommendation = Assert.Single(recRepo.Added);
+        RecommendationCreatedDomainEvent domainEvent = Assert.IsType<RecommendationCreatedDomainEvent>(
+            Assert.Single(recommendation.DomainEvents));
+        Assert.Equal(dietologistId, domainEvent.DietologistUserId);
+        Assert.Equal(clientId, domainEvent.ClientUserId);
     }
 
 
     [Fact]
-    public async Task CreateRecommendation_WhenDietologistMissingDuringNotification_UsesEmptyLabel() {
+    public async Task CreateRecommendation_WhenDietologistBecomesUnavailableAfterAccessCheck_StillRaisesEvent() {
         var dietologistId = UserId.New();
         var clientId = UserId.New();
         DietologistInvitation invitation = CreateAcceptedInvitation(clientId, dietologistId);
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
-        var notificationRepo = new InMemoryNotificationRepository();
         var userRepo = new SequenceUserRepository(CreateUser(dietologistId, "diet@example.com"), null);
         CreateRecommendationCommandHandler handler = CreateRecommendationHandler(
             invitationRepository: invRepo,
-            notificationRepository: notificationRepo,
             userRepository: userRepo);
 
         Result<RecommendationModel> result = await handler.Handle(
@@ -144,9 +140,6 @@ public partial class DietologistFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        NewRecommendationNotificationPayload? payload = NotificationPayloadSerializer.Deserialize<NewRecommendationNotificationPayload>(
-            Assert.Single(notificationRepo.Added).PayloadJson);
-        Assert.Equal("diet@example.com", payload?.DietologistName);
     }
 
 

@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Dietologist;
@@ -35,6 +36,10 @@ public sealed class Recommendation : AggregateRoot<RecommendationId> {
             IsRead = false,
         };
         recommendation.SetCreated();
+        recommendation.RaiseDomainEvent(new RecommendationCreatedDomainEvent(
+            recommendation.Id,
+            dietologistUserId,
+            clientUserId));
         return recommendation;
     }
 

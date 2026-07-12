@@ -28,3 +28,12 @@ A post-commit action is an in-memory best-effort callback after a successful com
 - Notification web-push delivery is written through `INotificationWebPushOutbox`.
 - Image object deletion is written through `IImageObjectDeletionOutbox`, including orphan cleanup.
 - Domain event handlers currently only create transactional notification state and best-effort live refresh hints.
+
+## Executable Governance
+
+- Every concrete domain event lives in `FoodDiary.Domain/Events`, is a sealed immutable `*DomainEvent`, exposes `OccurredOnUtc`, and must be raised by domain source code. Declared-but-never-raised events fail architecture tests.
+- Domain events may reference domain primitives, IDs, enums and value objects, but not Application, Infrastructure, EF, HTTP or serializer types.
+- Concrete integration events must live in an `Events` folder and use the `*IntegrationEvent` suffix. They are cross-process contracts, not aliases for telemetry records, webhook payloads or database entities.
+- A domain event handler participates in the source transaction. Durable provider work must create an outbox record; best-effort client refresh is queued as a post-commit action.
+
+`RecommendationCreatedDomainEvent` follows this lifecycle: the Recommendation aggregate raises the fact, the transactional handler creates notification/outbox state, and the unread-count refresh is queued only after commit. The command handler does not duplicate that side effect.

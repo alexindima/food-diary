@@ -1,18 +1,14 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
@@ -20,10 +16,7 @@ namespace FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
 public sealed class CreateRecommendationCommandHandler(
     IDietologistInvitationReadRepository invitationRepository,
     IRecommendationWriteRepository recommendationRepository,
-    INotificationWriter notificationWriter,
-    INotificationClientRefreshService notificationClientRefreshService,
-    IDietologistUserContextService dietologistUserContextService,
-    IPostCommitActionQueue postCommitActionQueue)
+    IDietologistUserContextService dietologistUserContextService)
     : ICommandHandler<CreateRecommendationCommand, Result<RecommendationModel>> {
     public async Task<Result<RecommendationModel>> Handle(
         CreateRecommendationCommand command, CancellationToken cancellationToken) {
@@ -64,29 +57,7 @@ public sealed class CreateRecommendationCommandHandler(
 
         var recommendation = Recommendation.Create(dietologistUserId, clientUserId, command.Text);
         await recommendationRepository.AddAsync(recommendation, cancellationToken).ConfigureAwait(false);
-        await NotifyClientAsync(recommendation, dietologistResult.Value, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(recommendation.ToModel());
-    }
-
-    private async Task NotifyClientAsync(Recommendation recommendation, User dietologist, CancellationToken cancellationToken) {
-        Notification notification = NotificationFactory.CreateNewRecommendation(
-            recommendation.ClientUserId,
-            ResolveDietologistLabel(dietologist),
-            recommendation.Id.Value.ToString());
-
-        await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
-        NotificationPostCommitActions.EnqueueUnreadCountPush(
-            postCommitActionQueue,
-            notificationClientRefreshService,
-            recommendation.ClientUserId,
-            pushChanged: false);
-    }
-
-    private static string ResolveDietologistLabel(User dietologist) {
-        string fullName = $"{dietologist.FirstName} {dietologist.LastName}".Trim();
-        return string.IsNullOrWhiteSpace(fullName)
-            ? dietologist.Email
-            : $"{fullName} ({dietologist.Email})";
     }
 }

@@ -257,19 +257,11 @@ public partial class DietologistFeatureTests {
     private static CreateRecommendationCommandHandler CreateRecommendationHandler(
         IDietologistInvitationRepository? invitationRepository = null,
         IRecommendationRepository? recommendationRepository = null,
-        INotificationRepository? notificationRepository = null,
-        INotificationPusher? notificationPusher = null,
         IDietologistUserContextService? userRepository = null) {
-        INotificationRepository resolvedNotificationRepository = notificationRepository ?? new InMemoryNotificationRepository();
         return new(
             invitationRepository ?? new InMemoryInvitationRepository(),
             recommendationRepository ?? new InMemoryRecommendationRepository(),
-            new InMemoryNotificationWriter(resolvedNotificationRepository, new FakeWebPushNotificationSender()),
-            new NotificationClientRefreshService(
-                resolvedNotificationRepository,
-                notificationPusher ?? new FakeNotificationPusher()),
-            userRepository ?? new InMemoryUserRepository(),
-            new ImmediatePostCommitActionQueue());
+            userRepository ?? new InMemoryUserRepository());
     }
 
     // InviteDietologist
