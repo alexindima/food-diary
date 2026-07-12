@@ -1,20 +1,18 @@
-using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
-using FoodDiary.Application.FavoriteMeals.Mappings;
+using FoodDiary.Application.FavoriteMeals.Common;
+using FoodDiary.Application.FavoriteMeals.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Services;
 
 public sealed class ConsumptionReadService(
     IMealConsumptionReadRepository mealRepository,
-    IFavoriteMealReadRepository favoriteMealRepository,
-    IFavoriteMealReadModelRepository favoriteMealReadModelRepository) : IConsumptionReadService {
+    IFavoriteMealReadService favoriteMealReadService) : IConsumptionReadService {
     public async Task<PagedResponse<ConsumptionModel>> GetPagedAsync(
         UserId userId,
         int page,
@@ -50,11 +48,8 @@ public sealed class ConsumptionReadService(
             filters,
             cancellationToken).ConfigureAwait(false);
 
-        IReadOnlyList<FavoriteMealReadModel> favorites = await favoriteMealReadModelRepository.GetAllReadModelsAsync(userId, cancellationToken).ConfigureAwait(false);
-        var favoriteItems = favorites
-            .Take(favoriteLimit)
-            .Select(static favorite => favorite.ToModel())
-            .ToList();
+        (IReadOnlyList<FavoriteMealModel> favoriteItems, int favoriteCount) =
+            await favoriteMealReadService.GetOverviewAsync(userId, favoriteLimit, cancellationToken).ConfigureAwait(false);
         IReadOnlyDictionary<MealId, FavoriteMealId> favoritesByMealId = await GetFavoritesByMealIdAsync(
             userId,
             Items,
@@ -62,7 +57,7 @@ public sealed class ConsumptionReadService(
 
         PagedResponse<ConsumptionModel> allConsumptions = ToPagedResponse(Items, favoritesByMealId, page, limit, TotalItems);
 
-        return new ConsumptionOverviewModel(allConsumptions, favoriteItems, favorites.Count);
+        return new ConsumptionOverviewModel(allConsumptions, favoriteItems, favoriteCount);
     }
 
     public async Task<ConsumptionModel?> GetByIdAsync(
@@ -85,7 +80,7 @@ public sealed class ConsumptionReadService(
             .Select(static meal => (MealId)meal.Id)
             .Distinct()];
 
-        return await favoriteMealRepository.GetFavoriteIdsByMealIdsAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
+        return await favoriteMealReadService.GetFavoriteIdsByMealIdsAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
     }
 
     private static PagedResponse<ConsumptionModel> ToPagedResponse(

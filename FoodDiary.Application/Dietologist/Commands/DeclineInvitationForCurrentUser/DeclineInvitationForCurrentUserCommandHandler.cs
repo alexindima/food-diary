@@ -18,8 +18,7 @@ public sealed class DeclineInvitationForCurrentUserCommandHandler(
     IDietologistInvitationWriteRepository invitationRepository,
     IDietologistUserContextService dietologistUserContextService,
     INotificationWriter notificationWriter,
-    INotificationReadModelRepository notificationReadModelRepository,
-    INotificationPusher notificationPusher,
+    INotificationClientRefreshService notificationClientRefreshService,
     IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<DeclineInvitationForCurrentUserCommand, Result> {
     public async Task<Result> Handle(DeclineInvitationForCurrentUserCommand command, CancellationToken cancellationToken) {
@@ -67,8 +66,7 @@ public sealed class DeclineInvitationForCurrentUserCommandHandler(
         await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);
         await DietologistInvitationClientNotifier.NotifyDeclinedAsync(
             notificationWriter,
-            notificationReadModelRepository,
-            notificationPusher,
+            notificationClientRefreshService,
             postCommitActionQueue,
             invitation.ClientUserId,
             ResolveDietologistDisplayName(user),

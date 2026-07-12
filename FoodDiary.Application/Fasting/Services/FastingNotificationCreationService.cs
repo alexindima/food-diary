@@ -6,10 +6,10 @@ namespace FoodDiary.Application.Fasting.Services;
 internal static class FastingNotificationCreationService {
     public static async Task<bool> TryCreateAsync(
         FastingNotificationCandidate candidate,
-        INotificationLookupRepository notificationLookupRepository,
+        INotificationDeduplicationService notificationDeduplicationService,
         INotificationWriter notificationWriter,
         CancellationToken cancellationToken) {
-        if (await notificationLookupRepository.ExistsAsync(
+        if (await notificationDeduplicationService.ExistsAsync(
                 candidate.UserId,
                 candidate.Type,
                 candidate.ReferenceId,

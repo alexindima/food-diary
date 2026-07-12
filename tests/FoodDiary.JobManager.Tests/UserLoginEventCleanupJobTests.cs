@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.JobManager.Services;
@@ -86,7 +87,7 @@ public sealed class UserLoginEventCleanupJobTests : IDisposable {
         UserLoginEventCleanupOptions? options = null,
         TimeProvider? timeProvider = null) =>
         new(
-            repository,
+            new AuthenticationLoginEventCleanupService(repository),
             Options.Create(options ?? new UserLoginEventCleanupOptions()),
             new JobExecutionObserver(timeProvider ?? new FixedTimeProvider(new DateTime(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc)), _stateTracker),
             NullLogger<UserLoginEventCleanupJob>.Instance);

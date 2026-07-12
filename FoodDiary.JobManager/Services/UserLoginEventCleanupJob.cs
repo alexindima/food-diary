@@ -1,12 +1,12 @@
 using System.Diagnostics;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Authentication.Common;
 using Hangfire;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;
 
 public sealed class UserLoginEventCleanupJob(
-    IUserLoginEventRepository repository,
+    IAuthenticationLoginEventCleanupService cleanupService,
     IOptions<UserLoginEventCleanupOptions> options,
     JobExecutionObserver observer,
     ILogger<UserLoginEventCleanupJob> logger) {
@@ -28,7 +28,9 @@ public sealed class UserLoginEventCleanupJob(
             }
 
             DateTime cutoffUtc = observer.UtcNow.AddDays(-settings.RetentionDays);
-            totalDeletedCount = await DeleteEventsAsync(cutoffUtc, settings.BatchSize, cancellationToken).ConfigureAwait(false);
+            totalDeletedCount = await cleanupService
+                .CleanupAsync(cutoffUtc, settings.BatchSize, cancellationToken)
+                .ConfigureAwait(false);
 
             if (totalDeletedCount > 0) {
                 logger.LogInformation(
@@ -56,19 +58,4 @@ public sealed class UserLoginEventCleanupJob(
         }
     }
 
-    private async Task<int> DeleteEventsAsync(DateTime cutoffUtc, int batchSize, CancellationToken cancellationToken) {
-        int totalDeletedCount = 0;
-        int deletedCount;
-
-        do {
-            cancellationToken.ThrowIfCancellationRequested();
-            deletedCount = await repository.DeleteOlderThanAsync(
-                cutoffUtc,
-                batchSize,
-                cancellationToken).ConfigureAwait(false);
-            totalDeletedCount += deletedCount;
-        } while (deletedCount == batchSize);
-
-        return totalDeletedCount;
-    }
 }

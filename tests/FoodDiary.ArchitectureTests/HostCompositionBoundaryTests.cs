@@ -306,6 +306,30 @@ public sealed class HostCompositionBoundaryTests {
         Assert.Empty(violations);
     }
 
+    [Fact]
+    public void BackendHostsPresentationAndIntegrations_InvokeCapabilities_NotRepositories() {
+        string[] adapterRoots = [
+            "FoodDiary.Web.Api",
+            "FoodDiary.Presentation.Api",
+            "FoodDiary.JobManager",
+            "FoodDiary.Initializer",
+            "FoodDiary.Integrations",
+        ];
+
+        string[] violations = [.. adapterRoots
+            .Select(static root => ArchitectureTestPaths.FromRoot(root))
+            .SelectMany(SourceScanner.SourceFiles)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(entry => entry.line
+                .Split([' ', '\t', '(', ')', ',', ':', ';'], StringSplitOptions.RemoveEmptyEntries)
+                .Any(static token => token.StartsWith('I') && token.EndsWith("Repository", StringComparison.Ordinal)))
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} adapters and hosts must invoke application capabilities instead of repositories")
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
     private static string ProjectFolderFromProjectName(string projectName) =>
         string.Equals(projectName, "FoodDiary.Mediator", StringComparison.Ordinal)
             ? Path.Combine("Shared", "FoodDiary.Mediator")

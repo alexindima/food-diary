@@ -9,4 +9,9 @@ public interface IExerciseEntryReadService {
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken);
+
+    Task<double> GetTotalCaloriesBurnedAsync(
+        UserId userId,
+        DateTime dateUtc,
+        CancellationToken cancellationToken);
 }

@@ -5,18 +5,18 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.FavoriteMeals.Mappings;
 using FoodDiary.Application.FavoriteMeals.Models;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Consumptions.Common;
+using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 
 public sealed class AddFavoriteMealCommandHandler(
     IFavoriteMealWriteRepository favoriteMealRepository,
-    IMealReadRepository mealRepository,
+    IConsumptionReadService consumptionReadService,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<AddFavoriteMealCommand, Result<FavoriteMealModel>> {
     public async Task<Result<FavoriteMealModel>> Handle(
@@ -40,8 +40,10 @@ public sealed class AddFavoriteMealCommandHandler(
 
         UserId userId = userIdResult.Value;
         MealId mealId = mealIdResult.Value;
-        Meal? meal = await mealRepository.GetByIdAsync(mealId, userId, includeItems: true, cancellationToken: cancellationToken).ConfigureAwait(false);
-        if (meal is null) {
+        ConsumptionModel? consumption = await consumptionReadService
+            .GetByIdAsync(userId, mealId, cancellationToken)
+            .ConfigureAwait(false);
+        if (consumption is null) {
             return Result.Failure<FavoriteMealModel>(Errors.Consumption.NotFound(command.MealId));
         }
 
@@ -53,6 +55,6 @@ public sealed class AddFavoriteMealCommandHandler(
         var favorite = FavoriteMeal.Create(userId, mealId, command.Name);
         await favoriteMealRepository.AddAsync(favorite, cancellationToken).ConfigureAwait(false);
 
-        return Result.Success(favorite.ToModel(meal));
+        return Result.Success(favorite.ToModel(consumption));
     }
 }

@@ -1,8 +1,7 @@
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Domain.Entities.Notifications;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -11,8 +10,7 @@ using WebPush;
 namespace FoodDiary.Integrations.Services;
 
 public sealed class WebPushNotificationSender(
-    IWebPushSubscriptionRepository subscriptionRepository,
-    IUserRepository userRepository,
+    IWebPushDeliveryAudienceService deliveryAudienceService,
     INotificationTextRenderer notificationTextRenderer,
     IOptions<WebPushOptions> optionsAccessor,
     IWebPushClientAdapter webPushClient,
@@ -30,18 +28,19 @@ public sealed class WebPushNotificationSender(
             return;
         }
 
-        if (!await ShouldSendForUserAsync(notification, cancellationToken).ConfigureAwait(false)) {
-            return;
-        }
-
-        List<WebPushSubscription> subscriptions = await GetActiveSubscriptionsAsync(notification, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WebPushDeliverySubscription> subscriptions = await deliveryAudienceService
+            .GetActiveAudienceAsync(notification.UserId, notification.Type, timeProvider.GetUtcNow().UtcDateTime, cancellationToken)
+            .ConfigureAwait(false);
         if (subscriptions.Count == 0) {
             return;
         }
 
-        (int deliveredCount, List<WebPushSubscription>? invalidSubscriptions) = await SendToSubscriptionsAsync(notification, subscriptions, cancellationToken).ConfigureAwait(false);
+        (int deliveredCount, List<WebPushDeliverySubscription>? invalidSubscriptions) = await SendToSubscriptionsAsync(notification, subscriptions, cancellationToken).ConfigureAwait(false);
         if (invalidSubscriptions.Count > 0) {
-            await subscriptionRepository.DeleteRangeAsync(invalidSubscriptions, cancellationToken).ConfigureAwait(false);
+            await deliveryAudienceService.RemoveInvalidSubscriptionsAsync(
+                notification.UserId,
+                [.. invalidSubscriptions.Select(static subscription => subscription.Id)],
+                cancellationToken).ConfigureAwait(false);
         }
 
         logger.LogDebug(
@@ -64,89 +63,15 @@ public sealed class WebPushNotificationSender(
         return true;
     }
 
-    private async Task<bool> ShouldSendForUserAsync(Notification notification, CancellationToken cancellationToken) {
-        User? user = await userRepository.GetByIdAsync(notification.UserId, cancellationToken).ConfigureAwait(false);
-        if (user is null) {
-            logger.LogDebug(
-                "Skipping web push notification {NotificationId} because user {UserId} was not found.",
-                notification.Id.Value,
-                notification.UserId.Value);
-            return false;
-        }
-
-        if (!user.PushNotificationsEnabled) {
-            logger.LogDebug(
-                "Skipping web push notification {NotificationId} for user {UserId} because account push notifications are disabled.",
-                notification.Id.Value,
-                notification.UserId.Value);
-            return false;
-        }
-
-        if (!IsCategoryEnabled(user, notification.Type)) {
-            logger.LogDebug(
-                "Skipping web push notification {NotificationId} for user {UserId} because category {NotificationType} is disabled.",
-                notification.Id.Value,
-                notification.UserId.Value,
-                notification.Type);
-            return false;
-        }
-
-        return true;
-    }
-
-    private async Task<List<WebPushSubscription>> GetActiveSubscriptionsAsync(Notification notification, CancellationToken cancellationToken) {
-        IReadOnlyList<WebPushSubscription> subscriptions = await ((IWebPushSubscriptionReadRepository)subscriptionRepository).GetByUserAsync(notification.UserId, cancellationToken).ConfigureAwait(false);
-        if (subscriptions.Count == 0) {
-            logger.LogDebug(
-                "Skipping web push notification {NotificationId} for user {UserId} because there are no subscriptions.",
-                notification.Id.Value,
-                notification.UserId.Value);
-            return [];
-        }
-
-        List<WebPushSubscription> activeSubscriptions = await PruneExpiredSubscriptionsAsync(notification, subscriptions, cancellationToken).ConfigureAwait(false);
-        if (activeSubscriptions.Count == 0) {
-            logger.LogDebug(
-                "Skipping web push notification {NotificationId} for user {UserId} because there are no active subscriptions.",
-                notification.Id.Value,
-                notification.UserId.Value);
-        }
-
-        return activeSubscriptions;
-    }
-
-    private async Task<List<WebPushSubscription>> PruneExpiredSubscriptionsAsync(
+    private async Task<(int DeliveredCount, List<WebPushDeliverySubscription> InvalidSubscriptions)> SendToSubscriptionsAsync(
         Notification notification,
-        IReadOnlyCollection<WebPushSubscription> subscriptions,
-        CancellationToken cancellationToken) {
-        DateTime utcNow = timeProvider.GetUtcNow().UtcDateTime;
-        var expiredSubscriptions = subscriptions
-            .Where(subscription => subscription.ExpirationTimeUtc <= utcNow)
-            .ToList();
-
-        if (expiredSubscriptions.Count == 0) {
-            return [.. subscriptions];
-        }
-
-        await subscriptionRepository.DeleteRangeAsync(expiredSubscriptions, cancellationToken).ConfigureAwait(false);
-        logger.LogInformation(
-            "Pruned {SubscriptionCount} expired web push subscriptions for user {UserId} before sending notification {NotificationId}.",
-            expiredSubscriptions.Count,
-            notification.UserId.Value,
-            notification.Id.Value);
-
-        return [.. subscriptions.Except(expiredSubscriptions)];
-    }
-
-    private async Task<(int DeliveredCount, List<WebPushSubscription> InvalidSubscriptions)> SendToSubscriptionsAsync(
-        Notification notification,
-        IReadOnlyCollection<WebPushSubscription> subscriptions,
+        IReadOnlyCollection<WebPushDeliverySubscription> subscriptions,
         CancellationToken cancellationToken) {
         var vapidDetails = new VapidDetails(options.Subject, options.PublicKey, options.PrivateKey);
-        var invalidSubscriptions = new List<WebPushSubscription>();
+        var invalidSubscriptions = new List<WebPushDeliverySubscription>();
         int deliveredCount = 0;
 
-        foreach (WebPushSubscription subscription in subscriptions) {
+        foreach (WebPushDeliverySubscription subscription in subscriptions) {
             NotificationText text = notificationTextRenderer.RenderFromPayload(notification.Type, notification.PayloadJson, subscription.Locale);
             string payload = BuildPayload(notification, text);
             var pushSubscription = new PushSubscription(subscription.Endpoint, subscription.P256Dh, subscription.Auth);
@@ -159,14 +84,14 @@ public sealed class WebPushNotificationSender(
                 invalidSubscriptions.Add(subscription);
                 logger.LogInformation(
                     "Removing expired web push subscription {SubscriptionId} for user {UserId}.",
-                    subscription.Id.Value,
-                    subscription.UserId.Value);
+                    subscription.Id,
+                    notification.UserId.Value);
             } catch (Exception ex) {
                 logger.LogWarning(
                     ex,
                     "Failed to send web push notification {NotificationId} to subscription {SubscriptionId}.",
                     notification.Id.Value,
-                    subscription.Id.Value);
+                    subscription.Id);
             }
         }
 
@@ -220,18 +145,4 @@ public sealed class WebPushNotificationSender(
                || ex.StatusCode == System.Net.HttpStatusCode.NotFound;
     }
 
-    private static bool IsCategoryEnabled(FoodDiary.Domain.Entities.Users.User user, string notificationType) {
-        return notificationType switch {
-            NotificationTypes.FastingCompleted => user.FastingPushNotificationsEnabled,
-            NotificationTypes.EatingWindowStarted => user.FastingPushNotificationsEnabled,
-            NotificationTypes.FastingWindowStarted => user.FastingPushNotificationsEnabled,
-            NotificationTypes.FastingCheckInReminder => user.FastingPushNotificationsEnabled,
-            NotificationTypes.DietologistInvitationReceived => user.SocialPushNotificationsEnabled,
-            NotificationTypes.DietologistInvitationAccepted => user.SocialPushNotificationsEnabled,
-            NotificationTypes.DietologistInvitationDeclined => user.SocialPushNotificationsEnabled,
-            NotificationTypes.NewRecommendation => user.SocialPushNotificationsEnabled,
-            NotificationTypes.NewComment => user.SocialPushNotificationsEnabled,
-            _ => true,
-        };
-    }
 }

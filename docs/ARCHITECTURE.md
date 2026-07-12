@@ -68,6 +68,8 @@ Core rules:
 - `Resources` provides resource-backed text without depending on concrete application/domain/persistence; Russian resources must keep matching neutral resources and valid encoding.
 
 ## Application Read Boundaries
+Business-module ownership inside the primary backend is defined in `docs/backend/BACKEND_MODULE_OWNERSHIP.md`. Layer sharing and a shared `DbContext` do not imply shared write ownership: cross-module mutations go through the owning module, while composed reads use explicit projection/read-service contracts. Fasting introduced the executable vertical-boundary pattern; it is now applied across the governed modules, hosts/adapters and the explicit cross-module projection allowlist.
+
 Application read paths should use the narrowest contract that matches the behavior:
 - `*ReadModelRepository` for projection reads, counters, summaries, and API/UI read models.
 - `*LookupRepository` for narrow existence checks that do not need aggregate materialization.

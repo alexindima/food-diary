@@ -1,19 +1,19 @@
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Services;
 
 internal sealed class AuthenticationUserRegistrationService(
-    IUserLookupRepository userLookupRepository,
-    IUserWriteRepository userWriteRepository,
-    IUserRoleCatalogService roleCatalogService) : IAuthenticationUserRegistrationService {
+    IUserDirectoryService userDirectoryService,
+    IUserIdentityMutationService userIdentityMutationService) : IAuthenticationUserRegistrationService {
     public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) =>
-        userWriteRepository.AddAsync(user, cancellationToken);
+        userIdentityMutationService.AddAsync(user, cancellationToken);
 
     public Task<IReadOnlyList<Role>> EnsureRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) =>
-        roleCatalogService.EnsureRolesByNamesAsync(names, cancellationToken);
+        userIdentityMutationService.EnsureRolesByNamesAsync(names, cancellationToken);
 
     public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
-        userLookupRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken);
+        userDirectoryService.GetByEmailIncludingDeletedAsync(email, cancellationToken);
 }

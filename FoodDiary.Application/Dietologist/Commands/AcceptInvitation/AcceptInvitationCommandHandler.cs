@@ -22,8 +22,7 @@ public sealed class AcceptInvitationCommandHandler(
     IUserRoleMembershipService userRoleMembershipService,
     IPasswordHasher passwordHasher,
     INotificationWriter notificationWriter,
-    INotificationReadModelRepository notificationReadModelRepository,
-    INotificationPusher notificationPusher,
+    INotificationClientRefreshService notificationClientRefreshService,
     IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<AcceptInvitationCommand, Result> {
     public async Task<Result> Handle(AcceptInvitationCommand command, CancellationToken cancellationToken) {
@@ -76,8 +75,7 @@ public sealed class AcceptInvitationCommandHandler(
         await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);
         await DietologistInvitationClientNotifier.NotifyAcceptedAsync(
             notificationWriter,
-            notificationReadModelRepository,
-            notificationPusher,
+            notificationClientRefreshService,
             postCommitActionQueue,
             invitation.ClientUserId,
             ResolveDietologistDisplayName(user),

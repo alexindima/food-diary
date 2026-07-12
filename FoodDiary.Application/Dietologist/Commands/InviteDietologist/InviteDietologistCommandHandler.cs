@@ -25,8 +25,7 @@ public sealed class InviteDietologistCommandHandler(
     IPasswordHasher passwordHasher,
     IDietologistEmailSender emailSender,
     INotificationWriter notificationWriter,
-    INotificationReadModelRepository notificationReadModelRepository,
-    INotificationPusher notificationPusher,
+    INotificationClientRefreshService notificationClientRefreshService,
     IPostCommitActionQueue postCommitActionQueue,
     TimeProvider dateTimeProvider)
     : ICommandHandler<InviteDietologistCommand, Result> {
@@ -110,8 +109,7 @@ public sealed class InviteDietologistCommandHandler(
         await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
         NotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,
-            notificationReadModelRepository,
-            notificationPusher,
+            notificationClientRefreshService,
             registeredDietologist.Id);
     }
 

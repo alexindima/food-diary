@@ -10,9 +10,8 @@ using FoodDiary.Domain.Entities.Notifications;
 namespace FoodDiary.Application.Dietologist.EventHandlers;
 
 public sealed class RecommendationCreatedEventHandler(
-    INotificationReadModelRepository notificationReadModelRepository,
+    INotificationClientRefreshService notificationClientRefreshService,
     INotificationWriter notificationWriter,
-    INotificationPusher notificationPusher,
     IDietologistUserLookupService userLookupService,
     IPostCommitActionQueue postCommitActionQueue)
     : INotificationHandler<NotificationEnvelope<RecommendationCreatedDomainEvent>> {
@@ -29,8 +28,7 @@ public sealed class RecommendationCreatedEventHandler(
         await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
         NotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,
-            notificationReadModelRepository,
-            notificationPusher,
+            notificationClientRefreshService,
             domainEvent.ClientUserId,
             pushChanged: false);
     }

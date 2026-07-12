@@ -5,7 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dietologist.Services;
 
-internal sealed class DietologistUserLookupService(IUserLookupRepository userRepository) : IDietologistUserLookupService {
+internal sealed class DietologistUserLookupService(IUserDirectoryService userRepository) : IDietologistUserLookupService {
     public Task<User?> GetAccessibleUserByEmailAsync(string email, CancellationToken cancellationToken) =>
         userRepository.GetByEmailAsync(email, cancellationToken);
 

@@ -11,10 +11,9 @@ namespace FoodDiary.Application.Fasting.Services;
 public sealed class FastingNotificationScheduler(
     IFastingOccurrenceReadRepository fastingOccurrenceRepository,
     IFastingCheckInReadRepository fastingCheckInRepository,
-    INotificationLookupRepository notificationLookupRepository,
-    INotificationReadModelRepository notificationReadModelRepository,
+    INotificationDeduplicationService notificationDeduplicationService,
     INotificationWriter notificationWriter,
-    INotificationPusher notificationPusher,
+    INotificationClientRefreshService notificationClientRefreshService,
     IUnitOfWork unitOfWork,
     IPostCommitActionQueue postCommitActionQueue,
     TimeProvider dateTimeProvider,
@@ -43,7 +42,7 @@ public sealed class FastingNotificationScheduler(
             foreach (FastingNotificationCandidate notification in FastingNotificationCandidatePlanner.GetDueNotifications(occurrence, plan, occurrenceCheckIns, now)) {
                 bool created = await FastingNotificationCreationService.TryCreateAsync(
                     notification,
-                    notificationLookupRepository,
+                    notificationDeduplicationService,
                     notificationWriter,
                     cancellationToken).ConfigureAwait(false);
 
@@ -62,8 +61,7 @@ public sealed class FastingNotificationScheduler(
             UserId[] pushUserIds = [.. usersToPush];
             postCommitActionQueue.Enqueue("fasting.notifications.push", ct => FastingNotificationPushDispatcher.PushAsync(
                 pushUserIds,
-                notificationReadModelRepository,
-                notificationPusher,
+                notificationClientRefreshService,
                 ct));
         }
 

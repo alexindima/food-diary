@@ -9,6 +9,16 @@ namespace FoodDiary.Application.Notifications.Services;
 
 internal sealed class WebPushSubscriptionReadService(
     IWebPushSubscriptionReadModelRepository webPushSubscriptionRepository) : IWebPushSubscriptionReadService {
+    public async Task<IReadOnlyList<WebPushSubscriptionModel>> GetSubscriptionsAsync(
+        UserId userId,
+        CancellationToken cancellationToken) {
+        IReadOnlyList<WebPushSubscriptionReadModel> subscriptions = await webPushSubscriptionRepository
+            .GetByUserReadModelsAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+
+        return [.. subscriptions.Select(subscription => subscription.ToModel())];
+    }
+
     public async Task<IReadOnlyList<WebPushSubscriptionModel>> GetActiveSubscriptionsAsync(
         UserId userId,
         DateTime utcNow,

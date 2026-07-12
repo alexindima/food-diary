@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Application.FavoriteMeals.Models;
+using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.Meals;
 
@@ -22,6 +23,20 @@ public static class FavoriteMealMappings {
             meal.TotalFats,
             meal.TotalCarbs,
             meal.Items.Count);
+
+    public static FavoriteMealModel ToModel(this FavoriteMeal favorite, ConsumptionModel consumption) =>
+        new(
+            favorite.Id.Value,
+            favorite.MealId.Value,
+            favorite.Name,
+            favorite.CreatedAtUtc,
+            consumption.Date,
+            consumption.MealType,
+            consumption.TotalCalories,
+            consumption.TotalProteins,
+            consumption.TotalFats,
+            consumption.TotalCarbs,
+            consumption.Items.Count);
 
     public static FavoriteMealModel ToModel(this FavoriteMealReadModel favorite) =>
         new(

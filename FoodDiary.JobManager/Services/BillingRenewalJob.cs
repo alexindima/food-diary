@@ -1,13 +1,13 @@
 using System.Diagnostics;
 using FoodDiary.Application.Billing.Models;
-using FoodDiary.Application.Billing.Services;
+using FoodDiary.Application.Billing.Common;
 using Hangfire;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;
 
 public sealed class BillingRenewalJob(
-    BillingRenewalService billingRenewalService,
+    IBillingRenewalService billingRenewalService,
     IOptions<BillingRenewalOptions> options,
     JobExecutionObserver observer,
     ILogger<BillingRenewalJob> logger) {

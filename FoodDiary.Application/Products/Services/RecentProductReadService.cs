@@ -10,7 +10,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Products.Services;
 
 public sealed class RecentProductReadService(
-    IRecentItemReadRepository recentItemRepository,
+    IRecentItemUsageReadService recentItemUsageReadService,
     IProductOverviewReadService productOverviewReadService)
     : IRecentProductReadService {
     public async Task<IReadOnlyList<ProductModel>> GetRecentAsync(
@@ -54,7 +54,7 @@ public sealed class RecentProductReadService(
         return await RecentItemOverviewLoader.LoadAsync<RecentProductUsage, ProductId, ProductOverviewReadItem>(
             userId,
             limit,
-            recentItemRepository.GetRecentProductsAsync,
+            recentItemUsageReadService.GetRecentProductsAsync,
             recent => recent.ProductId,
             (ids, ownerUserId, ct) => productOverviewReadService.GetByIdsWithUsageAsync(ids, ownerUserId, includePublic, ct),
             cancellationToken).ConfigureAwait(false);

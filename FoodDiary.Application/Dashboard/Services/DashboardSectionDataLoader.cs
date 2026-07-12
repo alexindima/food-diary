@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
-using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Cycles.Models;
@@ -24,7 +24,7 @@ internal sealed class DashboardSectionDataLoader(
     ISender sender,
     IDashboardUserContextService dashboardUserContextService,
     IFastingReadService fastingReadService,
-    IExerciseEntryReadRepository exerciseEntryRepository,
+    IExerciseEntryReadService exerciseEntryReadService,
     IDashboardReadService dashboardReadService) : IDashboardSectionDataLoader {
     private const int DefaultPage = 1;
     private const int DefaultPageSize = 10;
@@ -109,7 +109,7 @@ internal sealed class DashboardSectionDataLoader(
         DashboardBuildContext context,
         CancellationToken cancellationToken) =>
         context.Sections.IncludeExercise
-            ? exerciseEntryRepository.GetTotalCaloriesBurnedAsync(context.UserId, context.DayStart, cancellationToken)
+            ? exerciseEntryReadService.GetTotalCaloriesBurnedAsync(context.UserId, context.DayStart, cancellationToken)
             : Task.FromResult(0d);
 
     public async Task<Result<TdeeInsightModel>?> LoadTdeeAsync(

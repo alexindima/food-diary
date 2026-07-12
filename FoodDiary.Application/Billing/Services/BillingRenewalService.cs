@@ -16,7 +16,7 @@ public sealed class BillingRenewalService(
     IBillingTransactionRunner billingTransactionRunner,
     IEnumerable<IBillingRecurringProviderGateway> recurringProviderGateways,
     BillingAccessService billingAccessService,
-    TimeProvider dateTimeProvider) {
+    TimeProvider dateTimeProvider) : IBillingRenewalService {
     private static readonly TimeSpan FailedRenewalRetryDelay = TimeSpan.FromHours(1);
 
     private readonly Dictionary<string, IBillingRecurringProviderGateway> _recurringGateways = recurringProviderGateways

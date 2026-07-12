@@ -17,5 +17,7 @@ public static partial class Errors {
         public static Error InvalidResponse(string reason) => AiErrors.InvalidResponse(reason);
 
         public static Error QuotaExceeded() => AiErrors.QuotaExceeded();
+
+        public static Error PromptTemplateNotFound() => AiErrors.PromptTemplateNotFound();
     }
 }

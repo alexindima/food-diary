@@ -2,14 +2,14 @@ using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Application.Email.Common;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 
 public sealed class UpsertAdminEmailTemplateCommandHandler(
-    IEmailTemplateWriteRepository repository)
+    IEmailTemplateAdministrationService administrationService)
     : ICommandHandler<UpsertAdminEmailTemplateCommand, Result<AdminEmailTemplateModel>> {
     public async Task<Result<AdminEmailTemplateModel>> Handle(
         UpsertAdminEmailTemplateCommand command,
@@ -23,7 +23,7 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
             return Result.Failure<AdminEmailTemplateModel>(localeResult.Error);
         }
 
-        EmailTemplate template = await repository.UpsertAsync(
+        Result<EmailTemplate> templateResult = await administrationService.UpsertAsync(
             key,
             localeResult.Value,
             command.Subject,
@@ -32,7 +32,9 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
             command.IsActive,
             cancellationToken).ConfigureAwait(false);
 
-        return Result.Success(template.ToAdminModel());
+        return templateResult.IsSuccess
+            ? Result.Success(templateResult.Value.ToAdminModel())
+            : Result.Failure<AdminEmailTemplateModel>(templateResult.Error);
     }
 
     private static string NormalizeKey(string value) {

@@ -16,6 +16,9 @@ using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 using FoodDiary.Application.Dashboard.Services;
+using FoodDiary.Application.Hydration.Services;
+using FoodDiary.Application.WaistEntries.Services;
+using FoodDiary.Application.WeightEntries.Services;
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Users;
@@ -181,9 +184,9 @@ public class DashboardFeatureTests {
                 new(Guid.NewGuid(), userId.Value, dayStart, 82),
             ]));
         RepositoryDashboardBodyReadService service = new(
-            weightRepository,
-            Substitute.For<IWaistEntryRepository>(),
-            Substitute.For<IHydrationEntryRepository>());
+            new WeightEntryReadService(weightRepository),
+            new WaistEntryReadService(Substitute.For<IWaistEntryRepository>()),
+            new HydrationEntryReadService(Substitute.For<IHydrationEntryRepository>()));
 
         DashboardBodyReadModel result = await service.GetBodyAsync(
             userId,

@@ -20,6 +20,8 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Application.MealPlans.Models;
 using FoodDiary.Application.ShoppingLists.Models;
+using FoodDiary.Application.ShoppingLists.Common;
+using FoodDiary.Application.ShoppingLists.Mappings;
 
 namespace FoodDiary.Application.Tests.MealPlans;
 
@@ -533,12 +535,42 @@ public class MealPlansFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingShoppingListRepository : IShoppingListRepository {
+    private sealed class RecordingShoppingListRepository : IShoppingListRepository, IShoppingListCreationService {
         public ShoppingList? Added { get; private set; }
 
         public Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) {
             Added = list;
             return Task.FromResult(list);
+        }
+
+        public async Task<Result<ShoppingListModel>> CreateAsync(
+            ShoppingListCreationRequest request,
+            CancellationToken cancellationToken) {
+            var list = ShoppingList.Create(request.UserId, request.Name);
+            foreach (ShoppingListCreationItem item in request.Items) {
+                ShoppingListItem listItem = list.AddItem(
+                    item.Name,
+                    item.ProductId,
+                    item.Amount,
+                    item.Unit,
+                    item.Category,
+                    isChecked: false,
+                    item.SortOrder);
+                foreach (ShoppingListCreationSource source in item.Sources) {
+                    listItem.AddMealPlanSource(
+                        source.MealPlanId,
+                        source.MealPlanMealId,
+                        source.RecipeId,
+                        source.Label,
+                        source.DayNumber,
+                        source.MealType,
+                        source.Amount,
+                        source.Unit);
+                }
+            }
+
+            await AddAsync(list, cancellationToken).ConfigureAwait(false);
+            return Result.Success(list.ToModel());
         }
 
         public Task<ShoppingList?> GetByIdAsync(

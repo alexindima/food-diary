@@ -14,6 +14,7 @@ using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
+using FoodDiary.Application.FavoriteMeals.Services;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.FavoriteMeals;
@@ -720,7 +721,7 @@ public partial class ConsumptionsFeatureTests {
         IMealConsumptionReadRepository mealRepository,
         IFavoriteMealRepository? favoriteMealRepository = null) {
         IFavoriteMealRepository repository = favoriteMealRepository ?? new StubFavoriteMealRepository();
-        return new ConsumptionReadService(mealRepository, repository, repository);
+        return new ConsumptionReadService(mealRepository, new FavoriteMealReadService(repository));
     }
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) =>

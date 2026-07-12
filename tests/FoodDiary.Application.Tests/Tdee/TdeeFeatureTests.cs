@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Exercises.Services;
+using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
@@ -114,7 +115,7 @@ public class TdeeFeatureTests {
             profileService ?? CreateProfileService(user: null),
             new WeightEntryReadService(CreateWeightEntryRepository()),
             statisticsReadService ?? CreateStatisticsReadService(),
-            new ExerciseEntryReadService(CreateExerciseEntryRepository()),
+            CreateExerciseEntryReadService(),
             new StubDateTimeProvider(),
             currentUserAccessService ?? CreateCurrentUserAccessService(user: null));
 
@@ -195,6 +196,11 @@ public class TdeeFeatureTests {
             .GetByDateRangeAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IReadOnlyList<ExerciseEntry>>([]));
         return repository;
+    }
+
+    private static IExerciseEntryReadService CreateExerciseEntryReadService() {
+        IExerciseEntryRepository repository = CreateExerciseEntryRepository();
+        return new ExerciseEntryReadService(repository, repository);
     }
 
     [ExcludeFromCodeCoverage]

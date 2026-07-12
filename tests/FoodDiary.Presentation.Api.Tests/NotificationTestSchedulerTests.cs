@@ -176,6 +176,7 @@ public sealed class NotificationTestSchedulerTests {
         services.AddSingleton<INotificationReadModelRepository>(repository);
         services.AddSingleton(pusher);
         services.AddSingleton<INotificationPusher>(pusher);
+        services.AddSingleton<INotificationClientRefreshService>(new RecordingNotificationClientRefreshService(repository, pusher));
         services.AddSingleton(sender);
         services.AddSingleton<IWebPushNotificationSender>(sender);
         services.AddSingleton<INotificationWriter>(new RecordingNotificationWriter(repository, sender));
@@ -186,6 +187,19 @@ public sealed class NotificationTestSchedulerTests {
 
     private static readonly DateTime FixedUtcNow = new(2026, 4, 10, 13, 0, 0, DateTimeKind.Utc);
     private static readonly TimeProvider FixedTime = new FixedTimeProvider(FixedUtcNow);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingNotificationClientRefreshService(
+        INotificationReadModelRepository repository,
+        INotificationPusher pusher) : INotificationClientRefreshService {
+        public async Task RefreshAsync(UserId userId, bool pushChanged, CancellationToken cancellationToken) {
+            int unreadCount = await repository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
+            await pusher.PushUnreadCountAsync(userId.Value, unreadCount, cancellationToken).ConfigureAwait(false);
+            if (pushChanged) {
+                await pusher.PushNotificationsChangedAsync(userId.Value, cancellationToken).ConfigureAwait(false);
+            }
+        }
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider(DateTime utcNow) : TimeProvider {

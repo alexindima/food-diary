@@ -9,17 +9,15 @@ namespace FoodDiary.Application.Dietologist.Common;
 internal static class DietologistInvitationClientNotifier {
     public static Task NotifyAcceptedAsync(
         INotificationWriter notificationWriter,
-        INotificationReadModelRepository notificationReadModelRepository,
-        INotificationPusher notificationPusher,
-        IPostCommitActionQueue postCommitActionQueue,
+        INotificationClientRefreshService notificationClientRefreshService,
+            IPostCommitActionQueue postCommitActionQueue,
         UserId clientUserId,
         string dietologistDisplayName,
         string invitationReferenceId,
         CancellationToken cancellationToken) =>
         NotifyAsync(
             notificationWriter,
-            notificationReadModelRepository,
-            notificationPusher,
+            notificationClientRefreshService,
             postCommitActionQueue,
             NotificationFactory.CreateDietologistInvitationAccepted(
                 clientUserId,
@@ -29,17 +27,15 @@ internal static class DietologistInvitationClientNotifier {
 
     public static Task NotifyDeclinedAsync(
         INotificationWriter notificationWriter,
-        INotificationReadModelRepository notificationReadModelRepository,
-        INotificationPusher notificationPusher,
-        IPostCommitActionQueue postCommitActionQueue,
+        INotificationClientRefreshService notificationClientRefreshService,
+            IPostCommitActionQueue postCommitActionQueue,
         UserId clientUserId,
         string dietologistDisplayName,
         string invitationReferenceId,
         CancellationToken cancellationToken) =>
         NotifyAsync(
             notificationWriter,
-            notificationReadModelRepository,
-            notificationPusher,
+            notificationClientRefreshService,
             postCommitActionQueue,
             NotificationFactory.CreateDietologistInvitationDeclined(
                 clientUserId,
@@ -49,16 +45,14 @@ internal static class DietologistInvitationClientNotifier {
 
     private static async Task NotifyAsync(
         INotificationWriter notificationWriter,
-        INotificationReadModelRepository notificationReadModelRepository,
-        INotificationPusher notificationPusher,
-        IPostCommitActionQueue postCommitActionQueue,
+        INotificationClientRefreshService notificationClientRefreshService,
+            IPostCommitActionQueue postCommitActionQueue,
         Notification notification,
         CancellationToken cancellationToken) {
         await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
         NotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,
-            notificationReadModelRepository,
-            notificationPusher,
+            notificationClientRefreshService,
             notification.UserId);
     }
 }

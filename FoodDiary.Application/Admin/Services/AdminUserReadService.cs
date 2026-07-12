@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Admin.Services;
 
 internal sealed class AdminUserReadService(
-    IUserLookupRepository userLookupRepository,
+    IUserDirectoryService userLookupRepository,
     IUserAdminReadModelRepository userAdminReadRepository) : IAdminUserReadService {
     public async Task<AdminUserModel?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) {
         UserAdminReadModel? user = await userAdminReadRepository

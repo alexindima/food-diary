@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Models;
+using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
@@ -255,7 +256,7 @@ public sealed class WebPushNotificationSenderTests {
             FastingPushNotificationsEnabled: fastingEnabled,
             SocialPushNotificationsEnabled: socialEnabled));
 
-        bool result = InvokePrivateStatic<bool>("IsCategoryEnabled", user, notificationType);
+        bool result = InvokeAudiencePrivateStatic<bool>("IsCategoryEnabled", user, notificationType);
 
         Assert.Equal(expected, result);
     }
@@ -265,8 +266,7 @@ public sealed class WebPushNotificationSenderTests {
         IUserRepository userRepository,
         WebPushOptions? options = null) {
         return new WebPushNotificationSender(
-            subscriptionRepository,
-            userRepository,
+            CreateAudienceService(subscriptionRepository, userRepository),
             new StubNotificationTextRenderer(),
             Microsoft.Extensions.Options.Options.Create(options ?? new WebPushOptions {
                 Enabled = true,
@@ -300,8 +300,7 @@ public sealed class WebPushNotificationSenderTests {
             new PushSubscription(activeSubscription.Endpoint, activeSubscription.P256Dh, activeSubscription.Auth),
             new HttpResponseMessage(System.Net.HttpStatusCode.Gone)));
         var sender = new WebPushNotificationSender(
-            subscriptionRepository,
-            new SingleUserRepository(user),
+            CreateAudienceService(subscriptionRepository, new SingleUserRepository(user)),
             new StubNotificationTextRenderer(),
             Microsoft.Extensions.Options.Options.Create(new WebPushOptions {
                 Enabled = true,
@@ -339,8 +338,7 @@ public sealed class WebPushNotificationSenderTests {
         var subscriptionRepository = new RecordingSubscriptionRepository([activeSubscription]);
         var webPushClient = new StubWebPushClientAdapter();
         var sender = new WebPushNotificationSender(
-            subscriptionRepository,
-            new SingleUserRepository(user),
+            CreateAudienceService(subscriptionRepository, new SingleUserRepository(user)),
             new StubNotificationTextRenderer(),
             Microsoft.Extensions.Options.Options.Create(new WebPushOptions {
                 Enabled = true,
@@ -380,6 +378,39 @@ public sealed class WebPushNotificationSenderTests {
             methodName,
             System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
         return (T)method.Invoke(null, args)!;
+    }
+
+    private static T InvokeAudiencePrivateStatic<T>(string methodName, params object[] args) {
+        System.Reflection.MethodInfo method = typeof(WebPushDeliveryAudienceService).GetMethod(
+            methodName,
+            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+        return (T)method.Invoke(null, args)!;
+    }
+
+    private static WebPushDeliveryAudienceService CreateAudienceService(
+        IWebPushSubscriptionRepository subscriptionRepository,
+        IUserRepository userRepository) =>
+        new(subscriptionRepository, subscriptionRepository, new UserDirectoryAdapter(userRepository));
+
+    [ExcludeFromCodeCoverage]
+    private sealed class UserDirectoryAdapter(IUserRepository repository) : IUserDirectoryService {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) =>
+            repository.GetByEmailAsync(email, cancellationToken);
+
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
+            repository.GetByEmailIncludingDeletedAsync(email, cancellationToken);
+
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
+            repository.GetByIdAsync(id, cancellationToken);
+
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
+            repository.GetByIdIncludingDeletedAsync(id, cancellationToken);
+
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
+            repository.GetByTelegramUserIdAsync(telegramUserId, cancellationToken);
+
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
+            repository.GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken);
     }
 
     [ExcludeFromCodeCoverage]

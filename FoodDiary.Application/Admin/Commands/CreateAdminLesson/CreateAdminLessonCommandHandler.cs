@@ -3,13 +3,13 @@ using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Lessons.Common;
+using FoodDiary.Application.Lessons.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Admin.Commands.CreateAdminLesson;
 
-public sealed class CreateAdminLessonCommandHandler(INutritionLessonWriteRepository repository)
+public sealed class CreateAdminLessonCommandHandler(ILessonAdministrationService lessonAdministrationService)
     : ICommandHandler<CreateAdminLessonCommand, Result<AdminLessonModel>> {
     public async Task<Result<AdminLessonModel>> Handle(
         CreateAdminLessonCommand command,
@@ -24,7 +24,7 @@ public sealed class CreateAdminLessonCommandHandler(INutritionLessonWriteReposit
             return Result.Failure<AdminLessonModel>(difficultyResult.Error);
         }
 
-        var lesson = NutritionLesson.Create(
+        Result<NutritionLesson> lessonResult = await lessonAdministrationService.CreateAsync(
             command.Title,
             command.Content,
             command.Summary,
@@ -32,10 +32,11 @@ public sealed class CreateAdminLessonCommandHandler(INutritionLessonWriteReposit
             categoryResult.Value,
             difficultyResult.Value,
             command.EstimatedReadMinutes,
-            command.SortOrder);
+            command.SortOrder,
+            cancellationToken).ConfigureAwait(false);
 
-        await repository.AddAsync(lesson, cancellationToken).ConfigureAwait(false);
-
-        return Result.Success(lesson.ToAdminModel());
+        return lessonResult.IsSuccess
+            ? Result.Success(lessonResult.Value.ToAdminModel())
+            : Result.Failure<AdminLessonModel>(lessonResult.Error);
     }
 }

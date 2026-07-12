@@ -1,22 +1,21 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using System.Globalization;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Lessons.Common;
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Application.Lessons.Common;
 using FoodDiary.Domain.Enums;
-using System.Globalization;
+using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 
-public sealed class ImportAdminLessonsCommandHandler(INutritionLessonWriteRepository repository)
+public sealed class ImportAdminLessonsCommandHandler(ILessonAdministrationService lessonAdministrationService)
     : ICommandHandler<ImportAdminLessonsCommand, Result<AdminLessonsImportModel>> {
     public async Task<Result<AdminLessonsImportModel>> Handle(
         ImportAdminLessonsCommand command,
         CancellationToken cancellationToken) {
-        var lessons = new List<NutritionLesson>(command.Lessons.Count);
+        var lessons = new List<LessonAdministrationItem>(command.Lessons.Count);
 
         for (int index = 0; index < command.Lessons.Count; index++) {
             ImportAdminLessonItem item = command.Lessons[index];
@@ -35,26 +34,25 @@ public sealed class ImportAdminLessonsCommandHandler(INutritionLessonWriteReposi
                 return Result.Failure<AdminLessonsImportModel>(difficultyResult.Error);
             }
 
-            try {
-                lessons.Add(NutritionLesson.Create(
-                    item.Title,
-                    item.Content,
-                    item.Summary,
-                    item.Locale,
-                    categoryResult.Value,
-                    difficultyResult.Value,
-                    item.EstimatedReadMinutes,
-                    item.SortOrder));
-            } catch (ArgumentException exception) {
-                return Result.Failure<AdminLessonsImportModel>(
-                    Errors.Validation.Invalid($"lessons[{index.ToString(CultureInfo.InvariantCulture)}]", exception.Message));
-            }
+            lessons.Add(new LessonAdministrationItem(
+                item.Title,
+                item.Content,
+                item.Summary,
+                item.Locale,
+                categoryResult.Value,
+                difficultyResult.Value,
+                item.EstimatedReadMinutes,
+                item.SortOrder));
         }
 
-        await repository.AddRangeAsync(lessons, cancellationToken).ConfigureAwait(false);
+        Result<IReadOnlyList<NutritionLesson>> importResult = await lessonAdministrationService
+            .ImportAsync(lessons, cancellationToken)
+            .ConfigureAwait(false);
+        if (importResult.IsFailure) {
+            return Result.Failure<AdminLessonsImportModel>(importResult.Error);
+        }
 
-        List<AdminLessonModel> models = lessons.ConvertAll(static lesson => lesson.ToAdminModel());
-
+        List<AdminLessonModel> models = [.. importResult.Value.Select(static lesson => lesson.ToAdminModel())];
         return Result.Success(new AdminLessonsImportModel(models.Count, models));
     }
 }

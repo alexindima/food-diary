@@ -12,10 +12,9 @@ using FoodDiary.Domain.Entities.Assets;
 namespace FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 
 public sealed class AnalyzeFoodImageCommandHandler(
-    IImageAssetReadRepository imageAssetRepository,
+    IImageAssetAccessService imageAssetAccessService,
     IAiUserContextService aiUserContextService,
-    IOpenAiFoodService openAiFoodService,
-    IImageStorageService imageStorageService)
+    IOpenAiFoodService openAiFoodService)
     : ICommandHandler<AnalyzeFoodImageCommand, Result<FoodVisionModel>> {
     public async Task<Result<FoodVisionModel>> Handle(
         AnalyzeFoodImageCommand query,
@@ -38,20 +37,19 @@ public sealed class AnalyzeFoodImageCommandHandler(
 
         UserId userId = userIdResult.Value;
         ImageAssetId imageAssetId = imageAssetIdResult.Value;
-        ImageAsset? asset = await imageAssetRepository.GetByIdAsync(imageAssetId, cancellationToken).ConfigureAwait(false);
-        if (asset is null) {
-            return Result.Failure<FoodVisionModel>(Errors.Ai.ImageNotFound(query.ImageAssetId));
+        Result<ImageAsset?> assetResult = await imageAssetAccessService
+            .ResolveOptionalAsync(imageAssetId, userId, cancellationToken)
+            .ConfigureAwait(false);
+        if (assetResult.IsFailure) {
+            Error error = assetResult.Error.Code switch {
+                "Image.NotFound" => Errors.Ai.ImageNotFound(query.ImageAssetId),
+                "Image.Forbidden" => Errors.Ai.Forbidden(),
+                _ => assetResult.Error,
+            };
+            return Result.Failure<FoodVisionModel>(error);
         }
 
-        if (asset.UserId != userId) {
-            return Result.Failure<FoodVisionModel>(Errors.Ai.Forbidden());
-        }
-
-        ImageObjectValidationResult imageValidation = await imageStorageService.ValidateUploadedObjectAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
-        if (!imageValidation.IsValid) {
-            return Result.Failure<FoodVisionModel>(Errors.Image.InvalidData(
-                imageValidation.Message ?? "Image upload has not completed or is invalid."));
-        }
+        ImageAsset asset = assetResult.Value!;
 
         Result<AiUserContext> contextResult = await aiUserContextService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
         if (contextResult.IsFailure) {

@@ -5,6 +5,21 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class JobManagerGuardrailTests {
     [Fact]
+    public void JobManagerJobs_InvokeApplicationCapabilities_NotRepositories() {
+        string jobManagerRoot = ArchitectureTestPaths.FromRoot("FoodDiary.JobManager");
+        string[] violations = [.. SourceScanner.SourceFiles(jobManagerRoot)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(entry => entry.line
+                .Split([' ', '\t', '(', ')', ',', ':', ';'], StringSplitOptions.RemoveEmptyEntries)
+                .Any(static token => token.StartsWith('I') && token.EndsWith("Repository", StringComparison.Ordinal)))
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} jobs must invoke an application capability instead of acquiring a repository")
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void JobManagerProject_ReferencesOnlyApprovedRuntimeModulesAndSchedulerPackages() {
         const string relativeProjectPath = "FoodDiary.JobManager/FoodDiary.JobManager.csproj";
         string[] expectedProjectReferences = [

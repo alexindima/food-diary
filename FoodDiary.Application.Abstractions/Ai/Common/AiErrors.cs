@@ -32,4 +32,9 @@ public static class AiErrors {
         "Ai.QuotaExceeded",
         "AI token quota exceeded for the current month.",
         Kind: ErrorKind.RateLimited);
+
+    public static Error PromptTemplateNotFound() => new(
+        "Ai.PromptTemplateNotFound",
+        "AI prompt template disappeared during update.",
+        Kind: ErrorKind.NotFound);
 }

@@ -1,9 +1,13 @@
 using System.Text.Json;
+using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
+using FoodDiary.Application.Dietologist.Common;
+using FoodDiary.Application.Dietologist.Mappings;
+using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Application.Admin.Mappings;
@@ -689,7 +693,7 @@ public partial class UsersFeatureTests {
         var handler = new GetProfileOverviewQueryHandler(
             new ProfileOverviewReadService(
                 new SingleUserRepository(user),
-                new FixedWebPushSubscriptionRepository([subscription]),
+                new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([subscription])),
                 new FixedDietologistInvitationRepository(invitation)),
             new SingleUserRepository(user));
 
@@ -713,7 +717,7 @@ public partial class UsersFeatureTests {
         var handler = new GetProfileOverviewQueryHandler(
             new ProfileOverviewReadService(
                 new SingleUserRepository(user),
-                new FixedWebPushSubscriptionRepository([]),
+                new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([])),
                 new FixedDietologistInvitationRepository(invitation: null)),
             new SingleUserRepository(user));
 
@@ -730,7 +734,7 @@ public partial class UsersFeatureTests {
         var handler = new GetProfileOverviewQueryHandler(
             new ProfileOverviewReadService(
                 new SingleUserRepository(user),
-                new FixedWebPushSubscriptionRepository([]),
+                new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([])),
                 new FixedDietologistInvitationRepository(invitation: null)),
             new SingleUserRepository(user));
 
@@ -749,7 +753,7 @@ public partial class UsersFeatureTests {
             .Returns(Task.FromResult(Result.Failure<UserModel>(Errors.Authentication.InvalidToken)));
         var service = new ProfileOverviewReadService(
             userProfileReadService,
-            new FixedWebPushSubscriptionRepository([]),
+            new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([])),
             new FixedDietologistInvitationRepository(invitation: null));
 
         Result<ProfileOverviewModel> result = await service.GetAsync(userId, CancellationToken.None);
@@ -770,7 +774,7 @@ public partial class UsersFeatureTests {
             .Returns(Task.FromResult(Result.Failure<NotificationPreferencesModel>(Errors.Authentication.InvalidToken)));
         var service = new ProfileOverviewReadService(
             userProfileReadService,
-            new FixedWebPushSubscriptionRepository([]),
+            new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([])),
             new FixedDietologistInvitationRepository(invitation: null));
 
         Result<ProfileOverviewModel> result = await service.GetAsync(user.Id, CancellationToken.None);
@@ -1118,7 +1122,34 @@ public partial class UsersFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FixedDietologistInvitationRepository(DietologistInvitation? invitation) : IDietologistInvitationRepository {
+    private sealed class FixedDietologistInvitationRepository(DietologistInvitation? invitation)
+        : IDietologistInvitationRepository, IDietologistInvitationReadService {
+        public Task<Result<DietologistRelationshipModel?>> GetMyRelationshipAsync(
+            UserId userId,
+            CancellationToken cancellationToken) {
+            DietologistRelationshipModel? relationship = invitation is null
+                ? null
+                : ToReadModel(invitation).ToRelationshipModel();
+            return Task.FromResult(Result.Success<DietologistRelationshipModel?>(relationship));
+        }
+
+        public Task<Result<DietologistInvitationForCurrentUserModel>> GetForCurrentUserAsync(
+            UserId userId,
+            Guid invitationId,
+            CancellationToken cancellationToken) => throw new NotSupportedException();
+
+        public Task<Result<InvitationModel>> GetByTokenAsync(
+            UserId userId,
+            Guid invitationId,
+            CancellationToken cancellationToken) => throw new NotSupportedException();
+
+        public Task<Result<DietologistInfoModel?>> GetMyDietologistAsync(
+            UserId userId,
+            CancellationToken cancellationToken) => throw new NotSupportedException();
+
+        public Task<Result<IReadOnlyList<ClientSummaryModel>>> GetMyClientsAsync(
+            UserId userId,
+            CancellationToken cancellationToken) => throw new NotSupportedException();
         public Task<DietologistInvitationReadModel?> GetByIdReadModelAsync(
             DietologistInvitationId id,
             CancellationToken cancellationToken = default) =>

@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Marketing.Common;
+using FoodDiary.Application.Marketing.Services;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -84,7 +85,7 @@ public sealed class MarketingAttributionCleanupJobTests : IDisposable {
         MarketingAttributionCleanupOptions? options = null,
         TimeProvider? timeProvider = null) =>
         new(
-            repository,
+            new MarketingAttributionCleanupService(repository),
             Options.Create(options ?? new MarketingAttributionCleanupOptions()),
             new JobExecutionObserver(timeProvider ?? new FixedTimeProvider(new DateTime(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc)), _stateTracker),
             NullLogger<MarketingAttributionCleanupJob>.Instance);

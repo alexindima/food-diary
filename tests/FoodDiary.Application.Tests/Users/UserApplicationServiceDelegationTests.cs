@@ -4,6 +4,7 @@ using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Admin.Services;
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Billing.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -58,23 +59,23 @@ public sealed class UserApplicationServiceDelegationTests {
     [Fact]
     public async Task AuthenticationUserMutationService_AddAsync_DelegatesToWriteRepository() {
         IUserLookupRepository lookupRepository = Substitute.For<IUserLookupRepository>();
-        IUserWriteRepository writeRepository = Substitute.For<IUserWriteRepository>();
-        var service = new AuthenticationUserMutationService(lookupRepository, writeRepository);
+        IUserIdentityMutationService identityMutationService = Substitute.For<IUserIdentityMutationService>();
+        var service = new AuthenticationUserMutationService(lookupRepository, identityMutationService);
         var user = User.Create("add@test.com", "hashed-password");
         using var cancellationTokenSource = new CancellationTokenSource();
-        writeRepository.AddAsync(user, cancellationTokenSource.Token).Returns(user);
+        identityMutationService.AddAsync(user, cancellationTokenSource.Token).Returns(user);
 
         User result = await service.AddAsync(user, cancellationTokenSource.Token);
 
         Assert.Same(user, result);
-        await writeRepository.Received(1).AddAsync(user, cancellationTokenSource.Token);
+        await identityMutationService.Received(1).AddAsync(user, cancellationTokenSource.Token);
     }
 
     [Fact]
     public async Task AuthenticationUserMutationService_GetByTelegramUserIdIncludingDeletedAsync_DelegatesToLookupRepository() {
         IUserLookupRepository lookupRepository = Substitute.For<IUserLookupRepository>();
-        IUserWriteRepository writeRepository = Substitute.For<IUserWriteRepository>();
-        var service = new AuthenticationUserMutationService(lookupRepository, writeRepository);
+        IUserIdentityMutationService identityMutationService = Substitute.For<IUserIdentityMutationService>();
+        var service = new AuthenticationUserMutationService(lookupRepository, identityMutationService);
         var user = User.Create("telegram-deleted@test.com", "hashed-password");
         using var cancellationTokenSource = new CancellationTokenSource();
         lookupRepository.GetByTelegramUserIdIncludingDeletedAsync(987654321, cancellationTokenSource.Token).Returns(user);

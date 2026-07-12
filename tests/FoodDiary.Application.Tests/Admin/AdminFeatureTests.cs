@@ -5,6 +5,9 @@ using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
+using FoodDiary.Application.Ai.Services;
+using FoodDiary.Application.ContentReports.Services;
+using FoodDiary.Application.Email.Services;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Services;
@@ -17,6 +20,7 @@ using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Application.Abstractions.ContentReports.Models;
 using FoodDiary.Application.Abstractions.Lessons.Common;
@@ -60,17 +64,15 @@ public partial class AdminFeatureTests {
     public async Task AdminUserManagementService_ForwardsLookupRolesAndUpdate() {
         var user = User.Create("admin-management-service@example.com", "hash");
         var role = Role.Create("Premium");
-        IUserLookupRepository lookupRepository = Substitute.For<IUserLookupRepository>();
-        IUserWriteRepository writeRepository = Substitute.For<IUserWriteRepository>();
-        IUserRoleCatalogService roleCatalogService = Substitute.For<IUserRoleCatalogService>();
+        IUserAdministrationService userAdministrationService = Substitute.For<IUserAdministrationService>();
         using var cts = new CancellationTokenSource();
-        lookupRepository
+        userAdministrationService
             .GetByIdIncludingDeletedAsync(user.Id, cts.Token)
             .Returns(Task.FromResult<User?>(user));
-        roleCatalogService
+        userAdministrationService
             .GetRolesByNamesAsync(Arg.Is<IReadOnlyList<string>>(names => names.Count == 1 && names[0] == "Premium"), cts.Token)
             .Returns(Task.FromResult<IReadOnlyList<Role>>([role]));
-        var service = new AdminUserManagementService(lookupRepository, writeRepository, roleCatalogService);
+        var service = new AdminUserManagementService(userAdministrationService);
 
         User? loadedUser = await service.GetByIdIncludingDeletedAsync(user.Id, cts.Token);
         IReadOnlyList<Role> roles = await service.GetRolesByNamesAsync(["Premium"], cts.Token);
@@ -78,7 +80,10 @@ public partial class AdminFeatureTests {
 
         Assert.Same(user, loadedUser);
         Assert.Equal(role, Assert.Single(roles));
-        await writeRepository.Received(1).UpdateAsync(user, Arg.Is<IReadOnlyCollection<UserRoleAuditEvent>>(events => events.Count == 0), cts.Token);
+        await userAdministrationService.Received(1).UpdateAsync(
+            user,
+            Arg.Is<IReadOnlyCollection<UserRoleAuditEvent>>(events => events.Count == 0),
+            cts.Token);
     }
 
     [Fact]
@@ -246,7 +251,8 @@ public partial class AdminFeatureTests {
 
     [Fact]
     public async Task UpsertAdminEmailTemplateHandler_WithInvalidLocale_ReturnsValidationFailure() {
-        var handler = new UpsertAdminEmailTemplateCommandHandler(new InMemoryEmailTemplateRepository());
+        var handler = new UpsertAdminEmailTemplateCommandHandler(
+            new EmailTemplateAdministrationService(new InMemoryEmailTemplateRepository()));
 
         Result<AdminEmailTemplateModel> result = await handler.Handle(
             new UpsertAdminEmailTemplateCommand(
@@ -265,7 +271,8 @@ public partial class AdminFeatureTests {
 
     [Fact]
     public async Task UpsertAdminEmailTemplateHandler_WithValidCommand_UpsertsTemplate() {
-        var handler = new UpsertAdminEmailTemplateCommandHandler(new InMemoryEmailTemplateRepository());
+        var handler = new UpsertAdminEmailTemplateCommandHandler(
+            new EmailTemplateAdministrationService(new InMemoryEmailTemplateRepository()));
 
         Result<AdminEmailTemplateModel> result = await handler.Handle(
             new UpsertAdminEmailTemplateCommand(
@@ -315,7 +322,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task UpsertAdminAiPromptHandler_WhenPromptMissing_CreatesTemplate() {
         var repository = new InMemoryAiPromptTemplateRepository();
-        var handler = new UpsertAdminAiPromptCommandHandler(repository);
+        var handler = new UpsertAdminAiPromptCommandHandler(new AiPromptAdministrationService(repository));
 
         Result<AdminAiPromptModel> result = await handler.Handle(
             new UpsertAdminAiPromptCommand(" Meal_Summary ", " EN ", " Prompt text ", IsActive: true),
@@ -333,7 +340,7 @@ public partial class AdminFeatureTests {
     public async Task UpsertAdminAiPromptHandler_WhenPromptExists_UpdatesTrackedTemplate() {
         var template = AiPromptTemplate.Create("meal_summary", "en", "Old prompt", isActive: true);
         var repository = new InMemoryAiPromptTemplateRepository(template);
-        var handler = new UpsertAdminAiPromptCommandHandler(repository);
+        var handler = new UpsertAdminAiPromptCommandHandler(new AiPromptAdministrationService(repository));
 
         Result<AdminAiPromptModel> result = await handler.Handle(
             new UpsertAdminAiPromptCommand("MEAL_SUMMARY", "EN", "New prompt", IsActive: false),
@@ -350,7 +357,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task UpsertAdminAiPromptHandler_WithInvalidLocale_ReturnsValidationFailure() {
         var repository = new InMemoryAiPromptTemplateRepository();
-        var handler = new UpsertAdminAiPromptCommandHandler(repository);
+        var handler = new UpsertAdminAiPromptCommandHandler(new AiPromptAdministrationService(repository));
 
         Result<AdminAiPromptModel> result = await handler.Handle(
             new UpsertAdminAiPromptCommand("meal_summary", "xx", "Prompt text", IsActive: true),
@@ -388,7 +395,8 @@ public partial class AdminFeatureTests {
 
     [Fact]
     public async Task ReviewContentReportHandler_WhenReportMissing_ReturnsNotFound() {
-        var handler = new ReviewContentReportCommandHandler(new CountingContentReportRepository(0));
+        var handler = new ReviewContentReportCommandHandler(
+            new ContentReportAdministrationService(new CountingContentReportRepository(0)));
         var reportId = Guid.NewGuid();
 
         Result result = await handler.Handle(new ReviewContentReportCommand(reportId, "handled"), CancellationToken.None);
@@ -405,7 +413,7 @@ public partial class AdminFeatureTests {
             Guid.NewGuid(),
             "Incorrect content");
         var repository = new CountingContentReportRepository(0, [report]);
-        var handler = new ReviewContentReportCommandHandler(repository);
+        var handler = new ReviewContentReportCommandHandler(new ContentReportAdministrationService(repository));
 
         Result result = await handler.Handle(new ReviewContentReportCommand(report.Id.Value, "  verified  "), CancellationToken.None);
 
@@ -417,7 +425,8 @@ public partial class AdminFeatureTests {
 
     [Fact]
     public async Task DismissContentReportHandler_WhenReportMissing_ReturnsNotFound() {
-        var handler = new DismissContentReportCommandHandler(new CountingContentReportRepository(0));
+        var handler = new DismissContentReportCommandHandler(
+            new ContentReportAdministrationService(new CountingContentReportRepository(0)));
         var reportId = Guid.NewGuid();
 
         Result result = await handler.Handle(new DismissContentReportCommand(reportId, "duplicate"), CancellationToken.None);
@@ -434,7 +443,7 @@ public partial class AdminFeatureTests {
             Guid.NewGuid(),
             "Incorrect content");
         var repository = new CountingContentReportRepository(0, [report]);
-        var handler = new DismissContentReportCommandHandler(repository);
+        var handler = new DismissContentReportCommandHandler(new ContentReportAdministrationService(repository));
 
         Result result = await handler.Handle(new DismissContentReportCommand(report.Id.Value, "  duplicate  "), CancellationToken.None);
 

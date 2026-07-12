@@ -217,7 +217,7 @@ public class ExercisesFeatureTests {
         var entry = ExerciseEntry.Create(userId, new DateTime(2026, 5, 1, 12, 0, 0, DateTimeKind.Utc), ExerciseType.Cycling, 45, 320, "Bike", "Outdoor");
         var repo = new InMemoryExerciseEntryRepository();
         repo.Seed(entry);
-        var service = new ExerciseEntryReadService(repo);
+        var service = new ExerciseEntryReadService(repo, repo);
 
         IReadOnlyList<ExerciseEntryModel> result = await service.GetEntriesAsync(
             userId,

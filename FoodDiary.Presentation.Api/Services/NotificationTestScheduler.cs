@@ -38,8 +38,7 @@ public sealed class NotificationTestScheduler(
 
             using IServiceScope scope = serviceScopeFactory.CreateScope();
             INotificationWriter notificationWriter = scope.ServiceProvider.GetRequiredService<INotificationWriter>();
-            INotificationReadModelRepository notificationReadModelRepository = scope.ServiceProvider.GetRequiredService<INotificationReadModelRepository>();
-            INotificationPusher notificationPusher = scope.ServiceProvider.GetRequiredService<INotificationPusher>();
+            INotificationClientRefreshService clientRefreshService = scope.ServiceProvider.GetRequiredService<INotificationClientRefreshService>();
             IUnitOfWork unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
             IPostCommitActionQueue postCommitActionQueue = scope.ServiceProvider.GetRequiredService<IPostCommitActionQueue>();
             var domainUserId = new Domain.ValueObjects.Ids.UserId(userId);
@@ -73,9 +72,7 @@ public sealed class NotificationTestScheduler(
 
             await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
             await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            int unreadCount = await notificationReadModelRepository.GetUnreadCountAsync(domainUserId, cancellationToken).ConfigureAwait(false);
-            await notificationPusher.PushUnreadCountAsync(userId, unreadCount, cancellationToken).ConfigureAwait(false);
-            await notificationPusher.PushNotificationsChangedAsync(userId, cancellationToken).ConfigureAwait(false);
+            await clientRefreshService.RefreshAsync(domainUserId, pushChanged: true, cancellationToken).ConfigureAwait(false);
             await postCommitActionQueue.FlushAsync(cancellationToken).ConfigureAwait(false);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
         } catch (Exception ex) {

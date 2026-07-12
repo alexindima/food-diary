@@ -1,5 +1,6 @@
 using FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
 using FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
+using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
@@ -17,7 +18,7 @@ public partial class NotificationsFeatureTests {
         var pusher = new RecordingNotificationPusher();
 
         RecordingPostCommitActionQueue postCommitActionQueue = CreatePostCommitActionQueue();
-        var handler = new MarkNotificationReadCommandHandler(repo, repo, CreateCurrentUserAccessService(CreateUser(userId)), pusher, postCommitActionQueue);
+        var handler = new MarkNotificationReadCommandHandler(repo, CreateCurrentUserAccessService(CreateUser(userId)), new NotificationClientRefreshService(repo, pusher), postCommitActionQueue);
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, notification.Id.Value),
             CancellationToken.None);
@@ -42,7 +43,7 @@ public partial class NotificationsFeatureTests {
         var repo = new InMemoryNotificationRepository();
         repo.Seed(notification);
 
-        var handler = new MarkNotificationReadCommandHandler(repo, repo, CreateCurrentUserAccessService(CreateUser(otherUserId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
+        var handler = new MarkNotificationReadCommandHandler(repo, CreateCurrentUserAccessService(CreateUser(otherUserId)), new NotificationClientRefreshService(repo, new RecordingNotificationPusher()), CreatePostCommitActionQueue());
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(otherUserId.Value, notification.Id.Value),
             CancellationToken.None);
@@ -54,7 +55,7 @@ public partial class NotificationsFeatureTests {
     public async Task MarkNotificationRead_WhenNotFound_ReturnsFailure() {
         var repo = new InMemoryNotificationRepository();
         var userId = UserId.New();
-        var handler = new MarkNotificationReadCommandHandler(repo, repo, CreateCurrentUserAccessService(CreateUser(userId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
+        var handler = new MarkNotificationReadCommandHandler(repo, CreateCurrentUserAccessService(CreateUser(userId)), new NotificationClientRefreshService(repo, new RecordingNotificationPusher()), CreatePostCommitActionQueue());
 
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, Guid.NewGuid()),
@@ -65,11 +66,11 @@ public partial class NotificationsFeatureTests {
 
     [Fact]
     public async Task MarkNotificationRead_WithNullUserId_ReturnsFailure() {
+        var repo = new InMemoryNotificationRepository();
         var handler = new MarkNotificationReadCommandHandler(
-            new InMemoryNotificationRepository(),
-            new InMemoryNotificationRepository(),
+            repo,
             CreateCurrentUserAccessService(CreateUser()),
-            new RecordingNotificationPusher(),
+            new NotificationClientRefreshService(repo, new RecordingNotificationPusher()),
             CreatePostCommitActionQueue());
 
         Result result = await handler.Handle(
@@ -85,9 +86,8 @@ public partial class NotificationsFeatureTests {
         var repo = new InMemoryNotificationRepository();
         var handler = new MarkNotificationReadCommandHandler(
             repo,
-            repo,
             CreateCurrentUserAccessService(CreateUser(userId)),
-            new RecordingNotificationPusher(),
+            new NotificationClientRefreshService(repo, new RecordingNotificationPusher()),
             CreatePostCommitActionQueue());
 
         Result result = await handler.Handle(
@@ -105,7 +105,7 @@ public partial class NotificationsFeatureTests {
         var notification = Notification.Create(userId, "info", "{}");
         var repo = new InMemoryNotificationRepository();
         repo.Seed(notification);
-        var handler = new MarkNotificationReadCommandHandler(repo, repo, CreateCurrentUserAccessService(CreateDeletedUser(userId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
+        var handler = new MarkNotificationReadCommandHandler(repo, CreateCurrentUserAccessService(CreateDeletedUser(userId)), new NotificationClientRefreshService(repo, new RecordingNotificationPusher()), CreatePostCommitActionQueue());
 
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, notification.Id.Value),
@@ -124,7 +124,7 @@ public partial class NotificationsFeatureTests {
         repo.Seed(Notification.Create(userId, "info", "{}"));
         var pusher = new RecordingNotificationPusher();
         RecordingPostCommitActionQueue postCommitActionQueue = CreatePostCommitActionQueue();
-        var handler = new MarkAllNotificationsReadCommandHandler(repo, repo, CreateCurrentUserAccessService(CreateUser(userId)), pusher, postCommitActionQueue);
+        var handler = new MarkAllNotificationsReadCommandHandler(repo, CreateCurrentUserAccessService(CreateUser(userId)), new NotificationClientRefreshService(repo, pusher), postCommitActionQueue);
 
         Result result = await handler.Handle(
             new MarkAllNotificationsReadCommand(userId.Value),
@@ -144,11 +144,11 @@ public partial class NotificationsFeatureTests {
 
     [Fact]
     public async Task MarkAllNotificationsRead_WithNullUserId_ReturnsFailure() {
+        var repo = new InMemoryNotificationRepository();
         var handler = new MarkAllNotificationsReadCommandHandler(
-            new InMemoryNotificationRepository(),
-            new InMemoryNotificationRepository(),
+            repo,
             CreateCurrentUserAccessService(CreateUser()),
-            new RecordingNotificationPusher(),
+            new NotificationClientRefreshService(repo, new RecordingNotificationPusher()),
             CreatePostCommitActionQueue());
 
         Result result = await handler.Handle(
@@ -162,7 +162,7 @@ public partial class NotificationsFeatureTests {
     public async Task MarkAllNotificationsRead_WhenUserDeleted_ReturnsFailure() {
         var userId = UserId.New();
         var repo = new InMemoryNotificationRepository();
-        var handler = new MarkAllNotificationsReadCommandHandler(repo, repo, CreateCurrentUserAccessService(CreateDeletedUser(userId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
+        var handler = new MarkAllNotificationsReadCommandHandler(repo, CreateCurrentUserAccessService(CreateDeletedUser(userId)), new NotificationClientRefreshService(repo, new RecordingNotificationPusher()), CreatePostCommitActionQueue());
 
         Result result = await handler.Handle(
             new MarkAllNotificationsReadCommand(userId.Value),

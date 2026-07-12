@@ -3,6 +3,10 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Services;
+using FoodDiary.Application.Exercises.Services;
+using FoodDiary.Application.Hydration.Services;
+using FoodDiary.Application.WaistEntries.Services;
+using FoodDiary.Application.WeightEntries.Services;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Exercises.Models;
 using FoodDiary.Application.Abstractions.Hydration.Common;
@@ -37,7 +41,7 @@ namespace FoodDiary.Application.Tests.Dashboard;
 public sealed class DashboardSnapshotBuilderTests {
     [Fact]
     public async Task BuildAsync_WithEmptyUserId_ReturnsValidationFailure() {
-        var builder = new DashboardSnapshotBuilder(
+        DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
             new StubSender(),
             new MissingUserContextService(),
             new StubWeightEntryRepository(),
@@ -66,7 +70,7 @@ public sealed class DashboardSnapshotBuilderTests {
     [Fact]
     public async Task BuildAsync_WithDateToBeforeDate_ReturnsValidationFailure() {
         var user = User.Create("dashboard-date-range@example.com", "hash");
-        var builder = new DashboardSnapshotBuilder(
+        DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
             new StubSender(),
             new AccessibleUserContextService(user),
             new StubWeightEntryRepository(),
@@ -95,7 +99,7 @@ public sealed class DashboardSnapshotBuilderTests {
     [Fact]
     public async Task BuildAsync_WhenUserIsMissing_ReturnsAccessFailure() {
         var existingUser = User.Create("dashboard-existing@example.com", "hash");
-        var builder = new DashboardSnapshotBuilder(
+        DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
             new StubSender(),
             new AccessibleUserContextService(existingUser),
             new StubWeightEntryRepository(),
@@ -124,7 +128,7 @@ public sealed class DashboardSnapshotBuilderTests {
     public async Task BuildAsync_WithInvalidDashboardLayoutJson_ReturnsSnapshotWithoutLayout() {
         var user = User.Create("dashboard-invalid-layout@example.com", "hash");
         user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: "{"));
-        var builder = new DashboardSnapshotBuilder(
+        DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
             new StubSender(),
             new AccessibleUserContextService(user),
             new StubWeightEntryRepository(),
@@ -179,7 +183,7 @@ public sealed class DashboardSnapshotBuilderTests {
             WaistEntry.Create(userId, selectedDate, 91),
             WaistEntry.Create(userId, previousDate, 92),
         ]);
-        var builder = new DashboardSnapshotBuilder(
+        DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
             new EmptyTrendSender(),
             new AccessibleUserContextService(user),
             weightRepository,
@@ -225,7 +229,7 @@ public sealed class DashboardSnapshotBuilderTests {
     public async Task BuildAsync_NormalizesMealPagingBeforeLoadingConsumptions() {
         var user = User.Create("dashboard-paging@example.com", "hash");
         var sender = new RecordingConsumptionsSender();
-        var builder = new DashboardSnapshotBuilder(
+        DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
             sender,
             new AccessibleUserContextService(user),
             new StubWeightEntryRepository(),
@@ -384,7 +388,7 @@ public sealed class DashboardSnapshotBuilderTests {
         User user,
         ISender sender,
         IHydrationEntryRepository? hydrationEntryRepository = null) =>
-        new(
+        CreateDashboardSnapshotBuilder(
             sender,
             new AccessibleUserContextService(user),
             new StubWeightEntryRepository(),
@@ -393,6 +397,25 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubFastingReadService(),
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
+
+    private static DashboardSnapshotBuilder CreateDashboardSnapshotBuilder(
+        ISender sender,
+        IDashboardUserContextService dashboardUserContextService,
+        IWeightEntryReadModelRepository weightEntryRepository,
+        IWaistEntryReadModelRepository waistEntryRepository,
+        IHydrationEntryReadModelRepository hydrationEntryRepository,
+        IFastingReadService fastingReadService,
+        IExerciseEntryRepository exerciseEntryRepository,
+        Microsoft.Extensions.Logging.ILogger<DashboardSnapshotBuilder> logger) =>
+        new(
+            sender,
+            dashboardUserContextService,
+            new WeightEntryReadService(weightEntryRepository),
+            new WaistEntryReadService(waistEntryRepository),
+            new HydrationEntryReadService(hydrationEntryRepository),
+            fastingReadService,
+            new ExerciseEntryReadService(exerciseEntryRepository, exerciseEntryRepository),
+            logger);
 
     private static DashboardSnapshotRequest CreateRequest(
         Guid userId,

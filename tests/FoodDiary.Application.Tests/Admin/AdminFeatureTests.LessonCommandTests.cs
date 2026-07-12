@@ -1,5 +1,6 @@
 using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
 using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
+using FoodDiary.Application.Lessons.Services;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Results;
@@ -11,7 +12,8 @@ public partial class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminLessonHandler_WithEmptyLessonId_ReturnsValidationFailure() {
-        var handler = new UpdateAdminLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>());
+        var handler = new UpdateAdminLessonCommandHandler(
+            new LessonAdministrationService(Substitute.For<INutritionLessonWriteRepository>()));
 
         Result<AdminLessonModel> result = await handler.Handle(
             new UpdateAdminLessonCommand(
@@ -34,7 +36,8 @@ public partial class AdminFeatureTests {
 
     [Fact]
     public async Task DeleteAdminLessonHandler_WithEmptyLessonId_ReturnsValidationFailure() {
-        var handler = new DeleteAdminLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>());
+        var handler = new DeleteAdminLessonCommandHandler(
+            new LessonAdministrationService(Substitute.For<INutritionLessonWriteRepository>()));
 
         Result result = await handler.Handle(new DeleteAdminLessonCommand(Guid.Empty), CancellationToken.None);
 

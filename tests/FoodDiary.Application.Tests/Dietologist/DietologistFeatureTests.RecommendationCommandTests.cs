@@ -4,6 +4,7 @@ using FoodDiary.Application.Dietologist.Commands.MarkRecommendationRead;
 using FoodDiary.Application.Dietologist.EventHandlers;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
@@ -302,9 +303,8 @@ public partial class DietologistFeatureTests {
         var pusher = new FakeNotificationPusher();
 
         var handler = new RecommendationCreatedEventHandler(
-            notifRepo,
+            new NotificationClientRefreshService(notifRepo, pusher),
             new InMemoryNotificationWriter(notifRepo, new FakeWebPushNotificationSender()),
-            pusher,
             userRepo,
             new ImmediatePostCommitActionQueue());
         var domainEvent = new RecommendationCreatedDomainEvent(recId, dietologistId, clientId);
@@ -328,9 +328,8 @@ public partial class DietologistFeatureTests {
         var pusher = new FakeNotificationPusher();
 
         var handler = new RecommendationCreatedEventHandler(
-            notifRepo,
+            new NotificationClientRefreshService(notifRepo, pusher),
             new InMemoryNotificationWriter(notifRepo, new FakeWebPushNotificationSender()),
-            pusher,
             new InMemoryUserRepository(),
             new ImmediatePostCommitActionQueue());
         var domainEvent = new RecommendationCreatedDomainEvent(recId, dietologistId, clientId);

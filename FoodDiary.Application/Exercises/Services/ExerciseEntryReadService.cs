@@ -7,16 +7,24 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Exercises.Services;
 
-internal sealed class ExerciseEntryReadService(IExerciseEntryReadModelRepository exerciseEntryRepository) : IExerciseEntryReadService {
+internal sealed class ExerciseEntryReadService(
+    IExerciseEntryReadModelRepository exerciseEntryReadModelRepository,
+    IExerciseEntryReadRepository exerciseEntryReadRepository) : IExerciseEntryReadService {
     public async Task<IReadOnlyList<ExerciseEntryModel>> GetEntriesAsync(
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken) {
-        IReadOnlyList<ExerciseEntryReadModel> entries = await exerciseEntryRepository
+        IReadOnlyList<ExerciseEntryReadModel> entries = await exerciseEntryReadModelRepository
             .GetByDateRangeReadModelsAsync(userId, dateFrom, dateTo, cancellationToken)
             .ConfigureAwait(false);
 
         return [.. entries.Select(entry => entry.ToModel())];
     }
+
+    public Task<double> GetTotalCaloriesBurnedAsync(
+        UserId userId,
+        DateTime dateUtc,
+        CancellationToken cancellationToken) =>
+        exerciseEntryReadRepository.GetTotalCaloriesBurnedAsync(userId, dateUtc, cancellationToken);
 }

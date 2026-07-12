@@ -3,13 +3,11 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
-using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.ShoppingLists.Mappings;
+using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.MealPlans;
-using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Recipes;
 
@@ -17,7 +15,7 @@ namespace FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
 
 public sealed class GenerateShoppingListCommandHandler(
     IMealPlanReadRepository mealPlanRepository,
-    IShoppingListWriteRepository shoppingListRepository,
+    IShoppingListCreationService shoppingListCreationService,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<GenerateShoppingListCommand, Result<ShoppingListModel>> {
     public async Task<Result<ShoppingListModel>> Handle(
@@ -50,39 +48,33 @@ public sealed class GenerateShoppingListCommandHandler(
             return Result.Failure<ShoppingListModel>(Errors.MealPlan.NotAccessible(command.PlanId));
         }
 
-        ShoppingList shoppingList = CreateShoppingList(userIdResult.Value, plan);
-        await shoppingListRepository.AddAsync(shoppingList, cancellationToken).ConfigureAwait(false);
-
-        return Result.Success(shoppingList.ToModel());
+        return await shoppingListCreationService.CreateAsync(
+            CreateShoppingListRequest(userIdResult.Value, plan),
+            cancellationToken).ConfigureAwait(false);
     }
 
-    private static ShoppingList CreateShoppingList(UserId userId, MealPlan plan) {
-        var shoppingList = ShoppingList.Create(userId, plan.Name);
-        foreach (AggregatedIngredient item in AggregateIngredients(plan).Values.OrderBy(i => i.SortOrder)) {
-            ShoppingListItem shoppingListItem = shoppingList.AddItem(
-                item.Name,
-                item.ProductId,
-                Math.Round(item.TotalAmount, 1, MidpointRounding.ToEven),
-                item.Unit,
-                item.Category,
-                isChecked: false,
-                item.SortOrder);
-
-            foreach (IngredientSource source in item.Sources) {
-                shoppingListItem.AddMealPlanSource(
-                    plan.Id,
-                    source.MealPlanMealId,
-                    source.RecipeId,
-                    source.Label,
-                    source.DayNumber,
-                    source.MealType,
-                    Math.Round(source.Amount, 1, MidpointRounding.ToEven),
-                    source.Unit);
-            }
-        }
-
-        return shoppingList;
-    }
+    private static ShoppingListCreationRequest CreateShoppingListRequest(UserId userId, MealPlan plan) =>
+        new(
+            userId,
+            plan.Name,
+            [.. AggregateIngredients(plan).Values
+                .OrderBy(static item => item.SortOrder)
+                .Select(item => new ShoppingListCreationItem(
+                    item.ProductId,
+                    item.Name,
+                    Math.Round(item.TotalAmount, 1, MidpointRounding.ToEven),
+                    item.Unit,
+                    item.Category,
+                    item.SortOrder,
+                    [.. item.Sources.Select(source => new ShoppingListCreationSource(
+                        plan.Id,
+                        source.MealPlanMealId,
+                        source.RecipeId,
+                        source.Label,
+                        source.DayNumber,
+                        source.MealType,
+                        Math.Round(source.Amount, 1, MidpointRounding.ToEven),
+                        source.Unit))]))]);
 
     private static Dictionary<ProductId, AggregatedIngredient> AggregateIngredients(MealPlan plan) {
         var aggregated = new Dictionary<ProductId, AggregatedIngredient>();

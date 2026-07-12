@@ -17,7 +17,7 @@ public sealed class UpdateConsumptionCommandHandler(
     IMealReadRepository mealReadRepository,
     IMealWriteRepository mealWriteRepository,
     IMealNutritionService mealNutritionService,
-    IRecentItemWriteRepository recentItemRepository,
+    IRecentItemUsageRecorder recentItemUsageRecorder,
     IImageAssetCleanupService imageAssetCleanupService,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider,
@@ -48,7 +48,7 @@ public sealed class UpdateConsumptionCommandHandler(
         }
 
         await mealWriteRepository.UpdateAsync(values.Meal, cancellationToken).ConfigureAwait(false);
-        await recentItemRepository.RegisterUsageAsync(
+        await recentItemUsageRecorder.RegisterUsageAsync(
             values.UserId,
             values.Meal.Items.Where(x => x.ProductId.HasValue).Select(x => x.ProductId!.Value).ToList(),
             values.Meal.Items.Where(x => x.RecipeId.HasValue).Select(x => x.RecipeId!.Value).ToList(),

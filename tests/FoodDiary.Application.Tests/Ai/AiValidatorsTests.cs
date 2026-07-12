@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
+using FoodDiary.Application.Images.Services;
 using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
 using FoodDiary.Application.Ai.Commands.ParseFoodText;
 using FoodDiary.Application.Ai.Common;
@@ -54,10 +55,9 @@ public class AiValidatorsTests {
     public async Task AnalyzeFoodImageHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var user = User.Create("ai-handler@example.com", "hash");
         var handler = new AnalyzeFoodImageCommandHandler(
-            CreateImageAssetRepository(),
+            new ImageAssetAccessService(CreateImageAssetRepository(), CreateImageStorageService()),
             CreateAiUserContextService(user),
-            CreateOpenAiFoodService(),
-            CreateImageStorageService());
+            CreateOpenAiFoodService());
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, Guid.Empty, Description: null),
@@ -71,10 +71,9 @@ public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageHandler_WithEmptyUserId_ReturnsValidationFailure() {
         var handler = new AnalyzeFoodImageCommandHandler(
-            CreateImageAssetRepository(),
+            new ImageAssetAccessService(CreateImageAssetRepository(), CreateImageStorageService()),
             CreateAiUserContextService(User.Create("ai-empty-image-user@example.com", "hash")),
-            CreateOpenAiFoodService(),
-            CreateImageStorageService());
+            CreateOpenAiFoodService());
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(Guid.Empty, Guid.NewGuid(), Description: null),
@@ -89,10 +88,9 @@ public class AiValidatorsTests {
     public async Task AnalyzeFoodImageHandler_WhenImageAssetMissing_ReturnsImageNotFound() {
         var user = User.Create("ai-missing-image@example.com", "hash");
         var handler = new AnalyzeFoodImageCommandHandler(
-            CreateImageAssetRepository(),
+            new ImageAssetAccessService(CreateImageAssetRepository(), CreateImageStorageService()),
             CreateAiUserContextService(user),
-            CreateOpenAiFoodService(),
-            CreateImageStorageService());
+            CreateOpenAiFoodService());
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, Guid.NewGuid(), Description: null),
@@ -108,10 +106,9 @@ public class AiValidatorsTests {
         var requester = User.Create("ai-image-requester@example.com", "hash");
         var asset = ImageAsset.Create(owner.Id, "images/meal.jpg", "https://cdn.example.com/meal.jpg");
         var handler = new AnalyzeFoodImageCommandHandler(
-            CreateImageAssetRepository(asset),
+            new ImageAssetAccessService(CreateImageAssetRepository(asset), CreateImageStorageService()),
             CreateAiUserContextService(requester),
-            CreateOpenAiFoodService(),
-            CreateImageStorageService());
+            CreateOpenAiFoodService());
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(requester.Id.Value, asset.Id.Value, Description: null),
@@ -126,10 +123,11 @@ public class AiValidatorsTests {
         var user = User.Create("ai-invalid-image@example.com", "hash");
         var asset = ImageAsset.Create(user.Id, "images/invalid.jpg", "https://cdn.example.com/invalid.jpg");
         var handler = new AnalyzeFoodImageCommandHandler(
-            CreateImageAssetRepository(asset),
+            new ImageAssetAccessService(
+                CreateImageAssetRepository(asset),
+                CreateImageStorageService(isValid: false, message: "upload incomplete")),
             CreateAiUserContextService(user),
-            CreateOpenAiFoodService(),
-            CreateImageStorageService(isValid: false, message: "upload incomplete"));
+            CreateOpenAiFoodService());
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, Description: null),
@@ -146,10 +144,9 @@ public class AiValidatorsTests {
         var asset = ImageAsset.Create(userId, "images/orphan.jpg", "https://cdn.example.com/orphan.jpg");
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
         var handler = new AnalyzeFoodImageCommandHandler(
-            CreateImageAssetRepository(asset),
+            new ImageAssetAccessService(CreateImageAssetRepository(asset), CreateImageStorageService()),
             CreateAiUserContextService(user: null),
-            openAiFoodService,
-            CreateImageStorageService());
+            openAiFoodService);
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(userId.Value, asset.Id.Value, "notes"),
@@ -167,10 +164,9 @@ public class AiValidatorsTests {
         var asset = ImageAsset.Create(user.Id, "images/valid.jpg", "https://cdn.example.com/valid.jpg");
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
         var handler = new AnalyzeFoodImageCommandHandler(
-            CreateImageAssetRepository(asset),
+            new ImageAssetAccessService(CreateImageAssetRepository(asset), CreateImageStorageService()),
             CreateAiUserContextService(user),
-            openAiFoodService,
-            CreateImageStorageService());
+            openAiFoodService);
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, "dinner"),

@@ -1,10 +1,10 @@
 using System.Text.Json;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
-using FoodDiary.Application.Abstractions.Exercises.Common;
-using FoodDiary.Application.Abstractions.Hydration.Common;
-using FoodDiary.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Application.Exercises.Common;
+using FoodDiary.Application.Hydration.Common;
+using FoodDiary.Application.WaistEntries.Common;
+using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.Dashboard.Common;
@@ -36,21 +36,21 @@ public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
     public DashboardSnapshotBuilder(
         ISender sender,
         IDashboardUserContextService dashboardUserContextService,
-        IWeightEntryReadModelRepository weightEntryRepository,
-        IWaistEntryReadModelRepository waistEntryRepository,
-        IHydrationEntryReadModelRepository hydrationEntryRepository,
+        IWeightEntryReadService weightEntryReadService,
+        IWaistEntryReadService waistEntryReadService,
+        IHydrationEntryReadService hydrationEntryReadService,
         IFastingReadService fastingReadService,
-        IExerciseEntryReadRepository exerciseEntryRepository,
+        IExerciseEntryReadService exerciseEntryReadService,
         ILogger<DashboardSnapshotBuilder> logger)
         : this(
             new DashboardSectionDataLoader(
                 sender,
                 dashboardUserContextService,
                 fastingReadService,
-                exerciseEntryRepository,
+                exerciseEntryReadService,
                 new ComposedDashboardReadService(
                     new MediatorDashboardStatisticsReadService(sender),
-                    new RepositoryDashboardBodyReadService(weightEntryRepository, waistEntryRepository, hydrationEntryRepository),
+                    new RepositoryDashboardBodyReadService(weightEntryReadService, waistEntryReadService, hydrationEntryReadService),
                     new MediatorDashboardMealsReadService(sender))),
             logger) {
     }

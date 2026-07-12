@@ -371,6 +371,25 @@ public partial class FastingFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
+    private sealed class RecordingNotificationClientRefreshService(RecordingNotificationPusher notificationPusher)
+        : INotificationClientRefreshService {
+        public async Task RefreshAsync(
+            UserId userId,
+            bool pushChanged,
+            CancellationToken cancellationToken) {
+            await notificationPusher
+                .PushUnreadCountAsync(userId.Value, count: 0, cancellationToken)
+                .ConfigureAwait(false);
+
+            if (pushChanged) {
+                await notificationPusher
+                    .PushNotificationsChangedAsync(userId.Value, cancellationToken)
+                    .ConfigureAwait(false);
+            }
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingWebPushNotificationSender : IWebPushNotificationSender {
         public List<Notification> Sent { get; } = [];
 

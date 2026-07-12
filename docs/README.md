@@ -6,6 +6,7 @@ This directory contains long-form repository documentation. Keep root-level mark
 
 - `ARCHITECTURE.md` - system architecture, deployable units, and dependency boundaries.
 - `BACKEND_MODULE_MAP.md` - backend project/module map and placement guidance.
+- `backend/BACKEND_MODULE_OWNERSHIP.md` - business-module data ownership and allowed interaction types.
 - `TESTING_STRATEGY.md` - test project responsibilities and when to run each suite.
 - `adr/` - architecture decision records.
 

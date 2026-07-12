@@ -20,8 +20,7 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
     IDietologistUserContextService dietologistUserContextService,
     IUserRoleMembershipService userRoleMembershipService,
     INotificationWriter notificationWriter,
-    INotificationReadModelRepository notificationReadModelRepository,
-    INotificationPusher notificationPusher,
+    INotificationClientRefreshService notificationClientRefreshService,
     IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<AcceptInvitationForCurrentUserCommand, Result> {
     public async Task<Result> Handle(AcceptInvitationForCurrentUserCommand command, CancellationToken cancellationToken) {
@@ -74,8 +73,7 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
         await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);
         await DietologistInvitationClientNotifier.NotifyAcceptedAsync(
             notificationWriter,
-            notificationReadModelRepository,
-            notificationPusher,
+            notificationClientRefreshService,
             postCommitActionQueue,
             invitation.ClientUserId,
             ResolveDietologistDisplayName(user),
