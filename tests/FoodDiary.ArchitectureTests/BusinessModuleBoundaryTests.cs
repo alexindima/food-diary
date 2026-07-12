@@ -6,6 +6,32 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BusinessModuleBoundaryTests {
+    [Fact]
+    public void RootApplicationDependencyInjection_RemainsAModuleAggregator() {
+        string dependencyInjectionPath = ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Application",
+            "DependencyInjection.cs");
+        string source = File.ReadAllText(dependencyInjectionPath);
+        string[] expectedModuleCalls = [
+            "services.AddAdministrationModules();",
+            "services.AddIdentityModules();",
+            "services.AddFoodModules();",
+            "services.AddTrackingModules();",
+            "services.AddNotificationModule();",
+            "services.AddBillingModule();",
+        ];
+
+        foreach (string expectedModuleCall in expectedModuleCalls) {
+            Assert.Contains(expectedModuleCall, source, StringComparison.Ordinal);
+        }
+
+        Assert.DoesNotContain("using FoodDiary.Application.Admin", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("using FoodDiary.Application.Billing", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("using FoodDiary.Application.Notifications", source, StringComparison.Ordinal);
+        Assert.Equal(1, source.Split("services.AddScoped<", StringSplitOptions.None).Length - 1);
+        Assert.DoesNotContain("services.TryAddScoped<", source, StringComparison.Ordinal);
+    }
+
     private static readonly HashSet<string> ApprovedFastingApplicationDependencies = new(StringComparer.Ordinal) {
         "FoodDiary.Application.Abstractions.Common",
         "FoodDiary.Application.Abstractions.Fasting",
@@ -205,7 +231,7 @@ public sealed class BusinessModuleBoundaryTests {
 
         string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
             .Where(path => !path.StartsWith(notificationsRoot, StringComparison.OrdinalIgnoreCase))
-            .Where(path => !path.Equals(compositionRoot, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenRepositoryContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
@@ -276,7 +302,7 @@ public sealed class BusinessModuleBoundaryTests {
 
         string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
             .Where(path => !path.StartsWith(fastingRoot, StringComparison.OrdinalIgnoreCase))
-            .Where(path => !path.Equals(compositionRoot, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
@@ -343,7 +369,7 @@ public sealed class BusinessModuleBoundaryTests {
 
         string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
             .Where(path => !path.StartsWith(billingRoot, StringComparison.OrdinalIgnoreCase))
-            .Where(path => !path.Equals(compositionRoot, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
@@ -428,7 +454,7 @@ public sealed class BusinessModuleBoundaryTests {
 
         string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
             .Where(path => !path.StartsWith(ownerRoot, StringComparison.OrdinalIgnoreCase))
-            .Where(path => !path.Equals(compositionRoot, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
@@ -502,7 +528,7 @@ public sealed class BusinessModuleBoundaryTests {
 
         string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
             .Where(path => !path.StartsWith(ownerRoot, StringComparison.OrdinalIgnoreCase))
-            .Where(path => !path.Equals(compositionRoot, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
@@ -523,7 +549,7 @@ public sealed class BusinessModuleBoundaryTests {
         ];
 
         string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
-            .Where(path => !path.Equals(compositionRoot, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
@@ -591,7 +617,7 @@ public sealed class BusinessModuleBoundaryTests {
 
         string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
             .Where(path => !path.StartsWith(usersRoot, StringComparison.OrdinalIgnoreCase))
-            .Where(path => !path.Equals(compositionRoot, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
@@ -907,7 +933,7 @@ public sealed class BusinessModuleBoundaryTests {
 
         string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
             .Where(path => !path.StartsWith(ownerRoot, StringComparison.OrdinalIgnoreCase))
-            .Where(path => !path.Equals(compositionRoot, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))

@@ -70,6 +70,8 @@ Core rules:
 ## Application Read Boundaries
 Business-module ownership inside the primary backend is defined in `docs/backend/BACKEND_MODULE_OWNERSHIP.md`. Layer sharing and a shared `DbContext` do not imply shared write ownership: cross-module mutations go through the owning module, while composed reads use explicit projection/read-service contracts. Fasting introduced the executable vertical-boundary pattern; it is now applied across the governed modules, hosts/adapters and the explicit cross-module projection allowlist.
 
+Application service composition follows the same ownership model. Root `FoodDiary.Application/DependencyInjection.cs` contains mediator/validation/cross-cutting bootstrap and delegates feature registrations to module-area partials (`Administration`, `Identity`, `Food`, `Tracking`, `Notifications`, and `Billing`). An architecture test prevents feature registrations from regrowing in the root aggregator.
+
 Application read paths should use the narrowest contract that matches the behavior:
 - `*ReadModelRepository` for projection reads, counters, summaries, and API/UI read models.
 - `*LookupRepository` for narrow existence checks that do not need aggregate materialization.

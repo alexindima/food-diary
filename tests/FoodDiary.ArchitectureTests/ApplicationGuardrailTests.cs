@@ -178,13 +178,9 @@ public sealed class ApplicationGuardrailTests {
     public void ApplicationSourceFiles_AreKeptOutOfProjectRootExceptCompositionFiles() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        string[] allowedRootFiles = [
-            "AssemblyInfo.cs",
-            "DependencyInjection.cs",
-        ];
-
         string[] violations = [.. Directory.GetFiles(applicationRoot, "*.cs", SearchOption.TopDirectoryOnly)
-            .Where(path => !allowedRootFiles.Contains(Path.GetFileName(path), StringComparer.Ordinal))
+            .Where(path => !string.Equals(Path.GetFileName(path), "AssemblyInfo.cs", StringComparison.Ordinal))
+            .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.Ordinal))
             .Select(path => Path.GetRelativePath(root, path))
             .Order(StringComparer.Ordinal)];
 
@@ -3155,7 +3151,7 @@ public sealed class ApplicationGuardrailTests {
         Assert.Contains("services.RemoveAll<IDashboardReadService>();", registrationSource, StringComparison.Ordinal);
         Assert.Contains("services.AddScoped<IDashboardReadService, DashboardReadService>();", registrationSource, StringComparison.Ordinal);
 
-        string applicationRegistrationPath = Path.Combine(root, "FoodDiary.Application", "DependencyInjection.cs");
+        string applicationRegistrationPath = Path.Combine(root, "FoodDiary.Application", "DependencyInjection.Tracking.cs");
         string applicationRegistrationSource = File.ReadAllText(applicationRegistrationPath);
         Assert.Contains("services.TryAddScoped<IDashboardReadService, ComposedDashboardReadService>();", applicationRegistrationSource, StringComparison.Ordinal);
     }

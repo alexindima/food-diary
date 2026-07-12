@@ -20,6 +20,12 @@ Keep namespaces aligned with folder paths.
 - Application source must not depend on ASP.NET transport types (`HttpContext`, `IActionResult`, `ControllerBase`, etc.).
 - Application source must not bind `IConfiguration` or `IOptions<T>` directly.
 
+## Composition
+
+- Keep root `DependencyInjection.cs` as the cross-cutting bootstrap and module aggregator only.
+- Put feature service registrations in the matching `DependencyInjection.<Area>.cs` partial.
+- Do not add feature namespaces or individual feature registrations back to the root composition file.
+
 ## CQRS + Validation
 - Commands/queries with focused handlers.
 - FluentValidation validators per request model.
