@@ -108,3 +108,9 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
     - `assets/i18n/en/*.json`
     - `assets/i18n/ru/*.json`
 - Verify Cyrillic output after edits.
+
+## Git Hooks
+
+- Never bypass `pre-commit` or `pre-push` with `--no-verify`.
+- Pre-push formatting must use `npm run check:format:ci`, the same command as GitHub Actions.
+- Hook step logs are stored under `.git/hook-logs/`. On failure, diagnose and fix the reported step, then rerun the original Git command.

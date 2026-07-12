@@ -1,10 +1,12 @@
 # Repository Guidelines
 
 ## Scope
+
 This file is the root aggregator. It defines cross-repo defaults and points to project-specific guides.
 When working in a project folder, prefer that folder's `AGENTS.md` for concrete rules and commands.
 
 ## Project Guides
+
 - Application abstractions: `FoodDiary.Application.Abstractions/AGENTS.md`
 - Frontend app: `FoodDiary.Web.Client/AGENTS.md`
 - Frontend admin app: `FoodDiary.Web.Client/projects/fooddiary-admin/AGENTS.md`
@@ -41,6 +43,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Shared result primitives: `Shared/FoodDiary.Results/AGENTS.md`
 
 ## Cross-Repo Rules
+
 - Keep architecture feature-first and move legacy flat areas incrementally.
 - Keep .NET shared build settings in root `Directory.Build.props`.
 - Keep nullable enabled in C# projects and align namespaces with folders.
@@ -52,11 +55,12 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Async backend methods should use the `Async` suffix and accept `CancellationToken` unless they are framework entrypoints covered by architecture-test exceptions.
 - If backend HTTP routes, payloads, status codes, or Swagger-visible API surface change, update the relevant contract snapshots under `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/` and commit them with the feature.
 - For UI text changes, update both locales:
-  - `FoodDiary.Web.Client/assets/i18n/en/*.json`
-  - `FoodDiary.Web.Client/assets/i18n/ru/*.json`
+    - `FoodDiary.Web.Client/assets/i18n/en/*.json`
+    - `FoodDiary.Web.Client/assets/i18n/ru/*.json`
 - Verify Russian text rendering after edits (no mojibake / replacement symbols).
 
 ## Build Baseline
+
 - `dotnet build FoodDiary.slnx`
 - `cd FoodDiary.Web.Client && npm run build`
 - Focused architecture guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
@@ -64,14 +68,18 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Frontend full verification: `cd FoodDiary.Web.Client && npm run verify`
 - Commits can take a while because the pre-commit hook runs formatting, linters, and tests. If `git commit` appears to time out, check `git status` and `git log -1` before retrying; the commit may still finish successfully after the command wrapper stops waiting.
 - Pushes can take a long time because the pre-push hook runs the full frontend and backend test suites. If `git push` appears to time out, check `git status`, `git log -1`, and the remote branch state before retrying.
+- Always run `git commit` and `git push` with hooks enabled. Do not use `--no-verify`. If a hook fails, inspect the reported log under `.git/hook-logs/`, fix the cause, and rerun the original command.
+- A running local API must not require bypassing hooks. The pre-push backend build uses `.artifacts/pre-push` so it does not overwrite assemblies held by the development server.
 
 ## Documentation
+
 - Long-form documentation lives under `docs/`.
 - Start with `docs/README.md`, `docs/ARCHITECTURE.md`, `docs/BACKEND_MODULE_MAP.md`, and `docs/TESTING_STRATEGY.md` for broad context.
 - Product and feature plans live under `docs/plans/`; treat them as planning context unless referenced by current guides.
 - Historical or stale documents should be removed once durable decisions are captured in current guides or ADRs. Git history is the repository history.
 
 ## EF Core Migrations
+
 - Always commit both migration files: `*.cs` and `*.Designer.cs`.
 - Add `[ExcludeFromCodeCoverage]` to migration implementation classes and model snapshots so generated EF code stays out of dotCover/code coverage.
 - After editing or generating a migration, run a whitespace/style pass before commit. Prefer `dotnet format whitespace FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj` or an equivalent fix on the migration files so CI does not fail with `WHITESPACE: Fix whitespace formatting`.

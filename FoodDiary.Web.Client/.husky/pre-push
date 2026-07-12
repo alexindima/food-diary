@@ -11,7 +11,12 @@ hook_run "Frontend application tests" npm run test:ci:app || exit 1
 hook_run "Frontend i18n consistency" npm run check:i18n || exit 1
 cd ..
 
-hook_run "Backend solution build" dotnet build FoodDiary.slnx --no-restore || exit 1
+PRE_PUSH_ARTIFACTS_PATH=.artifacts/pre-push
+dotnet() {
+  command dotnet "$@" --artifacts-path "$PRE_PUSH_ARTIFACTS_PATH"
+}
+
+hook_run "Backend solution build" dotnet build FoodDiary.slnx || exit 1
 hook_run "Application tests" dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore --no-build || exit 1
 hook_run "Architecture tests" dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore --no-build || exit 1
 hook_run "Infrastructure tests" dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --no-restore --no-build || exit 1

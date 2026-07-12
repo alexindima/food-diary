@@ -85,8 +85,10 @@ fi
 
 cd ..
 
+PRE_COMMIT_ARTIFACTS_PATH=.artifacts/pre-commit
+
 if [ "$HAS_CS" -gt 0 ]; then
-  hook_run "Backend solution build" dotnet build FoodDiary.slnx --no-restore || exit 1
+  hook_run "Backend solution build" dotnet build FoodDiary.slnx --artifacts-path "$PRE_COMMIT_ARTIFACTS_PATH" || exit 1
 
   STAGED_CS_FILES=$(echo "$STAGED_FILES" | grep '\.cs$' | tr '\n' ',' | sed 's/,$//')
   hook_step_start "dotnet format check on staged C# files"
@@ -105,7 +107,7 @@ else
 fi
 
 if [ "$HAS_INFRA_MIGRATIONS" -gt 0 ]; then
-  hook_run "Infrastructure migration build guard" dotnet build FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj --no-restore || exit 1
+  hook_run "Infrastructure migration build guard" dotnet build FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj --no-restore --artifacts-path "$PRE_COMMIT_ARTIFACTS_PATH" || exit 1
 else
   hook_step_skip "Infrastructure migration build guard" "no migration files changed"
 fi
