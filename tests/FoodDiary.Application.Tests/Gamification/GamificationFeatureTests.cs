@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Gamification.Queries.GetGamification;
 using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Services;
+using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
@@ -181,7 +182,7 @@ public class GamificationFeatureTests {
         IMealActivityReadRepository mealRepository,
         IDashboardStatisticsReadService statisticsReadService,
         IGamificationUserProfileService userProfileService) =>
-        new GamificationReadService(mealRepository, statisticsReadService, userProfileService, new StubDateTimeProvider());
+        new GamificationReadService(new MealActivityReadService(mealRepository), statisticsReadService, userProfileService, new StubDateTimeProvider());
 
     private static IDashboardStatisticsReadService CreateStatisticsReadService(
         IReadOnlyList<DashboardStatisticsBucketReadModel>? buckets = null) {

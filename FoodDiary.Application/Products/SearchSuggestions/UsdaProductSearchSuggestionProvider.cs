@@ -2,11 +2,12 @@ using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Usda.Common;
 
 namespace FoodDiary.Application.Products.SearchSuggestions;
 
 public sealed class UsdaProductSearchSuggestionProvider(
-    IUsdaFoodReadModelRepository usdaFoodRepository,
+    IUsdaProductSuggestionReadService usdaProductSuggestionReadService,
     IUsdaFoodSearchService usdaFoodSearchService) : IProductSearchSuggestionProvider {
     public string Source => "usda";
 
@@ -14,7 +15,7 @@ public sealed class UsdaProductSearchSuggestionProvider(
         string search,
         int limit,
         CancellationToken cancellationToken) {
-        IReadOnlyList<UsdaFoodReadModel> localFoods = await usdaFoodRepository.SearchReadModelsAsync(search, limit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<UsdaFoodReadModel> localFoods = await usdaProductSuggestionReadService.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
         var foods = localFoods
             .Select(f => new UsdaFoodModel(f.FdcId, f.Description, f.FoodCategory))
             .ToList();

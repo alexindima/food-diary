@@ -9,6 +9,7 @@ using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Products.Queries.SearchProductSuggestions;
 using FoodDiary.Application.Products.SearchSuggestions;
+using FoodDiary.Application.Usda.Services;
 using FoodDiary.Application.OpenFoodFacts.Common;
 using FoodDiary.Application.OpenFoodFacts.Services;
 using FoodDiary.Domain.Entities.Usda;
@@ -123,7 +124,7 @@ public sealed class ProductSearchSuggestionTests {
             new UsdaFoodModel(100, "Duplicate Fanta", "Soda"),
             new UsdaFoodModel(200, "FANTA ZERO, SODA, ORANGE", "Soda"),
         ], out Func<(string Search, int Limit)?> getLastBrandedSearchCall);
-        var provider = new UsdaProductSearchSuggestionProvider(repository, searchService);
+        var provider = new UsdaProductSearchSuggestionProvider(new UsdaProductSuggestionReadService(repository), searchService);
 
         IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 5, CancellationToken.None);
 
@@ -146,7 +147,7 @@ public sealed class ProductSearchSuggestionTests {
         IUsdaFoodSearchService searchService = CreateUsdaFoodSearchService(
             [],
             out Func<(string Search, int Limit)?> getLastBrandedSearchCall);
-        var provider = new UsdaProductSearchSuggestionProvider(repository, searchService);
+        var provider = new UsdaProductSearchSuggestionProvider(new UsdaProductSuggestionReadService(repository), searchService);
 
         IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 1, CancellationToken.None);
 

@@ -32,6 +32,7 @@ Creating an assembly, schema or service for every feature would add migration an
 - Keep JobManager as an operational composition host: recurring jobs invoke application capabilities, including Marketing attribution and Authentication login-event cleanup, and may not acquire repositories.
 - Prohibit repository injection across primary hosts and adapters. Web-push delivery receives a Notifications-owned delivery audience, and Presentation refreshes notification clients through a semantic capability.
 - Complete Health Tracking read isolation by moving Dashboard fallback composition to semantic read services, and maintain an executable file-level allowlist for the remaining cross-module reporting projections.
+- Replace Consumption Diary and USDA repository-shaped cross-module projections with semantic activity, export, micronutrient-input and product-suggestion capabilities.
 - Allow Fasting to use Users current-access and Notifications contracts.
 - Allow Dashboard to consume the Fasting read service/models as a read-only composed-view dependency.
 - Do not introduce new assemblies, schemas, brokers or facades solely to claim modularity.

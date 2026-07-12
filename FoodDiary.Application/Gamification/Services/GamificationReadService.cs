@@ -1,7 +1,7 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -9,7 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Gamification.Services;
 
 public sealed class GamificationReadService(
-    IMealActivityReadRepository mealRepository,
+    IMealActivityReadService mealActivityReadService,
     IDashboardStatisticsReadService statisticsReadService,
     IGamificationUserProfileService userProfileService,
     TimeProvider dateTimeProvider)
@@ -24,10 +24,10 @@ public sealed class GamificationReadService(
         DateTime today = dateTimeProvider.GetUtcNow().UtcDateTime.Date;
         DateTime streakFrom = today.AddDays(-365);
 
-        IReadOnlyList<DateTime> mealDates = await mealRepository.GetDistinctMealDatesAsync(userId, streakFrom, today, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<DateTime> mealDates = await mealActivityReadService.GetDistinctMealDatesAsync(userId, streakFrom, today, cancellationToken).ConfigureAwait(false);
         (int currentStreak, int longestStreak) = GamificationCalculator.CalculateStreaks(mealDates, today);
 
-        int totalMeals = await mealRepository.GetTotalMealCountAsync(userId, cancellationToken).ConfigureAwait(false);
+        int totalMeals = await mealActivityReadService.GetTotalMealCountAsync(userId, cancellationToken).ConfigureAwait(false);
 
         DateTime weekStart = today.AddDays(-6);
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> weeklyCaloriesResult = await statisticsReadService.GetStatisticsAsync(

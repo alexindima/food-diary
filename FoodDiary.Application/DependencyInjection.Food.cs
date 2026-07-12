@@ -33,6 +33,9 @@ namespace FoodDiary.Application;
 public static partial class DependencyInjection {
     private static void AddFoodModules(this IServiceCollection services) {
         services.AddScoped<IConsumptionReadService, ConsumptionReadService>();
+        services.AddScoped<IMealActivityReadService, MealActivityReadService>();
+        services.AddScoped<IConsumptionExportReadService, ConsumptionExportReadService>();
+        services.AddScoped<IMealProductNutritionReadService, MealProductNutritionReadService>();
         services.AddScoped<IMealNutritionService, MealNutritionService>();
         services.AddScoped<IMealPlanReadService, MealPlanReadService>();
         services.AddScoped<IShoppingListCreationService, ShoppingListCreationService>();
@@ -50,5 +53,6 @@ public static partial class DependencyInjection {
         services.AddScoped<IRecentRecipeReadService, RecentRecipeReadService>();
         services.AddScoped<IUsdaDailyMicronutrientReadService, UsdaDailyMicronutrientReadService>();
         services.AddScoped<IUsdaFoodReadService, UsdaFoodReadService>();
+        services.AddScoped<IUsdaProductSuggestionReadService, UsdaProductSuggestionReadService>();
     }
 }

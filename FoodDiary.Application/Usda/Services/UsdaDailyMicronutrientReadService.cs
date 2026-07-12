@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Usda.Mappings;
@@ -9,13 +9,13 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Usda.Services;
 
 public sealed class UsdaDailyMicronutrientReadService(
-    IMealProductNutritionReadRepository mealRepository,
+    IMealProductNutritionReadService mealProductNutritionReadService,
     IUsdaFoodReadModelRepository usdaFoodRepository) : IUsdaDailyMicronutrientReadService {
     public async Task<DailyMicronutrientSummaryModel> GetDailySummaryAsync(
         UserId userId,
         DateTime date,
         CancellationToken cancellationToken) {
-        IReadOnlyList<MealProductNutritionReadModel> productItems = await mealRepository.GetProductNutritionReadModelsAsync(
+        IReadOnlyList<MealProductNutritionReadModel> productItems = await mealProductNutritionReadService.GetForDateAsync(
             userId,
             date,
             cancellationToken).ConfigureAwait(false);

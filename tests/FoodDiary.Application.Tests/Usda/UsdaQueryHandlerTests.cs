@@ -7,6 +7,7 @@ using FoodDiary.Application.Usda.Queries.GetDailyMicronutrients;
 using FoodDiary.Application.Usda.Queries.GetMicronutrients;
 using FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
 using FoodDiary.Application.Usda.Services;
+using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Usda;
@@ -171,7 +172,7 @@ public sealed class UsdaQueryHandlerTests {
                     CreateNutrient(10, nutrientId: 303, "Iron", "mg", amount: 2.5),
                 ],
             });
-        var handler = new GetDailyMicronutrientsQueryHandler(new UsdaDailyMicronutrientReadService(meals, repository), Substitute.For<ICurrentUserAccessService>());
+        var handler = new GetDailyMicronutrientsQueryHandler(new UsdaDailyMicronutrientReadService(new MealProductNutritionReadService(meals), repository), Substitute.For<ICurrentUserAccessService>());
 
         Result<DailyMicronutrientSummaryModel> result = await handler.Handle(new GetDailyMicronutrientsQuery(userId.Value, date), CancellationToken.None);
 
@@ -208,7 +209,7 @@ public sealed class UsdaQueryHandlerTests {
         AddProductItem(meal, product, 100);
         IUsdaFoodRepository repository = CreateUsdaFoodRepository(nutrientsByFdcIdsCalled: out Func<bool> wereNutrientsByFdcIdsCalled);
         var handler = new GetDailyMicronutrientsQueryHandler(
-            new UsdaDailyMicronutrientReadService(CreateMealRepository([meal]), repository),
+            new UsdaDailyMicronutrientReadService(new MealProductNutritionReadService(CreateMealRepository([meal])), repository),
             Substitute.For<ICurrentUserAccessService>());
 
         Result<DailyMicronutrientSummaryModel> result = await handler.Handle(new GetDailyMicronutrientsQuery(userId.Value, date), CancellationToken.None);
@@ -224,7 +225,7 @@ public sealed class UsdaQueryHandlerTests {
     [Fact]
     public async Task GetDailyMicronutrients_WithNullUserId_ReturnsFailure() {
         var handler = new GetDailyMicronutrientsQueryHandler(
-            new UsdaDailyMicronutrientReadService(CreateMealRepository([]), CreateUsdaFoodRepository()),
+            new UsdaDailyMicronutrientReadService(new MealProductNutritionReadService(CreateMealRepository([])), CreateUsdaFoodRepository()),
             Substitute.For<ICurrentUserAccessService>());
 
         Result<DailyMicronutrientSummaryModel> result = await handler.Handle(
@@ -257,7 +258,7 @@ public sealed class UsdaQueryHandlerTests {
             dailyValues: new Dictionary<int, DailyReferenceValue>(),
             nutrientsByFdcId: new Dictionary<int, IReadOnlyList<UsdaFoodNutrient>>());
         var handler = new GetDailyMicronutrientsQueryHandler(
-            new UsdaDailyMicronutrientReadService(CreateMealRepository([meal]), repository),
+            new UsdaDailyMicronutrientReadService(new MealProductNutritionReadService(CreateMealRepository([meal])), repository),
             Substitute.For<ICurrentUserAccessService>());
 
         Result<DailyMicronutrientSummaryModel> result = await handler.Handle(new GetDailyMicronutrientsQuery(userId.Value, date), CancellationToken.None);

@@ -9,6 +9,7 @@ using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.WaistEntries.Services;
 using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Services;
+using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Services;
@@ -236,7 +237,7 @@ public class WeeklyCheckInFeatureTests {
         IWeeklyCheckInUserProfileService? profileService = null) =>
         new(
             new WeeklyCheckInReadService(
-                mealRepo ?? CreateMealRepository(),
+                new MealActivityReadService(mealRepo ?? CreateMealRepository()),
                 statisticsReadService ?? CreateStatisticsReadService(),
                 new WeightEntryReadService(weightRepo ?? CreateWeightEntryRepository()),
                 new WaistEntryReadService(waistRepo ?? CreateWaistEntryRepository()),

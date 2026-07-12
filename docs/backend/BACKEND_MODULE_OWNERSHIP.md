@@ -299,7 +299,9 @@ Technical and catalog adapters use explicit folders as well: `Admin`, `Ai`, `Con
 
 Executable hosts, Presentation, Initializer, JobManager and Integrations may not inject repository contracts. They invoke application capabilities or implement external ports. This is enforced across all primary backend adapter projects by a single architecture guardrail.
 
-The small number of intentional repository-shaped cross-module projections is explicitly allowlisted by consumer file. These are reporting/calculation paths only: Admin content/audit summaries, Gamification and Weekly Check-In meal activity, Export consumption data, USDA micronutrient calculation, and USDA product suggestions. Adding another consumer requires an intentional architecture-test and ownership-map change; the allowlist grants no write capability.
+The remaining repository-shaped cross-module projections are explicitly allowlisted by consumer file and are currently limited to Admin reporting/content/audit screens. Gamification, Weekly Check-In, Export, USDA micronutrient calculation and USDA product suggestions now use semantic owner capabilities instead. Adding another repository-shaped consumer requires an intentional architecture-test and ownership-map change; the allowlist grants no write capability.
+
+Consumption Diary exposes `IMealActivityReadService`, `IConsumptionExportReadService` and `IMealProductNutritionReadService` for calculation/reporting consumers. USDA exposes `IUsdaProductSuggestionReadService` to Products. These APIs preserve optimized read paths without exporting persistence vocabulary.
 
 ## Administrative content capabilities
 

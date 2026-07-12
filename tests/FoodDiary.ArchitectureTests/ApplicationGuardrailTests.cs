@@ -875,9 +875,9 @@ public sealed class ApplicationGuardrailTests {
             "UsdaProductSearchSuggestionProvider.cs");
         string source = File.ReadAllText(providerPath);
 
-        Assert.Contains("SearchReadModelsAsync", source, StringComparison.Ordinal);
+        Assert.Contains("IUsdaProductSuggestionReadService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IUsdaFoodReadModelRepository", source, StringComparison.Ordinal);
         Assert.DoesNotContain("FoodDiary.Domain.Entities.Usda", source, StringComparison.Ordinal);
-        Assert.DoesNotContain(".SearchAsync(", source, StringComparison.Ordinal);
     }
 
     [Fact]

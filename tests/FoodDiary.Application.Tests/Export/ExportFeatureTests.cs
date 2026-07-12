@@ -8,6 +8,7 @@ using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Queries.ExportCycle;
 using FoodDiary.Application.Export.Queries.ExportDiary;
 using FoodDiary.Application.Export.Services;
+using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -122,7 +123,7 @@ public class ExportFeatureTests {
     public async Task ExportDiary_WithLocalDayUtcBoundaries_PreservesRequestedInstants() {
         var userId = UserId.New();
         IMealRepository repository = CreateMealRepository([], out Func<(DateTime? DateFrom, DateTime? DateTo)> getLastPeriod);
-        ExportDiaryQueryHandler handler = CreateHandler(new ExportDiaryReadService(repository));
+        ExportDiaryQueryHandler handler = CreateHandler(new ExportDiaryReadService(new ConsumptionExportReadService(repository)));
         DateTime localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
         DateTime localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
 
@@ -501,7 +502,7 @@ public class ExportFeatureTests {
         CreateMealRepository(meals, out _);
 
     private static IExportDiaryReadService CreateExportDiaryReadService(IReadOnlyList<Meal> meals) =>
-        new ExportDiaryReadService(CreateMealRepository(meals));
+        new ExportDiaryReadService(new ConsumptionExportReadService(CreateMealRepository(meals)));
 
     private static IMealRepository CreateMealRepository(
         IReadOnlyList<Meal> meals,

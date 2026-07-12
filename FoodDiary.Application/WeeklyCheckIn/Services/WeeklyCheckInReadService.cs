@@ -2,6 +2,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WaistEntries.Common;
@@ -14,7 +15,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.WeeklyCheckIn.Services;
 
 public sealed class WeeklyCheckInReadService(
-    IMealActivityReadRepository mealRepository,
+    IMealActivityReadService mealActivityReadService,
     IDashboardStatisticsReadService statisticsReadService,
     IWeightEntryReadService weightEntryReadService,
     IWaistEntryReadService waistEntryReadService,
@@ -35,7 +36,7 @@ public sealed class WeeklyCheckInReadService(
             return Result.Failure<WeekSummaryModel>(nutritionResult.Error);
         }
 
-        int mealCount = await mealRepository.GetCountAsync(
+        int mealCount = await mealActivityReadService.GetCountAsync(
             userId,
             new MealQueryFilters(DateFrom: dateFrom, DateTo: dateTo),
             cancellationToken).ConfigureAwait(false);

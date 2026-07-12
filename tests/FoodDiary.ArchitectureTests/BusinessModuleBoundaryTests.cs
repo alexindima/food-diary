@@ -77,6 +77,7 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Products",
         "FoodDiary.Application.RecentItems.Common",
         "FoodDiary.Application.Users.Common",
+        "FoodDiary.Application.Usda.Common",
     };
 
     private static readonly HashSet<string> ApprovedRecipesApplicationDependencies = new(StringComparer.Ordinal) {
@@ -516,7 +517,7 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Fact]
-    public void OtherApplicationModules_DoNotAcquireMealAggregateRepositories() {
+    public void OtherApplicationModules_DoNotAcquireMealPersistenceRepositories() {
         string applicationRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application");
         string ownerRoot = Path.Combine(applicationRoot, "Consumptions");
         string compositionRoot = Path.Combine(applicationRoot, "DependencyInjection.cs");
@@ -524,6 +525,9 @@ public sealed class BusinessModuleBoundaryTests {
             "IMealRepository",
             "IMealReadRepository",
             "IMealWriteRepository",
+            "IMealActivityReadRepository",
+            "IMealConsumptionReadRepository",
+            "IMealProductNutritionReadRepository",
         ];
 
         string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
@@ -532,7 +536,7 @@ public sealed class BusinessModuleBoundaryTests {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires a Consumption-owned Meal aggregate repository; use IConsumptionReadService or a specialized projection contract")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires a Consumption-owned Meal repository; use a semantic Consumption read capability")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -880,7 +884,7 @@ public sealed class BusinessModuleBoundaryTests {
 
     [Theory]
     [InlineData("OpenFoodFacts", "IOpenFoodFactsProductCacheRepository", "IOpenFoodFactsProductCacheReadRepository", "IOpenFoodFactsProductCacheWriteRepository")]
-    [InlineData("Usda", "IUsdaFoodRepository", "IUsdaFoodReadRepository", "IUsdaProductLinkRepository", "IUsdaProductLinkReadRepository", "IUsdaProductLinkWriteRepository")]
+    [InlineData("Usda", "IUsdaFoodRepository", "IUsdaFoodReadRepository", "IUsdaFoodReadModelRepository", "IUsdaProductLinkRepository", "IUsdaProductLinkReadRepository", "IUsdaProductLinkWriteRepository")]
     public void OtherApplicationModules_DoNotAcquireExternalCatalogRepositories(
         string ownerModule,
         params string[] forbiddenContracts) {
@@ -899,10 +903,6 @@ public sealed class BusinessModuleBoundaryTests {
     [InlineData("ContentReports", "IContentReportReadRepository", "Admin/Services/AdminDashboardReadService.cs")]
     [InlineData("Authentication", "IUserLoginEventReadRepository", "Admin/Services/AdminUserLoginReadService.cs")]
     [InlineData("Users", "IUserAdminReadModelRepository", "Admin/Services/AdminUserReadService.cs")]
-    [InlineData("Consumptions", "IMealActivityReadRepository", "Gamification/Services/GamificationReadService.cs", "WeeklyCheckIn/Services/WeeklyCheckInReadService.cs")]
-    [InlineData("Consumptions", "IMealConsumptionReadRepository", "Export/Services/ExportDiaryReadService.cs")]
-    [InlineData("Consumptions", "IMealProductNutritionReadRepository", "Usda/Services/UsdaDailyMicronutrientReadService.cs")]
-    [InlineData("Usda", "IUsdaFoodReadModelRepository", "Products/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs")]
     public void CrossModuleRepositoryProjections_AreExplicitlyAllowlisted(
         string ownerModule,
         string projectionContract,
