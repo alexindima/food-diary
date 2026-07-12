@@ -27,7 +27,7 @@ The rules are intentionally evolutionary:
 
 The canonical Application module graph lives in `docs/architecture/module-dependencies.json`. Architecture tests derive direct `FoodDiary.Application.<Module>` dependencies from source and require an exact manifest match. Every new in-process Module API dependency is therefore an explicit architecture decision; unknown modules, self-edges and unacknowledged strongly connected components fail the build.
 
-The manifest currently records one legacy strongly connected component around Dashboard, Users and health-tracking orchestration. It is architecture debt, not a permitted pattern: the test freezes it so it cannot silently grow, and extraction work should reduce the component until `knownCycles` is empty.
+The manifest currently records one remaining legacy strongly connected component between Users and Notifications. It is architecture debt, not a permitted pattern: the test freezes it so it cannot silently grow, and extraction work should reduce the component until `knownCycles` is empty. Consumer-owned profile ports already removed FavoriteMeals and the Dashboard/health-tracking chain from the original component.
 
 This map covers the governed business owners and composed read modules in the primary backend. New areas must be classified before they introduce persistence or cross-module dependencies; absence from the table never grants shared write ownership.
 

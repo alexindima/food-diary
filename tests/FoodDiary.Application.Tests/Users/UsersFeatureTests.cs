@@ -1123,7 +1123,35 @@ public partial class UsersFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedDietologistInvitationRepository(DietologistInvitation? invitation)
-        : IDietologistInvitationRepository, IDietologistInvitationReadService {
+        : IDietologistInvitationRepository, IDietologistInvitationReadService, IProfileDietologistReadService {
+        public async Task<Result<ProfileDietologistRelationshipModel?>> GetRelationshipAsync(
+            UserId userId,
+            CancellationToken cancellationToken) {
+            Result<DietologistRelationshipModel?> result = await GetMyRelationshipAsync(userId, cancellationToken).ConfigureAwait(false);
+            DietologistRelationshipModel? relationship = result.Value;
+            return Result.Success(relationship is null
+                ? null
+                : new ProfileDietologistRelationshipModel(
+                    relationship.InvitationId,
+                    relationship.Status,
+                    relationship.Email,
+                    relationship.FirstName,
+                    relationship.LastName,
+                    relationship.DietologistUserId,
+                    new ProfileDietologistPermissionsModel(
+                        relationship.Permissions.ShareMeals,
+                        relationship.Permissions.ShareStatistics,
+                        relationship.Permissions.ShareWeight,
+                        relationship.Permissions.ShareWaist,
+                        relationship.Permissions.ShareGoals,
+                        relationship.Permissions.ShareHydration,
+                        relationship.Permissions.ShareProfile,
+                        relationship.Permissions.ShareFasting),
+                    relationship.CreatedAtUtc,
+                    relationship.ExpiresAtUtc,
+                    relationship.AcceptedAtUtc));
+        }
+
         public Task<Result<DietologistRelationshipModel?>> GetMyRelationshipAsync(
             UserId userId,
             CancellationToken cancellationToken) {

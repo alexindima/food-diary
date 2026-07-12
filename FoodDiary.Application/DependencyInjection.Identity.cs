@@ -23,6 +23,8 @@ public static partial class DependencyInjection {
         services.AddScoped<IUserIdentityMutationService, UserIdentityMutationService>();
         services.AddScoped<IDietologistClientReadService, DietologistClientReadService>();
         services.AddScoped<IDietologistInvitationReadService, DietologistInvitationReadService>();
+        services.AddScoped<IProfileDietologistReadService>(static provider =>
+            (IProfileDietologistReadService)provider.GetRequiredService<IDietologistInvitationReadService>());
         services.AddScoped<IDietologistRecommendationReadService, DietologistRecommendationReadService>();
         services.AddScoped<IDietologistUserLookupService, DietologistUserLookupService>();
         services.AddScoped<IDietologistUserContextService, DietologistUserContextService>();

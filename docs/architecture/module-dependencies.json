@@ -37,13 +37,13 @@
     "Statistics": ["Users"],
     "Tdee": ["Exercises", "Users", "WeightEntries"],
     "Usda": ["Consumptions", "Users"],
-    "Users": ["Dietologist", "Images", "Notifications"],
+    "Users": ["Images", "Notifications"],
     "WaistEntries": ["Users"],
     "Wearables": ["Users"],
     "WeeklyCheckIn": ["Consumptions", "Hydration", "Users", "WaistEntries", "WeightEntries"],
     "WeightEntries": ["Users"]
   },
   "knownCycles": [
-    ["Authentication", "Consumptions", "Cycles", "DailyAdvices", "Dashboard", "Dietologist", "Exercises", "Fasting", "Hydration", "Notifications", "Statistics", "Tdee", "Users", "WaistEntries", "WeightEntries"]
+    ["Notifications", "Users"]
   ]
 }

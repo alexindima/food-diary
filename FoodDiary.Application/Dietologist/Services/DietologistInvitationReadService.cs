@@ -7,6 +7,7 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -17,7 +18,7 @@ public sealed class DietologistInvitationReadService(
     IDietologistUserContextService dietologistUserContextService,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider timeProvider)
-    : IDietologistInvitationReadService {
+    : IDietologistInvitationReadService, IProfileDietologistReadService {
     public async Task<Result<DietologistInvitationForCurrentUserModel>> GetForCurrentUserAsync(
         UserId userId,
         Guid invitationId,
@@ -124,6 +125,38 @@ public sealed class DietologistInvitationReadService(
 
         return Result.Success(pending is null ? null : ToRelationshipModel(pending));
     }
+
+    async Task<Result<ProfileDietologistRelationshipModel?>> IProfileDietologistReadService.GetRelationshipAsync(
+        UserId userId,
+        CancellationToken cancellationToken) {
+        Result<DietologistRelationshipModel?> result = await GetMyRelationshipAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (result.IsFailure) {
+            return Result.Failure<ProfileDietologistRelationshipModel?>(result.Error);
+        }
+
+        return Result.Success(result.Value is null ? null : ToProfileRelationshipModel(result.Value));
+    }
+
+    private static ProfileDietologistRelationshipModel ToProfileRelationshipModel(DietologistRelationshipModel relationship) =>
+        new(
+            relationship.InvitationId,
+            relationship.Status,
+            relationship.Email,
+            relationship.FirstName,
+            relationship.LastName,
+            relationship.DietologistUserId,
+            new ProfileDietologistPermissionsModel(
+                relationship.Permissions.ShareMeals,
+                relationship.Permissions.ShareStatistics,
+                relationship.Permissions.ShareWeight,
+                relationship.Permissions.ShareWaist,
+                relationship.Permissions.ShareGoals,
+                relationship.Permissions.ShareHydration,
+                relationship.Permissions.ShareProfile,
+                relationship.Permissions.ShareFasting),
+            relationship.CreatedAtUtc,
+            relationship.ExpiresAtUtc,
+            relationship.AcceptedAtUtc);
 
     private static Result<DietologistInvitationId> ParseInvitationId(Guid invitationId) =>
         RequiredIdParser.Parse(

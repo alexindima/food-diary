@@ -1,6 +1,4 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Dietologist.Common;
-using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Users.Common;
@@ -12,7 +10,7 @@ namespace FoodDiary.Application.Users.Services;
 public sealed class ProfileOverviewReadService(
     IUserProfileReadService userProfileReadService,
     IWebPushSubscriptionReadService webPushSubscriptionReadService,
-    IDietologistInvitationReadService dietologistInvitationReadService)
+    IProfileDietologistReadService dietologistReadService)
     : IProfileOverviewReadService {
     public async Task<Result<ProfileOverviewModel>> GetAsync(UserId userId, CancellationToken cancellationToken) {
         Result<UserModel> userResult = await userProfileReadService.GetUserAsync(userId, cancellationToken).ConfigureAwait(false);
@@ -28,8 +26,8 @@ public sealed class ProfileOverviewReadService(
         IReadOnlyList<WebPushSubscriptionModel> webPushSubscriptions = await webPushSubscriptionReadService
             .GetSubscriptionsAsync(userId, cancellationToken)
             .ConfigureAwait(false);
-        Result<DietologistRelationshipModel?> relationshipResult = await dietologistInvitationReadService
-            .GetMyRelationshipAsync(userId, cancellationToken)
+        Result<ProfileDietologistRelationshipModel?> relationshipResult = await dietologistReadService
+            .GetRelationshipAsync(userId, cancellationToken)
             .ConfigureAwait(false);
         if (relationshipResult.IsFailure) {
             return Result.Failure<ProfileOverviewModel>(relationshipResult.Error);

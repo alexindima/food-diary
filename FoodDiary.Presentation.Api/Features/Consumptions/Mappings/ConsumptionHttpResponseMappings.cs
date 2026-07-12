@@ -1,7 +1,7 @@
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Consumptions.Models;
-using FoodDiary.Presentation.Api.Features.FavoriteMeals.Mappings;
 using FoodDiary.Presentation.Api.Features.Consumptions.Responses;
+using FoodDiary.Presentation.Api.Features.FavoriteMeals.Responses;
 using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
@@ -46,10 +46,24 @@ public static class ConsumptionHttpResponseMappings {
     public static ConsumptionOverviewHttpResponse ToHttpResponse(this ConsumptionOverviewModel model) {
         return new ConsumptionOverviewHttpResponse(
             model.AllConsumptions.ToHttpResponse(),
-            model.FavoriteItems.Select(FavoriteMealHttpMappings.ToHttpResponse).ToList(),
+            model.FavoriteItems.Select(ToHttpResponse).ToList(),
             model.FavoriteTotalCount
         );
     }
+
+    private static FavoriteMealHttpResponse ToHttpResponse(ConsumptionFavoriteMealModel model) =>
+        new(
+            model.Id,
+            model.MealId,
+            model.Name,
+            model.CreatedAtUtc,
+            model.MealDate,
+            model.MealType,
+            model.TotalCalories,
+            model.TotalProteins,
+            model.TotalFats,
+            model.TotalCarbs,
+            model.ItemCount);
 
     private static ConsumptionItemHttpResponse ToHttpResponse(this ConsumptionItemModel model) {
         return new ConsumptionItemHttpResponse(

@@ -1,4 +1,3 @@
-using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.SetPassword;
@@ -208,14 +207,14 @@ public sealed class UserHttpMappingsTests {
                     CreatedAtUtc: subscriptionCreatedAtUtc,
                     UpdatedAtUtc: subscriptionCreatedAtUtc.AddHours(1)),
             ],
-            new DietologistRelationshipModel(
+            new ProfileDietologistRelationshipModel(
                 relationshipId,
                 Status: "Accepted",
                 Email: "dietologist@example.com",
                 FirstName: "Dana",
                 LastName: "Doc",
                 dietologistUserId,
-                new DietologistPermissionsModel(
+                new ProfileDietologistPermissionsModel(
                     ShareMeals: true,
                     ShareStatistics: true,
                     ShareWeight: false,

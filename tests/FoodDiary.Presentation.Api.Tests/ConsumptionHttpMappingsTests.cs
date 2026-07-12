@@ -8,7 +8,6 @@ using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptionsOverview;
-using FoodDiary.Application.FavoriteMeals.Models;
 using FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
 using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
 using FoodDiary.Presentation.Api.Features.Consumptions.Responses;
@@ -441,7 +440,7 @@ public sealed class ConsumptionHttpMappingsTests {
             FavoriteMealId: null,
             [],
             []);
-        var favorite = new FavoriteMealModel(
+        var favorite = new ConsumptionFavoriteMealModel(
             Guid.NewGuid(),
             consumption.Id,
             "Morning meal",

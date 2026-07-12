@@ -1,4 +1,5 @@
 using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Application.Users.Models;
 using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
@@ -24,6 +25,27 @@ public static class DietologistHttpResponseMappings {
             model.LastName,
             model.DietologistUserId,
             model.Permissions.ToHttpResponse(),
+            model.CreatedAtUtc,
+            model.ExpiresAtUtc,
+            model.AcceptedAtUtc);
+
+    public static DietologistRelationshipHttpResponse ToHttpResponse(this ProfileDietologistRelationshipModel model) =>
+        new(
+            model.InvitationId,
+            model.Status,
+            model.Email,
+            model.FirstName,
+            model.LastName,
+            model.DietologistUserId,
+            new DietologistPermissionsHttpResponse(
+                model.Permissions.ShareMeals,
+                model.Permissions.ShareStatistics,
+                model.Permissions.ShareWeight,
+                model.Permissions.ShareWaist,
+                model.Permissions.ShareGoals,
+                model.Permissions.ShareHydration,
+                model.Permissions.ShareProfile,
+                model.Permissions.ShareFasting),
             model.CreatedAtUtc,
             model.ExpiresAtUtc,
             model.AcceptedAtUtc);
