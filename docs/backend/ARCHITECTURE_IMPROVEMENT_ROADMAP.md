@@ -32,6 +32,11 @@ The backend also has structural guardrails for the main ownership boundaries:
 - `FoodDiary.Infrastructure` and `FoodDiary.Integrations` keep root folders limited to technical implementation and provider-adapter areas.
 - `FoodDiary.Presentation.Api` keeps HTTP controllers thin by limiting feature purpose folders and controller constructor dependencies.
 - `FoodDiary.Web.Api` and `FoodDiary.JobManager` keep executable-host code out of project roots except `Program.cs`.
+- Cross-module Application reads use semantic owner APIs or consumer-owned ports; no module acquires another module's repository.
+- The executable module manifest exactly matches source dependencies, rejects undeclared edges, and has no dependency cycles.
+- Direct `FoodDiaryDbContext` acquisition is confined to Infrastructure persistence adapters, migrations/design-time support, and the persistence composition root.
+- Marketing is the first physically extracted application module and is registered explicitly by executable composition roots.
+- Domain event declarations are immutable, transport-agnostic, and verified to be raised by domain code; integration-event naming and placement are guarded separately.
 
 ## Priority 1: Durable Side Effects
 
