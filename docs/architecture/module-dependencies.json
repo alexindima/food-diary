@@ -6,7 +6,7 @@
     "Ai": ["Users"],
     "Authentication": ["Email", "Notifications", "Users"],
     "Billing": ["Marketing", "Users"],
-    "Consumptions": ["FavoriteMeals", "Images", "Nutrition", "Users"],
+    "Consumptions": ["Images", "Nutrition", "Users"],
     "ContentReports": ["Users"],
     "Cycles": ["Users"],
     "DailyAdvices": ["Users"],
@@ -44,6 +44,6 @@
     "WeightEntries": ["Users"]
   },
   "knownCycles": [
-    ["Authentication", "Consumptions", "Cycles", "DailyAdvices", "Dashboard", "Dietologist", "Exercises", "Fasting", "FavoriteMeals", "Hydration", "Notifications", "Statistics", "Tdee", "Users", "WaistEntries", "WeightEntries"]
+    ["Authentication", "Consumptions", "Cycles", "DailyAdvices", "Dashboard", "Dietologist", "Exercises", "Fasting", "Hydration", "Notifications", "Statistics", "Tdee", "Users", "WaistEntries", "WeightEntries"]
   ]
 }

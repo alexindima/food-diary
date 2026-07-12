@@ -250,7 +250,7 @@ Images owns `ImageAsset`, upload validation, cleanup policy and the durable obje
 
 FavoriteProducts, FavoriteRecipes and FavoriteMeals are three separate relationship modules. Each owns its own favorite entity and exposes commands plus a semantic read service. Products, Recipes and Consumption Diary consume those read services rather than favorite repositories.
 
-FavoriteMeals uses `IConsumptionReadService` when creating a favorite from a source meal. Consumption Diary uses `IFavoriteMealReadService` for favorite IDs and overview projections, avoiding mutual repository access between the two modules.
+FavoriteMeals uses `IConsumptionReadService` when creating a favorite from a source meal. Consumption Diary declares the consumer-owned `IConsumptionFavoriteReadService` port; the FavoriteMeals adapter implements it for favorite IDs and overview projections. This keeps the source dependency one-way (`FavoriteMeals` to `Consumptions`) and avoids mutual repository or Module API coupling.
 
 Image EF configuration and object-deletion outbox configuration live in `Configurations/Images`. Favorite relationship configurations live together in `Configurations/Favorites`, while their repositories remain separated by owned persistence folders.
 

@@ -40,6 +40,8 @@ public static partial class DependencyInjection {
         services.AddScoped<IMealPlanReadService, MealPlanReadService>();
         services.AddScoped<IShoppingListCreationService, ShoppingListCreationService>();
         services.AddScoped<IFavoriteMealReadService, FavoriteMealReadService>();
+        services.AddScoped<IConsumptionFavoriteReadService>(static provider =>
+            (IConsumptionFavoriteReadService)provider.GetRequiredService<IFavoriteMealReadService>());
         services.AddScoped<IFavoriteProductReadService, FavoriteProductReadService>();
         services.AddScoped<IFavoriteRecipeReadService, FavoriteRecipeReadService>();
         services.AddScoped<IShoppingListReadService, ShoppingListReadService>();
