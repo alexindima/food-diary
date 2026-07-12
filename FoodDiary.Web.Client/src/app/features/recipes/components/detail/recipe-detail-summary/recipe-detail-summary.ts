@@ -24,4 +24,21 @@ export class RecipeDetailSummaryComponent {
     public readonly ingredientCount = input.required<number>();
     public readonly ingredientPreview = input.required<readonly IngredientPreviewItem[]>();
     protected readonly qualityHintKey = computed(() => `QUALITY.${this.qualityGrade().toUpperCase()}`);
+    protected readonly servingsUnitKey = computed(() => resolveServingsUnitKey(this.recipe().servings));
+}
+
+export function resolveServingsUnitKey(count: number): string {
+    const absoluteCount = Math.abs(count);
+    const modulo100 = absoluteCount % 100;
+    const modulo10 = absoluteCount % 10;
+
+    if (modulo10 === 1 && modulo100 !== 11) {
+        return 'RECIPE_DETAIL.SUMMARY.SERVINGS_ONE';
+    }
+
+    if (modulo10 >= 2 && modulo10 <= 4 && (modulo100 < 12 || modulo100 > 14)) {
+        return 'RECIPE_DETAIL.SUMMARY.SERVINGS_FEW';
+    }
+
+    return 'RECIPE_DETAIL.SUMMARY.SERVINGS_MANY';
 }

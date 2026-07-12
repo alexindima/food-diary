@@ -447,6 +447,9 @@
         "SUMMARY": {
             "CALORIES": "Калории",
             "SERVINGS": "Порции",
+            "SERVINGS_ONE": "порция",
+            "SERVINGS_FEW": "порции",
+            "SERVINGS_MANY": "порций",
             "TOTAL_TIME": "Общее время",
             "INGREDIENTS": "Ингредиенты",
             "VISIBILITY": "Видимость",

@@ -483,6 +483,9 @@
         "SUMMARY": {
             "CALORIES": "Calories",
             "SERVINGS": "Servings",
+            "SERVINGS_ONE": "serving",
+            "SERVINGS_FEW": "servings",
+            "SERVINGS_MANY": "servings",
             "TOTAL_TIME": "Total time",
             "INGREDIENTS": "Ingredients",
             "VISIBILITY": "Visibility",

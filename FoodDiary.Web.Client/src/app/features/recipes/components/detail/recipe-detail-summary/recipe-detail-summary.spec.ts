@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
-import { RecipeDetailSummaryComponent } from './recipe-detail-summary';
+import { RecipeDetailSummaryComponent, resolveServingsUnitKey } from './recipe-detail-summary';
 
 const RECIPE_CALORIES = 240;
 const TOTAL_TIME_MINUTES = 45;
@@ -26,6 +26,21 @@ describe('RecipeDetailSummaryComponent', () => {
         expect(text).toContain(RECIPE_CALORIES.toString());
         expect(text).toContain('2');
         expect(text).toContain('Rice');
+    });
+});
+
+describe('resolveServingsUnitKey', () => {
+    it.each([
+        [1, 'SERVINGS_ONE'],
+        [2, 'SERVINGS_FEW'],
+        [4, 'SERVINGS_FEW'],
+        [5, 'SERVINGS_MANY'],
+        [11, 'SERVINGS_MANY'],
+        [21, 'SERVINGS_ONE'],
+        [22, 'SERVINGS_FEW'],
+        [25, 'SERVINGS_MANY'],
+    ])('selects the correct plural form for %i servings', (count, suffix) => {
+        expect(resolveServingsUnitKey(count)).toBe(`RECIPE_DETAIL.SUMMARY.${suffix}`);
     });
 });
 

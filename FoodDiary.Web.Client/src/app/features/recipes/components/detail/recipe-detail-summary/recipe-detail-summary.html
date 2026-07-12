@@ -13,7 +13,7 @@
                 {{ calories() }} {{ 'GENERAL.UNITS.KCAL' | translate }}
             </strong>
             <span class="recipe-detail__hero-meta fd-ui-body-sm">
-                {{ recipe().servings }} {{ 'RECIPE_DETAIL.SUMMARY.SERVINGS' | translate }}
+                {{ recipe().servings }} {{ servingsUnitKey() | translate }}
                 @if (totalTime() !== null) {
                     &middot; {{ totalTime() }} {{ 'RECIPE_DETAIL.MIN' | translate }}
                 }

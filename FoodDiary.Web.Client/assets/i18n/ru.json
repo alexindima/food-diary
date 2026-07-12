@@ -451,7 +451,10 @@
             "TOTAL_TIME": "Общее время",
             "INGREDIENTS": "Ингредиенты",
             "VISIBILITY": "Видимость",
-            "COMMENT": "Комментарий"
+            "COMMENT": "Комментарий",
+            "SERVINGS_ONE": "порция",
+            "SERVINGS_FEW": "порции",
+            "SERVINGS_MANY": "порций"
         },
         "COOK_MODE": {
             "EMPTY": "Шагов приготовления пока нет.",

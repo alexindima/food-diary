@@ -451,7 +451,10 @@
             "TOTAL_TIME": "Total time",
             "INGREDIENTS": "Ingredients",
             "VISIBILITY": "Visibility",
-            "COMMENT": "Comment"
+            "COMMENT": "Comment",
+            "SERVINGS_ONE": "serving",
+            "SERVINGS_FEW": "servings",
+            "SERVINGS_MANY": "servings"
         },
         "COOK_MODE": {
             "EMPTY": "No cooking steps yet.",
