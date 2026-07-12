@@ -2,12 +2,12 @@
 <fd-ui-top-loader [visible]="isTopLoaderVisible()" />
 <div
     class="fd-root"
-    [class.fd-root--no-sidebar]="!isAuthenticated()"
-    [class.fd-root--impersonating]="isImpersonating()"
+    [class.fd-root--no-sidebar]="!usesAuthenticatedShell()"
+    [class.fd-root--impersonating]="usesAuthenticatedShell() && isImpersonating()"
     [class.fd-root--compact-mobile-nav]="usesCompactMobileNavigation()"
 >
-    @if (isAuthenticated()) {
-        @defer (when isAuthenticated()) {
+    @if (usesAuthenticatedShell()) {
+        @defer (when usesAuthenticatedShell()) {
             <fd-sidebar class="fd-root__sidebar" />
             <fd-quick-consumption-drawer />
         } @placeholder {
@@ -15,7 +15,7 @@
         }
     }
     <main class="fd-root__main" id="main-content" tabindex="-1">
-        @if (isImpersonating()) {
+        @if (usesAuthenticatedShell() && isImpersonating()) {
             <div class="fd-impersonation-banner" role="status" aria-live="polite">
                 <span>Impersonation mode</span>
                 @if (impersonationReason()) {

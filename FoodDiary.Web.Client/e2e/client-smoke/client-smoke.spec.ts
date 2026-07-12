@@ -167,6 +167,23 @@ test.describe('session routing smoke', () => {
 });
 
 test.describe('authenticated feature smoke', () => {
+    test('renders privacy policy without the authenticated shell', async ({ page }) => {
+        await page.addInitScript((token: string) => {
+            window.localStorage.setItem('authToken', token);
+            window.localStorage.setItem('refreshToken', 'refresh-token');
+            window.localStorage.setItem('userId', 'u1');
+            window.localStorage.setItem('emailConfirmed', 'true');
+        }, createAuthenticatedUserJwt());
+
+        await mockAuthenticatedClientApiAsync(page);
+        await page.goto('/privacy-policy');
+
+        await expect(page.getByRole('heading', { level: 1 })).toContainText('Privacy Policy');
+        await expect(page.locator('.fd-root')).toHaveClass(/fd-root--no-sidebar/);
+        await expect(page.locator('fd-sidebar')).toHaveCount(0);
+        await expect(page.locator('fd-quick-consumption-drawer')).toHaveCount(0);
+    });
+
     test('renders not found page for unknown route', async ({ page }) => {
         await page.goto('/missing-page');
 

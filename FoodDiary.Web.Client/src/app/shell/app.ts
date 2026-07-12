@@ -20,6 +20,7 @@ import { parseRouteSeoData } from './app-lib/app-seo-data.utils';
 import { SidebarComponent } from './sidebar/sidebar';
 
 const SESSION_ROUTE_PENDING_CLASS = 'fd-session-route-pending';
+type AppShellMode = 'authenticated' | 'public';
 
 @Component({
     selector: 'fd-root',
@@ -52,6 +53,8 @@ export class AppComponent {
     protected isAuthenticated = this.authService.isAuthenticated;
     protected isImpersonating = this.authService.isImpersonating;
     protected impersonationReason = this.authService.impersonationReason;
+    protected readonly shellMode = signal<AppShellMode>(this.getShellMode());
+    protected readonly usesAuthenticatedShell = computed(() => this.isAuthenticated() && this.shellMode() === 'authenticated');
     protected readonly isTopLoaderVisible = computed(() => this.globalLoadingService.isVisible() || this.routeLoadingService.isVisible());
     protected readonly currentPath = signal(this.getCurrentPath());
     protected readonly usesCompactMobileNavigation = computed(() => {
@@ -73,6 +76,7 @@ export class AppComponent {
             .subscribe(event => {
                 this.document.documentElement.classList.remove(SESSION_ROUTE_PENDING_CLASS);
                 this.currentPath.set(this.getCurrentPath(event.urlAfterRedirects));
+                this.shellMode.set(this.getShellMode());
             });
 
         this.router.events
@@ -115,6 +119,10 @@ export class AppComponent {
             const routeSeo = parseRouteSeoData(routePart.snapshot.data['seo']);
             return routeSeo === null ? seo : { ...seo, ...routeSeo };
         }, {});
+    }
+
+    private getShellMode(): AppShellMode {
+        return this.getDeepestRoute(this.activatedRoute).snapshot.data['shell'] === 'public' ? 'public' : 'authenticated';
     }
 
     private async prepareRouteAsync(url: string): Promise<void> {

@@ -80,6 +80,28 @@ describe('AppComponent shell behavior', () => {
     );
 
     it(
+        'hides the authenticated shell on public routes for signed-in users',
+        async () => {
+            const { component } = await createComponentAsync({ isAuthenticated: true, shell: 'public' });
+            const usesAuthenticatedShell = (component as unknown as { usesAuthenticatedShell: Signal<boolean> }).usesAuthenticatedShell;
+
+            expect(usesAuthenticatedShell()).toBe(false);
+        },
+        SHELL_TEST_TIMEOUT_MS,
+    );
+
+    it(
+        'shows the authenticated shell on workspace routes for signed-in users',
+        async () => {
+            const { component } = await createComponentAsync({ isAuthenticated: true, shell: 'authenticated' });
+            const usesAuthenticatedShell = (component as unknown as { usesAuthenticatedShell: Signal<boolean> }).usesAuthenticatedShell;
+
+            expect(usesAuthenticatedShell()).toBe(true);
+        },
+        SHELL_TEST_TIMEOUT_MS,
+    );
+
+    it(
         'reveals the app after the initial route resolves',
         async () => {
             const { routerEvents } = await createComponentAsync();
@@ -94,7 +116,7 @@ describe('AppComponent shell behavior', () => {
     );
 });
 
-async function createComponentAsync(): Promise<{
+async function createComponentAsync(options: { isAuthenticated?: boolean; shell?: 'authenticated' | 'public' } = {}): Promise<{
     component: AppComponent;
     localizationService: { loadTranslationsForRouteAsync: ReturnType<typeof vi.fn> };
     routeLoadingService: { beginLoad: ReturnType<typeof vi.fn>; endLoad: ReturnType<typeof vi.fn> };
@@ -116,7 +138,7 @@ async function createComponentAsync(): Promise<{
             {
                 provide: AuthService,
                 useValue: {
-                    isAuthenticated: signal(false),
+                    isAuthenticated: signal(options.isAuthenticated ?? false),
                     isImpersonating: signal(false),
                     impersonationReason: signal<string | null>(null),
                     onLogoutAsync: vi.fn().mockResolvedValue(void 0),
@@ -125,7 +147,7 @@ async function createComponentAsync(): Promise<{
             { provide: Router, useValue: router },
             {
                 provide: ActivatedRoute,
-                useValue: createActivatedRouteStub(),
+                useValue: createActivatedRouteStub(options.shell ?? 'authenticated'),
             },
             { provide: SeoService, useValue: seoService },
             { provide: LocalizationService, useValue: localizationService },
@@ -158,19 +180,20 @@ async function createComponentAsync(): Promise<{
     };
 }
 
-function createActivatedRouteStub(): ActivatedRoute {
+function createActivatedRouteStub(shell: 'authenticated' | 'public'): ActivatedRoute {
+    const data = {
+        shell,
+        seo: {
+            titleKey: 'SEO.DASHBOARD.TITLE',
+            descriptionKey: 'SEO.DASHBOARD.DESCRIPTION',
+        },
+    };
     const route = {
         firstChild: null,
+        snapshot: { data },
         pathFromRoot: [
             {
-                snapshot: {
-                    data: {
-                        seo: {
-                            titleKey: 'SEO.DASHBOARD.TITLE',
-                            descriptionKey: 'SEO.DASHBOARD.DESCRIPTION',
-                        },
-                    },
-                },
+                snapshot: { data },
             },
         ],
     };

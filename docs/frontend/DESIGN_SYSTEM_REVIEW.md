@@ -69,7 +69,7 @@ When two screens show the same semantic object, they must use the same primitive
 | `/food-log`                        | SEO landing         | yes | yes | `food log` replaced throughout with consistent Russian journal terminology                   |
 | `/protein-tracker`                 | SEO landing         | yes | yes | Shared composition; SEO jargon, duplication, and nutrition terminology corrected             |
 | `/meal-prep-planner`               | SEO landing         | yes | yes | Rewritten around natural Russian preparation, menu, recipe, and shopping terminology         |
-| `/privacy-policy`                  | legal page          | -   | yes | No overflow                                                                                  |
+| `/privacy-policy`                  | legal page          | yes | yes | Public shell for signed-in users; compact reading measure and no overflow                    |
 | not-found route                    | public state page   | yes | yes | Shared public tokens; localized recovery actions and no broken icon glyph                    |
 
 ## Authentication
@@ -158,6 +158,8 @@ Review desktop at `1440x900` and a compact laptop width before mobile. Admin wor
 | P2       | Planning and progress pages used `workflow`, English search phrases, `поток`, and `снижать трение`        | Fixed with concrete Russian task-oriented copy                               |
 | P1       | Meal-prep SEO copy contained repeated case, agreement, and terminology errors                             | Fixed by rewriting the complete visible scenario in natural Russian          |
 | P2       | Food-log and protein pages exposed English search language and internal SEO terminology                   | Fixed with user-facing journal and nutrition copy                            |
+| P1       | Signed-in users opened the privacy policy inside the authenticated sidebar and quick-entry shell          | Fixed with explicit public route metadata and route-aware root shell         |
+| P2       | Privacy policy lacks verified operator identity/contact details and Russia-specific legal review          | Open; requires product owner and qualified legal input                       |
 
 ## Per-Page Checklist
 

@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 .privacy-policy {
     min-height: 100dvh;
     background: var(--fd-bg-surface-inset);
@@ -47,5 +49,13 @@
 
     &__content strong {
         font-weight: var(--fd-font-weight-bold);
+    }
+
+    @media #{variables.$media-phablet} {
+        padding: var(--fd-space-lg) var(--fd-space-sm) var(--fd-space-xxl);
+
+        &__container {
+            padding: var(--fd-space-lg) var(--fd-space-md);
+        }
     }
 }

@@ -23,6 +23,7 @@ const publicSeoLanding = ({
     loadComponent: async (): Promise<Type<unknown>> =>
         import('./features/public/pages/seo-landing/seo-landing-page/seo-landing-page').then(m => m.SeoLandingPageComponent),
     data: {
+        shell: 'public',
         seo: {
             titleKey,
             descriptionKey,
@@ -46,7 +47,7 @@ export const routes: Routes = [
         loadComponent: async () => import('./features/public/pages/landing/main').then(m => m.MainComponent),
         canActivate: [mobileShellStartGuard, loggedInGuard],
         canDeactivate: [unsavedChangesGuard],
-        data: { seo: { titleKey: 'SEO.LANDING_TITLE', descriptionKey: 'SEO.LANDING_DESCRIPTION' } },
+        data: { shell: 'public', seo: { titleKey: 'SEO.LANDING_TITLE', descriptionKey: 'SEO.LANDING_DESCRIPTION' } },
     },
     ...PUBLIC_SEO_LANDING_ROUTES.map(publicSeoLanding),
     ...authRoutes,
@@ -180,11 +181,11 @@ export const routes: Routes = [
     {
         path: 'privacy-policy',
         loadComponent: async () => import('./features/public/pages/privacy-policy/privacy-policy').then(m => m.PrivacyPolicyComponent),
-        data: { seo: { titleKey: 'SEO.PRIVACY_POLICY', descriptionKey: 'SEO.PRIVACY_POLICY_DESCRIPTION' } },
+        data: { shell: 'public', seo: { titleKey: 'SEO.PRIVACY_POLICY', descriptionKey: 'SEO.PRIVACY_POLICY_DESCRIPTION' } },
     },
     {
         path: '**',
         loadComponent: async () => import('./features/public/pages/not-found/not-found').then(m => m.NotFoundComponent),
-        data: { seo: { titleKey: 'SEO.NOT_FOUND', noIndex: true } },
+        data: { shell: 'public', seo: { titleKey: 'SEO.NOT_FOUND', noIndex: true } },
     },
 ];
