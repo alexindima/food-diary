@@ -83,7 +83,6 @@ describe('ProductListBaseComponent', () => {
         expect(component['currentPageIndex']).toBe(PAGE_INDEX);
         expect(component['resolveImage'](createProduct())).toBe('https://example.test/image.jpg');
     });
-
 });
 
 function setupComponent(): {
