@@ -62,8 +62,8 @@ export class AdminEmailTemplatesComponent {
     protected openCreate(): void {
         const dialogData: AdminEmailTemplate & { isNew: boolean } = {
             id: '',
-            key: 'email_verification',
-            locale: 'en',
+            key: '',
+            locale: '',
             subject: '',
             htmlBody: '',
             textBody: '',

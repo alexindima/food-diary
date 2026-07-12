@@ -1,8 +1,8 @@
 <div class="admin-users fd-grid fd-gap-md">
     <div class="toolbar fd-row fd-gap-sm">
-        <fd-ui-input placeholder="Search by email or username" [value]="search()" (valueChange)="onSearchChange($event)" />
+        <fd-ui-input label="Search users" placeholder="Email or username" [value]="search()" (valueChange)="onSearchChange($event)" />
 
-        <fd-ui-select placeholder="User status" [options]="statusOptions" [value]="status()" (valueChange)="onStatusChange($event)" />
+        <fd-ui-select label="User status" [options]="statusOptions" [value]="status()" (valueChange)="onStatusChange($event)" />
     </div>
 
     @if (isLoading()) {

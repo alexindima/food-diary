@@ -59,6 +59,22 @@ describe('AdminUsersComponent', () => {
         expect(component['isLoading']()).toBe(false);
     });
 
+    it('exposes persistent names for the user filters', () => {
+        const element = fixture.nativeElement as HTMLElement;
+        const searchInput = element.querySelector<HTMLInputElement>('fd-ui-input input');
+        const statusButton = element.querySelector<HTMLButtonElement>('fd-ui-select button');
+        if (searchInput === null || statusButton === null) {
+            throw new Error('Expected user filter controls to render.');
+        }
+        const searchLabels = searchInput.labels;
+        if (searchLabels === null) {
+            throw new Error('Expected user filter labels to render.');
+        }
+
+        expect(searchLabels.item(0).textContent).toContain('Search users');
+        expect(statusButton.labels.item(0).textContent).toContain('User status');
+    });
+
     it('should update search and reload from page 1', () => {
         component['onSearchChange']('john');
 

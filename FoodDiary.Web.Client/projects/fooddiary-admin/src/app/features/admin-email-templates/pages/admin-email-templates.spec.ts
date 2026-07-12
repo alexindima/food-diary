@@ -83,7 +83,10 @@ describe('AdminEmailTemplatesComponent', () => {
         close$.next(true);
         close$.complete();
 
-        expect(dialogService.open).toHaveBeenCalled();
+        const serializedDialogConfig = JSON.stringify(dialogService.open.mock.calls[0]?.[1]);
+        expect(serializedDialogConfig).toContain('"key":""');
+        expect(serializedDialogConfig).toContain('"locale":""');
+        expect(serializedDialogConfig).toContain('"isNew":true');
         expect(templatesService.getAll).toHaveBeenCalledTimes(2);
     });
 });

@@ -1,6 +1,7 @@
 <div class="admin-moderation">
     <div class="toolbar fd-row fd-gap-sm">
-        <select [value]="statusFilter()" (change)="onStatusChange(getSelectValue($event))">
+        <label for="admin-moderation-status">Report status</label>
+        <select id="admin-moderation-status" [value]="statusFilter()" (change)="onStatusChange(getSelectValue($event))">
             <option value="">All</option>
             <option value="Pending">Pending</option>
             <option value="Reviewed">Reviewed</option>

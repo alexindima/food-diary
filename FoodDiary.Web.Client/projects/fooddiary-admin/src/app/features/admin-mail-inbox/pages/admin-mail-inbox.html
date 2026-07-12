@@ -8,7 +8,7 @@
                 <option value="general">Other mail</option>
             </select>
         </div>
-        <fd-ui-input type="number" placeholder="Limit" [value]="limit()" (valueChange)="updateLimit($event)" />
+        <fd-ui-input label="Message limit" type="number" [value]="limit()" (valueChange)="updateLimit($event)" />
         <fd-ui-button type="button" variant="secondary" (click)="loadMessages()">Refresh</fd-ui-button>
     </div>
 
