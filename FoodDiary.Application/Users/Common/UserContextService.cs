@@ -1,6 +1,5 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.Entities.Users;
@@ -55,14 +54,14 @@ internal sealed class UserContextService(
             : Result.Success(new UserDesiredWaistModel(userResult.Value.DesiredWaist));
     }
 
-    public async Task<Result<NotificationPreferencesModel>> GetNotificationPreferencesAsync(UserId userId, CancellationToken cancellationToken) {
+    public async Task<Result<UserNotificationPreferencesModel>> GetNotificationPreferencesAsync(UserId userId, CancellationToken cancellationToken) {
         Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
-            return Result.Failure<NotificationPreferencesModel>(userResult.Error);
+            return Result.Failure<UserNotificationPreferencesModel>(userResult.Error);
         }
 
         User user = userResult.Value;
-        return Result.Success(new NotificationPreferencesModel(
+        return Result.Success(new UserNotificationPreferencesModel(
             user.PushNotificationsEnabled,
             user.FastingPushNotificationsEnabled,
             user.SocialPushNotificationsEnabled,

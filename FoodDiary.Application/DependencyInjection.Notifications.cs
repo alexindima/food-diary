@@ -9,6 +9,7 @@ using FoodDiary.Application.Dietologist.Services;
 using FoodDiary.Application.Images.Services;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Services;
+using FoodDiary.Application.Users.Common;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Application;
@@ -25,6 +26,8 @@ public static partial class DependencyInjection {
         services.AddScoped<INotificationPreferencesService, NotificationPreferencesService>();
         services.AddScoped<INotificationFeedReadService, NotificationFeedReadService>();
         services.AddScoped<IWebPushSubscriptionReadService, WebPushSubscriptionReadService>();
+        services.AddScoped<IProfileNotificationReadService>(static provider =>
+            (IProfileNotificationReadService)provider.GetRequiredService<IWebPushSubscriptionReadService>());
         services.AddScoped<IWebPushDeliveryAudienceService, WebPushDeliveryAudienceService>();
         services.AddScoped<INotificationUserContextService, NotificationUserContextService>();
         services.AddScoped<INotificationWriter, NotificationWriter>();

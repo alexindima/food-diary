@@ -1,4 +1,3 @@
-using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.SetPassword;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
@@ -191,14 +190,14 @@ public sealed class UserHttpMappingsTests {
         var dietologistUserId = Guid.NewGuid();
         var model = new ProfileOverviewModel(
             CreateUserModel(userId, profileImageAssetId: null, birthDate: null, lastLoginAtUtc: null, aiConsentAcceptedAt: null),
-            new NotificationPreferencesModel(
+            new UserNotificationPreferencesModel(
                 PushNotificationsEnabled: true,
                 FastingPushNotificationsEnabled: false,
                 SocialPushNotificationsEnabled: true,
                 FastingCheckInReminderHours: 6,
                 FastingCheckInFollowUpReminderHours: 3),
             [
-                new WebPushSubscriptionModel(
+                new ProfileWebPushSubscriptionModel(
                     Endpoint: "https://push.example/subscription",
                     EndpointHost: "push.example",
                     ExpirationTimeUtc: null,

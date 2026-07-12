@@ -1,6 +1,4 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -9,7 +7,7 @@ namespace FoodDiary.Application.Users.Services;
 
 public sealed class ProfileOverviewReadService(
     IUserProfileReadService userProfileReadService,
-    IWebPushSubscriptionReadService webPushSubscriptionReadService,
+    IProfileNotificationReadService notificationReadService,
     IProfileDietologistReadService dietologistReadService)
     : IProfileOverviewReadService {
     public async Task<Result<ProfileOverviewModel>> GetAsync(UserId userId, CancellationToken cancellationToken) {
@@ -18,13 +16,13 @@ public sealed class ProfileOverviewReadService(
             return Result.Failure<ProfileOverviewModel>(userResult.Error);
         }
 
-        Result<NotificationPreferencesModel> preferencesResult = await userProfileReadService.GetNotificationPreferencesAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserNotificationPreferencesModel> preferencesResult = await userProfileReadService.GetNotificationPreferencesAsync(userId, cancellationToken).ConfigureAwait(false);
         if (preferencesResult.IsFailure) {
             return Result.Failure<ProfileOverviewModel>(preferencesResult.Error);
         }
 
-        IReadOnlyList<WebPushSubscriptionModel> webPushSubscriptions = await webPushSubscriptionReadService
-            .GetSubscriptionsAsync(userId, cancellationToken)
+        IReadOnlyList<ProfileWebPushSubscriptionModel> webPushSubscriptions = await notificationReadService
+            .GetWebPushSubscriptionsAsync(userId, cancellationToken)
             .ConfigureAwait(false);
         Result<ProfileDietologistRelationshipModel?> relationshipResult = await dietologistReadService
             .GetRelationshipAsync(userId, cancellationToken)

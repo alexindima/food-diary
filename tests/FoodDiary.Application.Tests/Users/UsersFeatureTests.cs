@@ -18,7 +18,6 @@ using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
 using FoodDiary.Application.Users.Commands.UpdateUserAppearance;
 using FoodDiary.Application.Users.Commands.UpdateGoals;
-using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
@@ -771,7 +770,7 @@ public partial class UsersFeatureTests {
             .Returns(Task.FromResult(Result.Success(user.ToModel())));
         userProfileReadService
             .GetNotificationPreferencesAsync(user.Id, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<NotificationPreferencesModel>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<UserNotificationPreferencesModel>(Errors.Authentication.InvalidToken)));
         var service = new ProfileOverviewReadService(
             userProfileReadService,
             new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([])),
@@ -945,7 +944,7 @@ public partial class UsersFeatureTests {
         userLookupRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns(Task.FromResult<User?>(null));
         var service = new UserContextService(userLookupRepository, Substitute.For<IUserWriteRepository>());
 
-        Result<NotificationPreferencesModel> result = await service.GetNotificationPreferencesAsync(userId, CancellationToken.None);
+        Result<UserNotificationPreferencesModel> result = await service.GetNotificationPreferencesAsync(userId, CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1045,14 +1044,14 @@ public partial class UsersFeatureTests {
                 : Result.Success(new UserDesiredWaistModel(result.Value.DesiredWaist));
         }
 
-        public async Task<Result<NotificationPreferencesModel>> GetNotificationPreferencesAsync(UserId userId, CancellationToken cancellationToken) {
+        public async Task<Result<UserNotificationPreferencesModel>> GetNotificationPreferencesAsync(UserId userId, CancellationToken cancellationToken) {
             Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
             if (result.IsFailure) {
-                return Result.Failure<NotificationPreferencesModel>(result.Error);
+                return Result.Failure<UserNotificationPreferencesModel>(result.Error);
             }
 
             User currentUser = result.Value;
-            return Result.Success(new NotificationPreferencesModel(
+            return Result.Success(new UserNotificationPreferencesModel(
                 currentUser.PushNotificationsEnabled,
                 currentUser.FastingPushNotificationsEnabled,
                 currentUser.SocialPushNotificationsEnabled,

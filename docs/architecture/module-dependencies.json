@@ -37,13 +37,11 @@
     "Statistics": ["Users"],
     "Tdee": ["Exercises", "Users", "WeightEntries"],
     "Usda": ["Consumptions", "Users"],
-    "Users": ["Images", "Notifications"],
+    "Users": ["Images"],
     "WaistEntries": ["Users"],
     "Wearables": ["Users"],
     "WeeklyCheckIn": ["Consumptions", "Hydration", "Users", "WaistEntries", "WeightEntries"],
     "WeightEntries": ["Users"]
   },
-  "knownCycles": [
-    ["Notifications", "Users"]
-  ]
+  "knownCycles": []
 }

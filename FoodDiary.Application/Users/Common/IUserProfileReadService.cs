@@ -1,5 +1,4 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -10,5 +9,5 @@ public interface IUserProfileReadService {
     Task<Result<GoalsModel>> GetGoalsAsync(UserId userId, CancellationToken cancellationToken);
     Task<Result<UserDesiredWeightModel>> GetDesiredWeightAsync(UserId userId, CancellationToken cancellationToken);
     Task<Result<UserDesiredWaistModel>> GetDesiredWaistAsync(UserId userId, CancellationToken cancellationToken);
-    Task<Result<NotificationPreferencesModel>> GetNotificationPreferencesAsync(UserId userId, CancellationToken cancellationToken);
+    Task<Result<UserNotificationPreferencesModel>> GetNotificationPreferencesAsync(UserId userId, CancellationToken cancellationToken);
 }

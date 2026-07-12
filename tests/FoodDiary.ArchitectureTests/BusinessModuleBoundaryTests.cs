@@ -50,6 +50,7 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Common",
         "FoodDiary.Application.Notifications",
         "FoodDiary.Application.Users.Common",
+        "FoodDiary.Application.Users.Models",
     };
 
     private static readonly HashSet<string> ApprovedBillingApplicationDependencies = new(StringComparer.Ordinal) {
