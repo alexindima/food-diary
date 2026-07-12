@@ -57,6 +57,23 @@ describe('FdUiTimeInputComponent rendering', () => {
         expect(label).toBeNull();
     });
 
+    it('should use the field label as the picker button accessible name', async () => {
+        const { fixture, requireElement } = await setupTimeInputAsync();
+        fixture.componentRef.setInput('label', 'Meal time');
+        fixture.detectChanges();
+
+        expect(requireElement('.fd-ui-time-input__suffix').getAttribute('aria-label')).toBe('Meal time');
+    });
+
+    it('should support a dedicated picker button accessible name', async () => {
+        const { fixture, requireElement } = await setupTimeInputAsync();
+        fixture.componentRef.setInput('label', 'Time');
+        fixture.componentRef.setInput('pickerAriaLabel', 'Open time picker');
+        fixture.detectChanges();
+
+        expect(requireElement('.fd-ui-time-input__suffix').getAttribute('aria-label')).toBe('Open time picker');
+    });
+
     it('should show required asterisk', async () => {
         const { fixture, requireElement } = await setupTimeInputAsync();
         fixture.componentRef.setInput('label', 'Time');

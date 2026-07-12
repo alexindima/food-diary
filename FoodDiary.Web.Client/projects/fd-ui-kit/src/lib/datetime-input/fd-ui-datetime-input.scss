@@ -101,6 +101,10 @@
     text-align: left;
 }
 
+.fd-ui-datetime-input__control--time::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
 .fd-ui-datetime-input__segment {
     position: relative;
     display: flex;

@@ -25,7 +25,13 @@
                 (input)="onInput(timeInput.value)"
                 (blur)="onBlur()"
             />
-            <button type="button" class="fd-ui-time-input__suffix" [disabled]="disabled()" (click)="focusTime(timeInput)">
+            <button
+                type="button"
+                class="fd-ui-time-input__suffix"
+                [disabled]="disabled()"
+                [attr.aria-label]="pickerAriaLabel() ?? label()"
+                (click)="focusTime(timeInput)"
+            >
                 <fd-ui-icon name="schedule" />
             </button>
         </div>

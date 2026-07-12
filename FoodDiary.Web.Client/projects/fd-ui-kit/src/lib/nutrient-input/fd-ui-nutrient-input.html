@@ -29,6 +29,7 @@
             [attr.type]="type() === 'number' ? 'text' : type()"
             [attr.inputmode]="type() === 'number' ? 'decimal' : null"
             [attr.placeholder]="visiblePlaceholder()"
+            [attr.aria-label]="effectiveAriaLabel()"
             [required]="required()"
             [readonly]="isReadonly()"
             [attr.step]="step() ?? null"

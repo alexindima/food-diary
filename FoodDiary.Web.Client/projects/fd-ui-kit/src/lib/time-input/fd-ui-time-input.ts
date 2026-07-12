@@ -24,6 +24,7 @@ let uniqueId = 0;
 export class FdUiTimeInputComponent implements FormValueControl<string | null> {
     public readonly id = input(`fd-ui-time-input-${uniqueId++}`);
     public readonly label = input<string>();
+    public readonly pickerAriaLabel = input<string>();
     public readonly placeholder = input<string>();
     public readonly error = input<string | null>();
     public readonly required = input(false);

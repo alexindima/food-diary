@@ -55,6 +55,24 @@ describe('FdUiNutrientInputComponent', () => {
         expect(host.querySelector('.fd-ui-nutrient-input__unit')).toBeNull();
     });
 
+    it('should build the input accessible name from the label and unit', async () => {
+        const { fixture, input } = await setupNutrientInputAsync();
+        fixture.componentRef.setInput('label', 'Proteins');
+        fixture.componentRef.setInput('unitLabel', 'g');
+        fixture.detectChanges();
+
+        expect(input().getAttribute('aria-label')).toBe('Proteins, g');
+    });
+
+    it('should prefer an explicit input accessible name', async () => {
+        const { fixture, input } = await setupNutrientInputAsync();
+        fixture.componentRef.setInput('label', 'Proteins');
+        fixture.componentRef.setInput('ariaLabel', 'Protein amount in grams');
+        fixture.detectChanges();
+
+        expect(input().getAttribute('aria-label')).toBe('Protein amount in grams');
+    });
+
     it('should focus input when the card is pressed', async () => {
         const { host, input } = await setupNutrientInputAsync();
 

@@ -32,6 +32,7 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
     private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
 
     public readonly label = input('');
+    public readonly ariaLabel = input<string>();
     public readonly icon = input<string>();
     public readonly placeholder = input('0');
     public readonly name = input('');
@@ -62,6 +63,16 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
     protected readonly maxInputChars = DEFAULT_MAX_INPUT_CHARS;
     protected readonly isFocused = signal(false);
     protected readonly visiblePlaceholder = computed(() => (this.isFocused() ? null : this.placeholder()));
+    protected readonly effectiveAriaLabel = computed(() => {
+        const explicitLabel = this.ariaLabel()?.trim();
+        if (explicitLabel) {
+            return explicitLabel;
+        }
+
+        const label = this.label().trim();
+        const unit = this.unitLabel()?.trim();
+        return unit ? `${label}, ${unit}` : label || null;
+    });
 
     public constructor() {
         effect(() => {

@@ -104,6 +104,10 @@
     color: var(--fd-color-text-muted);
 }
 
+.fd-ui-time-input__control::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
 .fd-ui-time-input__suffix {
     position: static;
     margin-left: var(--fd-space-xs);
