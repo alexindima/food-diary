@@ -1,5 +1,8 @@
 using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
 using FoodDiary.Application.Lessons.Services;
+using FoodDiary.Application.Ai.Services;
+using FoodDiary.Application.ContentReports.Services;
+using FoodDiary.Application.Email.Services;
 using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
 using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
@@ -496,8 +499,12 @@ public class AdminLessonFeatureTests {
     private static IAdminContentReadService CreateAdminContentReadService(
         INutritionLessonReadModelRepository lessonRepository) =>
         new AdminContentReadService(
-            lessonRepository,
-            Substitute.For<IEmailTemplateReadModelRepository>(),
-            Substitute.For<IAiPromptTemplateReadModelRepository>(),
-            Substitute.For<IContentReportReadModelRepository>());
+            new LessonAdministrationReadService(lessonRepository),
+            new EmailTemplateAdministrationReadService(Substitute.For<IEmailTemplateReadModelRepository>()),
+            new AiAdministrationReadService(
+                Substitute.For<IAiUsageReadRepository>(),
+                Substitute.For<IAiPromptTemplateReadModelRepository>()),
+            new ContentReportAdministrationReadService(
+                Substitute.For<IContentReportReadModelRepository>(),
+                Substitute.For<IContentReportReadRepository>()));
 }

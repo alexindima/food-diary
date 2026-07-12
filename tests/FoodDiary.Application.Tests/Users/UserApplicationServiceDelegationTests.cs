@@ -5,6 +5,7 @@ using FoodDiary.Application.Admin.Services;
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Billing.Services;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Users.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -90,7 +91,7 @@ public sealed class UserApplicationServiceDelegationTests {
     public async Task AdminUserReadService_DelegatesReadMethodsToRepositories() {
         IUserLookupRepository lookupRepository = Substitute.For<IUserLookupRepository>();
         IUserAdminReadModelRepository adminReadRepository = Substitute.For<IUserAdminReadModelRepository>();
-        var service = new AdminUserReadService(lookupRepository, adminReadRepository);
+        var service = new AdminUserReadService(lookupRepository, new UserAdministrationReadService(adminReadRepository));
         var userId = UserId.New();
         var user = User.Create("admin@test.com", "hashed-password");
         UserAdminReadModel userReadModel = ToAdminReadModel(user);

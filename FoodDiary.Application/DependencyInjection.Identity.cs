@@ -14,10 +14,12 @@ public static partial class DependencyInjection {
     private static void AddIdentityModules(this IServiceCollection services) {
         services.AddScoped<IAuthenticationUserLookupService, AuthenticationUserLookupService>();
         services.AddScoped<IAuthenticationLoginEventCleanupService, AuthenticationLoginEventCleanupService>();
+        services.AddScoped<IAuthenticationLoginEventReadService, AuthenticationLoginEventReadService>();
         services.AddScoped<IAuthenticationUserMutationService, AuthenticationUserMutationService>();
         services.AddScoped<IAuthenticationUserRegistrationService, AuthenticationUserRegistrationService>();
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
         services.AddScoped<IUserAdministrationService, UserAdministrationService>();
+        services.AddScoped<IUserAdministrationReadService, UserAdministrationReadService>();
         services.AddScoped<IUserIdentityMutationService, UserIdentityMutationService>();
         services.AddScoped<IDietologistClientReadService, DietologistClientReadService>();
         services.AddScoped<IDietologistInvitationReadService, DietologistInvitationReadService>();

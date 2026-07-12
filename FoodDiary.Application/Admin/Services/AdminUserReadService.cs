@@ -4,15 +4,16 @@ using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Admin.Services;
 
 internal sealed class AdminUserReadService(
     IUserDirectoryService userLookupRepository,
-    IUserAdminReadModelRepository userAdminReadRepository) : IAdminUserReadService {
+    IUserAdministrationReadService userAdministrationReadService) : IAdminUserReadService {
     public async Task<AdminUserModel?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) {
-        UserAdminReadModel? user = await userAdminReadRepository
-            .GetByIdIncludingDeletedReadModelAsync(userId, cancellationToken)
+        UserAdminReadModel? user = await userAdministrationReadService
+            .GetByIdIncludingDeletedAsync(userId, cancellationToken)
             .ConfigureAwait(false);
         return user?.ToAdminModel();
     }
@@ -23,7 +24,7 @@ internal sealed class AdminUserReadService(
         int limit,
         UserAccountStatusFilter status,
         CancellationToken cancellationToken = default) {
-        (IReadOnlyList<UserAdminReadModel> Items, int TotalItems) = await userAdminReadRepository.GetPagedReadModelsAsync(
+        (IReadOnlyList<UserAdminReadModel> Items, int TotalItems) = await userAdministrationReadService.GetPagedAsync(
             search,
             page,
             limit,
@@ -38,7 +39,7 @@ internal sealed class AdminUserReadService(
         int pendingReportsCount,
         CancellationToken cancellationToken = default) {
         (int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<UserAdminReadModel> RecentUsers) =
-            await userAdminReadRepository.GetAdminDashboardSummaryReadModelsAsync(recentLimit, cancellationToken).ConfigureAwait(false);
+            await userAdministrationReadService.GetDashboardSummaryAsync(recentLimit, cancellationToken).ConfigureAwait(false);
 
         return new AdminDashboardSummaryModel(
             TotalUsers,

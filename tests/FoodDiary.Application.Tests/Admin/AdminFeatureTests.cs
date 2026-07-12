@@ -8,6 +8,7 @@ using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.ContentReports.Services;
 using FoodDiary.Application.Email.Services;
+using FoodDiary.Application.Lessons.Services;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Services;
@@ -908,10 +909,14 @@ public partial class AdminFeatureTests {
         IAiPromptTemplateReadModelRepository? aiPromptTemplateRepository = null,
         IContentReportReadModelRepository? contentReportRepository = null) =>
         new AdminContentReadService(
-            lessonRepository ?? Substitute.For<INutritionLessonReadModelRepository>(),
-            emailTemplateRepository ?? Substitute.For<IEmailTemplateReadModelRepository>(),
-            aiPromptTemplateRepository ?? Substitute.For<IAiPromptTemplateReadModelRepository>(),
-            contentReportRepository ?? Substitute.For<IContentReportReadModelRepository>());
+            new LessonAdministrationReadService(lessonRepository ?? Substitute.For<INutritionLessonReadModelRepository>()),
+            new EmailTemplateAdministrationReadService(emailTemplateRepository ?? Substitute.For<IEmailTemplateReadModelRepository>()),
+            new AiAdministrationReadService(
+                Substitute.For<IAiUsageReadRepository>(),
+                aiPromptTemplateRepository ?? Substitute.For<IAiPromptTemplateReadModelRepository>()),
+            new ContentReportAdministrationReadService(
+                contentReportRepository ?? Substitute.For<IContentReportReadModelRepository>(),
+                Substitute.For<IContentReportReadRepository>()));
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryEmailTemplateRepository(params EmailTemplate[] templates) : IEmailTemplateRepository {

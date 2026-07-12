@@ -1,14 +1,14 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Admin.Models;
-using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Models;
+using FoodDiary.Application.Ai.Common;
 
 namespace FoodDiary.Application.Admin.Services;
 
 public sealed class AdminAiUsageReadService(
-    IAiUsageReadRepository aiUsageRepository,
+    IAiAdministrationReadService aiReadService,
     TimeProvider dateTimeProvider)
     : IAdminAiUsageReadService {
     public async Task<Result<AdminAiUsageSummaryModel>> GetSummaryAsync(
@@ -26,7 +26,7 @@ public sealed class AdminAiUsageReadService(
         var fromUtc = periodFrom.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
         var toUtc = periodTo.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
 
-        AiUsageSummary summary = await aiUsageRepository.GetSummaryAsync(fromUtc, toUtc, cancellationToken).ConfigureAwait(false);
+        AiUsageSummary summary = await aiReadService.GetUsageSummaryAsync(fromUtc, toUtc, cancellationToken).ConfigureAwait(false);
 
         var response = new AdminAiUsageSummaryModel(
             summary.TotalTokens,

@@ -28,13 +28,17 @@ public static partial class DependencyInjection {
         services.AddScoped<IAdminUserReadService, AdminUserReadService>();
         services.AddScoped<IAdminUserLoginReadService, AdminUserLoginReadService>();
         services.AddScoped<IAiUserContextService, AiUserContextService>();
+        services.AddScoped<IAiAdministrationReadService, AiAdministrationReadService>();
         services.AddScoped<IAiPromptAdministrationService, AiPromptAdministrationService>();
         services.AddScoped<IUserAiUsageSummaryReadService, UserAiUsageSummaryReadService>();
         services.AddScoped<IContentReportAdministrationService, ContentReportAdministrationService>();
+        services.AddScoped<IContentReportAdministrationReadService, ContentReportAdministrationReadService>();
         services.AddScoped<IDailyAdviceReadService, DailyAdviceReadService>();
         services.AddScoped<IEmailTemplateAdministrationService, EmailTemplateAdministrationService>();
+        services.AddScoped<IEmailTemplateAdministrationReadService, EmailTemplateAdministrationReadService>();
         services.AddScoped<ILessonReadService, LessonReadService>();
         services.AddScoped<ILessonAdministrationService, LessonAdministrationService>();
+        services.AddScoped<ILessonAdministrationReadService, LessonAdministrationReadService>();
         services.AddScoped<IMarketingConversionRecorder, MarketingConversionRecorder>();
         services.AddScoped<IMarketingAttributionCleanupService, MarketingAttributionCleanupService>();
         services.AddScoped<IMarketingAttributionSummaryReadService, MarketingAttributionSummaryReadService>();

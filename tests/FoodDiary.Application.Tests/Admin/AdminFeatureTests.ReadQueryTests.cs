@@ -1,7 +1,12 @@
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Services;
+using FoodDiary.Application.Ai.Services;
+using FoodDiary.Application.ContentReports.Services;
+using FoodDiary.Application.Users.Services;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminAiPrompts;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
@@ -172,7 +177,9 @@ public partial class AdminFeatureTests {
         User user = CreateUserWithRoles("admin-read-exists@example.com", [RoleNames.Admin]);
         IUserLookupRepository lookupRepository = Substitute.For<IUserLookupRepository>();
         lookupRepository.GetByIdIncludingDeletedAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Task.FromResult<User?>(user));
-        var service = new AdminUserReadService(lookupRepository, Substitute.For<IUserAdminReadModelRepository>());
+        var service = new AdminUserReadService(
+            lookupRepository,
+            new UserAdministrationReadService(Substitute.For<IUserAdminReadModelRepository>()));
 
         bool exists = await service.ExistsIncludingDeletedAsync(user.Id, CancellationToken.None);
 
@@ -230,7 +237,7 @@ public partial class AdminFeatureTests {
     public async Task GetAdminAiUsageSummaryQueryHandler_WithInvertedRange_ReturnsValidationFailure() {
         var repository = new RecordingAiUsageRepository();
         var handler = new GetAdminAiUsageSummaryQueryHandler(new AdminAiUsageReadService(
-            repository,
+            new AiAdministrationReadService(repository, Substitute.For<IAiPromptTemplateReadModelRepository>()),
             new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc))));
 
         Result<AdminAiUsageSummaryModel> result = await handler.Handle(
@@ -248,7 +255,9 @@ public partial class AdminFeatureTests {
     public async Task GetAdminAiUsageSummaryQueryHandler_UsesDateTimeProviderForDefaultRange() {
         var dateTimeProvider = new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc));
         var aiUsageRepository = new RecordingAiUsageRepository();
-        var handler = new GetAdminAiUsageSummaryQueryHandler(new AdminAiUsageReadService(aiUsageRepository, dateTimeProvider));
+        var handler = new GetAdminAiUsageSummaryQueryHandler(new AdminAiUsageReadService(
+            new AiAdministrationReadService(aiUsageRepository, Substitute.For<IAiPromptTemplateReadModelRepository>()),
+            dateTimeProvider));
 
         Result<AdminAiUsageSummaryModel> result = await handler.Handle(new GetAdminAiUsageSummaryQuery(From: null, To: null), CancellationToken.None);
 
@@ -270,7 +279,9 @@ public partial class AdminFeatureTests {
             ByModel: [new AiUsageBreakdown("gpt-test", 30, 12, 18)],
             ByUser: [new AiUsageUserSummary(userId, "user@example.com", 40, 16, 24)]);
         var handler = new GetAdminAiUsageSummaryQueryHandler(new AdminAiUsageReadService(
-            new RecordingAiUsageRepository(summary),
+            new AiAdministrationReadService(
+                new RecordingAiUsageRepository(summary),
+                Substitute.For<IAiPromptTemplateReadModelRepository>()),
             new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc))));
 
         Result<AdminAiUsageSummaryModel> result = await handler.Handle(
@@ -393,7 +404,11 @@ public partial class AdminFeatureTests {
         User recentUser = CreateUserWithRoles("recent@example.com", [RoleNames.Premium]);
         var userRepository = new SummaryUserRepository((12, 10, 3, 1, [recentUser]));
         var contentReportRepository = new CountingContentReportRepository(4);
-        var handler = new GetAdminDashboardSummaryQueryHandler(new AdminDashboardReadService(userRepository, contentReportRepository));
+        var handler = new GetAdminDashboardSummaryQueryHandler(new AdminDashboardReadService(
+            userRepository,
+            new ContentReportAdministrationReadService(
+                Substitute.For<IContentReportReadModelRepository>(),
+                contentReportRepository)));
 
         Result<AdminDashboardSummaryModel> result = await handler.Handle(new GetAdminDashboardSummaryQuery(2), CancellationToken.None);
 

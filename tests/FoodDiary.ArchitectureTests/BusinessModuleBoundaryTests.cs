@@ -895,33 +895,19 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Theory]
-    [InlineData("Ai", "IAiUsageReadRepository", "Admin/Services/AdminAiUsageReadService.cs")]
-    [InlineData("Lessons", "INutritionLessonReadModelRepository", "Admin/Services/AdminContentReadService.cs")]
-    [InlineData("Email", "IEmailTemplateReadModelRepository", "Admin/Services/AdminContentReadService.cs")]
-    [InlineData("Ai", "IAiPromptTemplateReadModelRepository", "Admin/Services/AdminContentReadService.cs")]
-    [InlineData("ContentReports", "IContentReportReadModelRepository", "Admin/Services/AdminContentReadService.cs")]
-    [InlineData("ContentReports", "IContentReportReadRepository", "Admin/Services/AdminDashboardReadService.cs")]
-    [InlineData("Authentication", "IUserLoginEventReadRepository", "Admin/Services/AdminUserLoginReadService.cs")]
-    [InlineData("Users", "IUserAdminReadModelRepository", "Admin/Services/AdminUserReadService.cs")]
-    public void CrossModuleRepositoryProjections_AreExplicitlyAllowlisted(
+    [InlineData("Ai", "IAiUsageReadRepository", "IAiPromptTemplateReadModelRepository")]
+    [InlineData("Lessons", "INutritionLessonReadModelRepository")]
+    [InlineData("Email", "IEmailTemplateReadModelRepository")]
+    [InlineData("ContentReports", "IContentReportReadModelRepository", "IContentReportReadRepository")]
+    [InlineData("Authentication", "IUserLoginEventReadRepository")]
+    [InlineData("Users", "IUserAdminReadModelRepository")]
+    public void OtherApplicationModules_DoNotAcquireAdministrativeProjectionRepositories(
         string ownerModule,
-        string projectionContract,
-        params string[] allowedConsumerPaths) {
-        string applicationRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application");
-        string ownerRoot = Path.Combine(applicationRoot, ownerModule);
-        string dependencyInjectionPath = Path.Combine(applicationRoot, "DependencyInjection.cs");
-
-        string[] actualConsumers = [.. SourceScanner.SourceFiles(applicationRoot)
-            .Where(path => !path.StartsWith(ownerRoot, StringComparison.OrdinalIgnoreCase))
-            .Where(path => !path.Equals(dependencyInjectionPath, StringComparison.OrdinalIgnoreCase))
-            .Where(path => File.ReadLines(path).Any(line => line.Contains(projectionContract, StringComparison.Ordinal)))
-            .Select(path => Path.GetRelativePath(applicationRoot, path).Replace('\\', '/'))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .Order(StringComparer.OrdinalIgnoreCase)];
-        string[] expectedConsumers = [.. allowedConsumerPaths.Order(StringComparer.OrdinalIgnoreCase)];
-
-        Assert.Equal(expectedConsumers, actualConsumers, StringComparer.OrdinalIgnoreCase);
-    }
+        params string[] forbiddenContracts) =>
+        AssertNoForeignRepositoryDependencies(
+            ownerModule,
+            forbiddenContracts,
+            "use the owning module administration read capability");
 
     private static void AssertNoForeignRepositoryDependencies(
         string ownerModule,

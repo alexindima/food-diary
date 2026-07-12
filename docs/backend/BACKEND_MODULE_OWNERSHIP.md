@@ -299,13 +299,13 @@ Technical and catalog adapters use explicit folders as well: `Admin`, `Ai`, `Con
 
 Executable hosts, Presentation, Initializer, JobManager and Integrations may not inject repository contracts. They invoke application capabilities or implement external ports. This is enforced across all primary backend adapter projects by a single architecture guardrail.
 
-The remaining repository-shaped cross-module projections are explicitly allowlisted by consumer file and are currently limited to Admin reporting/content/audit screens. Gamification, Weekly Check-In, Export, USDA micronutrient calculation and USDA product suggestions now use semantic owner capabilities instead. Adding another repository-shaped consumer requires an intentional architecture-test and ownership-map change; the allowlist grants no write capability.
+Repository-shaped cross-module projections are no longer allowlisted. Admin reporting/content/audit screens, Gamification, Weekly Check-In, Export, USDA micronutrient calculation and USDA product suggestions all use semantic owner capabilities. Architecture tests reject new foreign repository consumers, including read-model repositories.
 
 Consumption Diary exposes `IMealActivityReadService`, `IConsumptionExportReadService` and `IMealProductNutritionReadService` for calculation/reporting consumers. USDA exposes `IUsdaProductSuggestionReadService` to Products. These APIs preserve optimized read paths without exporting persistence vocabulary.
 
 ## Administrative content capabilities
 
-Admin is an orchestration and management surface, not the owner of every entity visible in its screens. Content Reports owns moderation transitions through `IContentReportAdministrationService`; AI owns prompt-template upserts through `IAiPromptAdministrationService`; Email owns template upserts through `IEmailTemplateAdministrationService`. Admin may consume dedicated read-model projections for grids and detail screens, but it must not acquire these modules' write or aggregate repositories.
+Admin is an orchestration and management surface, not the owner of every entity visible in its screens. Content Reports owns moderation transitions through `IContentReportAdministrationService`; AI owns prompt-template upserts through `IAiPromptAdministrationService`; Email owns template upserts through `IEmailTemplateAdministrationService`. Admin consumes owner-side administration read capabilities for grids, summaries and detail screens and does not acquire these modules' repositories.
 
 The legacy email repository abstractions still live under the `Admin` abstraction namespace. Runtime ownership is nevertheless assigned to Email and enforced at the Application boundary. Moving those adapter-facing contracts can be done separately when the namespace churn is justified; it is not required to preserve the behavioral boundary.
 
