@@ -1,4 +1,5 @@
 using FoodDiary.Application;
+using FoodDiary.Application.Marketing;
 using FoodDiary.Infrastructure;
 using FoodDiary.Integrations;
 using FoodDiary.JobManager.Services;
@@ -57,6 +58,7 @@ public sealed class DependencyInjectionTests {
         var services = new ServiceCollection();
 
         services.AddApplication();
+        services.AddMarketingModule();
         services.AddInfrastructure(configuration);
         services.AddIntegrations(configuration);
         services.AddNotificationResources();

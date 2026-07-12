@@ -15,6 +15,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Presentation adapter: `FoodDiary.Presentation.Api/AGENTS.md`
 - API host/presentation: `FoodDiary.Web.Api/AGENTS.md`
 - Application layer: `FoodDiary.Application/AGENTS.md`
+- Marketing application module: `FoodDiary.Application.Marketing/AGENTS.md`
 - Domain layer: `FoodDiary.Domain/AGENTS.md`
 - Infrastructure layer: `FoodDiary.Infrastructure/AGENTS.md`
 - Integrations layer: `FoodDiary.Integrations/AGENTS.md`

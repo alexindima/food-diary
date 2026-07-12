@@ -10,8 +10,6 @@ using FoodDiary.Application.Email.Common;
 using FoodDiary.Application.Email.Services;
 using FoodDiary.Application.Lessons.Common;
 using FoodDiary.Application.Lessons.Services;
-using FoodDiary.Application.Marketing.Common;
-using FoodDiary.Application.Marketing.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Application;
@@ -39,8 +37,5 @@ public static partial class DependencyInjection {
         services.AddScoped<ILessonReadService, LessonReadService>();
         services.AddScoped<ILessonAdministrationService, LessonAdministrationService>();
         services.AddScoped<ILessonAdministrationReadService, LessonAdministrationReadService>();
-        services.AddScoped<IMarketingConversionRecorder, MarketingConversionRecorder>();
-        services.AddScoped<IMarketingAttributionCleanupService, MarketingAttributionCleanupService>();
-        services.AddScoped<IMarketingAttributionSummaryReadService, MarketingAttributionSummaryReadService>();
     }
 }

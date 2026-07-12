@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Marketing.Common;
 using FoodDiary.Application.Marketing.Common;
+using FoodDiary.Application.Billing.Common;
 
 namespace FoodDiary.Application.Marketing.Services;
 
@@ -7,7 +8,7 @@ public sealed class MarketingConversionRecorder(
     IMarketingAttributionEventReadRepository marketingAttributionEventReadRepository,
     IMarketingAttributionEventWriteRepository marketingAttributionEventWriteRepository,
     TimeProvider dateTimeProvider)
-    : IMarketingConversionRecorder {
+    : IMarketingConversionRecorder, IBillingMarketingConversionRecorder {
     private const string PremiumStartedEventType = "premium_started";
 
     public async Task RecordPremiumStartedAsync(Guid userId, CancellationToken cancellationToken = default) {

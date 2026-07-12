@@ -56,6 +56,7 @@ public sealed partial class ModuleDependencyGraphTests {
             .Select(Path.GetFileName)
             .OfType<string>()
             .Where(name => name is not ("bin" or "obj" or "Common"))
+            .Where(name => Directory.EnumerateFiles(Path.Combine(applicationRoot, name), "*.cs", SearchOption.AllDirectories).Any())
             .Order(StringComparer.Ordinal)];
         HashSet<string> moduleSet = modules.ToHashSet(StringComparer.Ordinal);
 

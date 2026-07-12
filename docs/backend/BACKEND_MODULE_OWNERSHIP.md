@@ -173,7 +173,7 @@ Webhook and renewal workflows use `IBillingTransactionRunner` as a narrow explic
 
 ### Approved collaborators
 
-Billing may use Users access/role contracts to resolve accounts and synchronize premium membership. Premium role transitions may use the narrow Marketing attribution contract. New collaborators require an intentional ownership-map and guardrail update.
+Billing may use Users access/role contracts to resolve accounts and synchronize premium membership. Premium role transitions emit through the Billing-owned `IBillingMarketingConversionRecorder` port, implemented by the extracted Marketing module. New collaborators require an intentional ownership-map and guardrail update.
 
 ## Products and Recipes boundaries
 
@@ -285,7 +285,7 @@ Shopping Lists and Meal Plans are separate owners even though a meal plan can ge
 
 Wearables owns provider connections and synchronization history. Provider APIs remain infrastructure/integration adapters, while application consumers use Wearables commands and its read service. Connection and sync repositories are private to the Wearables application module, and their configurations live in `Configurations/Wearables`.
 
-Marketing owns attribution events and conversion state. Authentication and Billing record business outcomes through Marketing capabilities rather than its repositories. Reporting uses the attribution summary read service. The attribution configuration lives in `Configurations/Marketing`.
+Marketing owns attribution events and conversion state and is physically isolated in `FoodDiary.Application.Marketing`. The assembly registers its handlers and services through `AddMarketingModule`; executable composition roots reference it explicitly, while core `FoodDiary.Application` has no reverse project reference. Authentication records attribution through its command API, Billing emits premium conversion through a consumer-owned port, and reporting uses the attribution summary read service. The persistence configuration remains in `Configurations/Marketing`.
 
 Operational cleanup remains owned by the corresponding application module. JobManager invokes `IMarketingAttributionCleanupService` and `IAuthenticationLoginEventCleanupService`; batching and repository access stay inside Marketing and Authentication. A JobManager architecture guardrail prohibits jobs from acquiring any `I*Repository` contract.
 

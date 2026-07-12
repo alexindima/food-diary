@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\FoodDiary.Application\FoodDiary.Application.csproj" />
+    <ProjectReference Include="..\..\FoodDiary.Application.Marketing\FoodDiary.Application.Marketing.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
   </ItemGroup>
 

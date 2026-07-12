@@ -2,7 +2,6 @@ using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Services;
-using FoodDiary.Application.Marketing.Common;
 using FoodDiary.Domain.Entities.Billing;
 using User = FoodDiary.Domain.Entities.Users.User;
 
@@ -12,7 +11,7 @@ public sealed class BillingWebhookPremiumRoleSyncer(
     IBillingSubscriptionWriteRepository billingSubscriptionRepository,
     IBillingUserContextService billingUserContextService,
     BillingAccessService billingAccessService,
-    IMarketingConversionRecorder marketingConversionRecorder,
+    IBillingMarketingConversionRecorder marketingConversionRecorder,
     TimeProvider dateTimeProvider) {
     public async Task SyncAsync(
         User user,

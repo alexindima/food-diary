@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Application;
+using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Initializer;
@@ -48,6 +49,7 @@ if (string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("Default
 }
 
 builder.Services.AddApplication();
+builder.Services.AddMarketingModule();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddScoped<IEmailVerificationNotifier, NoOpEmailVerificationNotifier>();

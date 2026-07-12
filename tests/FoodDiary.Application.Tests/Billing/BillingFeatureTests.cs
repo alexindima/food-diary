@@ -8,7 +8,6 @@ using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 using FoodDiary.Application.Billing.Queries.GetBillingOverview;
 using FoodDiary.Application.Billing.Services;
-using FoodDiary.Application.Marketing.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Users;
@@ -109,7 +108,7 @@ public partial class BillingFeatureTests {
         InMemoryBillingSubscriptionRepository subscriptionRepository,
         RecordingBillingPaymentRepository paymentRepository,
         RecordingBillingWebhookEventRepository webhookEventRepository,
-        IMarketingConversionRecorder? marketingConversionRecorder = null) {
+        IBillingMarketingConversionRecorder? marketingConversionRecorder = null) {
         var dateTimeProvider = new FixedDateTimeProvider(Now);
         var billingAccessService = new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider);
         return new ProcessBillingWebhookCommandHandler(
@@ -606,13 +605,13 @@ public partial class BillingFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class NoOpMarketingConversionRecorder : IMarketingConversionRecorder {
+    private sealed class NoOpMarketingConversionRecorder : IBillingMarketingConversionRecorder {
         public Task RecordPremiumStartedAsync(Guid userId, CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingMarketingConversionRecorder : IMarketingConversionRecorder {
+    private sealed class RecordingMarketingConversionRecorder : IBillingMarketingConversionRecorder {
         public List<Guid> PremiumStartedUserIds { get; } = [];
 
         public Task RecordPremiumStartedAsync(Guid userId, CancellationToken cancellationToken = default) {

@@ -9,6 +9,10 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Domain",
                 "FoodDiary.Mediator",
             ],
+            ["FoodDiary.Application.Marketing"] = [
+                "FoodDiary.Application",
+                "FoodDiary.Application.Abstractions",
+            ],
             ["FoodDiary.Application.Abstractions"] = [
                 "FoodDiary.Domain",
                 "FoodDiary.Domain.Primitives",
@@ -24,6 +28,7 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.Initializer"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Marketing",
                 "FoodDiary.Infrastructure",
             ],
             ["FoodDiary.Integrations"] = [
@@ -34,6 +39,7 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.JobManager"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Marketing",
                 "FoodDiary.Infrastructure",
                 "FoodDiary.Integrations",
                 "FoodDiary.Resources",
@@ -90,6 +96,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Mediator"] = [],
             ["FoodDiary.Presentation.Api"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Marketing",
             ],
             ["FoodDiary.Domain.Primitives"] = [],
             ["FoodDiary.Resources"] = [
@@ -99,6 +106,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Telegram.Bot"] = [],
             ["FoodDiary.Web.Api"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Marketing",
                 "FoodDiary.Infrastructure",
                 "FoodDiary.Integrations",
                 "FoodDiary.Presentation.Api",
@@ -110,6 +118,7 @@ public sealed class ProjectDependencyMatrixTests {
         new Dictionary<string, string[]>(StringComparer.Ordinal) {
             ["FoodDiary.Application.Tests"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Marketing",
                 "FoodDiary.Domain",
             ],
             ["FoodDiary.ArchitectureTests"] = [

@@ -31,6 +31,7 @@
     <Project Path="tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj" />
   </Folder>
   <Project Path="FoodDiary.Application/FoodDiary.Application.csproj" />
+  <Project Path="FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj" />
   <Project Path="FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj" />
   <Project Path="FoodDiary.Domain/FoodDiary.Domain.csproj" />
   <Project Path="FoodDiary.Initializer/FoodDiary.Initializer.csproj" />

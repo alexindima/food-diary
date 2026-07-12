@@ -1,4 +1,5 @@
 using FoodDiary.Application;
+using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Integrations;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -28,6 +29,7 @@ public static class ApiServiceCollectionExtensions {
         }
         private IServiceCollection AddApplicationModules(IConfiguration configuration, IHostEnvironment? environment) {
             services.AddApplication();
+            services.AddMarketingModule();
             services.AddInfrastructure(configuration);
             services.AddIntegrations(configuration);
             services.AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>();

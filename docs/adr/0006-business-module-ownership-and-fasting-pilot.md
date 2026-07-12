@@ -51,6 +51,7 @@ Benefits:
 Tradeoffs:
 
 - Some module APIs remain in the Application assembly and rely on architecture tests rather than CLR visibility.
+- Marketing is the first application module promoted to a separate CLR assembly. Billing declares the consumer-owned `IBillingMarketingConversionRecorder` port; the Marketing assembly implements it and is registered explicitly by executable composition roots.
 - The ownership map and executable allowlists must evolve whenever a new persisted module or legitimate collaborator is introduced.
 - Legitimate new collaborators require an intentional documentation and guardrail update.
 - A shared database still permits infrastructure-level joins; ownership rules govern writes, not all reporting queries.

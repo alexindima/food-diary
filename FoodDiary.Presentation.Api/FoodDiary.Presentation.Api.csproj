@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FoodDiary.Application\FoodDiary.Application.csproj" />
+    <ProjectReference Include="..\FoodDiary.Application.Marketing\FoodDiary.Application.Marketing.csproj" />
   </ItemGroup>
 
 </Project>
