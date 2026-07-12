@@ -160,6 +160,7 @@ Review desktop at `1440x900` and a compact laptop width before mobile. Admin wor
 | P2       | Food-log and protein pages exposed English search language and internal SEO terminology                   | Fixed with user-facing journal and nutrition copy                            |
 | P1       | Signed-in users opened the privacy policy inside the authenticated sidebar and quick-entry shell          | Fixed with explicit public route metadata and route-aware root shell         |
 | P2       | Privacy policy lacks verified operator identity/contact details and Russia-specific legal review          | Open; requires product owner and qualified legal input                       |
+| P2       | Authenticated shell and profile exposed `Дашборд`, `Premium`, `Про`, `триал`, and analytics jargon        | Fixed with consistent Russian navigation, plan, and status terminology       |
 
 ## Per-Page Checklist
 
