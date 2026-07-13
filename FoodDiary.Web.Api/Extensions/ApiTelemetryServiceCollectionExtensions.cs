@@ -42,6 +42,7 @@ public static class ApiTelemetryServiceCollectionExtensions {
                     .AddMeter("FoodDiary.Application.Email")
                     .AddMeter("FoodDiary.Infrastructure")
                     .AddMeter("FoodDiary.Integrations")
+                    .AddRuntimeInstrumentation()
                     .AddOtlpExporter(exporterOptions => exporterOptions.Endpoint = endpointUri)
                     .Build();
             });
