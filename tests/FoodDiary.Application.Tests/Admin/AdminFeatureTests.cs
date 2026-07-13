@@ -356,6 +356,25 @@ public partial class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task UpsertAdminAiPromptHandler_WhenTrackedPromptDisappears_ReturnsNotFound() {
+        var existing = AiPromptTemplate.Create("meal_summary", "en", "Old prompt", isActive: true);
+        IAiPromptTemplateWriteRepository repository = Substitute.For<IAiPromptTemplateWriteRepository>();
+        repository.GetByKeyAsync("meal_summary", "en", Arg.Any<CancellationToken>()).Returns(existing);
+        repository
+            .GetByIdAsync(existing.Id, asTracking: true, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<AiPromptTemplate?>(null));
+        var handler = new UpsertAdminAiPromptCommandHandler(new AiPromptAdministrationService(repository));
+
+        Result<AdminAiPromptModel> result = await handler.Handle(
+            new UpsertAdminAiPromptCommand("meal_summary", "en", "New prompt", IsActive: true),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Ai.PromptTemplateNotFound", result.Error.Code);
+        await repository.DidNotReceive().UpdateAsync(Arg.Any<AiPromptTemplate>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task UpsertAdminAiPromptHandler_WithInvalidLocale_ReturnsValidationFailure() {
         var repository = new InMemoryAiPromptTemplateRepository();
         var handler = new UpsertAdminAiPromptCommandHandler(new AiPromptAdministrationService(repository));

@@ -14,6 +14,45 @@ namespace FoodDiary.Application.Tests.Users;
 [ExcludeFromCodeCoverage]
 public sealed class UserApplicationServiceDelegationTests {
     [Fact]
+    public async Task UserAdministrationService_GetRolesByNamesAsync_DelegatesToRoleCatalog() {
+        IUserDirectoryService directory = Substitute.For<IUserDirectoryService>();
+        IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
+        IUserRoleCatalogService roleCatalog = Substitute.For<IUserRoleCatalogService>();
+        var service = new UserAdministrationService(directory, writer, roleCatalog);
+        IReadOnlyList<string> names = ["Admin", "Premium"];
+        IReadOnlyList<Role> roles = [Role.Create("Admin"), Role.Create("Premium")];
+        using var cancellationTokenSource = new CancellationTokenSource();
+        roleCatalog.GetRolesByNamesAsync(names, cancellationTokenSource.Token).Returns(roles);
+
+        IReadOnlyList<Role> result = await service.GetRolesByNamesAsync(names, cancellationTokenSource.Token);
+
+        Assert.Same(roles, result);
+        await roleCatalog.Received(1).GetRolesByNamesAsync(names, cancellationTokenSource.Token);
+    }
+
+    [Fact]
+    public async Task UserAdministrationService_DelegatesDirectoryLookupAndAggregateUpdate() {
+        IUserDirectoryService directory = Substitute.For<IUserDirectoryService>();
+        IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
+        var service = new UserAdministrationService(
+            directory,
+            writer,
+            Substitute.For<IUserRoleCatalogService>());
+        var userId = UserId.New();
+        var user = User.Create("administration@example.com", "hash");
+        IReadOnlyCollection<UserRoleAuditEvent> auditEvents = [];
+        using var cancellationTokenSource = new CancellationTokenSource();
+        directory.GetByIdIncludingDeletedAsync(userId, cancellationTokenSource.Token).Returns(user);
+
+        User? result = await service.GetByIdIncludingDeletedAsync(userId, cancellationTokenSource.Token);
+        await service.UpdateAsync(user, auditEvents, cancellationTokenSource.Token);
+
+        Assert.Same(user, result);
+        await directory.Received(1).GetByIdIncludingDeletedAsync(userId, cancellationTokenSource.Token);
+        await writer.Received(1).UpdateAsync(user, auditEvents, cancellationTokenSource.Token);
+    }
+
+    [Fact]
     public async Task BillingUserLookupService_GetUserIncludingDeletedAsync_DelegatesToLookupRepository() {
         IUserLookupRepository repository = Substitute.For<IUserLookupRepository>();
         var service = new BillingUserLookupService(repository);

@@ -783,6 +783,25 @@ public partial class UsersFeatureTests {
     }
 
     [Fact]
+    public async Task ProfileOverviewReadService_WhenDietologistRelationshipReadFails_ReturnsFailure() {
+        var user = User.Create("overview-relationship-failure@example.com", "hash");
+        IUserProfileReadService userProfileReadService = new SingleUserRepository(user);
+        IProfileDietologistReadService dietologistReadService = Substitute.For<IProfileDietologistReadService>();
+        dietologistReadService
+            .GetRelationshipAsync(user.Id, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<ProfileDietologistRelationshipModel?>(Errors.Dietologist.AccessDenied)));
+        var service = new ProfileOverviewReadService(
+            userProfileReadService,
+            new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([])),
+            dietologistReadService);
+
+        Result<ProfileOverviewModel> result = await service.GetAsync(user.Id, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal(Errors.Dietologist.AccessDenied.Code, result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetDesiredWaistQueryValidator_WithEmptyUserId_Fails() {
         var validator = new GetDesiredWaistQueryValidator();
         ValidationResult result = await validator.ValidateAsync(new GetDesiredWaistQuery(Guid.Empty));

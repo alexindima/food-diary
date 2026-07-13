@@ -18,6 +18,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Tests.Dietologist;
 
@@ -1058,6 +1059,45 @@ public partial class DietologistFeatureTests {
         Result<DietologistRelationshipModel?> result = await service.GetMyRelationshipAsync(
             UserId.New(),
             CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task ProfileDietologistReadService_WhenRelationshipExists_MapsConsumerOwnedProjection() {
+        var clientId = UserId.New();
+        var dietologistId = UserId.New();
+        var invitationRepository = new InMemoryInvitationRepository();
+        invitationRepository.Seed(CreateAcceptedInvitation(clientId, dietologistId));
+        var users = new InMemoryUserRepository();
+        users.Seed(CreateUser(clientId, "client-profile@example.com"));
+        var service = new DietologistInvitationReadService(
+            invitationRepository,
+            users,
+            users,
+            TimeProvider.System);
+
+        Result<ProfileDietologistRelationshipModel?> result = await ((IProfileDietologistReadService)service)
+            .GetRelationshipAsync(clientId, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.NotNull(result.Value);
+        Assert.Multiple(
+            () => Assert.Equal(dietologistId.Value, result.Value.DietologistUserId),
+            () => Assert.True(result.Value.Permissions.ShareMeals),
+            () => Assert.True(result.Value.Permissions.ShareFasting));
+    }
+
+    [Fact]
+    public async Task ProfileDietologistReadService_WhenAccessFails_PropagatesFailure() {
+        var service = new DietologistInvitationReadService(
+            new InMemoryInvitationRepository(),
+            new InMemoryUserRepository(),
+            new InMemoryUserRepository(),
+            TimeProvider.System);
+
+        Result<ProfileDietologistRelationshipModel?> result = await ((IProfileDietologistReadService)service)
+            .GetRelationshipAsync(UserId.New(), CancellationToken.None);
 
         ResultAssert.Failure(result);
     }
