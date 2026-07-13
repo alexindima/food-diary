@@ -84,7 +84,7 @@ Evidence: `FoodDiary.Application/`, `FoodDiary.Application.Abstractions/`, `test
 
 Writes are expressed as commands and reads as queries. Command paths load and mutate aggregates; read paths prefer projections and dedicated read-model services. This is pragmatic CQRS inside one application and database, not two independently deployed systems.
 
-Evidence: `FoodDiary.Application/Common/Abstractions/Messaging/`, command/query handlers, ADR `2026-07-05-product-recipe-read-model-query-paths.md`.
+Evidence: `FoodDiary.Application/Common/Abstractions/Messaging/`, command/query handlers, ADR `0008-product-recipe-read-model-query-paths.md`.
 
 ### 14. Mediator pattern
 
@@ -178,7 +178,7 @@ Evidence: `docs/backend/BACKEND_EVENT_TAXONOMY.md`, `IIntegrationEvent`.
 
 Email, web push and object deletion are written as database records in the same transaction as business state. JobManager sends them after commit, closing the “database committed but external call was lost” failure window.
 
-Evidence: email, notification and image outbox implementations; ADR `2026-07-05-backend-side-effect-transaction-semantics.md`.
+Evidence: email, notification and image outbox implementations; ADR `0007-backend-side-effect-transaction-semantics.md`.
 
 ### 29. Competing Consumers with database leases
 
