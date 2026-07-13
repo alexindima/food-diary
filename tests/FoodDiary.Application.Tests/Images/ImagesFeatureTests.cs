@@ -427,7 +427,7 @@ public class ImagesFeatureTests {
         service
             .DeleteAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(call => {
-                string objectKey = call.Arg<string>();
+                string objectKey = call.Arg<string>()!;
                 return string.Equals(objectKey, failingObjectKey, StringComparison.Ordinal)
                     ? Task.FromException(new InvalidOperationException("Simulated storage failure."))
                     : Task.CompletedTask;

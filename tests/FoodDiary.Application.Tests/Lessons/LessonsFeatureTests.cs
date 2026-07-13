@@ -293,7 +293,7 @@ public class LessonsFeatureTests {
                 progressAdded = true;
                 storedProgress.Add(item);
             }), Arg.Any<CancellationToken>())
-            .Returns(call => Task.FromResult(call.Arg<UserLessonProgress>()));
+            .Returns(call => Task.FromResult(call.Arg<UserLessonProgress>()!));
 
         wasProgressAdded = () => progressAdded;
         localeRequests = capturedLocaleRequests;

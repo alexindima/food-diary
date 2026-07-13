@@ -84,7 +84,7 @@ public sealed class NotificationReadServiceCoverageTests {
         WebPushDeliverySubscription subscription = Assert.Single(result);
         Assert.Equal(active.Id.Value, subscription.Id);
         await writer.Received(1).DeleteRangeAsync(
-            Arg.Is<IReadOnlyCollection<WebPushSubscription>>(items => items.Count == 1 && items.Contains(expired)),
+            Arg.Is<IReadOnlyCollection<WebPushSubscription>>(items => items!.Count == 1 && items.Contains(expired)),
             CancellationToken.None);
     }
 
@@ -147,7 +147,7 @@ public sealed class NotificationReadServiceCoverageTests {
         await service.RemoveInvalidSubscriptionsAsync(userId, [matching.Id.Value, Guid.NewGuid()], CancellationToken.None);
 
         await writer.Received(1).DeleteRangeAsync(
-            Arg.Is<IReadOnlyCollection<WebPushSubscription>>(items => items.Count == 1 && items.Contains(matching)),
+            Arg.Is<IReadOnlyCollection<WebPushSubscription>>(items => items!.Count == 1 && items.Contains(matching)),
             CancellationToken.None);
     }
 

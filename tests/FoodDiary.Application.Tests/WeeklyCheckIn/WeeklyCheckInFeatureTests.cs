@@ -163,7 +163,7 @@ public class WeeklyCheckInFeatureTests {
         mealRepo
             .GetCountAsync(
                 userId,
-                Arg.Is<MealQueryFilters>(filters => filters.DateFrom == thisWeekStart && filters.DateTo == Today),
+                Arg.Is<MealQueryFilters>(filters => filters!.DateFrom == thisWeekStart && filters.DateTo == Today),
                 Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(3));
         IDashboardStatisticsReadService statisticsReadService = Substitute.For<IDashboardStatisticsReadService>();

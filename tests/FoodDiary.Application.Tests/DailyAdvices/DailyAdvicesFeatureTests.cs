@@ -253,14 +253,14 @@ public class DailyAdvicesFeatureTests {
         repository
             .GetByLocaleAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(call => {
-                string locale = call.Arg<string>();
+                string locale = call.Arg<string>()!;
                 capturedRequestedLocales.Add(locale);
                 return Task.FromResult(advices.GetValueOrDefault(locale, []));
             });
         repository
             .GetByLocaleReadModelsAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(call => {
-                string locale = call.Arg<string>();
+                string locale = call.Arg<string>()!;
                 capturedRequestedLocales.Add(locale);
                 IReadOnlyList<DailyAdvice> items = advices.GetValueOrDefault(locale, []);
                 return Task.FromResult<IReadOnlyList<DailyAdviceReadModel>>([

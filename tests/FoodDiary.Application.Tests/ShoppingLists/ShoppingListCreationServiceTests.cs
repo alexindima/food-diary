@@ -17,7 +17,7 @@ public sealed class ShoppingListCreationServiceTests {
         ShoppingList? persisted = null;
         repository
             .AddAsync(Arg.Do<ShoppingList>(list => persisted = list), Arg.Any<CancellationToken>())
-            .Returns(call => call.Arg<ShoppingList>());
+            .Returns(call => call.Arg<ShoppingList>()!);
         var service = new ShoppingListCreationService(repository);
         var mealPlanId = MealPlanId.New();
         var mealPlanMealId = MealPlanMealId.New();

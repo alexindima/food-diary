@@ -376,7 +376,7 @@ public class FavoriteMealsFeatureTests {
             });
         repository
             .AddAsync(Arg.Any<FavoriteMeal>(), Arg.Any<CancellationToken>())
-            .Returns(call => Task.FromResult(call.Arg<FavoriteMeal>()));
+            .Returns(call => Task.FromResult(call.Arg<FavoriteMeal>()!));
         repository
             .DeleteAsync(Arg.Any<FavoriteMeal>(), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);

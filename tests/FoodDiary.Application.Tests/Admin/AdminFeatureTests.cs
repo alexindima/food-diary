@@ -71,7 +71,7 @@ public partial class AdminFeatureTests {
             .GetByIdIncludingDeletedAsync(user.Id, cts.Token)
             .Returns(Task.FromResult<User?>(user));
         userAdministrationService
-            .GetRolesByNamesAsync(Arg.Is<IReadOnlyList<string>>(names => names.Count == 1 && names[0] == "Premium"), cts.Token)
+            .GetRolesByNamesAsync(Arg.Is<IReadOnlyList<string>>(names => names!.Count == 1 && names[0] == "Premium"), cts.Token)
             .Returns(Task.FromResult<IReadOnlyList<Role>>([role]));
         var service = new AdminUserManagementService(userAdministrationService);
 
@@ -83,7 +83,7 @@ public partial class AdminFeatureTests {
         Assert.Equal(role, Assert.Single(roles));
         await userAdministrationService.Received(1).UpdateAsync(
             user,
-            Arg.Is<IReadOnlyCollection<UserRoleAuditEvent>>(events => events.Count == 0),
+            Arg.Is<IReadOnlyCollection<UserRoleAuditEvent>>(events => events!.Count == 0),
             cts.Token);
     }
 
