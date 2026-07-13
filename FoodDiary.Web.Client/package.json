@@ -119,7 +119,7 @@
         "@lhci/cli": "^0.15.1",
         "@material-design-icons/font": "^0.14.15",
         "@playwright/test": "^1.61.1",
-        "@storybook/angular": "^10.4.6",
+        "@storybook/angular": "^10.5.0",
         "@types/express": "^5.0.6",
         "@types/node": "^26.1.1",
         "@typescript-eslint/eslint-plugin": "^8.62.1",
