@@ -34,6 +34,7 @@ public static class ApiServiceCollectionExtensions {
             services.AddIntegrations(configuration);
             services.AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>();
             services.AddSingleton<IDiaryPdfReportTextProvider, DiaryPdfReportResourceTextProvider>();
+            services.AddSingleton<INotificationTestScheduler, NotificationTestScheduler>();
             services.AddApiDistributedCache(configuration, environment);
             services.AddPresentationApi();
             services.AddEndpointsApiExplorer();

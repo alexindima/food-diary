@@ -14,30 +14,26 @@ namespace FoodDiary.Presentation.Api.Features.Notifications;
 public sealed class NotificationPushController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("config")]
     [ProducesResponseType<WebPushConfigurationHttpResponse>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetWebPushConfiguration() {
-        return HandleOk(NotificationHttpMappings.ToWebPushConfigurationQuery(), static value => value.ToHttpResponse());
-    }
+    public Task<IActionResult> GetWebPushConfiguration() =>
+        HandleOk(NotificationHttpMappings.ToWebPushConfigurationQuery(), static value => value.ToHttpResponse());
 
     [HttpGet("subscriptions")]
     [ProducesResponseType<List<WebPushSubscriptionHttpResponse>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetWebPushSubscriptions([FromCurrentUser] Guid userId) {
-        return await HandleOk(userId.ToWebPushSubscriptionsQuery(), static value => value.Select(x => x.ToHttpResponse()).ToList());
-    }
+    public Task<IActionResult> GetWebPushSubscriptions([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToWebPushSubscriptionsQuery(), static value => value.Select(x => x.ToHttpResponse()).ToList());
 
     [HttpPut("subscription")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UpsertWebPushSubscription(
+    public Task<IActionResult> UpsertWebPushSubscription(
         [FromCurrentUser] Guid userId,
-        [FromBody] UpsertWebPushSubscriptionHttpRequest request) {
-        return await HandleNoContent(request.ToCommand(userId));
-    }
+        [FromBody] UpsertWebPushSubscriptionHttpRequest request) =>
+        HandleNoContent(request.ToCommand(userId));
 
     [HttpDelete("subscription")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> RemoveWebPushSubscription(
+    public Task<IActionResult> RemoveWebPushSubscription(
         [FromCurrentUser] Guid userId,
-        [FromBody] RemoveWebPushSubscriptionHttpRequest request) {
-        return await HandleNoContent(request.ToCommand(userId));
-    }
+        [FromBody] RemoveWebPushSubscriptionHttpRequest request) =>
+        HandleNoContent(request.ToCommand(userId));
 }

@@ -56,11 +56,14 @@ public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsy
             return false;
         }
 
-        context.Result = new ContentResult {
-            Content = reservation.Body,
-            ContentType = "application/json",
-            StatusCode = reservation.StatusCode ?? StatusCodes.Status200OK,
-        };
+        int statusCode = reservation.StatusCode ?? StatusCodes.Status200OK;
+        context.Result = reservation.Body is null
+            ? new StatusCodeResult(statusCode)
+            : new ContentResult {
+                Content = reservation.Body,
+                ContentType = "application/json",
+                StatusCode = statusCode,
+            };
         return true;
     }
 
@@ -69,17 +72,34 @@ public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsy
         ActionExecutedContext executedContext,
         string cacheKey,
         string requestHash) {
-        if (executedContext.Exception is not null || executedContext.Result is not ObjectResult objectResult) {
+        if (executedContext.Exception is not null || !TrySerializeResult(executedContext.Result, out int statusCode, out string? body)) {
             return;
         }
 
         await idempotencyStore.CompleteAsync(
             cacheKey,
             requestHash,
-            objectResult.StatusCode ?? StatusCodes.Status200OK,
-            JsonSerializer.Serialize(objectResult.Value, JsonOptions),
+            statusCode,
+            body,
             CacheDuration,
             context.HttpContext.RequestAborted).ConfigureAwait(false);
+    }
+
+    private static bool TrySerializeResult(IActionResult? result, out int statusCode, out string? body) {
+        switch (result) {
+            case ObjectResult objectResult:
+                statusCode = objectResult.StatusCode ?? StatusCodes.Status200OK;
+                body = JsonSerializer.Serialize(objectResult.Value, JsonOptions);
+                return true;
+            case StatusCodeResult statusCodeResult:
+                statusCode = statusCodeResult.StatusCode;
+                body = null;
+                return true;
+            default:
+                statusCode = default;
+                body = null;
+                return false;
+        }
     }
 
     private static ObjectResult CreateIdempotencyConflict(ActionExecutingContext context) =>

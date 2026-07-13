@@ -58,6 +58,16 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         return result.ToNoContentActionResult(this);
     }
 
+    protected async Task<IActionResult> HandleNoContent(Task<Result> resultTask) {
+        Result result = await resultTask;
+        return result.ToNoContentActionResult(this);
+    }
+
+    protected Task<IActionResult> HandleNoContent(
+        IRequest<Result> request,
+        Func<Task<Result>, Task<Result>> processResult) =>
+        HandleNoContent(processResult(Send(request)));
+
     protected async Task<IActionResult> HandleFile(IRequest<Result<FileExportResult>> request) {
         Result<FileExportResult> result = await Send(request);
         return result.ToFileActionResult(this);
@@ -115,7 +125,7 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
             activity?.SetTag("enduser.id", userId.Value);
         }
 
-        return new PresentationOperationObservation(operationName, feature, controllerName, route, userId, stopwatch, activity);
+        return new PresentationOperationObservation(operationName, feature, controllerName, stopwatch, activity);
     }
 
     private static void CompleteObservation(
@@ -202,8 +212,6 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         string OperationName,
         string Feature,
         string ControllerName,
-        string? Route,
-        Guid? UserId,
         Stopwatch Stopwatch,
         Activity? Activity) : IDisposable {
         public void Dispose() {

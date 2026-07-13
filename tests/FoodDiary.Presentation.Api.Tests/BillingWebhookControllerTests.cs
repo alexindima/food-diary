@@ -67,7 +67,7 @@ public sealed class BillingWebhookControllerTests {
         httpContext.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(payload));
         httpContext.Request.ContentLength = httpContext.Request.Body.Length;
 
-        return new BillingWebhookController(sender) {
+        return new BillingWebhookController(sender, new BillingWebhookHttpProcessor()) {
             ControllerContext = new ControllerContext {
                 HttpContext = httpContext,
             },

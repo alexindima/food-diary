@@ -76,7 +76,7 @@ public sealed class LogsControllerTests {
     }
 
     private static LogsController CreateController(RecordingLogger logger, ISender sender) =>
-        new(logger, sender) {
+        new(sender, new ClientTelemetryHttpProcessor(logger)) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),
             },

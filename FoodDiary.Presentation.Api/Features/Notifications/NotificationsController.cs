@@ -14,43 +14,37 @@ namespace FoodDiary.Presentation.Api.Features.Notifications;
 public sealed class NotificationsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<NotificationHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetNotifications([FromCurrentUser] Guid userId) {
-        return HandleOk(userId.ToNotificationsQuery(), static value => value.Select(x => x.ToHttpResponse()).ToList());
-    }
+    public Task<IActionResult> GetNotifications([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToNotificationsQuery(), static value => value.Select(x => x.ToHttpResponse()).ToList());
 
     [HttpGet("unread-count")]
     [ProducesResponseType<UnreadCountHttpResponse>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetUnreadCount([FromCurrentUser] Guid userId) {
-        return HandleOk(userId.ToUnreadCountQuery(), static value => new UnreadCountHttpResponse(value));
-    }
+    public Task<IActionResult> GetUnreadCount([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToUnreadCountQuery(), static value => new UnreadCountHttpResponse(value));
 
     [HttpPut("{notificationId:guid}/read")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> MarkAsRead(Guid notificationId, [FromCurrentUser] Guid userId) {
-        return HandleNoContent(notificationId.ToMarkReadCommand(userId));
-    }
+    public Task<IActionResult> MarkAsRead(Guid notificationId, [FromCurrentUser] Guid userId) =>
+        HandleNoContent(notificationId.ToMarkReadCommand(userId));
 
     [HttpPut("read-all")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public Task<IActionResult> MarkAllAsRead([FromCurrentUser] Guid userId) {
-        return HandleNoContent(userId.ToMarkAllReadCommand());
-    }
+    public Task<IActionResult> MarkAllAsRead([FromCurrentUser] Guid userId) =>
+        HandleNoContent(userId.ToMarkAllReadCommand());
 
     [HttpPost("test/schedule")]
     [ProducesResponseType<ScheduledNotificationHttpResponse>(StatusCodes.Status202Accepted)]
-    public async Task<IActionResult> ScheduleTestNotification(
+    public Task<IActionResult> ScheduleTestNotification(
         [FromCurrentUser] Guid userId,
-        [FromBody] ScheduleTestNotificationHttpRequest request) {
-        return await HandleAccepted(request.ToCommand(userId), static value => value.ToHttpResponse());
-    }
+        [FromBody] ScheduleTestNotificationHttpRequest request) =>
+        HandleAccepted(request.ToCommand(userId), static value => value.ToHttpResponse());
 
     [HttpGet("preferences")]
     [ProducesResponseType<NotificationPreferencesHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> GetNotificationPreferences([FromCurrentUser] Guid userId) {
-        return HandleOk(userId.ToNotificationPreferencesQuery(), static value => value.ToHttpResponse());
-    }
+    public Task<IActionResult> GetNotificationPreferences([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToNotificationPreferencesQuery(), static value => value.ToHttpResponse());
 
     [HttpPut("preferences")]
     [ProducesResponseType<NotificationPreferencesHttpResponse>(StatusCodes.Status200OK)]
@@ -58,7 +52,6 @@ public sealed class NotificationsController(ISender mediator) : AuthorizedContro
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> UpdateNotificationPreferences(
         [FromCurrentUser] Guid userId,
-        [FromBody] UpdateNotificationPreferencesHttpRequest request) {
-        return HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
-    }
+        [FromBody] UpdateNotificationPreferencesHttpRequest request) =>
+        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 }

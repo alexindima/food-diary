@@ -31,6 +31,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IWebPushDeliveryAudienceService, WebPushDeliveryAudienceService>();
         services.AddScoped<INotificationUserContextService, NotificationUserContextService>();
         services.AddScoped<INotificationWriter, NotificationWriter>();
+        services.AddScoped<ITestNotificationDeliveryDispatcher, TestNotificationDeliveryDispatcher>();
         services.AddScoped<IOpenAiFoodService, OpenAiFoodService>();
         services.AddScoped<IEmailSender, EmailSender>();
         services.AddScoped<IDietologistEmailSender, DietologistEmailSender>();

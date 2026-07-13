@@ -61,6 +61,24 @@ public sealed class IdempotencyFilterTests {
     }
 
     [Fact]
+    public async Task OnActionExecutionAsync_WithNoContentResponse_ReplaysStatusWithoutBody() {
+        var store = new InMemoryIdempotencyStore(TimeProvider.System);
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext firstHttpContext = CreateHttpContext("POST", "/api/v1/actions", "key-no-content", "user-204");
+        ActionExecutingContext firstContext = CreateActionExecutingContext(firstHttpContext, new EnableIdempotencyAttribute());
+        await filter.OnActionExecutionAsync(firstContext, () => Task.FromResult(new ActionExecutedContext(firstContext, [], new object()) {
+            Result = new NoContentResult(),
+        }));
+
+        DefaultHttpContext replayHttpContext = CreateHttpContext("POST", "/api/v1/actions", "key-no-content", "user-204");
+        ActionExecutingContext replayContext = CreateActionExecutingContext(replayHttpContext, new EnableIdempotencyAttribute());
+        await filter.OnActionExecutionAsync(replayContext, () => throw new InvalidOperationException("Replay must skip the action."));
+
+        StatusCodeResult result = Assert.IsType<StatusCodeResult>(replayContext.Result);
+        Assert.Equal(StatusCodes.Status204NoContent, result.StatusCode);
+    }
+
+    [Fact]
     public async Task OnActionExecutionAsync_WithSameKeyAndDifferentPayload_ReturnsConflict() {
         var store = new InMemoryIdempotencyStore(TimeProvider.System);
         var filter = new IdempotencyFilter(store);

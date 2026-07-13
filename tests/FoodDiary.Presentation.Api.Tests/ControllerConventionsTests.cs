@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Diagnostics;
 using FoodDiary.Presentation.Api.Responses;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -166,6 +167,30 @@ public sealed class ControllerConventionsTests {
     }
 
     [Fact]
+    public void AllowAnonymous_UsageMatchesReviewedAllowlist() {
+        string[] expected = [
+            "AdminSsoController.AdminSsoExchange",
+            "BillingWebhookController",
+            "LogsController",
+            "MarketingAttributionController",
+        ];
+        string[] actual = [.. GetControllerSyntaxTrees()
+            .SelectMany(static tree => tree.GetRoot().DescendantNodes()
+                .Where(static node => node is ClassDeclarationSyntax or MethodDeclarationSyntax)
+                .Where(static node => node.ChildNodes().OfType<AttributeListSyntax>()
+                    .SelectMany(static list => list.Attributes)
+                    .Any(static attribute => string.Equals(attribute.Name.ToString(), "AllowAnonymous", StringComparison.Ordinal)))
+                .Select(static node => node switch {
+                    ClassDeclarationSyntax declaration => declaration.Identifier.ValueText,
+                    MethodDeclarationSyntax method => $"{method.FirstAncestorOrSelf<ClassDeclarationSyntax>()!.Identifier.ValueText}.{method.Identifier.ValueText}",
+                    _ => throw new UnreachableException(),
+                }))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
     public void SimpleFeatureControllers_UseBaseControllerHelpers_InsteadOfDirectMediatorSend() {
         string[] violations = [.. GetControllerSyntaxTrees()
             .Where(tree => tree.GetRoot()
@@ -173,6 +198,20 @@ public sealed class ControllerConventionsTests {
                 .OfType<InvocationExpressionSyntax>()
                 .Any(static invocation => invocation.Expression is IdentifierNameSyntax { Identifier.ValueText: "Send" }))
             .Select(static tree => Path.GetFileName(tree.FilePath))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void FeatureControllerActions_AreExpressionBodied() {
+        string[] violations = [.. GetControllerSyntaxTrees()
+            .SelectMany(static tree => tree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>())
+            .Where(static method => method.AttributeLists
+                .SelectMany(static list => list.Attributes)
+                .Any(static attribute => attribute.Name.ToString().StartsWith("Http", StringComparison.Ordinal)))
+            .Where(static method => method.ExpressionBody is null)
+            .Select(static method => method.Identifier.ValueText)
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);

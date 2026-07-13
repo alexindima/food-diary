@@ -1,4 +1,6 @@
 using System.Globalization;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace FoodDiary.ArchitectureTests;
 
@@ -131,16 +133,15 @@ public class PresentationConventionsTests {
         string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
 
         string[] violations = [.. Directory.GetFiles(presentationRoot, "*Controller.cs", SearchOption.AllDirectories)
-            .SelectMany(path => File.ReadLines(path)
-                .Select((line, index) => new { path, index, line = line.Trim() }))
-            .Where(static entry => entry.line.StartsWith("public ", StringComparison.Ordinal) &&
-                                   entry.line.Contains(" class ", StringComparison.Ordinal) &&
-                                   entry.line.Contains("Controller(", StringComparison.Ordinal))
-            .SelectMany(entry => ExtractPrimaryConstructorParameters(entry.line)
-                .Where(static parameterType => !IsPresentationSafeControllerDependency(parameterType))
-                .Select(parameterType => string.Create(
-                    CultureInfo.InvariantCulture,
-                    $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}: {parameterType}")))
+            .SelectMany(path => CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path).GetRoot()
+                .DescendantNodes().OfType<ClassDeclarationSyntax>()
+                .Where(static declaration => declaration.Identifier.ValueText.EndsWith("Controller", StringComparison.Ordinal))
+                .SelectMany(declaration => declaration.ParameterList?.Parameters ?? [])
+                .Select(parameter => new { path, parameter }))
+            .Where(static entry => !IsPresentationSafeControllerDependency(entry.parameter.Type?.ToString() ?? string.Empty))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.parameter.GetLocation().GetLineSpan().StartLinePosition.Line + 1}: {entry.parameter.Type}"))
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -267,25 +268,9 @@ public class PresentationConventionsTests {
         throw new InvalidOperationException("Repository root was not found.");
     }
 
-    private static string[] ExtractPrimaryConstructorParameters(string classDeclarationLine) {
-        int openParenthesisIndex = classDeclarationLine.IndexOf('(', StringComparison.Ordinal);
-        int closeParenthesisIndex = classDeclarationLine.IndexOf(')', openParenthesisIndex + 1);
-        if (openParenthesisIndex < 0 || closeParenthesisIndex < 0 || closeParenthesisIndex <= openParenthesisIndex + 1) {
-            return [];
-        }
-
-        string parameters = classDeclarationLine[(openParenthesisIndex + 1)..closeParenthesisIndex];
-
-        return [.. parameters
-            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Select(static parameter => {
-                string[] parts = parameter.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                return parts.Length >= 2 ? string.Join(' ', parts[..^1]) : parameter;
-            })];
-    }
-
     private static bool IsPresentationSafeControllerDependency(string parameterType) {
         return parameterType is "ISender" or "TimeProvider" or "IApiVersionInfo" ||
+               parameterType.EndsWith("HttpProcessor", StringComparison.Ordinal) ||
                parameterType.StartsWith("ILogger<", StringComparison.Ordinal);
     }
 }

@@ -2,6 +2,8 @@ using Asp.Versioning;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Presentation.Api.Filters;
+using FoodDiary.Presentation.Api.Features.Billing;
+using FoodDiary.Presentation.Api.Features.Logs;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Presentation.Api.Services;
@@ -16,6 +18,8 @@ public static class PresentationServiceCollectionExtensions {
     public static IServiceCollection AddPresentationApi(this IServiceCollection services) {
         services.AddScoped<TelemetryActionFilter>();
         services.AddScoped<IdempotencyFilter>();
+        services.AddScoped<BillingWebhookHttpProcessor>();
+        services.AddScoped<ClientTelemetryHttpProcessor>();
         services.TryAddSingleton(TimeProvider.System);
         services.TryAddSingleton<IIdempotencyStore, InMemoryIdempotencyStore>();
         services.AddApiVersioning(options => {
@@ -56,7 +60,6 @@ public static class PresentationServiceCollectionExtensions {
         services.AddSingleton<IUserIdProvider, UserIdProvider>();
         services.AddScoped<IEmailVerificationNotifier, EmailVerificationNotifier>();
         services.AddScoped<INotificationPusher, NotificationPusher>();
-        services.AddSingleton<INotificationTestScheduler, NotificationTestScheduler>();
         return services;
     }
 }
