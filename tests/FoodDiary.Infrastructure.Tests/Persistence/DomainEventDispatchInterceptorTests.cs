@@ -1,4 +1,3 @@
-using System.Reflection;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Shopping;
@@ -21,11 +20,11 @@ public sealed class DomainEventDispatchInterceptorTests {
         list.UpdateName("After");
         IDomainEventPublisher publisher = Substitute.For<IDomainEventPublisher>();
         publisher.PublishAsync(Arg.Any<IDomainEvent>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
-        var interceptor = new DomainEventDispatchInterceptor(
+        await DomainEventDispatcher.DispatchAsync(
+            context,
             publisher,
-            NullLogger<DomainEventDispatchInterceptor>.Instance);
-
-        await InvokeDispatchDomainEventsAsync(interceptor, context);
+            NullLogger.Instance,
+            CancellationToken.None);
 
         await publisher.Received(1).PublishAsync(Arg.Any<IDomainEvent>(), Arg.Any<CancellationToken>());
         Assert.Empty(list.DomainEvents);
@@ -54,11 +53,11 @@ public sealed class DomainEventDispatchInterceptorTests {
         await using FoodDiaryDbContext context = CreateContext();
         context.ShoppingLists.Add(ShoppingList.Create(UserId.New(), "List"));
         IDomainEventPublisher publisher = Substitute.For<IDomainEventPublisher>();
-        var interceptor = new DomainEventDispatchInterceptor(
+        await DomainEventDispatcher.DispatchAsync(
+            context,
             publisher,
-            NullLogger<DomainEventDispatchInterceptor>.Instance);
-
-        await InvokeDispatchDomainEventsAsync(interceptor, context);
+            NullLogger.Instance,
+            CancellationToken.None);
 
         await publisher.DidNotReceive().PublishAsync(Arg.Any<IDomainEvent>(), Arg.Any<CancellationToken>());
     }
@@ -72,14 +71,6 @@ public sealed class DomainEventDispatchInterceptorTests {
         }
 
         return new FoodDiaryDbContext(builder.Options);
-    }
-
-    private static Task InvokeDispatchDomainEventsAsync(
-        DomainEventDispatchInterceptor interceptor,
-        FoodDiaryDbContext context) {
-        MethodInfo method = typeof(DomainEventDispatchInterceptor)
-            .GetMethod("DispatchDomainEventsAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
-        return (Task)method.Invoke(interceptor, [context, CancellationToken.None])!;
     }
 
 }

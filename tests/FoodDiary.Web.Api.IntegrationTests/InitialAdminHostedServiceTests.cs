@@ -128,6 +128,8 @@ public sealed class InitialAdminHostedServiceTests {
         services.AddApplication();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserLookupRepository>(static provider => provider.GetRequiredService<IUserRepository>());
+        services.AddScoped<IUserDirectoryService>(static provider =>
+            (IUserDirectoryService)provider.GetRequiredService<IUserRepository>());
         services.AddScoped<IUserWriteRepository>(static provider => provider.GetRequiredService<IUserRepository>());
         services.AddScoped<IUserRoleCatalogService, TestUserRoleCatalogService>();
         services.AddScoped<IUnitOfWork, TestUnitOfWork>();
