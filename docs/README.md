@@ -9,7 +9,7 @@ This directory contains long-form repository documentation. Keep root-level mark
 - `backend/BACKEND_MODULE_OWNERSHIP.md` - business-module data ownership and allowed interaction types.
 - `architecture/module-dependencies.json` - executable, acyclic Application module dependency graph.
 - `TESTING_STRATEGY.md` - test project responsibilities and when to run each suite.
-- `adr/` - architecture decision records.
+- `adr/README.md` - architecture decision record index, lifecycle, and authoring guidance.
 
 ## Backend Operations And Governance
 

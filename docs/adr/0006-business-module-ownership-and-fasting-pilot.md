@@ -1,58 +1,66 @@
-# ADR 0006: Business Module Ownership And Fasting Pilot
+# ADR 0006: Business-Module Ownership And Fasting Pilot
 
-## Status
-
-Accepted
+- Status: Accepted
+- Date: 2026-07-13
+- Owners: Backend architecture
+- Related: ADR-0001, ADR-0004, ADR-0007, ADR-0008, ADR-0009
+- Supersedes: None
 
 ## Context
 
-The primary backend has strong horizontal Clean Architecture boundaries, but business-feature ownership inside those layers was previously implicit. A shared `DbContext` and in-process DI make it technically possible for one feature to acquire another feature's repository, gradually turning a modular monolith into a coupled monolith.
+The primary backend has strong horizontal Clean Architecture boundaries, but business-feature ownership inside those layers was previously implicit. A shared `DbContext` and in-process dependency injection make it technically possible for one feature to acquire another feature's repository, gradually turning a modular monolith into a coupled monolith.
 
-Creating an assembly, schema or service for every feature would add migration and operational cost before module boundaries are stable.
+Creating an assembly, schema, or service for every feature would add migration and operational cost before module boundaries are stable.
+
+## Decision Drivers
+
+- Shared infrastructure must not imply shared write ownership.
+- Cross-module coupling must be intentional and reviewable.
+- Strong logical boundaries are needed without premature distributed deployment or assembly extraction.
+- The policy needs an incremental migration path for an established codebase.
+
+## Considered Options
+
+1. Keep ownership informal and rely on code review. This preserves flexibility but does not prevent repository sharing and boundary erosion.
+2. Extract every feature into its own assembly, schema, or service immediately. This makes some boundaries physical but adds substantial migration and operational cost.
+3. Define logical ownership, expose semantic module APIs, and enforce boundaries incrementally with architecture tests.
 
 ## Decision
 
-- Define business-module ownership independently from physical database/project separation.
-- The owner is the only module allowed to mutate its aggregates and tables.
-- Cross-module reads use explicit projection/read-service contracts.
-- Cross-module actions use the owning module's command/service contract or an event.
-- Start enforcement with Fasting as the pilot module.
-- Extend the same enforcement model to Notifications after validating the pilot.
-- Protect Billing ownership and expose recurring renewal to JobManager through `IBillingRenewalService` rather than a concrete application service.
-- Treat Products and Recipes as separate modules, protect their aggregate repositories, and split the historical combined food-persistence registration into owned registration modules.
-- Treat Consumptions plus the Meal domain/persistence model as one Consumption Diary module, and expose RecentItems through semantic usage read/recording capabilities rather than repositories.
-- Separate Users ownership from Authentication orchestration: foreign modules use `IUserDirectoryService` and Users-owned mutation capabilities rather than core User repositories.
-- Protect Images and the three Favorite relationship modules behind access/cleanup/read capabilities; remove AI, Consumption Diary and FavoriteMeals cross-repository access.
-- Protect Dietologist Relationships, RecipeComments and RecipeLikes; Users profile composition uses the Dietologist relationship read service rather than its repository.
-- Treat Body Metrics, Hydration, Exercises and Cycles as separate Health Tracking owners; Dashboard, Weekly Check-In and TDEE may consume read projections but may not acquire their aggregate or write repositories.
-- Protect Shopping Lists, Meal Plans, Wearables and Marketing Attribution as independent owners. Meal Plans generates a shopping list through `IShoppingListCreationService`, leaving aggregate construction and persistence inside Shopping Lists.
-- Protect Lessons and Daily Advice as content owners. Admin lesson mutations and reads use owner-provided administration capabilities.
-- Treat Admin as a management surface rather than a universal content owner: Content Reports, AI prompt templates, Email templates, Authentication and Users expose dedicated administration capabilities; Admin acquires no foreign repositories.
-- Protect USDA and OpenFoodFacts persistence as external-catalog boundaries; Products may consume purpose-specific search projections but not their repositories.
-- Keep JobManager as an operational composition host: recurring jobs invoke application capabilities, including Marketing attribution and Authentication login-event cleanup, and may not acquire repositories.
-- Prohibit repository injection across primary hosts and adapters. Web-push delivery receives a Notifications-owned delivery audience, and Presentation refreshes notification clients through a semantic capability.
-- Complete Health Tracking read isolation by moving Dashboard fallback composition to semantic read services, and reject all repository-shaped cross-module reporting projections.
-- Replace Consumption Diary and USDA repository-shaped cross-module projections with semantic activity, export, micronutrient-input and product-suggestion capabilities.
-- Allow Fasting to use Users current-access and Notifications contracts.
-- Allow Dashboard to consume the Fasting read service/models as a read-only composed-view dependency.
-- Do not introduce new assemblies, schemas, brokers or facades solely to claim modularity.
-- Require every EF entity configuration to live in an owning module/adapter folder; keep the configuration root empty and protect it with an architecture test.
-- Treat `INotificationWriter` as the public transactional write boundary for notification producers; foreign modules must not acquire Notifications write repositories.
+- Every persisted business concept has an owning module.
+- Only the owner may mutate its aggregates and tables.
+- Cross-module reads use explicit projection or read-service contracts rather than foreign repositories or aggregates.
+- Cross-module actions use a capability, command/service contract, domain event, or integration event owned by the appropriate boundary.
+- Domain events may add state in the current transaction but may not perform external I/O; durable external reactions use an outbox as refined by ADR-0007.
+- A shared `DbContext` and database remain acceptable. New assemblies, schemas, brokers, or network calls are not required merely to claim modularity.
+- Fasting is the pilot for executable vertical-boundary enforcement. Extend the pattern module by module after validating it rather than attempting a single repository-wide rewrite.
+- Dashboard-style composed reads may consume stable projections from multiple owners, but this never grants write ownership.
 
 ## Consequences
 
-Benefits:
+### Positive
 
 - Vertical boundaries become reviewable and executable without a rewrite.
-- Shared infrastructure no longer implies shared business ownership.
-- Cross-module coupling is made intentional before more physical isolation is considered.
-- The pilot provides a repeatable migration pattern for other modules.
+- Modules can evolve toward stronger physical isolation only when concrete pressure appears.
+- Cross-module writes and reads communicate intent through semantic contracts.
+- The pilot provides a repeatable migration pattern.
 
-Tradeoffs:
+### Negative
 
-- Some module APIs remain in the Application assembly and rely on architecture tests rather than CLR visibility.
-- Marketing is the first application module promoted to a separate CLR assembly. Billing declares the consumer-owned `IBillingMarketingConversionRecorder` port; the Marketing assembly implements it and is registered explicitly by executable composition roots.
-- The ownership map and executable allowlists must evolve whenever a new persisted module or legitimate collaborator is introduced.
-- Legitimate new collaborators require an intentional documentation and guardrail update.
-- A shared database still permits infrastructure-level joins; ownership rules govern writes, not all reporting queries.
-- Read-oriented calculation modules may compose purpose-specific projections across owners, but that exception never grants aggregate mutation rights.
+- Many boundaries rely on architecture tests rather than CLR visibility.
+- The ownership map and allowed dependencies require ongoing maintenance.
+- Legitimate collaboration can require a new capability instead of direct repository reuse.
+- A shared database still permits infrastructure-level joins; the ownership policy governs behavior and writes, not every reporting query.
+
+## Enforcement
+
+- `docs/backend/BACKEND_MODULE_OWNERSHIP.md` is the current ownership and interaction map.
+- `docs/architecture/module-dependencies.json` is the current Application dependency graph, governed by ADR-0009.
+- `tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs`
+- `tests/FoodDiary.ArchitectureTests/ModuleDependencyGraphTests.cs`
+- `tests/FoodDiary.ArchitectureTests/FeatureStructureTests.cs`
+
+## Follow-up
+
+- Continue migrating modules incrementally when a concrete cross-boundary leak is identified.
+- Record new enduring policies as new ADRs rather than appending module inventories to this record.
