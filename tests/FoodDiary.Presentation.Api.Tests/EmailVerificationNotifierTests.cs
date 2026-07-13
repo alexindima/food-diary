@@ -25,7 +25,7 @@ public sealed class EmailVerificationNotifierTests {
         clients.Received(1).User(userId.ToString());
         await clientProxy.Received(1).SendCoreAsync(
             EmailVerificationHubMethods.EmailVerified,
-            Arg.Is<object?[]>(args => args.Length == 0),
+            Arg.Is<object?[]>(args => args!.Length == 0),
             cts.Token);
     }
 }
