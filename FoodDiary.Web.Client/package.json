@@ -124,7 +124,7 @@
         "@types/node": "^26.1.0",
         "@typescript-eslint/eslint-plugin": "^8.62.1",
         "@typescript-eslint/parser": "^8.62.1",
-        "@vitest/coverage-v8": "^4.1.9",
+        "@vitest/coverage-v8": "^4.1.10",
         "angular-eslint": "^22.0.0",
         "baseline-browser-mapping": "^2.10.42",
         "concurrently": "^10.0.3",
@@ -153,6 +153,6 @@
         "stylelint-order": "^8.1.1",
         "stylelint-scss": "^7.2.0",
         "typescript": "6.0.3",
-        "vitest": "^4.1.9"
+        "vitest": "^4.1.10"
     }
 }
