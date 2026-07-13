@@ -128,7 +128,7 @@
         "angular-eslint": "^22.0.0",
         "baseline-browser-mapping": "^2.10.42",
         "concurrently": "^10.0.3",
-        "dependency-cruiser": "^18.0.0",
+        "dependency-cruiser": "^18.1.0",
         "eslint": "^10.7.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-boundaries": "^7.0.2",
