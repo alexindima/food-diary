@@ -4,6 +4,16 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class DockerfileDependencyTests {
+    [Theory]
+    [InlineData(@"..\FoodDiary.Application\FoodDiary.Application.csproj")]
+    [InlineData("../FoodDiary.Application/FoodDiary.Application.csproj")]
+    public void ProjectReferencePaths_AreNormalizedForCurrentOperatingSystem(string projectReference) {
+        string separator = Path.DirectorySeparatorChar.ToString();
+        string expected = string.Join(separator, "..", "FoodDiary.Application", "FoodDiary.Application.csproj");
+
+        Assert.Equal(expected, NormalizeProjectReferencePath(projectReference));
+    }
+
     [Fact]
     public void DotNetDockerfiles_CopyAllTransitiveProjectReferencesBeforeRestoreAndPublish() {
         string root = GetRepositoryRoot();
@@ -50,10 +60,14 @@ public sealed class DockerfileDependencyTests {
         foreach (XElement reference in project.Descendants("ProjectReference")) {
             string? include = reference.Attribute("Include")?.Value;
             if (!string.IsNullOrWhiteSpace(include)) {
-                Visit(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(projectFile)!, include)), visited);
+                string normalizedInclude = NormalizeProjectReferencePath(include);
+                Visit(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(projectFile)!, normalizedInclude)), visited);
             }
         }
     }
+
+    private static string NormalizeProjectReferencePath(string path) =>
+        path.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
 
     private static string GetRepositoryRoot() {
         var current = new DirectoryInfo(AppContext.BaseDirectory);
