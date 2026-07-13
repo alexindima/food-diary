@@ -126,7 +126,7 @@
         "@typescript-eslint/parser": "^8.63.0",
         "@vitest/coverage-v8": "^4.1.10",
         "angular-eslint": "^22.1.0",
-        "baseline-browser-mapping": "^2.10.42",
+        "baseline-browser-mapping": "^2.10.43",
         "concurrently": "^10.0.3",
         "dependency-cruiser": "^18.1.0",
         "eslint": "^10.7.0",
