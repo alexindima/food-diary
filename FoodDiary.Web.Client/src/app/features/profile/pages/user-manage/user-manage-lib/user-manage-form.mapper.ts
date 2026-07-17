@@ -2,7 +2,7 @@ import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { formatDateInputValue } from '../../../../../shared/lib/local-date.utils';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
-import { type ActivityLevelOption, Gender, type User } from '../../../../../shared/models/user.data';
+import { type ActivityLevelOption, Gender, UpdateUserDto, type User } from '../../../../../shared/models/user.data';
 import {
     APP_THEMES,
     APP_UI_STYLES,
@@ -88,6 +88,26 @@ export function mapUserToForm(user: User): Partial<UserFormValues> {
         stepGoal: toNullable(user.stepGoal),
         profileImage: mapUserProfileImage(user),
     };
+}
+
+export function buildUserUpdateDto(formData: UserFormValues): UpdateUserDto {
+    return new UpdateUserDto({
+        ...formData,
+        profileImage: formData.profileImage,
+    });
+}
+
+export function normalizeOptionalTextInput(value: string): string | null {
+    return value.length > 0 ? value : null;
+}
+
+export function parseOptionalNumberInput(value: string): number | null {
+    if (value.trim().length === 0) {
+        return null;
+    }
+
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
 }
 
 function normalizeLanguage(value: string | null | undefined): string | null {

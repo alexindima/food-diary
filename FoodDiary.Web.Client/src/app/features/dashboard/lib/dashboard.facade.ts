@@ -1,9 +1,12 @@
-import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { PartialObserver } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
+import { RequestStateController } from '../../../shared/lib/request-state';
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
 import type { CycleResponse } from '../../cycle-tracking/models/cycle.data';
 import type { FastingSession } from '../../fasting/models/fasting.data';
@@ -11,6 +14,11 @@ import { GoalsService } from '../../goals/api/goals.service';
 import { HydrationService } from '../../hydration/api/hydration.service';
 import type { Meal } from '../../meals/models/meal.data';
 import { DashboardService } from '../api/dashboard.service';
+import type { TdeeInsightDialogComponent as TdeeInsightDialogComponentType } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog';
+import type {
+    TdeeInsightDialogAction,
+    TdeeInsightDialogData,
+} from '../dialogs/tdee-insight-dialog/tdee-insight-dialog-lib/tdee-insight-dialog.types';
 import type { DashboardSnapshot } from '../models/dashboard.data';
 import { getDashboardDateUtc, getHydrationDateUtc, normalizeDate } from './dashboard-date.utils';
 import { DASHBOARD_TREND_DAYS } from './dashboard-facade.config';
@@ -24,27 +32,29 @@ import {
 } from './dashboard-nutrition.utils';
 import { createWaistTrendSignals, createWeightTrendSignals } from './dashboard-trend.utils';
 
-@Service()
+@Injectable()
 export class DashboardFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly dashboardService = inject(DashboardService);
     private readonly hydrationService = inject(HydrationService);
     private readonly goalsService = inject(GoalsService);
     private readonly translateService = inject(TranslateService);
+    private readonly dialogService = inject(FdUiDialogService);
     public readonly layout = inject(DashboardLayoutService);
 
     private readonly initialized = signal(false);
     private readonly isHydrationUpdating = signal(false);
     private readonly trendDays = DASHBOARD_TREND_DAYS;
-    private snapshotRequestVersion = 0;
+    private readonly snapshotRequest = new RequestStateController<DashboardSnapshot, 'DASHBOARD.LOAD_ERROR'>();
 
     public readonly selectedDate = signal<Date>(normalizeDate(new Date()));
     public readonly isTodaySelected = computed(() => {
         const today = normalizeDate(new Date());
         return this.selectedDate().getTime() === today.getTime();
     });
-    public readonly snapshot = signal<DashboardSnapshot | null>(null);
-    public readonly isLoading = signal(false);
+    public readonly snapshot = this.snapshotRequest.data;
+    public readonly isLoading = this.snapshotRequest.isLoading;
+    public readonly loadError = this.snapshotRequest.error;
     public readonly cycle = computed<CycleResponse | null>(() => this.snapshot()?.currentCycle ?? null);
     public readonly isCycleLoading = computed(() => this.isLoading());
     public readonly tdeeInsight = computed(() => this.snapshot()?.tdeeInsight ?? null);
@@ -125,35 +135,53 @@ export class DashboardFacade {
             });
     }
 
+    public async openTdeeDetailsAsync(): Promise<TdeeInsightDialogAction | undefined> {
+        const { TdeeInsightDialogComponent } = await import('../dialogs/tdee-insight-dialog/tdee-insight-dialog');
+        return firstValueFrom(
+            this.dialogService
+                .open<TdeeInsightDialogComponentType, TdeeInsightDialogData, TdeeInsightDialogAction | undefined>(
+                    TdeeInsightDialogComponent,
+                    { size: 'md', data: { insight: this.tdeeInsight() } },
+                )
+                .afterClosed(),
+        );
+    }
+
     public reload(showLoader = true): void {
         this.loadDashboardSnapshot(showLoader);
     }
 
     private loadDashboardSnapshot(showLoader = true, clearHydrationUpdate = false): void {
-        const requestVersion = ++this.snapshotRequestVersion;
+        const requestId = this.snapshotRequest.begin({ showLoading: showLoader });
         const targetDate = getDashboardDateUtc(this.selectedDate());
         const locale = this.getCurrentLocale();
         const query = { date: targetDate, page: 1, pageSize: 10, locale, trendDays: this.trendDays };
         const request$ = showLoader ? this.dashboardService.getSnapshot(query) : this.dashboardService.getSnapshotSilentlyStrict(query);
         const observer: PartialObserver<DashboardSnapshot | null> = {
             next: snapshot => {
-                if (requestVersion !== this.snapshotRequestVersion) {
+                if (snapshot === null) {
+                    if (this.snapshotRequest.fail(requestId, 'DASHBOARD.LOAD_ERROR', { preserveData: !showLoader }) && showLoader) {
+                        this.layout.initializeLayout(null);
+                    }
+                    if (clearHydrationUpdate) {
+                        this.isHydrationUpdating.set(false);
+                    }
                     return;
                 }
-
-                this.snapshot.set(snapshot);
-                this.layout.initializeLayout(snapshot?.dashboardLayout ?? null);
+                if (!this.snapshotRequest.succeed(requestId, snapshot)) {
+                    return;
+                }
+                this.layout.initializeLayout(snapshot.dashboardLayout ?? null);
                 if (clearHydrationUpdate) {
                     this.isHydrationUpdating.set(false);
                 }
             },
             error: () => {
-                if (requestVersion !== this.snapshotRequestVersion) {
+                if (!this.snapshotRequest.fail(requestId, 'DASHBOARD.LOAD_ERROR', { preserveData: !showLoader })) {
                     return;
                 }
 
                 if (showLoader) {
-                    this.snapshot.set(null);
                     this.layout.initializeLayout(null);
                 }
                 if (clearHydrationUpdate) {
@@ -161,11 +189,6 @@ export class DashboardFacade {
                 }
             },
         };
-
-        if (showLoader) {
-            runTrackedRequest(this.destroyRef, this.isLoading, request$, observer);
-            return;
-        }
 
         request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(observer);
     }

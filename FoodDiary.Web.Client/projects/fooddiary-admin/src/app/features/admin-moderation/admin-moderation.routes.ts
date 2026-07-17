@@ -1,6 +1,10 @@
 import type { Routes } from '@angular/router';
 
 import { adminAuthGuard } from '../../guards/admin-auth.guard';
-import { AdminModerationComponent } from './pages/admin-moderation';
-
-export const adminModerationRoutes: Routes = [{ path: '', component: AdminModerationComponent, canActivate: [adminAuthGuard] }];
+export const adminModerationRoutes: Routes = [
+    {
+        path: '',
+        loadComponent: async () => import('./pages/admin-moderation').then(m => m.AdminModerationComponent),
+        canActivate: [adminAuthGuard],
+    },
+];

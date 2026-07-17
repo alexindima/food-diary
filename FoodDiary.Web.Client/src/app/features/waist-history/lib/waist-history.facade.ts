@@ -1,4 +1,4 @@
-import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, required, validate } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
@@ -9,6 +9,7 @@ import { resolveTranslateLanguage } from '../../../shared/i18n/translate-languag
 import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
 import { parseDecimalInput } from '../../../shared/lib/number.utils';
 import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
+import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { WaistEntriesService } from '../api/waist-entries.service';
 import type { CreateWaistEntryPayload, WaistEntry, WaistEntrySummaryFilters, WaistEntrySummaryPoint } from '../models/waist-entry.data';
 import { MAX_DESIRED_WAIST_CM, MAX_WAIST_CM, MIN_WAIST_CM } from './waist-history.constants';
@@ -37,10 +38,11 @@ type WaistCustomRangeFormModel = {
     range: WaistHistoryCustomRange | null;
 };
 
-@Service()
+@Injectable()
 export class WaistHistoryFacade {
     private readonly waistEntriesService = inject(WaistEntriesService);
     private readonly userService = inject(UserService);
+    private readonly invalidation = inject(NutritionDataInvalidationService);
     private readonly translate = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
 
@@ -168,6 +170,7 @@ export class WaistHistoryFacade {
                     takeUntilDestroyed(this.destroyRef),
                 ),
             );
+            this.invalidation.reportBodyMetricMutation();
             this.loadEntries(false, true);
             if (editingId !== null) {
                 this.resetEditingState();
@@ -209,6 +212,7 @@ export class WaistHistoryFacade {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
+                this.invalidation.reportBodyMetricMutation();
                 this.loadEntries(false, true);
                 if (this.editingEntryId() === entry.id) {
                     this.resetEditingState();
@@ -236,6 +240,7 @@ export class WaistHistoryFacade {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(value => {
+                this.invalidation.reportGoalMutation();
                 this.desiredWaist.set(value);
                 this.desiredWaistModel.set({ circumference: value?.toString() ?? '' });
             });

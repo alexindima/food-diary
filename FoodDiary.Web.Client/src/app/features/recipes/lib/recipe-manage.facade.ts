@@ -1,4 +1,4 @@
-import { inject, Service, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -34,7 +34,7 @@ export type RecipeIngredientSelectionTarget = {
 
 export type RecipeStepsNutritionState = readonly StepFormValues[];
 
-@Service()
+@Injectable()
 export class RecipeManageFacade {
     private readonly recipeService = inject(RecipeService);
     private readonly translateService = inject(TranslateService);

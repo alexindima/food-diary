@@ -1,58 +1,62 @@
 <div class="admin-billing fd-grid fd-gap-md">
     <div class="admin-billing__header fd-row fd-justify-end">
-        <fd-ui-button type="button" variant="secondary" (click)="load()"> Refresh </fd-ui-button>
+        <fd-ui-button type="button" variant="secondary" (click)="billing.load()"> Refresh </fd-ui-button>
     </div>
 
     <div class="admin-billing__tabs fd-row fd-gap-sm fd-wrap">
-        <button type="button" [class.active]="activeTab() === 'subscriptions'" (click)="setTab('subscriptions')">Subscriptions</button>
-        <button type="button" [class.active]="activeTab() === 'payments'" (click)="setTab('payments')">Payments</button>
-        <button type="button" [class.active]="activeTab() === 'webhook-events'" (click)="setTab('webhook-events')">Webhooks</button>
+        <button type="button" [class.active]="billing.activeTab() === 'subscriptions'" (click)="billing.setTab('subscriptions')">
+            Subscriptions
+        </button>
+        <button type="button" [class.active]="billing.activeTab() === 'payments'" (click)="billing.setTab('payments')">Payments</button>
+        <button type="button" [class.active]="billing.activeTab() === 'webhook-events'" (click)="billing.setTab('webhook-events')">
+            Webhooks
+        </button>
     </div>
 
     <fd-admin-billing-filters
-        [activeTab]="activeTab()"
-        [search]="search()"
-        [provider]="provider()"
-        [status]="status()"
-        [kind]="kind()"
-        [fromDate]="fromDate()"
-        [toDate]="toDate()"
-        (searchChange)="search.set($event)"
-        (providerChange)="provider.set($event)"
-        (statusChange)="status.set($event)"
-        (kindChange)="kind.set($event)"
-        (fromDateChange)="fromDate.set($event)"
-        (toDateChange)="toDate.set($event)"
-        (filtersApply)="applyFilters()"
-        (filtersReset)="resetFilters()"
+        [activeTab]="billing.activeTab()"
+        [search]="billing.search()"
+        [provider]="billing.provider()"
+        [status]="billing.status()"
+        [kind]="billing.kind()"
+        [fromDate]="billing.fromDate()"
+        [toDate]="billing.toDate()"
+        (searchChange)="billing.search.set($event)"
+        (providerChange)="billing.provider.set($event)"
+        (statusChange)="billing.status.set($event)"
+        (kindChange)="billing.kind.set($event)"
+        (fromDateChange)="billing.fromDate.set($event)"
+        (toDateChange)="billing.toDate.set($event)"
+        (filtersApply)="billing.applyFilters()"
+        (filtersReset)="billing.resetFilters()"
     />
 
-    @if (isLoading()) {
+    @if (billing.isLoading()) {
         <p>Loading billing records...</p>
     } @else {
-        <p class="admin-billing__error" role="alert" [hidden]="errorMessage() === null">{{ errorMessage() }}</p>
+        <p class="admin-billing__error" role="alert" [hidden]="billing.errorMessage() === null">{{ billing.errorMessage() }}</p>
 
-        <div class="admin-billing__summary fd-ui-action-text">Total records: {{ totalItems() }}</div>
+        <div class="admin-billing__summary fd-ui-action-text">Total records: {{ billing.totalItems() }}</div>
 
-        @if (activeTab() === 'subscriptions') {
-            <fd-admin-billing-subscriptions-table [items]="subscriptionItems()" />
+        @if (billing.activeTab() === 'subscriptions') {
+            <fd-admin-billing-subscriptions-table [items]="billing.subscriptionItems()" />
         }
-        @if (activeTab() === 'payments') {
-            <fd-admin-billing-payments-table [items]="paymentItems()" (metadataOpen)="showMetadata($event)" />
+        @if (billing.activeTab() === 'payments') {
+            <fd-admin-billing-payments-table [items]="billing.paymentItems()" (metadataOpen)="billing.showMetadata($event)" />
         }
-        @if (activeTab() === 'webhook-events') {
-            <fd-admin-billing-webhooks-table [items]="webhookEventItems()" (metadataOpen)="showMetadata($event)" />
+        @if (billing.activeTab() === 'webhook-events') {
+            <fd-admin-billing-webhooks-table [items]="billing.webhookEventItems()" (metadataOpen)="billing.showMetadata($event)" />
         }
 
         <fd-ui-pagination
             class="admin-billing__pagination"
-            [length]="totalItems()"
-            [pageSize]="limit"
-            [pageIndex]="page() - 1"
-            (pageIndexChange)="goToPage($event + 1)"
+            [length]="billing.totalItems()"
+            [pageSize]="billing.limit"
+            [pageIndex]="billing.page() - 1"
+            (pageIndexChange)="billing.goToPage($event + 1)"
         />
     }
-    @if (selectedMetadata(); as metadata) {
-        <fd-admin-billing-metadata-panel [metadata]="metadata" (closePanel)="selectedMetadata.set(null)" />
+    @if (billing.selectedMetadata(); as metadata) {
+        <fd-admin-billing-metadata-panel [metadata]="metadata" (closePanel)="billing.selectedMetadata.set(null)" />
     }
 </div>

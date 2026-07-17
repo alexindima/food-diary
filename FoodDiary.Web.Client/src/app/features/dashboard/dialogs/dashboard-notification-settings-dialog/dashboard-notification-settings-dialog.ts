@@ -1,20 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
-import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiHintDirective } from 'fd-ui-kit/hint/fd-ui-hint.directive';
 import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch';
-import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { finalize } from 'rxjs';
 
-import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
-import { NavigationService } from '../../../../services/navigation.service';
-import { BrowserNotificationCapabilityService } from '../../../../shared/notifications/browser-notification-capability.service';
-import { NotificationService } from '../../../../shared/notifications/notification.service';
-import { PushNotificationService } from '../../../../shared/notifications/push-notification.service';
+import { DashboardNotificationSettingsFacade } from './dashboard-notification-settings.facade';
 
 @Component({
     selector: 'fd-dashboard-notification-settings-dialog',
@@ -22,289 +14,42 @@ import { PushNotificationService } from '../../../../shared/notifications/push-n
     styleUrl: './dashboard-notification-settings-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslatePipe, FdUiDialogComponent, FdUiSwitchComponent, FdUiButtonComponent, FdUiDialogFooterDirective, FdUiHintDirective],
+    providers: [DashboardNotificationSettingsFacade],
 })
 export class DashboardNotificationSettingsDialogComponent {
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly dialogRef = inject(FdUiDialogRef<DashboardNotificationSettingsDialogComponent>, { optional: true });
-    private readonly notificationService = inject(NotificationService);
-    private readonly pushNotifications = inject(PushNotificationService);
-    private readonly navigationService = inject(NavigationService);
-    private readonly translateService = inject(TranslateService);
-    private readonly toastService = inject(FdUiToastService);
-    private readonly frontendObservability = inject(FrontendObservabilityService);
-    private readonly browserNotifications = inject(BrowserNotificationCapabilityService);
-    private readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.browserNotifications.getPermission());
+    private readonly settings = inject(DashboardNotificationSettingsFacade);
 
-    protected readonly isLoading = signal(true);
-    protected readonly isUpdating = signal(false);
-    protected readonly isOpeningProfile = signal(false);
-    protected readonly submitError = signal<string | null>(null);
-    protected readonly pushNotificationsEnabled = signal(false);
-    protected readonly fastingPushNotificationsEnabled = signal(true);
-    protected readonly socialPushNotificationsEnabled = signal(true);
-    protected readonly pushNotificationsSupported = this.pushNotifications.isSupported;
-    protected readonly pushNotificationsSubscribed = this.pushNotifications.isSubscribed;
-    protected readonly pushNotificationsBusy = this.pushNotifications.isBusy;
-
-    protected readonly pushNotificationsAccountStatusKey = computed(() =>
-        this.pushNotificationsEnabled()
-            ? 'USER_MANAGE.NOTIFICATIONS_ACCOUNT_STATUS_ENABLED'
-            : 'USER_MANAGE.NOTIFICATIONS_ACCOUNT_STATUS_DISABLED',
-    );
-
-    protected readonly pushNotificationsDeviceStatusKey = computed(() => {
-        if (!this.pushNotificationsSupported()) {
-            return 'USER_MANAGE.NOTIFICATIONS_STATUS_UNSUPPORTED';
-        }
-
-        if (this.notificationPermission() === 'denied') {
-            return 'USER_MANAGE.NOTIFICATIONS_STATUS_BLOCKED';
-        }
-
-        if (this.pushNotificationsSubscribed()) {
-            return 'USER_MANAGE.NOTIFICATIONS_STATUS_ENABLED';
-        }
-
-        if (!this.pushNotificationsEnabled()) {
-            return 'USER_MANAGE.NOTIFICATIONS_STATUS_DEVICE_IDLE';
-        }
-
-        return 'USER_MANAGE.NOTIFICATIONS_STATUS_SETUP_REQUIRED';
-    });
-
-    protected readonly pushNotificationsHintKey = computed(() => {
-        if (!this.pushNotificationsEnabled()) {
-            return 'USER_MANAGE.NOTIFICATIONS_DISABLED_HINT';
-        }
-
-        if (this.notificationPermission() === 'denied') {
-            return 'USER_MANAGE.NOTIFICATIONS_BLOCKED_HINT';
-        }
-
-        if (!this.pushNotificationsSupported()) {
-            return 'USER_MANAGE.NOTIFICATIONS_UNSUPPORTED_HINT';
-        }
-
-        if (this.pushNotificationsSubscribed()) {
-            return 'USER_MANAGE.NOTIFICATIONS_ENABLED_HINT';
-        }
-
-        return 'USER_MANAGE.NOTIFICATIONS_SETUP_REQUIRED_HINT';
-    });
+    protected readonly isLoading = this.settings.isLoading;
+    protected readonly isUpdating = this.settings.isUpdating;
+    protected readonly isOpeningProfile = this.settings.isOpeningProfile;
+    protected readonly submitError = this.settings.submitError;
+    protected readonly pushNotificationsEnabled = this.settings.pushNotificationsEnabled;
+    protected readonly fastingPushNotificationsEnabled = this.settings.fastingPushNotificationsEnabled;
+    protected readonly socialPushNotificationsEnabled = this.settings.socialPushNotificationsEnabled;
+    protected readonly pushNotificationsSupported = this.settings.pushNotificationsSupported;
+    protected readonly pushNotificationsSubscribed = this.settings.pushNotificationsSubscribed;
+    protected readonly pushNotificationsBusy = this.settings.pushNotificationsBusy;
+    protected readonly pushNotificationsAccountStatusKey = this.settings.pushNotificationsAccountStatusKey;
+    protected readonly pushNotificationsDeviceStatusKey = this.settings.pushNotificationsDeviceStatusKey;
+    protected readonly pushNotificationsHintKey = this.settings.pushNotificationsHintKey;
 
     public constructor() {
-        this.loadPreferences();
+        this.settings.load();
     }
 
     protected togglePushNotifications(): void {
-        if (this.isUpdating() || this.pushNotificationsBusy()) {
-            return;
-        }
-
-        const nextEnabled = !this.pushNotificationsEnabled();
-        this.isUpdating.set(true);
-        this.submitError.set(null);
-
-        this.notificationService
-            .updateNotificationPreferences({ pushNotificationsEnabled: nextEnabled })
-            .pipe(
-                finalize(() => {
-                    this.isUpdating.set(false);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
-                next: preferences => {
-                    this.pushNotificationsEnabled.set(preferences.pushNotificationsEnabled);
-                    this.fastingPushNotificationsEnabled.set(preferences.fastingPushNotificationsEnabled);
-                    this.socialPushNotificationsEnabled.set(preferences.socialPushNotificationsEnabled);
-                    this.notificationPermission.set(this.browserNotifications.getPermission());
-
-                    if (!nextEnabled) {
-                        this.frontendObservability.recordNotificationPreferenceChanged('push', false, {
-                            permission: this.notificationPermission(),
-                            source: 'dashboard-dialog',
-                        });
-                        this.toastService.info(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_DISABLED'));
-                        return;
-                    }
-
-                    void this.finishEnablingPushAsync();
-                },
-                error: () => {
-                    this.submitError.set(this.translateService.instant('DASHBOARD.NOTIFICATIONS.ERROR'));
-                },
-            });
+        this.settings.togglePushNotifications();
     }
 
     protected toggleFastingPushNotifications(): void {
-        if (this.isUpdating()) {
-            return;
-        }
-
-        const nextEnabled = !this.fastingPushNotificationsEnabled();
-        this.isUpdating.set(true);
-        this.submitError.set(null);
-
-        this.notificationService
-            .updateNotificationPreferences({ fastingPushNotificationsEnabled: nextEnabled })
-            .pipe(
-                finalize(() => {
-                    this.isUpdating.set(false);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
-                next: preferences => {
-                    this.pushNotificationsEnabled.set(preferences.pushNotificationsEnabled);
-                    this.fastingPushNotificationsEnabled.set(preferences.fastingPushNotificationsEnabled);
-                    this.socialPushNotificationsEnabled.set(preferences.socialPushNotificationsEnabled);
-                    this.frontendObservability.recordNotificationPreferenceChanged('fasting', nextEnabled, {
-                        source: 'dashboard-dialog',
-                    });
-                    this.toastService.info(
-                        this.translateService.instant(
-                            nextEnabled
-                                ? 'USER_MANAGE.NOTIFICATIONS_FASTING_ENABLED_TOAST'
-                                : 'USER_MANAGE.NOTIFICATIONS_FASTING_DISABLED_TOAST',
-                        ),
-                    );
-                },
-                error: () => {
-                    this.submitError.set(this.translateService.instant('DASHBOARD.NOTIFICATIONS.ERROR'));
-                },
-            });
+        this.settings.toggleFastingPushNotifications();
     }
 
     protected toggleSocialPushNotifications(): void {
-        if (this.isUpdating()) {
-            return;
-        }
-
-        const nextEnabled = !this.socialPushNotificationsEnabled();
-        this.isUpdating.set(true);
-        this.submitError.set(null);
-
-        this.notificationService
-            .updateNotificationPreferences({ socialPushNotificationsEnabled: nextEnabled })
-            .pipe(
-                finalize(() => {
-                    this.isUpdating.set(false);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
-                next: preferences => {
-                    this.pushNotificationsEnabled.set(preferences.pushNotificationsEnabled);
-                    this.fastingPushNotificationsEnabled.set(preferences.fastingPushNotificationsEnabled);
-                    this.socialPushNotificationsEnabled.set(preferences.socialPushNotificationsEnabled);
-                    this.frontendObservability.recordNotificationPreferenceChanged('social', nextEnabled, {
-                        source: 'dashboard-dialog',
-                    });
-                    this.toastService.info(
-                        this.translateService.instant(
-                            nextEnabled
-                                ? 'USER_MANAGE.NOTIFICATIONS_SOCIAL_ENABLED_TOAST'
-                                : 'USER_MANAGE.NOTIFICATIONS_SOCIAL_DISABLED_TOAST',
-                        ),
-                    );
-                },
-                error: () => {
-                    this.submitError.set(this.translateService.instant('DASHBOARD.NOTIFICATIONS.ERROR'));
-                },
-            });
+        this.settings.toggleSocialPushNotifications();
     }
 
     protected async openAdvancedSettingsAsync(): Promise<void> {
-        if (this.isOpeningProfile()) {
-            return;
-        }
-
-        this.isOpeningProfile.set(true);
-
-        try {
-            this.dialogRef?.close();
-            await this.navigationService.navigateToProfileAsync();
-        } finally {
-            this.isOpeningProfile.set(false);
-        }
-    }
-
-    private loadPreferences(): void {
-        this.notificationService
-            .getNotificationPreferences()
-            .pipe(
-                finalize(() => {
-                    this.isLoading.set(false);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
-                next: preferences => {
-                    this.pushNotificationsEnabled.set(preferences.pushNotificationsEnabled);
-                    this.fastingPushNotificationsEnabled.set(preferences.fastingPushNotificationsEnabled);
-                    this.socialPushNotificationsEnabled.set(preferences.socialPushNotificationsEnabled);
-                    this.notificationPermission.set(this.browserNotifications.getPermission());
-                    this.frontendObservability.recordNotificationSettingsViewed({
-                        pushEnabled: preferences.pushNotificationsEnabled,
-                        fastingEnabled: preferences.fastingPushNotificationsEnabled,
-                        socialEnabled: preferences.socialPushNotificationsEnabled,
-                        source: 'dashboard-dialog',
-                    });
-                },
-                error: () => {
-                    this.submitError.set(this.translateService.instant('DASHBOARD.NOTIFICATIONS.LOAD_ERROR'));
-                },
-            });
-    }
-
-    private async finishEnablingPushAsync(): Promise<void> {
-        const result = await this.pushNotifications.ensureSubscriptionAsync();
-
-        switch (result) {
-            case 'subscribed':
-            case 'already-subscribed': {
-                this.frontendObservability.recordNotificationPreferenceChanged('push', true, {
-                    permission: this.notificationPermission(),
-                    source: 'dashboard-dialog',
-                });
-                this.frontendObservability.recordNotificationSubscriptionEvent('subscription.ensure', 'success', {
-                    result,
-                    source: 'dashboard-dialog',
-                });
-                this.toastService.success(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_ENABLED'));
-                break;
-            }
-            case 'unsupported': {
-                this.frontendObservability.recordNotificationSubscriptionEvent('subscription.ensure', 'unsupported', {
-                    result,
-                    source: 'dashboard-dialog',
-                });
-                this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_UNSUPPORTED_HINT'));
-                break;
-            }
-            case 'blocked': {
-                this.frontendObservability.recordNotificationSubscriptionEvent('subscription.ensure', 'blocked', {
-                    result,
-                    source: 'dashboard-dialog',
-                });
-                this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_BLOCKED_HINT'));
-                break;
-            }
-            case 'unavailable': {
-                this.frontendObservability.recordNotificationSubscriptionEvent('subscription.ensure', 'unavailable', {
-                    result,
-                    source: 'dashboard-dialog',
-                });
-                this.toastService.info(
-                    this.translateService.instant(
-                        this.notificationPermission() === 'denied'
-                            ? 'USER_MANAGE.NOTIFICATIONS_BLOCKED_HINT'
-                            : 'USER_MANAGE.NOTIFICATIONS_UNAVAILABLE_HINT',
-                    ),
-                );
-                break;
-            }
-        }
+        await this.settings.openAdvancedSettingsAsync();
     }
 }

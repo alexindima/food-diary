@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Service, signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, type Observable, of, switchMap } from 'rxjs';
 
@@ -8,7 +8,7 @@ import type { UsdaFood } from '../models/usda.data';
 
 const USDA_SEARCH_MIN_LENGTH = 2;
 
-@Service()
+@Injectable()
 export class UsdaFoodSearchFacade {
     private readonly usdaService = inject(UsdaService);
     private readonly destroyRef = inject(DestroyRef);

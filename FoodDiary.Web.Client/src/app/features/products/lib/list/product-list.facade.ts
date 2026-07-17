@@ -1,13 +1,16 @@
-import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form } from '@angular/forms/signals';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import {
     catchError,
     debounceTime,
     distinctUntilChanged,
     EMPTY,
     finalize,
+    firstValueFrom,
     map,
     type Observable,
     of,
@@ -26,6 +29,7 @@ import { QuickMealService } from '../../../meals/lib/quick/quick-meal.service';
 import { FavoriteProductService } from '../../api/favorite-product.service';
 import { OpenFoodFactsService } from '../../api/open-food-facts.service';
 import { ProductService } from '../../api/product.service';
+import { ProductDetailActionResult } from '../../components/detail/product-detail-lib/product-detail.types';
 import {
     PRODUCT_LIST_FAVORITE_LIMIT,
     PRODUCT_LIST_OFF_SEARCH_LIMIT,
@@ -37,19 +41,16 @@ import type { ProductCardViewModel } from '../../components/list/product-list.ty
 import { ProductListFiltersDialogComponent } from '../../components/list/product-list-filters-dialog/product-list-filters-dialog';
 import type { ProductListFiltersDialogResult } from '../../components/list/product-list-filters-dialog/product-list-filters-dialog.types';
 import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
-import {
-    type FavoriteProduct,
-    MeasurementUnit,
-    type Product,
-    ProductFilters,
-    ProductType,
-    ProductVisibility,
-} from '../../models/product.data';
+import { type FavoriteProduct, type Product, ProductFilters, ProductType } from '../../models/product.data';
 import { resolveProductImageUrl } from '../product-image.util';
+import {
+    buildFavoriteProductSnapshot,
+    excludeRecentProducts,
+    getProductListActiveFilterCount,
+    resolveProductListFilterChanges,
+} from './product-list.state';
 
-const FAVORITE_GRAM_BASE_AMOUNT = 100;
-
-@Service()
+@Injectable()
 export class ProductListFacade {
     private readonly productService = inject(ProductService);
     public readonly navigationService = inject(NavigationService);
@@ -60,6 +61,9 @@ export class ProductListFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly openFoodFactsService = inject(OpenFoodFactsService);
     private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
+    private readonly toastService = inject(FdUiToastService);
+    private readonly translateService = inject(TranslateService);
+    private isDeleteInProgress = false;
 
     public readonly pageSize = PRODUCT_LIST_PAGE_SIZE;
     public readonly searchModel = signal<ProductSearchFormValues>({
@@ -101,8 +105,7 @@ export class ProductListFacade {
             return products;
         }
 
-        const recentIds = new Set(this.recentProducts().map(product => product.id));
-        return products.filter(product => !recentIds.has(product.id));
+        return excludeRecentProducts(products, this.recentProducts());
     });
     public readonly allProductItems = computed<ProductCardViewModel[]>(() =>
         this.allProductsSectionItems().map(product => ({
@@ -115,12 +118,14 @@ export class ProductListFacade {
     public readonly caloriesToFilter = signal<number | null>(null);
     public readonly hasImageFilter = signal<boolean | null>(null);
     public readonly hasVisibleProducts = computed(() => this.showRecentSection() || this.allProductsSectionItems().length > 0);
-    public readonly activeFilterCount = computed(
-        () =>
-            (this.onlyMineFilter() ? 1 : 0) +
-            this.selectedProductTypes().length +
-            (this.caloriesFromFilter() !== null || this.caloriesToFilter() !== null ? 1 : 0) +
-            (this.hasImageFilter() !== null ? 1 : 0),
+    public readonly activeFilterCount = computed(() =>
+        getProductListActiveFilterCount({
+            onlyMine: this.onlyMineFilter(),
+            productTypes: this.selectedProductTypes(),
+            caloriesFrom: this.caloriesFromFilter(),
+            caloriesTo: this.caloriesToFilter(),
+            hasImage: this.hasImageFilter(),
+        }),
     );
     public readonly hasActiveFilters = computed(() => this.activeFilterCount() > 0);
     public readonly isEmptyState = computed(() => !this.hasVisibleProducts() && !this.hasSearchValue() && !this.hasActiveFilters());
@@ -222,7 +227,7 @@ export class ProductListFacade {
                         return EMPTY;
                     }
 
-                    const changes = this.resolveFilterDialogChanges(
+                    const changes = resolveProductListFilterChanges(
                         {
                             onlyMine: currentOnlyMine,
                             productTypes: currentTypes,
@@ -404,7 +409,7 @@ export class ProductListFacade {
     }
 
     public addFavoriteProductToMeal(favorite: FavoriteProduct): void {
-        this.quickConsumptionService.addProduct(this.toFavoriteProductSnapshot(favorite), favorite.defaultPortionAmount);
+        this.quickConsumptionService.addProduct(buildFavoriteProductSnapshot(favorite), favorite.defaultPortionAmount);
     }
 
     public removeFavorite(favorite: FavoriteProduct): void {
@@ -439,6 +444,44 @@ export class ProductListFacade {
         return this.productService
             .deleteById(productId)
             .pipe(switchMap(() => this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchValue())));
+    }
+
+    public async handleProductDetailsAsync(product: Product): Promise<boolean> {
+        const { ProductDetailComponent } = await import('../../components/detail/product-detail/product-detail');
+        const result = await firstValueFrom(
+            this.fdDialogService.open(ProductDetailComponent, { preset: 'detail', data: product }).afterClosed().pipe(take(1)),
+        );
+
+        if (!(result instanceof ProductDetailActionResult)) {
+            return false;
+        }
+
+        if (result.action === 'FavoriteChanged') {
+            this.loadFavorites();
+            this.reloadCurrentPage();
+            return false;
+        }
+
+        if (result.action === 'Edit' || result.action === 'Duplicate') {
+            await this.navigationService.navigateToProductEditAsync(result.id);
+            return false;
+        }
+
+        if (!product.isOwnedByCurrentUser || this.isDeleteInProgress) {
+            return false;
+        }
+
+        this.isDeleteInProgress = true;
+        try {
+            await firstValueFrom(this.deleteProductAndReload(result.id));
+            return true;
+        } catch {
+            this.productData.setLoading(false);
+            this.toastService.error(this.translateService.instant('PRODUCT_LIST.DELETE_ERROR'));
+            return false;
+        } finally {
+            this.isDeleteInProgress = false;
+        }
     }
 
     private bindSearch(): void {
@@ -491,36 +534,6 @@ export class ProductListFacade {
             });
     }
 
-    private normalizeProductTypes(productTypes: ProductType[]): ProductType[] {
-        return [...new Set(productTypes)];
-    }
-
-    private areProductTypesEqual(left: ProductType[], right: ProductType[]): boolean {
-        if (left.length !== right.length) {
-            return false;
-        }
-
-        const leftSet = new Set(left);
-        return right.every(type => leftSet.has(type));
-    }
-
-    private resolveFilterDialogChanges(current: ProductListFilterState, result: ProductListFiltersDialogResult): ProductListFilterChanges {
-        const productTypes = this.normalizeProductTypes(result.productTypes);
-        const onlyMineChanged = current.onlyMine !== result.onlyMine;
-        const typesChanged = !this.areProductTypesEqual(current.productTypes, productTypes);
-        const caloriesChanged = current.caloriesFrom !== result.caloriesFrom || current.caloriesTo !== result.caloriesTo;
-        const imageChanged = current.hasImage !== result.hasImage;
-
-        return {
-            productTypes,
-            onlyMineChanged,
-            typesChanged,
-            caloriesChanged,
-            imageChanged,
-            hasChanges: onlyMineChanged || typesChanged || caloriesChanged || imageChanged,
-        };
-    }
-
     private syncProductFavoriteState(productId: string, isFavorite: boolean, favoriteProductId: string | null): void {
         this.productData.items.update(items =>
             items.map(product => (product.id === productId ? { ...product, isFavorite, favoriteProductId } : product)),
@@ -528,59 +541,6 @@ export class ProductListFacade {
         this.recentProducts.update(products =>
             products.map(product => (product.id === productId ? { ...product, isFavorite, favoriteProductId } : product)),
         );
-    }
-
-    private toFavoriteProductSnapshot(favorite: FavoriteProduct): Product {
-        return {
-            id: favorite.productId,
-            name: this.resolveFavoriteName(favorite),
-            barcode: favorite.barcode ?? null,
-            brand: favorite.brand ?? null,
-            productType: ProductType.Unknown,
-            category: null,
-            description: null,
-            comment: favorite.comment ?? null,
-            imageUrl: favorite.imageUrl ?? null,
-            imageAssetId: null,
-            baseUnit: this.normalizeMeasurementUnit(favorite.baseUnit),
-            baseAmount: this.resolveFavoriteBaseAmount(favorite.baseUnit),
-            defaultPortionAmount: favorite.defaultPortionAmount,
-            caloriesPerBase: favorite.caloriesPerBase,
-            proteinsPerBase: favorite.proteinsPerBase,
-            fatsPerBase: favorite.fatsPerBase,
-            carbsPerBase: favorite.carbsPerBase,
-            fiberPerBase: favorite.fiberPerBase,
-            alcoholPerBase: favorite.alcoholPerBase,
-            usageCount: 0,
-            visibility: ProductVisibility.Private,
-            createdAt: new Date(favorite.createdAtUtc),
-            isOwnedByCurrentUser: favorite.isOwnedByCurrentUser,
-            qualityScore: favorite.qualityScore,
-            qualityGrade: favorite.qualityGrade,
-            isFavorite: true,
-            favoriteProductId: favorite.id,
-        };
-    }
-
-    private resolveFavoriteName(favorite: FavoriteProduct): string {
-        const name = favorite.name?.trim();
-        return name !== undefined && name.length > 0 ? name : favorite.productName;
-    }
-
-    private normalizeMeasurementUnit(value: string): MeasurementUnit {
-        if (value === 'ML') {
-            return MeasurementUnit.ML;
-        }
-
-        if (value === 'PCS') {
-            return MeasurementUnit.PCS;
-        }
-
-        return MeasurementUnit.G;
-    }
-
-    private resolveFavoriteBaseAmount(baseUnit: string): number {
-        return this.normalizeMeasurementUnit(baseUnit) === MeasurementUnit.PCS ? 1 : FAVORITE_GRAM_BASE_AMOUNT;
     }
 
     private removeProductFavorite(product: Product): void {
@@ -625,21 +585,4 @@ export class ProductListFacade {
 type ProductSearchFormValues = {
     search: string | null;
     onlyMine: boolean;
-};
-
-type ProductListFilterState = {
-    onlyMine: boolean;
-    productTypes: ProductType[];
-    caloriesFrom: number | null;
-    caloriesTo: number | null;
-    hasImage: boolean | null;
-};
-
-type ProductListFilterChanges = {
-    productTypes: ProductType[];
-    onlyMineChanged: boolean;
-    typesChanged: boolean;
-    caloriesChanged: boolean;
-    imageChanged: boolean;
-    hasChanges: boolean;
 };

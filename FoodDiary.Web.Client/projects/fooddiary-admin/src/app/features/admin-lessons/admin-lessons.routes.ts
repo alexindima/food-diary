@@ -1,12 +1,10 @@
 import type { Routes } from '@angular/router';
 
 import { adminAuthGuard } from '../../guards/admin-auth.guard';
-import { AdminLessonsComponent } from './pages/admin-lessons';
-
 export const adminLessonsRoutes: Routes = [
     {
         path: '',
-        component: AdminLessonsComponent,
+        loadComponent: async () => import('./pages/admin-lessons').then(m => m.AdminLessonsComponent),
         canActivate: [adminAuthGuard],
     },
 ];

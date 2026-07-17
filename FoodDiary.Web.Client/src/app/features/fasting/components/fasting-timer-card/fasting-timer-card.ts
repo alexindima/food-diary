@@ -16,11 +16,15 @@ import { FastingTimerCardGroupsComponent } from './fasting-timer-card-groups/fas
 import { FastingTimerCardItemsComponent } from './fasting-timer-card-items/fasting-timer-card-items';
 import type {
     FastingTimerCardChrome,
-    FastingTimerCardDisplayGroup,
-    FastingTimerCardDisplayItem,
     FastingTimerCardLayout,
     FastingTimerCardState,
 } from './fasting-timer-card-lib/fasting-timer-card.types';
+import {
+    buildFastingMainRingItems,
+    buildFastingSummaryContentGroups,
+    buildFastingSummaryRingItems,
+    type FastingTimerCardDisplayContext,
+} from './fasting-timer-card-lib/fasting-timer-card-display.mapper';
 
 const RING_RADIUS = 90;
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
@@ -85,9 +89,9 @@ export class FastingTimerCardComponent {
     protected readonly shouldShowStageDescriptionFallback = computed(
         () => !this.isEatingPhase() && !this.shouldShowStageProgress() && this.viewState().stageDescriptionKey !== null,
     );
-    protected readonly mainRingItems = computed(() => this.buildMainRingItems());
-    protected readonly summaryRingItems = computed(() => this.buildSummaryRingItems());
-    protected readonly summaryContentGroups = computed(() => this.buildSummaryContentGroups());
+    protected readonly mainRingItems = computed(() => buildFastingMainRingItems(this.buildDisplayContext()));
+    protected readonly summaryRingItems = computed(() => buildFastingSummaryRingItems(this.buildDisplayContext()));
+    protected readonly summaryContentGroups = computed(() => buildFastingSummaryContentGroups(this.buildDisplayContext()));
     protected readonly progressStrokeColor = computed(() => {
         const state = this.viewState();
         if (state.isOvertime || this.isEatingPhase()) {
@@ -162,226 +166,16 @@ export class FastingTimerCardComponent {
         };
     }
 
-    private buildMainRingItems(): FastingTimerCardDisplayItem[] {
-        const state = this.viewState();
-        const items: FastingTimerCardDisplayItem[] = [];
-        const showHeader = !(this.isSetupLayout() && !state.isActive && !state.currentSessionCompleted);
-
-        if (showHeader) {
-            items.push({ className: 'fasting-timer-card__label fd-ui-meta-text', text: this.translate(state.labelKey) });
-            this.pushOptionalItem(items, 'fasting-timer-card__state fd-ui-meta-text', state.stateLabel);
-        }
-
-        if (state.isActive) {
-            this.addActiveMainRingItems(items, state);
-        } else if (state.currentSessionCompleted) {
-            this.addCompletedMainRingItems(items, state);
-        } else if (this.isSetupLayout()) {
-            items.push({ className: 'fasting-timer-card__remaining fd-ui-body-sm', text: this.translate('FASTING.SELECT_AND_START') });
-        } else {
-            items.push({
-                className: 'fasting-timer-card__elapsed fasting-timer-card__elapsed--idle fd-ui-metric-lg',
-                text: this.translate('FASTING.READY'),
-            });
-            items.push({ className: 'fasting-timer-card__remaining fd-ui-body-sm', text: this.translate('FASTING.SELECT_AND_START') });
-        }
-
-        if (showHeader) {
-            this.pushOptionalItem(items, 'fasting-timer-card__detail fd-ui-caption', state.detailLabel);
-        }
-
-        return items;
-    }
-
-    private addActiveMainRingItems(items: FastingTimerCardDisplayItem[], state: FastingTimerCardState): void {
-        items.push({ className: 'fasting-timer-card__elapsed fd-ui-metric-lg', text: state.elapsedFormatted });
-        this.addStageItems(items, state);
-        items.push({ className: 'fasting-timer-card__remaining fd-ui-body-sm', text: this.getRemainingText(state) });
-
-        if (!this.isEatingPhase() && !state.isOvertime && state.nextStageTitleKey !== null && state.nextStageFormatted !== null) {
-            items.push({
-                className: 'fasting-timer-card__next-stage-time fd-ui-body-sm',
-                text: this.translate('FASTING.STAGES.NEXT_IN', { time: state.nextStageFormatted }),
-            });
-            items.push({
-                className: 'fasting-timer-card__next-stage-label',
-                text: `${this.translate('FASTING.STAGES.NEXT_STAGE')}: ${this.translate(state.nextStageTitleKey)}`,
-            });
-            return;
-        }
-
-        this.addStageDescriptionFallbackItem(items, state);
-    }
-
-    private addCompletedMainRingItems(items: FastingTimerCardDisplayItem[], state: FastingTimerCardState): void {
-        items.push({ className: 'fasting-timer-card__elapsed fd-ui-metric-lg', text: state.elapsedFormatted });
-        this.addStageItems(items, state);
-        items.push({
-            className: 'fasting-timer-card__remaining fasting-timer-card__remaining--done fd-ui-body-sm',
-            text: this.translate('FASTING.COMPLETED'),
-        });
-        this.pushOptionalTranslatedItem(items, 'fasting-timer-card__next-stage-label', state.stageDescriptionKey);
-    }
-
-    private buildSummaryRingItems(): FastingTimerCardDisplayItem[] {
-        const state = this.viewState();
-        if (!state.isActive && !state.currentSessionCompleted) {
-            return [
-                {
-                    className: 'fasting-timer-card__elapsed fasting-timer-card__elapsed--idle fd-ui-metric-lg',
-                    text: this.translate('FASTING.READY'),
-                },
-                { className: 'fasting-timer-card__remaining fd-ui-body-sm', text: this.translate('FASTING.SELECT_AND_START') },
-            ];
-        }
-
-        const items: FastingTimerCardDisplayItem[] = [];
-        this.pushOptionalItem(items, 'fasting-timer-card__state fasting-timer-card__state--summary fd-ui-body-sm', state.stateLabel);
-        items.push({
-            className: 'fasting-timer-card__elapsed fasting-timer-card__elapsed--summary fd-ui-metric-lg',
-            text: state.elapsedFormatted,
-        });
-        items.push({
-            className: 'fasting-timer-card__percent fasting-timer-card__percent--summary-secondary fd-ui-stat-value',
-            text: `${this.normalizedProgressPercent().toFixed(0)}%`,
-        });
-
-        return items;
-    }
-
-    private buildSummaryContentGroups(): FastingTimerCardDisplayGroup[] {
-        const state = this.viewState();
-        if (state.isActive) {
-            return this.buildActiveSummaryGroups(state);
-        }
-
-        if (state.currentSessionCompleted) {
-            return this.buildCompletedSummaryGroups(state);
-        }
-
-        return [
-            {
-                className: 'fasting-timer-card__summary-time fasting-timer-card__summary-time--idle fd-stack fd-gap-card-header',
-                items: [
-                    { className: 'fd-ui-metric-lg', text: this.translate('FASTING.READY') },
-                    { className: 'fasting-timer-card__remaining fd-ui-body-sm', text: this.translate('FASTING.SELECT_AND_START') },
-                ],
-            },
-        ];
-    }
-
-    private buildActiveSummaryGroups(state: FastingTimerCardState): FastingTimerCardDisplayGroup[] {
-        const groups: FastingTimerCardDisplayGroup[] = [];
-
-        if (this.shouldShowStageProgress()) {
-            const stageItems: FastingTimerCardDisplayItem[] = [];
-            if (state.metaLabel === null) {
-                stageItems.push({
-                    className: 'fasting-timer-card__stage-progress fd-ui-overline',
-                    text: this.getStageProgressText(state),
-                });
-            }
-
-            this.pushOptionalTranslatedItem(stageItems, 'fasting-timer-card__stage-title fd-ui-card-title', state.stageTitleKey);
-            this.pushOptionalTranslatedItem(stageItems, 'fasting-timer-card__next-stage-label', state.stageDescriptionKey);
-            groups.push({ className: 'fasting-timer-card__summary-stage fd-stack fd-gap-card-header', items: stageItems });
-        }
-
-        if (!this.isEatingPhase() && !state.isOvertime && state.nextStageTitleKey !== null && state.nextStageFormatted !== null) {
-            groups.push({
-                className: 'fasting-timer-card__summary-next fd-stack fd-gap-card-header',
-                items: [
-                    {
-                        className: 'fasting-timer-card__next-stage-time fd-ui-body-sm',
-                        text: this.translate('FASTING.STAGES.NEXT_IN', { time: state.nextStageFormatted }),
-                    },
-                ],
-            });
-        }
-
-        groups.push({
-            className: 'fasting-timer-card__summary-meta fd-row fd-gap-card-header',
-            items: [
-                {
-                    className: state.isOvertime
-                        ? 'fasting-timer-card__remaining fasting-timer-card__remaining--done fd-ui-body-sm'
-                        : 'fasting-timer-card__remaining fd-ui-body-sm',
-                    text: this.getRemainingText(state),
-                },
-            ],
-        });
-
-        if (this.shouldShowStageDescriptionFallback() && state.stageDescriptionKey !== null) {
-            groups.push({
-                className: 'fasting-timer-card__summary-description fd-stack fd-gap-card-header',
-                items: [{ className: 'fasting-timer-card__next-stage-label', text: this.translate(state.stageDescriptionKey) }],
-            });
-        }
-
-        return groups;
-    }
-
-    private buildCompletedSummaryGroups(state: FastingTimerCardState): FastingTimerCardDisplayGroup[] {
-        const groups: FastingTimerCardDisplayGroup[] = [];
-        if (this.shouldShowStageProgress()) {
-            const stageItems: FastingTimerCardDisplayItem[] = [];
-            this.addStageItems(stageItems, state);
-            groups.push({ className: 'fasting-timer-card__summary-stage fd-stack fd-gap-card-header', items: stageItems });
-        }
-
-        groups.push({
-            className: 'fasting-timer-card__summary-completed fd-stack fd-gap-card-header',
-            items: [
-                {
-                    className: 'fasting-timer-card__remaining fasting-timer-card__remaining--done fd-ui-body-sm',
-                    text: this.translate('FASTING.COMPLETED'),
-                },
-                ...this.buildOptionalTranslatedItems('fasting-timer-card__next-stage-label', state.stageDescriptionKey),
-            ],
-        });
-
-        return groups;
-    }
-
-    private addStageItems(items: FastingTimerCardDisplayItem[], state: FastingTimerCardState): void {
-        if (!this.shouldShowStageProgress()) {
-            return;
-        }
-
-        items.push({ className: 'fasting-timer-card__stage-progress fd-ui-overline', text: this.getStageProgressText(state) });
-        this.pushOptionalTranslatedItem(items, 'fasting-timer-card__stage-title fd-ui-card-title', state.stageTitleKey);
-    }
-
-    private addStageDescriptionFallbackItem(items: FastingTimerCardDisplayItem[], state: FastingTimerCardState): void {
-        if (!this.shouldShowStageDescriptionFallback()) {
-            return;
-        }
-
-        this.pushOptionalTranslatedItem(items, 'fasting-timer-card__next-stage-label', state.stageDescriptionKey);
-    }
-
-    private getRemainingText(state: FastingTimerCardState): string {
-        return state.isOvertime
-            ? this.translate('FASTING.GOAL_REACHED')
-            : `${this.translate(state.remainingLabelKey)}: ${state.remainingFormatted}`;
-    }
-
-    private getStageProgressText(state: FastingTimerCardState): string {
-        return this.translate('FASTING.STAGES.PROGRESS', { current: state.stageIndex, total: state.totalStages });
-    }
-
-    private pushOptionalItem(items: FastingTimerCardDisplayItem[], className: string, text: string | null): void {
-        if (text !== null) {
-            items.push({ className, text });
-        }
-    }
-
-    private pushOptionalTranslatedItem(items: FastingTimerCardDisplayItem[], className: string, translationKey: string | null): void {
-        items.push(...this.buildOptionalTranslatedItems(className, translationKey));
-    }
-
-    private buildOptionalTranslatedItems(className: string, translationKey: string | null): FastingTimerCardDisplayItem[] {
-        return translationKey !== null ? [{ className, text: this.translate(translationKey) }] : [];
+    private buildDisplayContext(): FastingTimerCardDisplayContext {
+        return {
+            state: this.viewState(),
+            isSetupLayout: this.isSetupLayout(),
+            isEatingPhase: this.isEatingPhase(),
+            showStageProgress: this.shouldShowStageProgress(),
+            showStageDescriptionFallback: this.shouldShowStageDescriptionFallback(),
+            normalizedProgressPercent: this.normalizedProgressPercent(),
+            translate: this.translate,
+        };
     }
 
     private buildStageViewState(

@@ -536,47 +536,38 @@ const noBrowserGlobalsRule = {
 };
 
 const appBoundaryElements = [
-    { type: 'app-shared-models', pattern: 'src/app/shared/models', mode: 'folder' },
-    { type: 'app-shared-api', pattern: 'src/app/shared/api', mode: 'folder' },
-    { type: 'app-shared-auth', pattern: 'src/app/shared/auth', mode: 'folder' },
-    { type: 'app-shared-bootstrap', pattern: 'src/app/shared/bootstrap', mode: 'folder' },
-    { type: 'app-shared-lib', pattern: 'src/app/shared/lib', mode: 'folder' },
-    { type: 'app-shared-dialogs', pattern: 'src/app/shared/dialogs', mode: 'folder' },
-    { type: 'app-shared-forms', pattern: 'src/app/shared/forms', mode: 'folder' },
-    { type: 'app-shared-i18n', pattern: 'src/app/shared/i18n', mode: 'folder' },
-    { type: 'app-shared-notifications', pattern: 'src/app/shared/notifications', mode: 'folder' },
-    { type: 'app-shared-platform', pattern: 'src/app/shared/platform', mode: 'folder' },
-    { type: 'app-shared-theme', pattern: 'src/app/shared/theme', mode: 'folder' },
-    { type: 'app-shared-ui-code', pattern: 'src/app/shared/ui', mode: 'folder' },
-    { type: 'app-shared-ui', pattern: 'src/app/components/shared', mode: 'folder' },
-    { type: 'app-feature-api', pattern: 'src/app/features/(*)/api', mode: 'folder', capture: ['feature'] },
-    { type: 'app-feature-models', pattern: 'src/app/features/(*)/models', mode: 'folder', capture: ['feature'] },
-    { type: 'app-feature-components', pattern: 'src/app/features/(*)/components', mode: 'folder', capture: ['feature'] },
-    { type: 'app-feature-dialogs', pattern: 'src/app/features/(*)/dialogs', mode: 'folder', capture: ['feature'] },
-    { type: 'app-feature-lib', pattern: 'src/app/features/(*)/lib', mode: 'folder', capture: ['feature'] },
-    { type: 'app-feature-resolvers', pattern: 'src/app/features/(*)/resolvers', mode: 'folder', capture: ['feature'] },
-    { type: 'app-feature-pages', pattern: 'src/app/features/(*)/pages', mode: 'folder', capture: ['feature'] },
-    { type: 'app-feature-routes', pattern: 'src/app/features/(*)/*.routes.ts', mode: 'file', capture: ['feature', 'file'] },
-    { type: 'admin-feature-api', pattern: 'projects/fooddiary-admin/src/app/features/(*)/api', mode: 'folder', capture: ['feature'] },
+    { type: 'app-shared-models', pattern: 'src/app/shared/models' },
+    { type: 'app-shared-api', pattern: 'src/app/shared/api' },
+    { type: 'app-shared-auth', pattern: 'src/app/shared/auth' },
+    { type: 'app-shared-bootstrap', pattern: 'src/app/shared/bootstrap' },
+    { type: 'app-shared-lib', pattern: 'src/app/shared/lib' },
+    { type: 'app-shared-dialogs', pattern: 'src/app/shared/dialogs' },
+    { type: 'app-shared-forms', pattern: 'src/app/shared/forms' },
+    { type: 'app-shared-i18n', pattern: 'src/app/shared/i18n' },
+    { type: 'app-shared-notifications', pattern: 'src/app/shared/notifications' },
+    { type: 'app-shared-platform', pattern: 'src/app/shared/platform' },
+    { type: 'app-shared-theme', pattern: 'src/app/shared/theme' },
+    { type: 'app-shared-ui-code', pattern: 'src/app/shared/ui' },
+    { type: 'app-shared-ui', pattern: 'src/app/components/shared' },
+    { type: 'app-feature-api', pattern: 'src/app/features/(*)/api', capture: ['feature'] },
+    { type: 'app-feature-models', pattern: 'src/app/features/(*)/models', capture: ['feature'] },
+    { type: 'app-feature-components', pattern: 'src/app/features/(*)/components', capture: ['feature'] },
+    { type: 'app-feature-dialogs', pattern: 'src/app/features/(*)/dialogs', capture: ['feature'] },
+    { type: 'app-feature-lib', pattern: 'src/app/features/(*)/lib', capture: ['feature'] },
+    { type: 'app-feature-resolvers', pattern: 'src/app/features/(*)/resolvers', capture: ['feature'] },
+    { type: 'app-feature-pages', pattern: 'src/app/features/(*)/pages', capture: ['feature'] },
+    { type: 'admin-feature-api', pattern: 'projects/fooddiary-admin/src/app/features/(*)/api', capture: ['feature'] },
     {
         type: 'admin-feature-components',
         pattern: 'projects/fooddiary-admin/src/app/features/(*)/components',
-        mode: 'folder',
         capture: ['feature'],
     },
     {
         type: 'admin-feature-dialogs',
         pattern: 'projects/fooddiary-admin/src/app/features/(*)/dialogs',
-        mode: 'folder',
         capture: ['feature'],
     },
-    { type: 'admin-feature-pages', pattern: 'projects/fooddiary-admin/src/app/features/(*)/pages', mode: 'folder', capture: ['feature'] },
-    {
-        type: 'admin-feature-routes',
-        pattern: 'projects/fooddiary-admin/src/app/features/(*)/*.routes.ts',
-        mode: 'file',
-        capture: ['feature', 'file'],
-    },
+    { type: 'admin-feature-pages', pattern: 'projects/fooddiary-admin/src/app/features/(*)/pages', capture: ['feature'] },
 ];
 
 const isAriaHidden = node =>
@@ -1302,6 +1293,52 @@ const noLegacyAngularFormsImportsRule = {
     create: createNoLegacyAngularFormsImportsRule,
 };
 
+const statefulFeatureFacadeFilePattern =
+    /(?:^|\/)(?:src\/app\/(?:components\/shared|features)|projects\/fooddiary-admin\/src\/app\/features)\/.+\.facade\.ts$/;
+
+const createNoRootStatefulFeatureFacadeRule = context => {
+    const fileName = (context.physicalFilename ?? context.filename ?? '').replaceAll('\\', '/');
+    if (!statefulFeatureFacadeFilePattern.test(fileName)) {
+        return {};
+    }
+
+    let serviceDecorator = null;
+    let usesWritableSignal = false;
+
+    return {
+        CallExpression(node) {
+            if (node.callee.type === 'Identifier' && node.callee.name === 'signal') {
+                usesWritableSignal = true;
+            }
+        },
+        Decorator(node) {
+            if (node.expression.type === 'CallExpression' && node.expression.callee.type === 'Identifier' && node.expression.callee.name === 'Service') {
+                serviceDecorator = node;
+            }
+        },
+        'Program:exit'() {
+            if (usesWritableSignal && serviceDecorator !== null) {
+                context.report({ node: serviceDecorator, messageId: 'rootStatefulFacade' });
+            }
+        },
+    };
+};
+
+const noRootStatefulFeatureFacadeRule = {
+    meta: {
+        type: 'problem',
+        docs: {
+            description: 'Require stateful feature facades to use an explicit non-root DI scope.',
+        },
+        messages: {
+            rootStatefulFacade:
+                'Stateful feature facades must use @Injectable() and an explicit route/page/dialog/component provider; do not give feature state a root fallback.',
+        },
+        schema: [],
+    },
+    create: createNoRootStatefulFeatureFacadeRule,
+};
+
 const localTsPlugin = {
     rules: {
         'no-mojibake': noMojibakeRule,
@@ -1313,6 +1350,7 @@ const localTsPlugin = {
         'no-browser-globals': noBrowserGlobalsRule,
         'no-fd-ui-kit-self-import': noFdUiKitSelfImportRule,
         'no-legacy-angular-forms-imports': noLegacyAngularFormsImportsRule,
+        'no-root-stateful-feature-facade': noRootStatefulFeatureFacadeRule,
         'prefer-protected-template-members': preferProtectedTemplateMembersRule,
         'action-oriented-host-event-handlers': actionOrientedHostEventHandlersRule,
         'async-function-suffix': {
@@ -1501,6 +1539,7 @@ export default [
             'local/no-mojibake': 'error',
             'local/no-legacy-angular-forms-imports': 'error',
             'local/no-locally-caught-throw': 'error',
+            'local/no-root-stateful-feature-facade': 'error',
             'no-else-return': 'error',
             'no-implicit-coercion': 'error',
             'no-lonely-if': 'error',
@@ -1533,7 +1572,7 @@ export default [
                 'error',
                 {
                     default: 'allow',
-                    rules: [
+                    policies: [
                         {
                             from: { type: 'app-shared-models' },
                             disallow: {
@@ -1562,6 +1601,19 @@ export default [
                             message: 'shared UI must stay feature-agnostic.',
                         },
                         {
+                            from: { type: 'app-feature-*' },
+                            disallow: {
+                                to: {
+                                    type: 'app-feature-*',
+                                    captured: {
+                                        feature: '!({{ from.captured.feature }})',
+                                    },
+                                },
+                            },
+                            message:
+                                'Feature code must not import another feature directly. Move the contract to shared or compose the features at the routing boundary.',
+                        },
+                        {
                             from: { type: 'app-feature-models' },
                             disallow: {
                                 to: {
@@ -1584,6 +1636,25 @@ export default [
                                 },
                             },
                             message: 'Feature API code must not depend on feature UI or pages.',
+                        },
+                        {
+                            from: {
+                                type: [
+                                    'app-feature-api',
+                                    'app-feature-models',
+                                    'app-feature-components',
+                                    'app-feature-dialogs',
+                                    'app-feature-lib',
+                                    'app-feature-resolvers',
+                                ],
+                            },
+                            disallow: {
+                                to: {
+                                    type: 'app-feature-pages',
+                                },
+                            },
+                            message:
+                                'Feature implementation must not depend on route-level pages. Compose pages from lower layers instead.',
                         },
                         {
                             from: { type: ['app-feature-components', 'app-feature-dialogs', 'app-feature-lib', 'app-feature-resolvers'] },
@@ -1620,6 +1691,19 @@ export default [
                                 },
                             },
                             message: 'Admin feature code must use its own feature API, not another admin feature API.',
+                        },
+                        {
+                            from: { type: 'admin-feature-*' },
+                            disallow: {
+                                to: {
+                                    type: 'admin-feature-*',
+                                    captured: {
+                                        feature: '!({{ from.captured.feature }})',
+                                    },
+                                },
+                            },
+                            message:
+                                'Admin feature code must not import another admin feature directly. Move the contract to shared or compose the features at the routing boundary.',
                         },
                         {
                             from: { type: 'admin-feature-*' },
@@ -2573,4 +2657,14 @@ export default [
         },
     },
     ...storybook.configs['flat/recommended'],
+    {
+        files: [
+            'src/app/components/shared/**/*.facade.ts',
+            'src/app/features/**/*.facade.ts',
+            'projects/fooddiary-admin/src/app/features/**/*.facade.ts',
+        ],
+        rules: {
+            '@angular-eslint/use-injectable-provided-in': 'off',
+        },
+    },
 ];

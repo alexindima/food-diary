@@ -1,10 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { NavigationService } from '../../../../services/navigation.service';
 import type { PageOf } from '../../../../shared/models/page-of.data';
+import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
 import type { FavoriteMeal, Meal, MealOverview } from '../../models/meal.data';
@@ -133,6 +136,8 @@ describe('MealListFacade', () => {
                 { provide: MealService, useValue: mealService },
                 { provide: FavoriteMealService, useValue: favoriteMealService },
                 { provide: FdUiToastService, useValue: toastService },
+                { provide: FdUiDialogService, useValue: { open: vi.fn() } },
+                { provide: NavigationService, useValue: { navigateToConsumptionEditAsync: vi.fn() } },
                 {
                     provide: TranslateService,
                     useValue: {
@@ -217,6 +222,7 @@ function registerMutationTests(): void {
             });
 
             expect(result).toBe(true);
+            expect(TestBed.inject(NutritionDataInvalidationService).dashboardVersion()).toBe(1);
             expect(mealService.repeat).toHaveBeenCalledWith('meal-1', '2026-05-05T08:30:00.000Z', 'BREAKFAST');
             expect(mealService.query).toHaveBeenCalledWith(NEXT_PAGE, MEAL_LIST_PAGE_SIZE, { dateFrom: undefined, dateTo: undefined });
         });
@@ -243,6 +249,7 @@ function registerMutationTests(): void {
             });
 
             expect(result).toBe(true);
+            expect(TestBed.inject(NutritionDataInvalidationService).dashboardVersion()).toBe(1);
             expect(mealService.deleteById).toHaveBeenCalledWith('meal-1');
             expect(mealService.query).toHaveBeenCalledWith(NEXT_PAGE, MEAL_LIST_PAGE_SIZE, { dateFrom: undefined, dateTo: undefined });
         });

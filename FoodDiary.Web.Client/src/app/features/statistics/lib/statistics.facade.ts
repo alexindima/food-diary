@@ -1,4 +1,4 @@
-import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
@@ -10,6 +10,7 @@ import { resolveTranslateLanguage } from '../../../shared/i18n/translate-languag
 import { CENTIMETERS_PER_METER } from '../../../shared/lib/body-measurement.constants';
 import { formatDateInputValue, parseLocalDateInputValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
+import { RequestStateController } from '../../../shared/lib/request-state';
 import type { ExportFormat } from '../../../shared/models/export.models';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
 import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
@@ -39,7 +40,7 @@ import {
 import { buildStatisticsExportRequest } from './statistics-export.mapper';
 import { mapStatistics } from './statistics-statistics.mapper';
 
-@Service()
+@Injectable()
 export class StatisticsFacade {
     private readonly statisticsService = inject(StatisticsService);
     private readonly weightEntriesService = inject(WeightEntriesService);
@@ -51,8 +52,11 @@ export class StatisticsFacade {
 
     private dateLabelFormatterCache: { locale: string; range: StatisticsRange; formatter: Intl.DateTimeFormat } | null = null;
     private lastLoadedRangeKey: string | null = null;
-    private statisticsRequestVersion = 0;
-    private bodyRequestVersion = 0;
+    private readonly statisticsRequest = new RequestStateController<MappedStatistics, 'STATISTICS.LOAD_ERROR'>();
+    private readonly bodyRequest = new RequestStateController<
+        { weight: WeightEntrySummaryPoint[]; waist: WaistEntrySummaryPoint[] },
+        'STATISTICS.BODY_LOAD_ERROR'
+    >();
     private readonly initialized = signal(false);
     private readonly currentLocale = signal(this.resolveCurrentLocale());
 
@@ -62,14 +66,14 @@ export class StatisticsFacade {
     public readonly customRangeModel = signal<{ range: { start: Date | null; end: Date | null } | null }>({ range: null });
     public readonly customRangeForm = form(this.customRangeModel);
 
-    public readonly isLoading = signal(false);
-    public readonly isBodyLoading = signal(false);
-    public readonly hasLoadError = signal(false);
-    public readonly hasBodyLoadError = signal(false);
+    public readonly isLoading = this.statisticsRequest.isLoading;
+    public readonly isBodyLoading = this.bodyRequest.isLoading;
+    public readonly hasLoadError = computed(() => this.statisticsRequest.error() !== null);
+    public readonly hasBodyLoadError = computed(() => this.bodyRequest.error() !== null);
     public readonly exportingFormat = signal<ExportFormat | null>(null);
-    public readonly chartStatisticsData = signal<MappedStatistics | null>(null);
-    public readonly weightSummaryPoints = signal<WeightEntrySummaryPoint[]>([]);
-    public readonly waistSummaryPoints = signal<WaistEntrySummaryPoint[]>([]);
+    public readonly chartStatisticsData = this.statisticsRequest.data;
+    public readonly weightSummaryPoints = computed(() => this.bodyRequest.data()?.weight ?? []);
+    public readonly waistSummaryPoints = computed(() => this.bodyRequest.data()?.waist ?? []);
     public readonly userHeightCm = signal<number | null>(null);
 
     public readonly currentRange = computed<DateRange>(() => {
@@ -240,9 +244,7 @@ export class StatisticsFacade {
     }
 
     private loadStatistics(range: DateRange): void {
-        const requestVersion = ++this.statisticsRequestVersion;
-        this.isLoading.set(true);
-        this.hasLoadError.set(false);
+        const requestId = this.statisticsRequest.begin();
         const normalizedStart = normalizeStartOfDay(range.start);
         const normalizedEnd = normalizeEndOfDay(range.end);
         const quantizationDays = getQuantizationDays(normalizedStart, normalizedEnd);
@@ -253,38 +255,19 @@ export class StatisticsFacade {
                 dateTo: normalizedEnd,
                 quantizationDays,
             })
-            .pipe(
-                finalize(() => {
-                    if (requestVersion === this.statisticsRequestVersion) {
-                        this.isLoading.set(false);
-                    }
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: data => {
-                    if (requestVersion !== this.statisticsRequestVersion) {
-                        return;
-                    }
-
-                    this.chartStatisticsData.set(mapStatistics(data));
-                    this.hasLoadError.set(false);
+                    this.statisticsRequest.succeed(requestId, mapStatistics(data));
                 },
                 error: () => {
-                    if (requestVersion !== this.statisticsRequestVersion) {
-                        return;
-                    }
-
-                    this.chartStatisticsData.set(null);
-                    this.hasLoadError.set(true);
+                    this.statisticsRequest.fail(requestId, 'STATISTICS.LOAD_ERROR', { preserveData: false });
                 },
             });
     }
 
     private loadBodySummaries(range: DateRange): void {
-        const requestVersion = ++this.bodyRequestVersion;
-        this.isBodyLoading.set(true);
-        this.hasBodyLoadError.set(false);
+        const requestId = this.bodyRequest.begin();
         const normalizedStart = formatDateInputValue(range.start);
         const normalizedEnd = formatDateInputValue(range.end);
         const quantizationDays = getQuantizationDays(normalizeStartOfDay(range.start), normalizeEndOfDay(range.end));
@@ -301,32 +284,13 @@ export class StatisticsFacade {
                 quantizationDays,
             }),
         })
-            .pipe(
-                finalize(() => {
-                    if (requestVersion === this.bodyRequestVersion) {
-                        this.isBodyLoading.set(false);
-                    }
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: ({ weight, waist }) => {
-                    if (requestVersion !== this.bodyRequestVersion) {
-                        return;
-                    }
-
-                    this.weightSummaryPoints.set(weight);
-                    this.waistSummaryPoints.set(waist);
-                    this.hasBodyLoadError.set(false);
+                    this.bodyRequest.succeed(requestId, { weight, waist });
                 },
                 error: () => {
-                    if (requestVersion !== this.bodyRequestVersion) {
-                        return;
-                    }
-
-                    this.weightSummaryPoints.set([]);
-                    this.waistSummaryPoints.set([]);
-                    this.hasBodyLoadError.set(true);
+                    this.bodyRequest.fail(requestId, 'STATISTICS.BODY_LOAD_ERROR', { preserveData: false });
                 },
             });
     }

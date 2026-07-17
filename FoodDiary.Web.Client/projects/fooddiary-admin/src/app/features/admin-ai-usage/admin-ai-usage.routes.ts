@@ -1,12 +1,10 @@
 import type { Routes } from '@angular/router';
 
 import { adminAuthGuard } from '../../guards/admin-auth.guard';
-import { AdminAiUsageComponent } from './pages/admin-ai-usage';
-
 export const adminAiUsageRoutes: Routes = [
     {
         path: '',
-        component: AdminAiUsageComponent,
+        loadComponent: async () => import('./pages/admin-ai-usage').then(m => m.AdminAiUsageComponent),
         canActivate: [adminAuthGuard],
     },
 ];

@@ -3,9 +3,12 @@ import { describe, expect, it } from 'vitest';
 import { Gender, type User } from '../../../../../shared/models/user.data';
 import {
     buildUserManageSelectOptions,
+    buildUserUpdateDto,
     createDietologistFormModel,
     createUserManageFormModel,
     mapUserToForm,
+    normalizeOptionalTextInput,
+    parseOptionalNumberInput,
 } from './user-manage-form.mapper';
 
 const USER: User = {
@@ -33,6 +36,8 @@ const USER: User = {
     isActive: true,
     isEmailConfirmed: true,
 };
+
+const EXPECTED_HEIGHT = 180;
 
 describe('user manage form mapper', () => {
     it('should create user form with empty defaults', () => {
@@ -110,5 +115,30 @@ describe('user manage form mapper', () => {
             { label: 'translated:USER_MANAGE.LANGUAGE_OPTIONS.EN', value: 'en' },
             { label: 'translated:USER_MANAGE.LANGUAGE_OPTIONS.RU', value: 'ru' },
         ]);
+    });
+});
+
+describe('user manage DOM value mapper', () => {
+    it('should normalize optional DOM input values', () => {
+        expect(normalizeOptionalTextInput('Alex')).toBe('Alex');
+        expect(normalizeOptionalTextInput('')).toBeNull();
+        expect(parseOptionalNumberInput(' 180 ')).toBe(EXPECTED_HEIGHT);
+        expect(parseOptionalNumberInput('')).toBeNull();
+        expect(parseOptionalNumberInput('not-a-number')).toBeNull();
+    });
+
+    it('should map the complete form model to the update DTO', () => {
+        const form = {
+            ...createUserManageFormModel(),
+            email: USER.email,
+            username: USER.username ?? null,
+            profileImage: { url: USER.profileImage ?? '', assetId: USER.profileImageAssetId ?? null },
+        };
+
+        expect(buildUserUpdateDto(form)).toMatchObject({
+            username: USER.username,
+            profileImage: USER.profileImage,
+            profileImageAssetId: USER.profileImageAssetId,
+        });
     });
 });

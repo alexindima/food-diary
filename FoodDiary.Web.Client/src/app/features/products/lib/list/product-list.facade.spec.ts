@@ -15,6 +15,7 @@ import { QuickMealService } from '../../../meals/lib/quick/quick-meal.service';
 import { FavoriteProductService } from '../../api/favorite-product.service';
 import { OpenFoodFactsService } from '../../api/open-food-facts.service';
 import { ProductService } from '../../api/product.service';
+import { ProductDetailActionResult } from '../../components/detail/product-detail-lib/product-detail.types';
 import {
     PRODUCT_LIST_FAVORITE_LIMIT,
     PRODUCT_LIST_OFF_SEARCH_LIMIT,
@@ -50,7 +51,10 @@ let favoriteProductService: {
 };
 let openFoodFactsService: { search: ReturnType<typeof vi.fn> };
 let quickMealService: { addProduct: ReturnType<typeof vi.fn> };
-let navigationService: { navigateToProductAddAsync: ReturnType<typeof vi.fn> };
+let navigationService: {
+    navigateToProductAddAsync: ReturnType<typeof vi.fn>;
+    navigateToProductEditAsync: ReturnType<typeof vi.fn>;
+};
 let dialogService: { open: ReturnType<typeof vi.fn> };
 let toastService: { error: ReturnType<typeof vi.fn> };
 let translateService: { instant: ReturnType<typeof vi.fn> };
@@ -77,6 +81,7 @@ beforeEach(() => {
     };
     navigationService = {
         navigateToProductAddAsync: vi.fn().mockResolvedValue(true),
+        navigateToProductEditAsync: vi.fn().mockResolvedValue(true),
     };
     dialogService = {
         open: vi.fn(),
@@ -154,6 +159,55 @@ describe('ProductListFacade overview', () => {
         expect(facade.favorites()).toEqual([]);
         expect(facade.favoriteTotalCount()).toBe(0);
         expect(facade.errorKey()).toBe('ERRORS.LOAD_FAILED_TITLE');
+    });
+});
+
+describe('ProductListFacade product details', () => {
+    it('reloads favorites and the current page after a favorite change', async () => {
+        dialogService.open.mockReturnValue({
+            afterClosed: () => of(new ProductDetailActionResult('product-1', 'FavoriteChanged')),
+        });
+        const loadFavoritesSpy = vi.spyOn(facade, 'loadFavorites');
+        const reloadSpy = vi.spyOn(facade, 'reloadCurrentPage');
+
+        await facade.handleProductDetailsAsync(createProduct());
+
+        expect(loadFavoritesSpy).toHaveBeenCalledTimes(1);
+        expect(reloadSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('navigates to edit and does not report deletion for edit actions', async () => {
+        dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'Edit')) });
+
+        await expect(facade.handleProductDetailsAsync(createProduct())).resolves.toBe(false);
+
+        expect(navigationService.navigateToProductEditAsync).toHaveBeenCalledWith('product-1');
+    });
+
+    it('deletes owned products and reports the UI scroll signal', async () => {
+        dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'Delete')) });
+
+        await expect(facade.handleProductDetailsAsync(createProduct())).resolves.toBe(true);
+
+        expect(productService.deleteById).toHaveBeenCalledWith('product-1');
+    });
+
+    it('does not delete products that are not owned by the current user', async () => {
+        dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'Delete')) });
+
+        await expect(facade.handleProductDetailsAsync(createProduct({ isOwnedByCurrentUser: false }))).resolves.toBe(false);
+
+        expect(productService.deleteById).not.toHaveBeenCalled();
+    });
+
+    it('clears loading and reports an error when deletion fails', async () => {
+        dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'Delete')) });
+        productService.deleteById.mockReturnValueOnce(throwError(() => new Error('Delete failed')));
+
+        await expect(facade.handleProductDetailsAsync(createProduct())).resolves.toBe(false);
+
+        expect(facade.productData.isLoading()).toBe(false);
+        expect(toastService.error).toHaveBeenCalledWith('PRODUCT_LIST.DELETE_ERROR');
     });
 });
 

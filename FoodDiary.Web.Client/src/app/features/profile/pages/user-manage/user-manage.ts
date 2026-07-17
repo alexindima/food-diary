@@ -34,7 +34,7 @@ import { finalize } from 'rxjs';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import type { DietologistPermissions, DietologistRelationship } from '../../../../shared/models/dietologist.data';
-import { type ActivityLevelOption, type Gender, UpdateUserDto } from '../../../../shared/models/user.data';
+import type { ActivityLevelOption, Gender } from '../../../../shared/models/user.data';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import type { AppThemeName, AppUiStyleName } from '../../../../theme/app-theme.config';
@@ -65,9 +65,12 @@ import { buildBillingView } from './user-manage-lib/user-manage-billing.mapper';
 import { getDietologistPermissions, mapDietologistRelationshipToForm } from './user-manage-lib/user-manage-dietologist-form.mapper';
 import {
     buildUserManageSelectOptions,
+    buildUserUpdateDto,
     createDietologistFormModel,
     createUserManageFormModel,
     mapUserToForm,
+    normalizeOptionalTextInput,
+    parseOptionalNumberInput,
 } from './user-manage-lib/user-manage-form.mapper';
 import { UserManageNotificationsFacade } from './user-manage-lib/user-manage-notifications.facade';
 import { buildProfileStatus } from './user-manage-lib/user-manage-profile-status.mapper';
@@ -317,7 +320,7 @@ export class UserManageComponent {
     }
 
     protected onSubmit(): void {
-        this.facade.saveProfileNow(this.buildUserUpdateDto());
+        this.facade.saveProfileNow(buildUserUpdateDto(this.readUserFormValues()));
     }
 
     protected onUserFormSubmit(event: SubmitEvent): void {
@@ -577,14 +580,7 @@ export class UserManageComponent {
             return;
         }
 
-        this.facade.queueProfileAutosave(this.buildUserUpdateDto(formData));
-    }
-
-    private buildUserUpdateDto(formData: UserFormValues = this.readUserFormValues()): UpdateUserDto {
-        return new UpdateUserDto({
-            ...formData,
-            profileImage: formData.profileImage,
-        });
+        this.facade.queueProfileAutosave(buildUserUpdateDto(formData));
     }
 
     private readUserFormValues(): UserFormValues {
@@ -624,38 +620,25 @@ export class UserManageComponent {
     private syncUserFormFieldValue(field: string, value: string): void {
         switch (field) {
             case 'username': {
-                this.userForm.username().value.set(this.normalizeOptionalTextInput(value));
+                this.userForm.username().value.set(normalizeOptionalTextInput(value));
                 break;
             }
             case 'firstName': {
-                this.userForm.firstName().value.set(this.normalizeOptionalTextInput(value));
+                this.userForm.firstName().value.set(normalizeOptionalTextInput(value));
                 break;
             }
             case 'lastName': {
-                this.userForm.lastName().value.set(this.normalizeOptionalTextInput(value));
+                this.userForm.lastName().value.set(normalizeOptionalTextInput(value));
                 break;
             }
             case 'height': {
-                this.userForm.height().value.set(this.parseOptionalNumberInput(value));
+                this.userForm.height().value.set(parseOptionalNumberInput(value));
                 break;
             }
             default: {
                 break;
             }
         }
-    }
-
-    private normalizeOptionalTextInput(value: string): string | null {
-        return value.length > 0 ? value : null;
-    }
-
-    private parseOptionalNumberInput(value: string): number | null {
-        if (value.trim().length === 0) {
-            return null;
-        }
-
-        const parsed = Number(value);
-        return Number.isFinite(parsed) ? parsed : null;
     }
 
     private queueUserFormAutosaveCheck(formData: UserFormValues = this.readUserFormValues()): void {

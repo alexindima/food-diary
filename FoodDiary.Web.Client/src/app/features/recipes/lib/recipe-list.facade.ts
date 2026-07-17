@@ -1,5 +1,6 @@
-import { computed, inject, Service, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { catchError, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
 
@@ -14,9 +15,11 @@ import {
     RECIPE_LIST_OVERVIEW_RECENT_LIMIT,
     RECIPE_LIST_PAGE_SIZE,
 } from '../components/list/recipe-list.config';
+import { RecipeListFiltersDialogComponent } from '../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog';
+import type { RecipeListFiltersDialogResult } from '../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.types';
 import type { FavoriteRecipe, Recipe, RecipeFilters } from '../models/recipe.data';
 
-@Service()
+@Injectable()
 export class RecipeListFacade {
     private readonly recipeService = inject(RecipeService);
     private readonly navigationService = inject(NavigationService);
@@ -24,6 +27,7 @@ export class RecipeListFacade {
     private readonly toastService = inject(FdUiToastService);
     private readonly quickMealService = inject(QuickMealService);
     private readonly favoriteRecipeService = inject(FavoriteRecipeService);
+    private readonly dialogService = inject(FdUiDialogService);
 
     public readonly pageSize = RECIPE_LIST_PAGE_SIZE;
     public readonly recipeData = new PagedData<Recipe>();
@@ -56,6 +60,15 @@ export class RecipeListFacade {
     );
 
     private readonly searchValue = signal<string | null>(null);
+
+    public openFilters(data: RecipeListFilterDialogData): Observable<RecipeListFiltersDialogResult | null | undefined> {
+        return this.dialogService
+            .open<RecipeListFiltersDialogComponent, RecipeListFilterDialogData, RecipeListFiltersDialogResult | null>(
+                RecipeListFiltersDialogComponent,
+                { preset: 'form', data },
+            )
+            .afterClosed();
+    }
 
     public loadRecipes(page: number, limit: number, filters: RecipeFilters, onlyMine: boolean): Observable<void> {
         this.recipeData.setLoading(true);
@@ -302,3 +315,12 @@ export class RecipeListFacade {
         return value !== null && value !== undefined;
     }
 }
+
+export type RecipeListFilterDialogData = {
+    onlyMine: boolean;
+    category: string | null;
+    maxTotalTime: number | null;
+    caloriesFrom: number | null;
+    caloriesTo: number | null;
+    hasImage: boolean | null;
+};

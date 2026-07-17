@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, max, min, required } from '@angular/forms/signals';
 import { finalize, firstValueFrom } from 'rxjs';
@@ -31,20 +31,27 @@ import {
     type SymptomLogPayload,
     type UpsertCycleFactorPayload,
 } from '../models/cycle.data';
-import { CYCLE_SYMPTOM_FIELDS } from '../pages/cycle-tracking-page-lib/cycle-tracking-page.config';
 import {
+    CYCLE_SYMPTOM_FIELDS,
     DEFAULT_AVERAGE_CYCLE_LENGTH,
     DEFAULT_AVERAGE_PERIOD_LENGTH,
     DEFAULT_LUTEAL_LENGTH,
     MAX_AVERAGE_CYCLE_LENGTH,
     MAX_AVERAGE_PERIOD_LENGTH,
     MAX_LUTEAL_LENGTH,
-    MAX_SYMPTOM_VALUE,
     MIN_AVERAGE_CYCLE_LENGTH,
     MIN_AVERAGE_PERIOD_LENGTH,
     MIN_LUTEAL_LENGTH,
     MIN_SYMPTOM_VALUE,
 } from './cycle-tracking.config';
+import {
+    clampCycleSymptom,
+    normalizeCycleEndOfDay,
+    normalizeCycleStartOfDay,
+    toCycleDateKey,
+    toNullableCycleNumber,
+    toOptionalCycleText,
+} from './cycle-tracking.mapper';
 
 type StartCycleFormModel = {
     trackingStartDate: string | null;
@@ -83,13 +90,7 @@ type CycleFactorFormModel = {
     notes: string | null;
 };
 
-const DAY_END_HOURS = 23;
-const DAY_END_MINUTES = 59;
-const DAY_END_SECONDS = 59;
-const DAY_END_MILLISECONDS = 999;
-const ISO_DATE_KEY_LENGTH = 10;
-
-@Service()
+@Injectable()
 export class CycleTrackingFacade {
     private readonly cyclesService = inject(CyclesService);
     private readonly exportService = inject(ExportService);
@@ -253,8 +254,8 @@ export class CycleTrackingFacade {
         this.isLoadingNutritionSummary.set(true);
         this.cyclesService
             .getNutritionSummary(
-                this.normalizeStartOfDay(new Date(cycle.trackingStartDate)).toISOString(),
-                this.normalizeEndOfDay(new Date()).toISOString(),
+                normalizeCycleStartOfDay(new Date(cycle.trackingStartDate)).toISOString(),
+                normalizeCycleEndOfDay(new Date()).toISOString(),
             )
             .pipe(
                 finalize(() => {
@@ -300,7 +301,7 @@ export class CycleTrackingFacade {
                         ? {
                               type: formValue.bleedingType ?? BLEEDING_TYPE_BLEEDING,
                               flow: formValue.flow ?? CYCLE_FLOW_LIGHT,
-                              painImpact: this.clampSymptom(formValue.pain),
+                              painImpact: clampCycleSymptom(formValue.pain),
                               notes: formValue.notes ?? undefined,
                               clearNotes: false,
                           }
@@ -323,19 +324,19 @@ export class CycleTrackingFacade {
             return;
         }
 
-        const dayDateKey = this.toDateKey(day.date);
+        const dayDateKey = toCycleDateKey(day.date);
         const updatedCycle = {
             ...current,
             bleedingEntries: [
-                ...current.bleedingEntries.filter(entry => this.toDateKey(entry.date) !== dayDateKey),
+                ...current.bleedingEntries.filter(entry => toCycleDateKey(entry.date) !== dayDateKey),
                 ...day.bleedingEntries,
             ],
-            symptoms: [...current.symptoms.filter(symptom => this.toDateKey(symptom.date) !== dayDateKey), ...day.symptoms],
+            symptoms: [...current.symptoms.filter(symptom => toCycleDateKey(symptom.date) !== dayDateKey), ...day.symptoms],
             fertilitySignals:
                 day.fertilitySignal === null || day.fertilitySignal === undefined
                     ? current.fertilitySignals
                     : [
-                          ...current.fertilitySignals.filter(fertilitySignal => this.toDateKey(fertilitySignal.date) !== dayDateKey),
+                          ...current.fertilitySignals.filter(fertilitySignal => toCycleDateKey(fertilitySignal.date) !== dayDateKey),
                           day.fertilitySignal,
                       ],
         };
@@ -350,10 +351,10 @@ export class CycleTrackingFacade {
             return;
         }
 
-        const dateKey = this.toDateKey(date);
-        const dayBleeding = currentCycle.bleedingEntries.filter(entry => this.toDateKey(entry.date) === dateKey);
-        const daySymptoms = currentCycle.symptoms.filter(symptom => this.toDateKey(symptom.date) === dateKey);
-        const fertilitySignal = currentCycle.fertilitySignals.find(item => this.toDateKey(item.date) === dateKey);
+        const dateKey = toCycleDateKey(date);
+        const dayBleeding = currentCycle.bleedingEntries.filter(entry => toCycleDateKey(entry.date) === dateKey);
+        const daySymptoms = currentCycle.symptoms.filter(symptom => toCycleDateKey(symptom.date) === dateKey);
+        const fertilitySignal = currentCycle.fertilitySignals.find(item => toCycleDateKey(item.date) === dateKey);
         const bleeding = dayBleeding.find(entry => entry.type === BLEEDING_TYPE_BLEEDING) ?? dayBleeding[0];
 
         this.dayModel.set(this.buildDayEditModel(date, daySymptoms, bleeding, fertilitySignal));
@@ -388,7 +389,7 @@ export class CycleTrackingFacade {
             type: formValue.type,
             startDate: new Date(formValue.startDate).toISOString(),
             endDate: formValue.endDate === null || formValue.endDate.length === 0 ? null : new Date(formValue.endDate).toISOString(),
-            notes: this.toOptionalText(formValue.notes),
+            notes: toOptionalCycleText(formValue.notes),
             clearNotes: false,
         };
 
@@ -436,7 +437,7 @@ export class CycleTrackingFacade {
             .upsertFactor(currentCycle.id, {
                 type: factor.type,
                 startDate: factor.startDate,
-                endDate: this.normalizeEndOfDay(new Date()).toISOString(),
+                endDate: normalizeCycleEndOfDay(new Date()).toISOString(),
                 notes: factor.notes ?? undefined,
                 clearNotes: false,
             })
@@ -458,7 +459,7 @@ export class CycleTrackingFacade {
             return;
         }
 
-        const dateKey = this.toDateKey(date);
+        const dateKey = toCycleDateKey(date);
         if (dateKey.length === 0) {
             return;
         }
@@ -480,9 +481,9 @@ export class CycleTrackingFacade {
 
                 const updatedCycle = {
                     ...current,
-                    bleedingEntries: current.bleedingEntries.filter(entry => this.toDateKey(entry.date) !== dateKey),
-                    symptoms: current.symptoms.filter(symptom => this.toDateKey(symptom.date) !== dateKey),
-                    fertilitySignals: current.fertilitySignals.filter(fertilitySignal => this.toDateKey(fertilitySignal.date) !== dateKey),
+                    bleedingEntries: current.bleedingEntries.filter(entry => toCycleDateKey(entry.date) !== dateKey),
+                    symptoms: current.symptoms.filter(symptom => toCycleDateKey(symptom.date) !== dateKey),
+                    fertilitySignals: current.fertilitySignals.filter(fertilitySignal => toCycleDateKey(fertilitySignal.date) !== dateKey),
                 };
                 this.cycle.set(updatedCycle);
                 this.loadNutritionSummary(updatedCycle);
@@ -498,8 +499,8 @@ export class CycleTrackingFacade {
         this.isExportingCycle.set(true);
         this.exportService
             .exportCycle({
-                dateFrom: this.normalizeStartOfDay(new Date(currentCycle.trackingStartDate)).toISOString(),
-                dateTo: this.normalizeEndOfDay(new Date()).toISOString(),
+                dateFrom: normalizeCycleStartOfDay(new Date(currentCycle.trackingStartDate)).toISOString(),
+                dateTo: normalizeCycleEndOfDay(new Date()).toISOString(),
                 timeZoneOffsetMinutes: -new Date().getTimezoneOffset(),
             })
             .pipe(
@@ -514,7 +515,7 @@ export class CycleTrackingFacade {
     private buildSymptomPayload(formValue: CycleDayFormModel): SymptomLogPayload[] {
         return CYCLE_SYMPTOM_FIELDS.map(field => ({
             category: field.category,
-            intensity: this.clampSymptom(formValue[field.key]),
+            intensity: clampCycleSymptom(formValue[field.key]),
             tags: [],
             note: null,
             clearNote: false,
@@ -522,8 +523,8 @@ export class CycleTrackingFacade {
     }
 
     private buildFertilitySignalPayload(formValue: CycleDayFormModel): FertilitySignalPayload | null {
-        const basalBodyTemperatureCelsius = this.toNullableNumber(formValue.basalBodyTemperatureCelsius);
-        const cervicalFluid = this.toOptionalText(formValue.cervicalFluid);
+        const basalBodyTemperatureCelsius = toNullableCycleNumber(formValue.basalBodyTemperatureCelsius);
+        const cervicalFluid = toOptionalCycleText(formValue.cervicalFluid);
         const hasSignal =
             basalBodyTemperatureCelsius !== null ||
             formValue.ovulationTestResult !== null ||
@@ -557,28 +558,6 @@ export class CycleTrackingFacade {
                 this.cycle.set(cycle);
                 this.loadNutritionSummary(cycle);
             });
-    }
-
-    private clampSymptom(value: number | null | undefined): number {
-        if (value === null || value === undefined || Number.isNaN(value)) {
-            return MIN_SYMPTOM_VALUE;
-        }
-
-        return Math.min(MAX_SYMPTOM_VALUE, Math.max(MIN_SYMPTOM_VALUE, value));
-    }
-
-    private toNullableNumber(value: number | string | null | undefined): number | null {
-        if (value === null || value === undefined || value === '') {
-            return null;
-        }
-
-        const numberValue = Number(value);
-        return Number.isNaN(numberValue) ? null : numberValue;
-    }
-
-    private toOptionalText(value: string | null | undefined): string | undefined {
-        const trimmed = value?.trim();
-        return trimmed === undefined || trimmed.length === 0 ? undefined : trimmed;
     }
 
     private buildDayEditModel(
@@ -643,22 +622,5 @@ export class CycleTrackingFacade {
         }
 
         return symptoms.find(symptom => symptom.category === symptomField.category)?.intensity ?? MIN_SYMPTOM_VALUE;
-    }
-
-    private normalizeStartOfDay(value: Date): Date {
-        const result = new Date(value);
-        result.setHours(0, 0, 0, 0);
-        return result;
-    }
-
-    private normalizeEndOfDay(value: Date): Date {
-        const result = new Date(value);
-        result.setHours(DAY_END_HOURS, DAY_END_MINUTES, DAY_END_SECONDS, DAY_END_MILLISECONDS);
-        return result;
-    }
-
-    private toDateKey(value: string): string {
-        const date = new Date(value);
-        return Number.isNaN(date.getTime()) ? '' : date.toISOString().slice(0, ISO_DATE_KEY_LENGTH);
     }
 }

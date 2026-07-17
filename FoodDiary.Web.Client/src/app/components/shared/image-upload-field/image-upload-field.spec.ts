@@ -13,8 +13,7 @@ type ImageUploadFieldTestContext = {
     fixture: ComponentFixture<ImageUploadFieldComponent>;
     imageUploadService: {
         deleteAsset: ReturnType<typeof vi.fn>;
-        requestUploadUrl: ReturnType<typeof vi.fn>;
-        uploadToPresignedUrl: ReturnType<typeof vi.fn>;
+        upload: ReturnType<typeof vi.fn>;
     };
     logger: {
         warn: ReturnType<typeof vi.fn>;
@@ -27,12 +26,7 @@ const CROP_SHIFTED_X = 20;
 
 async function setupImageUploadFieldAsync(): Promise<ImageUploadFieldTestContext> {
     const imageUploadService = {
-        requestUploadUrl: vi
-            .fn()
-            .mockReturnValue(
-                of({ uploadUrl: 'https://upload.example.com', fileUrl: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' }),
-            ),
-        uploadToPresignedUrl: vi.fn().mockReturnValue(of(void 0)),
+        upload: vi.fn().mockReturnValue(of({ url: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' })),
         deleteAsset: vi.fn().mockReturnValue(of(void 0)),
     };
     const logger = { warn: vi.fn() };
@@ -76,7 +70,7 @@ describe('ImageUploadFieldComponent upload', () => {
         await fixture.whenStable();
 
         expect(component['error']()).toBe('Only images');
-        expect(imageUploadService.requestUploadUrl).not.toHaveBeenCalled();
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
     });
 
     it('uploads valid image files and emits selection', async () => {
@@ -88,7 +82,7 @@ describe('ImageUploadFieldComponent upload', () => {
         component['handleIncomingFile'](new File(['image'], 'photo.png', { type: 'image/png' }));
         await fixture.whenStable();
 
-        expect(imageUploadService.requestUploadUrl).toHaveBeenCalledOnce();
+        expect(imageUploadService.upload).toHaveBeenCalledOnce();
         expect(component['selection']()).toEqual({ url: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' });
         expect(changeSpy).toHaveBeenCalledWith({ url: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' });
     });
@@ -103,13 +97,13 @@ describe('ImageUploadFieldComponent upload', () => {
         await fixture.whenStable();
 
         expect(component['error']()).toBe('Too large');
-        expect(imageUploadService.requestUploadUrl).not.toHaveBeenCalled();
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
     });
 
     it('shows upload error when presigned upload fails', async () => {
         const { component, fixture, imageUploadService, translateService } = await setupImageUploadFieldAsync();
         vi.spyOn(translateService, 'instant').mockReturnValue('Upload failed');
-        imageUploadService.uploadToPresignedUrl.mockReturnValueOnce(throwError(() => new Error('upload failed')));
+        imageUploadService.upload.mockReturnValueOnce(throwError(() => new Error('upload failed')));
         fixture.detectChanges();
 
         component['handleIncomingFile'](new File(['image'], 'photo.png', { type: 'image/png' }));
@@ -195,7 +189,7 @@ describe('ImageUploadFieldComponent interactions', () => {
         } as unknown as DragEvent);
 
         expect(component['isDragging']()).toBe(false);
-        expect(imageUploadService.requestUploadUrl).not.toHaveBeenCalled();
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
         expect(preventDefault).toHaveBeenCalled();
         expect(stopPropagation).toHaveBeenCalled();
     });

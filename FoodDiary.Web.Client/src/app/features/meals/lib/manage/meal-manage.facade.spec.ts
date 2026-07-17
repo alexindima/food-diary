@@ -7,6 +7,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
 import type { ConsumptionFormValues } from '../../components/manage/meal-manage-lib/meal-manage.types';
 import {
@@ -186,6 +187,7 @@ function registerSubmitAndNavigationTests(): void {
 
             expect(mealService.create).toHaveBeenCalled();
             expect(result).toEqual(consumption);
+            expect(TestBed.inject(NutritionDataInvalidationService).dashboardVersion()).toBe(1);
         });
 
         it('should update consumption when editing existing consumption', async () => {

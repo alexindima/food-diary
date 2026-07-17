@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -16,7 +17,11 @@ describe('RecipeSelectFacade', () => {
         const page = { items: [], page: FIRST_PAGE, pageSize: FIRST_LIMIT, totalCount: 0 };
         const recipeService = { query: vi.fn().mockReturnValue(of(page)) };
         TestBed.configureTestingModule({
-            providers: [RecipeSelectFacade, { provide: RecipeService, useValue: recipeService }],
+            providers: [
+                RecipeSelectFacade,
+                { provide: RecipeService, useValue: recipeService },
+                { provide: FdUiDialogService, useValue: { open: vi.fn() } },
+            ],
         });
 
         const facade = TestBed.inject(RecipeSelectFacade);
@@ -33,7 +38,11 @@ describe('RecipeSelectFacade', () => {
         const page = { items: [], page: SECOND_PAGE, pageSize: SECOND_LIMIT, totalCount: 0 };
         const recipeService = { query: vi.fn().mockReturnValue(of(page)) };
         TestBed.configureTestingModule({
-            providers: [RecipeSelectFacade, { provide: RecipeService, useValue: recipeService }],
+            providers: [
+                RecipeSelectFacade,
+                { provide: RecipeService, useValue: recipeService },
+                { provide: FdUiDialogService, useValue: { open: vi.fn() } },
+            ],
         });
 
         const facade = TestBed.inject(RecipeSelectFacade);
@@ -43,5 +52,37 @@ describe('RecipeSelectFacade', () => {
         });
 
         expect(recipeService.query).toHaveBeenCalledWith(SECOND_PAGE, SECOND_LIMIT, undefined, false);
+    });
+
+    it('opens filters through the dialog service', () => {
+        const filters = {
+            onlyMine: false,
+            category: null,
+            maxTotalTime: null,
+            caloriesFrom: null,
+            caloriesTo: null,
+            hasImage: null,
+        };
+        const result = { ...filters, onlyMine: true };
+        const dialogService = {
+            open: vi.fn().mockReturnValue({ afterClosed: () => of(result) }),
+        };
+        TestBed.configureTestingModule({
+            providers: [
+                RecipeSelectFacade,
+                { provide: RecipeService, useValue: { query: vi.fn() } },
+                { provide: FdUiDialogService, useValue: dialogService },
+            ],
+        });
+
+        let emitted: unknown;
+        TestBed.inject(RecipeSelectFacade)
+            .openFilters(filters)
+            .subscribe(value => {
+                emitted = value;
+            });
+
+        expect(dialogService.open).toHaveBeenCalledWith(expect.any(Function), { preset: 'form', data: filters });
+        expect(emitted).toEqual(result);
     });
 });

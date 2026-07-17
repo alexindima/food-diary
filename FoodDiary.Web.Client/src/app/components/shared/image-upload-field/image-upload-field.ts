@@ -16,7 +16,7 @@ import type { FormValueControl } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { finalize, map, switchMap } from 'rxjs';
+import { finalize } from 'rxjs';
 
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
 import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
@@ -428,13 +428,8 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         this.isUploading.set(true);
 
         this.imageUploadFacade
-            .requestUploadUrl(file)
+            .upload(file)
             .pipe(
-                switchMap(presign =>
-                    this.imageUploadFacade
-                        .uploadToPresignedUrl(presign.uploadUrl, file)
-                        .pipe(map(() => ({ url: presign.fileUrl, assetId: presign.assetId }))),
-                ),
                 finalize(() => {
                     this.isUploading.set(false);
                 }),

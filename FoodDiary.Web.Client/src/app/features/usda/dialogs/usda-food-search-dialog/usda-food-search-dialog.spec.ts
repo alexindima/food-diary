@@ -85,11 +85,10 @@ function setupComponent(): {
 } {
     TestBed.configureTestingModule({
         imports: [UsdaFoodSearchDialogComponent],
-        providers: [
-            provideTranslateTesting(),
-            { provide: FdUiDialogRef, useValue: dialogRef },
-            { provide: UsdaFoodSearchFacade, useValue: facade },
-        ],
+        providers: [provideTranslateTesting(), { provide: FdUiDialogRef, useValue: dialogRef }],
+    });
+    TestBed.overrideComponent(UsdaFoodSearchDialogComponent, {
+        set: { providers: [{ provide: UsdaFoodSearchFacade, useValue: facade }] },
     });
 
     const fixture = TestBed.createComponent(UsdaFoodSearchDialogComponent);

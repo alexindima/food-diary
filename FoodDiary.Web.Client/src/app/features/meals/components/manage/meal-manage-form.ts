@@ -64,12 +64,15 @@ import type {
     NutritionTotals,
 } from './meal-manage-lib/meal-manage.types';
 import {
+    buildMealDateTime,
     buildMealManageDto,
     buildMealManageFormPatchValue,
     createMealManageFormValue,
+    findReusableEmptyMealItemIndex,
     getConsumptionItemInitialAmount,
     getDateInputValue,
     getTimeInputValue,
+    hasSelectedMealItems,
 } from './meal-manage-lib/meal-manage-form.mapper';
 import { buildMealTypeSelectOptions, type MealSatietyControlName } from './meal-manage-lib/meal-manage-options.mapper';
 import { MEAL_MANAGE_TOUR } from './meal-manage-tour';
@@ -687,7 +690,7 @@ export class MealManageFormComponent {
     }
 
     private findReusableEmptyItemIndex(): number {
-        return this.items.findIndex(item => item.product === null && item.recipe === null);
+        return findReusableEmptyMealItemIndex(this.items);
     }
 
     private buildMealTypeOptions(): void {
@@ -703,11 +706,8 @@ export class MealManageFormComponent {
     }
 
     private buildDateTime(): Date {
-        const dateValue = this.consumptionFormModel().date;
-        const timeValue = this.consumptionFormModel().time;
-        const combined = `${dateValue}T${timeValue}`;
-        const parsed = new Date(combined);
-        return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+        const formValue = this.consumptionFormModel();
+        return buildMealDateTime(formValue.date, formValue.time, new Date());
     }
 
     private getConsumptionFormValue(): ConsumptionFormValues {
@@ -740,7 +740,7 @@ export class MealManageFormComponent {
     }
 
     private hasSelectedItems(): boolean {
-        return this.items.some(item => item.product !== null || item.recipe !== null) || this.aiSessions().length > 0;
+        return hasSelectedMealItems(this.items, this.aiSessions());
     }
 
     private getItemAmountError(item: ConsumptionItemFormValues, touched: boolean): string | null {

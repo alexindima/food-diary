@@ -1,13 +1,12 @@
-import { computed, DestroyRef, inject, Service, signal, type WritableSignal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal, type WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { Observable } from 'rxjs';
 
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
 import { resolveFastingReminderPresetId } from '../../../shared/lib/fasting-reminder-presets';
-import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
-import { HOURS_PER_DAY, MS_PER_HOUR, MS_PER_SECOND, SECONDS_PER_HOUR, SECONDS_PER_MINUTE } from '../../../shared/lib/time.constants';
+import { HOURS_PER_DAY, MS_PER_HOUR, MS_PER_SECOND } from '../../../shared/lib/time.constants';
 import { FastingService } from '../api/fasting.service';
 import {
     FASTING_PROTOCOLS,
@@ -27,7 +26,6 @@ import {
     DEFAULT_FOLLOW_UP_REMINDER_HOURS,
     DEFAULT_INTERMITTENT_FAST_HOURS,
     DEFAULT_REDUCE_HOURS,
-    EMPTY_FASTING_DURATION_HOURS,
     FASTING_HISTORY_PAGE_SIZE,
     FASTING_PROMPT_SNOOZE_HOURS,
     MAX_CHECK_IN_LEVEL,
@@ -37,10 +35,14 @@ import {
     MIN_FASTING_HOURS,
 } from './fasting.constants';
 import { FastingPromptStateStore } from './fasting-prompt-state.store';
+import {
+    calculateFastingElapsedMs,
+    calculateFastingProgressPercent,
+    calculateMaxReducibleFastingHours,
+    getFastingSessionDurationHours,
+} from './fasting-session-state';
+import { formatFastingDuration } from './fasting-timer-card-state';
 
-const DURATION_PART_LENGTH = 2;
-const DURATION_PART_PAD = '0';
-const DURATION_ROUNDING_FACTOR = 10;
 const HISTORY_FROM_MONTH_OFFSET = 1;
 const HISTORY_TO_MONTH_OFFSET = 2;
 
@@ -49,7 +51,7 @@ type FastingPromptState = {
     snoozedUntilUtc?: string;
 };
 
-@Service()
+@Injectable()
 export class FastingFacade {
     private readonly fastingService = inject(FastingService);
     private readonly frontendObservability = inject(FrontendObservabilityService);
@@ -109,13 +111,7 @@ export class FastingFacade {
     });
 
     public readonly elapsedMs = computed(() => {
-        const session = this.currentSession();
-        if (session === null) {
-            return 0;
-        }
-        const start = new Date(session.startedAtUtc).getTime();
-        const end = session.endedAtUtc !== null ? new Date(session.endedAtUtc).getTime() : this.now().getTime();
-        return Math.max(0, end - start);
+        return calculateFastingElapsedMs(this.currentSession(), this.now());
     });
 
     public readonly totalMs = computed(() => {
@@ -127,29 +123,18 @@ export class FastingFacade {
     });
 
     public readonly progressPercent = computed(() => {
-        const total = this.totalMs();
-        if (total <= 0) {
-            return 0;
-        }
-        return Math.min((this.elapsedMs() / total) * PERCENT_MULTIPLIER, PERCENT_MULTIPLIER);
+        return calculateFastingProgressPercent(this.elapsedMs(), this.totalMs());
     });
 
-    public readonly elapsedFormatted = computed(() => this.formatDuration(this.elapsedMs()));
+    public readonly elapsedFormatted = computed(() => formatFastingDuration(this.elapsedMs()));
 
     public readonly remainingFormatted = computed(() => {
         const remaining = Math.max(0, this.totalMs() - this.elapsedMs());
-        return this.formatDuration(remaining);
+        return formatFastingDuration(remaining);
     });
 
     public readonly maxReducibleHours = computed(() => {
-        const session = this.currentSession();
-        if (session?.endedAtUtc !== null) {
-            return EMPTY_FASTING_DURATION_HOURS;
-        }
-
-        const maxByRemainingTime = Math.floor(Math.max(0, this.totalMs() - this.elapsedMs()) / MS_PER_HOUR);
-        const maxByMinimumDuration = Math.max(EMPTY_FASTING_DURATION_HOURS, session.plannedDurationHours - MIN_FASTING_HOURS);
-        return Math.min(maxByRemainingTime, maxByMinimumDuration);
+        return calculateMaxReducibleFastingHours(this.currentSession(), this.elapsedMs(), this.totalMs());
     });
 
     public readonly isOvertime = computed(() => this.elapsedMs() > this.totalMs());
@@ -212,7 +197,7 @@ export class FastingFacade {
                     planType: session.planType,
                     status: session.status,
                     plannedDurationHours: session.plannedDurationHours,
-                    actualDurationHours: this.getSessionDurationHours(session),
+                    actualDurationHours: getFastingSessionDurationHours(session),
                     hadCheckIn: session.checkInAtUtc !== null,
                     ...this.getReminderTelemetryDetails(),
                 });
@@ -563,33 +548,6 @@ export class FastingFacade {
 
     private trackRequest<T>(state: WritableSignal<boolean>, request$: Observable<T>, next: (value: T) => void): void {
         runTrackedRequest(this.destroyRef, state, request$, { next });
-    }
-
-    private formatDuration(ms: number): string {
-        const totalSeconds = Math.floor(ms / MS_PER_SECOND);
-        const hours = Math.floor(totalSeconds / SECONDS_PER_HOUR);
-        const minutes = Math.floor((totalSeconds % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE);
-        const seconds = totalSeconds % SECONDS_PER_MINUTE;
-        return `${this.formatDurationPart(hours)}:${this.formatDurationPart(minutes)}:${this.formatDurationPart(seconds)}`;
-    }
-
-    private formatDurationPart(value: number): string {
-        return String(value).padStart(DURATION_PART_LENGTH, DURATION_PART_PAD);
-    }
-
-    private getSessionDurationHours(session: FastingSession): number {
-        const endedAt = session.endedAtUtc;
-        if (endedAt === null) {
-            return 0;
-        }
-
-        const startedAtMs = new Date(session.startedAtUtc).getTime();
-        const endedAtMs = new Date(endedAt).getTime();
-        if (Number.isNaN(startedAtMs) || Number.isNaN(endedAtMs) || endedAtMs <= startedAtMs) {
-            return 0;
-        }
-
-        return Math.round(((endedAtMs - startedAtMs) / MS_PER_HOUR) * DURATION_ROUNDING_FACTOR) / DURATION_ROUNDING_FACTOR;
     }
 
     private getReminderTelemetryDetails(): Record<string, unknown> {

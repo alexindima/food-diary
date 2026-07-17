@@ -2,6 +2,10 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { AdminAiUsageService } from '../../admin-ai-usage/api/admin-ai-usage.service';
+import { AdminUsersFacade } from '../../admin-users/lib/admin-users.facade';
+import { AdminDashboardService } from '../api/admin-dashboard.service';
+import { AdminTelemetryService } from '../api/admin-telemetry.service';
 import { AdminDashboardFacade } from '../lib/admin-dashboard.facade';
 import { AdminDashboardComponent } from './admin-dashboard';
 
@@ -24,20 +28,21 @@ const COMPLETION_RATE_PERCENT = 66.7;
 const CHECK_IN_RATE_PERCENT = 41.7;
 const AVERAGE_COMPLETED_DURATION_HOURS = 18.2;
 
-type DashboardFacadeMock = {
+type DashboardServicesMock = {
     getAiUsageSummary: ReturnType<typeof vi.fn>;
     getFastingSummary: ReturnType<typeof vi.fn>;
     getLoginSummary: ReturnType<typeof vi.fn>;
     getSummary: ReturnType<typeof vi.fn>;
 };
 type DashboardTestContext = {
-    dashboardFacade: DashboardFacadeMock;
+    dashboard: AdminDashboardFacade;
+    services: DashboardServicesMock;
     component: AdminDashboardComponent;
     fixture: ComponentFixture<AdminDashboardComponent>;
 };
 
 async function setupDashboardAsync(): Promise<DashboardTestContext> {
-    const dashboardFacade: DashboardFacadeMock = {
+    const services: DashboardServicesMock = {
         getAiUsageSummary: vi.fn().mockReturnValue(of(createAiUsageSummary())),
         getFastingSummary: vi.fn().mockReturnValue(of(createFastingSummary())),
         getLoginSummary: vi.fn().mockReturnValue(of(createLoginSummary())),
@@ -46,14 +51,21 @@ async function setupDashboardAsync(): Promise<DashboardTestContext> {
 
     await TestBed.configureTestingModule({
         imports: [AdminDashboardComponent],
-        providers: [{ provide: AdminDashboardFacade, useValue: dashboardFacade }],
+        providers: [
+            AdminDashboardFacade,
+            { provide: AdminDashboardService, useValue: { getSummary: services.getSummary } },
+            { provide: AdminAiUsageService, useValue: { getSummary: services.getAiUsageSummary } },
+            { provide: AdminTelemetryService, useValue: { getFastingSummary: services.getFastingSummary } },
+            { provide: AdminUsersFacade, useValue: { getLoginSummary: services.getLoginSummary } },
+        ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AdminDashboardComponent);
     const component = fixture.componentInstance;
+    const dashboard = TestBed.inject(AdminDashboardFacade);
     fixture.detectChanges();
 
-    return { component, dashboardFacade, fixture };
+    return { component, dashboard, services, fixture };
 }
 
 describe('AdminDashboardComponent', () => {
@@ -64,37 +76,34 @@ describe('AdminDashboardComponent', () => {
     });
 
     it('should load dashboard summary, ai usage, fasting telemetry, and login summary on init', async () => {
-        const { component, dashboardFacade } = await setupDashboardAsync();
+        const { dashboard, services } = await setupDashboardAsync();
 
-        expect(dashboardFacade.getSummary).toHaveBeenCalledTimes(1);
-        expect(dashboardFacade.getAiUsageSummary).toHaveBeenCalledTimes(1);
-        expect(dashboardFacade.getFastingSummary).toHaveBeenCalledTimes(1);
-        expect(dashboardFacade.getLoginSummary).toHaveBeenCalledTimes(1);
-        expect(component['summary']()?.totalUsers).toBe(TOTAL_USERS);
-        expect(component['aiUsage']()?.totalTokens).toBe(TOTAL_TOKENS);
-        expect(component['fastingTelemetry']()?.startedSessions).toBe(STARTED_SESSIONS);
-        expect(component['loginDeviceSegments']()).toEqual([{ label: 'Desktop', value: 21 }]);
-        expect(component['loginOperatingSystemSegments']()).toEqual([{ label: 'Windows', value: 21 }]);
-        expect(component['loginBrowserSegments']()).toEqual([
+        expect(services.getSummary).toHaveBeenCalledTimes(1);
+        expect(services.getAiUsageSummary).toHaveBeenCalledTimes(1);
+        expect(services.getFastingSummary).toHaveBeenCalledTimes(1);
+        expect(services.getLoginSummary).toHaveBeenCalledTimes(1);
+        expect(dashboard.summary()?.totalUsers).toBe(TOTAL_USERS);
+        expect(dashboard.aiUsage()?.totalTokens).toBe(TOTAL_TOKENS);
+        expect(dashboard.fastingTelemetry()?.startedSessions).toBe(STARTED_SESSIONS);
+        expect(dashboard.loginDeviceSegments()).toEqual([{ label: 'Desktop', value: 21 }]);
+        expect(dashboard.loginOperatingSystemSegments()).toEqual([{ label: 'Windows', value: 21 }]);
+        expect(dashboard.loginBrowserSegments()).toEqual([
             { label: 'Opera', value: 19 },
             { label: 'Chrome', value: 2 },
         ]);
-        expect(component['isLoading']()).toBe(false);
+        expect(dashboard.isLoading()).toBe(false);
     });
 
     it('should reset summary and loading state on dashboard error', async () => {
-        const { dashboardFacade } = await setupDashboardAsync();
-        dashboardFacade.getSummary.mockReturnValueOnce(throwError(() => new Error('dashboard failed')));
-        dashboardFacade.getAiUsageSummary.mockReturnValueOnce(of(null));
-        dashboardFacade.getFastingSummary.mockReturnValueOnce(of(null));
+        const { dashboard, services } = await setupDashboardAsync();
+        services.getSummary.mockReturnValueOnce(throwError(() => new Error('dashboard failed')));
+        services.getAiUsageSummary.mockReturnValueOnce(of(null));
+        services.getFastingSummary.mockReturnValueOnce(of(null));
 
-        const errorFixture = TestBed.createComponent(AdminDashboardComponent);
-        const errorComponent = errorFixture.componentInstance;
-        errorFixture.detectChanges();
-        await errorFixture.whenStable();
+        dashboard.load();
 
-        expect(errorComponent['summary']()).toBeNull();
-        expect(errorComponent['isLoading']()).toBe(false);
+        expect(dashboard.summary()).toBeNull();
+        expect(dashboard.isLoading()).toBe(false);
     });
 });
 

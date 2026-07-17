@@ -1,12 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateService } from '@ngx-translate/core';
-import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { EMPTY, type Observable, of, throwError } from 'rxjs';
+import { EMPTY, type Observable, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { PagedData } from '../../../../shared/lib/paged-data.data';
-import { ProductDetailActionResult } from '../../components/detail/product-detail-lib/product-detail.types';
 import { ProductListFacade } from '../../lib/list/product-list.facade';
 import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
 import { type FavoriteProduct, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
@@ -20,56 +17,22 @@ const QUALITY_SCORE_GREEN = 80;
 const PAGE_SIZE = 10;
 
 describe('ProductListPageComponent', () => {
-    it('reloads favorites and current page after favorite change in detail dialog', async () => {
-        const { component, facade, dialogService } = setupComponent();
-        dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'FavoriteChanged')) });
+    it('delegates product detail handling to the facade', async () => {
+        const { component, facade } = setupComponent();
 
         await handleProductClickAsync(component, createProduct());
 
-        expect(facade.loadFavorites).toHaveBeenCalled();
-        expect(facade.reloadCurrentPage).toHaveBeenCalled();
+        expect(facade.handleProductDetailsAsync).toHaveBeenCalledWith(expect.objectContaining({ id: 'product-1' }));
     });
 
-    it('navigates to product edit after edit action in detail dialog', async () => {
-        const { component, facade, dialogService } = setupComponent();
-        dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'Edit')) });
-
-        await handleProductClickAsync(component, createProduct());
-
-        expect(facade.navigationService.navigateToProductEditAsync).toHaveBeenCalledWith('product-1');
-    });
-
-    it('deletes owned product and scrolls to top after delete action in detail dialog', async () => {
-        const { component, facade, dialogService } = setupComponent();
+    it('scrolls to top when the facade reports a deleted product', async () => {
+        const { component, facade } = setupComponent();
         const scrollSpy = vi.spyOn(component as unknown as { scrollToTop: () => void }, 'scrollToTop').mockImplementation(() => {});
-        dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'Delete')) });
-        facade.deleteProductAndReload.mockReturnValue(of(void 0));
-
-        await handleProductClickAsync(component, createProduct({ isOwnedByCurrentUser: true }));
-
-        expect(facade.deleteProductAndReload).toHaveBeenCalledWith('product-1');
-        expect(scrollSpy).toHaveBeenCalled();
-    });
-
-    it('does not delete public product after delete action in detail dialog', async () => {
-        const { component, facade, dialogService } = setupComponent();
-        dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'Delete')) });
-
-        await handleProductClickAsync(component, createProduct({ isOwnedByCurrentUser: false }));
-
-        expect(facade.deleteProductAndReload).not.toHaveBeenCalled();
-    });
-
-    it('shows delete error and clears loading state when delete fails', async () => {
-        const { component, facade, dialogService, toastService } = setupComponent();
-        dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'Delete')) });
-        facade.deleteProductAndReload.mockReturnValue(throwError(() => new Error('Delete failed')));
-        facade.productData.setLoading(true);
+        facade.handleProductDetailsAsync.mockResolvedValueOnce(true);
 
         await handleProductClickAsync(component, createProduct());
 
-        expect(facade.productData.isLoading()).toBe(false);
-        expect(toastService.error).toHaveBeenCalledWith('PRODUCT_LIST.DELETE_ERROR');
+        expect(scrollSpy).toHaveBeenCalled();
     });
 });
 
@@ -78,19 +41,14 @@ function setupComponent(): {
     component: ProductListPageComponent;
     facade: ProductListFacadeMock;
     dialogService: { open: ReturnType<typeof vi.fn> };
-    toastService: { error: ReturnType<typeof vi.fn> };
 } {
     const facade = createProductListFacadeMock();
     const dialogService = { open: vi.fn().mockReturnValue({ afterClosed: (): Observable<never> => EMPTY }) };
-    const toastService = { error: vi.fn() };
     facade.fdDialogService = dialogService;
 
     TestBed.configureTestingModule({
         imports: [ProductListPageComponent],
-        providers: [
-            { provide: TranslateService, useValue: { instant: (key: string): string => key } },
-            { provide: FdUiToastService, useValue: toastService },
-        ],
+        providers: [],
     });
     TestBed.overrideComponent(ProductListPageComponent, {
         set: {
@@ -102,7 +60,7 @@ function setupComponent(): {
     const fixture = TestBed.createComponent(ProductListPageComponent);
     fixture.detectChanges();
 
-    return { fixture, component: fixture.componentInstance, facade, dialogService, toastService };
+    return { fixture, component: fixture.componentInstance, facade, dialogService };
 }
 
 type ProductListFacadeMock = Omit<ProductListFacade, 'fdDialogService' | 'navigationService'> & {
@@ -113,6 +71,7 @@ type ProductListFacadeMock = Omit<ProductListFacade, 'fdDialogService' | 'naviga
         navigateToProductEditAsync: ReturnType<typeof vi.fn>;
     };
     reloadCurrentPage: ReturnType<typeof vi.fn>;
+    handleProductDetailsAsync: ReturnType<typeof vi.fn>;
 };
 
 function createProductListFacadeMock(): ProductListFacadeMock {
@@ -169,6 +128,7 @@ function createProductListFacadeMock(): ProductListFacadeMock {
         removeFavorite: vi.fn(),
         reloadCurrentPage: vi.fn(),
         deleteProductAndReload: vi.fn().mockReturnValue(of(void 0)),
+        handleProductDetailsAsync: vi.fn().mockResolvedValue(false),
     } as unknown as ProductListFacadeMock;
 }
 

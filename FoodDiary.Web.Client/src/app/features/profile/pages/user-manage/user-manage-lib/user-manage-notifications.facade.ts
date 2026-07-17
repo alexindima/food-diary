@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -26,7 +26,7 @@ import type { ConnectedDeviceViewModel } from './user-manage.types';
 import { formatUserManageDateTime } from './user-manage-date.mapper';
 import { buildConnectedDeviceItems, isCurrentConnectedDevice } from './user-manage-notifications.mapper';
 
-@Service()
+@Injectable()
 export class UserManageNotificationsFacade {
     private readonly facade = inject(ProfileManageFacade);
     private readonly notificationService = inject(NotificationService);

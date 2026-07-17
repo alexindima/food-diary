@@ -5,6 +5,7 @@ import { type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
+import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import type { Meal } from '../../models/meal.data';
 import { AiMealCreateFacade } from './ai-meal-create.facade';
 import { AiMealCreateService } from './ai-meal-create.service';
@@ -34,7 +35,7 @@ const AI_RESULT: AiInputBarResult = {
 describe('AiMealCreateFacade', () => {
     it('sets saving state and increments clear token only after successful create', () => {
         const meal = createMeal();
-        const { facade, aiMealCreateService } = setupFacade(of(meal));
+        const { facade, aiMealCreateService, invalidation } = setupFacade(of(meal));
 
         let actual: Meal | null = null;
         facade.createFromAiResult(AI_RESULT).subscribe(result => {
@@ -46,6 +47,7 @@ describe('AiMealCreateFacade', () => {
         expect(facade.clearToken()).toBe(1);
         expect(facade.isSaving()).toBe(false);
         expect(facade.errorKey()).toBeNull();
+        expect(invalidation.dashboardVersion()).toBe(1);
     });
 
     it('keeps clear token unchanged and shows a toast on create failure', () => {
@@ -83,6 +85,7 @@ describe('AiMealCreateFacade', () => {
 function setupFacade(response$: Observable<Meal>): {
     aiMealCreateService: { createFromAiResult: ReturnType<typeof vi.fn> };
     facade: AiMealCreateFacade;
+    invalidation: NutritionDataInvalidationService;
     toastService: { error: ReturnType<typeof vi.fn> };
 } {
     const aiMealCreateService = {
@@ -105,6 +108,7 @@ function setupFacade(response$: Observable<Meal>): {
     return {
         aiMealCreateService,
         facade: TestBed.inject(AiMealCreateFacade),
+        invalidation: TestBed.inject(NutritionDataInvalidationService),
         toastService,
     };
 }

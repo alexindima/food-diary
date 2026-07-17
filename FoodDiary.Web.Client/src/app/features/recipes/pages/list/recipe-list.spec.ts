@@ -141,6 +141,7 @@ type SetupOptions = {
 };
 
 function setupComponent(options: SetupOptions = {}): { fixture: ComponentFixture<RecipeListComponent>; component: RecipeListComponent } {
+    facade.openFilters.mockReturnValue(of(options.filterResult ?? null));
     dialogService.open.mockImplementation((_component: unknown, config: { data?: unknown }): { afterClosed: () => Observable<unknown> } => {
         if (config.data !== undefined && 'onlyMine' in (config.data as Record<string, unknown>)) {
             return { afterClosed: () => of(options.filterResult ?? null) };
@@ -166,6 +167,7 @@ type RecipeListFacadeMock = Omit<
     | 'loadInitialOverview'
     | 'loadRecipes'
     | 'navigateToAddRecipeAsync'
+    | 'openFilters'
     | 'removeFavorite'
     | 'toggleRecipeFavorite'
 > & {
@@ -178,6 +180,7 @@ type RecipeListFacadeMock = Omit<
     loadInitialOverview: ReturnType<typeof vi.fn>;
     loadRecipes: ReturnType<typeof vi.fn>;
     navigateToAddRecipeAsync: ReturnType<typeof vi.fn>;
+    openFilters: ReturnType<typeof vi.fn>;
     removeFavorite: ReturnType<typeof vi.fn>;
     toggleRecipeFavorite: ReturnType<typeof vi.fn>;
 };
@@ -212,6 +215,7 @@ function createRecipeListFacadeMock(): RecipeListFacadeMock {
         loadInitialOverview: vi.fn().mockReturnValue(of(void 0)),
         loadRecipes: vi.fn().mockReturnValue(of(void 0)),
         navigateToAddRecipeAsync: vi.fn().mockResolvedValue(true),
+        openFilters: vi.fn().mockReturnValue(of(null)),
         pageSize: PAGE_SIZE,
         recipeData,
         recentRecipes: signal<Recipe[]>([]),

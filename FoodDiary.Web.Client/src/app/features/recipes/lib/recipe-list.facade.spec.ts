@@ -1,6 +1,7 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -99,6 +100,7 @@ beforeEach(() => {
             { provide: NavigationService, useValue: navigationService },
             { provide: QuickMealService, useValue: quickMealService },
             { provide: FdUiToastService, useValue: toastService },
+            { provide: FdUiDialogService, useValue: { open: vi.fn() } },
             {
                 provide: TranslateService,
                 useValue: {

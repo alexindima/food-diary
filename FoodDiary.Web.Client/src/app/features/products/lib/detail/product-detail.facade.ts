@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Service, signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -14,7 +14,7 @@ import { ProductService } from '../../api/product.service';
 import { ProductDetailActionResult } from '../../components/detail/product-detail-lib/product-detail.types';
 import type { Product } from '../../models/product.data';
 
-@Service()
+@Injectable()
 export class ProductDetailFacade {
     private readonly productService = inject(ProductService);
     private readonly favoriteProductService = inject(FavoriteProductService);

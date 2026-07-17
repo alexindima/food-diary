@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { Observable } from 'rxjs';
 
@@ -6,7 +6,7 @@ import { WearableService } from '../api/wearable.service';
 import type { WearableAuthUrl, WearableConnection } from '../models/wearable.data';
 import { buildWearableProviderRows } from './wearable.mapper';
 
-@Service()
+@Injectable()
 export class WearableConnectionsFacade {
     private readonly wearableService = inject(WearableService);
     private readonly destroyRef = inject(DestroyRef);

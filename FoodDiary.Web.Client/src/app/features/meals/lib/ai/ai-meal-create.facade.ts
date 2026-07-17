@@ -1,17 +1,19 @@
-import { computed, inject, Service, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { catchError, finalize, type Observable, of, tap } from 'rxjs';
 
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
+import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import type { Meal } from '../../models/meal.data';
 import { AiMealCreateService } from './ai-meal-create.service';
 
-@Service()
+@Injectable()
 export class AiMealCreateFacade {
     private readonly aiMealCreateService = inject(AiMealCreateService);
     private readonly toastService = inject(FdUiToastService);
     private readonly translateService = inject(TranslateService);
+    private readonly invalidation = inject(NutritionDataInvalidationService);
     private readonly savingCount = signal(0);
     private readonly clearVersion = signal(0);
 
@@ -29,6 +31,7 @@ export class AiMealCreateFacade {
 
         return this.aiMealCreateService.createFromAiResult(result).pipe(
             tap(() => {
+                this.invalidation.reportMealMutation();
                 this.clearVersion.update(version => version + 1);
             }),
             catchError(() => {

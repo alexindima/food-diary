@@ -1,4 +1,4 @@
-import { inject, Service, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { filter, finalize, firstValueFrom, switchMap, tap } from 'rxjs';
@@ -24,7 +24,7 @@ import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog
 import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog';
 import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog';
 
-@Service()
+@Injectable()
 export class ProfileManageFacade {
     private readonly userService = inject(UserService);
     private readonly translateService = inject(TranslateService);

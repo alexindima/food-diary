@@ -8,7 +8,7 @@ import {
     provideBrowserGlobalErrorListeners,
     provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideClientHydration, withEventReplay, withNoIncrementalHydration } from '@angular/platform-browser';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling, withPreloading } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
@@ -102,6 +102,6 @@ export const appConfig: ApplicationConfig = {
         ThemeService,
         LoggingApiService,
         MarketingAttributionService,
-        provideClientHydration(withEventReplay(), withNoIncrementalHydration()),
+        provideClientHydration(withEventReplay()),
     ],
 };

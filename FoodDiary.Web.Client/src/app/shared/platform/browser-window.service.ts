@@ -47,6 +47,30 @@ export class BrowserWindowService {
         this.getWindow()?.history.replaceState({}, '', nextUrl);
     }
 
+    public matchMedia(query: string): MediaQueryList | null {
+        return this.getWindow()?.matchMedia(query) ?? null;
+    }
+
+    public open(url: string, target: string): Window | null {
+        return this.getWindow()?.open(url, target) ?? null;
+    }
+
+    public setTimeout(callback: () => void, delayMs: number): void {
+        this.getWindow()?.setTimeout(callback, delayMs);
+    }
+
+    public getViewportWidth(): number {
+        return this.getWindow()?.innerWidth ?? 0;
+    }
+
+    public getScrollY(): number {
+        return this.getWindow()?.scrollY ?? 0;
+    }
+
+    public scrollTo(x: number, y: number): void {
+        this.getWindow()?.scrollTo(x, y);
+    }
+
     public onPageHideOnce(callback: () => void): void {
         this.getWindow()?.addEventListener('pagehide', callback, { once: true });
     }

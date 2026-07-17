@@ -10,11 +10,14 @@ import {
 } from '../../../models/meal.data';
 import type { ConsumptionFormValues, ConsumptionItemFormValues, NutritionTotals } from './meal-manage.types';
 import {
+    buildMealDateTime,
     buildMealManageDto,
     buildMealManageFormPatchValue,
     createConsumptionItemValue,
     createMealManageFormValue,
+    findReusableEmptyMealItemIndex,
     getConsumptionItemInitialAmount,
+    hasSelectedMealItems,
 } from './meal-manage-form.mapper';
 
 const PRODUCT_AMOUNT = 150;
@@ -58,6 +61,22 @@ describe('meal manage form creation', () => {
         expect(value.time).toBe('09:07');
         expect(value.items).toEqual([createConsumptionItemValue()]);
         expect(value.isNutritionAutoCalculated).toBe(true);
+    });
+
+    it('should combine local date and time and use an explicit fallback for invalid input', () => {
+        expect(buildMealDateTime('2026-04-05', '10:30', FIXED_DATE)).toEqual(SUBMIT_DATE);
+        expect(buildMealDateTime('invalid', 'value', FIXED_DATE)).toBe(FIXED_DATE);
+    });
+
+    it('should find reusable empty items and detect product, recipe or AI selections', () => {
+        const emptyItem = createConsumptionItemValue();
+        const productItem = createProductItem();
+
+        expect(findReusableEmptyMealItemIndex([productItem, emptyItem])).toBe(1);
+        expect(findReusableEmptyMealItemIndex([productItem])).toBe(-1);
+        expect(hasSelectedMealItems([emptyItem], [])).toBe(false);
+        expect(hasSelectedMealItems([productItem], [])).toBe(true);
+        expect(hasSelectedMealItems([emptyItem], AI_SESSIONS)).toBe(true);
     });
 });
 

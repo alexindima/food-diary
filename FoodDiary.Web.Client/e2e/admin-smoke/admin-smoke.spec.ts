@@ -18,9 +18,9 @@ test.describe('admin smoke', () => {
         await expect(page.getByText('Total users')).toBeVisible();
         await expect(page.getByText('AI total tokens')).toBeVisible();
 
-        await page.getByRole('link', { name: 'Users' }).click();
+        await page.getByRole('link', { name: 'Accounts' }).click();
         await expect(page).toHaveURL(/\/users$/);
-        await expect(page.getByPlaceholder('Search by email or username')).toBeVisible();
+        await expect(page.getByRole('textbox', { name: 'Search users' })).toBeVisible();
         await expect(page.getByText('Total users: 1')).toBeVisible();
 
         await page.getByRole('link', { name: 'AI Logs' }).click();

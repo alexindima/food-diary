@@ -29,7 +29,6 @@ import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
-import { RecipeListFiltersDialogComponent } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog';
 import type { RecipeListFiltersDialogResult } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.types';
 import { RecipeListFavoritesComponent } from '../../components/list/recipe-list-sections/recipe-list-favorites/recipe-list-favorites';
 import {
@@ -242,30 +241,15 @@ export class RecipeListComponent {
     protected openFilters(): void {
         const currentOnlyMine = this.searchModel().onlyMine;
         const currentFilters = this.buildRecipeFilters();
-        this.fdDialogService
-            .open<
-                RecipeListFiltersDialogComponent,
-                {
-                    onlyMine: boolean;
-                    category: string | null;
-                    maxTotalTime: number | null;
-                    caloriesFrom: number | null;
-                    caloriesTo: number | null;
-                    hasImage: boolean | null;
-                },
-                RecipeListFiltersDialogResult | null
-            >(RecipeListFiltersDialogComponent, {
-                preset: 'form',
-                data: {
-                    onlyMine: currentOnlyMine,
-                    category: currentFilters.category ?? null,
-                    maxTotalTime: currentFilters.maxTotalTime ?? null,
-                    caloriesFrom: currentFilters.caloriesFrom ?? null,
-                    caloriesTo: currentFilters.caloriesTo ?? null,
-                    hasImage: currentFilters.hasImage ?? null,
-                },
+        this.recipeListFacade
+            .openFilters({
+                onlyMine: currentOnlyMine,
+                category: currentFilters.category ?? null,
+                maxTotalTime: currentFilters.maxTotalTime ?? null,
+                caloriesFrom: currentFilters.caloriesFrom ?? null,
+                caloriesTo: currentFilters.caloriesTo ?? null,
+                hasImage: currentFilters.hasImage ?? null,
             })
-            .afterClosed()
             .pipe(
                 switchMap(result => {
                     if (result === null || result === undefined || this.hasSameFilters(currentOnlyMine, currentFilters, result)) {

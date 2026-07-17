@@ -29,11 +29,6 @@ import { ThemeService } from '../../../shared/theme/theme.service';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { AiMealCreateFacade } from '../../meals/lib/ai/ai-meal-create.facade';
-import type { TdeeInsightDialogComponent as TdeeInsightDialogComponentType } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog';
-import type {
-    TdeeInsightDialogAction,
-    TdeeInsightDialogData,
-} from '../dialogs/tdee-insight-dialog/tdee-insight-dialog-lib/tdee-insight-dialog.types';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DASHBOARD_FIRST_RESIZE_ENTRY_INDEX, DASHBOARD_LANGUAGE_VERSION_INCREMENT } from './dashboard-lib/dashboard-page.config';
@@ -87,7 +82,7 @@ import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-tre
         DashboardTdeeBlockComponent,
         DashboardAdviceBlockComponent,
     ],
-    providers: [DashboardLayoutService, DashboardFacade],
+    providers: [AiMealCreateFacade, DashboardLayoutService, DashboardFacade],
     templateUrl: './dashboard.html',
     styleUrl: './dashboard.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -361,44 +356,32 @@ export class DashboardComponent {
     }
 
     protected async openTdeeDetailsAsync(): Promise<void> {
-        const { TdeeInsightDialogComponent } = await import('../dialogs/tdee-insight-dialog/tdee-insight-dialog');
-
-        this.dialogService
-            .open<TdeeInsightDialogComponentType, TdeeInsightDialogData, TdeeInsightDialogAction | undefined>(TdeeInsightDialogComponent, {
-                size: 'md',
-                data: {
-                    insight: this.tdeeInsight(),
-                },
-            })
-            .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(action => {
-                switch (action?.type) {
-                    case 'profile': {
-                        void this.openProfileAsync();
-                        break;
-                    }
-                    case 'meal': {
-                        void this.addConsumptionAsync();
-                        break;
-                    }
-                    case 'weight': {
-                        void this.openWeightHistoryAsync();
-                        break;
-                    }
-                    case 'goals': {
-                        void this.openGoalsAsync();
-                        break;
-                    }
-                    case 'applyGoal': {
-                        this.applyTdeeGoal(action.target);
-                        break;
-                    }
-                    case undefined: {
-                        break;
-                    }
-                }
-            });
+        const action = await this.facade.openTdeeDetailsAsync();
+        switch (action?.type) {
+            case 'profile': {
+                void this.openProfileAsync();
+                break;
+            }
+            case 'meal': {
+                void this.addConsumptionAsync();
+                break;
+            }
+            case 'weight': {
+                void this.openWeightHistoryAsync();
+                break;
+            }
+            case 'goals': {
+                void this.openGoalsAsync();
+                break;
+            }
+            case 'applyGoal': {
+                this.applyTdeeGoal(action.target);
+                break;
+            }
+            case undefined: {
+                break;
+            }
+        }
     }
 
     protected openFastingPage(): void {

@@ -126,6 +126,17 @@ module.exports = {
                 path: '^src/app/features/[^/]+/(api|components|dialogs|lib|pages)/',
             },
         },
+        {
+            name: 'feature-implementation-must-not-import-routes',
+            severity: 'error',
+            from: {
+                path: '^src/app/features/[^/]+/(api|components|dialogs|lib|models|pages|resolvers)/',
+                pathNot: '[.](?:spec|test)[.](?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$',
+            },
+            to: {
+                path: '^src/app/features/[^/]+/[^/]+[.]routes[.]ts$',
+            },
+        },
     ],
     options: {
         doNotFollow: {

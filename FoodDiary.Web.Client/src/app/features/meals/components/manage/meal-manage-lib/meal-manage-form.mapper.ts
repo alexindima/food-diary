@@ -4,6 +4,7 @@ import type { Recipe } from '../../../../recipes/models/recipe.data';
 import { getDateInputValue, getTimeInputValue } from '../../../lib/meal-date-input.utils';
 import {
     type Consumption,
+    type ConsumptionAiSessionManageDto,
     type ConsumptionItem,
     type ConsumptionItemManageDto,
     type ConsumptionManageDto,
@@ -52,6 +53,22 @@ export function createConsumptionItemValue(
         recipe,
         amount,
     };
+}
+
+export function buildMealDateTime(dateValue: string, timeValue: string, fallback: Date): Date {
+    const parsed = new Date(`${dateValue}T${timeValue}`);
+    return Number.isNaN(parsed.getTime()) ? fallback : parsed;
+}
+
+export function findReusableEmptyMealItemIndex(items: readonly ConsumptionItemFormValues[]): number {
+    return items.findIndex(item => item.product === null && item.recipe === null);
+}
+
+export function hasSelectedMealItems(
+    items: readonly ConsumptionItemFormValues[],
+    aiSessions: readonly ConsumptionAiSessionManageDto[],
+): boolean {
+    return items.some(item => item.product !== null || item.recipe !== null) || aiSessions.length > 0;
 }
 
 export function buildMealManageDto(formValue: ConsumptionFormValues, callbacks: MealManageDtoCallbacks): ConsumptionManageDto {

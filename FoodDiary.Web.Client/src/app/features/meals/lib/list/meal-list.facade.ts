@@ -1,14 +1,19 @@
-import { DestroyRef, inject, Service, signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import type { FdUiDateRangeValue } from 'fd-ui-kit';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { catchError, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, finalize, firstValueFrom, map, type Observable, of, switchMap, tap } from 'rxjs';
 
+import { NavigationService } from '../../../../services/navigation.service';
 import { toLocalDayEndIso, toLocalDayStartIso } from '../../../../shared/lib/local-date.utils';
+import { resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
+import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
+import type { MealDetailActionResult } from '../../components/detail/meal-detail-lib/meal-detail.types';
 import type { FavoriteMeal, Meal, MealFilters } from '../../models/meal.data';
 import { MEAL_LIST_OVERVIEW_FAVORITES_LIMIT, MEAL_LIST_PAGE_SIZE } from './meal-list.config';
 
@@ -21,13 +26,16 @@ export type MealListStructuredFilters = {
     hasAiSession: boolean | null;
 };
 
-@Service()
+@Injectable()
 export class MealListFacade {
     private readonly mealService = inject(MealService);
     private readonly favoriteMealService = inject(FavoriteMealService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
+    private readonly dialogService = inject(FdUiDialogService);
+    private readonly navigationService = inject(NavigationService);
+    private readonly invalidation = inject(NutritionDataInvalidationService);
 
     public readonly pageSize = MEAL_LIST_PAGE_SIZE;
     public readonly consumptionData = new PagedData<Meal>();
@@ -80,6 +88,35 @@ export class MealListFacade {
         );
     }
 
+    public async handleMealDetailsAsync(meal: Meal, filters: MealListStructuredFilters): Promise<boolean> {
+        const { MealDetailComponent } = await import('../../components/detail/meal-detail/meal-detail');
+        const result = await firstValueFrom(
+            this.dialogService
+                .open<InstanceType<typeof MealDetailComponent>, Meal, MealDetailActionResult>(MealDetailComponent, {
+                    preset: 'detail',
+                    data: meal,
+                })
+                .afterClosed(),
+        );
+        if (result === undefined) {
+            return false;
+        }
+        if (result.action === 'FavoriteChanged') {
+            this.loadFavorites();
+            await firstValueFrom(this.loadConsumptions(this.currentPageIndex() + 1, filters));
+            return false;
+        }
+        if (result.action === 'Edit') {
+            await this.navigationService.navigateToConsumptionEditAsync(result.id);
+            return false;
+        }
+        if (result.action === 'Repeat') {
+            const targetDate = new Date();
+            return firstValueFrom(this.repeatMeal(result.id, targetDate.toISOString(), resolveMealTypeByTime(targetDate), filters));
+        }
+        return firstValueFrom(this.deleteMeal(result.id, filters));
+    }
+
     public loadInitialOverview(filtersModel: MealListStructuredFilters): Observable<void> {
         this.consumptionData.setLoading(true);
         const filters = this.buildFilters(filtersModel);
@@ -108,6 +145,9 @@ export class MealListFacade {
 
     public repeatMeal(mealId: string, targetDate: string, mealType: string, filtersModel: MealListStructuredFilters): Observable<boolean> {
         return this.mealService.repeat(mealId, targetDate, mealType).pipe(
+            tap(() => {
+                this.invalidation.reportMealMutation();
+            }),
             switchMap(() => this.loadConsumptions(this.currentPageIndex() + 1, filtersModel)),
             map(() => true),
             catchError(() => {
@@ -119,6 +159,9 @@ export class MealListFacade {
 
     public deleteMeal(mealId: string, filtersModel: MealListStructuredFilters): Observable<boolean> {
         return this.mealService.deleteById(mealId).pipe(
+            tap(() => {
+                this.invalidation.reportMealMutation();
+            }),
             switchMap(() => this.loadConsumptions(this.currentPageIndex() + 1, filtersModel)),
             map(() => true),
             catchError(() => {

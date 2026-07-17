@@ -12,6 +12,7 @@ import { WearableConnectionsFacade } from '../../lib/wearable-connections.facade
     templateUrl: './wearable-connections.html',
     styleUrls: ['./wearable-connections.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [WearableConnectionsFacade],
 })
 export class WearableConnectionsComponent {
     private readonly facade = inject(WearableConnectionsFacade);

@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -175,6 +176,7 @@ function setupFacade(): {
             { provide: HydrationService, useValue: hydrationService },
             { provide: DashboardLayoutService, useValue: layout },
             { provide: TranslateService, useValue: translateService },
+            { provide: FdUiDialogService, useValue: { open: vi.fn() } },
         ],
     });
 

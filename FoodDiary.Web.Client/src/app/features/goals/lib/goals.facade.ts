@@ -1,4 +1,4 @@
-import { computed, effect, inject, Service, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize } from 'rxjs';
@@ -10,6 +10,7 @@ import {
     PERCENT_MULTIPLIER,
     PROTEIN_CALORIES_PER_GRAM,
 } from '../../../shared/lib/nutrition.constants';
+import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { GoalsService } from '../api/goals.service';
 import type { DayCalorieKey, GoalsResponse, UpdateGoalsRequest } from '../models/goals.data';
 import {
@@ -21,8 +22,17 @@ import {
     GOALS_NORMAL_CALORIE_THRESHOLD,
     MAX_BODY_TARGET,
 } from './goals.constants';
+import {
+    type BodyTargetKey,
+    buildGoalsRequest,
+    calculateGoalProgressPercent,
+    clampGoalValue,
+    createDayCalories,
+    createDayCaloriesFromGoals,
+    type MacroKey,
+} from './goals-state.mapper';
 
-export type MacroKey = 'protein' | 'fats' | 'carbs' | 'fiber';
+export type { BodyTargetKey, MacroKey } from './goals-state.mapper';
 
 type MacroZone = {
     from: number;
@@ -63,14 +73,13 @@ type SliderConfig = {
     zones: MacroZone[];
 };
 
-export type BodyTargetKey = 'weight' | 'waist';
-
 const CIRCLE_DEGREES = 360;
 
-@Service()
+@Injectable()
 export class GoalsFacade {
     private readonly goalsService = inject(GoalsService);
     private readonly toastService = inject(FdUiToastService);
+    private readonly invalidation = inject(NutritionDataInvalidationService);
     private readonly translateService = inject(TranslateService);
 
     private readonly colorBlue = 'var(--fd-color-primary-600)';
@@ -163,7 +172,7 @@ export class GoalsFacade {
     public readonly maxCalories = GOALS_MAX_CALORIES;
     public readonly calorieTarget = signal(0);
     public readonly calorieCyclingEnabled = signal(false);
-    public readonly dayCalories = signal<Record<DayCalorieKey, number>>(this.createDayCalories(0));
+    public readonly dayCalories = signal<Record<DayCalorieKey, number>>(createDayCalories(0));
     public readonly macroValues = signal<Record<MacroKey, number>>({
         protein: 0,
         fats: 0,
@@ -256,9 +265,7 @@ export class GoalsFacade {
     public readonly coreMacroStates = computed(() => this.macroStates().filter(macro => macro.key !== 'fiber'));
     public readonly fiberMacroState = computed(() => this.macroStates().find(macro => macro.key === 'fiber'));
     public readonly progressPercent = computed(() => {
-        const span = this.maxCalories - this.minCalories;
-        const normalized = Math.min(Math.max(this.calorieTarget() - this.minCalories, 0), span);
-        return Math.round((normalized / span) * PERCENT_MULTIPLIER);
+        return calculateGoalProgressPercent(this.calorieTarget(), this.minCalories, this.maxCalories);
     });
     public readonly knobAngle = computed(() => (this.progressPercent() / PERCENT_MULTIPLIER) * CIRCLE_DEGREES);
     public readonly accentColor = computed(() => {
@@ -374,7 +381,7 @@ export class GoalsFacade {
             const current = this.dayCalories();
             const allZero = Object.values(current).every(v => v === 0);
             if (allZero && base > 0) {
-                this.dayCalories.set(this.createDayCalories(base));
+                this.dayCalories.set(createDayCalories(base));
             }
         }
         this.queueAutosave();
@@ -420,7 +427,7 @@ export class GoalsFacade {
             waist: goals?.desiredWaist ?? 0,
         });
         this.calorieCyclingEnabled.set(goals?.calorieCyclingEnabled ?? false);
-        this.dayCalories.set(this.createDayCaloriesFromGoals(goals));
+        this.dayCalories.set(createDayCaloriesFromGoals(goals));
         this.hasAutosaveError.set(false);
         this.hasPendingAutosave.set(false);
     }
@@ -459,7 +466,16 @@ export class GoalsFacade {
     private queueAutosave(): void {
         this.hasAutosaveError.set(false);
         this.hasPendingAutosave.set(true);
-        this.autosaveQueue.schedule(this.buildGoalsRequest());
+        this.autosaveQueue.schedule(
+            buildGoalsRequest({
+                calorieTarget: this.calorieTarget(),
+                macros: this.macroValues(),
+                waterValue: this.waterValue(),
+                bodyTargets: this.bodyTargetValues(),
+                calorieCyclingEnabled: this.calorieCyclingEnabled(),
+                dayCalories: this.dayCalories(),
+            }),
+        );
     }
 
     private persistGoals(request: UpdateGoalsRequest): void {
@@ -488,6 +504,7 @@ export class GoalsFacade {
                     }
 
                     this.hasAutosaveError.set(false);
+                    this.invalidation.reportGoalMutation();
                     this.toastService.success(this.translateService.instant('GOALS_PAGE.SAVED_TOAST'));
                     this.autosaveQueue.scheduleIfPending();
                     this.hasPendingAutosave.set(this.autosaveQueue.hasPending());
@@ -506,62 +523,12 @@ export class GoalsFacade {
             });
     }
 
-    private buildGoalsRequest(): UpdateGoalsRequest {
-        const macros = this.macroValues();
-        const bodyTargets = this.bodyTargetValues();
-
-        return {
-            dailyCalorieTarget: this.calorieTarget(),
-            proteinTarget: macros.protein,
-            fatTarget: macros.fats,
-            carbTarget: macros.carbs,
-            fiberTarget: macros.fiber,
-            waterGoal: this.waterValue(),
-            desiredWeight: this.normalizeDesiredBodyTarget(bodyTargets.weight),
-            desiredWaist: this.normalizeDesiredBodyTarget(bodyTargets.waist),
-            calorieCyclingEnabled: this.calorieCyclingEnabled(),
-            ...(this.calorieCyclingEnabled() && this.dayCalories()),
-        };
-    }
-
-    private normalizeDesiredBodyTarget(value: number): number | null {
-        return value > 0 ? value : null;
-    }
-
     private clampCalories(value: number): number {
         return Math.min(this.maxCalories, Math.max(this.minCalories, Math.round(value)));
     }
 
     private clampValue(value: number, max: number): number {
-        return Math.min(max, Math.max(0, Math.round(value)));
-    }
-
-    private createDayCalories(value: number): Record<DayCalorieKey, number> {
-        return {
-            mondayCalories: value,
-            tuesdayCalories: value,
-            wednesdayCalories: value,
-            thursdayCalories: value,
-            fridayCalories: value,
-            saturdayCalories: value,
-            sundayCalories: value,
-        };
-    }
-
-    private createDayCaloriesFromGoals(goals: GoalsResponse | null): Record<DayCalorieKey, number> {
-        if (goals === null) {
-            return this.createDayCalories(0);
-        }
-
-        return {
-            mondayCalories: goals.mondayCalories ?? 0,
-            tuesdayCalories: goals.tuesdayCalories ?? 0,
-            wednesdayCalories: goals.wednesdayCalories ?? 0,
-            thursdayCalories: goals.thursdayCalories ?? 0,
-            fridayCalories: goals.fridayCalories ?? 0,
-            saturdayCalories: goals.saturdayCalories ?? 0,
-            sundayCalories: goals.sundayCalories ?? 0,
-        };
+        return clampGoalValue(value, max);
     }
 
     private pickZoneColor(cfg: SliderConfig | MacroItem, value: number): string {

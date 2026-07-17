@@ -1,10 +1,13 @@
 import type { Routes } from '@angular/router';
 
-import { AdminBillingComponent } from './pages/admin-billing';
+import { adminAuthGuard } from '../../guards/admin-auth.guard';
+import { AdminBillingFacade } from './lib/admin-billing.facade';
 
 export const adminBillingRoutes: Routes = [
     {
         path: '',
-        component: AdminBillingComponent,
+        loadComponent: async () => import('./pages/admin-billing').then(m => m.AdminBillingComponent),
+        canActivate: [adminAuthGuard],
+        providers: [AdminBillingFacade],
     },
 ];

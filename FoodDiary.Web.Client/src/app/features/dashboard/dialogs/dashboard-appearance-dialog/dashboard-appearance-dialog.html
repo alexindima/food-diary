@@ -1,5 +1,5 @@
 <fd-ui-dialog size="md" [title]="'DASHBOARD.APPEARANCE.TITLE' | translate">
-    <div class="dashboard-appearance-dialog fd-stack fd-gap-lg" [attr.aria-busy]="isSaving()">
+    <div class="dashboard-appearance-dialog fd-stack fd-gap-lg" [attr.aria-busy]="appearance.isSaving()">
         <section class="dashboard-appearance-dialog__section fd-stack fd-gap-sm" aria-labelledby="dashboard-appearance-theme-heading">
             <div class="dashboard-appearance-dialog__section-header fd-stack fd-gap-xxs">
                 <h3 id="dashboard-appearance-theme-heading" class="dashboard-appearance-dialog__section-title fd-ui-card-title">
@@ -11,13 +11,13 @@
             </div>
 
             <div class="dashboard-appearance-dialog__grid fd-grid fd-gap-sm">
-                @for (theme of themes; track theme.name) {
+                @for (theme of appearance.themes; track theme.name) {
                     <button
                         type="button"
                         class="dashboard-appearance-dialog__option dashboard-appearance-dialog__option--theme fd-stack fd-align-start fd-gap-xs"
-                        [class.is-selected]="selectedTheme() === theme.name"
-                        [attr.aria-pressed]="selectedTheme() === theme.name"
-                        (click)="selectTheme(theme.name)"
+                        [class.is-selected]="appearance.selectedTheme() === theme.name"
+                        [attr.aria-pressed]="appearance.selectedTheme() === theme.name"
+                        (click)="appearance.selectTheme(theme.name)"
                     >
                         <span [class]="`dashboard-appearance-dialog__swatch dashboard-appearance-dialog__swatch--${theme.name}`"></span>
                         <span class="dashboard-appearance-dialog__option-title fd-ui-body">{{ theme.labelKey | translate }}</span>
@@ -40,13 +40,13 @@
             </div>
 
             <div class="dashboard-appearance-dialog__grid dashboard-appearance-dialog__grid--styles fd-grid fd-gap-sm">
-                @for (uiStyle of uiStyles; track uiStyle.name) {
+                @for (uiStyle of appearance.uiStyles; track uiStyle.name) {
                     <button
                         type="button"
                         class="dashboard-appearance-dialog__option dashboard-appearance-dialog__option--style fd-stack fd-align-start fd-gap-xs"
-                        [class.is-selected]="selectedUiStyle() === uiStyle.name"
-                        [attr.aria-pressed]="selectedUiStyle() === uiStyle.name"
-                        (click)="selectUiStyle(uiStyle.name)"
+                        [class.is-selected]="appearance.selectedUiStyle() === uiStyle.name"
+                        [attr.aria-pressed]="appearance.selectedUiStyle() === uiStyle.name"
+                        (click)="appearance.selectUiStyle(uiStyle.name)"
                     >
                         <span
                             [class]="`dashboard-appearance-dialog__style-preview dashboard-appearance-dialog__style-preview--${uiStyle.name}`"
@@ -64,8 +64,8 @@
             </div>
         </section>
 
-        @if (submitError()) {
-            <p class="dashboard-appearance-dialog__error" role="alert">{{ submitError() }}</p>
+        @if (appearance.submitError()) {
+            <p class="dashboard-appearance-dialog__error" role="alert">{{ appearance.submitError() }}</p>
         }
     </div>
 </fd-ui-dialog>

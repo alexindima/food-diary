@@ -6,7 +6,7 @@ import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { EMPTY, type Observable, switchMap } from 'rxjs';
+import type { Observable } from 'rxjs';
 
 import { AiInputActionBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-action-bar';
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
@@ -19,8 +19,6 @@ import { normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
-import type { MealDetailComponent } from '../../components/detail/meal-detail/meal-detail';
-import type { MealDetailActionResult } from '../../components/detail/meal-detail-lib/meal-detail.types';
 import { AiMealCreateFacade } from '../../lib/ai/ai-meal-create.facade';
 import { MealListFacade, type MealListStructuredFilters } from '../../lib/list/meal-list.facade';
 import type { FavoriteMeal, Meal } from '../../models/meal.data';
@@ -46,7 +44,7 @@ import { MEAL_LIST_TOUR } from './meal-list-tour';
         MealListContentComponent,
         MealListFavoritesComponent,
     ],
-    providers: [MealListFacade],
+    providers: [AiMealCreateFacade, MealListFacade],
 })
 export class MealListComponent {
     private readonly mealListFacade = inject(MealListFacade);
@@ -223,50 +221,9 @@ export class MealListComponent {
     }
 
     protected async openMealDetailsAsync(consumption: Meal): Promise<void> {
-        const { MealDetailComponent } = await import('../../components/detail/meal-detail/meal-detail');
-
-        this.fdDialogService
-            .open<MealDetailComponent, Meal, MealDetailActionResult>(MealDetailComponent, {
-                preset: 'detail',
-                data: consumption,
-            })
-            .afterClosed()
-            .pipe(
-                switchMap(data => {
-                    if (data === undefined) {
-                        return EMPTY;
-                    }
-
-                    if (data.action === 'FavoriteChanged') {
-                        this.loadFavorites();
-                        this.reloadCurrentPage();
-                        return EMPTY;
-                    }
-
-                    if (data.action === 'Edit') {
-                        void this.navigationService.navigateToConsumptionEditAsync(data.id);
-                        return EMPTY;
-                    }
-
-                    if (data.action === 'Repeat') {
-                        const targetDate = new Date();
-                        return this.mealListFacade.repeatMeal(
-                            data.id,
-                            targetDate.toISOString(),
-                            resolveMealTypeByTime(targetDate),
-                            this.structuredFilters,
-                        );
-                    }
-
-                    return this.mealListFacade.deleteMeal(data.id, this.structuredFilters);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(changed => {
-                if (changed) {
-                    this.scrollToTop();
-                }
-            });
+        if (await this.mealListFacade.handleMealDetailsAsync(consumption, this.structuredFilters)) {
+            this.scrollToTop();
+        }
     }
 
     protected async goToMealAddAsync(): Promise<void> {

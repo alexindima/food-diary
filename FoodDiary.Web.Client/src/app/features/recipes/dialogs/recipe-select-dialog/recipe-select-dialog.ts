@@ -14,7 +14,6 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
@@ -22,10 +21,8 @@ import { catchError, debounceTime, EMPTY, finalize, map, type Observable, of, sk
 
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
-import { RecipeListFiltersDialogComponent } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog';
-import type { RecipeListFiltersDialogResult } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.types';
 import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
-import { RecipeSelectFacade } from '../../lib/recipe-select.facade';
+import { RecipeSelectFacade, type RecipeSelectFilterValues } from '../../lib/recipe-select.facade';
 import type { Recipe, RecipeFilters } from '../../models/recipe.data';
 import { RecipeSelectDialogContentComponent } from './recipe-select-dialog-content/recipe-select-dialog-content';
 import {
@@ -52,7 +49,6 @@ import type { RecipeSelectItemViewModel } from './recipe-select-dialog-lib/recip
 })
 export class RecipeSelectDialogComponent {
     private readonly recipeSelectFacade = inject(RecipeSelectFacade);
-    private readonly fdDialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
     private readonly dialogRef = inject(FdUiDialogRef<RecipeSelectDialogComponent, Recipe | null>, {
@@ -156,22 +152,8 @@ export class RecipeSelectDialogComponent {
 
     protected openFilters(): void {
         const currentFilters = this.searchModel();
-        this.fdDialogService
-            .open<RecipeListFiltersDialogComponent, RecipeSearchFilterValues, RecipeListFiltersDialogResult | null>(
-                RecipeListFiltersDialogComponent,
-                {
-                    preset: 'form',
-                    data: {
-                        onlyMine: currentFilters.onlyMine,
-                        category: currentFilters.category,
-                        maxTotalTime: currentFilters.maxTotalTime,
-                        caloriesFrom: currentFilters.caloriesFrom,
-                        caloriesTo: currentFilters.caloriesTo,
-                        hasImage: currentFilters.hasImage,
-                    },
-                },
-            )
-            .afterClosed()
+        this.recipeSelectFacade
+            .openFilters(this.toFilterValues(currentFilters))
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
                 switchMap(result => {
@@ -193,6 +175,17 @@ export class RecipeSelectDialogComponent {
                 }),
             )
             .subscribe();
+    }
+
+    private toFilterValues(filters: RecipeSearchFilterValues): RecipeSelectFilterValues {
+        return {
+            onlyMine: filters.onlyMine,
+            category: filters.category,
+            maxTotalTime: filters.maxTotalTime,
+            caloriesFrom: filters.caloriesFrom,
+            caloriesTo: filters.caloriesTo,
+            hasImage: filters.hasImage,
+        };
     }
 
     private resolveImage(recipe: Recipe): string | undefined {

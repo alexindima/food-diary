@@ -20,12 +20,12 @@ import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-c
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
 import type { Recipe, RecipeDto } from '../../../models/recipe.data';
 import { RecipeBasicInfoComponent } from '../recipe-basic-info/recipe-basic-info';
+import { parseRecipeImportDraft } from '../recipe-manage-lib/recipe-import-draft.mapper';
 import type { IngredientFormValues, NutritionScaleMode, RecipeFormValues, StepFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import {
     buildRecipeDto,
     buildRecipeFormPatchValue,
     createRecipeFormValue,
-    createRecipeStepValue,
     hasNoRecipeNutritionTotals,
     RECIPE_MIN_INGREDIENT_AMOUNT,
 } from '../recipe-manage-lib/recipe-manage-form.mapper';
@@ -345,7 +345,13 @@ export class RecipeManageComponent {
 
     protected applyImportDraft(): void {
         const sourceUrl = this.importUrl().trim();
-        const draft = this.parseImportDraft(this.importText(), sourceUrl);
+        const draft = parseRecipeImportDraft({
+            text: this.importText(),
+            sourceUrl,
+            sourceLabel: this.translateService.instant('RECIPE_MANAGE.IMPORT.SOURCE_LABEL'),
+            ingredientsLabel: this.translateService.instant('RECIPE_MANAGE.IMPORT.INGREDIENTS_LABEL'),
+            existingIngredients: this.steps[0]?.ingredients ?? [],
+        });
 
         if (draft === null) {
             this.importErrorKey.set('RECIPE_MANAGE.IMPORT.EMPTY_ERROR');
@@ -362,96 +368,6 @@ export class RecipeManageComponent {
         draft.steps.forEach((_, index) => this.stepFormManager.expandedSteps.add(index));
         this.importErrorKey.set(null);
         this.updateSummaryFromCurrentForm();
-    }
-
-    private parseImportDraft(text: string, sourceUrl: string): RecipeImportDraft | null {
-        const lines = this.getImportLines(text);
-
-        if (lines.length === 0 && sourceUrl.length === 0) {
-            return null;
-        }
-
-        const name = this.resolveImportTitle(lines, sourceUrl);
-        const contentLines = name === sourceUrl ? lines : lines.slice(1);
-        const sectionedLines = this.splitImportSections(contentLines);
-        const description = this.buildImportDescription(sectionedLines.ingredients, sectionedLines.notes);
-        const stepLines = sectionedLines.steps.length > 0 ? sectionedLines.steps : sectionedLines.notes;
-        const steps = this.buildImportSteps(stepLines, name);
-        const comment = sourceUrl.length > 0 ? `${this.translateService.instant('RECIPE_MANAGE.IMPORT.SOURCE_LABEL')}: ${sourceUrl}` : null;
-
-        return { name, description, comment, steps };
-    }
-
-    private getImportLines(text: string): string[] {
-        return text
-            .split(/\r?\n/)
-            .map(line => line.trim())
-            .filter(line => line.length > 0);
-    }
-
-    private resolveImportTitle(lines: readonly string[], sourceUrl: string): string {
-        return lines[0] ?? sourceUrl;
-    }
-
-    private splitImportSections(lines: readonly string[]): RecipeImportSections {
-        const sections: RecipeImportSections = { ingredients: [], steps: [], notes: [] };
-        let activeSection: keyof RecipeImportSections = 'notes';
-
-        for (const line of lines) {
-            const heading = this.resolveImportSectionHeading(line);
-
-            if (heading !== null) {
-                activeSection = heading;
-                continue;
-            }
-
-            sections[activeSection].push(line);
-        }
-
-        return sections;
-    }
-
-    private resolveImportSectionHeading(line: string): keyof RecipeImportSections | null {
-        const normalizedLine = line.toLowerCase().replace(/:$/, '');
-
-        if (['ingredients', 'ингредиенты'].includes(normalizedLine)) {
-            return 'ingredients';
-        }
-
-        if (['steps', 'instructions', 'method', 'шаги', 'приготовление'].includes(normalizedLine)) {
-            return 'steps';
-        }
-
-        return null;
-    }
-
-    private buildImportDescription(ingredients: readonly string[], notes: readonly string[]): string | null {
-        const parts = [...notes];
-
-        if (ingredients.length > 0) {
-            parts.push(`${this.translateService.instant('RECIPE_MANAGE.IMPORT.INGREDIENTS_LABEL')}\n${ingredients.join('\n')}`);
-        }
-
-        return parts.length > 0 ? parts.join('\n\n') : null;
-    }
-
-    private buildImportSteps(stepLines: readonly string[], fallback: string): StepFormValues[] {
-        const existingIngredients = this.steps[0]?.ingredients ?? [];
-        const lines = stepLines.length > 0 ? stepLines : [fallback];
-
-        return lines.map(line => {
-            const step = createRecipeStepValue();
-
-            return {
-                ...step,
-                description: this.stripStepPrefix(line),
-                ingredients: existingIngredients.length > 0 ? existingIngredients.map(ingredient => ({ ...ingredient })) : step.ingredients,
-            };
-        });
-    }
-
-    private stripStepPrefix(value: string): string {
-        return value.replace(/^\s*(?:[-*]|\d+[.)])\s*/, '').trim();
     }
 
     private prepareRecipeDto(): RecipeDto {
@@ -675,19 +591,6 @@ export class RecipeManageComponent {
 type RecipeManageHeaderState = {
     titleKey: string;
     submitLabelKey: string;
-};
-
-type RecipeImportDraft = {
-    comment: string | null;
-    description: string | null;
-    name: string;
-    steps: StepFormValues[];
-};
-
-type RecipeImportSections = {
-    ingredients: string[];
-    notes: string[];
-    steps: string[];
 };
 
 type RecipeNutritionField =

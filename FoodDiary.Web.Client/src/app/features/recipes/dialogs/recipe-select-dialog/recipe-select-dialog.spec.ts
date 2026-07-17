@@ -1,12 +1,10 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import type { PageOf } from '../../../../shared/models/page-of.data';
-import { RecipeListFiltersDialogComponent } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog';
 import { RecipeSelectFacade } from '../../lib/recipe-select.facade';
 import { type Recipe, RecipeVisibility } from '../../models/recipe.data';
 import { RecipeSelectDialogComponent } from './recipe-select-dialog';
@@ -76,31 +74,27 @@ describe('RecipeSelectDialogComponent', () => {
 
 describe('RecipeSelectDialogComponent filters and actions', () => {
     it('opens structured filters and reloads recipes with applied values', () => {
-        const { component, dialogService, recipeService } = setupComponent([createRecipe()]);
-        dialogService.open.mockReturnValueOnce({
-            afterClosed: () =>
-                of({
-                    onlyMine: true,
-                    category: 'Dinner',
-                    maxTotalTime: 30,
-                    caloriesFrom: 100,
-                    caloriesTo: 500,
-                    hasImage: true,
-                }),
-        });
+        const { component, recipeService } = setupComponent([createRecipe()]);
+        recipeService.openFilters.mockReturnValueOnce(
+            of({
+                onlyMine: true,
+                category: 'Dinner',
+                maxTotalTime: 30,
+                caloriesFrom: 100,
+                caloriesTo: 500,
+                hasImage: true,
+            }),
+        );
 
         component['openFilters']();
 
-        expect(dialogService.open).toHaveBeenCalledWith(RecipeListFiltersDialogComponent, {
-            preset: 'form',
-            data: {
-                onlyMine: false,
-                category: null,
-                maxTotalTime: null,
-                caloriesFrom: null,
-                caloriesTo: null,
-                hasImage: null,
-            },
+        expect(recipeService.openFilters).toHaveBeenCalledWith({
+            onlyMine: false,
+            category: null,
+            maxTotalTime: null,
+            caloriesFrom: null,
+            caloriesTo: null,
+            hasImage: null,
         });
         expect(component['activeFilterCount']()).toBe(FULL_FILTER_COUNT);
         expect(recipeService.query).toHaveBeenLastCalledWith(
@@ -153,16 +147,13 @@ describe('RecipeSelectDialogComponent filters and actions', () => {
 
 function setupComponent(recipes: Recipe[]): {
     component: RecipeSelectDialogComponent;
-    dialogService: { open: ReturnType<typeof vi.fn> };
     dialogRef: { close: ReturnType<typeof vi.fn> };
     fixture: ComponentFixture<RecipeSelectDialogComponent>;
-    recipeService: { query: ReturnType<typeof vi.fn> };
+    recipeService: { openFilters: ReturnType<typeof vi.fn>; query: ReturnType<typeof vi.fn> };
 } {
     const recipeService = {
+        openFilters: vi.fn().mockReturnValue(of(null)),
         query: vi.fn().mockReturnValue(of(createPage(recipes))),
-    };
-    const dialogService = {
-        open: vi.fn().mockReturnValue({ afterClosed: () => of(null) }),
     };
     const dialogRef = { close: vi.fn() };
 
@@ -170,7 +161,6 @@ function setupComponent(recipes: Recipe[]): {
         imports: [RecipeSelectDialogComponent],
         providers: [
             { provide: RecipeSelectFacade, useValue: recipeService },
-            { provide: FdUiDialogService, useValue: dialogService },
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: APP_SEARCH_DEBOUNCE_MS, useValue: ZERO_DEBOUNCE_MS },
         ],
@@ -184,7 +174,7 @@ function setupComponent(recipes: Recipe[]): {
     const fixture = TestBed.createComponent(RecipeSelectDialogComponent);
     fixture.detectChanges();
 
-    return { component: fixture.componentInstance, dialogService, dialogRef, fixture, recipeService };
+    return { component: fixture.componentInstance, dialogRef, fixture, recipeService };
 }
 
 function readRecipeItems(component: RecipeSelectDialogComponent): RecipeSelectItemViewModel[] {

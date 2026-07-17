@@ -18,6 +18,7 @@ import type {
 } from '../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { calculateCalorieMismatchWarning, roundNutrient } from '../../../../shared/lib/nutrition-form.utils';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import type { Product } from '../../../products/models/product.data';
 import type { Recipe } from '../../../recipes/models/recipe.data';
 import { MealService } from '../../api/meal.service';
@@ -48,6 +49,7 @@ export class MealManageFacade {
     private readonly recipeWeight = inject(RecipeServingWeightService);
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
+    private readonly invalidation = inject(NutritionDataInvalidationService);
 
     public async confirmDiscardChangesAsync(data: ConfirmDeleteDialogData): Promise<boolean> {
         const confirmed = await firstValueFrom(
@@ -79,9 +81,11 @@ export class MealManageFacade {
     }
 
     public async submitConsumptionAsync(consumption: Consumption | null, consumptionData: ConsumptionManageDto): Promise<Consumption> {
-        return consumption !== null
+        const savedConsumption = await (consumption !== null
             ? firstValueFrom(this.mealService.update(consumption.id, consumptionData))
-            : firstValueFrom(this.mealService.create(consumptionData));
+            : firstValueFrom(this.mealService.create(consumptionData)));
+        this.invalidation.reportMealMutation();
+        return savedConsumption;
     }
 
     public async showSuccessToastAndRedirectAsync(isEdit: boolean): Promise<void> {

@@ -44,6 +44,10 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 - Use standalone components defaults (do not set `standalone: true` manually).
 - Set `changeDetection: ChangeDetectionStrategy.OnPush` on components.
 - Prefer signals and `computed()`, use `set`/`update`, avoid `mutate`.
+- Use native Angular signals for state; do not add NgRx Store/SignalStore or another state framework without an ADR.
+- Keep root signal state limited to genuinely cross-feature app state with an explicit session/reset policy.
+- Stateful feature facades must use `@Injectable()` and an explicit route/page/dialog/component provider; do not give them a root fallback.
+- Keep transient presentation state in the component, shareable/reloadable state in the URL, and persistent browser state behind an SSR-safe storage service.
 - Prefer `input()` / `output()` helpers instead of decorators.
 - Use `inject()` instead of constructor injection where practical.
 - Use `@Service()` for root singleton services. Keep `@Injectable()` for constructor DI, advanced provider configuration, and non-root scopes.

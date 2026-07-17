@@ -15,6 +15,7 @@ import type { UsdaFood } from '../../models/usda.data';
     templateUrl: './usda-food-search-dialog.html',
     styleUrls: ['./usda-food-search-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [UsdaFoodSearchFacade],
 })
 export class UsdaFoodSearchDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<UsdaFoodSearchDialogComponent, UsdaFood | null>);

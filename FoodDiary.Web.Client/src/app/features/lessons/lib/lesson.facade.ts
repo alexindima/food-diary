@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject, resource, Service, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, resource, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -7,7 +7,7 @@ import { resolveTranslateLanguage } from '../../../shared/i18n/translate-languag
 import { LessonService } from '../api/lesson.service';
 import type { LessonDetail, LessonSummary } from '../models/lesson.data';
 
-@Service()
+@Injectable()
 export class LessonFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly service = inject(LessonService);

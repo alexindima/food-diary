@@ -3,6 +3,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { AdminBillingService } from '../api/admin-billing.service';
 import { AdminBillingFacade } from '../lib/admin-billing.facade';
 import type { AdminBillingSubscription } from '../models/admin-billing.models';
 import { AdminBillingComponent } from './admin-billing';
@@ -11,32 +12,34 @@ const PAGE_SIZE = 20;
 const TOTAL_PAGES = 2;
 const TOTAL_ITEMS = 21;
 
-type BillingServiceMock = {
+type BillingApiMock = {
     getSubscriptions: ReturnType<typeof vi.fn>;
     getPayments: ReturnType<typeof vi.fn>;
     getWebhookEvents: ReturnType<typeof vi.fn>;
 };
 type SubscriptionsPage = typeof subscriptionsPage;
 type BillingTestContext = {
-    billingService: BillingServiceMock;
+    billingApi: BillingApiMock;
+    billing: AdminBillingFacade;
     component: AdminBillingComponent;
     fixture: ComponentFixture<AdminBillingComponent>;
 };
 
-async function setupBillingAsync(billingService: BillingServiceMock = createBillingServiceMock()): Promise<BillingTestContext> {
+async function setupBillingAsync(billingApi: BillingApiMock = createBillingServiceMock()): Promise<BillingTestContext> {
     await TestBed.configureTestingModule({
         imports: [AdminBillingComponent],
-        providers: [provideTranslateTesting(), { provide: AdminBillingFacade, useValue: billingService }],
+        providers: [provideTranslateTesting(), AdminBillingFacade, { provide: AdminBillingService, useValue: billingApi }],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AdminBillingComponent);
     const component = fixture.componentInstance;
+    const billing = TestBed.inject(AdminBillingFacade);
     fixture.detectChanges();
 
-    return { billingService, component, fixture };
+    return { billingApi, billing, component, fixture };
 }
 
-function createBillingServiceMock(): BillingServiceMock {
+function createBillingServiceMock(): BillingApiMock {
     return {
         getSubscriptions: vi.fn().mockReturnValue(of(subscriptionsPage)),
         getPayments: vi.fn().mockReturnValue(
@@ -108,9 +111,9 @@ const subscriptionsPage = {
 
 describe('AdminBillingComponent loading', () => {
     it('should load subscriptions on init', async () => {
-        const { billingService, component } = await setupBillingAsync();
+        const { billingApi, billing } = await setupBillingAsync();
 
-        expect(billingService.getSubscriptions).toHaveBeenCalledWith(1, PAGE_SIZE, {
+        expect(billingApi.getSubscriptions).toHaveBeenCalledWith(1, PAGE_SIZE, {
             provider: null,
             status: null,
             kind: null,
@@ -118,52 +121,52 @@ describe('AdminBillingComponent loading', () => {
             fromUtc: null,
             toUtc: null,
         });
-        expect(component['subscriptions']()).toEqual(subscriptionsPage.items);
-        expect(component['totalPages']()).toBe(TOTAL_PAGES);
-        expect(component['totalItems']()).toBe(TOTAL_ITEMS);
-        expect(component['isLoading']()).toBe(false);
+        expect(billing.subscriptions()).toEqual(subscriptionsPage.items);
+        expect(billing.totalPages()).toBe(TOTAL_PAGES);
+        expect(billing.totalItems()).toBe(TOTAL_ITEMS);
+        expect(billing.isLoading()).toBe(false);
     });
 
     it('should clear state on load error', async () => {
-        const { billingService, component } = await setupBillingAsync();
-        billingService.getSubscriptions.mockReturnValueOnce(throwError(() => new Error('network')));
+        const { billingApi, billing } = await setupBillingAsync();
+        billingApi.getSubscriptions.mockReturnValueOnce(throwError(() => new Error('network')));
 
-        component['load']();
+        billing.load();
 
-        expect(component['subscriptions']()).toEqual([]);
-        expect(component['totalItems']()).toBe(0);
-        expect(component['errorMessage']()).toBe('network');
-        expect(component['isLoading']()).toBe(false);
+        expect(billing.subscriptions()).toEqual([]);
+        expect(billing.totalItems()).toBe(0);
+        expect(billing.errorMessage()).toBe('network');
+        expect(billing.isLoading()).toBe(false);
     });
 
     it('should ignore stale load responses after tab changes', async () => {
-        const billingService = createBillingServiceMock();
+        const billingApi = createBillingServiceMock();
         const pendingSubscriptions = new Subject<SubscriptionsPage>();
-        billingService.getSubscriptions.mockReturnValueOnce(pendingSubscriptions.asObservable());
-        const { component } = await setupBillingAsync(billingService);
+        billingApi.getSubscriptions.mockReturnValueOnce(pendingSubscriptions.asObservable());
+        const { billing } = await setupBillingAsync(billingApi);
 
-        component['setTab']('payments');
+        billing.setTab('payments');
         pendingSubscriptions.next({
             ...subscriptionsPage,
             totalItems: 99,
         });
 
-        expect(component['activeTab']()).toBe('payments');
-        expect(component['subscriptions']()).toEqual([]);
-        expect(component['totalItems']()).toBe(1);
-        expect(component['isLoading']()).toBe(false);
+        expect(billing.activeTab()).toBe('payments');
+        expect(billing.subscriptions()).toEqual([]);
+        expect(billing.totalItems()).toBe(1);
+        expect(billing.isLoading()).toBe(false);
     });
 });
 
 describe('AdminBillingComponent filters', () => {
     it('should switch to payments and include kind filter', async () => {
-        const { billingService, component } = await setupBillingAsync();
-        component['kind'].set('webhook');
-        component['setTab']('payments');
+        const { billingApi, billing } = await setupBillingAsync();
+        billing.kind.set('webhook');
+        billing.setTab('payments');
 
-        expect(component['activeTab']()).toBe('payments');
-        expect(component['page']()).toBe(1);
-        expect(billingService.getPayments).toHaveBeenCalledWith(1, PAGE_SIZE, {
+        expect(billing.activeTab()).toBe('payments');
+        expect(billing.page()).toBe(1);
+        expect(billingApi.getPayments).toHaveBeenCalledWith(1, PAGE_SIZE, {
             provider: null,
             status: null,
             kind: 'webhook',
@@ -171,20 +174,20 @@ describe('AdminBillingComponent filters', () => {
             fromUtc: null,
             toUtc: null,
         });
-        expect(component['payments']()[0].externalPaymentId).toBe('pay_123');
+        expect(billing.payments()[0].externalPaymentId).toBe('pay_123');
     });
 
     it('should apply filters with utc day bounds', async () => {
-        const { billingService, component } = await setupBillingAsync();
-        component['provider'].set(' Paddle ');
-        component['status'].set(' paid ');
-        component['search'].set(' buyer@example.com ');
-        component['fromDate'].set('2026-04-01');
-        component['toDate'].set('2026-04-30');
+        const { billingApi, billing } = await setupBillingAsync();
+        billing.provider.set(' Paddle ');
+        billing.status.set(' paid ');
+        billing.search.set(' buyer@example.com ');
+        billing.fromDate.set('2026-04-01');
+        billing.toDate.set('2026-04-30');
 
-        component['applyFilters']();
+        billing.applyFilters();
 
-        expect(billingService.getSubscriptions).toHaveBeenLastCalledWith(1, PAGE_SIZE, {
+        expect(billingApi.getSubscriptions).toHaveBeenLastCalledWith(1, PAGE_SIZE, {
             provider: 'Paddle',
             status: 'paid',
             kind: null,
@@ -197,9 +200,9 @@ describe('AdminBillingComponent filters', () => {
 
 describe('AdminBillingComponent metadata', () => {
     it('should format metadata json for side panel', async () => {
-        const { component } = await setupBillingAsync();
-        component['showMetadata']('{"payment_id":"pay_123"}');
+        const { billing } = await setupBillingAsync();
+        billing.showMetadata('{"payment_id":"pay_123"}');
 
-        expect(component['selectedMetadata']()).toContain('"payment_id": "pay_123"');
+        expect(billing.selectedMetadata()).toContain('"payment_id": "pay_123"');
     });
 });

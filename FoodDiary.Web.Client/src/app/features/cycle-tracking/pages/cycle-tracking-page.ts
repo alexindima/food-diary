@@ -17,6 +17,7 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
+import { CYCLE_SYMPTOM_FIELDS, type CycleSymptomField } from '../lib/cycle-tracking.config';
 import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
 import {
     BLEEDING_TYPE_BLEEDING,
@@ -50,7 +51,6 @@ import { CycleCurrentCardComponent } from './cycle-current-card/cycle-current-ca
 import { CycleDaysCardComponent } from './cycle-days-card/cycle-days-card';
 import { CycleFactorListComponent } from './cycle-factor-list/cycle-factor-list';
 import { CycleNutritionSummaryCardComponent } from './cycle-nutrition-summary-card/cycle-nutrition-summary-card';
-import { CYCLE_SYMPTOM_FIELDS, type CycleSymptomField } from './cycle-tracking-page-lib/cycle-tracking-page.config';
 import {
     buildCycleCurrentView,
     buildCycleDayItems,
