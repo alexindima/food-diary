@@ -695,6 +695,31 @@ jobs:
             } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
             exit "$status"
           fi
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('FoodDiary.Web.Client/package-lock.json') }}
+
+      - name: Install Playwright Chromium
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/playwright-install.log"
+          set +e
+          npx playwright install --with-deps chromium 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=frontend"
+              echo "FAILED_TARGET=Install Playwright Chromium"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit "$status"
+          fi
           grep -E 'Test Files|Tests|Duration' "$log_file" | tail -n 5 || true
 
       - name: Check component logic boundaries
@@ -953,6 +978,7 @@ jobs:
             echo "| Area | Check | Status | Details |"
             echo "| --- | --- | --- | --- |"
             echo "| Setup | Install dependencies | $(status_for_log "${logs_dir}/npm-ci.log") | npm ci |"
+            echo "| Setup | Install Playwright Chromium | $(status_for_log "${logs_dir}/playwright-install.log") | npx playwright install --with-deps chromium |"
             echo "| Quality | i18n consistency | $(status_for_log "${logs_dir}/i18n-check.log") | npm run check:i18n |"
             echo "| Quality | ESLint | $(status_for_log "${logs_dir}/lint.log") | npm run lint |"
             echo "| Quality | Dependency graph lint | $(status_for_log "${logs_dir}/dependency-graph.log") | npm run lint:deps:strict |"
