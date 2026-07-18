@@ -23,6 +23,10 @@ const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { matches: pathname => pathname.endsWith('/products/overview'), createResponse: createProductsOverview },
     { matches: pathname => pathname.endsWith('/products/search'), createResponse: createProductsPage },
     { matches: pathname => pathname.endsWith('/products'), createResponse: createProductsPage },
+    { matches: pathname => pathname.endsWith('/meal-plans/plan-1'), createResponse: createMealPlanDetail },
+    { matches: pathname => pathname.endsWith('/lessons/lesson-1'), createResponse: createLessonDetail },
+    { matches: pathname => pathname.endsWith('/recipes/recipe-1'), createResponse: createOwnedRecipe },
+    { matches: pathname => pathname.endsWith('/dietologist/clients'), createResponse: createDietologistClients },
 ];
 
 test.describe('client smoke', () => {
@@ -255,6 +259,66 @@ test.describe('authenticated feature smoke', () => {
     });
 });
 
+test.describe('deterministic authenticated feature fixtures', () => {
+    test('renders deterministic meal plan detail data', async ({ page }) => {
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+
+        await page.goto('/meal-plans/plan-1');
+
+        await expect(page).toHaveURL(/\/meal-plans\/plan-1$/);
+        await expect(page.getByRole('heading', { name: 'Balanced week', level: 1 })).toBeVisible();
+        await expect(page.getByText('Greek yogurt breakfast')).toBeVisible();
+        await expect(page.getByRole('button', { name: /Generate shopping list/ })).toBeVisible();
+    });
+
+    test('renders deterministic lesson detail and marks it read', async ({ page }) => {
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+
+        await page.goto('/lessons/lesson-1');
+
+        await expect(page).toHaveURL(/\/lessons\/lesson-1$/);
+        await expect(page.getByRole('heading', { name: 'Build a balanced plate', level: 2 })).toBeVisible();
+        await expect(page.getByText('Use vegetables, protein, and whole grains as a practical starting point.')).toBeVisible();
+        await page.getByRole('button', { name: /Mark as read/ }).click();
+        await expect(page.getByText(/Already read/)).toBeVisible();
+    });
+
+    test('hydrates the owned recipe edit form from a deterministic fixture', async ({ page }) => {
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+
+        await page.goto('/recipes/recipe-1/edit');
+
+        await expect(page).toHaveURL(/\/recipes\/recipe-1\/edit$/);
+        await expect(page.getByLabel('Name', { exact: true })).toHaveValue('Roasted vegetable bowl');
+        await expect(page.getByLabel('Servings', { exact: true })).toHaveValue('2');
+        await expect(page.getByText('Roast the vegetables')).toBeVisible();
+    });
+
+    test('renders the dietologist client list with a role-specific fixture', async ({ page }) => {
+        await authenticateUserAsync(page, 'Dietologist');
+        await mockAuthenticatedClientApiAsync(page);
+
+        await page.goto('/dietologist');
+
+        await expect(page).toHaveURL(/\/dietologist$/);
+        await expect(page.getByRole('heading', { name: 'My clients', level: 1 })).toBeVisible();
+        await expect(page.getByText('Taylor Example')).toBeVisible();
+        await expect(page.getByText('client@example.test')).toBeVisible();
+    });
+});
+
+async function authenticateUserAsync(page: Page, role = 'User'): Promise<void> {
+    await page.addInitScript((token: string) => {
+        window.localStorage.setItem('authToken', token);
+        window.localStorage.setItem('refreshToken', 'refresh-token');
+        window.localStorage.setItem('userId', 'u1');
+        window.localStorage.setItem('emailConfirmed', 'true');
+    }, createAuthenticatedUserJwt(role));
+}
+
 async function expectCollageFitsMediaSlotAsync(collage: ReturnType<Page['locator']>): Promise<void> {
     await expect(collage).toBeVisible();
 
@@ -320,6 +384,10 @@ async function fulfillClientApiRouteAsync(route: Route): Promise<void> {
     const { pathname } = new URL(route.request().url());
     if (route.request().method() === 'PUT' && pathname.endsWith('/recommendations/rec-1/read')) {
         await route.fulfill(jsonResponse(null));
+        return;
+    }
+    if (route.request().method() === 'POST' && pathname.endsWith('/lessons/lesson-1/read')) {
+        await route.fulfill({ status: 204 });
         return;
     }
 
@@ -561,6 +629,124 @@ function createProductsOverview(): Record<string, unknown> {
     };
 }
 
+function createMealPlanDetail(): Record<string, unknown> {
+    return {
+        id: 'plan-1',
+        name: 'Balanced week',
+        description: 'A repeatable seven-day plan for deterministic visual checks.',
+        dietType: 'Balanced',
+        durationDays: 7,
+        targetCaloriesPerDay: 1900,
+        isCurated: true,
+        days: [
+            {
+                id: 'plan-day-1',
+                dayNumber: 1,
+                meals: [
+                    {
+                        id: 'plan-meal-1',
+                        mealType: 'Breakfast',
+                        recipeId: 'recipe-1',
+                        recipeName: 'Greek yogurt breakfast',
+                        servings: 1,
+                        calories: 420,
+                        proteins: 32,
+                        fats: 12,
+                        carbs: 46,
+                    },
+                ],
+            },
+        ],
+    };
+}
+
+function createLessonDetail(): Record<string, unknown> {
+    return {
+        id: 'lesson-1',
+        title: 'Build a balanced plate',
+        content: 'Use vegetables, protein, and whole grains as a practical starting point.',
+        summary: 'A simple composition guide.',
+        category: 'NutritionBasics',
+        difficulty: 'Beginner',
+        estimatedReadMinutes: 4,
+        isRead: false,
+    };
+}
+
+function createOwnedRecipe(): Record<string, unknown> {
+    return {
+        id: 'recipe-1',
+        name: 'Roasted vegetable bowl',
+        description: 'A deterministic recipe used for edit-flow checks.',
+        comment: null,
+        category: 'Dinner',
+        imageUrl: null,
+        imageAssetId: null,
+        prepTime: 15,
+        cookTime: 30,
+        servings: 2,
+        visibility: 'Private',
+        usageCount: 0,
+        createdAt: '2026-07-01T10:00:00.000Z',
+        isOwnedByCurrentUser: true,
+        qualityScore: 85,
+        qualityGrade: 'green',
+        totalCalories: 640,
+        totalProteins: 24,
+        totalFats: 18,
+        totalCarbs: 92,
+        totalFiber: 16,
+        totalAlcohol: 0,
+        isNutritionAutoCalculated: true,
+        manualCalories: null,
+        manualProteins: null,
+        manualFats: null,
+        manualCarbs: null,
+        manualFiber: null,
+        manualAlcohol: null,
+        isFavorite: false,
+        favoriteRecipeId: null,
+        steps: [
+            {
+                id: 'recipe-step-1',
+                stepNumber: 1,
+                title: 'Roast the vegetables',
+                instruction: 'Roast until tender and lightly browned.',
+                imageUrl: null,
+                imageAssetId: null,
+                ingredients: [],
+            },
+        ],
+    };
+}
+
+function createDietologistClients(): Array<Record<string, unknown>> {
+    return [
+        {
+            userId: 'client-1',
+            email: 'client@example.test',
+            firstName: 'Taylor',
+            lastName: 'Example',
+            profileImage: null,
+            birthDate: '1992-04-12',
+            gender: 'Other',
+            height: 172,
+            activityLevel: 'Moderate',
+            permissions: {
+                shareProfile: true,
+                shareMeals: true,
+                shareStatistics: true,
+                shareWeight: true,
+                shareWaist: true,
+                shareGoals: true,
+                shareHydration: true,
+                shareFasting: true,
+            },
+            acceptedAtUtc: '2026-07-01T10:00:00.000Z',
+        },
+    ];
+}
+
 function jsonResponse(body: unknown): { status: number; contentType: string; body: string } {
     return {
         status: 200,
@@ -573,11 +759,11 @@ function createJwt(payload: Record<string, unknown>): string {
     return `${encodeSegment({ alg: 'none', typ: 'JWT' })}.${encodeSegment(payload)}.signature`;
 }
 
-function createAuthenticatedUserJwt(): string {
+function createAuthenticatedUserJwt(role = 'User'): string {
     return createJwt({
         sub: 'u1',
         nameid: 'u1',
-        role: 'User',
+        role,
         exp: Math.floor(Date.now() / MS_PER_SECOND) + AUTH_TOKEN_TTL_SECONDS,
     });
 }

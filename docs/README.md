@@ -33,6 +33,10 @@ This directory contains long-form repository documentation. Keep root-level mark
 - `frontend/FRONTEND_OBSERVABILITY_BASELINE.md`
 - `frontend/DESIGN_SYSTEM_REVIEW.md` - living page inventory, token contract, visual QA matrix, and findings ledger.
 
+## Privacy
+
+- `privacy/PRIVACY_RELEASE_CHECKLIST.md` - owner facts, engineering evidence, and legal sign-off required before treating the privacy policy as release-ready.
+
 ## Plans
 
 `plans/` contains active product, feature, SEO, and integration plans. Remove implemented or stale plans once durable decisions are captured in ADRs, current guides, or project instructions.

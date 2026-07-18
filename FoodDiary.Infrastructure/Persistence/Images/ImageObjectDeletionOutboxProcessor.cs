@@ -2,6 +2,7 @@ using System.Diagnostics;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Infrastructure.Persistence.Images;
@@ -44,11 +45,21 @@ internal sealed class ImageObjectDeletionOutboxProcessor(
             }
 
             await SaveAndRecordAsync(messages.Count, processed, retried, deadLettered, cancellationToken).ConfigureAwait(false);
+            await RecordOldestPendingAgeAsync(nowUtc, cancellationToken).ConfigureAwait(false);
             return processed;
         } finally {
             stopwatch.Stop();
             InfrastructureTelemetry.RecordOutboxProcessingDuration(OutboxName, stopwatch.Elapsed.TotalMilliseconds);
         }
+    }
+
+    private async Task RecordOldestPendingAgeAsync(DateTime nowUtc, CancellationToken cancellationToken) {
+        DateTime? oldestCreatedOnUtc = await context.ImageObjectDeletionOutbox
+            .AsNoTracking()
+            .Where(message => message.ProcessedOnUtc == null && message.DeadLetteredOnUtc == null)
+            .MinAsync(message => (DateTime?)message.CreatedOnUtc, cancellationToken)
+            .ConfigureAwait(false);
+        InfrastructureTelemetry.RecordOutboxOldestPendingAge(OutboxName, nowUtc, oldestCreatedOnUtc);
     }
 
     private bool HandleFailure(ImageObjectDeletionOutboxMessage message, Exception ex) {

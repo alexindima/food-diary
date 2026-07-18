@@ -57,7 +57,7 @@
         "check:component-logic": "node scripts/check-component-logic.mjs",
         "check:state-ownership": "node --test scripts/check-state-ownership.test.mjs && node scripts/check-state-ownership.mjs",
         "check:format:ci": "prettier --check \"src/**/*.{ts,html}\" \"projects/**/*.{ts,html}\"",
-        "verify": "npm run lint && npm run lint:deps:strict && npm run check:depcruise-baseline && npm run check:component-logic && npm run check:state-ownership && npm run stylelint && npm run build && npm run check:seo-prerender && npm run test:ci:app && npm run check:i18n",
+        "verify": "npm run lint && npm run lint:deps:strict && npm run check:depcruise-baseline && npm run check:component-logic && npm run check:state-ownership && npm run stylelint && npm run audit:design-tokens && npm run build && npm run build:admin && npm run build:tour && npm run check:seo-prerender && npm run test:ci:app && npm run test:ci:ui-kit && npm run test:ci:tour && npm run test:ci:admin && npm run check:i18n",
         "stylelint": "stylelint '**/*.{css,scss}'",
         "stylelint:fix": "stylelint '**/*.{css,scss}' --fix",
         "prettier": "prettier --check '**/*.{js,ts,css,scss,html,json,md}'",
@@ -81,6 +81,7 @@
         "test:e2e:admin:smoke:ui": "npx playwright test -c playwright.admin.smoke.config.ts --ui",
         "audit:lighthouse:collect": "node scripts/run-lighthouse.mjs",
         "audit:lighthouse": "npm run build:audit && npm run audit:lighthouse:collect",
+        "audit:design-tokens": "node scripts/audit-design-tokens.mjs",
         "storybook": "ng run fd-ui-kit:storybook",
         "build:storybook": "ng run fd-ui-kit:build-storybook",
         "serve:ssr:food-diary-web-client": "node dist/server/server.mjs"

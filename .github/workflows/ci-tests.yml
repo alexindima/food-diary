@@ -591,7 +591,7 @@ jobs:
           set -euo pipefail
           log_file="${RUNNER_TEMP}/frontend-checks-logs/dependency-graph.log"
           set +e
-          npm run lint:deps 2>&1 | tee "$log_file"
+          npm run lint:deps:strict 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
           set -e
           if [ "$status" -ne 0 ]; then
@@ -675,6 +675,85 @@ jobs:
             exit "$status"
           fi
           grep -E 'Test Files|Tests|Duration' "$log_file" | tail -n 5 || true
+
+      - name: Run fd-tour unit tests
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/fd-tour-tests.log"
+          set +e
+          npm run test:ci:tour > "$log_file" 2>&1
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ]; then
+            tail -n 160 "$log_file"
+            {
+              echo "FAILED_AREA=frontend"
+              echo "FAILED_TARGET=Run fd-tour unit tests"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit "$status"
+          fi
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('FoodDiary.Web.Client/package-lock.json') }}
+
+      - name: Install Playwright Chromium
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/playwright-install.log"
+          set +e
+          npx playwright install --with-deps chromium 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=frontend"
+              echo "FAILED_TARGET=Install Playwright Chromium"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit "$status"
+          fi
+          grep -E 'Test Files|Tests|Duration' "$log_file" | tail -n 5 || true
+
+      - name: Check component logic boundaries
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -o pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/component-logic.log"
+          if ! npm run check:component-logic 2>&1 | tee "$log_file"; then
+            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Check component logic boundaries\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit 1
+          fi
+
+      - name: Audit design token references
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -o pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/design-tokens.log"
+          if ! npm run audit:design-tokens 2>&1 | tee "$log_file"; then
+            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Audit design token references\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit 1
+          fi
+
+      - name: Check frontend state ownership
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -o pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/state-ownership.log"
+          if ! npm run check:state-ownership 2>&1 | tee "$log_file"; then
+            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Check frontend state ownership\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit 1
+          fi
 
       - name: Run admin frontend unit tests
         shell: bash
@@ -803,6 +882,47 @@ jobs:
             exit "$status"
           fi
 
+      - name: Build fd-tour
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/build-fd-tour.log"
+          set +e
+          npm run build:tour 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=frontend"
+              echo "FAILED_TARGET=Build fd-tour"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit "$status"
+          fi
+
+      - name: Run client smoke E2E
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -o pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/client-e2e.log"
+          if ! npm run test:e2e:client:smoke 2>&1 | tee "$log_file"; then
+            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Run client smoke E2E\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit 1
+          fi
+
+      - name: Run admin smoke E2E
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -o pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/admin-e2e.log"
+          if ! npm run test:e2e:admin:smoke 2>&1 | tee "$log_file"; then
+            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Run admin smoke E2E\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit 1
+          fi
+
       - name: Append frontend checks summary
         if: always()
         shell: bash
@@ -858,17 +978,25 @@ jobs:
             echo "| Area | Check | Status | Details |"
             echo "| --- | --- | --- | --- |"
             echo "| Setup | Install dependencies | $(status_for_log "${logs_dir}/npm-ci.log") | npm ci |"
+            echo "| Setup | Install Playwright Chromium | $(status_for_log "${logs_dir}/playwright-install.log") | npx playwright install --with-deps chromium |"
             echo "| Quality | i18n consistency | $(status_for_log "${logs_dir}/i18n-check.log") | npm run check:i18n |"
             echo "| Quality | ESLint | $(status_for_log "${logs_dir}/lint.log") | npm run lint |"
-            echo "| Quality | Dependency graph lint | $(status_for_log "${logs_dir}/dependency-graph.log") | npm run lint:deps |"
+            echo "| Quality | Dependency graph lint | $(status_for_log "${logs_dir}/dependency-graph.log") | npm run lint:deps:strict |"
+            echo "| Quality | Component logic boundaries | $(status_for_log "${logs_dir}/component-logic.log") | npm run check:component-logic |"
+            echo "| Quality | State ownership | $(status_for_log "${logs_dir}/state-ownership.log") | npm run check:state-ownership |"
+            echo "| Quality | Design token references | $(status_for_log "${logs_dir}/design-tokens.log") | npm run audit:design-tokens |"
             echo "| Quality | Stylelint | $(status_for_log "${logs_dir}/stylelint.log") | npm run stylelint |"
             echo "| Quality | Formatting | $(status_for_log "${logs_dir}/prettier.log") | prettier --check |"
             echo "| Tests | Frontend app unit tests | $(status_for_log "${logs_dir}/unit-tests.log") | $(test_summary_for_log "${logs_dir}/unit-tests.log") |"
             echo "| Tests | Admin frontend unit tests | $(status_for_log "${logs_dir}/admin-unit-tests.log") | $(test_summary_for_log "${logs_dir}/admin-unit-tests.log") |"
             echo "| Tests | fd-ui-kit unit tests | $(status_for_log "${logs_dir}/fd-ui-kit-tests.log") | $(test_summary_for_log "${logs_dir}/fd-ui-kit-tests.log") |"
+            echo "| Tests | fd-tour unit tests | $(status_for_log "${logs_dir}/fd-tour-tests.log") | $(test_summary_for_log "${logs_dir}/fd-tour-tests.log") |"
+            echo "| E2E | Client smoke | $(status_for_log "${logs_dir}/client-e2e.log") | Playwright smoke |"
+            echo "| E2E | Admin smoke | $(status_for_log "${logs_dir}/admin-e2e.log") | Playwright smoke |"
             echo "| Build | Frontend production build | $(status_for_log "${logs_dir}/build-frontend.log") | npm run build:prod |"
             echo "| Build | SEO prerender check | $(status_for_log "${logs_dir}/seo-prerender-check.log") | npm run check:seo-prerender |"
             echo "| Build | Admin frontend build | $(status_for_log "${logs_dir}/build-admin-frontend.log") | npm run build:admin |"
+            echo "| Build | fd-tour package | $(status_for_log "${logs_dir}/build-fd-tour.log") | npm run build:tour |"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload frontend failure logs
