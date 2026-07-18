@@ -235,6 +235,60 @@ public partial class BillingFeatureTests {
         Assert.Equal(0, subscriptionRepository.UpdateCount);
     }
 
+    [Fact]
+    public async Task ProcessBillingWebhook_WhenEventIsOlderThanAppliedSnapshot_IgnoresStaleEvent() {
+        var user = User.Create("stale-webhook@example.com", "hash");
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.YooKassa,
+            "customer_stale",
+            "subscription_stale",
+            "pm_stale",
+            "active",
+            Now,
+            Now.AddMonths(1),
+            "evt_newer",
+            Now);
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var webhookEventRepository = new RecordingBillingWebhookEventRepository();
+        var staleEvent = new BillingWebhookEventModel(
+            "evt_older",
+            "subscription.canceled",
+            "customer_stale",
+            "subscription_stale",
+            "pm_stale",
+            "price_monthly",
+            "monthly",
+            "canceled",
+            Now.AddMonths(-1),
+            Now,
+            CancelAtPeriodEnd: false,
+            CanceledAtUtc: Now.AddDays(-1),
+            TrialStartUtc: null,
+            TrialEndUtc: null,
+            Amount: null,
+            Currency: null,
+            ProviderMetadataJson: null,
+            user.Id.Value,
+            OccurredAtUtc: Now.AddMinutes(-1));
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
+            new FakeBillingProviderGateway(BillingProviderNames.YooKassa, webhookEvent: staleEvent),
+            new FakeUserRepository(user),
+            subscriptionRepository,
+            paymentRepository,
+            webhookEventRepository);
+
+        Result result = await handler.Handle(
+            new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal("active", subscription.Status);
+        Assert.Equal(0, subscriptionRepository.UpdateCount);
+        Assert.Empty(paymentRepository.Payments);
+    }
+
 
     [Fact]
     public async Task ProcessBillingWebhook_WhenUserCannotBeResolved_ReturnsValidationFailure() {

@@ -104,7 +104,13 @@ public sealed partial class AuthenticationCommandHandlerTests {
     private static LinkTelegramCommandHandler CreateLinkTelegramHandler(
         StubUserRepository userRepository,
         StubTelegramAuthValidator? telegramAuthValidator = null) =>
-        new(userRepository, userRepository, telegramAuthValidator ?? new StubTelegramAuthValidator());
+        new(userRepository, userRepository, telegramAuthValidator ?? new StubTelegramAuthValidator(), new StubTelegramAssertionReplayGuard());
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubTelegramAssertionReplayGuard(bool consume = true) : ITelegramAssertionReplayGuard {
+        public Task<bool> TryConsumeAsync(string signedAssertion, DateTime expiresAtUtc, CancellationToken cancellationToken = default) =>
+            Task.FromResult(consume);
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User? user = null, params User[] otherUsers)
@@ -120,6 +126,10 @@ public sealed partial class AuthenticationCommandHandlerTests {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
             Task.FromResult<User?>(_users.FirstOrDefault(candidate => string.Equals(candidate.Email, email, StringComparison.OrdinalIgnoreCase)));
+        public Task<User?> GetByGoogleIdentityIncludingDeletedAsync(string issuer, string subject, CancellationToken cancellationToken = default) =>
+            Task.FromResult<User?>(_users.FirstOrDefault(candidate =>
+                string.Equals(candidate.GoogleIssuer, issuer, StringComparison.Ordinal) &&
+                string.Equals(candidate.GoogleSubject, subject, StringComparison.Ordinal)));
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
             Task.FromResult<User?>(_users.FirstOrDefault(candidate => candidate is { IsActive: true, DeletedAt: null } && candidate.Id == id));
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();

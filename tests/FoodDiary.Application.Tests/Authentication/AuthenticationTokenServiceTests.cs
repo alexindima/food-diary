@@ -181,6 +181,14 @@ public class AuthenticationTokenServiceTests {
 
         public Task UpdateAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
+
+        public Task RevokeAllAsync(UserId userId, DateTime revokedAtUtc, CancellationToken cancellationToken = default) {
+            foreach (UserRefreshTokenSession session in Items.Where(session => session.UserId == userId && session.IsActive)) {
+                session.Revoke(revokedAtUtc);
+            }
+
+            return Task.CompletedTask;
+        }
     }
 
     [ExcludeFromCodeCoverage]

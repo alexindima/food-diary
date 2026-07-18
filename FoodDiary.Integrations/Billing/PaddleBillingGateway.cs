@@ -182,7 +182,8 @@ public sealed class PaddleBillingGateway(
             Amount: null,
             Currency: null,
             ProviderMetadataJson: null,
-            ParseUserId(customData));
+            ParseUserId(customData),
+            ParseDateTime(root, "occurred_at"));
     }
 
     private async Task<Result<string>> CreateCustomerAsync(

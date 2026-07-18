@@ -3,6 +3,7 @@ using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Integrations;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Infrastructure;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Filters;
@@ -21,6 +22,7 @@ public static class ApiServiceCollectionExtensions {
             services.AddApiAuthentication();
             services.AddApiHostServices();
             services.AddApiDataProtection(configuration);
+            services.AddSingleton<IWearableTokenProtector, WearableTokenProtector>();
             services.AddApiSwagger();
             services.AddConfiguredOpenTelemetry();
             services.AddApiHealthChecks();

@@ -51,7 +51,7 @@ public sealed class EmailSenderTests {
             CancellationToken.None);
 
         Assert.Equal("Reset FD", getSent().Subject);
-        Assert.Contains("<p>FD https://app.example/reset-password?userId=user-1&token=token</p>", getSent().Body, StringComparison.Ordinal);
+        Assert.Contains("<p>FD https://app.example/reset-password#userId=user-1&token=token</p>", getSent().Body, StringComparison.Ordinal);
         Assert.Contains(getSent().AlternateViewBodies, body => body.Contains("Plain FD https://app.example/reset-password", StringComparison.Ordinal));
     }
 

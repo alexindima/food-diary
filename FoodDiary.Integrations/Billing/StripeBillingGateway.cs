@@ -176,7 +176,8 @@ public sealed class StripeBillingGateway(
             Amount: null,
             Currency: null,
             ProviderMetadataJson: null,
-            ParseUserId(ReadMetadata(metadata, "user_id")));
+            ParseUserId(ReadMetadata(metadata, "user_id")),
+            stripeEvent.Created);
     }
 
     private string ResolvePriceId(string plan) {

@@ -9,7 +9,9 @@ namespace FoodDiary.Application.Users.Commands.ChangePassword;
 
 public sealed class ChangePasswordCommandHandler(
     IUserContextService userContextService,
-    IPasswordHasher passwordHasher)
+    IPasswordHasher passwordHasher,
+    IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
+    TimeProvider dateTimeProvider)
     : ICommandHandler<ChangePasswordCommand, Result> {
     public async Task<Result> Handle(ChangePasswordCommand command, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
@@ -40,6 +42,9 @@ public sealed class ChangePasswordCommandHandler(
         currentUser.UpdatePassword(hashedPassword);
 
         await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
+        await refreshTokenSessionRepository
+            .RevokeAllAsync(userId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
+            .ConfigureAwait(false);
 
         return Result.Success();
     }

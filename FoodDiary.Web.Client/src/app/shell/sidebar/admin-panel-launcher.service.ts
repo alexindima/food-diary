@@ -30,7 +30,7 @@ export class AdminPanelLauncherService {
         this.authService.startAdminSso().subscribe({
             next: response => {
                 const url = new URL('/', adminAppUrl);
-                url.searchParams.set('code', response.code);
+                url.hash = new URLSearchParams({ code: response.code }).toString();
                 adminWindow?.location.assign(url.toString());
             },
             error: () => {

@@ -1,8 +1,8 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, minLength, required, validate } from '@angular/forms/signals';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, type ParamMap } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
@@ -43,6 +43,7 @@ type FieldErrors = Record<ErrorField, string | null>;
 })
 export class PasswordResetComponent {
     private readonly route = inject(ActivatedRoute);
+    private readonly document = inject(DOCUMENT);
     private readonly authService = inject(AuthService);
     private readonly navigationService = inject(NavigationService);
     private readonly translateService = inject(TranslateService);
@@ -140,15 +141,24 @@ export class PasswordResetComponent {
     }
 
     private resolveToken(): void {
-        const params = this.route.snapshot.queryParamMap;
-        const userId = params.get('userId') ?? params.get('user') ?? params.get('id');
-        const token = params.get('token');
+        const fragmentParams = new URLSearchParams(this.document.location.hash.replace(/^#/, ''));
+        const queryParams = this.route.snapshot.queryParamMap;
+        const userId = fragmentParams.get('userId') ?? this.resolveLegacyUserId(queryParams);
+        const token = fragmentParams.get('token') ?? queryParams.get('token');
         this.token.set({ userId, token });
+
+        if (fragmentParams.has('token') || fragmentParams.has('userId')) {
+            this.document.defaultView?.history.replaceState({}, '', this.document.location.pathname + this.document.location.search);
+        }
 
         if (userId === null || userId.length === 0 || token === null || token.length === 0) {
             this.state.set('invalid');
             this.errorMessage.set(this.translateService.instant('AUTH.RESET.INVALID'));
         }
+    }
+
+    private resolveLegacyUserId(queryParams: ParamMap): string | null {
+        return queryParams.get('userId') ?? queryParams.get('user') ?? queryParams.get('id');
     }
 }
 

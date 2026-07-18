@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Mappings;
@@ -15,7 +16,8 @@ namespace FoodDiary.Application.Authentication.Commands.LinkTelegram;
 public sealed class LinkTelegramCommandHandler(
     IUserContextService userContextService,
     IAuthenticationUserMutationService userMutationService,
-    ITelegramAuthValidator telegramAuthValidator) : ICommandHandler<LinkTelegramCommand, Result<UserModel>> {
+    ITelegramAuthValidator telegramAuthValidator,
+    ITelegramAssertionReplayGuard replayGuard) : ICommandHandler<LinkTelegramCommand, Result<UserModel>> {
     public async Task<Result<UserModel>> Handle(LinkTelegramCommand command, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(
             command.UserId,
@@ -30,6 +32,13 @@ public sealed class LinkTelegramCommandHandler(
         }
 
         TelegramInitData initData = initDataResult.Value;
+        bool consumed = await replayGuard
+            .TryConsumeAsync(command.InitData, initData.AuthDateUtc.AddDays(1), cancellationToken)
+            .ConfigureAwait(false);
+        if (!consumed) {
+            return Result.Failure<UserModel>(Errors.Authentication.TelegramAssertionAlreadyUsed);
+        }
+
         Result<User> currentUserResult = await userContextService
             .GetAccessibleUserAsync(userIdResult.Value, cancellationToken)
             .ConfigureAwait(false);

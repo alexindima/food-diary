@@ -3,6 +3,7 @@ using System;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodDiary.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodDiaryDbContext))]
-    partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260718223616_AddGoogleExternalIdentity")]
+    partial class AddGoogleExternalIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -322,9 +325,6 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<string>("LastWebhookEventId")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
-
-                    b.Property<DateTime?>("LastWebhookOccurredAtUtc")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone");
@@ -3399,8 +3399,8 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.Property<string>("AccessToken")
                         .IsRequired()
-                        .HasMaxLength(8192)
-                        .HasColumnType("character varying(8192)");
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
 
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
@@ -3425,8 +3425,8 @@ namespace FoodDiary.Infrastructure.Migrations
                         .HasColumnType("character varying(32)");
 
                     b.Property<string>("RefreshToken")
-                        .HasMaxLength(8192)
-                        .HasColumnType("character varying(8192)");
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
 
                     b.Property<DateTime?>("TokenExpiresAtUtc")
                         .HasColumnType("timestamp with time zone");
@@ -3480,22 +3480,6 @@ namespace FoodDiary.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("WearableSyncEntries");
-                });
-
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Authentication.ConsumedTelegramAssertion", b =>
-                {
-                    b.Property<string>("Fingerprint")
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
-
-                    b.Property<DateTime>("ExpiresAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Fingerprint");
-
-                    b.HasIndex("ExpiresAtUtc");
-
-                    b.ToTable("ConsumedTelegramAssertions", (string)null);
                 });
 
             modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Email.EmailOutboxMessage", b =>

@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Application.Authentication.Models;
@@ -29,9 +30,16 @@ public sealed class GoogleLoginCommandHandler(
         }
 
         GoogleIdentityPayload payload = payloadResult.Value;
-        User? user = await userMutationService.GetByEmailIncludingDeletedAsync(payload.Email, cancellationToken).ConfigureAwait(false);
+        User? user = await userMutationService
+            .GetByGoogleIdentityIncludingDeletedAsync(payload.Issuer, payload.Subject, cancellationToken)
+            .ConfigureAwait(false);
 
         if (user is null) {
+            User? emailOwner = await userMutationService.GetByEmailIncludingDeletedAsync(payload.Email, cancellationToken).ConfigureAwait(false);
+            if (emailOwner is not null) {
+                return Result.Failure<AuthenticationModel>(Errors.Authentication.GoogleAccountLinkRequired);
+            }
+
             user = CreateGoogleUser(payload, passwordHasher);
             user = await userMutationService.AddAsync(user, cancellationToken).ConfigureAwait(false);
         } else {
@@ -55,6 +63,7 @@ public sealed class GoogleLoginCommandHandler(
     private static User CreateGoogleUser(GoogleIdentityPayload payload, IPasswordHasher passwordHasher) {
         string placeholderPasswordHash = passwordHasher.Hash(SecurityTokenGenerator.GenerateUrlSafeToken());
         var user = User.Create(payload.Email, placeholderPasswordHash, hasPassword: false);
+        user.LinkGoogleIdentity(payload.Issuer, payload.Subject);
         user.UpdateGoals(new UserGoalUpdate(
             DailyCalorieTarget: 2000,
             ProteinTarget: 150,

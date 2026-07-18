@@ -51,7 +51,7 @@ public sealed class GoogleTokenValidator(IOptions<GoogleAuthOptions> options, IL
                 ValidAudience = _options.ClientId,
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.FromMinutes(1),
-            }, out _);
+            }, out SecurityToken validatedToken);
 
             string? email = GetClaimValue(principal, ClaimTypes.Email) ??
                         GetClaimValue(principal, "email");
@@ -64,7 +64,15 @@ public sealed class GoogleTokenValidator(IOptions<GoogleAuthOptions> options, IL
                 return Result.Failure<GoogleIdentityPayload>(Errors.Authentication.GoogleEmailNotVerified);
             }
 
+            string? issuer = validatedToken.Issuer;
+            string? subject = GetClaimValue(principal, ClaimTypes.NameIdentifier) ?? GetClaimValue(principal, "sub");
+            if (string.IsNullOrWhiteSpace(issuer) || string.IsNullOrWhiteSpace(subject)) {
+                return Result.Failure<GoogleIdentityPayload>(Errors.Authentication.GoogleInvalidToken);
+            }
+
             return Result.Success(new GoogleIdentityPayload(
+                Issuer: NormalizeIssuer(issuer),
+                Subject: subject,
                 Email: email,
                 FirstName: GetClaimValue(principal, ClaimTypes.GivenName) ?? GetClaimValue(principal, "given_name"),
                 LastName: GetClaimValue(principal, ClaimTypes.Surname) ?? GetClaimValue(principal, "family_name"),
@@ -81,4 +89,9 @@ public sealed class GoogleTokenValidator(IOptions<GoogleAuthOptions> options, IL
     private static string? GetClaimValue(ClaimsPrincipal principal, string claimType) {
         return principal.FindFirst(claimType)?.Value;
     }
+
+    private static string NormalizeIssuer(string issuer) =>
+        string.Equals(issuer, "accounts.google.com", StringComparison.Ordinal)
+            ? "https://accounts.google.com"
+            : issuer;
 }

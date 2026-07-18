@@ -66,6 +66,7 @@ public sealed class GoogleTokenValidatorTests {
         const string clientId = "google-client";
         RsaSecurityKey signingKey = CreateSigningKey();
         string token = CreateGoogleJwt(signingKey, clientId, [
+            new Claim("sub", "google-subject"),
             new Claim("email", "user@example.com"),
             new Claim("email_verified", "true"),
             new Claim("given_name", "Alex"),
@@ -78,6 +79,8 @@ public sealed class GoogleTokenValidatorTests {
 
         Assert.True(result.IsSuccess, result.Error.Message);
         Assert.Equal("user@example.com", result.Value.Email);
+        Assert.Equal("google-subject", result.Value.Subject);
+        Assert.Equal("https://accounts.google.com", result.Value.Issuer);
         Assert.Equal("Alex", result.Value.FirstName);
         Assert.Equal("Smith", result.Value.LastName);
         Assert.Equal("en", result.Value.Locale);

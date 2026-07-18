@@ -3,6 +3,17 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Domain.Entities.Users;
 
 public sealed partial class User {
+    public void LinkGoogleIdentity(string issuer, string subject) {
+        EnsureNotDeleted();
+        GoogleIssuer = string.IsNullOrWhiteSpace(issuer)
+            ? throw new ArgumentException("Google issuer is required.", nameof(issuer))
+            : issuer.Trim();
+        GoogleSubject = string.IsNullOrWhiteSpace(subject)
+            ? throw new ArgumentException("Google subject is required.", nameof(subject))
+            : subject.Trim();
+        SetModified();
+    }
+
     public void CompletePasswordReset(string hashedPassword) {
         EnsureNotDeleted();
         UserSecurityState nextState = GetSecurityState()

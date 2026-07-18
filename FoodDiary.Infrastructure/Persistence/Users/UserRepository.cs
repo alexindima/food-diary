@@ -22,6 +22,10 @@ public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository
     public async Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
         await UsersWithRoles().FirstOrDefaultAsync(u => u.Email == email, cancellationToken).ConfigureAwait(false);
 
+    public async Task<User?> GetByGoogleIdentityIncludingDeletedAsync(string issuer, string subject, CancellationToken cancellationToken = default) =>
+        await UsersWithRoles().FirstOrDefaultAsync(u =>
+            u.GoogleIssuer == issuer && u.GoogleSubject == subject, cancellationToken).ConfigureAwait(false);
+
     public async Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
         await UsersWithRoles().FirstOrDefaultAsync(u =>
             u.Id == id && u.IsActive && u.DeletedAt == null, cancellationToken).ConfigureAwait(false);

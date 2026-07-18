@@ -16,7 +16,8 @@ public sealed class SyncWearableDataCommandHandler(
     IEnumerable<IWearableClient> wearableClients,
     IWearableConnectionWriteRepository connectionRepository,
     IWearableSyncWriteRepository syncRepository,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    IWearableTokenProtector tokenProtector)
     : ICommandHandler<SyncWearableDataCommand, Result<WearableDailySummaryModel>> {
     public async Task<Result<WearableDailySummaryModel>> Handle(
         SyncWearableDataCommand command,
@@ -48,37 +49,64 @@ public sealed class SyncWearableDataCommandHandler(
 
         // Refresh token if expired
         if (connection.IsTokenExpired() && connection.RefreshToken is not null) {
-            WearableTokenResult? refreshResult = await client.RefreshTokenAsync(connection.RefreshToken, cancellationToken).ConfigureAwait(false);
+            string refreshToken = tokenProtector.Unprotect(connection.RefreshToken);
+            WearableTokenResult? refreshResult = await client.RefreshTokenAsync(refreshToken, cancellationToken).ConfigureAwait(false);
             if (refreshResult is null) {
                 connection.Deactivate();
                 await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);
                 return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.AuthFailed(command.Provider));
             }
-            connection.UpdateTokens(refreshResult.AccessToken, refreshResult.RefreshToken, refreshResult.ExpiresAtUtc);
+            string protectedAccessToken = tokenProtector.Protect(refreshResult.AccessToken);
+            string? protectedRefreshToken = refreshResult.RefreshToken is null ? null : tokenProtector.Protect(refreshResult.RefreshToken);
+            connection.UpdateTokens(protectedAccessToken, protectedRefreshToken, refreshResult.ExpiresAtUtc);
             await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);
         }
 
-        IReadOnlyList<WearableDataPoint> dataPoints = await client.FetchDailyDataAsync(connection.AccessToken, command.Date, cancellationToken).ConfigureAwait(false);
+        string accessToken = tokenProtector.Unprotect(connection.AccessToken);
+        IReadOnlyList<WearableDataPoint> dataPoints = await client.FetchDailyDataAsync(accessToken, command.Date, cancellationToken).ConfigureAwait(false);
 
-        foreach (WearableDataPoint point in dataPoints) {
-            WearableSyncEntry? existing = await syncRepository.GetAsync(
-                userIdResult.Value, provider, point.DataType, command.Date, cancellationToken).ConfigureAwait(false);
+        ProtectLegacyTokens(connection, accessToken);
 
-            if (existing is not null) {
-                existing.UpdateValue(point.Value);
-                await syncRepository.UpdateAsync(existing, cancellationToken).ConfigureAwait(false);
-            } else {
-                var entry = WearableSyncEntry.Create(
-                    userIdResult.Value, provider, point.DataType, command.Date, point.Value);
-                await syncRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
-            }
-        }
+        await StoreDataPointsAsync(userIdResult.Value, provider, command.Date, dataPoints, cancellationToken).ConfigureAwait(false);
 
         connection.MarkSynced();
         await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);
 
         WearableDailySummaryModel summary = await BuildSummaryAsync(userIdResult.Value, command.Date, cancellationToken).ConfigureAwait(false);
         return Result.Success(summary);
+    }
+
+    private void ProtectLegacyTokens(WearableConnection connection, string accessToken) {
+        if (tokenProtector.IsProtected(connection.AccessToken) &&
+            (connection.RefreshToken is null || tokenProtector.IsProtected(connection.RefreshToken))) {
+            return;
+        }
+
+        connection.UpdateTokens(
+            tokenProtector.Protect(accessToken),
+            connection.RefreshToken is null ? null : tokenProtector.Protect(tokenProtector.Unprotect(connection.RefreshToken)),
+            connection.TokenExpiresAtUtc);
+    }
+
+    private async Task StoreDataPointsAsync(
+        UserId userId,
+        WearableProvider provider,
+        DateTime date,
+        IReadOnlyList<WearableDataPoint> dataPoints,
+        CancellationToken cancellationToken) {
+        foreach (WearableDataPoint point in dataPoints) {
+            WearableSyncEntry? existing = await syncRepository
+                .GetAsync(userId, provider, point.DataType, date, cancellationToken)
+                .ConfigureAwait(false);
+            if (existing is not null) {
+                existing.UpdateValue(point.Value);
+                await syncRepository.UpdateAsync(existing, cancellationToken).ConfigureAwait(false);
+                continue;
+            }
+
+            var entry = WearableSyncEntry.Create(userId, provider, point.DataType, date, point.Value);
+            await syncRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
+        }
     }
 
     private async Task<WearableDailySummaryModel> BuildSummaryAsync(

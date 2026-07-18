@@ -20,6 +20,8 @@ public sealed partial class User : AggregateRoot<UserId> {
     public string Email { get; private set; } = string.Empty;
     public string Password { get; private set; } = string.Empty;
     public bool HasPassword { get; private set; }
+    public string? GoogleIssuer { get; private set; }
+    public string? GoogleSubject { get; private set; }
     public string? RefreshToken { get; private set; }
     public bool IsEmailConfirmed { get; private set; }
     public string? EmailConfirmationTokenHash { get; private set; }

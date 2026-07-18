@@ -195,7 +195,8 @@ public sealed class YooKassaBillingGateway(
             ParseAmount(payment.Amount?.Value),
             payment.Amount?.Currency,
             JsonSerializer.Serialize(payment, JsonOptions),
-            userId);
+            userId,
+            payment.CapturedAt ?? payment.CreatedAt);
     }
 
     private async Task<Result<YooKassaPayment>> FetchPaymentAsync(string paymentId, CancellationToken cancellationToken) {

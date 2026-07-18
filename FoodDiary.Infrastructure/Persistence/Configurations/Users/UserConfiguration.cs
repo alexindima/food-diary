@@ -28,6 +28,11 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             value => value.HasValue ? new ImageAssetId(value.Value) : null);
 
         builder.HasIndex(e => e.Email).IsUnique();
+        builder.HasIndex(e => new { e.GoogleIssuer, e.GoogleSubject })
+            .IsUnique()
+            .HasFilter("\"GoogleIssuer\" IS NOT NULL AND \"GoogleSubject\" IS NOT NULL");
+        builder.Property(e => e.GoogleIssuer).HasMaxLength(200);
+        builder.Property(e => e.GoogleSubject).HasMaxLength(255);
         builder.Property(e => e.IsActive).HasDefaultValue(value: true);
         builder.Property(e => e.IsEmailConfirmed).HasDefaultValue(value: false);
         builder.Property(e => e.HasPassword).HasDefaultValue(value: true);

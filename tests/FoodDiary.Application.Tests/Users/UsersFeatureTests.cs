@@ -2,6 +2,7 @@ using System.Text.Json;
 using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
@@ -33,7 +34,6 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Results;
 using FluentValidation.Results;
@@ -42,6 +42,24 @@ namespace FoodDiary.Application.Tests.Users;
 
 [ExcludeFromCodeCoverage]
 public partial class UsersFeatureTests {
+    private static ChangePasswordCommandHandler CreateChangePasswordHandler(
+        IUserContextService userContextService,
+        IPasswordHasher passwordHasher) =>
+        new(
+            userContextService,
+            passwordHasher,
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            TimeProvider.System);
+
+    private static SetPasswordCommandHandler CreateSetPasswordHandler(
+        IUserContextService userContextService,
+        IPasswordHasher passwordHasher) =>
+        new(
+            userContextService,
+            passwordHasher,
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            TimeProvider.System);
+
 
     [Fact]
     public void UserMappings_ToModel_UsesDefaultPreferencesWhenMissing() {
@@ -111,7 +129,7 @@ public partial class UsersFeatureTests {
 
     [Fact]
     public async Task ChangePasswordHandler_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new ChangePasswordCommandHandler(
+        ChangePasswordCommandHandler handler = CreateChangePasswordHandler(
             new SingleUserRepository(User.Create("user@example.com", "hash")),
             new PassthroughPasswordHasher());
 
@@ -126,7 +144,7 @@ public partial class UsersFeatureTests {
     [Fact]
     public async Task ChangePasswordHandler_WithWrongCurrentPassword_ReturnsInvalidPassword() {
         var user = User.Create("wrong-password@example.com", "old-hash");
-        var handler = new ChangePasswordCommandHandler(
+        ChangePasswordCommandHandler handler = CreateChangePasswordHandler(
             new SingleUserRepository(user),
             new PassthroughPasswordHasher());
 
@@ -143,7 +161,7 @@ public partial class UsersFeatureTests {
     public async Task ChangePasswordHandler_WithValidCurrentPassword_UpdatesPassword() {
         var user = User.Create("change-password@example.com", "old-password");
         var repository = new SingleUserRepository(user);
-        var handler = new ChangePasswordCommandHandler(
+        ChangePasswordCommandHandler handler = CreateChangePasswordHandler(
             repository,
             new PassthroughPasswordHasher());
 
@@ -219,7 +237,7 @@ public partial class UsersFeatureTests {
     public async Task ChangePasswordHandler_WithInactiveUser_ReturnsInvalidToken() {
         var user = User.Create("inactive@example.com", "hash");
         user.Deactivate();
-        var handler = new ChangePasswordCommandHandler(
+        ChangePasswordCommandHandler handler = CreateChangePasswordHandler(
             new SingleUserRepository(user),
             new PassthroughPasswordHasher());
 
@@ -241,7 +259,7 @@ public partial class UsersFeatureTests {
         userContextService
             .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
-        var handler = new ChangePasswordCommandHandler(
+        ChangePasswordCommandHandler handler = CreateChangePasswordHandler(
             userContextService,
             new PassthroughPasswordHasher());
 
@@ -256,7 +274,7 @@ public partial class UsersFeatureTests {
     [Fact]
     public async Task ChangePasswordHandler_WithoutConfiguredPassword_ReturnsConflict() {
         var user = User.Create("google@example.com", "hash", hasPassword: false);
-        var handler = new ChangePasswordCommandHandler(
+        ChangePasswordCommandHandler handler = CreateChangePasswordHandler(
             new SingleUserRepository(user),
             new PassthroughPasswordHasher());
 
@@ -271,7 +289,7 @@ public partial class UsersFeatureTests {
     [Fact]
     public async Task SetPasswordHandler_ForGoogleOnlyAccount_SetsPassword() {
         var user = User.Create("google@example.com", "hash", hasPassword: false);
-        var handler = new SetPasswordCommandHandler(
+        SetPasswordCommandHandler handler = CreateSetPasswordHandler(
             new SingleUserRepository(user),
             new PassthroughPasswordHasher());
 
@@ -287,7 +305,7 @@ public partial class UsersFeatureTests {
     [Fact]
     public async Task SetPasswordHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var user = User.Create("set-password-empty@example.com", "hash", hasPassword: false);
-        var handler = new SetPasswordCommandHandler(
+        SetPasswordCommandHandler handler = CreateSetPasswordHandler(
             new SingleUserRepository(user),
             new PassthroughPasswordHasher());
 
@@ -303,7 +321,7 @@ public partial class UsersFeatureTests {
     public async Task SetPasswordHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("set-password-deleted@example.com", "hash", hasPassword: false);
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new SetPasswordCommandHandler(
+        SetPasswordCommandHandler handler = CreateSetPasswordHandler(
             new SingleUserRepository(user),
             new PassthroughPasswordHasher());
 
@@ -318,7 +336,7 @@ public partial class UsersFeatureTests {
     [Fact]
     public async Task SetPasswordHandler_WhenPasswordAlreadyExists_ReturnsConflict() {
         var user = User.Create("user@example.com", "hash");
-        var handler = new SetPasswordCommandHandler(
+        SetPasswordCommandHandler handler = CreateSetPasswordHandler(
             new SingleUserRepository(user),
             new PassthroughPasswordHasher());
 
@@ -333,7 +351,7 @@ public partial class UsersFeatureTests {
     [Fact]
     public async Task SetPasswordHandler_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
         var userId = UserId.New();
-        var handler = new SetPasswordCommandHandler(
+        SetPasswordCommandHandler handler = CreateSetPasswordHandler(
             CreateAccessCheckedFailingUserContext(userId),
             new PassthroughPasswordHasher());
 

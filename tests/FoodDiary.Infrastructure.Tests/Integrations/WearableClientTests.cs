@@ -64,7 +64,9 @@ public sealed class WearableClientTests {
                 return JsonResponse("""{"access_token":"access","refresh_token":"refresh","expires_in":3600}""");
             }
 
-            Assert.Equal("https://www.googleapis.com/oauth2/v1/userinfo?access_token=access", request.RequestUri.AbsoluteUri);
+            Assert.Equal("https://www.googleapis.com/oauth2/v1/userinfo", request.RequestUri.AbsoluteUri);
+            Assert.Equal("Bearer", request.Headers.Authorization?.Scheme);
+            Assert.Equal("access", request.Headers.Authorization?.Parameter);
             return JsonResponse("""{"id":"google-user"}""");
         });
         GoogleFitClient client = CreateGoogleFitClient(handler);

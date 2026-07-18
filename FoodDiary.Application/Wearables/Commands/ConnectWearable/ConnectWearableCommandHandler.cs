@@ -16,7 +16,8 @@ public sealed class ConnectWearableCommandHandler(
     IEnumerable<IWearableClient> wearableClients,
     IWearableConnectionWriteRepository connectionRepository,
     IWearableOAuthStateService stateService,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    IWearableTokenProtector tokenProtector)
     : ICommandHandler<ConnectWearableCommand, Result<WearableConnectionModel>> {
     public async Task<Result<WearableConnectionModel>> Handle(
         ConnectWearableCommand command,
@@ -50,16 +51,18 @@ public sealed class ConnectWearableCommandHandler(
             return Result.Failure<WearableConnectionModel>(Errors.Wearable.AuthFailed(command.Provider));
         }
 
+        string protectedAccessToken = tokenProtector.Protect(tokenResult.AccessToken);
+        string? protectedRefreshToken = tokenResult.RefreshToken is null ? null : tokenProtector.Protect(tokenResult.RefreshToken);
         WearableConnection? existing = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
-            existing.UpdateTokens(tokenResult.AccessToken, tokenResult.RefreshToken, tokenResult.ExpiresAtUtc);
+            existing.UpdateTokens(protectedAccessToken, protectedRefreshToken, tokenResult.ExpiresAtUtc);
             if (!existing.IsActive) {
                 existing = WearableConnection.Create(
                     userIdResult.Value,
                     provider,
                     tokenResult.ExternalUserId,
-                    tokenResult.AccessToken,
-                    tokenResult.RefreshToken,
+                    protectedAccessToken,
+                    protectedRefreshToken,
                     tokenResult.ExpiresAtUtc);
             }
             await connectionRepository.UpdateAsync(existing, cancellationToken).ConfigureAwait(false);
@@ -70,8 +73,8 @@ public sealed class ConnectWearableCommandHandler(
             userIdResult.Value,
             provider,
             tokenResult.ExternalUserId,
-            tokenResult.AccessToken,
-            tokenResult.RefreshToken,
+            protectedAccessToken,
+            protectedRefreshToken,
             tokenResult.ExpiresAtUtc);
 
         await connectionRepository.AddAsync(connection, cancellationToken).ConfigureAwait(false);

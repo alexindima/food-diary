@@ -1,7 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { form, FormField, maxLength, min, required } from '@angular/forms/signals';
-import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -42,12 +41,11 @@ export class AdminLessonEditDialogComponent {
     protected readonly data = inject<AdminLesson>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<AdminLessonEditDialogComponent, boolean>>(FdUiDialogRef);
     private readonly lessonsFacade = inject(AdminLessonsFacade);
-    private readonly sanitizer = inject(DomSanitizer);
 
     protected readonly isNew = (this.data as AdminLesson & { isNew?: boolean }).isNew === true;
     protected readonly isSaving = signal(false);
     protected readonly showPreview = signal(false);
-    protected readonly previewHtml = computed<SafeHtml>(() => this.sanitizer.bypassSecurityTrustHtml(this.formModel().content));
+    protected readonly previewHtml = computed(() => this.formModel().content);
     protected readonly contentLength = computed(() => this.formModel().content.length);
     protected readonly contentMaxLength = CONTENT_MAX_LENGTH;
     protected readonly contentRemaining = computed(() => this.contentMaxLength - this.contentLength());

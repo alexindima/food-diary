@@ -165,7 +165,8 @@ public partial class BillingFeatureTests {
             trialEndUtc: null,
             eventId,
             eventCreatedAtUtc,
-            metadataJson);
+            metadataJson,
+            eventCreatedAtUtc);
         return subscription;
     }
 

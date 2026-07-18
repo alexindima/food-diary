@@ -46,7 +46,8 @@ export class AdminAuthService {
         }
 
         const params = new URLSearchParams(this.document.location.search);
-        const code = params.get('code');
+        const fragmentParams = new URLSearchParams(this.document.location.hash.replace(/^#/, ''));
+        const code = fragmentParams.get('code') ?? params.get('code');
         if (code === null || code.length === 0) {
             return;
         }
@@ -210,14 +211,18 @@ export class AdminAuthService {
 
         try {
             const url = new URL(decoded, this.document.location.origin);
-            const code = url.searchParams.get('code');
+            const fragmentParams = new URLSearchParams(url.hash.replace(/^#/, ''));
+            const code = fragmentParams.get('code') ?? url.searchParams.get('code');
             if (code === null || code.length === 0) {
                 return null;
             }
 
             url.searchParams.delete('code');
+            fragmentParams.delete('code');
+            url.hash = fragmentParams.toString();
             const cleanedSearch = url.searchParams.toString();
-            const cleanedUrl = cleanedSearch.length > 0 ? `${url.pathname}?${cleanedSearch}` : url.pathname;
+            const cleanedHash = url.hash.length > 0 ? url.hash : '';
+            const cleanedUrl = `${cleanedSearch.length > 0 ? `${url.pathname}?${cleanedSearch}` : url.pathname}${cleanedHash}`;
             return { code, cleanedUrl };
         } catch {
             return null;

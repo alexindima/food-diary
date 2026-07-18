@@ -48,7 +48,8 @@ public sealed class BillingWebhookSubscriptionWriter(
             webhookEvent.TrialEndUtc,
             webhookEvent.EventId,
             dateTimeProvider.GetUtcNow().UtcDateTime,
-            webhookEvent.ProviderMetadataJson);
+            webhookEvent.ProviderMetadataJson,
+            webhookEvent.OccurredAtUtc);
 
         if (subscription is null) {
             await billingSubscriptionRepository.AddAsync(currentSubscription, cancellationToken).ConfigureAwait(false);

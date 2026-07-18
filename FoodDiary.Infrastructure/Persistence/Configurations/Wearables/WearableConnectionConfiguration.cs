@@ -21,8 +21,8 @@ internal sealed class WearableConnectionConfiguration : IEntityTypeConfiguration
             .HasMaxLength(32);
 
         builder.Property(e => e.ExternalUserId).HasMaxLength(256).IsRequired();
-        builder.Property(e => e.AccessToken).HasMaxLength(2048).IsRequired();
-        builder.Property(e => e.RefreshToken).HasMaxLength(2048);
+        builder.Property(e => e.AccessToken).HasMaxLength(8192).IsRequired();
+        builder.Property(e => e.RefreshToken).HasMaxLength(8192);
 
         builder.HasIndex(e => new { e.UserId, e.Provider }).IsUnique();
 

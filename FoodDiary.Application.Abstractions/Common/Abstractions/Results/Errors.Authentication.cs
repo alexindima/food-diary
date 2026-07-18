@@ -29,6 +29,11 @@ public static partial class Errors {
             "Google account email is not verified.",
             Kind: ErrorKind.Unauthorized);
 
+        public static Error GoogleAccountLinkRequired => new(
+            "Authentication.GoogleAccountLinkRequired",
+            "Sign in with your existing account before linking Google.",
+            Kind: ErrorKind.Conflict);
+
         public static Error AccountDeleted => new(
             "Authentication.AccountDeleted",
             "Account is scheduled for deletion.",
@@ -47,6 +52,11 @@ public static partial class Errors {
         public static Error TelegramAuthExpired => new(
             "Authentication.TelegramAuthExpired",
             "Telegram auth data has expired.",
+            Kind: ErrorKind.Unauthorized);
+
+        public static Error TelegramAssertionAlreadyUsed => new(
+            "Authentication.TelegramAssertionAlreadyUsed",
+            "Telegram authentication data has already been used.",
             Kind: ErrorKind.Unauthorized);
 
         public static Error TelegramNotLinked => new(

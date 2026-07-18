@@ -27,7 +27,7 @@ public class WearablesFeatureTests {
 
         var stateService = new StubWearableOAuthStateService();
         string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
-        var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService());
+        var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
         Result<WearableConnectionModel> result = await handler.Handle(
             new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code", state),
             CancellationToken.None);
@@ -44,7 +44,8 @@ public class WearablesFeatureTests {
             [],
             new InMemoryWearableConnectionRepository(),
             new StubWearableOAuthStateService(),
-            CreateCurrentUserAccessService());
+            CreateCurrentUserAccessService(),
+            CreateTokenProtector());
 
         Result<WearableConnectionModel> result = await handler.Handle(
             new ConnectWearableCommand(Guid.NewGuid(), "InvalidProvider", "code", "state"),
@@ -59,7 +60,8 @@ public class WearablesFeatureTests {
             [],
             new InMemoryWearableConnectionRepository(),
             new StubWearableOAuthStateService(),
-            CreateCurrentUserAccessService());
+            CreateCurrentUserAccessService(),
+            CreateTokenProtector());
 
         Result<WearableConnectionModel> result = await handler.Handle(
             new ConnectWearableCommand(Guid.Empty, "Fitbit", "code", "state"),
@@ -75,7 +77,8 @@ public class WearablesFeatureTests {
             [],
             new InMemoryWearableConnectionRepository(),
             new StubWearableOAuthStateService(),
-            CreateCurrentUserAccessService());
+            CreateCurrentUserAccessService(),
+            CreateTokenProtector());
 
         Result<WearableConnectionModel> result = await handler.Handle(
             new ConnectWearableCommand(Guid.NewGuid(), "Fitbit", "code", "state"),
@@ -91,7 +94,7 @@ public class WearablesFeatureTests {
         var userId = UserId.New();
         var stateService = new StubWearableOAuthStateService();
         string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
-        var handler = new ConnectWearableCommandHandler([client], new InMemoryWearableConnectionRepository(), stateService, CreateCurrentUserAccessService());
+        var handler = new ConnectWearableCommandHandler([client], new InMemoryWearableConnectionRepository(), stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
 
         Result<WearableConnectionModel> result = await handler.Handle(
             new ConnectWearableCommand(userId.Value, "Fitbit", "bad-code", state),
@@ -114,7 +117,7 @@ public class WearablesFeatureTests {
 
         var stateService = new StubWearableOAuthStateService();
         string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
-        var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService());
+        var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
         Result<WearableConnectionModel> result = await handler.Handle(
             new ConnectWearableCommand(userId.Value, "Fitbit", "code", state),
             CancellationToken.None);
@@ -136,7 +139,7 @@ public class WearablesFeatureTests {
 
         var stateService = new StubWearableOAuthStateService();
         string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
-        var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService());
+        var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
         Result<WearableConnectionModel> result = await handler.Handle(
             new ConnectWearableCommand(userId.Value, "Fitbit", "code", state),
             CancellationToken.None);
@@ -156,7 +159,8 @@ public class WearablesFeatureTests {
             [client],
             new InMemoryWearableConnectionRepository(),
             new StubWearableOAuthStateService(),
-            CreateCurrentUserAccessService());
+            CreateCurrentUserAccessService(),
+            CreateTokenProtector());
 
         Result<WearableConnectionModel> result = await handler.Handle(
             new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code", "tampered-state"),
@@ -370,7 +374,7 @@ public class WearablesFeatureTests {
                 new WearableDataPoint(WearableDataType.CaloriesBurned, 250),
             ],
         };
-        var handler = new SyncWearableDataCommandHandler([client], connectionRepository, syncRepository, CreateCurrentUserAccessService());
+        var handler = new SyncWearableDataCommandHandler([client], connectionRepository, syncRepository, CreateCurrentUserAccessService(), CreateTokenProtector());
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(userId.Value, "Fitbit", date),
@@ -389,7 +393,8 @@ public class WearablesFeatureTests {
             [],
             new InMemoryWearableConnectionRepository(),
             new InMemoryWearableSyncRepository(),
-            CreateCurrentUserAccessService());
+            CreateCurrentUserAccessService(),
+            CreateTokenProtector());
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(Guid.Empty, "Fitbit", DateTime.UtcNow.Date),
@@ -405,7 +410,8 @@ public class WearablesFeatureTests {
             [],
             new InMemoryWearableConnectionRepository(),
             new InMemoryWearableSyncRepository(),
-            CreateCurrentUserAccessService());
+            CreateCurrentUserAccessService(),
+            CreateTokenProtector());
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(Guid.NewGuid(), "Unknown", DateTime.UtcNow.Date),
@@ -421,7 +427,8 @@ public class WearablesFeatureTests {
             [new StubWearableClient(WearableProvider.Fitbit, tokenResult: null)],
             new InMemoryWearableConnectionRepository(),
             new InMemoryWearableSyncRepository(),
-            CreateCurrentUserAccessService());
+            CreateCurrentUserAccessService(),
+            CreateTokenProtector());
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(Guid.NewGuid(), "Fitbit", DateTime.UtcNow.Date),
@@ -443,7 +450,8 @@ public class WearablesFeatureTests {
             [new StubWearableClient(WearableProvider.Fitbit, tokenResult: null)],
             connectionRepository,
             new InMemoryWearableSyncRepository(),
-            CreateCurrentUserAccessService());
+            CreateCurrentUserAccessService(),
+            CreateTokenProtector());
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(userId.Value, "Fitbit", DateTime.UtcNow.Date),
@@ -464,7 +472,8 @@ public class WearablesFeatureTests {
             [],
             connectionRepository,
             new InMemoryWearableSyncRepository(),
-            CreateCurrentUserAccessService());
+            CreateCurrentUserAccessService(),
+            CreateTokenProtector());
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(userId.Value, "Fitbit", DateTime.UtcNow.Date),
@@ -485,15 +494,15 @@ public class WearablesFeatureTests {
         var client = new StubWearableClient(WearableProvider.Fitbit, tokenResult: null) {
             RefreshTokenResult = new WearableTokenResult("new-access", "new-refresh", "ext", refreshExpiresAtUtc),
         };
-        var handler = new SyncWearableDataCommandHandler([client], connectionRepository, new InMemoryWearableSyncRepository(), CreateCurrentUserAccessService());
+        var handler = new SyncWearableDataCommandHandler([client], connectionRepository, new InMemoryWearableSyncRepository(), CreateCurrentUserAccessService(), CreateTokenProtector());
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(userId.Value, "Fitbit", DateTime.UtcNow.Date),
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.Equal("new-access", connection.AccessToken);
-        Assert.Equal("new-refresh", connection.RefreshToken);
+        Assert.Equal("protected:new-access", connection.AccessToken);
+        Assert.Equal("protected:new-refresh", connection.RefreshToken);
         Assert.Equal(2, connectionRepository.UpdateCallCount);
     }
 
@@ -514,7 +523,7 @@ public class WearablesFeatureTests {
                 new WearableDataPoint(WearableDataType.SleepMinutes, 420),
             ],
         };
-        var handler = new SyncWearableDataCommandHandler([client], connectionRepository, syncRepository, CreateCurrentUserAccessService());
+        var handler = new SyncWearableDataCommandHandler([client], connectionRepository, syncRepository, CreateCurrentUserAccessService(), CreateTokenProtector());
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(userId.Value, "Fitbit", date),
@@ -538,7 +547,7 @@ public class WearablesFeatureTests {
         var client = new StubWearableClient(WearableProvider.Fitbit, tokenResult: null) {
             RefreshTokenResult = null,
         };
-        var handler = new SyncWearableDataCommandHandler([client], connectionRepository, new InMemoryWearableSyncRepository(), CreateCurrentUserAccessService());
+        var handler = new SyncWearableDataCommandHandler([client], connectionRepository, new InMemoryWearableSyncRepository(), CreateCurrentUserAccessService(), CreateTokenProtector());
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(userId.Value, "Fitbit", DateTime.UtcNow.Date),
@@ -563,6 +572,17 @@ public class WearablesFeatureTests {
             .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(accessError));
         return service;
+    }
+
+    private static IWearableTokenProtector CreateTokenProtector() => new StubWearableTokenProtector();
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubWearableTokenProtector : IWearableTokenProtector {
+        private const string Prefix = "protected:";
+
+        public bool IsProtected(string token) => token.StartsWith(Prefix, StringComparison.Ordinal);
+        public string Protect(string token) => IsProtected(token) ? token : Prefix + token;
+        public string Unprotect(string protectedToken) => IsProtected(protectedToken) ? protectedToken[Prefix.Length..] : protectedToken;
     }
 
     [ExcludeFromCodeCoverage]

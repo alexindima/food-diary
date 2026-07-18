@@ -17,8 +17,7 @@ public sealed class RefreshTokenCommandHandler(
     IJwtTokenGenerator jwtTokenGenerator,
     IPasswordHasher passwordHasher,
     IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
-    IAuthenticationTokenService authenticationTokenService,
-    TimeProvider dateTimeProvider) : ICommandHandler<RefreshTokenCommand, Result<AuthenticationModel>> {
+    IAuthenticationTokenService authenticationTokenService) : ICommandHandler<RefreshTokenCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(RefreshTokenCommand command, CancellationToken cancellationToken) {
         (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validationResult = jwtTokenGenerator.ValidateToken(command.RefreshToken);
         if (validationResult == null) {
@@ -41,8 +40,7 @@ public sealed class RefreshTokenCommandHandler(
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
-        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
-        if (!IsRefreshTokenValid(command.RefreshToken, session, nowUtc)) {
+        if (!VerifyRefreshToken(command.RefreshToken, session.RefreshTokenHash)) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
@@ -52,16 +50,6 @@ public sealed class RefreshTokenCommandHandler(
             .ConfigureAwait(false);
         return Result.Success(currentUser.ToAuthenticationModel(tokens));
     }
-
-    private bool IsRefreshTokenValid(string refreshToken, UserRefreshTokenSession session, DateTime nowUtc) =>
-        VerifyRefreshToken(refreshToken, session.RefreshTokenHash) ||
-        IsPreviousRefreshTokenValid(refreshToken, session, nowUtc);
-
-    private bool IsPreviousRefreshTokenValid(string refreshToken, UserRefreshTokenSession session, DateTime nowUtc) =>
-        session.PreviousRefreshTokenHash is { Length: > 0 } previousHash &&
-        session.PreviousRefreshTokenValidUntilUtc is { } validUntilUtc &&
-        validUntilUtc > nowUtc &&
-        VerifyRefreshToken(refreshToken, previousHash);
 
     private bool VerifyRefreshToken(string refreshToken, string refreshTokenHash) =>
         SecurityTokenGenerator.IsFastStorageHash(refreshTokenHash)

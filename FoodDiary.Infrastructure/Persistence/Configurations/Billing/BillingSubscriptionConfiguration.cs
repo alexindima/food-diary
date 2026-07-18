@@ -77,6 +77,9 @@ internal sealed class BillingSubscriptionConfiguration : IEntityTypeConfiguratio
         builder.Property(e => e.LastWebhookEventId)
             .HasMaxLength(255);
 
+        builder.Property(e => e.LastWebhookOccurredAtUtc)
+            .HasColumnType("timestamp with time zone");
+
         builder.Property(e => e.LastSyncedAtUtc)
             .HasColumnType("timestamp with time zone");
 

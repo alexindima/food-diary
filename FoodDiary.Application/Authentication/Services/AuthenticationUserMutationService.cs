@@ -15,6 +15,9 @@ internal sealed class AuthenticationUserMutationService(
     public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
         userDirectoryService.GetByEmailIncludingDeletedAsync(email, cancellationToken);
 
+    public Task<User?> GetByGoogleIdentityIncludingDeletedAsync(string issuer, string subject, CancellationToken cancellationToken = default) =>
+        userDirectoryService.GetByGoogleIdentityIncludingDeletedAsync(issuer, subject, cancellationToken);
+
     public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
         userDirectoryService.GetByIdAsync(userId, cancellationToken);
 

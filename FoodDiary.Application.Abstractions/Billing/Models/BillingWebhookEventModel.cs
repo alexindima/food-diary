@@ -18,4 +18,5 @@ public sealed record BillingWebhookEventModel(
     decimal? Amount,
     string? Currency,
     string? ProviderMetadataJson,
-    Guid? UserId);
+    Guid? UserId,
+    DateTime? OccurredAtUtc = null);

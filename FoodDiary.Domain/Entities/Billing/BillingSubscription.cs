@@ -23,6 +23,7 @@ public sealed class BillingSubscription : Entity<Guid> {
     public DateTime? NextBillingAttemptUtc { get; private set; }
     public string? ProviderMetadataJson { get; private set; }
     public string? LastWebhookEventId { get; private set; }
+    public DateTime? LastWebhookOccurredAtUtc { get; private set; }
     public DateTime? LastSyncedAtUtc { get; private set; }
     public bool PremiumRoleManagedByBilling { get; private set; }
 
@@ -79,7 +80,8 @@ public sealed class BillingSubscription : Entity<Guid> {
         DateTime? trialEndUtc,
         string webhookEventId,
         DateTime syncedAtUtc,
-        string? providerMetadataJson = null) {
+        string? providerMetadataJson = null,
+        DateTime? webhookOccurredAtUtc = null) {
         Provider = NormalizeProvider(provider);
         ExternalSubscriptionId = NormalizeOptional(externalSubscriptionId);
         ExternalPaymentMethodId = NormalizeOptional(externalPaymentMethodId);
@@ -95,6 +97,7 @@ public sealed class BillingSubscription : Entity<Guid> {
         NextBillingAttemptUtc = ResolveNextBillingAttemptUtc(Status, CancelAtPeriodEnd, CurrentPeriodEndUtc);
         ProviderMetadataJson = NormalizeOptional(providerMetadataJson);
         LastWebhookEventId = NormalizeRequired(webhookEventId, nameof(webhookEventId));
+        LastWebhookOccurredAtUtc = NormalizeOptionalUtc(webhookOccurredAtUtc, nameof(webhookOccurredAtUtc));
         LastSyncedAtUtc = NormalizeRequiredUtc(syncedAtUtc, nameof(syncedAtUtc));
         SetModified(LastSyncedAtUtc.Value);
     }

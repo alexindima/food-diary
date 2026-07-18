@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Application.Authentication.Models;
@@ -13,6 +14,7 @@ namespace FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
 public sealed class TelegramLoginWidgetCommandHandler(
     IAuthenticationUserLookupService userLookupService,
     ITelegramLoginWidgetValidator telegramLoginWidgetValidator,
+    ITelegramAssertionReplayGuard replayGuard,
     IAuthenticationTokenService authenticationTokenService) : ICommandHandler<TelegramLoginWidgetCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(TelegramLoginWidgetCommand command, CancellationToken cancellationToken) {
         var widgetData = new TelegramLoginWidgetData(
@@ -27,6 +29,13 @@ public sealed class TelegramLoginWidgetCommandHandler(
         Result<TelegramInitData> validationResult = telegramLoginWidgetValidator.ValidateLoginWidget(widgetData);
         if (!validationResult.IsSuccess) {
             return Result.Failure<AuthenticationModel>(validationResult.Error);
+        }
+
+        bool consumed = await replayGuard
+            .TryConsumeAsync("widget:" + command.Hash, validationResult.Value.AuthDateUtc.AddDays(1), cancellationToken)
+            .ConfigureAwait(false);
+        if (!consumed) {
+            return Result.Failure<AuthenticationModel>(Errors.Authentication.TelegramAssertionAlreadyUsed);
         }
 
         User? user = await userLookupService.GetByTelegramUserIdAsync(validationResult.Value.UserId, cancellationToken).ConfigureAwait(false);

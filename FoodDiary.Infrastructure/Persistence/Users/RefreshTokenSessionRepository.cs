@@ -28,4 +28,17 @@ public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : 
         context.UserRefreshTokenSessions.Update(session);
         return Task.CompletedTask;
     }
+
+    public async Task RevokeAllAsync(
+        UserId userId,
+        DateTime revokedAtUtc,
+        CancellationToken cancellationToken = default) {
+        List<UserRefreshTokenSession> sessions = await context.UserRefreshTokenSessions
+            .Where(session => session.UserId == userId && session.RevokedAtUtc == null)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+        foreach (UserRefreshTokenSession session in sessions) {
+            session.Revoke(revokedAtUtc);
+        }
+    }
 }

@@ -7,6 +7,8 @@ namespace FoodDiary.Infrastructure.Persistence.Configurations.Authentication;
 
 internal sealed class UserRefreshTokenSessionConfiguration : IEntityTypeConfiguration<UserRefreshTokenSession> {
     public void Configure(EntityTypeBuilder<UserRefreshTokenSession> builder) {
+        builder.Property<uint>("xmin").IsRowVersion();
+
         builder.Property(e => e.UserId).HasConversion(
             id => id.Value,
             value => new UserId(value));

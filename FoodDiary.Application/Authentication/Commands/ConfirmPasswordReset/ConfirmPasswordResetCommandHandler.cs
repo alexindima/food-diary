@@ -18,6 +18,7 @@ public sealed class ConfirmPasswordResetCommandHandler(
     IPasswordHasher passwordHasher,
     TimeProvider dateTimeProvider,
     IAuthenticationTokenService authenticationTokenService,
+    IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
     IAuditLogger auditLogger)
     : ICommandHandler<ConfirmPasswordResetCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(ConfirmPasswordResetCommand command, CancellationToken cancellationToken) {
@@ -47,6 +48,10 @@ public sealed class ConfirmPasswordResetCommandHandler(
 
         string hashedPassword = passwordHasher.Hash(command.NewPassword);
         user.CompletePasswordReset(hashedPassword);
+
+        await refreshTokenSessionRepository
+            .RevokeAllAsync(userId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
+            .ConfigureAwait(false);
 
         IssuedAuthenticationTokens tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken).ConfigureAwait(false);
 

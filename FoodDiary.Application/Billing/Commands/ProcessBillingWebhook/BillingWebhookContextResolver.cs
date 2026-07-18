@@ -26,6 +26,12 @@ public sealed class BillingWebhookContextResolver(
             return Result.Success<BillingWebhookProcessingContext?>(value: null);
         }
 
+        if (subscription?.LastWebhookOccurredAtUtc is DateTime lastOccurredAtUtc &&
+            webhookEvent.OccurredAtUtc is DateTime occurredAtUtc &&
+            occurredAtUtc <= lastOccurredAtUtc) {
+            return Result.Success<BillingWebhookProcessingContext?>(value: null);
+        }
+
         User? user = await ResolveUserAsync(subscription, webhookEvent.UserId, cancellationToken).ConfigureAwait(false);
         return user is null
             ? Result.Failure<BillingWebhookProcessingContext?>(

@@ -26,7 +26,7 @@ public sealed class RefreshTokenCommandHandlerTests {
             user.Id,
             $"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("current-refresh-token")}");
         var authTokenService = new FakeAuthenticationTokenService();
-        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, refreshSessions, authTokenService, new FixedDateTimeProvider());
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, refreshSessions, authTokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
@@ -50,7 +50,7 @@ public sealed class RefreshTokenCommandHandlerTests {
             user.Id,
             $"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("remember-refresh-token")}");
         var authTokenService = new FakeAuthenticationTokenService();
-        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, refreshSessions, authTokenService, new FixedDateTimeProvider());
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, refreshSessions, authTokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("remember-refresh-token"), CancellationToken.None);
 
@@ -70,7 +70,7 @@ public sealed class RefreshTokenCommandHandlerTests {
             user.Id,
             $"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("other-refresh-token")}");
         var authTokenService = new FakeAuthenticationTokenService();
-        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, refreshSessions, authTokenService, new FixedDateTimeProvider());
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, refreshSessions, authTokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
@@ -86,7 +86,7 @@ public sealed class RefreshTokenCommandHandlerTests {
         var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
         var hasher = new FakePasswordHasher();
         var authTokenService = new FakeAuthenticationTokenService();
-        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, new InMemoryRefreshTokenSessionRepository(), authTokenService, new FixedDateTimeProvider());
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, new InMemoryRefreshTokenSessionRepository(), authTokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("invalid-refresh-token"), CancellationToken.None);
 
@@ -102,7 +102,7 @@ public sealed class RefreshTokenCommandHandlerTests {
         var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
         var hasher = new FakePasswordHasher();
         var authTokenService = new FakeAuthenticationTokenService();
-        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, new InMemoryRefreshTokenSessionRepository(), authTokenService, new FixedDateTimeProvider());
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, new InMemoryRefreshTokenSessionRepository(), authTokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("refresh-token-without-session"), CancellationToken.None);
 
@@ -119,7 +119,7 @@ public sealed class RefreshTokenCommandHandlerTests {
         var jwt = new FakeJwtTokenGenerator(jwtUser.Id, jwtUser.Email);
         var hasher = new FakePasswordHasher();
         var authTokenService = new FakeAuthenticationTokenService();
-        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, new InMemoryRefreshTokenSessionRepository(), authTokenService, new FixedDateTimeProvider());
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, new InMemoryRefreshTokenSessionRepository(), authTokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
@@ -135,7 +135,7 @@ public sealed class RefreshTokenCommandHandlerTests {
         var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
         var hasher = new FakePasswordHasher();
         var authTokenService = new FakeAuthenticationTokenService();
-        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, new InMemoryRefreshTokenSessionRepository(), authTokenService, new FixedDateTimeProvider());
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, new InMemoryRefreshTokenSessionRepository(), authTokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
@@ -156,7 +156,7 @@ public sealed class RefreshTokenCommandHandlerTests {
             user.Id,
             SecurityTokenGenerator.HashForStorage("current-refresh-token"));
         var authTokenService = new FakeAuthenticationTokenService();
-        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, refreshSessions, authTokenService, new FixedDateTimeProvider());
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, refreshSessions, authTokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
@@ -166,7 +166,7 @@ public sealed class RefreshTokenCommandHandlerTests {
     }
 
     [Fact]
-    public async Task Handle_WithPreviousRefreshTokenInsideGraceWindow_RotatesTokens() {
+    public async Task Handle_WithPreviousRefreshTokenInsideFormerGraceWindow_ReturnsInvalidToken() {
         User user = CreateUser("refresh-previous@example.com");
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
@@ -184,13 +184,13 @@ public sealed class RefreshTokenCommandHandlerTests {
             TimeSpan.FromMinutes(2));
         var refreshSessions = new InMemoryRefreshTokenSessionRepository(session);
         var authTokenService = new FakeAuthenticationTokenService();
-        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, refreshSessions, authTokenService, new FixedDateTimeProvider(now));
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, refreshSessions, authTokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
-        ResultAssert.Success(result);
-        Assert.Equal("new-access-token", result.Value.AccessToken);
-        Assert.Equal(1, authTokenService.IssueAndStoreCallCount);
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
     }
 
     [Fact]
@@ -212,7 +212,7 @@ public sealed class RefreshTokenCommandHandlerTests {
             TimeSpan.FromMinutes(2));
         var refreshSessions = new InMemoryRefreshTokenSessionRepository(session);
         var authTokenService = new FakeAuthenticationTokenService();
-        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, refreshSessions, authTokenService, new FixedDateTimeProvider(now));
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, refreshSessions, authTokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
@@ -230,7 +230,7 @@ public sealed class RefreshTokenCommandHandlerTests {
         var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
         var hasher = new FakePasswordHasher();
         var authTokenService = new FakeAuthenticationTokenService();
-        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, new InMemoryRefreshTokenSessionRepository(), authTokenService, new FixedDateTimeProvider());
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, new InMemoryRefreshTokenSessionRepository(), authTokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
@@ -248,7 +248,7 @@ public sealed class RefreshTokenCommandHandlerTests {
         var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
         var hasher = new FakePasswordHasher();
         var authTokenService = new FakeAuthenticationTokenService();
-        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, new InMemoryRefreshTokenSessionRepository(), authTokenService, new FixedDateTimeProvider());
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, new InMemoryRefreshTokenSessionRepository(), authTokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
@@ -353,6 +353,14 @@ public sealed class RefreshTokenCommandHandlerTests {
 
         public Task UpdateAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
+
+        public Task RevokeAllAsync(UserId userId, DateTime revokedAtUtc, CancellationToken cancellationToken = default) {
+            foreach (UserRefreshTokenSession session in _sessions.Where(session => session.UserId == userId && session.IsActive)) {
+                session.Revoke(revokedAtUtc);
+            }
+
+            return Task.CompletedTask;
+        }
     }
 
     [ExcludeFromCodeCoverage]

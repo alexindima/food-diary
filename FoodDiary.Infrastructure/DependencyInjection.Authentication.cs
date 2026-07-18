@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Infrastructure.Authentication;
+using FoodDiary.Infrastructure.Persistence.Authentication;
 using FoodDiary.Infrastructure.Persistence.Ai;
 using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Users;
@@ -17,6 +18,7 @@ public static partial class DependencyInjection {
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddSingleton<IAdminSsoService, AdminSsoService>();
+        services.AddScoped<ITelegramAssertionReplayGuard, TelegramAssertionReplayGuard>();
         services.AddScoped<IUserCleanupService, UserCleanupService>();
         services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
         services.AddSingleton<IAiPromptProvider, AiPromptProvider>();

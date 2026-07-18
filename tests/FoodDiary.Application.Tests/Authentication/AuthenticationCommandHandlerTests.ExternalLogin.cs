@@ -10,6 +10,8 @@ using FoodDiary.Application.Authentication.Models;
 namespace FoodDiary.Application.Tests.Authentication;
 
 public sealed partial class AuthenticationCommandHandlerTests {
+    private const string GoogleIssuer = "https://accounts.google.com";
+    private const string GoogleSubject = "google-subject";
 
     [Fact]
     public async Task GoogleLoginHandler_WhenCredentialValidationFails_ReturnsFailure() {
@@ -20,7 +22,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             notificationRepository,
             new StubNotificationWriter(notificationRepository),
             new StubGoogleTokenValidator(
-                new GoogleIdentityPayload("google@example.com", "Alex", "User", "en"),
+                new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, "google@example.com", "Alex", "User", "en"),
                 validateFailure: true),
             new StubPasswordHasher(),
             tokenService);
@@ -35,6 +37,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task GoogleLoginHandler_WithDeletedExistingUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-google@example.com", "secret", hasPassword: false);
+        user.LinkGoogleIdentity(GoogleIssuer, GoogleSubject);
         user.DeleteAccount(DateTime.UtcNow);
         var tokenService = new StubAuthenticationTokenService();
         var notificationRepository = new StubNotificationRepository();
@@ -42,7 +45,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             new StubUserRepository(user),
             notificationRepository,
             new StubNotificationWriter(notificationRepository),
-            new StubGoogleTokenValidator(new GoogleIdentityPayload(user.Email, "Alex", "User", "en")),
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")),
             new StubPasswordHasher(),
             tokenService);
 
@@ -55,20 +58,21 @@ public sealed partial class AuthenticationCommandHandlerTests {
     }
 
     [Fact]
-    public async Task GoogleLoginHandler_WithPasswordAccount_DoesNotCreatePasswordSetupNotification() {
+    public async Task GoogleLoginHandler_WithUnlinkedPasswordAccount_RequiresExplicitLink() {
         var user = User.Create("google-password@example.com", "secret", hasPassword: true);
         var notificationRepository = new StubNotificationRepository();
         var handler = new GoogleLoginCommandHandler(
             new StubUserRepository(user),
             notificationRepository,
             new StubNotificationWriter(notificationRepository),
-            new StubGoogleTokenValidator(new GoogleIdentityPayload(user.Email, "Alex", "User", "en")),
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")),
             new StubPasswordHasher(),
             new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
 
-        ResultAssert.Success(result);
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.GoogleAccountLinkRequired", result.Error.Code);
         Assert.Empty(notificationRepository.Notifications);
     }
 
@@ -79,7 +83,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             new StubUserRepository(),
             notificationRepository,
             new StubNotificationWriter(notificationRepository),
-            new StubGoogleTokenValidator(new GoogleIdentityPayload("google@example.com", "Alex", "User", "en")),
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, "google@example.com", "Alex", "User", "en")),
             new StubPasswordHasher(),
             new StubAuthenticationTokenService());
 
@@ -94,13 +98,14 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task GoogleLoginHandler_DoesNotDuplicatePasswordSetupNotification() {
         var user = User.Create("google@example.com", "secret", hasPassword: false);
+        user.LinkGoogleIdentity(GoogleIssuer, GoogleSubject);
         Notification existingNotification = NotificationFactory.CreatePasswordSetupSuggested(user.Id, $"password-setup:{user.Id.Value}");
         var notificationRepository = new StubNotificationRepository(existingNotification);
         var handler = new GoogleLoginCommandHandler(
             new StubUserRepository(user),
             notificationRepository,
             new StubNotificationWriter(notificationRepository),
-            new StubGoogleTokenValidator(new GoogleIdentityPayload("google@example.com", "Alex", "User", "en")),
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, "google@example.com", "Alex", "User", "en")),
             new StubPasswordHasher(),
             new StubAuthenticationTokenService());
 

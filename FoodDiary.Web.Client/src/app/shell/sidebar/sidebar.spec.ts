@@ -193,7 +193,7 @@ describe('SidebarComponent admin behavior', () => {
         harness.openAdminPanel();
 
         expect(window.open).toHaveBeenCalledWith(ADMIN_LOADING_URL, '_blank');
-        expect(adminWindow.location.assign).toHaveBeenCalledWith(`http://localhost:4300/?code=${ADMIN_SSO_CODE}`);
+        expect(adminWindow.location.assign).toHaveBeenCalledWith(`http://localhost:4300/#code=${ADMIN_SSO_CODE}`);
     });
 
     it('closes admin loading window and shows toast when SSO fails', () => {

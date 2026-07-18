@@ -49,9 +49,13 @@ internal sealed class GoogleFitClient(
                 return null;
             }
 
-            // Get user ID from token info
-            JsonElement userInfo = await httpClient.GetFromJsonAsync<JsonElement>(
-                $"https://www.googleapis.com/oauth2/v1/userinfo?access_token={token.AccessToken}", cancellationToken).ConfigureAwait(false);
+            using var userInfoRequest = new HttpRequestMessage(HttpMethod.Get, "https://www.googleapis.com/oauth2/v1/userinfo");
+            userInfoRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+            using HttpResponseMessage userInfoResponse = await httpClient.SendAsync(userInfoRequest, cancellationToken).ConfigureAwait(false);
+            userInfoResponse.EnsureSuccessStatusCode();
+            JsonElement userInfo = await userInfoResponse.Content
+                .ReadFromJsonAsync<JsonElement>(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
             string userId = userInfo.TryGetProperty("id", out JsonElement id) ? id.GetString() ?? "unknown" : "unknown";
 
             return new WearableTokenResult(

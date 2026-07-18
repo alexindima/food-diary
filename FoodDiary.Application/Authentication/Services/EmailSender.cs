@@ -75,7 +75,7 @@ public sealed class EmailSender(
             templateKey: "password_reset",
             locale: locale,
             toEmail: message.ToEmail,
-            buildLink: () => BuildLink(options.PasswordResetPath, message.UserId, message.Token, message.ClientOrigin),
+            buildLink: () => BuildFragmentLink(options.PasswordResetPath, message.UserId, message.Token, message.ClientOrigin),
             createFallbackContent: link => (
                 Subject: string.Equals(locale, "ru", StringComparison.Ordinal) ? PasswordResetSubjectRu : "Reset your password",
                 Html: string.Equals(locale, "ru"
@@ -145,6 +145,14 @@ public sealed class EmailSender(
         string baseUrl = resolvedBaseUrl.TrimEnd('/');
         string safePath = path.StartsWith('/') ? path : "/" + path;
         return $"{baseUrl}{safePath}?userId={Uri.EscapeDataString(userId)}&token={Uri.EscapeDataString(token)}";
+    }
+
+    private string BuildFragmentLink(string path, string userId, string token, string? clientOrigin) {
+        string queryLink = BuildLink(path, userId, token, clientOrigin);
+        int querySeparatorIndex = queryLink.IndexOf('?', StringComparison.Ordinal);
+        return querySeparatorIndex < 0
+            ? queryLink
+            : queryLink[..querySeparatorIndex] + '#' + queryLink[(querySeparatorIndex + 1)..];
     }
 
     private string ResolveFrontendBaseUrl(string? clientOrigin) {

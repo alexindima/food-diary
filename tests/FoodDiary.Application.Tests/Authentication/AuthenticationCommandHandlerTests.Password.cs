@@ -5,6 +5,7 @@ using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
@@ -87,6 +88,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             new StubDateTimeProvider(),
             new StubAuthenticationTokenService(),
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
             new NullAuditLogger());
 
         Result<AuthenticationModel> result = await handler.Handle(
@@ -105,6 +107,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             new StubDateTimeProvider(),
             new StubAuthenticationTokenService(),
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
             new NullAuditLogger());
 
         Result<AuthenticationModel> result = await handler.Handle(
@@ -123,6 +126,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             new StubDateTimeProvider(),
             new StubAuthenticationTokenService(),
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
             new NullAuditLogger());
 
         Result<AuthenticationModel> result = await handler.Handle(
@@ -142,6 +146,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             new StubDateTimeProvider(),
             new StubAuthenticationTokenService(),
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
             new NullAuditLogger());
 
         Result<AuthenticationModel> result = await handler.Handle(
@@ -163,6 +168,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             dateTimeProvider,
             tokenService,
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
             new NullAuditLogger());
 
         Result<AuthenticationModel> result = await handler.Handle(
@@ -185,6 +191,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             dateTimeProvider,
             tokenService,
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
             new NullAuditLogger());
 
         Result<AuthenticationModel> result = await handler.Handle(

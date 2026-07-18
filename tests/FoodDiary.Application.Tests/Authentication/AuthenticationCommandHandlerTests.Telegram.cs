@@ -97,6 +97,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var handler = new TelegramVerifyCommandHandler(
             new StubUserRepository(),
             new StubTelegramAuthValidator(validateFailure: true),
+            new StubTelegramAssertionReplayGuard(),
             new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(new TelegramVerifyCommand("bad-init-data"), CancellationToken.None);
@@ -110,6 +111,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var handler = new TelegramVerifyCommandHandler(
             new StubUserRepository(),
             new StubTelegramAuthValidator(),
+            new StubTelegramAssertionReplayGuard(),
             new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(new TelegramVerifyCommand("valid-init-data"), CancellationToken.None);
@@ -126,6 +128,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var handler = new TelegramVerifyCommandHandler(
             new StubUserRepository(user),
             new StubTelegramAuthValidator(),
+            new StubTelegramAssertionReplayGuard(),
             tokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new TelegramVerifyCommand("valid-init-data"), CancellationToken.None);
@@ -136,10 +139,31 @@ public sealed partial class AuthenticationCommandHandlerTests {
     }
 
     [Fact]
+    public async Task TelegramVerifyHandler_WhenAssertionWasConsumed_RejectsReplay() {
+        var user = User.Create("telegram-replay@example.com", "secret");
+        user.LinkTelegram(123456);
+        var tokenService = new StubAuthenticationTokenService();
+        var handler = new TelegramVerifyCommandHandler(
+            new StubUserRepository(user),
+            new StubTelegramAuthValidator(),
+            new StubTelegramAssertionReplayGuard(consume: false),
+            tokenService);
+
+        Result<AuthenticationModel> result = await handler.Handle(
+            new TelegramVerifyCommand("replayed-init-data"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.TelegramAssertionAlreadyUsed", result.Error.Code);
+        Assert.Null(tokenService.LastUser);
+    }
+
+    [Fact]
     public async Task TelegramLoginWidgetHandler_WhenWidgetDataInvalid_ReturnsFailure() {
         var handler = new TelegramLoginWidgetCommandHandler(
             new StubUserRepository(),
             new StubTelegramLoginWidgetValidator(validateFailure: true),
+            new StubTelegramAssertionReplayGuard(),
             new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(
@@ -155,6 +179,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var handler = new TelegramLoginWidgetCommandHandler(
             new StubUserRepository(),
             new StubTelegramLoginWidgetValidator(),
+            new StubTelegramAssertionReplayGuard(),
             new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(
@@ -173,6 +198,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var handler = new TelegramLoginWidgetCommandHandler(
             new StubUserRepository(user),
             new StubTelegramLoginWidgetValidator(),
+            new StubTelegramAssertionReplayGuard(),
             tokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(
@@ -182,6 +208,33 @@ public sealed partial class AuthenticationCommandHandlerTests {
         ResultAssert.Success(result);
         Assert.Equal("access", result.Value.AccessToken);
         Assert.Equal(user, tokenService.LastUser);
+    }
+
+    [Fact]
+    public async Task TelegramLoginWidgetHandler_WhenAssertionWasConsumed_RejectsReplay() {
+        var user = User.Create("telegram-widget-replay@example.com", "secret");
+        user.LinkTelegram(123456);
+        var tokenService = new StubAuthenticationTokenService();
+        var handler = new TelegramLoginWidgetCommandHandler(
+            new StubUserRepository(user),
+            new StubTelegramLoginWidgetValidator(),
+            new StubTelegramAssertionReplayGuard(consume: false),
+            tokenService);
+
+        Result<AuthenticationModel> result = await handler.Handle(
+            new TelegramLoginWidgetCommand(
+                123456,
+                123,
+                "replayed-hash",
+                Username: null,
+                FirstName: null,
+                LastName: null,
+                PhotoUrl: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.TelegramAssertionAlreadyUsed", result.Error.Code);
+        Assert.Null(tokenService.LastUser);
     }
 
     [Fact]

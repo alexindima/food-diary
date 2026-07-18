@@ -6,6 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FluentValidation.Results;
 using FoodDiary.Application.Admin.Models;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Application.Tests.Admin;
 
@@ -25,7 +26,11 @@ public partial class AdminFeatureTests {
     public async Task SetAdminUserPasswordHandler_WithExistingPassword_ReplacesPassword() {
         User user = CreateUserWithRoles("password-user@example.com", []);
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
-        var handler = new SetAdminUserPasswordCommandHandler(userRepository, new PrefixPasswordHasher());
+        var handler = new SetAdminUserPasswordCommandHandler(
+            userRepository,
+            new PrefixPasswordHasher(),
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            TimeProvider.System);
 
         Result result = await handler.Handle(
             new SetAdminUserPasswordCommand(user.Id.Value, "NewPassword123!"),
@@ -41,7 +46,11 @@ public partial class AdminFeatureTests {
     public async Task SetAdminUserPasswordHandler_WithGoogleOnlyUser_SetsFirstPassword() {
         var user = User.Create("google-user@example.com", "placeholder-hash", hasPassword: false);
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
-        var handler = new SetAdminUserPasswordCommandHandler(userRepository, new PrefixPasswordHasher());
+        var handler = new SetAdminUserPasswordCommandHandler(
+            userRepository,
+            new PrefixPasswordHasher(),
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            TimeProvider.System);
 
         Result result = await handler.Handle(
             new SetAdminUserPasswordCommand(user.Id.Value, "FirstPassword123!"),
@@ -57,7 +66,11 @@ public partial class AdminFeatureTests {
     public async Task SetAdminUserPasswordHandler_WithEmptyUserId_ReturnsValidationFailure() {
         User user = CreateUserWithRoles("password-empty-user@example.com", []);
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
-        var handler = new SetAdminUserPasswordCommandHandler(userRepository, new PrefixPasswordHasher());
+        var handler = new SetAdminUserPasswordCommandHandler(
+            userRepository,
+            new PrefixPasswordHasher(),
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            TimeProvider.System);
 
         Result result = await handler.Handle(
             new SetAdminUserPasswordCommand(Guid.Empty, "NewPassword123!"),
@@ -72,7 +85,11 @@ public partial class AdminFeatureTests {
     public async Task SetAdminUserPasswordHandler_WhenUserMissing_ReturnsNotFound() {
         User user = CreateUserWithRoles("password-missing-user@example.com", []);
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
-        var handler = new SetAdminUserPasswordCommandHandler(userRepository, new PrefixPasswordHasher());
+        var handler = new SetAdminUserPasswordCommandHandler(
+            userRepository,
+            new PrefixPasswordHasher(),
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            TimeProvider.System);
 
         Result result = await handler.Handle(
             new SetAdminUserPasswordCommand(Guid.NewGuid(), "NewPassword123!"),

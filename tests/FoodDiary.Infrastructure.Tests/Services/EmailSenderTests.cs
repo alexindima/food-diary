@@ -75,7 +75,7 @@ public sealed class EmailSenderTests {
             new PasswordResetMessage("user@example.com", User.Create("user@example.com", "hash").Id.Value.ToString(), "token", "ru", "https://xn--b1adbcbrouc8l.xn--p1ai"),
             CancellationToken.None);
 
-        Assert.Contains("https://дневникеды.рф/reset-password?", getBody(), StringComparison.Ordinal);
+        Assert.Contains("https://дневникеды.рф/reset-password#", getBody(), StringComparison.Ordinal);
     }
 
     [Fact]
