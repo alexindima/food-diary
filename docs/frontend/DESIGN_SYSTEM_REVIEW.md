@@ -92,7 +92,7 @@ When two screens show the same semantic object, they must use the same primitive
 | `/products`                              | shared media/entity cards         | yes | yes     | Matches meals and recipes                                                             |
 | `/products/add`, `/products/:id/edit`    | manage form cards                 | yes | yes     | Filled edit state, delete confirmation, and discard protection checked                |
 | `/recipes`                               | shared media/entity cards         | yes | yes     | Matches meals and products                                                            |
-| `/recipes/add`, `/recipes/:id/edit`      | manage form cards                 | yes | yes     | Add and discard flows checked; owned edit/delete state still needs a stable fixture   |
+| `/recipes/add`, `/recipes/:id/edit`      | manage form cards                 | yes | yes     | Add/discard flows and deterministic owned edit hydration are smoke-covered            |
 | `/explore`                               | shared recipe results             | -   | yes     | No overflow                                                                           |
 | `/shopping-lists`                        | card/list workspace               | -   | yes     | No overflow                                                                           |
 | `/goals`                                 | metric cards and controls         | -   | yes     | No overflow                                                                           |
@@ -101,15 +101,15 @@ When two screens show the same semantic object, they must use the same primitive
 | `/waist-history`                         | `fd-ui-card` and line chart       | -   | yes     | End-axis label containment fixed                                                      |
 | `/cycle-tracking`                        | metric and log cards              | -   | yes     | No overflow                                                                           |
 | `/meal-plans`                            | plan cards                        | -   | yes     | No overflow                                                                           |
-| `/meal-plans/:id`                        | plan detail                       | -   | -       | Needs seeded plan data                                                                |
+| `/meal-plans/:id`                        | plan detail                       | yes | -       | Deterministic populated detail fixture is smoke-covered                               |
 | `/weekly-check-in`                       | summary cards                     | -   | yes     | No overflow                                                                           |
 | `/lessons`                               | lesson cards                      | -   | yes     | No overflow                                                                           |
-| `/lessons/:id`                           | lesson detail                     | -   | -       | Needs seeded lesson data                                                              |
+| `/lessons/:id`                           | lesson detail                     | yes | -       | Deterministic detail and mark-read interaction are smoke-covered                      |
 | `/gamification`                          | metric and badge cards            | -   | yes     | No overflow                                                                           |
 | `/fasting`                               | timer card and segmented controls | -   | yes     | Mobile mode selector now stacks without overlap                                       |
 | `/premium`                               | access and plan cards             | -   | yes     | No overflow                                                                           |
 | `/profile`                               | `fd-ui-card` profile density      | yes | yes     | Compact phones now use one-column account fields                                      |
-| `/dietologist`                           | client cards                      | -   | blocked | Admin test account redirects to dashboard; requires a dietologist account             |
+| `/dietologist`                           | client cards                      | yes | -       | Role-specific dietologist fixture renders a populated client list                     |
 | `/dietologist/clients/:clientId`         | client dashboard                  | -   | -       | Requires shared client fixture                                                        |
 | `/dietologist-invitations/:invitationId` | invitation state                  | -   | -       | Requires invitation fixture                                                           |
 | `/recommendations`                       | recommendation list               | -   | yes     | No overflow                                                                           |
@@ -134,7 +134,7 @@ Review desktop at `1440x900` and a compact laptop width before mobile. Admin wor
 | P2       | Profile fields used two columns on compact phones and clipped long Russian labels                         | Fixed with a one-column compact layout                                       |
 | P2       | Authenticated navigation to `/` briefly rendered the public landing before redirecting                    | Fixed with a pre-hydration stored-session gate released on `NavigationEnd`   |
 | P2       | Secondary authenticated pages have mobile coverage but incomplete desktop visual coverage                 | Open; next review batch                                                      |
-| P2       | Detail/manage pages need deterministic fixtures for complete visual states                                | Open; add fixtures before baseline screenshots                               |
+| P2       | Detail/manage pages need deterministic fixtures for complete visual states                                | Fixed for recipe edit, meal-plan detail, lesson detail, and dietologist list  |
 | P2       | Manage forms expanded every nutrient into a single mobile column                                          | Fixed; normal phone widths retain the compact shared nutrient grid           |
 | P2       | Meal and recipe image uploads consumed a full square card width on mobile                                 | Fixed; all three manage forms now share a compact 240px upload treatment     |
 | P2       | Waist dashboard card reused the weight-specific empty-state copy                                          | Fixed; trend blocks now accept a semantic empty-state key                    |
@@ -174,3 +174,11 @@ For each row moved to reviewed:
 6. Check loading, empty, populated, validation, and error states.
 7. Check console warnings/errors and keyboard focus.
 8. Run `npm run stylelint`, focused unit tests, `npm run check:i18n`, and the relevant smoke suite.
+
+## Design Token Usage Audit
+
+Run `npm run audit:design-tokens` after adding, renaming, or removing global
+tokens. The audit reports declaration coverage, the most-used tokens, unused
+declarations that need manual review, and unknown references. Unknown
+references fail the command; unused declarations remain advisory because some
+tokens intentionally form a public UI-kit or theme contract.

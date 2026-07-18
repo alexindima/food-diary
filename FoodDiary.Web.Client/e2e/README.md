@@ -29,4 +29,5 @@ Notes:
 - the suites use mocked HTTP responses and do not depend on a running backend
 - admin smoke starts the Angular admin dev server on `http://127.0.0.1:4300`
 - client smoke starts the Angular client dev server on `http://127.0.0.1:4201`
-- current CI is intentionally unchanged; add a dedicated job only after the smoke suite is stable in local/dev use
+- CI runs both smoke suites after the corresponding unit tests and builds
+- deterministic API fixtures cover public, authenticated user, admin, meal-plan detail, and lesson-detail states

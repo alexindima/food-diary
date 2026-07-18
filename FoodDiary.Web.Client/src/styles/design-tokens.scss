@@ -2193,5 +2193,44 @@ $fd-theme-design-tokens: (
         --fd-page-body-gap: var(--fd-space-page-section-gap);
         --fd-page-header-gap: var(--fd-space-page-header-gap);
         --fd-page-actions-gap: var(--fd-space-actions-gap);
+
+        // Compatibility aliases kept here so legacy feature styles resolve to
+        // the current semantic token contract while they are migrated.
+        --fd-border-width-default: var(--fd-border-width);
+        --fd-button-transition: var(--fd-transition-interactive);
+        --fd-color-amber-300: color-mix(in srgb, var(--fd-color-amber-500) 60%, var(--fd-color-white));
+        --fd-color-amber-700: color-mix(in srgb, var(--fd-color-amber-500) 75%, var(--fd-color-slate-900));
+        --fd-color-border-primary: var(--fd-color-border-primary-strong);
+        --fd-color-border-subtle: var(--fd-border-subtle);
+        --fd-color-emerald-300: color-mix(in srgb, var(--fd-color-emerald-500) 60%, var(--fd-color-white));
+        --fd-color-green-400: color-mix(in srgb, var(--fd-color-green-500) 80%, var(--fd-color-white));
+        --fd-color-green-700: color-mix(in srgb, var(--fd-color-green-500) 70%, var(--fd-color-slate-900));
+        --fd-color-on-primary: var(--fd-color-on-brand);
+        --fd-color-orange-300: color-mix(in srgb, var(--fd-color-orange-500) 60%, var(--fd-color-white));
+        --fd-color-orange-400: color-mix(in srgb, var(--fd-color-orange-500) 80%, var(--fd-color-white));
+        --fd-color-purple-300: color-mix(in srgb, var(--fd-color-purple-500) 60%, var(--fd-color-white));
+        --fd-color-sky-300: color-mix(in srgb, var(--fd-color-sky-500) 60%, var(--fd-color-white));
+        --fd-color-sky-600: color-mix(in srgb, var(--fd-color-sky-500) 82%, var(--fd-color-slate-900));
+        --fd-color-surface-secondary: var(--fd-color-surface-muted);
+        --fd-color-surface-subtle: var(--fd-bg-surface-subtle);
+        --fd-color-surface-sunken: var(--fd-bg-surface-inset);
+        --fd-color-text-main: var(--fd-color-text);
+        --fd-color-text-subtle: var(--fd-color-text-muted);
+        --fd-color-warning: var(--fd-color-warn);
+        --fd-color-yellow-400: color-mix(in srgb, var(--fd-color-yellow-300) 82%, var(--fd-color-slate-900));
+        --fd-color-yellow-500: color-mix(in srgb, var(--fd-color-yellow-300) 68%, var(--fd-color-slate-900));
+        --fd-focus-ring-color: var(--fd-color-primary-400);
+        --fd-focus-ring-offset: var(--fd-border-width-strong);
+        --fd-focus-ring-width: var(--fd-border-width-strong);
+        --fd-font-weight-semibold: var(--fd-font-weight-bold);
+        --fd-icon-size-md: var(--fd-size-icon-md);
+        --fd-radius-control: var(--fd-radius-md);
+        --fd-size-button-icon-md: var(--fd-size-button-icon-lg);
+        --fd-size-control-default: var(--fd-size-control-md);
+        --fd-size-pill-height-sm: var(--fd-size-pill-height-compact);
+        --fd-space-2xs: var(--fd-space-xxs);
+        --fd-text-body-lg-line-height: var(--fd-text-body-line-height);
+        --fd-text-display-xs-line-height: var(--fd-text-display-sm-line-height);
+        --fd-text-display-xs-size: var(--fd-text-display-sm-size);
     }
 }

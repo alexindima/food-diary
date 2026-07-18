@@ -277,6 +277,35 @@ At minimum, the backend dashboard should expose these panels:
 
 Use these as the first production alert baseline and tune them with real traffic data.
 
+## Reliability SLO Baseline
+
+Use the following initial objectives for a rolling 30-day production window.
+They are starting targets and must be revised from observed traffic, not silently
+relaxed when an alert becomes noisy.
+
+| Capability | SLI | Initial objective | Page threshold |
+| --- | --- | --- | --- |
+| Authenticated API availability | successful non-4xx requests / eligible requests | 99.9% | 5-minute server-error ratio above 2% |
+| High-value read latency | p95 duration for dashboard/products/recipes/consumptions | below 750 ms | p95 above 1.5 s for 10 minutes |
+| Critical outbox delivery | time from record creation to processed state | 99% below 5 minutes | oldest pending message above 10 minutes |
+| Critical outbox correctness | dead-lettered / claimed messages | below 0.1% | any dead letter for auth, billing, or account email; otherwise above 1% for 10 minutes |
+| Recurring job freshness | time since last successful execution | schedule interval plus 5 minutes | two missed expected executions |
+| Recurring job reliability | successful executions / completed executions | 99.5% | two consecutive failures or failure streak above 1 |
+
+`fooddiary.outbox.messages` and `fooddiary.outbox.processing.duration` provide
+delivery outcome and processing-duration evidence.
+`fooddiary.outbox.pending.oldest_age` exports the current oldest pending age in
+seconds after every processor run, tagged by `fooddiary.outbox.name`. Alert on
+that gauge per outbox so a blocked email provider does not hide a healthy
+image-deletion queue. Pair it with the job-freshness alert: if a processor stops
+running entirely, its age observation cannot refresh but the missed job remains
+visible through `fooddiary.job.last_success_age`.
+
+For job freshness, use `fooddiary.job.last_success_age` and compare each series
+with that job's configured schedule. Use `fooddiary.job.failure_streak` for the
+consecutive-failure page. Dashboards should display the SLO, current value,
+remaining error budget, and deploy markers together.
+
 - Auth server errors:
   trigger when `fooddiary.api.business_flow.events` with `fooddiary.business_outcome=server_error` is non-zero for 5 minutes on any auth flow.
 - Auth client-error spike:

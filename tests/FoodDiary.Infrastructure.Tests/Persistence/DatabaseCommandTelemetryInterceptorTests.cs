@@ -56,6 +56,39 @@ public sealed class DatabaseCommandTelemetryInterceptorTests {
     }
 
     [Fact]
+    public void RecordOutboxOldestPendingAge_EmitsObservableGaugeWithExpectedTag() {
+        double? observedAgeSeconds = null;
+        string? observedOutboxName = null;
+        using var listener = new MeterListener();
+        listener.InstrumentPublished = (instrument, meterListener) => {
+            if (string.Equals(instrument.Meter.Name, InfrastructureMeterName, StringComparison.Ordinal)
+                && string.Equals(instrument.Name, "fooddiary.outbox.pending.oldest_age", StringComparison.Ordinal)) {
+                meterListener.EnableMeasurementEvents(instrument);
+            }
+        };
+        listener.SetMeasurementEventCallback<double>((instrument, value, tags, _) => {
+            if (!string.Equals(instrument.Name, "fooddiary.outbox.pending.oldest_age", StringComparison.Ordinal)) {
+                return;
+            }
+
+            string? outboxName = GetTagValue(tags, "fooddiary.outbox.name");
+            if (string.Equals(outboxName, "telemetry_test", StringComparison.Ordinal)) {
+                observedAgeSeconds = value;
+                observedOutboxName = outboxName;
+            }
+        });
+        listener.Start();
+        var nowUtc = new DateTime(2026, 7, 18, 12, 0, 0, DateTimeKind.Utc);
+
+        InfrastructureTelemetry.RecordOutboxOldestPendingAge("telemetry_test", nowUtc, nowUtc.AddMinutes(-7));
+        listener.RecordObservableInstruments();
+
+        Assert.Multiple(
+            () => Assert.Equal(420, observedAgeSeconds),
+            () => Assert.Equal("telemetry_test", observedOutboxName));
+    }
+
+    [Fact]
     public async Task CommandFailed_RecordsFailureFromEventData() {
         long? failureCount = null;
         string? operation = null;

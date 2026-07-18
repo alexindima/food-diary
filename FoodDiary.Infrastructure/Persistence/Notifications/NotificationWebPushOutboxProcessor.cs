@@ -52,11 +52,21 @@ internal sealed class NotificationWebPushOutboxProcessor(
             }
 
             await SaveAndRecordAsync(messages.Count, processed, retried, deadLettered, cancellationToken).ConfigureAwait(false);
+            await RecordOldestPendingAgeAsync(nowUtc, cancellationToken).ConfigureAwait(false);
             return processed;
         } finally {
             stopwatch.Stop();
             InfrastructureTelemetry.RecordOutboxProcessingDuration(OutboxName, stopwatch.Elapsed.TotalMilliseconds);
         }
+    }
+
+    private async Task RecordOldestPendingAgeAsync(DateTime nowUtc, CancellationToken cancellationToken) {
+        DateTime? oldestCreatedOnUtc = await context.NotificationWebPushOutbox
+            .AsNoTracking()
+            .Where(message => message.ProcessedOnUtc == null && message.DeadLetteredOnUtc == null)
+            .MinAsync(message => (DateTime?)message.CreatedOnUtc, cancellationToken)
+            .ConfigureAwait(false);
+        InfrastructureTelemetry.RecordOutboxOldestPendingAge(OutboxName, nowUtc, oldestCreatedOnUtc);
     }
 
     private bool HandleFailure(NotificationWebPushOutboxMessage message, Exception ex) {

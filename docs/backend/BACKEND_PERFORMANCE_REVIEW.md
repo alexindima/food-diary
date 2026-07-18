@@ -39,7 +39,7 @@ Both sort by `CreatedOnUtc` after filtering by ownership and public visibility, 
 
 ## Remaining Gaps
 
-1. No load-test baseline yet for meal, product, and recipe list endpoints.
+1. The first k6 baseline now covers dashboard, meal, product, and recipe read endpoints, but production capacity has not yet been established from repeated environment-specific runs.
 2. Search still uses `%term%` semantics, so future ranking/relevance needs may eventually justify a dedicated search layer.
 
 ## First Regression Gate Added In B12
@@ -150,5 +150,7 @@ For now, the chosen strategy is:
 
 ## Next Perf Tasks
 
+- run `infra/load-testing/api-baseline.js` against a production-like isolated dataset and store the environment and result summary with the release evidence
+- add a write-heavy scenario only after a resettable disposable dataset and idempotent cleanup procedure are available
 - add a wider explain review for the full repository OR-based search predicates if those predicates become materially more complex
 - consider dedicated search or ranking only if trigram-backed `ILIKE` stops meeting latency or relevance expectations
