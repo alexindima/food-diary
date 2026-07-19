@@ -79,20 +79,8 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         HttpResponseMessage replayResponse = await client.PostAsJsonAsync(
             "/api/v1/auth/refresh",
             new RefreshTokenHttpRequest(originalRefreshToken));
-        AuthPayload? replayPayload = await replayResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
 
-        Assert.Equal(HttpStatusCode.OK, replayResponse.StatusCode);
-        Assert.NotNull(replayPayload);
-        Assert.False(string.IsNullOrWhiteSpace(replayPayload.AccessToken));
-        Assert.False(string.IsNullOrWhiteSpace(replayPayload.RefreshToken));
-        Assert.NotEqual(originalRefreshToken, replayPayload.RefreshToken);
-        Assert.NotEqual(refreshPayload.RefreshToken, replayPayload.RefreshToken);
-
-        HttpResponseMessage secondReplayResponse = await client.PostAsJsonAsync(
-            "/api/v1/auth/refresh",
-            new RefreshTokenHttpRequest(originalRefreshToken));
-
-        Assert.Equal(HttpStatusCode.Unauthorized, secondReplayResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, replayResponse.StatusCode);
     }
 
     [RequiresDockerFact]
