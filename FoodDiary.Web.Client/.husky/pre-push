@@ -1,5 +1,5 @@
 . FoodDiary.Web.Client/.husky/progress.sh
-hook_progress_init "pre-push" 29
+hook_progress_init "pre-push" 30
 
 cd FoodDiary.Web.Client
 hook_run "Frontend formatting" npm run check:format:ci || exit 1
@@ -20,6 +20,7 @@ hook_run "Backend solution build" dotnet build FoodDiary.slnx || exit 1
 hook_run "Application tests" dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore --no-build || exit 1
 hook_run "Architecture tests" dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore --no-build || exit 1
 hook_run "Infrastructure tests" dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --no-restore --no-build || exit 1
+hook_run "Migration coverage guard" dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj --no-restore --no-build --filter "FullyQualifiedName~MigrationSafetyIntegrationTests.MigrationTypes_AreExcludedFromCodeCoverage" || exit 1
 hook_run "Job manager tests" dotnet test tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj --no-restore --no-build || exit 1
 hook_run "MailInbox application tests" dotnet test MailInbox/tests/FoodDiary.MailInbox.Application.Tests/FoodDiary.MailInbox.Application.Tests.csproj --no-restore --no-build || exit 1
 hook_run "MailInbox client tests" dotnet test MailInbox/tests/FoodDiary.MailInbox.Client.Tests/FoodDiary.MailInbox.Client.Tests.csproj --no-restore --no-build || exit 1
