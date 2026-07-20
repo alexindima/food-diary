@@ -127,7 +127,7 @@
         "@types/express": "^5.0.6",
         "@types/node": "^26.1.1",
         "@typescript-eslint/eslint-plugin": "^8.62.1",
-        "@typescript-eslint/parser": "^8.63.0",
+        "@typescript-eslint/parser": "^8.64.0",
         "@vitest/coverage-v8": "^4.1.10",
         "angular-eslint": "^22.1.0",
         "baseline-browser-mapping": "^2.10.43",
