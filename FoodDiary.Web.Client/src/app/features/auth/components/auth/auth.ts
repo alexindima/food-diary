@@ -372,7 +372,7 @@ export class AuthComponent {
     private async tryBuildAdminRedirectUrlAsync(): Promise<string | null> {
         const adminReturnUrl = this.adminReturnUrl;
         const adminAppUrl = environment.adminAppUrl ?? '';
-        if (!this.isBrowser || adminReturnUrl === null || adminReturnUrl.length === 0 || adminAppUrl.length === 0) {
+        if (adminReturnUrl === null || !this.isBrowser || adminReturnUrl.length === 0 || adminAppUrl.length === 0) {
             return null;
         }
 

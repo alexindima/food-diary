@@ -17,7 +17,7 @@ export class AdminPanelLauncherService {
 
     public open(isAdmin: boolean): void {
         const adminAppUrl = environment.adminAppUrl;
-        if (!this.browserWindow.isAvailable() || !isAdmin || adminAppUrl === undefined || adminAppUrl.length === 0) {
+        if (!isAdmin || adminAppUrl === undefined || adminAppUrl.length === 0 || !this.browserWindow.isAvailable()) {
             return;
         }
 

@@ -186,7 +186,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         this.isCropping.set(false);
         this.clearCropState();
 
-        if (this.deleteOnClear() && assetId !== null) {
+        if (assetId !== null && this.deleteOnClear()) {
             this.imageUploadFacade.deleteAsset(assetId).subscribe({
                 error: (err: unknown) => {
                     this.logger.warn('Failed to delete orphan image asset', err);
@@ -450,7 +450,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     private confirmCropInternal(): void {
         const selection = this.cropSelection();
         const bounds = this.cropImageBounds();
-        if (this.cropImageElement === null || selection === null || bounds === null) {
+        if (selection === null || bounds === null || this.cropImageElement === null) {
             return;
         }
 

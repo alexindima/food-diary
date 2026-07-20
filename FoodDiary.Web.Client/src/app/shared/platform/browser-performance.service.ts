@@ -47,7 +47,7 @@ export class BrowserPerformanceService {
     }
 
     private observePerformanceEntry(type: string, callback: (entries: PerformanceEntry[]) => void): PerformanceObserver | null {
-        if (!this.isBrowser || typeof PerformanceObserver === 'undefined') {
+        if (typeof PerformanceObserver === 'undefined' || !this.isBrowser) {
             return null;
         }
 

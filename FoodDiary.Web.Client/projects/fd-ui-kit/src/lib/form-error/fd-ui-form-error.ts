@@ -186,7 +186,7 @@ export class FdUiFormErrorComponent {
 
     private resolveControlMessage(control: FdUiFormErrorControlState): string | null {
         const shouldShow = control.touched || (this.showOnDirty() && control.dirty);
-        if (!control.invalid || !shouldShow) {
+        if (!shouldShow || !control.invalid) {
             return null;
         }
 

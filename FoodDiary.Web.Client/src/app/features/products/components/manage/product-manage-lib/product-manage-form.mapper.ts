@@ -182,7 +182,7 @@ export function normalizeProductNutritionValues(
     sourceAmount: number | null,
     targetAmount: number,
 ): NutritionValues {
-    if (sourceAmount === null || sourceAmount <= 0 || sourceAmount === targetAmount) {
+    if (sourceAmount === null || sourceAmount === targetAmount || sourceAmount <= 0) {
         return roundProductNutritionValues(values, 1);
     }
 

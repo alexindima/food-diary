@@ -370,7 +370,7 @@ function formatRange(from: string | null | undefined, to: string | null | undefi
         return toLabel;
     }
 
-    if (toLabel.length === 0 || fromLabel === toLabel) {
+    if (fromLabel === toLabel || toLabel.length === 0) {
         return fromLabel;
     }
 

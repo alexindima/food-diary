@@ -136,7 +136,7 @@ export class ThemeService {
 
     private getStoredTheme(): AppThemeName | null {
         const value = this.storage.getItem('local', this.themeStorageKey);
-        if (value === null || value.length === 0 || value === 'undefined' || value === 'null' || !isAppThemeName(value)) {
+        if (value === null || value === 'undefined' || value === 'null' || value.length === 0 || !isAppThemeName(value)) {
             return null;
         }
 
@@ -145,7 +145,7 @@ export class ThemeService {
 
     private getStoredUiStyle(): AppUiStyleName | null {
         const value = this.storage.getItem('local', this.uiStyleStorageKey);
-        if (value === null || value.length === 0 || value === 'undefined' || value === 'null' || !isAppUiStyleName(value)) {
+        if (value === null || value === 'undefined' || value === 'null' || value.length === 0 || !isAppUiStyleName(value)) {
             return null;
         }
 

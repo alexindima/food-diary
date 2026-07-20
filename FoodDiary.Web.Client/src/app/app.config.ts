@@ -35,7 +35,7 @@ const isMobileShellEnvironment = isBrowserEnvironment && isMobileShellWindow(win
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        ...(environment.enableGlobalErrorHandler === true && isBrowserEnvironment
+        ...(isBrowserEnvironment && environment.enableGlobalErrorHandler === true
             ? [
                   provideBrowserGlobalErrorListeners(),
                   {

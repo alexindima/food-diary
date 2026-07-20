@@ -139,7 +139,7 @@ export class LocalizationService {
 
     private getStoredLanguage(): string | null {
         const value = this.storage.getItem('local', this.storageKey);
-        if (value === null || value.length === 0 || value === 'undefined' || value === 'null') {
+        if (value === null || value === 'undefined' || value === 'null' || value.length === 0) {
             return null;
         }
         return value;

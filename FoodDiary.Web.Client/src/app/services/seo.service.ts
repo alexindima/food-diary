@@ -98,7 +98,7 @@ export class SeoService {
 
     private buildSiteUrl(baseUrl: string, path?: string): string {
         const normalizedPath = this.normalizePath(path);
-        if (normalizedPath.length === 0 || normalizedPath === '/') {
+        if (normalizedPath === '/' || normalizedPath.length === 0) {
             return baseUrl;
         }
 
@@ -113,7 +113,7 @@ export class SeoService {
         const withoutHash = path.split('#', 1)[0] ?? '/';
         const withoutQuery = withoutHash.split('?', 1)[0] ?? '/';
 
-        if (withoutQuery.length === 0 || withoutQuery === '/') {
+        if (withoutQuery === '/' || withoutQuery.length === 0) {
             return '/';
         }
 
@@ -253,7 +253,7 @@ export class SeoService {
     }
 
     private getStructuredFeatureList(baseKey?: string, featureKeys?: readonly string[]): string[] | undefined {
-        if (baseKey === undefined || baseKey.length === 0 || featureKeys === undefined || featureKeys.length === 0) {
+        if (baseKey === undefined || featureKeys === undefined || baseKey.length === 0 || featureKeys.length === 0) {
             return undefined;
         }
 
@@ -265,7 +265,7 @@ export class SeoService {
         faqKeys: readonly string[] | undefined,
         currentUrl: string,
     ): Record<string, unknown> | null {
-        if (baseKey === undefined || baseKey.length === 0 || faqKeys === undefined || faqKeys.length === 0) {
+        if (baseKey === undefined || faqKeys === undefined || baseKey.length === 0 || faqKeys.length === 0) {
             return null;
         }
 

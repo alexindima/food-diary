@@ -15,9 +15,13 @@ This document tracks temporary follow-up work after the Angular 22 upgrade.
 
 ## Temporary Debt
 
-### Storybook still needs `@angular-devkit/build-angular`
+### Storybook still needs legacy peer resolution and `@angular-devkit/build-angular`
 
-`@angular-devkit/build-angular` is deprecated for application builds in Angular 22, but the current `@storybook/angular@10.5.0` preview builder still imports its webpack configuration helpers and declares an Angular peer range below 22.
+`@storybook/angular@10.5.2` supports Angular 22 (`>=18.0.0 <23.0.0`), so the Angular peer range is no longer the blocker. However, its TypeScript peer range is still `^4.9.0 || ^5.0.0`, while Angular 22 requires TypeScript `>=6.0 <6.1`.
+
+Without legacy peer resolution, `npm ci` fails with `ERESOLVE` because the workspace uses TypeScript 6. TypeScript 7 cannot be adopted yet either: Angular 22 and the current TypeScript ESLint packages do not support it.
+
+`@angular-devkit/build-angular` is deprecated for application builds in Angular 22, but the current Storybook Angular preview builder still declares it as a required peer dependency and uses its webpack configuration helpers.
 
 Without this dev dependency, `npm run build:storybook` fails with:
 
@@ -25,16 +29,17 @@ Without this dev dependency, `npm run build:storybook` fails with:
 Cannot find module '@angular-devkit/build-angular/package.json'
 ```
 
-Keep `@angular-devkit/build-angular` as a dev-only Storybook compatibility dependency until Storybook publishes Angular 22-compatible support that no longer requires it.
+Keep `@angular-devkit/build-angular` as a dev-only Storybook compatibility dependency until Storybook no longer requires the legacy Angular webpack builder.
 
-`FoodDiary.Web.Client/.npmrc` also temporarily sets `legacy-peer-deps=true` so GitHub Actions `npm ci` and the frontend Docker build can install dependencies with the current Storybook Angular peer range.
+`FoodDiary.Web.Client/.npmrc` temporarily sets `legacy-peer-deps=true` so GitHub Actions `npm ci` and the frontend Docker build can install the Angular 22/TypeScript 6 workspace despite Storybook's stale TypeScript peer range.
 
 Close this when:
 
-- `@storybook/angular` supports Angular 22 peer ranges.
+- `@storybook/angular` supports the TypeScript version required by the current Angular version.
+- The current TypeScript ESLint packages support that TypeScript version.
 - `npm run build:storybook` works without `@angular-devkit/build-angular`.
 - `@angular-devkit/build-angular` is removed from `devDependencies`.
-- `FoodDiary.Web.Client/.npmrc` is removed, or at least no longer needs `legacy-peer-deps=true`.
+- `npm ci` succeeds after `FoodDiary.Web.Client/.npmrc` is removed, or after `legacy-peer-deps=true` is removed from it.
 
 ## Verification Commands
 

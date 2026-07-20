@@ -208,7 +208,7 @@ export class UserManageComponent {
     private watchUserFormElement(): void {
         effect(() => {
             const formElement = this.userFormElement()?.nativeElement;
-            if (!this.isBrowser || this.userFormDomListenersRegistered || formElement === undefined) {
+            if (formElement === undefined || !this.isBrowser || this.userFormDomListenersRegistered) {
                 return;
             }
 
@@ -604,7 +604,7 @@ export class UserManageComponent {
 
     private syncUserFormInputEvent(event: Event | undefined): boolean {
         const view = this.document.defaultView;
-        if (!this.isBrowser || event === undefined || view === null || !(event.target instanceof view.HTMLInputElement)) {
+        if (event === undefined || view === null || !this.isBrowser || !(event.target instanceof view.HTMLInputElement)) {
             return false;
         }
 

@@ -160,7 +160,8 @@ export class DashboardFacade {
         const observer: PartialObserver<DashboardSnapshot | null> = {
             next: snapshot => {
                 if (snapshot === null) {
-                    if (this.snapshotRequest.fail(requestId, 'DASHBOARD.LOAD_ERROR', { preserveData: !showLoader }) && showLoader) {
+                    const failed = this.snapshotRequest.fail(requestId, 'DASHBOARD.LOAD_ERROR', { preserveData: !showLoader });
+                    if (showLoader && failed) {
                         this.layout.initializeLayout(null);
                     }
                     if (clearHydrationUpdate) {

@@ -73,6 +73,18 @@ describe('DashboardFacade loading', () => {
         expect(layout.initializeLayout).toHaveBeenCalledTimes(1);
     });
 
+    it('should record an error and preserve current data when silent reload returns null', () => {
+        const { facade, dashboardService, snapshot, layout } = setupFacade();
+        facade.initialize();
+        dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(of(null));
+
+        facade.reload(false);
+
+        expect(facade.loadError()).toBe('DASHBOARD.LOAD_ERROR');
+        expect(facade.snapshot()).toEqual(snapshot);
+        expect(layout.initializeLayout).toHaveBeenCalledTimes(1);
+    });
+
     it('should ignore stale snapshot responses after selected date changes', () => {
         const { facade, dashboardService } = setupFacade();
         const firstRequest$ = new Subject<DashboardSnapshot>();

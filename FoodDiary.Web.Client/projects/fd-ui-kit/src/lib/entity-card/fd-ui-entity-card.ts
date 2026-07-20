@@ -24,7 +24,7 @@ export class FdUiEntityCardComponent {
 
     protected readonly resolvedImage = computed(() => {
         const imageUrl = this.imageUrl();
-        if (this.hasImageError() || imageUrl === null || imageUrl === undefined || imageUrl.trim().length === 0) {
+        if (imageUrl === null || imageUrl === undefined || imageUrl.trim().length === 0 || this.hasImageError()) {
             return this.fallbackImage();
         }
 

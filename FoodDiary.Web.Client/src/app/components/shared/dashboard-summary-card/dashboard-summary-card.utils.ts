@@ -261,7 +261,7 @@ function isValidCssVariableName(value: string): boolean {
     }
 
     for (const character of value) {
-        if (character.trim().length === 0 || character === ')') {
+        if (character === ')' || character.trim().length === 0) {
             return false;
         }
     }

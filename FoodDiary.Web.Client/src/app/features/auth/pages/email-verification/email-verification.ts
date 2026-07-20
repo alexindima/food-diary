@@ -43,7 +43,7 @@ export class EmailVerificationComponent {
 
     protected onRetry(): void {
         const { userId, token } = this.emailToken();
-        if (userId === null || userId.length === 0 || token === null || token.length === 0) {
+        if (userId === null || token === null || userId.length === 0 || token.length === 0) {
             this.errorMessage.set(this.translateService.instant('AUTH.VERIFY.ERROR_INVALID'));
             return;
         }
@@ -60,7 +60,7 @@ export class EmailVerificationComponent {
         const token = params.get('token');
         this.emailToken.set({ userId, token });
 
-        if (userId === null || userId.length === 0 || token === null || token.length === 0) {
+        if (userId === null || token === null || userId.length === 0 || token.length === 0) {
             this.state.set('invalid');
             this.errorMessage.set(this.translateService.instant('AUTH.VERIFY.ERROR_INVALID'));
             return;

@@ -104,7 +104,7 @@ export class PasswordResetComponent {
         }
 
         const { userId, token } = this.token();
-        if (userId === null || userId.length === 0 || token === null || token.length === 0) {
+        if (userId === null || token === null || userId.length === 0 || token.length === 0) {
             this.state.set('invalid');
             this.errorMessage.set(this.translateService.instant('AUTH.RESET.INVALID'));
             return;
@@ -151,7 +151,7 @@ export class PasswordResetComponent {
             this.document.defaultView?.history.replaceState({}, '', this.document.location.pathname + this.document.location.search);
         }
 
-        if (userId === null || userId.length === 0 || token === null || token.length === 0) {
+        if (userId === null || token === null || userId.length === 0 || token.length === 0) {
             this.state.set('invalid');
             this.errorMessage.set(this.translateService.instant('AUTH.RESET.INVALID'));
         }

@@ -36,7 +36,7 @@ export class TokenStorageService {
 
     public getRefreshToken(): string | null {
         const token = this.storage.getItem('local', 'refreshToken');
-        if (token === null || token.length === 0 || token === 'undefined' || token === 'null') {
+        if (token === null || token === 'undefined' || token === 'null' || token.length === 0) {
             this.clearRefreshToken();
             return null;
         }
@@ -57,7 +57,7 @@ export class TokenStorageService {
 
     public loadUserId(): string | null {
         const storedId = this.storage.getItem('local', 'userId');
-        if (storedId === null || storedId.length === 0 || storedId === 'undefined') {
+        if (storedId === null || storedId === 'undefined' || storedId.length === 0) {
             return null;
         }
         return storedId;

@@ -9,7 +9,7 @@ export class BrowserNotificationCapabilityService {
 
     public getPermission(): NotificationPermission | 'unsupported' {
         const notification = this.document.defaultView?.Notification;
-        if (!this.isBrowser || notification === undefined) {
+        if (notification === undefined || !this.isBrowser) {
             return 'unsupported';
         }
 
@@ -30,7 +30,7 @@ export class BrowserNotificationCapabilityService {
         }
 
         const view = this.document.defaultView;
-        if (!this.isBrowser || view === null) {
+        if (view === null || !this.isBrowser) {
             return url;
         }
 

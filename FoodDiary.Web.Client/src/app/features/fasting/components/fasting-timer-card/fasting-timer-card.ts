@@ -121,7 +121,7 @@ export class FastingTimerCardComponent {
     public constructor() {
         effect(() => {
             const session = this.getSession();
-            if (!this.usesFacadeTimer() && session !== null && session.endedAtUtc === null) {
+            if (session !== null && session.endedAtUtc === null && !this.usesFacadeTimer()) {
                 this.startTimer();
                 return;
             }

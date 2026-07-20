@@ -151,7 +151,7 @@ function mapConsumptionItem(
 
 function normalizeItemAmount(value: unknown): number {
     const parsedAmount = Number(value);
-    return Number.isNaN(parsedAmount) || parsedAmount === 0 ? 0 : parsedAmount;
+    return parsedAmount === 0 || Number.isNaN(parsedAmount) ? 0 : parsedAmount;
 }
 
 function buildManualNutritionPayload(isNutritionAutoCalculated: boolean, manualTotals: NutritionTotals): Partial<ConsumptionManageDto> {

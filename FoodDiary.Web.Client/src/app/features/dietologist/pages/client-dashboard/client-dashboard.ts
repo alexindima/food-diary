@@ -247,8 +247,8 @@ export class ClientDashboardComponent {
         const nextPeriod = this.getPeriodFromForm();
         if (
             client === null ||
-            this.dateFilterForm().invalid() ||
             nextPeriod === null ||
+            this.dateFilterForm().invalid() ||
             (nextPeriod.dateFrom === this.selectedDateFrom() && nextPeriod.dateTo === this.selectedDateTo())
         ) {
             this.dateFilterForm().markAsTouched();

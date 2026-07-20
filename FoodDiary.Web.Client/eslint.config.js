@@ -288,7 +288,7 @@ const createAngularSpecificFieldsBeforeMethodsRule = context => ({
                 continue;
             }
 
-            if (member.type !== 'PropertyDefinition' || !seenMethod) {
+            if (!seenMethod || member.type !== 'PropertyDefinition') {
                 continue;
             }
 
@@ -1312,7 +1312,11 @@ const createNoRootStatefulFeatureFacadeRule = context => {
             }
         },
         Decorator(node) {
-            if (node.expression.type === 'CallExpression' && node.expression.callee.type === 'Identifier' && node.expression.callee.name === 'Service') {
+            if (
+                node.expression.type === 'CallExpression' &&
+                node.expression.callee.type === 'Identifier' &&
+                node.expression.callee.name === 'Service'
+            ) {
                 serviceDecorator = node;
             }
         },
@@ -1574,39 +1578,43 @@ export default [
                     default: 'allow',
                     policies: [
                         {
-                            from: { type: 'app-shared-models' },
+                            from: { element: { type: 'app-shared-models' } },
                             disallow: {
                                 to: {
-                                    type: ['app-shared-api', 'app-shared-dialogs', 'app-shared-ui', 'app-feature-*'],
+                                    element: {
+                                        type: ['app-shared-api', 'app-shared-dialogs', 'app-shared-ui', 'app-feature-*'],
+                                    },
                                 },
                             },
                             message: 'shared/models must stay pure and must not depend on API, UI, or feature code.',
                         },
                         {
-                            from: { type: 'app-shared-api' },
+                            from: { element: { type: 'app-shared-api' } },
                             disallow: {
                                 to: {
-                                    type: ['app-shared-dialogs', 'app-shared-ui', 'app-feature-*'],
+                                    element: { type: ['app-shared-dialogs', 'app-shared-ui', 'app-feature-*'] },
                                 },
                             },
                             message: 'shared/api must not depend on UI or feature code.',
                         },
                         {
-                            from: { type: 'app-shared-ui' },
+                            from: { element: { type: 'app-shared-ui' } },
                             disallow: {
                                 to: {
-                                    type: 'app-feature-*',
+                                    element: { type: 'app-feature-*' },
                                 },
                             },
                             message: 'shared UI must stay feature-agnostic.',
                         },
                         {
-                            from: { type: 'app-feature-*' },
+                            from: { element: { type: 'app-feature-*' } },
                             disallow: {
                                 to: {
-                                    type: 'app-feature-*',
-                                    captured: {
-                                        feature: '!({{ from.captured.feature }})',
+                                    element: {
+                                        type: 'app-feature-*',
+                                        captured: {
+                                            feature: '!({{ from.element.captured.feature }})',
+                                        },
                                     },
                                 },
                             },
@@ -1614,91 +1622,109 @@ export default [
                                 'Feature code must not import another feature directly. Move the contract to shared or compose the features at the routing boundary.',
                         },
                         {
-                            from: { type: 'app-feature-models' },
+                            from: { element: { type: 'app-feature-models' } },
                             disallow: {
                                 to: {
-                                    type: [
-                                        'app-feature-api',
-                                        'app-feature-components',
-                                        'app-feature-dialogs',
-                                        'app-feature-lib',
-                                        'app-feature-pages',
-                                    ],
+                                    element: {
+                                        type: [
+                                            'app-feature-api',
+                                            'app-feature-components',
+                                            'app-feature-dialogs',
+                                            'app-feature-lib',
+                                            'app-feature-pages',
+                                        ],
+                                    },
                                 },
                             },
                             message: 'Feature models must stay data-only and must not depend on API, UI, lib, or pages.',
                         },
                         {
-                            from: { type: 'app-feature-api' },
+                            from: { element: { type: 'app-feature-api' } },
                             disallow: {
                                 to: {
-                                    type: ['app-feature-components', 'app-feature-dialogs', 'app-feature-pages'],
+                                    element: { type: ['app-feature-components', 'app-feature-dialogs', 'app-feature-pages'] },
                                 },
                             },
                             message: 'Feature API code must not depend on feature UI or pages.',
                         },
                         {
                             from: {
-                                type: [
-                                    'app-feature-api',
-                                    'app-feature-models',
-                                    'app-feature-components',
-                                    'app-feature-dialogs',
-                                    'app-feature-lib',
-                                    'app-feature-resolvers',
-                                ],
+                                element: {
+                                    type: [
+                                        'app-feature-api',
+                                        'app-feature-models',
+                                        'app-feature-components',
+                                        'app-feature-dialogs',
+                                        'app-feature-lib',
+                                        'app-feature-resolvers',
+                                    ],
+                                },
                             },
                             disallow: {
                                 to: {
-                                    type: 'app-feature-pages',
+                                    element: { type: 'app-feature-pages' },
                                 },
                             },
                             message:
                                 'Feature implementation must not depend on route-level pages. Compose pages from lower layers instead.',
                         },
                         {
-                            from: { type: ['app-feature-components', 'app-feature-dialogs', 'app-feature-lib', 'app-feature-resolvers'] },
+                            from: {
+                                element: {
+                                    type: ['app-feature-components', 'app-feature-dialogs', 'app-feature-lib', 'app-feature-resolvers'],
+                                },
+                            },
                             disallow: {
                                 to: {
-                                    type: 'app-feature-api',
-                                    captured: {
-                                        feature: '!({{ from.captured.feature }})',
+                                    element: {
+                                        type: 'app-feature-api',
+                                        captured: {
+                                            feature: '!({{ from.element.captured.feature }})',
+                                        },
                                     },
                                 },
                             },
                             message: 'Feature internals must use their own feature API or shared APIs, not another feature API.',
                         },
                         {
-                            from: { type: 'app-feature-*' },
+                            from: { element: { type: 'app-feature-*' } },
                             disallow: {
                                 to: {
-                                    type: 'app-feature-pages',
-                                    captured: {
-                                        feature: '!({{ from.captured.feature }})',
+                                    element: {
+                                        type: 'app-feature-pages',
+                                        captured: {
+                                            feature: '!({{ from.element.captured.feature }})',
+                                        },
                                     },
                                 },
                             },
                             message: 'Feature code must not import pages from another feature.',
                         },
                         {
-                            from: { type: ['admin-feature-components', 'admin-feature-dialogs', 'admin-feature-pages'] },
+                            from: {
+                                element: { type: ['admin-feature-components', 'admin-feature-dialogs', 'admin-feature-pages'] },
+                            },
                             disallow: {
                                 to: {
-                                    type: 'admin-feature-api',
-                                    captured: {
-                                        feature: '!({{ from.captured.feature }})',
+                                    element: {
+                                        type: 'admin-feature-api',
+                                        captured: {
+                                            feature: '!({{ from.element.captured.feature }})',
+                                        },
                                     },
                                 },
                             },
                             message: 'Admin feature code must use its own feature API, not another admin feature API.',
                         },
                         {
-                            from: { type: 'admin-feature-*' },
+                            from: { element: { type: 'admin-feature-*' } },
                             disallow: {
                                 to: {
-                                    type: 'admin-feature-*',
-                                    captured: {
-                                        feature: '!({{ from.captured.feature }})',
+                                    element: {
+                                        type: 'admin-feature-*',
+                                        captured: {
+                                            feature: '!({{ from.element.captured.feature }})',
+                                        },
                                     },
                                 },
                             },
@@ -1706,12 +1732,14 @@ export default [
                                 'Admin feature code must not import another admin feature directly. Move the contract to shared or compose the features at the routing boundary.',
                         },
                         {
-                            from: { type: 'admin-feature-*' },
+                            from: { element: { type: 'admin-feature-*' } },
                             disallow: {
                                 to: {
-                                    type: 'admin-feature-pages',
-                                    captured: {
-                                        feature: '!({{ from.captured.feature }})',
+                                    element: {
+                                        type: 'admin-feature-pages',
+                                        captured: {
+                                            feature: '!({{ from.element.captured.feature }})',
+                                        },
                                     },
                                 },
                             },

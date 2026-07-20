@@ -187,7 +187,7 @@ export class FdUiLineChartComponent {
         const numeric = this.numericValues();
         const actualMinValue = Math.min(...numeric);
         const actualMaxValue = Math.max(...numeric);
-        if (numeric.length > 0 && actualMinValue === actualMaxValue && actualMinValue !== 0) {
+        if (actualMinValue !== 0 && actualMinValue === actualMaxValue && numeric.length > 0) {
             return Math.max(0, actualMinValue - this.getFlatRangePadding(actualMinValue));
         }
 
