@@ -40,6 +40,22 @@ public sealed partial class AuthenticationCommandHandlerTests {
     }
 
     [Fact]
+    public async Task LinkTelegramHandler_WhenAssertionWasConsumed_RejectsReplay() {
+        var user = User.Create("link-replay@example.com", "secret");
+        LinkTelegramCommandHandler handler = CreateLinkTelegramHandler(
+            new StubUserRepository(user),
+            replayGuard: new StubTelegramAssertionReplayGuard(consume: false));
+
+        Result<UserModel> result = await handler.Handle(
+            new LinkTelegramCommand(user.Id.Value, "replayed-init-data"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.TelegramAssertionAlreadyUsed", result.Error.Code);
+        Assert.Null(user.TelegramUserId);
+    }
+
+    [Fact]
     public async Task LinkTelegramHandler_WhenUserMissing_ReturnsFailure() {
         LinkTelegramCommandHandler handler = CreateLinkTelegramHandler(new StubUserRepository());
 

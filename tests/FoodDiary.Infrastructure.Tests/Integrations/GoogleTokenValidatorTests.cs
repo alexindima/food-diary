@@ -118,6 +118,22 @@ public sealed class GoogleTokenValidatorTests {
     }
 
     [Fact]
+    public async Task ValidateCredentialAsync_WhenSubjectMissing_ReturnsInvalidToken() {
+        const string clientId = "google-client";
+        RsaSecurityKey signingKey = CreateSigningKey();
+        string token = CreateGoogleJwt(signingKey, clientId, [
+            new Claim("email", "user@example.com"),
+            new Claim("email_verified", "true"),
+        ]);
+        GoogleTokenValidator validator = CreateValidator(clientId, new StaticConfigurationManager(signingKey));
+
+        Result<GoogleIdentityPayload> result = await validator.ValidateCredentialAsync(token, CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.GoogleInvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task ValidateCredentialAsync_WhenTokenInvalid_ReturnsInvalidToken() {
         RsaSecurityKey signingKey = CreateSigningKey();
         GoogleTokenValidator validator = CreateValidator("google-client", new StaticConfigurationManager(signingKey));

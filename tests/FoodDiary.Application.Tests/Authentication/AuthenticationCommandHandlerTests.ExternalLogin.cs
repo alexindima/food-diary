@@ -114,4 +114,23 @@ public sealed partial class AuthenticationCommandHandlerTests {
         ResultAssert.Success(result);
         Assert.Single(notificationRepository.Notifications);
     }
+
+    [Fact]
+    public async Task GoogleLoginHandler_ForLinkedPasswordAccount_DoesNotCreatePasswordSetupNotification() {
+        var user = User.Create("linked-google@example.com", "secret", hasPassword: true);
+        user.LinkGoogleIdentity(GoogleIssuer, GoogleSubject);
+        var notificationRepository = new StubNotificationRepository();
+        var handler = new GoogleLoginCommandHandler(
+            new StubUserRepository(user),
+            notificationRepository,
+            new StubNotificationWriter(notificationRepository),
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")),
+            new StubPasswordHasher(),
+            new StubAuthenticationTokenService());
+
+        Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Empty(notificationRepository.Notifications);
+    }
 }

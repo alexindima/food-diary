@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Admin.Models;
@@ -100,7 +101,8 @@ public sealed class UserApplicationServiceDelegationTests {
     public async Task AuthenticationUserMutationService_AddAsync_DelegatesToWriteRepository() {
         IUserLookupRepository lookupRepository = Substitute.For<IUserLookupRepository>();
         IUserIdentityMutationService identityMutationService = Substitute.For<IUserIdentityMutationService>();
-        var service = new AuthenticationUserMutationService(lookupRepository, identityMutationService);
+        IGoogleIdentityUserDirectoryService googleIdentityDirectoryService = Substitute.For<IGoogleIdentityUserDirectoryService>();
+        var service = new AuthenticationUserMutationService(lookupRepository, googleIdentityDirectoryService, identityMutationService);
         var user = User.Create("add@test.com", "hashed-password");
         using var cancellationTokenSource = new CancellationTokenSource();
         identityMutationService.AddAsync(user, cancellationTokenSource.Token).Returns(user);
@@ -115,7 +117,8 @@ public sealed class UserApplicationServiceDelegationTests {
     public async Task AuthenticationUserMutationService_GetByTelegramUserIdIncludingDeletedAsync_DelegatesToLookupRepository() {
         IUserLookupRepository lookupRepository = Substitute.For<IUserLookupRepository>();
         IUserIdentityMutationService identityMutationService = Substitute.For<IUserIdentityMutationService>();
-        var service = new AuthenticationUserMutationService(lookupRepository, identityMutationService);
+        IGoogleIdentityUserDirectoryService googleIdentityDirectoryService = Substitute.For<IGoogleIdentityUserDirectoryService>();
+        var service = new AuthenticationUserMutationService(lookupRepository, googleIdentityDirectoryService, identityMutationService);
         var user = User.Create("telegram-deleted@test.com", "hashed-password");
         using var cancellationTokenSource = new CancellationTokenSource();
         lookupRepository.GetByTelegramUserIdIncludingDeletedAsync(987654321, cancellationTokenSource.Token).Returns(user);
@@ -124,6 +127,30 @@ public sealed class UserApplicationServiceDelegationTests {
 
         Assert.Same(user, result);
         await lookupRepository.Received(1).GetByTelegramUserIdIncludingDeletedAsync(987654321, cancellationTokenSource.Token);
+    }
+
+    [Fact]
+    public async Task AuthenticationUserMutationService_GetByGoogleIdentityIncludingDeletedAsync_DelegatesToLookupRepository() {
+        IUserLookupRepository lookupRepository = Substitute.For<IUserLookupRepository>();
+        IUserIdentityMutationService identityMutationService = Substitute.For<IUserIdentityMutationService>();
+        IGoogleIdentityUserDirectoryService googleIdentityDirectoryService = Substitute.For<IGoogleIdentityUserDirectoryService>();
+        var service = new AuthenticationUserMutationService(lookupRepository, googleIdentityDirectoryService, identityMutationService);
+        var user = User.Create("google-identity@test.com", "hashed-password");
+        using var cancellationTokenSource = new CancellationTokenSource();
+        googleIdentityDirectoryService
+            .GetByGoogleIdentityIncludingDeletedAsync("https://accounts.google.com", "google-subject", cancellationTokenSource.Token)
+            .Returns(user);
+
+        User? result = await service.GetByGoogleIdentityIncludingDeletedAsync(
+            "https://accounts.google.com",
+            "google-subject",
+            cancellationTokenSource.Token);
+
+        Assert.Same(user, result);
+        await googleIdentityDirectoryService.Received(1).GetByGoogleIdentityIncludingDeletedAsync(
+            "https://accounts.google.com",
+            "google-subject",
+            cancellationTokenSource.Token);
     }
 
     [Fact]

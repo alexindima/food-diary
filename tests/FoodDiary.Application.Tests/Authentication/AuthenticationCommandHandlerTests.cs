@@ -103,8 +103,9 @@ public sealed partial class AuthenticationCommandHandlerTests {
 
     private static LinkTelegramCommandHandler CreateLinkTelegramHandler(
         StubUserRepository userRepository,
-        StubTelegramAuthValidator? telegramAuthValidator = null) =>
-        new(userRepository, userRepository, telegramAuthValidator ?? new StubTelegramAuthValidator(), new StubTelegramAssertionReplayGuard());
+        StubTelegramAuthValidator? telegramAuthValidator = null,
+        StubTelegramAssertionReplayGuard? replayGuard = null) =>
+        new(userRepository, userRepository, telegramAuthValidator ?? new StubTelegramAuthValidator(), replayGuard ?? new StubTelegramAssertionReplayGuard());
 
     [ExcludeFromCodeCoverage]
     private sealed class StubTelegramAssertionReplayGuard(bool consume = true) : ITelegramAssertionReplayGuard {
@@ -178,6 +179,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         : IUserRepository, IAuthenticationUserLookupService, IAuthenticationUserMutationService {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByGoogleIdentityIncludingDeletedAsync(string issuer, string subject, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user?.Id == id ? user : null);
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();

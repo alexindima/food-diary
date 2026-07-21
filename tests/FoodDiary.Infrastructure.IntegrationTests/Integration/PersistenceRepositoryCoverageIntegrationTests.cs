@@ -636,6 +636,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var active = User.Create($"active-{Guid.NewGuid():N}@example.com", "hash");
         active.LinkTelegram(123456);
+        active.LinkGoogleIdentity("https://accounts.google.com", "active-google-subject");
         var inactive = User.Create($"inactive-{Guid.NewGuid():N}@example.com", "hash");
         inactive.Deactivate(DateTime.UtcNow);
         var deleted = User.Create($"deleted-{Guid.NewGuid():N}@example.com", "hash");
@@ -679,6 +680,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     private static async Task AssertUserLookupRepositoryAsync(UserRepository repository, User active, User deleted) {
         Assert.NotNull(await repository.GetByEmailAsync(active.Email));
         Assert.NotNull(await repository.GetByEmailIncludingDeletedAsync(deleted.Email));
+        Assert.NotNull(await repository.GetByGoogleIdentityIncludingDeletedAsync("https://accounts.google.com", "active-google-subject"));
         Assert.NotNull(await repository.GetByIdAsync(active.Id));
         Assert.NotNull(await repository.GetByIdIncludingDeletedAsync(deleted.Id));
         Assert.NotNull(await repository.GetByTelegramUserIdAsync(123456));

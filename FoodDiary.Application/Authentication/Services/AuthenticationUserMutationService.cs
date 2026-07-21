@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Users.Common;
@@ -8,6 +9,7 @@ namespace FoodDiary.Application.Authentication.Services;
 
 internal sealed class AuthenticationUserMutationService(
     IUserDirectoryService userDirectoryService,
+    IGoogleIdentityUserDirectoryService googleIdentityUserDirectoryService,
     IUserIdentityMutationService userIdentityMutationService) : IAuthenticationUserMutationService {
     public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) =>
         userIdentityMutationService.AddAsync(user, cancellationToken);
@@ -16,7 +18,7 @@ internal sealed class AuthenticationUserMutationService(
         userDirectoryService.GetByEmailIncludingDeletedAsync(email, cancellationToken);
 
     public Task<User?> GetByGoogleIdentityIncludingDeletedAsync(string issuer, string subject, CancellationToken cancellationToken = default) =>
-        userDirectoryService.GetByGoogleIdentityIncludingDeletedAsync(issuer, subject, cancellationToken);
+        googleIdentityUserDirectoryService.GetByGoogleIdentityIncludingDeletedAsync(issuer, subject, cancellationToken);
 
     public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
         userDirectoryService.GetByIdAsync(userId, cancellationToken);

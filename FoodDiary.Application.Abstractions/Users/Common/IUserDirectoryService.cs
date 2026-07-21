@@ -6,8 +6,6 @@ namespace FoodDiary.Application.Abstractions.Users.Common;
 public interface IUserDirectoryService {
     Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
     Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default);
-    Task<User?> GetByGoogleIdentityIncludingDeletedAsync(string issuer, string subject, CancellationToken cancellationToken = default) =>
-        throw new NotSupportedException();
     Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default);
     Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default);
     Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default);
