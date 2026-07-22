@@ -44,6 +44,12 @@
     color: inherit;
     cursor: pointer;
     text-align: left;
+
+    &:where(:focus-visible) {
+        outline: var(--fd-outline-focus);
+        outline-offset: var(--fd-outline-offset);
+        border-radius: var(--fd-radius-xs);
+    }
 }
 
 .meals-preview__placeholder-actions {

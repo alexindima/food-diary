@@ -240,6 +240,11 @@
         pointer-events: none;
     }
 
+    &__ring:has(&__range:where(:focus-visible)) {
+        outline: var(--fd-outline-focus);
+        outline-offset: var(--fd-outline-offset);
+    }
+
     &__macro-group {
         display: flex;
         flex-direction: column;
@@ -412,6 +417,11 @@
         appearance: none;
         -webkit-appearance: none;
         z-index: 3;
+    }
+
+    &__macro-slider:has(&__macro-range:where(:focus-visible)) {
+        outline: var(--fd-outline-focus);
+        outline-offset: var(--fd-outline-offset);
     }
 
     &__placeholder-note {

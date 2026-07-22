@@ -12,6 +12,10 @@
     outline-offset: var(--fd-outline-offset);
 }
 
+:host(:where(:focus-visible)) {
+    outline: none;
+}
+
 .media-card {
     display: grid;
     align-items: stretch;

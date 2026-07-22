@@ -86,6 +86,12 @@
     text-decoration: underline;
 }
 
+.premium-access-page__link:where(:focus-visible) {
+    outline: var(--fd-outline-focus);
+    outline-offset: var(--fd-outline-offset);
+    border-radius: var(--fd-radius-xs);
+}
+
 @media #{variables.$media-desktop-sm} {
     .premium-access-page__plans {
         grid-template-columns: 1fr;

@@ -11,6 +11,11 @@
     background: var(--fd-color-white);
     cursor: pointer;
 
+    &:where(:focus-visible) {
+        outline: var(--fd-outline-focus);
+        outline-offset: var(--fd-outline-offset);
+    }
+
     &.active {
         border-color: var(--fd-color-primary-600);
         background: var(--fd-bg-status-info);
@@ -35,6 +40,12 @@
         border: var(--fd-border-strong);
         border-radius: var(--fd-radius-md);
         padding: 0 var(--fd-space-sm);
+
+        &:where(:focus-visible) {
+            outline: none;
+            border-color: var(--fd-color-primary-500);
+            box-shadow: var(--fd-shadow-focus);
+        }
     }
 }
 
@@ -51,6 +62,11 @@
     overflow-x: auto;
     border-collapse: collapse;
     background: var(--fd-color-white);
+}
+
+.admin-billing__table:where(:focus-visible) {
+    outline: var(--fd-outline-focus);
+    outline-offset: calc(0px - var(--fd-border-width-strong));
 }
 
 .admin-billing__table th,

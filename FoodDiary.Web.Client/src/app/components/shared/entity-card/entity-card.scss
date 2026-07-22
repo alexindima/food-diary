@@ -22,6 +22,11 @@
         cursor: zoom-in;
     }
 
+    &:where(:focus-visible) {
+        outline: var(--fd-outline-focus);
+        outline-offset: calc(0px - var(--fd-border-width-strong));
+    }
+
     &--has-image {
         display: block;
     }

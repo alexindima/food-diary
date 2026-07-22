@@ -10,6 +10,12 @@
         border: var(--fd-border-strong);
         border-radius: var(--fd-radius-xs);
         font-size: var(--fd-text-body-xs-size);
+
+        &:where(:focus-visible) {
+            outline: none;
+            border-color: var(--fd-color-primary-500);
+            box-shadow: var(--fd-shadow-focus);
+        }
     }
 }
 
@@ -39,6 +45,11 @@
         font-size: var(--fd-text-code-sm-size);
         color: var(--fd-color-text-muted);
     }
+}
+
+.reports-table:where(:focus-visible) {
+    outline: var(--fd-outline-focus);
+    outline-offset: calc(0px - var(--fd-border-width-strong));
 }
 
 .reason-cell {

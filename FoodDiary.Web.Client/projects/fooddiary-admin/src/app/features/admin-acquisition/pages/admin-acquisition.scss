@@ -28,6 +28,12 @@
             border-radius: var(--fd-radius-sm);
             background: var(--fd-color-surface);
             color: var(--fd-color-text);
+
+            &:where(:focus-visible) {
+                outline: none;
+                border-color: var(--fd-color-primary-500);
+                box-shadow: var(--fd-shadow-focus);
+            }
         }
     }
 

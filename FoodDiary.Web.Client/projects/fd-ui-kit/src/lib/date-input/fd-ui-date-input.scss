@@ -131,6 +131,11 @@
     color: var(--fd-color-text);
 }
 
+.fd-ui-date-input__suffix:where(:focus-visible) {
+    outline: none;
+    color: var(--fd-color-text);
+}
+
 .fd-ui-date-input__suffix fd-ui-icon {
     width: var(--fd-size-icon-lg);
     height: var(--fd-size-icon-lg);

@@ -32,9 +32,13 @@
     color: var(--fd-ui-sidebar-link-hover-text);
 }
 
-.fd-ui-sidebar__link:where(:focus-visible) {
+.fd-ui-sidebar__link:where(:focus-visible):not(.is-active) {
     outline: var(--fd-outline-focus-strong);
     outline-offset: var(--fd-outline-offset);
+}
+
+.fd-ui-sidebar__link.is-active:where(:focus-visible) {
+    outline: none;
 }
 
 .fd-ui-sidebar__link.is-active {

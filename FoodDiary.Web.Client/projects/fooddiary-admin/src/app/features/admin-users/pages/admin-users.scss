@@ -26,6 +26,11 @@
     border-collapse: collapse;
 }
 
+.users-table:where(:focus-visible) {
+    outline: var(--fd-outline-focus);
+    outline-offset: calc(0px - var(--fd-border-width-strong));
+}
+
 .users-table th,
 .users-table td {
     padding: var(--fd-space-sm);

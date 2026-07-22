@@ -68,6 +68,11 @@
         box-shadow: var(--fd-shadow-xl);
     }
 
+    &:where(:focus-visible) {
+        outline: var(--fd-outline-focus);
+        outline-offset: var(--fd-outline-offset);
+    }
+
     &--read {
         opacity: 0.75;
     }

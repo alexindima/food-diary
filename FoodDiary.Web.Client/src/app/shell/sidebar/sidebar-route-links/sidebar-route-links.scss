@@ -33,10 +33,15 @@
     color: var(--fd-color-text-strong);
 }
 
-.sidebar__link:where(:focus-visible),
-.sidebar-mobile__sheet-link:where(:focus-visible) {
+.sidebar__link:where(:focus-visible):not(.is-active),
+.sidebar-mobile__sheet-link:where(:focus-visible):not(.is-active) {
     outline: var(--fd-outline-focus-strong);
     outline-offset: var(--fd-outline-offset);
+}
+
+.sidebar__link.is-active:where(:focus-visible),
+.sidebar-mobile__sheet-link.is-active:where(:focus-visible) {
+    outline: none;
 }
 
 .sidebar__link.is-active {
