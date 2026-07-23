@@ -353,6 +353,12 @@ export class AuthComponent {
     }
 
     private async completeAuthenticatedNavigationAsync(): Promise<void> {
+        if (this.authService.mustChangePassword()) {
+            await this.navigationService.navigateToRequiredPasswordChangeAsync();
+            this.closeDialogIfAny();
+            return;
+        }
+
         if (!this.authService.isEmailConfirmed()) {
             await this.navigationService.navigateToEmailVerificationPendingAsync({ autoResend: true });
             return;

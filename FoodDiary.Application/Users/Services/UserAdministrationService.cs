@@ -12,6 +12,12 @@ internal sealed class UserAdministrationService(
     public Task<User?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) =>
         userDirectoryService.GetByIdIncludingDeletedAsync(userId, cancellationToken);
 
+    public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
+        userDirectoryService.GetByEmailIncludingDeletedAsync(email, cancellationToken);
+
+    public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) =>
+        userWriteRepository.AddAsync(user, cancellationToken);
+
     public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(
         IReadOnlyList<string> names,
         CancellationToken cancellationToken = default) =>

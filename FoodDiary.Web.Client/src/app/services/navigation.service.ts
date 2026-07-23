@@ -25,6 +25,10 @@ export class NavigationService {
         await this.router.navigate(['/verify-pending'], { queryParams });
     }
 
+    public async navigateToRequiredPasswordChangeAsync(): Promise<void> {
+        await this.router.navigate(['/change-password-required']);
+    }
+
     public async navigateToReturnUrlAsync(returnUrl: string | null): Promise<void> {
         await this.router.navigateByUrl(returnUrl ?? '/dashboard');
     }

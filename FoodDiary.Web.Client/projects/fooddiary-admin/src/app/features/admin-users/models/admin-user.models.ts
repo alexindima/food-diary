@@ -2,6 +2,7 @@ export type AdminUser = {
     id: string;
     email: string;
     hasPassword?: boolean;
+    mustChangePassword?: boolean;
     username?: string | null;
     firstName?: string | null;
     lastName?: string | null;
@@ -49,6 +50,25 @@ export type AdminUser = {
     aiInputTokenLimit?: number;
     aiOutputTokenLimit?: number;
     aiConsentAcceptedAt?: string | null;
+};
+
+export type AdminUserCreate = {
+    email: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    language: 'en' | 'ru';
+    roles: string[];
+    temporaryPassword?: string | null;
+    generatePassword: boolean;
+    isEmailConfirmed: boolean;
+    sendCredentialsEmail: boolean;
+    requirePasswordChange: boolean;
+};
+
+export type AdminUserCreation = {
+    user: AdminUser;
+    temporaryPassword: string;
+    credentialsEmailQueued: boolean;
 };
 
 export type AdminUserStatusFilter = 'active' | 'inactive' | 'deleted';

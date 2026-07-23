@@ -314,6 +314,9 @@ public sealed partial class AuthenticationCommandHandlerTests {
             return Task.CompletedTask;
         }
 
+        public Task SendAccountCreatedAsync(AccountCreatedMessage message, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
         public Task SendTestEmailAsync(TestEmailMessage message, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
     }

@@ -50,4 +50,5 @@ public sealed record AdminUserHttpResponse(
     string[] Roles,
     long AiInputTokenLimit,
     long AiOutputTokenLimit,
-    DateTime? AiConsentAcceptedAt);
+    DateTime? AiConsentAcceptedAt,
+    bool MustChangePassword);

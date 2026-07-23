@@ -3,6 +3,7 @@ namespace FoodDiary.Domain.ValueObjects;
 public readonly record struct UserSecurityState(
     string Password,
     bool HasPassword,
+    bool MustChangePassword,
     string? RefreshToken,
     bool IsEmailConfirmed,
     string? EmailConfirmationTokenHash,
@@ -16,6 +17,7 @@ public readonly record struct UserSecurityState(
         return new UserSecurityState(
             Password: passwordHash,
             HasPassword: hasPassword,
+            MustChangePassword: false,
             RefreshToken: null,
             IsEmailConfirmed: false,
             EmailConfirmationTokenHash: null,
@@ -31,6 +33,17 @@ public readonly record struct UserSecurityState(
         return this with {
             Password = passwordHash,
             HasPassword = true,
+            MustChangePassword = false,
+        };
+    }
+
+    public UserSecurityState RequiringPasswordChange() {
+        if (!HasPassword) {
+            throw new InvalidOperationException("A password must be set before a password change can be required.");
+        }
+
+        return this with {
+            MustChangePassword = true,
         };
     }
 

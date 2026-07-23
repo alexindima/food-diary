@@ -13,6 +13,7 @@ export type User = {
     id: string;
     email: string;
     hasPassword: boolean;
+    mustChangePassword?: boolean;
     username?: string;
     firstName?: string;
     lastName?: string;

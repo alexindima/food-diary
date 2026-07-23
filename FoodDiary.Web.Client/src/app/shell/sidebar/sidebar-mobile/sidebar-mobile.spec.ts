@@ -41,6 +41,20 @@ describe('SidebarMobileComponent', () => {
         expect(foodToggle).toHaveBeenCalledWith(foodButton);
     });
 
+    it('provides accessible names when visual labels are hidden on narrow screens', () => {
+        const fixture = createComponent(null);
+        const host = fixture.nativeElement as HTMLElement;
+        const items = [...host.querySelectorAll<HTMLElement>('.sidebar-mobile__item')];
+
+        expect(items.map(item => item.getAttribute('aria-label'))).toEqual([
+            'SIDEBAR.DASHBOARD',
+            'SIDEBAR.FOOD',
+            'SIDEBAR.BODY',
+            'SIDEBAR.REPORTS',
+            'SIDEBAR.USER',
+        ]);
+    });
+
     it('hides admin panel action from non-admin users', () => {
         const fixture = createComponent('user', false);
         const host = fixture.nativeElement as HTMLElement;

@@ -50,6 +50,12 @@ public sealed partial class User {
         SetModified();
     }
 
+    public void RequirePasswordChange() {
+        EnsureNotDeleted();
+        ApplySecurityState(GetSecurityState().RequiringPasswordChange());
+        SetModified();
+    }
+
     public void SetEmailConfirmationToken(string tokenHash, DateTime expiresAtUtc, DateTime? issuedAtUtc = null) {
         SetEmailConfirmationToken(new UserTokenIssue(tokenHash, expiresAtUtc, issuedAtUtc));
     }

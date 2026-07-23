@@ -58,7 +58,8 @@ public static class AdminUserMappings {
             roles,
             user.AiInputTokenLimit,
             user.AiOutputTokenLimit,
-            user.AiConsentAcceptedAt);
+            user.AiConsentAcceptedAt,
+            user.MustChangePassword);
     }
 
     public static AdminUserModel ToAdminModel(this UserAdminReadModel user) =>
@@ -112,5 +113,6 @@ public static class AdminUserMappings {
             user.Roles,
             user.AiInputTokenLimit,
             user.AiOutputTokenLimit,
-            user.AiConsentAcceptedAt);
+            user.AiConsentAcceptedAt,
+            user.MustChangePassword);
 }

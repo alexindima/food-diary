@@ -1,11 +1,13 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { environment } from '../../../../environments/environment';
+import { AdminUserCreateDialogComponent } from '../dialogs/admin-user-create-dialog';
 import { AdminUserDetailsDialogComponent, type AdminUserDetailsDialogResult } from '../dialogs/admin-user-details-dialog';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog';
@@ -18,7 +20,7 @@ const ADMIN_USERS_PAGE_SIZE = 20;
 
 @Component({
     selector: 'fd-admin-users',
-    imports: [CommonModule, FdUiInputComponent, FdUiSelectComponent, AdminUsersTableComponent],
+    imports: [CommonModule, FdUiButtonComponent, FdUiInputComponent, FdUiSelectComponent, AdminUsersTableComponent],
     templateUrl: './admin-users.html',
     styleUrl: './admin-users.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,6 +67,18 @@ export class AdminUsersComponent {
                     this.totalItems.set(0);
                     this.isLoading.set(false);
                 },
+            });
+    }
+
+    protected openCreate(): void {
+        this.dialogService
+            .open<AdminUserCreateDialogComponent, never, boolean>(AdminUserCreateDialogComponent, { size: 'sm' })
+            .afterClosed()
+            .subscribe(created => {
+                if (created === true) {
+                    this.page.set(1);
+                    this.loadUsers();
+                }
             });
     }
 

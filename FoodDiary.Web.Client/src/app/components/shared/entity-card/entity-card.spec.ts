@@ -186,33 +186,19 @@ describe('EntityCardComponent events', () => {
         expect(actionSpy).toHaveBeenCalledOnce();
     });
 
-    it('opens from keyboard only when the card itself handles the event', async () => {
+    it('uses a dedicated accessible button to open the card', async () => {
         const { component, fixture } = await setupEntityCardAsync();
         const openSpy = vi.fn();
-        const preventDefaultSpy = vi.fn();
         const el = fixture.nativeElement as HTMLElement;
-        const cardElement = el.querySelector('fd-media-card') as HTMLElement;
-        const childElement = document.createElement('button');
         component['open'].subscribe(openSpy);
         fixture.detectChanges();
 
-        component['openCardFromKeyboard']({
-            currentTarget: cardElement,
-            target: childElement,
-            preventDefault: preventDefaultSpy,
-        } as unknown as KeyboardEvent);
+        const openButton = el.querySelector<HTMLButtonElement>('.entity-card__open-button');
+        openButton?.click();
 
-        expect(openSpy).not.toHaveBeenCalled();
-        expect(preventDefaultSpy).not.toHaveBeenCalled();
-
-        component['openCardFromKeyboard']({
-            currentTarget: cardElement,
-            target: cardElement,
-            preventDefault: preventDefaultSpy,
-        } as unknown as KeyboardEvent);
-
+        expect(openButton?.getAttribute('aria-label')).toBe('Test title');
+        expect(el.querySelector('fd-media-card')?.getAttribute('role')).toBeNull();
         expect(openSpy).toHaveBeenCalledOnce();
-        expect(preventDefaultSpy).toHaveBeenCalledOnce();
     });
 
     it('stops favorite keyboard events from reaching the card', async () => {

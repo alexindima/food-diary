@@ -449,7 +449,7 @@
     }
 
     &__target-number {
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text);
         letter-spacing: var(--fd-letter-spacing-emphasis);
     }
 
@@ -462,7 +462,7 @@
         text-align: center;
         border: none;
         background: transparent;
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text);
         outline: none;
         padding: var(--fd-space-xxs) var(--fd-space-xs);
         border-radius: var(--fd-radius-card);
@@ -547,7 +547,7 @@
         display: flex;
         align-items: center;
         gap: var(--fd-space-xs);
-        color: var(--fd-color-slate-700);
+        color: var(--fd-color-text);
         cursor: pointer;
 
         input[type='checkbox'] {
@@ -570,7 +570,7 @@
     }
 
     &__cycling-day-label {
-        color: var(--fd-color-slate-600);
+        color: var(--fd-color-text);
     }
 
     &__cycling-day-input {

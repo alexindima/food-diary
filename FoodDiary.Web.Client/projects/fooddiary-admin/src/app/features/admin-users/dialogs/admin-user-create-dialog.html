@@ -1,0 +1,113 @@
+<fd-ui-dialog title="Create user" size="sm" [dismissible]="false">
+    @if (created(); as result) {
+        <div class="admin-user-create-dialog fd-grid fd-gap-md" role="status">
+            <p>
+                <strong>{{ result.user.email }}</strong> has been created.
+            </p>
+            <div class="admin-user-create-dialog__credentials">
+                <span>Temporary password</span>
+                <code>{{ result.temporaryPassword }}</code>
+            </div>
+            <p>
+                @if (result.credentialsEmailQueued) {
+                    Credentials email has been queued. The user must change this password after signing in.
+                } @else {
+                    Send the temporary password to the user through a secure channel.
+                }
+            </p>
+        </div>
+    } @else {
+        <form class="admin-user-create-dialog fd-grid fd-gap-md" [formRoot]="form" (submit)="submit()">
+            <fd-ui-input label="Email" type="email" floatLabel="always" [formField]="form.email" />
+            <div class="fd-row fd-gap-sm">
+                <fd-ui-input label="First name" floatLabel="always" [formField]="form.firstName" />
+                <fd-ui-input label="Last name" floatLabel="always" [formField]="form.lastName" />
+            </div>
+
+            <div class="fd-grid fd-gap-xxs">
+                <label for="admin-user-create-language">Language</label>
+                <select id="admin-user-create-language" [formField]="form.language">
+                    <option value="ru">Russian</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+
+            <fieldset class="admin-user-create-dialog__roles fd-grid fd-gap-xs">
+                <legend>Roles</legend>
+                @for (role of availableRoles; track role) {
+                    <div>
+                        <input
+                            type="checkbox"
+                            [id]="`admin-user-create-role-${role}`"
+                            [checked]="hasRole(role)"
+                            (change)="toggleRole(role)"
+                        />
+                        <label [attr.for]="`admin-user-create-role-${role}`">{{ role }}</label>
+                    </div>
+                }
+            </fieldset>
+
+            <div>
+                <input id="admin-user-create-generate-password" type="checkbox" [formField]="form.generatePassword" />
+                <label for="admin-user-create-generate-password">Generate a secure temporary password</label>
+            </div>
+            @if (!formModel().generatePassword) {
+                <fd-ui-input label="Temporary password" type="password" floatLabel="always" [formField]="form.temporaryPassword" />
+                @if (formModel().temporaryPassword.length > 0 && formModel().temporaryPassword.length < 6) {
+                    <p class="admin-user-create-dialog__error">Temporary password must be at least 6 characters.</p>
+                }
+            }
+
+            <div>
+                <input id="admin-user-create-email-confirmed" type="checkbox" [formField]="form.isEmailConfirmed" />
+                <label for="admin-user-create-email-confirmed">Email confirmed</label>
+            </div>
+            <div>
+                <input
+                    id="admin-user-create-send-credentials"
+                    type="checkbox"
+                    [formField]="form.sendCredentialsEmail"
+                    (change)="onSendCredentialsChange()"
+                />
+                <label for="admin-user-create-send-credentials">Send login credentials by email</label>
+            </div>
+            <div>
+                <input
+                    id="admin-user-create-require-password-change"
+                    type="checkbox"
+                    [formField]="form.requirePasswordChange"
+                    (change)="onSendCredentialsChange()"
+                />
+                <label for="admin-user-create-require-password-change">Require password change on first sign-in</label>
+            </div>
+
+            @if (submitError()) {
+                <p class="admin-user-create-dialog__error" role="alert">{{ submitError() }}</p>
+            }
+        </form>
+    }
+    <div fdUiDialogFooter>
+        @if (created()) {
+            <fd-ui-button type="button" (click)="close()">Done</fd-ui-button>
+        } @else {
+            <fd-ui-button
+                type="button"
+                variant="secondary"
+                [disabled]="isSubmitting()"
+                [disabledReason]="isSubmitting() ? 'User creation is in progress' : null"
+                (click)="close()"
+            >
+                Cancel
+            </fd-ui-button>
+            <fd-ui-button
+                type="button"
+                [loading]="isSubmitting()"
+                [disabled]="form().invalid()"
+                [disabledReason]="form().invalid() ? 'Complete all required fields' : null"
+                (click)="submit()"
+            >
+                {{ submitLabel() }}
+            </fd-ui-button>
+        }
+    </div>
+</fd-ui-dialog>

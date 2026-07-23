@@ -1,4 +1,5 @@
 using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
+using FoodDiary.Application.Admin.Commands.CreateAdminUser;
 using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
 using FoodDiary.Application.Admin.Commands.DismissContentReport;
 using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
@@ -17,6 +18,25 @@ using FoodDiary.Presentation.Api.Features.Admin.Requests;
 namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
 
 public static class AdminHttpMappings {
+    public static CreateAdminUserCommand ToCommand(
+        this AdminUserCreateHttpRequest request,
+        Guid actorUserId,
+        string? clientOrigin) {
+        return new CreateAdminUserCommand(
+            Email: request.Email,
+            FirstName: request.FirstName,
+            LastName: request.LastName,
+            Language: request.Language,
+            Roles: request.Roles,
+            TemporaryPassword: request.TemporaryPassword,
+            GeneratePassword: request.GeneratePassword,
+            IsEmailConfirmed: request.IsEmailConfirmed,
+            SendCredentialsEmail: request.SendCredentialsEmail,
+            RequirePasswordChange: request.RequirePasswordChange,
+            ClientOrigin: clientOrigin,
+            ActorUserId: actorUserId);
+    }
+
     public static UpsertAdminEmailTemplateCommand ToCommand(
         this AdminEmailTemplateUpsertHttpRequest request,
         string key,

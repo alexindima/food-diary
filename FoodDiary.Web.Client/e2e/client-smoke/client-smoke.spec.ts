@@ -1,8 +1,35 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, type Page, type Route, test } from '@playwright/test';
 
 const MS_PER_SECOND = 1000;
 const AUTH_TOKEN_TTL_SECONDS = 3600;
 const SESSION_RESTORE_DELAY_MS = 750;
+const ACCESSIBILITY_TEST_TIMEOUT_MS = 120_000;
+const ACCESSIBILITY_ROUTES = [
+    '/dashboard',
+    '/products',
+    '/products/add',
+    '/meals',
+    '/meals/add',
+    '/recipes',
+    '/recipes/add',
+    '/explore',
+    '/shopping-lists',
+    '/goals',
+    '/statistics',
+    '/weight-history',
+    '/waist-history',
+    '/cycle-tracking',
+    '/meal-plans',
+    '/weekly-check-in',
+    '/lessons',
+    '/gamification',
+    '/fasting',
+    '/premium',
+    '/profile',
+    '/dietologist',
+    '/recommendations',
+] as const;
 const TEST_IMAGE_URLS = [
     createSvgDataUrl('#f97316', '1'),
     createSvgDataUrl('#22c55e', '2'),
@@ -145,6 +172,33 @@ test.describe('authenticated client smoke', () => {
         await expect(page.locator('fd-dashboard')).toBeVisible();
         await expect(page.getByRole('heading', { name: 'Consumption for today' })).toBeVisible();
     });
+});
+
+test.describe('authenticated accessibility', () => {
+    for (const viewport of [
+        { name: 'desktop', width: 1440, height: 900 },
+        { name: 'mobile', width: 390, height: 844 },
+    ] as const) {
+        test(`has no detectable WCAG A/AA violations on ${viewport.name} routes`, async ({ page }) => {
+            test.setTimeout(ACCESSIBILITY_TEST_TIMEOUT_MS);
+            await page.setViewportSize(viewport);
+            await page.addInitScript((token: string) => {
+                window.localStorage.setItem('authToken', token);
+                window.localStorage.setItem('refreshToken', 'refresh-token');
+                window.localStorage.setItem('userId', 'u1');
+                window.localStorage.setItem('emailConfirmed', 'true');
+            }, createAuthenticatedUserJwt());
+            await mockAuthenticatedClientApiAsync(page);
+
+            for (const route of ACCESSIBILITY_ROUTES) {
+                await page.goto(route);
+                await expect(page.locator('body')).toBeVisible();
+                const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+
+                expect(results.violations, `Accessibility violations on ${route} (${viewport.name})`).toEqual([]);
+            }
+        });
+    }
 });
 
 test.describe('session routing smoke', () => {
@@ -457,7 +511,7 @@ function createUser(): Record<string, unknown> {
         email: 'user@example.com',
         username: 'alexi',
         language: 'en',
-        theme: 'default',
+        theme: 'dark',
         uiStyle: 'classic',
         pushNotificationsEnabled: true,
         fastingPushNotificationsEnabled: true,

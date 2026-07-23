@@ -29,7 +29,7 @@ export class AdminUserEditDialogComponent {
     private readonly data = inject<AdminUser>(FD_UI_DIALOG_DATA);
     private readonly usersService = inject(AdminUsersFacade);
 
-    protected readonly roles = ['Admin', 'Premium', 'Support'];
+    protected readonly roles = ['Admin', 'Premium', 'Support', 'Dietologist'];
     protected readonly isSaving = signal(false);
     protected readonly languages: ReadonlyArray<{ value: 'en' | 'ru'; label: string }> = [
         { value: 'en', label: 'English' },

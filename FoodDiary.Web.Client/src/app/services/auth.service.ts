@@ -40,12 +40,14 @@ export class AuthService extends ApiService {
     private readonly authTokenSignal = signal<string | null>(this.tokenStorage.getToken());
     private readonly userSignal = signal<string | null>(this.tokenStorage.loadUserId());
     private readonly emailConfirmedSignal = signal<boolean | null>(this.tokenStorage.loadEmailConfirmed());
+    private readonly mustChangePasswordSignal = signal<boolean>(this.tokenStorage.loadMustChangePassword() ?? false);
     private refreshInFlight$: Observable<string | null> | null = null;
     private sessionRestorePromise: Promise<void> | null = null;
     private readonly authReadySignal = signal(false);
 
     public readonly isAuthenticated = computed(() => this.authTokenSignal() !== null);
     public readonly isEmailConfirmed = computed(() => this.emailConfirmedSignal() ?? true);
+    public readonly mustChangePassword = this.mustChangePasswordSignal.asReadonly();
     public readonly isAdmin = computed(() => this.hasRole('Admin'));
     public readonly isPremium = computed(() => this.hasRole('Premium'));
     public readonly isDietologist = computed(() => this.hasRole('Dietologist'));
@@ -241,6 +243,7 @@ export class AuthService extends ApiService {
         this.authTokenSignal.set(null);
         this.userSignal.set(null);
         this.emailConfirmedSignal.set(null);
+        this.mustChangePasswordSignal.set(false);
         this.tokenStorage.clearAll();
         this.localizationService.clearStoredLanguage();
         if (redirectToAuth) {
@@ -261,6 +264,11 @@ export class AuthService extends ApiService {
     public setEmailConfirmed(value: boolean): void {
         this.emailConfirmedSignal.set(value);
         this.tokenStorage.setEmailConfirmed(value);
+    }
+
+    public completeRequiredPasswordChange(): void {
+        this.mustChangePasswordSignal.set(false);
+        this.tokenStorage.setMustChangePassword(false);
     }
 
     private onLogin(authResponse: AuthResponse, rememberMe: boolean): void {
@@ -286,6 +294,9 @@ export class AuthService extends ApiService {
         } else {
             this.setEmailConfirmed(true);
         }
+
+        this.mustChangePasswordSignal.set(authResponse.user.mustChangePassword === true);
+        this.tokenStorage.setMustChangePassword(authResponse.user.mustChangePassword === true);
 
         const userId = authResponse.user.id;
         if (userId.length > 0) {
@@ -328,8 +339,10 @@ export class AuthService extends ApiService {
         this.authTokenSignal.set(null);
         this.userSignal.set(null);
         this.emailConfirmedSignal.set(null);
+        this.mustChangePasswordSignal.set(false);
         this.tokenStorage.clearUserId();
         this.tokenStorage.clearEmailConfirmed();
+        this.tokenStorage.clearMustChangePassword();
     }
 
     private linkTelegramIfAvailable(): void {

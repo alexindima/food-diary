@@ -39,4 +39,5 @@ public sealed record UserModel(
     bool IsActive,
     bool IsEmailConfirmed,
     DateTime? LastLoginAtUtc,
-    DateTime? AiConsentAcceptedAt);
+    DateTime? AiConsentAcceptedAt,
+    bool MustChangePassword = false);

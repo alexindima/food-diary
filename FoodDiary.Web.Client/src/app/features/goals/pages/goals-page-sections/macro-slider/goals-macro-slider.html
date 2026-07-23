@@ -8,6 +8,7 @@
             <input
                 type="number"
                 class="goals__macro-input fd-ui-stat-value"
+                [attr.aria-label]="item.labelKey | translate"
                 [min]="0"
                 [max]="item.max"
                 [value]="item.value"

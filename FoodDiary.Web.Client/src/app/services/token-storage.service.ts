@@ -95,10 +95,30 @@ export class TokenStorageService {
         this.storage.removeItem('local', 'emailConfirmed');
     }
 
+    public loadMustChangePassword(): boolean | null {
+        const stored = this.storage.getItem('local', 'mustChangePassword');
+        if (stored === 'true') {
+            return true;
+        }
+        if (stored === 'false') {
+            return false;
+        }
+        return null;
+    }
+
+    public setMustChangePassword(value: boolean): void {
+        this.storage.setItem('local', 'mustChangePassword', value ? 'true' : 'false');
+    }
+
+    public clearMustChangePassword(): void {
+        this.storage.removeItem('local', 'mustChangePassword');
+    }
+
     public clearAll(): void {
         this.clearToken();
         this.clearRefreshToken();
         this.clearUserId();
         this.clearEmailConfirmed();
+        this.clearMustChangePassword();
     }
 }

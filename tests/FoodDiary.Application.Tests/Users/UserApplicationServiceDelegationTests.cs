@@ -245,5 +245,6 @@ public sealed class UserApplicationServiceDelegationTests {
             [.. user.GetRoleNames()],
             user.AiInputTokenLimit,
             user.AiOutputTokenLimit,
-            user.AiConsentAcceptedAt);
+            user.AiConsentAcceptedAt,
+            user.MustChangePassword);
 }

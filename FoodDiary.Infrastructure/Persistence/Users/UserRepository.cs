@@ -246,5 +246,6 @@ public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository
             [.. user.GetRoleNames()],
             user.AiInputTokenLimit,
             user.AiOutputTokenLimit,
-            user.AiConsentAcceptedAt);
+            user.AiConsentAcceptedAt,
+            user.MustChangePassword);
 }

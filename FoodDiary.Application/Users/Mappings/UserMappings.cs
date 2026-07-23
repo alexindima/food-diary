@@ -54,7 +54,8 @@ public static class UserMappings {
             user.IsActive,
             user.IsEmailConfirmed,
             user.LastLoginAtUtc,
-            user.AiConsentAcceptedAt
+            user.AiConsentAcceptedAt,
+            user.MustChangePassword
         );
     }
 

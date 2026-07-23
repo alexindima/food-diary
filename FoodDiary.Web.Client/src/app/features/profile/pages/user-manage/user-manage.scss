@@ -192,7 +192,7 @@
     }
 
     &__notifications-badge {
-        --fd-pill-color: var(--fd-color-primary-300);
+        --fd-pill-color: var(--fd-color-text);
 
         &--account {
             --fd-pill-color: var(--fd-color-text-strong);
@@ -258,7 +258,7 @@
     &__dietologist-meta {
         font-size: var(--fd-text-stat-value-size);
         line-height: 1.35;
-        color: var(--fd-color-text-muted);
+        color: var(--fd-color-text);
     }
 
     &__dietologist-info-row {

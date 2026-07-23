@@ -55,7 +55,7 @@
 
     &__section-title {
         margin: 0;
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text);
     }
 
     &__factor-list {
@@ -126,7 +126,11 @@
 
     &__privacy-note {
         margin: var(--fd-space-card-header-gap) 0;
-        color: var(--fd-color-slate-600);
+        color: var(--fd-color-text);
+    }
+
+    &__empty {
+        color: var(--fd-color-text);
     }
 
     &__current-factors {
@@ -209,7 +213,7 @@
 
     &__nutrition-note {
         margin: var(--fd-space-card-header-gap) 0 0;
-        color: var(--fd-color-slate-600);
+        color: var(--fd-color-text);
     }
 
     &__nutrition-metric {
@@ -231,7 +235,7 @@
     &__loader {
         margin: 0;
         padding: var(--fd-space-section-state-compact-padding);
-        color: var(--fd-color-slate-500);
+        color: var(--fd-color-text);
     }
 
     @media #{variables.$media-tablet} {

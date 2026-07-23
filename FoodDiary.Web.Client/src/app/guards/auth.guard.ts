@@ -12,6 +12,10 @@ export const authGuard: CanActivateFn = async (_route, state) => {
     await authService.ensureSessionReadyAsync();
 
     if (authService.isAuthenticated()) {
+        if (authService.mustChangePassword()) {
+            await navigationService.navigateToRequiredPasswordChangeAsync();
+            return false;
+        }
         if (!authService.isEmailConfirmed()) {
             await navigationService.navigateToEmailVerificationPendingAsync();
             return false;

@@ -129,15 +129,6 @@ export class EntityCardComponent {
         this.open.emit();
     }
 
-    protected openCardFromKeyboard(event: Event): void {
-        if (event.target !== event.currentTarget) {
-            return;
-        }
-
-        event.preventDefault();
-        this.openCard();
-    }
-
     protected previewCardImage(): void {
         this.preview.emit();
     }

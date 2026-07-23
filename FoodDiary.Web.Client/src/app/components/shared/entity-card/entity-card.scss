@@ -5,6 +5,31 @@
     height: 100%;
 }
 
+.entity-card__open-button {
+    appearance: none;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: inherit;
+    background: transparent;
+    cursor: pointer;
+
+    &:focus-visible {
+        outline: var(--fd-outline-focus);
+        outline-offset: calc(0px - var(--fd-border-width-strong));
+    }
+}
+
+.entity-card__media-shell:has([role='button']),
+fd-entity-card-actions {
+    position: relative;
+    z-index: 2;
+}
+
 .entity-card__thumb {
     width: 100%;
     height: 100%;
@@ -139,7 +164,7 @@
 }
 
 .entity-card__favorite-button {
-    --entity-card-favorite-size: var(--fd-size-control-xs);
+    --entity-card-favorite-size: max(24px, var(--fd-size-control-xs));
     appearance: none;
     position: absolute;
     top: var(--fd-space-xs);
@@ -309,7 +334,7 @@
     }
 
     .entity-card__favorite-button {
-        --entity-card-favorite-size: var(--fd-size-control-micro);
+        --entity-card-favorite-size: max(24px, var(--fd-size-control-micro));
         top: var(--fd-space-xxs);
         right: var(--fd-space-xs);
     }

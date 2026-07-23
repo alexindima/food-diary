@@ -31,6 +31,53 @@ public sealed class EmailSender(
     private const string IgnoreEmailFooterRu =
         "\u0415\u0441\u043b\u0438 \u0432\u044b \u043d\u0435 \u0437\u0430\u043f\u0440\u0430\u0448\u0438\u0432\u0430\u043b\u0438 \u044d\u0442\u043e, \u043f\u0440\u043e\u0441\u0442\u043e \u043f\u0440\u043e\u0438\u0433\u043d\u043e\u0440\u0438\u0440\u0443\u0439\u0442\u0435 \u043f\u0438\u0441\u044c\u043c\u043e.";
 
+    public async Task SendAccountCreatedAsync(AccountCreatedMessage message, CancellationToken cancellationToken) {
+        const string templateKey = "account_created";
+        string locale = NormalizeLanguage(message.Language);
+        bool isRu = string.Equals(locale, "ru", StringComparison.Ordinal);
+        string loginLink = ResolveFrontendBaseUrl(message.ClientOrigin).TrimEnd('/') + "/login";
+        string brand = string.IsNullOrWhiteSpace(options.FromName) ? "FoodDiary" : options.FromName;
+        string subjectFallback = isRu ? "Ваш аккаунт FoodDiary создан" : "Your FoodDiary account is ready";
+        string intro = isRu
+            ? "Для вас создан аккаунт FoodDiary. Используйте временный пароль ниже для первого входа."
+            : "A FoodDiary account has been created for you. Use the temporary password below for your first sign-in.";
+        string footer = isRu
+            ? "После входа система попросит установить новый пароль."
+            : "After signing in, you will be asked to choose a new password.";
+        string htmlFallback = BuildCredentialsTemplate(
+            subjectFallback,
+            intro,
+            message.ToEmail,
+            message.TemporaryPassword,
+            loginLink,
+            footer,
+            brand);
+        string textFallback = $"{intro}\n\nEmail: {message.ToEmail}\n{(isRu ? "Временный пароль" : "Temporary password")}: {message.TemporaryPassword}\n{(isRu ? "Войти" : "Sign in")}: {loginLink}\n\n{footer}";
+
+        try {
+            EmailTemplateContent? template = await templateProvider
+                .GetActiveTemplateAsync(templateKey, locale, cancellationToken)
+                .ConfigureAwait(false);
+            string subject = ApplyAccountCreatedTokens(template?.Subject ?? subjectFallback, message, loginLink, brand);
+            string htmlBody = ApplyAccountCreatedTokens(
+                string.IsNullOrWhiteSpace(template?.HtmlBody) ? htmlFallback : template.HtmlBody,
+                message,
+                loginLink,
+                brand);
+            string textBody = ApplyAccountCreatedTokens(
+                string.IsNullOrWhiteSpace(template?.TextBody) ? textFallback : template.TextBody,
+                message,
+                loginLink,
+                brand);
+
+            await DispatchAsync(message.ToEmail, subject, htmlBody, textBody, cancellationToken).ConfigureAwait(false);
+            ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "success");
+        } catch (Exception ex) {
+            ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "failure", ex.GetType().Name);
+            throw;
+        }
+    }
+
     public Task SendEmailVerificationAsync(EmailVerificationMessage message, CancellationToken cancellationToken) {
         string locale = NormalizeLanguage(message.Language);
         return SendEmailCoreAsync(
@@ -238,6 +285,53 @@ public sealed class EmailSender(
             .Replace("{{link}}", link, StringComparison.OrdinalIgnoreCase)
             .Replace("{{brand}}", brand, StringComparison.OrdinalIgnoreCase);
     }
+
+    private static string ApplyAccountCreatedTokens(
+        string value,
+        AccountCreatedMessage message,
+        string loginLink,
+        string brand) {
+        return value
+            .Replace("{{brand}}", brand, StringComparison.OrdinalIgnoreCase)
+            .Replace("{{email}}", message.ToEmail, StringComparison.OrdinalIgnoreCase)
+            .Replace("{{temporaryPassword}}", message.TemporaryPassword, StringComparison.OrdinalIgnoreCase)
+            .Replace("{{loginLink}}", loginLink, StringComparison.OrdinalIgnoreCase)
+            .Replace("{{link}}", loginLink, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string BuildCredentialsTemplate(
+        string title,
+        string intro,
+        string email,
+        string temporaryPassword,
+        string loginLink,
+        string footer,
+        string brand) =>
+        $"""
+         <!doctype html>
+         <html lang="en">
+           <body style="margin:0;padding:0;background-color:#f4f6fb;">
+             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4f6fb;padding:32px 16px;">
+               <tr>
+                 <td align="center">
+                   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;background:#ffffff;border-radius:16px;overflow:hidden;">
+                     <tr><td style="padding:24px 28px;background:#101827;color:#ffffff;font-family:Segoe UI,Arial,sans-serif;font-size:18px;font-weight:600;">{brand}</td></tr>
+                     <tr>
+                       <td style="padding:28px;font-family:Segoe UI,Arial,sans-serif;color:#0f172a;">
+                         <h1 style="margin:0 0 12px;font-size:22px;">{title}</h1>
+                         <p style="color:#475569;">{intro}</p>
+                         <p><strong>Email:</strong> {email}<br><strong>Temporary password:</strong> <code>{temporaryPassword}</code></p>
+                         <p><a href="{loginLink}" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#4a90e2;color:#ffffff;text-decoration:none;font-weight:600;">Sign in</a></p>
+                         <p style="font-size:13px;color:#64748b;">{footer}</p>
+                       </td>
+                     </tr>
+                   </table>
+                 </td>
+               </tr>
+             </table>
+           </body>
+         </html>
+         """;
 
     private string BuildTemplate(string title, string intro, string ctaLabel, string ctaLink, string footer) {
         string brand = string.IsNullOrWhiteSpace(options.FromName) ? "FoodDiary" : options.FromName;

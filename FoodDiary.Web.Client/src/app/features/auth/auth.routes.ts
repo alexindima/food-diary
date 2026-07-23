@@ -1,5 +1,7 @@
 import type { Routes } from '@angular/router';
 
+import { requiredPasswordChangeGuard } from './guards/required-password-change.guard';
+
 export const authRoutes: Routes = [
     {
         path: 'mobile',
@@ -21,6 +23,13 @@ export const authRoutes: Routes = [
         path: 'verify-email',
         loadComponent: async () => import('./pages/email-verification/email-verification').then(m => m.EmailVerificationComponent),
         data: { shell: 'public', seo: { titleKey: 'SEO.VERIFY_EMAIL', noIndex: true } },
+    },
+    {
+        path: 'change-password-required',
+        canActivate: [requiredPasswordChangeGuard],
+        loadComponent: async () =>
+            import('./pages/required-password-change/required-password-change').then(m => m.RequiredPasswordChangeComponent),
+        data: { shell: 'public', seo: { titleKey: 'SEO.RESET_PASSWORD', noIndex: true } },
     },
     {
         path: 'reset-password',

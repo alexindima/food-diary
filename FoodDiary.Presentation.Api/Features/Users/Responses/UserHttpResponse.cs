@@ -38,4 +38,5 @@ public sealed record UserHttpResponse(
     bool IsActive,
     bool IsEmailConfirmed,
     DateTime? LastLoginAtUtc,
-    DateTime? AiConsentAcceptedAt);
+    DateTime? AiConsentAcceptedAt,
+    bool MustChangePassword);

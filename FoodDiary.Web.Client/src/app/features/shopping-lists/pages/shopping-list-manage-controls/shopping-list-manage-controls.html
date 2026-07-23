@@ -13,12 +13,11 @@
                 (click)="createAndRenameList()"
             />
         </div>
-        <div class="shopping-list__list-cards" role="listbox" [attr.aria-label]="'SHOPPING_LIST.LISTS_LABEL' | translate">
+        <div class="shopping-list__list-cards" role="list" [attr.aria-label]="'SHOPPING_LIST.LISTS_LABEL' | translate">
             @for (list of lists(); track list.id) {
                 <div
                     class="shopping-list__list-card"
-                    role="option"
-                    [attr.aria-selected]="list.id === selectedListId()"
+                    role="listitem"
                     [class.shopping-list__list-card--active]="list.id === selectedListId()"
                     [class.shopping-list__list-card--editing]="editingListId() === list.id"
                 >

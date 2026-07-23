@@ -80,7 +80,8 @@
     &__category {
         --fd-pill-bg: var(--fd-bg-category-purple);
         --fd-pill-border: transparent;
-        --fd-pill-color: var(--fd-color-purple-300);
+        --fd-pill-color: var(--fd-color-text);
+        color: var(--fd-color-text);
     }
 
     &__check {

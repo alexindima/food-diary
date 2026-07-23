@@ -7,6 +7,8 @@ import type {
     AdminImpersonationSession,
     AdminImpersonationStart,
     AdminUser,
+    AdminUserCreate,
+    AdminUserCreation,
     AdminUserLoginDeviceSummary,
     AdminUserLoginEvent,
     AdminUserRoleAuditEvent,
@@ -30,6 +32,10 @@ type ApiPagedResponse<T> = {
 export class AdminUsersService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/users`;
+
+    public createUser(payload: AdminUserCreate): Observable<AdminUserCreation> {
+        return this.http.post<AdminUserCreation>(this.baseUrl, payload);
+    }
 
     public getUsers(
         page: number,

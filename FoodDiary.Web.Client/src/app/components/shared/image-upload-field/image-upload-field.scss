@@ -69,17 +69,17 @@
 
     &__sub-text--plain {
         display: block;
-        color: var(--fd-color-slate-400);
+        color: var(--fd-color-text);
     }
 
     &__sub-text {
         display: block;
-        color: var(--fd-color-slate-600);
+        color: var(--fd-color-text);
     }
 
     &__hint {
+        color: var(--fd-color-text);
         display: block;
-        color: var(--fd-color-slate-500);
     }
 
     &__preview {
@@ -373,14 +373,14 @@
         }
 
         .image-upload-field__sub-text {
-            color: var(--fd-color-text-muted);
+            color: var(--fd-color-text);
             font-size: var(--fd-text-helper-size);
             line-height: var(--fd-text-helper-line-height);
             font-weight: var(--fd-text-helper-weight);
         }
 
         .image-upload-field__hint {
-            color: var(--fd-color-text-muted-soft);
+            color: var(--fd-color-text);
             font-size: var(--fd-text-helper-size);
             line-height: var(--fd-text-helper-line-height);
             font-weight: var(--fd-text-helper-weight);

@@ -113,7 +113,7 @@
                     <div class="dashboard-summary-card__bar fd-stack fd-gap-card-header">
                         <div class="dashboard-summary-card__bar-header fd-row fd-justify-between fd-gap-card-header">
                             <span class="dashboard-summary-card__bar-label fd-ui-body-sm"> {{ bar.labelText }} </span>
-                            <span class="dashboard-summary-card__bar-value fd-ui-meta-text fd-nowrap" [style.color]="bar.valueColor">
+                            <span class="dashboard-summary-card__bar-value fd-ui-meta-text fd-nowrap">
                                 {{ bar.current | number: '1.0-0' }}
                                 <span [hidden]="bar.target <= 0"> / {{ bar.target | number: '1.0-0' }} </span>
                                 {{ bar.unitText }}

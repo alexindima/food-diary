@@ -28,7 +28,8 @@ public sealed class UpdateAdminUserCommandValidator : AbstractValidator<UpdateAd
                               (string.Equals(role.Trim(), RoleNames.Owner, StringComparison.Ordinal) ||
                                string.Equals(role.Trim(), RoleNames.Admin, StringComparison.Ordinal) ||
                                string.Equals(role.Trim(), RoleNames.Premium, StringComparison.Ordinal) ||
-                               string.Equals(role.Trim(), RoleNames.Support, StringComparison.Ordinal)))
+                               string.Equals(role.Trim(), RoleNames.Support, StringComparison.Ordinal) ||
+                               string.Equals(role.Trim(), RoleNames.Dietologist, StringComparison.Ordinal)))
                 .WithMessage("Unknown role.");
         });
     }

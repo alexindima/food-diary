@@ -20,6 +20,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     public string Email { get; private set; } = string.Empty;
     public string Password { get; private set; } = string.Empty;
     public bool HasPassword { get; private set; }
+    public bool MustChangePassword { get; private set; }
     public string? GoogleIssuer { get; private set; }
     public string? GoogleSubject { get; private set; }
     public string? RefreshToken { get; private set; }
@@ -108,6 +109,7 @@ public sealed partial class User : AggregateRoot<UserId> {
             Email = normalizedEmail,
             Password = normalizedPassword,
             HasPassword = hasPassword,
+            MustChangePassword = false,
             IsEmailConfirmed = false,
         };
         user.ApplySecurityState(UserSecurityState.CreateInitial(normalizedPassword, hasPassword));
@@ -323,6 +325,7 @@ public sealed partial class User : AggregateRoot<UserId> {
         return new UserSecurityState(
             Password,
             HasPassword,
+            MustChangePassword,
             RefreshToken,
             IsEmailConfirmed,
             EmailConfirmationTokenHash,
@@ -337,6 +340,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     private void ApplySecurityState(UserSecurityState state) {
         Password = state.Password;
         HasPassword = state.HasPassword;
+        MustChangePassword = state.MustChangePassword;
         RefreshToken = state.RefreshToken;
         IsEmailConfirmed = state.IsEmailConfirmed;
         EmailConfirmationTokenHash = state.EmailConfirmationTokenHash;

@@ -20,6 +20,11 @@ public sealed class TestEmailSender : IEmailSender {
         return Task.CompletedTask;
     }
 
+    public Task SendAccountCreatedAsync(AccountCreatedMessage message, CancellationToken cancellationToken) {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.CompletedTask;
+    }
+
     public Task SendTestEmailAsync(TestEmailMessage message, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
         return Task.CompletedTask;

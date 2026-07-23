@@ -19,12 +19,13 @@
 }
 
 .fd-favorite-button {
-    --fd-button-host-width: var(--fd-size-control-xs);
-    --fd-button-host-min-width: var(--fd-size-control-xs);
-    --fd-button-width: var(--fd-size-control-xs);
-    --fd-button-min-width: var(--fd-size-control-xs);
-    --fd-button-height: var(--fd-size-control-xs);
-    --fd-button-height-explicit: var(--fd-size-control-xs);
+    --fd-favorite-target-size: max(24px, var(--fd-size-control-xs));
+    --fd-button-host-width: var(--fd-favorite-target-size);
+    --fd-button-host-min-width: var(--fd-favorite-target-size);
+    --fd-button-width: var(--fd-favorite-target-size);
+    --fd-button-min-width: var(--fd-favorite-target-size);
+    --fd-button-height: var(--fd-favorite-target-size);
+    --fd-button-height-explicit: var(--fd-favorite-target-size);
     --fd-button-padding-x: 0;
     --fd-button-border-radius: var(--fd-radius-pill);
     --fd-button-transform-hover: scale(1.05);

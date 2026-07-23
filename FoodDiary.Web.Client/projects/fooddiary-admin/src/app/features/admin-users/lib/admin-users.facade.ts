@@ -6,6 +6,8 @@ import type {
     AdminImpersonationSession,
     AdminImpersonationStart,
     AdminUser,
+    AdminUserCreate,
+    AdminUserCreation,
     AdminUserLoginDeviceSummary,
     AdminUserLoginEvent,
     AdminUserRoleAuditEvent,
@@ -18,6 +20,10 @@ import type {
 @Service()
 export class AdminUsersFacade {
     private readonly usersService = inject(AdminUsersService);
+
+    public createUser(payload: AdminUserCreate): Observable<AdminUserCreation> {
+        return this.usersService.createUser(payload);
+    }
 
     public getUsers(
         page: number,

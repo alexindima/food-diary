@@ -85,6 +85,10 @@ function registerLabelTests(): void {
             expect(requireButtonElement('.fd-ui-date-input__suffix').getAttribute('aria-label')).toBe('Filter from');
         });
 
+        it('should expose the popup input as a combobox', () => {
+            expect(requireInputElement('.fd-ui-date-input__control').getAttribute('role')).toBe('combobox');
+        });
+
         it('should support a dedicated calendar button accessible name', () => {
             fixture.componentRef.setInput('label', 'Date');
             fixture.componentRef.setInput('pickerAriaLabel', 'Open start date calendar');

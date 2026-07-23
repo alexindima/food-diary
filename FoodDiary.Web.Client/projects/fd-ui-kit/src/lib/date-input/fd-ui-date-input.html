@@ -13,6 +13,7 @@
                 #origin="cdkOverlayOrigin"
                 cdkOverlayOrigin
                 class="fd-ui-date-input__control"
+                role="combobox"
                 [id]="id()"
                 [value]="displayValue()"
                 [disabled]="disabled()"
@@ -20,6 +21,7 @@
                 [attr.placeholder]="placeholderAttribute()"
                 [attr.aria-describedby]="error() ? `${id()}-error` : null"
                 [attr.aria-invalid]="error() ? 'true' : null"
+                [attr.aria-controls]="`${id()}-dialog`"
                 [attr.aria-expanded]="isOpen()"
                 [attr.aria-haspopup]="'dialog'"
                 (click)="openDatePicker()"
@@ -49,7 +51,7 @@
                 (detach)="closeDatePicker()"
                 (overlayKeydown)="onOverlayKeydown($event)"
             >
-                <div class="fd-ui-date-input__panel" tabindex="-1">
+                <div class="fd-ui-date-input__panel" tabindex="-1" [id]="`${id()}-dialog`">
                     <fd-ui-calendar
                         [value]="internalValue()"
                         [displayMonth]="displayMonth()"

@@ -1,11 +1,5 @@
-﻿<fd-media-card
-    class="entity-card"
-    role="button"
-    tabindex="0"
-    (click)="openCard()"
-    (keydown.enter)="openCardFromKeyboard($event)"
-    (keydown.space)="openCardFromKeyboard($event)"
->
+﻿<fd-media-card class="entity-card" (click)="openCard()">
+    <button fdMediaCardContent type="button" class="entity-card__open-button" [attr.aria-label]="title()"></button>
     @let previewInteraction = previewInteractionState();
     <div fdMediaCardMedia class="entity-card__media-shell">
         <fd-entity-card-thumb

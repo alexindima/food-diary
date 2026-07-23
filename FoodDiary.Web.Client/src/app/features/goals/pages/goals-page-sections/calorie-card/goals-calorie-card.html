@@ -15,6 +15,7 @@
                 <input
                     type="number"
                     class="goals__calorie-input fd-ui-metric-hero"
+                    [attr.aria-label]="'GOALS_PAGE.DAILY_TARGET' | translate"
                     [min]="minCalories()"
                     [max]="maxCalories()"
                     [value]="calorieTarget()"

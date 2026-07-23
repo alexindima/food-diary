@@ -44,7 +44,8 @@ public static class UserHttpResponseMappings {
             model.IsActive,
             model.IsEmailConfirmed,
             model.LastLoginAtUtc,
-            model.AiConsentAcceptedAt
+            model.AiConsentAcceptedAt,
+            model.MustChangePassword
         );
     }
 

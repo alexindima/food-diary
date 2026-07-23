@@ -22,7 +22,7 @@ public sealed class UpdateAdminUserCommandHandler(
     private const string RoleAuditSource = "AdminUserEditor";
 
     private static readonly HashSet<string> AllowedRoles = new(
-        [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support],
+        [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support, RoleNames.Dietologist],
         StringComparer.Ordinal);
 
     private sealed record RoleUpdate(

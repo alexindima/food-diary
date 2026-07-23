@@ -3,6 +3,7 @@
         <fd-ui-input label="Search users" placeholder="Email or username" [value]="search()" (valueChange)="onSearchChange($event)" />
 
         <fd-ui-select label="User status" [options]="statusOptions" [value]="status()" (valueChange)="onStatusChange($event)" />
+        <fd-ui-button type="button" (click)="openCreate()">Create user</fd-ui-button>
     </div>
 
     @if (isLoading()) {
