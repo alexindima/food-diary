@@ -11,6 +11,7 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Application.Tests.Admin;
 
+[ExcludeFromCodeCoverage]
 public sealed class CreateAdminUserCommandHandlerTests {
     [Fact]
     public async Task Handle_WithGeneratedPassword_CreatesConfirmedUserAndQueuesCredentialsEmail() {
