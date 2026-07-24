@@ -18,6 +18,7 @@ public sealed class MarketingAttributionSummaryReadService(
         MarketingAttributionEventRecord[] attributedEvents = [.. events.Where(static x => HasUtmData(x) || !string.IsNullOrWhiteSpace(x.ReferrerHost))];
         MarketingAttributionEventRecord[] organicEvents = [.. events.Except(attributedEvents)];
         MarketingAttributionEventRecord[] visitEvents = [.. events.Where(static x => string.Equals(x.EventType, "page_landing", StringComparison.OrdinalIgnoreCase))];
+        MarketingAttributionEventRecord[] attributedVisits = [.. visitEvents.Where(static x => HasUtmData(x) || !string.IsNullOrWhiteSpace(x.ReferrerHost))];
         MarketingAttributionEventRecord[] signupEvents = [.. events.Where(static x => string.Equals(x.EventType, "signup_completed", StringComparison.OrdinalIgnoreCase))];
         MarketingAttributionEventRecord[] premiumEvents = [.. events.Where(static x => string.Equals(x.EventType, "premium_started", StringComparison.OrdinalIgnoreCase))];
 
@@ -32,14 +33,19 @@ public sealed class MarketingAttributionSummaryReadService(
             events.Select(static x => x.SessionId).Distinct(StringComparer.OrdinalIgnoreCase).Count(),
             attributedEvents.Length,
             organicEvents.Length,
+            attributedVisits.Length,
+            visitEvents.Length - attributedVisits.Length,
             CalculateRate(signupEvents.Length, visitEvents.Length),
             CalculateRate(premiumEvents.Length, signupEvents.Length),
             events.MaxBy(static x => x.OccurredAtUtc)?.OccurredAtUtc,
-            BuildBreakdown(attributedEvents, includeCampaign: true, limit: 10),
-            BuildBreakdown(attributedEvents, includeCampaign: false, limit: 10),
+            BuildBreakdown(
+                [.. attributedEvents.Where(static x => !string.IsNullOrWhiteSpace(x.UtmCampaign))],
+                includeCampaign: true,
+                limit: 10),
+            BuildBreakdown(events, includeCampaign: false, limit: 10),
             [.. events
                 .OrderByDescending(static x => x.OccurredAtUtc)
-                .Take(25)
+                .Take(50)
                 .Select(static x => new MarketingAttributionRecentEventModel(
                     x.OccurredAtUtc,
                     x.EventType,

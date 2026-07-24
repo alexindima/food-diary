@@ -16,6 +16,8 @@ public static class AdminMarketingHttpResponseMappings {
             summary.Sessions,
             summary.AttributedEvents,
             summary.OrganicEvents,
+            summary.AttributedVisits,
+            summary.OrganicVisits,
             summary.SignupRatePercent,
             summary.PremiumRatePercent,
             summary.LastEventAtUtc,

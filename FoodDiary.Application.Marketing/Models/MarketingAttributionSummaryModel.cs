@@ -11,6 +11,8 @@ public sealed record MarketingAttributionSummaryModel(
     int Sessions,
     int AttributedEvents,
     int OrganicEvents,
+    int AttributedVisits,
+    int OrganicVisits,
     double SignupRatePercent,
     double PremiumRatePercent,
     DateTime? LastEventAtUtc,

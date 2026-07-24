@@ -11,6 +11,8 @@ public sealed record MarketingAttributionSummaryHttpResponse(
     int Sessions,
     int AttributedEvents,
     int OrganicEvents,
+    int AttributedVisits,
+    int OrganicVisits,
     double SignupRatePercent,
     double PremiumRatePercent,
     DateTime? LastEventAtUtc,

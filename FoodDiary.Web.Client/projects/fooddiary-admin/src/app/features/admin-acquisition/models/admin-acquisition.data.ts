@@ -39,6 +39,8 @@ export type MarketingAttributionSummary = {
     sessions: number;
     attributedEvents: number;
     organicEvents: number;
+    attributedVisits: number;
+    organicVisits: number;
     signupRatePercent: number;
     premiumRatePercent: number;
     lastEventAtUtc: string | null;

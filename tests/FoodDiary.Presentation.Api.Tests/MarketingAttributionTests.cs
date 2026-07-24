@@ -60,6 +60,8 @@ public sealed class MarketingAttributionTests {
             Sessions: 1,
             AttributedEvents: 1,
             OrganicEvents: 0,
+            AttributedVisits: 1,
+            OrganicVisits: 0,
             SignupRatePercent: 0,
             PremiumRatePercent: 0,
             LastEventAtUtc: DateTime.UtcNow,
@@ -169,11 +171,50 @@ public sealed class MarketingAttributionTests {
         Assert.Equal(2, summary.Sessions);
         Assert.Equal(1, summary.AttributedEvents);
         Assert.Equal(1, summary.OrganicEvents);
+        Assert.Equal(1, summary.AttributedVisits);
+        Assert.Equal(1, summary.OrganicVisits);
         MarketingAttributionBreakdownModel campaign = Assert.Single(summary.TopCampaigns);
         Assert.Equal("telegram", campaign.Source);
         Assert.Equal("social", campaign.Medium);
         Assert.Equal("launch", campaign.Campaign);
+        Assert.Equal(2, summary.TopSources.Count);
+        Assert.Contains(
+            summary.TopSources,
+            source => string.Equals(source.Source, "direct", StringComparison.Ordinal) && source.Visits == 1);
         Assert.Equal(2, summary.RecentEvents.Count);
+    }
+
+    [Fact]
+    public async Task GetSummaryAsync_DoesNotTreatReferralWithoutUtmCampaignAsCampaign() {
+        var repository = new InMemoryMarketingAttributionEventRepository();
+        DateTime now = new(2026, 7, 9, 10, 0, 0, DateTimeKind.Utc);
+        var handler = new GetMarketingAttributionSummaryQueryHandler(
+            new MarketingAttributionSummaryReadService(repository, new FixedTimeProvider(now)));
+        await repository.AddAsync(new MarketingAttributionEventRecord(
+            EventType: "page_landing",
+            OccurredAtUtc: now.AddHours(-1),
+            UserId: null,
+            AnonymousId: "anon-referral",
+            SessionId: "session-referral",
+            LandingPath: "/",
+            ReferrerHost: "example.test",
+            UtmSource: null,
+            UtmMedium: null,
+            UtmCampaign: null,
+            UtmContent: null,
+            UtmTerm: null,
+            BuildVersion: "test"));
+
+        Result<MarketingAttributionSummaryModel> result =
+            await handler.Handle(new GetMarketingAttributionSummaryQuery(24), CancellationToken.None);
+        MarketingAttributionSummaryModel summary = result.Value;
+
+        Assert.Empty(summary.TopCampaigns);
+        MarketingAttributionBreakdownModel source = Assert.Single(summary.TopSources);
+        Assert.Multiple(
+            () => Assert.Equal("example.test", source.Source),
+            () => Assert.Equal("referral", source.Medium),
+            () => Assert.Equal(1, source.Visits));
     }
 
     [Fact]
