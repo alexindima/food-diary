@@ -15,6 +15,85 @@ namespace FoodDiary.Application.Tests.Users;
 [ExcludeFromCodeCoverage]
 public sealed class UserApplicationServiceDelegationTests {
     [Fact]
+    public async Task UserIdentityMutationService_EnsureRolesByNamesAsync_DelegatesToRoleCatalog() {
+        IUserRoleCatalogService roleCatalog = Substitute.For<IUserRoleCatalogService>();
+        IReadOnlyList<string> names = ["Admin"];
+        IReadOnlyList<Role> roles = [Role.Create("Admin")];
+        roleCatalog.EnsureRolesByNamesAsync(names, Arg.Any<CancellationToken>()).Returns(roles);
+        var service = new UserIdentityMutationService(Substitute.For<IUserWriteRepository>(), roleCatalog);
+
+        IReadOnlyList<Role> result = await service.EnsureRolesByNamesAsync(names, CancellationToken.None);
+
+        Assert.Same(roles, result);
+        await roleCatalog.Received(1).EnsureRolesByNamesAsync(names, CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task UserIdentityMutationService_AddAndUpdate_DelegateToWriteRepository() {
+        IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
+        var user = User.Create("identity-mutation@example.com", "hash");
+        writer.AddAsync(user, Arg.Any<CancellationToken>()).Returns(user);
+        var service = new UserIdentityMutationService(writer, Substitute.For<IUserRoleCatalogService>());
+
+        User added = await service.AddAsync(user, CancellationToken.None);
+        await service.UpdateAsync(user, CancellationToken.None);
+
+        Assert.Same(user, added);
+        await writer.Received(1).UpdateAsync(user, CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task UserAdministrationService_EmailLookupAndAdd_DelegateToDependencies() {
+        IUserDirectoryService directory = Substitute.For<IUserDirectoryService>();
+        IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
+        var user = User.Create("administration-add@example.com", "hash");
+        directory.GetByEmailIncludingDeletedAsync(user.Email, Arg.Any<CancellationToken>()).Returns(user);
+        writer.AddAsync(user, Arg.Any<CancellationToken>()).Returns(user);
+        var service = new UserAdministrationService(
+            directory,
+            writer,
+            Substitute.For<IUserRoleCatalogService>());
+
+        User? found = await service.GetByEmailIncludingDeletedAsync(user.Email, CancellationToken.None);
+        User added = await service.AddAsync(user, CancellationToken.None);
+
+        Assert.Same(user, found);
+        Assert.Same(user, added);
+    }
+
+    [Fact]
+    public async Task AuthenticationUserRegistrationService_EnsureRolesByNamesAsync_DelegatesToIdentityMutationService() {
+        IUserIdentityMutationService mutation = Substitute.For<IUserIdentityMutationService>();
+        IReadOnlyList<string> names = ["User"];
+        IReadOnlyList<Role> roles = [Role.Create("User")];
+        mutation.EnsureRolesByNamesAsync(names, Arg.Any<CancellationToken>()).Returns(roles);
+        var service = new AuthenticationUserRegistrationService(
+            Substitute.For<IUserDirectoryService>(),
+            mutation);
+
+        IReadOnlyList<Role> result = await service.EnsureRolesByNamesAsync(names, CancellationToken.None);
+
+        Assert.Same(roles, result);
+        await mutation.Received(1).EnsureRolesByNamesAsync(names, CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task AuthenticationUserRegistrationService_AddAndLookup_DelegateToDependencies() {
+        IUserDirectoryService directory = Substitute.For<IUserDirectoryService>();
+        IUserIdentityMutationService mutation = Substitute.For<IUserIdentityMutationService>();
+        var user = User.Create("registration-service@example.com", "hash");
+        directory.GetByEmailIncludingDeletedAsync(user.Email, Arg.Any<CancellationToken>()).Returns(user);
+        mutation.AddAsync(user, Arg.Any<CancellationToken>()).Returns(user);
+        var service = new AuthenticationUserRegistrationService(directory, mutation);
+
+        User added = await service.AddAsync(user, CancellationToken.None);
+        User? found = await service.GetByEmailIncludingDeletedAsync(user.Email, CancellationToken.None);
+
+        Assert.Same(user, added);
+        Assert.Same(user, found);
+    }
+
+    [Fact]
     public async Task UserAdministrationService_GetRolesByNamesAsync_DelegatesToRoleCatalog() {
         IUserDirectoryService directory = Substitute.For<IUserDirectoryService>();
         IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();

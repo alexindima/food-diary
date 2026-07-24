@@ -675,6 +675,13 @@ public sealed class DependencyInjectionTests {
 
     public static TheoryData<string, string[]> SplitRepositoryRegistrationCases() => new() {
         {
+            "FoodDiary.Infrastructure.Persistence.Audit.AuditEntryService",
+            [
+                "FoodDiary.Application.Abstractions.Audit.Common.IAuditEntryReadService",
+                "FoodDiary.Application.Abstractions.Audit.Common.IAuditEntryWriter",
+            ]
+        },
+        {
             "FoodDiary.Application.Abstractions.Products.Common.IProductRepository",
             [
                 "FoodDiary.Application.Abstractions.Products.Common.IProductReadRepository",

@@ -9,6 +9,72 @@ namespace FoodDiary.Application.Tests.Authentication;
 [ExcludeFromCodeCoverage]
 public sealed class EmailSenderTests {
     [Fact]
+    public async Task SendAccountCreated_WithFallback_BuildsCredentialsMessage() {
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<SentEmail> getSent);
+        var sender = new EmailSender(
+            CreateOptions(fromName: ""),
+            CreateTemplateProvider(),
+            CreateSuccessfulTransport(),
+            outbox);
+
+        await sender.SendAccountCreatedAsync(
+            new AccountCreatedMessage("admin@example.com", "Temp-123", "en", ClientOrigin: null),
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal("Your FoodDiary account is ready", getSent().Subject),
+            () => Assert.Contains("admin@example.com", getSent().Body, StringComparison.Ordinal),
+            () => Assert.Contains("Temp-123", getSent().Body, StringComparison.Ordinal),
+            () => Assert.Contains("https://app.example/login", getSent().Body, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task SendAccountCreated_WithTemplate_AppliesEveryToken() {
+        Dictionary<(string Key, string Locale), EmailTemplateContent> templates = new() {
+            [("account_created", "ru")] = new(
+                "{{brand}} {{email}}",
+                "{{temporaryPassword}} {{loginLink}}",
+                "{{link}}"),
+        };
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<SentEmail> getSent);
+        var sender = new EmailSender(
+            CreateOptions(fromName: "FD", allowedFrontendBaseUrls: ["https://tenant.example"]),
+            CreateTemplateProvider(templates),
+            CreateSuccessfulTransport(),
+            outbox);
+
+        await sender.SendAccountCreatedAsync(
+            new AccountCreatedMessage("admin@example.com", "Temp-123", "ru-RU", "https://tenant.example/path"),
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal("FD admin@example.com", getSent().Subject),
+            () => Assert.Equal("Temp-123 https://tenant.example/login", getSent().Body),
+            () => Assert.Contains(
+                getSent().AlternateViewBodies,
+                body => string.Equals(body, "https://tenant.example/login", StringComparison.Ordinal)));
+    }
+
+    [Fact]
+    public async Task SendAccountCreated_WhenOutboxFails_Rethrows() {
+        IEmailOutbox outbox = Substitute.For<IEmailOutbox>();
+        outbox.EnqueueAsync(Arg.Any<EmailMessage>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromException(new InvalidOperationException("outbox failed")));
+        var sender = new EmailSender(
+            CreateOptions(),
+            CreateTemplateProvider(),
+            CreateSuccessfulTransport(),
+            outbox);
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            sender.SendAccountCreatedAsync(
+                new AccountCreatedMessage("admin@example.com", "Temp-123", "en", ClientOrigin: null),
+                CancellationToken.None));
+
+        Assert.Equal("outbox failed", exception.Message);
+    }
+
+    [Fact]
     public async Task SendEmailVerification_WithAllowedClientOrigin_UsesFallbackAndTenantOrigin() {
         IEmailTemplateProvider templateProvider = CreateTemplateProvider(out Func<string?> getLastKey, out Func<string?> getLastLocale);
         IEmailOutbox outbox = CreateCapturingOutbox(out Func<SentEmail> getSent);

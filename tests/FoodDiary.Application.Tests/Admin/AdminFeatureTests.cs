@@ -88,6 +88,23 @@ public partial class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task AdminUserManagementService_ForwardsEmailLookupAndAdd() {
+        var user = User.Create("admin-management-add@example.com", "hash");
+        IUserAdministrationService userAdministrationService = Substitute.For<IUserAdministrationService>();
+        userAdministrationService
+            .GetByEmailIncludingDeletedAsync(user.Email, Arg.Any<CancellationToken>())
+            .Returns(user);
+        userAdministrationService.AddAsync(user, Arg.Any<CancellationToken>()).Returns(user);
+        var service = new AdminUserManagementService(userAdministrationService);
+
+        User? loadedUser = await service.GetByEmailIncludingDeletedAsync(user.Email, CancellationToken.None);
+        User addedUser = await service.AddAsync(user, CancellationToken.None);
+
+        Assert.Same(user, loadedUser);
+        Assert.Same(user, addedUser);
+    }
+
+    [Fact]
     public async Task StartAdminImpersonationHandler_WithInactiveActor_ReturnsForbidden() {
         User actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         actor.Deactivate();

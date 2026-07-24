@@ -89,6 +89,35 @@ public sealed class NotificationReadServiceCoverageTests {
     }
 
     [Fact]
+    public async Task WebPushDeliveryAudienceService_GetActiveAudienceAsync_WithoutExpiredSubscriptions_DoesNotDelete() {
+        var user = User.Create("push-active-only@example.com", "hash");
+        user.UpdatePreferences(new UserPreferenceUpdate(
+            PushNotificationsEnabled: true,
+            SocialPushNotificationsEnabled: true));
+        var utcNow = new DateTime(2026, 7, 25, 9, 0, 0, DateTimeKind.Utc);
+        var active = WebPushSubscription.Create(
+            user.Id, "https://push.example.com/active-only", "p256", "auth", utcNow.AddHours(1), "en");
+        IWebPushSubscriptionReadRepository reader = Substitute.For<IWebPushSubscriptionReadRepository>();
+        IWebPushSubscriptionWriteRepository writer = Substitute.For<IWebPushSubscriptionWriteRepository>();
+        FoodDiary.Application.Abstractions.Users.Common.IUserDirectoryService users =
+            Substitute.For<FoodDiary.Application.Abstractions.Users.Common.IUserDirectoryService>();
+        users.GetByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(user);
+        reader.GetByUserAsync(user.Id, Arg.Any<CancellationToken>()).Returns([active]);
+        var service = new WebPushDeliveryAudienceService(reader, writer, users);
+
+        IReadOnlyList<WebPushDeliverySubscription> result = await service.GetActiveAudienceAsync(
+            user.Id,
+            NotificationTypes.NewComment,
+            utcNow,
+            CancellationToken.None);
+
+        Assert.Single(result);
+        await writer.DidNotReceive().DeleteRangeAsync(
+            Arg.Any<IReadOnlyCollection<WebPushSubscription>>(),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task WebPushDeliveryAudienceService_GetActiveAudienceAsync_WhenUserMissing_ReturnsEmptyWithoutReadingSubscriptions() {
         IWebPushSubscriptionReadRepository reader = Substitute.For<IWebPushSubscriptionReadRepository>();
         var service = new WebPushDeliveryAudienceService(
@@ -160,6 +189,12 @@ public sealed class NotificationReadServiceCoverageTests {
     [InlineData(NotificationTypes.DietologistInvitationAccepted)]
     [InlineData(NotificationTypes.DietologistInvitationDeclined)]
     [InlineData(NotificationTypes.NewRecommendation)]
+    [InlineData(NotificationTypes.NewRecommendationComment)]
+    [InlineData(NotificationTypes.NewRecommendationCommentForDietologist)]
+    [InlineData(NotificationTypes.NewClientTask)]
+    [InlineData(NotificationTypes.ClientTaskChangedForDietologist)]
+    [InlineData(NotificationTypes.ClientTaskCancelled)]
+    [InlineData(NotificationTypes.ClientTaskDueSoon)]
     [InlineData(NotificationTypes.NewComment)]
     [InlineData("UnknownType")]
     public void WebPushDeliveryAudienceService_IsCategoryEnabled_CoversEveryNotificationCategory(string notificationType) {

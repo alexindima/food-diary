@@ -93,6 +93,97 @@ public sealed class CreateAdminUserCommandHandlerTests {
         await userManagementService.DidNotReceive().AddAsync(Arg.Any<User>(), Arg.Any<CancellationToken>());
     }
 
+    [Fact]
+    public async Task Handle_WithEmptyActorId_ReturnsValidationFailure() {
+        IAdminUserManagementService userManagementService = Substitute.For<IAdminUserManagementService>();
+        var handler = new CreateAdminUserCommandHandler(
+            userManagementService,
+            Substitute.For<IPasswordHasher>(),
+            Substitute.For<IEmailSender>(),
+            Substitute.For<IAuditLogger>(),
+            TimeProvider.System);
+
+        Result<AdminUserCreationModel> result = await handler.Handle(
+            CreateCommand() with { ActorUserId = Guid.Empty },
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        await userManagementService.DidNotReceive().GetByEmailIncludingDeletedAsync(
+            Arg.Any<string>(),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_WithUnknownRole_ReturnsValidationFailure() {
+        IAdminUserManagementService userManagementService = Substitute.For<IAdminUserManagementService>();
+        userManagementService
+            .GetByEmailIncludingDeletedAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns((User?)null);
+        userManagementService
+            .GetRolesByNamesAsync(Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns(Array.Empty<Role>());
+        var handler = new CreateAdminUserCommandHandler(
+            userManagementService,
+            Substitute.For<IPasswordHasher>(),
+            Substitute.For<IEmailSender>(),
+            Substitute.For<IAuditLogger>(),
+            TimeProvider.System);
+
+        Result<AdminUserCreationModel> result = await handler.Handle(
+            CreateCommand(),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        await userManagementService.DidNotReceive().AddAsync(
+            Arg.Any<User>(),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_WithExplicitPasswordAndNoEmail_CreatesUserWithoutPasswordChange() {
+        IAdminUserManagementService userManagementService = Substitute.For<IAdminUserManagementService>();
+        IPasswordHasher passwordHasher = Substitute.For<IPasswordHasher>();
+        IEmailSender emailSender = Substitute.For<IEmailSender>();
+        var role = Role.Create(RoleNames.Dietologist);
+        User? createdUser = null;
+        userManagementService
+            .GetByEmailIncludingDeletedAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns((User?)null);
+        userManagementService
+            .GetRolesByNamesAsync(Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns([role]);
+        userManagementService.AddAsync(Arg.Any<User>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                createdUser = call.Arg<User>();
+                return createdUser!;
+            });
+        passwordHasher.Hash("explicit-password").Returns("hash");
+        var handler = new CreateAdminUserCommandHandler(
+            userManagementService,
+            passwordHasher,
+            emailSender,
+            Substitute.For<IAuditLogger>(),
+            TimeProvider.System);
+
+        Result<AdminUserCreationModel> result = await handler.Handle(
+            CreateCommand() with {
+                TemporaryPassword = " explicit-password ",
+                GeneratePassword = false,
+                SendCredentialsEmail = false,
+                RequirePasswordChange = false,
+            },
+            CancellationToken.None);
+
+        AdminUserCreationModel model = ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal("explicit-password", model.TemporaryPassword),
+            () => Assert.False(model.CredentialsEmailQueued),
+            () => Assert.False(Assert.IsType<User>(createdUser).MustChangePassword));
+        await emailSender.DidNotReceive().SendAccountCreatedAsync(
+            Arg.Any<AccountCreatedMessage>(),
+            Arg.Any<CancellationToken>());
+    }
+
     private static CreateAdminUserCommand CreateCommand() =>
         new(
             Email: "dietologist@example.com",

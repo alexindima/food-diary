@@ -267,6 +267,20 @@ public class CommonAbstractionsTests {
     [InlineData(NotificationTypes.EatingWindowStarted, null, "/fasting?intent=eating-window")]
     [InlineData(NotificationTypes.NewRecommendation, null, "/recommendations")]
     [InlineData(NotificationTypes.NewRecommendation, "recommendation-id", "/recommendations?recommendationId=recommendation-id")]
+    [InlineData(NotificationTypes.NewRecommendationComment, null, "/recommendations")]
+    [InlineData(NotificationTypes.NewRecommendationComment, "comment-recommendation-id", "/recommendations?recommendationId=comment-recommendation-id")]
+    [InlineData(NotificationTypes.NewClientTask, null, "/recommendations")]
+    [InlineData(NotificationTypes.ClientTaskCancelled, null, "/recommendations")]
+    [InlineData(NotificationTypes.ClientTaskDueSoon, null, "/recommendations")]
+    [InlineData(NotificationTypes.ClientTaskChangedForDietologist, null, null)]
+    [InlineData(NotificationTypes.ClientTaskChangedForDietologist, "client-id", "/dietologist/clients/client-id")]
+    [InlineData(NotificationTypes.NewRecommendationCommentForDietologist, "bad", null)]
+    [InlineData(NotificationTypes.NewRecommendationCommentForDietologist, "bad|also-bad", null)]
+    [InlineData(NotificationTypes.NewRecommendationCommentForDietologist, "00000000-0000-0000-0000-000000000001|bad", null)]
+    [InlineData(
+        NotificationTypes.NewRecommendationCommentForDietologist,
+        "00000000-0000-0000-0000-000000000001|00000000-0000-0000-0000-000000000002",
+        "/dietologist/clients/00000000-0000-0000-0000-000000000001?recommendationId=00000000-0000-0000-0000-000000000002")]
     [InlineData(NotificationTypes.DietologistInvitationReceived, "invitation-id", "/dietologist-invitations/invitation-id")]
     [InlineData(NotificationTypes.DietologistInvitationAccepted, null, "/profile")]
     [InlineData(NotificationTypes.DietologistInvitationDeclined, null, "/profile")]

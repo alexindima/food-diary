@@ -6,6 +6,12 @@ namespace FoodDiary.Domain.Tests.Domain;
 [ExcludeFromCodeCoverage]
 public sealed class RecommendationTemplateInvariantTests {
     [Fact]
+    public void Create_RejectsEmptyDietologistId() {
+        Assert.Throws<ArgumentException>(() =>
+            RecommendationTemplate.Create(UserId.Empty, "Name", "Text"));
+    }
+
+    [Fact]
     public void Create_NormalizesValuesAndStartsActive() {
         var template = RecommendationTemplate.Create(
             UserId.New(),

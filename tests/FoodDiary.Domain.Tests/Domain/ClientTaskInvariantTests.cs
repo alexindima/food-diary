@@ -7,6 +7,40 @@ namespace FoodDiary.Domain.Tests.Domain;
 [ExcludeFromCodeCoverage]
 public sealed class ClientTaskInvariantTests {
     [Fact]
+    public void Create_RejectsEmptyParticipants() {
+        Assert.Multiple(
+            () => Assert.Throws<ArgumentException>(() =>
+                ClientTask.Create(
+                    dietologistUserId: UserId.Empty,
+                    clientUserId: UserId.New(),
+                    title: "Task",
+                    details: null,
+                    dueAtUtc: null)),
+            () => Assert.Throws<ArgumentException>(() =>
+                ClientTask.Create(
+                    dietologistUserId: UserId.New(),
+                    clientUserId: UserId.Empty,
+                    title: "Task",
+                    details: null,
+                    dueAtUtc: null)));
+    }
+
+    [Fact]
+    public void CancelledTask_CannotBeCompletedOrReopened() {
+        var task = ClientTask.Create(
+            UserId.New(),
+            UserId.New(),
+            "Task",
+            details: null,
+            dueAtUtc: null);
+        task.Cancel();
+
+        Assert.Multiple(
+            () => Assert.Throws<InvalidOperationException>(task.Complete),
+            () => Assert.Throws<InvalidOperationException>(task.Reopen));
+    }
+
+    [Fact]
     public void Create_NormalizesValuesAndStartsOpen() {
         var task = ClientTask.Create(
             UserId.New(),
@@ -51,6 +85,22 @@ public sealed class ClientTaskInvariantTests {
         Assert.Equal(ClientTaskStatus.Cancelled, task.Status);
         Assert.Throws<InvalidOperationException>(task.Complete);
         Assert.Throws<InvalidOperationException>(task.Reopen);
+    }
+
+    [Fact]
+    public void MarkDueReminderSent_IsIdempotent() {
+        var task = ClientTask.Create(
+            UserId.New(),
+            UserId.New(),
+            "Task",
+            details: null,
+            dueAtUtc: DateTime.UtcNow.AddDays(1));
+        DateTime first = DateTime.UtcNow;
+
+        task.MarkDueReminderSent(first);
+        task.MarkDueReminderSent(first.AddHours(1));
+
+        Assert.Equal(first, task.DueReminderSentAtUtc);
     }
 
     [Theory]

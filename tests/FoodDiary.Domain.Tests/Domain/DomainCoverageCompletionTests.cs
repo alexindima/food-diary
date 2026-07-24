@@ -22,6 +22,25 @@ namespace FoodDiary.Domain.Tests.Domain;
 [ExcludeFromCodeCoverage]
 public sealed class DomainCoverageCompletionTests {
     [Fact]
+    public void UserSecurityState_RequiringPasswordChange_WithoutPassword_Throws() {
+        var state = UserSecurityState.CreateInitial("hash", hasPassword: false);
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(
+            () => state.RequiringPasswordChange());
+
+        Assert.Equal("A password must be set before a password change can be required.", exception.Message);
+    }
+
+    [Fact]
+    public void UserSecurityState_RequiringPasswordChange_WithPassword_SetsFlag() {
+        var state = UserSecurityState.CreateInitial("hash");
+
+        UserSecurityState changed = state.RequiringPasswordChange();
+
+        Assert.True(changed.MustChangePassword);
+    }
+
+    [Fact]
     public void EventProperties_ExposeConstructorValues() {
         var recipeId = RecipeId.New();
         var userId = UserId.New();

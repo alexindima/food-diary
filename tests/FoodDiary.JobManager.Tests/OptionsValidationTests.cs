@@ -4,6 +4,23 @@ namespace FoodDiary.JobManager.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class OptionsValidationTests {
+    [Theory]
+    [InlineData(false, "", true)]
+    [InlineData(true, "0 * * * *", true)]
+    [InlineData(true, "", false)]
+    [InlineData(true, " ", false)]
+    public void ClientTaskReminderOptions_ReturnExpectedValidationResult(
+        bool enabled,
+        string cron,
+        bool expected) {
+        var options = new ClientTaskReminderOptions {
+            Enabled = enabled,
+            Cron = cron,
+        };
+
+        Assert.Equal(expected, ClientTaskReminderOptions.HasValidConfiguration(options));
+    }
+
     [Fact]
     public void ImageCleanupOptions_WithInvalidValues_FailsValidation() {
         var options = new ImageCleanupOptions {

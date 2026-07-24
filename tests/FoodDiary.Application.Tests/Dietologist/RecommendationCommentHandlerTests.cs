@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -17,6 +18,68 @@ namespace FoodDiary.Application.Tests.Dietologist;
 
 [ExcludeFromCodeCoverage]
 public sealed class RecommendationCommentHandlerTests {
+    [Fact]
+    public async Task CreateRecommendationComment_WhenCurrentUserAccessFails_ReturnsFailure() {
+        IUserContextService users = Substitute.For<IUserContextService>();
+        users.EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Errors.Authentication.InvalidToken);
+        var handler = new CreateRecommendationCommentCommandHandler(
+            Substitute.For<IRecommendationReadRepository>(),
+            Substitute.For<IRecommendationCommentRepository>(),
+            Substitute.For<IDietologistInvitationReadModelRepository>(),
+            Substitute.For<INotificationWriter>(),
+            Substitute.For<IAuditEntryWriter>(),
+            users);
+
+        Result<FoodDiary.Application.Dietologist.Models.RecommendationCommentModel> result = await handler.Handle(
+            new CreateRecommendationCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "Text"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, Errors.Authentication.InvalidToken.Code);
+    }
+
+    [Fact]
+    public async Task CreateRecommendationComment_WhenRecommendationIdIsEmpty_ReturnsFailure() {
+        var user = User.Create("user@example.com", "hash");
+        var handler = new CreateRecommendationCommentCommandHandler(
+            Substitute.For<IRecommendationReadRepository>(),
+            Substitute.For<IRecommendationCommentRepository>(),
+            Substitute.For<IDietologistInvitationReadModelRepository>(),
+            Substitute.For<INotificationWriter>(),
+            Substitute.For<IAuditEntryWriter>(),
+            CreateAccessibleUserContext(user));
+
+        Result<FoodDiary.Application.Dietologist.Models.RecommendationCommentModel> result = await handler.Handle(
+            new CreateRecommendationCommentCommand(user.Id.Value, Guid.Empty, "Text"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task CreateRecommendationComment_WhenAuthorLookupFails_ReturnsFailure() {
+        var clientId = UserId.New();
+        var recommendation = Recommendation.Create(UserId.New(), clientId, "Recommendation");
+        IUserContextService users = Substitute.For<IUserContextService>();
+        users.EnsureCanAccessAsync(clientId, Arg.Any<CancellationToken>())
+            .Returns((Error?)null);
+        users.GetAccessibleUserAsync(clientId, Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<User>(Errors.Authentication.InvalidToken));
+        var handler = new CreateRecommendationCommentCommandHandler(
+            CreateRecommendationRepository(recommendation),
+            Substitute.For<IRecommendationCommentRepository>(),
+            Substitute.For<IDietologistInvitationReadModelRepository>(),
+            Substitute.For<INotificationWriter>(),
+            Substitute.For<IAuditEntryWriter>(),
+            users);
+
+        Result<FoodDiary.Application.Dietologist.Models.RecommendationCommentModel> result = await handler.Handle(
+            new CreateRecommendationCommentCommand(clientId.Value, recommendation.Id.Value, "Text"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, Errors.Authentication.InvalidToken.Code);
+    }
+
     [Fact]
     public async Task CreateRecommendationComment_WhenClientOwnsRecommendation_AddsCommentAndNotification() {
         var clientId = UserId.New();

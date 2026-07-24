@@ -1,11 +1,158 @@
 using FoodDiary.Initializer;
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Results;
+using Microsoft.Extensions.Configuration;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class InitializerTests {
+    [Fact]
+    public void InitialAdminBootstrapOptions_FromConfiguration_UsesDefaults() {
+        IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
+
+        var options = InitialAdminBootstrapOptions.FromConfiguration(configuration);
+
+        Assert.Multiple(
+            () => Assert.Equal("admin@fooddiary.club", options.Email),
+            () => Assert.Equal(string.Empty, options.Password),
+            () => Assert.Equal(TimeSpan.FromSeconds(30), options.Timeout));
+    }
+
+    [Theory]
+    [InlineData("0")]
+    [InlineData("301")]
+    public void InitialAdminBootstrapOptions_FromConfiguration_RejectsInvalidTimeout(string timeout) {
+        IConfiguration configuration = CreateInitialAdminConfiguration(
+            email: "admin@example.com",
+            password: "",
+            timeout);
+
+        Assert.Throws<InvalidOperationException>(() =>
+            InitialAdminBootstrapOptions.FromConfiguration(configuration));
+    }
+
+    [Theory]
+    [InlineData("admin@example.com", "short")]
+    [InlineData("admin@example.com", "123456")]
+    [InlineData("not-an-email", "long-enough-password")]
+    [InlineData("", "long-enough-password")]
+    public void InitialAdminBootstrapOptions_FromConfiguration_RejectsInvalidCredentials(
+        string email,
+        string password) {
+        IConfiguration configuration = CreateInitialAdminConfiguration(email, password, "30");
+
+        Assert.Throws<InvalidOperationException>(() =>
+            InitialAdminBootstrapOptions.FromConfiguration(configuration));
+    }
+
+    [Fact]
+    public void InitialAdminBootstrapOptions_FromConfiguration_AcceptsConfiguredValues() {
+        IConfiguration configuration = CreateInitialAdminConfiguration(
+            "admin@example.com",
+            "long-enough-password",
+            "45");
+
+        var options = InitialAdminBootstrapOptions.FromConfiguration(configuration);
+
+        Assert.Multiple(
+            () => Assert.Equal("admin@example.com", options.Email),
+            () => Assert.Equal("long-enough-password", options.Password),
+            () => Assert.Equal(TimeSpan.FromSeconds(45), options.Timeout));
+    }
+
+    [Theory]
+    [InlineData(BootstrapInitialAdminStatus.SkippedMissingPassword)]
+    [InlineData(BootstrapInitialAdminStatus.SkippedExistingUser)]
+    [InlineData(BootstrapInitialAdminStatus.Created)]
+    public async Task InitialAdminBootstrapper_BootstrapAsync_AcceptsKnownOutcomes(
+        BootstrapInitialAdminStatus status) {
+        IInitialAdminBootstrapService service = Substitute.For<IInitialAdminBootstrapService>();
+        service.BootstrapAsync(Arg.Any<string>(), "password", Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new BootstrapInitialAdminModel(status, "admin@example.com")));
+
+        await InitialAdminBootstrapper.BootstrapAsync(
+            service,
+            new InitialAdminBootstrapOptions(" admin@example.com ", "password", TimeSpan.FromSeconds(1)));
+
+        await service.Received(1).BootstrapAsync(
+            " admin@example.com ",
+            "password",
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task InitialAdminBootstrapper_BootstrapAsync_WhenServiceFails_Throws() {
+        IInitialAdminBootstrapService service = Substitute.For<IInitialAdminBootstrapService>();
+        service.BootstrapAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<BootstrapInitialAdminModel>(
+                new Error("InitialAdmin.Failed", "failed")));
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            InitialAdminBootstrapper.BootstrapAsync(
+                service,
+                new InitialAdminBootstrapOptions("admin@example.com", "password", TimeSpan.FromSeconds(1))));
+
+        Assert.Contains("InitialAdmin.Failed", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task InitialAdminBootstrapper_BootstrapAsync_WhenInternalTimeoutExpires_ThrowsTimeout() {
+        IInitialAdminBootstrapService service = Substitute.For<IInitialAdminBootstrapService>();
+        service.BootstrapAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(async call => {
+                await Task.Delay(
+                    Timeout.InfiniteTimeSpan,
+                    call.ArgAt<CancellationToken>(2)).ConfigureAwait(false);
+                return Result.Success(new BootstrapInitialAdminModel(
+                    BootstrapInitialAdminStatus.Created,
+                    "admin@example.com"));
+            });
+
+        await Assert.ThrowsAsync<TimeoutException>(() =>
+            InitialAdminBootstrapper.BootstrapAsync(
+                service,
+                new InitialAdminBootstrapOptions(
+                    "admin@example.com",
+                    "password",
+                    TimeSpan.FromMilliseconds(10))));
+    }
+
+    [Fact]
+    public async Task InitialAdminBootstrapper_BootstrapAsync_WhenCallerCancels_PropagatesCancellation() {
+        using var cancellationSource = new CancellationTokenSource();
+        await cancellationSource.CancelAsync();
+        IInitialAdminBootstrapService service = Substitute.For<IInitialAdminBootstrapService>();
+        service.BootstrapAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(call => Task.FromCanceled<Result<BootstrapInitialAdminModel>>(
+                call.ArgAt<CancellationToken>(2)));
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            InitialAdminBootstrapper.BootstrapAsync(
+                service,
+                new InitialAdminBootstrapOptions(
+                    "admin@example.com",
+                    "password",
+                    TimeSpan.FromSeconds(1)),
+                cancellationSource.Token));
+    }
+
+    [Fact]
+    public async Task InitialAdminBootstrapper_BootstrapAsync_WhenOutcomeIsUnknown_Throws() {
+        IInitialAdminBootstrapService service = Substitute.For<IInitialAdminBootstrapService>();
+        service.BootstrapAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new BootstrapInitialAdminModel(
+                (BootstrapInitialAdminStatus)999,
+                "admin@example.com")));
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            InitialAdminBootstrapper.BootstrapAsync(
+                service,
+                new InitialAdminBootstrapOptions("admin@example.com", "password", TimeSpan.FromSeconds(1))));
+    }
+
     [Fact]
     public void InitializerCommandParse_WithNoArguments_ReturnsNull() {
         var command = InitializerCommand.Parse([]);
@@ -142,4 +289,16 @@ public sealed class InitializerTests {
             File.Delete(path);
         }
     }
+
+    private static IConfiguration CreateInitialAdminConfiguration(
+        string email,
+        string password,
+        string timeout) =>
+        new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["InitialAdmin:Email"] = email,
+                ["InitialAdmin:Password"] = password,
+                ["InitialAdmin:BootstrapTimeoutSeconds"] = timeout,
+            })
+            .Build();
 }

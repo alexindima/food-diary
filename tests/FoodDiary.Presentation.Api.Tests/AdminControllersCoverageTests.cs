@@ -2,6 +2,7 @@ using System.Net;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
+using FoodDiary.Application.Admin.Commands.CreateAdminUser;
 using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
 using FoodDiary.Application.Admin.Commands.DismissContentReport;
 using FoodDiary.Application.Admin.Commands.MarkAdminMailInboxMessageRead;
@@ -20,6 +21,7 @@ using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
 using FoodDiary.Application.Admin.Queries.GetAdminContentReports;
+using FoodDiary.Application.Admin.Queries.GetCollaborationAudit;
 using FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
 using FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
 using FoodDiary.Application.Admin.Queries.GetAdminLessons;
@@ -276,6 +278,71 @@ public sealed class AdminControllersCoverageTests {
         IActionResult sendTest = await testController.SendTest(new AdminEmailTemplateTestHttpRequest("user@example.com", "welcome", "Subject", "<p>Body</p>", "Body"));
         Assert.IsType<NoContentResult>(sendTest);
         Assert.IsType<SendAdminEmailTemplateTestCommand>(testSender.Request);
+    }
+
+    [Fact]
+    public async Task AdminCollaborationAuditController_MapsQueryAndResponse() {
+        var model = new AdminAuditEntryModel(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            "action",
+            "target",
+            "id",
+            "{}",
+            DateTime.UtcNow);
+        CapturedSender sender = SubstituteSender.Capture(
+            Result.Success<IReadOnlyList<AdminAuditEntryModel>>([model]));
+        AdminCollaborationAuditController controller =
+            CreateController(new AdminCollaborationAuditController(sender));
+        var clientUserId = Guid.NewGuid();
+
+        IActionResult result = await controller.GetCollaborationAudit(
+            new GetCollaborationAuditHttpQuery(clientUserId, 25));
+
+        List<AdminAuditEntryHttpResponse> response =
+            Assert.IsType<List<AdminAuditEntryHttpResponse>>(Assert.IsType<OkObjectResult>(result).Value);
+        AdminAuditEntryHttpResponse item = Assert.Single(response);
+        GetCollaborationAuditQuery query = Assert.IsType<GetCollaborationAuditQuery>(sender.Request);
+        Assert.Multiple(
+            () => Assert.Equal(model.Id, item.Id),
+            () => Assert.Equal(model.Metadata, item.Metadata),
+            () => Assert.Equal(clientUserId, query.ClientUserId),
+            () => Assert.Equal(25, query.Limit));
+    }
+
+    [Fact]
+    public async Task AdminUserCreationController_MapsRequestOriginAndResponse() {
+        AdminUserModel user = CreateUser();
+        var model = new AdminUserCreationModel(user, "Temporary123!", CredentialsEmailQueued: true);
+        CapturedSender sender = SubstituteSender.Capture(Result.Success(model));
+        AdminUserCreationController controller = CreateController(new AdminUserCreationController(sender));
+        controller.Request.Headers.Origin = "https://app.example.com";
+        var actorUserId = Guid.NewGuid();
+        var request = new AdminUserCreateHttpRequest(
+            "new@example.com",
+            "New",
+            "User",
+            "en",
+            ["User"],
+            "Temporary123!",
+            GeneratePassword: false,
+            IsEmailConfirmed: true,
+            SendCredentialsEmail: true,
+            RequirePasswordChange: true);
+
+        IActionResult result = await controller.CreateUser(actorUserId, request);
+
+        AdminUserCreationHttpResponse response =
+            Assert.IsType<AdminUserCreationHttpResponse>(Assert.IsType<CreatedResult>(result).Value);
+        CreateAdminUserCommand command = Assert.IsType<CreateAdminUserCommand>(sender.Request);
+        Assert.Multiple(
+            () => Assert.Equal(user.Id, response.User.Id),
+            () => Assert.Equal("Temporary123!", response.TemporaryPassword),
+            () => Assert.True(response.CredentialsEmailQueued),
+            () => Assert.Equal(actorUserId, command.ActorUserId),
+            () => Assert.Equal("https://app.example.com", command.ClientOrigin),
+            () => Assert.Equal(request.Roles, command.Roles));
     }
 
     [Fact]
