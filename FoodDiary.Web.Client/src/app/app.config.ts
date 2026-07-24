@@ -28,6 +28,7 @@ import { FoodDiaryTranslationLoader } from './shared/i18n/food-diary-translation
 import { LocalizationService } from './shared/i18n/localization.service';
 import { MarketingAttributionService } from './shared/marketing/marketing-attribution.service';
 import { isMobileShellWindow } from './shared/platform/mobile-shell-runtime';
+import { AppVersionRecoveryService } from './shared/service-worker/app-version-recovery.service';
 import { ThemeService } from './shared/theme/theme.service';
 
 const isBrowserEnvironment = typeof window !== 'undefined';
@@ -74,6 +75,9 @@ export const appConfig: ApplicationConfig = {
         provideAppInitializer(() => {
             inject(AppBootstrapService).initializeObservability();
         }),
+        provideAppInitializer(() => {
+            inject(AppVersionRecoveryService).initialize();
+        }),
         provideZonelessChangeDetection(),
         provideRouter(
             routes,
@@ -102,6 +106,7 @@ export const appConfig: ApplicationConfig = {
         ThemeService,
         LoggingApiService,
         MarketingAttributionService,
+        AppVersionRecoveryService,
         provideClientHydration(withEventReplay()),
     ],
 };

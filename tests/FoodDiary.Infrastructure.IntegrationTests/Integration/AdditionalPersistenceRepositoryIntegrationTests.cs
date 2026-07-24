@@ -8,6 +8,7 @@ using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.Entities.Admin;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.MealPlans;
+using FoodDiary.Domain.Entities.OpenFoodFacts;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Entities.Usda;
@@ -23,6 +24,7 @@ using FoodDiary.Infrastructure.Persistence.RecipeComments;
 using FoodDiary.Infrastructure.Persistence.RecipeLikes;
 using FoodDiary.Infrastructure.Persistence.Usda;
 using FoodDiary.Infrastructure.Persistence.Wearables;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
@@ -117,6 +119,41 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         OpenFoodFactsProductModel match = Assert.Single(matches);
         Assert.Equal("100% Cocoa Updated", match.Name);
         Assert.Empty(blankMatches);
+    }
+
+    [RequiresDockerFact]
+    public async Task OpenFoodFactsRepository_ConcurrentUpsertsForSameBarcode_DoNotViolatePrimaryKey() {
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        await using (FoodDiaryDbContext migrationContext = databaseFixture.CreateDbContext(connectionString)) {
+            await migrationContext.Database.MigrateAsync();
+        }
+
+        await using FoodDiaryDbContext firstContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
+        await using FoodDiaryDbContext secondContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
+        var firstRepository = new OpenFoodFactsProductCacheRepository(firstContext, FixedTime);
+        var secondRepository = new OpenFoodFactsProductCacheRepository(secondContext, FixedTime);
+        var product = new OpenFoodFactsProductModel(
+            Barcode: "concurrent-123",
+            Name: "Concurrent product",
+            Brand: "Brand",
+            Category: "Category",
+            ImageUrl: null,
+            CaloriesPer100G: 100,
+            ProteinsPer100G: 10,
+            FatsPer100G: 5,
+            CarbsPer100G: 15,
+            FiberPer100G: 2);
+
+        await Task.WhenAll(
+            firstRepository.UpsertAsync([product]),
+            secondRepository.UpsertAsync([product with { Name = "Concurrent product updated" }]));
+
+        await using FoodDiaryDbContext assertionContext = databaseFixture.CreateDbContext(connectionString);
+        OpenFoodFactsProduct saved = Assert.Single(await assertionContext.OpenFoodFactsProducts.AsNoTracking().ToListAsync());
+        Assert.Multiple(
+            () => Assert.Equal(product.Barcode, saved.Barcode),
+            () => Assert.Equal(2, saved.SearchHitCount),
+            () => Assert.Contains("Concurrent product", saved.Name, StringComparison.Ordinal));
     }
 
     [RequiresDockerFact]

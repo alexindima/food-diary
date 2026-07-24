@@ -156,7 +156,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
     [RequiresDockerFact]
     public async Task OutboxMessageClaimer_WithRelationalDatabase_ClaimsDueMessagesAndSkipsLockedRows() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
+        await context.Database.MigrateAsync();
         var firstDue = EmailOutboxMessage.Create(
             new EmailMessage("sender@example.com", "Sender", ["first@example.com"], "First", "<p>First</p>", "First"),
             FixedNow.AddMinutes(-2));

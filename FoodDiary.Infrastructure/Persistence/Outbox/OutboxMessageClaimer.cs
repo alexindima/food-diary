@@ -55,6 +55,36 @@ internal static class OutboxMessageClaimer {
         IQueryable<TMessage>? claimedQuery,
         CancellationToken cancellationToken)
         where TMessage : class, IOutboxMessage {
+        IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
+        bool claimedAny = await strategy.ExecuteAsync(() => ExecuteClaimTransactionAsync(
+            context,
+            tableName,
+            batchSize,
+            nowUtc,
+            lockedUntilUtc,
+            workerId,
+            cancellationToken)).ConfigureAwait(false);
+
+        if (!claimedAny) {
+            return [];
+        }
+
+        IQueryable<TMessage> query = claimedQuery ?? messages;
+        return await query
+            .Where(message => EF.Property<string?>(message, "LockedBy") == workerId)
+            .OrderBy(message => EF.Property<DateTime>(message, "CreatedOnUtc"))
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    private static async Task<bool> ExecuteClaimTransactionAsync(
+        FoodDiaryDbContext context,
+        string tableName,
+        int batchSize,
+        DateTime nowUtc,
+        DateTime lockedUntilUtc,
+        string workerId,
+        CancellationToken cancellationToken) {
         IDbContextTransaction transaction = await context.Database
             .BeginTransactionAsync(cancellationToken)
             .ConfigureAwait(false);
@@ -81,7 +111,7 @@ internal static class OutboxMessageClaimer {
 
             if (ids.Count == 0) {
                 await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-                return [];
+                return false;
             }
 
 #pragma warning disable EF1002
@@ -102,14 +132,8 @@ internal static class OutboxMessageClaimer {
 #pragma warning restore EF1002
 
             await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            return true;
         }
-
-        IQueryable<TMessage> query = claimedQuery ?? messages;
-        return await query
-            .Where(message => EF.Property<string?>(message, "LockedBy") == workerId)
-            .OrderBy(message => EF.Property<DateTime>(message, "CreatedOnUtc"))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
     }
 
     private static string ValidateTableName(string tableName) =>
