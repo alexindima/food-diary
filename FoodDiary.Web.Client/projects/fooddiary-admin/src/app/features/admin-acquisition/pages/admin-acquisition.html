@@ -16,7 +16,7 @@
                     <option value="2160">Last 90 days</option>
                 </select>
             </div>
-            <fd-ui-button type="button" variant="secondary" [disabled]="isLoading()" (click)="loadSummary()"> Refresh </fd-ui-button>
+            <fd-ui-button type="button" variant="secondary" [loading]="isLoading()" (click)="loadSummary()"> Refresh </fd-ui-button>
         </div>
     </div>
 
