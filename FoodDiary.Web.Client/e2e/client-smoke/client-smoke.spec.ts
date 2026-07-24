@@ -45,6 +45,8 @@ const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { matches: pathname => pathname.endsWith('/usda/daily-micronutrients'), createResponse: createDailyMicronutrients },
     { matches: pathname => pathname.endsWith('/notifications/unread-count'), createResponse: () => ({ count: 2 }) },
     { matches: pathname => pathname.endsWith('/notifications'), createResponse: () => [] },
+    { matches: pathname => pathname.endsWith('/client-tasks'), createResponse: () => [] },
+    { matches: pathname => pathname.endsWith('/recommendations/rec-1/comments'), createResponse: () => [] },
     { matches: pathname => pathname.endsWith('/recommendations'), createResponse: createRecommendations },
     { matches: pathname => pathname.endsWith('/favorite-products'), createResponse: createEmptyProductsPage },
     { matches: pathname => pathname.endsWith('/products/overview'), createResponse: createProductsOverview },
@@ -53,6 +55,7 @@ const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { matches: pathname => pathname.endsWith('/meal-plans/plan-1'), createResponse: createMealPlanDetail },
     { matches: pathname => pathname.endsWith('/lessons/lesson-1'), createResponse: createLessonDetail },
     { matches: pathname => pathname.endsWith('/recipes/recipe-1'), createResponse: createOwnedRecipe },
+    { matches: pathname => pathname.endsWith('/dietologist/clients/attention'), createResponse: () => [] },
     { matches: pathname => pathname.endsWith('/dietologist/clients'), createResponse: createDietologistClients },
 ];
 
@@ -359,7 +362,7 @@ test.describe('deterministic authenticated feature fixtures', () => {
 
         await expect(page).toHaveURL(/\/dietologist$/);
         await expect(page.getByRole('heading', { name: 'My clients', level: 1 })).toBeVisible();
-        await expect(page.getByText('Taylor Example')).toBeVisible();
+        await expect(page.getByRole('button', { name: /Taylor Example/ })).toBeVisible();
         await expect(page.getByText('client@example.test')).toBeVisible();
     });
 });
