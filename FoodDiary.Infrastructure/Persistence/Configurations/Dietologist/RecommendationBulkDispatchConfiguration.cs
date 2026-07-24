@@ -18,10 +18,10 @@ internal sealed class RecommendationBulkDispatchConfiguration : IEntityTypeConfi
             .HasConversion(id => id.Value, value => new RecommendationId(value));
         builder.Property(dispatch => dispatch.IdempotencyKey).IsRequired().HasMaxLength(100);
         builder.HasIndex(dispatch => new {
-                dispatch.DietologistUserId,
-                dispatch.IdempotencyKey,
-                dispatch.ClientUserId,
-            })
+            dispatch.DietologistUserId,
+            dispatch.IdempotencyKey,
+            dispatch.ClientUserId,
+        })
             .IsUnique();
         builder.HasOne<FoodDiary.Domain.Entities.Users.User>()
             .WithMany()
