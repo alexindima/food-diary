@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Services;
@@ -18,6 +19,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IAuthenticationUserMutationService, AuthenticationUserMutationService>();
         services.AddScoped<IAuthenticationUserRegistrationService, AuthenticationUserRegistrationService>();
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
+        services.AddScoped<IInitialAdminBootstrapService, InitialAdminBootstrapService>();
         services.AddScoped<IUserAdministrationService, UserAdministrationService>();
         services.AddScoped<IUserAdministrationReadService, UserAdministrationReadService>();
         services.AddScoped<IUserIdentityMutationService, UserIdentityMutationService>();

@@ -26,6 +26,8 @@ services:
       - .env
     environment:
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-change-me-local-password}
+      InitialAdmin__Email: ${InitialAdmin__Email:-admin@fooddiary.club}
+      InitialAdmin__Password: ${InitialAdmin__Password:-}
       MailRelayClient__BaseUrl: http://mail-relay:5088
       MailInboxClient__BaseUrl: http://mail-inbox:5098
     depends_on:
@@ -157,8 +159,6 @@ services:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
       BuildInfo__CommitSha: ${DEPLOY_COMMIT_SHA:-unknown}
       BuildInfo__ImageTag: ${API_IMAGE_TAG:-unknown}
-      InitialAdmin__Email: ${InitialAdmin__Email:-admin@fooddiary.club}
-      InitialAdmin__Password: ${InitialAdmin__Password:-}
       MailRelayClient__BaseUrl: http://mail-relay:5088
       MailRelayClient__ApiKey: ${MailRelayClient__ApiKey:-}
       MailInboxClient__BaseUrl: http://mail-inbox:5098

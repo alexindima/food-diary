@@ -373,22 +373,26 @@ jobs:
           docker compose --profile full up -d --force-recreate --no-deps telegram-bot
           docker compose --profile full up -d --force-recreate --no-deps job-manager
 
-          echo "Checking deployed API version..."
+          echo "Waiting for deployed API readiness..."
           echo "Expected commit SHA: $DEPLOY_COMMIT_SHA"
           echo "Expected image tag: $DEPLOY_IMAGE_TAG"
-          version_json=""
-          for _ in $(seq 1 15); do
-            if version_json=$(curl -fsS http://127.0.0.1:${API_PORT:-5000}/api/v1/version); then
+          api_base_url="http://127.0.0.1:${API_PORT:-5000}"
+          ready=""
+          for _ in $(seq 1 45); do
+            if ready=$(curl -fsS "${api_base_url}/health/ready"); then
               break
             fi
             sleep 4
           done
 
-          if [ -z "$version_json" ]; then
-            echo "API version endpoint did not respond in time."
+          if [ "$ready" != "Healthy" ]; then
+            echo "API readiness endpoint did not report Healthy in time."
+            docker compose ps api
+            docker compose logs --tail=250 --timestamps api
             exit 1
           fi
 
+          version_json=$(curl -fsS "${api_base_url}/api/v1/version")
           echo "Actual API version payload: $version_json"
           echo "$version_json" | grep -F "\"commitSha\":\"$DEPLOY_COMMIT_SHA\""
           echo "$version_json" | grep -F "\"imageTag\":\"${DEPLOY_IMAGE_TAG}\""

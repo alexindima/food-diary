@@ -188,9 +188,7 @@ public sealed class HostCompositionBoundaryTests {
     public void PrimaryWebApiHost_RegistersOnlyAllowedHostedServices() {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string hostRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api");
-        var allowedHostedServiceRegistrations = new HashSet<string>(StringComparer.Ordinal) {
-            "InitialAdminHostedService",
-        };
+        var allowedHostedServiceRegistrations = new HashSet<string>(StringComparer.Ordinal);
 
         string[] violations = [.. SourceScanner.SourceFiles(hostRoot)
             .SelectMany(path => File.ReadLines(path)
@@ -211,7 +209,7 @@ public sealed class HostCompositionBoundaryTests {
     }
 
     [Fact]
-    public void HostEntryPoints_DoNotUseMediatorDirectlyExceptInitialAdminBootstrap() {
+    public void HostEntryPoints_DoNotUseMediatorDirectly() {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string[] hostRoots = [
             ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api"),
@@ -221,13 +219,7 @@ public sealed class HostCompositionBoundaryTests {
             ArchitectureTestPaths.FromRoot("MailInbox/FoodDiary.MailInbox.Initializer"),
             ArchitectureTestPaths.FromRoot("MailRelay/FoodDiary.MailRelay.Initializer"),
         ];
-        string allowedPath = Path.Combine(
-            ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api"),
-            "Services",
-            "InitialAdminHostedService.cs");
-
         string[] violations = [.. SourceScanner.SourceFiles(hostRoots)
-            .Where(path => !string.Equals(path, allowedPath, StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(static entry =>

@@ -82,13 +82,6 @@ public static class ApiOptionsServiceCollectionExtensions {
                     "BuildInfo:ImageTag must be empty or shorter than 257 characters.")
                 .ValidateOnStart();
 
-            services
-                .AddOptions<InitialAdminOptions>()
-                .BindConfiguration(InitialAdminOptions.SectionName)
-                .Validate(InitialAdminOptions.HasValidConfiguration,
-                    "InitialAdmin requires a valid email and a password of at least 12 characters when configured.")
-                .ValidateOnStart();
-
             return services;
         }
     }

@@ -24,6 +24,11 @@ The runner resolves `ConnectionStrings:DefaultConnection` from these sources:
 
 The last source wins.
 
+Running `update` without a target migration also bootstraps the initial administrator after migrations complete.
+Configure it with `InitialAdmin__Email` and `InitialAdmin__Password`. The bootstrap is idempotent and skips
+creation when the password is absent or the user already exists. `InitialAdmin__BootstrapTimeoutSeconds`
+controls its timeout and defaults to 30 seconds.
+
 ## Notes
 
 - EF Core migrations stay in `FoodDiary.Infrastructure` next to `FoodDiaryDbContext`.

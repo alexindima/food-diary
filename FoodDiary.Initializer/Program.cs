@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Application;
 using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Initializer;
 using FoodDiary.Infrastructure;
@@ -59,9 +60,15 @@ using IHost host = builder.Build();
 AsyncServiceScope scope = host.Services.CreateAsyncScope();
 await using (scope.ConfigureAwait(false)) {
     FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+    IInitialAdminBootstrapService initialAdminBootstrapService =
+        scope.ServiceProvider.GetRequiredService<IInitialAdminBootstrapService>();
 
     try {
-        await ExecuteAsync(command, dbContext).ConfigureAwait(false);
+        await ExecuteAsync(
+            command,
+            dbContext,
+            initialAdminBootstrapService,
+            builder.Configuration).ConfigureAwait(false);
         return 0;
     } catch (Exception exception) {
         Console.Error.WriteLine($"Initializer failed: {exception}");
@@ -69,7 +76,11 @@ await using (scope.ConfigureAwait(false)) {
     }
 }
 
-static async Task ExecuteAsync(InitializerCommand command, FoodDiaryDbContext dbContext) {
+static async Task ExecuteAsync(
+    InitializerCommand command,
+    FoodDiaryDbContext dbContext,
+    IInitialAdminBootstrapService initialAdminBootstrapService,
+    IConfiguration configuration) {
     switch (command.Name) {
         case "list":
             await ListMigrationsAsync(dbContext).ConfigureAwait(false);
@@ -79,6 +90,11 @@ static async Task ExecuteAsync(InitializerCommand command, FoodDiaryDbContext db
             break;
         case "update":
             await UpdateDatabaseAsync(dbContext, command.TargetMigration).ConfigureAwait(false);
+            if (string.IsNullOrWhiteSpace(command.TargetMigration)) {
+                await InitialAdminBootstrapper.BootstrapAsync(
+                    initialAdminBootstrapService,
+                    InitialAdminBootstrapOptions.FromConfiguration(configuration)).ConfigureAwait(false);
+            }
             break;
         case "rollback":
             await RollbackDatabaseAsync(dbContext, command.TargetMigration).ConfigureAwait(false);

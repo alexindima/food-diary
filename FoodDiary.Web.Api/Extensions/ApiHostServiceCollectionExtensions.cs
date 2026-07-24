@@ -1,7 +1,6 @@
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Web.Api.HealthChecks;
 using FoodDiary.Web.Api.Options;
-using FoodDiary.Web.Api.Services;
 using FoodDiary.Web.Api.Swagger;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpLogging;
@@ -24,8 +23,6 @@ public static class ApiHostServiceCollectionExtensions {
             services.AddExceptionHandler<ApiExceptionHandler>();
             services.AddRateLimiter(static _ => { });
             services.AddOutputCache(static _ => { });
-            services.AddHostedService<InitialAdminHostedService>();
-
             return services;
         }
 
