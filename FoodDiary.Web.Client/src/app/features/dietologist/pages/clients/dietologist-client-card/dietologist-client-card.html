@@ -1,6 +1,14 @@
 @let itemView = item();
 
-<fd-ui-card class="dietologist-clients__card" (click)="clientOpen.emit(itemView.client)">
+<fd-ui-card
+    class="dietologist-clients__card"
+    role="button"
+    tabindex="0"
+    [attr.aria-label]="itemView.title"
+    (click)="openClient()"
+    (keydown.enter)="openClient()"
+    (keydown.space)="$event.preventDefault(); openClient()"
+>
     <div class="dietologist-clients__card-content fd-row fd-justify-between fd-gap-md">
         <div
             class="dietologist-clients__avatar fd-inline-center"
@@ -24,12 +32,12 @@
                     }
                     @if (itemView.client.gender) {
                         <span class="dietologist-clients__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
-                            {{ itemView.client.gender }}
+                            {{ genderTranslationKey(itemView.client.gender) | translate }}
                         </span>
                     }
                     @if (itemView.client.activityLevel) {
                         <span class="dietologist-clients__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
-                            {{ itemView.client.activityLevel }}
+                            {{ activityTranslationKey(itemView.client.activityLevel) | translate }}
                         </span>
                     }
                 </div>

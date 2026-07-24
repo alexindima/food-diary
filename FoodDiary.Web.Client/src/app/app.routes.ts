@@ -170,7 +170,7 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: async () =>
             import('./features/dietologist/pages/invitation/dietologist-invitation-page').then(m => m.DietologistInvitationPageComponent),
-        data: { seo: { titleKey: 'SEO.DIETOLOGIST', noIndex: true } },
+        data: { seo: { titleKey: 'DIETOLOGIST_INVITATION.TITLE', noIndex: true } },
     },
     {
         path: 'recommendations',

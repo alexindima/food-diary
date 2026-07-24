@@ -1,6 +1,7 @@
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
 using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
+using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
@@ -21,4 +22,24 @@ public sealed class RecommendationsController(ISender mediator) : AuthorizedCont
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> MarkAsRead(Guid recommendationId, [FromCurrentUser] Guid userId) =>
         HandleNoContent(recommendationId.ToMarkReadCommand(userId));
+
+    [HttpGet("{recommendationId:guid}/comments")]
+    [ProducesResponseType<List<RecommendationCommentHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> GetComments(Guid recommendationId, [FromCurrentUser] Guid userId) =>
+        HandleOk(
+            recommendationId.ToRecommendationCommentsQuery(userId),
+            static value => value.Select(comment => comment.ToHttpResponse()).ToList());
+
+    [HttpPost("{recommendationId:guid}/comments")]
+    [ProducesResponseType<RecommendationCommentHttpResponse>(StatusCodes.Status201Created)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> CreateComment(
+        Guid recommendationId,
+        [FromCurrentUser] Guid userId,
+        [FromBody] CreateRecommendationCommentHttpRequest request) =>
+        HandleCreated(
+            request.ToCommand(userId, recommendationId),
+            static value => value.ToHttpResponse());
 }

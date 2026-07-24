@@ -24,6 +24,7 @@ export const environment: AppConfig = {
         shoppingLists: `${apiBasePath}/shopping-lists`,
         dietologist: `${apiBasePath}/dietologist`,
         recommendations: `${apiBasePath}/recommendations`,
+        clientTasks: `${apiBasePath}/client-tasks`,
         fasting: `${apiBasePath}/fasting`,
         favoriteMeals: `${apiBasePath}/favorite-meals`,
         favoriteProducts: `${apiBasePath}/favorite-products`,

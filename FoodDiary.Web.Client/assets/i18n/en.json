@@ -4341,6 +4341,8 @@
         "DIETOLOGIST_INVITATION_BADGE": "Dietologist invite",
         "DIETOLOGIST_INVITATION_ACTION": "Review invitation",
         "RECOMMENDATION_BADGE": "Recommendation",
+        "TASK_BADGE": "Task",
+        "TASK_ACTION": "Open tasks",
         "RECOMMENDATION_ACTION": "Open recommendation"
     },
     "RECOMMENDATIONS": {
@@ -4357,6 +4359,17 @@
         "STATUS_UNREAD": "New",
         "STATUS_READ": "Read",
         "STATUS_MARKING": "Marking...",
+        "DISCUSSION": {
+            "TITLE": "Discussion",
+            "LOADING": "Loading discussion...",
+            "EMPTY": "No messages yet. Start the discussion.",
+            "MESSAGE_LABEL": "Message",
+            "MESSAGE_PLACEHOLDER": "Ask a question or add context...",
+            "SEND": "Send",
+            "SENDING": "Sending...",
+            "LOAD_ERROR": "Could not load the discussion.",
+            "SAVE_ERROR": "Could not send the message. Try again."
+        },
         "TOUR": {
             "START_TOUR": "Show recommendations tour",
             "LIST_TITLE": "Dietologist recommendations",
@@ -5560,6 +5573,8 @@
             "TITLE": "My clients",
             "HEADING": "My clients",
             "LOADING": "Loading clients...",
+            "LOAD_ERROR": "We could not load your clients. Check your connection and try again.",
+            "RETRY": "Try again",
             "EMPTY": "No clients yet. Clients can invite you by email.",
             "CONNECTED": "Connected {{ date }}",
             "TOUR": {
@@ -5580,6 +5595,9 @@
             "NOT_FOUND": "Client not found.",
             "NO_DATA": "Client has not shared any data.",
             "DISCONNECT": "Disconnect client",
+            "DISCONNECT_TITLE": "Disconnect this client?",
+            "DISCONNECT_MESSAGE": "You will immediately lose access to the client's shared data and recommendations history. The client must invite you again to reconnect.",
+            "DISCONNECT_CONFIRM": "Disconnect",
             "DISCONNECTED": "Client connection removed.",
             "DISCONNECT_ERROR": "Failed to disconnect client.",
             "METRICS": {
@@ -5641,7 +5659,8 @@
             "FASTING": {
                 "PROTOCOL": "Protocol",
                 "STARTED": "Started",
-                "PLANNED": "Planned"
+                "PLANNED": "Planned",
+                "EMPTY": "No fasting session is available for the selected period."
             },
             "SECTIONS": {
                 "PROFILE_TITLE": "Profile",
@@ -5675,6 +5694,81 @@
                 "HELP_TITLE": "Replay this tour anytime",
                 "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this dashboard."
             }
+        }
+    },
+    "RECOMMENDATION_TEMPLATES": {
+        "TITLE": "Recommendation templates",
+        "EMPTY": "No templates yet.",
+        "NAME": "Template name",
+        "SAVE": "Save current text as template",
+        "CREATED": "Template saved.",
+        "SAVE_ERROR": "Failed to save the template.",
+        "ARCHIVE": "Archive template {{ name }}",
+        "ARCHIVE_SHORT": "Archive",
+        "ARCHIVE_ERROR": "Failed to archive the template."
+    },
+    "BULK_RECOMMENDATIONS": {
+        "TITLE": "Send recommendation to several clients",
+        "DESCRIPTION": "Select clients and review the text before sending. Each client receives a separate recommendation.",
+        "TEXT": "Recommendation",
+        "SEND": "Review and send to {{ count }}",
+        "CONFIRM_TITLE": "Send bulk recommendation?",
+        "CONFIRM_MESSAGE": "A separate recommendation will be sent to {{ count }} clients.",
+        "CONFIRM": "Send",
+        "SUCCESS": "Recommendation sent to {{ count }} clients.",
+        "PARTIAL_ERROR": "Sent with partial results: {{ failed }} of {{ total }} failed.",
+        "ERROR": "Failed to send the recommendation. Retry is safe."
+    },
+    "CLIENT_TASKS": {
+        "TITLE": "Client tasks",
+        "LOADING": "Loading tasks...",
+        "EMPTY": "There are no tasks yet.",
+        "DUE": "Due:",
+        "OVERDUE": "Overdue",
+        "COMPLETE": "Mark complete",
+        "REOPEN": "Reopen",
+        "CANCEL": "Cancel task",
+        "CREATED": "Task created.",
+        "CREATE_ERROR": "Failed to create the task.",
+        "LOAD_ERROR": "Failed to load tasks.",
+        "CHANGE_ERROR": "Failed to change the task.",
+        "FORM": {
+            "TITLE": "Task title",
+            "DETAILS": "Details (optional)",
+            "DUE_DATE": "Due date (optional)",
+            "CREATE": "Create task"
+        },
+        "STATUS": {
+            "OPEN": "Open",
+            "COMPLETED": "Completed",
+            "CANCELLED": "Cancelled"
+        }
+    },
+    "ATTENTION": {
+        "TITLE": "Needs attention",
+        "DESCRIPTION": "Objective signals based only on data each client currently shares. Sparse data is never treated as a negative health conclusion.",
+        "SETTINGS": "Signal settings",
+        "INACTIVITY_DAYS": "Diary inactivity, days",
+        "CALORIE_DEVIATION": "Calorie deviation, %",
+        "WEIGHT_CHANGE": "Weight change, %",
+        "APPLY": "Apply settings",
+        "LOAD_ERROR": "Failed to load attention signals.",
+        "EMPTY": "No clients currently need attention.",
+        "ACKNOWLEDGE": "Acknowledge",
+        "SNOOZE": "Snooze for 7 days",
+        "ACKNOWLEDGE_SUCCESS": "Signal acknowledged.",
+        "SNOOZE_SUCCESS": "Signal snoozed for 7 days.",
+        "ACTION_ERROR": "Failed to update the signal.",
+        "SEVERITY": {
+            "High": "High priority",
+            "Medium": "Medium priority",
+            "Low": "Low priority"
+        },
+        "REASON": {
+            "NoRecentDiaryEntries": "No recent food diary entries.",
+            "InsufficientDiaryData": "There is not enough diary data yet; this is not a health conclusion.",
+            "SustainedCalorieTargetDeviation": "Calories have stayed materially away from the shared target.",
+            "MaterialWeightChange": "The shared weight trend changed materially during the selected period."
         }
     },
     "DIETOLOGIST_INVITATION": {

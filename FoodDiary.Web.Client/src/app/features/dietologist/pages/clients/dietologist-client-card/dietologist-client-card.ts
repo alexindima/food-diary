@@ -17,4 +17,18 @@ export class DietologistClientCardComponent {
     public readonly item = input.required<ClientCardViewModel>();
 
     public readonly clientOpen = output<ClientSummary>();
+
+    protected openClient(): void {
+        this.clientOpen.emit(this.item().client);
+    }
+
+    protected genderTranslationKey(value: string): string {
+        const normalized = value.toUpperCase();
+        const key = normalized === 'MALE' ? 'M' : normalized === 'FEMALE' ? 'F' : normalized;
+        return `USER_MANAGE.GENDER_OPTIONS.${key}`;
+    }
+
+    protected activityTranslationKey(value: string): string {
+        return `USER_MANAGE.ACTIVITY_LEVEL_OPTIONS.${value.toUpperCase()}`;
+    }
 }

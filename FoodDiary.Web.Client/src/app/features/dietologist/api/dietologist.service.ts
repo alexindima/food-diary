@@ -5,7 +5,12 @@ import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import type {
+    AttentionSignal,
+    AttentionSignalSettings,
+    BulkRecommendationResult,
     ClientSummary,
+    ClientTask,
+    CreateClientTaskRequest,
     CreateRecommendationRequest,
     DietologistClientGoals,
     DietologistInvitationForCurrentUser,
@@ -13,6 +18,8 @@ import type {
     DietologistRecommendation,
     DietologistRelationship,
     InviteDietologistRequest,
+    RecommendationTemplate,
+    RecommendationTemplateRequest,
 } from '../../../shared/models/dietologist.data';
 import type { DashboardSnapshot } from '../../dashboard/models/dashboard.data';
 
@@ -42,6 +49,22 @@ export class DietologistService extends ApiService {
 
     public getMyClients(): Observable<ClientSummary[]> {
         return this.get<ClientSummary[]>('clients');
+    }
+
+    public getAttentionSignals(settings: AttentionSignalSettings): Observable<AttentionSignal[]> {
+        return this.get<AttentionSignal[]>('clients/attention', settings);
+    }
+
+    public setAttentionSignalState(
+        signal: AttentionSignal,
+        action: 'Acknowledge' | 'Snooze',
+        snoozedUntilUtc: string | null = null,
+    ): Observable<void> {
+        return this.put<void>(`clients/attention/${encodeURIComponent(signal.id)}/state`, {
+            clientUserId: signal.clientUserId,
+            action,
+            snoozedUntilUtc,
+        });
     }
 
     public getClientDashboard(clientUserId: string, query: DietologistClientDashboardQuery): Observable<DashboardSnapshot> {
@@ -82,6 +105,38 @@ export class DietologistService extends ApiService {
 
     public createRecommendation(clientUserId: string, request: CreateRecommendationRequest): Observable<DietologistRecommendation> {
         return this.post<DietologistRecommendation>(`clients/${clientUserId}/recommendations`, request);
+    }
+
+    public getTasksForClient(clientUserId: string): Observable<ClientTask[]> {
+        return this.get<ClientTask[]>(`clients/${clientUserId}/tasks`);
+    }
+
+    public createTask(clientUserId: string, request: CreateClientTaskRequest): Observable<ClientTask> {
+        return this.post<ClientTask>(`clients/${clientUserId}/tasks`, request);
+    }
+
+    public cancelTask(taskId: string): Observable<ClientTask> {
+        return this.put<ClientTask>(`clients/tasks/${taskId}/cancel`, {});
+    }
+
+    public searchRecommendationTemplates(search = '', includeArchived = false): Observable<RecommendationTemplate[]> {
+        return this.get<RecommendationTemplate[]>('recommendation-templates', { search, includeArchived: String(includeArchived) });
+    }
+
+    public createRecommendationTemplate(request: RecommendationTemplateRequest): Observable<RecommendationTemplate> {
+        return this.post<RecommendationTemplate>('recommendation-templates', request);
+    }
+
+    public updateRecommendationTemplate(templateId: string, request: RecommendationTemplateRequest): Observable<RecommendationTemplate> {
+        return this.put<RecommendationTemplate>(`recommendation-templates/${templateId}`, request);
+    }
+
+    public archiveRecommendationTemplate(templateId: string): Observable<void> {
+        return this.delete<void>(`recommendation-templates/${templateId}`);
+    }
+
+    public bulkCreateRecommendations(clientUserIds: string[], text: string, idempotencyKey: string): Observable<BulkRecommendationResult> {
+        return this.post<BulkRecommendationResult>('recommendations/bulk', { clientUserIds, text, idempotencyKey });
     }
 
     public invite(request: InviteDietologistRequest): Observable<void> {

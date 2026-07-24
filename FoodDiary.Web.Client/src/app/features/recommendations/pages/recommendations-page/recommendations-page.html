@@ -13,6 +13,62 @@
     </fd-page-header>
 
     <fd-page-body>
+        <section class="fd-stack fd-gap-md" aria-labelledby="client-tasks-title">
+            <h2 id="client-tasks-title" class="fd-ui-card-title">{{ 'CLIENT_TASKS.TITLE' | translate }}</h2>
+            @if (tasksLoading()) {
+                <p class="fd-ui-body-sm" role="status">{{ 'CLIENT_TASKS.LOADING' | translate }}</p>
+            } @else if (taskErrorKey(); as taskError) {
+                <p class="recommendations-page__state--error fd-ui-body-sm" role="alert">{{ taskError | translate }}</p>
+            } @else {
+                <div class="fd-stack fd-gap-sm">
+                    @for (task of tasks(); track task.id) {
+                        <fd-ui-card>
+                            <article class="fd-stack fd-gap-sm">
+                                <div class="fd-row fd-justify-between fd-gap-sm">
+                                    <strong>{{ task.title }}</strong>
+                                    <span class="fd-ui-pill fd-ui-caption">
+                                        {{ 'CLIENT_TASKS.STATUS.' + task.status.toUpperCase() | translate }}
+                                    </span>
+                                </div>
+                                @if (task.details) {
+                                    <p class="fd-ui-body-sm">{{ task.details }}</p>
+                                }
+                                @if (task.dueAtUtc) {
+                                    <span class="fd-ui-caption">
+                                        {{ 'CLIENT_TASKS.DUE' | translate }} {{ task.dueAtUtc | localizedDate: 'mediumDate' }}
+                                        @if (task.isOverdue) {
+                                            · {{ 'CLIENT_TASKS.OVERDUE' | translate }}
+                                        }
+                                    </span>
+                                }
+                                @if (task.status === 'Open') {
+                                    <fd-ui-button
+                                        type="button"
+                                        [loading]="changingTaskIds().has(task.id)"
+                                        (click)="changeTaskStatus(task, 'Completed')"
+                                    >
+                                        {{ 'CLIENT_TASKS.COMPLETE' | translate }}
+                                    </fd-ui-button>
+                                } @else if (task.status === 'Completed') {
+                                    <fd-ui-button
+                                        type="button"
+                                        variant="secondary"
+                                        fill="outline"
+                                        [loading]="changingTaskIds().has(task.id)"
+                                        (click)="changeTaskStatus(task, 'Open')"
+                                    >
+                                        {{ 'CLIENT_TASKS.REOPEN' | translate }}
+                                    </fd-ui-button>
+                                }
+                            </article>
+                        </fd-ui-card>
+                    } @empty {
+                        <p class="fd-ui-body-sm">{{ 'CLIENT_TASKS.EMPTY' | translate }}</p>
+                    }
+                </div>
+            }
+        </section>
+
         @if (isLoading()) {
             <section class="recommendations-page__state fd-place-center fd-ui-body-sm" role="status" aria-live="polite">
                 {{ 'RECOMMENDATIONS.LOADING' | translate }}
@@ -34,14 +90,15 @@
         } @else {
             <section class="recommendations-page__list fd-grid fd-gap-md" data-tour-id="recommendations-list" aria-live="polite">
                 @for (recommendation of recommendationItems(); track recommendation.id) {
-                    <button
-                        type="button"
-                        class="recommendations-page__item"
-                        [class.recommendations-page__item--selected]="recommendation.isSelected"
-                        [class.is-read]="recommendation.isRead"
-                        (click)="markRecommendationAsRead(recommendation)"
-                    >
-                        <fd-ui-card class="recommendations-page__card">
+                    <fd-ui-card class="recommendations-page__card">
+                        <button
+                            type="button"
+                            class="recommendations-page__item"
+                            [class.recommendations-page__item--selected]="recommendation.isSelected"
+                            [class.is-read]="recommendation.isRead"
+                            [attr.aria-expanded]="recommendation.isSelected"
+                            (click)="openRecommendation(recommendation)"
+                        >
                             <div class="recommendations-page__card-head fd-row fd-justify-between fd-gap-md">
                                 <div class="recommendations-page__card-title fd-stack fd-gap-xxs">
                                     <span class="fd-ui-caption">
@@ -58,7 +115,7 @@
                                         }
                                     </span>
                                     <span class="recommendations-page__date fd-ui-caption">
-                                        {{ recommendation.createdAtUtc | date: 'medium' }}
+                                        {{ recommendation.createdAtUtc | localizedDate: 'medium' }}
                                     </span>
                                 </div>
                                 <span class="recommendations-page__status fd-ui-pill fd-ui-pill--compact fd-ui-caption">
@@ -72,8 +129,11 @@
                                 </span>
                             </div>
                             <p class="recommendations-page__text fd-ui-body">{{ recommendation.text }}</p>
-                        </fd-ui-card>
-                    </button>
+                        </button>
+                        @if (recommendation.isSelected) {
+                            <fd-recommendation-thread [recommendationId]="recommendation.id" />
+                        }
+                    </fd-ui-card>
                 }
             </section>
         }

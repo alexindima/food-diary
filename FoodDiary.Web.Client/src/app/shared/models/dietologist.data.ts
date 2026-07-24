@@ -53,6 +53,88 @@ export type CreateRecommendationRequest = {
     text: string;
 };
 
+export type RecommendationComment = {
+    id: string;
+    recommendationId: string;
+    authorUserId: string;
+    authorFirstName: string | null;
+    authorLastName: string | null;
+    authorEmail: string;
+    text: string;
+    createdAtUtc: string;
+};
+
+export type CreateRecommendationCommentRequest = {
+    text: string;
+};
+
+export type ClientTaskStatus = 'Open' | 'Completed' | 'Cancelled';
+
+export type ClientTask = {
+    id: string;
+    dietologistUserId: string;
+    clientUserId: string;
+    title: string;
+    details: string | null;
+    dueAtUtc: string | null;
+    status: ClientTaskStatus;
+    isOverdue: boolean;
+    createdAtUtc: string;
+    statusChangedAtUtc: string | null;
+};
+
+export type CreateClientTaskRequest = {
+    title: string;
+    details?: string | null;
+    dueAtUtc?: string | null;
+};
+
+export type RecommendationTemplate = {
+    id: string;
+    name: string;
+    text: string;
+    isArchived: boolean;
+    createdAtUtc: string;
+    modifiedAtUtc: string | null;
+};
+
+export type RecommendationTemplateRequest = {
+    name: string;
+    text: string;
+};
+
+export type BulkRecommendationRecipientResult = {
+    clientUserId: string;
+    succeeded: boolean;
+    recommendationId: string | null;
+    wasAlreadyProcessed: boolean;
+    errorCode: string | null;
+};
+
+export type BulkRecommendationResult = {
+    idempotencyKey: string;
+    recipients: BulkRecommendationRecipientResult[];
+};
+
+export type AttentionSignal = {
+    id: string;
+    clientUserId: string;
+    clientDisplayName: string;
+    type: 'DiaryInactivity' | 'CalorieTargetDeviation' | 'MaterialWeightChange';
+    severity: 'High' | 'Medium' | 'Low';
+    reason: 'NoRecentDiaryEntries' | 'InsufficientDiaryData' | 'SustainedCalorieTargetDeviation' | 'MaterialWeightChange';
+    detectedAtUtc: string;
+    snoozedUntilUtc: string | null;
+};
+
+export type AttentionSignalSettings = {
+    inactivityDays: number;
+    calorieDeviationPercent: number;
+    sustainedDays: number;
+    weightChangePercent: number;
+    lookbackDays: number;
+};
+
 export type DietologistRelationship = {
     invitationId: string;
     status: string;

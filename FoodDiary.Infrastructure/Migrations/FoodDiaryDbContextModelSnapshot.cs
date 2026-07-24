@@ -605,6 +605,57 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("UserLessonProgress");
                 });
 
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.ClientTask", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ClientUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Details")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<Guid>("DietologistUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("DueAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DueReminderSentAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<DateTime?>("StatusChangedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientUserId", "CreatedOnUtc");
+
+                    b.HasIndex("DietologistUserId", "ClientUserId");
+
+                    b.HasIndex("Status", "DueAtUtc", "DueReminderSentAtUtc");
+
+                    b.ToTable("ClientTasks");
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.DietologistInvitation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -730,6 +781,108 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.HasIndex("DietologistUserId", "ClientUserId");
 
                     b.ToTable("Recommendations");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.RecommendationBulkDispatch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ClientUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("DietologistUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("IdempotencyKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("RecommendationId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientUserId");
+
+                    b.HasIndex("RecommendationId");
+
+                    b.HasIndex("DietologistUserId", "IdempotencyKey", "ClientUserId")
+                        .IsUnique();
+
+                    b.ToTable("RecommendationBulkDispatches");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.RecommendationComment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AuthorUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("RecommendationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorUserId");
+
+                    b.HasIndex("RecommendationId", "CreatedOnUtc");
+
+                    b.ToTable("RecommendationComments");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.RecommendationTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("DietologistUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DietologistUserId", "IsArchived", "Name");
+
+                    b.ToTable("RecommendationTemplates");
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.FavoriteMeals.FavoriteMeal", b =>
@@ -3489,6 +3642,48 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("WearableSyncEntries");
                 });
 
+            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Audit.AuditEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.Property<Guid>("ActorUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Metadata")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<Guid?>("SubjectClientUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("TargetId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("TargetType")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAtUtc");
+
+                    b.HasIndex("SubjectClientUserId", "CreatedAtUtc");
+
+                    b.ToTable("AuditEntries", (string)null);
+                });
+
             modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Authentication.ConsumedTelegramAssertion", b =>
                 {
                     b.Property<string>("Fingerprint")
@@ -3738,6 +3933,21 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.ClientTask", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("ClientUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("DietologistUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.DietologistInvitation", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.Users.User", "ClientUser")
@@ -3773,6 +3983,55 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("ClientUser");
 
                     b.Navigation("DietologistUser");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.RecommendationBulkDispatch", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("ClientUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("DietologistUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FoodDiary.Domain.Entities.Dietologist.Recommendation", null)
+                        .WithMany()
+                        .HasForeignKey("RecommendationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.RecommendationComment", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.Users.User", "AuthorUser")
+                        .WithMany()
+                        .HasForeignKey("AuthorUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FoodDiary.Domain.Entities.Dietologist.Recommendation", "Recommendation")
+                        .WithMany()
+                        .HasForeignKey("RecommendationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AuthorUser");
+
+                    b.Navigation("Recommendation");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.RecommendationTemplate", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("DietologistUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.FavoriteMeals.FavoriteMeal", b =>

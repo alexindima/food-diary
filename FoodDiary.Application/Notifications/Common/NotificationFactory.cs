@@ -24,6 +24,46 @@ public static class NotificationFactory {
             NotificationPayloads.NewRecommendation(dietologistName),
             referenceId);
 
+    public static Notification CreateNewRecommendationComment(
+        UserId userId,
+        string recommendationId,
+        string clientUserId,
+        bool forDietologist) =>
+        Notification.Create(
+            userId,
+            forDietologist
+                ? NotificationTypes.NewRecommendationCommentForDietologist
+                : NotificationTypes.NewRecommendationComment,
+            NotificationPayloads.Empty(),
+            forDietologist ? $"{clientUserId}|{recommendationId}" : recommendationId);
+
+    public static Notification CreateClientTaskChanged(
+        UserId userId,
+        string clientUserId,
+        bool forDietologist,
+        bool cancelled = false) =>
+        Notification.Create(
+            userId,
+            ResolveClientTaskNotificationType(forDietologist, cancelled),
+            NotificationPayloads.Empty(),
+            forDietologist ? clientUserId : null);
+
+    private static string ResolveClientTaskNotificationType(bool forDietologist, bool cancelled) {
+        if (cancelled) {
+            return NotificationTypes.ClientTaskCancelled;
+        }
+
+        return forDietologist
+            ? NotificationTypes.ClientTaskChangedForDietologist
+            : NotificationTypes.NewClientTask;
+    }
+
+    public static Notification CreateClientTaskDueSoon(UserId userId) =>
+        Notification.Create(
+            userId,
+            NotificationTypes.ClientTaskDueSoon,
+            NotificationPayloads.Empty());
+
     public static Notification CreateDietologistInvitationReceived(
         UserId userId,
         string clientName,

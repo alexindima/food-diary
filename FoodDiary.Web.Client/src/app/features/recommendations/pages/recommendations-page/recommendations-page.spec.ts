@@ -174,6 +174,8 @@ function createComponent(options: CreateComponentOptions = {}): {
     facade: {
         getMyRecommendations: ReturnType<typeof vi.fn>;
         markAsRead: ReturnType<typeof vi.fn>;
+        getMyTasks: ReturnType<typeof vi.fn>;
+        changeTaskStatus: ReturnType<typeof vi.fn>;
     };
 } {
     const queryParams$ = createQueryParams(options);
@@ -182,6 +184,8 @@ function createComponent(options: CreateComponentOptions = {}): {
     const facade = {
         getMyRecommendations: vi.fn(() => recommendations$),
         markAsRead: vi.fn(() => markRead$),
+        getMyTasks: vi.fn(() => of([])),
+        changeTaskStatus: vi.fn(),
     };
     const tourService = options.tourService ?? { start: vi.fn() };
     const localizedTour = options.localizedTour ?? { build: vi.fn(() => ({ steps: [] })) };

@@ -21,6 +21,42 @@
   <data name="NewRecommendation_Title" xml:space="preserve">
     <value>Новая рекомендация от вашего диетолога{0}</value>
   </data>
+  <data name="NewRecommendationComment_Title" xml:space="preserve">
+    <value>Новое сообщение в обсуждении рекомендации</value>
+  </data>
+  <data name="NewRecommendationComment_Body" xml:space="preserve">
+    <value>Откройте рекомендацию, чтобы прочитать сообщение и ответить.</value>
+  </data>
+  <data name="NewRecommendationCommentForDietologist_Title" xml:space="preserve">
+    <value>Новый ответ клиента на рекомендацию</value>
+  </data>
+  <data name="NewRecommendationCommentForDietologist_Body" xml:space="preserve">
+    <value>Откройте обзор клиента, чтобы прочитать сообщение и ответить.</value>
+  </data>
+  <data name="NewClientTask_Title" xml:space="preserve">
+    <value>Новая задача от диетолога</value>
+  </data>
+  <data name="NewClientTask_Body" xml:space="preserve">
+    <value>Откройте задачи, чтобы посмотреть подробности.</value>
+  </data>
+  <data name="ClientTaskChangedForDietologist_Title" xml:space="preserve">
+    <value>Клиент изменил статус задачи</value>
+  </data>
+  <data name="ClientTaskChangedForDietologist_Body" xml:space="preserve">
+    <value>Откройте обзор клиента, чтобы посмотреть задачу.</value>
+  </data>
+  <data name="ClientTaskCancelled_Title" xml:space="preserve">
+    <value>Задача отменена</value>
+  </data>
+  <data name="ClientTaskCancelled_Body" xml:space="preserve">
+    <value>Диетолог отменил задачу.</value>
+  </data>
+  <data name="ClientTaskDueSoon_Title" xml:space="preserve">
+    <value>Срок задачи скоро наступит</value>
+  </data>
+  <data name="ClientTaskDueSoon_Body" xml:space="preserve">
+    <value>До срока задачи от диетолога осталось не более 24 часов.</value>
+  </data>
   <data name="DietologistInvitationReceived_Title" xml:space="preserve">
     <value>Новое приглашение стать диетологом</value>
   </data>

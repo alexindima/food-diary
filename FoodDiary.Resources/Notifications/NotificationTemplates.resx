@@ -21,6 +21,42 @@
   <data name="NewRecommendation_Title" xml:space="preserve">
     <value>New recommendation from your dietologist{0}</value>
   </data>
+  <data name="NewRecommendationComment_Title" xml:space="preserve">
+    <value>New message in a recommendation discussion</value>
+  </data>
+  <data name="NewRecommendationComment_Body" xml:space="preserve">
+    <value>Open the recommendation to read and reply.</value>
+  </data>
+  <data name="NewRecommendationCommentForDietologist_Title" xml:space="preserve">
+    <value>New client reply to a recommendation</value>
+  </data>
+  <data name="NewRecommendationCommentForDietologist_Body" xml:space="preserve">
+    <value>Open the client dashboard to read and reply.</value>
+  </data>
+  <data name="NewClientTask_Title" xml:space="preserve">
+    <value>New task from your dietologist</value>
+  </data>
+  <data name="NewClientTask_Body" xml:space="preserve">
+    <value>Open your tasks to review the details.</value>
+  </data>
+  <data name="ClientTaskChangedForDietologist_Title" xml:space="preserve">
+    <value>Client task status changed</value>
+  </data>
+  <data name="ClientTaskChangedForDietologist_Body" xml:space="preserve">
+    <value>Open the client dashboard to review the task.</value>
+  </data>
+  <data name="ClientTaskCancelled_Title" xml:space="preserve">
+    <value>Task cancelled</value>
+  </data>
+  <data name="ClientTaskCancelled_Body" xml:space="preserve">
+    <value>Your dietologist cancelled a task.</value>
+  </data>
+  <data name="ClientTaskDueSoon_Title" xml:space="preserve">
+    <value>Task due soon</value>
+  </data>
+  <data name="ClientTaskDueSoon_Body" xml:space="preserve">
+    <value>A task from your dietologist is due within 24 hours.</value>
+  </data>
   <data name="DietologistInvitationReceived_Title" xml:space="preserve">
     <value>New dietologist invitation</value>
   </data>

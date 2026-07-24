@@ -11,7 +11,7 @@
     "Cycles": ["Users"],
     "DailyAdvices": ["Users"],
     "Dashboard": ["Consumptions", "Cycles", "DailyAdvices", "Exercises", "Fasting", "Hydration", "Statistics", "Tdee", "Users", "WaistEntries", "WeightEntries"],
-    "Dietologist": ["Authentication", "Dashboard", "Notifications", "Users"],
+    "Dietologist": ["Authentication", "Dashboard", "Notifications", "Users", "WeightEntries"],
     "Email": [],
     "Exercises": ["Users"],
     "Export": ["Consumptions", "Cycles", "Users"],

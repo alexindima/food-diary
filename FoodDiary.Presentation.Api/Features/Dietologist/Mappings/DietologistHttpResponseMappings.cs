@@ -5,6 +5,17 @@ using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
 namespace FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
 
 public static class DietologistHttpResponseMappings {
+    public static AttentionSignalHttpResponse ToHttpResponse(this AttentionSignalModel model) =>
+        new(
+            model.Id,
+            model.ClientUserId,
+            model.ClientDisplayName,
+            model.Type,
+            model.Severity,
+            model.Reason,
+            model.DetectedAtUtc,
+            model.SnoozedUntilUtc);
+
     public static DietologistInvitationForCurrentUserHttpResponse ToHttpResponse(this DietologistInvitationForCurrentUserModel model) =>
         new(
             model.InvitationId,
@@ -72,4 +83,41 @@ public static class DietologistHttpResponseMappings {
         new(model.Id, model.DietologistUserId, model.DietologistFirstName,
             model.DietologistLastName, model.Text, model.IsRead,
             model.CreatedAtUtc, model.ReadAtUtc);
+
+    public static RecommendationCommentHttpResponse ToHttpResponse(this RecommendationCommentModel model) =>
+        new(model.Id, model.RecommendationId, model.AuthorUserId,
+            model.AuthorFirstName, model.AuthorLastName, model.AuthorEmail,
+            model.Text, model.CreatedAtUtc);
+
+    public static ClientTaskHttpResponse ToHttpResponse(this ClientTaskModel model) =>
+        new(
+            model.Id,
+            model.DietologistUserId,
+            model.ClientUserId,
+            model.Title,
+            model.Details,
+            model.DueAtUtc,
+            model.Status.ToString(),
+            model.IsOverdue,
+            model.CreatedAtUtc,
+            model.StatusChangedAtUtc);
+
+    public static RecommendationTemplateHttpResponse ToHttpResponse(this RecommendationTemplateModel model) =>
+        new(
+            model.Id,
+            model.Name,
+            model.Text,
+            model.IsArchived,
+            model.CreatedAtUtc,
+            model.ModifiedAtUtc);
+
+    public static BulkRecommendationResultHttpResponse ToHttpResponse(this BulkRecommendationResultModel model) =>
+        new(
+            model.IdempotencyKey,
+            model.Recipients.Select(recipient => new BulkRecommendationRecipientResultHttpResponse(
+                recipient.ClientUserId,
+                recipient.Succeeded,
+                recipient.RecommendationId,
+                recipient.WasAlreadyProcessed,
+                recipient.ErrorCode)).ToList());
 }

@@ -2,6 +2,12 @@ namespace FoodDiary.Application.Abstractions.Notifications.Common;
 
 public static class NotificationTypes {
     public const string NewRecommendation = "NewRecommendation";
+    public const string NewRecommendationComment = "NewRecommendationComment";
+    public const string NewRecommendationCommentForDietologist = "NewRecommendationCommentForDietologist";
+    public const string NewClientTask = "NewClientTask";
+    public const string ClientTaskChangedForDietologist = "ClientTaskChangedForDietologist";
+    public const string ClientTaskCancelled = "ClientTaskCancelled";
+    public const string ClientTaskDueSoon = "ClientTaskDueSoon";
     public const string PasswordSetupSuggested = "PasswordSetupSuggested";
     public const string DietologistInvitationReceived = "DietologistInvitationReceived";
     public const string DietologistInvitationAccepted = "DietologistInvitationAccepted";

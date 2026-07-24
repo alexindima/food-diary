@@ -99,9 +99,17 @@ export class NotificationsDialogComponent {
     private buildNotificationViewModel(notification: NotificationItem): NotificationViewModel {
         this.languageVersion();
         const isDietologistInvitation = notification.type === 'DietologistInvitationReceived';
-        const isDietologistRecommendation = notification.type === 'NewRecommendation';
+        const isDietologistRecommendation =
+            notification.type === 'NewRecommendation' ||
+            notification.type === 'NewRecommendationComment' ||
+            notification.type === 'NewRecommendationCommentForDietologist';
+        const isClientTask =
+            notification.type === 'NewClientTask' ||
+            notification.type === 'ClientTaskChangedForDietologist' ||
+            notification.type === 'ClientTaskCancelled' ||
+            notification.type === 'ClientTaskDueSoon';
         const isPasswordSetupSuggestion = notification.type === 'PasswordSetupSuggested';
-        const hasAccentIcon = isDietologistInvitation || isDietologistRecommendation || isPasswordSetupSuggestion;
+        const hasAccentIcon = isDietologistInvitation || isDietologistRecommendation || isClientTask || isPasswordSetupSuggestion;
 
         return {
             notification,
@@ -137,8 +145,22 @@ export class NotificationsDialogComponent {
     }
 
     private resolveNotificationIcon(type: string): string {
-        if (type === 'DietologistInvitationReceived' || type === 'NewRecommendation') {
+        if (
+            type === 'DietologistInvitationReceived' ||
+            type === 'NewRecommendation' ||
+            type === 'NewRecommendationComment' ||
+            type === 'NewRecommendationCommentForDietologist'
+        ) {
             return 'medical_information';
+        }
+
+        if (
+            type === 'NewClientTask' ||
+            type === 'ClientTaskChangedForDietologist' ||
+            type === 'ClientTaskCancelled' ||
+            type === 'ClientTaskDueSoon'
+        ) {
+            return 'task_alt';
         }
 
         if (type === 'PasswordSetupSuggested') {
@@ -153,8 +175,17 @@ export class NotificationsDialogComponent {
             return 'NOTIFICATIONS.DIETOLOGIST_INVITATION_BADGE';
         }
 
-        if (type === 'NewRecommendation') {
+        if (type === 'NewRecommendation' || type === 'NewRecommendationComment' || type === 'NewRecommendationCommentForDietologist') {
             return 'NOTIFICATIONS.RECOMMENDATION_BADGE';
+        }
+
+        if (
+            type === 'NewClientTask' ||
+            type === 'ClientTaskChangedForDietologist' ||
+            type === 'ClientTaskCancelled' ||
+            type === 'ClientTaskDueSoon'
+        ) {
+            return 'NOTIFICATIONS.TASK_BADGE';
         }
 
         if (type === 'PasswordSetupSuggested') {
@@ -169,8 +200,17 @@ export class NotificationsDialogComponent {
             return 'NOTIFICATIONS.DIETOLOGIST_INVITATION_ACTION';
         }
 
-        if (type === 'NewRecommendation') {
+        if (type === 'NewRecommendation' || type === 'NewRecommendationComment' || type === 'NewRecommendationCommentForDietologist') {
             return 'NOTIFICATIONS.RECOMMENDATION_ACTION';
+        }
+
+        if (
+            type === 'NewClientTask' ||
+            type === 'ClientTaskChangedForDietologist' ||
+            type === 'ClientTaskCancelled' ||
+            type === 'ClientTaskDueSoon'
+        ) {
+            return 'NOTIFICATIONS.TASK_ACTION';
         }
 
         if (type === 'PasswordSetupSuggested') {

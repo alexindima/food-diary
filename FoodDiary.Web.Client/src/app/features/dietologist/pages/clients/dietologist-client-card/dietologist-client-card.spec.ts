@@ -19,6 +19,20 @@ describe('DietologistClientCardComponent', () => {
         expect(getHost(fixture).textContent).toContain('client@example.com');
         expect(open).toHaveBeenCalledWith(fixture.componentInstance['item']().client);
     });
+
+    it('opens the client card from the keyboard', () => {
+        const fixture = createComponent();
+        const open = vi.fn();
+        fixture.componentInstance['clientOpen'].subscribe(open);
+        const card = getHost(fixture).querySelector<HTMLElement>('fd-ui-card');
+
+        card?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+
+        expect(card?.getAttribute('role')).toBe('button');
+        expect(card?.getAttribute('tabindex')).toBe('0');
+        expect(card?.getAttribute('aria-label')).toBe('Alex Ivanov');
+        expect(open).toHaveBeenCalledWith(fixture.componentInstance['item']().client);
+    });
 });
 
 function createComponent(): ComponentFixture<DietologistClientCardComponent> {

@@ -1062,7 +1062,8 @@ public sealed class JobsTests {
             }),
             Options.Create(new UserLoginEventCleanupOptions { Cron = "0 3 * * *" }),
             Options.Create(new MarketingAttributionCleanupOptions { Cron = "30 3 * * *" }),
-            Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }));
+            Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }),
+            Options.Create(new ClientTaskReminderOptions { Cron = "0 * * * *" }));
 
         await service.StartAsync(CancellationToken.None);
 
@@ -1078,6 +1079,7 @@ public sealed class JobsTests {
                 RecurringJobIds.UsersCleanup,
                 RecurringJobIds.UserLoginEventsCleanup,
                 RecurringJobIds.MarketingAttributionCleanup,
+                RecurringJobIds.ClientTaskReminders,
             ],
             recurringJobManager.JobIds);
         Assert.Equal(
@@ -1092,6 +1094,7 @@ public sealed class JobsTests {
                 RecurringJobIds.NotificationWebPushOutbox,
                 RecurringJobIds.UserLoginEventsCleanup,
                 RecurringJobIds.MarketingAttributionCleanup,
+                RecurringJobIds.ClientTaskReminders,
             ],
             verifier.ExpectedJobIds);
     }
@@ -1115,7 +1118,8 @@ public sealed class JobsTests {
             }),
             Options.Create(new UserLoginEventCleanupOptions { Cron = "0 3 * * *" }),
             Options.Create(new MarketingAttributionCleanupOptions { Cron = "30 3 * * *" }),
-            Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }));
+            Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }),
+            Options.Create(new ClientTaskReminderOptions { Cron = "0 * * * *" }));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.StartAsync(CancellationToken.None));
     }
@@ -1123,6 +1127,7 @@ public sealed class JobsTests {
     [Fact]
     public async Task RecurringJobsHostedService_StopAsync_CompletesWithoutWork() {
         var service = new RecurringJobsHostedService(
+            null!,
             null!,
             null!,
             null!,

@@ -1,0 +1,52 @@
+<section class="recommendation-thread fd-stack fd-gap-sm" aria-live="polite">
+    <h3 class="fd-ui-body">{{ 'RECOMMENDATIONS.DISCUSSION.TITLE' | translate }}</h3>
+
+    @if (loading()) {
+        <p class="fd-ui-body-sm" role="status">{{ 'RECOMMENDATIONS.DISCUSSION.LOADING' | translate }}</p>
+    } @else {
+        @if (comments().length === 0) {
+            <p class="recommendation-thread__empty fd-ui-body-sm">{{ 'RECOMMENDATIONS.DISCUSSION.EMPTY' | translate }}</p>
+        } @else {
+            <div class="recommendation-thread__messages fd-stack fd-gap-sm">
+                @for (comment of comments(); track comment.id) {
+                    <article class="recommendation-thread__message fd-stack fd-gap-xxs">
+                        <div class="fd-row fd-justify-between fd-gap-sm">
+                            <strong class="fd-ui-body-sm">{{ authorName(comment) }}</strong>
+                            <span class="fd-ui-caption">{{ comment.createdAtUtc | localizedDate: 'short' }}</span>
+                        </div>
+                        <p class="fd-ui-body-sm">{{ comment.text }}</p>
+                    </article>
+                }
+            </div>
+        }
+    }
+
+    <div class="recommendation-thread__composer fd-stack fd-gap-xs">
+        <label for="recommendation-comment" class="fd-ui-caption">
+            {{ 'RECOMMENDATIONS.DISCUSSION.MESSAGE_LABEL' | translate }}
+        </label>
+        <textarea
+            id="recommendation-comment"
+            rows="3"
+            maxlength="2000"
+            [value]="draft()"
+            [placeholder]="'RECOMMENDATIONS.DISCUSSION.MESSAGE_PLACEHOLDER' | translate"
+            (input)="updateDraft($event)"
+        ></textarea>
+    </div>
+    <div class="fd-row fd-justify-between fd-gap-sm">
+        <span class="fd-ui-caption">{{ draft().length }}/2000</span>
+        <fd-ui-button
+            type="button"
+            [disabled]="draft().trim().length === 0"
+            [disabledReason]="'DISABLED_HINTS.FORM_INVALID' | translate"
+            [loading]="saving()"
+            (click)="submit()"
+        >
+            {{ (saving() ? 'RECOMMENDATIONS.DISCUSSION.SENDING' : 'RECOMMENDATIONS.DISCUSSION.SEND') | translate }}
+        </fd-ui-button>
+    </div>
+    @if (errorKey(); as error) {
+        <p class="recommendation-thread__error fd-ui-body-sm" role="alert">{{ error | translate }}</p>
+    }
+</section>

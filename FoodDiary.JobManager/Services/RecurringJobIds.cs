@@ -11,6 +11,7 @@ public static class RecurringJobIds {
     public const string NotificationWebPushOutbox = "notification-web-push-outbox";
     public const string UserLoginEventsCleanup = "user-login-events-cleanup";
     public const string MarketingAttributionCleanup = "marketing-attribution-cleanup";
+    public const string ClientTaskReminders = "client-task-reminders";
 
     public static readonly string[] All = [
         ImageAssetsCleanup,
@@ -23,5 +24,6 @@ public static class RecurringJobIds {
         NotificationWebPushOutbox,
         UserLoginEventsCleanup,
         MarketingAttributionCleanup,
+        ClientTaskReminders,
     ];
 }

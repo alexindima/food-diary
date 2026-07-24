@@ -16,7 +16,8 @@ public sealed class RecurringJobsHostedService(
     IOptions<NotificationCleanupOptions> notificationCleanupOptions,
     IOptions<UserLoginEventCleanupOptions> userLoginEventCleanupOptions,
     IOptions<MarketingAttributionCleanupOptions> marketingAttributionCleanupOptions,
-    IOptions<UserCleanupOptions> userCleanupOptions) : IHostedService {
+    IOptions<UserCleanupOptions> userCleanupOptions,
+    IOptions<ClientTaskReminderOptions> clientTaskReminderOptions) : IHostedService {
     public Task StartAsync(CancellationToken cancellationToken) {
         ImageCleanupOptions settings = options.Value;
         BillingRenewalOptions billingRenewalSettings = billingRenewalOptions.Value;
@@ -28,6 +29,7 @@ public sealed class RecurringJobsHostedService(
         UserLoginEventCleanupOptions userLoginEventSettings = userLoginEventCleanupOptions.Value;
         MarketingAttributionCleanupOptions marketingAttributionSettings = marketingAttributionCleanupOptions.Value;
         UserCleanupOptions userSettings = userCleanupOptions.Value;
+        ClientTaskReminderOptions clientTaskReminderSettings = clientTaskReminderOptions.Value;
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.ImageAssetsCleanup,
             Job.FromExpression<ImageCleanupJob>(job => job.Execute(CancellationToken.None)),
@@ -68,6 +70,10 @@ public sealed class RecurringJobsHostedService(
             RecurringJobIds.MarketingAttributionCleanup,
             Job.FromExpression<MarketingAttributionCleanupJob>(job => job.Execute(CancellationToken.None)),
             ResolveCron(marketingAttributionSettings.Cron, "30 3 * * *"));
+        recurringJobManager.AddOrUpdate(
+            RecurringJobIds.ClientTaskReminders,
+            Job.FromExpression<ClientTaskReminderJob>(job => job.Execute(CancellationToken.None)),
+            ResolveCron(clientTaskReminderSettings.Cron, "0 * * * *"));
         recurringJobRegistrationVerifier.EnsureRegistered(RecurringJobIds.All);
 
         return Task.CompletedTask;

@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Dietologist.Services;
 
 namespace FoodDiary.JobManager.Services;
 
@@ -62,6 +63,12 @@ public static class JobManagerServiceCollectionExtensions {
             .Validate(NotificationWebPushOutboxOptions.HasValidConfiguration,
                 "NotificationWebPushOutbox configuration requires a positive batch size and a non-empty cron when enabled.")
             .ValidateOnStart();
+        services.AddOptions<ClientTaskReminderOptions>()
+            .Bind(configuration.GetSection(ClientTaskReminderOptions.SectionName))
+            .Validate(
+                ClientTaskReminderOptions.HasValidConfiguration,
+                "ClientTaskReminders configuration requires a non-empty cron when enabled.")
+            .ValidateOnStart();
 
         return services;
     }
@@ -78,6 +85,8 @@ public static class JobManagerServiceCollectionExtensions {
         services.AddTransient<UserCleanupJob>();
         services.AddTransient<UserLoginEventCleanupJob>();
         services.AddTransient<MarketingAttributionCleanupJob>();
+        services.AddTransient<ClientTaskReminderJob>();
+        services.AddScoped<ClientTaskDueReminderProcessor>();
 
         return services;
     }

@@ -7,6 +7,17 @@ using FoodDiary.Presentation.Api.Responses;
 namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
 
 public static class AdminHttpResponseMappings {
+    public static AdminAuditEntryHttpResponse ToHttpResponse(this AdminAuditEntryModel model) =>
+        new(
+            model.Id,
+            model.ActorUserId,
+            model.SubjectClientUserId,
+            model.Action,
+            model.TargetType,
+            model.TargetId,
+            model.Metadata,
+            model.CreatedAtUtc);
+
     public static AdminUserCreationHttpResponse ToHttpResponse(this AdminUserCreationModel model) =>
         new(model.User.ToHttpResponse(), model.TemporaryPassword, model.CredentialsEmailQueued);
 

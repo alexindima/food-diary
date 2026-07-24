@@ -18,6 +18,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         services.AddScoped<IDomainEventPublisher, MediatorDomainEventPublisher>();
         services.AddScoped<DomainEventDispatchInterceptor>();
+        services.AddScoped<CollaborationAuditInterceptor>();
         services.AddDbContext<FoodDiaryDbContext>((sp, options) => {
             DatabaseOptions databaseOptions = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
             options
@@ -33,7 +34,8 @@ public static partial class DependencyInjection {
                     })
                 .AddInterceptors(
                     sp.GetRequiredService<DatabaseCommandTelemetryInterceptor>(),
-                    sp.GetRequiredService<DomainEventDispatchInterceptor>());
+                    sp.GetRequiredService<DomainEventDispatchInterceptor>(),
+                    sp.GetRequiredService<CollaborationAuditInterceptor>());
         });
 
         return services;

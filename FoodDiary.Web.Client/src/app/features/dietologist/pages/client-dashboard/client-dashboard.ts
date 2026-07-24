@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, maxLength, required } from '@angular/forms/signals';
@@ -9,15 +8,26 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
+import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { catchError, firstValueFrom, forkJoin, type Observable, of, switchMap, tap } from 'rxjs';
 
+import { LocalizedDatePipe } from '../../../../shared/i18n/localized-date.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
-import type { ClientSummary, DietologistClientGoals, DietologistRecommendation } from '../../../../shared/models/dietologist.data';
+import type {
+    ClientSummary,
+    ClientTask,
+    DietologistClientGoals,
+    DietologistRecommendation,
+    RecommendationTemplate,
+} from '../../../../shared/models/dietologist.data';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import type { DashboardSnapshot } from '../../../dashboard/models/dashboard.data';
+import { RecommendationThreadComponent } from '../../../recommendations/components/recommendation-thread/recommendation-thread';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import {
     buildBodyTiles,
@@ -52,6 +62,8 @@ import { ClientDashboardNoticesComponent } from './components/client-dashboard-n
 import { ClientDashboardSummaryCardComponent } from './components/client-dashboard-summary-card';
 
 const RECOMMENDATION_MAX_LENGTH = 2000;
+const TASK_TITLE_MAX_LENGTH = 200;
+const TASK_DETAILS_MAX_LENGTH = 2000;
 const CLIENT_DASHBOARD_TREND_DAYS = 14;
 const DEFAULT_PERIOD_DAYS = 7;
 const HOURS_PER_DAY = 24;
@@ -72,13 +84,20 @@ type DateFilterFormModel = {
 
 type RecommendationFormModel = {
     text: string;
+    templateName: string;
+};
+
+type TaskFormModel = {
+    title: string;
+    details: string;
+    dueDate: string;
 };
 
 @Component({
     selector: 'fd-client-dashboard',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        DatePipe,
+        LocalizedDatePipe,
         FormField,
         FormRoot,
         TranslatePipe,
@@ -86,6 +105,7 @@ type RecommendationFormModel = {
         FdUiButtonComponent,
         FdUiCardComponent,
         FdUiDateInputComponent,
+        FdUiInputComponent,
         FdUiTextareaComponent,
         ClientDashboardHeaderComponent,
         ClientDashboardNoticesComponent,
@@ -94,6 +114,7 @@ type RecommendationFormModel = {
         ClientDashboardSummaryCardComponent,
         ClientDashboardHydrationCardComponent,
         ClientDashboardFastingCardComponent,
+        RecommendationThreadComponent,
     ],
     templateUrl: './client-dashboard.html',
     styleUrls: ['./client-dashboard.scss'],
@@ -104,6 +125,7 @@ export class ClientDashboardComponent {
     private readonly dietologistFacade = inject(DietologistFacade);
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
+    private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
@@ -113,9 +135,15 @@ export class ClientDashboardComponent {
     protected readonly dashboard = signal<DashboardSnapshot | null>(null);
     protected readonly goals = signal<DietologistClientGoals | null>(null);
     protected readonly recommendations = signal<DietologistRecommendation[]>([]);
+    protected readonly recommendationTemplates = signal<RecommendationTemplate[]>([]);
+    protected readonly tasks = signal<ClientTask[]>([]);
     protected readonly loading = signal(true);
     protected readonly detailsLoading = signal(false);
     protected readonly savingRecommendation = signal(false);
+    protected readonly savingTemplate = signal(false);
+    protected readonly savingTask = signal(false);
+    protected readonly changingTaskIds = signal<ReadonlySet<string>>(new Set<string>());
+    protected readonly openDiscussionId = signal<string | null>(null);
     protected readonly error = signal<string | null>(null);
     protected readonly sectionLoadError = signal<string | null>(null);
     protected readonly selectedDateTo = signal(formatDateInputValue(new Date()));
@@ -139,7 +167,12 @@ export class ClientDashboardComponent {
             },
         },
     );
-    protected readonly recommendationModel = signal<RecommendationFormModel>({ text: '' });
+
+    protected toggleDiscussion(recommendationId: string): void {
+        this.openDiscussionId.update(current => (current === recommendationId ? null : recommendationId));
+    }
+
+    protected readonly recommendationModel = signal<RecommendationFormModel>({ text: '', templateName: '' });
     private readonly submitRecommendationFormAsync = async (): Promise<void> => {
         await this.submitRecommendationAsync();
     };
@@ -155,6 +188,23 @@ export class ClientDashboardComponent {
             },
         },
     );
+    protected readonly taskModel = signal<TaskFormModel>({ title: '', details: '', dueDate: '' });
+    private readonly submitTaskFormAsync = async (): Promise<void> => {
+        await this.submitTaskAsync();
+    };
+    protected readonly taskForm = form(
+        this.taskModel,
+        path => {
+            required(path.title);
+            maxLength(path.title, TASK_TITLE_MAX_LENGTH);
+            maxLength(path.details, TASK_DETAILS_MAX_LENGTH);
+        },
+        {
+            submission: {
+                action: this.submitTaskFormAsync,
+            },
+        },
+    );
     protected readonly clientTitle = computed(() => {
         const client = this.client();
         if (client === null) {
@@ -164,9 +214,16 @@ export class ClientDashboardComponent {
         return getClientDashboardTitle(client);
     });
     protected readonly profileChips = computed(() => {
-        return buildClientProfileChips(this.client());
+        const client = this.client();
+        return buildClientProfileChips(client).map(value => this.localizeProfileValue(value, client));
     });
-    protected readonly profileDetails = computed<ClientProfileDetail[]>(() => buildClientProfileDetails(this.client()));
+    protected readonly profileDetails = computed<ClientProfileDetail[]>(() => {
+        const client = this.client();
+        return buildClientProfileDetails(client).map(detail => ({
+            ...detail,
+            value: this.localizeProfileValue(detail.value, client),
+        }));
+    });
     protected readonly visibleSections = computed<ClientDashboardSection[]>(() => {
         return buildClientDashboardSections(this.client());
     });
@@ -201,6 +258,7 @@ export class ClientDashboardComponent {
 
     public constructor() {
         const clientId = this.route.snapshot.paramMap.get('clientId');
+        this.openDiscussionId.set(this.route.snapshot.queryParamMap.get('recommendationId'));
         this.dietologistFacade
             .getMyClients()
             .pipe(
@@ -283,6 +341,73 @@ export class ClientDashboardComponent {
         void this.submitRecommendationAsync();
     }
 
+    protected useRecommendationTemplate(template: RecommendationTemplate): void {
+        this.recommendationModel.update(model => ({ ...model, text: template.text }));
+    }
+
+    protected createRecommendationTemplate(): void {
+        const model = this.recommendationModel();
+        const name = model.templateName.trim();
+        const text = model.text.trim();
+        if (name.length === 0 || text.length === 0 || this.savingTemplate()) {
+            return;
+        }
+
+        this.savingTemplate.set(true);
+        this.dietologistFacade
+            .createRecommendationTemplate({ name, text })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: template => {
+                    this.recommendationTemplates.update(templates =>
+                        [...templates, template].sort((left, right) => left.name.localeCompare(right.name)),
+                    );
+                    this.recommendationModel.update(value => ({ ...value, templateName: '' }));
+                    this.savingTemplate.set(false);
+                    this.toastService.success(this.translateService.instant('RECOMMENDATION_TEMPLATES.CREATED'));
+                },
+                error: () => {
+                    this.savingTemplate.set(false);
+                    this.toastService.error(this.translateService.instant('RECOMMENDATION_TEMPLATES.SAVE_ERROR'));
+                },
+            });
+    }
+
+    protected archiveRecommendationTemplate(template: RecommendationTemplate): void {
+        this.dietologistFacade
+            .archiveRecommendationTemplate(template.id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: () => {
+                    this.recommendationTemplates.update(templates => templates.filter(item => item.id !== template.id));
+                },
+                error: () => {
+                    this.toastService.error(this.translateService.instant('RECOMMENDATION_TEMPLATES.ARCHIVE_ERROR'));
+                },
+            });
+    }
+
+    protected cancelTask(task: ClientTask): void {
+        if (this.changingTaskIds().has(task.id)) {
+            return;
+        }
+
+        this.changingTaskIds.update(ids => new Set(ids).add(task.id));
+        this.dietologistFacade
+            .cancelTask(task.id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: updated => {
+                    this.tasks.update(tasks => tasks.map(item => (item.id === updated.id ? updated : item)));
+                    this.removeChangingTaskId(task.id);
+                },
+                error: () => {
+                    this.toastService.error(this.translateService.instant('CLIENT_TASKS.CHANGE_ERROR'));
+                    this.removeChangingTaskId(task.id);
+                },
+            });
+    }
+
     private async submitRecommendationAsync(): Promise<void> {
         const client = this.client();
         if (client === null || this.recommendationForm().invalid() || this.savingRecommendation()) {
@@ -292,7 +417,7 @@ export class ClientDashboardComponent {
 
         const text = this.recommendationModel().text.trim();
         if (text.length === 0) {
-            this.recommendationModel.set({ text: '' });
+            this.recommendationModel.update(model => ({ ...model, text: '' }));
             this.recommendationForm().markAsTouched();
             return;
         }
@@ -303,12 +428,42 @@ export class ClientDashboardComponent {
                 this.dietologistFacade.createRecommendation(client.userId, { text }).pipe(takeUntilDestroyed(this.destroyRef)),
             );
             this.recommendations.update(items => [recommendation, ...items]);
-            this.recommendationModel.set({ text: '' });
+            this.recommendationModel.update(model => ({ ...model, text: '' }));
             this.savingRecommendation.set(false);
             this.toastService.success(this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SENT'));
         } catch {
             this.savingRecommendation.set(false);
             this.toastService.error(this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SEND_ERROR'));
+        }
+    }
+
+    private async submitTaskAsync(): Promise<void> {
+        const client = this.client();
+        if (client === null || this.taskForm().invalid() || this.savingTask()) {
+            this.taskForm().markAsTouched();
+            return;
+        }
+
+        const value = this.taskModel();
+        const dueDate = parseLocalDateInputValue(value.dueDate);
+        this.savingTask.set(true);
+        try {
+            const task = await firstValueFrom(
+                this.dietologistFacade
+                    .createTask(client.userId, {
+                        title: value.title.trim(),
+                        details: value.details.trim() === '' ? null : value.details.trim(),
+                        dueAtUtc: dueDate?.toISOString() ?? null,
+                    })
+                    .pipe(takeUntilDestroyed(this.destroyRef)),
+            );
+            this.tasks.update(tasks => [task, ...tasks]);
+            this.taskModel.set({ title: '', details: '', dueDate: '' });
+            this.toastService.success(this.translateService.instant('CLIENT_TASKS.CREATED'));
+        } catch {
+            this.toastService.error(this.translateService.instant('CLIENT_TASKS.CREATE_ERROR'));
+        } finally {
+            this.savingTask.set(false);
         }
     }
 
@@ -318,6 +473,27 @@ export class ClientDashboardComponent {
             return;
         }
 
+        this.dialogService
+            .open(FdUiConfirmDialogComponent, {
+                preset: 'confirm',
+                data: {
+                    title: this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_TITLE'),
+                    message: this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_MESSAGE'),
+                    confirmLabel: this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_CONFIRM'),
+                    cancelLabel: this.translateService.instant('COMMON.CANCEL'),
+                    danger: true,
+                },
+            })
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(confirmed => {
+                if (confirmed === true) {
+                    this.executeDisconnectClient(client);
+                }
+            });
+    }
+
+    private executeDisconnectClient(client: ClientSummary): void {
         this.dietologistFacade
             .disconnectClient(client.userId)
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -332,10 +508,25 @@ export class ClientDashboardComponent {
             });
     }
 
+    private localizeProfileValue(value: string, client: ClientSummary | null): string {
+        if (value === client?.activityLevel) {
+            return this.translateService.instant(`USER_MANAGE.ACTIVITY_LEVEL_OPTIONS.${value.toUpperCase()}`);
+        }
+
+        if (value === client?.gender) {
+            const genderKey = value.toUpperCase() === 'MALE' ? 'M' : value.toUpperCase() === 'FEMALE' ? 'F' : value.toUpperCase();
+            return this.translateService.instant(`USER_MANAGE.GENDER_OPTIONS.${genderKey}`);
+        }
+
+        return value;
+    }
+
     private loadClientDetails(client: ClientSummary): Observable<{
         dashboard: DashboardSnapshot | null;
         goals: DietologistClientGoals | null;
         recommendations: DietologistRecommendation[];
+        tasks: ClientTask[];
+        templates: RecommendationTemplate[];
     }> {
         const language = resolveTranslateLanguage(this.translateService);
         this.sectionLoadError.set(null);
@@ -350,11 +541,19 @@ export class ClientDashboardComponent {
             recommendations: this.dietologistFacade
                 .getRecommendationsForClient(client.userId)
                 .pipe(this.handleSectionLoadError<DietologistRecommendation[], DietologistRecommendation[]>([])),
+            tasks: this.dietologistFacade
+                .getTasksForClient(client.userId)
+                .pipe(this.handleSectionLoadError<ClientTask[], ClientTask[]>([])),
+            templates: this.dietologistFacade
+                .searchRecommendationTemplates()
+                .pipe(this.handleSectionLoadError<RecommendationTemplate[], RecommendationTemplate[]>([])),
         }).pipe(
             tap(result => {
                 this.dashboard.set(result.dashboard);
                 this.goals.set(result.goals);
                 this.recommendations.set(result.recommendations);
+                this.tasks.set(result.tasks);
+                this.recommendationTemplates.set(result.templates);
             }),
         );
     }
@@ -462,5 +661,13 @@ export class ClientDashboardComponent {
                     return of(fallback);
                 }),
             );
+    }
+
+    private removeChangingTaskId(taskId: string): void {
+        this.changingTaskIds.update(ids => {
+            const next = new Set(ids);
+            next.delete(taskId);
+            return next;
+        });
     }
 }

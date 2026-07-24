@@ -11,7 +11,7 @@
                         <div class="fd-row fd-justify-between fd-gap-sm">
                             <div class="fd-stack fd-gap-xxs">
                                 <strong class="client-dashboard__row-title">{{ meal.title }}</strong>
-                                <span class="fd-ui-caption">{{ meal.date | date: 'short' }}</span>
+                                <span class="fd-ui-caption">{{ meal.date | localizedDate: 'short' }}</span>
                             </div>
                             <strong class="client-dashboard__row-value">{{ meal.calories }}</strong>
                         </div>

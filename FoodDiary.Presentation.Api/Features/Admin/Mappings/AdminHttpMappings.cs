@@ -13,11 +13,15 @@ using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
+using FoodDiary.Application.Admin.Queries.GetCollaborationAudit;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
 
 public static class AdminHttpMappings {
+    public static GetCollaborationAuditQuery ToQuery(this GetCollaborationAuditHttpQuery query) =>
+        new(query.ClientUserId, query.Limit);
+
     public static CreateAdminUserCommand ToCommand(
         this AdminUserCreateHttpRequest request,
         Guid actorUserId,

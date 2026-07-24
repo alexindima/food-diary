@@ -67,6 +67,12 @@ public sealed class WebPushDeliveryAudienceService(
             NotificationTypes.DietologistInvitationAccepted => user.SocialPushNotificationsEnabled,
             NotificationTypes.DietologistInvitationDeclined => user.SocialPushNotificationsEnabled,
             NotificationTypes.NewRecommendation => user.SocialPushNotificationsEnabled,
+            NotificationTypes.NewRecommendationComment => user.SocialPushNotificationsEnabled,
+            NotificationTypes.NewRecommendationCommentForDietologist => user.SocialPushNotificationsEnabled,
+            NotificationTypes.NewClientTask => user.SocialPushNotificationsEnabled,
+            NotificationTypes.ClientTaskChangedForDietologist => user.SocialPushNotificationsEnabled,
+            NotificationTypes.ClientTaskCancelled => user.SocialPushNotificationsEnabled,
+            NotificationTypes.ClientTaskDueSoon => user.SocialPushNotificationsEnabled,
             NotificationTypes.NewComment => user.SocialPushNotificationsEnabled,
             _ => true,
         };

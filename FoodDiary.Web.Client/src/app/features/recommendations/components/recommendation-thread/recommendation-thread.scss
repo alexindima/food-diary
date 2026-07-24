@@ -1,0 +1,41 @@
+.recommendation-thread {
+    padding-block-start: var(--fd-space-md);
+    border-block-start: 1px solid var(--fd-color-border);
+}
+
+.recommendation-thread__messages {
+    max-block-size: 20rem;
+    overflow-y: auto;
+}
+
+.recommendation-thread__message {
+    padding: var(--fd-space-sm);
+    border-radius: var(--fd-radius-md);
+    background: var(--fd-color-surface-muted);
+}
+
+.recommendation-thread__message p {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.recommendation-thread__composer textarea {
+    inline-size: 100%;
+    resize: vertical;
+    padding: var(--fd-space-sm);
+    border: 1px solid var(--fd-color-border);
+    border-radius: var(--fd-radius-md);
+    color: var(--fd-color-text);
+    background: var(--fd-color-surface);
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.recommendation-thread__empty {
+    color: var(--fd-color-text-muted);
+}
+
+.recommendation-thread__error {
+    color: var(--fd-color-danger);
+}

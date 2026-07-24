@@ -61,3 +61,5 @@ Thumbs.db
 /FoodDiary.Web.Client/dist-admin/
 /coverage-results/
 /.artifacts/
+/.playwright-cli/
+/output/playwright/

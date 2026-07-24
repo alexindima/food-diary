@@ -1,7 +1,9 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import type { Observable } from 'rxjs';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -22,11 +24,18 @@ let dietologistService: {
     getClientDashboard: ReturnType<typeof vi.fn>;
     getClientGoals: ReturnType<typeof vi.fn>;
     getRecommendationsForClient: ReturnType<typeof vi.fn>;
+    getTasksForClient: ReturnType<typeof vi.fn>;
+    createTask: ReturnType<typeof vi.fn>;
+    cancelTask: ReturnType<typeof vi.fn>;
+    searchRecommendationTemplates: ReturnType<typeof vi.fn>;
+    createRecommendationTemplate: ReturnType<typeof vi.fn>;
+    archiveRecommendationTemplate: ReturnType<typeof vi.fn>;
     createRecommendation: ReturnType<typeof vi.fn>;
     disconnectClient: ReturnType<typeof vi.fn>;
 };
 let router: { navigate: ReturnType<typeof vi.fn> };
 let toastService: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>; info: ReturnType<typeof vi.fn> };
+let dialogService: { open: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
     dietologistService = {
@@ -34,6 +43,12 @@ beforeEach(() => {
         getClientDashboard: vi.fn(() => of(createDashboardSnapshot())),
         getClientGoals: vi.fn(() => of({ id: 'client-1', email: 'client@example.com', dailyCalorieTarget: 1800 })),
         getRecommendationsForClient: vi.fn(() => of([])),
+        getTasksForClient: vi.fn(() => of([])),
+        createTask: vi.fn(),
+        cancelTask: vi.fn(),
+        searchRecommendationTemplates: vi.fn(() => of([])),
+        createRecommendationTemplate: vi.fn(),
+        archiveRecommendationTemplate: vi.fn(),
         createRecommendation: vi.fn(() =>
             of({
                 id: 'rec-1',
@@ -55,6 +70,9 @@ beforeEach(() => {
         success: vi.fn(),
         error: vi.fn(),
         info: vi.fn(),
+    };
+    dialogService = {
+        open: vi.fn(() => ({ afterClosed: (): Observable<boolean> => of(true) })),
     };
 });
 
@@ -204,7 +222,7 @@ function registerActionTests(): void {
     it('sends recommendation and prepends it to the list', async () => {
         createComponent('client-1');
 
-        component['recommendationModel'].set({ text: 'Add protein' });
+        component['recommendationModel'].set({ text: 'Add protein', templateName: '' });
         component['submitRecommendation']();
 
         expect(dietologistService.createRecommendation).toHaveBeenCalledWith('client-1', { text: 'Add protein' });
@@ -217,7 +235,7 @@ function registerActionTests(): void {
     it('prevents native recommendation submit when sending recommendation', async () => {
         createComponent('client-1');
 
-        component['recommendationModel'].set({ text: 'Add protein' });
+        component['recommendationModel'].set({ text: 'Add protein', templateName: '' });
         fixture.detectChanges();
 
         const form = (fixture.nativeElement as HTMLElement).querySelector('.client-dashboard__recommendation-form');
@@ -232,13 +250,24 @@ function registerActionTests(): void {
         expect(dietologistService.createRecommendation).toHaveBeenCalledWith('client-1', { text: 'Add protein' });
     });
 
-    it('disconnects selected client', () => {
+    it('disconnects selected client after confirmation', () => {
         createComponent('client-1');
 
         component['disconnectClient']();
 
+        expect(dialogService.open).toHaveBeenCalled();
         expect(dietologistService.disconnectClient).toHaveBeenCalledWith('client-1');
         expect(router.navigate).toHaveBeenCalledWith(['/dietologist']);
+    });
+
+    it('keeps selected client when disconnect confirmation is cancelled', () => {
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(false) });
+        createComponent('client-1');
+
+        component['disconnectClient']();
+
+        expect(dietologistService.disconnectClient).not.toHaveBeenCalled();
+        expect(router.navigate).not.toHaveBeenCalledWith(['/dietologist']);
     });
 }
 
@@ -250,11 +279,13 @@ function createComponent(clientId: string): void {
             { provide: DietologistFacade, useValue: dietologistService },
             { provide: Router, useValue: router },
             { provide: FdUiToastService, useValue: toastService },
+            { provide: FdUiDialogService, useValue: dialogService },
             {
                 provide: ActivatedRoute,
                 useValue: {
                     snapshot: {
                         paramMap: convertToParamMap({ clientId }),
+                        queryParamMap: convertToParamMap({}),
                     },
                 },
             },

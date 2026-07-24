@@ -38,6 +38,7 @@ export type AppConfigApiUrls = {
     shoppingLists: string;
     dietologist: string;
     recommendations: string;
+    clientTasks: string;
     fasting: string;
     favoriteMeals: string;
     favoriteProducts: string;

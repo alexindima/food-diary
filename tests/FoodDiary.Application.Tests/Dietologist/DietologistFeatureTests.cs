@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
@@ -335,6 +336,8 @@ public partial class DietologistFeatureTests {
             invitationRepository ?? new InMemoryInvitationRepository(),
             snapshotBuilder ?? new ThrowingDashboardSnapshotBuilder(),
             userRepository ?? new InMemoryUserRepository()),
+            Substitute.For<IAuditEntryWriter>(),
+            Substitute.For<IUnitOfWork>(),
             userRepository ?? new InMemoryUserRepository());
 
     private static GetClientGoalsQueryHandler CreateGetClientGoalsHandler(

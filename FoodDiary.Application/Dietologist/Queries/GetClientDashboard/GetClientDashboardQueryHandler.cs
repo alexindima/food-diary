@@ -1,4 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Audit.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Dashboard.Models;
@@ -10,6 +12,8 @@ namespace FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
 
 public sealed class GetClientDashboardQueryHandler(
     IDietologistClientReadService readService,
+    IAuditEntryWriter auditWriter,
+    IUnitOfWork unitOfWork,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetClientDashboardQuery, Result<DashboardSnapshotModel>> {
     public async Task<Result<DashboardSnapshotModel>> Handle(
@@ -23,7 +27,7 @@ public sealed class GetClientDashboardQueryHandler(
         }
 
         UserId dietologistUserId = userIdResult.Value;
-        return await readService.GetDashboardAsync(
+        Result<DashboardSnapshotModel> result = await readService.GetDashboardAsync(
             dietologistUserId,
             query.ClientUserId,
             query.Date,
@@ -33,5 +37,19 @@ public sealed class GetClientDashboardQueryHandler(
             query.Page,
             query.PageSize,
             cancellationToken).ConfigureAwait(false);
+        if (result.IsFailure) {
+            return result;
+        }
+
+        await auditWriter.AddAsync(
+            dietologistUserId,
+            query.ClientUserId,
+            "dietologist.dashboard.accessed",
+            "ClientDashboard",
+            query.ClientUserId.ToString(),
+            metadata: null,
+            cancellationToken).ConfigureAwait(false);
+        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return result;
     }
 }
