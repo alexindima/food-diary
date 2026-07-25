@@ -87,7 +87,7 @@ jobs:
 
       - name: Install Cosign
         id: install_cosign
-        uses: sigstore/cosign-installer@v4
+        uses: sigstore/cosign-installer@v3
 
       - name: Record failure step
         if: always() && steps.install_cosign.outcome == 'failure'

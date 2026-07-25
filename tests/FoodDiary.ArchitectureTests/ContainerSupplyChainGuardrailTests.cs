@@ -41,7 +41,7 @@ public sealed class ContainerSupplyChainGuardrailTests {
         string workflow = ReadDeployWorkflow();
 
         Assert.Contains("id-token: write", workflow, StringComparison.Ordinal);
-        Assert.Contains("uses: sigstore/cosign-installer@v4", workflow, StringComparison.Ordinal);
+        Assert.Contains("uses: sigstore/cosign-installer@v3", workflow, StringComparison.Ordinal);
 
         int signingStep = workflow.IndexOf("- name: Sign and verify production images", StringComparison.Ordinal);
         int sshStep = workflow.IndexOf("- name: Setup SSH", StringComparison.Ordinal);
