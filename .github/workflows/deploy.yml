@@ -24,6 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write
       packages: write
 
     steps:
@@ -84,6 +85,19 @@ jobs:
             echo "FAILED_TARGET=Set up Docker Buildx"
           } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
 
+      - name: Install Cosign
+        id: install_cosign
+        uses: sigstore/cosign-installer@v4
+
+      - name: Record failure step
+        if: always() && steps.install_cosign.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Install Cosign"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Build and push API
         id: build_api
         uses: docker/build-push-action@v7
@@ -91,7 +105,8 @@ jobs:
           context: .
           file: FoodDiary.Web.Api/Dockerfile
           push: true
-          provenance: false
+          provenance: mode=max
+          sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/api:latest
             ${{ env.IMAGE_PREFIX }}/api:sha-${{ github.sha }}
@@ -112,7 +127,8 @@ jobs:
           context: .
           file: FoodDiary.Telegram.Bot/Dockerfile
           push: true
-          provenance: false
+          provenance: mode=max
+          sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/telegram-bot:latest
             ${{ env.IMAGE_PREFIX }}/telegram-bot:sha-${{ github.sha }}
@@ -133,7 +149,8 @@ jobs:
           context: .
           file: FoodDiary.Initializer/Dockerfile
           push: true
-          provenance: false
+          provenance: mode=max
+          sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/initializer:latest
             ${{ env.IMAGE_PREFIX }}/initializer:sha-${{ github.sha }}
@@ -154,7 +171,8 @@ jobs:
           context: .
           file: FoodDiary.JobManager/Dockerfile
           push: true
-          provenance: false
+          provenance: mode=max
+          sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/job-manager:latest
             ${{ env.IMAGE_PREFIX }}/job-manager:sha-${{ github.sha }}
@@ -175,7 +193,8 @@ jobs:
           context: .
           file: MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile
           push: true
-          provenance: false
+          provenance: mode=max
+          sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/mail-relay:latest
             ${{ env.IMAGE_PREFIX }}/mail-relay:sha-${{ github.sha }}
@@ -196,7 +215,8 @@ jobs:
           context: .
           file: MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile
           push: true
-          provenance: false
+          provenance: mode=max
+          sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/mailrelay-initializer:latest
             ${{ env.IMAGE_PREFIX }}/mailrelay-initializer:sha-${{ github.sha }}
@@ -217,7 +237,8 @@ jobs:
           context: .
           file: MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile
           push: true
-          provenance: false
+          provenance: mode=max
+          sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/mail-inbox:latest
             ${{ env.IMAGE_PREFIX }}/mail-inbox:sha-${{ github.sha }}
@@ -238,7 +259,8 @@ jobs:
           context: .
           file: MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile
           push: true
-          provenance: false
+          provenance: mode=max
+          sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/mailinbox-initializer:latest
             ${{ env.IMAGE_PREFIX }}/mailinbox-initializer:sha-${{ github.sha }}
@@ -259,7 +281,8 @@ jobs:
           context: FoodDiary.Web.Client
           file: FoodDiary.Web.Client/Dockerfile
           push: true
-          provenance: false
+          provenance: mode=max
+          sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/client:latest
             ${{ env.IMAGE_PREFIX }}/client:sha-${{ github.sha }}
@@ -273,6 +296,30 @@ jobs:
           {
             echo "FAILED_AREA=deploy"
             echo "FAILED_TARGET=Build and push Client"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
+      - name: Sign and verify production images
+        id: sign_images
+        shell: bash
+        run: |
+          .github/scripts/sign-and-verify-images.sh \
+            "api=${{ steps.build_api.outputs.digest }}" \
+            "telegram-bot=${{ steps.build_telegram_bot.outputs.digest }}" \
+            "initializer=${{ steps.build_initializer.outputs.digest }}" \
+            "job-manager=${{ steps.build_job_manager.outputs.digest }}" \
+            "mail-relay=${{ steps.build_mail_relay.outputs.digest }}" \
+            "mailrelay-initializer=${{ steps.build_mailrelay_initializer.outputs.digest }}" \
+            "mail-inbox=${{ steps.build_mail_inbox.outputs.digest }}" \
+            "mailinbox-initializer=${{ steps.build_mailinbox_initializer.outputs.digest }}" \
+            "client=${{ steps.build_client.outputs.digest }}"
+
+      - name: Record failure step
+        if: always() && steps.sign_images.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Sign and verify production images"
           } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
 
       - name: Setup SSH
