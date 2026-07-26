@@ -38,6 +38,9 @@ public sealed class JobManagerGuardrailTests {
             "Microsoft.EntityFrameworkCore.Relational",
             "Microsoft.Extensions.Hosting",
             "Newtonsoft.Json",
+            "OpenTelemetry.Exporter.OpenTelemetryProtocol",
+            "OpenTelemetry.Extensions.Hosting",
+            "OpenTelemetry.Instrumentation.Runtime",
         ];
 
         string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);

@@ -7,6 +7,7 @@ using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using OpenTelemetry.Metrics;
 
 namespace FoodDiary.JobManager.Tests;
 
@@ -55,6 +56,16 @@ public sealed class DependencyInjectionTests {
             () => Assert.NotNull(provider.GetRequiredService<IOptions<NotificationWebPushOutboxOptions>>().Value));
     }
 
+    [Fact]
+    public void JobManagerProductionRegistrations_ConfigureMetricsExporter() {
+        IConfiguration configuration = CreateConfiguration();
+        ServiceCollection services = CreateProductionServices(configuration);
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        Assert.NotNull(provider.GetRequiredService<MeterProvider>());
+    }
+
     private static ServiceCollection CreateProductionServices(IConfiguration configuration) {
         var services = new ServiceCollection();
 
@@ -65,6 +76,7 @@ public sealed class DependencyInjectionTests {
         services.AddIntegrations(configuration);
         services.AddNotificationResources();
         services.AddJobManagerServices(configuration);
+        services.AddJobManagerOpenTelemetry(configuration);
 
         return services;
     }
@@ -72,6 +84,7 @@ public sealed class DependencyInjectionTests {
     private static IConfiguration CreateConfiguration() {
         var values = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary_test;Username=test;Password=test",
+            ["OpenTelemetry:Otlp:Endpoint"] = "http://localhost:4317",
             ["Jwt:SecretKey"] = "test-secret-key-for-di-validation-32",
             ["Jwt:Issuer"] = "FoodDiary.Tests",
             ["Jwt:Audience"] = "FoodDiary.Tests",

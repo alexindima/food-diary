@@ -17,6 +17,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddIntegrations(builder.Configuration);
 builder.Services.AddNotificationResources();
 builder.Services.AddJobManagerServices(builder.Configuration);
+builder.Services.AddJobManagerOpenTelemetry(builder.Configuration);
 
 builder.Services.AddHangfire((sp, config) => {
     string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
