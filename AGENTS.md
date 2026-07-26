@@ -77,6 +77,9 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 
 - Long-form documentation lives under `docs/`.
 - Start with `docs/README.md`, `docs/ARCHITECTURE.md`, `docs/BACKEND_MODULE_MAP.md`, and `docs/TESTING_STRATEGY.md` for broad context.
+- For cross-cutting repository discovery, start at `.llm-wiki/index.md`, then verify relevant claims in its declared sources before changing code.
+- Treat `.llm-wiki/` as compiled navigation, never as authority over code, tests, accepted ADRs, current `docs/`, or scoped `AGENTS.md`.
+- Use `./.llm-wiki/wiki.ps1 diff` to discover change-set context and `./.llm-wiki/wiki.ps1 verify` before handing off wiki-affecting changes.
 - Product and feature plans live under `docs/plans/`; treat them as planning context unless referenced by current guides.
 - Historical or stale documents should be removed once durable decisions are captured in current guides or ADRs. Git history is the repository history.
 

@@ -1,0 +1,184 @@
+[CmdletBinding()]
+param(
+    [string]$BaseRef = 'HEAD',
+    [string]$HeadRef,
+    [string[]]$ChangedPath,
+    [switch]$FailOnUnreviewed,
+    [switch]$VerboseGenerated
+)
+
+$ErrorActionPreference = 'Stop'
+$wikiRoot = Split-Path -Parent $PSScriptRoot
+$repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+
+function ConvertTo-RepositoryPath {
+    param([string]$Path)
+
+    $normalizedPath = $Path.Trim().Replace('\', '/')
+    while ($normalizedPath.StartsWith('./')) {
+        $normalizedPath = $normalizedPath.Substring(2)
+    }
+    return $normalizedPath
+}
+
+function Get-PageMetadata {
+    param([System.IO.FileInfo]$Page)
+
+    $lines = @(Get-Content -LiteralPath $Page.FullName)
+    $closingDelimiter = -1
+    for ($index = 1; $index -lt $lines.Count; $index++) {
+        if ($lines[$index] -eq '---') {
+            $closingDelimiter = $index
+            break
+        }
+    }
+
+    if ($lines.Count -lt 3 -or $lines[0] -ne '---' -or $closingDelimiter -lt 0) {
+        throw "$($Page.FullName) has invalid front matter. Run Test-LlmWiki.ps1 first."
+    }
+
+    $frontMatter = $lines[1..($closingDelimiter - 1)]
+    $idLine = $frontMatter | Where-Object { $_ -match '^id:\s*(\S+)\s*$' } | Select-Object -First 1
+    $statusLine = $frontMatter | Where-Object { $_ -match '^status:\s*(\S+)\s*$' } | Select-Object -First 1
+    $generatedByLine = $frontMatter | Where-Object { $_ -match '^generated_by:\s*(\S+)\s*$' } | Select-Object -First 1
+    $sourcesLineIndex = [Array]::IndexOf($frontMatter, 'sources:')
+    if (-not $idLine -or -not $statusLine -or $sourcesLineIndex -lt 0) {
+        throw "$($Page.FullName) has incomplete front matter. Run Test-LlmWiki.ps1 first."
+    }
+
+    $null = $idLine -match '^id:\s*(\S+)\s*$'
+    $pageId = $Matches[1]
+    $null = $statusLine -match '^status:\s*(\S+)\s*$'
+    $status = $Matches[1]
+    $generatedBy = $null
+    if ($generatedByLine) {
+        $null = $generatedByLine -match '^generated_by:\s*(\S+)\s*$'
+        $generatedBy = $Matches[1]
+    }
+    $sources = [System.Collections.Generic.List[string]]::new()
+
+    for ($index = $sourcesLineIndex + 1; $index -lt $frontMatter.Count; $index++) {
+        if ($frontMatter[$index] -match '^\s+-\s+(.+?)\s*$') {
+            $sources.Add((ConvertTo-RepositoryPath $Matches[1]))
+            continue
+        }
+        if ($frontMatter[$index] -match '^\S') {
+            break
+        }
+    }
+
+    $repositoryUri = [System.Uri]::new(($repositoryRoot.TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar))
+    $pageUri = [System.Uri]::new($Page.FullName)
+    $pagePath = [System.Uri]::UnescapeDataString($repositoryUri.MakeRelativeUri($pageUri).ToString())
+
+    return [pscustomobject]@{
+        Id = $pageId
+        Path = $pagePath
+        Status = $status
+        GeneratedBy = $generatedBy
+        Sources = @($sources)
+    }
+}
+
+if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
+    $gitArguments = @('diff', '--name-only', '--diff-filter=ACMRD', $BaseRef)
+    if (-not [string]::IsNullOrWhiteSpace($HeadRef)) {
+        $gitArguments += $HeadRef
+    }
+    $gitArguments += '--'
+
+    $diffPaths = @(& git @gitArguments)
+    if ($LASTEXITCODE -ne 0) {
+        throw "git diff failed for base '$BaseRef' and head '$HeadRef'."
+    }
+
+    $ChangedPath = @($diffPaths)
+    if ([string]::IsNullOrWhiteSpace($HeadRef)) {
+        $untrackedPaths = @(& git ls-files --others --exclude-standard)
+        if ($LASTEXITCODE -ne 0) {
+            throw 'git ls-files failed while collecting untracked paths.'
+        }
+        $ChangedPath += $untrackedPaths
+    }
+}
+
+$changedPaths = @(
+    $ChangedPath |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        ForEach-Object { ConvertTo-RepositoryPath $_ } |
+        Sort-Object -Unique
+)
+$changedPathSet = @{}
+foreach ($path in $changedPaths) {
+    $changedPathSet[$path] = $true
+}
+
+$pages = @(
+    Get-ChildItem -LiteralPath $wikiRoot -Recurse -File -Filter '*.md' |
+        Where-Object { $_.FullName -ne (Join-Path $wikiRoot 'README.md') } |
+        ForEach-Object { Get-PageMetadata $_ }
+)
+
+$impacts = [System.Collections.Generic.List[object]]::new()
+foreach ($page in $pages) {
+    $changedSources = @($page.Sources | Where-Object { $changedPathSet.ContainsKey($_) })
+    if ($changedSources.Count -eq 0) {
+        continue
+    }
+
+    $pageChanged = $changedPathSet.ContainsKey($page.Path)
+    $reviewed = $pageChanged -or $page.Status -eq 'stale' -or -not [string]::IsNullOrWhiteSpace($page.GeneratedBy)
+    $impacts.Add([pscustomobject]@{
+        Id = $page.Id
+        Path = $page.Path
+        Status = $page.Status
+        GeneratedBy = $page.GeneratedBy
+        ChangedSources = $changedSources
+        PageChanged = $pageChanged
+        Reviewed = $reviewed
+    })
+}
+
+if ($impacts.Count -eq 0) {
+    Write-Host "LLM Wiki freshness check passed: no declared sources changed."
+    return
+}
+
+Write-Host "LLM Wiki source impact:"
+foreach ($impact in @($impacts | Where-Object { [string]::IsNullOrWhiteSpace($_.GeneratedBy) })) {
+    $reviewState = if ($impact.Reviewed) {
+        'reviewed'
+    } else {
+        'needs review'
+    }
+    Write-Host " - $($impact.Path) [$($impact.Status), $reviewState]"
+    foreach ($source in $impact.ChangedSources) {
+        Write-Host "   <- $source"
+    }
+}
+$generatedImpacts = @($impacts | Where-Object { -not [string]::IsNullOrWhiteSpace($_.GeneratedBy) })
+if ($VerboseGenerated) {
+    foreach ($impact in $generatedImpacts) {
+        Write-Host " - $($impact.Path) [$($impact.Status), generated by $($impact.GeneratedBy)]"
+        foreach ($source in $impact.ChangedSources) {
+            Write-Host "   <- $source"
+        }
+    }
+} else {
+    foreach ($generatorGroup in @($generatedImpacts | Group-Object GeneratedBy | Sort-Object Name)) {
+        Write-Host " - $($generatorGroup.Count) generated page(s) validated by $($generatorGroup.Name)"
+    }
+}
+
+$unreviewed = @($impacts | Where-Object { -not $_.Reviewed })
+if ($FailOnUnreviewed -and $unreviewed.Count -gt 0) {
+    Write-Host ''
+    Write-Host 'Update each affected page in this change set or set its status to stale.'
+    exit 1
+}
+
+if ($unreviewed.Count -eq 0) {
+    Write-Host "LLM Wiki freshness check passed: $($impacts.Count) affected page(s) were reviewed."
+} else {
+    Write-Host "LLM Wiki freshness report: $($unreviewed.Count) page(s) need review."
+}

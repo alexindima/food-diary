@@ -21,6 +21,33 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Verify LLM Wiki
+        shell: pwsh
+        env:
+          EVENT_BEFORE: ${{ github.event.before }}
+        run: |
+          ./.llm-wiki/tools/Test-LlmWiki.ps1
+          ./.llm-wiki/tools/Build-LlmWikiCatalog.ps1 -Check
+          ./.llm-wiki/tools/Build-LlmWikiModulePages.ps1 -Check
+          ./.llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1 -Check
+          ./.llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1 -Check
+          ./.llm-wiki/tools/Test-LlmWikiTools.ps1
+
+          if ("${{ github.event_name }}" -eq "pull_request") {
+            $baseRef = "origin/${{ github.base_ref }}"
+          } elseif ($env:EVENT_BEFORE -and $env:EVENT_BEFORE -notmatch '^0+$') {
+            $baseRef = $env:EVENT_BEFORE
+          } else {
+            $baseRef = "HEAD^"
+          }
+
+          ./.llm-wiki/tools/Get-LlmWikiImpact.ps1 `
+            -BaseRef $baseRef `
+            -HeadRef HEAD `
+            -FailOnUnreviewed
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5

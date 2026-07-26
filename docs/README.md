@@ -2,6 +2,10 @@
 
 This directory contains long-form repository documentation. Keep root-level markdown limited to entrypoint files such as `README.md` and `AGENTS.md`.
 
+## Agent Knowledge Layer
+
+- `.llm-wiki/index.md` - compiled, source-linked repository map for coding agents. It is a derived navigation layer; this documentation, scoped `AGENTS.md`, ADRs, tests, and code remain authoritative.
+
 ## Architecture
 
 - `ARCHITECTURE.md` - system architecture, deployable units, and dependency boundaries.

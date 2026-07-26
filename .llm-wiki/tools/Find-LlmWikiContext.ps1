@@ -1,0 +1,611 @@
+[CmdletBinding()]
+param(
+    [string]$Module,
+    [string]$Query,
+    [ValidateSet('Any', 'Api', 'Backend', 'Frontend', 'Database', 'Tests')]
+    [string]$ChangeType = 'Any',
+    [ValidateSet('Text', 'Json')]
+    [string]$Format = 'Text',
+    [ValidateRange(1, 50)]
+    [int]$Limit = 12
+)
+
+$ErrorActionPreference = 'Stop'
+$wikiRoot = Split-Path -Parent $PSScriptRoot
+$repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+$catalogPath = Join-Path $wikiRoot 'generated/repository-catalog.json'
+$symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
+$frontendIndexPath = Join-Path $wikiRoot 'generated/frontend-index.json'
+
+if ([string]::IsNullOrWhiteSpace($Module) -and [string]::IsNullOrWhiteSpace($Query)) {
+    throw 'Provide -Module, -Query, or both.'
+}
+if (-not (Test-Path -LiteralPath $catalogPath)) {
+    throw 'Repository catalog is missing. Run Build-LlmWikiCatalog.ps1 first.'
+}
+
+function ConvertTo-RepositoryPath {
+    param([string]$Path)
+
+    $resolvedPath = [System.IO.Path]::GetFullPath($Path)
+    $repositoryUri = [System.Uri]::new(($repositoryRoot.TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar))
+    $pathUri = [System.Uri]::new($resolvedPath)
+    return [System.Uri]::UnescapeDataString($repositoryUri.MakeRelativeUri($pathUri).ToString())
+}
+
+function Get-SearchScore {
+    param(
+        [string]$Text,
+        [string[]]$Tokens,
+        [int]$TokenWeight = 4,
+        [int]$ExactWeight = 12
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Text)) {
+        return 0
+    }
+
+    $normalizedText = $Text.ToLowerInvariant()
+    $score = 0
+    foreach ($token in $Tokens) {
+        if ($normalizedText.Contains($token)) {
+            $score += $TokenWeight
+        }
+    }
+
+    $fullQuery = @($Module, $Query) |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        ForEach-Object { $_.ToLowerInvariant() }
+    foreach ($phrase in $fullQuery) {
+        if ($normalizedText.Contains($phrase)) {
+            $score += $ExactWeight
+        }
+    }
+    return $score
+}
+
+function Select-ScoredItems {
+    param(
+        [object[]]$Items,
+        [int]$Maximum = $Limit
+    )
+
+    return @(
+        $Items |
+            Where-Object { $_.score -gt 0 } |
+            Sort-Object @{ Expression = 'score'; Descending = $true }, @{ Expression = 'path'; Descending = $false } |
+            Select-Object -First $Maximum
+    )
+}
+
+$searchText = (@($Module, $Query) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }) -join ' '
+$tokens = @(
+    [regex]::Matches($searchText.ToLowerInvariant(), '[\p{L}\p{N}]+') |
+        ForEach-Object { $_.Value } |
+        Where-Object { $_.Length -ge 2 } |
+        Sort-Object -Unique
+)
+$catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
+$symbolIndex = if (Test-Path -LiteralPath $symbolIndexPath) {
+    Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json
+} else {
+    $null
+}
+$frontendIndex = if (Test-Path -LiteralPath $frontendIndexPath) {
+    Get-Content -LiteralPath $frontendIndexPath -Raw | ConvertFrom-Json
+} else {
+    $null
+}
+
+$matchedModule = $null
+if (-not [string]::IsNullOrWhiteSpace($Module)) {
+    $matchedModule = @(
+        $catalog.applicationModules |
+            Where-Object { $_.name -ieq $Module } |
+            Select-Object -First 1
+    )
+    if ($matchedModule.Count -eq 0) {
+        $matchedModule = @(
+            $catalog.applicationModules |
+                Where-Object { $_.name -like "*$Module*" } |
+                Select-Object -First 1
+        )
+    }
+    if ($matchedModule.Count -gt 0) {
+        $matchedModule = $matchedModule[0]
+    } else {
+        $extractedMatch = @(
+            $catalog.extractedApplicationModules |
+                Where-Object { $_.name -ieq $Module -or $_.name -like "*$Module*" } |
+                Select-Object -First 1
+        )
+        if ($extractedMatch.Count -gt 0) {
+            $matchedModule = [pscustomobject]@{
+                name = $extractedMatch[0].name
+                dependencies = @()
+                origin = 'extracted-project'
+                project = $extractedMatch[0].project
+            }
+        } else {
+            $matchedModule = $null
+        }
+    }
+}
+
+$moduleContext = $null
+if ($null -ne $matchedModule) {
+    $consumers = @(
+        $catalog.applicationModules |
+            Where-Object { @($_.dependencies) -contains $matchedModule.name } |
+            ForEach-Object { $_.name } |
+            Sort-Object
+    )
+    $moduleContext = [ordered]@{
+        name = $matchedModule.name
+        origin = if ($null -ne $matchedModule.origin) { $matchedModule.origin } else { 'module-graph' }
+        project = $matchedModule.project
+        dependencies = @($matchedModule.dependencies)
+        consumers = $consumers
+    }
+}
+
+$wikiCandidates = [System.Collections.Generic.List[object]]::new()
+$wikiPages = Get-ChildItem -LiteralPath $wikiRoot -Recurse -File -Filter '*.md' |
+    Where-Object { $_.FullName -ne (Join-Path $wikiRoot 'README.md') }
+foreach ($page in $wikiPages) {
+    $content = Get-Content -LiteralPath $page.FullName -Raw
+    $path = ConvertTo-RepositoryPath $page.FullName
+    $score = (Get-SearchScore $path $tokens 8 16) + (Get-SearchScore $content $tokens 2 6)
+    if ($path -eq '.llm-wiki/index.md') {
+        $score += 1
+    }
+    $wikiCandidates.Add([pscustomobject]@{ path = $path; score = $score })
+}
+$wikiResults = Select-ScoredItems $wikiCandidates 6
+
+$projectCandidates = [System.Collections.Generic.List[object]]::new()
+$changeTypeContextProjects = @{
+    Api = @(
+        'FoodDiary.Presentation.Api'
+        'FoodDiary.Web.Api'
+        'FoodDiary.Presentation.Api.Tests'
+        'FoodDiary.Web.Api.IntegrationTests'
+    )
+    Backend = @(
+        'FoodDiary.Application'
+        'FoodDiary.Application.Abstractions'
+        'FoodDiary.Domain'
+        'FoodDiary.Infrastructure'
+        'FoodDiary.ArchitectureTests'
+    )
+    Frontend = @()
+    Database = @(
+        'FoodDiary.Infrastructure'
+        'FoodDiary.Initializer'
+        'FoodDiary.Infrastructure.Tests'
+        'FoodDiary.Infrastructure.IntegrationTests'
+    )
+    Tests = @('FoodDiary.ArchitectureTests')
+    Any = @()
+}
+foreach ($project in $catalog.dotnet.projects) {
+    $searchable = "$($project.name) $($project.path)"
+    $score = Get-SearchScore $searchable $tokens 10 20
+    if (@($changeTypeContextProjects[$ChangeType]) -contains $project.name) {
+        $score += 3
+    }
+    $projectCandidates.Add([pscustomobject]@{
+        name = $project.name
+        path = $project.path
+        isTestProject = [bool]$project.isTestProject
+        score = $score
+    })
+}
+$projectResults = Select-ScoredItems $projectCandidates
+
+$frontendProjectCandidates = [System.Collections.Generic.List[object]]::new()
+foreach ($frontendProject in $catalog.frontend.projects) {
+    $searchable = "$($frontendProject.name) $($frontendProject.root) $($frontendProject.sourceRoot)"
+    $score = Get-SearchScore $searchable $tokens 10 20
+    if ($ChangeType -eq 'Frontend') {
+        $score += 3
+    }
+    $frontendProjectCandidates.Add([pscustomobject]@{
+        name = $frontendProject.name
+        projectType = $frontendProject.projectType
+        root = $frontendProject.root
+        sourceRoot = $frontendProject.sourceRoot
+        score = $score
+    })
+}
+$frontendProjectResults = Select-ScoredItems $frontendProjectCandidates
+
+$frontendFeatureResults = @()
+$frontendSymbolResults = @()
+$frontendRouteResults = @()
+$localizationResults = @()
+if ($null -ne $frontendIndex) {
+    $frontendFeatureCandidates = [System.Collections.Generic.List[object]]::new()
+    foreach ($feature in $frontendIndex.features) {
+        $score = Get-SearchScore "$($feature.area) $($feature.name) $($feature.root)" $tokens 10 20
+        if ($score -gt 0) {
+            $frontendFeatureCandidates.Add([pscustomobject]@{
+                area = $feature.area
+                name = $feature.name
+                root = $feature.root
+                routes = @($feature.routes)
+                tests = @($feature.tests)
+                score = $score
+            })
+        }
+    }
+    $frontendFeatureResults = Select-ScoredItems $frontendFeatureCandidates
+
+    $frontendSymbolCandidates = [System.Collections.Generic.List[object]]::new()
+    foreach ($frontendSymbol in $frontendIndex.symbols) {
+        $score = Get-SearchScore "$($frontendSymbol.name) $($frontendSymbol.role) $($frontendSymbol.selector) $($frontendSymbol.path)" $tokens 8 18
+        if ($score -gt 0) {
+            $frontendSymbolCandidates.Add([pscustomobject]@{
+                name = $frontendSymbol.name
+                role = $frontendSymbol.role
+                selector = $frontendSymbol.selector
+                path = $frontendSymbol.path
+                line = $frontendSymbol.line
+                score = $score
+            })
+        }
+    }
+    $frontendSymbolResults = Select-ScoredItems $frontendSymbolCandidates
+
+    $frontendRouteCandidates = [System.Collections.Generic.List[object]]::new()
+    foreach ($frontendRoute in $frontendIndex.routes) {
+        $score = Get-SearchScore "$($frontendRoute.path) $($frontendRoute.source)" $tokens 10 20
+        if ($score -gt 0) {
+            $frontendRouteCandidates.Add([pscustomobject]@{
+                route = $frontendRoute.path
+                path = $frontendRoute.source
+                line = $frontendRoute.line
+                score = $score
+            })
+        }
+    }
+    $frontendRouteResults = Select-ScoredItems $frontendRouteCandidates
+
+    $localizationCandidates = [System.Collections.Generic.List[object]]::new()
+    foreach ($localeFile in $frontendIndex.localization) {
+        $score = Get-SearchScore $localeFile.name $tokens 10 20
+        if (@($tokens | Where-Object { $_ -in @('i18n', 'locale', 'localization', 'translation') }).Count -gt 0) {
+            $score += 8
+        }
+        if ($score -gt 0) {
+            $localizationCandidates.Add([pscustomobject]@{
+                name = $localeFile.name
+                englishProperties = $localeFile.englishProperties
+                russianProperties = $localeFile.russianProperties
+                countsMatch = $localeFile.countsMatch
+                score = $score
+            })
+        }
+    }
+    $localizationResults = Select-ScoredItems $localizationCandidates
+}
+
+$controllerCandidates = [System.Collections.Generic.List[object]]::new()
+foreach ($controller in $catalog.http.controllers) {
+    $endpointRoutes = @($controller.endpoints | ForEach-Object { "$($_.verb) $($_.route)" })
+    $searchable = "$($controller.name) $($controller.path) $($controller.routePrefix) $($endpointRoutes -join ' ')"
+    $score = Get-SearchScore $searchable $tokens 10 20
+    if ($score -gt 0 -and $ChangeType -eq 'Api') {
+        $score += 2
+    }
+    if ($score -gt 0) {
+        $controllerCandidates.Add([pscustomobject]@{
+            name = $controller.name
+            path = $controller.path
+            routePrefix = $controller.routePrefix
+            endpoints = @($controller.endpoints)
+            score = $score
+        })
+    }
+}
+$controllerResults = Select-ScoredItems $controllerCandidates
+
+$symbolResults = @()
+$registrationResults = @()
+if ($null -ne $symbolIndex) {
+    $symbolCandidates = [System.Collections.Generic.List[object]]::new()
+    foreach ($symbol in $symbolIndex.symbols) {
+        $searchable = "$($symbol.name) $($symbol.role) $($symbol.path)"
+        $score = Get-SearchScore $searchable $tokens 8 18
+        if ($null -ne $matchedModule) {
+            $modulePathPattern = "/$([regex]::Escape([string]$matchedModule.name))/"
+            if ([string]$symbol.path -match $modulePathPattern) {
+                $score += 12
+            }
+            if (-not [string]::IsNullOrWhiteSpace([string]$matchedModule.project)) {
+                $moduleProjectDirectory = (Split-Path -Parent $matchedModule.project).Replace('\', '/')
+                if ([string]$symbol.path -like "$moduleProjectDirectory/*") {
+                    $score += 12
+                }
+            }
+        }
+        if ($score -gt 0) {
+            $symbolCandidates.Add([pscustomobject]@{
+                name = $symbol.name
+                kind = $symbol.kind
+                role = $symbol.role
+                path = $symbol.path
+                line = $symbol.line
+                score = $score
+            })
+        }
+    }
+    $symbolResults = Select-ScoredItems $symbolCandidates
+
+    $registrationCandidates = [System.Collections.Generic.List[object]]::new()
+    foreach ($registration in $symbolIndex.dependencyInjectionRegistrations) {
+        $searchable = "$($registration.service) $($registration.implementation) $($registration.path)"
+        $score = Get-SearchScore $searchable $tokens 8 18
+        if ($null -ne $matchedModule -and
+            [string]$registration.path -match "/$([regex]::Escape([string]$matchedModule.name))(/|\.)") {
+            $score += 12
+        }
+        if ($score -gt 0) {
+            $registrationCandidates.Add([pscustomobject]@{
+                service = $registration.service
+                implementation = $registration.implementation
+                lifetime = $registration.lifetime
+                path = $registration.path
+                line = $registration.line
+                score = $score
+            })
+        }
+    }
+    $registrationResults = Select-ScoredItems $registrationCandidates
+}
+
+$preferredGuidePaths = @{'AGENTS.md' = $true}
+foreach ($projectResult in $projectResults) {
+    $projectDirectory = Split-Path -Parent $projectResult.path
+    while (-not [string]::IsNullOrWhiteSpace($projectDirectory)) {
+        $candidateGuide = ($projectDirectory.TrimEnd('/', '\') + '/AGENTS.md').Replace('\', '/')
+        if (@($catalog.knowledgeSources.agentGuides) -contains $candidateGuide) {
+            $preferredGuidePaths[$candidateGuide] = $true
+            break
+        }
+        $parentDirectory = Split-Path -Parent $projectDirectory
+        if ($parentDirectory -eq $projectDirectory) {
+            break
+        }
+        $projectDirectory = $parentDirectory
+    }
+}
+foreach ($frontendProjectResult in $frontendProjectResults) {
+    $frontendRoot = 'FoodDiary.Web.Client'
+    if (-not [string]::IsNullOrWhiteSpace($frontendProjectResult.root)) {
+        $frontendRoot += '/' + $frontendProjectResult.root.Trim('/')
+    }
+    $frontendGuide = $frontendRoot + '/AGENTS.md'
+    if (@($catalog.knowledgeSources.agentGuides) -contains $frontendGuide) {
+        $preferredGuidePaths[$frontendGuide] = $true
+    } elseif (@($catalog.knowledgeSources.agentGuides) -contains 'FoodDiary.Web.Client/AGENTS.md') {
+        $preferredGuidePaths['FoodDiary.Web.Client/AGENTS.md'] = $true
+    }
+}
+
+$guideCandidates = [System.Collections.Generic.List[object]]::new()
+foreach ($guidePath in $catalog.knowledgeSources.agentGuides) {
+    $absolutePath = Join-Path $repositoryRoot $guidePath
+    $content = Get-Content -LiteralPath $absolutePath -Raw
+    $pathScore = Get-SearchScore $guidePath $tokens 10 20
+    $contentScore = Get-SearchScore $content $tokens 1 4
+    $score = $pathScore
+    if ($pathScore -gt 0 -or $preferredGuidePaths.ContainsKey($guidePath)) {
+        $score += $contentScore
+    }
+    if ($preferredGuidePaths.ContainsKey($guidePath)) {
+        $score += 6
+    }
+    $guideCandidates.Add([pscustomobject]@{ path = $guidePath; score = $score })
+}
+$guideResults = Select-ScoredItems $guideCandidates 8
+
+$testCandidates = [System.Collections.Generic.List[object]]::new()
+$testRoots = if ($ChangeType -eq 'Frontend') {
+    @()
+} else {
+    @(
+        Join-Path $repositoryRoot 'tests'
+        Join-Path $repositoryRoot 'MailRelay/tests'
+        Join-Path $repositoryRoot 'MailInbox/tests'
+    )
+}
+$testFiles = @(
+    foreach ($testRoot in $testRoots) {
+        if (Test-Path -LiteralPath $testRoot) {
+            Get-ChildItem -LiteralPath $testRoot -Recurse -File -Filter '*.cs' |
+                Where-Object { $_.FullName -notmatch '[\\/](obj|bin)[\\/]' }
+        }
+    }
+)
+foreach ($testFile in $testFiles) {
+    $path = ConvertTo-RepositoryPath $testFile.FullName
+    $pathScore = Get-SearchScore $path $tokens 12 24
+    $content = Get-Content -LiteralPath $testFile.FullName -Raw
+    $contentScore = Get-SearchScore $content $tokens 1 3
+    $score = $pathScore + [Math]::Min($contentScore, 8)
+    $testCandidates.Add([pscustomobject]@{ path = $path; score = $score })
+}
+if ($ChangeType -eq 'Frontend' -and $null -ne $frontendIndex) {
+    $frontendTestPaths = @(
+        $frontendIndex.features |
+            ForEach-Object { $_.tests } |
+            Sort-Object -Unique
+    )
+    foreach ($frontendTestPath in $frontendTestPaths) {
+        $score = Get-SearchScore $frontendTestPath $tokens 12 24
+        if ($score -gt 0) {
+            $testCandidates.Add([pscustomobject]@{ path = $frontendTestPath; score = $score })
+        }
+    }
+}
+$testResults = Select-ScoredItems $testCandidates
+
+$recommendedChecks = switch ($ChangeType) {
+    'Api' {
+        @(
+            'dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj'
+            'dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj'
+            'Update relevant API contract snapshots when the Swagger-visible surface changes.'
+        )
+    }
+    'Backend' {
+        @(
+            'dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj'
+            'Run the focused application/domain/infrastructure test project for the changed area.'
+        )
+    }
+    'Frontend' {
+        @(
+            'cd FoodDiary.Web.Client && npm run verify'
+            'Run npm run check:i18n when UI text changes.'
+        )
+    }
+    'Database' {
+        @(
+            'dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj'
+            'Run migration whitespace formatting and commit both migration files.'
+        )
+    }
+    'Tests' {
+        @('Run the focused test project and the architecture guardrails when boundaries are involved.')
+    }
+    default {
+        @('Run the focused project checks plus architecture guardrails for cross-project changes.')
+    }
+}
+
+$context = [ordered]@{
+    query = [ordered]@{
+        module = $Module
+        text = $Query
+        changeType = $ChangeType
+    }
+    module = $moduleContext
+    wikiPages = @($wikiResults | ForEach-Object { [ordered]@{ path = $_.path; score = $_.score } })
+    agentGuides = @($guideResults | ForEach-Object { [ordered]@{ path = $_.path; score = $_.score } })
+    projects = @($projectResults | ForEach-Object {
+        [ordered]@{ name = $_.name; path = $_.path; isTestProject = $_.isTestProject; score = $_.score }
+    })
+    frontendProjects = @($frontendProjectResults | ForEach-Object {
+        [ordered]@{
+            name = $_.name
+            projectType = $_.projectType
+            root = $_.root
+            sourceRoot = $_.sourceRoot
+            score = $_.score
+        }
+    })
+    frontendFeatures = @($frontendFeatureResults)
+    frontendSymbols = @($frontendSymbolResults)
+    frontendRoutes = @($frontendRouteResults)
+    localization = @($localizationResults)
+    controllers = @($controllerResults | ForEach-Object {
+        [ordered]@{
+            name = $_.name
+            path = $_.path
+            routePrefix = $_.routePrefix
+            endpoints = $_.endpoints
+            score = $_.score
+        }
+    })
+    symbols = @($symbolResults | ForEach-Object {
+        [ordered]@{
+            name = $_.name
+            kind = $_.kind
+            role = $_.role
+            path = $_.path
+            line = $_.line
+            score = $_.score
+        }
+    })
+    dependencyInjection = @($registrationResults | ForEach-Object {
+        [ordered]@{
+            service = $_.service
+            implementation = $_.implementation
+            lifetime = $_.lifetime
+            path = $_.path
+            line = $_.line
+            score = $_.score
+        }
+    })
+    tests = @($testResults | ForEach-Object { [ordered]@{ path = $_.path; score = $_.score } })
+    recommendedChecks = $recommendedChecks
+}
+
+if ($Format -eq 'Json') {
+    $context | ConvertTo-Json -Depth 12
+    return
+}
+
+Write-Host "LLM Wiki context: '$searchText' [$ChangeType]"
+if ($null -ne $moduleContext) {
+    Write-Host "Module: $($moduleContext.name)"
+    Write-Host "  depends on: $(if ($moduleContext.dependencies.Count) { $moduleContext.dependencies -join ', ' } else { 'none' })"
+    Write-Host "  consumed by: $(if ($moduleContext.consumers.Count) { $moduleContext.consumers -join ', ' } else { 'none' })"
+}
+
+function Write-ContextSection {
+    param(
+        [string]$Title,
+        [object[]]$Items,
+        [scriptblock]$Formatter
+    )
+
+    if ($Items.Count -eq 0) {
+        return
+    }
+    Write-Host ''
+    Write-Host "${Title}:"
+    foreach ($item in $Items) {
+        Write-Host " - $(& $Formatter $item)"
+    }
+}
+
+Write-ContextSection 'Wiki pages' @($context.wikiPages) { param($item) $item.path }
+Write-ContextSection 'Applicable guides' @($context.agentGuides) { param($item) $item.path }
+Write-ContextSection 'Projects' @($context.projects) { param($item) $item.path }
+Write-ContextSection 'Frontend projects' @($context.frontendProjects) {
+    param($item)
+    "$($item.name) ($($item.projectType), root: $(if ($item.root) { $item.root } else { '.' }))"
+}
+Write-ContextSection 'Frontend features' @($context.frontendFeatures) {
+    param($item)
+    "$($item.area)/$($item.name) - $($item.root)"
+}
+Write-ContextSection 'Frontend symbols' @($context.frontendSymbols) {
+    param($item)
+    "$($item.name) [$($item.role)] - $($item.path):$($item.line)"
+}
+Write-ContextSection 'Frontend routes' @($context.frontendRoutes) {
+    param($item)
+    "'$($item.route)' - $($item.path):$($item.line)"
+}
+Write-ContextSection 'Localization files' @($context.localization) {
+    param($item)
+    "$($item.name): en=$($item.englishProperties), ru=$($item.russianProperties), countsMatch=$($item.countsMatch)"
+}
+Write-ContextSection 'Controllers' @($context.controllers) {
+    param($item)
+    "$($item.path) ($(@($item.endpoints).Count) endpoints)"
+}
+Write-ContextSection 'C# symbols' @($context.symbols) {
+    param($item)
+    "$($item.name) [$($item.role)] - $($item.path):$($item.line)"
+}
+Write-ContextSection 'DI registrations' @($context.dependencyInjection) {
+    param($item)
+    "$($item.service) -> $($item.implementation) [$($item.lifetime)] - $($item.path):$($item.line)"
+}
+Write-ContextSection 'Tests' @($context.tests) { param($item) $item.path }
+Write-ContextSection 'Recommended checks' @($context.recommendedChecks) { param($item) $item }
