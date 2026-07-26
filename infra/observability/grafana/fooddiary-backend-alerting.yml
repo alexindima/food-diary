@@ -1,0 +1,157 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: FoodDiary Backend Reliability
+    folder: Infrastructure
+    interval: 1m
+    rules:
+      - uid: fd-outbox-dead-letter
+        title: Outbox message dead-lettered
+        condition: C
+        data:
+          - refId: A
+            datasourceUid: cfhlwwx2t4w00a
+            relativeTimeRange: {from: 300, to: 0}
+            model:
+              datasource: {type: prometheus, uid: cfhlwwx2t4w00a}
+              editorMode: code
+              expr: sum(increase(fooddiary_outbox_messages_total{fooddiary_outbox_outcome="dead_lettered"}[5m])) or vector(0)
+              instant: true
+              intervalMs: 1000
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            relativeTimeRange: {from: 0, to: 0}
+            model:
+              datasource: {type: __expr__, uid: __expr__}
+              expression: A
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            relativeTimeRange: {from: 0, to: 0}
+            model:
+              conditions:
+                - evaluator: {params: [0], type: gt}
+                  operator: {type: and}
+                  query: {params: [C]}
+                  reducer: {params: [], type: last}
+                  type: query
+              datasource: {type: __expr__, uid: __expr__}
+              expression: B
+              refId: C
+              type: threshold
+        noDataState: OK
+        execErrState: Error
+        for: 0m
+        annotations:
+          summary: A FoodDiary outbox message entered the dead-letter state.
+          runbook: docs/backend/BACKEND_RUNBOOKS.md
+        labels:
+          severity: critical
+          service: outbox
+        isPaused: false
+
+      - uid: fd-outbox-backlog-old
+        title: Outbox backlog is older than 10 minutes
+        condition: C
+        data:
+          - refId: A
+            datasourceUid: cfhlwwx2t4w00a
+            relativeTimeRange: {from: 600, to: 0}
+            model:
+              datasource: {type: prometheus, uid: cfhlwwx2t4w00a}
+              editorMode: code
+              expr: max(fooddiary_outbox_pending_oldest_age_seconds) or vector(0)
+              instant: true
+              intervalMs: 1000
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            relativeTimeRange: {from: 0, to: 0}
+            model:
+              datasource: {type: __expr__, uid: __expr__}
+              expression: A
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            relativeTimeRange: {from: 0, to: 0}
+            model:
+              conditions:
+                - evaluator: {params: [600], type: gt}
+                  operator: {type: and}
+                  query: {params: [C]}
+                  reducer: {params: [], type: last}
+                  type: query
+              datasource: {type: __expr__, uid: __expr__}
+              expression: B
+              refId: C
+              type: threshold
+        noDataState: OK
+        execErrState: Error
+        for: 5m
+        annotations:
+          summary: The oldest pending FoodDiary outbox message is over 10 minutes old.
+          runbook: docs/backend/BACKEND_RUNBOOKS.md
+        labels:
+          severity: critical
+          service: outbox
+        isPaused: false
+
+      - uid: fd-job-failure-streak
+        title: Recurring job failed consecutively
+        condition: C
+        data:
+          - refId: A
+            datasourceUid: cfhlwwx2t4w00a
+            relativeTimeRange: {from: 300, to: 0}
+            model:
+              datasource: {type: prometheus, uid: cfhlwwx2t4w00a}
+              editorMode: code
+              expr: max(fooddiary_job_failure_streak) or vector(0)
+              instant: true
+              intervalMs: 1000
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            relativeTimeRange: {from: 0, to: 0}
+            model:
+              datasource: {type: __expr__, uid: __expr__}
+              expression: A
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            relativeTimeRange: {from: 0, to: 0}
+            model:
+              conditions:
+                - evaluator: {params: [1], type: gt}
+                  operator: {type: and}
+                  query: {params: [C]}
+                  reducer: {params: [], type: last}
+                  type: query
+              datasource: {type: __expr__, uid: __expr__}
+              expression: B
+              refId: C
+              type: threshold
+        noDataState: OK
+        execErrState: Error
+        for: 1m
+        annotations:
+          summary: A FoodDiary recurring job failed at least twice consecutively.
+          runbook: docs/backend/BACKEND_RUNBOOKS.md
+        labels:
+          severity: critical
+          service: job-manager
+        isPaused: false

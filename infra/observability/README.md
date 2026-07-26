@@ -3,6 +3,8 @@
 The files in this directory are the source-controlled production baseline:
 
 - `grafana/fooddiary-backend-reliability.json` is the backend reliability dashboard.
+- `grafana/fooddiary-backend-alerting.yml` contains Grafana-managed rules routed
+  through the production notification policy.
 - `prometheus/fooddiary-backend-alerts.yml` contains the first backend paging rules.
 - `promtail-config.yaml` configures log shipping.
 - `observability_report.py` produces a point-in-time host report.
