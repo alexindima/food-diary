@@ -18,7 +18,6 @@ public sealed class BusinessModuleBoundaryTests {
             "services.AddFoodModules();",
             "services.AddTrackingModules();",
             "services.AddNotificationModule();",
-            "services.AddBillingModule();",
         ];
 
         foreach (string expectedModuleCall in expectedModuleCalls) {
@@ -337,8 +336,7 @@ public sealed class BusinessModuleBoundaryTests {
     public void BillingApplication_DoesNotDependOnUnapprovedApplicationFeatures() {
         string moduleRoot = Path.Combine(
             ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Application",
-            "Billing");
+            "FoodDiary.Application.Billing");
 
         string[] violations = [.. SourceScanner.SourceFiles(moduleRoot)
             .SelectMany(ReadApplicationNamespaceDependencies)
@@ -354,7 +352,7 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void OtherApplicationModules_DoNotAcquireBillingRepositories() {
         string applicationRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application");
-        string billingRoot = Path.Combine(applicationRoot, "Billing");
+        string billingRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Billing");
         string compositionRoot = Path.Combine(applicationRoot, "DependencyInjection.cs");
         string[] forbiddenContracts = [
             "IBillingSubscriptionRepository",

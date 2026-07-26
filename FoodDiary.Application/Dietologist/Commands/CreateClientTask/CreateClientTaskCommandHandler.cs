@@ -13,7 +13,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Dietologist.Commands.CreateClientTask;
 
 public sealed class CreateClientTaskCommandHandler(
-    IClientTaskRepository taskRepository,
+    IClientTaskWriteRepository taskRepository,
     IDietologistInvitationReadModelRepository invitationRepository,
     IUserContextService userContextService,
     INotificationWriter notificationWriter,

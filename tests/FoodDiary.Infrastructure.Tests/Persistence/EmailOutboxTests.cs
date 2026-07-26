@@ -115,6 +115,32 @@ public sealed class EmailOutboxTests {
     }
 
     [Fact]
+    public async Task ReplayAsync_WhenMessageIsDeadLettered_RequeuesAndAuditsOperatorIntent() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var message = EmailOutboxMessage.Create(CreateEmailMessage(), Now.AddMinutes(-1));
+        message.MarkDeadLettered("provider rejected request", Now.AddSeconds(-1));
+        context.EmailOutbox.Add(message);
+        await context.SaveChangesAsync();
+        var replayService = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
+
+        await replayService.ReplayAsync(
+            "email",
+            message.Id,
+            "ops@example.com",
+            "Provider incident resolved",
+            CancellationToken.None);
+
+        OutboxReplayAudit audit = Assert.Single(context.OutboxReplayAudits);
+        Assert.Multiple(
+            () => Assert.Null(message.DeadLetteredOnUtc),
+            () => Assert.Equal(Now, message.NextAttemptOnUtc),
+            () => Assert.Null(message.LastError),
+            () => Assert.Equal("ops@example.com", audit.RequestedBy),
+            () => Assert.Equal("Provider incident resolved", audit.Reason),
+            () => Assert.Equal("provider rejected request", audit.PreviousError));
+    }
+
+    [Fact]
     public void Create_WithInvalidRequiredFields_Throws() {
         Assert.Multiple(
             () => Assert.Equal("message", Assert.Throws<ArgumentException>(() =>

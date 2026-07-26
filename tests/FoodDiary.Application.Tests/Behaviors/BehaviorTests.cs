@@ -178,7 +178,9 @@ public class BehaviorTests {
 
     [Fact]
     public async Task PostCommitActionQueue_FlushAsync_DrainsActionsEnqueuedDuringFlush() {
-        var postCommitActionQueue = new PostCommitActionQueue(NullLogger<PostCommitActionQueue>.Instance);
+        var postCommitActionQueue = new PostCommitActionQueue(
+            NullLogger<PostCommitActionQueue>.Instance,
+            TimeProvider.System);
         var callOrder = new List<string>();
         postCommitActionQueue.Enqueue("test.first", _ => {
             callOrder.Add("first");
@@ -199,7 +201,7 @@ public class BehaviorTests {
     [Fact]
     public async Task PostCommitActionQueue_FlushAsync_WhenActionFails_LogsWarningAndContinues() {
         var logger = new RecordingLogger<PostCommitActionQueue>();
-        var postCommitActionQueue = new PostCommitActionQueue(logger);
+        var postCommitActionQueue = new PostCommitActionQueue(logger, TimeProvider.System);
         var callOrder = new List<string>();
         postCommitActionQueue.Enqueue("test.failing", _ => throw new InvalidOperationException("failed"));
         postCommitActionQueue.Enqueue("test.next", _ => {
@@ -216,12 +218,36 @@ public class BehaviorTests {
 
     [Fact]
     public async Task PostCommitActionQueue_FlushAsync_WhenCancellationRequested_PropagatesCancellation() {
-        var postCommitActionQueue = new PostCommitActionQueue(NullLogger<PostCommitActionQueue>.Instance);
+        var postCommitActionQueue = new PostCommitActionQueue(
+            NullLogger<PostCommitActionQueue>.Instance,
+            TimeProvider.System);
         using var cts = new CancellationTokenSource();
         await cts.CancelAsync();
         postCommitActionQueue.Enqueue("test.cancel", cancellationToken => Task.FromCanceled(cancellationToken));
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => postCommitActionQueue.FlushAsync(cts.Token));
+    }
+
+    [Fact]
+    public async Task PostCommitActionQueue_FlushAsync_WhenActionTimesOut_ContinuesWithNextAction() {
+        var postCommitActionQueue = new PostCommitActionQueue(
+            NullLogger<PostCommitActionQueue>.Instance,
+            TimeProvider.System,
+            TimeSpan.FromMilliseconds(10));
+        bool nextActionExecuted = false;
+        postCommitActionQueue.Enqueue(
+            "test.stuck",
+            static cancellationToken => Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken));
+        postCommitActionQueue.Enqueue(
+            "test.next",
+            _ => {
+                nextActionExecuted = true;
+                return Task.CompletedTask;
+            });
+
+        await postCommitActionQueue.FlushAsync();
+
+        Assert.True(nextActionExecuted);
     }
 
     [ExcludeFromCodeCoverage]

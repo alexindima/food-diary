@@ -18,5 +18,6 @@ internal sealed class EfUnitOfWork(
             logger,
             cancellationToken).ConfigureAwait(false);
         await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        DomainEventDispatcher.ClearDomainEvents(context);
     }
 }

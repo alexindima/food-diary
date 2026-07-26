@@ -9,9 +9,14 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Domain",
                 "FoodDiary.Mediator",
             ],
-            ["FoodDiary.Application.Marketing"] = [
-                "FoodDiary.Application",
+            ["FoodDiary.Application.Billing"] = [
                 "FoodDiary.Application.Abstractions",
+                "FoodDiary.Domain",
+                "FoodDiary.Mediator",
+            ],
+            ["FoodDiary.Application.Marketing"] = [
+                "FoodDiary.Application.Abstractions",
+                "FoodDiary.Mediator",
             ],
             ["FoodDiary.Application.Abstractions"] = [
                 "FoodDiary.Domain",
@@ -28,6 +33,7 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.Initializer"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Billing",
                 "FoodDiary.Application.Marketing",
                 "FoodDiary.Infrastructure",
             ],
@@ -39,6 +45,7 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.JobManager"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Billing",
                 "FoodDiary.Application.Marketing",
                 "FoodDiary.Infrastructure",
                 "FoodDiary.Integrations",
@@ -96,6 +103,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Mediator"] = [],
             ["FoodDiary.Presentation.Api"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Billing",
                 "FoodDiary.Application.Marketing",
             ],
             ["FoodDiary.Domain.Primitives"] = [],
@@ -106,6 +114,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Telegram.Bot"] = [],
             ["FoodDiary.Web.Api"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Billing",
                 "FoodDiary.Application.Marketing",
                 "FoodDiary.Infrastructure",
                 "FoodDiary.Integrations",
@@ -118,6 +127,7 @@ public sealed class ProjectDependencyMatrixTests {
         new Dictionary<string, string[]>(StringComparer.Ordinal) {
             ["FoodDiary.Application.Tests"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Billing",
                 "FoodDiary.Application.Marketing",
                 "FoodDiary.Domain",
             ],
@@ -145,6 +155,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Integrations",
             ],
             ["FoodDiary.JobManager.Tests"] = [
+                "FoodDiary.Application.Billing",
                 "FoodDiary.JobManager",
             ],
             ["FoodDiary.MailInbox.Application.Tests"] = [
@@ -213,6 +224,7 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.Presentation.Api.Tests"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Billing",
                 "FoodDiary.Domain",
                 "FoodDiary.Presentation.Api",
             ],

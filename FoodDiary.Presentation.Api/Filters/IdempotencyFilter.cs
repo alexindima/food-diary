@@ -38,7 +38,12 @@ public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsy
         }
 
         ActionExecutedContext executedContext = await next().ConfigureAwait(false);
-        await CacheExecutedResponseAsync(context, executedContext, cacheKey, requestHash).ConfigureAwait(false);
+        await CacheExecutedResponseAsync(
+            context,
+            executedContext,
+            cacheKey,
+            requestHash,
+            reservation.OwnerToken!).ConfigureAwait(false);
     }
 
     private static bool TryApplyReservation(ActionExecutingContext context, IdempotencyReservation reservation) {
@@ -71,7 +76,8 @@ public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsy
         ActionExecutingContext context,
         ActionExecutedContext executedContext,
         string cacheKey,
-        string requestHash) {
+        string requestHash,
+        string ownerToken) {
         if (executedContext.Exception is not null || !TrySerializeResult(executedContext.Result, out int statusCode, out string? body)) {
             return;
         }
@@ -79,6 +85,7 @@ public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsy
         await idempotencyStore.CompleteAsync(
             cacheKey,
             requestHash,
+            ownerToken,
             statusCode,
             body,
             CacheDuration,

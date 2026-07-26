@@ -12,7 +12,7 @@ Rules for `FoodDiary.Application.Marketing/`.
 
 ## Rules
 
-- Keep this project as a leaf application module: it may reference the core Application shared kernel and Application Abstractions, but the core Application project must not reference this assembly.
+- Keep this project as an isolated leaf application module: it may reference Application Abstractions, shared mediator/results transitively, but it must not reference the core Application assembly.
 - Do not move Marketing handlers or models back into `FoodDiary.Application/Marketing`.
 - Do not acquire repositories owned by other modules.
 - Add new runtime consumers explicitly to the project dependency matrix and call `AddMarketingModule` in executable composition roots.

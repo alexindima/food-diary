@@ -12,7 +12,7 @@ namespace FoodDiary.Application.Dietologist.Services;
 
 public sealed class RecommendationDiscussionReadService(
     IRecommendationReadRepository recommendationRepository,
-    IRecommendationCommentRepository commentRepository)
+    IRecommendationCommentReadModelRepository commentRepository)
     : IRecommendationDiscussionReadService {
     public async Task<Result<IReadOnlyList<RecommendationCommentModel>>> GetAsync(
         UserId userId,

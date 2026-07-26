@@ -6,7 +6,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 namespace FoodDiary.Application.Dietologist.Services;
 
 public sealed class ClientTaskDueReminderProcessor(
-    IClientTaskRepository taskRepository,
+    IClientTaskWriteRepository taskRepository,
     INotificationWriter notificationWriter,
     TimeProvider timeProvider) {
     private const int BatchSize = 100;

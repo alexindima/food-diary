@@ -12,7 +12,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Dietologist.Commands.UpdateRecommendationTemplate;
 
 public sealed class UpdateRecommendationTemplateCommandHandler(
-    IRecommendationTemplateRepository repository,
+    IRecommendationTemplateWriteRepository repository,
     IUserContextService userContextService)
     : ICommandHandler<UpdateRecommendationTemplateCommand, Result<RecommendationTemplateModel>> {
     public async Task<Result<RecommendationTemplateModel>> Handle(

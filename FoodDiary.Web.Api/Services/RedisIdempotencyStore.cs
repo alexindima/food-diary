@@ -27,8 +27,10 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
             return completed;
         }
 
-        if (await database.StringSetAsync(lockKey, requestHash, processingTtl, When.NotExists).ConfigureAwait(false)) {
-            return new IdempotencyReservation(IdempotencyReservationStatus.Acquired);
+        string ownerToken = Guid.NewGuid().ToString("N");
+        string lockValue = BuildLockValue(requestHash, ownerToken);
+        if (await database.StringSetAsync(lockKey, lockValue, processingTtl, When.NotExists).ConfigureAwait(false)) {
+            return new IdempotencyReservation(IdempotencyReservationStatus.Acquired, OwnerToken: ownerToken);
         }
 
         completed = await TryReadCompletedAsync(database, responseKey, requestHash, cancellationToken).ConfigureAwait(false);
@@ -36,13 +38,13 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
             return completed;
         }
 
-        RedisValue activeRequestHash = await database.StringGetAsync(lockKey).ConfigureAwait(false);
-        if (activeRequestHash.HasValue &&
-            !string.Equals(activeRequestHash.ToString(), requestHash, StringComparison.Ordinal)) {
+        RedisValue activeLock = await database.StringGetAsync(lockKey).ConfigureAwait(false);
+        if (activeLock.HasValue &&
+            !HasRequestHash(activeLock.ToString(), requestHash)) {
             return new IdempotencyReservation(IdempotencyReservationStatus.Conflict);
         }
 
-        return activeRequestHash.HasValue
+        return activeLock.HasValue
             ? new IdempotencyReservation(IdempotencyReservationStatus.InProgress)
             : await TryAcquireAfterExpiredLockAsync(
                 database,
@@ -55,6 +57,7 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
     public async Task CompleteAsync(
         string key,
         string requestHash,
+        string ownerToken,
         int statusCode,
         string? body,
         TimeSpan responseTtl,
@@ -63,12 +66,20 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
         var entry = new CompletedEntry(requestHash, statusCode, body);
 
         cancellationToken.ThrowIfCancellationRequested();
-        await database.StringSetAsync(
-            BuildResponseKey(key),
-            JsonSerializer.Serialize(entry, JsonOptions),
-            responseTtl).ConfigureAwait(false);
-        cancellationToken.ThrowIfCancellationRequested();
-        await database.LockReleaseAsync(BuildLockKey(key), requestHash).ConfigureAwait(false);
+        const string script = """
+            if redis.call('GET', KEYS[1]) ~= ARGV[1] then return 0 end
+            redis.call('SET', KEYS[2], ARGV[2], 'PX', ARGV[3])
+            redis.call('DEL', KEYS[1])
+            return 1
+            """;
+        await database.ScriptEvaluateAsync(
+            script,
+            [BuildLockKey(key), BuildResponseKey(key)],
+            [
+                BuildLockValue(requestHash, ownerToken),
+                JsonSerializer.Serialize(entry, JsonOptions),
+                ((long)responseTtl.TotalMilliseconds).ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ]).ConfigureAwait(false);
     }
 
     private static async Task<IdempotencyReservation?> TryReadCompletedAsync(
@@ -100,8 +111,13 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
         TimeSpan processingTtl,
         CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
-        return await database.StringSetAsync(lockKey, requestHash, processingTtl, When.NotExists).ConfigureAwait(false)
-            ? new IdempotencyReservation(IdempotencyReservationStatus.Acquired)
+        string ownerToken = Guid.NewGuid().ToString("N");
+        return await database.StringSetAsync(
+            lockKey,
+            BuildLockValue(requestHash, ownerToken),
+            processingTtl,
+            When.NotExists).ConfigureAwait(false)
+            ? new IdempotencyReservation(IdempotencyReservationStatus.Acquired, OwnerToken: ownerToken)
             : new IdempotencyReservation(IdempotencyReservationStatus.InProgress);
     }
 
@@ -116,6 +132,12 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
     private static RedisKey BuildResponseKey(string key) => KeyPrefix + key + ":response";
 
     private static RedisKey BuildLockKey(string key) => KeyPrefix + key + ":lock";
+
+    private static string BuildLockValue(string requestHash, string ownerToken) => $"{requestHash}:{ownerToken}";
+
+    private static bool HasRequestHash(string lockValue, string requestHash) =>
+        string.Equals(lockValue, requestHash, StringComparison.Ordinal) ||
+        lockValue.StartsWith($"{requestHash}:", StringComparison.Ordinal);
 
     private sealed record CompletedEntry(string RequestHash, int StatusCode, string? Body);
 }

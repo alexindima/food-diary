@@ -11,6 +11,7 @@ public interface IIdempotencyStore {
     Task CompleteAsync(
         string key,
         string requestHash,
+        string ownerToken,
         int statusCode,
         string? body,
         TimeSpan responseTtl,

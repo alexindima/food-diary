@@ -135,22 +135,16 @@ public sealed class SideEffectReliabilityGuardrailTests {
 
     [Fact]
     public void OutboxProcessors_DeadLetterAfterSharedMaxAttempts() {
-        string root = ArchitectureTestPaths.RepositoryRoot;
-        string persistenceRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence");
-        string[] processorFiles = [.. SourceScanner.SourceFiles(persistenceRoot)
-            .Where(static path => Path.GetFileName(path).EndsWith("OutboxProcessor.cs", StringComparison.Ordinal))];
+        string enginePath = ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Infrastructure",
+            "Persistence",
+            "Outbox",
+            "OutboxProcessingEngine.cs");
+        string source = File.ReadAllText(enginePath);
 
-        string[] violations = [.. processorFiles
-            .Where(path => {
-                string source = File.ReadAllText(path);
-                return !source.Contains("OutboxProcessingPolicy.ShouldDeadLetter", StringComparison.Ordinal) ||
-                       !source.Contains("MarkDeadLettered", StringComparison.Ordinal) ||
-                       !source.Contains("OutboxProcessingPolicy.MaxAttemptCount", StringComparison.Ordinal);
-            })
-            .Select(path => Path.GetRelativePath(root, path))
-            .Order(StringComparer.Ordinal)];
-
-        Assert.Empty(violations);
+        Assert.Contains("OutboxProcessingPolicy.ShouldDeadLetter", source, StringComparison.Ordinal);
+        Assert.Contains("MarkDeadLettered", source, StringComparison.Ordinal);
+        Assert.Contains("OutboxProcessingPolicy.MaxAttemptCount", source, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -170,28 +164,22 @@ public sealed class SideEffectReliabilityGuardrailTests {
     }
     [Fact]
     public void OutboxProcessors_RecordOperationalTelemetry() {
-        string root = ArchitectureTestPaths.RepositoryRoot;
-        string persistenceRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence");
-        string[] processorFiles = [.. SourceScanner.SourceFiles(persistenceRoot)
-            .Where(static path => Path.GetFileName(path).EndsWith("OutboxProcessor.cs", StringComparison.Ordinal))];
+        string enginePath = ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Infrastructure",
+            "Persistence",
+            "Outbox",
+            "OutboxProcessingEngine.cs");
+        string source = File.ReadAllText(enginePath);
 
         string[] requiredPatterns = [
-            "RecordOutboxMessages(OutboxName, \"claimed\"",
-            "RecordOutboxMessages(OutboxName, \"processed\"",
-            "RecordOutboxMessages(OutboxName, \"retried\"",
-            "RecordOutboxMessages(OutboxName, \"dead_lettered\"",
-            "RecordOutboxProcessingDuration(OutboxName",
+            "RecordOutboxMessages(outboxName, \"claimed\"",
+            "RecordOutboxMessages(outboxName, \"processed\"",
+            "RecordOutboxMessages(outboxName, \"retried\"",
+            "RecordOutboxMessages(outboxName, \"dead_lettered\"",
+            "RecordOutboxProcessingDuration(outboxName",
         ];
 
-        string[] violations = [.. processorFiles
-            .Where(path => {
-                string source = File.ReadAllText(path);
-                return requiredPatterns.Any(pattern => !source.Contains(pattern, StringComparison.Ordinal));
-            })
-            .Select(path => Path.GetRelativePath(root, path))
-            .Order(StringComparer.Ordinal)];
-
-        Assert.Empty(violations);
+        Assert.All(requiredPatterns, pattern => Assert.Contains(pattern, source, StringComparison.Ordinal));
     }
 
     [Fact]

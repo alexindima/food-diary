@@ -112,6 +112,7 @@ The next regression gates sit one layer higher than the repository checks and ex
 - Scenario: first page of a monthly meal history range for a user with `1500` API-created consumptions backed by a valid private product
 - Threshold: second measured execution must complete within `500 ms`
 - Test: `PostgresPerformanceBaselineTests.Consumptions_FirstPageWithinMonthRange_StaysWithinEndpointLatencyBudget`
+- Test: `PostgresPerformanceBaselineTests.BillingOverview_WithAuthenticatedUser_StaysWithinLatencyBudget`
 
 These are intentionally smoke-sized performance baselines:
 
@@ -150,6 +151,8 @@ For now, the chosen strategy is:
 
 ## Next Perf Tasks
 
+- keep dietologist attention-signal reads on the dedicated batch projection; the handler must not rebuild one dashboard per client
+- add the attention-signals endpoint to the production-like k6 dataset once multi-client dietologist fixtures are available
 - run `infra/load-testing/api-baseline.js` against a production-like isolated dataset and store the environment and result summary with the release evidence
 - add a write-heavy scenario only after a resettable disposable dataset and idempotent cleanup procedure are available
 - add a wider explain review for the full repository OR-based search predicates if those predicates become materially more complex

@@ -61,7 +61,7 @@ public sealed class RedisIdempotencyStoreTests {
         IDatabase database = Substitute.For<IDatabase>();
         database.StringGetAsync(ResponseKey("request-3"), CommandFlags.None)
             .Returns("not-json");
-        database.StringSetAsync(LockKey("request-3"), "hash-3", ProcessingTtl, When.NotExists)
+        database.StringSetAsync(LockKey("request-3"), Arg.Is<RedisValue>(value => value.ToString().StartsWith("hash-3:", StringComparison.Ordinal)), ProcessingTtl, When.NotExists)
             .Returns(returnThis: true);
         RedisIdempotencyStore store = CreateStore(database);
 
@@ -79,7 +79,7 @@ public sealed class RedisIdempotencyStoreTests {
     [Fact]
     public async Task ReserveAsync_WhenDifferentRequestOwnsActiveLock_ReturnsConflict() {
         IDatabase database = Substitute.For<IDatabase>();
-        database.StringSetAsync(LockKey("request-4"), "hash-4", ProcessingTtl, When.NotExists)
+        database.StringSetAsync(LockKey("request-4"), Arg.Is<RedisValue>(value => value.ToString().StartsWith("hash-4:", StringComparison.Ordinal)), ProcessingTtl, When.NotExists)
             .Returns(returnThis: false);
         database.StringGetAsync(ResponseKey("request-4"), CommandFlags.None)
             .Returns(RedisValue.Null);
@@ -100,7 +100,7 @@ public sealed class RedisIdempotencyStoreTests {
     [Fact]
     public async Task ReserveAsync_WhenSameRequestOwnsActiveLock_ReturnsInProgress() {
         IDatabase database = Substitute.For<IDatabase>();
-        database.StringSetAsync(LockKey("request-5"), "hash-5", ProcessingTtl, When.NotExists)
+        database.StringSetAsync(LockKey("request-5"), Arg.Is<RedisValue>(value => value.ToString().StartsWith("hash-5:", StringComparison.Ordinal)), ProcessingTtl, When.NotExists)
             .Returns(returnThis: false);
         database.StringGetAsync(ResponseKey("request-5"), CommandFlags.None)
             .Returns(RedisValue.Null);
@@ -121,7 +121,7 @@ public sealed class RedisIdempotencyStoreTests {
     [Fact]
     public async Task ReserveAsync_WhenCompletedResponseAppearsAfterFailedLock_ReturnsReplay() {
         IDatabase database = Substitute.For<IDatabase>();
-        database.StringSetAsync(LockKey("request-replay-after-lock"), "hash-replay", ProcessingTtl, When.NotExists)
+        database.StringSetAsync(LockKey("request-replay-after-lock"), Arg.Is<RedisValue>(value => value.ToString().StartsWith("hash-replay:", StringComparison.Ordinal)), ProcessingTtl, When.NotExists)
             .Returns(returnThis: false);
         database.StringGetAsync(ResponseKey("request-replay-after-lock"), CommandFlags.None)
             .Returns(
@@ -145,7 +145,7 @@ public sealed class RedisIdempotencyStoreTests {
     [Fact]
     public async Task ReserveAsync_WhenLockExpiresBetweenAttempts_TriesToAcquireAgain() {
         IDatabase database = Substitute.For<IDatabase>();
-        database.StringSetAsync(LockKey("request-6"), "hash-6", ProcessingTtl, When.NotExists)
+        database.StringSetAsync(LockKey("request-6"), Arg.Is<RedisValue>(value => value.ToString().StartsWith("hash-6:", StringComparison.Ordinal)), ProcessingTtl, When.NotExists)
             .Returns(returnThis: false, returnThese: true);
         database.StringGetAsync(ResponseKey("request-6"), CommandFlags.None)
             .Returns(RedisValue.Null);
@@ -161,7 +161,11 @@ public sealed class RedisIdempotencyStoreTests {
             CancellationToken.None);
 
         Assert.Equal(IdempotencyReservationStatus.Acquired, reservation.Status);
-        await database.Received(2).StringSetAsync(LockKey("request-6"), "hash-6", ProcessingTtl, When.NotExists);
+        await database.Received(2).StringSetAsync(
+            LockKey("request-6"),
+            Arg.Is<RedisValue>(value => value.ToString().StartsWith("hash-6:", StringComparison.Ordinal)),
+            ProcessingTtl,
+            When.NotExists);
     }
 
     [Fact]
@@ -172,19 +176,20 @@ public sealed class RedisIdempotencyStoreTests {
         await store.CompleteAsync(
             "request-7",
             "hash-7",
+            "owner-7",
             202,
             """{"queued":true}""",
             ResponseTtl,
             CancellationToken.None);
 
-        await database.Received(1).StringSetAsync(
-            ResponseKey("request-7"),
-            Arg.Is<RedisValue>(value =>
-                value.ToString().Contains("\"requestHash\":\"hash-7\"", StringComparison.Ordinal) &&
-                value.ToString().Contains("\"statusCode\":202", StringComparison.Ordinal) &&
-                value.ToString().Contains("\"body\":\"{\\u0022queued\\u0022:true}\"", StringComparison.Ordinal)),
-            ResponseTtl);
-        await database.Received(1).LockReleaseAsync(LockKey("request-7"), "hash-7", CommandFlags.None);
+        await database.Received(1).ScriptEvaluateAsync(
+            Arg.Any<string>(),
+            Arg.Is<RedisKey[]>(keys => keys.SequenceEqual(new[] { LockKey("request-7"), ResponseKey("request-7") })),
+            Arg.Is<RedisValue[]>(values => values != null &&
+                values[0] == "hash-7:owner-7" &&
+                values[1].ToString().Contains("\"requestHash\":\"hash-7\"", StringComparison.Ordinal) &&
+                values[1].ToString().Contains("\"statusCode\":202", StringComparison.Ordinal)),
+            CommandFlags.None);
     }
 
     private static RedisIdempotencyStore CreateStore(IDatabase database) {

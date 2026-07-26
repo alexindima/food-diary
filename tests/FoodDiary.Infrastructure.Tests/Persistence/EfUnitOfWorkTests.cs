@@ -4,6 +4,7 @@ using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Infrastructure.Tests.Persistence;
@@ -49,11 +50,50 @@ public sealed class EfUnitOfWorkTests {
         await publisher.Received(1).PublishAsync(Arg.Any<IDomainEvent>(), Arg.Any<CancellationToken>());
     }
 
-    private static FoodDiaryDbContext CreateContext() {
-        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
-            .Options;
+    [Fact]
+    public async Task SaveChangesAsync_WhenPersistenceFails_RetainsEventsAndDoesNotRepublishOnRetry() {
+        var failureInterceptor = new FailFirstSaveInterceptor();
+        await using FoodDiaryDbContext context = CreateContext(failureInterceptor);
+        var source = ShoppingList.Create(UserId.New(), "Before");
+        context.ShoppingLists.Add(source);
+        source.UpdateName("After");
+        IDomainEventPublisher publisher = Substitute.For<IDomainEventPublisher>();
+        publisher.PublishAsync(Arg.Any<IDomainEvent>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
+        var unitOfWork = new EfUnitOfWork(context, publisher, NullLogger<EfUnitOfWork>.Instance);
 
-        return new FoodDiaryDbContext(options);
+        await Assert.ThrowsAsync<InvalidOperationException>(() => unitOfWork.SaveChangesAsync());
+        Assert.NotEmpty(source.DomainEvents);
+
+        await unitOfWork.SaveChangesAsync();
+
+        Assert.Empty(source.DomainEvents);
+        await publisher.Received(1).PublishAsync(Arg.Any<IDomainEvent>(), Arg.Any<CancellationToken>());
+    }
+
+    private static FoodDiaryDbContext CreateContext(SaveChangesInterceptor? interceptor = null) {
+        DbContextOptionsBuilder<FoodDiaryDbContext> builder = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString("N"));
+        if (interceptor is not null) {
+            builder.AddInterceptors(interceptor);
+        }
+
+        return new FoodDiaryDbContext(builder.Options);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FailFirstSaveInterceptor : SaveChangesInterceptor {
+        private bool failed;
+
+        public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
+            DbContextEventData eventData,
+            InterceptionResult<int> result,
+            CancellationToken cancellationToken = default) {
+            if (!failed) {
+                failed = true;
+                throw new InvalidOperationException("Simulated transient persistence failure.");
+            }
+
+            return base.SavingChangesAsync(eventData, result, cancellationToken);
+        }
     }
 }

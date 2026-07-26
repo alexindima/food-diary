@@ -11,7 +11,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Dietologist.Queries.GetMyClientTasks;
 
 public sealed class GetMyClientTasksQueryHandler(
-    IClientTaskRepository taskRepository,
+    IClientTaskReadModelRepository taskRepository,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider timeProvider)
     : IQueryHandler<GetMyClientTasksQuery, Result<IReadOnlyList<ClientTaskModel>>> {

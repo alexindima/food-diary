@@ -9,6 +9,8 @@ Use this file when deciding where backend code belongs.
 | Domain model | `FoodDiary.Domain` | Entities, value objects, aggregate behavior, domain events | EF Core, HTTP, external SDKs, options |
 | Application ports/models | `FoodDiary.Application.Abstractions` | Feature ports, application-facing models, shared result abstractions | ASP.NET, EF Core, provider SDKs, host config |
 | Use cases | `FoodDiary.Application` | Commands, queries, handlers, validators, application services | Persistence implementation, HTTP request/response DTOs |
+| Billing use cases | `FoodDiary.Application.Billing` | Billing commands, queries, validators, renewal and webhook orchestration | Core Application dependencies, persistence, HTTP DTOs |
+| Marketing use cases | `FoodDiary.Application.Marketing` | Attribution commands, queries and conversion recording | Core Application dependencies, persistence, HTTP DTOs |
 | Persistence/technical implementations | `FoodDiary.Infrastructure` | DbContext, EF mappings, repositories, technical service implementations | HTTP controllers, host startup, external provider orchestration |
 | External adapters | `FoodDiary.Integrations` | Provider clients, provider options, MailRelay/MailInbox client bridges | EF migrations, core domain workflows |
 | HTTP/SignalR transport | `FoodDiary.Presentation.Api` | Controllers, hubs, HTTP requests/responses, presentation mappings | Business logic, infrastructure, host middleware |

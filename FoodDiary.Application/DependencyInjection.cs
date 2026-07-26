@@ -28,8 +28,6 @@ public static partial class DependencyInjection {
         services.AddFoodModules();
         services.AddTrackingModules();
         services.AddNotificationModule();
-        services.AddBillingModule();
-
         return services;
     }
 }

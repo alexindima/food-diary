@@ -7,6 +7,8 @@ The primary product backend is a modular monolith:
 - `FoodDiary.Domain`
 - `FoodDiary.Application.Abstractions`
 - `FoodDiary.Application`
+- `FoodDiary.Application.Billing`
+- `FoodDiary.Application.Marketing`
 - `FoodDiary.Infrastructure`
 - `FoodDiary.Integrations`
 - `FoodDiary.Presentation.Api`
@@ -42,10 +44,13 @@ Dependency direction is intentionally inward.
 flowchart LR
     WebApi["FoodDiary.Web.Api\nhost/composition root"] --> Presentation["FoodDiary.Presentation.Api\nHTTP + SignalR transport"]
     WebApi --> Application["FoodDiary.Application\nuse cases"]
+    WebApi --> Billing["FoodDiary.Application.Billing\nbilling use cases"]
+    WebApi --> Marketing["FoodDiary.Application.Marketing\nmarketing use cases"]
     WebApi --> Infrastructure["FoodDiary.Infrastructure\npersistence + implementations"]
     WebApi --> Integrations["FoodDiary.Integrations\nexternal adapters"]
     WebApi --> Resources["FoodDiary.Resources\nresource-backed text"]
     Presentation --> Application
+    Presentation --> Billing
     Application --> Abstractions["FoodDiary.Application.Abstractions\nports + models"]
     Application --> Domain["FoodDiary.Domain\ndomain model"]
     Infrastructure --> Abstractions
@@ -70,7 +75,9 @@ Core rules:
 ## Application Read Boundaries
 Business-module ownership inside the primary backend is defined in `docs/backend/BACKEND_MODULE_OWNERSHIP.md`. Layer sharing and a shared `DbContext` do not imply shared write ownership: cross-module mutations go through the owning module, while composed reads use explicit projection/read-service contracts. Fasting introduced the executable vertical-boundary pattern; it is now applied across the governed modules, hosts/adapters and the explicit cross-module projection allowlist.
 
-Application service composition follows the same ownership model. Root `FoodDiary.Application/DependencyInjection.cs` contains mediator/validation/cross-cutting bootstrap and delegates feature registrations to module-area partials (`Administration`, `Identity`, `Food`, `Tracking`, `Notifications`, and `Billing`). An architecture test prevents feature registrations from regrowing in the root aggregator.
+Application service composition follows the same ownership model. Root `FoodDiary.Application/DependencyInjection.cs` contains mediator/validation/cross-cutting bootstrap and delegates registrations for the features that remain in the core assembly to module-area partials (`Administration`, `Identity`, `Food`, `Tracking`, and `Notifications`). Executable composition roots register extracted modules explicitly. Architecture tests prevent feature registrations from regrowing in the root aggregator.
+
+`FoodDiary.Application.Billing` and `FoodDiary.Application.Marketing` are physically extracted modules. They reference application-facing abstractions, domain where required, and the shared mediator, never the core `FoodDiary.Application` assembly. Transactional commands shared by extracted modules implement the abstraction-level `ITransactionalCommand` marker so the core command transaction pipeline remains applicable without reversing the project dependency.
 
 Application read paths should use the narrowest contract that matches the behavior:
 - `*ReadModelRepository` for projection reads, counters, summaries, and API/UI read models.
@@ -81,6 +88,10 @@ Application read paths should use the narrowest contract that matches the behavi
 Full composite `*Repository` contracts are primarily adapter conveniences. Avoid injecting them into application services and handlers when a narrower read, lookup, read-model, or write contract is available.
 
 Current guardrails protect the migrated read-model boundaries for favorites, notifications, tracking/body metrics, lessons/content, dashboard body reads, and notification lookup checks. When adding a new read use case, prefer a dedicated read service backed by read-model contracts instead of reusing aggregate repositories directly from query handlers.
+
+Personal-data export, retention and purge responsibilities are documented in `docs/backend/PERSONAL_DATA_LIFECYCLE.md`. User deletion is a soft-delete/recovery window followed by transactional bounded purge; external image deletion remains durable through the object-deletion outbox.
+
+Dietologist attention signals use a consumer-owned batch projection for calorie, meal-activity and weight metrics. The query handler must not compose one dashboard per client; the dedicated projection keeps database round trips bounded as the client list grows.
 
 ## Supporting Service Boundaries
 MailRelay and MailInbox repeat the same basic layer pattern:

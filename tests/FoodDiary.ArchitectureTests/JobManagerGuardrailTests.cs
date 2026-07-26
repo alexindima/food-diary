@@ -24,6 +24,7 @@ public sealed class JobManagerGuardrailTests {
         const string relativeProjectPath = "FoodDiary.JobManager/FoodDiary.JobManager.csproj";
         string[] expectedProjectReferences = [
             "FoodDiary.Application",
+            "FoodDiary.Application.Billing",
             "FoodDiary.Application.Marketing",
             "FoodDiary.Infrastructure",
             "FoodDiary.Integrations",

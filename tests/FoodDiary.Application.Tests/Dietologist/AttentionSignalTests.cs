@@ -174,7 +174,7 @@ public sealed class AttentionSignalTests {
         ClientSummaryModel second = CreateClient(UtcNow.AddDays(-1));
         IDietologistClientReadService dashboards = Substitute.For<IDietologistClientReadService>();
         dashboards.GetDashboardAsync(
-                user.Id,
+                Arg.Any<UserId>(),
                 first.UserId,
                 Arg.Any<DateTime>(),
                 Arg.Any<DateTime?>(),
@@ -185,7 +185,7 @@ public sealed class AttentionSignalTests {
                 Arg.Any<CancellationToken>())
             .Returns(Result.Failure<DashboardSnapshotModel>(Errors.Dietologist.AccessDenied));
         dashboards.GetDashboardAsync(
-                user.Id,
+                Arg.Any<UserId>(),
                 second.UserId,
                 Arg.Any<DateTime>(),
                 Arg.Any<DateTime?>(),
@@ -222,7 +222,7 @@ public sealed class AttentionSignalTests {
             permissions: CreatePermissions(meals: false, statistics: true, weight: true));
         IDietologistClientReadService dashboards = Substitute.For<IDietologistClientReadService>();
         dashboards.GetDashboardAsync(
-                user.Id,
+                Arg.Any<UserId>(),
                 first.UserId,
                 Arg.Any<DateTime>(),
                 Arg.Any<DateTime?>(),
@@ -238,7 +238,7 @@ public sealed class AttentionSignalTests {
                     new WeightEntrySummaryModel(UtcNow, UtcNow, 99),
                 ])));
         dashboards.GetDashboardAsync(
-                user.Id,
+                Arg.Any<UserId>(),
                 second.UserId,
                 Arg.Any<DateTime>(),
                 Arg.Any<DateTime?>(),
@@ -407,10 +407,71 @@ public sealed class AttentionSignalTests {
 
         return new GetAttentionSignalsQueryHandler(
             invitations,
-            dashboards ?? Substitute.For<IDietologistClientReadService>(),
+            CreateMetricsService(dashboards),
             audits,
             userContext ?? Substitute.For<IUserContextService>(),
             new FixedTimeProvider(UtcNow));
+    }
+
+    private static IAttentionSignalMetricsReadService CreateMetricsService(
+        IDietologistClientReadService? dashboards) {
+        IAttentionSignalMetricsReadService service = Substitute.For<IAttentionSignalMetricsReadService>();
+        service.GetAsync(
+                Arg.Any<IReadOnlyCollection<UserId>>(),
+                Arg.Any<DateTime>(),
+                Arg.Any<DateTime>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => BuildMetricsAsync(
+                dashboards,
+                call.ArgAt<IReadOnlyCollection<UserId>>(0),
+                call.ArgAt<DateTime>(1),
+                call.ArgAt<DateTime>(2),
+                call.ArgAt<CancellationToken>(3)));
+        return service;
+    }
+
+    private static async Task<IReadOnlyList<AttentionSignalMetricsReadModel>> BuildMetricsAsync(
+        IDietologistClientReadService? dashboards,
+        IReadOnlyCollection<UserId> clientIds,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken) {
+        if (dashboards is null) {
+            return [];
+        }
+
+        var metrics = new List<AttentionSignalMetricsReadModel>();
+        foreach (UserId clientId in clientIds) {
+            Result<DashboardSnapshotModel> result = await dashboards.GetDashboardAsync(
+                UserId.Empty,
+                clientId.Value,
+                dateFrom,
+                dateTo,
+                "en",
+                90,
+                1,
+                100,
+                cancellationToken).ConfigureAwait(false);
+            if (result.IsFailure) {
+                continue;
+            }
+
+            DashboardSnapshotModel dashboard = result.Value;
+            metrics.Add(new AttentionSignalMetricsReadModel(
+                clientId.Value,
+                dashboard.DailyGoal,
+                dashboard.Meals.Items.Count == 0 ? null : dashboard.Meals.Items.Max(item => item.Date),
+                [
+                    .. dashboard.WeeklyCalories.Select(item =>
+                        new AttentionSignalDailyCaloriesReadModel(item.Date, item.Calories)),
+                ],
+                [
+                    .. (dashboard.WeightTrend ?? []).Select(item =>
+                        new AttentionSignalWeightPointReadModel(item.EndDate, item.AverageWeight)),
+                ]));
+        }
+
+        return metrics;
     }
 
     private static GetAttentionSignalsQuery CreateQuery(Guid userId) =>

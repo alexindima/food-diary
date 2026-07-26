@@ -18,7 +18,7 @@ namespace FoodDiary.Application.Dietologist.Commands.CreateRecommendationComment
 
 public sealed class CreateRecommendationCommentCommandHandler(
     IRecommendationReadRepository recommendationRepository,
-    IRecommendationCommentRepository commentRepository,
+    IRecommendationCommentWriteRepository commentRepository,
     IDietologistInvitationReadModelRepository invitationRepository,
     INotificationWriter notificationWriter,
     IAuditEntryWriter auditWriter,

@@ -130,9 +130,11 @@ public sealed class DietologistResidualCoverageTests {
     [Fact]
     public async Task BulkCreateRecommendations_WhenCurrentUserAccessFails_ReturnsFailure() {
         IUserContextService users = CreateFailingUserContext();
+        IRecommendationBulkDispatchRepository dispatches = Substitute.For<IRecommendationBulkDispatchRepository>();
         var handler = new BulkCreateRecommendationsCommandHandler(
             Substitute.For<IRecommendationWriteRepository>(),
-            Substitute.For<IRecommendationBulkDispatchRepository>(),
+            dispatches,
+            dispatches,
             Substitute.For<IDietologistInvitationReadModelRepository>(),
             users);
 

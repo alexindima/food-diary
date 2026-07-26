@@ -19,4 +19,15 @@ internal sealed class DomainEventDispatchInterceptor(
 
         return await base.SavingChangesAsync(eventData, result, cancellationToken).ConfigureAwait(false);
     }
+
+    public override ValueTask<int> SavedChangesAsync(
+        SaveChangesCompletedEventData eventData,
+        int result,
+        CancellationToken cancellationToken = default) {
+        if (eventData.Context is not null) {
+            DomainEventDispatcher.ClearDomainEvents(eventData.Context);
+        }
+
+        return base.SavedChangesAsync(eventData, result, cancellationToken);
+    }
 }

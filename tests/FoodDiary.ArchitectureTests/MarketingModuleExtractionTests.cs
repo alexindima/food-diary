@@ -20,6 +20,15 @@ public sealed class MarketingModuleExtractionTests {
         Assert.DoesNotContain("FoodDiary.Application.Marketing", references, StringComparer.Ordinal);
     }
 
+    [Fact]
+    public void ExtractedMarketingAssembly_DoesNotReferenceCoreApplication() {
+        string[] references = ProjectReferenceReader.ReadProjectReferences(
+            "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj");
+
+        Assert.DoesNotContain("FoodDiary.Application", references, StringComparer.Ordinal);
+        Assert.Contains("FoodDiary.Application.Abstractions", references, StringComparer.Ordinal);
+    }
+
     [Theory]
     [InlineData("FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs")]
     [InlineData("FoodDiary.JobManager/Program.cs")]
@@ -32,7 +41,7 @@ public sealed class MarketingModuleExtractionTests {
 
     [Fact]
     public void Billing_DependsOnConsumerOwnedMarketingPort() {
-        string billingRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Billing");
+        string billingRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Billing");
         string[] violations = [.. SourceScanner.SourceFiles(billingRoot)
             .SelectMany(path => File.ReadLines(path).Select((line, index) => new { path, line, index }))
             .Where(entry => entry.line.Contains("FoodDiary.Application.Marketing", StringComparison.Ordinal) ||

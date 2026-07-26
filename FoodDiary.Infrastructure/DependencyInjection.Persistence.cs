@@ -1,9 +1,11 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Infrastructure.Events;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Interceptors;
+using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,6 +18,7 @@ public static partial class DependencyInjection {
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
         services.AddSingleton<DatabaseCommandTelemetryInterceptor>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+        services.AddScoped<IOutboxDeadLetterReplayService, OutboxDeadLetterReplayService>();
         services.AddScoped<IDomainEventPublisher, MediatorDomainEventPublisher>();
         services.AddScoped<DomainEventDispatchInterceptor>();
         services.AddScoped<CollaborationAuditInterceptor>();

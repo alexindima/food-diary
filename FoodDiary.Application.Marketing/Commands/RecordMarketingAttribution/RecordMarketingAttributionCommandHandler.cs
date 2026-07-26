@@ -1,6 +1,6 @@
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Marketing.Common;
-using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Mediator;
 using FoodDiary.Results;
 
 namespace FoodDiary.Application.Marketing.Commands.RecordMarketingAttribution;
@@ -8,7 +8,7 @@ namespace FoodDiary.Application.Marketing.Commands.RecordMarketingAttribution;
 public sealed class RecordMarketingAttributionCommandHandler(
     IMarketingAttributionEventWriteRepository repository,
     TimeProvider timeProvider)
-    : ICommandHandler<RecordMarketingAttributionCommand, Result> {
+    : IRequestHandler<RecordMarketingAttributionCommand, Result> {
     private const int EventTypeMaxLength = 32;
     private const int AnonymousIdMaxLength = 96;
     private const int SessionIdMaxLength = 96;

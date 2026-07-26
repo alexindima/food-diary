@@ -12,7 +12,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Dietologist.Queries.GetClientTasksForDietologist;
 
 public sealed class GetClientTasksForDietologistQueryHandler(
-    IClientTaskRepository taskRepository,
+    IClientTaskReadModelRepository taskRepository,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider timeProvider)
     : IQueryHandler<GetClientTasksForDietologistQuery, Result<IReadOnlyList<ClientTaskModel>>> {

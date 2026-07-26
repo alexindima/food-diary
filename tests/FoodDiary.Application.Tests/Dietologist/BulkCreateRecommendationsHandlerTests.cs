@@ -32,6 +32,7 @@ public sealed class BulkCreateRecommendationsHandlerTests {
         var handler = new BulkCreateRecommendationsCommandHandler(
             recommendations,
             dispatches,
+            dispatches,
             invitations,
             CreateUserContext(dietologist));
 
@@ -83,6 +84,7 @@ public sealed class BulkCreateRecommendationsHandlerTests {
             ]);
         var handler = new BulkCreateRecommendationsCommandHandler(
             recommendations,
+            dispatches,
             dispatches,
             Substitute.For<IDietologistInvitationReadModelRepository>(),
             CreateUserContext(dietologist));

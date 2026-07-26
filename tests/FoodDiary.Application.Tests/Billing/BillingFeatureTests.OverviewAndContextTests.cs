@@ -3,7 +3,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Queries.GetBillingOverview;
 using FoodDiary.Application.Billing.Services;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -20,7 +20,7 @@ public partial class BillingFeatureTests {
         var user = User.Create("billing-context@example.com", "hash");
         var repository = new FakeUserRepository(user);
         var roleMembershipService = new RecordingUserRoleMembershipService();
-        var service = new BillingUserContextService(repository, repository, roleMembershipService);
+        var service = new BillingUserContextService(repository, repository, repository, roleMembershipService);
 
         Result<User> accessible = await service.GetAccessibleUserAsync(user.Id, CancellationToken.None);
         User? includingDeleted = await service.GetUserIncludingDeletedAsync(user.Id, CancellationToken.None);
@@ -41,7 +41,11 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task BillingUserContextService_WithMissingUser_ReturnsInvalidToken() {
         var repository = new FakeUserRepository();
-        var service = new BillingUserContextService(repository, repository, new RecordingUserRoleMembershipService());
+        var service = new BillingUserContextService(
+            repository,
+            repository,
+            repository,
+            new RecordingUserRoleMembershipService());
 
         Result<User> result = await service.GetAccessibleUserAsync(UserId.New(), CancellationToken.None);
 
@@ -54,7 +58,11 @@ public partial class BillingFeatureTests {
         User user = CreatePremiumUser("billing-profile@example.com");
         user.StartPremiumTrial(Now, TimeSpan.FromDays(7));
         var repository = new FakeUserRepository(user);
-        var service = new BillingUserContextService(repository, repository, new RecordingUserRoleMembershipService());
+        var service = new BillingUserContextService(
+            repository,
+            repository,
+            repository,
+            new RecordingUserRoleMembershipService());
 
         Result<BillingUserProfileModel> result = await service.GetAccessibleUserProfileAsync(user.Id, CancellationToken.None);
 
@@ -68,13 +76,14 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task BillingUserContextService_GetAccessibleUserProfileAsync_WhenUserLoadFails_ReturnsFailure() {
         var userId = UserId.New();
-        IUserContextService userContextService = Substitute.For<IUserContextService>();
-        userContextService
-            .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+        IUserDirectoryService userDirectoryService = Substitute.For<IUserDirectoryService>();
+        userDirectoryService
+            .GetByIdAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<User?>(null));
         var service = new BillingUserContextService(
             Substitute.For<IBillingUserLookupService>(),
-            userContextService,
+            userDirectoryService,
+            Substitute.For<IUserWriteRepository>(),
             new RecordingUserRoleMembershipService());
 
         Result<BillingUserProfileModel> result = await service.GetAccessibleUserProfileAsync(userId, CancellationToken.None);
@@ -89,7 +98,11 @@ public partial class BillingFeatureTests {
         var user = User.Create("billing-access-deleted@example.com", "hash");
         user.DeleteAccount(Now);
         var repository = new FakeUserRepository(user);
-        var service = new BillingUserContextService(repository, repository, new RecordingUserRoleMembershipService());
+        var service = new BillingUserContextService(
+            repository,
+            repository,
+            repository,
+            new RecordingUserRoleMembershipService());
 
         Error? error = await service.EnsureCanAccessAsync(user.Id, CancellationToken.None);
 

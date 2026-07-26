@@ -1,5 +1,6 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Common.Abstractions.Messaging;
 
-public interface ICommand<out TResponse> : IRequest<TResponse>;
+public interface ICommand<out TResponse> : IRequest<TResponse>, ITransactionalCommand;

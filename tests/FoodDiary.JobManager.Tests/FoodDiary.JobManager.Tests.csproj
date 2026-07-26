@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\FoodDiary.JobManager\FoodDiary.JobManager.csproj" />
+    <ProjectReference Include="..\..\FoodDiary.Application.Billing\FoodDiary.Application.Billing.csproj" />
   </ItemGroup>
 
 </Project>

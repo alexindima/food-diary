@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Marketing.Common;
-using FoodDiary.Application.Billing.Common;
+using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Marketing.Common;
 using FoodDiary.Application.Marketing.Services;

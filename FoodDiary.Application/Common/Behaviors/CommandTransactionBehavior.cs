@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Common.Behaviors;
@@ -9,7 +9,7 @@ internal sealed class CommandTransactionBehavior<TRequest, TResponse>(
     IUnitOfWork unitOfWork,
     IPostCommitActionQueue postCommitActionQueue)
     : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : ICommand<TResponse> {
+    where TRequest : ITransactionalCommand {
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,

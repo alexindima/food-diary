@@ -1,6 +1,12 @@
 namespace FoodDiary.Initializer;
 
-internal sealed record InitializerCommand(string Name, string? TargetMigration, string? ConnectionString, bool Force = false) {
+internal sealed record InitializerCommand(
+    string Name,
+    string? TargetMigration,
+    string? ConnectionString,
+    bool Force = false,
+    string? RequestedBy = null,
+    string? Reason = null) {
     public static InitializerCommand? Parse(string[] args) {
         if (args.Length == 0) {
             return null;
@@ -10,6 +16,8 @@ internal sealed record InitializerCommand(string Name, string? TargetMigration, 
         string? targetMigration = null;
         string? connectionString = null;
         bool force = false;
+        string? requestedBy = null;
+        string? reason = null;
 
         for (int index = 0; index < args.Length; index++) {
             string argument = args[index];
@@ -29,6 +37,16 @@ internal sealed record InitializerCommand(string Name, string? TargetMigration, 
                 continue;
             }
 
+            if (argument is "--requested-by") {
+                requestedBy = ReadOptionValue(args, ref index, argument);
+                continue;
+            }
+
+            if (argument is "--reason") {
+                reason = ReadOptionValue(args, ref index, argument);
+                continue;
+            }
+
             if (name is null) {
                 name = argument;
                 continue;
@@ -42,6 +60,21 @@ internal sealed record InitializerCommand(string Name, string? TargetMigration, 
             throw new InvalidOperationException($"Unexpected argument '{argument}'.");
         }
 
-        return name is null ? null : new InitializerCommand(name, targetMigration, connectionString, force);
+        return name is null ? null : new InitializerCommand(
+            name,
+            targetMigration,
+            connectionString,
+            force,
+            requestedBy,
+            reason);
+    }
+
+    private static string ReadOptionValue(string[] args, ref int index, string option) {
+        index++;
+        if (index >= args.Length) {
+            throw new InvalidOperationException($"Missing value for {option}.");
+        }
+
+        return args[index];
     }
 }

@@ -1,13 +1,13 @@
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Audit.Models;
+using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Users.Common;
-using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
@@ -15,7 +15,7 @@ namespace FoodDiary.Application.Dietologist.Queries.GetAttentionSignals;
 
 public sealed class GetAttentionSignalsQueryHandler(
     IDietologistInvitationReadService invitationReadService,
-    IDietologistClientReadService clientReadService,
+    IAttentionSignalMetricsReadService metricsReadService,
     IAuditEntryReadService auditReadService,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider timeProvider)
@@ -41,20 +41,17 @@ public sealed class GetAttentionSignalsQueryHandler(
 
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
         int lookbackDays = Math.Clamp(query.LookbackDays, 7, 90);
+        IReadOnlyList<AttentionSignalMetricsReadModel> metrics = await metricsReadService.GetAsync(
+            [.. clientsResult.Value.Select(client => new UserId(client.UserId))],
+            nowUtc.Date.AddDays(-(lookbackDays - 1)),
+            nowUtc.Date,
+            cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<Guid, AttentionSignalMetricsReadModel> metricsByClient =
+            metrics.ToDictionary(item => item.ClientUserId);
         var signals = new List<AttentionSignalModel>();
         foreach (ClientSummaryModel client in clientsResult.Value) {
-            Result<DashboardSnapshotModel> dashboardResult = await clientReadService.GetDashboardAsync(
-                dietologistId,
-                client.UserId,
-                nowUtc.Date.AddDays(-(lookbackDays - 1)),
-                nowUtc.Date,
-                "en",
-                lookbackDays,
-                page: 1,
-                pageSize: 100,
-                cancellationToken).ConfigureAwait(false);
-            if (dashboardResult.IsSuccess) {
-                AddClientSignals(signals, client, dashboardResult.Value, query, nowUtc);
+            if (metricsByClient.TryGetValue(client.UserId, out AttentionSignalMetricsReadModel? clientMetrics)) {
+                AddClientSignals(signals, client, clientMetrics, query, nowUtc);
             }
         }
 
@@ -74,36 +71,34 @@ public sealed class GetAttentionSignalsQueryHandler(
     private static void AddClientSignals(
         ICollection<AttentionSignalModel> signals,
         ClientSummaryModel client,
-        DashboardSnapshotModel dashboard,
+        AttentionSignalMetricsReadModel metrics,
         GetAttentionSignalsQuery query,
         DateTime nowUtc) {
         if (client.Permissions.ShareMeals) {
-            AddInactivitySignal(signals, client, dashboard, Math.Clamp(query.InactivityDays, 1, 30), nowUtc);
+            AddInactivitySignal(signals, client, metrics, Math.Clamp(query.InactivityDays, 1, 30), nowUtc);
         }
 
         if (client.Permissions.ShareStatistics) {
             AddCalorieSignal(
                 signals,
                 client,
-                dashboard,
+                metrics,
                 Math.Clamp(query.CalorieDeviationPercent, 5, 100),
                 Math.Clamp(query.SustainedDays, 2, 14));
         }
 
         if (client.Permissions.ShareWeight) {
-            AddWeightSignal(signals, client, dashboard, Math.Clamp(query.WeightChangePercent, 0.5, 20));
+            AddWeightSignal(signals, client, metrics, Math.Clamp(query.WeightChangePercent, 0.5, 20));
         }
     }
 
     private static void AddInactivitySignal(
         ICollection<AttentionSignalModel> signals,
         ClientSummaryModel client,
-        DashboardSnapshotModel dashboard,
+        AttentionSignalMetricsReadModel metrics,
         int inactivityDays,
         DateTime nowUtc) {
-        DateTime? lastMealUtc = dashboard.Meals.Items.Count == 0
-            ? null
-            : dashboard.Meals.Items.Max(item => item.Date);
+        DateTime? lastMealUtc = metrics.LastMealAtUtc;
         double inactiveDays = lastMealUtc.HasValue
             ? (nowUtc - lastMealUtc.Value).TotalDays
             : (nowUtc - client.AcceptedAtUtc).TotalDays;
@@ -123,15 +118,15 @@ public sealed class GetAttentionSignalsQueryHandler(
     private static void AddCalorieSignal(
         ICollection<AttentionSignalModel> signals,
         ClientSummaryModel client,
-        DashboardSnapshotModel dashboard,
+        AttentionSignalMetricsReadModel metrics,
         double deviationPercent,
         int sustainedDays) {
-        if (dashboard.DailyGoal <= 0) {
+        if (metrics.DailyCalorieTarget <= 0) {
             return;
         }
 
-        DailyCaloriesModel[] loggedDays = [
-            .. dashboard.WeeklyCalories
+        AttentionSignalDailyCaloriesReadModel[] loggedDays = [
+            .. metrics.DailyCalories
                 .Where(day => day.Calories > 0)
                 .OrderByDescending(day => day.Date)
                 .Take(sustainedDays),
@@ -141,13 +136,13 @@ public sealed class GetAttentionSignalsQueryHandler(
         }
 
         bool sustained = loggedDays.All(day =>
-            Math.Abs(day.Calories - dashboard.DailyGoal) / dashboard.DailyGoal * 100 >= deviationPercent);
+            Math.Abs(day.Calories - metrics.DailyCalorieTarget) / metrics.DailyCalorieTarget * 100 >= deviationPercent);
         if (!sustained) {
             return;
         }
 
         double averageDeviation = loggedDays.Average(day =>
-            Math.Abs(day.Calories - dashboard.DailyGoal) / dashboard.DailyGoal * 100);
+            Math.Abs(day.Calories - metrics.DailyCalorieTarget) / metrics.DailyCalorieTarget * 100);
         signals.Add(CreateSignal(
             client,
             "CalorieTargetDeviation",
@@ -159,19 +154,19 @@ public sealed class GetAttentionSignalsQueryHandler(
     private static void AddWeightSignal(
         ICollection<AttentionSignalModel> signals,
         ClientSummaryModel client,
-        DashboardSnapshotModel dashboard,
+        AttentionSignalMetricsReadModel metrics,
         double changePercent) {
-        WeightEntrySummaryModel[] points = [
-            .. (dashboard.WeightTrend ?? [])
-                .Where(point => point.AverageWeight > 0)
-                .OrderBy(point => point.EndDate),
+        AttentionSignalWeightPointReadModel[] points = [
+            .. metrics.WeightPoints
+                .Where(point => point.Weight > 0)
+                .OrderBy(point => point.Date),
         ];
         if (points.Length < 2) {
             return;
         }
 
-        double percent = Math.Abs(points[^1].AverageWeight - points[0].AverageWeight) /
-                         points[0].AverageWeight * 100;
+        double percent = Math.Abs(points[^1].Weight - points[0].Weight) /
+                         points[0].Weight * 100;
         if (percent < changePercent) {
             return;
         }
@@ -181,7 +176,7 @@ public sealed class GetAttentionSignalsQueryHandler(
             "MaterialWeightChange",
             percent >= changePercent * 1.5 ? "High" : "Medium",
             "MaterialWeightChange",
-            points[^1].EndDate));
+            points[^1].Date));
     }
 
     private static AttentionSignalModel CreateSignal(

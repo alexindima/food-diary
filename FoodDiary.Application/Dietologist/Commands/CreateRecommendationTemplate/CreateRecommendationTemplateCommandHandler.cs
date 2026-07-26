@@ -10,7 +10,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Dietologist.Commands.CreateRecommendationTemplate;
 
 public sealed class CreateRecommendationTemplateCommandHandler(
-    IRecommendationTemplateRepository repository,
+    IRecommendationTemplateWriteRepository repository,
     IUserContextService userContextService)
     : ICommandHandler<CreateRecommendationTemplateCommand, Result<RecommendationTemplateModel>> {
     public async Task<Result<RecommendationTemplateModel>> Handle(

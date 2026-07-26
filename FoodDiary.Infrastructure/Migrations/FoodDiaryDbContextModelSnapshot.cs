@@ -3856,6 +3856,47 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("NotificationWebPushOutbox", (string)null);
                 });
 
+            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Outbox.OutboxReplayAudit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("MessageId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("OutboxName")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<int>("PreviousAttemptCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PreviousError")
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.Property<string>("RequestedBy")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime>("RequestedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OutboxName", "MessageId", "RequestedOnUtc");
+
+                    b.ToTable("OutboxReplayAudits", (string)null);
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.Admin.AdminImpersonationSession", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.Users.User", null)

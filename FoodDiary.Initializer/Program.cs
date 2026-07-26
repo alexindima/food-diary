@@ -1,9 +1,11 @@
 using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Application;
+using FoodDiary.Application.Billing;
 using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Initializer;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.Persistence;
@@ -50,6 +52,7 @@ if (string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("Default
 }
 
 builder.Services.AddApplication();
+builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddDistributedMemoryCache();
@@ -62,12 +65,15 @@ await using (scope.ConfigureAwait(false)) {
     FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
     IInitialAdminBootstrapService initialAdminBootstrapService =
         scope.ServiceProvider.GetRequiredService<IInitialAdminBootstrapService>();
+    IOutboxDeadLetterReplayService outboxReplayService =
+        scope.ServiceProvider.GetRequiredService<IOutboxDeadLetterReplayService>();
 
     try {
         await ExecuteAsync(
             command,
             dbContext,
             initialAdminBootstrapService,
+            outboxReplayService,
             builder.Configuration).ConfigureAwait(false);
         return 0;
     } catch (Exception exception) {
@@ -80,6 +86,7 @@ static async Task ExecuteAsync(
     InitializerCommand command,
     FoodDiaryDbContext dbContext,
     IInitialAdminBootstrapService initialAdminBootstrapService,
+    IOutboxDeadLetterReplayService outboxReplayService,
     IConfiguration configuration) {
     switch (command.Name) {
         case "list":
@@ -112,9 +119,33 @@ static async Task ExecuteAsync(
                 await UsdaDataSeeder.SeedAsync(dbContext, command.TargetMigration).ConfigureAwait(false);
             }
             break;
+        case "replay-outbox":
+            await ReplayOutboxAsync(command, outboxReplayService).ConfigureAwait(false);
+            break;
         default:
             throw new InvalidOperationException($"Unknown command '{command.Name}'.");
     }
+}
+
+static async Task ReplayOutboxAsync(
+    InitializerCommand command,
+    IOutboxDeadLetterReplayService replayService) {
+    string[] targetParts = command.TargetMigration?.Split(':', 2) ?? [];
+    if (targetParts.Length != 2 || !Guid.TryParse(targetParts[1], out Guid messageId)) {
+        throw new InvalidOperationException(
+            "replay-outbox requires target '<email|image_object_deletion|notification_web_push>:<message-id>'.");
+    }
+
+    if (string.IsNullOrWhiteSpace(command.RequestedBy) || string.IsNullOrWhiteSpace(command.Reason)) {
+        throw new InvalidOperationException("replay-outbox requires --requested-by and --reason.");
+    }
+
+    await replayService.ReplayAsync(
+        targetParts[0],
+        messageId,
+        command.RequestedBy,
+        command.Reason).ConfigureAwait(false);
+    Console.WriteLine($"Replayed {targetParts[0]} outbox message {messageId}.");
 }
 
 static async Task ListMigrationsAsync(FoodDiaryDbContext dbContext) {
@@ -190,6 +221,8 @@ Commands:
   rollback-last           Roll database back by one migration
   rollback <target|0>     Roll database back to a specific migration or 0
   seed-usda <csv-dir>     Import USDA SR Legacy data from CSV files (--force to re-seed)
+  replay-outbox <outbox>:<message-id> --requested-by <operator> --reason <reason>
+                          Replay one dead-lettered message and persist an audit record
 
 Examples:
   dotnet run --project FoodDiary.Initializer -- status

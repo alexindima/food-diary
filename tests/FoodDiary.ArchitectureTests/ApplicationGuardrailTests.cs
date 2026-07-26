@@ -1182,10 +1182,6 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Users", "Queries", "GetUserById", "GetUserByIdQueryHandler.cs"),
             Path.Combine(applicationRoot, "Users", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
             Path.Combine(applicationRoot, "Ai", "Commands", "ParseFoodText", "ParseFoodTextCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Billing", "Commands", "CreateCheckoutSession", "CreateCheckoutSessionCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Billing", "Commands", "CreatePortalSession", "CreatePortalSessionCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Billing", "Commands", "StartPremiumTrial", "StartPremiumTrialCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Billing", "Queries", "GetBillingOverview", "GetBillingOverviewQueryHandler.cs"),
             Path.Combine(applicationRoot, "Consumptions", "Commands", "DeleteConsumption", "DeleteConsumptionCommandHandler.cs"),
             Path.Combine(applicationRoot, "Consumptions", "Queries", "GetConsumptionById", "GetConsumptionByIdQueryHandler.cs"),
             Path.Combine(applicationRoot, "ContentReports", "Commands", "CreateContentReport", "CreateContentReportCommandHandler.cs"),
@@ -2075,7 +2071,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void BillingQueries_UseBillingProfileModelsInsteadOfUserAggregates() {
         string root = GetRepositoryRoot();
-        string billingQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Billing", "Queries");
+        string billingQueriesRoot = Path.Combine(root, "FoodDiary.Application.Billing", "Queries");
         string[] billingQueryFiles = [.. SourceScanner.SourceFiles(billingQueriesRoot)];
 
         string[] violations = [
@@ -2608,8 +2604,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Billing",
+            "FoodDiary.Application.Billing",
             "Services",
             "BillingOverviewReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -2894,6 +2889,41 @@ public sealed class ApplicationGuardrailTests {
         Assert.Empty(violations);
     }
 
+    [Theory]
+    [InlineData("IClientTaskRepository")]
+    [InlineData("IRecommendationTemplateRepository")]
+    [InlineData("IRecommendationCommentRepository")]
+    [InlineData("IRecommendationBulkDispatchRepository")]
+    public void ApplicationSourceFiles_DoNotUseFullDietologistWorkflowRepositories(string repositoryName) {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            applicationRoot,
+            repositoryName,
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void AttentionSignals_UseDedicatedBatchProjectionInsteadOfDashboardComposition() {
+        string handlerPath = Path.Combine(
+            GetRepositoryRoot(),
+            "FoodDiary.Application",
+            "Dietologist",
+            "Queries",
+            "GetAttentionSignals",
+            "GetAttentionSignalsQueryHandler.cs");
+        string source = File.ReadAllText(handlerPath);
+
+        Assert.Contains("IAttentionSignalMetricsReadService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IDietologistClientReadService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("DashboardSnapshotModel", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("GetDashboardAsync", source, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void ApplicationSourceFiles_DoNotUseFullImageAssetRepository() {
         string root = GetRepositoryRoot();
@@ -3028,7 +3058,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void BillingSlice_UsesCurrentUserAccessPolicyOnlyThroughBillingUserLookupService() {
         string root = GetRepositoryRoot();
-        string billingRoot = Path.Combine(root, "FoodDiary.Application", "Billing");
+        string billingRoot = Path.Combine(root, "FoodDiary.Application.Billing");
         string allowedPath = Path.Combine(billingRoot, "Services", "BillingUserLookupService.cs");
         string[] billingFiles = [.. SourceScanner.SourceFiles(billingRoot)
             .Where(path => !string.Equals(path, allowedPath, StringComparison.OrdinalIgnoreCase))];
@@ -3054,13 +3084,13 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Billing",
+            "FoodDiary.Application.Billing",
             "Services",
             "BillingUserContextService.cs");
         string source = File.ReadAllText(servicePath);
 
-        Assert.Contains("IUserContextService", source, StringComparison.Ordinal);
+        Assert.Contains("IUserDirectoryService", source, StringComparison.Ordinal);
+        Assert.Contains("IUserWriteRepository", source, StringComparison.Ordinal);
         Assert.Contains("IBillingUserLookupService", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IUserRepository", source, StringComparison.Ordinal);
         Assert.DoesNotContain("CurrentUserAccessPolicy", source, StringComparison.Ordinal);

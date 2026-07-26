@@ -4,6 +4,7 @@ using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Notifications;
+using FoodDiary.Infrastructure.Persistence.Outbox;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;
@@ -19,6 +20,7 @@ public sealed partial class FoodDiaryDbContext {
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<EmailOutboxMessage> EmailOutbox => Set<EmailOutboxMessage>();
     public DbSet<NotificationWebPushOutboxMessage> NotificationWebPushOutbox => Set<NotificationWebPushOutboxMessage>();
+    internal DbSet<OutboxReplayAudit> OutboxReplayAudits => Set<OutboxReplayAudit>();
     public DbSet<WebPushSubscription> WebPushSubscriptions => Set<WebPushSubscription>();
     public DbSet<ContentReport> ContentReports => Set<ContentReport>();
 }

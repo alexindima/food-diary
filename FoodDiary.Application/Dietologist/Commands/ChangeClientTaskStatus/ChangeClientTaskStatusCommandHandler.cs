@@ -16,7 +16,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Dietologist.Commands.ChangeClientTaskStatus;
 
 public sealed class ChangeClientTaskStatusCommandHandler(
-    IClientTaskRepository taskRepository,
+    IClientTaskWriteRepository taskRepository,
     IDietologistInvitationReadModelRepository invitationRepository,
     ICurrentUserAccessService currentUserAccessService,
     INotificationWriter notificationWriter,

@@ -187,6 +187,7 @@ public sealed class IdempotencyFilterTests {
         await store.CompleteAsync(
             "key-expired-response",
             "hash",
+            first.OwnerToken!,
             StatusCodes.Status201Created,
             "{\"id\":1}",
             responseTtl: TimeSpan.FromMinutes(1));
@@ -319,6 +320,7 @@ public sealed class IdempotencyFilterTests {
         public Task CompleteAsync(
             string key,
             string requestHash,
+            string ownerToken,
             int statusCode,
             string? body,
             TimeSpan responseTtl,
@@ -338,12 +340,15 @@ public sealed class IdempotencyFilterTests {
             TimeSpan processingTtl,
             CancellationToken cancellationToken = default) {
             ReserveCalls++;
-            return Task.FromResult(new IdempotencyReservation(IdempotencyReservationStatus.Acquired));
+            return Task.FromResult(new IdempotencyReservation(
+                IdempotencyReservationStatus.Acquired,
+                OwnerToken: "owner-token"));
         }
 
         public Task CompleteAsync(
             string key,
             string requestHash,
+            string ownerToken,
             int statusCode,
             string? body,
             TimeSpan responseTtl,

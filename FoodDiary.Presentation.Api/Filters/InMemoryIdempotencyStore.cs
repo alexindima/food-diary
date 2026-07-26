@@ -30,14 +30,18 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
                 return Task.FromResult(new IdempotencyReservation(IdempotencyReservationStatus.InProgress));
             }
 
-            entries[key] = Entry.InProgress(requestHash, nowUtc.Add(processingTtl));
-            return Task.FromResult(new IdempotencyReservation(IdempotencyReservationStatus.Acquired));
+            string ownerToken = Guid.NewGuid().ToString("N");
+            entries[key] = Entry.InProgress(requestHash, ownerToken, nowUtc.Add(processingTtl));
+            return Task.FromResult(new IdempotencyReservation(
+                IdempotencyReservationStatus.Acquired,
+                OwnerToken: ownerToken));
         }
     }
 
     public Task CompleteAsync(
         string key,
         string requestHash,
+        string ownerToken,
         int statusCode,
         string? body,
         TimeSpan responseTtl,
@@ -45,7 +49,12 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
 
         lock (syncRoot) {
-            entries[key] = Entry.CompletedEntry(requestHash, statusCode, body, nowUtc.Add(responseTtl));
+            if (entries.TryGetValue(key, out Entry? entry) &&
+                !entry.Completed &&
+                string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal) &&
+                string.Equals(entry.OwnerToken, ownerToken, StringComparison.Ordinal)) {
+                entries[key] = Entry.CompletedEntry(requestHash, statusCode, body, nowUtc.Add(responseTtl));
+            }
         }
 
         return Task.CompletedTask;
@@ -63,14 +72,15 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
 
     private sealed record Entry(
         string RequestHash,
+        string? OwnerToken,
         bool Completed,
         int? StatusCode,
         string? Body,
         DateTime ExpiresAtUtc) {
-        public static Entry InProgress(string requestHash, DateTime expiresAtUtc) =>
-            new(requestHash, Completed: false, StatusCode: null, Body: null, expiresAtUtc);
+        public static Entry InProgress(string requestHash, string ownerToken, DateTime expiresAtUtc) =>
+            new(requestHash, ownerToken, Completed: false, StatusCode: null, Body: null, expiresAtUtc);
 
         public static Entry CompletedEntry(string requestHash, int statusCode, string? body, DateTime expiresAtUtc) =>
-            new(requestHash, Completed: true, statusCode, body, expiresAtUtc);
+            new(requestHash, OwnerToken: null, Completed: true, statusCode, body, expiresAtUtc);
     }
 }

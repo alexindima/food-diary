@@ -1,9 +1,13 @@
 using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Abstractions.Audit.Models;
+using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Audit;
 using FoodDiary.Infrastructure.Persistence.Authentication;
+using FoodDiary.Infrastructure.Persistence.Dietologist;
 using FoodDiary.Infrastructure.Persistence.Recommendations;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
@@ -51,6 +55,36 @@ public sealed class DietologistPersistenceIntegrationTests(PostgresDatabaseFixtu
         Assert.Single(await templateRepository.SearchAsync(dietologist.Id, search: null, includeArchived: false));
         Assert.Single(await templateRepository.SearchAsync(dietologist.Id, "plate", includeArchived: true));
         Assert.Single(await dispatchRepository.GetExistingAsync(dietologist.Id, "key", [client.Id]));
+    }
+
+    [RequiresDockerFact]
+    public async Task AttentionSignalMetricsReadService_BatchesMultipleClientsAgainstPostgres() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var first = User.Create($"attention-first-{Guid.NewGuid():N}@example.com", "hash");
+        var second = User.Create($"attention-second-{Guid.NewGuid():N}@example.com", "hash");
+        var firstMeal = Meal.Create(first.Id, UtcNow.AddDays(-2));
+        var secondMeal = Meal.Create(second.Id, UtcNow.AddDays(-1));
+        var firstWeight = WeightEntry.Create(first.Id, UtcNow.AddDays(-3), 90);
+        var secondWeight = WeightEntry.Create(second.Id, UtcNow.AddDays(-2), 75);
+        context.AddRange(first, second, firstMeal, secondMeal, firstWeight, secondWeight);
+        await context.SaveChangesAsync();
+        var service = new AttentionSignalMetricsReadService(context);
+
+        IReadOnlyList<AttentionSignalMetricsReadModel> result = await service.GetAsync(
+            [first.Id, second.Id],
+            UtcNow.AddDays(-7),
+            UtcNow);
+
+        Assert.Multiple(
+            () => Assert.Equal(2, result.Count),
+            () => Assert.Contains(result, item =>
+                item.ClientUserId == first.Id.Value &&
+                item.LastMealAtUtc == firstMeal.Date &&
+                item.WeightPoints.Single().Weight == firstWeight.Weight),
+            () => Assert.Contains(result, item =>
+                item.ClientUserId == second.Id.Value &&
+                item.LastMealAtUtc == secondMeal.Date &&
+                item.WeightPoints.Single().Weight == secondWeight.Weight));
     }
 
     [RequiresDockerFact]

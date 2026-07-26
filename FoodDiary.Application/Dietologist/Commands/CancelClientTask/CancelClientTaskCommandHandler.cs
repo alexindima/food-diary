@@ -15,7 +15,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Dietologist.Commands.CancelClientTask;
 
 public sealed class CancelClientTaskCommandHandler(
-    IClientTaskRepository taskRepository,
+    IClientTaskWriteRepository taskRepository,
     IDietologistInvitationReadModelRepository invitationRepository,
     ICurrentUserAccessService currentUserAccessService,
     INotificationWriter notificationWriter,

@@ -23,9 +23,8 @@ public sealed class PersistenceTransactionGuardrailTests {
             Path.Combine(persistenceRoot, "Billing", "EfBillingTransactionRunner.cs"),
             Path.Combine(persistenceRoot, "EfUnitOfWork.cs"),
             Path.Combine(persistenceRoot, "Email", "EmailOutbox.cs"),
-            Path.Combine(persistenceRoot, "Email", "EmailOutboxProcessor.cs"),
-            Path.Combine(persistenceRoot, "Images", "ImageObjectDeletionOutboxProcessor.cs"),
-            Path.Combine(persistenceRoot, "Notifications", "NotificationWebPushOutboxProcessor.cs"),
+            Path.Combine(persistenceRoot, "Outbox", "OutboxProcessingEngine.cs"),
+            Path.Combine(persistenceRoot, "Outbox", "OutboxDeadLetterReplayService.cs"),
             Path.Combine(persistenceRoot, "Users", "UserCleanupService.cs"),
         ];
 

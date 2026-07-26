@@ -28,6 +28,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     private static readonly TimeSpan RecipeListLatencyBudget = TimeSpan.FromMilliseconds(400);
     private static readonly TimeSpan ConsumptionListLatencyBudget = TimeSpan.FromMilliseconds(500);
     private static readonly TimeSpan ImageUploadUrlLatencyBudget = TimeSpan.FromMilliseconds(300);
+    private static readonly TimeSpan BillingOverviewLatencyBudget = TimeSpan.FromMilliseconds(300);
 
     private static readonly JsonSerializerOptions JsonOptions = new() {
         PropertyNameCaseInsensitive = true,
@@ -163,6 +164,28 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         Assert.True(
             stopwatch.Elapsed <= ImageUploadUrlLatencyBudget,
             string.Create(CultureInfo.InvariantCulture, $"Expected POST /api/v1/images/upload-url to stay within {ImageUploadUrlLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
+    }
+
+    [RequiresDockerFact]
+    public async Task BillingOverview_WithAuthenticatedUser_StaysWithinLatencyBudget() {
+        HttpClient client = factory.CreateClient();
+        AuthPayload authPayload = await RegisterAsync(
+            client,
+            $"perf-billing-{Guid.NewGuid():N}@example.com");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+
+        _ = await client.GetAsync("/api/v1/billing/overview");
+
+        var stopwatch = Stopwatch.StartNew();
+        HttpResponseMessage response = await client.GetAsync("/api/v1/billing/overview");
+        stopwatch.Stop();
+
+        await AssertStatusCodeAsync(HttpStatusCode.OK, response);
+        Assert.True(
+            stopwatch.Elapsed <= BillingOverviewLatencyBudget,
+            string.Create(
+                CultureInfo.InvariantCulture,
+                $"Expected GET /api/v1/billing/overview to stay within {BillingOverviewLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
     }
 
     private static async Task<AuthPayload> RegisterAsync(HttpClient client, string email) {

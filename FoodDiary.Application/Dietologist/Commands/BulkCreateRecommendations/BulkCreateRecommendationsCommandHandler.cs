@@ -12,7 +12,8 @@ namespace FoodDiary.Application.Dietologist.Commands.BulkCreateRecommendations;
 
 public sealed class BulkCreateRecommendationsCommandHandler(
     IRecommendationWriteRepository recommendationRepository,
-    IRecommendationBulkDispatchRepository dispatchRepository,
+    IRecommendationBulkDispatchLookupRepository dispatchLookupRepository,
+    IRecommendationBulkDispatchWriteRepository dispatchWriteRepository,
     IDietologistInvitationReadModelRepository invitationRepository,
     IUserContextService userContextService)
     : ICommandHandler<BulkCreateRecommendationsCommand, Result<BulkRecommendationResultModel>> {
@@ -28,7 +29,7 @@ public sealed class BulkCreateRecommendationsCommandHandler(
         UserId dietologistId = dietologistIdResult.Value;
         UserId[] clientIds = [.. command.ClientUserIds.Select(id => new UserId(id))];
         string idempotencyKey = command.IdempotencyKey.Trim();
-        IReadOnlyList<RecommendationBulkDispatchReadModel> existing = await dispatchRepository.GetExistingAsync(
+        IReadOnlyList<RecommendationBulkDispatchReadModel> existing = await dispatchLookupRepository.GetExistingAsync(
             dietologistId,
             idempotencyKey,
             clientIds,
@@ -84,7 +85,7 @@ public sealed class BulkCreateRecommendationsCommandHandler(
 
         var recommendation = Recommendation.Create(dietologistId, clientId, text);
         await recommendationRepository.AddAsync(recommendation, cancellationToken).ConfigureAwait(false);
-        await dispatchRepository.AddAsync(
+        await dispatchWriteRepository.AddAsync(
             RecommendationBulkDispatch.Create(dietologistId, clientId, recommendation.Id, idempotencyKey),
             cancellationToken).ConfigureAwait(false);
         return new(

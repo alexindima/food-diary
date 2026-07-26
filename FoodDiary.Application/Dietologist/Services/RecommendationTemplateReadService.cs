@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dietologist.Services;
 
-public sealed class RecommendationTemplateReadService(IRecommendationTemplateRepository repository)
+public sealed class RecommendationTemplateReadService(IRecommendationTemplateReadModelRepository repository)
     : IRecommendationTemplateReadService {
     public async Task<IReadOnlyList<RecommendationTemplateModel>> SearchAsync(
         UserId dietologistUserId,

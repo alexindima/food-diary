@@ -13,7 +13,7 @@ namespace FoodDiary.Infrastructure.Tests.Persistence;
 [ExcludeFromCodeCoverage]
 public sealed class DomainEventDispatchInterceptorTests {
     [Fact]
-    public async Task DispatchDomainEventsAsync_PublishesAndClearsTrackedAggregateEvents() {
+    public async Task DispatchDomainEventsAsync_PublishesButRetainsEventsUntilSaveSucceeds() {
         await using FoodDiaryDbContext context = CreateContext();
         var list = ShoppingList.Create(UserId.New(), "Before");
         context.ShoppingLists.Add(list);
@@ -27,7 +27,7 @@ public sealed class DomainEventDispatchInterceptorTests {
             CancellationToken.None);
 
         await publisher.Received(1).PublishAsync(Arg.Any<IDomainEvent>(), Arg.Any<CancellationToken>());
-        Assert.Empty(list.DomainEvents);
+        Assert.NotEmpty(list.DomainEvents);
     }
 
     [Fact]

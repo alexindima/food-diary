@@ -67,6 +67,14 @@ public sealed class ImageObjectDeletionOutboxMessage : IOutboxMessage {
         LastError = TruncateOptional(error, ErrorMaxLength);
     }
 
+    public void MarkReplayed(DateTime nextAttemptOnUtc) {
+        NextAttemptOnUtc = NormalizeUtc(nextAttemptOnUtc);
+        DeadLetteredOnUtc = null;
+        LockedUntilUtc = null;
+        LockedBy = null;
+        LastError = null;
+    }
+
     private static string? TruncateOptional(string value, int maxLength) {
         if (string.IsNullOrWhiteSpace(value)) {
             return null;
