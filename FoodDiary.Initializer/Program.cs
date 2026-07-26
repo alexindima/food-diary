@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using FoodDiary.Application;
 using FoodDiary.Application.Billing;
 using FoodDiary.Application.Marketing;
@@ -122,6 +123,15 @@ static async Task ExecuteAsync(
         case "replay-outbox":
             await ReplayOutboxAsync(command, outboxReplayService).ConfigureAwait(false);
             break;
+        case "list-dead-letters":
+            await ListDeadLettersAsync(command, outboxReplayService).ConfigureAwait(false);
+            break;
+        case "show-dead-letter":
+            await ShowDeadLetterAsync(command, outboxReplayService).ConfigureAwait(false);
+            break;
+        case "list-outbox-replays":
+            await ListOutboxReplaysAsync(command, outboxReplayService).ConfigureAwait(false);
+            break;
         default:
             throw new InvalidOperationException($"Unknown command '{command.Name}'.");
     }
@@ -130,22 +140,99 @@ static async Task ExecuteAsync(
 static async Task ReplayOutboxAsync(
     InitializerCommand command,
     IOutboxDeadLetterReplayService replayService) {
-    string[] targetParts = command.TargetMigration?.Split(':', 2) ?? [];
-    if (targetParts.Length != 2 || !Guid.TryParse(targetParts[1], out Guid messageId)) {
-        throw new InvalidOperationException(
-            "replay-outbox requires target '<email|image_object_deletion|notification_web_push>:<message-id>'.");
-    }
+    (string outboxName, Guid messageId) = ParseOutboxTarget(command, "replay-outbox");
 
     if (string.IsNullOrWhiteSpace(command.RequestedBy) || string.IsNullOrWhiteSpace(command.Reason)) {
         throw new InvalidOperationException("replay-outbox requires --requested-by and --reason.");
     }
 
-    await replayService.ReplayAsync(
-        targetParts[0],
+    OutboxDeadLetterMessageModel? message = await replayService
+        .GetDeadLetterAsync(outboxName, messageId)
+        .ConfigureAwait(false)
+        ?? throw new InvalidOperationException("Dead-lettered outbox message was not found.");
+    PrintDeadLetter(message);
+    if (command.DryRun) {
+        Console.WriteLine("Dry run only. No state was changed.");
+        return;
+    }
+    if (!command.Force) {
+        throw new InvalidOperationException("replay-outbox requires --force after inspecting the message or using --dry-run.");
+    }
+    if (!command.ExpectedAttemptCount.HasValue) {
+        throw new InvalidOperationException("replay-outbox requires --expected-attempt-count from the inspected message.");
+    }
+
+    OutboxReplayAuditModel audit = await replayService.ReplayAsync(
+        outboxName,
         messageId,
         command.RequestedBy,
-        command.Reason).ConfigureAwait(false);
-    Console.WriteLine($"Replayed {targetParts[0]} outbox message {messageId}.");
+        command.Reason,
+        command.ExpectedAttemptCount.Value).ConfigureAwait(false);
+    Console.WriteLine($"Replayed {audit.OutboxName} outbox message {audit.MessageId}. Audit id: {audit.Id}.");
+}
+
+static async Task ListDeadLettersAsync(
+    InitializerCommand command,
+    IOutboxDeadLetterReplayService replayService) {
+    IReadOnlyList<OutboxDeadLetterMessageModel> messages = await replayService
+        .ListDeadLettersAsync(command.TargetMigration, command.Limit)
+        .ConfigureAwait(false);
+    foreach (OutboxDeadLetterMessageModel message in messages) {
+        PrintDeadLetter(message);
+    }
+    Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"Dead-letter messages: {messages.Count}."));
+}
+
+static async Task ShowDeadLetterAsync(
+    InitializerCommand command,
+    IOutboxDeadLetterReplayService replayService) {
+    (string outboxName, Guid messageId) = ParseOutboxTarget(command, "show-dead-letter");
+    OutboxDeadLetterMessageModel? message = await replayService
+        .GetDeadLetterAsync(outboxName, messageId)
+        .ConfigureAwait(false);
+    if (message is null) {
+        throw new InvalidOperationException("Dead-lettered outbox message was not found.");
+    }
+    PrintDeadLetter(message);
+}
+
+static async Task ListOutboxReplaysAsync(
+    InitializerCommand command,
+    IOutboxDeadLetterReplayService replayService) {
+    string[] parts = command.TargetMigration?.Split(':', 2) ?? [];
+    string? outboxName = parts.Length > 0 ? parts[0] : null;
+    Guid? messageId = parts.Length == 2 && Guid.TryParse(parts[1], out Guid parsedMessageId)
+        ? parsedMessageId
+        : null;
+    IReadOnlyList<OutboxReplayAuditModel> audits = await replayService
+        .ListReplayHistoryAsync(outboxName, messageId, command.Limit)
+        .ConfigureAwait(false);
+    foreach (OutboxReplayAuditModel audit in audits) {
+        Console.WriteLine(
+            string.Create(
+                CultureInfo.InvariantCulture,
+                $"{audit.RequestedOnUtc:O} {audit.OutboxName}:{audit.MessageId} attempts={audit.PreviousAttemptCount} by={audit.RequestedBy} reason={audit.Reason}"));
+    }
+    Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"Replay audit records: {audits.Count}."));
+}
+
+static (string OutboxName, Guid MessageId) ParseOutboxTarget(InitializerCommand command, string commandName) {
+    string[] targetParts = command.TargetMigration?.Split(':', 2) ?? [];
+    if (targetParts.Length != 2 || !Guid.TryParse(targetParts[1], out Guid messageId)) {
+        throw new InvalidOperationException(
+            string.Create(
+                CultureInfo.InvariantCulture,
+                $"{commandName} requires target '<email|image_object_deletion|notification_web_push>:<message-id>'."));
+    }
+    return (targetParts[0], messageId);
+}
+
+static void PrintDeadLetter(OutboxDeadLetterMessageModel message) {
+    Console.WriteLine(
+        string.Create(
+            CultureInfo.InvariantCulture,
+            $"{message.DeadLetteredOnUtc:O} {message.OutboxName}:{message.MessageId} attempts={message.AttemptCount} summary={message.Summary}"));
+    Console.WriteLine($"  error: {message.LastError ?? "<none>"}");
 }
 
 static async Task ListMigrationsAsync(FoodDiaryDbContext dbContext) {
@@ -221,8 +308,14 @@ Commands:
   rollback-last           Roll database back by one migration
   rollback <target|0>     Roll database back to a specific migration or 0
   seed-usda <csv-dir>     Import USDA SR Legacy data from CSV files (--force to re-seed)
-  replay-outbox <outbox>:<message-id> --requested-by <operator> --reason <reason>
-                          Replay one dead-lettered message and persist an audit record
+  list-dead-letters [outbox] [--limit <1-200>]
+                          List dead-lettered messages across all or one outbox
+  show-dead-letter <outbox>:<message-id>
+                          Inspect one dead-lettered message before replay
+  replay-outbox <outbox>:<message-id> --requested-by <operator> --reason <reason> --expected-attempt-count <count> [--dry-run | --force]
+                          Preview or replay one dead-lettered message with race protection and audit
+  list-outbox-replays [outbox[:message-id]] [--limit <1-200>]
+                          List immutable replay audit history
 
 Examples:
   dotnet run --project FoodDiary.Initializer -- status

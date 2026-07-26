@@ -243,6 +243,43 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     [RequiresDockerFact]
+    public async Task OutboxMessageClaimer_WithConcurrentWorkers_ClaimsMessageExactlyOnce() {
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        await using (FoodDiaryDbContext setupContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true)) {
+            await setupContext.Database.MigrateAsync();
+            setupContext.EmailOutbox.Add(EmailOutboxMessage.Create(
+                new EmailMessage("sender@example.com", "Sender", ["recipient@example.com"], "Concurrent", "<p>Body</p>", "Body"),
+                FixedNow.AddMinutes(-1)));
+            await setupContext.SaveChangesAsync();
+        }
+
+        await using FoodDiaryDbContext firstContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
+        await using FoodDiaryDbContext secondContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
+
+        Task<List<EmailOutboxMessage>> firstWorker = OutboxMessageClaimer.ClaimDueAsync(
+            firstContext,
+            firstContext.EmailOutbox,
+            "\"EmailOutbox\"",
+            batchSize: 1,
+            FixedNow,
+            claimedQuery: firstContext.EmailOutbox.AsNoTracking(),
+            cancellationToken: CancellationToken.None);
+        Task<List<EmailOutboxMessage>> secondWorker = OutboxMessageClaimer.ClaimDueAsync(
+            secondContext,
+            secondContext.EmailOutbox,
+            "\"EmailOutbox\"",
+            batchSize: 1,
+            FixedNow,
+            claimedQuery: secondContext.EmailOutbox.AsNoTracking(),
+            cancellationToken: CancellationToken.None);
+
+        List<EmailOutboxMessage>[] claims = await Task.WhenAll(firstWorker, secondWorker);
+
+        Assert.Equal(1, claims.Sum(static messages => messages.Count));
+        Assert.Single(claims.SelectMany(static messages => messages).Select(static message => message.Id).Distinct());
+    }
+
+    [RequiresDockerFact]
     public async Task ContentReportRepository_CoversStatusFiltersAndTrackingUpdatePaths() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"report-{Guid.NewGuid():N}@example.com", "hash");

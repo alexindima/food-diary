@@ -4,6 +4,7 @@ using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Application.Abstractions.Images.Common;
@@ -49,6 +50,11 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         shoppingList.AddItem("Apple", product.Id, 1, MeasurementUnit.Pcs, "Fruit", isChecked: false, 0);
         var recentItem = RecentItem.Create(deletedUser.Id, RecentItemType.Product, product.Id.Value);
         var aiUsage = AiUsage.Create(deletedUser.Id, "vision", "gpt-4.1-mini", 10, 20, 30);
+        var recordedAt = new DateTime(2026, 7, 26, 8, 0, 0, DateTimeKind.Utc);
+        var meal = FoodDiary.Domain.Entities.Meals.Meal.Create(deletedUser.Id, recordedAt);
+        var hydration = HydrationEntry.Create(deletedUser.Id, recordedAt, 250);
+        var weight = WeightEntry.Create(deletedUser.Id, recordedAt, 72.5);
+        var waist = WaistEntry.Create(deletedUser.Id, recordedAt, 84);
 
         context.Users.Add(deletedUser);
         context.ImageAssets.Add(imageAsset);
@@ -57,6 +63,10 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         context.ShoppingLists.Add(shoppingList);
         context.RecentItems.Add(recentItem);
         context.AiUsages.Add(aiUsage);
+        context.Meals.Add(meal);
+        context.HydrationEntries.Add(hydration);
+        context.WeightEntries.Add(weight);
+        context.WaistEntries.Add(waist);
         await context.SaveChangesAsync();
 
         var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
@@ -76,6 +86,10 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         Assert.False(await verificationContext.ShoppingListItems.AnyAsync());
         Assert.False(await verificationContext.RecentItems.AnyAsync());
         Assert.False(await verificationContext.AiUsages.AnyAsync());
+        Assert.False(await verificationContext.Meals.AnyAsync());
+        Assert.False(await verificationContext.HydrationEntries.AnyAsync());
+        Assert.False(await verificationContext.WeightEntries.AnyAsync());
+        Assert.False(await verificationContext.WaistEntries.AnyAsync());
         Assert.Equal(["users/deleted/image-1.webp"], imageObjectDeletionOutbox.ObjectKeys);
     }
 

@@ -10,6 +10,27 @@ namespace FoodDiary.Infrastructure.Tests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task SaveChangesAsync_WithConcurrentUserUpdates_RejectsStaleWriter() {
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        await using (FoodDiaryDbContext setupContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true)) {
+            await setupContext.Database.MigrateAsync();
+            setupContext.Users.Add(User.Create("concurrency@example.com", "hash"));
+            await setupContext.SaveChangesAsync();
+        }
+
+        await using FoodDiaryDbContext firstContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
+        await using FoodDiaryDbContext secondContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
+        User firstCopy = await firstContext.Users.SingleAsync(user => user.Email == "concurrency@example.com");
+        User staleCopy = await secondContext.Users.SingleAsync(user => user.Email == "concurrency@example.com");
+        firstCopy.UpdatePersonalInfo(new FoodDiary.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "first-writer"));
+        staleCopy.UpdatePersonalInfo(new FoodDiary.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "stale-writer"));
+
+        await firstContext.SaveChangesAsync();
+
+        await Assert.ThrowsAsync<DbUpdateConcurrencyException>(() => secondContext.SaveChangesAsync());
+    }
+
+    [RequiresDockerFact]
     public async Task GetByEmailAsync_ReturnsActiveNonDeletedUserWithRoles() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         Role premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);

@@ -255,6 +255,10 @@ When a backend change touches one of the listed flows:
 
 ## Minimum Dashboard Panels
 
+The source-controlled starter dashboard and alert rules live in
+`infra/observability/grafana/fooddiary-backend-reliability.json` and
+`infra/observability/prometheus/fooddiary-backend-alerts.yml`.
+
 At minimum, the backend dashboard should expose these panels:
 
 - auth flow events by `fooddiary.business_flow` and `fooddiary.business_outcome`

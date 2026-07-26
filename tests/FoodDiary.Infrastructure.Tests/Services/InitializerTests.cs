@@ -195,6 +195,38 @@ public sealed class InitializerTests {
     }
 
     [Fact]
+    public void InitializerCommandParse_WithSafeReplayOptions_ParsesCommand() {
+        var command = InitializerCommand.Parse([
+            "replay-outbox",
+            "email:98d9e58e-f9cd-4d7d-84dd-4c81ef48bc7c",
+            "--dry-run",
+            "--limit",
+            "25",
+            "--expected-attempt-count",
+            "3",
+        ]);
+
+        Assert.NotNull(command);
+        Assert.True(command.DryRun);
+        Assert.Equal(25, command.Limit);
+        Assert.Equal(3, command.ExpectedAttemptCount);
+    }
+
+    [Theory]
+    [InlineData("0")]
+    [InlineData("-1")]
+    [InlineData("many")]
+    public void InitializerCommandParse_WithInvalidLimit_Throws(string limit) {
+        InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => InitializerCommand.Parse([
+            "list-dead-letters",
+            "--limit",
+            limit,
+        ]));
+
+        Assert.Contains("positive integer", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public void InitializerCommandParse_WithMissingConnectionStringValue_Throws() {
         InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => InitializerCommand.Parse([
             "update",

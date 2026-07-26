@@ -1,0 +1,57 @@
+groups:
+  - name: fooddiary-backend-reliability
+    interval: 30s
+    rules:
+      - alert: FoodDiaryApiServerErrorRatioHigh
+        expr: |
+          sum(rate(fooddiary_api_requests_total{http_response_status_code=~"5.."}[5m]))
+          /
+          clamp_min(sum(rate(fooddiary_api_requests_total[5m])), 0.001)
+          > 0.02
+        for: 5m
+        labels:
+          severity: critical
+          service: api
+        annotations:
+          summary: FoodDiary API server-error ratio is above 2%.
+          runbook: docs/backend/BACKEND_RUNBOOKS.md
+
+      - alert: FoodDiaryDatabaseFailures
+        expr: increase(fooddiary_db_command_failures_total[5m]) > 0
+        for: 5m
+        labels:
+          severity: critical
+          service: postgresql
+        annotations:
+          summary: FoodDiary has persistent database command failures.
+          runbook: docs/backend/BACKEND_RUNBOOKS.md
+
+      - alert: FoodDiaryOutboxDeadLettered
+        expr: increase(fooddiary_outbox_messages_total{fooddiary_outbox_outcome="dead_lettered"}[5m]) > 0
+        for: 0m
+        labels:
+          severity: critical
+          service: outbox
+        annotations:
+          summary: A FoodDiary outbox message entered the dead-letter state.
+          runbook: docs/backend/BACKEND_RUNBOOKS.md
+
+      - alert: FoodDiaryOutboxBacklogOld
+        expr: fooddiary_outbox_pending_oldest_age_seconds > 600
+        for: 5m
+        labels:
+          severity: critical
+          service: outbox
+        annotations:
+          summary: A FoodDiary outbox has pending messages older than 10 minutes.
+          runbook: docs/backend/BACKEND_RUNBOOKS.md
+
+      - alert: FoodDiaryCleanupJobFailureStreak
+        expr: fooddiary_job_failure_streak > 1
+        for: 1m
+        labels:
+          severity: critical
+          service: job-manager
+        annotations:
+          summary: A FoodDiary recurring job has failed at least twice consecutively.
+          runbook: docs/backend/BACKEND_RUNBOOKS.md
