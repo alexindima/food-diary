@@ -119,7 +119,7 @@
         "@angular/compiler-cli": "^22.0.7",
         "@axe-core/playwright": "^4.12.1",
         "@emnapi/core": "^1.11.2",
-        "@emnapi/runtime": "^1.11.2",
+        "@emnapi/runtime": "^1.11.3",
         "@emnapi/wasi-threads": "^2.0.1",
         "@eslint-community/eslint-plugin-eslint-comments": "^4.7.2",
         "@lhci/cli": "^0.15.1",
