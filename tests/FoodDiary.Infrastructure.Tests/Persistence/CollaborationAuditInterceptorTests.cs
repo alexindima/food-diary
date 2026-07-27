@@ -127,7 +127,7 @@ public sealed class CollaborationAuditInterceptorTests {
             clientId,
             $"{Guid.NewGuid():N}@example.com",
             "hash",
-            UtcNow.AddDays(1),
+            DateTime.UtcNow.AddDays(1),
             DietologistPermissions.AllEnabled);
 
     private static FoodDiaryDbContext CreateContext() {
