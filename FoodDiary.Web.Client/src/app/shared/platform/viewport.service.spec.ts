@@ -44,18 +44,21 @@ describe('ViewportService', () => {
     });
 
     it('uses non-mobile initial value outside browser platform', () => {
+        const matchMedia = mockMatchMedia(false);
         const service = setup('server');
 
         expect(service.isMobile()).toBe(false);
-        expect(window.matchMedia).not.toHaveBeenCalled();
+        expect(matchMedia).not.toHaveBeenCalled();
     });
 });
 
-function mockMatchMedia(matches: boolean): void {
+function mockMatchMedia(matches: boolean): ReturnType<typeof vi.fn> {
+    const matchMedia = vi.fn().mockReturnValue({ matches });
     Object.defineProperty(window, 'matchMedia', {
         configurable: true,
-        value: vi.fn().mockReturnValue({ matches }),
+        value: matchMedia,
     });
+    return matchMedia;
 }
 
 function setup(platformId: object | string): ViewportService {

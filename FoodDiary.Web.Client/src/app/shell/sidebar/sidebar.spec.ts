@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { Observable, of, Subject } from 'rxjs';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import { ADMIN_LOADING_URL_TTL_MS, SIDEBAR_MOBILE_VIEWPORT_QUERY } from '../../config/runtime-ui.tokens';
@@ -188,11 +188,11 @@ describe('SidebarComponent admin behavior', () => {
         const adminWindow = createAdminWindowMock();
         authService.isAdmin.set(true);
         authService.startAdminSso.mockReturnValueOnce(of({ code: ADMIN_SSO_CODE }));
-        mockAdminWindow(adminWindow);
+        const openAdminWindow = mockAdminWindow(adminWindow);
 
         harness.openAdminPanel();
 
-        expect(window.open).toHaveBeenCalledWith(ADMIN_LOADING_URL, '_blank');
+        expect(openAdminWindow).toHaveBeenCalledWith(ADMIN_LOADING_URL, '_blank');
         expect(adminWindow.location.assign).toHaveBeenCalledWith(`http://localhost:4300/#code=${ADMIN_SSO_CODE}`);
     });
 
@@ -362,11 +362,11 @@ function createAdminWindowMock(): {
     };
 }
 
-function mockAdminWindow(adminWindow: ReturnType<typeof createAdminWindowMock>): void {
+function mockAdminWindow(adminWindow: ReturnType<typeof createAdminWindowMock>): MockInstance<Window['open']> {
     environment.adminAppUrl = 'http://localhost:4300';
     vi.spyOn(URL, 'createObjectURL').mockReturnValue(ADMIN_LOADING_URL);
     vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
-    vi.spyOn(window, 'open').mockReturnValue(adminWindow as unknown as Window);
+    return vi.spyOn(window, 'open').mockReturnValue(adminWindow as unknown as Window);
 }
 
 function createDialogServiceMock(): {

@@ -161,7 +161,7 @@ export class FdUiDialogService {
     }
 
     private isCompactMobile(): boolean {
-        const matchMedia = this.document.defaultView?.matchMedia;
-        return this.isBrowser && matchMedia?.(this.compactViewportQuery).matches === true;
+        const mediaQuery = this.document.defaultView?.matchMedia(this.compactViewportQuery);
+        return this.isBrowser && mediaQuery?.matches === true;
     }
 }

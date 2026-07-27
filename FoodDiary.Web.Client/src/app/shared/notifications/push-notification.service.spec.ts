@@ -74,16 +74,20 @@ beforeEach(() => {
     service = TestBed.inject(PushNotificationService);
 });
 
-function createPushSubscription(endpoint: string): PushSubscription & { unsubscribe: ReturnType<typeof vi.fn> } {
+function createPushSubscription(
+    endpoint: string,
+): PushSubscription & { unsubscribe: ReturnType<typeof vi.fn>; unsubscribeMock: ReturnType<typeof vi.fn> } {
     const options: PushSubscriptionOptions = {
         applicationServerKey: null,
         userVisibleOnly: true,
     };
+    const unsubscribeMock = vi.fn().mockResolvedValue(true);
 
     return {
         endpoint,
         expirationTime: null,
-        unsubscribe: vi.fn().mockResolvedValue(true),
+        unsubscribe: unsubscribeMock,
+        unsubscribeMock,
         toJSON: () => ({
             endpoint,
             expirationTime: null,
@@ -165,7 +169,7 @@ describe('PushNotificationService subscription lifecycle', () => {
         const removed = await service.removeSubscriptionAsync(subscription.endpoint);
 
         expect(removed).toBe(true);
-        expect(subscription.unsubscribe).toHaveBeenCalledTimes(1);
+        expect(subscription.unsubscribeMock).toHaveBeenCalledTimes(1);
         expect(notificationService.removeWebPushSubscription).toHaveBeenCalledWith(subscription.endpoint);
         expect(service.currentSubscriptionEndpoint()).toBeNull();
     });
