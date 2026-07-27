@@ -724,7 +724,7 @@ jobs:
           fi
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('FoodDiary.Web.Client/package-lock.json') }}
