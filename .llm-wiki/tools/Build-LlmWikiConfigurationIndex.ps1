@@ -23,7 +23,7 @@ function Get-RepositoryFiles {
         $paths |
             Where-Object { $_ } |
             Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique |
-            ForEach-Object { Get-Item -LiteralPath (Join-Path $repositoryRoot $_) }
+            ForEach-Object { Get-Item -LiteralPath (Join-Path $repositoryRoot $_) -Force }
     )
 }
 
