@@ -47,6 +47,10 @@ function Get-Hash([object]$Value) {
 function Get-FileHashValue([string]$Path) {
     (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
 }
+function ConvertTo-CanonicalTimestamp([object]$Value) {
+    if ($null -eq $Value -or [string]::IsNullOrWhiteSpace([string]$Value)) { return $null }
+    ([DateTimeOffset]$Value).ToUniversalTime().ToString('o')
+}
 function Get-Category([string]$Id, [string]$Text) {
     $value = "$Id $Text"
     if ($value -match '(?i)compile|build|CS\d{4}') { return 'compile' }
@@ -60,32 +64,41 @@ function Get-Category([string]$Id, [string]$Text) {
 }
 function Get-AttemptPayload([object]$Attempt) {
     [pscustomobject][ordered]@{
-        id = $Attempt.id
-        sequence = $Attempt.sequence
-        checkId = $Attempt.checkId
-        category = $Attempt.category
-        symptom = $Attempt.symptom
-        hypothesis = $Attempt.hypothesis
-        repairPaths = @($Attempt.repairPaths)
-        owner = $Attempt.owner
-        state = $Attempt.state
-        startedAtUtc = $Attempt.startedAtUtc
-        finishedAtUtc = $Attempt.finishedAtUtc
-        resolution = $Attempt.resolution
-        packetFingerprint = $Attempt.packetFingerprint
-        policyFingerprint = $Attempt.policyFingerprint
-        evidenceHashAtStart = $Attempt.evidenceHashAtStart
-        evidenceHashAtFinish = $Attempt.evidenceHashAtFinish
-        proof = $Attempt.proof
-        attemptFingerprint = $Attempt.attemptFingerprint
-        previousHash = $Attempt.previousHash
+        id = [string]$Attempt.id
+        sequence = [int]$Attempt.sequence
+        checkId = [string]$Attempt.checkId
+        category = [string]$Attempt.category
+        symptom = [string]$Attempt.symptom
+        hypothesis = [string]$Attempt.hypothesis
+        repairPaths = @($Attempt.repairPaths | ForEach-Object { [string]$_ })
+        owner = [string]$Attempt.owner
+        state = [string]$Attempt.state
+        startedAtUtc = ConvertTo-CanonicalTimestamp $Attempt.startedAtUtc
+        finishedAtUtc = ConvertTo-CanonicalTimestamp $Attempt.finishedAtUtc
+        resolution = $(if ($null -eq $Attempt.resolution) { $null } else { [string]$Attempt.resolution })
+        packetFingerprint = [string]$Attempt.packetFingerprint
+        policyFingerprint = [string]$Attempt.policyFingerprint
+        evidenceHashAtStart = [string]$Attempt.evidenceHashAtStart
+        evidenceHashAtFinish = $(if ($null -eq $Attempt.evidenceHashAtFinish) { $null } else { [string]$Attempt.evidenceHashAtFinish })
+        proof = $(if ($null -eq $Attempt.proof) { $null } else {
+            [pscustomobject][ordered]@{
+                checkStatus = $(if ($null -eq $Attempt.proof.checkStatus) { $null } else { [string]$Attempt.proof.checkStatus })
+                lineageHash = $(if ($null -eq $Attempt.proof.lineageHash) { $null } else { [string]$Attempt.proof.lineageHash })
+            }
+        })
+        attemptFingerprint = [string]$Attempt.attemptFingerprint
+        previousHash = [string]$Attempt.previousHash
     }
 }
 function Get-RegistryPayload([object]$Registry) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Registry.schemaVersion
-        workspace = $Registry.workspace
-        attempts = @($Registry.attempts)
+        schemaVersion = [int]$Registry.schemaVersion
+        workspace = [string]$Registry.workspace
+        attempts = @($Registry.attempts | ForEach-Object {
+            $canonicalAttempt = Get-AttemptPayload $_
+            $canonicalAttempt | Add-Member -NotePropertyName attemptHash -NotePropertyValue ([string]$_.attemptHash)
+            $canonicalAttempt
+        })
     }
 }
 function New-Registry {
