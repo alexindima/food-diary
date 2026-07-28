@@ -5,6 +5,11 @@ This directory contains long-form repository documentation. Keep root-level mark
 ## Agent Knowledge Layer
 
 - `.llm-wiki/index.md` - compiled, source-linked repository map for coding agents. It is a derived navigation layer; this documentation, scoped `AGENTS.md`, ADRs, tests, and code remain authoritative.
+- `ai/CODE_REVIEW.md` - shared correctness, architecture, security, compatibility, frontend, and evidence rubric for AI-assisted review.
+- `.llm-wiki/generated/configuration-index.json` - generated key-name-only map of options, appsettings, and environment examples.
+- `.llm-wiki/generated/quality-index.json` - generated structural hotspot, test-reference, and explicit debt inventory.
+- `.llm-wiki/generated/runtime-topology.json` - generated Compose service, worker, HTTP client, webhook, and recurring-job inventory.
+- `.llm-wiki/generated/sensitive-data-index.json` - generated name-based sensitive-field and boundary review inventory without runtime values.
 
 ## Architecture
 
@@ -29,6 +34,7 @@ This directory contains long-form repository documentation. Keep root-level mark
 - `backend/BACKEND_RUNBOOKS.md`
 - `backend/MARKETING_ATTRIBUTION_RUNBOOK.md`
 - `backend/BACKEND_SECURITY_HARDENING.md`
+- `security/THREAT_MODEL.md` - repository-wide assets, trust boundaries, attacker stories, and severity calibration.
 - `backend/BACKEND_TIME_POLICY.md`
 
 ## Frontend

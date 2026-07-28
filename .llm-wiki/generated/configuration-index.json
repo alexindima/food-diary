@@ -1,0 +1,1049 @@
+{
+    "schemaVersion":  1,
+    "summary":  {
+                    "optionTypes":  49,
+                    "configurationFiles":  9,
+                    "configurationKeys":  178,
+                    "environmentVariables":  148
+                },
+    "optionTypes":  [
+                        {
+                            "type":  "ApiBuildInfoOptions",
+                            "section":  "BuildInfo",
+                            "properties":  [
+                                               "CommitSha",
+                                               "ImageTag"
+                                           ],
+                            "path":  "FoodDiary.Web.Api/Options/ApiBuildInfoOptions.cs"
+                        },
+                        {
+                            "type":  "ApiCorsOptions",
+                            "section":  "Cors",
+                            "properties":  [
+                                               "Origins"
+                                           ],
+                            "path":  "FoodDiary.Web.Api/Options/ApiCorsOptions.cs"
+                        },
+                        {
+                            "type":  "ApiDataProtectionOptions",
+                            "section":  "DataProtection",
+                            "properties":  [
+                                               "ApplicationName",
+                                               "KeyRingPath"
+                                           ],
+                            "path":  "FoodDiary.Web.Api/Options/ApiDataProtectionOptions.cs"
+                        },
+                        {
+                            "type":  "ApiForwardedHeadersOptions",
+                            "section":  "ForwardedHeaders",
+                            "properties":  [
+                                               "ForwardLimit",
+                                               "KnownNetworks",
+                                               "KnownProxies"
+                                           ],
+                            "path":  "FoodDiary.Web.Api/Options/ApiForwardedHeadersOptions.cs"
+                        },
+                        {
+                            "type":  "ApiHttpsRedirectionOptions",
+                            "section":  "HttpsRedirection",
+                            "properties":  [
+                                               "Enabled"
+                                           ],
+                            "path":  "FoodDiary.Web.Api/Options/ApiHttpsRedirectionOptions.cs"
+                        },
+                        {
+                            "type":  "ApiOutputCacheOptions",
+                            "section":  "OutputCache",
+                            "properties":  [
+                                               "AdminAiUsage",
+                                               "AdminAiUsageCacheOptions",
+                                               "ExpirationSeconds",
+                                               "UserScoped",
+                                               "UserScopedCacheOptions"
+                                           ],
+                            "path":  "FoodDiary.Web.Api/Options/ApiOutputCacheOptions.cs"
+                        },
+                        {
+                            "type":  "ApiRateLimitingOptions",
+                            "section":  "RateLimiting",
+                            "properties":  [
+                                               "Ai",
+                                               "Auth",
+                                               "FixedWindowPolicyOptions",
+                                               "PermitLimit",
+                                               "QueueLimit",
+                                               "WindowSeconds"
+                                           ],
+                            "path":  "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs"
+                        },
+                        {
+                            "type":  "BillingOptions",
+                            "section":  "Billing",
+                            "properties":  [
+                                               "Provider",
+                                               "RequireConfiguredProvider"
+                                           ],
+                            "path":  "FoodDiary.Integrations/Options/BillingOptions.cs"
+                        },
+                        {
+                            "type":  "BillingRenewalOptions",
+                            "section":  "BillingRenewal",
+                            "properties":  [
+                                               "BatchSize",
+                                               "Cron",
+                                               "Enabled",
+                                               "Provider"
+                                           ],
+                            "path":  "FoodDiary.JobManager/Services/BillingRenewalOptions.cs"
+                        },
+                        {
+                            "type":  "ClientTaskReminderOptions",
+                            "section":  "ClientTaskReminders",
+                            "properties":  [
+                                               "Cron",
+                                               "Enabled"
+                                           ],
+                            "path":  "FoodDiary.JobManager/Services/ClientTaskReminderOptions.cs"
+                        },
+                        {
+                            "type":  "DatabaseOptions",
+                            "section":  "Database",
+                            "properties":  [
+                                               "EnableRetries",
+                                               "MaxRetryCount",
+                                               "MaxRetryDelaySeconds"
+                                           ],
+                            "path":  "FoodDiary.Infrastructure/Options/DatabaseOptions.cs"
+                        },
+                        {
+                            "type":  "DirectMxOptions",
+                            "section":  "DirectMx",
+                            "properties":  [
+                                               "ConnectTimeoutSeconds",
+                                               "LocalDomain",
+                                               "Port",
+                                               "UseStartTlsWhenAvailable"
+                                           ],
+                            "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/DirectMxOptions.cs"
+                        },
+                        {
+                            "type":  "EmailOptions",
+                            "section":  "Email",
+                            "properties":  [
+                                               "AllowedFrontendBaseUrls",
+                                               "FromAddress",
+                                               "FromName",
+                                               "FrontendBaseUrl",
+                                               "PasswordResetPath",
+                                               "VerificationPath"
+                                           ],
+                            "path":  "FoodDiary.Application.Abstractions/Email/Common/EmailOptions.cs"
+                        },
+                        {
+                            "type":  "EmailOutboxOptions",
+                            "section":  "EmailOutbox",
+                            "properties":  [
+                                               "BatchSize",
+                                               "Cron",
+                                               "Enabled"
+                                           ],
+                            "path":  "FoodDiary.JobManager/Services/EmailOutboxOptions.cs"
+                        },
+                        {
+                            "type":  "FastingNotificationOptions",
+                            "section":  "FastingNotifications",
+                            "properties":  [
+                                               "Cron",
+                                               "Enabled"
+                                           ],
+                            "path":  "FoodDiary.JobManager/Services/FastingNotificationOptions.cs"
+                        },
+                        {
+                            "type":  "FitbitOptions",
+                            "section":  "Fitbit",
+                            "properties":  [
+                                               "ClientId",
+                                               "ClientSecret",
+                                               "RedirectUri"
+                                           ],
+                            "path":  "FoodDiary.Integrations/Options/FitbitOptions.cs"
+                        },
+                        {
+                            "type":  "GoogleAuthOptions",
+                            "section":  "GoogleAuth",
+                            "properties":  [
+                                               "ClientId"
+                                           ],
+                            "path":  "FoodDiary.Integrations/Options/GoogleAuthOptions.cs"
+                        },
+                        {
+                            "type":  "GoogleFitOptions",
+                            "section":  "GoogleFit",
+                            "properties":  [
+                                               "ClientId",
+                                               "ClientSecret",
+                                               "RedirectUri"
+                                           ],
+                            "path":  "FoodDiary.Integrations/Options/GoogleFitOptions.cs"
+                        },
+                        {
+                            "type":  "ImageCleanupOptions",
+                            "section":  "ImageCleanup",
+                            "properties":  [
+                                               "BatchSize",
+                                               "Cron",
+                                               "OlderThanHours"
+                                           ],
+                            "path":  "FoodDiary.JobManager/Services/ImageCleanupOptions.cs"
+                        },
+                        {
+                            "type":  "ImageObjectDeletionOutboxOptions",
+                            "section":  "ImageObjectDeletionOutbox",
+                            "properties":  [
+                                               "BatchSize",
+                                               "Cron",
+                                               "Enabled"
+                                           ],
+                            "path":  "FoodDiary.JobManager/Services/ImageObjectDeletionOutboxOptions.cs"
+                        },
+                        {
+                            "type":  "JwtOptions",
+                            "section":  "Jwt",
+                            "properties":  [
+                                               "Audience",
+                                               "ExpirationMinutes",
+                                               "Issuer",
+                                               "RefreshTokenExpirationDays",
+                                               "RememberMeRefreshTokenExpirationDays",
+                                               "SecretKey"
+                                           ],
+                            "path":  "FoodDiary.Infrastructure/Options/JwtOptions.cs"
+                        },
+                        {
+                            "type":  "MailInboxClientOptions",
+                            "section":  "MailInboxClient",
+                            "properties":  [
+                                               "ApiKey",
+                                               "BaseUrl",
+                                               "Timeout"
+                                           ],
+                            "path":  "MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs"
+                        },
+                        {
+                            "type":  "MailInboxHttpOptions",
+                            "section":  "MailInboxHttp",
+                            "properties":  [
+                                               "ApiKey",
+                                               "RequireApiKey"
+                                           ],
+                            "path":  "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs"
+                        },
+                        {
+                            "type":  "MailInboxSmtpOptions",
+                            "section":  "MailInboxSmtp",
+                            "properties":  [
+                                               "AllowedRecipients",
+                                               "Enabled",
+                                               "MaxMessageSizeBytes",
+                                               "Port",
+                                               "ServerName"
+                                           ],
+                            "path":  "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxSmtpOptions.cs"
+                        },
+                        {
+                            "type":  "MailRelayBrokerOptions",
+                            "section":  "MailRelayBroker",
+                            "properties":  [
+                                               "Backend",
+                                               "ConnectionRetryDelaySeconds",
+                                               "DeadLetterExchangeName",
+                                               "DeadLetterQueueName",
+                                               "DeadLetterRoutingKey",
+                                               "EnablePollingFallback",
+                                               "HostName",
+                                               "OutboundExchangeName",
+                                               "OutboundRoutingKey",
+                                               "Password",
+                                               "Port",
+                                               "PrefetchCount",
+                                               "QueueName",
+                                               "RetryDelayMilliseconds",
+                                               "RetryExchangeName",
+                                               "RetryQueueName",
+                                               "RetryRoutingKey",
+                                               "UserName",
+                                               "VirtualHost"
+                                           ],
+                            "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayBrokerOptions.cs"
+                        },
+                        {
+                            "type":  "MailRelayClientOptions",
+                            "section":  "MailRelayClient",
+                            "properties":  [
+                                               "ApiKey",
+                                               "BaseUrl",
+                                               "Timeout"
+                                           ],
+                            "path":  "MailRelay/FoodDiary.MailRelay.Client/Options/MailRelayClientOptions.cs"
+                        },
+                        {
+                            "type":  "MailRelayDeliveryOptions",
+                            "section":  "MailRelayDelivery",
+                            "properties":  [
+                                               "Mode"
+                                           ],
+                            "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayDeliveryOptions.cs"
+                        },
+                        {
+                            "type":  "MailRelayDkimOptions",
+                            "section":  "MailRelayDkim",
+                            "properties":  [
+                                               "Domain",
+                                               "Enabled",
+                                               "PrivateKeyPath",
+                                               "PrivateKeyPem",
+                                               "Selector"
+                                           ],
+                            "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayDkimOptions.cs"
+                        },
+                        {
+                            "type":  "MailRelayOptions",
+                            "section":  "MailRelay",
+                            "properties":  [
+                                               "ApiKey",
+                                               "MailgunWebhookSigningKey",
+                                               "RequireApiKey",
+                                               "RequireAwsSesSnsSignature",
+                                               "RequireMailgunWebhookSignature"
+                                           ],
+                            "path":  "MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs"
+                        },
+                        {
+                            "type":  "MailRelayQueueOptions",
+                            "section":  "MailRelayQueue",
+                            "properties":  [
+                                               "BaseRetryDelaySeconds",
+                                               "BatchSize",
+                                               "LockTimeoutSeconds",
+                                               "MaxAttempts",
+                                               "MaxRetryDelaySeconds",
+                                               "PollIntervalSeconds"
+                                           ],
+                            "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayQueueOptions.cs"
+                        },
+                        {
+                            "type":  "MailRelaySmtpOptions",
+                            "section":  "RelaySmtp",
+                            "properties":  [
+                                               "Host",
+                                               "Password",
+                                               "Port",
+                                               "User",
+                                               "UseSsl"
+                                           ],
+                            "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelaySmtpOptions.cs"
+                        },
+                        {
+                            "type":  "MarketingAttributionCleanupOptions",
+                            "section":  "MarketingAttributionCleanup",
+                            "properties":  [
+                                               "BatchSize",
+                                               "Cron",
+                                               "Enabled",
+                                               "RetentionDays"
+                                           ],
+                            "path":  "FoodDiary.JobManager/Services/MarketingAttributionCleanupOptions.cs"
+                        },
+                        {
+                            "type":  "NotificationCleanupOptions",
+                            "section":  "NotificationCleanup",
+                            "properties":  [
+                                               "BatchSize",
+                                               "Cron",
+                                               "StandardReadRetentionDays",
+                                               "StandardUnreadRetentionDays",
+                                               "TransientReadRetentionDays",
+                                               "TransientTypes",
+                                               "TransientUnreadRetentionDays"
+                                           ],
+                            "path":  "FoodDiary.JobManager/Services/NotificationCleanupOptions.cs"
+                        },
+                        {
+                            "type":  "NotificationWebPushOutboxOptions",
+                            "section":  "NotificationWebPushOutbox",
+                            "properties":  [
+                                               "BatchSize",
+                                               "Cron",
+                                               "Enabled"
+                                           ],
+                            "path":  "FoodDiary.JobManager/Services/NotificationWebPushOutboxOptions.cs"
+                        },
+                        {
+                            "type":  "OpenAiOptions",
+                            "section":  "OpenAi",
+                            "properties":  [
+                                               "ApiKey",
+                                               "TextModel",
+                                               "VisionFallbackModel",
+                                               "VisionModel"
+                                           ],
+                            "path":  "FoodDiary.Integrations/Options/OpenAiOptions.cs"
+                        },
+                        {
+                            "type":  "OpenFoodFactsApiOptions",
+                            "section":  "OpenFoodFacts",
+                            "properties":  [
+                                               "BaseUrl",
+                                               "UserAgent"
+                                           ],
+                            "path":  "FoodDiary.Integrations/Options/OpenFoodFactsApiOptions.cs"
+                        },
+                        {
+                            "type":  "OpenTelemetryOptions",
+                            "section":  "OpenTelemetry",
+                            "properties":  [
+                                               "Endpoint",
+                                               "Otlp",
+                                               "OtlpOptions"
+                                           ],
+                            "path":  "FoodDiary.Web.Api/Options/OpenTelemetryOptions.cs"
+                        },
+                        {
+                            "type":  "OpenTelemetryOptions",
+                            "section":  "OpenTelemetry",
+                            "properties":  [
+                                               "Endpoint",
+                                               "Otlp",
+                                               "OtlpOptions"
+                                           ],
+                            "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/OpenTelemetryOptions.cs"
+                        },
+                        {
+                            "type":  "PaddleOptions",
+                            "section":  "Paddle",
+                            "properties":  [
+                                               "ApiBaseUrl",
+                                               "ApiKey",
+                                               "CheckoutUrl",
+                                               "ClientSideToken",
+                                               "PremiumMonthlyPriceId",
+                                               "PremiumYearlyPriceId",
+                                               "WebhookSecretKey"
+                                           ],
+                            "path":  "FoodDiary.Integrations/Options/PaddleOptions.cs"
+                        },
+                        {
+                            "type":  "S3Options",
+                            "section":  "S3",
+                            "properties":  [
+                                               "AccessKeyId",
+                                               "Bucket",
+                                               "MaxUploadSizeBytes",
+                                               "PublicBaseUrl",
+                                               "Region",
+                                               "SecretAccessKey",
+                                               "ServiceUrl"
+                                           ],
+                            "path":  "FoodDiary.Integrations/Options/S3Options.cs"
+                        },
+                        {
+                            "type":  "StripeOptions",
+                            "section":  "Stripe",
+                            "properties":  [
+                                               "CancelUrl",
+                                               "PortalReturnUrl",
+                                               "PremiumMonthlyPriceId",
+                                               "PremiumYearlyPriceId",
+                                               "PublishableKey",
+                                               "SecretKey",
+                                               "SuccessUrl",
+                                               "WebhookSecret"
+                                           ],
+                            "path":  "FoodDiary.Integrations/Options/StripeOptions.cs"
+                        },
+                        {
+                            "type":  "TelegramAuthOptions",
+                            "section":  "TelegramAuth",
+                            "properties":  [
+                                               "AuthTtlSeconds",
+                                               "BotToken"
+                                           ],
+                            "path":  "FoodDiary.Integrations/Options/TelegramAuthOptions.cs"
+                        },
+                        {
+                            "type":  "TelegramBotAuthOptions",
+                            "section":  "TelegramBot",
+                            "properties":  [
+                                               "ApiSecret"
+                                           ],
+                            "path":  "FoodDiary.Presentation.Api/Options/TelegramBotAuthOptions.cs"
+                        },
+                        {
+                            "type":  "TelegramBotOptions",
+                            "section":  "TelegramBot",
+                            "properties":  [
+                                               "ApiBaseUrl",
+                                               "ApiSecret",
+                                               "Token",
+                                               "WebAppUrl"
+                                           ],
+                            "path":  "FoodDiary.Telegram.Bot/TelegramBotOptions.cs"
+                        },
+                        {
+                            "type":  "UsdaApiOptions",
+                            "section":  "UsdaApi",
+                            "properties":  [
+                                               "ApiKey",
+                                               "BaseUrl"
+                                           ],
+                            "path":  "FoodDiary.Integrations/Options/UsdaApiOptions.cs"
+                        },
+                        {
+                            "type":  "UserCleanupOptions",
+                            "section":  "UserCleanup",
+                            "properties":  [
+                                               "BatchSize",
+                                               "Cron",
+                                               "ReassignUserId",
+                                               "RetentionDays"
+                                           ],
+                            "path":  "FoodDiary.JobManager/Services/UserCleanupOptions.cs"
+                        },
+                        {
+                            "type":  "UserLoginEventCleanupOptions",
+                            "section":  "UserLoginEventCleanup",
+                            "properties":  [
+                                               "BatchSize",
+                                               "Cron",
+                                               "Enabled",
+                                               "RetentionDays"
+                                           ],
+                            "path":  "FoodDiary.JobManager/Services/UserLoginEventCleanupOptions.cs"
+                        },
+                        {
+                            "type":  "WebPushOptions",
+                            "section":  "WebPush",
+                            "properties":  [
+                                               "DefaultUrl",
+                                               "Enabled",
+                                               "PrivateKey",
+                                               "PublicKey",
+                                               "Subject"
+                                           ],
+                            "path":  "FoodDiary.Integrations/Options/WebPushOptions.cs"
+                        },
+                        {
+                            "type":  "YooKassaOptions",
+                            "section":  "YooKassa",
+                            "properties":  [
+                                               "ApiBaseUrl",
+                                               "Currency",
+                                               "Description",
+                                               "PremiumMonthlyAmount",
+                                               "PremiumYearlyAmount",
+                                               "ReturnUrl",
+                                               "SecretKey",
+                                               "ShopId"
+                                           ],
+                            "path":  "FoodDiary.Integrations/Options/YooKassaOptions.cs"
+                        }
+                    ],
+    "configurationFiles":  [
+                               {
+                                   "path":  "FoodDiary.JobManager/appsettings.json",
+                                   "keys":  [
+                                                "BillingRenewal:BatchSize",
+                                                "BillingRenewal:Cron",
+                                                "BillingRenewal:Enabled",
+                                                "BillingRenewal:Provider",
+                                                "ConnectionStrings:DefaultConnection",
+                                                "FastingNotifications:Cron",
+                                                "FastingNotifications:Enabled",
+                                                "ImageCleanup:BatchSize",
+                                                "ImageCleanup:Cron",
+                                                "ImageCleanup:OlderThanHours",
+                                                "ImageObjectDeletionOutbox:BatchSize",
+                                                "ImageObjectDeletionOutbox:Cron",
+                                                "ImageObjectDeletionOutbox:Enabled",
+                                                "Logging:LogLevel:Default",
+                                                "Logging:LogLevel:Hangfire",
+                                                "Logging:LogLevel:Microsoft",
+                                                "Logging:LogLevel:Microsoft.EntityFrameworkCore",
+                                                "MarketingAttributionCleanup:BatchSize",
+                                                "MarketingAttributionCleanup:Cron",
+                                                "MarketingAttributionCleanup:Enabled",
+                                                "MarketingAttributionCleanup:RetentionDays",
+                                                "NotificationCleanup:BatchSize",
+                                                "NotificationCleanup:Cron",
+                                                "NotificationCleanup:StandardReadRetentionDays",
+                                                "NotificationCleanup:StandardUnreadRetentionDays",
+                                                "NotificationCleanup:TransientReadRetentionDays",
+                                                "NotificationCleanup:TransientTypes",
+                                                "NotificationCleanup:TransientUnreadRetentionDays",
+                                                "NotificationWebPushOutbox:BatchSize",
+                                                "NotificationWebPushOutbox:Cron",
+                                                "NotificationWebPushOutbox:Enabled",
+                                                "S3:AccessKeyId",
+                                                "S3:Bucket",
+                                                "S3:MaxUploadSizeBytes",
+                                                "S3:PublicBaseUrl",
+                                                "S3:Region",
+                                                "S3:SecretAccessKey",
+                                                "S3:ServiceUrl",
+                                                "UserCleanup:BatchSize",
+                                                "UserCleanup:Cron",
+                                                "UserCleanup:ReassignUserId",
+                                                "UserCleanup:RetentionDays",
+                                                "UserLoginEventCleanup:BatchSize",
+                                                "UserLoginEventCleanup:Cron",
+                                                "UserLoginEventCleanup:Enabled",
+                                                "UserLoginEventCleanup:RetentionDays"
+                                            ]
+                               },
+                               {
+                                   "path":  "FoodDiary.Telegram.Bot/appsettings.json",
+                                   "keys":  [
+                                                "Logging:LogLevel:Default",
+                                                "Logging:LogLevel:Microsoft.Hosting.Lifetime",
+                                                "TelegramBot:ApiBaseUrl",
+                                                "TelegramBot:ApiSecret",
+                                                "TelegramBot:Token",
+                                                "TelegramBot:WebAppUrl"
+                                            ]
+                               },
+                               {
+                                   "path":  "FoodDiary.Web.Api/appsettings.Development.json",
+                                   "keys":  [
+                                                "Email:AllowedFrontendBaseUrls",
+                                                "Email:FrontendBaseUrl"
+                                            ]
+                               },
+                               {
+                                   "path":  "FoodDiary.Web.Api/appsettings.json",
+                                   "keys":  [
+                                                "AllowedHosts",
+                                                "Billing:Provider",
+                                                "ConnectionStrings:DefaultConnection",
+                                                "ConnectionStrings:Redis",
+                                                "Cors:Origins",
+                                                "Database:EnableRetries",
+                                                "Database:MaxRetryCount",
+                                                "Database:MaxRetryDelaySeconds",
+                                                "DataProtection:ApplicationName",
+                                                "DataProtection:KeyRingPath",
+                                                "Email:AllowedFrontendBaseUrls",
+                                                "Email:FromAddress",
+                                                "Email:FromName",
+                                                "Email:FrontendBaseUrl",
+                                                "Email:PasswordResetPath",
+                                                "Email:VerificationPath",
+                                                "ForwardedHeaders:ForwardLimit",
+                                                "ForwardedHeaders:KnownNetworks",
+                                                "ForwardedHeaders:KnownProxies",
+                                                "GoogleAuth:ClientId",
+                                                "HttpsRedirection:Enabled",
+                                                "InitialAdmin:Email",
+                                                "InitialAdmin:Password",
+                                                "Jwt:Audience",
+                                                "Jwt:ExpirationMinutes",
+                                                "Jwt:Issuer",
+                                                "Jwt:RefreshTokenExpirationDays",
+                                                "Jwt:RememberMeRefreshTokenExpirationDays",
+                                                "Jwt:SecretKey",
+                                                "Logging:LogLevel:Default",
+                                                "Logging:LogLevel:Microsoft.AspNetCore",
+                                                "Logging:LogLevel:Microsoft.EntityFrameworkCore",
+                                                "MailInboxClient:ApiKey",
+                                                "MailInboxClient:BaseUrl",
+                                                "MailRelayClient:ApiKey",
+                                                "MailRelayClient:BaseUrl",
+                                                "OpenAi:ApiKey",
+                                                "OpenAi:TextModel",
+                                                "OpenAi:VisionFallbackModel",
+                                                "OpenAi:VisionModel",
+                                                "OutputCache:AdminAiUsage:ExpirationSeconds",
+                                                "OutputCache:UserScoped:ExpirationSeconds",
+                                                "Paddle:ApiBaseUrl",
+                                                "Paddle:ApiKey",
+                                                "Paddle:CheckoutUrl",
+                                                "Paddle:ClientSideToken",
+                                                "Paddle:PremiumMonthlyPriceId",
+                                                "Paddle:PremiumYearlyPriceId",
+                                                "Paddle:WebhookSecretKey",
+                                                "RateLimiting:Ai:PermitLimit",
+                                                "RateLimiting:Ai:QueueLimit",
+                                                "RateLimiting:Ai:WindowSeconds",
+                                                "RateLimiting:Auth:PermitLimit",
+                                                "RateLimiting:Auth:QueueLimit",
+                                                "RateLimiting:Auth:WindowSeconds",
+                                                "S3:AccessKeyId",
+                                                "S3:Bucket",
+                                                "S3:MaxUploadSizeBytes",
+                                                "S3:PublicBaseUrl",
+                                                "S3:Region",
+                                                "S3:SecretAccessKey",
+                                                "S3:ServiceUrl",
+                                                "Stripe:CancelUrl",
+                                                "Stripe:PortalReturnUrl",
+                                                "Stripe:PremiumMonthlyPriceId",
+                                                "Stripe:PremiumYearlyPriceId",
+                                                "Stripe:PublishableKey",
+                                                "Stripe:SecretKey",
+                                                "Stripe:SuccessUrl",
+                                                "Stripe:WebhookSecret",
+                                                "TelegramAuth:AuthTtlSeconds",
+                                                "TelegramAuth:BotToken",
+                                                "TelegramBot:ApiSecret",
+                                                "WebPush:DefaultUrl",
+                                                "WebPush:Enabled",
+                                                "WebPush:PrivateKey",
+                                                "WebPush:PublicKey",
+                                                "WebPush:Subject",
+                                                "YooKassa:ApiBaseUrl",
+                                                "YooKassa:Currency",
+                                                "YooKassa:Description",
+                                                "YooKassa:PremiumMonthlyAmount",
+                                                "YooKassa:PremiumYearlyAmount",
+                                                "YooKassa:ReturnUrl",
+                                                "YooKassa:SecretKey",
+                                                "YooKassa:ShopId"
+                                            ]
+                               },
+                               {
+                                   "path":  "FoodDiary.Web.Api/appsettings.Production.json",
+                                   "keys":  [
+                                                "Cors:Origins",
+                                                "DataProtection:ApplicationName",
+                                                "DataProtection:KeyRingPath",
+                                                "ForwardedHeaders:ForwardLimit",
+                                                "ForwardedHeaders:KnownNetworks",
+                                                "ForwardedHeaders:KnownProxies",
+                                                "HttpsRedirection:Enabled"
+                                            ]
+                               },
+                               {
+                                   "path":  "FoodDiary.Web.Api/appsettings.Template.json",
+                                   "keys":  [
+                                                "ConnectionStrings:DefaultConnection",
+                                                "ConnectionStrings:Redis",
+                                                "Cors:Origins",
+                                                "Database:EnableRetries",
+                                                "Database:MaxRetryCount",
+                                                "Database:MaxRetryDelaySeconds",
+                                                "Email:AllowedFrontendBaseUrls",
+                                                "Email:FromAddress",
+                                                "Email:FromName",
+                                                "Email:FrontendBaseUrl",
+                                                "Email:PasswordResetPath",
+                                                "Email:VerificationPath",
+                                                "ForwardedHeaders:ForwardLimit",
+                                                "ForwardedHeaders:KnownNetworks",
+                                                "ForwardedHeaders:KnownProxies",
+                                                "HttpsRedirection:Enabled",
+                                                "InitialAdmin:Email",
+                                                "InitialAdmin:Password",
+                                                "Jwt:Audience",
+                                                "Jwt:ExpirationMinutes",
+                                                "Jwt:Issuer",
+                                                "Jwt:RefreshTokenExpirationDays",
+                                                "Jwt:SecretKey",
+                                                "MailInboxClient:ApiKey",
+                                                "MailInboxClient:BaseUrl",
+                                                "MailRelayClient:ApiKey",
+                                                "MailRelayClient:BaseUrl",
+                                                "OpenAi:ApiKey",
+                                                "OpenAi:TextModel",
+                                                "OpenAi:VisionFallbackModel",
+                                                "OpenAi:VisionModel",
+                                                "OutputCache:AdminAiUsage:ExpirationSeconds",
+                                                "OutputCache:UserScoped:ExpirationSeconds",
+                                                "RateLimiting:Ai:PermitLimit",
+                                                "RateLimiting:Ai:QueueLimit",
+                                                "RateLimiting:Ai:WindowSeconds",
+                                                "RateLimiting:Auth:PermitLimit",
+                                                "RateLimiting:Auth:QueueLimit",
+                                                "RateLimiting:Auth:WindowSeconds",
+                                                "S3:AccessKeyId",
+                                                "S3:Bucket",
+                                                "S3:MaxUploadSizeBytes",
+                                                "S3:PublicBaseUrl",
+                                                "S3:Region",
+                                                "S3:SecretAccessKey",
+                                                "S3:ServiceUrl",
+                                                "TelegramAuth:AuthTtlSeconds",
+                                                "TelegramAuth:BotToken",
+                                                "TelegramBot:ApiSecret"
+                                            ]
+                               },
+                               {
+                                   "path":  "MailInbox/FoodDiary.MailInbox.WebApi/appsettings.Development.json",
+                                   "keys":  [
+                                                "Logging:LogLevel:Default",
+                                                "Logging:LogLevel:Microsoft.AspNetCore"
+                                            ]
+                               },
+                               {
+                                   "path":  "MailInbox/FoodDiary.MailInbox.WebApi/appsettings.json",
+                                   "keys":  [
+                                                "AllowedHosts",
+                                                "ConnectionStrings:DefaultConnection",
+                                                "Logging:LogLevel:Default",
+                                                "Logging:LogLevel:Microsoft.AspNetCore",
+                                                "MailInboxHttp:ApiKey",
+                                                "MailInboxHttp:RequireApiKey",
+                                                "MailInboxSmtp:AllowedRecipients",
+                                                "MailInboxSmtp:Enabled",
+                                                "MailInboxSmtp:MaxMessageSizeBytes",
+                                                "MailInboxSmtp:Port",
+                                                "MailInboxSmtp:ServerName"
+                                            ]
+                               },
+                               {
+                                   "path":  "MailRelay/FoodDiary.MailRelay.WebApi/appsettings.json",
+                                   "keys":  [
+                                                "AllowedHosts",
+                                                "ConnectionStrings:DefaultConnection",
+                                                "DirectMx:ConnectTimeoutSeconds",
+                                                "DirectMx:LocalDomain",
+                                                "DirectMx:Port",
+                                                "DirectMx:UseStartTlsWhenAvailable",
+                                                "Logging:LogLevel:Default",
+                                                "Logging:LogLevel:Microsoft.AspNetCore",
+                                                "Logging:LogLevel:Microsoft.EntityFrameworkCore",
+                                                "MailRelay:ApiKey",
+                                                "MailRelay:MailgunWebhookSigningKey",
+                                                "MailRelay:RequireApiKey",
+                                                "MailRelay:RequireAwsSesSnsSignature",
+                                                "MailRelay:RequireMailgunWebhookSignature",
+                                                "MailRelayBroker:Backend",
+                                                "MailRelayBroker:DeadLetterExchangeName",
+                                                "MailRelayBroker:DeadLetterQueueName",
+                                                "MailRelayBroker:DeadLetterRoutingKey",
+                                                "MailRelayBroker:EnablePollingFallback",
+                                                "MailRelayBroker:HostName",
+                                                "MailRelayBroker:OutboundExchangeName",
+                                                "MailRelayBroker:OutboundRoutingKey",
+                                                "MailRelayBroker:Password",
+                                                "MailRelayBroker:Port",
+                                                "MailRelayBroker:PrefetchCount",
+                                                "MailRelayBroker:QueueName",
+                                                "MailRelayBroker:RetryDelayMilliseconds",
+                                                "MailRelayBroker:RetryExchangeName",
+                                                "MailRelayBroker:RetryQueueName",
+                                                "MailRelayBroker:RetryRoutingKey",
+                                                "MailRelayBroker:UserName",
+                                                "MailRelayBroker:VirtualHost",
+                                                "MailRelayDelivery:Mode",
+                                                "MailRelayDkim:Domain",
+                                                "MailRelayDkim:Enabled",
+                                                "MailRelayDkim:PrivateKeyPath",
+                                                "MailRelayDkim:PrivateKeyPem",
+                                                "MailRelayDkim:Selector",
+                                                "MailRelayQueue:BaseRetryDelaySeconds",
+                                                "MailRelayQueue:BatchSize",
+                                                "MailRelayQueue:LockTimeoutSeconds",
+                                                "MailRelayQueue:MaxAttempts",
+                                                "MailRelayQueue:MaxRetryDelaySeconds",
+                                                "MailRelayQueue:PollIntervalSeconds",
+                                                "OpenTelemetry:Otlp:Endpoint",
+                                                "RelaySmtp:Host",
+                                                "RelaySmtp:Password",
+                                                "RelaySmtp:Port",
+                                                "RelaySmtp:User",
+                                                "RelaySmtp:UseSsl"
+                                            ]
+                               }
+                           ],
+    "environmentFiles":  [
+                             {
+                                 "path":  ".env.example",
+                                 "variables":  [
+                                                   "API_HOST_BIND",
+                                                   "API_PORT",
+                                                   "ASPNETCORE_ENVIRONMENT",
+                                                   "CLIENT_HOST_BIND",
+                                                   "CLIENT_PORT",
+                                                   "IMAGE_PREFIX",
+                                                   "MAIL_INBOX_HOST_BIND",
+                                                   "MAIL_INBOX_PORT",
+                                                   "MAIL_INBOX_POSTGRES_DB",
+                                                   "MAIL_INBOX_POSTGRES_HOST_BIND",
+                                                   "MAIL_INBOX_POSTGRES_PASSWORD",
+                                                   "MAIL_INBOX_POSTGRES_PORT",
+                                                   "MAIL_INBOX_POSTGRES_USER",
+                                                   "MAIL_INBOX_SMTP_HOST_BIND",
+                                                   "MAIL_INBOX_SMTP_PORT",
+                                                   "MAIL_RELAY_HOST_BIND",
+                                                   "MAIL_RELAY_POSTGRES_DB",
+                                                   "MAIL_RELAY_POSTGRES_HOST_BIND",
+                                                   "MAIL_RELAY_POSTGRES_PASSWORD",
+                                                   "MAIL_RELAY_POSTGRES_PORT",
+                                                   "MAIL_RELAY_POSTGRES_USER",
+                                                   "POSTGRES_DB",
+                                                   "POSTGRES_HOST_BIND",
+                                                   "POSTGRES_PASSWORD",
+                                                   "POSTGRES_PORT",
+                                                   "POSTGRES_USER",
+                                                   "RABBITMQ_HOST_BIND",
+                                                   "RABBITMQ_MANAGEMENT_HOST_BIND",
+                                                   "RABBITMQ_MANAGEMENT_PORT",
+                                                   "RABBITMQ_PORT",
+                                                   "REDIS_HOST_BIND",
+                                                   "REDIS_PORT"
+                                               ]
+                             },
+                             {
+                                 "path":  "fooddiary.env.example",
+                                 "variables":  [
+                                                   "API_HOST_BIND",
+                                                   "API_PORT",
+                                                   "ASPNETCORE_ENVIRONMENT",
+                                                   "Billing__Provider",
+                                                   "BillingRenewal__BatchSize",
+                                                   "BillingRenewal__Cron",
+                                                   "BillingRenewal__Enabled",
+                                                   "BillingRenewal__Provider",
+                                                   "CLIENT_HOST_BIND",
+                                                   "CLIENT_PORT",
+                                                   "ConnectionStrings__DefaultConnection",
+                                                   "Cors__Origins__0",
+                                                   "Cors__Origins__1",
+                                                   "Cors__Origins__2",
+                                                   "DirectMx__ConnectTimeoutSeconds",
+                                                   "DirectMx__Port",
+                                                   "DirectMx__UseStartTlsWhenAvailable",
+                                                   "Email__AllowedFrontendBaseUrls__0",
+                                                   "Email__FromAddress",
+                                                   "Email__FrontendBaseUrl",
+                                                   "Email__SmtpHost",
+                                                   "Email__SmtpPassword",
+                                                   "Email__SmtpPort",
+                                                   "Email__SmtpUser",
+                                                   "EmailDelivery__Mode",
+                                                   "EmailDelivery__RelayApiKey",
+                                                   "EmailDelivery__RelayBaseUrl",
+                                                   "IMAGE_PREFIX",
+                                                   "Jwt__Audience",
+                                                   "Jwt__ExpirationMinutes",
+                                                   "Jwt__Issuer",
+                                                   "Jwt__RefreshTokenExpirationDays",
+                                                   "Jwt__RememberMeRefreshTokenExpirationDays",
+                                                   "Jwt__SecretKey",
+                                                   "MAIL_INBOX_HOST_BIND",
+                                                   "MAIL_INBOX_IMAGE_TAG",
+                                                   "MAIL_INBOX_INITIALIZER_IMAGE_TAG",
+                                                   "MAIL_INBOX_PORT",
+                                                   "MAIL_INBOX_POSTGRES_DB",
+                                                   "MAIL_INBOX_POSTGRES_HOST_BIND",
+                                                   "MAIL_INBOX_POSTGRES_PASSWORD",
+                                                   "MAIL_INBOX_POSTGRES_PORT",
+                                                   "MAIL_INBOX_POSTGRES_USER",
+                                                   "MAIL_INBOX_SMTP_HOST_BIND",
+                                                   "MAIL_INBOX_SMTP_PORT",
+                                                   "MAIL_RELAY_DKIM_PRIVATE_KEY_FILE",
+                                                   "MAIL_RELAY_HOST_BIND",
+                                                   "MAIL_RELAY_IMAGE_TAG",
+                                                   "MAIL_RELAY_PORT",
+                                                   "MAIL_RELAY_POSTGRES_DB",
+                                                   "MAIL_RELAY_POSTGRES_HOST_BIND",
+                                                   "MAIL_RELAY_POSTGRES_PASSWORD",
+                                                   "MAIL_RELAY_POSTGRES_PORT",
+                                                   "MAIL_RELAY_POSTGRES_USER",
+                                                   "MailInboxSmtp__AllowedRecipients__0",
+                                                   "MailInboxSmtp__AllowedRecipients__1",
+                                                   "MailInboxSmtp__AllowedRecipients__2",
+                                                   "MailInboxSmtp__AllowedRecipients__3",
+                                                   "MailInboxSmtp__Enabled",
+                                                   "MailInboxSmtp__Port",
+                                                   "MailInboxSmtp__ServerName",
+                                                   "MailRelay__ApiKey",
+                                                   "MailRelay__MailgunWebhookSigningKey",
+                                                   "MailRelay__RequireApiKey",
+                                                   "MailRelay__RequireAwsSesSnsSignature",
+                                                   "MailRelay__RequireMailgunWebhookSignature",
+                                                   "MailRelayBroker__Backend",
+                                                   "MailRelayBroker__DeadLetterExchangeName",
+                                                   "MailRelayBroker__DeadLetterQueueName",
+                                                   "MailRelayBroker__DeadLetterRoutingKey",
+                                                   "MailRelayBroker__EnablePollingFallback",
+                                                   "MailRelayBroker__HostName",
+                                                   "MailRelayBroker__OutboundExchangeName",
+                                                   "MailRelayBroker__OutboundRoutingKey",
+                                                   "MailRelayBroker__Password",
+                                                   "MailRelayBroker__Port",
+                                                   "MailRelayBroker__PrefetchCount",
+                                                   "MailRelayBroker__QueueName",
+                                                   "MailRelayBroker__RetryDelayMilliseconds",
+                                                   "MailRelayBroker__RetryExchangeName",
+                                                   "MailRelayBroker__RetryQueueName",
+                                                   "MailRelayBroker__RetryRoutingKey",
+                                                   "MailRelayBroker__UserName",
+                                                   "MailRelayBroker__VirtualHost",
+                                                   "MailRelayDelivery__Mode",
+                                                   "MailRelayDkim__Domain",
+                                                   "MailRelayDkim__Enabled",
+                                                   "MailRelayDkim__PrivateKeyPath",
+                                                   "MailRelayDkim__PrivateKeyPem",
+                                                   "MailRelayDkim__Selector",
+                                                   "MailRelayQueue__BaseRetryDelaySeconds",
+                                                   "MailRelayQueue__BatchSize",
+                                                   "MailRelayQueue__LockTimeoutSeconds",
+                                                   "MailRelayQueue__MaxAttempts",
+                                                   "MailRelayQueue__MaxRetryDelaySeconds",
+                                                   "MailRelayQueue__PollIntervalSeconds",
+                                                   "OpenAi__ApiKey",
+                                                   "OpenTelemetry__Otlp__Endpoint",
+                                                   "Paddle__ApiBaseUrl",
+                                                   "Paddle__ApiKey",
+                                                   "Paddle__CheckoutUrl",
+                                                   "Paddle__ClientSideToken",
+                                                   "Paddle__PremiumMonthlyPriceId",
+                                                   "Paddle__PremiumYearlyPriceId",
+                                                   "Paddle__WebhookSecretKey",
+                                                   "POSTGRES_DB",
+                                                   "POSTGRES_HOST_BIND",
+                                                   "POSTGRES_PASSWORD",
+                                                   "POSTGRES_PORT",
+                                                   "POSTGRES_USER",
+                                                   "RABBITMQ_HOST_BIND",
+                                                   "RABBITMQ_MANAGEMENT_HOST_BIND",
+                                                   "RABBITMQ_MANAGEMENT_PORT",
+                                                   "RABBITMQ_PORT",
+                                                   "REDIS_HOST_BIND",
+                                                   "REDIS_PORT",
+                                                   "RelaySmtp__Host",
+                                                   "RelaySmtp__Password",
+                                                   "RelaySmtp__Port",
+                                                   "RelaySmtp__User",
+                                                   "RelaySmtp__UseSsl",
+                                                   "S3__AccessKeyId",
+                                                   "S3__Bucket",
+                                                   "S3__PublicBaseUrl",
+                                                   "S3__Region",
+                                                   "S3__SecretAccessKey",
+                                                   "S3__ServiceUrl",
+                                                   "Stripe__CancelUrl",
+                                                   "Stripe__PortalReturnUrl",
+                                                   "Stripe__PremiumMonthlyPriceId",
+                                                   "Stripe__PremiumYearlyPriceId",
+                                                   "Stripe__PublishableKey",
+                                                   "Stripe__SecretKey",
+                                                   "Stripe__SuccessUrl",
+                                                   "Stripe__WebhookSecret",
+                                                   "TelegramAuth__BotToken",
+                                                   "TelegramBot__ApiBaseUrl",
+                                                   "TelegramBot__ApiSecret",
+                                                   "TelegramBot__Token",
+                                                   "TelegramBot__WebAppUrl",
+                                                   "YooKassa__ApiBaseUrl",
+                                                   "YooKassa__Currency",
+                                                   "YooKassa__Description",
+                                                   "YooKassa__PremiumMonthlyAmount",
+                                                   "YooKassa__PremiumYearlyAmount",
+                                                   "YooKassa__ReturnUrl",
+                                                   "YooKassa__SecretKey",
+                                                   "YooKassa__ShopId"
+                                               ]
+                             }
+                         ]
+}

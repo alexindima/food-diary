@@ -74,7 +74,7 @@ $moduleNames = @($allModules | ForEach-Object { $_.name })
 $allDirectories = @(
     Get-ChildItem -LiteralPath $repositoryRoot -Recurse -Directory |
         Where-Object {
-            $_.FullName -notmatch '[\\/](\.git|node_modules|obj|bin|dist|coverage|\.artifacts|TestResults)[\\/]'
+            $_.FullName -notmatch '[\\/](\.git|\.github|\.llm-wiki|docs|node_modules|obj|bin|dist|coverage|\.artifacts|TestResults)[\\/]'
         }
 )
 $allTestFiles = @(

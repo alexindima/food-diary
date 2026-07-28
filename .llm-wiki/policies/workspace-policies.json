@@ -1,0 +1,703 @@
+{
+  "schemaVersion": 1,
+  "workspace": {
+    "format": "llm-wiki-task-workspace",
+    "latestSchemaVersion": 4,
+    "artifactSchemaVersions": {
+      "packet": 1,
+      "taskContract": 1,
+      "manifest": 1,
+      "acceptance": 1,
+      "evidence": 1,
+      "journal": 1,
+      "report": 1
+    }
+  },
+  "audit": {
+    "staleAfterDays": 7,
+    "evidenceMaxAgeDays": 3,
+    "maximumDays": 3650
+  },
+  "planConformance": {
+    "maximumUnplannedAllowedPaths": 0,
+    "maximumMissingPlannedPaths": 0,
+    "blockOutOfScope": true,
+    "blockNewChecks": true,
+    "blockNewReviews": true
+  },
+  "proofOfChange": {
+    "minimumChangedPathsPerSatisfiedCriterion": 1,
+    "requireVerifiedEvidencePerSatisfiedCriterion": true,
+    "requireMappedPathsInCurrentDiff": true,
+    "requireMappedTestPathsToExist": true
+  },
+  "requirementModel": {
+    "minimumCriterionWords": 3,
+    "maximumCompoundConnectors": 2,
+    "duplicateSimilarityPercent": 80,
+    "maximumRecommendations": 10,
+    "blockVagueCriteria": true,
+    "blockCompoundCriteria": true
+  },
+  "impactSimulation": {
+    "maximumUnexpectedScopes": 0,
+    "maximumUnexpectedModules": 0,
+    "maximumUnexpectedContracts": 0,
+    "maximumUnexpectedConsumers": 0,
+    "maximumUnexpectedRuntimeBindings": 0,
+    "maximumUnexpectedDataBindings": 0,
+    "maximumUnexpectedFrontendBindings": 0
+  },
+    "repairLoop": {
+      "maximumRepairPaths": 5,
+      "maximumAttemptsPerFailure": 3,
+      "maximumRepeatedAttemptFingerprint": 1,
+      "maximumTotalAttempts": 20,
+      "learningMinimumConfidence": 75,
+      "learningMaximumMatches": 5,
+      "allowedCategories": [
+      "compile",
+      "test",
+      "format",
+      "lint",
+      "contract",
+      "architecture",
+      "infrastructure",
+      "unknown"
+    ]
+  },
+  "scheduler": {
+    "defaultConcurrency": 3,
+    "maximumConcurrency": 8,
+    "defaultLeaseMinutes": 30,
+    "maximumLeaseMinutes": 240,
+    "terminalReceiptRetentionDays": 30,
+    "maximumReceiptRetentionDays": 3650,
+    "defaultMetricsWindowDays": 30,
+    "slo": {
+      "minimumTerminalSamples": 2,
+      "minimumSuccessRatePercent": 80,
+      "minimumHeartbeatCoveragePercent": 80,
+      "maximumReconciliationRatePercent": 20,
+      "maximumP95DurationMinutes": 240
+    },
+    "metricsSnapshots": {
+      "retentionCount": 90,
+      "regression": {
+        "minimumTerminalSamples": 2,
+        "maximumSuccessRateDropPoints": 10,
+        "maximumHeartbeatCoverageDropPoints": 10,
+        "maximumReconciliationRateIncreasePoints": 10,
+        "maximumP95DurationIncreasePercent": 25,
+        "maximumThroughputDropPercent": 30
+      }
+    },
+    "orchestrationCycles": {
+      "retentionCount": 90
+    },
+    "decomposition": {
+      "minimumChangedPaths": 6,
+      "defaultMaximumShards": 6,
+      "maximumShards": 12,
+      "retentionCount": 90
+    },
+    "verificationPlanner": {
+      "riskCalibration": {
+        "mediumThreshold": 35,
+        "highThreshold": 60,
+        "criticalThreshold": 80,
+        "packetRiskPointWeight": 6,
+        "changedPathPointWeight": 2,
+        "maximumChangedPathPoints": 20,
+        "additionalScopePointWeight": 5,
+        "securityReviewPoints": 15,
+        "databaseScopePoints": 12,
+        "apiScopePoints": 8,
+        "negativeQualityAdjustmentPoints": 3,
+        "maximumHistoricalPoints": 15,
+        "forceIncludePassedAt": "high",
+        "requireSequentialExecutionAt": "critical"
+      },
+      "supersedes": {
+        "frontend-verify": [
+          "frontend-i18n"
+        ]
+      },
+      "priorityPatterns": [
+        {
+          "pattern": "format|compatibility|architecture-health|audit",
+          "priority": 10
+        },
+        {
+          "pattern": "architecture-tests|presentation-api-tests",
+          "priority": 20
+        },
+        {
+          "pattern": "integration-tests",
+          "priority": 30
+        },
+        {
+          "pattern": "frontend-verify|wiki-verify",
+          "priority": 40
+        }
+      ],
+      "defaultPriority": 25,
+      "modelRouting": {
+        "enabled": true,
+        "maximumComplexityScore": 100,
+        "predictedFailureWeightPercent": 20,
+        "verificationExecutionPoints": 3,
+        "maximumVerificationExecutionPoints": 15,
+        "additionalScopePoints": 3,
+        "maximumScopePoints": 12,
+        "securityReviewPoints": 10,
+        "databaseScopePoints": 8,
+        "apiScopePoints": 5,
+        "riskFloorRank": {
+          "low": 1,
+          "medium": 2,
+          "high": 3,
+          "critical": 4
+        },
+        "routes": [
+          {
+            "id": "economy",
+            "rank": 1,
+            "minimumComplexityScore": 0,
+            "model": "gpt-5.6-terra",
+            "reasoningEffort": "medium",
+            "relativeCostUnits": 1
+          },
+          {
+            "id": "balanced",
+            "rank": 2,
+            "minimumComplexityScore": 35,
+            "model": "gpt-5.6-terra",
+            "reasoningEffort": "high",
+            "relativeCostUnits": 2
+          },
+          {
+            "id": "frontier",
+            "rank": 3,
+            "minimumComplexityScore": 60,
+            "model": "gpt-5.6-sol",
+            "reasoningEffort": "high",
+            "relativeCostUnits": 4
+          },
+          {
+            "id": "frontier-deep",
+            "rank": 4,
+            "minimumComplexityScore": 80,
+            "model": "gpt-5.6-sol",
+            "reasoningEffort": "xhigh",
+            "relativeCostUnits": 7
+          }
+        ],
+        "outcomes": {
+          "minimumSamples": 3,
+          "successScoreThreshold": 75,
+          "maximumEvents": 10000,
+          "priorStrength": 3,
+          "recentWindowSamples": 5,
+          "minimumDriftSamples": 3,
+          "maximumRecentOutcomeDropPoints": 10,
+          "minimumRecentSuccessRatePercent": 60,
+          "escalateDegradedRoutes": true,
+          "weights": {
+            "readiness": 25,
+            "confidence": 25,
+            "critique": 25,
+            "verification": 25
+          },
+          "penalties": {
+            "failedRepair": 25,
+            "falseNegative": 6,
+            "impactDrift": 5,
+            "flakyCheck": 3,
+            "maximum": 30
+          }
+        },
+        "optimization": {
+          "enabled": true,
+          "minimumSamplesPerRoute": 3,
+          "qualityWeightPercent": 85,
+          "costWeightPercent": 15,
+          "minimumQualityGainPoints": 5,
+          "maximumEscalationRanks": 1
+        }
+      },
+      "instructionOutcomes": {
+        "enabled": true,
+        "minimumSamples": 3,
+        "successScoreThreshold": 75,
+        "recentWindowSamples": 5,
+        "minimumDriftSamples": 3,
+        "maximumRecentOutcomeDropPoints": 10,
+        "minimumRecentSuccessRatePercent": 60,
+        "maximumEvents": 10000,
+        "maximumSourcesPerEvent": 50,
+        "candidateScore": 80,
+        "complexityBandUpperBounds": [
+          34,
+          59,
+          79,
+          100
+        ]
+      },
+      "instructionExperiments": {
+        "enabled": true,
+        "minimumSamplesPerCohort": 3,
+        "minimumOutcomeGainPoints": 5,
+        "maximumSuccessRateDropPoints": 0,
+        "minimumMatchedSamplesPerCohort": 2,
+        "confidenceZScore": 1.96,
+        "sequentialMonitoring": {
+          "enabled": true,
+          "maximumLooks": 5,
+          "minimumNewCandidateSamples": 1,
+          "adjustedZScore": 2.576
+        },
+        "powerPlanning": {
+          "enabled": true,
+          "powerZScore": 0.84,
+          "defaultOutcomeStandardDeviation": 15,
+          "maximumRequiredSamplesPerCohort": 1000
+        },
+        "maximumActiveExperiments": 10,
+        "maximumEvents": 1000
+      },
+      "failurePrediction": {
+        "predictedFailureThresholdPercent": 55,
+        "riskScoreWeightPercent": 60,
+        "maximumChangeBreadthPoints": 15,
+        "pointsPerChangedPath": 2,
+        "historicalLearningPoints": 15,
+        "maximumHistoricalPoints": 30,
+        "priorRepairAttemptPoints": 10,
+        "maximumPriorRepairPoints": 20,
+        "priorityBoostDivisor": 10,
+        "costModel": {
+          "defaultVerificationSeconds": 180,
+          "maximumPriorityBoost": 20,
+          "valueDensityBoostMultiplier": 2,
+          "verificationSecondsByPattern": [
+            { "pattern": "architecture", "seconds": 240 },
+            { "pattern": "integration", "seconds": 600 },
+            { "pattern": "frontend", "seconds": 480 },
+            { "pattern": "wiki", "seconds": 600 }
+          ],
+          "repairSecondsByCategory": {
+            "compile": 900,
+            "test": 1200,
+            "format": 300,
+            "lint": 600,
+            "contract": 1800,
+            "architecture": 2400,
+            "infrastructure": 1800,
+            "unknown": 1200
+          },
+          "telemetry": {
+            "minimumSamples": 3,
+            "flakyTransitionPercent": 30,
+            "historicalBlendPercent": 50,
+            "maximumHistoricalFailurePoints": 30,
+            "retentionCount": 5000
+          }
+        }
+      }
+    },
+    "confidenceLedger": {
+      "statusMultipliers": {
+        "pass": 1,
+        "warning": 0.5,
+        "not-assessed": 0,
+        "fail": 0
+      },
+      "dimensions": {
+        "requirements": 15,
+        "planConformance": 15,
+        "proofOfChange": 15,
+        "evidence": 20,
+        "impactSimulation": 10,
+        "repairLoop": 10,
+        "failurePrediction": 5,
+        "verificationTelemetry": 5,
+        "contextSecurity": 5
+      },
+      "hardCaps": {
+        "invalidContextSecurity": 39,
+        "unresolvedEvidence": 49,
+        "unresolvedRepair": 49,
+        "invalidRequirements": 59,
+        "invalidPlanConformance": 59,
+        "invalidProofOfChange": 59,
+        "invalidImpactSimulation": 69
+      },
+      "levels": {
+        "guardedAt": 40,
+        "substantialAt": 70,
+        "highAt": 90
+      }
+    },
+    "changeCritique": {
+      "minimumApprovalScore": 70,
+      "maximumWarningsForApproval": 3,
+      "blockingSeverities": [
+        "critical",
+        "major"
+      ],
+      "severityPenalties": {
+        "critical": 25,
+        "major": 15,
+        "warning": 5,
+        "info": 0
+      },
+      "requiredReviewAreas": [
+        "intent",
+        "scope",
+        "proof",
+        "verification",
+        "architecture",
+        "security",
+        "operability"
+      ]
+    },
+    "retrospective": {
+      "minimumLearningScore": 60,
+      "maximumLearningCandidates": 20,
+      "costVarianceWarningPercent": 50,
+      "candidateScores": {
+        "impactDrift": 90,
+        "falseNegative": 90,
+        "failedRepair": 80,
+        "flakyVerification": 75,
+        "costVariance": 70,
+        "contextQuarantine": 85
+      }
+    },
+    "learningPromotion": {
+      "minimumDistinctTasks": 2,
+      "minimumObservationScore": 60,
+      "maximumCandidates": 1000,
+      "maximumEvidenceItems": 50,
+      "approvalRequiresHumanReason": true,
+      "materialization": {
+        "minimumCalibrationSeconds": 1,
+        "maximumCalibrationSeconds": 86400,
+        "maximumAppliedLearnings": 1000,
+        "requireSuccessfulExperiment": true
+      },
+      "experiments": {
+        "minimumShadowImprovementPercent": 10,
+        "minimumCanarySamples": 2,
+        "maximumCanaryDegradationPercent": 0,
+        "defaultCanaryPercentage": 25,
+        "maximumCanaryPercentage": 100,
+        "maximumActiveCanaries": 10
+      },
+      "health": {
+        "minimumSamples": 2,
+        "degradedScoreThreshold": 65,
+        "maximumDegradationPercent": 25,
+        "failedRepairPenalty": 20,
+        "falseNegativePenalty": 15,
+        "impactDriftPenalty": 10,
+        "contextQuarantinePenalty": 10,
+        "maximumPenalty": 80,
+        "maximumObservations": 10000
+      },
+      "targets": {
+        "impact-drift": "durable-memory",
+        "failure-prediction": "durable-memory",
+        "repair-learning": "durable-memory",
+        "flaky-verification": "verification-calibration",
+        "cost-calibration": "verification-calibration",
+        "context-security": "durable-memory"
+      }
+    },
+    "evalPromotion": {
+      "minimumSignalScore": 70,
+      "maximumCandidates": 1000,
+      "maximumChangedPaths": 1000,
+      "maximumSignals": 20,
+      "approvalRequiresHumanReason": true,
+      "requirePassingBeforeApply": true
+    },
+    "taskSimilarity": {
+      "minimumCandidateScore": 60,
+      "minimumPlanReuseScore": 75,
+      "maximumRiskScoreDelta": 25,
+      "maximumCandidates": 20,
+      "weights": {
+        "modules": 30,
+        "scopes": 20,
+        "rules": 20,
+        "checks": 20,
+        "pathAreas": 10
+      }
+    },
+    "contextBundles": {
+      "maximumItems": 100,
+      "defaultItems": 50,
+      "maximumTotalCharacters": 120000,
+      "defaultTotalCharacters": 60000,
+      "maximumItemCharacters": 8000,
+      "symbolContextLines": 30,
+      "optimizer": {
+        "minimumScoreCoveragePercent": 80,
+        "minimumCharacterUtilizationPercent": 35,
+        "maximumTruncationPercent": 80,
+        "minimumKindDiversity": 2,
+        "recommendedHeadroomPercent": 10,
+        "maximumRecommendations": 10
+      },
+      "benchmark": {
+        "minimumComparabilityPercent": 60,
+        "minimumImprovementPoints": 3,
+        "maximumRequiredCoverageRegressionPoints": 0,
+        "maximumSecurityFindingIncrease": 0,
+        "weights": {
+          "requiredCoverage": 30,
+          "scoreCoverage": 25,
+          "lowTruncation": 15,
+          "contentYield": 10,
+          "kindDiversity": 10,
+          "budgetFit": 10
+        }
+      },
+      "experiments": {
+        "maximumVariants": 8,
+        "minimumItemLimit": 5,
+        "minimumCharacterBudget": 5000,
+        "compactCharacterPercent": 75,
+        "coverageItemPercent": 125,
+        "coverageCharacterPercent": 110,
+        "depthCharacterPercent": 125
+      },
+      "strategyApplication": {
+        "approvalRequiresHumanReason": true,
+        "minimumApprovalReasonWords": 3,
+        "maximumQualityDeviationPoints": 0.1,
+        "maximumSecurityFindingIncrease": 0,
+        "maximumQuarantineMatchIncrease": 0
+      },
+      "strategyOutcomes": {
+        "minimumSamples": 2,
+        "successScoreThreshold": 75,
+        "maximumAbsoluteExperimentAdjustmentPoints": 5,
+        "maximumEvents": 10000,
+        "priorStrength": 3,
+        "recentWindowSamples": 5,
+        "minimumDriftSamples": 3,
+        "maximumRecentOutcomeDropPoints": 10,
+        "minimumRecentSuccessRatePercent": 60,
+        "blockDegradedAdoption": true,
+        "weights": {
+          "readiness": 35,
+          "confidence": 30,
+          "critique": 25,
+          "verification": 10
+        },
+        "penalties": {
+          "failedRepair": 10,
+          "falseNegative": 8,
+          "impactDrift": 5,
+          "quarantinedContextSource": 5,
+          "rolledBack": 25,
+          "maximum": 60
+        }
+      },
+      "security": {
+        "maximumScanCharactersPerFile": 200000,
+        "trustZones": [
+          {
+            "id": "agent-instructions",
+            "pattern": "(^|/)AGENTS\\.md$",
+            "trust": "trusted-instructions",
+            "instructionAuthority": true
+          },
+          {
+            "id": "governed-wiki",
+            "pattern": "^\\.llm-wiki/",
+            "trust": "governed-context",
+            "instructionAuthority": false
+          },
+          {
+            "id": "project-docs",
+            "pattern": "^docs/",
+            "trust": "reviewed-context",
+            "instructionAuthority": false
+          }
+        ],
+        "defaultTrust": "untrusted-data",
+        "promptInjectionPatterns": [
+          {
+            "id": "instruction-override",
+            "severity": "critical",
+            "pattern": "(?i)(ignore|disregard|forget)\\s+(all\\s+)?(previous|prior|system|developer)\\s+instructions?",
+            "replacement": "[QUARANTINED: instruction override]"
+          },
+          {
+            "id": "role-override",
+            "severity": "high",
+            "pattern": "(?i)(you are now|act as|new system prompt|developer message follows)",
+            "replacement": "[QUARANTINED: role override]"
+          },
+          {
+            "id": "secret-exfiltration",
+            "severity": "critical",
+            "pattern": "(?i)(reveal|print|send|upload|exfiltrate)\\s+.{0,40}(secret|token|password|credential|private key)",
+            "replacement": "[QUARANTINED: secret exfiltration]"
+          },
+          {
+            "id": "tool-coercion",
+            "severity": "high",
+            "pattern": "(?i)(run|execute)\\s+.{0,30}(without\\s+(approval|asking)|bypass\\s+(approval|safety)|disable\\s+safety)",
+            "replacement": "[QUARANTINED: tool coercion]"
+          }
+        ]
+      },
+      "feedback": {
+        "minimumPathSamples": 2,
+        "helpfulWeight": 6,
+        "noisyWeight": -6,
+        "missingWeight": 5,
+        "maximumAbsoluteAdjustment": 24,
+        "retentionCount": 1000,
+        "qualityAdjustments": {
+          "reworkDelta": -10,
+          "rollbackDelta": -25,
+          "regressionDelta": -20,
+          "recoveryDelta": 10,
+          "maximumEventsPerDispatch": 20,
+          "retentionCount": 2000
+        }
+      },
+      "memory": {
+        "defaultReviewAfterDays": 180,
+        "maximumReviewAfterDays": 3650,
+        "maximumRelevantItems": 12,
+        "minimumCandidateScore": 70,
+        "duplicateSimilarityPercent": 75,
+        "maximumCandidates": 20
+      }
+    },
+    "watchdog": {
+      "silentDispatchMinutes": 10,
+      "retryWindowMinutes": 1440,
+      "maximumRetriesPerWorkspace": 2,
+      "agentFailureThreshold": 3,
+      "defaultQuarantineMinutes": 60,
+      "maximumQuarantineMinutes": 1440,
+      "retentionCount": 90,
+      "circuitBreaker": {
+        "defaultCooldownMinutes": 240,
+        "maximumCooldownMinutes": 10080,
+        "retentionCount": 180
+      }
+    },
+    "agentRegistry": {
+      "allowedCapabilities": [
+        "generalist",
+        "backend",
+        "frontend",
+        "api",
+        "database",
+        "tests",
+        "security",
+        "infrastructure",
+        "localization",
+        "docs"
+      ],
+      "defaultCapacity": 1,
+      "maximumCapacity": 8,
+      "defaultRegistrationMinutes": 60,
+      "maximumRegistrationMinutes": 1440,
+      "routing": {
+          "minimumReliabilitySamples": 2,
+          "minimumCapabilitySamples": 2,
+          "coldStartScore": 50,
+          "capabilityReliabilityBlendPercent": 65,
+          "successWeight": 20,
+          "heartbeatWeight": 10,
+          "durationWeight": 15,
+          "qualityWeight": 15,
+          "highRiskReliabilityWeight": 10,
+          "criticalRiskReliabilityWeight": 20,
+          "availableCapacityWeight": 20,
+          "specializationWeight": 10,
+          "fairnessWeight": 10
+      },
+      "schedulePlans": {
+        "defaultTtlMinutes": 5,
+        "maximumTtlMinutes": 60,
+        "retentionCount": 90
+      }
+    }
+  },
+  "export": {
+    "pathPattern": "^\\.artifacts/llm-wiki/exports/[^/]+\\.json$",
+    "maximumContextItems": 100,
+    "defaultContextItems": 50,
+    "redaction": {
+      "policyId": "whitelist-plus-pattern-redaction-v1",
+      "patterns": [
+        {
+          "id": "private-key",
+          "category": "private-key",
+          "pattern": "(?s)-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----.*?-----END (?:RSA |EC |OPENSSH )?PRIVATE KEY-----",
+          "replacementMode": "full"
+        },
+        {
+          "id": "bearer-token",
+          "category": "bearer-token",
+          "pattern": "(?i)\\bBearer\\s+[A-Za-z0-9._~+/\\-]+=*",
+          "replacementMode": "full"
+        },
+        {
+          "id": "jwt",
+          "category": "jwt",
+          "pattern": "\\beyJ[A-Za-z0-9_-]{8,}\\.[A-Za-z0-9_-]{8,}\\.[A-Za-z0-9_-]{8,}\\b",
+          "replacementMode": "full"
+        },
+        {
+          "id": "github-token",
+          "category": "github-token",
+          "pattern": "\\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\\b",
+          "replacementMode": "full"
+        },
+        {
+          "id": "aws-access-key",
+          "category": "aws-access-key",
+          "pattern": "\\b(?:AKIA|ASIA)[A-Z0-9]{16}\\b",
+          "replacementMode": "full"
+        },
+        {
+          "id": "credential-url",
+          "category": "credential-url",
+          "pattern": "(?i)\\b([a-z][a-z0-9+.-]*://)[^/\\s:@]+:[^/\\s@]+@",
+          "replacementMode": "preserve-group-1"
+        },
+        {
+          "id": "credential-value",
+          "category": "credential-value",
+          "pattern": "(?i)\\b(password|passwd|secret|api[-_]?key|access[-_]?token|refresh[-_]?token|connection[-_]?string)\\b(\\s*[:=]\\s*[\"']?)(?!\\[REDACTED\\])([^\"'\\s,;}{]+)",
+          "replacementMode": "preserve-groups-1-2"
+        },
+        {
+          "id": "email",
+          "category": "email",
+          "pattern": "\\b[A-Z0-9._%+\\-]+@[A-Z0-9.\\-]+\\.[A-Z]{2,}\\b",
+          "replacementMode": "full"
+        }
+      ]
+    }
+  },
+  "import": {
+    "pathPattern": "^\\.artifacts/llm-wiki/exports/[^/]+\\.json$",
+    "workspacePattern": "^\\.artifacts/llm-wiki/tasks/[^/.][^/]*$",
+    "stagingPrefix": ".task-import-",
+    "allowPartialScopeByDefault": false,
+    "revalidateAcceptance": true
+  }
+}

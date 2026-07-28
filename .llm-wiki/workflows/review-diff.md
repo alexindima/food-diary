@@ -39,3 +39,7 @@ The result identifies:
 Use `-Format Json` when another agent or automation will consume the packet.
 The output is advisory: actual requirements still come from scoped
 `AGENTS.md`, source code, tests, contracts, and the user's request.
+
+After reviewing the packet, run `wiki.ps1 policy` to enforce structural rules.
+For higher-risk or handed-off work, initialize an evidence bundle and resolve
+every required check and review obligation before completion.

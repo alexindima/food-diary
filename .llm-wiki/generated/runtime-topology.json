@@ -1,0 +1,390 @@
+{
+    "schemaVersion":  1,
+    "summary":  {
+                    "composeServices":  19,
+                    "hostedServices":  9,
+                    "httpClients":  10,
+                    "webhooks":  16,
+                    "recurringJobRegistrations":  11
+                },
+    "composeServices":  [
+                            {
+                                "name":  "api",
+                                "image":  "${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/api:${API_IMAGE_TAG:-latest}",
+                                "dockerfile":  "FoodDiary.Web.Api/Dockerfile",
+                                "dependsOn":  [
+                                                  "db-init",
+                                                  "mail-relay",
+                                                  "rabbitmq",
+                                                  "redis"
+                                              ]
+                            },
+                            {
+                                "name":  "api-data-protection-keys",
+                                "image":  null,
+                                "dockerfile":  null,
+                                "dependsOn":  [
+
+                                              ]
+                            },
+                            {
+                                "name":  "client",
+                                "image":  "${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/client:${CLIENT_IMAGE_TAG:-latest}",
+                                "dockerfile":  "Dockerfile",
+                                "dependsOn":  [
+                                                  "api"
+                                              ]
+                            },
+                            {
+                                "name":  "db-init",
+                                "image":  "${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/initializer:${INITIALIZER_IMAGE_TAG:-latest}",
+                                "dockerfile":  "FoodDiary.Initializer/Dockerfile",
+                                "dependsOn":  [
+                                                  "postgres"
+                                              ]
+                            },
+                            {
+                                "name":  "job-manager",
+                                "image":  "${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/job-manager:${JOB_MANAGER_IMAGE_TAG:-latest}",
+                                "dockerfile":  "FoodDiary.JobManager/Dockerfile",
+                                "dependsOn":  [
+                                                  "db-init"
+                                              ]
+                            },
+                            {
+                                "name":  "mail-inbox",
+                                "image":  "${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mail-inbox:${MAIL_INBOX_IMAGE_TAG:-latest}",
+                                "dockerfile":  "MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile",
+                                "dependsOn":  [
+                                                  "mailinbox-db-init"
+                                              ]
+                            },
+                            {
+                                "name":  "mailinbox-db-init",
+                                "image":  "${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mailinbox-initializer:${MAIL_INBOX_INITIALIZER_IMAGE_TAG:-latest}",
+                                "dockerfile":  "MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile",
+                                "dependsOn":  [
+                                                  "mailinbox-postgres"
+                                              ]
+                            },
+                            {
+                                "name":  "mailinbox-postgres",
+                                "image":  "postgres:17-alpine",
+                                "dockerfile":  null,
+                                "dependsOn":  [
+
+                                              ]
+                            },
+                            {
+                                "name":  "mailinbox-postgres-data",
+                                "image":  null,
+                                "dockerfile":  null,
+                                "dependsOn":  [
+
+                                              ]
+                            },
+                            {
+                                "name":  "mail-relay",
+                                "image":  "${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mail-relay:${MAIL_RELAY_IMAGE_TAG:-latest}",
+                                "dockerfile":  "MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile",
+                                "dependsOn":  [
+                                                  "mailrelay-db-init",
+                                                  "rabbitmq"
+                                              ]
+                            },
+                            {
+                                "name":  "mailrelay-db-init",
+                                "image":  "${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mailrelay-initializer:${MAIL_RELAY_INITIALIZER_IMAGE_TAG:-latest}",
+                                "dockerfile":  "MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile",
+                                "dependsOn":  [
+                                                  "mailrelay-postgres"
+                                              ]
+                            },
+                            {
+                                "name":  "mailrelay-postgres",
+                                "image":  "postgres:17-alpine",
+                                "dockerfile":  null,
+                                "dependsOn":  [
+
+                                              ]
+                            },
+                            {
+                                "name":  "mailrelay-postgres-data",
+                                "image":  null,
+                                "dockerfile":  null,
+                                "dependsOn":  [
+
+                                              ]
+                            },
+                            {
+                                "name":  "nginx",
+                                "image":  "nginx:alpine",
+                                "dockerfile":  null,
+                                "dependsOn":  [
+
+                                              ]
+                            },
+                            {
+                                "name":  "postgres",
+                                "image":  "postgres:17-alpine",
+                                "dockerfile":  null,
+                                "dependsOn":  [
+
+                                              ]
+                            },
+                            {
+                                "name":  "postgres-data",
+                                "image":  null,
+                                "dockerfile":  null,
+                                "dependsOn":  [
+
+                                              ]
+                            },
+                            {
+                                "name":  "rabbitmq",
+                                "image":  "rabbitmq:4-management",
+                                "dockerfile":  null,
+                                "dependsOn":  [
+
+                                              ]
+                            },
+                            {
+                                "name":  "redis",
+                                "image":  "redis:7-alpine",
+                                "dockerfile":  null,
+                                "dependsOn":  [
+
+                                              ]
+                            },
+                            {
+                                "name":  "telegram-bot",
+                                "image":  "${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/telegram-bot:${TELEGRAM_BOT_IMAGE_TAG:-latest}",
+                                "dockerfile":  "FoodDiary.Telegram.Bot/Dockerfile",
+                                "dependsOn":  [
+                                                  "api"
+                                              ]
+                            }
+                        ],
+    "hostedServices":  [
+                           {
+                               "name":  "MailInboxSchemaInitializerHostedService",
+                               "baseType":  "IHostedService",
+                               "path":  "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSchemaInitializerHostedService.cs"
+                           },
+                           {
+                               "name":  "MailInboxSmtpHostedService",
+                               "baseType":  "BackgroundService",
+                               "path":  "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs"
+                           },
+                           {
+                               "name":  "MailRelayOutboxPublisherHostedService",
+                               "baseType":  "BackgroundService",
+                               "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayOutboxPublisherHostedService.cs"
+                           },
+                           {
+                               "name":  "MailRelayQueueProcessorHostedService",
+                               "baseType":  "BackgroundService",
+                               "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueProcessorHostedService.cs"
+                           },
+                           {
+                               "name":  "MailRelaySchemaInitializerHostedService",
+                               "baseType":  "IHostedService",
+                               "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelaySchemaInitializerHostedService.cs"
+                           },
+                           {
+                               "name":  "RabbitMqMailRelayBootstrapHostedService",
+                               "baseType":  "IHostedService",
+                               "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBootstrapHostedService.cs"
+                           },
+                           {
+                               "name":  "RabbitMqMailRelayConsumerHostedService",
+                               "baseType":  "BackgroundService",
+                               "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs"
+                           },
+                           {
+                               "name":  "RecurringJobsHostedService",
+                               "baseType":  "IHostedService",
+                               "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+                           },
+                           {
+                               "name":  "TelegramBotWorker",
+                               "baseType":  "BackgroundService",
+                               "path":  "FoodDiary.Telegram.Bot/TelegramBotWorker.cs"
+                           }
+                       ],
+    "httpClients":  [
+                        {
+                            "contract":  "IDiaryPdfGenerator",
+                            "implementation":  "DiaryPdfGenerator",
+                            "registrationPath":  "FoodDiary.Infrastructure/DependencyInjection.Export.cs"
+                        },
+                        {
+                            "contract":  null,
+                            "implementation":  "FitbitClient",
+                            "registrationPath":  "FoodDiary.Integrations/Wearables/FitbitClient.cs"
+                        },
+                        {
+                            "contract":  null,
+                            "implementation":  "GoogleFitClient",
+                            "registrationPath":  "FoodDiary.Integrations/Wearables/GoogleFitClient.cs"
+                        },
+                        {
+                            "contract":  "IMailInboxClient",
+                            "implementation":  "MailInboxClient",
+                            "registrationPath":  "MailInbox/FoodDiary.MailInbox.Client/Extensions/MailInboxClientServiceCollectionExtensions.cs"
+                        },
+                        {
+                            "contract":  "IMailRelayClient",
+                            "implementation":  "MailRelayClient",
+                            "registrationPath":  "MailRelay/FoodDiary.MailRelay.Client/Extensions/MailRelayClientServiceCollectionExtensions.cs"
+                        },
+                        {
+                            "contract":  "IOpenAiFoodClient",
+                            "implementation":  "OpenAiFoodClient",
+                            "registrationPath":  "FoodDiary.Integrations/DependencyInjection.Ai.cs"
+                        },
+                        {
+                            "contract":  "IOpenFoodFactsService",
+                            "implementation":  "OpenFoodFactsService",
+                            "registrationPath":  "FoodDiary.Integrations/DependencyInjection.FoodData.cs"
+                        },
+                        {
+                            "contract":  null,
+                            "implementation":  "PaddleBillingGateway",
+                            "registrationPath":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs"
+                        },
+                        {
+                            "contract":  "IUsdaFoodSearchService",
+                            "implementation":  "UsdaFoodSearchService",
+                            "registrationPath":  "FoodDiary.Integrations/DependencyInjection.FoodData.cs"
+                        },
+                        {
+                            "contract":  null,
+                            "implementation":  "YooKassaBillingGateway",
+                            "registrationPath":  "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs"
+                        }
+                    ],
+    "webhooks":  [
+                     {
+                         "name":  "AwsSesSnsWebhookHttpMappings",
+                         "path":  "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/AwsSesSnsWebhookHttpMappings.cs"
+                     },
+                     {
+                         "name":  "BillingWebhookContextResolver",
+                         "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs"
+                     },
+                     {
+                         "name":  "BillingWebhookController",
+                         "path":  "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs"
+                     },
+                     {
+                         "name":  "BillingWebhookEvent",
+                         "path":  "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs"
+                     },
+                     {
+                         "name":  "BillingWebhookEventAlreadyProcessedException",
+                         "path":  "FoodDiary.Application.Abstractions/Billing/Common/BillingWebhookEventAlreadyProcessedException.cs"
+                     },
+                     {
+                         "name":  "BillingWebhookEventConfiguration",
+                         "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Billing/BillingWebhookEventConfiguration.cs"
+                     },
+                     {
+                         "name":  "BillingWebhookEventRepository",
+                         "path":  "FoodDiary.Infrastructure/Persistence/Billing/BillingWebhookEventRepository.cs"
+                     },
+                     {
+                         "name":  "BillingWebhookEventValidator",
+                         "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs"
+                     },
+                     {
+                         "name":  "BillingWebhookHttpProcessor",
+                         "path":  "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookHttpProcessor.cs"
+                     },
+                     {
+                         "name":  "BillingWebhookPaymentRecorder",
+                         "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs"
+                     },
+                     {
+                         "name":  "BillingWebhookPremiumRoleSyncer",
+                         "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs"
+                     },
+                     {
+                         "name":  "BillingWebhookSubscriptionWriter",
+                         "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookSubscriptionWriter.cs"
+                     },
+                     {
+                         "name":  "GetAdminBillingWebhookEventsQueryHandler",
+                         "path":  "FoodDiary.Application/Admin/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQueryHandler.cs"
+                     },
+                     {
+                         "name":  "MailgunWebhookHttpMappings",
+                         "path":  "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailgunWebhookHttpMappings.cs"
+                     },
+                     {
+                         "name":  "ProcessBillingWebhookCommandHandler",
+                         "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs"
+                     },
+                     {
+                         "name":  "ProviderWebhookAuthorizer",
+                         "path":  "MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs"
+                     }
+                 ],
+    "recurringJobRegistrations":  [
+                                      {
+                                          "api":  "recurringJobManager.AddOrUpdate",
+                                          "detail":  "RecurringJobIds.BillingRenewal",
+                                          "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+                                      },
+                                      {
+                                          "api":  "recurringJobManager.AddOrUpdate",
+                                          "detail":  "RecurringJobIds.ClientTaskReminders",
+                                          "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+                                      },
+                                      {
+                                          "api":  "recurringJobManager.AddOrUpdate",
+                                          "detail":  "RecurringJobIds.EmailOutbox",
+                                          "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+                                      },
+                                      {
+                                          "api":  "recurringJobManager.AddOrUpdate",
+                                          "detail":  "RecurringJobIds.FastingNotifications",
+                                          "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+                                      },
+                                      {
+                                          "api":  "recurringJobManager.AddOrUpdate",
+                                          "detail":  "RecurringJobIds.ImageAssetsCleanup",
+                                          "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+                                      },
+                                      {
+                                          "api":  "recurringJobManager.AddOrUpdate",
+                                          "detail":  "RecurringJobIds.ImageObjectDeletionOutbox",
+                                          "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+                                      },
+                                      {
+                                          "api":  "recurringJobManager.AddOrUpdate",
+                                          "detail":  "RecurringJobIds.MarketingAttributionCleanup",
+                                          "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+                                      },
+                                      {
+                                          "api":  "recurringJobManager.AddOrUpdate",
+                                          "detail":  "RecurringJobIds.NotificationsCleanup",
+                                          "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+                                      },
+                                      {
+                                          "api":  "recurringJobManager.AddOrUpdate",
+                                          "detail":  "RecurringJobIds.NotificationWebPushOutbox",
+                                          "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+                                      },
+                                      {
+                                          "api":  "recurringJobManager.AddOrUpdate",
+                                          "detail":  "RecurringJobIds.UserLoginEventsCleanup",
+                                          "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+                                      },
+                                      {
+                                          "api":  "recurringJobManager.AddOrUpdate",
+                                          "detail":  "RecurringJobIds.UsersCleanup",
+                                          "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+                                      }
+                                  ]
+}

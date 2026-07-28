@@ -22,6 +22,27 @@ does not replace repository instructions or design records.
 | Living guidance | `docs/`, scoped `AGENTS.md` | Describes current architecture and working rules |
 | Compiled knowledge | `.llm-wiki/` | Connects and summarizes the layers above |
 
+Change policies are a separate executable layer: they translate changed paths
+into mandatory checks, structural invariants, and explicit review obligations.
+Evidence bundles record how those obligations were resolved without promoting
+task-local execution data into canonical repository knowledge.
+
+Task briefs combine these layers into a compact plan, ownership impact expands
+direct changes through the executable module graph, and task contracts detect
+scope drift. API compatibility and AI evals provide regression gates, while the
+failure knowledge base stores only verified, reusable diagnostic resolutions.
+The configuration index exposes key names and consumers without storing values;
+dependency and rollout reports connect code changes to environment and
+deployment obligations.
+The quality index adds a deliberately weaker-than-coverage signal for structural
+hotspots and missing direct test references so agents can spend review effort
+where it is most likely to matter.
+The runtime topology connects deployable services to hosted workers, external
+clients, webhook surfaces, and recurring jobs so asynchronous and network blast
+radius is visible before code changes.
+The sensitive-data index supplies candidate lifecycle and logging review leads
+without recording runtime values or presenting name matching as proof.
+
 Accepted ADRs are historical records. Current inventories and operational
 instructions belong in living documentation, as defined by the
 [ADR lifecycle](../../docs/adr/README.md).

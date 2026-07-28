@@ -30,11 +30,9 @@ jobs:
           EVENT_BEFORE: ${{ github.event.before }}
         run: |
           ./.llm-wiki/tools/Test-LlmWiki.ps1
-          ./.llm-wiki/tools/Build-LlmWikiCatalog.ps1 -Check
-          ./.llm-wiki/tools/Build-LlmWikiModulePages.ps1 -Check
-          ./.llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1 -Check
-          ./.llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1 -Check
+          ./.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check
           ./.llm-wiki/tools/Test-LlmWikiTools.ps1
+          ./.llm-wiki/tools/Invoke-LlmWikiEvals.ps1
 
           if ("${{ github.event_name }}" -eq "pull_request") {
             $baseRef = "origin/${{ github.base_ref }}"
@@ -48,6 +46,25 @@ jobs:
             -BaseRef $baseRef `
             -HeadRef HEAD `
             -FailOnUnreviewed
+
+          ./.llm-wiki/tools/Test-LlmWikiChangePolicy.ps1 `
+            -BaseRef $baseRef `
+            -HeadRef HEAD `
+            -FailOnViolation
+
+          ./.llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1 `
+            -BaseRef $baseRef `
+            -FailOnBreaking
+
+          ./.llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1 `
+            -BaseRef $baseRef
+
+          $reviewReport = Join-Path $env:RUNNER_TEMP "llm-wiki-review.md"
+          ./.llm-wiki/wiki.ps1 report `
+            -BaseRef $baseRef `
+            -HeadRef HEAD `
+            -OutputPath $reviewReport
+          Get-Content -LiteralPath $reviewReport | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5

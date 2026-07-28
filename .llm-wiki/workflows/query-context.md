@@ -44,5 +44,9 @@ that a file must change. Read the returned wiki pages and applicable
 `AGENTS.md`, then verify the result against code, tests, manifests, and contract
 snapshots.
 
+Context discovery is advisory. Run `wiki.ps1 policy` for deterministic
+repository obligations and use an evidence bundle when those obligations need
+an auditable task handoff.
+
 HTTP matches come from the generated literal attribute-route catalog. Test
 matches additionally search test source paths and contents at query time.

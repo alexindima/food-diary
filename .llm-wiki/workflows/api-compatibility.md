@@ -1,0 +1,27 @@
+---
+id: workflow-api-compatibility
+kind: workflow
+status: current
+title: Review API compatibility
+summary: Classify OpenAPI snapshot changes as additive or potentially breaking before handoff.
+tags:
+  - workflow
+  - api
+  - compatibility
+sources:
+  - tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json
+  - .llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1
+---
+
+# Review API compatibility
+
+After regenerating API contract snapshots, compare them with the intended base:
+
+```powershell
+./.llm-wiki/wiki.ps1 api-compat -BaseRef origin/master -FailOnBreaking
+```
+
+The guard reports removed paths, operations, documented responses, and newly
+required parameters as breaking. New paths and operations are additive. It is a
+focused compatibility gate, not a substitute for integration tests or review of
+schema semantics, authorization, error shapes, and status-code behavior.

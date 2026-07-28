@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "fasting-api",
+      "changedPaths": [
+        "FoodDiary.Application/Fasting/Commands/Start/StartFastingCommandHandler.cs",
+        "FoodDiary.Presentation.Api/Features/Fasting/FastingController.cs"
+      ],
+      "expectedModules": ["Fasting"],
+      "expectedScopes": ["Backend", "Api", "Contracts"],
+      "expectedRules": ["backend-boundaries", "api-contract", "quality-critical-path"],
+      "expectedChecks": ["architecture-tests", "api-compatibility", "presentation-api-tests", "api-integration-tests"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "paired-localization",
+      "changedPaths": [
+        "FoodDiary.Web.Client/assets/i18n/en/common.json",
+        "FoodDiary.Web.Client/assets/i18n/ru/common.json"
+      ],
+      "expectedModules": [],
+      "expectedScopes": ["Frontend", "Localization"],
+      "expectedRules": ["localization-pair", "frontend-workspace"],
+      "expectedChecks": ["frontend-i18n", "frontend-verify"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "missing-russian-localization",
+      "changedPaths": [
+        "FoodDiary.Web.Client/assets/i18n/en/common.json"
+      ],
+      "expectedModules": [],
+      "expectedScopes": ["Frontend", "Localization"],
+      "expectedRules": ["localization-pair", "frontend-workspace"],
+      "expectedChecks": ["frontend-i18n", "frontend-verify"],
+      "expectedViolationRules": ["localization-pair"]
+    },
+    {
+      "id": "migration-pair",
+      "changedPaths": [
+        "FoodDiary.Infrastructure/Persistence/Migrations/20260726_AddIndex.cs",
+        "FoodDiary.Infrastructure/Persistence/Migrations/20260726_AddIndex.Designer.cs"
+      ],
+      "expectedModules": [],
+      "expectedScopes": ["Backend", "Database"],
+      "expectedRules": ["ef-migration"],
+      "expectedChecks": ["migration-format", "infrastructure-integration-tests"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "missing-migration-designer",
+      "changedPaths": [
+        "FoodDiary.Infrastructure/Persistence/Migrations/20260726_AddIndex.cs"
+      ],
+      "expectedModules": [],
+      "expectedScopes": ["Backend", "Database"],
+      "expectedRules": ["ef-migration"],
+      "expectedChecks": ["migration-format", "infrastructure-integration-tests"],
+      "expectedViolationRules": ["ef-migration"]
+    },
+    {
+      "id": "billing-security",
+      "changedPaths": [
+        "FoodDiary.Application.Billing/Webhooks/ProcessBillingWebhookCommandHandler.cs"
+      ],
+      "expectedModules": ["Billing"],
+      "expectedScopes": ["Backend"],
+      "expectedRules": ["backend-boundaries", "security-sensitive", "observability-critical-flow"],
+      "expectedChecks": ["architecture-tests"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "repository-performance",
+      "changedPaths": [
+        "FoodDiary.Infrastructure/Persistence/Products/ProductRepository.cs"
+      ],
+      "expectedModules": ["Products"],
+      "expectedScopes": ["Backend"],
+      "expectedRules": ["backend-boundaries", "performance-data-access", "quality-critical-path"],
+      "expectedChecks": ["architecture-tests", "data-access-integration-tests"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "dependency-graph-adr",
+      "changedPaths": [
+        "docs/architecture/module-dependencies.json"
+      ],
+      "expectedModules": [],
+      "expectedScopes": ["Documentation"],
+      "expectedRules": ["architecture-decision", "llm-wiki"],
+      "expectedChecks": ["wiki-verify"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "critical-flow-observability",
+      "changedPaths": [
+        "FoodDiary.Application/Authentication/Commands/Login/LoginCommandHandler.cs"
+      ],
+      "expectedModules": ["Authentication"],
+      "expectedScopes": ["Backend"],
+      "expectedRules": ["backend-boundaries", "security-sensitive", "observability-critical-flow"],
+      "expectedChecks": ["architecture-tests"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "nuget-dependency-change",
+      "changedPaths": [
+        "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"
+      ],
+      "expectedModules": [],
+      "expectedScopes": ["Backend"],
+      "expectedRules": ["dependency-nuget", "architecture-decision"],
+      "expectedChecks": ["nuget-vulnerability-audit"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "npm-dependency-change",
+      "changedPaths": [
+        "FoodDiary.Web.Client/package.json",
+        "FoodDiary.Web.Client/package-lock.json"
+      ],
+      "expectedModules": [],
+      "expectedScopes": ["Frontend"],
+      "expectedRules": ["frontend-workspace", "dependency-npm"],
+      "expectedChecks": ["frontend-verify", "npm-vulnerability-audit"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "deployment-configuration",
+      "changedPaths": [
+        "FoodDiary.Web.Api/appsettings.Production.json",
+        ".github/workflows/deploy.yml"
+      ],
+      "expectedModules": [],
+      "expectedScopes": ["Configuration", "Deployment"],
+      "expectedRules": ["configuration-contract", "deployment-rollout"],
+      "expectedChecks": [],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "domain-quality-hotspot",
+      "changedPaths": [
+        "FoodDiary.Domain/Entities/Recipes/Recipe.cs"
+      ],
+      "expectedModules": ["Recipes"],
+      "expectedScopes": ["Backend"],
+      "expectedRules": ["backend-boundaries", "quality-critical-path", "domain-invariant"],
+      "expectedChecks": ["architecture-tests"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "runtime-message-consumer",
+      "changedPaths": [
+        "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs"
+      ],
+      "expectedModules": [],
+      "expectedScopes": ["Backend"],
+      "expectedRules": ["backend-boundaries", "observability-critical-flow", "deployment-rollout", "quality-critical-path", "runtime-resilience"],
+      "expectedChecks": ["architecture-tests"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "privacy-user-credential",
+      "changedPaths": [
+        "FoodDiary.Domain/Entities/Users/User.cs"
+      ],
+      "expectedModules": ["Users"],
+      "expectedScopes": ["Backend"],
+      "expectedRules": ["backend-boundaries", "quality-critical-path", "privacy-data-lifecycle", "domain-invariant"],
+      "expectedChecks": ["architecture-tests"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "persistence-model-mapping",
+      "changedPaths": [
+        "FoodDiary.Infrastructure/Persistence/Configurations/Users/UserConfiguration.cs"
+      ],
+      "expectedModules": ["Users"],
+      "expectedScopes": ["Backend"],
+      "expectedRules": ["backend-boundaries", "performance-data-access", "persistence-model-contract"],
+      "expectedChecks": ["architecture-tests", "data-access-integration-tests", "infrastructure-integration-tests"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "shared-ui-consumer-change",
+      "changedPaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete.ts"
+      ],
+      "expectedModules": [],
+      "expectedScopes": ["Frontend"],
+      "expectedRules": ["frontend-workspace", "frontend-component-contract", "shared-ui-consumer-contract"],
+      "expectedChecks": ["frontend-verify"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "backend-command-consumer-change",
+      "changedPaths": [
+        "FoodDiary.Application/Fasting/Commands/StartFasting/StartFastingCommand.cs"
+      ],
+      "expectedModules": ["Fasting"],
+      "expectedScopes": ["Backend"],
+      "expectedRules": ["backend-boundaries", "backend-public-contract"],
+      "expectedChecks": ["architecture-tests"],
+      "expectedViolationRules": [],
+      "expectedPlanPhases": ["context", "contracts", "implementation", "focused-verification", "generated-artifacts", "release-readiness"]
+    },
+    {
+      "id": "architecture-project-reference-change",
+      "changedPaths": [
+        "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"
+      ],
+      "expectedModules": [],
+      "expectedScopes": ["Backend"],
+      "expectedRules": ["architecture-drift", "dependency-nuget", "architecture-decision"],
+      "expectedChecks": ["architecture-health", "architecture-tests", "nuget-vulnerability-audit"],
+      "expectedViolationRules": []
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "id": "git-commit-hook-wrapper-timeout",
+      "symptom": "The git commit command wrapper times out while pre-commit validation is still running.",
+      "cause": "The repository pre-commit hook runs formatting, linters, and tests and can outlive a short command timeout; the commit may already have completed.",
+      "fix": "Inspect git status and git log -1 before retrying. If the commit did not complete, inspect the newest file under .git/hook-logs, fix the reported failure, and rerun git commit with hooks enabled.",
+      "pathPatterns": [
+        "^\\.git/hooks/",
+        "^\\.git/hook-logs/"
+      ],
+      "verification": [
+        "git status --short",
+        "git log -1 --oneline"
+      ]
+    },
+    {
+      "id": "git-push-hook-wrapper-timeout",
+      "symptom": "The git push command wrapper times out while the pre-push test suites continue running.",
+      "cause": "The repository pre-push hook runs full frontend and backend verification and may exceed a short command timeout.",
+      "fix": "Inspect the remote branch state, git status, and git log -1 before retrying. If the push failed, inspect .git/hook-logs, resolve the failing suite, and rerun git push without bypassing hooks.",
+      "pathPatterns": [
+        "^\\.git/hooks/",
+        "^\\.git/hook-logs/"
+      ],
+      "verification": [
+        "git status --short",
+        "git log -1 --oneline",
+        "git ls-remote --heads origin"
+      ]
+    },
+    {
+      "id": "migration-whitespace-ci-failure",
+      "symptom": "CI reports WHITESPACE formatting failures after an EF Core migration is added or regenerated.",
+      "cause": "Generated migration, designer, or model snapshot files do not match the repository whitespace rules.",
+      "fix": "Run dotnet format whitespace for FoodDiary.Infrastructure, retain both migration files, and confirm generated migration and snapshot classes remain excluded from coverage.",
+      "pathPatterns": [
+        "^FoodDiary\\.Infrastructure/.*/Migrations/.*\\.cs$",
+        "ModelSnapshot\\.cs$"
+      ],
+      "verification": [
+        "dotnet format whitespace FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj --verify-no-changes"
+      ]
+    }
+  ]
+}

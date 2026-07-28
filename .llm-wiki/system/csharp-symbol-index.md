@@ -22,7 +22,9 @@ It extracts:
   convention;
 - literal `AddScoped`, `AddTransient`, and `AddSingleton` registrations.
 
-The index excludes tests, EF migrations, generated files, `obj`, and `bin`.
+The index excludes tests, dependency sources under `node_modules`, EF
+migrations, generated files, `obj`, and `bin`. This prevents bundled native
+build helpers from appearing as application contracts.
 Mappings are discovery hints, not proof of runtime resolution or inheritance.
 
 ```powershell

@@ -8,21 +8,21 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  2952,
-                    "symbols":  3002,
+                    "sourceFiles":  2951,
+                    "symbols":  2991,
                     "interfaceImplementationLinks":  220,
                     "dependencyInjectionRegistrations":  218,
                     "kinds":  {
-                                  "class":  1515,
-                                  "enum":  44,
-                                  "interface":  403,
+                                  "class":  1513,
+                                  "enum":  43,
+                                  "interface":  395,
                                   "record":  932,
                                   "record struct":  108
                               },
                     "roles":  {
                                   "Command":  148,
                                   "CommandHandler":  144,
-                                  "Configuration":  79,
+                                  "Configuration":  77,
                                   "Controller":  84,
                                   "Entity":  76,
                                   "Event":  19,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  3,
                                   "Options":  55,
-                                  "Other":  1055,
+                                  "Other":  1046,
                                   "Query":  148,
                                   "QueryHandler":  115,
                                   "ReadModelRepository":  29,
@@ -19212,83 +19212,6 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Swagger/StandardErrorResponsesOperationFilter.cs",
                         "line":  9
-                    },
-                    {
-                        "name":  "InstanceState",
-                        "kind":  "enum",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Web.Client/node_modules/node-gyp/lib/Find-VisualStudio.cs",
-                        "line":  17
-                    },
-                    {
-                        "name":  "IEnumSetupInstances",
-                        "kind":  "interface",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Web.Client/node_modules/node-gyp/lib/Find-VisualStudio.cs",
-                        "line":  30
-                    },
-                    {
-                        "name":  "ISetupConfiguration",
-                        "kind":  "interface",
-                        "role":  "Configuration",
-                        "path":  "FoodDiary.Web.Client/node_modules/node-gyp/lib/Find-VisualStudio.cs",
-                        "line":  48
-                    },
-                    {
-                        "name":  "ISetupConfiguration2",
-                        "kind":  "interface",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Web.Client/node_modules/node-gyp/lib/Find-VisualStudio.cs",
-                        "line":  55
-                    },
-                    {
-                        "name":  "ISetupInstance",
-                        "kind":  "interface",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Web.Client/node_modules/node-gyp/lib/Find-VisualStudio.cs",
-                        "line":  74
-                    },
-                    {
-                        "name":  "ISetupInstance2",
-                        "kind":  "interface",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Web.Client/node_modules/node-gyp/lib/Find-VisualStudio.cs",
-                        "line":  81
-                    },
-                    {
-                        "name":  "ISetupPackageReference",
-                        "kind":  "interface",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Web.Client/node_modules/node-gyp/lib/Find-VisualStudio.cs",
-                        "line":  134
-                    },
-                    {
-                        "name":  "ISetupPropertyStore",
-                        "kind":  "interface",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Web.Client/node_modules/node-gyp/lib/Find-VisualStudio.cs",
-                        "line":  165
-                    },
-                    {
-                        "name":  "SetupConfiguration",
-                        "kind":  "interface",
-                        "role":  "Configuration",
-                        "path":  "FoodDiary.Web.Client/node_modules/node-gyp/lib/Find-VisualStudio.cs",
-                        "line":  177
-                    },
-                    {
-                        "name":  "SetupConfigurationClass",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Web.Client/node_modules/node-gyp/lib/Find-VisualStudio.cs",
-                        "line":  184
-                    },
-                    {
-                        "name":  "Main",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Web.Client/node_modules/node-gyp/lib/Find-VisualStudio.cs",
-                        "line":  187
                     },
                     {
                         "name":  "IInboundMailStore",

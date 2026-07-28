@@ -92,7 +92,7 @@ $frontendIndex = if (Test-Path -LiteralPath $frontendIndexPath) {
 $scopes = [ordered]@{
     Backend = @($changedPaths | Where-Object { $_ -match '\.cs$|\.csproj$|Directory\.(Build|Packages)\.props$' }).Count -gt 0
     Api = @($changedPaths | Where-Object {
-        $_ -match 'Presentation|Web\.Api|Controller\.cs$|/Snapshots/'
+        $_ -match 'Presentation|Web\.Api/.+\.cs$|Controller\.cs$|/Snapshots/'
     }).Count -gt 0
     Frontend = @($changedPaths | Where-Object {
         $_ -match '^FoodDiary\.Web\.Client/|^FoodDiary\.Mobile/'
@@ -102,6 +102,12 @@ $scopes = [ordered]@{
     }).Count -gt 0
     Tests = @($changedPaths | Where-Object { $_ -match '(^|/)tests/' -or $_ -match '\.(spec\.ts|test\.mjs)$' }).Count -gt 0
     Documentation = @($changedPaths | Where-Object { $_ -match '(^|/)(AGENTS|README)\.md$|^docs/|^\.llm-wiki/' }).Count -gt 0
+    Configuration = @($changedPaths | Where-Object {
+        $_ -match 'appsettings[^/]*\.json$|\.env\.example$|Options\.cs$'
+    }).Count -gt 0
+    Deployment = @($changedPaths | Where-Object {
+        $_ -match '^\.github/workflows/deploy\.yml$|docker-compose[^/]*\.ya?ml$'
+    }).Count -gt 0
     Localization = @($changedPaths | Where-Object { $_ -match '/assets/i18n/(en|ru)/.+\.json$' }).Count -gt 0
     Contracts = @($changedPaths | Where-Object {
         $_ -match '/Snapshots/|/Requests/|/Responses/|Controller\.cs$'
@@ -134,7 +140,8 @@ foreach ($module in $candidateModules) {
     $matchingPaths = @(
         $changedPaths | Where-Object {
             $_ -match "(^|/)$escapedName(/|\.|[A-Z])" -or
-            $_ -match "/Features/$escapedName/"
+            $_ -match "/Features/$escapedName/" -or
+            ($module.origin -eq 'extracted-project' -and $_ -match "^FoodDiary\.Application\.$escapedName/")
         }
     )
     if ($matchingPaths.Count -eq 0) {
@@ -317,6 +324,25 @@ if (@($changedPaths | Where-Object {
 }).Count -gt 0) {
     $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1')
 }
+if ($scopes.Configuration) {
+    $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiConfigurationIndex.ps1')
+}
+if (@($changedPaths | Where-Object {
+    $_ -match '\.(cs|ts)$' -and $_ -notmatch '(^|/)tests/|/Migrations?/|\.(spec|test)\.ts$'
+}).Count -gt 0) {
+    $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiQualityIndex.ps1')
+}
+if (@($changedPaths | Where-Object {
+    $_ -eq 'docker-compose.yml' -or
+    ($_ -match '\.cs$' -and $_ -match 'Client|Gateway|Transport|HostedService|Job|Consumer|Publisher|Webhook|DependencyInjection')
+}).Count -gt 0) {
+    $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiRuntimeTopology.ps1')
+}
+if (@($changedPaths | Where-Object {
+    $_ -match '\.cs$' -and $_ -notmatch '(^|/)tests/|/Migrations?/'
+}).Count -gt 0) {
+    $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiSensitiveDataIndex.ps1')
+}
 if ($matchedModules.Count -gt 0 -or
     $changedPathSet.ContainsKey('docs/architecture/module-dependencies.json') -or
     @($changedPaths | Where-Object { $_ -match 'Controller\.cs$' }).Count -gt 0) {
@@ -332,6 +358,12 @@ if ($scopes.Localization) {
 }
 if ($scopes.Database) {
     $warnings.Add('Commit migration and Designer files together; format generated migration code.')
+}
+if ($scopes.Configuration) {
+    $warnings.Add('Synchronize option validation, appsettings templates, environment examples, deployment values, and secret handling.')
+}
+if ($scopes.Deployment) {
+    $warnings.Add('Record deployment ordering, mixed-version compatibility, post-deploy verification, and rollback or roll-forward strategy.')
 }
 if ($matchedModules.Count -gt 1) {
     $warnings.Add('Multiple business modules are affected; verify ownership and cross-module mutation boundaries.')
@@ -350,12 +382,32 @@ if ($scopes.Api) {
 }
 if ($scopes.Frontend) {
     $recommendedChecks.Add('cd FoodDiary.Web.Client && npm run verify')
+    $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1')
 }
 if ($scopes.Localization) {
     $recommendedChecks.Add('cd FoodDiary.Web.Client && npm run check:i18n')
 }
 if ($scopes.Database) {
     $recommendedChecks.Add('dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj')
+    $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1')
+}
+if ($scopes.Backend -and @($changedPaths | Where-Object { $_ -match '(^|/)(FoodDiary\.Domain|FoodDiary\.MailInbox\.Domain|FoodDiary\.MailRelay\.Domain)/' }).Count -gt 0) {
+    $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1')
+}
+if ($scopes.Backend -and @($changedPaths | Where-Object {
+    $_ -match '\.cs$' -and (
+        $_ -match 'Application\.Abstractions/' -or
+        $_ -match '/(Requests|Responses|Commands|Queries|Events)/' -or
+        $_ -match '\.(Client|Domain\.Primitives)/'
+    )
+}).Count -gt 0) {
+    $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1')
+}
+if (@($changedPaths | Where-Object { $_ -match '/Persistence/Configurations/.+Configuration\.cs$|DbContext\.cs$' }).Count -gt 0) {
+    $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1')
+}
+if (@($changedPaths | Where-Object { $_ -match '\.csproj$|^docs/architecture/module-dependencies\.json$' }).Count -gt 0) {
+    $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1')
 }
 $uniqueChecks = @($recommendedChecks | Sort-Object -Unique)
 

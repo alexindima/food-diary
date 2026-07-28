@@ -80,6 +80,18 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - For cross-cutting repository discovery, start at `.llm-wiki/index.md`, then verify relevant claims in its declared sources before changing code.
 - Treat `.llm-wiki/` as compiled navigation, never as authority over code, tests, accepted ADRs, current `docs/`, or scoped `AGENTS.md`.
 - Use `./.llm-wiki/wiki.ps1 diff` to discover change-set context and `./.llm-wiki/wiki.ps1 verify` before handing off wiki-affecting changes.
+- Use `./.llm-wiki/wiki.ps1 brief` to compile risk, scoped instructions, affected modules, focused tests, and review obligations for a non-trivial change.
+- Use `./.llm-wiki/wiki.ps1 test-plan` to derive focused tests and risk scenarios before implementing or reviewing behavioral changes.
+- Use `./.llm-wiki/wiki.ps1 decision` when project references, dependency injection, deployment, ownership, or module graph changes.
+- Use `dependencies` for manifest changes and `rollout` for migrations, configuration, jobs, providers, or deployment-sensitive changes.
+- Use `hotspots` and `test-gaps` to calibrate review depth; treat test references as navigation evidence, never as execution coverage.
+- Use `topology` before changing external clients, webhooks, background workers, recurring jobs, or message delivery behavior.
+- Use `privacy` before changing credentials, identity/health/financial data, private content, exports, logs, caches, queues, or provider sharing.
+- For explicitly bounded autonomous work, use `task-init` and `task-validate` to detect accidental changes outside the declared path scope.
+- Use `./.llm-wiki/wiki.ps1 trace -Query <command-or-query>` before changing an existing backend flow.
+- Use `./.llm-wiki/wiki.ps1 ownership` for cross-module changes and `api-compat` after API snapshot changes.
+- Search `./.llm-wiki/wiki.ps1 failures -Query <error>` before repeating diagnosis; record only verified, reusable resolutions.
+- Use `docs/ai/CODE_REVIEW.md` for consistent AI-assisted review and resolve triggered change-policy obligations through an evidence bundle when the task warrants formal handoff.
 - Product and feature plans live under `docs/plans/`; treat them as planning context unless referenced by current guides.
 - Historical or stale documents should be removed once durable decisions are captured in current guides or ADRs. Git history is the repository history.
 

@@ -1,0 +1,35 @@
+---
+id: workflow.evals
+kind: workflow
+status: current
+sources:
+  - .llm-wiki/evals/cases.json
+  - .llm-wiki/tools/Invoke-LlmWikiEvals.ps1
+  - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
+  - .llm-wiki/tools/Test-LlmWikiChangePolicy.ps1
+---
+
+# AI Development Evals
+
+The eval suite protects the quality of agent context and change-policy
+classification with representative synthetic change sets.
+
+```powershell
+./.llm-wiki/wiki.ps1 evals
+./.llm-wiki/wiki.ps1 evals -Detailed
+```
+
+Cases currently cover API/backend changes, complete and incomplete
+localization pairs, complete and incomplete EF migration pairs, extracted
+Billing-module detection, and security-sensitive classification.
+
+Each policy rule should have:
+
+- at least one positive classification case;
+- a negative structural case when the rule can fail;
+- expected modules/scopes/checks;
+- no unexpected policy violations.
+
+These evals measure routing and policy correctness, not the quality of generated
+application code. Real-task outcome evals can be added after several weeks of
+usage data.

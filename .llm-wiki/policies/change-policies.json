@@ -1,0 +1,509 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "id": "backend-boundaries",
+      "description": "Production backend changes must preserve architectural boundaries.",
+      "pathPatterns": [
+        "^(FoodDiary\\.|Shared/|MailRelay/FoodDiary\\.|MailInbox/FoodDiary\\.).+\\.cs$"
+      ],
+      "excludePatterns": [
+        "(^|/)tests/",
+        "/Migrations/"
+      ],
+      "requiredChecks": [
+        {
+          "id": "architecture-tests",
+          "command": "dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj"
+        }
+      ],
+      "reviewObligations": []
+    },
+    {
+      "id": "api-contract",
+      "description": "HTTP surface changes require focused presentation/integration verification and explicit snapshot review.",
+      "pathPatterns": [
+        "Controller\\.cs$",
+        "/(Requests|Responses)/.+\\.cs$"
+      ],
+      "excludePatterns": [
+        "(^|/)tests/"
+      ],
+      "requiredChecks": [
+        {
+          "id": "api-compatibility",
+          "command": "./.llm-wiki/wiki.ps1 api-compat -BaseRef HEAD -FailOnBreaking"
+        },
+        {
+          "id": "presentation-api-tests",
+          "command": "dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj"
+        },
+        {
+          "id": "api-integration-tests",
+          "command": "dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj"
+        }
+      ],
+      "reviewObligations": [
+        {
+          "id": "api-contract-snapshots",
+          "description": "Confirm whether Swagger-visible routes, payloads, status codes, or schemas changed; update contract snapshots when applicable."
+        }
+      ]
+    },
+    {
+      "id": "localization-pair",
+      "description": "English and Russian UI locale files must change together.",
+      "pathPatterns": [
+        "^FoodDiary\\.Web\\.Client/assets/i18n/(en|ru)/.+\\.json$"
+      ],
+      "excludePatterns": [],
+      "structuralChecks": [
+        "paired-locales"
+      ],
+      "requiredChecks": [
+        {
+          "id": "frontend-i18n",
+          "command": "cd FoodDiary.Web.Client && npm run check:i18n"
+        }
+      ],
+      "reviewObligations": [
+        {
+          "id": "cyrillic-rendering",
+          "description": "Verify Russian text renders without mojibake or replacement symbols."
+        }
+      ]
+    },
+    {
+      "id": "ef-migration",
+      "description": "EF migrations require implementation/designer pairs and migration safety verification.",
+      "pathPatterns": [
+        "/Migrations/.+\\.cs$",
+        "ModelSnapshot\\.cs$"
+      ],
+      "excludePatterns": [],
+      "structuralChecks": [
+        "migration-pair"
+      ],
+      "requiredChecks": [
+        {
+          "id": "migration-format",
+          "command": "dotnet format whitespace FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"
+        },
+        {
+          "id": "infrastructure-integration-tests",
+          "command": "dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj"
+        }
+      ],
+      "reviewObligations": [
+        {
+          "id": "migration-coverage-exclusion",
+          "description": "Confirm migration and model snapshot classes remain excluded from code coverage."
+        }
+      ]
+    },
+    {
+      "id": "frontend-workspace",
+      "description": "Frontend behavior changes require the full frontend verification pipeline.",
+      "pathPatterns": [
+        "^FoodDiary\\.Web\\.Client/.+\\.(ts|html|scss|json)$"
+      ],
+      "excludePatterns": [
+        "^FoodDiary\\.Web\\.Client/package-lock\\.json$"
+      ],
+      "requiredChecks": [
+        {
+          "id": "frontend-verify",
+          "command": "cd FoodDiary.Web.Client && npm run verify"
+        }
+      ],
+      "reviewObligations": [
+        {
+          "id": "frontend-visual-evidence",
+          "description": "For rendered UI changes, record route, desktop/mobile viewports, interaction proof, console health, keyboard/accessibility checks, and screenshot location; use not-applicable only for non-rendered changes."
+        }
+      ]
+    },
+    {
+      "id": "security-sensitive",
+      "description": "Authentication, billing, webhook, privacy, and personal-data changes require explicit security review.",
+      "pathPatterns": [
+        "(^|[./])(Auth|Authentication|Billing|Webhooks?|PersonalData|Privacy)/",
+        "PERSONAL_DATA_LIFECYCLE\\.md$",
+        "BACKEND_SECURITY_HARDENING\\.md$",
+        "THREAT_MODEL\\.md$"
+      ],
+      "excludePatterns": [],
+      "requiredChecks": [],
+      "reviewObligations": [
+        {
+          "id": "security-review",
+          "description": "Review authorization, tenant/user scoping, replay/idempotency, secrets, sensitive logging, and personal-data handling as applicable."
+        }
+      ]
+    },
+    {
+      "id": "performance-data-access",
+      "description": "Query-shape and persistence changes require realistic provider-backed performance review.",
+      "pathPatterns": [
+        "^FoodDiary\\.Infrastructure/(?:.*/)?(Repositories|Persistence)/.+\\.cs$",
+        "^Mail(Relay|Inbox)/FoodDiary\\..*Infrastructure/(?:.*/)?(Persistence|Repositories)/.+\\.cs$",
+        "(Repository|Store|ReadService|QueryHandler)\\.cs$"
+      ],
+      "excludePatterns": [
+        "(^|/)tests/",
+        "/Migrations/"
+      ],
+      "requiredChecks": [
+        {
+          "id": "data-access-integration-tests",
+          "command": "dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj"
+        }
+      ],
+      "reviewObligations": [
+        {
+          "id": "query-performance-review",
+          "description": "Review no-tracking, query count, Include/cartesian growth, bounded pagination, WHERE+ORDER BY index fit, provider translation, and realistic-cardinality coverage."
+        }
+      ]
+    },
+    {
+      "id": "observability-critical-flow",
+      "description": "Critical business and operational flow changes require telemetry outcome review.",
+      "pathPatterns": [
+        "(Auth|Authentication|Billing|Webhooks?|Jobs|Ai|ExternalProvider|MailRelay|MailInbox)/.+\\.cs$",
+        "(Telemetry|Observation|Metrics)\\.cs$"
+      ],
+      "excludePatterns": [
+        "(^|/)tests/"
+      ],
+      "requiredChecks": [],
+      "reviewObligations": [
+        {
+          "id": "observability-review",
+          "description": "Confirm success/failure outcomes, duration where useful, low-cardinality dimensions, correlation, and exclusion of secrets or personal data."
+        }
+      ]
+    },
+    {
+      "id": "architecture-decision",
+      "description": "Durable boundary, ownership, deployment, consistency, or engineering-policy changes require an ADR decision.",
+      "pathPatterns": [
+        "^docs/architecture/module-dependencies\\.json$",
+        "\\.(slnx|csproj)$",
+        "(^|/)docker-compose[^/]*\\.ya?ml$",
+        "^Directory\\.Build\\.props$",
+        "(^|/)DependencyInjection[^/]*\\.cs$"
+      ],
+      "excludePatterns": [
+        "(^|/)tests/"
+      ],
+      "requiredChecks": [],
+      "reviewObligations": [
+        {
+          "id": "adr-review",
+          "description": "Decide whether this changes a durable system boundary, ownership, deployment, data consistency, public contract policy, or engineering policy; create/supersede an ADR when it does."
+        }
+      ]
+    },
+    {
+      "id": "dependency-nuget",
+      "description": "NuGet dependency changes require graph, vulnerability, license, and compatibility review.",
+      "pathPatterns": [
+        "\\.csproj$",
+        "^Directory\\.Build\\.props$"
+      ],
+      "excludePatterns": [],
+      "requiredChecks": [
+        {
+          "id": "nuget-vulnerability-audit",
+          "command": "dotnet list FoodDiary.slnx package --vulnerable --include-transitive"
+        }
+      ],
+      "reviewObligations": [
+        {
+          "id": "dependency-review",
+          "description": "Review direct/transitive changes, changelog and breaking behavior, lockfile consistency, license, platform/runtime compatibility, and package provenance."
+        }
+      ]
+    },
+    {
+      "id": "dependency-npm",
+      "description": "npm dependency and lockfile changes require graph, vulnerability, license, and compatibility review.",
+      "pathPatterns": [
+        "(^|/)package(-lock)?\\.json$"
+      ],
+      "excludePatterns": [],
+      "requiredChecks": [
+        {
+          "id": "npm-vulnerability-audit",
+          "command": "cd FoodDiary.Web.Client && npm audit"
+        }
+      ],
+      "reviewObligations": [
+        {
+          "id": "dependency-review",
+          "description": "Review direct/transitive changes, changelog and breaking behavior, lockfile consistency, license, platform/runtime compatibility, and package provenance."
+        }
+      ]
+    },
+    {
+      "id": "configuration-contract",
+      "description": "Configuration contract changes require synchronized templates, deployment values, validation, and secret-handling review.",
+      "pathPatterns": [
+        "appsettings[^/]*\\.json$",
+        "\\.env\\.example$",
+        "Options\\.cs$",
+        "docker-compose[^/]*\\.ya?ml$",
+        "^\\.github/workflows/deploy\\.yml$"
+      ],
+      "excludePatterns": [
+        "(^|/)tests/"
+      ],
+      "requiredChecks": [],
+      "reviewObligations": [
+        {
+          "id": "configuration-review",
+          "description": "Synchronize option binding/validation, safe defaults, appsettings templates, environment examples, deployment values, secret storage, and startup/readiness behavior."
+        }
+      ]
+    },
+    {
+      "id": "deployment-rollout",
+      "description": "Operationally sensitive changes require explicit rollout, verification, and rollback planning.",
+      "pathPatterns": [
+        "/Migrations/",
+        "FoodDiary\\.JobManager/",
+        "HostedService\\.cs$",
+        "FoodDiary\\.Integrations/",
+        "(MailRelay|MailInbox|Telegram|Billing|Webhooks?)/",
+        "docker-compose[^/]*\\.ya?ml$",
+        "^\\.github/workflows/deploy\\.yml$"
+      ],
+      "excludePatterns": [
+        "(^|/)tests/"
+      ],
+      "requiredChecks": [],
+      "reviewObligations": [
+        {
+          "id": "rollout-review",
+          "description": "Record deployment ordering, mixed-version compatibility, configuration/secrets, post-deploy signals, smoke checks, and a data-safe rollback or roll-forward strategy."
+        }
+      ]
+    },
+    {
+      "id": "quality-critical-path",
+      "description": "Critical orchestration, transport, validation, persistence, and domain changes require explicit test-gap and complexity review.",
+      "pathPatterns": [
+        "(Handler|Controller|Validator|Repository|ReadService|HostedService)\\.cs$",
+        "^FoodDiary\\.Domain/Entities/.+\\.cs$"
+      ],
+      "excludePatterns": [
+        "(^|/)tests/",
+        "/Migrations/"
+      ],
+      "requiredChecks": [],
+      "reviewObligations": [
+        {
+          "id": "quality-risk-review",
+          "description": "Review structural hotspot score, direct test references, boundary/error/concurrency scenarios, and whether focused coverage should be added or strengthened."
+        }
+      ]
+    },
+    {
+      "id": "runtime-resilience",
+      "description": "External clients, webhooks, workers, jobs, and message processing require explicit resilience and delivery-semantics review.",
+      "pathPatterns": [
+        "FoodDiary\\.Integrations/.+\\.cs$",
+        "(Client|Gateway|Transport|HostedService|Job|Consumer|Publisher|Webhook)\\.cs$",
+        "Mail(Relay|Inbox)/.+\\.cs$"
+      ],
+      "excludePatterns": [
+        "(^|/)tests/",
+        "/Migrations/"
+      ],
+      "requiredChecks": [],
+      "reviewObligations": [
+        {
+          "id": "runtime-resilience-review",
+          "description": "Review timeout/cancellation, retry and backoff, idempotency/replay, ordering, duplicate and partial delivery, dead-letter/recovery, graceful shutdown, readiness, and telemetry."
+        }
+      ]
+    },
+    {
+      "id": "privacy-data-lifecycle",
+      "description": "Credential, identity, health, financial, messaging, export, and personal-data flows require lifecycle and disclosure review.",
+      "pathPatterns": [
+        "(Authentication|Auth|Users|Weight|Waist|Cycles|Health|Billing|Export|PersonalData|Privacy|Telegram)/.+\\.cs$",
+        "(Email|Message|Prompt|Image|ContentReport).*(Request|Response|Model|Entity|Command|Event)\\.cs$",
+        "PERSONAL_DATA_LIFECYCLE\\.md$",
+        "PRIVACY_RELEASE_CHECKLIST\\.md$"
+      ],
+      "excludePatterns": [
+        "(^|/)tests/",
+        "/Migrations/"
+      ],
+      "requiredChecks": [],
+      "reviewObligations": [
+        {
+          "id": "privacy-lifecycle-review",
+          "description": "Review minimization/purpose, consent or disclosure, authorization, storage/encryption, logs/cache/queues, provider sharing, export, retention/deletion, backups, and telemetry."
+        }
+      ]
+    },
+    {
+      "id": "domain-invariant",
+      "description": "Domain entities and value objects require invariant and state-transition review.",
+      "pathPatterns": [
+        "(^|/)(FoodDiary\\.(MailInbox\\.|MailRelay\\.)?Domain|FoodDiary\\.Domain|Shared/FoodDiary\\.Domain\\.Primitives)/.+\\.cs$"
+      ],
+      "excludePatterns": [],
+      "requiredChecks": [],
+      "reviewObligations": [
+        {
+          "id": "domain-invariant-review",
+          "description": "Review construction and mutation paths, numeric/string boundaries, illegal state transitions, ownership scope, equality, serialization, and focused invariant tests."
+        }
+      ]
+    },
+    {
+      "id": "persistence-model-contract",
+      "description": "EF model configuration changes require domain/schema compatibility and query-shape review.",
+      "pathPatterns": [
+        "/Persistence/Configurations/.+Configuration\\.cs$",
+        "DbContext\\.cs$"
+      ],
+      "excludePatterns": [
+        "/Migrations/"
+      ],
+      "requiredChecks": [
+        {
+          "id": "infrastructure-integration-tests",
+          "command": "dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj"
+        }
+      ],
+      "reviewObligations": [
+        {
+          "id": "persistence-model-review",
+          "description": "Review keys, nullability, uniqueness, indexes, relationships, delete behavior, conversions, concurrency, generated migration, and realistic query shape."
+        }
+      ]
+    },
+    {
+      "id": "architecture-drift",
+      "description": "Project and module dependency changes must remain inside the executable architecture matrix.",
+      "pathPatterns": [
+        "\\.csproj$",
+        "^docs/architecture/module-dependencies\\.json$",
+        "ProjectDependencyMatrixTests\\.cs$"
+      ],
+      "excludePatterns": [],
+      "requiredChecks": [
+        {
+          "id": "architecture-health",
+          "command": "./.llm-wiki/wiki.ps1 architecture-health -Check"
+        },
+        {
+          "id": "architecture-tests",
+          "command": "dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj"
+        }
+      ],
+      "reviewObligations": [
+        {
+          "id": "architecture-dependency-review",
+          "description": "Review layer direction, necessity, allowed-matrix coverage, module cycles, cross-service client boundaries, and whether a durable ADR is required."
+        }
+      ]
+    },
+    {
+      "id": "backend-public-contract",
+      "description": "Backend DTO, application abstraction, command/query/event, and client-package changes require consumer and serialization compatibility review.",
+      "pathPatterns": [
+        "Application\\.Abstractions/.+\\.cs$",
+        "/(Requests|Responses|Commands|Queries|Events)/.+\\.cs$",
+        "Mail(Inbox|Relay)/FoodDiary\\.Mail(Inbox|Relay)\\.Client/.+\\.cs$",
+        "^Shared/.+\\.cs$"
+      ],
+      "excludePatterns": [
+        "(^|/)tests/",
+        "(Handler|Validator)\\.cs$"
+      ],
+      "requiredChecks": [
+        {
+          "id": "architecture-tests",
+          "command": "dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj"
+        }
+      ],
+      "reviewObligations": [
+        {
+          "id": "backend-consumer-review",
+          "description": "Query production/test consumers and review source/binary/serialization compatibility, nullability/defaults, enum evolution, cross-service rollout, and client-package versioning."
+        }
+      ]
+    },
+    {
+      "id": "shared-ui-consumer-contract",
+      "description": "Shared UI-kit changes require downstream selector-consumer and cross-surface verification.",
+      "pathPatterns": [
+        "^FoodDiary\\.Web\\.Client/projects/fd-ui-kit/src/lib/.+\\.(ts|html|scss)$"
+      ],
+      "excludePatterns": [
+        "\\.(spec|test)\\.ts$"
+      ],
+      "requiredChecks": [
+        {
+          "id": "frontend-verify",
+          "command": "cd FoodDiary.Web.Client && npm run verify"
+        }
+      ],
+      "reviewObligations": [
+        {
+          "id": "shared-ui-consumer-review",
+          "description": "Query indexed consumers and review all affected selectors, input bindings, output handlers, projected content, styling hooks, main/admin surfaces, responsive behavior, and migration compatibility."
+        }
+      ]
+    },
+    {
+      "id": "frontend-component-contract",
+      "description": "Angular component and template changes require public contract, accessibility, and rendered-state review.",
+      "pathPatterns": [
+        "^FoodDiary\\.Web\\.Client/.+\\.(ts|html|scss)$"
+      ],
+      "excludePatterns": [
+        "\\.(spec|test)\\.ts$"
+      ],
+      "requiredChecks": [
+        {
+          "id": "frontend-verify",
+          "command": "cd FoodDiary.Web.Client && npm run verify"
+        }
+      ],
+      "reviewObligations": [
+        {
+          "id": "frontend-public-contract",
+          "description": "Review selector, inputs, outputs, defaults, consuming templates, translation keys, and API call shape for compatibility."
+        },
+        {
+          "id": "frontend-accessibility",
+          "description": "Verify semantic roles, accessible names, keyboard navigation, focus behavior, disabled/error states, and responsive rendered evidence."
+        }
+      ]
+    },
+    {
+      "id": "llm-wiki",
+      "description": "Knowledge-layer changes must remain deterministic and fresh.",
+      "pathPatterns": [
+        "^\\.llm-wiki/",
+        "(^|/)AGENTS\\.md$",
+        "^docs/architecture/module-dependencies\\.json$"
+      ],
+      "excludePatterns": [],
+      "requiredChecks": [
+        {
+          "id": "wiki-verify",
+          "command": "./.llm-wiki/wiki.ps1 verify"
+        }
+      ],
+      "reviewObligations": []
+    }
+  ]
+}

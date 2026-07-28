@@ -20,7 +20,7 @@
                     "controllers":  81,
                     "endpoints":  259,
                     "agentGuides":  42,
-                    "documentationPages":  40
+                    "documentationPages":  42
                 },
     "dotnet":  {
                    "projects":  [
@@ -4384,6 +4384,7 @@
                                                    "docs/adr/0009-executable-application-module-dependency-graph.md",
                                                    "docs/adr/README.md",
                                                    "docs/adr/template.md",
+                                                   "docs/ai/CODE_REVIEW.md",
                                                    "docs/ARCHITECTURE.md",
                                                    "docs/backend/ARCHITECTURE_IMPROVEMENT_ROADMAP.md",
                                                    "docs/backend/BACKEND_API_CONTRACT_GOVERNANCE.md",
@@ -4412,6 +4413,7 @@
                                                    "docs/plans/README.md",
                                                    "docs/privacy/PRIVACY_RELEASE_CHECKLIST.md",
                                                    "docs/README.md",
+                                                   "docs/security/THREAT_MODEL.md",
                                                    "docs/TESTING_STRATEGY.md"
                                                ]
                          }
