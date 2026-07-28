@@ -2,6 +2,7 @@
 param([switch]$Check)
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $symbolIndex = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/csharp-symbol-index.json') -Raw | ConvertFrom-Json
@@ -93,7 +94,7 @@ $result = [ordered]@{
 }
 $jsonText = ($result | ConvertTo-Json -Depth 10) + [Environment]::NewLine
 if ($Check) {
-    if (-not (Test-Path -LiteralPath $outputPath) -or (Get-Content -LiteralPath $outputPath -Raw) -ne $jsonText) {
+    if (-not (Test-LlmWikiJsonEquivalent -ActualPath $outputPath -ExpectedJson $jsonText -Depth 10)) {
         Write-Host 'Backend contract index is stale. Run ./.llm-wiki/wiki.ps1 update.'
         exit 1
     }

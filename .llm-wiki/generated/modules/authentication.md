@@ -35,12 +35,12 @@ No literal attribute-routed controller was associated with this module.
 
 - `tests/FoodDiary.Application.Tests/Authentication/AuthenticationAdditionalValidatorTests.cs`
 - `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.AdminSso.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs`
 - `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.EmailVerification.cs`
 - `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ExternalLogin.cs`
 - `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Password.cs`
 - `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.RegisterLogin.cs`
 - `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Telegram.cs`
+- `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs`
 - `tests/FoodDiary.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs`
 - `tests/FoodDiary.Application.Tests/Authentication/AuthenticationUserAccessPolicyTests.cs`
 - `tests/FoodDiary.Application.Tests/Authentication/AuthenticationValidatorsTests.cs`

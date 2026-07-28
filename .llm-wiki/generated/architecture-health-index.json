@@ -229,20 +229,20 @@
                                                "specPath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-impersonation-dialog.spec.ts"
                                            },
                                            {
-                                               "class":  "AdminUsersComponent",
-                                               "selector":  "fd-admin-users",
-                                               "feature":  "admin-users",
-                                               "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.ts",
-                                               "templatePath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.html",
-                                               "specPath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.spec.ts"
-                                           },
-                                           {
                                                "class":  "AdminUserSetPasswordDialogComponent",
                                                "selector":  "fd-admin-user-set-password-dialog",
                                                "feature":  "admin-users",
                                                "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-set-password-dialog.ts",
                                                "templatePath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-set-password-dialog.html",
                                                "specPath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-set-password-dialog.spec.ts"
+                                           },
+                                           {
+                                               "class":  "AdminUsersComponent",
+                                               "selector":  "fd-admin-users",
+                                               "feature":  "admin-users",
+                                               "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.html",
+                                               "specPath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.spec.ts"
                                            },
                                            {
                                                "class":  "AuthDialogComponent",

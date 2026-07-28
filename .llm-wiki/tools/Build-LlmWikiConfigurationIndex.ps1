@@ -2,6 +2,7 @@
 param([switch]$Check)
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $outputPath = Join-Path $wikiRoot 'generated/configuration-index.json'
@@ -36,7 +37,7 @@ foreach ($file in Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Fil
         $properties = @(
             [regex]::Matches($body, 'public\s+(?:required\s+)?[A-Za-z0-9_?<>,.\[\]\s]+\s+(?<name>[A-Z][A-Za-z0-9_]*)\s*\{') |
                 ForEach-Object { $_.Groups['name'].Value } |
-                Sort-Object -Unique
+                Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique
         )
         if (-not $sectionMatch.Success -and $properties.Count -eq 0) { continue }
         $optionTypes.Add([pscustomobject]@{
@@ -57,7 +58,7 @@ foreach ($file in Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Fil
         Add-JsonKeys $json '' $keys
         $configurationFiles.Add([pscustomobject]@{
             path = ConvertTo-RepositoryPath $file.FullName
-            keys = @($keys | Sort-Object -Unique)
+            keys = @($keys | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique)
         })
     } catch {
         throw "Invalid configuration JSON: $(ConvertTo-RepositoryPath $file.FullName)"
@@ -65,12 +66,12 @@ foreach ($file in Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Fil
 }
 
 $environmentFiles = [System.Collections.Generic.List[object]]::new()
-foreach ($file in Get-ChildItem -LiteralPath $repositoryRoot -File -Filter '*.env.example') {
+foreach ($file in Get-ChildItem -LiteralPath $repositoryRoot -File -Force -Filter '*.env.example') {
     $names = @(
         Get-Content -LiteralPath $file.FullName |
             Where-Object { $_ -match '^\s*(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=' } |
             ForEach-Object { ([regex]::Match($_, '^\s*(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=')).Groups['name'].Value } |
-            Sort-Object -Unique
+            Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique
     )
     $environmentFiles.Add([pscustomobject]@{
         path = ConvertTo-RepositoryPath $file.FullName
@@ -83,17 +84,17 @@ $result = [ordered]@{
     summary = [ordered]@{
         optionTypes = $optionTypes.Count
         configurationFiles = $configurationFiles.Count
-        configurationKeys = @($configurationFiles.keys | Sort-Object -Unique).Count
-        environmentVariables = @($environmentFiles.variables | Sort-Object -Unique).Count
+        configurationKeys = @($configurationFiles.keys | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique).Count
+        environmentVariables = @($environmentFiles.variables | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique).Count
     }
-    optionTypes = @($optionTypes | Sort-Object type, path)
-    configurationFiles = @($configurationFiles | Sort-Object path)
-    environmentFiles = @($environmentFiles | Sort-Object path)
+    optionTypes = @($optionTypes | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.type)`0$($_.path)" })
+    configurationFiles = @($configurationFiles | Sort-Object { Get-LlmWikiOrdinalSortKey $_.path })
+    environmentFiles = @($environmentFiles | Sort-Object { Get-LlmWikiOrdinalSortKey $_.path })
 }
 $jsonText = ($result | ConvertTo-Json -Depth 10) + [Environment]::NewLine
 
 if ($Check) {
-    if (-not (Test-Path -LiteralPath $outputPath) -or (Get-Content -LiteralPath $outputPath -Raw) -ne $jsonText) {
+    if (-not (Test-LlmWikiJsonEquivalent -ActualPath $outputPath -ExpectedJson $jsonText -Depth 10)) {
         Write-Host 'Configuration index is stale. Run ./.llm-wiki/wiki.ps1 update.'
         exit 1
     }

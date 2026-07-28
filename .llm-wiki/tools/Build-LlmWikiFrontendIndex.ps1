@@ -4,6 +4,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $frontendRoot = Join-Path $repositoryRoot 'FoodDiary.Web.Client'
@@ -45,11 +46,11 @@ function Get-JsonPropertyCount {
 }
 
 $typescriptFiles = @(
-    Get-ChildItem -LiteralPath $frontendRoot -Recurse -File -Filter '*.ts' |
+    Get-ChildItem -LiteralPath $frontendRoot -Recurse -File -Force -Filter '*.ts' |
         Where-Object {
             $_.FullName -notmatch '[\\/](node_modules|dist|coverage|\.angular)[\\/]'
         } |
-        Sort-Object FullName
+        Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName }
 )
 
 $symbols = [System.Collections.Generic.List[object]]::new()
@@ -130,12 +131,12 @@ $features = @(
                 area = $_.area
                 name = $_.name
                 root = $_.root
-                symbols = @($_.symbols | Sort-Object -Unique)
-                routes = @($_.routes | Sort-Object -Unique)
-                tests = @($_.tests | Sort-Object -Unique)
+                symbols = @($_.symbols | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique)
+                routes = @($_.routes | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique)
+                tests = @($_.tests | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique)
             }
         } |
-        Sort-Object area, name
+        Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.area)`0$($_.name)" }
 )
 
 $localeRoot = Join-Path $frontendRoot 'assets/i18n'
@@ -145,7 +146,7 @@ $localeNames = @(
         ForEach-Object { $_.Name }
     Get-ChildItem -LiteralPath (Join-Path $localeRoot 'ru') -File -Filter '*.json' |
         ForEach-Object { $_.Name }
-) | Sort-Object -Unique
+) | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique
 foreach ($localeName in $localeNames) {
     $enPath = Join-Path $localeRoot "en/$localeName"
     $ruPath = Join-Path $localeRoot "ru/$localeName"
@@ -168,7 +169,7 @@ foreach ($localeName in $localeNames) {
 }
 
 $roleCounts = [ordered]@{}
-foreach ($roleGroup in @($symbols | Group-Object role | Sort-Object Name)) {
+foreach ($roleGroup in @($symbols | Group-Object role | Sort-Object { Get-LlmWikiOrdinalSortKey $_.Name })) {
     $roleCounts[$roleGroup.Name] = $roleGroup.Count
 }
 $index = [ordered]@{
@@ -190,9 +191,20 @@ $index = [ordered]@{
         roles = $roleCounts
     }
     features = $features
-    symbols = @($symbols | Sort-Object path, line, name)
-    routes = @($routes | Sort-Object source, line)
-    localization = @($localeFiles | Sort-Object name)
+    symbols = @(
+        $symbols |
+            Sort-Object `
+                @{ Expression = { Get-LlmWikiOrdinalSortKey $_.path } },
+                line,
+                @{ Expression = { Get-LlmWikiOrdinalSortKey $_.name } }
+    )
+    routes = @(
+        $routes |
+            Sort-Object `
+                @{ Expression = { Get-LlmWikiOrdinalSortKey $_.source } },
+                line
+    )
+    localization = @($localeFiles | Sort-Object { Get-LlmWikiOrdinalSortKey $_.name })
 }
 
 $json = $index | ConvertTo-Json -Depth 15
@@ -202,7 +214,7 @@ if ($Check) {
         Write-Host 'Frontend index is missing. Run Build-LlmWikiFrontendIndex.ps1.'
         exit 1
     }
-    if ([System.IO.File]::ReadAllText($outputPath) -cne $expectedContent) {
+    if (-not (Test-LlmWikiJsonEquivalent -ActualPath $outputPath -ExpectedJson $expectedContent -Depth 15)) {
         Write-Host 'Frontend index is stale. Regenerate it with:'
         Write-Host '  ./.llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1'
         exit 1

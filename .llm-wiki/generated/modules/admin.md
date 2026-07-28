@@ -142,11 +142,11 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.LessonCommandTests.cs`
 - `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.MappingTests.cs`
 - `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs`
 - `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs`
+- `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Admin/AdminValidatorTests.cs`
 - `tests/FoodDiary.Application.Tests/Admin/CreateAdminUserCommandHandlerTests.cs`

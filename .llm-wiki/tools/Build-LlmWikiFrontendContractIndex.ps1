@@ -2,6 +2,7 @@
 param([switch]$Check)
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $frontendRoot = Join-Path $repositoryRoot 'FoodDiary.Web.Client'
@@ -29,7 +30,7 @@ $tsFiles = @(
             $_.FullName -notmatch '[\\/](node_modules|dist|coverage|\.angular)[\\/]' -and
             $_.Name -notmatch '\.(spec|test)\.ts$'
         } |
-        Sort-Object FullName
+        Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName }
 )
 
 foreach ($file in $tsFiles) {
@@ -94,7 +95,7 @@ foreach ($file in $tsFiles) {
 $templateFiles = @(
     Get-ChildItem -LiteralPath $frontendRoot -Recurse -File -Filter '*.html' |
         Where-Object { $_.FullName -notmatch '[\\/](node_modules|dist|coverage|\.angular)[\\/]' } |
-        Sort-Object FullName
+        Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName }
 )
 $templateContents = @{}
 foreach ($file in $templateFiles) {
@@ -104,7 +105,7 @@ foreach ($file in $templateFiles) {
     $keys = @(
         [regex]::Matches($content, "['""](?<key>[A-Z][A-Z0-9_.-]+)['""]\s*\|\s*translate") |
             ForEach-Object { $_.Groups['key'].Value } |
-            Sort-Object -Unique
+            Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique
     )
     if ($keys.Count -gt 0) {
         $translationUsage.Add([pscustomobject]@{
@@ -120,7 +121,13 @@ $componentsBySelector = @{}
 foreach ($component in $components | Where-Object { -not [string]::IsNullOrWhiteSpace($_.selector) }) {
     $componentsBySelector[$component.selector] = $component
 }
-$selectorAlternation = @($componentsBySelector.Keys | Sort-Object { $_.Length } -Descending | ForEach-Object { [regex]::Escape($_) }) -join '|'
+$selectorAlternation = @(
+    $componentsBySelector.Keys |
+        Sort-Object `
+            @{ Expression = { $_.Length }; Descending = $true },
+            @{ Expression = { Get-LlmWikiOrdinalSortKey $_ } } |
+        ForEach-Object { [regex]::Escape($_) }
+) -join '|'
 foreach ($file in $templateFiles) {
     $content = $templateContents[$file.FullName]
     $usagesBySelector = @(
@@ -154,8 +161,8 @@ foreach ($file in $templateFiles) {
             consumerFeature = Get-Feature $consumerPath
             consumerPath = $consumerPath
             occurrences = $usageGroup.Count
-            inputsUsed = @($inputsUsed | Sort-Object)
-            outputsHandled = @($outputsHandled | Sort-Object)
+            inputsUsed = @($inputsUsed | Sort-Object { Get-LlmWikiOrdinalSortKey $_ })
+            outputsHandled = @($outputsHandled | Sort-Object { Get-LlmWikiOrdinalSortKey $_ })
         })
     }
 }
@@ -169,22 +176,42 @@ $result = [ordered]@{
         outputs = @($components.outputs).Count
         apiCalls = $apiCalls.Count
         templatesWithTranslations = $translationUsage.Count
-        translationKeys = @($translationUsage.keys | Sort-Object -Unique).Count
+        translationKeys = @($translationUsage.keys | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique).Count
         consumerEdges = $consumerEdges.Count
-        consumedComponents = @($consumerEdges.component | Sort-Object -Unique).Count
+        consumedComponents = @($consumerEdges.component | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique).Count
         unconsumedComponents = @(
             $components |
                 Where-Object { $_.class -notin @($consumerEdges.component) }
         ).Count
     }
-    components = @($components | Sort-Object feature, class, path)
-    apiCalls = @($apiCalls | Sort-Object feature, path, line)
-    translationUsage = @($translationUsage | Sort-Object feature, path)
-    consumerEdges = @($consumerEdges | Sort-Object component, consumerPath)
+    components = @(
+        $components |
+            Sort-Object {
+                Get-LlmWikiOrdinalSortKey "$($_.feature)`0$($_.class)`0$($_.path)"
+            }
+    )
+    apiCalls = @(
+        $apiCalls |
+            Sort-Object `
+                @{ Expression = { Get-LlmWikiOrdinalSortKey "$($_.feature)`0$($_.path)" } },
+                line
+    )
+    translationUsage = @(
+        $translationUsage |
+            Sort-Object {
+                Get-LlmWikiOrdinalSortKey "$($_.feature)`0$($_.path)"
+            }
+    )
+    consumerEdges = @(
+        $consumerEdges |
+            Sort-Object {
+                Get-LlmWikiOrdinalSortKey "$($_.component)`0$($_.consumerPath)"
+            }
+    )
 }
 $jsonText = ($result | ConvertTo-Json -Depth 10) + [Environment]::NewLine
 if ($Check) {
-    if (-not (Test-Path -LiteralPath $outputPath) -or (Get-Content -LiteralPath $outputPath -Raw) -ne $jsonText) {
+    if (-not (Test-LlmWikiJsonEquivalent -ActualPath $outputPath -ExpectedJson $jsonText -Depth 10)) {
         Write-Host 'Frontend contract index is stale. Run ./.llm-wiki/wiki.ps1 update.'
         exit 1
     }

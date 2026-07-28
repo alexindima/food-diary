@@ -36,6 +36,12 @@ sources:
 
 ## HTTP Surface
 
+### ProductSuggestionsController
+
+Source: `FoodDiary.Presentation.Api/Features/Products/ProductSuggestionsController.cs`
+
+- `GET /api/v{version:apiVersion}/products/suggestions`
+
 ### ProductsController
 
 Source: `FoodDiary.Presentation.Api/Features/Products/ProductsController.cs`
@@ -49,21 +55,15 @@ Source: `FoodDiary.Presentation.Api/Features/Products/ProductsController.cs`
 - `DELETE /api/v{version:apiVersion}/products/{id:guid}`
 - `POST /api/v{version:apiVersion}/products/{id:guid}/duplicate`
 
-### ProductSuggestionsController
-
-Source: `FoodDiary.Presentation.Api/Features/Products/ProductSuggestionsController.cs`
-
-- `GET /api/v{version:apiVersion}/products/suggestions`
-
 ## Focused Tests
 
 - `tests/FoodDiary.Application.Tests/Products/ProductSearchSuggestionTests.cs`
 - `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.CreateCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs`
 - `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.MappingTests.cs`
 - `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs`
 - `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.UpdateCommandTests.cs`
+- `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs`
 - `tests/FoodDiary.Presentation.Api.Tests/ProductSuggestionsControllerTests.cs`
 

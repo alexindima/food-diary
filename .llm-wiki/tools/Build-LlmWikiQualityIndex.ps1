@@ -2,6 +2,7 @@
 param([switch]$Check)
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
@@ -16,14 +17,26 @@ $symbols = (Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json).s
 $criticalRoles = @('CommandHandler', 'QueryHandler', 'Handler', 'Controller', 'Validator')
 $criticalSymbols = @($symbols | Where-Object { $_.role -in $criticalRoles -and $_.kind -ne 'interface' })
 
+$additionalSourceRoots = @(
+    Join-Path $repositoryRoot 'FoodDiary.Web.Client/.storybook'
+)
+$repositoryFiles = @(
+    Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File
+    foreach ($additionalSourceRoot in $additionalSourceRoots) {
+        if (Test-Path -LiteralPath $additionalSourceRoot -PathType Container) {
+            Get-ChildItem -LiteralPath $additionalSourceRoot -Recurse -File
+        }
+    }
+) | Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName } -Unique
+
 $testFiles = @(
-    Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File |
+    $repositoryFiles |
         Where-Object {
             $_.FullName -notmatch '[\\/](node_modules|obj|bin|dist|coverage|\.angular|\.artifacts|TestResults)[\\/]' -and
             ($_.FullName -match '[\\/]tests[\\/]' -or $_.Name -match '\.(spec|test)\.ts$') -and
             $_.Extension -in @('.cs', '.ts')
         } |
-        Sort-Object FullName |
+        Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName } |
         ForEach-Object {
             [pscustomobject]@{
                 path = ConvertTo-RepositoryPath $_.FullName
@@ -50,14 +63,14 @@ foreach ($symbol in $criticalSymbols) {
 }
 
 $productionFiles = @(
-    Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File |
+    $repositoryFiles |
         Where-Object {
             $_.FullName -notmatch '[\\/](tests|node_modules|obj|bin|dist|coverage|\.angular|\.artifacts|TestResults|Migrations)[\\/]' -and
             ($_.Extension -eq '.cs' -or
              ($_.Extension -eq '.ts' -and $_.FullName -match '[\\/]FoodDiary\.(Web\.Client|Mobile)[\\/]')) -and
             $_.Name -notmatch '\.(Designer|g|spec|test)\.(cs|ts)$'
         } |
-        Sort-Object FullName
+        Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName }
 )
 
 $fileMetrics = [System.Collections.Generic.List[object]]::new()
@@ -72,13 +85,18 @@ foreach ($file in $productionFiles) {
     $fileCritical = @($symbolCoverage | Where-Object path -eq $path)
     $unreferenced = @($fileCritical | Where-Object testReferenceCount -eq 0).Count
     $score = [Math]::Round(($lineCount / 50.0) + ($decisionCount * 1.5) + ($fileCritical.Count * 2) + ($unreferenced * 5), 2)
+    $serializedScore = if ($score -eq [Math]::Truncate($score)) {
+        [int]$score
+    } else {
+        $score
+    }
     $fileMetrics.Add([pscustomobject]@{
         path = $path
         nonBlankLines = $lineCount
         decisionPoints = $decisionCount
         criticalSymbols = $fileCritical.Count
         unreferencedCriticalSymbols = $unreferenced
-        structuralRiskScore = $score
+        structuralRiskScore = $serializedScore
     })
     foreach ($match in [regex]::Matches($content, '(?im)(?<marker>TODO|FIXME|HACK|#pragma\s+warning\s+disable|SuppressMessage)\b')) {
         $line = 1 + [regex]::Matches($content.Substring(0, $match.Index), "`n").Count
@@ -106,17 +124,29 @@ $result = [ordered]@{
     }
     hotspots = @(
         $fileMetrics |
-            Sort-Object @{ Expression = 'structuralRiskScore'; Descending = $true }, path |
+            Sort-Object `
+                @{ Expression = 'structuralRiskScore'; Descending = $true },
+                @{ Expression = { Get-LlmWikiOrdinalSortKey $_.path } } |
             Select-Object -First 100
     )
-    files = @($fileMetrics | Sort-Object path)
-    criticalSymbols = @($symbolCoverage | Sort-Object role, name, path)
-    debtMarkers = @($debtMarkers | Sort-Object path, line)
+    files = @($fileMetrics | Sort-Object { Get-LlmWikiOrdinalSortKey $_.path })
+    criticalSymbols = @(
+        $symbolCoverage |
+            Sort-Object {
+                Get-LlmWikiOrdinalSortKey "$($_.role)`0$($_.name)`0$($_.path)"
+            }
+    )
+    debtMarkers = @(
+        $debtMarkers |
+            Sort-Object `
+                @{ Expression = { Get-LlmWikiOrdinalSortKey $_.path } },
+                line
+    )
 }
 $jsonText = ($result | ConvertTo-Json -Depth 10) + [Environment]::NewLine
 
 if ($Check) {
-    if (-not (Test-Path -LiteralPath $outputPath) -or (Get-Content -LiteralPath $outputPath -Raw) -ne $jsonText) {
+    if (-not (Test-LlmWikiJsonEquivalent -ActualPath $outputPath -ExpectedJson $jsonText -Depth 10)) {
         Write-Host 'Quality index is stale. Run ./.llm-wiki/wiki.ps1 update.'
         exit 1
     }

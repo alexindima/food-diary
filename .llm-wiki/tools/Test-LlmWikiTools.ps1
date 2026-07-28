@@ -28,6 +28,52 @@ function Get-WikiObjectFingerprint([object]$Value) {
     } finally { $sha.Dispose() }
 }
 
+. (Join-Path $toolsRoot 'LlmWikiJson.ps1')
+$crossPlatformFixtureRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/cross-platform-fixtures'
+$jsonFixturePath = Join-Path $crossPlatformFixtureRoot 'actual.json'
+$textFixturePath = Join-Path $crossPlatformFixtureRoot 'actual.md'
+try {
+    New-Item -ItemType Directory -Path $crossPlatformFixtureRoot -Force | Out-Null
+    [System.IO.File]::WriteAllText(
+        $jsonFixturePath,
+        '{"name":"portable","values":[1,2,3]}',
+        [System.Text.UTF8Encoding]::new($false))
+    $expectedJson = @'
+{
+  "name": "portable",
+  "values": [
+    1,
+    2,
+    3
+  ]
+}
+'@
+    Assert-Wiki (Test-LlmWikiJsonEquivalent -ActualPath $jsonFixturePath -ExpectedJson $expectedJson) `
+        'JSON freshness comparison remained sensitive to serializer whitespace.'
+
+    [System.IO.File]::WriteAllText(
+        $textFixturePath,
+        "line-one`r`nline-two`r`n",
+        [System.Text.UTF8Encoding]::new($false))
+    Assert-Wiki (Test-LlmWikiTextEquivalent -ActualPath $textFixturePath -ExpectedText "line-one`nline-two`n") `
+        'Text freshness comparison remained sensitive to platform line endings.'
+
+    $ordinalOrder = @('fooddiary-admin', 'food-diary-web-client') |
+        Sort-Object { Get-LlmWikiOrdinalSortKey $_ }
+    Assert-Wiki ($ordinalOrder[0] -eq 'food-diary-web-client') `
+        'Ordinal sort key remained dependent on the current culture.'
+} finally {
+    if (Test-Path -LiteralPath $jsonFixturePath) {
+        Remove-Item -LiteralPath $jsonFixturePath -Force
+    }
+    if (Test-Path -LiteralPath $textFixturePath) {
+        Remove-Item -LiteralPath $textFixturePath -Force
+    }
+    if (Test-Path -LiteralPath $crossPlatformFixtureRoot) {
+        Remove-Item -LiteralPath $crossPlatformFixtureRoot -Force
+    }
+}
+
 $workspacePolicyValidation = & (Join-Path $toolsRoot 'Get-LlmWikiWorkspacePolicy.ps1') validate -Format Json | ConvertFrom-Json
 Assert-Wiki ($workspacePolicyValidation.valid -and $workspacePolicyValidation.fingerprint -match '^[a-f0-9]{64}$') 'Canonical workspace policy did not validate with a SHA-256 fingerprint.'
 $workspacePolicy = & (Join-Path $toolsRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -Format Json | ConvertFrom-Json

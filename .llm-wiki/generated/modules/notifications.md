@@ -57,12 +57,12 @@ Source: `FoodDiary.Presentation.Api/Features/Notifications/NotificationsControll
 
 - `tests/FoodDiary.Application.Tests/Notifications/DeliverTestNotificationCommandHandlerTests.cs`
 - `tests/FoodDiary.Application.Tests/Notifications/NotificationReadServiceCoverageTests.cs`
-- `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.MappingAndCleanup.cs`
 - `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.Preferences.cs`
 - `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.Queries.cs`
 - `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.ReadCommands.cs`
 - `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.WebPush.cs`
+- `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Notifications/NotificationsValidatorTests.cs`
 - `tests/FoodDiary.Presentation.Api.Tests/NotificationsControllerTests.cs`
 - `tests/FoodDiary.Resources.Tests/Notifications/NotificationResourceRendererTests.cs`

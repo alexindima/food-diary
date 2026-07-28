@@ -4,6 +4,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $catalogPath = Join-Path $wikiRoot 'generated/repository-catalog.json'
@@ -100,16 +101,16 @@ $indexLines.Add('')
 $indexLines.Add('| Module | Dependencies | Consumers | Controllers |')
 $indexLines.Add('| --- | ---: | ---: | ---: |')
 
-foreach ($module in @($allModules | Sort-Object name)) {
+foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.name })) {
     $moduleName = [string]$module.name
     $slug = ConvertTo-Slug $moduleName
     $relativeOutputPath = ".llm-wiki/generated/modules/$slug.md"
-    $dependencies = @($module.dependencies | Sort-Object)
+    $dependencies = @($module.dependencies | Sort-Object { Get-LlmWikiOrdinalSortKey $_ })
     $consumers = @(
         $allModules |
             Where-Object { @($_.dependencies) -contains $moduleName } |
             ForEach-Object { $_.name } |
-            Sort-Object
+            Sort-Object { Get-LlmWikiOrdinalSortKey $_ }
     )
     $controllers = @(
         $catalog.http.controllers |
@@ -117,13 +118,13 @@ foreach ($module in @($allModules | Sort-Object name)) {
                 $_.path -match "/Features/$([regex]::Escape($moduleName))/" -or
                 $_.name -like "$moduleName*Controller"
             } |
-            Sort-Object path
+            Sort-Object { Get-LlmWikiOrdinalSortKey $_.path }
     )
     $sourceDirectories = @(
         $allDirectories |
             Where-Object { $_.Name -eq $moduleName } |
             ForEach-Object { ConvertTo-RepositoryPath $_.FullName } |
-            Sort-Object -Unique
+            Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique
     )
     $tests = @(
         $allTestFiles |
@@ -131,7 +132,7 @@ foreach ($module in @($allModules | Sort-Object name)) {
                 (ConvertTo-RepositoryPath $_.FullName) -match "/$([regex]::Escape($moduleName))(/|[^/]*Tests?\.cs$)"
             } |
             ForEach-Object { ConvertTo-RepositoryPath $_.FullName } |
-            Sort-Object |
+            Sort-Object { Get-LlmWikiOrdinalSortKey $_ } |
             Select-Object -First 30
     )
 
@@ -209,8 +210,7 @@ if ($Check) {
             $errors.Add("Missing generated module page: $($entry.Key)")
             continue
         }
-        $actualContent = [System.IO.File]::ReadAllText($absolutePath)
-        if ($actualContent -cne $entry.Value) {
+        if (-not (Test-LlmWikiTextEquivalent -ActualPath $absolutePath -ExpectedText $entry.Value)) {
             $errors.Add("Stale generated module page: $($entry.Key)")
         }
     }

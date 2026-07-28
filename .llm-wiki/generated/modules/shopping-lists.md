@@ -43,12 +43,12 @@ Source: `FoodDiary.Presentation.Api/Features/ShoppingLists/ShoppingListsControll
 
 - `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListCreationServiceTests.cs`
 - `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.CreateCommand.cs`
-- `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.DeleteCommand.cs`
 - `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.ItemBuilder.cs`
 - `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.Mapping.cs`
 - `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.Queries.cs`
 - `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.UpdateCommand.cs`
+- `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsValidatorTests.cs`
 
 ## Working Rule

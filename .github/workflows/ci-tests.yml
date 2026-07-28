@@ -1129,6 +1129,31 @@ jobs:
             exit 0
           fi
 
+          telegram_api_call() {
+            local method="$1"
+            shift
+            local response
+
+            if ! response=$(curl \
+              --silent \
+              --show-error \
+              --retry 3 \
+              --retry-all-errors \
+              --connect-timeout 10 \
+              --max-time 45 \
+              -X POST \
+              "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/${method}" \
+              "$@"); then
+              echo "::error::Telegram ${method} request failed after retries."
+              return 1
+            fi
+
+            if ! printf '%s' "${response}" | grep -q '"ok":true'; then
+              echo "::error::Telegram API rejected ${method}: ${response}"
+              return 1
+            fi
+          }
+
           FAILED_AREA="unknown"
           FAILED_TARGET="unknown"
           FAILED_LOG_FILE=""
@@ -1152,9 +1177,9 @@ jobs:
           fi
 
           if [ -n "${META_FILE}" ]; then
-            parsed_area=$(grep '^FAILED_AREA=' "${META_FILE}" | head -n 1 | cut -d= -f2-)
-            parsed_target=$(grep '^FAILED_TARGET=' "${META_FILE}" | head -n 1 | cut -d= -f2-)
-            parsed_log_name=$(grep '^FAILED_LOG_FILE_NAME=' "${META_FILE}" | head -n 1 | cut -d= -f2-)
+            parsed_area=$(grep '^FAILED_AREA=' "${META_FILE}" | head -n 1 | cut -d= -f2- || true)
+            parsed_target=$(grep '^FAILED_TARGET=' "${META_FILE}" | head -n 1 | cut -d= -f2- || true)
+            parsed_log_name=$(grep '^FAILED_LOG_FILE_NAME=' "${META_FILE}" | head -n 1 | cut -d= -f2- || true)
             if [ -n "${parsed_area}" ]; then
               FAILED_AREA="${parsed_area}"
             fi
@@ -1194,9 +1219,9 @@ jobs:
 
           WORKFLOW_NAME="CI Tests"
           MESSAGE=$'❌ CI failed\nWorkflow: '"${WORKFLOW_NAME}"$'\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${COMMIT_SHA}"$'\nTitle: '"${COMMIT_SUBJECT}"$'\nActor: '"${GITHUB_ACTOR}"$'\nArea: '"${FAILED_AREA}"$'\nStep: '"${FAILED_TARGET}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
-          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+          telegram_api_call sendMessage \
             -d chat_id="${TELEGRAM_CHAT_ID}" \
-            --data-urlencode text="${MESSAGE}" >/dev/null
+            --data-urlencode text="${MESSAGE}"
 
           if [ -n "${FAILED_LOG_FILE}" ] && [ -f "${FAILED_LOG_FILE}" ]; then
             echo "Sending log file: ${FAILED_LOG_FILE}"
@@ -1232,20 +1257,19 @@ jobs:
               echo
               echo "Full log is available in the uploaded CI artifact."
             } > "${telegram_log_file}"
-            response=$(curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument" \
+            if ! telegram_api_call sendDocument \
               -F chat_id="${TELEGRAM_CHAT_ID}" \
               -F caption="❌ CI Tests | ${FAILED_AREA} | ${FAILED_TARGET}" \
-              -F document=@"${telegram_log_file}")
-            if ! echo "${response}" | grep -q '"ok":true'; then
+              -F document=@"${telegram_log_file}"; then
               tail_excerpt=$(tail -n 40 "${FAILED_LOG_FILE}")
               FALLBACK_MESSAGE=$'❌ CI failure log tail\nWorkflow: '"${WORKFLOW_NAME}"$'\nArea: '"${FAILED_AREA}"$'\nStep: '"${FAILED_TARGET}"$'\n\n'"${tail_excerpt}"
-              curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+              telegram_api_call sendMessage \
                 -d chat_id="${TELEGRAM_CHAT_ID}" \
-                --data-urlencode text="${FALLBACK_MESSAGE}" >/dev/null
+                --data-urlencode text="${FALLBACK_MESSAGE}"
             fi
           else
             FALLBACK_MESSAGE=$'❌ CI failure log unavailable\nWorkflow: '"${WORKFLOW_NAME}"$'\nArea: '"${FAILED_AREA}"$'\nStep: '"${FAILED_TARGET}"$'\nLog file was not found in downloaded artifacts.'
-            curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            telegram_api_call sendMessage \
               -d chat_id="${TELEGRAM_CHAT_ID}" \
-              --data-urlencode text="${FALLBACK_MESSAGE}" >/dev/null
+              --data-urlencode text="${FALLBACK_MESSAGE}"
           fi

@@ -4,6 +4,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $outputPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
@@ -187,8 +188,7 @@ if ($Check) {
         Write-Host 'C# symbol index is missing. Run Build-LlmWikiSymbolIndex.ps1.'
         exit 1
     }
-    $actualContent = [System.IO.File]::ReadAllText($outputPath)
-    if ($actualContent -cne $expectedContent) {
+    if (-not (Test-LlmWikiJsonEquivalent -ActualPath $outputPath -ExpectedJson $expectedContent -Depth 12)) {
         Write-Host 'C# symbol index is stale. Regenerate it with:'
         Write-Host '  ./.llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1'
         exit 1

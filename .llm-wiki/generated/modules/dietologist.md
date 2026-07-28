@@ -50,6 +50,14 @@ Source: `FoodDiary.Presentation.Api/Features/Dietologist/DietologistAttentionCon
 - `GET /api/v{version:apiVersion}/dietologist/clients/attention`
 - `PUT /api/v{version:apiVersion}/dietologist/clients/attention/{signalId}/state`
 
+### DietologistClientTasksController
+
+Source: `FoodDiary.Presentation.Api/Features/Dietologist/DietologistClientTasksController.cs`
+
+- `GET /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/tasks`
+- `POST /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/tasks`
+- `PUT /api/v{version:apiVersion}/dietologist/clients/tasks/{taskId:guid}/cancel`
+
 ### DietologistClientsController
 
 Source: `FoodDiary.Presentation.Api/Features/Dietologist/DietologistClientsController.cs`
@@ -60,14 +68,6 @@ Source: `FoodDiary.Presentation.Api/Features/Dietologist/DietologistClientsContr
 - `GET /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/goals`
 - `POST /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/recommendations`
 - `GET /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/recommendations`
-
-### DietologistClientTasksController
-
-Source: `FoodDiary.Presentation.Api/Features/Dietologist/DietologistClientTasksController.cs`
-
-- `GET /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/tasks`
-- `POST /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/tasks`
-- `PUT /api/v{version:apiVersion}/dietologist/clients/tasks/{taskId:guid}/cancel`
 
 ### DietologistController
 
@@ -90,15 +90,6 @@ Source: `FoodDiary.Presentation.Api/Features/Dietologist/DietologistInvitationsC
 - `POST /api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/decline-current-user`
 - `GET /api/v{version:apiVersion}/dietologist/invitation/{invitationId:guid}`
 
-### RecommendationsController
-
-Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsController.cs`
-
-- `GET /api/v{version:apiVersion}/recommendations`
-- `PUT /api/v{version:apiVersion}/recommendations/{recommendationId:guid}/read`
-- `GET /api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments`
-- `POST /api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments`
-
 ### RecommendationTemplatesController
 
 Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationTemplatesController.cs`
@@ -108,6 +99,15 @@ Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationTemplates
 - `PUT /api/v{version:apiVersion}/dietologist/recommendation-templates/{templateId:guid}`
 - `DELETE /api/v{version:apiVersion}/dietologist/recommendation-templates/{templateId:guid}`
 
+### RecommendationsController
+
+Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsController.cs`
+
+- `GET /api/v{version:apiVersion}/recommendations`
+- `PUT /api/v{version:apiVersion}/recommendations/{recommendationId:guid}/read`
+- `GET /api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments`
+- `POST /api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments`
+
 ## Focused Tests
 
 - `tests/FoodDiary.Application.Tests/Dietologist/AttentionSignalTests.cs`
@@ -116,13 +116,13 @@ Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationTemplates
 - `tests/FoodDiary.Application.Tests/Dietologist/ClientTaskHandlerTests.cs`
 - `tests/FoodDiary.Application.Tests/Dietologist/DietologistAccessPolicyTests.cs`
 - `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.AcceptInvitationCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.DeclineInvitationCommandTests.cs`
 - `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.InviteCommandTests.cs`
 - `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.MappingTests.cs`
 - `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs`
 - `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.RecommendationCommandTests.cs`
 - `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.RelationshipCommandTests.cs`
+- `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs`
 - `tests/FoodDiary.Application.Tests/Dietologist/DietologistValidatorTests.cs`
 - `tests/FoodDiary.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs`

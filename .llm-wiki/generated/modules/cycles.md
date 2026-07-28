@@ -41,11 +41,11 @@ Source: `FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs`
 ## Focused Tests
 
 - `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.CreateAndRead.cs`
-- `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.DayCommands.cs`
 - `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.FactorCommands.cs`
 - `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.MappingAndPrediction.cs`
 - `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.NutritionSummary.cs`
+- `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Cycles/CyclesValidatorTests.cs`
 - `tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs`
 

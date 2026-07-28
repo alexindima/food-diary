@@ -2151,17 +2151,6 @@
                                                       ]
                                       },
                                       {
-                                          "name":  "fooddiary-admin",
-                                          "projectType":  "application",
-                                          "root":  "projects/fooddiary-admin",
-                                          "sourceRoot":  "projects/fooddiary-admin/src",
-                                          "targets":  [
-                                                          "build",
-                                                          "serve",
-                                                          "test"
-                                                      ]
-                                      },
-                                      {
                                           "name":  "food-diary-web-client",
                                           "projectType":  "application",
                                           "root":  "",
@@ -2169,6 +2158,17 @@
                                           "targets":  [
                                                           "build",
                                                           "extract-i18n",
+                                                          "serve",
+                                                          "test"
+                                                      ]
+                                      },
+                                      {
+                                          "name":  "fooddiary-admin",
+                                          "projectType":  "application",
+                                          "root":  "projects/fooddiary-admin",
+                                          "sourceRoot":  "projects/fooddiary-admin/src",
+                                          "targets":  [
+                                                          "build",
                                                           "serve",
                                                           "test"
                                                       ]
@@ -4373,6 +4373,11 @@
                                                  "tests/FoodDiary.ArchitectureTests/AGENTS.md"
                                              ],
                              "documentation":  [
+                                                   "docs/ARCHITECTURE.md",
+                                                   "docs/BACKEND_MODULE_MAP.md",
+                                                   "docs/BACKEND_PATTERNS_AND_ARCHITECTURE_INTERVIEW_GUIDE.md",
+                                                   "docs/README.md",
+                                                   "docs/TESTING_STRATEGY.md",
                                                    "docs/adr/0001-modular-monolith-with-supporting-services.md",
                                                    "docs/adr/0002-mailrelay-mailinbox-as-separate-services.md",
                                                    "docs/adr/0003-presentation-models-live-in-presentation-api.md",
@@ -4385,7 +4390,6 @@
                                                    "docs/adr/README.md",
                                                    "docs/adr/template.md",
                                                    "docs/ai/CODE_REVIEW.md",
-                                                   "docs/ARCHITECTURE.md",
                                                    "docs/backend/ARCHITECTURE_IMPROVEMENT_ROADMAP.md",
                                                    "docs/backend/BACKEND_API_CONTRACT_GOVERNANCE.md",
                                                    "docs/backend/BACKEND_CRITICAL_FLOW_MATRIX.md",
@@ -4401,20 +4405,16 @@
                                                    "docs/backend/BACKEND_TIME_POLICY.md",
                                                    "docs/backend/MARKETING_ATTRIBUTION_RUNBOOK.md",
                                                    "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
-                                                   "docs/BACKEND_MODULE_MAP.md",
-                                                   "docs/BACKEND_PATTERNS_AND_ARCHITECTURE_INTERVIEW_GUIDE.md",
-                                                   "docs/frontend/angular-22-tech-debt.md",
                                                    "docs/frontend/DESIGN_SYSTEM_REVIEW.md",
                                                    "docs/frontend/FRONTEND_ARCHITECTURE.md",
                                                    "docs/frontend/FRONTEND_OBSERVABILITY_BASELINE.md",
-                                                   "docs/plans/accessibility-hardening-plan.md",
+                                                   "docs/frontend/angular-22-tech-debt.md",
                                                    "docs/plans/ADAPTIVE_COACH_MVP_PLAN.md",
-                                                   "docs/plans/dietologist-collaboration-completion-plan.md",
                                                    "docs/plans/README.md",
+                                                   "docs/plans/accessibility-hardening-plan.md",
+                                                   "docs/plans/dietologist-collaboration-completion-plan.md",
                                                    "docs/privacy/PRIVACY_RELEASE_CHECKLIST.md",
-                                                   "docs/README.md",
-                                                   "docs/security/THREAT_MODEL.md",
-                                                   "docs/TESTING_STRATEGY.md"
+                                                   "docs/security/THREAT_MODEL.md"
                                                ]
                          }
 }

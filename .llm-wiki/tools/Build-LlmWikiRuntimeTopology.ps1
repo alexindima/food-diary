@@ -2,6 +2,7 @@
 param([switch]$Check)
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $outputPath = Join-Path $wikiRoot 'generated/runtime-topology.json'
@@ -17,7 +18,7 @@ $sourceFiles = @(
             $_.FullName -notmatch '[\\/](tests|obj|bin|\.artifacts|TestResults|Migrations)[\\/]' -and
             $_.Name -notmatch '\.(Designer|g)\.cs$'
         } |
-        Sort-Object FullName
+        Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName }
 )
 $hostedServices = [System.Collections.Generic.List[object]]::new()
 $httpClients = [System.Collections.Generic.List[object]]::new()
@@ -89,7 +90,7 @@ if (Test-Path -LiteralPath $composePath) {
             [regex]::Matches($body, '(?m)^\s{6}(?<name>[a-zA-Z0-9_-]+):\s*(?:\r?\n|$)') |
                 ForEach-Object { $_.Groups['name'].Value } |
                 Where-Object { $_ -notin @('condition', 'environment', 'healthcheck', 'profiles', 'build') } |
-                Sort-Object -Unique
+                Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique
         )
         $composeServices.Add([pscustomobject]@{
             name = $match.Groups['name'].Value
@@ -104,20 +105,20 @@ $result = [ordered]@{
     schemaVersion = 1
     summary = [ordered]@{
         composeServices = $composeServices.Count
-        hostedServices = @($hostedServices | Sort-Object name, path -Unique).Count
-        httpClients = @($httpClients | Sort-Object implementation, registrationPath -Unique).Count
-        webhooks = @($webhooks | Sort-Object name, path -Unique).Count
+        hostedServices = @($hostedServices | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.name)`0$($_.path)" } -Unique).Count
+        httpClients = @($httpClients | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.implementation)`0$($_.registrationPath)" } -Unique).Count
+        webhooks = @($webhooks | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.name)`0$($_.path)" } -Unique).Count
         recurringJobRegistrations = $jobRegistrations.Count
     }
-    composeServices = @($composeServices | Sort-Object name)
-    hostedServices = @($hostedServices | Sort-Object name, path -Unique)
-    httpClients = @($httpClients | Sort-Object implementation, registrationPath -Unique)
-    webhooks = @($webhooks | Sort-Object name, path -Unique)
-    recurringJobRegistrations = @($jobRegistrations | Sort-Object path, detail)
+    composeServices = @($composeServices | Sort-Object { Get-LlmWikiOrdinalSortKey $_.name })
+    hostedServices = @($hostedServices | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.name)`0$($_.path)" } -Unique)
+    httpClients = @($httpClients | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.implementation)`0$($_.registrationPath)" } -Unique)
+    webhooks = @($webhooks | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.name)`0$($_.path)" } -Unique)
+    recurringJobRegistrations = @($jobRegistrations | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.path)`0$($_.detail)" })
 }
 $jsonText = ($result | ConvertTo-Json -Depth 10) + [Environment]::NewLine
 if ($Check) {
-    if (-not (Test-Path -LiteralPath $outputPath) -or (Get-Content -LiteralPath $outputPath -Raw) -ne $jsonText) {
+    if (-not (Test-LlmWikiJsonEquivalent -ActualPath $outputPath -ExpectedJson $jsonText -Depth 10)) {
         Write-Host 'Runtime topology is stale. Run ./.llm-wiki/wiki.ps1 update.'
         exit 1
     }

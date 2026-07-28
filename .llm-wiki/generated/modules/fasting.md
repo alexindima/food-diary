@@ -58,7 +58,6 @@ Source: `FoodDiary.Presentation.Api/Features/Fasting/FastingReadController.cs`
 ## Focused Tests
 
 - `tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs`
-- `tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Cyclic.cs`
 - `tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs`
 - `tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.End.cs`
@@ -66,6 +65,7 @@ Source: `FoodDiary.Presentation.Api/Features/Fasting/FastingReadController.cs`
 - `tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Notifications.cs`
 - `tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs`
 - `tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Start.cs`
+- `tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Fasting/FastingInsightBuilderTests.cs`
 - `tests/FoodDiary.Application.Tests/Fasting/FastingNotificationPlannerTests.cs`
 - `tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs`

@@ -60,6 +60,15 @@
                                               ]
                             },
                             {
+                                "name":  "mail-relay",
+                                "image":  "${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mail-relay:${MAIL_RELAY_IMAGE_TAG:-latest}",
+                                "dockerfile":  "MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile",
+                                "dependsOn":  [
+                                                  "mailrelay-db-init",
+                                                  "rabbitmq"
+                                              ]
+                            },
+                            {
                                 "name":  "mailinbox-db-init",
                                 "image":  "${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mailinbox-initializer:${MAIL_INBOX_INITIALIZER_IMAGE_TAG:-latest}",
                                 "dockerfile":  "MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile",
@@ -81,15 +90,6 @@
                                 "dockerfile":  null,
                                 "dependsOn":  [
 
-                                              ]
-                            },
-                            {
-                                "name":  "mail-relay",
-                                "image":  "${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mail-relay:${MAIL_RELAY_IMAGE_TAG:-latest}",
-                                "dockerfile":  "MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile",
-                                "dependsOn":  [
-                                                  "mailrelay-db-init",
-                                                  "rabbitmq"
                                               ]
                             },
                             {
@@ -368,12 +368,12 @@
                                       },
                                       {
                                           "api":  "recurringJobManager.AddOrUpdate",
-                                          "detail":  "RecurringJobIds.NotificationsCleanup",
+                                          "detail":  "RecurringJobIds.NotificationWebPushOutbox",
                                           "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
                                       },
                                       {
                                           "api":  "recurringJobManager.AddOrUpdate",
-                                          "detail":  "RecurringJobIds.NotificationWebPushOutbox",
+                                          "detail":  "RecurringJobIds.NotificationsCleanup",
                                           "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
                                       },
                                       {

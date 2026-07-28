@@ -56,17 +56,17 @@ Source: `FoodDiary.Presentation.Api/Features/Recipes/RecipesController.cs`
 - `tests/FoodDiary.Application.Tests/Recipes/RecipeNutritionCalculatorTests.cs`
 - `tests/FoodDiary.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs`
 - `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.CreateCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DeleteCommandTests.cs`
 - `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DuplicateCommandTests.cs`
 - `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.NutritionAndIngredientTests.cs`
 - `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs`
 - `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.UpdateCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.cs`
+- `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Media.cs`
 - `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.NestedIngredients.cs`
 - `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.UpdateFlow.cs`
 - `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Validation.cs`
+- `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.cs`
 - `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandValidatorTests.cs`
 
 ## Working Rule

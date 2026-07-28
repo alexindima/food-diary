@@ -42,12 +42,12 @@ Source: `FoodDiary.Presentation.Api/Features/Consumptions/ConsumptionsController
 
 - `tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsAdditionalValidatorTests.cs`
 - `tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.CreateCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.MappingTests.cs`
 - `tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.ReadQueryTests.cs`
 - `tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.RepeatAndDeleteCommandTests.cs`
 - `tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.UpdateCommandTests.cs`
 - `tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.ValidatorAndCalculatorTests.cs`
+- `tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Consumptions/CreateConsumptionCommandValidatorTests.cs`
 - `tests/FoodDiary.Application.Tests/Consumptions/MealNutritionServiceTests.cs`
 - `tests/FoodDiary.Application.Tests/Consumptions/UpdateConsumptionCommandValidatorTests.cs`

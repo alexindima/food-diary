@@ -49,11 +49,11 @@ Source: `FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs
 ## Focused Tests
 
 - `tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.OverviewAndContextTests.cs`
 - `tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.PortalAndTrialCommandTests.cs`
 - `tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.RenewalAndAccessServiceTests.cs`
 - `tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs`
+- `tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.cs`
 - `tests/FoodDiary.ArchitectureTests/BillingModuleExtractionTests.cs`
 - `tests/FoodDiary.Domain.Tests/Domain/BillingInvariantTests.cs`
 - `tests/FoodDiary.Infrastructure.Tests/Integrations/BillingProviderGatewayAccessorTests.cs`
