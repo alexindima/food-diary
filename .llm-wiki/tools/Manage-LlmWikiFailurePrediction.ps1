@@ -72,7 +72,15 @@ function Get-Current([bool]$PersistRisk) {
     $repair = Get-Repair
     $learningValidation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRepairLearning.ps1') verify -Format Json | ConvertFrom-Json
     $telemetry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics -Format Json | ConvertFrom-Json
-    if (-not $risk.valid -or -not $repair.valid -or -not $learningValidation.valid -or -not $telemetry.valid) { throw 'Failure prediction requires valid risk, repair, learning, and telemetry inputs.' }
+    if (-not $risk.valid -or -not $repair.valid -or -not $learningValidation.valid -or -not $telemetry.valid) {
+        $details = @(
+            "risk=$([bool]$risk.valid) [$(@($risk.issues) -join '; ')]"
+            "repair=$([bool]$repair.valid) [$(@($repair.issues) -join '; ')]"
+            "learning=$([bool]$learningValidation.valid) [$(@($learningValidation.issues) -join '; ')]"
+            "telemetry=$([bool]$telemetry.valid) [$(@($telemetry.issues) -join '; ')]"
+        ) -join ', '
+        throw "Failure prediction requires valid risk, repair, learning, and telemetry inputs: $details"
+    }
     $predictions = @($evidence.checks | ForEach-Object {
         $check = $_
         $checkId = [string]$check.id
