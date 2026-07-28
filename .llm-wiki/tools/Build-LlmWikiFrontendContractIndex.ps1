@@ -27,7 +27,7 @@ $translationUsage = [System.Collections.Generic.List[object]]::new()
 $tsFiles = @(
     Get-ChildItem -LiteralPath $frontendRoot -Recurse -File -Filter '*.ts' |
         Where-Object {
-            $_.FullName -notmatch '[\\/](node_modules|dist|coverage|\.angular)[\\/]' -and
+            $_.FullName -notmatch '[\\/](node_modules|dist[^\\/]*|coverage|\.angular)[\\/]' -and
             $_.Name -notmatch '\.(spec|test)\.ts$'
         } |
         Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName }
@@ -94,7 +94,7 @@ foreach ($file in $tsFiles) {
 
 $templateFiles = @(
     Get-ChildItem -LiteralPath $frontendRoot -Recurse -File -Filter '*.html' |
-        Where-Object { $_.FullName -notmatch '[\\/](node_modules|dist|coverage|\.angular)[\\/]' } |
+        Where-Object { $_.FullName -notmatch '[\\/](node_modules|dist[^\\/]*|coverage|\.angular)[\\/]' } |
         Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName }
 )
 $templateContents = @{}

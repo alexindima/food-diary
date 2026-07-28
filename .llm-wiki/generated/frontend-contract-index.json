@@ -8,7 +8,7 @@
                     "apiCalls":  46,
                     "templatesWithTranslations":  238,
                     "translationKeys":  1162,
-                    "consumerEdges":  897,
+                    "consumerEdges":  896,
                     "consumedComponents":  276,
                     "unconsumedComponents":  121
                 },
@@ -15870,20 +15870,6 @@
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "rows"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "AppComponent",
-                              "selector":  "app-root",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.ts",
-                              "consumerFeature":  "shell",
-                              "consumerPath":  "FoodDiary.Web.Client/dist-admin/index.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-
                                              ],
                               "outputsHandled":  [
 
