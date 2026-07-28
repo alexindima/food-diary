@@ -37,12 +37,12 @@ function Get-FileSha([string]$Value) {
 }
 function Get-Payload([object]$Retrospective) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Retrospective.schemaVersion
-        workspace = $Retrospective.workspace
-        createdAtUtc = $Retrospective.createdAtUtc
-        completionFingerprint = $Retrospective.completionFingerprint
-        packetFingerprint = $Retrospective.packetFingerprint
-        policyFingerprint = $Retrospective.policyFingerprint
+        schemaVersion = [int]$Retrospective.schemaVersion
+        workspace = [string]$Retrospective.workspace
+        createdAtUtc = ([DateTimeOffset]$Retrospective.createdAtUtc).ToUniversalTime().ToString('o')
+        completionFingerprint = [string]$Retrospective.completionFingerprint
+        packetFingerprint = [string]$Retrospective.packetFingerprint
+        policyFingerprint = [string]$Retrospective.policyFingerprint
         inputs = $Retrospective.inputs
         outcome = $Retrospective.outcome
         learningCandidates = @($Retrospective.learningCandidates)
