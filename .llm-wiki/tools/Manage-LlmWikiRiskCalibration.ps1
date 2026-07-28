@@ -33,16 +33,26 @@ function Get-Hash([object]$Value) {
 }
 function Get-Payload([object]$Receipt) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Receipt.schemaVersion
-        workspace = $Receipt.workspace
-        createdAtUtc = $Receipt.createdAtUtc
-        packetFingerprint = $Receipt.packetFingerprint
-        policyFingerprint = $Receipt.policyFingerprint
-        qualityAdjustmentFingerprint = $Receipt.qualityAdjustmentFingerprint
-        score = $Receipt.score
-        level = $Receipt.level
-        signals = @($Receipt.signals)
-        controls = $Receipt.controls
+        schemaVersion = [int]$Receipt.schemaVersion
+        workspace = [string]$Receipt.workspace
+        createdAtUtc = ([DateTimeOffset]$Receipt.createdAtUtc).ToUniversalTime().ToString('o')
+        packetFingerprint = [string]$Receipt.packetFingerprint
+        policyFingerprint = [string]$Receipt.policyFingerprint
+        qualityAdjustmentFingerprint = [string]$Receipt.qualityAdjustmentFingerprint
+        score = [int]$Receipt.score
+        level = [string]$Receipt.level
+        signals = @($Receipt.signals | ForEach-Object {
+            [pscustomobject][ordered]@{
+                id = [string]$_.id
+                points = [int]$_.points
+                evidence = [string]$_.evidence
+            }
+        })
+        controls = [pscustomobject][ordered]@{
+            forceIncludePassed = [bool]$Receipt.controls.forceIncludePassed
+            requireSequentialExecution = [bool]$Receipt.controls.requireSequentialExecution
+            failFast = [bool]$Receipt.controls.failFast
+        }
     }
 }
 function Get-Level([int]$Score) {
