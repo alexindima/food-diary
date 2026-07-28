@@ -21,7 +21,6 @@ sources:
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Billing`
-- `FoodDiary.Application/Billing`
 - `FoodDiary.Domain/Entities/Billing`
 - `FoodDiary.Infrastructure/Persistence/Billing`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Billing`

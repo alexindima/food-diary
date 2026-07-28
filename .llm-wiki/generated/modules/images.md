@@ -23,13 +23,8 @@ sources:
 - `FoodDiary.Application/Images`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Images`
 - `FoodDiary.Infrastructure/Persistence/Images`
-- `FoodDiary.Mobile/android/app/build/intermediates/assets/debug/mergeDebugAssets/public/assets/images`
-- `FoodDiary.Mobile/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/images`
-- `FoodDiary.Mobile/android/app/src/main/assets/public/assets/images`
 - `FoodDiary.Presentation.Api/Features/Images`
 - `FoodDiary.Web.Client/assets/images`
-- `FoodDiary.Web.Client/dist-admin/assets/images`
-- `FoodDiary.Web.Client/dist-storybook/images`
 - `tests/FoodDiary.Application.Tests/Images`
 
 ## HTTP Surface

@@ -21,7 +21,6 @@ sources:
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Marketing`
-- `FoodDiary.Application/Marketing`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Marketing`
 - `FoodDiary.Presentation.Api/Features/Marketing`
 - `FoodDiary.Web.Client/src/app/shared/marketing`

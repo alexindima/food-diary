@@ -31,6 +31,14 @@ function ConvertTo-Slug {
     return $slug.ToLowerInvariant()
 }
 
+function Get-RepositoryFilePaths {
+    $paths = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard)
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Unable to enumerate repository files.'
+    }
+    return @($paths | Where-Object { $_ } | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique)
+}
+
 function New-FrontMatter {
     param(
         [string]$Id,
@@ -72,18 +80,29 @@ foreach ($extractedModule in $catalog.extractedApplicationModules) {
     }
 }
 $moduleNames = @($allModules | ForEach-Object { $_.name })
+$repositoryFilePaths = @(Get-RepositoryFilePaths)
+$directoryPaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
+foreach ($filePath in $repositoryFilePaths) {
+    $segments = @($filePath.Replace('\', '/').Split('/'))
+    for ($length = 1; $length -lt $segments.Count; $length++) {
+        [void]$directoryPaths.Add(($segments[0..($length - 1)] -join '/'))
+    }
+}
 $allDirectories = @(
-    Get-ChildItem -LiteralPath $repositoryRoot -Recurse -Directory |
+    $directoryPaths |
         Where-Object {
-            $_.FullName -notmatch '[\\/](\.git|\.github|\.llm-wiki|docs|node_modules|obj|bin|dist|coverage|\.artifacts|TestResults)[\\/]'
-        }
+            "/$_/" -notmatch '/(\.git|\.github|\.llm-wiki|docs|node_modules|obj|bin|dist[^/]*|coverage|\.artifacts|TestResults)/'
+        } |
+        ForEach-Object { Get-Item -LiteralPath (Join-Path $repositoryRoot $_) -Force }
 )
 $allTestFiles = @(
-    Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
+    $repositoryFilePaths |
         Where-Object {
-            $_.FullName -match '[\\/]tests[\\/]' -and
-            $_.FullName -notmatch '[\\/](obj|bin|\.artifacts|TestResults)[\\/]'
-        }
+            "/$_" -match '/tests/' -and
+            $_ -match '\.cs$' -and
+            "/$_/" -notmatch '/(obj|bin|\.artifacts|TestResults)/'
+        } |
+        ForEach-Object { Get-Item -LiteralPath (Join-Path $repositoryRoot $_) -Force }
 )
 
 $generatedFiles = [ordered]@{}

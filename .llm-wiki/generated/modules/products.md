@@ -24,13 +24,8 @@ sources:
 - `FoodDiary.Domain/Entities/Products`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Products`
 - `FoodDiary.Infrastructure/Persistence/Products`
-- `FoodDiary.Mobile/android/app/build/intermediates/assets/debug/mergeDebugAssets/public/assets/images/stubs/products`
-- `FoodDiary.Mobile/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/images/stubs/products`
-- `FoodDiary.Mobile/android/app/src/main/assets/public/assets/images/stubs/products`
 - `FoodDiary.Presentation.Api/Features/Products`
 - `FoodDiary.Web.Client/assets/images/stubs/products`
-- `FoodDiary.Web.Client/dist-admin/assets/images/stubs/products`
-- `FoodDiary.Web.Client/dist-storybook/images/stubs/products`
 - `FoodDiary.Web.Client/src/app/features/products`
 - `tests/FoodDiary.Application.Tests/Products`
 
