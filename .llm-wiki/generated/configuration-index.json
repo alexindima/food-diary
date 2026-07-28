@@ -2,7 +2,7 @@
     "schemaVersion":  1,
     "summary":  {
                     "optionTypes":  49,
-                    "configurationFiles":  9,
+                    "configurationFiles":  7,
                     "configurationKeys":  178,
                     "environmentVariables":  148
                 },
@@ -616,72 +616,6 @@
                                    "keys":  [
                                                 "Email:AllowedFrontendBaseUrls",
                                                 "Email:FrontendBaseUrl"
-                                            ]
-                               },
-                               {
-                                   "path":  "FoodDiary.Web.Api/appsettings.Production.json",
-                                   "keys":  [
-                                                "Cors:Origins",
-                                                "DataProtection:ApplicationName",
-                                                "DataProtection:KeyRingPath",
-                                                "ForwardedHeaders:ForwardLimit",
-                                                "ForwardedHeaders:KnownNetworks",
-                                                "ForwardedHeaders:KnownProxies",
-                                                "HttpsRedirection:Enabled"
-                                            ]
-                               },
-                               {
-                                   "path":  "FoodDiary.Web.Api/appsettings.Template.json",
-                                   "keys":  [
-                                                "ConnectionStrings:DefaultConnection",
-                                                "ConnectionStrings:Redis",
-                                                "Cors:Origins",
-                                                "Database:EnableRetries",
-                                                "Database:MaxRetryCount",
-                                                "Database:MaxRetryDelaySeconds",
-                                                "Email:AllowedFrontendBaseUrls",
-                                                "Email:FromAddress",
-                                                "Email:FromName",
-                                                "Email:FrontendBaseUrl",
-                                                "Email:PasswordResetPath",
-                                                "Email:VerificationPath",
-                                                "ForwardedHeaders:ForwardLimit",
-                                                "ForwardedHeaders:KnownNetworks",
-                                                "ForwardedHeaders:KnownProxies",
-                                                "HttpsRedirection:Enabled",
-                                                "InitialAdmin:Email",
-                                                "InitialAdmin:Password",
-                                                "Jwt:Audience",
-                                                "Jwt:ExpirationMinutes",
-                                                "Jwt:Issuer",
-                                                "Jwt:RefreshTokenExpirationDays",
-                                                "Jwt:SecretKey",
-                                                "MailInboxClient:ApiKey",
-                                                "MailInboxClient:BaseUrl",
-                                                "MailRelayClient:ApiKey",
-                                                "MailRelayClient:BaseUrl",
-                                                "OpenAi:ApiKey",
-                                                "OpenAi:TextModel",
-                                                "OpenAi:VisionFallbackModel",
-                                                "OpenAi:VisionModel",
-                                                "OutputCache:AdminAiUsage:ExpirationSeconds",
-                                                "OutputCache:UserScoped:ExpirationSeconds",
-                                                "RateLimiting:Ai:PermitLimit",
-                                                "RateLimiting:Ai:QueueLimit",
-                                                "RateLimiting:Ai:WindowSeconds",
-                                                "RateLimiting:Auth:PermitLimit",
-                                                "RateLimiting:Auth:QueueLimit",
-                                                "RateLimiting:Auth:WindowSeconds",
-                                                "S3:AccessKeyId",
-                                                "S3:Bucket",
-                                                "S3:MaxUploadSizeBytes",
-                                                "S3:PublicBaseUrl",
-                                                "S3:Region",
-                                                "S3:SecretAccessKey",
-                                                "S3:ServiceUrl",
-                                                "TelegramAuth:AuthTtlSeconds",
-                                                "TelegramAuth:BotToken",
-                                                "TelegramBot:ApiSecret"
                                             ]
                                },
                                {

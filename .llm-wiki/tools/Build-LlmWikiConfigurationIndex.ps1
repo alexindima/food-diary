@@ -12,6 +12,21 @@ function ConvertTo-RepositoryPath {
     return [System.IO.Path]::GetFullPath($Path).Substring($repositoryRoot.Length + 1).Replace('\', '/')
 }
 
+function Get-RepositoryFiles {
+    param([string[]]$Pattern)
+
+    $paths = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard -- @Pattern)
+    if ($LASTEXITCODE -ne 0) {
+        throw "Unable to enumerate repository files for: $($Pattern -join ', ')"
+    }
+    return @(
+        $paths |
+            Where-Object { $_ } |
+            Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique |
+            ForEach-Object { Get-Item -LiteralPath (Join-Path $repositoryRoot $_) }
+    )
+}
+
 function Add-JsonKeys {
     param($Value, [string]$Prefix, [System.Collections.Generic.List[string]]$Keys)
     if ($null -eq $Value) { return }
@@ -26,7 +41,7 @@ function Add-JsonKeys {
 }
 
 $optionTypes = [System.Collections.Generic.List[object]]::new()
-foreach ($file in Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
+foreach ($file in Get-RepositoryFiles -Pattern @(':(glob)**/*.cs') |
     Where-Object { $_.FullName -notmatch '[\\/](obj|bin|tests|TestResults)[\\/]' }) {
     $content = [System.IO.File]::ReadAllText($file.FullName)
     foreach ($match in [regex]::Matches(
@@ -50,7 +65,7 @@ foreach ($file in Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Fil
 }
 
 $configurationFiles = [System.Collections.Generic.List[object]]::new()
-foreach ($file in Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter 'appsettings*.json' |
+foreach ($file in Get-RepositoryFiles -Pattern @(':(glob)**/appsettings*.json') |
     Where-Object { $_.FullName -notmatch '[\\/](obj|bin|TestResults)[\\/]' }) {
     try {
         $json = Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json
@@ -66,7 +81,8 @@ foreach ($file in Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Fil
 }
 
 $environmentFiles = [System.Collections.Generic.List[object]]::new()
-foreach ($file in Get-ChildItem -LiteralPath $repositoryRoot -File -Force -Filter '*.env.example') {
+foreach ($file in Get-RepositoryFiles -Pattern @(':(glob)*.env.example') |
+    Where-Object { (Split-Path -Parent (ConvertTo-RepositoryPath $_.FullName)) -eq '' }) {
     $names = @(
         Get-Content -LiteralPath $file.FullName |
             Where-Object { $_ -match '^\s*(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=' } |
