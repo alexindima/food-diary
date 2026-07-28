@@ -113,12 +113,18 @@ switch ($Action) {
         if ($null -eq $matrix.availableEvidence.PSObject.Properties['changedPaths']) {
             $availableChangedPaths = @()
         }
-        foreach ($path in @($ChangedPath)) {
+        foreach ($path in @($ChangedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })) {
             if ($path -notin $availableChangedPaths) { throw "Changed path is not present in the task packet: $path" }
         }
-        foreach ($id in @($ScenarioId)) { if ($id -notin $availableScenarioIds) { throw "Unknown scenario id: $id" } }
-        foreach ($id in @($CheckId)) { if ($id -notin $availableCheckIds) { throw "Unknown check id: $id" } }
-        foreach ($id in @($ReviewId)) { if ($id -notin $availableReviewIds) { throw "Unknown review id: $id" } }
+        foreach ($id in @($ScenarioId | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })) {
+            if ($id -notin $availableScenarioIds) { throw "Unknown scenario id: $id" }
+        }
+        foreach ($id in @($CheckId | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })) {
+            if ($id -notin $availableCheckIds) { throw "Unknown check id: $id" }
+        }
+        foreach ($id in @($ReviewId | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })) {
+            if ($id -notin $availableReviewIds) { throw "Unknown review id: $id" }
+        }
         if ($null -eq $item.mapping.PSObject.Properties['changedPaths']) {
             $item.mapping | Add-Member -NotePropertyName changedPaths -NotePropertyValue @()
         }
