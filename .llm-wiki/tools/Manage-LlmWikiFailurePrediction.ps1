@@ -42,12 +42,36 @@ function Get-FileHashValue([string]$Path) {
 }
 function Get-Payload([object]$Receipt) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Receipt.schemaVersion; workspace = $Receipt.workspace; createdAtUtc = $Receipt.createdAtUtc
-        packetFingerprint = $Receipt.packetFingerprint; policyFingerprint = $Receipt.policyFingerprint
-        riskCalibrationHash = $Receipt.riskCalibrationHash; repairHistoryHash = $Receipt.repairHistoryHash
-        repairLearningRegistryHash = $Receipt.repairLearningRegistryHash
-        telemetryRegistryHash = $Receipt.telemetryRegistryHash
-        thresholdPercent = $Receipt.thresholdPercent; predictions = @($Receipt.predictions)
+        schemaVersion = [int]$Receipt.schemaVersion
+        workspace = [string]$Receipt.workspace
+        createdAtUtc = ([DateTimeOffset]$Receipt.createdAtUtc).ToUniversalTime().ToString('o')
+        packetFingerprint = [string]$Receipt.packetFingerprint
+        policyFingerprint = [string]$Receipt.policyFingerprint
+        riskCalibrationHash = [string]$Receipt.riskCalibrationHash
+        repairHistoryHash = [string]$Receipt.repairHistoryHash
+        repairLearningRegistryHash = [string]$Receipt.repairLearningRegistryHash
+        telemetryRegistryHash = [string]$Receipt.telemetryRegistryHash
+        thresholdPercent = [int]$Receipt.thresholdPercent
+        predictions = @($Receipt.predictions | ForEach-Object {
+            [pscustomobject][ordered]@{
+                checkId = [string]$_.checkId
+                probabilityPercent = [int]$_.probabilityPercent
+                predictedFailure = [bool]$_.predictedFailure
+                signals = [pscustomobject][ordered]@{
+                    risk = [int]$_.signals.risk
+                    changeBreadth = [int]$_.signals.changeBreadth
+                    repairLearning = [int]$_.signals.repairLearning
+                    priorRepairs = [int]$_.signals.priorRepairs
+                    verificationHistory = [int]$_.signals.verificationHistory
+                }
+                telemetrySampleCount = [int]$_.telemetrySampleCount
+                telemetryFlaky = [bool]$_.telemetryFlaky
+                historicalLearningIds = @($_.historicalLearningIds |
+                    Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } |
+                    ForEach-Object { [string]$_ })
+                priorRepairAttemptCount = [int]$_.priorRepairAttemptCount
+            }
+        })
     }
 }
 function Get-Risk([bool]$Persist) {

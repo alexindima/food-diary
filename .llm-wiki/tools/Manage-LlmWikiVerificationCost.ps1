@@ -53,11 +53,15 @@ function Get-VerificationSeconds([string]$Id) {
 }
 function Get-Payload([object]$Receipt) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Receipt.schemaVersion; workspace = $Receipt.workspace; createdAtUtc = $Receipt.createdAtUtc
-        packetFingerprint = $Receipt.packetFingerprint; policyFingerprint = $Receipt.policyFingerprint
-        predictionHash = $Receipt.predictionHash; telemetryRegistryHash = $Receipt.telemetryRegistryHash
-        learningRegistryFingerprint = $Receipt.learningRegistryFingerprint
-        experimentRegistryFingerprint = $Receipt.experimentRegistryFingerprint
+        schemaVersion = [int]$Receipt.schemaVersion
+        workspace = [string]$Receipt.workspace
+        createdAtUtc = ([DateTimeOffset]$Receipt.createdAtUtc).ToUniversalTime().ToString('o')
+        packetFingerprint = [string]$Receipt.packetFingerprint
+        policyFingerprint = [string]$Receipt.policyFingerprint
+        predictionHash = [string]$Receipt.predictionHash
+        telemetryRegistryHash = [string]$Receipt.telemetryRegistryHash
+        learningRegistryFingerprint = [string]$Receipt.learningRegistryFingerprint
+        experimentRegistryFingerprint = [string]$Receipt.experimentRegistryFingerprint
         appliedLearningSnapshot = @($Receipt.appliedLearningSnapshot)
         estimates = @($Receipt.estimates); totals = $Receipt.totals
     }
