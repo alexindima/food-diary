@@ -193,7 +193,9 @@ package records redaction categories and is sealed with SHA-256;
 `task-export-verify` independently recomputes the seal and scans for remaining
 sensitive patterns. Signed JSON is parsed with ISO timestamps preserved as
 strings, so the seal is stable across Windows PowerShell and newer PowerShell
-Core versions that otherwise coerce timestamps into `DateTime`.
+Core versions that otherwise coerce timestamps into `DateTime`. The unified
+Wiki entrypoint and full tool-smoke suite enable the same parsing rule for
+every nested governance command, including decomposition and dispatch hashes.
 `-FailOnSensitive` refuses to write when any redaction was needed, and existing
 exports require explicit `-Overwrite`.
 

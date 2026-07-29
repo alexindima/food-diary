@@ -25,6 +25,10 @@ and high-confidence credential signatures before expensive index work begins.
 Its isolated regression fixtures run immediately after it in the verification
 gates.
 
+The unified `wiki.ps1` entrypoint also pins ISO timestamps to JSON strings on
+PowerShell versions that otherwise coerce them into `DateTime`. Nested tools
+therefore compute the same deterministic hashes on Windows and Linux.
+
 `wiki update`, `wiki verify`, `wiki verify-full`, and CI then use the same
 dependency-aware index pipeline:
 

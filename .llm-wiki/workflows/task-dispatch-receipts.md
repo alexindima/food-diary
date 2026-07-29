@@ -33,6 +33,8 @@ Router changes affecting these commands are covered by `wiki verify-full`;
 the faster `wiki verify` gate intentionally omits the exhaustive tool-smoke
 scenarios while retaining lint and its regression fixtures, index, eval,
 policy, and impact checks.
+The unified router preserves ISO timestamps as JSON strings before dispatching
+commands so receipt hashes do not depend on the installed PowerShell version.
 
 Every lifecycle event (`started`, `heartbeat`, `completed`, or `failed`) includes
 the previous event hash. Verification recomputes the chain, rejects mutation,

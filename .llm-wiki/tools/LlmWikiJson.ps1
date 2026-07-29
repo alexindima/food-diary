@@ -1,3 +1,17 @@
+function Enable-LlmWikiStringDateJsonParsing {
+    [CmdletBinding()]
+    param()
+
+    $convertFromJson = Get-Command ConvertFrom-Json
+    if (-not $convertFromJson.Parameters.ContainsKey('DateKind')) {
+        return
+    }
+    if ($null -eq $global:PSDefaultParameterValues) {
+        $global:PSDefaultParameterValues = @{}
+    }
+    $global:PSDefaultParameterValues['ConvertFrom-Json:DateKind'] = 'String'
+}
+
 function ConvertFrom-LlmWikiJson {
     [CmdletBinding()]
     param(

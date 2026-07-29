@@ -188,6 +188,8 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $toolsRoot = Join-Path $PSScriptRoot 'tools'
+. (Join-Path $toolsRoot 'LlmWikiJson.ps1')
+Enable-LlmWikiStringDateJsonParsing
 
 function Invoke-WikiTool {
     param(

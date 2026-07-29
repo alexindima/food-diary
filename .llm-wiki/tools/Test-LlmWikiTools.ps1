@@ -29,6 +29,7 @@ function Get-WikiObjectFingerprint([object]$Value) {
 }
 
 . (Join-Path $toolsRoot 'LlmWikiJson.ps1')
+Enable-LlmWikiStringDateJsonParsing
 $crossPlatformFixtureRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/cross-platform-fixtures'
 $jsonFixturePath = Join-Path $crossPlatformFixtureRoot 'actual.json'
 $textFixturePath = Join-Path $crossPlatformFixtureRoot 'actual.md'
