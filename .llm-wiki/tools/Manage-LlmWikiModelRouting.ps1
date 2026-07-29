@@ -43,11 +43,11 @@ function Get-FileSha([string]$Path) {
 }
 function Get-Payload([object]$Receipt) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Receipt.schemaVersion
-        workspace = $Receipt.workspace
-        createdAtUtc = $Receipt.createdAtUtc
-        policyFingerprint = $Receipt.policyFingerprint
-        generatorFingerprint = $Receipt.generatorFingerprint
+        schemaVersion = [int]$Receipt.schemaVersion
+        workspace = [string]$Receipt.workspace
+        createdAtUtc = ([DateTimeOffset]$Receipt.createdAtUtc).ToUniversalTime().ToString('o')
+        policyFingerprint = [string]$Receipt.policyFingerprint
+        generatorFingerprint = [string]$Receipt.generatorFingerprint
         inputs = $Receipt.inputs
         signals = $Receipt.signals
         alternatives = @($Receipt.alternatives)

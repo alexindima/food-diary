@@ -37,20 +37,20 @@ function Get-Hash([object]$Value) {
 }
 function Get-PlanPayload([object]$Plan) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Plan.schemaVersion
-        workspace = $Plan.workspace
-        createdAtUtc = $Plan.createdAtUtc
-        changeFingerprint = $Plan.changeFingerprint
-        changePolicyFingerprint = $Plan.changePolicyFingerprint
-        workspacePolicyFingerprint = $Plan.workspacePolicyFingerprint
-        includePassed = $Plan.includePassed
-        requestedIncludePassed = $Plan.requestedIncludePassed
-        riskCalibrationHash = $Plan.riskCalibrationHash
-        failurePredictionHash = $Plan.failurePredictionHash
-        verificationCostHash = $Plan.verificationCostHash
-        riskLevel = $Plan.riskLevel
-        riskScore = $Plan.riskScore
-        executionMode = $Plan.executionMode
+        schemaVersion = [int]$Plan.schemaVersion
+        workspace = [string]$Plan.workspace
+        createdAtUtc = ([DateTimeOffset]$Plan.createdAtUtc).ToUniversalTime().ToString('o')
+        changeFingerprint = [string]$Plan.changeFingerprint
+        changePolicyFingerprint = [string]$Plan.changePolicyFingerprint
+        workspacePolicyFingerprint = [string]$Plan.workspacePolicyFingerprint
+        includePassed = [bool]$Plan.includePassed
+        requestedIncludePassed = [bool]$Plan.requestedIncludePassed
+        riskCalibrationHash = [string]$Plan.riskCalibrationHash
+        failurePredictionHash = [string]$Plan.failurePredictionHash
+        verificationCostHash = [string]$Plan.verificationCostHash
+        riskLevel = [string]$Plan.riskLevel
+        riskScore = [int]$Plan.riskScore
+        executionMode = [string]$Plan.executionMode
         requiredCheckIds = @($Plan.requiredCheckIds)
         executions = @($Plan.executions)
         coverage = @($Plan.coverage)

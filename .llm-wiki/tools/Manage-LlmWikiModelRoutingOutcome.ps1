@@ -29,24 +29,24 @@ function Get-FileSha([string]$Path) {
 }
 function Get-EventPayload([object]$Event) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Event.schemaVersion
-        eventId = $Event.eventId
-        workspace = $Event.workspace
-        recordedAtUtc = $Event.recordedAtUtc
-        completionFingerprint = $Event.completionFingerprint
-        retrospectiveHash = $Event.retrospectiveHash
-        routeReceiptHash = $Event.routeReceiptHash
-        routeId = $Event.routeId
-        routeRank = $Event.routeRank
-        model = $Event.model
-        reasoningEffort = $Event.reasoningEffort
-        relativeCostUnits = $Event.relativeCostUnits
-        complexityScore = $Event.complexityScore
-        riskLevel = $Event.riskLevel
+        schemaVersion = [int]$Event.schemaVersion
+        eventId = [string]$Event.eventId
+        workspace = [string]$Event.workspace
+        recordedAtUtc = ([DateTimeOffset]$Event.recordedAtUtc).ToUniversalTime().ToString('o')
+        completionFingerprint = [string]$Event.completionFingerprint
+        retrospectiveHash = [string]$Event.retrospectiveHash
+        routeReceiptHash = [string]$Event.routeReceiptHash
+        routeId = [string]$Event.routeId
+        routeRank = [int]$Event.routeRank
+        model = [string]$Event.model
+        reasoningEffort = [string]$Event.reasoningEffort
+        relativeCostUnits = [int]$Event.relativeCostUnits
+        complexityScore = [int]$Event.complexityScore
+        riskLevel = [string]$Event.riskLevel
         actualOutcome = $Event.actualOutcome
-        success = $Event.success
-        policyFingerprint = $Event.policyFingerprint
-        previousEventHash = $Event.previousEventHash
+        success = [bool]$Event.success
+        policyFingerprint = [string]$Event.policyFingerprint
+        previousEventHash = [string]$Event.previousEventHash
     }
 }
 function Read-Registry {
