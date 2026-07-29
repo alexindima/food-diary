@@ -94,11 +94,7 @@ function Get-RegistryPayload([object]$Registry) {
     [pscustomobject][ordered]@{
         schemaVersion = [int]$Registry.schemaVersion
         workspace = [string]$Registry.workspace
-        attempts = @($Registry.attempts | ForEach-Object {
-            $canonicalAttempt = Get-AttemptPayload $_
-            $canonicalAttempt | Add-Member -NotePropertyName attemptHash -NotePropertyValue ([string]$_.attemptHash)
-            $canonicalAttempt
-        })
+        attemptHashes = @($Registry.attempts | ForEach-Object { [string]$_.attemptHash })
     }
 }
 function New-Registry {
