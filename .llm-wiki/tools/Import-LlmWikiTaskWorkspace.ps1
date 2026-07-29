@@ -72,7 +72,13 @@ if ($criteria.Count -eq 0) { throw 'Import package has no acceptance criteria.' 
 if ([int]$handoff.scope.omittedChangedPathCount -gt 0 -and -not $AllowPartialScope) {
     throw "Import package omitted $($handoff.scope.omittedChangedPathCount) changed path(s). Re-export with a larger -Limit or use -AllowPartialScope explicitly."
 }
-$changedPaths = @($handoff.scope.changedPaths | ForEach-Object { Assert-SafeChangedPath ([string]$_) } | Select-Object -Unique)
+$changedPaths = @(
+    $handoff.scope.changedPaths |
+        ForEach-Object { [string]$_ } |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        ForEach-Object { Assert-SafeChangedPath $_ } |
+        Select-Object -Unique
+)
 $allowedPatterns = if ($changedPaths.Count -gt 0) {
     @($changedPaths | ForEach-Object { '^' + [regex]::Escape($_) + '$' })
 } else {
