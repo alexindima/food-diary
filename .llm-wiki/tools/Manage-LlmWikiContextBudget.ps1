@@ -39,17 +39,17 @@ function Get-FileSha([string]$Path) {
 }
 function Get-Payload([object]$Receipt) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Receipt.schemaVersion
-        workspace = $Receipt.workspace
-        createdAtUtc = $Receipt.createdAtUtc
-        packetFingerprint = $Receipt.packetFingerprint
-        policyFingerprint = $Receipt.policyFingerprint
-        generatorFingerprint = $Receipt.generatorFingerprint
-        contextBundleHash = $Receipt.contextBundleHash
+        schemaVersion = [int]$Receipt.schemaVersion
+        workspace = [string]$Receipt.workspace
+        createdAtUtc = ([DateTimeOffset]$Receipt.createdAtUtc).ToUniversalTime().ToString('o')
+        packetFingerprint = [string]$Receipt.packetFingerprint
+        policyFingerprint = [string]$Receipt.policyFingerprint
+        generatorFingerprint = [string]$Receipt.generatorFingerprint
+        contextBundleHash = [string]$Receipt.contextBundleHash
         metrics = $Receipt.metrics
         findings = @($Receipt.findings)
         recommendations = @($Receipt.recommendations)
-        verdict = $Receipt.verdict
+        verdict = [string]$Receipt.verdict
     }
 }
 function Get-Percent([double]$Part, [double]$Whole) {
