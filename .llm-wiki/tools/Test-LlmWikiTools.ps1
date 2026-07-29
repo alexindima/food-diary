@@ -1800,8 +1800,8 @@ try {
             [double]$_.empiricalConfidencePercent -gt 100
         }).Count -eq 0
     ) 'Context experiment did not bind and apply governed outcome-history adjustments.'
-    $contextExperimentRaw = Get-Content -LiteralPath $contextExperimentPath -Raw
-    $tamperedContextExperiment = $contextExperimentRaw | ConvertFrom-Json
+    $contextExperimentBytes = [IO.File]::ReadAllBytes($contextExperimentPath)
+    $tamperedContextExperiment = [Text.Encoding]::UTF8.GetString($contextExperimentBytes) | ConvertFrom-Json
     $tamperedContextExperiment.recommendation.variantId = 'forged-winner'
     [IO.File]::WriteAllText($contextExperimentPath, (($tamperedContextExperiment | ConvertTo-Json -Depth 50) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
     $tamperedContextExperimentCheck = & (Join-Path $toolsRoot 'Manage-LlmWikiContextExperiment.ps1') verify `
@@ -1812,7 +1812,11 @@ try {
         @($tamperedContextExperimentCheck.issues) -contains 'Context experiment receipt hash is invalid.' -and
         @($tamperedContextExperimentCheck.issues) -contains 'Recommended variant is absent from results.'
     ) 'Context experiment accepted a forged winner.'
-    [IO.File]::WriteAllText($contextExperimentPath, $contextExperimentRaw, [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllBytes($contextExperimentPath, $contextExperimentBytes)
+    $restoredContextExperimentCheck = & (Join-Path $toolsRoot 'Manage-LlmWikiContextExperiment.ps1') verify `
+        -WorkspacePath $taskWorkspacePath `
+        -Format Json | ConvertFrom-Json
+    Assert-Wiki $restoredContextExperimentCheck.valid 'Restored context experiment receipt failed integrity validation.'
     $strategyPreview = & (Join-Path $toolsRoot 'Manage-LlmWikiContextStrategy.ps1') preview `
         -WorkspacePath $taskWorkspacePath `
         -Format Json | ConvertFrom-Json
