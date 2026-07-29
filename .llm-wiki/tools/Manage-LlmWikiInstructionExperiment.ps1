@@ -19,9 +19,44 @@ $policyPath = Join-Path $wikiRoot 'policies/workspace-policies.json'
 $policy = Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json
 $experimentPolicy = $policy.scheduler.verificationPlanner.instructionExperiments
 
+function ConvertTo-CanonicalHashValue([object]$Value) {
+    if ($null -eq $Value) { return $null }
+    if ($Value -is [DateTime] -or $Value -is [DateTimeOffset]) {
+        return ([DateTimeOffset]$Value).ToUniversalTime().ToString('o')
+    }
+    if ($Value -is [string]) {
+        $parsed = [DateTimeOffset]::MinValue
+        if ([DateTimeOffset]::TryParseExact(
+            $Value,
+            'o',
+            [Globalization.CultureInfo]::InvariantCulture,
+            [Globalization.DateTimeStyles]::RoundtripKind,
+            [ref]$parsed
+        )) {
+            return $parsed.ToUniversalTime().ToString('o')
+        }
+        return $Value
+    }
+    if ($Value -is [Collections.IDictionary]) {
+        $result = [ordered]@{}
+        foreach ($key in $Value.Keys) { $result[$key] = ConvertTo-CanonicalHashValue $Value[$key] }
+        return [pscustomobject]$result
+    }
+    if ($Value -is [Collections.IEnumerable]) {
+        return @($Value | ForEach-Object { ConvertTo-CanonicalHashValue $_ })
+    }
+    if ($Value -is [psobject] -and $Value.PSObject.Properties.Count -gt 0) {
+        $result = [ordered]@{}
+        foreach ($property in $Value.PSObject.Properties) {
+            $result[$property.Name] = ConvertTo-CanonicalHashValue $property.Value
+        }
+        return [pscustomobject]$result
+    }
+    $Value
+}
 function Get-Hash([object]$Value) {
     if ($null -eq $Value) { $Value = @() }
-    $json = ConvertTo-Json -InputObject $Value -Depth 30 -Compress
+    $json = ConvertTo-Json -InputObject (ConvertTo-CanonicalHashValue $Value) -Depth 30 -Compress
     $sha = [Security.Cryptography.SHA256]::Create()
     try { ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($json))) -replace '-', '').ToLowerInvariant() } finally { $sha.Dispose() }
 }
@@ -30,12 +65,12 @@ function Get-FileSha([string]$Path) {
 }
 function Get-EventPayload([object]$Event) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Event.schemaVersion
-        sequence = $Event.sequence
-        kind = $Event.kind
-        experimentId = $Event.experimentId
-        createdAtUtc = $Event.createdAtUtc
-        previousEventHash = $Event.previousEventHash
+        schemaVersion = [int]$Event.schemaVersion
+        sequence = [int]$Event.sequence
+        kind = [string]$Event.kind
+        experimentId = [string]$Event.experimentId
+        createdAtUtc = ([DateTimeOffset]$Event.createdAtUtc).ToUniversalTime().ToString('o')
+        previousEventHash = [string]$Event.previousEventHash
         definition = $Event.definition
         evaluation = $Event.evaluation
         reason = $Event.reason
