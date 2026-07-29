@@ -96,17 +96,21 @@ function Get-WatchdogPayload([object]$Receipt) {
 }
 function Get-CircuitPayload([object]$Receipt) {
     [ordered]@{
-        schemaVersion = $Receipt.schemaVersion
-        circuitId = $Receipt.circuitId
-        event = $Receipt.event
-        workspace = $Receipt.workspace
-        packetFingerprint = $Receipt.packetFingerprint
-        occurredAtUtc = $Receipt.occurredAtUtc
-        openUntilUtc = $Receipt.openUntilUtc
-        reason = $Receipt.reason
-        policyFingerprint = $Receipt.policyFingerprint
-        predecessorCircuitId = $Receipt.predecessorCircuitId
-        sourceWatchdogId = $Receipt.sourceWatchdogId
+        schemaVersion = [int]$Receipt.schemaVersion
+        circuitId = [string]$Receipt.circuitId
+        event = [string]$Receipt.event
+        workspace = [string]$Receipt.workspace
+        packetFingerprint = [string]$Receipt.packetFingerprint
+        occurredAtUtc = ([DateTimeOffset]$Receipt.occurredAtUtc).ToUniversalTime().ToString('o')
+        openUntilUtc = $(if ([string]::IsNullOrWhiteSpace([string]$Receipt.openUntilUtc)) {
+            ''
+        } else {
+            ([DateTimeOffset]$Receipt.openUntilUtc).ToUniversalTime().ToString('o')
+        })
+        reason = [string]$Receipt.reason
+        policyFingerprint = [string]$Receipt.policyFingerprint
+        predecessorCircuitId = [string]$Receipt.predecessorCircuitId
+        sourceWatchdogId = [string]$Receipt.sourceWatchdogId
     }
 }
 

@@ -212,7 +212,7 @@ try {
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskContract.ps1') init `
         -Path $taskContractPath `
         -Objective 'Exercise task scope validation.' `
-        -AllowedPath @('^\.llm-wiki/', '^\.github/', '^docs/', '^AGENTS\.md$') | Out-Null
+        -AllowedPath @('^\.llm-wiki/', '^\.github/', '^\.claude/', '^docs/', '^AGENTS\.md$') | Out-Null
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskContract.ps1') validate `
         -Path $taskContractPath `
         -FailOnOutOfScope | Out-Null
@@ -435,6 +435,25 @@ $importedTaskWorkspacePath = '.artifacts/llm-wiki/tasks/tool-smoke-imported'
 $absoluteImportedTaskWorkspacePath = Join-Path (Split-Path -Parent $wikiRoot) $importedTaskWorkspacePath
 $cacheSourceWorkspacePath = '.artifacts/llm-wiki/tasks/tool-smoke-cache-source'
 $absoluteCacheSourceWorkspacePath = Join-Path (Split-Path -Parent $wikiRoot) $cacheSourceWorkspacePath
+$smokeTasksRoot = Join-Path (Split-Path -Parent $wikiRoot) '.artifacts/llm-wiki/tasks'
+foreach ($staleSmokeFile in @($absoluteTaskExportPath, $absoluteStrictTaskExportPath)) {
+    if (Test-Path -LiteralPath $staleSmokeFile -PathType Leaf) {
+        Remove-Item -LiteralPath $staleSmokeFile -Force
+    }
+}
+$staleSmokeWorkspaces = @(
+    @($absoluteTaskWorkspacePath, $absoluteImportedTaskWorkspacePath)
+    if (Test-Path -LiteralPath $smokeTasksRoot -PathType Container) {
+        @(Get-ChildItem -LiteralPath $smokeTasksRoot -Directory -Force |
+            Where-Object Name -Like 'tool-smoke-cache-source*' |
+            ForEach-Object FullName)
+    }
+)
+foreach ($staleSmokeWorkspace in $staleSmokeWorkspaces) {
+    if (Test-Path -LiteralPath $staleSmokeWorkspace -PathType Container) {
+        Remove-Item -LiteralPath $staleSmokeWorkspace -Recurse -Force
+    }
+}
 $leaseRegistryPath = Join-Path (Split-Path -Parent $wikiRoot) '.artifacts/llm-wiki/scheduler/leases.json'
 $leaseRegistryExisted = Test-Path -LiteralPath $leaseRegistryPath -PathType Leaf
 $leaseRegistryRaw = if ($leaseRegistryExisted) { Get-Content -LiteralPath $leaseRegistryPath -Raw } else { '' }
@@ -1979,8 +1998,11 @@ try {
         $rootInstructionCandidate = $instructionCandidates.candidates | Where-Object path -eq 'AGENTS.md' | Select-Object -First 1
         [IO.File]::WriteAllText($absoluteInstructionExperimentGuidePath, "# Candidate instructions`n", [Text.UTF8Encoding]::new($false))
         $instructionExperimentCandidate = $instructionCandidates.candidates |
-            Where-Object path -eq $instructionExperimentGuidePath |
+            Where-Object observedFingerprint -eq ('e' * 64) |
             Select-Object -First 1
+        if ($null -eq $instructionExperimentCandidate) {
+            throw 'Synthetic instruction experiment candidate was not produced by the degraded outcome fixture.'
+        }
         $startedInstructionExperiment = & (Join-Path $toolsRoot 'Manage-LlmWikiInstructionExperiment.ps1') start `
             -Id $instructionExperimentCandidate.id `
             -Reason 'Smoke-test a fingerprint-bound instruction revision.' `
@@ -2008,6 +2030,7 @@ try {
             $rootInstructionCandidate.current -and
             $rootInstructionCandidate.recommendedWorkflow -eq 'learning-shadow' -and
             $null -ne $instructionExperimentCandidate -and
+            $instructionExperimentCandidate.path -eq $instructionExperimentGuidePath -and
             -not $instructionExperimentCandidate.current -and
             $startedInstructionExperiment.valid -and
             $startedInstructionExperiment.experiment.definition.baselineFingerprint -eq ('e' * 64) -and
@@ -2671,16 +2694,26 @@ try {
         -Path $taskExportPath `
         -Format Json | ConvertFrom-Json
     Assert-Wiki ($taskExportVerification.valid) 'Untampered task export failed independent verification.'
-    $partialImportRejected = $false
-    try {
-        & (Join-Path $toolsRoot 'Import-LlmWikiTaskWorkspace.ps1') `
+    $omittedExportPathCount = [int]$taskExportPackage.handoff.scope.omittedChangedPathCount
+    if ($omittedExportPathCount -gt 0) {
+        $partialImportRejected = $false
+        try {
+            & (Join-Path $toolsRoot 'Import-LlmWikiTaskWorkspace.ps1') `
+                -ImportPath $taskExportPath `
+                -WorkspacePath $importedTaskWorkspacePath `
+                -DryRun | Out-Null
+        } catch {
+            $partialImportRejected = $_.Exception.Message -match 'omitted .* changed path'
+        }
+        Assert-Wiki $partialImportRejected 'Task import accepted a truncated exported scope without explicit permission.'
+    } else {
+        $completeImportPlan = & (Join-Path $toolsRoot 'Import-LlmWikiTaskWorkspace.ps1') `
             -ImportPath $taskExportPath `
             -WorkspacePath $importedTaskWorkspacePath `
-            -DryRun | Out-Null
-    } catch {
-        $partialImportRejected = $_.Exception.Message -match 'omitted .* changed path'
+            -DryRun `
+            -Format Json | ConvertFrom-Json
+        Assert-Wiki ($completeImportPlan.valid -and $completeImportPlan.dryRun) 'Task import rejected a complete exported scope.'
     }
-    Assert-Wiki $partialImportRejected 'Task import accepted a truncated exported scope without explicit permission.'
     Assert-Wiki (-not (Test-Path -LiteralPath $absoluteImportedTaskWorkspacePath)) 'Rejected task import created a workspace.'
     $taskImportPlan = & (Join-Path $toolsRoot 'Import-LlmWikiTaskWorkspace.ps1') `
         -ImportPath $taskExportPath `

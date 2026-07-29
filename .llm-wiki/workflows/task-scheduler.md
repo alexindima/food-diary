@@ -184,6 +184,11 @@ task audit and handoff output. A circuit automatically stops blocking when its
 cooldown expires or the workspace packet fingerprint changes; an operator can
 also reset it explicitly after reviewing the failure:
 
+Circuit lineage verification canonicalizes UTC timestamps before hashing.
+This keeps receipts created by PowerShell 7/Linux valid when inspected by
+Windows PowerShell 5, whose JSON parser materializes ISO timestamps as date
+objects.
+
 ```powershell
 ./.llm-wiki/wiki.ps1 task-circuit-list
 ./.llm-wiki/wiki.ps1 task-circuit-reset -WorkspacePath .artifacts/llm-wiki/tasks/<name> -Reason "Reviewed and safe to retry"

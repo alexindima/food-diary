@@ -55,8 +55,16 @@ function ConvertTo-CanonicalHashValue([object]$Value) {
     $Value
 }
 function Get-Hash([object]$Value) {
-    if ($null -eq $Value) { $Value = @() }
-    $json = ConvertTo-Json -InputObject (ConvertTo-CanonicalHashValue $Value) -Depth 30 -Compress
+    $isEmptyCollection = $Value -is [Collections.IEnumerable] -and
+        $Value -isnot [string] -and
+        @($Value).Count -eq 0
+    # Windows PowerShell 5 emits no pipeline object for an empty array. Passing
+    # that result through ConvertTo-Json produces $null instead of JSON.
+    $json = if ($null -eq $Value -or $isEmptyCollection) {
+        '[]'
+    } else {
+        ConvertTo-Json -InputObject (ConvertTo-CanonicalHashValue $Value) -Depth 30 -Compress
+    }
     $sha = [Security.Cryptography.SHA256]::Create()
     try { ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($json))) -replace '-', '').ToLowerInvariant() } finally { $sha.Dispose() }
 }
