@@ -75,7 +75,7 @@ $lockStream = $null
 if ($mutating) {
     if (-not (Test-Path -LiteralPath $schedulerPath)) { New-Item -ItemType Directory -Path $schedulerPath | Out-Null }
     if (Test-Path -LiteralPath $lockPath -PathType Leaf) {
-        $lockAge = ([DateTime]::UtcNow - (Get-Item -LiteralPath $lockPath).LastWriteTimeUtc).TotalMinutes
+        $lockAge = ([DateTime]::UtcNow - [System.IO.File]::GetLastWriteTimeUtc($lockPath)).TotalMinutes
         if ($lockAge -gt 5) { [System.IO.File]::Delete($lockPath) }
     }
     try {

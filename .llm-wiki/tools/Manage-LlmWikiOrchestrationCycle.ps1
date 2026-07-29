@@ -86,7 +86,7 @@ $lockStream = $null
 if ($mutating) {
     if (-not (Test-Path -LiteralPath $schedulerRoot)) { New-Item -ItemType Directory -Path $schedulerRoot | Out-Null }
     if (Test-Path -LiteralPath $lockPath -PathType Leaf) {
-        if (([DateTime]::UtcNow - (Get-Item -LiteralPath $lockPath).LastWriteTimeUtc).TotalMinutes -gt 10) { [System.IO.File]::Delete($lockPath) }
+        if (([DateTime]::UtcNow - [System.IO.File]::GetLastWriteTimeUtc($lockPath)).TotalMinutes -gt 10) { [System.IO.File]::Delete($lockPath) }
     }
     try {
         $lockStream = [System.IO.File]::Open($lockPath, [System.IO.FileMode]::CreateNew, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)

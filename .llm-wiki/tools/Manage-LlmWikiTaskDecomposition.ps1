@@ -172,7 +172,7 @@ $mutating = $Action -in @('create', 'apply', 'prune')
 $lockStream = $null
 if ($mutating) {
     if (-not (Test-Path -LiteralPath $schedulerRoot)) { New-Item -ItemType Directory -Path $schedulerRoot | Out-Null }
-    if ((Test-Path -LiteralPath $lockPath) -and ($now - (Get-Item -LiteralPath $lockPath).LastWriteTimeUtc).TotalMinutes -gt 10) { [IO.File]::Delete($lockPath) }
+    if ((Test-Path -LiteralPath $lockPath) -and ($now - [IO.File]::GetLastWriteTimeUtc($lockPath)).TotalMinutes -gt 10) { [IO.File]::Delete($lockPath) }
     try { $lockStream = [IO.File]::Open($lockPath, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None) }
     catch { throw 'Task decomposition registry is busy; retry after the current mutation completes.' }
 }

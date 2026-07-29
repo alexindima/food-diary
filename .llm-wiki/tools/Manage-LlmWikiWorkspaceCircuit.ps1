@@ -154,7 +154,7 @@ $mutating = $Action -in @('open', 'reset', 'prune')
 $lockStream = $null
 if ($mutating) {
     if (-not (Test-Path -LiteralPath $schedulerRoot)) { New-Item -ItemType Directory -Path $schedulerRoot | Out-Null }
-    if ((Test-Path -LiteralPath $lockPath -PathType Leaf) -and ($now - (Get-Item -LiteralPath $lockPath).LastWriteTimeUtc).TotalMinutes -gt 10) { [IO.File]::Delete($lockPath) }
+    if ((Test-Path -LiteralPath $lockPath -PathType Leaf) -and ($now - [IO.File]::GetLastWriteTimeUtc($lockPath)).TotalMinutes -gt 10) { [IO.File]::Delete($lockPath) }
     try { $lockStream = [IO.File]::Open($lockPath, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None) }
     catch { throw 'Workspace circuit registry is already being mutated; retry after it completes.' }
 }
