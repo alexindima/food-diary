@@ -10,6 +10,8 @@ tags:
   - ci
   - indexes
 sources:
+  - .llm-wiki/tools/Test-LlmWiki.ps1
+  - .llm-wiki/tools/Test-LlmWikiLint.ps1
   - .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1
   - .llm-wiki/wiki.ps1
   - .github/workflows/ci-tests.yml
@@ -17,8 +19,14 @@ sources:
 
 # Run the Staged Index Pipeline
 
-`wiki update`, `wiki verify`, `wiki verify-full`, and CI use the same
-dependency-aware pipeline:
+`wiki lint` is the fast prerequisite for both verification commands and CI. It
+checks page contracts, sources, generated ownership, local links and anchors,
+and high-confidence credential signatures before expensive index work begins.
+Its isolated regression fixtures run immediately after it in the verification
+gates.
+
+`wiki update`, `wiki verify`, `wiki verify-full`, and CI then use the same
+dependency-aware index pipeline:
 
 1. Source indexes run concurrently: catalog, C# symbols, frontend, frontend contracts, domain/data, configuration, runtime, and sensitive data.
 2. Backend contracts and quality wait for the symbol index; module pages wait for the catalog.
@@ -34,7 +42,8 @@ The default concurrency is four processes and can be changed for constrained env
 Workers are isolated PowerShell processes with real exit-code propagation. A failed worker fails its stage and prevents dependent stages from running. Parallelism changes execution time only; every existing generator and freshness check still runs.
 
 `wiki verify` is the interactive gate. `wiki verify-full` and CI additionally
-run the complete tool-smoke suite, which is intentionally slower.
+run the complete tool-smoke suite, which is intentionally slower. Both fail
+before those stages when lint or its regression fixtures fail.
 
 After these gates, CI publishes the compiled LLM Wiki change-review report to
 the GitHub job summary so reviewers see the same scope, risk, and readiness

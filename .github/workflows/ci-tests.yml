@@ -29,7 +29,8 @@ jobs:
         env:
           EVENT_BEFORE: ${{ github.event.before }}
         run: |
-          ./.llm-wiki/tools/Test-LlmWiki.ps1
+          ./.llm-wiki/wiki.ps1 lint
+          ./.llm-wiki/tools/Test-LlmWikiLint.ps1
           ./.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check
           ./.llm-wiki/tools/Test-LlmWikiTools.ps1
           ./.llm-wiki/tools/Invoke-LlmWikiEvals.ps1

@@ -2,7 +2,7 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'update', 'verify', 'verify-full', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
+        'help', 'update', 'lint', 'verify', 'verify-full', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'diff', 'impact', 'ownership', 'api-compat', 'policy',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-validate',
@@ -210,9 +210,13 @@ switch ($Command) {
     'update' {
         Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1'
     }
+    'lint' {
+        Invoke-WikiTool 'Test-LlmWiki.ps1' @{ Format = $Format }
+    }
     'verify' {
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
         Invoke-WikiTool 'Test-LlmWiki.ps1'
+        Invoke-WikiTool 'Test-LlmWikiLint.ps1'
         Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' @{ Check = $true }
         Invoke-WikiTool 'Invoke-LlmWikiEvals.ps1'
         Invoke-WikiTool 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' }
@@ -222,6 +226,7 @@ switch ($Command) {
     'verify-full' {
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
         Invoke-WikiTool 'Test-LlmWiki.ps1'
+        Invoke-WikiTool 'Test-LlmWikiLint.ps1'
         Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' @{ Check = $true }
         Invoke-WikiTool 'Test-LlmWikiTools.ps1'
         Invoke-WikiTool 'Invoke-LlmWikiEvals.ps1'
@@ -1629,6 +1634,7 @@ switch ($Command) {
         Write-Host ''
         Write-Host 'Usage:'
         Write-Host '  ./.llm-wiki/wiki.ps1 update'
+        Write-Host '  ./.llm-wiki/wiki.ps1 lint [-Format Json]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify-full'
         Write-Host '  ./.llm-wiki/wiki.ps1 context -Module Billing -ChangeType Api'

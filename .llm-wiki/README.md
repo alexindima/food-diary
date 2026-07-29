@@ -52,6 +52,8 @@ The unified developer entrypoint is:
 ```powershell
 ./.llm-wiki/wiki.ps1 help
 ./.llm-wiki/wiki.ps1 update
+./.llm-wiki/wiki.ps1 lint
+./.llm-wiki/wiki.ps1 lint -Format Json
 ./.llm-wiki/wiki.ps1 verify
 ./.llm-wiki/wiki.ps1 verify-full
 ./.llm-wiki/wiki.ps1 workspace-policy -FailOnInvalid
@@ -174,7 +176,14 @@ The unified developer entrypoint is:
 ./.llm-wiki/wiki.ps1 task-similarity-reuse -WorkspacePath .artifacts/llm-wiki/tasks/<target> -SourceWorkspacePath .artifacts/llm-wiki/tasks/<source> -DryRun
 ```
 
-`verify` is the fast interactive and handoff gate. It checks page structure,
+`lint` is the fast deterministic page gate. It enforces the front matter
+contract, unique ids, normalized and existing sources, generated-page
+provenance, local link targets and anchors, and high-confidence credential
+signatures. Text diagnostics use stable `WIKI###` codes; `-Format Json` exposes
+the same result to any agent or CI consumer.
+
+`verify` is the fast interactive and handoff gate. It starts with lint and its
+regression fixtures, then checks page structure,
 generated indexes, freshness, eval regressions, failure records, change policy,
 and impact review. `verify-full` adds the complete developer-tool smoke suite
 used for CI and release-level validation. Independent indexes run in
