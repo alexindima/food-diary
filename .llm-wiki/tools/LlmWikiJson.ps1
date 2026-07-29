@@ -1,3 +1,20 @@
+function ConvertFrom-LlmWikiJson {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [AllowEmptyString()]
+        [string]$Json
+    )
+
+    process {
+        $convertFromJson = Get-Command ConvertFrom-Json
+        if ($convertFromJson.Parameters.ContainsKey('DateKind')) {
+            return ConvertFrom-Json -InputObject $Json -DateKind String
+        }
+        return ConvertFrom-Json -InputObject $Json
+    }
+}
+
 function Test-LlmWikiJsonEquivalent {
     [CmdletBinding()]
     param(
@@ -14,8 +31,8 @@ function Test-LlmWikiJsonEquivalent {
     }
 
     try {
-        $actualObject = [System.IO.File]::ReadAllText($ActualPath) | ConvertFrom-Json
-        $expectedObject = $ExpectedJson | ConvertFrom-Json
+        $actualObject = ConvertFrom-LlmWikiJson ([System.IO.File]::ReadAllText($ActualPath))
+        $expectedObject = ConvertFrom-LlmWikiJson $ExpectedJson
         $actualCanonical = $actualObject | ConvertTo-Json -Depth $Depth -Compress
         $expectedCanonical = $expectedObject | ConvertTo-Json -Depth $Depth -Compress
         return $actualCanonical -ceq $expectedCanonical

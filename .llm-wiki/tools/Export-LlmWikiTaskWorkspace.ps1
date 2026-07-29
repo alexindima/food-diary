@@ -16,7 +16,9 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
-$workspacePolicySnapshot = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -WithFingerprint -Format Json | ConvertFrom-Json
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+$workspacePolicySnapshot = ConvertFrom-LlmWikiJson `
+    (& (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -WithFingerprint -Format Json)
 $workspacePolicy = $workspacePolicySnapshot.policy
 $effectiveLimit = if ($null -ne $Limit) { [int]$Limit } else { [int]$workspacePolicy.export.defaultContextItems }
 if ($effectiveLimit -lt 1 -or $effectiveLimit -gt [int]$workspacePolicy.export.maximumContextItems) {
@@ -127,7 +129,7 @@ if ($Action -eq 'verify') {
         $issues.Add('Export file is absent.')
     } else {
         try {
-            $package = Get-Content -LiteralPath $absolutePath -Raw | ConvertFrom-Json
+            $package = ConvertFrom-LlmWikiJson (Get-Content -LiteralPath $absolutePath -Raw)
             if ($package.schemaVersion -ne 1) { $issues.Add('Unsupported export schemaVersion.') }
             if ([string]$package.kind -cne 'llm-wiki-task-export') { $issues.Add('Unexpected export kind.') }
             if ([string]$package.redaction.policy -cne [string]$workspacePolicy.export.redaction.policyId) {
@@ -180,18 +182,18 @@ if ((Test-Path -LiteralPath $absoluteExportPath) -and -not $Overwrite) {
     throw "Export already exists: $normalizedExportPath. Use -Overwrite to replace it."
 }
 
-$doctor = & (Join-Path $PSScriptRoot 'Test-LlmWikiTaskWorkspace.ps1') `
+$doctor = ConvertFrom-LlmWikiJson (& (Join-Path $PSScriptRoot 'Test-LlmWikiTaskWorkspace.ps1') `
     -WorkspacePath $normalizedWorkspacePath `
-    -Format Json | ConvertFrom-Json
+    -Format Json)
 if (-not $doctor.valid) {
     throw "Refusing to export an invalid workspace: $(@($doctor.errors) -join ' ')"
 }
-$handoff = & (Join-Path $PSScriptRoot 'Get-LlmWikiTaskHandoff.ps1') `
+$handoff = ConvertFrom-LlmWikiJson (& (Join-Path $PSScriptRoot 'Get-LlmWikiTaskHandoff.ps1') `
     -WorkspacePath $normalizedWorkspacePath `
     -Limit $effectiveLimit `
-    -Format Json | ConvertFrom-Json
+    -Format Json)
 $absoluteWorkspacePath = Join-Path $repositoryRoot $normalizedWorkspacePath
-$taskContract = Get-Content -LiteralPath (Join-Path $absoluteWorkspacePath 'task-contract.json') -Raw | ConvertFrom-Json
+$taskContract = ConvertFrom-LlmWikiJson (Get-Content -LiteralPath (Join-Path $absoluteWorkspacePath 'task-contract.json') -Raw)
 $handoff.scope | Add-Member -NotePropertyName allowedPathPatterns `
     -NotePropertyValue @($taskContract.scope.allowedPathPatterns) -Force
 $handoff.scope | Add-Member -NotePropertyName excludedPathPatterns `
@@ -251,7 +253,7 @@ try {
 } finally {
     if (Test-Path -LiteralPath $temporaryPath) { [System.IO.File]::Delete($temporaryPath) }
 }
-$verify = & $PSCommandPath verify -Path $normalizedExportPath -Format Json | ConvertFrom-Json
+$verify = ConvertFrom-LlmWikiJson (& $PSCommandPath verify -Path $normalizedExportPath -Format Json)
 if (-not $verify.valid) {
     [System.IO.File]::Delete($absoluteExportPath)
     throw "Generated export failed self-verification: $(@($verify.issues) -join ' ')"

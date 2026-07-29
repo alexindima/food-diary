@@ -50,6 +50,11 @@ try {
 '@
     Assert-Wiki (Test-LlmWikiJsonEquivalent -ActualPath $jsonFixturePath -ExpectedJson $expectedJson) `
         'JSON freshness comparison remained sensitive to serializer whitespace.'
+    $dateFixture = ConvertFrom-LlmWikiJson '{"at":"2026-07-29T13:34:35.1234567Z"}'
+    Assert-Wiki (
+        $dateFixture.at -is [string] -and
+        $dateFixture.at -ceq '2026-07-29T13:34:35.1234567Z'
+    ) 'Canonical JSON parsing converted an ISO timestamp and made hashes PowerShell-version dependent.'
 
     [System.IO.File]::WriteAllText(
         $textFixturePath,

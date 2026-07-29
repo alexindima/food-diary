@@ -24,6 +24,7 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiTaskAudit.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1
   - .llm-wiki/tools/Export-LlmWikiTaskWorkspace.ps1
+  - .llm-wiki/tools/LlmWikiJson.ps1
   - .llm-wiki/tools/Import-LlmWikiTaskWorkspace.ps1
   - .llm-wiki/tools/Get-LlmWikiWorkspacePolicy.ps1
   - .llm-wiki/tools/Compare-LlmWikiTaskPolicy.ps1
@@ -190,8 +191,11 @@ Potential credentials, tokens, private keys, embedded URL credentials, and
 email addresses are redacted recursively from every exported string. The
 package records redaction categories and is sealed with SHA-256;
 `task-export-verify` independently recomputes the seal and scans for remaining
-sensitive patterns. `-FailOnSensitive` refuses to write when any redaction was
-needed, and existing exports require explicit `-Overwrite`.
+sensitive patterns. Signed JSON is parsed with ISO timestamps preserved as
+strings, so the seal is stable across Windows PowerShell and newer PowerShell
+Core versions that otherwise coerce timestamps into `DateTime`.
+`-FailOnSensitive` refuses to write when any redaction was needed, and existing
+exports require explicit `-Overwrite`.
 
 Resume a verified export as a fresh local task:
 
