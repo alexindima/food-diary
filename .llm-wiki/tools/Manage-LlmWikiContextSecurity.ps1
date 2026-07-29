@@ -86,9 +86,14 @@ function Get-ScanEntry([string]$RelativePath) {
 }
 function Get-Payload([object]$Receipt) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Receipt.schemaVersion; workspace = $Receipt.workspace; createdAtUtc = $Receipt.createdAtUtc
-        packetFingerprint = $Receipt.packetFingerprint; policyFingerprint = $Receipt.policyFingerprint
-        scannerFingerprint = $Receipt.scannerFingerprint; sources = @($Receipt.sources); summary = $Receipt.summary
+        schemaVersion = [int]$Receipt.schemaVersion
+        workspace = [string]$Receipt.workspace
+        createdAtUtc = ([DateTimeOffset]$Receipt.createdAtUtc).ToUniversalTime().ToString('o')
+        packetFingerprint = [string]$Receipt.packetFingerprint
+        policyFingerprint = [string]$Receipt.policyFingerprint
+        scannerFingerprint = [string]$Receipt.scannerFingerprint
+        sources = @($Receipt.sources)
+        summary = $Receipt.summary
     }
 }
 function Get-Summary([object[]]$Sources) {

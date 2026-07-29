@@ -2144,7 +2144,7 @@ try {
                     schemaVersion = $optimizationEvent.schemaVersion
                     eventId = $optimizationEvent.eventId
                     workspace = $optimizationEvent.workspace
-                    recordedAtUtc = $optimizationEvent.recordedAtUtc
+                    recordedAtUtc = ([DateTimeOffset]$optimizationEvent.recordedAtUtc).ToUniversalTime().ToString('o')
                     completionFingerprint = $optimizationEvent.completionFingerprint
                     retrospectiveHash = $optimizationEvent.retrospectiveHash
                     routeReceiptHash = $optimizationEvent.routeReceiptHash

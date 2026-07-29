@@ -42,12 +42,12 @@ function Get-FileSha([string]$Path) {
 }
 function Get-BundlePayload([object]$Bundle) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Bundle.schemaVersion
-        workspace = $Bundle.workspace
-        createdAtUtc = $Bundle.createdAtUtc
-        packetFingerprint = $Bundle.packetFingerprint
-        policyFingerprint = $Bundle.policyFingerprint
-        generatorFingerprint = $Bundle.generatorFingerprint
+        schemaVersion = [int]$Bundle.schemaVersion
+        workspace = [string]$Bundle.workspace
+        createdAtUtc = ([DateTimeOffset]$Bundle.createdAtUtc).ToUniversalTime().ToString('o')
+        packetFingerprint = [string]$Bundle.packetFingerprint
+        policyFingerprint = [string]$Bundle.policyFingerprint
+        generatorFingerprint = [string]$Bundle.generatorFingerprint
         budgets = $Bundle.budgets
         query = $Bundle.query
         learning = $Bundle.learning
