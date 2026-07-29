@@ -2,7 +2,7 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'update', 'lint', 'verify', 'verify-full', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
+        'help', 'update', 'lint', 'smoke', 'verify', 'verify-full', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'diff', 'impact', 'ownership', 'api-compat', 'policy',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-validate',
@@ -64,6 +64,8 @@ param(
     [string]$HealthView = 'all',
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
+    [ValidateSet('portable', 'linux', 'tools')]
+    [string]$SmokeGroup = 'portable',
     [ValidateRange(1, 50)]
     [int]$Limit = 12,
     [string]$BaseRef = 'HEAD',
@@ -215,6 +217,13 @@ switch ($Command) {
     'lint' {
         Invoke-WikiTool 'Test-LlmWiki.ps1' @{ Format = $Format }
     }
+    'smoke' {
+        switch ($SmokeGroup) {
+            'portable' { Invoke-WikiTool 'Test-LlmWikiPortable.ps1' }
+            'linux' { Invoke-WikiTool 'Test-LlmWikiLinux.ps1' }
+            'tools' { Invoke-WikiTool 'Test-LlmWikiTools.ps1' }
+        }
+    }
     'verify' {
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
         Invoke-WikiTool 'Test-LlmWiki.ps1'
@@ -229,8 +238,8 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
         Invoke-WikiTool 'Test-LlmWiki.ps1'
         Invoke-WikiTool 'Test-LlmWikiLint.ps1'
-        Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' @{ Check = $true }
-        Invoke-WikiTool 'Test-LlmWikiTools.ps1'
+        Invoke-WikiTool 'Test-LlmWikiPortable.ps1'
+        Invoke-WikiTool 'Invoke-LlmWikiFullVerification.ps1'
         Invoke-WikiTool 'Invoke-LlmWikiEvals.ps1'
         Invoke-WikiTool 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' }
         Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' @{ FailOnViolation = $true }
@@ -1637,6 +1646,7 @@ switch ($Command) {
         Write-Host 'Usage:'
         Write-Host '  ./.llm-wiki/wiki.ps1 update'
         Write-Host '  ./.llm-wiki/wiki.ps1 lint [-Format Json]'
+        Write-Host '  ./.llm-wiki/wiki.ps1 smoke -SmokeGroup portable|linux|tools'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify-full'
         Write-Host '  ./.llm-wiki/wiki.ps1 context -Module Billing -ChangeType Api'

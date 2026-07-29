@@ -38,6 +38,7 @@ appear as `conditional` instead of making an otherwise valid pull request fail.
 Use the strict readiness command when those artifacts are part of the delivery
 contract.
 
-The CI step is labeled as full Wiki verification because it starts with the
-deterministic Wiki lint and its regression fixtures, then includes the complete
-developer-tool smoke suite in addition to index and eval checks.
+The dedicated CI Wiki job runs full verification alongside the backend,
+PostgreSQL, dependency-audit, and frontend jobs. It starts with deterministic
+lint and portable regressions, then runs index checks and the complete
+stateful developer-tool smoke suite concurrently before publishing this report.

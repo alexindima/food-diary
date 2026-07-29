@@ -9,16 +9,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  dotnet-tests:
-    name: Backend .NET tests and formatting
+  llm-wiki:
+    name: LLM Wiki verification
     runs-on: ubuntu-latest
 
     steps:
-      - name: Initialize test diagnostics
-        run: |
-          mkdir -p "${RUNNER_TEMP}/ci-test-logs"
-          : > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
-
       - name: Checkout code
         uses: actions/checkout@v7
         with:
@@ -29,11 +24,7 @@ jobs:
         env:
           EVENT_BEFORE: ${{ github.event.before }}
         run: |
-          ./.llm-wiki/wiki.ps1 lint
-          ./.llm-wiki/tools/Test-LlmWikiLint.ps1
-          ./.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check
-          ./.llm-wiki/tools/Test-LlmWikiTools.ps1
-          ./.llm-wiki/tools/Invoke-LlmWikiEvals.ps1
+          ./.llm-wiki/wiki.ps1 verify-full
 
           if ("${{ github.event_name }}" -eq "pull_request") {
             $baseRef = "origin/${{ github.base_ref }}"
@@ -66,6 +57,21 @@ jobs:
             -HeadRef HEAD `
             -OutputPath $reviewReport
           Get-Content -LiteralPath $reviewReport | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+  dotnet-tests:
+    name: Backend .NET tests and formatting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Initialize test diagnostics
+        run: |
+          mkdir -p "${RUNNER_TEMP}/ci-test-logs"
+          : > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
+
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
@@ -1053,8 +1059,9 @@ jobs:
           if-no-files-found: ignore
 
   notify-ci-failure:
-    if: always() && (needs.dotnet-tests.result == 'failure' || needs.backend-postgres-critical-flows.result == 'failure' || needs.backend-dependency-audit.result == 'failure' || needs.frontend-checks.result == 'failure')
+    if: always() && (needs.llm-wiki.result == 'failure' || needs.dotnet-tests.result == 'failure' || needs.backend-postgres-critical-flows.result == 'failure' || needs.backend-dependency-audit.result == 'failure' || needs.frontend-checks.result == 'failure')
     needs:
+      - llm-wiki
       - dotnet-tests
       - backend-postgres-critical-flows
       - backend-dependency-audit
@@ -1160,6 +1167,11 @@ jobs:
           FAILED_LOG_FILE=""
           FAILED_LOG_FILE_NAME=""
           META_FILE=""
+
+          if [ "${{ needs.llm-wiki.result }}" = "failure" ]; then
+            FAILED_AREA="llm-wiki"
+            FAILED_TARGET="verify-full"
+          fi
 
           if [ "${{ needs.dotnet-tests.result }}" = "failure" ] && [ -f "${RUNNER_TEMP}/ci-test-logs/failure-meta.env" ]; then
             META_FILE="${RUNNER_TEMP}/ci-test-logs/failure-meta.env"

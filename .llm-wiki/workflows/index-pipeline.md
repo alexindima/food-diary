@@ -12,7 +12,10 @@ tags:
 sources:
   - .llm-wiki/tools/Test-LlmWiki.ps1
   - .llm-wiki/tools/Test-LlmWikiLint.ps1
+  - .llm-wiki/tools/Test-LlmWikiPortable.ps1
+  - .llm-wiki/tools/Test-LlmWikiLinux.ps1
   - .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1
+  - .llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1
   - .llm-wiki/wiki.ps1
   - .github/workflows/ci-tests.yml
 ---
@@ -46,8 +49,23 @@ The default concurrency is four processes and can be changed for constrained env
 Workers are isolated PowerShell processes with real exit-code propagation. A failed worker fails its stage and prevents dependent stages from running. Parallelism changes execution time only; every existing generator and freshness check still runs.
 
 `wiki verify` is the interactive gate. `wiki verify-full` and CI additionally
-run the complete tool-smoke suite, which is intentionally slower. Both fail
-before those stages when lint or its regression fixtures fail.
+run the portable contract and complete stateful tool-smoke suite. Full
+verification starts index checks and stateful tools as independent processes,
+waits for both, and propagates every non-zero exit. CI runs this gate in its own
+job alongside backend, PostgreSQL, dependency, and frontend jobs, so Wiki
+verification no longer serializes the backend test pipeline.
+
+Use the focused commands before the full gate:
+
+```powershell
+./.llm-wiki/wiki.ps1 smoke -SmokeGroup portable
+./.llm-wiki/wiki.ps1 smoke -SmokeGroup linux
+./.llm-wiki/wiki.ps1 smoke -SmokeGroup tools
+```
+
+The Linux group uses the pinned
+`mcr.microsoft.com/powershell:7.5-ubuntu-24.04` Docker image on non-Linux
+workstations and directly executes the portable group on Linux.
 
 After these gates, CI publishes the compiled LLM Wiki change-review report to
 the GitHub job summary so reviewers see the same scope, risk, and readiness

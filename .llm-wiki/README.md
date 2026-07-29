@@ -54,6 +54,9 @@ The unified developer entrypoint is:
 ./.llm-wiki/wiki.ps1 update
 ./.llm-wiki/wiki.ps1 lint
 ./.llm-wiki/wiki.ps1 lint -Format Json
+./.llm-wiki/wiki.ps1 smoke -SmokeGroup portable
+./.llm-wiki/wiki.ps1 smoke -SmokeGroup linux
+./.llm-wiki/wiki.ps1 smoke -SmokeGroup tools
 ./.llm-wiki/wiki.ps1 verify
 ./.llm-wiki/wiki.ps1 verify-full
 ./.llm-wiki/wiki.ps1 workspace-policy -FailOnInvalid
@@ -182,12 +185,18 @@ provenance, local link targets and anchors, and high-confidence credential
 signatures. Text diagnostics use stable `WIKI###` codes; `-Format Json` exposes
 the same result to any agent or CI consumer.
 
+`smoke portable` is the short cross-version contract and runs on the current
+PowerShell. `smoke linux` runs that contract in the pinned PowerShell 7.5
+Ubuntu Docker image; `smoke tools` runs the complete stateful developer-tool
+lifecycle.
+
 `verify` is the fast interactive and handoff gate. It starts with lint and its
-regression fixtures, then checks page structure,
-generated indexes, freshness, eval regressions, failure records, change policy,
-and impact review. `verify-full` adds the complete developer-tool smoke suite
-used for CI and release-level validation. Independent indexes run in
-dependency-aware parallel stages.
+regression fixtures, then checks page structure, generated indexes, freshness,
+eval regressions, failure records, change policy, and impact review.
+`verify-full` adds the portable and complete stateful smoke suites while
+running independent index checks and tool scenarios concurrently. In CI the
+full Wiki gate is a separate job, so it no longer blocks backend restore,
+build, and tests.
 
 Verify the wiki from the repository root:
 

@@ -33,6 +33,8 @@ Router changes affecting these commands are covered by `wiki verify-full`;
 the faster `wiki verify` gate intentionally omits the exhaustive tool-smoke
 scenarios while retaining lint and its regression fixtures, index, eval,
 policy, and impact checks.
+Use `wiki smoke -SmokeGroup tools` to run the stateful dispatch lifecycle
+directly; full verification runs that group alongside independent index checks.
 The unified router preserves ISO timestamps as JSON strings before dispatching
 commands so receipt hashes do not depend on the installed PowerShell version.
 
