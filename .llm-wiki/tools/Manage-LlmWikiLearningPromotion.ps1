@@ -36,12 +36,12 @@ function Write-Registry([object]$Registry) {
 }
 function Get-EventPayload([object]$Event) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Event.schemaVersion
-        sequence = $Event.sequence
-        kind = $Event.kind
-        id = $Event.id
-        createdAtUtc = $Event.createdAtUtc
-        previousHash = $Event.previousHash
+        schemaVersion = [int]$Event.schemaVersion
+        sequence = [int]$Event.sequence
+        kind = [string]$Event.kind
+        id = [string]$Event.id
+        createdAtUtc = ([DateTimeOffset]$Event.createdAtUtc).ToUniversalTime().ToString('o')
+        previousHash = [string]$Event.previousHash
         observation = $Event.observation
         decision = $Event.decision
         targetId = $Event.targetId

@@ -29,14 +29,22 @@ function Get-Hash([object]$Value) {
 }
 function Get-EventPayload([object]$Event) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Event.schemaVersion; sequence = $Event.sequence; id = $Event.id
-        candidateFingerprint = $Event.candidateFingerprint; promotedAtUtc = $Event.promotedAtUtc
-        owner = $Event.owner; source = $Event.source; learning = $Event.learning
-        policyFingerprint = $Event.policyFingerprint; previousHash = $Event.previousHash
+        schemaVersion = [int]$Event.schemaVersion; sequence = [int]$Event.sequence; id = [string]$Event.id
+        candidateFingerprint = [string]$Event.candidateFingerprint
+        promotedAtUtc = ([DateTimeOffset]$Event.promotedAtUtc).ToUniversalTime().ToString('o')
+        owner = [string]$Event.owner; source = [string]$Event.source; learning = $Event.learning
+        policyFingerprint = [string]$Event.policyFingerprint; previousHash = [string]$Event.previousHash
     }
 }
 function Get-RegistryPayload([object]$Registry) {
-    [pscustomobject][ordered]@{ schemaVersion = $Registry.schemaVersion; events = @($Registry.events) }
+    [pscustomobject][ordered]@{
+        schemaVersion = [int]$Registry.schemaVersion
+        events = @($Registry.events | ForEach-Object {
+            $payload = Get-EventPayload $_
+            $payload | Add-Member -NotePropertyName eventHash -NotePropertyValue ([string]$_.eventHash)
+            $payload
+        })
+    }
 }
 function Read-Registry {
     if (-not (Test-Path -LiteralPath $registryPath -PathType Leaf)) { throw 'Repair learning registry is absent.' }

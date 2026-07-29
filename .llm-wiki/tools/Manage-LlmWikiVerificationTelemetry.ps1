@@ -29,16 +29,23 @@ function Get-Hash([object]$Value) {
 }
 function Get-EventPayload([object]$Event) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Event.schemaVersion; sequence = $Event.sequence; id = $Event.id
-        recordedAtUtc = $Event.recordedAtUtc; workspace = $Event.workspace
-        packetFingerprint = $Event.packetFingerprint; checkId = $Event.checkId
-        status = $Event.status; durationSeconds = $Event.durationSeconds
-        commandHash = $Event.commandHash; policyFingerprint = $Event.policyFingerprint
-        previousHash = $Event.previousHash
+        schemaVersion = [int]$Event.schemaVersion; sequence = [int]$Event.sequence; id = [string]$Event.id
+        recordedAtUtc = ([DateTimeOffset]$Event.recordedAtUtc).ToUniversalTime().ToString('o'); workspace = [string]$Event.workspace
+        packetFingerprint = [string]$Event.packetFingerprint; checkId = [string]$Event.checkId
+        status = [string]$Event.status; durationSeconds = [double]$Event.durationSeconds
+        commandHash = [string]$Event.commandHash; policyFingerprint = [string]$Event.policyFingerprint
+        previousHash = [string]$Event.previousHash
     }
 }
 function Get-RegistryPayload([object]$Registry) {
-    [pscustomobject][ordered]@{ schemaVersion = $Registry.schemaVersion; events = @($Registry.events) }
+    [pscustomobject][ordered]@{
+        schemaVersion = [int]$Registry.schemaVersion
+        events = @($Registry.events | ForEach-Object {
+            $payload = Get-EventPayload $_
+            $payload | Add-Member -NotePropertyName eventHash -NotePropertyValue ([string]$_.eventHash)
+            $payload
+        })
+    }
 }
 function Read-Registry {
     if (-not (Test-Path -LiteralPath $registryPath -PathType Leaf)) { throw 'Verification telemetry registry is absent.' }

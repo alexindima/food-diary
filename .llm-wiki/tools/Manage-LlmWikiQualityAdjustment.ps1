@@ -45,7 +45,7 @@ function Get-Payload([object]$Receipt) {
         evidence = @($Receipt.evidence)
         feedbackHash = $Receipt.feedbackHash
         dispatchHeadEventHash = $Receipt.dispatchHeadEventHash
-        recordedAtUtc = $Receipt.recordedAtUtc
+        recordedAtUtc = ([DateTimeOffset]$Receipt.recordedAtUtc).ToUniversalTime().ToString('o')
     }
 }
 function Get-Delta([string]$Type) {
