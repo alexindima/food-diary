@@ -3649,7 +3649,7 @@ try {
         $leaseLockDirectory = Split-Path -Parent $leaseLockPath
         if (-not (Test-Path -LiteralPath $leaseLockDirectory)) { New-Item -ItemType Directory -Path $leaseLockDirectory | Out-Null }
         [System.IO.File]::WriteAllText($leaseLockPath, 'abandoned', [System.Text.UTF8Encoding]::new($false))
-        (Get-Item -LiteralPath $leaseLockPath).LastWriteTimeUtc = [DateTime]::UtcNow.AddMinutes(-10)
+        [System.IO.File]::SetLastWriteTimeUtc($leaseLockPath, [DateTime]::UtcNow.AddMinutes(-10))
         $acquiredLease = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskLease.ps1') acquire `
             -WorkspacePath $cacheSourceWorkspacePath `
             -Owner 'smoke-agent-a' `
