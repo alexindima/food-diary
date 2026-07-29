@@ -73,6 +73,28 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Always run `git commit` and `git push` with hooks enabled. Do not use `--no-verify`. If a hook fails, inspect the reported log under `.git/hook-logs/`, fix the cause, and rerun the original command.
 - A running local API must not require bypassing hooks. The pre-push backend build uses `.artifacts/pre-push` so it does not overwrite assemblies held by the development server.
 
+## SSH Access
+
+- In this repository, requests such as "подключись к серверу", "зайди на сервер", or "проверь на сервере" refer to the `fooddiary-prod` SSH alias.
+- Connect with `ssh fooddiary-prod`; credentials and host details are managed by the user's local SSH configuration and must not be copied into the repository.
+- Never use, modify, or reconfigure the `integration-01` SSH alias for this repository. It belongs to an unrelated work project.
+- Treat server access as read-only unless the user explicitly requests a change or the requested operation clearly requires one. Before destructive or deployment-affecting actions, resolve the exact target and scope.
+
+## Local Development
+
+- In this repository, requests such as "перейди к локальной разработке", "запусти локально", or "открой локальное приложение" mean preparing and running the complete local application.
+- Build the frontend with `npm run build` in `FoodDiary.Web.Client`, then run its development server with `npm start`.
+- Run the backend with `dotnet run --project FoodDiary.Web.Api`.
+- Verify that the frontend is available at `http://localhost:4200` and that it can communicate with the backend before reporting readiness.
+- Local sign-in credentials are stored outside the repository in `%USERPROFILE%\.codex\secrets\food-diary.local.md`. Read that file only when authentication is required; never print, log, copy, or commit its contents.
+
+## Production Grafana
+
+- In this repository, requests such as "перейди в Grafana", "открой Grafana", or "проверь Grafana" refer to `https://grafana.fooddiary.club`.
+- Grafana credentials are stored outside the repository in `%USERPROFILE%\.codex\secrets\food-diary.grafana-prod.md`. Read that file only when authentication is required; never print, log, copy, or commit its contents.
+- Treat production Grafana access as read-only by default. Do not modify dashboards, alerts, data sources, users, organizations, API keys, service accounts, or other Grafana configuration unless the user explicitly requests that specific change.
+- Never expose Grafana credentials in terminal output, screenshots, task summaries, documentation, or repository files.
+
 ## Documentation
 
 - Long-form documentation lives under `docs/`.
