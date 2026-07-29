@@ -28,25 +28,53 @@ function Get-Hash([object]$Value) {
 function Get-FileSha([string]$Path) {
     (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
 }
+function Get-ActualOutcomePayload([object]$Outcome) {
+    [pscustomobject][ordered]@{
+        score = [double]$Outcome.score
+        baseScore = [double]$Outcome.baseScore
+        components = [pscustomobject][ordered]@{
+            readiness = [double]$Outcome.components.readiness
+            confidence = [double]$Outcome.components.confidence
+            critique = [double]$Outcome.components.critique
+            verification = [double]$Outcome.components.verification
+        }
+        penalty = [int]$Outcome.penalty
+        penaltyBreakdown = [pscustomobject][ordered]@{
+            failedRepair = [int]$Outcome.penaltyBreakdown.failedRepair
+            falseNegative = [int]$Outcome.penaltyBreakdown.falseNegative
+            impactDrift = [int]$Outcome.penaltyBreakdown.impactDrift
+            quarantinedContextSource = [int]$Outcome.penaltyBreakdown.quarantinedContextSource
+            rolledBack = [int]$Outcome.penaltyBreakdown.rolledBack
+        }
+        quality = [string]$Outcome.quality
+        completionVerdict = [string]$Outcome.completionVerdict
+    }
+}
 function Get-EventPayload([object]$Event) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Event.schemaVersion
-        eventId = $Event.eventId
-        workspace = $Event.workspace
-        recordedAtUtc = $Event.recordedAtUtc
-        completionFingerprint = $Event.completionFingerprint
-        retrospectiveHash = $Event.retrospectiveHash
-        strategyApplicationHash = $Event.strategyApplicationHash
-        strategyState = $Event.strategyState
-        variantId = $Event.variantId
-        itemLimit = $Event.itemLimit
-        characterBudget = $Event.characterBudget
-        syntheticQualityScore = $Event.syntheticQualityScore
-        taskProfile = $Event.taskProfile
-        actualOutcome = $Event.actualOutcome
-        success = $Event.success
-        policyFingerprint = $Event.policyFingerprint
-        previousEventHash = $Event.previousEventHash
+        schemaVersion = [int]$Event.schemaVersion
+        eventId = [string]$Event.eventId
+        workspace = [string]$Event.workspace
+        recordedAtUtc = ([DateTimeOffset]$Event.recordedAtUtc).ToUniversalTime().ToString('o')
+        completionFingerprint = [string]$Event.completionFingerprint
+        retrospectiveHash = [string]$Event.retrospectiveHash
+        strategyApplicationHash = [string]$Event.strategyApplicationHash
+        strategyState = [string]$Event.strategyState
+        variantId = [string]$Event.variantId
+        itemLimit = [int]$Event.itemLimit
+        characterBudget = [int]$Event.characterBudget
+        syntheticQualityScore = [double]$Event.syntheticQualityScore
+        taskProfile = [pscustomobject][ordered]@{
+            cohortKey = [string]$Event.taskProfile.cohortKey
+            changeClass = [string]$Event.taskProfile.changeClass
+            riskLevel = [string]$Event.taskProfile.riskLevel
+            scopes = @($Event.taskProfile.scopes)
+            modules = @($Event.taskProfile.modules)
+        }
+        actualOutcome = Get-ActualOutcomePayload $Event.actualOutcome
+        success = [bool]$Event.success
+        policyFingerprint = [string]$Event.policyFingerprint
+        previousEventHash = [string]$Event.previousEventHash
     }
 }
 function Read-Registry {
