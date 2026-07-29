@@ -277,6 +277,7 @@ switch ($Command) {
         $briefArguments = @{ BaseRef = $BaseRef; Format = $Format; Limit = [Math]::Min($Limit, 20) }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $briefArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $briefArguments.ChangedPath = $ChangedPath }
+        if ($PSBoundParameters.ContainsKey('ProposedPath')) { $briefArguments.ProposedPath = $ProposedPath }
         Invoke-WikiTool 'Get-LlmWikiTaskBrief.ps1' $briefArguments
     }
     { $_ -in @('implementation-plan', 'plan') } {
@@ -294,6 +295,7 @@ switch ($Command) {
         $testPlanArguments = @{ BaseRef = $BaseRef; Format = $Format; Limit = [Math]::Min($Limit, 30) }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $testPlanArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $testPlanArguments.ChangedPath = $ChangedPath }
+        if ($PSBoundParameters.ContainsKey('ProposedPath')) { $testPlanArguments.ProposedPath = $ProposedPath }
         Invoke-WikiTool 'Get-LlmWikiTestPlan.ps1' $testPlanArguments
     }
     'decision' {

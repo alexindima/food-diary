@@ -23,6 +23,12 @@ already classified diff and policy result instead of rescanning the same paths.
 ./.llm-wiki/wiki.ps1 test-plan
 ```
 
+Use `-ProposedPath <path>` before code exists; it may be repeated or supplied as
+an array. The planner combines proposed and changed paths and preserves the
+proposed paths in JSON output. When it resolves an existing Angular spec, its
+focused command uses the project's `test:ci:*` script with Angular's supported
+`--include` option.
+
 The plan combines focused existing test files, executable commands, and scenario
 prompts for backend, HTTP contracts, authorization, persistence, migrations,
 frontend states, localization, security, and observability. Scenario prompts

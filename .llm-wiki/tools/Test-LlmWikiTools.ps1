@@ -212,6 +212,34 @@ $apiCompatibilityJson = & (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibility.ps
 $apiCompatibility = $apiCompatibilityJson | ConvertFrom-Json
 Assert-Wiki ($apiCompatibility.breakingCount -eq 0) 'Unchanged API snapshot was classified as breaking.'
 
+$baseEndpointContract = @{
+    OpenApi = '3.0.4'
+    Endpoints = @(
+        @{ Path = '/api/v{version}/existing'; Operations = @(
+            @{ Method = 'get'; HasRequestBody = $false; ResponseCodes = @('200') }
+        ) }
+    )
+} | ConvertTo-Json -Depth 8
+$currentEndpointContract = @{
+    OpenApi = '3.0.4'
+    Endpoints = @(
+        @{ Path = '/api/v{version}/existing'; Operations = @(
+            @{ Method = 'get'; HasRequestBody = $false; ResponseCodes = @('200') }
+        ) }
+        @{ Path = '/api/v{version}/added'; Operations = @(
+            @{ Method = 'post'; HasRequestBody = $true; ResponseCodes = @('200', '409') }
+        ) }
+    )
+} | ConvertTo-Json -Depth 8
+$endpointCompatibilityJson = & (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibility.ps1') `
+    -BaseSnapshotContent $baseEndpointContract `
+    -CurrentSnapshotContent $currentEndpointContract `
+    -Format Json
+$endpointCompatibility = $endpointCompatibilityJson | ConvertFrom-Json
+Assert-Wiki ($endpointCompatibility.snapshotFormat -eq 'endpoint-contract') 'API compatibility did not recognize the repository endpoint-contract snapshot format.'
+Assert-Wiki ($endpointCompatibility.additiveCount -eq 1) 'API compatibility did not classify an added endpoint-contract path as additive.'
+Assert-Wiki (@($endpointCompatibility.changes.kind) -contains 'added-path') 'API compatibility did not report the added endpoint-contract path.'
+
 $taskContractPath = '.artifacts/llm-wiki/tool-smoke-task-contract.json'
 $absoluteTaskContractPath = Join-Path (Split-Path -Parent $wikiRoot) $taskContractPath
 try {
@@ -308,6 +336,27 @@ $configurationPlanJson = & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') `
 $configurationPlan = $configurationPlanJson | ConvertFrom-Json
 Assert-Wiki (@($configurationPlan.scenarios.id) -contains 'configuration-contract') 'Test plan did not include configuration contract validation.'
 Assert-Wiki (@($configurationPlan.scenarios.id) -contains 'deployment-compatibility') 'Test plan did not include deployment compatibility validation.'
+
+$proposedBackendPath = 'FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs'
+$proposedBriefJson = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
+    -BaseRef HEAD `
+    -ProposedPath $proposedBackendPath `
+    -Format Json
+$proposedBrief = $proposedBriefJson | ConvertFrom-Json
+Assert-Wiki (@($proposedBrief.change.paths) -contains $proposedBackendPath) 'Task brief ignored an explicit proposed path before a diff existed.'
+Assert-Wiki (@($proposedBrief.change.proposedPaths) -contains $proposedBackendPath) 'Task brief did not preserve proposed-path provenance.'
+Assert-Wiki (@($proposedBrief.change.scopes) -contains 'Backend') 'Task brief did not classify a proposed backend path.'
+
+$proposedFrontendPath = 'FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-flow.facade.ts'
+$proposedTestPlanJson = & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') `
+    -BaseRef HEAD `
+    -ProposedPath $proposedFrontendPath `
+    -Format Json
+$proposedTestPlan = $proposedTestPlanJson | ConvertFrom-Json
+Assert-Wiki (@($proposedTestPlan.proposedPaths) -contains $proposedFrontendPath) 'Test plan did not preserve proposed-path provenance.'
+Assert-Wiki (@($proposedTestPlan.scopes) -contains 'Frontend') 'Test plan ignored an explicit proposed frontend path before a diff existed.'
+Assert-Wiki (@($proposedTestPlan.commands.command | Where-Object { $_ -match 'npm run test:ci:app -- --include=' }).Count -gt 0) 'Test plan did not emit a supported focused Angular test command.'
+Assert-Wiki (@($proposedTestPlan.commands.command | Where-Object { $_ -match '(^|\s)--run(\s|$)' }).Count -eq 0) 'Test plan emitted the unsupported Angular --run option.'
 
 $frontendContract = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/frontend-contract-index.json') -Raw | ConvertFrom-Json
 Assert-Wiki ($frontendContract.summary.components -gt 0) 'Frontend contract index did not discover Angular components.'

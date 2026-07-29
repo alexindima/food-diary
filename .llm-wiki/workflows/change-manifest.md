@@ -32,6 +32,8 @@ The manifest snapshots risk, modules, implementation phases, required checks, re
 Manifest initialization compiles the task brief once and passes that exact
 snapshot into implementation planning, keeping its fingerprint and obligations
 internally consistent.
+For lightweight planning before manifest initialization, `brief -ProposedPath`
+offers the same path-based classification without creating manifest state.
 
 Validate repeatedly as the diff evolves:
 

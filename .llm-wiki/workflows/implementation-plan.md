@@ -29,5 +29,7 @@ The plan orders context discovery, contract migration, domain/data work, impleme
 
 When a compiled brief is available, the planner consumes it directly instead
 of recomputing decision and rollout context.
+Use `brief -ProposedPath` or `test-plan -ProposedPath` for early exploration;
+promote the settled path set to this plan's explicit `-ChangedPath` input.
 
 The generator does not invent product acceptance criteria. If the objective is incomplete, resolve exact behavior before editing. Re-run the plan when the intended path set changes materially.

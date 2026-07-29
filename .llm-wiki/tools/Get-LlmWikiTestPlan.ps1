@@ -3,6 +3,7 @@ param(
     [string]$BaseRef = 'HEAD',
     [string]$HeadRef,
     [string[]]$ChangedPath,
+    [string[]]$ProposedPath,
     [object]$DiffInput,
     [object]$PolicyInput,
     [ValidateSet('Text', 'Json')]
@@ -17,7 +18,12 @@ $wikiRoot = Split-Path -Parent $toolsRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $common = @{ BaseRef = $BaseRef; Format = 'Json' }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
-if ($PSBoundParameters.ContainsKey('ChangedPath')) { $common.ChangedPath = $ChangedPath }
+$effectivePaths = @(
+    @($ChangedPath) + @($ProposedPath) |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        Sort-Object -Unique
+)
+if ($effectivePaths.Count -gt 0) { $common.ChangedPath = $effectivePaths }
 
 $diffArguments = @{} + $common
 $diffArguments.Limit = [Math]::Min($Limit, 20)
@@ -142,7 +148,7 @@ if ('architecture-drift' -in $ruleIds) {
     Add-Scenario 'architecture-dependency-necessity' 'Confirm new references are necessary, point in the intended layer direction, and do not bypass client or abstraction boundaries.' 'Dependency and ADR review'
 }
 
-$commands = @(
+$commands = @(@(
     @($policy.requiredChecks | ForEach-Object { [pscustomobject]@{
         id = $_.id
         command = $_.command
@@ -153,10 +159,36 @@ $commands = @(
         command = $_
         source = 'context'
     } })
-) | Sort-Object command -Unique
+) | Sort-Object command -Unique)
+
+$frontendFocusedTests = @(
+    $discoveredTests |
+        Where-Object { $_ -match '^FoodDiary\.Web\.Client/.+\.spec\.ts$' } |
+        Sort-Object |
+        Select-Object -First 5
+)
+foreach ($testPath in $frontendFocusedTests) {
+    $workspacePath = $testPath.Substring('FoodDiary.Web.Client/'.Length)
+    $script = if ($workspacePath -match '^projects/fooddiary-admin/') {
+        'test:ci:admin'
+    } elseif ($workspacePath -match '^projects/fd-ui-kit/') {
+        'test:ci:ui-kit'
+    } elseif ($workspacePath -match '^projects/fd-tour/') {
+        'test:ci:tour'
+    } else {
+        'test:ci:app'
+    }
+    $commands += [pscustomobject]@{
+        id = 'focused-frontend'
+        command = "cd FoodDiary.Web.Client && npm run $script -- --include=$workspacePath"
+        source = 'focused-test'
+    }
+}
+$commands = @($commands | Sort-Object command -Unique)
 
 $result = [pscustomobject]@{
     scopes = $scopes
+    proposedPaths = @($ProposedPath)
     modules = @($diff.modules.name)
     focusedTestFiles = @(
         @($directTests | Sort-Object) +

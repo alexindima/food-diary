@@ -31,6 +31,8 @@ gates.
 The unified `wiki.ps1` entrypoint also pins ISO timestamps to JSON strings on
 PowerShell versions that otherwise coerce them into `DateTime`. Nested tools
 therefore compute the same deterministic hashes on Windows and Linux.
+It forwards `-ProposedPath` to the direct `brief` and `test-plan` planning
+commands so they can classify intended files before a Git diff exists.
 
 `wiki update`, `wiki verify`, `wiki verify-full`, and CI then use the same
 dependency-aware index pipeline:

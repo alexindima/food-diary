@@ -27,5 +27,8 @@ Use one compiled packet when several change-aware views are needed:
 ```
 
 The packet contains the exact diff classification, policy result, ownership graph, test plan, rollout plan, ADR context, task brief, and implementation plan. Shared intermediate objects are computed once.
+For a brief or test plan without a packet or diff, use their direct
+`-ProposedPath` input; packet compilation continues to use its explicit
+`-ChangedPath` snapshot.
 
 Its SHA-256 fingerprint covers Git HEAD, base/head refs, normalized changed paths, and objective. Recompile when any of those inputs change; a packet is a snapshot, not a durable source of truth.

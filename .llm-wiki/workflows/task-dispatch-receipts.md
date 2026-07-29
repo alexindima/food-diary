@@ -33,6 +33,8 @@ Router changes affecting these commands are covered by `wiki verify-full`;
 the faster `wiki verify` gate intentionally omits the exhaustive tool-smoke
 scenarios while retaining lint and its regression fixtures, index, eval,
 policy, and impact checks.
+The router's pre-diff `-ProposedPath` forwarding is limited to `brief` and
+`test-plan`; dispatch lifecycle inputs and receipt fingerprints are unchanged.
 Use `wiki smoke -SmokeGroup tools` to run the stateful dispatch lifecycle
 directly; full verification runs that group alongside independent index checks.
 The unified router preserves ISO timestamps as JSON strings before dispatching

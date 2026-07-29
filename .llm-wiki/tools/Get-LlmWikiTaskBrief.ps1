@@ -3,6 +3,7 @@ param(
     [string]$BaseRef = 'HEAD',
     [string]$HeadRef,
     [string[]]$ChangedPath,
+    [string[]]$ProposedPath,
     [object]$DiffInput,
     [object]$PolicyInput,
     [object]$OwnershipInput,
@@ -20,7 +21,12 @@ $toolsRoot = $PSScriptRoot
 
 $common = @{ BaseRef = $BaseRef; Format = 'Json' }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
-if ($PSBoundParameters.ContainsKey('ChangedPath')) { $common.ChangedPath = $ChangedPath }
+$effectivePaths = @(
+    @($ChangedPath) + @($ProposedPath) |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        Sort-Object -Unique
+)
+if ($effectivePaths.Count -gt 0) { $common.ChangedPath = $effectivePaths }
 
 $diffArguments = @{} + $common
 $diffArguments.Limit = $Limit
@@ -240,6 +246,7 @@ $brief = [pscustomobject]@{
     }
     change = [pscustomobject]@{
         paths = @($diff.changedPaths)
+        proposedPaths = @($ProposedPath)
         scopes = @($diff.scopes)
         directModules = @($ownership.directModules)
         downstreamModules = @($ownership.downstreamModules)

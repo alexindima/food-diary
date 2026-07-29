@@ -37,6 +37,8 @@ downstream modules, backend contracts and consumers, frontend contracts and
 consumers, runtime bindings, domain/data bindings, privacy boundaries,
 required checks, review obligations, risk, and a normalized blast-radius
 score.
+The direct `brief` and `test-plan` commands also accept `-ProposedPath` for a
+smaller pre-diff view when a complete impact simulation is unnecessary.
 
 For an active workspace, the manifest's planned paths form the forecast and
 the stored task packet forms the actual impact:

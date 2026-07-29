@@ -2,6 +2,8 @@
 param(
     [string]$BaseRef = 'HEAD',
     [string]$SnapshotPath = 'tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json',
+    [string]$BaseSnapshotContent,
+    [string]$CurrentSnapshotContent,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [switch]$FailOnBreaking
@@ -34,19 +36,63 @@ function Add-Change {
     })
 }
 
-if (-not (Test-Path -LiteralPath $absoluteSnapshotPath)) {
+function ConvertTo-ComparableOpenApi {
+    param($Snapshot)
+
+    if ($null -ne $Snapshot.Endpoints) {
+        $paths = [ordered]@{}
+        foreach ($endpoint in @($Snapshot.Endpoints)) {
+            $operations = [ordered]@{}
+            foreach ($operation in @($endpoint.Operations)) {
+                $responses = [ordered]@{}
+                foreach ($responseCode in @($operation.ResponseCodes)) {
+                    $responses[[string]$responseCode] = [ordered]@{}
+                }
+                $operations[[string]$operation.Method.ToLowerInvariant()] = [ordered]@{
+                    parameters = @()
+                    responses = $responses
+                }
+            }
+            $paths[[string]$endpoint.Path] = $operations
+        }
+
+        return ([ordered]@{
+            paths = $paths
+            components = [ordered]@{ schemas = [ordered]@{} }
+        } | ConvertTo-Json -Depth 12 | ConvertFrom-Json)
+    }
+
+    return $Snapshot
+}
+
+if (-not $PSBoundParameters.ContainsKey('CurrentSnapshotContent') -and -not (Test-Path -LiteralPath $absoluteSnapshotPath)) {
     throw "OpenAPI snapshot not found: $SnapshotPath"
 }
 
-$currentText = Get-Content -LiteralPath $absoluteSnapshotPath -Raw
-$baseText = git show "${BaseRef}:$SnapshotPath" 2>$null
-if ($LASTEXITCODE -ne 0) {
-    throw "Unable to read '$SnapshotPath' from '$BaseRef'."
+$currentText = if ($PSBoundParameters.ContainsKey('CurrentSnapshotContent')) {
+    $CurrentSnapshotContent
+} else {
+    Get-Content -LiteralPath $absoluteSnapshotPath -Raw
 }
-$baseText = $baseText -join [Environment]::NewLine
+$baseText = if ($PSBoundParameters.ContainsKey('BaseSnapshotContent')) {
+    $BaseSnapshotContent
+} else {
+    $gitText = git show "${BaseRef}:$SnapshotPath" 2>$null
+    if ($LASTEXITCODE -ne 0) {
+        throw "Unable to read '$SnapshotPath' from '$BaseRef'."
+    }
+    $gitText -join [Environment]::NewLine
+}
 
-$before = $baseText | ConvertFrom-Json
-$after = $currentText | ConvertFrom-Json
+$beforeSource = $baseText | ConvertFrom-Json
+$afterSource = $currentText | ConvertFrom-Json
+$snapshotFormat = if ($null -ne $beforeSource.Endpoints -or $null -ne $afterSource.Endpoints) {
+    'endpoint-contract'
+} else {
+    'openapi'
+}
+$before = ConvertTo-ComparableOpenApi $beforeSource
+$after = ConvertTo-ComparableOpenApi $afterSource
 $changes = [System.Collections.Generic.List[object]]::new()
 $httpMethods = @('get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace')
 
@@ -142,6 +188,7 @@ foreach ($schemaProperty in Get-Properties $beforeSchemas) {
 $result = [pscustomobject]@{
     baseRef = $BaseRef
     snapshotPath = $SnapshotPath
+    snapshotFormat = $snapshotFormat
     breakingCount = @($changes | Where-Object severity -eq 'breaking').Count
     additiveCount = @($changes | Where-Object severity -eq 'additive').Count
     changes = @($changes)

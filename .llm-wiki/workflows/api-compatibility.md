@@ -21,8 +21,9 @@ After regenerating API contract snapshots, compare them with the intended base:
 ./.llm-wiki/wiki.ps1 api-compat -BaseRef origin/master -FailOnBreaking
 ```
 
-The guard reports removed paths, operations, documented responses, and newly
-required parameters as breaking. New paths and operations are additive. It is a
+The guard understands both a raw OpenAPI document and this repository's compact
+`Endpoints` contract snapshot. It reports removed paths, operations, documented
+responses, and newly required parameters as breaking. New paths and operations are additive. It is a
 focused compatibility gate, not a substitute for integration tests or review of
 schema semantics, authorization, error shapes, and status-code behavior.
 
