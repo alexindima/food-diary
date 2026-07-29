@@ -25,3 +25,7 @@ For HTTP, message, or client-package boundaries, also review serialized names an
 ./.llm-wiki/wiki.ps1 contracts -BackendContractView tests -Query <type>
 ./.llm-wiki/wiki.ps1 brief -ChangedPath <contract-path>
 ```
+
+Credential-bearing account-link commands need an additional security pass:
+confirm current-user scoping, provider-identity uniqueness, email ownership,
+idempotent retries, and refusal to replace a different existing identity.

@@ -1,11 +1,13 @@
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Authentication.Commands.GoogleLogin;
+using FoodDiary.Application.Authentication.Commands.LinkGoogle;
 using FoodDiary.Results;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Users.Models;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
@@ -132,5 +134,92 @@ public sealed partial class AuthenticationCommandHandlerTests {
 
         ResultAssert.Success(result);
         Assert.Empty(notificationRepository.Notifications);
+    }
+
+    [Fact]
+    public async Task LinkGoogleHandler_WithMatchingAuthenticatedAccount_LinksIdentity() {
+        var user = User.Create("link-google@example.com", "secret");
+        var repository = new StubUserRepository(user);
+        var handler = new LinkGoogleCommandHandler(
+            repository,
+            repository,
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")));
+
+        Result<UserModel> result =
+            await handler.Handle(new LinkGoogleCommand(user.Id.Value, "credential"), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(GoogleIssuer, user.GoogleIssuer);
+        Assert.Equal(GoogleSubject, user.GoogleSubject);
+    }
+
+    [Fact]
+    public async Task LinkGoogleHandler_WithDifferentEmail_DoesNotLinkIdentity() {
+        var user = User.Create("link-google@example.com", "secret");
+        var repository = new StubUserRepository(user);
+        var handler = new LinkGoogleCommandHandler(
+            repository,
+            repository,
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, "other@example.com", "Alex", "User", "en")));
+
+        Result<UserModel> result =
+            await handler.Handle(new LinkGoogleCommand(user.Id.Value, "credential"), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.GoogleAccountEmailMismatch", result.Error.Code);
+        Assert.Null(user.GoogleSubject);
+    }
+
+    [Fact]
+    public async Task LinkGoogleHandler_WhenIdentityBelongsToAnotherUser_ReturnsConflict() {
+        var user = User.Create("link-google@example.com", "secret");
+        var identityOwner = User.Create("owner@example.com", "secret");
+        identityOwner.LinkGoogleIdentity(GoogleIssuer, GoogleSubject);
+        var repository = new StubUserRepository(user, identityOwner);
+        var handler = new LinkGoogleCommandHandler(
+            repository,
+            repository,
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")));
+
+        Result<UserModel> result =
+            await handler.Handle(new LinkGoogleCommand(user.Id.Value, "credential"), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.GoogleIdentityAlreadyLinked", result.Error.Code);
+        Assert.Null(user.GoogleSubject);
+    }
+
+    [Fact]
+    public async Task LinkGoogleHandler_WhenSameIdentityIsAlreadyLinked_IsIdempotent() {
+        var user = User.Create("link-google@example.com", "secret");
+        user.LinkGoogleIdentity(GoogleIssuer, GoogleSubject);
+        var repository = new StubUserRepository(user);
+        var handler = new LinkGoogleCommandHandler(
+            repository,
+            repository,
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")));
+
+        Result<UserModel> result =
+            await handler.Handle(new LinkGoogleCommand(user.Id.Value, "credential"), CancellationToken.None);
+
+        ResultAssert.Success(result);
+    }
+
+    [Fact]
+    public async Task LinkGoogleHandler_WhenDifferentIdentityIsAlreadyLinked_DoesNotReplaceIt() {
+        var user = User.Create("link-google@example.com", "secret");
+        user.LinkGoogleIdentity(GoogleIssuer, "existing-subject");
+        var repository = new StubUserRepository(user);
+        var handler = new LinkGoogleCommandHandler(
+            repository,
+            repository,
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")));
+
+        Result<UserModel> result =
+            await handler.Handle(new LinkGoogleCommand(user.Id.Value, "credential"), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.GoogleIdentityDifferent", result.Error.Code);
+        Assert.Equal("existing-subject", user.GoogleSubject);
     }
 }

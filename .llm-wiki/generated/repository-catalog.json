@@ -18,7 +18,7 @@
                     "applicationModules":  38,
                     "extractedApplicationModules":  2,
                     "controllers":  81,
-                    "endpoints":  259,
+                    "endpoints":  260,
                     "agentGuides":  42,
                     "documentationPages":  42
                 },
@@ -2807,37 +2807,42 @@
                                                            {
                                                                "verb":  "POST",
                                                                "route":  "/api/v{version:apiVersion}/auth/register",
-                                                               "line":  20
+                                                               "line":  22
                                                            },
                                                            {
                                                                "verb":  "POST",
                                                                "route":  "/api/v{version:apiVersion}/auth/login",
-                                                               "line":  29
+                                                               "line":  31
                                                            },
                                                            {
                                                                "verb":  "POST",
                                                                "route":  "/api/v{version:apiVersion}/auth/google",
-                                                               "line":  37
+                                                               "line":  39
+                                                           },
+                                                           {
+                                                               "verb":  "POST",
+                                                               "route":  "/api/v{version:apiVersion}/auth/google/link",
+                                                               "line":  50
                                                            },
                                                            {
                                                                "verb":  "POST",
                                                                "route":  "/api/v{version:apiVersion}/auth/refresh",
-                                                               "line":  46
+                                                               "line":  60
                                                            },
                                                            {
                                                                "verb":  "POST",
                                                                "route":  "/api/v{version:apiVersion}/auth/restore",
-                                                               "line":  55
+                                                               "line":  69
                                                            },
                                                            {
                                                                "verb":  "POST",
                                                                "route":  "/api/v{version:apiVersion}/auth/verify-email",
-                                                               "line":  64
+                                                               "line":  78
                                                            },
                                                            {
                                                                "verb":  "POST",
                                                                "route":  "/api/v{version:apiVersion}/auth/verify-email/resend",
-                                                               "line":  76
+                                                               "line":  90
                                                            }
                                                        ]
                                      },

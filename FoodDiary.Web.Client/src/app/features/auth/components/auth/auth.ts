@@ -78,6 +78,7 @@ export class AuthComponent {
     protected readonly globalError = signal<string | null>(null);
     protected readonly isSubmitting = signal<boolean>(false);
     protected readonly googleReady = this.googleManager.ready;
+    protected readonly googleLinkRequired = signal(false);
     protected readonly showRestoreAction = signal<boolean>(false);
     protected readonly isRestoring = signal<boolean>(false);
     protected readonly showPasswordReset = signal<boolean>(false);
@@ -96,6 +97,7 @@ export class AuthComponent {
 
     private returnUrl: string | null = null;
     private adminReturnUrl: string | null = null;
+    private pendingGoogleLinkCredential: string | null = null;
 
     public constructor() {
         this.formManager.configureSubmissionActions({
@@ -177,6 +179,8 @@ export class AuthComponent {
         }
         this.authMode = mode;
         this.formManager.resetAll();
+        this.pendingGoogleLinkCredential = null;
+        this.googleLinkRequired.set(false);
         this.showPasswordReset.set(false);
         this.passwordResetSent.set(false);
         this.hasLoginNativeInteraction = false;
@@ -204,6 +208,10 @@ export class AuthComponent {
         const result = await firstValueFrom(this.authFlowFacade.login(this.loginModel()));
         this.isSubmitting.set(false);
         if (result === 'success') {
+            if (this.pendingGoogleLinkCredential !== null) {
+                await this.completeGoogleLinkAsync(this.pendingGoogleLinkCredential);
+                return;
+            }
             await this.completeAuthenticatedNavigationAsync();
             this.closeDialogIfAny();
             return;
@@ -277,15 +285,38 @@ export class AuthComponent {
         this.isSubmitting.set(true);
         const rememberMe = this.authMode === 'login' ? this.loginModel().rememberMe : false;
         const request: GoogleLoginRequest = { credential, rememberMe: Boolean(rememberMe) };
-        this.authFlowFacade.loginWithGoogle(request).subscribe(success => {
+        this.authFlowFacade.loginWithGoogle(request).subscribe(result => {
             this.isSubmitting.set(false);
-            if (success) {
+            if (result === 'success') {
                 this.completeAuthenticatedNavigationAndClose();
+                return;
+            }
+
+            if (result === 'accountLinkRequired') {
+                void this.prepareGoogleLinkLoginAsync(credential);
                 return;
             }
 
             this.setGlobalError('FORM_ERRORS.UNKNOWN');
         });
+    }
+
+    private async prepareGoogleLinkLoginAsync(credential: string): Promise<void> {
+        if (this.authMode !== 'login') {
+            await this.onTabChangeAsync('login');
+        }
+
+        this.pendingGoogleLinkCredential = credential;
+        this.googleLinkRequired.set(true);
+        this.setGlobalError('AUTH.GOOGLE.LINK_REQUIRED_ACTION');
+    }
+
+    private async completeGoogleLinkAsync(credential: string): Promise<void> {
+        const linked = await firstValueFrom(this.authFlowFacade.linkGoogle(credential));
+        this.pendingGoogleLinkCredential = null;
+        this.googleLinkRequired.set(false);
+        await this.navigationService.navigateToProfileAsync({ googleLink: linked ? 'success' : 'failed' });
+        this.closeDialogIfAny();
     }
 
     protected onPasswordResetOpen(): void {

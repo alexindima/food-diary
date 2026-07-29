@@ -50,3 +50,8 @@ an auditable task handoff.
 
 HTTP matches come from the generated literal attribute-route catalog. Test
 matches additionally search test source paths and contents at query time.
+
+Frontend API discovery is strongest for direct literal calls. When a feature
+service inherits request helpers or composes endpoint suffixes through a base
+URL, a zero-result API query is inconclusive; inspect the service and its tests
+directly.

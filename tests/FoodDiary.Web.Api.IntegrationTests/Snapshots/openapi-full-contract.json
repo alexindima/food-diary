@@ -633,6 +633,24 @@
             "200",
             "400",
             "401",
+            "409",
+            "429",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/auth/google/link",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "409",
             "429",
             "500"
           ]

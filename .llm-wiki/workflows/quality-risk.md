@@ -24,3 +24,9 @@ sources:
 Use hotspots to choose review depth and refactoring candidates. Use test gaps to
 find nearby tests and verify whether behavior is covered indirectly before adding
 new tests. Never describe name-reference matching as real code coverage.
+
+For account linking, cover the success path, provider validation failure, email
+mismatch, identity owned by another user, idempotent retry, and refusal to
+replace a different linked identity. Frontend coverage should include the
+explanation state, post-password linking, success/failure navigation, and
+accessible status announcement.

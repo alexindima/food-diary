@@ -80,8 +80,15 @@ export class NavigationService {
         await this.router.navigate(['/fasting']);
     }
 
-    public async navigateToProfileAsync(): Promise<void> {
-        await this.router.navigate(['/profile']);
+    public async navigateToProfileAsync(options?: { googleLink?: 'success' | 'failed' }): Promise<void> {
+        if (options?.googleLink === undefined) {
+            await this.router.navigate(['/profile']);
+            return;
+        }
+
+        await this.router.navigate(['/profile'], {
+            queryParams: { googleLink: options.googleLink },
+        });
     }
 
     public async navigateToDietologistAsync(): Promise<void> {

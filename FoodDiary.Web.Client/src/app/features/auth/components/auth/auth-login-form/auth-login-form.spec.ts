@@ -31,6 +31,7 @@ function createComponent(): AuthLoginFormTestContext {
     fixture.componentRef.setInput('isRestoring', false);
     fixture.componentRef.setInput('showRestoreAction', false);
     fixture.componentRef.setInput('googleReady', true);
+    fixture.componentRef.setInput('googleLinkRequired', false);
     fixture.componentRef.setInput('loginSubmitLabelKey', 'AUTH.LOGIN.LOGIN');
     fixture.componentRef.setInput('isSubmitDisabled', false);
     fixture.detectChanges();
@@ -44,6 +45,17 @@ describe('AuthLoginFormComponent', () => {
 
         expect(component['formElement']()?.nativeElement.tagName).toBe('FORM');
         expect(component['googleButton']()?.nativeElement.classList.contains('auth__google-button')).toBe(true);
+    });
+
+    it('should explain the Google linking flow when required', () => {
+        const { fixture } = createComponent();
+        fixture.componentRef.setInput('googleLinkRequired', true);
+        fixture.detectChanges();
+
+        const notice = (fixture.nativeElement as HTMLElement).querySelector('[role="status"]');
+
+        expect(notice?.textContent).toContain('AUTH.GOOGLE.LINK_REQUIRED_TITLE');
+        expect(notice?.textContent).toContain('AUTH.GOOGLE.LINK_REQUIRED_DESCRIPTION');
     });
 
     it('should cancel native submit and delegate to FormRoot submission', async () => {

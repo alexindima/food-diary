@@ -2,6 +2,7 @@ using FoodDiary.Application.Authentication.Commands.AdminSsoExchange;
 using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
 using FoodDiary.Application.Authentication.Commands.GoogleLogin;
+using FoodDiary.Application.Authentication.Commands.LinkGoogle;
 using FoodDiary.Application.Authentication.Commands.LinkTelegram;
 using FoodDiary.Application.Authentication.Commands.Login;
 using FoodDiary.Application.Authentication.Commands.RefreshToken;
@@ -81,6 +82,14 @@ public static class AuthHttpMappings {
                 Credential: request.Credential,
                 RememberMe: request.RememberMe,
                 ClientContext: httpContext.ToAuthenticationClientContext("google"));
+        }
+    }
+
+    extension(GoogleLoginHttpRequest request) {
+        public LinkGoogleCommand ToLinkCommand(Guid userId) {
+            return new LinkGoogleCommand(
+                UserId: userId,
+                Credential: request.Credential);
         }
     }
 

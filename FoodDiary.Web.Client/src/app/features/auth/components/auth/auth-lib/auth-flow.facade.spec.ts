@@ -11,6 +11,7 @@ import { AuthFlowFacade } from './auth-flow.facade';
 let authServiceMock: {
     login: ReturnType<typeof vi.fn>;
     loginWithGoogle: ReturnType<typeof vi.fn>;
+    linkGoogle: ReturnType<typeof vi.fn>;
     register: ReturnType<typeof vi.fn>;
     requestPasswordReset: ReturnType<typeof vi.fn>;
     restoreAccount: ReturnType<typeof vi.fn>;
@@ -28,6 +29,7 @@ beforeEach(() => {
     authServiceMock = {
         login: vi.fn(),
         loginWithGoogle: vi.fn(),
+        linkGoogle: vi.fn(),
         register: vi.fn(),
         requestPasswordReset: vi.fn(),
         restoreAccount: vi.fn(),
@@ -99,13 +101,27 @@ describe('AuthFlowFacade register', () => {
 });
 
 describe('AuthFlowFacade simple flows', () => {
-    it('should return true for successful Google login and password reset request', async () => {
+    it('should return success for successful Google login and password reset request', async () => {
         const facade = TestBed.inject(AuthFlowFacade);
         authServiceMock.loginWithGoogle.mockReturnValue(of(createAuthResponse('en')));
         authServiceMock.requestPasswordReset.mockReturnValue(of({}));
 
-        await expect(firstValueFrom(facade.loginWithGoogle({ credential: 'credential', rememberMe: true }))).resolves.toBe(true);
+        await expect(firstValueFrom(facade.loginWithGoogle({ credential: 'credential', rememberMe: true }))).resolves.toBe('success');
         await expect(firstValueFrom(facade.requestPasswordReset({ email: 'user@example.com' }))).resolves.toBe(true);
+    });
+
+    it('should preserve the Google account-link-required outcome', async () => {
+        const facade = TestBed.inject(AuthFlowFacade);
+        authServiceMock.loginWithGoogle.mockReturnValue(throwError(() => createApiError('Authentication.GoogleAccountLinkRequired')));
+
+        await expect(firstValueFrom(facade.loginWithGoogle({ credential: 'credential' }))).resolves.toBe('accountLinkRequired');
+    });
+
+    it('should report authenticated Google linking outcome', async () => {
+        const facade = TestBed.inject(AuthFlowFacade);
+        authServiceMock.linkGoogle.mockReturnValue(of(undefined));
+
+        await expect(firstValueFrom(facade.linkGoogle('credential'))).resolves.toBe(true);
     });
 
     it('should return false for failed restore', async () => {

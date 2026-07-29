@@ -23,6 +23,14 @@
         color: var(--fd-color-text-muted);
     }
 
+    &__notice {
+        padding: var(--fd-space-md);
+        border: var(--fd-border-width-default) solid var(--fd-color-primary-200);
+        border-radius: var(--fd-radius-md);
+        background: color-mix(in srgb, var(--fd-color-primary-50) 82%, var(--fd-color-white));
+        color: var(--fd-color-text);
+    }
+
     &__link {
         align-self: flex-start;
         margin-top: calc(var(--fd-border-width-strong) - var(--fd-space-xs));

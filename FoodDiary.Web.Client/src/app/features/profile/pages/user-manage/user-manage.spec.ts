@@ -34,6 +34,7 @@ let dialogService: { open: ReturnType<typeof vi.fn> };
 let router: { navigate: ReturnType<typeof vi.fn> };
 let notificationService: NotificationServiceMock;
 let notificationsFacade: UserManageNotificationsFacadeMock;
+let toastService: ReturnType<typeof createToastServiceMock>;
 
 describe('UserManageComponent dietologist invite state', () => {
     it('keeps invite mode when no dietologist relationship exists', async () => {
@@ -332,6 +333,25 @@ describe('UserManageComponent profile autosave feedback', () => {
 });
 
 describe('UserManageComponent profile normalization and intents', () => {
+    it('shows Google linking success and clears the transient query parameter', async () => {
+        await createComponentAsync(null, false, null, { googleLink: 'success' });
+
+        expect(toastService.success).toHaveBeenCalledWith('USER_MANAGE.GOOGLE_LINK_SUCCESS');
+        expect(router.navigate).toHaveBeenCalledOnce();
+        const navigateOptions: unknown = router.navigate.mock.calls[0]?.[1];
+        expect(navigateOptions).toMatchObject({
+            queryParams: { googleLink: null },
+            queryParamsHandling: 'merge',
+            replaceUrl: true,
+        });
+    });
+
+    it('shows Google linking failure and clears the transient query parameter', async () => {
+        await createComponentAsync(null, false, null, { googleLink: 'failed' });
+
+        expect(toastService.error).toHaveBeenCalledWith('USER_MANAGE.GOOGLE_LINK_ERROR');
+    });
+
     it('normalizes legacy profile select values from user overview', async () => {
         await createComponentAsync(null, false, {
             id: 'u1',
@@ -475,6 +495,7 @@ async function createComponentAsync(
         notificationsChangedVersion: signal(0),
     };
     notificationsFacade = createUserManageNotificationsFacadeMock(notificationService.notificationsChangedVersion);
+    toastService = createToastServiceMock();
 
     await TestBed.configureTestingModule({
         imports: [UserManageComponent],
@@ -508,7 +529,7 @@ function createTestingProviders(queryParams: Record<string, string>): unknown[] 
         { provide: LocalizationService, useValue: createLocalizationServiceMock() },
         { provide: NotificationService, useValue: notificationService },
         { provide: PushNotificationService, useValue: createPushNotificationServiceMock() },
-        { provide: FdUiToastService, useValue: createToastServiceMock() },
+        { provide: FdUiToastService, useValue: toastService },
         { provide: FdUiDialogService, useValue: dialogService },
         { provide: FrontendObservabilityService, useValue: createFrontendObservabilityServiceMock() },
     ];

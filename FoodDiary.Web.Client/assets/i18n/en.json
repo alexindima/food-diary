@@ -148,7 +148,10 @@
             "OR": "or continue with",
             "LOGIN_BUTTON": "Continue with Google",
             "REGISTER_BUTTON": "Register with Google",
-            "UNAVAILABLE": "Google sign-in is unavailable right now."
+            "UNAVAILABLE": "Google sign-in is unavailable right now.",
+            "LINK_REQUIRED_TITLE": "This email already has a FoodDiary account",
+            "LINK_REQUIRED_DESCRIPTION": "For your security, sign in with your existing email and password. We will then link the Google account you just confirmed.",
+            "LINK_REQUIRED_ACTION": "Enter the password for your existing FoodDiary account to continue."
         },
         "VERIFY": {
             "TITLE": "Email verification",
@@ -3997,6 +4000,8 @@
         "SHARED_RECIPE_BADGE": "Shared"
     },
     "USER_MANAGE": {
+        "GOOGLE_LINK_SUCCESS": "Google was linked successfully. You can use it to sign in next time.",
+        "GOOGLE_LINK_ERROR": "You are signed in, but Google could not be linked. Please try again from the sign-in page.",
         "EDIT_TITLE": "Profile",
         "EDIT_SUBTITLE": "Personal details, goals and settings",
         "EMAIL": "Email",

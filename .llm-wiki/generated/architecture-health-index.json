@@ -10,7 +10,7 @@
                     "unconsumedBackendContracts":  0,
                     "selectorUnreferencedComponents":  121,
                     "componentsWithoutDirectSpecs":  107,
-                    "criticalSymbolsWithoutTestReferences":  25,
+                    "criticalSymbolsWithoutTestReferences":  26,
                     "explicitDebtMarkers":  2
                 },
     "projectDependencyViolations":  [
@@ -4573,6 +4573,16 @@
                                                      "name":  "IngestMailRelayDeliveryEventCommandValidator",
                                                      "role":  "Validator",
                                                      "path":  "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommandValidator.cs",
+                                                     "line":  4,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
+                                                     "name":  "LinkGoogleCommandValidator",
+                                                     "role":  "Validator",
+                                                     "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandValidator.cs",
                                                      "line":  4,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [

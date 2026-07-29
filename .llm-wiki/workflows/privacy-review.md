@@ -30,3 +30,8 @@ user-facing disclosure. Confirm every candidate against source semantics.
 Plain fields named `Token` are classified as credential candidates as well as
 more specific access, refresh, and hash forms; callers must still confirm the
 field's semantics in source.
+
+External identity credentials used to bridge an anonymous login attempt into an
+authenticated linking request should remain in memory only. Do not place them
+in URLs, router state persisted across reloads, browser storage, logs,
+telemetry, queues, or error messages.

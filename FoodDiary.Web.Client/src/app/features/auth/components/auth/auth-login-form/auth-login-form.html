@@ -5,6 +5,13 @@
     [attr.aria-busy]="isSubmitting() || isRestoring()"
     (input)="loginNativeInput.emit()"
 >
+    @if (googleLinkRequired()) {
+        <div class="auth__notice fd-stack fd-gap-xs" role="status" aria-live="polite">
+            <strong>{{ 'AUTH.GOOGLE.LINK_REQUIRED_TITLE' | translate }}</strong>
+            <span>{{ 'AUTH.GOOGLE.LINK_REQUIRED_DESCRIPTION' | translate }}</span>
+        </div>
+    }
+
     @let loginErrors = errors();
     <div class="auth__field fd-stack fd-gap-xs">
         <fd-ui-input

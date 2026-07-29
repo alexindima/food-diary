@@ -33,6 +33,7 @@ export class AuthLoginFormComponent {
     public readonly isRestoring = input.required<boolean>();
     public readonly showRestoreAction = input.required<boolean>();
     public readonly googleReady = input.required<boolean>();
+    public readonly googleLinkRequired = input.required<boolean>();
     public readonly loginSubmitLabelKey = input.required<string>();
     public readonly isSubmitDisabled = input.required<boolean>();
 

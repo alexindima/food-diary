@@ -185,6 +185,7 @@ export class UserManageComponent {
         this.watchUserFormElement();
         this.watchLanguageChanges();
         this.watchPasswordSetupIntent();
+        this.watchGoogleLinkResult();
         this.watchUserProfile();
         this.watchPasswordSetupDialog();
         this.watchDietologistRelationship();
@@ -238,6 +239,19 @@ export class UserManageComponent {
     private watchPasswordSetupIntent(): void {
         this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
             this.pendingPasswordSetupIntent.set(params.get('intent') === 'set-password');
+        });
+    }
+
+    private watchGoogleLinkResult(): void {
+        this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
+            const result = params.get('googleLink');
+            if (result === 'success') {
+                this.toastService.success(this.translateService.instant('USER_MANAGE.GOOGLE_LINK_SUCCESS'));
+                void this.clearGoogleLinkQueryParamAsync();
+            } else if (result === 'failed') {
+                this.toastService.error(this.translateService.instant('USER_MANAGE.GOOGLE_LINK_ERROR'));
+                void this.clearGoogleLinkQueryParamAsync();
+            }
         });
     }
 
@@ -771,6 +785,15 @@ export class UserManageComponent {
         await this.router.navigate([], {
             relativeTo: this.route,
             queryParams: { intent: null },
+            queryParamsHandling: 'merge',
+            replaceUrl: true,
+        });
+    }
+
+    private async clearGoogleLinkQueryParamAsync(): Promise<void> {
+        await this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { googleLink: null },
             queryParamsHandling: 'merge',
             replaceUrl: true,
         });

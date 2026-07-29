@@ -22,6 +22,7 @@ type AuthComponentTestContext = {
         requestPasswordReset: ReturnType<typeof vi.fn>;
         restoreAccount: ReturnType<typeof vi.fn>;
         loginWithGoogle: ReturnType<typeof vi.fn>;
+        linkGoogle: ReturnType<typeof vi.fn>;
     };
     component: AuthComponent;
     fixture: ComponentFixture<AuthComponent>;
@@ -29,6 +30,7 @@ type AuthComponentTestContext = {
     navigationServiceSpy: {
         navigateToEmailVerificationPendingAsync: ReturnType<typeof vi.fn>;
         navigateToReturnUrlAsync: ReturnType<typeof vi.fn>;
+        navigateToProfileAsync: ReturnType<typeof vi.fn>;
     };
     routerSpy: { navigate: ReturnType<typeof vi.fn> };
     dialogRefSpy: { close: ReturnType<typeof vi.fn> };
@@ -41,6 +43,7 @@ function createComponent(mode = 'login'): AuthComponentTestContext {
         requestPasswordReset: vi.fn(),
         restoreAccount: vi.fn(),
         loginWithGoogle: vi.fn(),
+        linkGoogle: vi.fn(),
     };
     const authServiceSpy = {
         isAuthenticated: vi.fn().mockReturnValue(false),
@@ -51,6 +54,7 @@ function createComponent(mode = 'login'): AuthComponentTestContext {
     const navigationServiceSpy = {
         navigateToEmailVerificationPendingAsync: vi.fn().mockResolvedValue(void 0),
         navigateToReturnUrlAsync: vi.fn().mockResolvedValue(void 0),
+        navigateToProfileAsync: vi.fn().mockResolvedValue(void 0),
     };
     const routerSpy = { navigate: vi.fn().mockResolvedValue(true) };
     const dialogRefSpy = { close: vi.fn() };
@@ -166,6 +170,34 @@ describe('AuthComponent login', () => {
         expect(authFlowFacadeSpy.restoreAccount).toHaveBeenCalledOnce();
         expect(component['isRestoring']()).toBe(false);
         expect(component['globalError']()).toBeNull();
+    });
+
+    it('should link the confirmed Google identity after password login and open profile', async () => {
+        const { authFlowFacadeSpy, component, navigationServiceSpy } = createComponent();
+        authFlowFacadeSpy.login.mockReturnValue(of('success'));
+        authFlowFacadeSpy.linkGoogle.mockReturnValue(of(true));
+        component['pendingGoogleLinkCredential'] = 'google-credential';
+        component['googleLinkRequired'].set(true);
+        component['loginModel'].set({ email: 'user@example.com', password: 'password123', rememberMe: false });
+
+        await submit(component['loginForm']);
+
+        expect(authFlowFacadeSpy.linkGoogle).toHaveBeenCalledWith('google-credential');
+        expect(navigationServiceSpy.navigateToProfileAsync).toHaveBeenCalledWith({ googleLink: 'success' });
+        expect(component['pendingGoogleLinkCredential']).toBeNull();
+    });
+});
+
+describe('AuthComponent Google login', () => {
+    it('should explain the required password login and retain the credential only in memory', async () => {
+        const { component } = createComponent('register');
+
+        await component['prepareGoogleLinkLoginAsync']('google-credential');
+
+        expect(component['authMode']).toBe('login');
+        expect(component['googleLinkRequired']()).toBe(true);
+        expect(component['pendingGoogleLinkCredential']).toBe('google-credential');
+        expect(component['globalError']()).toBe('AUTH.GOOGLE.LINK_REQUIRED_ACTION');
     });
 });
 

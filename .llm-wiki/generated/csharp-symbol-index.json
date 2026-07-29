@@ -8,20 +8,20 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  2951,
-                    "symbols":  2991,
+                    "sourceFiles":  2954,
+                    "symbols":  2994,
                     "interfaceImplementationLinks":  220,
                     "dependencyInjectionRegistrations":  218,
                     "kinds":  {
-                                  "class":  1513,
+                                  "class":  1515,
                                   "enum":  43,
                                   "interface":  395,
-                                  "record":  932,
+                                  "record":  933,
                                   "record struct":  108
                               },
                     "roles":  {
-                                  "Command":  148,
-                                  "CommandHandler":  144,
+                                  "Command":  149,
+                                  "CommandHandler":  145,
                                   "Configuration":  77,
                                   "Controller":  84,
                                   "Entity":  76,
@@ -41,7 +41,7 @@
                                   "Request":  121,
                                   "Response":  161,
                                   "Service":  251,
-                                  "Validator":  174,
+                                  "Validator":  175,
                                   "ValueObject":  118,
                                   "WriteRepository":  47
                               }
@@ -5043,6 +5043,27 @@
                         "kind":  "class",
                         "role":  "Validator",
                         "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "LinkGoogleCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "LinkGoogleCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "LinkGoogleCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandValidator.cs",
                         "line":  4
                     },
                     {
@@ -16411,7 +16432,7 @@
                         "kind":  "class",
                         "role":  "Controller",
                         "path":  "FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs",
-                        "line":  19
+                        "line":  21
                     },
                     {
                         "name":  "AuthTelegramController",
@@ -16425,7 +16446,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Presentation.Api/Features/Auth/Mappings/AuthHttpMappings.cs",
-                        "line":  21
+                        "line":  22
                     },
                     {
                         "name":  "AuthHttpResponseMappings",

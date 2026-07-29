@@ -185,6 +185,12 @@ export class AuthService extends ApiService {
         );
     }
 
+    public linkGoogle(credential: string): Observable<void> {
+        return this.post<void>('google/link', { credential }).pipe(
+            catchError((error: unknown) => rethrowApiError('Google link error', error)),
+        );
+    }
+
     public requestPasswordReset(data: PasswordResetRequest): Observable<void> {
         return this.post<void>('password-reset/request', {
             email: data.email,

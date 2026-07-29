@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "contracts":  979,
+                    "contracts":  980,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  6786,
-                    "productionConsumerEdges":  4133,
-                    "testConsumerEdges":  2653,
-                    "consumedContracts":  979,
+                    "consumerEdges":  6799,
+                    "productionConsumerEdges":  4142,
+                    "testConsumerEdges":  2657,
+                    "consumedContracts":  980,
                     "unconsumedContracts":  0
                 },
     "contracts":  [
@@ -12347,6 +12347,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Presentation.Api/Features/Lessons/Responses/LessonSummaryHttpResponse.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "LinkGoogleCommand",
+                          "roles":  [
+                                        "Command"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -38221,7 +38237,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs",
                               "isTest":  false,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "GoogleLoginHttpRequest",
@@ -38234,7 +38250,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Auth/Mappings/AuthHttpMappings.cs",
                               "isTest":  false,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "GoogleLoginHttpRequest",
@@ -38247,7 +38263,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AuthHttpMappingsTests.cs",
                               "isTest":  true,
-                              "referenceCount":  2
+                              "referenceCount":  3
                           },
                           {
                               "contract":  "GoogleLoginHttpRequest",
@@ -38260,7 +38276,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AuthSessionControllerTests.cs",
                               "isTest":  true,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "HealthAreaScoreHttpResponse",
@@ -41495,6 +41511,19 @@
                                                       "FoodDiary.Application/Authentication/Common/IAuthenticationUserMutationService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAuthenticationUserMutationService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Authentication/Common/IAuthenticationUserMutationService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -43913,6 +43942,19 @@
                                                       "FoodDiary.Application/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -45643,6 +45685,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -58864,6 +58919,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IGoogleTokenValidator",
+                              "roles":  [
+                                            "Validator"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -76726,7 +76794,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AuthSessionControllerTests.cs",
                               "isTest":  true,
-                              "referenceCount":  8
+                              "referenceCount":  9
                           },
                           {
                               "contract":  "IRequest",
@@ -78962,7 +79030,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AuthSessionControllerTests.cs",
                               "isTest":  true,
-                              "referenceCount":  9
+                              "referenceCount":  10
                           },
                           {
                               "contract":  "ISender",
@@ -81990,6 +82058,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Ai/Services/AiUserContextService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserContextService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Users/Common/IUserContextService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -88856,6 +88937,84 @@
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
                               "isTest":  true,
                               "referenceCount":  1
+                          },
+                          {
+                              "contract":  "LinkGoogleCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "LinkGoogleCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandValidator.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "LinkGoogleCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Auth/Mappings/AuthHttpMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "LinkGoogleCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ExternalLogin.cs",
+                              "isTest":  true,
+                              "referenceCount":  5
+                          },
+                          {
+                              "contract":  "LinkGoogleCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AuthHttpMappingsTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "LinkGoogleCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AuthSessionControllerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "LinkProductToUsdaFoodCommand",
@@ -102607,6 +102766,19 @@
                                                       "FoodDiary.Presentation.Api/Features/Users/Responses/UserHttpResponse.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "UserHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Users/Responses/UserHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Auth/Responses/AuthenticationHttpResponse.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -102662,6 +102834,19 @@
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Users/UsersController.cs",
                               "isTest":  false,
                               "referenceCount":  3
+                          },
+                          {
+                              "contract":  "UserHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Users/Responses/UserHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AuthSessionControllerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "UserHttpResponse",

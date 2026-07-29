@@ -3,11 +3,11 @@
     "summary":  {
                     "components":  398,
                     "componentsWithoutDirectSpecs":  107,
-                    "inputs":  1135,
+                    "inputs":  1136,
                     "outputs":  390,
                     "apiCalls":  46,
                     "templatesWithTranslations":  238,
-                    "translationKeys":  1162,
+                    "translationKeys":  1164,
                     "consumerEdges":  896,
                     "consumedComponents":  276,
                     "unconsumedComponents":  121
@@ -740,6 +740,11 @@
                                           },
                                           {
                                               "name":  "googleReady",
+                                              "type":  "boolean",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "googleLinkRequired",
                                               "type":  "boolean",
                                               "required":  true
                                           },
@@ -12756,6 +12761,8 @@
                                  "feature":  "auth",
                                  "path":  "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-login-form/auth-login-form.html",
                                  "keys":  [
+                                              "AUTH.GOOGLE.LINK_REQUIRED_DESCRIPTION",
+                                              "AUTH.GOOGLE.LINK_REQUIRED_TITLE",
                                               "AUTH.GOOGLE.LOGIN_BUTTON",
                                               "AUTH.GOOGLE.OR",
                                               "AUTH.LOGIN.EMAIL",
@@ -15976,6 +15983,7 @@
                               "inputsUsed":  [
                                                  "errors",
                                                  "globalError",
+                                                 "googleLinkRequired",
                                                  "googleReady",
                                                  "isRestoring",
                                                  "isSubmitDisabled",

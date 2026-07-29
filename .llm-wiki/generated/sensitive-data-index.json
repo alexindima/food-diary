@@ -5,8 +5,8 @@
                       "potentialLogging":  "A logging call near a candidate field name. This is a review lead, not proof that a runtime value is logged."
                   },
     "summary":  {
-                    "candidateFields":  1357,
-                    "credential":  146,
+                    "candidateFields":  1358,
+                    "credential":  147,
                     "identity":  141,
                     "health":  582,
                     "financial":  191,
@@ -189,6 +189,13 @@
                        "type":  "string",
                        "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommand.cs",
                        "line":  9
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Credential",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs",
+                       "line":  7
                    },
                    {
                        "category":  "credential",

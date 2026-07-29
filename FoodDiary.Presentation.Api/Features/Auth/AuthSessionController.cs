@@ -3,6 +3,8 @@ using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Auth.Mappings;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Responses;
+using FoodDiary.Presentation.Api.Features.Users.Mappings;
+using FoodDiary.Presentation.Api.Features.Users.Responses;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
@@ -38,10 +40,22 @@ public sealed class AuthSessionController(ISender mediator, ILogger<AuthSessionC
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public Task<IActionResult> GoogleLogin([FromBody] GoogleLoginHttpRequest request) =>
         HandleObservedOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse(), logger, "auth.google-login");
+
+    [Authorize]
+    [HttpPost("google/link")]
+    [ProducesResponseType<UserHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    public Task<IActionResult> LinkGoogle([FromCurrentUser] Guid userId, [FromBody] GoogleLoginHttpRequest request) =>
+        HandleObservedOk(request.ToLinkCommand(userId), static value => value.ToHttpResponse(), logger, "auth.google-link", userId);
 
     [HttpPost("refresh")]
     [EnableIdempotency]

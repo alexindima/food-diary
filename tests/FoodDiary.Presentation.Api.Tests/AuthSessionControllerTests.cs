@@ -1,5 +1,6 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Authentication.Commands.GoogleLogin;
+using FoodDiary.Application.Authentication.Commands.LinkGoogle;
 using FoodDiary.Application.Authentication.Commands.Login;
 using FoodDiary.Application.Authentication.Commands.RefreshToken;
 using FoodDiary.Application.Authentication.Commands.Register;
@@ -12,6 +13,7 @@ using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Responses;
+using FoodDiary.Presentation.Api.Features.Users.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -75,6 +77,25 @@ public sealed class AuthSessionControllerTests {
         Assert.Equal("google-credential", command.Credential);
         Assert.True(command.RememberMe);
         Assert.Equal("google", command.ClientContext!.AuthProvider);
+    }
+
+    [Fact]
+    public async Task LinkGoogle_SendsAuthenticatedCommandAndReturnsUserResponse() {
+        UserModel model = CreateUserModel();
+        IRequest<Result<UserModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
+        AuthSessionController controller = CreateController(sender);
+        var userId = Guid.NewGuid();
+        var request = new GoogleLoginHttpRequest("google-credential");
+
+        IActionResult result = await controller.LinkGoogle(userId, request);
+
+        OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
+        UserHttpResponse response = Assert.IsType<UserHttpResponse>(ok.Value);
+        Assert.Equal(model.Email, response.Email);
+        LinkGoogleCommand command = Assert.IsType<LinkGoogleCommand>(sentRequest);
+        Assert.Equal(userId, command.UserId);
+        Assert.Equal("google-credential", command.Credential);
     }
 
     [Fact]

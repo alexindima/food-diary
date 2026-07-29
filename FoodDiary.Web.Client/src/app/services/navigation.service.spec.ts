@@ -85,4 +85,11 @@ describe('NavigationService', () => {
         await service.navigateToProfileAsync();
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/profile']);
     });
+
+    it('should navigate to profile with Google link result', async () => {
+        await service.navigateToProfileAsync({ googleLink: 'success' });
+        expect(routerSpy.navigate).toHaveBeenCalledWith(['/profile'], {
+            queryParams: { googleLink: 'success' },
+        });
+    });
 });

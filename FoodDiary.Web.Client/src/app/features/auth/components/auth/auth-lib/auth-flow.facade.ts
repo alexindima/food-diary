@@ -9,6 +9,7 @@ import type { GoogleLoginRequest } from '../../../models/google-auth.data';
 
 export type AuthLoginResult = 'success' | 'invalidCredentials' | 'accountDeleted' | 'unknown';
 export type AuthRegisterResult = 'success' | 'emailExists' | 'accountDeleted' | 'unknown';
+export type GoogleLoginResult = 'success' | 'accountLinkRequired' | 'unknown';
 
 @Service()
 export class AuthFlowFacade {
@@ -50,9 +51,21 @@ export class AuthFlowFacade {
             );
     }
 
-    public loginWithGoogle(request: GoogleLoginRequest): Observable<boolean> {
+    public loginWithGoogle(request: GoogleLoginRequest): Observable<GoogleLoginResult> {
         return this.authService.loginWithGoogle(request).pipe(
             concatMap(response => this.prepareAuthenticatedLocalization(response)),
+            map(() => 'success' as const),
+            catchError((error: unknown) => {
+                const errorCode = this.getApiErrorCode(error);
+                const result: GoogleLoginResult =
+                    errorCode === 'Authentication.GoogleAccountLinkRequired' ? 'accountLinkRequired' : 'unknown';
+                return of(result);
+            }),
+        );
+    }
+
+    public linkGoogle(credential: string): Observable<boolean> {
+        return this.authService.linkGoogle(credential).pipe(
             map(() => true),
             catchError(() => of(false)),
         );

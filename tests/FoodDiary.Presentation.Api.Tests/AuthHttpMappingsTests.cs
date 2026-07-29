@@ -2,6 +2,7 @@ using FoodDiary.Application.Authentication.Commands.AdminSsoExchange;
 using FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
 using FoodDiary.Application.Authentication.Commands.GoogleLogin;
 using FoodDiary.Application.Authentication.Commands.LinkTelegram;
+using FoodDiary.Application.Authentication.Commands.LinkGoogle;
 using FoodDiary.Application.Authentication.Commands.Login;
 using FoodDiary.Application.Authentication.Commands.RefreshToken;
 using FoodDiary.Application.Authentication.Commands.Register;
@@ -123,6 +124,17 @@ public sealed class AuthHttpMappingsTests {
         Assert.Equal("google", command.ClientContext!.AuthProvider);
         Assert.Equal("203.0.113.13", command.ClientContext.IpAddress);
         Assert.Equal("GoogleAgent/1.0", command.ClientContext.UserAgent);
+    }
+
+    [Fact]
+    public void GoogleLoginRequest_ToLinkCommand_MapsUserIdAndCredential() {
+        var userId = Guid.NewGuid();
+        var request = new GoogleLoginHttpRequest("google-credential");
+
+        LinkGoogleCommand command = request.ToLinkCommand(userId);
+
+        Assert.Equal(userId, command.UserId);
+        Assert.Equal(request.Credential, command.Credential);
     }
 
     [Fact]

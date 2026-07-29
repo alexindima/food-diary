@@ -25,3 +25,8 @@ The guard reports removed paths, operations, documented responses, and newly
 required parameters as breaking. New paths and operations are additive. It is a
 focused compatibility gate, not a substitute for integration tests or review of
 schema semantics, authorization, error shapes, and status-code behavior.
+
+For authentication-provider linking, review the anonymous login operation and
+the authenticated linking operation together. A new linking route may be
+additive while newly documented `409` outcomes still require frontend handling
+and updated focused/full OpenAPI snapshots.
