@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Verify LLM Wiki
+      - name: Verify LLM Wiki (full)
         shell: pwsh
         env:
           EVENT_BEFORE: ${{ github.event.before }}

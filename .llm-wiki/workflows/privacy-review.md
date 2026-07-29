@@ -27,3 +27,6 @@ For a changed field or flow, review purpose/minimization, consent or lawful
 basis, ownership/authorization, encryption and secret handling, cache/queue/log
 copies, provider sharing, export, retention/deletion, backups, telemetry, and
 user-facing disclosure. Confirm every candidate against source semantics.
+Plain fields named `Token` are classified as credential candidates as well as
+more specific access, refresh, and hash forms; callers must still confirm the
+field's semantics in source.

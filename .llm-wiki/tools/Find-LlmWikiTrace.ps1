@@ -26,6 +26,45 @@ function Get-LineNumber {
     return 1 + ([regex]::Matches($Content.Substring(0, [Math]::Max(0, $Index)), "`n")).Count
 }
 
+function Get-SearchTerms {
+    param([string]$Text)
+
+    $aliases = @{
+        'dietitian' = 'dietologist'; 'nutritionist' = 'dietologist'
+        'invitation' = 'invite'; 'inviting' = 'invite'; 'invited' = 'invite'
+        'mail' = 'email'
+        'url' = 'link'
+    }
+    # Keep the script Windows PowerShell 5 compatible: non-ASCII aliases are
+    # represented as JSON escapes so the file does not depend on a UTF-8 BOM.
+    $aliases[(ConvertFrom-Json '"\u0434\u0438\u0435\u0442\u043e\u043b\u043e\u0433"')] = 'dietologist'
+    $aliases[(ConvertFrom-Json '"\u0434\u0438\u0435\u0442\u043e\u043b\u043e\u0433\u0430"')] = 'dietologist'
+    $aliases[(ConvertFrom-Json '"\u0434\u0438\u0435\u0442\u043e\u043b\u043e\u0433\u0443"')] = 'dietologist'
+    $aliases[(ConvertFrom-Json '"\u043f\u0440\u0438\u0433\u043b\u0430\u0441\u0438\u0442\u044c"')] = 'invite'
+    $aliases[(ConvertFrom-Json '"\u043f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435"')] = 'invite'
+    $aliases[(ConvertFrom-Json '"\u043f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u044f"')] = 'invite'
+    $aliases[(ConvertFrom-Json '"\u043f\u043e\u0447\u0442\u0430"')] = 'email'
+    $aliases[(ConvertFrom-Json '"\u043f\u0438\u0441\u044c\u043c\u043e"')] = 'email'
+    $aliases[(ConvertFrom-Json '"\u043f\u0438\u0441\u044c\u043c\u0435"')] = 'email'
+    $aliases[(ConvertFrom-Json '"\u0441\u0441\u044b\u043b\u043a\u0430"')] = 'link'
+    $aliases[(ConvertFrom-Json '"\u0441\u0441\u044b\u043b\u043a\u0435"')] = 'link'
+    $aliases[(ConvertFrom-Json '"\u0441\u0441\u044b\u043b\u043a\u0443"')] = 'link'
+    $stopWords = @('a', 'an', 'and', 'for', 'from', 'in', 'of', 'on', 'the', 'to', 'with',
+        'bug')
+
+    return @(
+        [regex]::Matches($Text.ToLowerInvariant(), '[\p{L}\p{Nd}]+') |
+            ForEach-Object {
+                $term = $_.Value
+                if ($aliases.ContainsKey($term)) { $aliases[$term] } else { $term }
+            } |
+            Where-Object { $_.Length -ge 3 -and $_ -notin $stopWords } |
+            Sort-Object -Unique
+    )
+}
+
+$queryTerms = @(Get-SearchTerms $Query)
+
 $sourceFiles = @(
     Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
         Where-Object {
@@ -34,18 +73,40 @@ $sourceFiles = @(
         } |
         Sort-Object FullName
 )
+$sourceDocuments = @(
+    foreach ($file in $sourceFiles) {
+        [pscustomobject]@{
+            file = $file
+            content = [System.IO.File]::ReadAllText($file.FullName)
+            repositoryPath = ConvertTo-RepositoryPath $file.FullName
+            isTest = $file.FullName -match '[\\/]tests[\\/]'
+        }
+    }
+)
 
 $handlerCandidates = [System.Collections.Generic.List[object]]::new()
-foreach ($file in $sourceFiles) {
-    if ($file.FullName -match '[\\/]tests[\\/]') { continue }
-    $content = [System.IO.File]::ReadAllText($file.FullName)
+foreach ($document in $sourceDocuments) {
+    if ($document.isTest) { continue }
+    $file = $document.file
+    $content = $document.content
     $handlerMatches = [regex]::Matches(
         $content,
         '(?ms)(?:class|sealed\s+class)\s+(?<handler>[A-Za-z_][A-Za-z0-9_]*)\s*(?<ctor>\([^;{]*?\))?\s*:\s*I(?:Command|Query|Request)Handler\s*<\s*(?<request>[A-Za-z_][A-Za-z0-9_]*)')
     foreach ($match in $handlerMatches) {
         $requestName = $match.Groups['request'].Value
         $handlerName = $match.Groups['handler'].Value
-        if ($requestName -notlike "*$Query*" -and $handlerName -notlike "*$Query*") { continue }
+        $repositoryPath = $document.repositoryPath
+        $searchableText = "$requestName $handlerName $repositoryPath $content".ToLowerInvariant()
+        $matchedTerms = @($queryTerms | Where-Object { $searchableText.Contains($_) })
+        $exactNameMatch = $requestName -like "*$Query*" -or $handlerName -like "*$Query*"
+        if (-not $exactNameMatch -and $matchedTerms.Count -eq 0) { continue }
+        $score = ($matchedTerms.Count * 10)
+        if ($exactNameMatch) { $score += 100 }
+        foreach ($term in $matchedTerms) {
+            if ($requestName.ToLowerInvariant().Contains($term)) { $score += 8 }
+            if ($handlerName.ToLowerInvariant().Contains($term)) { $score += 6 }
+            if ($repositoryPath.ToLowerInvariant().Contains($term)) { $score += 3 }
+        }
 
         $dependencies = [System.Collections.Generic.List[string]]::new()
         $constructorText = $match.Groups['ctor'].Value
@@ -61,24 +122,27 @@ foreach ($file in $sourceFiles) {
         $handlerCandidates.Add([pscustomobject]@{
             request = $requestName
             handler = $handlerName
-            path = ConvertTo-RepositoryPath $file.FullName
+            path = $repositoryPath
             line = Get-LineNumber $content $match.Index
             dependencies = @($dependencies | Sort-Object -Unique)
+            score = $score
+            matchedTerms = $matchedTerms
         })
     }
 }
 
 $results = [System.Collections.Generic.List[object]]::new()
-foreach ($candidate in ($handlerCandidates | Select-Object -First $Limit)) {
+foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'; Descending = $true }, request, path | Select-Object -First $Limit)) {
     $requestPattern = "\b$([regex]::Escape($candidate.request))\b"
     $requestDefinition = $null
     $implementations = [System.Collections.Generic.List[object]]::new()
     $presentation = [System.Collections.Generic.List[object]]::new()
     $tests = [System.Collections.Generic.List[object]]::new()
 
-    foreach ($file in $sourceFiles) {
-        $content = [System.IO.File]::ReadAllText($file.FullName)
-        $repositoryPath = ConvertTo-RepositoryPath $file.FullName
+    foreach ($document in $sourceDocuments) {
+        $file = $document.file
+        $content = $document.content
+        $repositoryPath = $document.repositoryPath
 
         if ($null -eq $requestDefinition -and
             $content -match "(?:record|class)\s+$([regex]::Escape($candidate.request))\b") {
@@ -92,7 +156,7 @@ foreach ($candidate in ($handlerCandidates | Select-Object -First $Limit)) {
         }
 
         foreach ($dependency in $candidate.dependencies) {
-            if ($file.FullName -match '[\\/]tests[\\/]') { continue }
+            if ($document.isTest) { continue }
             $plainDependency = $dependency -replace '<.*$', ''
             $implementationMatch = [regex]::Match(
                 $content,
@@ -117,7 +181,7 @@ foreach ($candidate in ($handlerCandidates | Select-Object -First $Limit)) {
             })
         }
 
-        if ($file.FullName -match '[\\/]tests[\\/]' -and
+        if ($document.isTest -and
             ($content -match $requestPattern -or $content -match "\b$([regex]::Escape($candidate.handler))\b")) {
             $tests.Add([pscustomobject]@{ path = $repositoryPath })
         }
@@ -125,6 +189,11 @@ foreach ($candidate in ($handlerCandidates | Select-Object -First $Limit)) {
 
     $results.Add([pscustomobject]@{
         request = $candidate.request
+        match = [pscustomobject]@{
+            score = $candidate.score
+            queryTerms = $queryTerms
+            matchedTerms = $candidate.matchedTerms
+        }
         requestDefinition = $requestDefinition
         handler = [pscustomobject]@{
             name = $candidate.handler

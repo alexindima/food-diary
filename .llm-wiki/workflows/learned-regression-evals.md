@@ -48,4 +48,7 @@ Static evals cover known architectural scenarios. Learned evals extend that suit
 - Static and learned case IDs must remain globally unique.
 - Audit and handoff expose pending and applied cases with the registry fingerprint.
 
-The active eval suite therefore grows from evidence, but no single task can silently redefine expected behavior.
+The active eval suite therefore grows from evidence, but no single task can silently redefine expected behavior. Static cases may also preserve verified
+real-bug lessons with optional trace and privacy expectations; the dietologist
+invitation-link case protects both natural-language discovery and token
+classification.

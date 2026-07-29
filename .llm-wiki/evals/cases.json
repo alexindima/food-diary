@@ -215,6 +215,21 @@
       "expectedRules": ["architecture-drift", "dependency-nuget", "architecture-decision"],
       "expectedChecks": ["architecture-health", "architecture-tests", "nuget-vulnerability-audit"],
       "expectedViolationRules": []
+    },
+    {
+      "id": "dietologist-invitation-email-link-regression",
+      "changedPaths": [
+        "FoodDiary.Application/Dietologist/Services/DietologistEmailSender.cs"
+      ],
+      "expectedModules": ["Dietologist"],
+      "expectedScopes": ["Backend"],
+      "expectedRules": ["backend-boundaries"],
+      "expectedChecks": ["architecture-tests"],
+      "expectedViolationRules": [],
+      "traceQuery": "dietologist invitation email link",
+      "expectedTraceRequests": ["InviteDietologistCommand"],
+      "privacyQuery": "DietologistInvitationMessage",
+      "expectedPrivacyFields": ["credential:Token", "identity:ToEmail"]
     }
   ]
 }

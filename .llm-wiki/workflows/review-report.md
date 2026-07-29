@@ -37,3 +37,6 @@ acceptance, or evidence files. Missing optional governance artifacts therefore
 appear as `conditional` instead of making an otherwise valid pull request fail.
 Use the strict readiness command when those artifacts are part of the delivery
 contract.
+
+The CI step is labeled as full Wiki verification because it includes the
+complete developer-tool smoke suite in addition to index and eval checks.

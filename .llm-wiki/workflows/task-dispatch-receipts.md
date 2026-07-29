@@ -29,6 +29,10 @@ accepted it. `task-dispatch-start` atomically acquires a task lease and writes a
 receipt containing the workspace, owner, lane, lease identifier, and current
 packet fingerprint.
 
+Router changes affecting these commands are covered by `wiki verify-full`;
+the faster `wiki verify` gate intentionally omits the exhaustive tool-smoke
+scenarios while retaining index, eval, policy, and impact checks.
+
 Every lifecycle event (`started`, `heartbeat`, `completed`, or `failed`) includes
 the previous event hash. Verification recomputes the chain, rejects mutation,
 and requires a single terminal event at the end.

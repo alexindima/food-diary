@@ -53,6 +53,7 @@ The unified developer entrypoint is:
 ./.llm-wiki/wiki.ps1 help
 ./.llm-wiki/wiki.ps1 update
 ./.llm-wiki/wiki.ps1 verify
+./.llm-wiki/wiki.ps1 verify-full
 ./.llm-wiki/wiki.ps1 workspace-policy -FailOnInvalid
 ./.llm-wiki/wiki.ps1 context -Module Billing -ChangeType Api
 ./.llm-wiki/wiki.ps1 brief
@@ -173,10 +174,11 @@ The unified developer entrypoint is:
 ./.llm-wiki/wiki.ps1 task-similarity-reuse -WorkspacePath .artifacts/llm-wiki/tasks/<target> -SourceWorkspacePath .artifacts/llm-wiki/tasks/<source> -DryRun
 ```
 
-`verify` checks page structure, generated catalogs, generated module pages,
-symbol extraction, freshness, and developer-tool smoke scenarios.
-Independent indexes run in dependency-aware parallel stages; no verification
-step is skipped.
+`verify` is the fast interactive and handoff gate. It checks page structure,
+generated indexes, freshness, eval regressions, failure records, change policy,
+and impact review. `verify-full` adds the complete developer-tool smoke suite
+used for CI and release-level validation. Independent indexes run in
+dependency-aware parallel stages.
 
 Verify the wiki from the repository root:
 

@@ -5,13 +5,13 @@
                       "potentialLogging":  "A logging call near a candidate field name. This is a review lead, not proof that a runtime value is logged."
                   },
     "summary":  {
-                    "candidateFields":  1331,
-                    "credential":  120,
+                    "candidateFields":  1357,
+                    "credential":  146,
                     "identity":  141,
                     "health":  582,
                     "financial":  191,
                     "privateContent":  297,
-                    "boundaryFiles":  165,
+                    "boundaryFiles":  173,
                     "potentialLoggingLeads":  1
                 },
     "fields":  [
@@ -21,6 +21,20 @@
                        "type":  "string",
                        "path":  "FoodDiary.Application.Abstractions/Authentication/Common/AccountCreatedMessage.cs",
                        "line":  5
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Authentication/Common/EmailVerificationMessage.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Authentication/Common/PasswordResetMessage.cs",
+                       "line":  6
                    },
                    {
                        "category":  "credential",
@@ -35,6 +49,20 @@
                        "type":  "string",
                        "path":  "FoodDiary.Application.Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
                        "line":  3
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "PaddleClientToken",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Abstractions/Billing/Models/BillingPublicConfigModel.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Dietologist/Common/DietologistInvitationMessage.cs",
+                       "line":  6
                    },
                    {
                        "category":  "credential",
@@ -63,6 +91,13 @@
                        "type":  "string?",
                        "path":  "FoodDiary.Application.Abstractions/Wearables/Models/WearableTokenResult.cs",
                        "line":  5
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "PaddleClientToken",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Billing/Models/BillingOverviewModel.cs",
+                       "line":  20
                    },
                    {
                        "category":  "credential",
@@ -136,6 +171,13 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "NewPassword",
                        "type":  "string",
                        "path":  "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
@@ -178,6 +220,13 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application/Authentication/Commands/VerifyEmail/VerifyEmailCommand.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "AccessToken",
                        "type":  "string",
                        "path":  "FoodDiary.Application/Authentication/Models/AuthenticationModel.cs",
@@ -192,10 +241,31 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application/Dietologist/Commands/AcceptInvitation/AcceptInvitationCommand.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application/Dietologist/Commands/DeclineInvitation/DeclineInvitationCommand.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "HasPassword",
                        "type":  "bool",
                        "path":  "FoodDiary.Application/Notifications/Common/NotificationUserContext.cs",
                        "line":  5
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "CancellationToken",
+                       "type":  "int,",
+                       "path":  "FoodDiary.Application/RecentItems/Common/RecentItemOverviewLoader.cs",
+                       "line":  9
                    },
                    {
                        "category":  "credential",
@@ -430,6 +500,20 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "CancellationToken",
+                       "type":  "Func\u003cstring,",
+                       "path":  "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "CancellationToken",
+                       "type":  "int,",
+                       "path":  "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "SecretKey",
                        "type":  "string",
                        "path":  "FoodDiary.Infrastructure/Options/JwtOptions.cs",
@@ -448,6 +532,20 @@
                        "type":  "int",
                        "path":  "FoodDiary.Infrastructure/Options/JwtOptions.cs",
                        "line":  25
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "CancellationToken",
+                       "type":  "Func\u003cTMessage,",
+                       "path":  "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
+                       "line":  16
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "CancellationToken",
+                       "type":  "Func\u003cstring,",
+                       "path":  "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
+                       "line":  8
                    },
                    {
                        "category":  "credential",
@@ -500,6 +598,13 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "ClientSideToken",
+                       "type":  "string",
+                       "path":  "FoodDiary.Integrations/Options/PaddleOptions.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "WebhookSecretKey",
                        "type":  "string",
                        "path":  "FoodDiary.Integrations/Options/PaddleOptions.cs",
@@ -525,6 +630,13 @@
                        "type":  "string",
                        "path":  "FoodDiary.Integrations/Options/StripeOptions.cs",
                        "line":  8
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "BotToken",
+                       "type":  "string",
+                       "path":  "FoodDiary.Integrations/Options/TelegramAuthOptions.cs",
+                       "line":  6
                    },
                    {
                        "category":  "credential",
@@ -619,6 +731,13 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Presentation.Api/Features/Auth/Requests/ConfirmPasswordResetHttpRequest.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "NewPassword",
                        "type":  "string",
                        "path":  "FoodDiary.Presentation.Api/Features/Auth/Requests/ConfirmPasswordResetHttpRequest.cs",
@@ -661,6 +780,13 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Presentation.Api/Features/Auth/Requests/VerifyEmailHttpRequest.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "AccessToken",
                        "type":  "string",
                        "path":  "FoodDiary.Presentation.Api/Features/Auth/Responses/AuthenticationHttpResponse.cs",
@@ -672,6 +798,27 @@
                        "type":  "string",
                        "path":  "FoodDiary.Presentation.Api/Features/Auth/Responses/AuthenticationHttpResponse.cs",
                        "line":  7
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "PaddleClientToken",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Billing/Responses/BillingOverviewHttpResponse.cs",
+                       "line":  20
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Presentation.Api/Features/Dietologist/Requests/AcceptInvitationHttpRequest.cs",
+                       "line":  3
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Presentation.Api/Features/Dietologist/Requests/DeclineInvitationHttpRequest.cs",
+                       "line":  3
                    },
                    {
                        "category":  "credential",
@@ -710,9 +857,23 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "OwnerToken",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Presentation.Api/Filters/InMemoryIdempotencyStore.cs",
+                       "line":  75
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "ApiSecret",
                        "type":  "string",
                        "path":  "FoodDiary.Presentation.Api/Options/TelegramBotAuthOptions.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Telegram.Bot/TelegramBotOptions.cs",
                        "line":  6
                    },
                    {
@@ -829,6 +990,20 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "CancellationToken",
+                       "type":  "Func\u003cNpgsqlDataReader,",
+                       "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "CancellationToken",
+                       "type":  "Func\u003cNpgsqlDataReader,",
+                       "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
+                       "line":  79
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "ConnectionString",
                        "type":  "string?",
                        "path":  "MailRelay/FoodDiary.MailRelay.Initializer/InitializerCommand.cs",
@@ -854,6 +1029,13 @@
                        "type":  "set",
                        "path":  "MailRelay/FoodDiary.MailRelay.Initializer/Program.cs",
                        "line":  44
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunSignatureHttpRequest.cs",
+                       "line":  5
                    },
                    {
                        "category":  "financial",
@@ -9351,6 +9533,13 @@
                               "fieldCount":  1
                           },
                           {
+                              "path":  "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
+                              "categories":  [
+                                                 "credential"
+                                             ],
+                              "fieldCount":  2
+                          },
+                          {
                               "path":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
                               "categories":  [
                                                  "financial",
@@ -9399,7 +9588,7 @@
                                                  "credential",
                                                  "financial"
                                              ],
-                              "fieldCount":  3
+                              "fieldCount":  4
                           },
                           {
                               "path":  "FoodDiary.Integrations/Options/S3Options.cs",
@@ -9414,6 +9603,13 @@
                                                  "credential"
                                              ],
                               "fieldCount":  2
+                          },
+                          {
+                              "path":  "FoodDiary.Integrations/Options/TelegramAuthOptions.cs",
+                              "categories":  [
+                                                 "credential"
+                                             ],
+                              "fieldCount":  1
                           },
                           {
                               "path":  "FoodDiary.Integrations/Options/UsdaApiOptions.cs",
@@ -9612,7 +9808,7 @@
                               "categories":  [
                                                  "credential"
                                              ],
-                              "fieldCount":  1
+                              "fieldCount":  2
                           },
                           {
                               "path":  "FoodDiary.Presentation.Api/Features/Auth/Requests/GoogleLoginHttpRequest.cs",
@@ -9667,6 +9863,13 @@
                               "fieldCount":  1
                           },
                           {
+                              "path":  "FoodDiary.Presentation.Api/Features/Auth/Requests/VerifyEmailHttpRequest.cs",
+                              "categories":  [
+                                                 "credential"
+                                             ],
+                              "fieldCount":  1
+                          },
+                          {
                               "path":  "FoodDiary.Presentation.Api/Features/Auth/Responses/AuthenticationHttpResponse.cs",
                               "categories":  [
                                                  "credential"
@@ -9676,9 +9879,10 @@
                           {
                               "path":  "FoodDiary.Presentation.Api/Features/Billing/Responses/BillingOverviewHttpResponse.cs",
                               "categories":  [
+                                                 "credential",
                                                  "financial"
                                              ],
-                              "fieldCount":  3
+                              "fieldCount":  4
                           },
                           {
                               "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/ConsumptionAiItemHttpRequest.cs",
@@ -9862,6 +10066,20 @@
                               "path":  "FoodDiary.Presentation.Api/Features/Dashboard/Responses/WeightPointHttpResponse.cs",
                               "categories":  [
                                                  "health"
+                                             ],
+                              "fieldCount":  1
+                          },
+                          {
+                              "path":  "FoodDiary.Presentation.Api/Features/Dietologist/Requests/AcceptInvitationHttpRequest.cs",
+                              "categories":  [
+                                                 "credential"
+                                             ],
+                              "fieldCount":  1
+                          },
+                          {
+                              "path":  "FoodDiary.Presentation.Api/Features/Dietologist/Requests/DeclineInvitationHttpRequest.cs",
+                              "categories":  [
+                                                 "credential"
                                              ],
                               "fieldCount":  1
                           },
@@ -10345,6 +10563,13 @@
                               "fieldCount":  1
                           },
                           {
+                              "path":  "FoodDiary.Presentation.Api/Filters/InMemoryIdempotencyStore.cs",
+                              "categories":  [
+                                                 "credential"
+                                             ],
+                              "fieldCount":  1
+                          },
+                          {
                               "path":  "FoodDiary.Presentation.Api/Options/TelegramBotAuthOptions.cs",
                               "categories":  [
                                                  "credential"
@@ -10356,7 +10581,7 @@
                               "categories":  [
                                                  "credential"
                                              ],
-                              "fieldCount":  1
+                              "fieldCount":  2
                           },
                           {
                               "path":  "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
@@ -10481,6 +10706,13 @@
                               "fieldCount":  1
                           },
                           {
+                              "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
+                              "categories":  [
+                                                 "credential"
+                                             ],
+                              "fieldCount":  2
+                          },
+                          {
                               "path":  "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Queue.cs",
                               "categories":  [
                                                  "identity"
@@ -10526,6 +10758,13 @@
                               "path":  "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/IngestMailRelayDeliveryEventHttpRequest.cs",
                               "categories":  [
                                                  "identity"
+                                             ],
+                              "fieldCount":  1
+                          },
+                          {
+                              "path":  "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunSignatureHttpRequest.cs",
+                              "categories":  [
+                                                 "credential"
                                              ],
                               "fieldCount":  1
                           },

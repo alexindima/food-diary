@@ -88,6 +88,26 @@ foreach ($case in $cases.cases) {
             $failures.Add("$($case.id): implementation phases are not sequentially ordered")
         }
     }
+    if (-not [string]::IsNullOrWhiteSpace([string]$case.traceQuery)) {
+        $traceJson = & (Join-Path $PSScriptRoot 'Find-LlmWikiTrace.ps1') `
+            -Query ([string]$case.traceQuery) `
+            -Format Json
+        $trace = @($traceJson | ConvertFrom-Json)
+        Test-ExpectedSet $case.id 'trace request' @($case.expectedTraceRequests) @($trace.request)
+    }
+    if (-not [string]::IsNullOrWhiteSpace([string]$case.privacyQuery)) {
+        $privacyArguments = @{
+            Query = [string]$case.privacyQuery
+            Format = 'Json'
+        }
+        if (-not [string]::IsNullOrWhiteSpace([string]$case.privacyCategory)) {
+            $privacyArguments.Category = [string]$case.privacyCategory
+        }
+        $privacyJson = & (Join-Path $PSScriptRoot 'Find-LlmWikiSensitiveData.ps1') @privacyArguments
+        $privacy = $privacyJson | ConvertFrom-Json
+        $privacyFields = @($privacy.items | ForEach-Object { "$($_.category):$($_.name)" })
+        Test-ExpectedSet $case.id 'privacy field' @($case.expectedPrivacyFields) $privacyFields
+    }
 
     $assertions++
     $unexpectedViolations = @($policy.violations | Where-Object {

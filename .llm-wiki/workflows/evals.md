@@ -21,7 +21,9 @@ classification with representative synthetic change sets.
 
 Cases currently cover API/backend changes, complete and incomplete
 localization pairs, complete and incomplete EF migration pairs, extracted
-Billing-module detection, and security-sensitive classification.
+module detection, security-sensitive classification, and real-task navigation
+regressions. Optional `traceQuery` and `privacyQuery` expectations assert that
+an agent can find the expected flow and sensitive fields from a bug description.
 
 Each policy rule should have:
 

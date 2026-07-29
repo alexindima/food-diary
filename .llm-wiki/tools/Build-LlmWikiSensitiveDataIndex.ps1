@@ -13,7 +13,7 @@ function ConvertTo-RepositoryPath {
 }
 
 $categories = [ordered]@{
-    credential = '(?i)(Password|RefreshToken|AccessToken|TokenHash|Secret|ApiKey|SigningKey|Credential|ConnectionString)'
+    credential = '(?i)(Password|RefreshToken|AccessToken|TokenHash|Token$|Secret|ApiKey|SigningKey|Credential|ConnectionString)'
     identity = '(?i)(Email|Phone|Telegram(UserId|Username)?|GoogleSubject|IpAddress|UserAgent|ExternalIdentity)'
     health = '(?i)(Weight|Waist|Height|Birth(Date)?|DateOfBirth|Gender|ActivityLevel|Cycle|Fasting|Nutrition|Calories|Hydration|Exercise|Satiety|Tdee)'
     financial = '(?i)(Payment|Subscription|CustomerId|Invoice|Checkout|Billing|Money|Amount|Currency)'
