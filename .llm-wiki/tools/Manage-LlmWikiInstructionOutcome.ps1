@@ -35,19 +35,19 @@ function Normalize-Workspace([string]$Value) {
 }
 function Get-EventPayload([object]$Event) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Event.schemaVersion
-        eventId = $Event.eventId
-        workspace = $Event.workspace
-        recordedAtUtc = $Event.recordedAtUtc
-        completionFingerprint = $Event.completionFingerprint
-        retrospectiveHash = $Event.retrospectiveHash
-        instructionSetFingerprint = $Event.instructionSetFingerprint
+        schemaVersion = [int]$Event.schemaVersion
+        eventId = [string]$Event.eventId
+        workspace = [string]$Event.workspace
+        recordedAtUtc = ([DateTimeOffset]$Event.recordedAtUtc).ToUniversalTime().ToString('o')
+        completionFingerprint = [string]$Event.completionFingerprint
+        retrospectiveHash = [string]$Event.retrospectiveHash
+        instructionSetFingerprint = [string]$Event.instructionSetFingerprint
         sources = @($Event.sources)
         taskSignals = $Event.taskSignals
         outcome = $Event.outcome
-        success = $Event.success
-        policyFingerprint = $Event.policyFingerprint
-        previousEventHash = $Event.previousEventHash
+        success = [bool]$Event.success
+        policyFingerprint = [string]$Event.policyFingerprint
+        previousEventHash = [string]$Event.previousEventHash
     }
 }
 function Read-Registry {

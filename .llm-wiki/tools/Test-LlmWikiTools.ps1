@@ -1954,7 +1954,7 @@ try {
                 schemaVersion = $instructionEvent.schemaVersion
                 eventId = $instructionEvent.eventId
                 workspace = $instructionEvent.workspace
-                recordedAtUtc = $instructionEvent.recordedAtUtc
+                recordedAtUtc = ([DateTimeOffset]$instructionEvent.recordedAtUtc).ToUniversalTime().ToString('o')
                 completionFingerprint = $instructionEvent.completionFingerprint
                 retrospectiveHash = $instructionEvent.retrospectiveHash
                 instructionSetFingerprint = $instructionEvent.instructionSetFingerprint
