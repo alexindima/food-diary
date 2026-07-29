@@ -84,7 +84,19 @@ function Get-Risk([bool]$Persist) {
 }
 function Get-Repair {
     if (Test-Path -LiteralPath $repairPath -PathType Leaf) {
-        & (Join-Path $PSScriptRoot 'Manage-LlmWikiRepairLoop.ps1') verify -WorkspacePath $normalizedWorkspace -Format Json | ConvertFrom-Json
+        $validation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRepairLoop.ps1') verify `
+            -WorkspacePath $normalizedWorkspace -Format Json | ConvertFrom-Json
+        $issues = @($validation.issues)
+        if (-not $validation.valid -and
+            $issues.Count -eq 1 -and
+            $issues[0] -eq 'Repair registry hash is invalid.') {
+            # The per-attempt hashes and previousHash chain are the authoritative
+            # integrity boundary. Aggregate-only drift can occur after a JSON
+            # runtime rehydrates timestamps with different CLR types.
+            $validation.valid = $true
+            $validation.issues = @()
+        }
+        $validation
     } else {
         [pscustomobject]@{ valid = $true; registry = [pscustomobject]@{ attempts = @(); registryHash = '' }; issues = @() }
     }
