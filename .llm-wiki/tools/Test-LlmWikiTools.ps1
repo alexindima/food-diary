@@ -3583,17 +3583,17 @@ try {
         Assert-Wiki (-not $tamperedCycleVerification.valid -and @($tamperedCycleVerification.validation.issues) -contains 'cycleHash is invalid.') 'Orchestration cycle verification accepted a tampered receipt.'
         [System.IO.File]::WriteAllText($appliedCyclePath, $appliedCycleRaw, [System.Text.UTF8Encoding]::new($false))
         foreach ($completedCyclePath in @($appliedCyclePath, $previewCyclePath)) {
-            if (Test-Path -LiteralPath $completedCyclePath) { Remove-Item -LiteralPath $completedCyclePath -Force }
+            if (-not [string]::IsNullOrWhiteSpace($completedCyclePath) -and (Test-Path -LiteralPath $completedCyclePath)) { Remove-Item -LiteralPath $completedCyclePath -Force }
         }
         foreach ($completedWatchdogPath in @($appliedWatchdogPath, $previewWatchdogPath)) {
-            if (Test-Path -LiteralPath $completedWatchdogPath) { Remove-Item -LiteralPath $completedWatchdogPath -Force }
+            if (-not [string]::IsNullOrWhiteSpace($completedWatchdogPath) -and (Test-Path -LiteralPath $completedWatchdogPath)) { Remove-Item -LiteralPath $completedWatchdogPath -Force }
         }
-        if (Test-Path -LiteralPath $appliedCycleDispatchPath) { Remove-Item -LiteralPath $appliedCycleDispatchPath -Force }
+        if (-not [string]::IsNullOrWhiteSpace($appliedCycleDispatchPath) -and (Test-Path -LiteralPath $appliedCycleDispatchPath)) { Remove-Item -LiteralPath $appliedCycleDispatchPath -Force }
         foreach ($completedCycleClaimPath in @($appliedCycleClaimPath, $previewClaimPath)) {
-            if (Test-Path -LiteralPath $completedCycleClaimPath) { Remove-Item -LiteralPath $completedCycleClaimPath -Force }
+            if (-not [string]::IsNullOrWhiteSpace($completedCycleClaimPath) -and (Test-Path -LiteralPath $completedCycleClaimPath)) { Remove-Item -LiteralPath $completedCycleClaimPath -Force }
         }
         foreach ($completedCyclePlanPath in @($appliedCyclePlanPath, $previewPlanPath)) {
-            if (Test-Path -LiteralPath $completedCyclePlanPath) { Remove-Item -LiteralPath $completedCyclePlanPath -Force }
+            if (-not [string]::IsNullOrWhiteSpace($completedCyclePlanPath) -and (Test-Path -LiteralPath $completedCyclePlanPath)) { Remove-Item -LiteralPath $completedCyclePlanPath -Force }
         }
         $postCleanupCycleAudit = & (Join-Path $toolsRoot 'Test-LlmWikiOrchestrationLineage.ps1') -AsOfUtc ($leaseNow.AddMinutes(6)) -Format Json | ConvertFrom-Json
         Assert-Wiki $postCleanupCycleAudit.valid 'Orchestration supervisor smoke cleanup left broken lineage.'
