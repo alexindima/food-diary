@@ -48,38 +48,59 @@ function Get-BytesSha([byte[]]$Value) {
 }
 function Get-ApprovalPayload([object]$Approval) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Approval.schemaVersion
-        workspace = $Approval.workspace
-        approvedAtUtc = $Approval.approvedAtUtc
-        experimentReceiptHash = $Approval.experimentReceiptHash
-        variantId = $Approval.variantId
-        itemLimit = $Approval.itemLimit
-        characterBudget = $Approval.characterBudget
-        reason = $Approval.reason
-        policyFingerprint = $Approval.policyFingerprint
+        schemaVersion = [int]$Approval.schemaVersion
+        workspace = [string]$Approval.workspace
+        approvedAtUtc = ([DateTimeOffset]$Approval.approvedAtUtc).ToUniversalTime().ToString('o')
+        experimentReceiptHash = [string]$Approval.experimentReceiptHash
+        variantId = [string]$Approval.variantId
+        itemLimit = [int]$Approval.itemLimit
+        characterBudget = [int]$Approval.characterBudget
+        reason = [string]$Approval.reason
+        policyFingerprint = [string]$Approval.policyFingerprint
+    }
+}
+function Get-ExperimentPayload([object]$Experiment) {
+    [pscustomobject][ordered]@{
+        schemaVersion = [int]$Experiment.schemaVersion
+        workspace = [string]$Experiment.workspace
+        createdAtUtc = ([DateTimeOffset]$Experiment.createdAtUtc).ToUniversalTime().ToString('o')
+        policyFingerprint = [string]$Experiment.policyFingerprint
+        generatorFingerprint = [string]$Experiment.generatorFingerprint
+        inputs = $Experiment.inputs
+        plan = @($Experiment.plan)
+        results = @($Experiment.results)
+        recommendation = $Experiment.recommendation
     }
 }
 function Get-ApplicationPayload([object]$Application) {
     [pscustomobject][ordered]@{
-        schemaVersion = $Application.schemaVersion
-        workspace = $Application.workspace
-        state = $Application.state
-        appliedAtUtc = $Application.appliedAtUtc
-        policyFingerprint = $Application.policyFingerprint
-        generatorFingerprint = $Application.generatorFingerprint
-        experiment = $Application.experiment
-        approval = $Application.approval
+        schemaVersion = [int]$Application.schemaVersion
+        workspace = [string]$Application.workspace
+        state = [string]$Application.state
+        appliedAtUtc = ([DateTimeOffset]$Application.appliedAtUtc).ToUniversalTime().ToString('o')
+        policyFingerprint = [string]$Application.policyFingerprint
+        generatorFingerprint = [string]$Application.generatorFingerprint
+        experiment = Get-ExperimentPayload $Application.experiment
+        approval = Get-ApprovalPayload $Application.approval
         # Snapshot contents can be large. Their byte hashes are canonical and are
         # validated separately, so the application hash stays bounded and fast.
         baseline = [pscustomobject][ordered]@{
-            qualityScore = $Application.baseline.qualityScore
+            qualityScore = [double]$Application.baseline.qualityScore
             artifacts = @($Application.baseline.artifacts | ForEach-Object {
-                [pscustomobject][ordered]@{ name = $_.name; sha256 = $_.sha256 }
+                [pscustomobject][ordered]@{ name = [string]$_.name; sha256 = [string]$_.sha256 }
             })
         }
         applied = $Application.applied
         postApply = $Application.postApply
-        rollback = $Application.rollback
+        rollback = $(if ($null -eq $Application.rollback) {
+            $null
+        } else {
+            [pscustomobject][ordered]@{
+                rolledBackAtUtc = ([DateTimeOffset]$Application.rollback.rolledBackAtUtc).ToUniversalTime().ToString('o')
+                reason = [string]$Application.rollback.reason
+                restoredBundleHash = [string]$Application.rollback.restoredBundleHash
+            }
+        })
     }
 }
 function Assert-Reason([string]$Value) {
