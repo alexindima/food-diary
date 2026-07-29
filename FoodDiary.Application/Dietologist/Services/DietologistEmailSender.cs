@@ -15,7 +15,7 @@ public sealed class DietologistEmailSender(
     public async Task SendDietologistInvitationAsync(
         DietologistInvitationMessage message,
         CancellationToken cancellationToken = default) {
-        string link = BuildInvitationLink(message.InvitationId, message.Token);
+        string link = BuildInvitationLink(message.InvitationId);
         string locale = NormalizeLanguage(message.Language);
         bool isRu = string.Equals(locale, "ru", StringComparison.Ordinal);
         string clientName = BuildClientName(message.ClientFirstName, message.ClientLastName);
@@ -36,13 +36,13 @@ public sealed class DietologistEmailSender(
         await DispatchAsync(message.ToEmail, subject, htmlBody, textBody, cancellationToken).ConfigureAwait(false);
     }
 
-    private string BuildInvitationLink(Guid invitationId, string token) {
+    private string BuildInvitationLink(Guid invitationId) {
         if (string.IsNullOrWhiteSpace(_options.FrontendBaseUrl)) {
             throw new InvalidOperationException("Email FrontendBaseUrl is not configured.");
         }
 
         string baseUrl = _options.FrontendBaseUrl.TrimEnd('/');
-        return $"{baseUrl}/dietologist/accept?invitationId={Uri.EscapeDataString(invitationId.ToString())}&token={Uri.EscapeDataString(token)}";
+        return $"{baseUrl}/dietologist-invitations/{Uri.EscapeDataString(invitationId.ToString())}";
     }
 
     private static string BuildClientName(string? firstName, string? lastName) {

@@ -331,9 +331,9 @@ public partial class AdminFeatureTests {
         ResultAssert.Success(result);
         Assert.Equal("admin@example.com", transport.ToEmail);
         Assert.Equal("Hello Alex Johnson", transport.Subject);
-        Assert.Equal("<a href=\"https://fooddiary.club/dietologist/accept?invitationId=demo&token=demo\">FoodDiary</a>", transport.Body);
+        Assert.Equal("<a href=\"https://fooddiary.club/dietologist-invitations/demo\">FoodDiary</a>", transport.Body);
         Assert.Contains(
-            "Alex Johnson on FoodDiary: https://fooddiary.club/dietologist/accept?invitationId=demo&token=demo",
+            "Alex Johnson on FoodDiary: https://fooddiary.club/dietologist-invitations/demo",
             transport.AlternateViewBodies);
     }
 

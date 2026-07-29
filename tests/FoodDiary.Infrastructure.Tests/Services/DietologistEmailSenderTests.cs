@@ -57,9 +57,11 @@ public sealed class DietologistEmailSenderTests {
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Contains("dietologist/accept", getSent().HtmlBody, StringComparison.Ordinal);
-        Assert.Contains(invitationId.ToString(), getSent().HtmlBody, StringComparison.Ordinal);
-        Assert.Contains("test-token", getSent().HtmlBody, StringComparison.Ordinal);
+        Assert.Contains(
+            $"https://fooddiary.club/dietologist-invitations/{invitationId}",
+            getSent().HtmlBody,
+            StringComparison.Ordinal);
+        Assert.DoesNotContain("token=", getSent().HtmlBody, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -119,7 +121,7 @@ public sealed class DietologistEmailSenderTests {
         Assert.Equal("en", lastLocale);
         Assert.Equal("Invite John Doe to FoodDiary", getSent().Subject);
         Assert.Contains("John Doe", getSent().HtmlBody, StringComparison.Ordinal);
-        Assert.Contains("dietologist/accept", getSent().HtmlBody, StringComparison.Ordinal);
+        Assert.Contains("dietologist-invitations/", getSent().HtmlBody, StringComparison.Ordinal);
     }
 
     private static DietologistEmailSender CreateSender(

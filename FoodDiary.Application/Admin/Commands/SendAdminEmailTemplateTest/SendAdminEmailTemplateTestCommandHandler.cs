@@ -41,7 +41,7 @@ public sealed class SendAdminEmailTemplateTestCommandHandler(
 
     private static string GetSampleLink(string key) {
         return string.Equals(NormalizeKey(key), "dietologist_invitation", StringComparison.Ordinal)
-            ? "https://fooddiary.club/dietologist/accept?invitationId=demo&token=demo"
+            ? "https://fooddiary.club/dietologist-invitations/demo"
             : "https://fooddiary.club/verify-email?userId=demo&token=demo";
     }
 

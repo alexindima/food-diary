@@ -188,8 +188,8 @@ public sealed class EmailSenderTests {
         Assert.Equal("dietologist@example.com", getSent().ToEmail);
         Assert.Equal("Invitation to become a dietologist", getSent().Subject);
         Assert.Contains("Alex Ivanov", getSent().Body, StringComparison.Ordinal);
-        Assert.Contains($"invitationId={invitationId}", getSent().Body, StringComparison.Ordinal);
-        Assert.Contains("token=invite%20token", getSent().Body, StringComparison.Ordinal);
+        Assert.Contains($"https://app.example/dietologist-invitations/{invitationId}", getSent().Body, StringComparison.Ordinal);
+        Assert.DoesNotContain("token=", getSent().Body, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -215,8 +215,8 @@ public sealed class EmailSenderTests {
             CancellationToken.None);
 
         Assert.Equal("Invite A user", getSent().Subject);
-        Assert.Contains("<p>A user FD https://app.example/dietologist/accept?", getSent().Body, StringComparison.Ordinal);
-        Assert.Contains(getSent().AlternateViewBodies, body => body.Contains("A user FD https://app.example/dietologist/accept?", StringComparison.Ordinal));
+        Assert.Contains("<p>A user FD https://app.example/dietologist-invitations/", getSent().Body, StringComparison.Ordinal);
+        Assert.Contains(getSent().AlternateViewBodies, body => body.Contains("A user FD https://app.example/dietologist-invitations/", StringComparison.Ordinal));
     }
 
     [Fact]
