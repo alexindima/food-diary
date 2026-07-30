@@ -55,6 +55,21 @@
                         "reviewedAtUtc":  "2026-07-30T09:40:25.8083522Z"
                     },
                     {
+                        "pageId":  "workflow.frontend-contract-review",
+                        "pagePath":  ".llm-wiki/workflows/frontend-contract-review.md",
+                        "pageSha256":  "225c45ee233216765f042957a19f615952f2ca2256542e58d3a7abf02d25d2f2",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/generated/frontend-contract-index.json",
+                                            "sha256":  "9fd233a6772186844f2ee77b66feb0c14025823e328b9922b397cf86904c688e"
+                                        }
+                                    ],
+                        "reason":  "Re-reviewed the final frontend contract after adding focus trapping and Escape dismissal; selector/API shapes remain compatible and the new accessibility behavior is internal.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "96d06abc8c7074dae8a26f753d81683e4bd411bf",
+                        "reviewedAtUtc":  "2026-07-30T20:45:45.8773677Z"
+                    },
+                    {
                         "pageId":  "workflow.review-diff",
                         "pagePath":  ".llm-wiki/workflows/review-diff.md",
                         "pageSha256":  "0e3762a3c2f1107ce770ef8221ef8168d25edac4080619bbd464709085c587bb",
@@ -211,13 +226,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "316671120966377b4b8981990086db7ef53314fbbd6340103158775e31430d21"
+                                            "sha256":  "e7bc7be328c6b42f6181a82440add6c62c27d690651e3ee791348a213a3866b5"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated quality index after frontend contract extraction improvements.",
+                        "reason":  "Re-reviewed final quality delta: 2556 app tests pass, including six/seven annotation density, row selection, and photo-dialog dismissal coverage.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5a8487b11f207bc3a624ae0b629cec441e6c7c5c",
-                        "reviewedAtUtc":  "2026-07-30T16:45:16.2729171Z"
+                        "gitHead":  "96d06abc8c7074dae8a26f753d81683e4bd411bf",
+                        "reviewedAtUtc":  "2026-07-30T20:45:46.7183792Z"
                     },
                     {
                         "pageId":  "workflow-runtime-impact",
@@ -248,6 +263,25 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "5a8487b11f207bc3a624ae0b629cec441e6c7c5c",
                         "reviewedAtUtc":  "2026-07-30T16:45:16.8863022Z"
+                    },
+                    {
+                        "pageId":  "workflow-trace-feature",
+                        "pagePath":  ".llm-wiki/workflows/trace-feature.md",
+                        "pageSha256":  "41967b1d6a8a4232d51034f79db7c10045672d7b8d62c58b2bb870ae64488ba0",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/generated/frontend-contract-index.json",
+                                            "sha256":  "9fd233a6772186844f2ee77b66feb0c14025823e328b9922b397cf86904c688e"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/generated/frontend-index.json",
+                                            "sha256":  "ccb82a96ccd2aad9347180dde8ad47c5d9d01d3538accfe0ca1d9a4b301aae1d"
+                                        }
+                                    ],
+                        "reason":  "Re-reviewed the final dashboard photo-recognition presentation flow after accessibility refinements; backend and API contracts remain unchanged.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "96d06abc8c7074dae8a26f753d81683e4bd411bf",
+                        "reviewedAtUtc":  "2026-07-30T20:45:47.4138706Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

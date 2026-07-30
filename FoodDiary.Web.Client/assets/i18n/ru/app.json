@@ -897,6 +897,8 @@
             "HIDE_ANNOTATIONS": "Скрыть метки",
             "SHOW_ANNOTATIONS": "Показать метки",
             "ANNOTATIONS_LABEL": "Распознанные продукты на фотографии",
+            "EXPAND_PRODUCTS": "Распознанные продукты ({{count}})",
+            "COLLAPSE_PRODUCTS": "Скрыть список продуктов ({{count}})",
             "ADD_TO_MEAL": "Добавить к приёму",
             "EDIT_ACTION": "Редактировать распознанные продукты",
             "REANALYZE_ACTION": "Распознать заново",

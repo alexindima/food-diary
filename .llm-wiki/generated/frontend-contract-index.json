@@ -3,8 +3,8 @@
     "summary":  {
                     "components":  399,
                     "componentsWithoutDirectSpecs":  107,
-                    "inputs":  1201,
-                    "outputs":  399,
+                    "inputs":  1203,
+                    "outputs":  401,
                     "apiCalls":  206,
                     "templatesWithTranslations":  239,
                     "translationKeys":  1174,
@@ -9761,12 +9761,21 @@
                                               "name":  "annotationsVisible",
                                               "type":  "",
                                               "required":  false
+                                          },
+                                          {
+                                              "name":  "activeAnnotationId",
+                                              "type":  "string | null",
+                                              "required":  false
                                           }
                                       ],
                            "outputs":  [
                                            {
                                                "name":  "annotationsToggled",
                                                "type":  ""
+                                           },
+                                           {
+                                               "name":  "annotationSelected",
+                                               "type":  "string"
                                            }
                                        ],
                            "specPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.spec.ts"
@@ -9914,10 +9923,18 @@
                                               "name":  "rows",
                                               "type":  "AiResultRow[]",
                                               "required":  true
+                                          },
+                                          {
+                                              "name":  "activeAnnotationId",
+                                              "type":  "string | null",
+                                              "required":  false
                                           }
                                       ],
                            "outputs":  [
-
+                                           {
+                                               "name":  "rowSelected",
+                                               "type":  "string"
+                                           }
                                        ],
                            "specPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-rows/ai-photo-result-rows.spec.ts"
                        },
@@ -17381,7 +17398,11 @@
                                               "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ANNOTATIONS_LABEL",
                                               "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING",
                                               "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_NUTRITION",
-                                              "GENERAL.UNITS.KCAL"
+                                              "GENERAL.UNITS.G",
+                                              "GENERAL.UNITS.KCAL",
+                                              "NUTRITION_EDITOR.CARBS",
+                                              "NUTRITION_EDITOR.FATS",
+                                              "NUTRITION_EDITOR.PROTEINS"
                                           ]
                              },
                              {
@@ -17396,7 +17417,8 @@
                                  "feature":  "shared",
                                  "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.html",
                                  "keys":  [
-                                              "COMMON.CANCEL"
+                                              "COMMON.CANCEL",
+                                              "GENERAL.UNITS.KCAL"
                                           ]
                              },
                              {
@@ -18306,6 +18328,7 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.html",
                               "occurrences":  1,
                               "inputsUsed":  [
+                                                 "activeAnnotationId",
                                                  "annotations",
                                                  "annotationsVisible",
                                                  "imageUrl",
@@ -18315,6 +18338,7 @@
                                                  "sourceTextLabelKey"
                                              ],
                               "outputsHandled":  [
+                                                     "annotationSelected",
                                                      "annotationsToggled"
                                                  ]
                           },
@@ -18373,10 +18397,11 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.html",
                               "occurrences":  1,
                               "inputsUsed":  [
+                                                 "activeAnnotationId",
                                                  "rows"
                                              ],
                               "outputsHandled":  [
-
+                                                     "rowSelected"
                                                  ]
                           },
                           {

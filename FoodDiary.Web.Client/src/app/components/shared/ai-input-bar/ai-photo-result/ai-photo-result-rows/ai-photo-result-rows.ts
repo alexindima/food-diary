@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 import type { AiResultRow } from '../ai-photo-result-lib/ai-photo-result.types';
 
@@ -13,4 +13,6 @@ import type { AiResultRow } from '../ai-photo-result-lib/ai-photo-result.types';
 })
 export class AiPhotoResultRowsComponent {
     public readonly rows = input.required<AiResultRow[]>();
+    public readonly activeAnnotationId = input<string | null>(null);
+    public readonly rowSelected = output<string>();
 }

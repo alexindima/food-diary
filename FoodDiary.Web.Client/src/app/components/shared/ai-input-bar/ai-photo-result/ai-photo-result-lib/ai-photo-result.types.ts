@@ -19,6 +19,7 @@ export type AiPhotoAnnotation = {
 
 export type AiResultRow = {
     key: string;
+    annotationId: string | null;
     displayName: string;
     amountLabel: string;
 };

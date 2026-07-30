@@ -933,6 +933,8 @@
             "HIDE_ANNOTATIONS": "Hide labels",
             "SHOW_ANNOTATIONS": "Show labels",
             "ANNOTATIONS_LABEL": "Recognized foods on the photo",
+            "EXPAND_PRODUCTS": "Recognized products ({{count}})",
+            "COLLAPSE_PRODUCTS": "Hide product list ({{count}})",
             "ADD_TO_MEAL": "Add to meal",
             "EDIT_ACTION": "Edit recognized items",
             "REANALYZE_ACTION": "Recognize again",

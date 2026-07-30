@@ -85,7 +85,7 @@ describe('AiPhotoResultComponent view models', () => {
         vi.spyOn(translateService, 'getCurrentLang').mockReturnValue('en');
         fixture.detectChanges();
 
-        expect(component['resultRows']()).toEqual([{ key: 'egg', displayName: 'Яйцо', amountLabel: '100 g' }]);
+        expect(component['resultRows']()).toEqual([{ key: 'egg', annotationId: null, displayName: 'Яйцо', amountLabel: '100 g' }]);
         expect(component['nutritionSummary']()[1]).toEqual({
             labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
             value: '12.3 g',
@@ -205,5 +205,23 @@ describe('AiPhotoResultComponent meal details', () => {
             preMealSatietyLevel: 5,
             postMealSatietyLevel: 3,
         });
+    });
+});
+
+describe('AiPhotoResultComponent dialog behavior', () => {
+    it('dismisses only photo-backed results on Escape', async () => {
+        const { component, fixture } = await setupAiPhotoResultAsync();
+        const dismissSpy = vi.fn();
+        component.dismissed.subscribe(dismissSpy);
+        fixture.detectChanges();
+
+        component['dismissPhotoDialog']();
+        expect(dismissSpy).not.toHaveBeenCalled();
+
+        fixture.componentRef.setInput('imageUrl', 'https://example.com/meal.png');
+        fixture.detectChanges();
+        component['dismissPhotoDialog']();
+
+        expect(dismissSpy).toHaveBeenCalledOnce();
     });
 });

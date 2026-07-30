@@ -3,9 +3,9 @@
         @if (imageUrl(); as previewUrl) {
             <img
                 class="ai-photo-result__preview"
-                width="512"
-                height="512"
-                [ngSrc]="previewUrl"
+                width="1536"
+                height="1024"
+                [src]="previewUrl"
                 [alt]="'AI_INPUT_BAR.PHOTO_PREVIEW_ALT' | translate"
             />
             @if (annotations().length > 0) {
@@ -25,7 +25,7 @@
                         <div class="ai-photo-result__annotation-frame">
                             <img class="ai-photo-result__annotation-sizer" alt="" [src]="previewUrl" />
                             <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                                @for (annotation of annotations(); track annotation.id) {
+                                @for (annotation of cardAnnotations(); track annotation.id) {
                                     <line
                                         [attr.x1]="annotation.centerX"
                                         [attr.y1]="annotation.centerY"
@@ -35,18 +35,38 @@
                                     <circle r="0.8" [attr.cx]="annotation.centerX" [attr.cy]="annotation.centerY" />
                                 }
                             </svg>
-                            @for (annotation of annotations(); track annotation.id) {
-                                <article
+                            @for (annotation of cardAnnotations(); track annotation.id) {
+                                <button
                                     class="ai-photo-result__annotation-card"
+                                    type="button"
                                     [style.left.%]="annotation.cardX"
                                     [style.top.%]="annotation.cardY"
+                                    [attr.aria-label]="annotation.name"
+                                    (click)="annotationSelected.emit(annotation.id)"
                                 >
                                     <strong>{{ annotation.name }}</strong> · {{ annotation.amountLabel }}
                                     <div>
                                         <strong>{{ annotation.calories }} {{ 'GENERAL.UNITS.KCAL' | translate }}</strong>
-                                        <span>Б {{ annotation.protein }} · Ж {{ annotation.fat }} · У {{ annotation.carbs }} г</span>
+                                        <span>
+                                            {{ 'NUTRITION_EDITOR.PROTEINS' | translate }} {{ annotation.protein }} ·
+                                            {{ 'NUTRITION_EDITOR.FATS' | translate }} {{ annotation.fat }} ·
+                                            {{ 'NUTRITION_EDITOR.CARBS' | translate }} {{ annotation.carbs }}
+                                            {{ 'GENERAL.UNITS.G' | translate }}
+                                        </span>
                                     </div>
-                                </article>
+                                </button>
+                            }
+                            @for (marker of markerAnnotations(); track marker.annotation.id) {
+                                <button
+                                    class="ai-photo-result__annotation-marker"
+                                    type="button"
+                                    [style.left.%]="marker.annotation.centerX"
+                                    [style.top.%]="marker.annotation.centerY"
+                                    [attr.aria-label]="marker.annotation.name"
+                                    (click)="annotationSelected.emit(marker.annotation.id)"
+                                >
+                                    {{ marker.number }}
+                                </button>
                             }
                         </div>
                     </div>

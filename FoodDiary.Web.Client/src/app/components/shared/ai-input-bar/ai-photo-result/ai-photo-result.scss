@@ -1,8 +1,50 @@
+@use 'variables' as variables;
+
 .ai-photo-result {
     border: var(--fd-border-width) solid var(--fd-color-border-ai);
     border-radius: var(--fd-radius-card);
     background: var(--fd-bg-ai-result-surface);
     padding: var(--fd-space-stat-tile-padding);
+}
+
+.ai-photo-result__backdrop {
+    /* A transient AI result owns its state in the input bar, so this local modal avoids duplicating that state in an overlay component. */
+    /* stylelint-disable-next-line declaration-property-value-disallowed-list -- The result must cover the viewport while preserving its live parent state. */
+    position: fixed;
+    inset: 0;
+    z-index: var(--fd-z-index-overlay-backdrop);
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: var(--fd-bg-overlay);
+    backdrop-filter: blur(8px);
+    cursor: default;
+}
+
+.ai-photo-result--modal {
+    /* stylelint-disable-next-line declaration-property-value-disallowed-list -- The result must cover the viewport while preserving its live parent state. */
+    position: fixed;
+    inset: 4vh 4vw;
+    z-index: var(--fd-z-index-overlay-panel);
+    width: auto;
+    max-height: 92vh;
+    overflow: clip;
+    box-shadow: var(--fd-shadow-xl);
+}
+
+.ai-photo-result--modal:has(.ai-photo-result__products-content) .ai-photo-result__preview-wrap {
+    min-height: 10rem;
+    max-height: 30vh;
+}
+
+.ai-photo-result--modal:has(.ai-photo-result__products-content) .ai-photo-result__preview {
+    max-height: 30vh;
+}
+
+.ai-photo-result--modal:has(.ai-photo-result__products-content) .ai-photo-result__annotation-frame,
+.ai-photo-result--modal:has(.ai-photo-result__products-content) .ai-photo-result__annotation-sizer {
+    max-height: 30vh;
 }
 
 :host(:where(.ai-input-bar__result-panel)) .ai-photo-result {
@@ -42,14 +84,17 @@
     position: relative;
     border-radius: var(--fd-radius-lg);
     overflow: hidden;
-    max-height: 200px;
+    min-height: 18rem;
+    max-height: 64vh;
     background: var(--fd-bg-surface-muted);
 }
 
 .ai-photo-result__preview {
-    width: 100%;
-    height: 200px;
-    max-height: 200px;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 64vh;
     object-fit: contain;
     object-position: center;
     display: block;
@@ -83,7 +128,7 @@
     position: relative;
     display: inline-block;
     max-width: 100%;
-    max-height: 200px;
+    max-height: 64vh;
 }
 
 .ai-photo-result__annotation-sizer {
@@ -91,7 +136,7 @@
     width: auto;
     height: auto;
     max-width: 100%;
-    max-height: 200px;
+    max-height: 64vh;
     visibility: hidden;
 }
 
@@ -129,6 +174,8 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     pointer-events: auto;
+    text-align: left;
+    cursor: pointer;
 }
 
 .ai-photo-result__annotation-card div {
@@ -141,6 +188,25 @@
 
 .ai-photo-result__annotation-card div strong {
     color: var(--fd-color-primary-700);
+}
+
+.ai-photo-result__annotation-marker {
+    position: absolute;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: var(--fd-size-control-xs);
+    height: var(--fd-size-control-xs);
+    padding: 0;
+    border: var(--fd-border-width-strong) solid var(--fd-color-surface-raised);
+    border-radius: var(--fd-radius-pill);
+    background: var(--fd-color-primary-600);
+    color: var(--fd-color-on-primary);
+    box-shadow: var(--fd-shadow-md);
+    font-weight: var(--fd-text-action-weight);
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 .ai-photo-result__text-preview {
@@ -250,10 +316,23 @@
 }
 
 .ai-photo-result__table-row {
+    width: 100%;
     padding: var(--fd-space-xs);
     border-radius: var(--fd-radius-md);
     background: var(--fd-bg-surface-raised);
     border: var(--fd-border-muted);
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.ai-photo-result__table-row:disabled {
+    cursor: default;
+}
+
+.ai-photo-result__table-row--active {
+    border-color: var(--fd-color-primary-600);
+    background: var(--fd-bg-brand-surface-medium);
 }
 
 .ai-photo-result__item-name {
@@ -440,4 +519,79 @@
 
 .ai-photo-result__details-inner {
     overflow: hidden;
+}
+
+.ai-photo-result__products {
+    border: var(--fd-border-muted);
+    border-radius: var(--fd-radius-lg);
+    background: var(--fd-bg-surface-raised);
+    overflow: hidden;
+}
+
+.ai-photo-result__products-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--fd-space-sm) var(--fd-space-md);
+    border: 0;
+    background: transparent;
+    color: var(--fd-color-text);
+    text-align: left;
+    cursor: pointer;
+}
+
+.ai-photo-result__products-toggle > span:first-child {
+    display: flex;
+    align-items: baseline;
+    gap: var(--fd-space-sm);
+}
+
+.ai-photo-result__products-toggle small {
+    color: var(--fd-color-text-muted);
+}
+
+.ai-photo-result__products-content {
+    max-height: 20vh;
+    padding: 0 var(--fd-space-md) var(--fd-space-md);
+    overflow-y: auto;
+}
+
+@media #{variables.$media-tablet} {
+    .ai-photo-result--modal {
+        inset: 0;
+        max-height: 100vh;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .ai-photo-result__preview-wrap {
+        min-height: 14rem;
+        max-height: 56vh;
+    }
+
+    .ai-photo-result__preview {
+        height: min(56vh, 36rem);
+        max-height: 56vh;
+    }
+
+    .ai-photo-result__annotation-frame,
+    .ai-photo-result__annotation-sizer {
+        max-height: 56vh;
+    }
+
+    .ai-photo-result__annotation-card {
+        width: min(10rem, 46%);
+    }
+
+    .ai-photo-result--modal:has(.ai-photo-result__products-content) .ai-photo-result__preview-wrap,
+    .ai-photo-result--modal:has(.ai-photo-result__products-content) .ai-photo-result__preview {
+        min-height: 8rem;
+        max-height: 28vh;
+    }
+
+    .ai-photo-result--modal:has(.ai-photo-result__products-content) .ai-photo-result__annotation-frame,
+    .ai-photo-result--modal:has(.ai-photo-result__products-content) .ai-photo-result__annotation-sizer {
+        max-height: 28vh;
+    }
 }

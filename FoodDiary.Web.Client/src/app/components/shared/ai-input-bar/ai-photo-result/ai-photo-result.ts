@@ -1,4 +1,6 @@
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
+import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
@@ -51,6 +53,8 @@ const CARD_ROW_GAP_PERCENT = 30;
     selector: 'fd-ai-photo-result',
     imports: [
         TranslatePipe,
+        DecimalPipe,
+        CdkTrapFocus,
         FdUiHintDirective,
         FdUiButtonComponent,
         AiPhotoPreviewComponent,
@@ -63,6 +67,9 @@ const CARD_ROW_GAP_PERCENT = 30;
     templateUrl: './ai-photo-result.html',
     styleUrls: ['./ai-photo-result.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '(document:keydown.escape)': 'dismissPhotoDialog()',
+    },
 })
 export class AiPhotoResultComponent {
     private readonly translateService = inject(TranslateService);
@@ -89,7 +96,9 @@ export class AiPhotoResultComponent {
 
     protected readonly isEditing = signal(false);
     protected readonly isDetailsExpanded = signal(false);
+    protected readonly isProductsExpanded = signal(false);
     protected readonly annotationsVisible = signal(true);
+    protected readonly selectedAnnotationId = signal<string | null>(null);
     protected readonly detailsDate = signal(this.getDateInputValue(new Date()));
     protected readonly detailsTime = signal(this.getTimeInputValue(new Date()));
     protected readonly detailsComment = signal('');
@@ -97,8 +106,9 @@ export class AiPhotoResultComponent {
     protected readonly postMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
     protected readonly editItems = signal<EditableAiItem[]>([]);
     protected readonly resultRows = computed<AiResultRow[]>(() =>
-        this.results().map(item => ({
+        this.results().map((item, index) => ({
             key: item.nameEn,
+            annotationId: hasReliableLocation(item) ? `${item.nameEn}-${index}` : null,
             displayName: this.resolveDisplayName(item),
             amountLabel: this.resolveAmountLabel(item),
         })),
@@ -128,6 +138,18 @@ export class AiPhotoResultComponent {
                 },
             ];
         });
+    });
+    protected readonly activeAnnotationId = computed(
+        () =>
+            this.annotations().find(annotation => annotation.id === this.selectedAnnotationId())?.id ??
+            this.annotations().at(0)?.id ??
+            null,
+    );
+    protected readonly productsAccordionLabel = computed(() => {
+        const key = this.isProductsExpanded()
+            ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.COLLAPSE_PRODUCTS'
+            : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EXPAND_PRODUCTS';
+        return this.translateService.instant(key, { count: this.results().length });
     });
     protected readonly editActionView = computed<AiEditActionView>(() =>
         this.isEditing()
@@ -286,6 +308,20 @@ export class AiPhotoResultComponent {
 
     protected toggleAnnotations(): void {
         this.annotationsVisible.update(visible => !visible);
+    }
+
+    protected toggleProducts(): void {
+        this.isProductsExpanded.update(expanded => !expanded);
+    }
+
+    protected dismissPhotoDialog(): void {
+        if (this.imageUrl() !== null) {
+            this.dismissed.emit();
+        }
+    }
+
+    protected selectAnnotation(id: string): void {
+        this.selectedAnnotationId.set(id);
     }
 
     protected updateDetailsDate(value: string): void {

@@ -2101,7 +2101,7 @@
                         "role":  "Component",
                         "selector":  "fd-ai-photo-preview",
                         "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.ts",
-                        "line":  17
+                        "line":  16
                     },
                     {
                         "name":  "AiPhotoResultActionsComponent",
@@ -2122,7 +2122,7 @@
                         "role":  "Component",
                         "selector":  "fd-ai-photo-result",
                         "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts",
-                        "line":  67
+                        "line":  74
                     },
                     {
                         "name":  "PhotoUploadDialogComponent",
@@ -5681,8 +5681,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  2860,
-                             "russianProperties":  2860,
+                             "englishProperties":  2862,
+                             "russianProperties":  2862,
                              "countsMatch":  true
                          },
                          {
