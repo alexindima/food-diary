@@ -1,0 +1,175 @@
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory = $true)]
+    [string]$Query,
+    [ValidateSet('Text', 'Json')]
+    [string]$Format = 'Text',
+    [ValidateRange(1, 30)]
+    [int]$Limit = 10
+)
+
+$ErrorActionPreference = 'Stop'
+$wikiRoot = Split-Path -Parent $PSScriptRoot
+$frontendIndex = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/frontend-index.json') -Raw | ConvertFrom-Json
+$contractIndex = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/frontend-contract-index.json') -Raw | ConvertFrom-Json
+
+$queryText = $Query.ToLowerInvariant()
+$queryTerms = @(
+    [regex]::Matches($queryText, '[a-z0-9]+') |
+        ForEach-Object Value |
+        Where-Object { $_.Length -ge 3 } |
+        Sort-Object -Unique
+)
+$symbols = @($frontendIndex.symbols)
+$matches = @(
+    $symbols |
+        ForEach-Object {
+            $searchable = "$($_.name) $($_.selector) $($_.path)".ToLowerInvariant()
+            $matchedTerms = @($queryTerms | Where-Object { $searchable.Contains($_) })
+            $score = $matchedTerms.Count * 10
+            if ($_.name.ToLowerInvariant() -eq $queryText -or $_.selector -eq $queryText) { $score += 100 }
+            if ($score -gt 0) {
+                [pscustomobject]@{ symbol = $_; score = $score; matchedTerms = $matchedTerms }
+            }
+        } |
+        Sort-Object @{ Expression = 'score'; Descending = $true }, @{ Expression = { $_.symbol.name } } |
+        Select-Object -First $Limit
+)
+
+if ($matches.Count -eq 0) {
+    if ($Format -eq 'Json') {
+        [pscustomobject]@{ matched = $false; query = $Query; traces = @() } | ConvertTo-Json -Depth 5
+        exit 0
+    }
+    Write-Host "No frontend symbols matched '$Query'."
+    exit 1
+}
+
+$documents = @{}
+foreach ($symbol in $symbols) {
+    if (-not $documents.ContainsKey($symbol.path)) {
+        $absolutePath = Join-Path (Split-Path -Parent $wikiRoot) $symbol.path
+        if (Test-Path -LiteralPath $absolutePath) {
+            $documents[$symbol.path] = [System.IO.File]::ReadAllText($absolutePath)
+        }
+    }
+}
+
+function Get-Consumers {
+    param([string]$SymbolName, [string]$ExcludePath)
+    $found = @(
+        foreach ($candidate in $symbols) {
+            if ($candidate.path -eq $ExcludePath -or -not $documents.ContainsKey($candidate.path)) { continue }
+            if ($documents[$candidate.path] -match "\b$([regex]::Escape($SymbolName))\b") {
+                [pscustomobject]@{
+                    name = $candidate.name
+                    role = $candidate.role
+                    path = $candidate.path
+                    line = $candidate.line
+                }
+            }
+        }
+    )
+    return @($found | Sort-Object path, name -Unique)
+}
+
+$traces = @(
+    foreach ($match in $matches) {
+        $target = $match.symbol
+        $related = [System.Collections.Generic.List[object]]::new()
+        $queue = [System.Collections.Generic.Queue[object]]::new()
+        $visited = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
+        $queue.Enqueue([pscustomobject]@{ symbol = $target; depth = 0; relation = 'target' })
+        while ($queue.Count -gt 0 -and $related.Count -lt 40) {
+            $current = $queue.Dequeue()
+            if (-not $visited.Add($current.symbol.name)) { continue }
+            if ($current.depth -gt 0) {
+                $related.Add([pscustomobject]@{
+                    name = $current.symbol.name
+                    role = $current.symbol.role
+                    path = $current.symbol.path
+                    line = $current.symbol.line
+                    relation = $current.relation
+                    depth = $current.depth
+                })
+            }
+            if ($current.depth -ge 6) { continue }
+            foreach ($consumer in @(Get-Consumers $current.symbol.name $current.symbol.path)) {
+                $queue.Enqueue([pscustomobject]@{ symbol = $consumer; depth = $current.depth + 1; relation = 'consumer' })
+            }
+            if ($documents.ContainsKey($current.symbol.path)) {
+                $source = $documents[$current.symbol.path]
+                foreach ($dependency in $symbols) {
+                    if ($dependency.name -eq $current.symbol.name -or
+                        $dependency.role -notin @('Component', 'Facade', 'Service', 'ApiClient')) { continue }
+                    if ($dependency.name -match '^Ai' -and $source -match "\b$([regex]::Escape($dependency.name))\b") {
+                        $queue.Enqueue([pscustomobject]@{ symbol = $dependency; depth = $current.depth + 1; relation = 'dependency' })
+                    }
+                }
+            }
+        }
+        $upstream = @($related | Where-Object relation -eq 'consumer')
+        $componentContract = @($contractIndex.components | Where-Object class -eq $target.name | Select-Object -First 1)
+        $selectorConsumers = if ($componentContract.Count -eq 0) {
+            @()
+        } else {
+            @($contractIndex.consumerEdges | Where-Object component -eq $target.name)
+        }
+        $relatedPaths = @($target.path) + @($related.path) + @($selectorConsumers.consumerPath)
+        $apiCalls = @(
+            $contractIndex.apiCalls |
+                Where-Object { $_.path -in $relatedPaths } |
+                Sort-Object path, line -Unique
+        )
+        $relatedFeatures = @(
+            $related.path |
+                ForEach-Object {
+                    $featureMatch = [regex]::Match($_, '/features/(?<feature>[^/]+)/')
+                    if ($featureMatch.Success) { $featureMatch.Groups['feature'].Value }
+                } |
+                Sort-Object -Unique
+        )
+        $routes = @(
+            $frontendIndex.routes |
+                Where-Object {
+                    $route = $_
+                    $route.path -in $relatedFeatures -or
+                    @($relatedFeatures | Where-Object { $route.source -match "/features/$([regex]::Escape($_))/" }).Count -gt 0
+                } |
+                Sort-Object source, line -Unique
+        )
+        [pscustomobject][ordered]@{
+            symbol = $target
+            match = [pscustomobject]@{ score = $match.score; queryTerms = $queryTerms; matchedTerms = $match.matchedTerms }
+            routes = $routes
+            relatedSymbols = @($related | Sort-Object depth, relation, path, name -Unique)
+            upstreamConsumers = @($upstream | Sort-Object depth, path, name -Unique)
+            selectorConsumers = $selectorConsumers
+            contract = if ($componentContract.Count -eq 0) { $null } else { $componentContract[0] }
+            apiCalls = $apiCalls
+            tests = @(
+                @($target.path) + @($related.path) |
+                    ForEach-Object { $_ -replace '\.ts$', '.spec.ts' } |
+                    Where-Object { Test-Path -LiteralPath (Join-Path (Split-Path -Parent $wikiRoot) $_) } |
+                    Sort-Object -Unique
+            )
+        }
+    }
+)
+
+$result = [pscustomobject]@{ matched = $true; query = $Query; traces = $traces }
+if ($Format -eq 'Json') {
+    $result | ConvertTo-Json -Depth 10
+    exit 0
+}
+
+foreach ($trace in $traces) {
+    Write-Host "$($trace.symbol.name) [$($trace.symbol.role)]"
+    Write-Host "  Source: $($trace.symbol.path):$($trace.symbol.line)"
+    foreach ($route in $trace.routes) { Write-Host "  Route: /$($route.path) ($($route.source):$($route.line))" }
+    foreach ($consumer in $trace.upstreamConsumers) { Write-Host "  Upstream: $($consumer.name) ($($consumer.path):$($consumer.line))" }
+    foreach ($consumer in $trace.selectorConsumers) { Write-Host "  Template consumer: $($consumer.consumerPath)" }
+    foreach ($apiCall in $trace.apiCalls) { Write-Host "  API: $($apiCall.method) $($apiCall.resolvedUrlExpression) ($($apiCall.path):$($apiCall.line))" }
+    foreach ($test in $trace.tests) { Write-Host "  Test: $test" }
+    Write-Host ''
+}

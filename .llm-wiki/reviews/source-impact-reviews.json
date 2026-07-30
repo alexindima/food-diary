@@ -70,6 +70,21 @@
                         "reviewedAtUtc":  "2026-07-30T10:39:41.4029064Z"
                     },
                     {
+                        "pageId":  "workflow-architecture-health-review",
+                        "pagePath":  ".llm-wiki/workflows/architecture-health-review.md",
+                        "pageSha256":  "13c911643835938223822e5a1566c4d89542a3717b262390dafdd850323ee329",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/generated/architecture-health-index.json",
+                                            "sha256":  "099d3998557675dcc0ec2efd4e09e3c6f4d127d5544128075dc1d4ccbefdc702"
+                                        }
+                                    ],
+                        "reason":  "Reviewed generated ownership classification changes; architecture-health semantics remain unchanged.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "5a8487b11f207bc3a624ae0b629cec441e6c7c5c",
+                        "reviewedAtUtc":  "2026-07-30T16:45:15.1991569Z"
+                    },
+                    {
                         "pageId":  "workflow-backend-contract-review",
                         "pagePath":  ".llm-wiki/workflows/backend-contract-review.md",
                         "pageSha256":  "e38ac8a4632c1ae729365477f68f5cde28f6eebaf7dd764685faffd319feed6d",
@@ -165,14 +180,14 @@
                         "pageSha256":  "ee1056ebcb0deeefbc4c2e1d8ba4573231159d3e3fd3809c44b845d7139b6b40",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-                                            "sha256":  "4ab7820a2cd59ed984abf1af53d15f1e15ab4844713cef1170d4ee72cfce6cb9"
+                                            "path":  ".llm-wiki/wiki.ps1",
+                                            "sha256":  "8d8363e7b1340274a1233e0bd47fd47288f79294835669453280cf279f2e108f"
                                         }
                                     ],
-                        "reason":  "Reviewed after making affected index plan output capturable and portable across Windows and Linux; pipeline selection and documented behavior remain unchanged.",
+                        "reason":  "Reviewed wiki.ps1 trace dispatch change; index pipeline behavior is unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0fda827d4bac4a99c79748f2c9bb932dff511a65",
-                        "reviewedAtUtc":  "2026-07-30T10:36:08.9708375Z"
+                        "gitHead":  "5a8487b11f207bc3a624ae0b629cec441e6c7c5c",
+                        "reviewedAtUtc":  "2026-07-30T16:45:15.7555663Z"
                     },
                     {
                         "pageId":  "workflow-performance-observability-review",
@@ -196,13 +211,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "584a7ca447d3b97e3b6117ee31301326d3ff14dcf6e0f172d9d0c92d54377094"
+                                            "sha256":  "316671120966377b4b8981990086db7ef53314fbbd6340103158775e31430d21"
                                         }
                                     ],
-                        "reason":  "The regenerated quality index reflects the larger OpenAiFoodClient; quality scoring semantics are unchanged.",
+                        "reason":  "Reviewed regenerated quality index after frontend contract extraction improvements.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439af4c4db41ef536cca5f30927131b88bdf09a0",
-                        "reviewedAtUtc":  "2026-07-30T14:30:22.6020611Z"
+                        "gitHead":  "5a8487b11f207bc3a624ae0b629cec441e6c7c5c",
+                        "reviewedAtUtc":  "2026-07-30T16:45:16.2729171Z"
                     },
                     {
                         "pageId":  "workflow-runtime-impact",
@@ -226,13 +241,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "8b87797d72cada775783a0b71112a15a75c1ed6d53319de6dfca9ba8694d9ef6"
+                                            "sha256":  "8d8363e7b1340274a1233e0bd47fd47288f79294835669453280cf279f2e108f"
                                         }
                                     ],
-                        "reason":  "Router additions are limited to review, compact planning, and affected indexes; dispatch lifecycle is unchanged.",
+                        "reason":  "Reviewed wiki.ps1 trace dispatch change; task dispatch receipt behavior is unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
-                        "reviewedAtUtc":  "2026-07-30T09:40:31.7976900Z"
+                        "gitHead":  "5a8487b11f207bc3a624ae0b629cec441e6c7c5c",
+                        "reviewedAtUtc":  "2026-07-30T16:45:16.8863022Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

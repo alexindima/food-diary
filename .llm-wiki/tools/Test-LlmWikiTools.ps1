@@ -473,6 +473,31 @@ $frontendContract = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/fro
 Assert-Wiki ($frontendContract.summary.components -gt 0) 'Frontend contract index did not discover Angular components.'
 Assert-Wiki ($frontendContract.summary.apiCalls -gt 0) 'Frontend contract index did not discover direct HTTP calls.'
 Assert-Wiki ($frontendContract.summary.consumerEdges -gt 0) 'Frontend contract index did not discover selector consumers.'
+$photoPreviewContract = @($frontendContract.components | Where-Object class -eq 'AiPhotoPreviewComponent' | Select-Object -First 1)
+Assert-Wiki ($photoPreviewContract.Count -eq 1) 'Frontend contract index did not discover AiPhotoPreviewComponent.'
+Assert-Wiki (@($photoPreviewContract[0].inputs.name) -contains 'annotations') 'Frontend contract index did not parse a signal input with a nested generic type.'
+Assert-Wiki (@($photoPreviewContract[0].inputs.name) -contains 'annotationsVisible') 'Frontend contract index did not parse an inferred signal input.'
+Assert-Wiki (@($photoPreviewContract[0].outputs.name) -contains 'annotationsToggled') 'Frontend contract index did not parse an inferred signal output.'
+Assert-Wiki ($photoPreviewContract[0].feature -eq 'shared') 'Frontend contract index misclassified a shared application component.'
+$photoPreviewConsumer = @($frontendContract.consumerEdges | Where-Object component -eq 'AiPhotoPreviewComponent' | Select-Object -First 1)
+Assert-Wiki (@($photoPreviewConsumer[0].inputsUsed) -contains 'annotations') 'Frontend consumer graph omitted a nested-generic signal binding.'
+Assert-Wiki (@($photoPreviewConsumer[0].outputsHandled) -contains 'annotationsToggled') 'Frontend consumer graph omitted an inferred signal output binding.'
+Assert-Wiki ($photoPreviewConsumer[0].consumerFeature -eq 'shared') 'Frontend consumer graph misclassified a shared application consumer.'
+$frontendTrace = & (Join-Path $toolsRoot 'Find-LlmWikiFrontendTrace.ps1') -Query AiPhotoPreviewComponent -Format Json | ConvertFrom-Json
+Assert-Wiki ([bool]$frontendTrace.matched) 'Frontend trace did not resolve AiPhotoPreviewComponent.'
+Assert-Wiki (@($frontendTrace.traces[0].upstreamConsumers.name) -contains 'AiPhotoResultComponent') 'Frontend trace omitted the direct component consumer.'
+Assert-Wiki (@($frontendTrace.traces[0].upstreamConsumers.name) -contains 'AiInputBarComponent') 'Frontend trace omitted the second-level component consumer.'
+Assert-Wiki (@($frontendTrace.traces[0].tests) -contains 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.spec.ts') 'Frontend trace omitted the direct consumer test.'
+Assert-Wiki (@($frontendTrace.traces[0].routes.path) -contains 'dashboard') 'Frontend trace omitted a consuming application route.'
+Assert-Wiki (@($frontendTrace.traces[0].apiCalls.publicMethod) -contains 'analyzeFoodImage') 'Frontend trace omitted the downstream AI HTTP call.'
+$photoPreviewPlan = & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') `
+    -ChangedPath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.ts' `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (@($photoPreviewPlan.focusedTestDetails | Where-Object {
+    $_.path -eq 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.spec.ts' -and
+    $_.reason -eq 'direct-component-consumer' -and
+    $_.priority -eq 'recommended'
+}).Count -eq 1) 'Frontend test plan did not prioritize the direct component consumer spec.'
 $linkGoogleApiCall = @($frontendContract.apiCalls | Where-Object publicMethod -eq 'linkGoogle')
 Assert-Wiki ($linkGoogleApiCall.Count -eq 1) 'Frontend contract index did not discover linkGoogle through inherited ApiService helpers.'
 Assert-Wiki ($linkGoogleApiCall[0].transport -eq 'InheritedApiService') 'Frontend contract index did not classify linkGoogle as an inherited API helper call.'
@@ -822,9 +847,18 @@ try {
         Assert-Wiki (
             $hypotheticalImpact.valid -and
             $hypotheticalImpact.packetFingerprint -match '^[a-f0-9]{64}$' -and
+            $null -ne $hypotheticalImpact.alignment -and
             $hypotheticalImpact.impact.blastRadiusLevel -in @('low', 'medium', 'high', 'critical') -and
             $hypotheticalImpact.impact.blastRadiusScore -ge 0
         ) 'Standalone impact simulation did not produce a deterministic blast-radius forecast.'
+        $misalignedFrontendImpact = & (Join-Path $toolsRoot 'Manage-LlmWikiImpactSimulation.ps1') simulate `
+            -WorkspacePath $taskWorkspacePath `
+            -ProposedPath 'FoodDiary.Web.Client/src/app/features/products/pages/product-list.ts' `
+            -Objective 'Add photo annotations to the dashboard meal flow.' `
+            -Format Json | ConvertFrom-Json
+        Assert-Wiki ($misalignedFrontendImpact.alignment.status -eq 'mismatch') 'Impact simulation did not detect objective/path feature mismatch.'
+        Assert-Wiki (@($misalignedFrontendImpact.alignment.expectedFeatures) -contains 'dashboard') 'Impact simulation did not infer the dashboard feature from the objective.'
+        Assert-Wiki (@($misalignedFrontendImpact.alignment.suggestedPaths) -contains 'FoodDiary.Web.Client/src/app/features/dashboard') 'Impact simulation did not suggest an objective-aligned frontend path.'
         $impactSimulation = & (Join-Path $toolsRoot 'Manage-LlmWikiImpactSimulation.ps1') create `
             -WorkspacePath $taskWorkspacePath `
             -AsOfUtc ([DateTime]'2026-01-01T00:00:00Z') `

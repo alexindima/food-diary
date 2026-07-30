@@ -43,6 +43,7 @@ $scenarios = [System.Collections.Generic.List[object]]::new()
 $discoveredTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $directTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $siblingTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+$consumerTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $changedTestFiles = @(
     $diff.changedPaths |
         Where-Object { $_ -match '\.cs$' -and $_ -match '(^|/)tests/' -or $_ -match '\.(spec|test)\.ts$' } |
@@ -57,6 +58,23 @@ foreach ($changedPath in @($diff.changedPaths | Where-Object {
     $absoluteSiblingTestPath = [System.IO.Path]::Combine($repositoryRoot, $siblingTestPath.Replace('/', '\'))
     if (Test-Path -LiteralPath $absoluteSiblingTestPath) {
         $null = $siblingTests.Add($siblingTestPath)
+    }
+}
+
+$frontendContractPath = Join-Path $wikiRoot 'generated/frontend-contract-index.json'
+if (Test-Path -LiteralPath $frontendContractPath) {
+    $frontendContracts = Get-Content -LiteralPath $frontendContractPath -Raw | ConvertFrom-Json
+    $changedComponents = @(
+        $frontendContracts.components |
+            Where-Object { $_.path -in @($diff.changedPaths) -or $_.templatePath -in @($diff.changedPaths) }
+    )
+    foreach ($component in $changedComponents) {
+        foreach ($consumer in @($frontendContracts.consumerEdges | Where-Object component -eq $component.class)) {
+            $consumerSpec = $consumer.consumerPath -replace '\.html$', '.spec.ts'
+            if (Test-Path -LiteralPath (Join-Path $repositoryRoot $consumerSpec)) {
+                $null = $consumerTests.Add($consumerSpec)
+            }
+        }
     }
 }
 
@@ -110,6 +128,7 @@ function Add-RankedTests {
 }
 Add-RankedTests $changedTestFiles 100 'changed-test'
 Add-RankedTests @($siblingTests | Sort-Object) 90 'direct-sibling-spec'
+Add-RankedTests @($consumerTests | Sort-Object) 80 'direct-component-consumer'
 Add-RankedTests @($directTests | Sort-Object) 70 'references-changed-symbol'
 Add-RankedTests @($diff.focusedTests) 40 'downstream-context'
 $selectedFocusedTests = @($rankedFocusedTests | Select-Object -First $Limit)

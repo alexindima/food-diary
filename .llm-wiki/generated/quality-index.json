@@ -21,6 +21,14 @@
                          "structuralRiskScore":  120.8
                      },
                      {
+                         "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
+                         "nonBlankLines":  553,
+                         "decisionPoints":  73,
+                         "criticalSymbols":  0,
+                         "unreferencedCriticalSymbols":  0,
+                         "structuralRiskScore":  120.56
+                     },
+                     {
                          "path":  "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage-lib/recipe-manage-form.mapper.ts",
                          "nonBlankLines":  304,
                          "decisionPoints":  70,
@@ -35,14 +43,6 @@
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
                          "structuralRiskScore":  104.34
-                     },
-                     {
-                         "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
-                         "nonBlankLines":  489,
-                         "decisionPoints":  62,
-                         "criticalSymbols":  0,
-                         "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  102.78
                      },
                      {
                          "path":  "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
@@ -645,6 +645,14 @@
                          "structuralRiskScore":  45.48
                      },
                      {
+                         "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts",
+                         "nonBlankLines":  316,
+                         "decisionPoints":  26,
+                         "criticalSymbols":  0,
+                         "unreferencedCriticalSymbols":  0,
+                         "structuralRiskScore":  45.32
+                     },
+                     {
                          "path":  "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.ts",
                          "nonBlankLines":  227,
                          "decisionPoints":  27,
@@ -803,14 +811,6 @@
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
                          "structuralRiskScore":  40.34
-                     },
-                     {
-                         "path":  "FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs",
-                         "nonBlankLines":  216,
-                         "decisionPoints":  24,
-                         "criticalSymbols":  0,
-                         "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  40.32
                      }
                  ],
     "files":  [
@@ -24184,11 +24184,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.ts",
-                      "nonBlankLines":  20,
+                      "nonBlankLines":  24,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.4
+                      "structuralRiskScore":  0.48
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-actions/ai-photo-result-actions.ts",
@@ -24200,11 +24200,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-lib/ai-photo-result.types.ts",
-                      "nonBlankLines":  38,
+                      "nonBlankLines":  51,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.76
+                      "structuralRiskScore":  1.02
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-rows/ai-photo-result-rows.ts",
@@ -24216,11 +24216,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts",
-                      "nonBlankLines":  262,
-                      "decisionPoints":  14,
+                      "nonBlankLines":  316,
+                      "decisionPoints":  26,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  26.24
+                      "structuralRiskScore":  45.32
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/photo-upload-dialog/photo-upload-dialog.ts",
@@ -26832,19 +26832,19 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog-lib/meal-photo-recognition-dialog.types.ts",
-                      "nonBlankLines":  34,
+                      "nonBlankLines":  48,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.68
+                      "structuralRiskScore":  0.96
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
-                      "nonBlankLines":  489,
-                      "decisionPoints":  62,
+                      "nonBlankLines":  553,
+                      "decisionPoints":  73,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  102.78
+                      "structuralRiskScore":  120.56
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-result-actions/meal-photo-result-actions.ts",
@@ -26864,11 +26864,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-upload-panel/meal-photo-upload-panel.ts",
-                      "nonBlankLines":  21,
+                      "nonBlankLines":  26,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.42
+                      "structuralRiskScore":  0.52
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.ts",

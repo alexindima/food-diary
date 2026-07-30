@@ -50,6 +50,8 @@ param(
 
     [string]$Module,
     [string]$Query,
+    [ValidateSet('Auto', 'Backend', 'Frontend')]
+    [string]$TraceView = 'Auto',
     [ValidateSet('Any', 'Api', 'Backend', 'Frontend', 'Database', 'Tests')]
     [string]$ChangeType = 'Any',
     [ValidateSet('all', 'credential', 'identity', 'health', 'financial', 'privateContent', 'logging', 'boundaries')]
@@ -263,10 +265,20 @@ switch ($Command) {
         }
     }
     'trace' {
-        Invoke-WikiTool 'Find-LlmWikiTrace.ps1' @{
-            Query = $Query
-            Format = $Format
-            Limit = [Math]::Min($Limit, 30)
+        $traceArguments = @{
+            Query = $Query; Format = $Format; Limit = [Math]::Min($Limit, 30)
+        }
+        if ($TraceView -eq 'Frontend') {
+            Invoke-WikiTool 'Find-LlmWikiFrontendTrace.ps1' $traceArguments
+        } elseif ($TraceView -eq 'Backend') {
+            Invoke-WikiTool 'Find-LlmWikiTrace.ps1' $traceArguments
+        } else {
+            $frontendProbe = & (Join-Path $toolsRoot 'Find-LlmWikiFrontendTrace.ps1') -Query $Query -Format Json -Limit ([Math]::Min($Limit, 30)) | ConvertFrom-Json
+            if ([bool]$frontendProbe.matched) {
+                Invoke-WikiTool 'Find-LlmWikiFrontendTrace.ps1' $traceArguments
+            } else {
+                Invoke-WikiTool 'Find-LlmWikiTrace.ps1' $traceArguments
+            }
         }
     }
     'packet' {
@@ -1670,7 +1682,7 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 verify [-AffectedOnly] [-BaseRef <ref>] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify-full'
         Write-Host '  ./.llm-wiki/wiki.ps1 context -Module Billing -ChangeType Api'
-        Write-Host '  ./.llm-wiki/wiki.ps1 trace -Query StartPremiumTrial'
+        Write-Host '  ./.llm-wiki/wiki.ps1 trace -Query <backend-request-or-frontend-symbol> [-TraceView Auto|Backend|Frontend]'
         Write-Host '  ./.llm-wiki/wiki.ps1 packet -Objective <text> [-OutputPath <path>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 brief'
         Write-Host '  ./.llm-wiki/wiki.ps1 plan -Objective <text> [-ChangedPath <path>]'

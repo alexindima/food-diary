@@ -37,6 +37,13 @@ downstream modules, backend contracts and consumers, frontend contracts and
 consumers, runtime bindings, domain/data bindings, privacy boundaries,
 required checks, review obligations, risk, and a normalized blast-radius
 score.
+For frontend proposals it also compares objective-derived feature names with
+the proposed paths. The `alignment` result reports `aligned` or `mismatch`,
+confidence, evidence terms, expected and covered features, reasons, and
+suggested feature/shared roots. Explicit feature names in the objective are
+reported as required features, so an incidental match in a different feature
+does not hide a path mismatch. This is a planning warning rather than a validity
+failure: the agent must still confirm suggestions in source.
 The direct `brief` and `test-plan` commands also accept `-ProposedPath` for a
 smaller pre-diff view when a complete impact simulation is unnecessary.
 

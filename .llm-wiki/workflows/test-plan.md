@@ -36,14 +36,15 @@ still require the implementer to choose concrete inputs and assertions from the
 changed behavior.
 
 Focused tests are ranked by evidence: explicitly changed tests first, then a
-changed production file's sibling spec, tests that directly reference changed
-symbols, and finally broad downstream context. JSON includes
+changed production file's sibling spec, specs belonging to direct selector
+consumers, tests that directly reference changed symbols, and finally broad
+downstream context. JSON includes
 `focusedTestDetails` with the rank reason. Use `-Compact` to retain actionable
 tests, commands, and scenarios while reducing context volume.
 
 Each focused test also carries an execution priority: `required` for changed
-tests and direct siblings, `recommended` for symbol references, and
-`contextual` for broad downstream evidence.
+tests and direct siblings, `recommended` for direct component consumers and
+symbol references, and `contextual` for broad downstream evidence.
 
 Focused Angular commands are derived from the actual `package.json` script and
 the project's `angular.json` test builder. `--include` is emitted only for the

@@ -18,6 +18,8 @@ function Get-Feature {
     $match = [regex]::Match($Path, '/features/(?<feature>[^/]+)/')
     if ($match.Success) { return $match.Groups['feature'].Value }
     if ($Path -match '/projects/(?<project>[^/]+)/') { return $Matches['project'] }
+    if ($Path -match '/src/app/components/shared/') { return 'shared' }
+    if ($Path -match '/src/app/components/(?<area>[^/]+)/') { return $Matches['area'] }
     return 'shell'
 }
 
@@ -53,7 +55,7 @@ foreach ($file in $tsFiles) {
             if (Test-Path -LiteralPath $templateAbsolute) { $templatePath = ConvertTo-RepositoryPath $templateAbsolute }
         }
         $inputs = @(
-            [regex]::Matches($content, '(?m)(?:readonly\s+)?(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*input(?:\.required)?\s*(?:<(?<type>[^>]+)>)?\s*\(') |
+            [regex]::Matches($content, '(?m)(?:readonly\s+)?(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*input(?:\.required)?\s*(?:<(?<type>[^\r\n]+?)>)?\s*\(') |
                 ForEach-Object {
                     [pscustomobject]@{
                         name = $_.Groups['name'].Value
@@ -63,7 +65,7 @@ foreach ($file in $tsFiles) {
                 }
         )
         $outputs = @(
-            [regex]::Matches($content, '(?m)(?:readonly\s+)?(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*output\s*(?:<(?<type>[^>]+)>)?\s*\(') |
+            [regex]::Matches($content, '(?m)(?:readonly\s+)?(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*output\s*(?:<(?<type>[^\r\n]+?)>)?\s*\(') |
                 ForEach-Object {
                     [pscustomobject]@{ name = $_.Groups['name'].Value; type = $_.Groups['type'].Value }
                 }
@@ -83,18 +85,27 @@ foreach ($file in $tsFiles) {
 
     foreach ($match in [regex]::Matches(
         $content,
-        '(?m)\b(?:this\.)?(?:http|httpClient)\.(?<method>get|post|put|patch|delete)\s*(?:<(?<response>[^>]+)>)?\s*\(\s*(?<url>[^,\r\n\)]+)')) {
+        '(?m)\b(?:this\.)?(?:http|httpClient)\s*\.\s*(?<method>get|post|put|patch|delete)\s*(?:<(?<response>[^>]+)>)?\s*\(\s*(?<url>[^,\r\n\)]+)')) {
+        $methodMatches = [regex]::Matches(
+            $content.Substring(0, $match.Index),
+            '(?m)^\s*(?:public|protected|private)\s+(?:async\s+)?(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*\([^)]*\)\s*:\s*[^{\r\n]+\{')
+        $publicMethod = if ($methodMatches.Count -gt 0) {
+            $methodMatches[$methodMatches.Count - 1].Groups['name'].Value
+        } else {
+            $null
+        }
+        $urlExpression = $match.Groups['url'].Value.Trim()
         $apiCalls.Add([pscustomobject]@{
             feature = $feature
             method = $match.Groups['method'].Value.ToUpperInvariant()
             responseType = $match.Groups['response'].Value.Trim()
-            urlExpression = $match.Groups['url'].Value.Trim()
+            urlExpression = $urlExpression
             path = $path
             line = 1 + [regex]::Matches($content.Substring(0, $match.Index), "`n").Count
-            publicMethod = $null
+            publicMethod = $publicMethod
             transport = 'HttpClient'
-            baseUrlExpression = $null
-            resolvedUrlExpression = $match.Groups['url'].Value.Trim()
+            baseUrlExpression = $baseUrlExpression
+            resolvedUrlExpression = $urlExpression
         })
     }
 

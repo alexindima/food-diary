@@ -28,6 +28,23 @@ extending `ApiService`. Inherited calls record the owning public method, base
 URL expression, endpoint argument, and combined URL expression, so queries such
 as `linkGoogle` and `google/link` resolve the same call.
 
+Angular signal contracts include typed and inferred `input()` / `output()`
+members, including nested generic types such as `input<readonly Item[]>([])`.
+Consumer edges record the bindings that each template actually uses. Main-app
+components under `src/app/components/shared` are classified as `shared`, while
+feature consumers retain their `/features/<name>/` ownership. Direct
+`HttpClient` discovery also accepts fluent calls split across lines, such as
+`this.http` followed by `.post(...)`.
+
+For an end-to-end component view, use:
+
+```powershell
+./.llm-wiki/wiki.ps1 trace -Query AiPhotoPreviewComponent -TraceView Frontend
+```
+
+This adds upstream component consumers, routes, AI facade/service dependencies,
+HTTP calls, selector contracts, and nearby specs to the contract-level view.
+
 Account-settings components that expose external sign-in providers should treat
 provider status as a public UI contract: review the profile response field, the
 connected and unconnected render branches, the credential output, the consuming

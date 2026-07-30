@@ -855,7 +855,7 @@
                                            {
                                                "class":  "AiConsentDialogComponent",
                                                "selector":  "fd-ai-consent-dialog",
-                                               "feature":  "shell",
+                                               "feature":  "shared",
                                                "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-consent-dialog/ai-consent-dialog.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/ai-consent-dialog/ai-consent-dialog.html",
                                                "specPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-consent-dialog/ai-consent-dialog.spec.ts"
@@ -863,7 +863,7 @@
                                            {
                                                "class":  "BadgeComponent",
                                                "selector":  "fd-badge",
-                                               "feature":  "shell",
+                                               "feature":  "shared",
                                                "path":  "FoodDiary.Web.Client/src/app/components/shared/badge/badge.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/badge/badge.html",
                                                "specPath":  "FoodDiary.Web.Client/src/app/components/shared/badge/badge.spec.ts"
@@ -871,7 +871,7 @@
                                            {
                                                "class":  "BarcodeScannerComponent",
                                                "selector":  "fd-barcode-scanner",
-                                               "feature":  "shell",
+                                               "feature":  "shared",
                                                "path":  "FoodDiary.Web.Client/src/app/components/shared/barcode-scanner/barcode-scanner.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/barcode-scanner/barcode-scanner.html",
                                                "specPath":  "FoodDiary.Web.Client/src/app/components/shared/barcode-scanner/barcode-scanner.spec.ts"
@@ -879,7 +879,7 @@
                                            {
                                                "class":  "CardComponent",
                                                "selector":  "fd-card",
-                                               "feature":  "shell",
+                                               "feature":  "shared",
                                                "path":  "FoodDiary.Web.Client/src/app/components/shared/card/card.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/card/card.html",
                                                "specPath":  "FoodDiary.Web.Client/src/app/components/shared/card/card.spec.ts"
@@ -887,7 +887,7 @@
                                            {
                                                "class":  "ConfirmDeleteDialogComponent",
                                                "selector":  "fd-confirm-delete-dialog",
-                                               "feature":  "shell",
+                                               "feature":  "shared",
                                                "path":  "FoodDiary.Web.Client/src/app/components/shared/confirm-delete-dialog/confirm-delete-dialog.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/confirm-delete-dialog/confirm-delete-dialog.html",
                                                "specPath":  "FoodDiary.Web.Client/src/app/components/shared/confirm-delete-dialog/confirm-delete-dialog.spec.ts"
@@ -895,10 +895,66 @@
                                            {
                                                "class":  "DailyProgressCardComponent",
                                                "selector":  "fd-daily-progress-card",
-                                               "feature":  "shell",
+                                               "feature":  "shared",
                                                "path":  "FoodDiary.Web.Client/src/app/components/shared/daily-progress-card/daily-progress-card.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/daily-progress-card/daily-progress-card.html",
                                                "specPath":  "FoodDiary.Web.Client/src/app/components/shared/daily-progress-card/daily-progress-card.spec.ts"
+                                           },
+                                           {
+                                               "class":  "NotificationsDialogComponent",
+                                               "selector":  "fd-notifications-dialog",
+                                               "feature":  "shared",
+                                               "path":  "FoodDiary.Web.Client/src/app/components/shared/notifications-dialog/notifications-dialog.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/notifications-dialog/notifications-dialog.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/components/shared/notifications-dialog/notifications-dialog.spec.ts"
+                                           },
+                                           {
+                                               "class":  "NutrientsSummaryComponent",
+                                               "selector":  "fd-nutrients-summary",
+                                               "feature":  "shared",
+                                               "path":  "FoodDiary.Web.Client/src/app/components/shared/nutrients-summary/nutrients-summary.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/nutrients-summary/nutrients-summary.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/components/shared/nutrients-summary/nutrients-summary.spec.ts"
+                                           },
+                                           {
+                                               "class":  "PhotoUploadDialogComponent",
+                                               "selector":  "fd-photo-upload-dialog",
+                                               "feature":  "shared",
+                                               "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/photo-upload-dialog/photo-upload-dialog.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/photo-upload-dialog/photo-upload-dialog.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/photo-upload-dialog/photo-upload-dialog.spec.ts"
+                                           },
+                                           {
+                                               "class":  "PremiumRequiredDialogComponent",
+                                               "selector":  "fd-premium-required-dialog",
+                                               "feature":  "shared",
+                                               "path":  "FoodDiary.Web.Client/src/app/components/shared/premium-required-dialog/premium-required-dialog.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/premium-required-dialog/premium-required-dialog.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/components/shared/premium-required-dialog/premium-required-dialog.spec.ts"
+                                           },
+                                           {
+                                               "class":  "UnsavedChangesDialogComponent",
+                                               "selector":  "fd-unsaved-changes-dialog",
+                                               "feature":  "shared",
+                                               "path":  "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-dialog/unsaved-changes-dialog.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-dialog/unsaved-changes-dialog.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-dialog/unsaved-changes-dialog.spec.ts"
+                                           },
+                                           {
+                                               "class":  "WaistSummaryCardComponent",
+                                               "selector":  "fd-waist-summary-card",
+                                               "feature":  "shared",
+                                               "path":  "FoodDiary.Web.Client/src/app/components/shared/waist-summary-card/waist-summary-card.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/waist-summary-card/waist-summary-card.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/components/shared/waist-summary-card/waist-summary-card.spec.ts"
+                                           },
+                                           {
+                                               "class":  "WeightSummaryCardComponent",
+                                               "selector":  "fd-weight-summary-card",
+                                               "feature":  "shared",
+                                               "path":  "FoodDiary.Web.Client/src/app/components/shared/weight-summary-card/weight-summary-card.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/weight-summary-card/weight-summary-card.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/components/shared/weight-summary-card/weight-summary-card.spec.ts"
                                            },
                                            {
                                                "class":  "ItemSelectDialogComponent",
@@ -907,62 +963,6 @@
                                                "path":  "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.html",
                                                "specPath":  "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.spec.ts"
-                                           },
-                                           {
-                                               "class":  "NotificationsDialogComponent",
-                                               "selector":  "fd-notifications-dialog",
-                                               "feature":  "shell",
-                                               "path":  "FoodDiary.Web.Client/src/app/components/shared/notifications-dialog/notifications-dialog.ts",
-                                               "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/notifications-dialog/notifications-dialog.html",
-                                               "specPath":  "FoodDiary.Web.Client/src/app/components/shared/notifications-dialog/notifications-dialog.spec.ts"
-                                           },
-                                           {
-                                               "class":  "NutrientsSummaryComponent",
-                                               "selector":  "fd-nutrients-summary",
-                                               "feature":  "shell",
-                                               "path":  "FoodDiary.Web.Client/src/app/components/shared/nutrients-summary/nutrients-summary.ts",
-                                               "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/nutrients-summary/nutrients-summary.html",
-                                               "specPath":  "FoodDiary.Web.Client/src/app/components/shared/nutrients-summary/nutrients-summary.spec.ts"
-                                           },
-                                           {
-                                               "class":  "PhotoUploadDialogComponent",
-                                               "selector":  "fd-photo-upload-dialog",
-                                               "feature":  "shell",
-                                               "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/photo-upload-dialog/photo-upload-dialog.ts",
-                                               "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/photo-upload-dialog/photo-upload-dialog.html",
-                                               "specPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/photo-upload-dialog/photo-upload-dialog.spec.ts"
-                                           },
-                                           {
-                                               "class":  "PremiumRequiredDialogComponent",
-                                               "selector":  "fd-premium-required-dialog",
-                                               "feature":  "shell",
-                                               "path":  "FoodDiary.Web.Client/src/app/components/shared/premium-required-dialog/premium-required-dialog.ts",
-                                               "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/premium-required-dialog/premium-required-dialog.html",
-                                               "specPath":  "FoodDiary.Web.Client/src/app/components/shared/premium-required-dialog/premium-required-dialog.spec.ts"
-                                           },
-                                           {
-                                               "class":  "UnsavedChangesDialogComponent",
-                                               "selector":  "fd-unsaved-changes-dialog",
-                                               "feature":  "shell",
-                                               "path":  "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-dialog/unsaved-changes-dialog.ts",
-                                               "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-dialog/unsaved-changes-dialog.html",
-                                               "specPath":  "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-dialog/unsaved-changes-dialog.spec.ts"
-                                           },
-                                           {
-                                               "class":  "WaistSummaryCardComponent",
-                                               "selector":  "fd-waist-summary-card",
-                                               "feature":  "shell",
-                                               "path":  "FoodDiary.Web.Client/src/app/components/shared/waist-summary-card/waist-summary-card.ts",
-                                               "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/waist-summary-card/waist-summary-card.html",
-                                               "specPath":  "FoodDiary.Web.Client/src/app/components/shared/waist-summary-card/waist-summary-card.spec.ts"
-                                           },
-                                           {
-                                               "class":  "WeightSummaryCardComponent",
-                                               "selector":  "fd-weight-summary-card",
-                                               "feature":  "shell",
-                                               "path":  "FoodDiary.Web.Client/src/app/components/shared/weight-summary-card/weight-summary-card.ts",
-                                               "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/weight-summary-card/weight-summary-card.html",
-                                               "specPath":  "FoodDiary.Web.Client/src/app/components/shared/weight-summary-card/weight-summary-card.spec.ts"
                                            },
                                            {
                                                "class":  "ShoppingListPageComponent",
@@ -1423,6 +1423,11 @@
                                              "path":  "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-fields/auth-register-fields.ts",
                                              "templatePath":  "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-fields/auth-register-fields.html",
                                              "inputs":  [
+                                                            {
+                                                                "name":  "form",
+                                                                "type":  "FieldTree\u003cRegisterFormValues\u003e",
+                                                                "required":  true
+                                                            },
                                                             {
                                                                 "name":  "errors",
                                                                 "type":  "RegisterFieldErrors",
@@ -2876,6 +2881,11 @@
                                                                 "required":  false
                                                             },
                                                             {
+                                                                "name":  "swatchGroups",
+                                                                "type":  "Array\u003c{ title: string; description: string | null; items: TokenSwatch[] }\u003e",
+                                                                "required":  false
+                                                            },
+                                                            {
                                                                 "name":  "tableTitle",
                                                                 "type":  "",
                                                                 "required":  false
@@ -2942,6 +2952,11 @@
                                                                 "required":  true
                                                             },
                                                             {
+                                                                "name":  "options",
+                                                                "type":  "Array\u003cFdUiAutocompleteOption\u003cT\u003e\u003e",
+                                                                "required":  true
+                                                            },
+                                                            {
                                                                 "name":  "emptyText",
                                                                 "type":  "string",
                                                                 "required":  false
@@ -2958,7 +2973,10 @@
                                                             }
                                                         ],
                                              "outputs":  [
-
+                                                             {
+                                                                 "name":  "optionSelected",
+                                                                 "type":  "FdUiAutocompleteOption\u003cT\u003e"
+                                                             }
                                                          ],
                                              "specPath":  null
                                          },
@@ -3236,6 +3254,16 @@
                                                                 "name":  "contentHtml",
                                                                 "type":  "SafeHtml | null",
                                                                 "required":  false
+                                                            },
+                                                            {
+                                                                "name":  "contentTemplate",
+                                                                "type":  "TemplateRef\u003cunknown\u003e | null",
+                                                                "required":  false
+                                                            },
+                                                            {
+                                                                "name":  "contentContext",
+                                                                "type":  "Record\u003cstring, unknown\u003e | null",
+                                                                "required":  false
                                                             }
                                                         ],
                                              "outputs":  [
@@ -3502,6 +3530,11 @@
                                                                 "required":  false
                                                             },
                                                             {
+                                                                "name":  "queryParams",
+                                                                "type":  "Record\u003cstring, unknown\u003e",
+                                                                "required":  false
+                                                            },
+                                                            {
                                                                 "name":  "fragment",
                                                                 "type":  "string",
                                                                 "required":  false
@@ -3538,6 +3571,11 @@
                                                                 "required":  true
                                                             },
                                                             {
+                                                                "name":  "options",
+                                                                "type":  "Array\u003cFdUiRadioOption\u003cT\u003e\u003e",
+                                                                "required":  true
+                                                            },
+                                                            {
                                                                 "name":  "disabled",
                                                                 "type":  "boolean",
                                                                 "required":  true
@@ -3549,6 +3587,10 @@
                                                             }
                                                         ],
                                              "outputs":  [
+                                                             {
+                                                                 "name":  "optionSelected",
+                                                                 "type":  "FdUiRadioOption\u003cT\u003e"
+                                                             },
                                                              {
                                                                  "name":  "optionBlur",
                                                                  "type":  ""
@@ -4135,7 +4177,7 @@
                                          {
                                              "class":  "AiInputActionBarComponent",
                                              "selector":  "fd-ai-input-action-bar",
-                                             "feature":  "shell",
+                                             "feature":  "shared",
                                              "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-action-bar.ts",
                                              "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-action-bar.html",
                                              "inputs":  [
@@ -4194,7 +4236,7 @@
                                          {
                                              "class":  "NutritionEditorMessagesComponent",
                                              "selector":  "fd-nutrition-editor-messages",
-                                             "feature":  "shell",
+                                             "feature":  "shared",
                                              "path":  "FoodDiary.Web.Client/src/app/components/shared/nutrition-editor/nutrition-editor-messages.ts",
                                              "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/nutrition-editor/nutrition-editor-messages.html",
                                              "inputs":  [
@@ -4291,6 +4333,11 @@
                                              "templatePath":  "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.html",
                                              "inputs":  [
                                                             {
+                                                                "name":  "circumferenceField",
+                                                                "type":  "FieldTree\u003cstring\u003e",
+                                                                "required":  true
+                                                            },
+                                                            {
                                                                 "name":  "isSaving",
                                                                 "type":  "boolean",
                                                                 "required":  true
@@ -4339,6 +4386,11 @@
                                              "path":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.ts",
                                              "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
                                              "inputs":  [
+                                                            {
+                                                                "name":  "weightField",
+                                                                "type":  "FieldTree\u003cstring\u003e",
+                                                                "required":  true
+                                                            },
                                                             {
                                                                 "name":  "isSaving",
                                                                 "type":  "boolean",

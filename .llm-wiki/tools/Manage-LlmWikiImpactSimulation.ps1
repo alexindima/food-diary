@@ -103,6 +103,76 @@ function Get-ImpactSnapshot([object]$Packet) {
 function Get-Unexpected([object[]]$Actual, [object[]]$Forecast) {
     @($Actual | Where-Object { $_ -notin $Forecast } | Sort-Object -Unique)
 }
+function Get-ScopeAlignment([string]$ObjectiveText, [string[]]$Paths) {
+    $normalizedObjective = ([string]$ObjectiveText).ToLowerInvariant()
+    $aliases = @{
+        'dashboard' = @('dashboard')
+        'meal' = @('meal', 'meals', 'consumption')
+        'food' = @('food', 'meal', 'meals', 'products')
+        'photo' = @('photo', 'image', 'vision')
+        'annotation' = @('annotation', 'photo', 'image', 'vision')
+    }
+    $terms = @(
+        [regex]::Matches($normalizedObjective, '[\p{L}\p{Nd}]+') |
+            ForEach-Object Value |
+            Where-Object { $_.Length -ge 4 -and $_ -notin @('add', 'change', 'feature', 'implement', 'with', 'from', 'that', 'this') } |
+            Sort-Object -Unique
+    )
+    $expanded = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    foreach ($term in $terms) {
+        $null = $expanded.Add($term)
+        if ($aliases.ContainsKey($term)) {
+            foreach ($alias in @($aliases[$term])) { $null = $expanded.Add($alias) }
+        }
+    }
+    $pathText = (@($Paths) -join ' ').ToLowerInvariant()
+    $matched = @($expanded | Where-Object { $pathText.Contains($_) } | Sort-Object)
+    $featureIndex = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/frontend-index.json') -Raw | ConvertFrom-Json
+    $expectedFeatures = @(
+        $featureIndex.features |
+            Where-Object {
+                $feature = $_
+                $feature.name -in @($expanded)
+            } |
+            ForEach-Object name |
+            Sort-Object -Unique
+    )
+    $requiredFeatures = @(
+        foreach ($term in $terms) {
+            if ($term -in @($featureIndex.features.name)) { $term }
+            if ($term -eq 'meal') { 'meals' }
+        }
+    ) | Sort-Object -Unique
+    $coveredFeatures = @($expectedFeatures | Where-Object { $pathText -match "/features/$([regex]::Escape($_))/" })
+    $suggestedPaths = @(
+        $featureIndex.features |
+            Where-Object name -in $expectedFeatures |
+            ForEach-Object root
+        if ($normalizedObjective -match 'photo|image|vision|annotation') {
+            'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar'
+        }
+    ) | Sort-Object -Unique
+    $missingRequiredFeatures = @($requiredFeatures | Where-Object { $_ -notin $coveredFeatures })
+    $aligned = if ($requiredFeatures.Count -gt 0) {
+        $missingRequiredFeatures.Count -eq 0
+    } else {
+        $expectedFeatures.Count -eq 0 -or $coveredFeatures.Count -gt 0
+    }
+    [pscustomobject][ordered]@{
+        status = if ($aligned) { 'aligned' } else { 'mismatch' }
+        confidence = if ($expectedFeatures.Count -gt 0) { 'high' } elseif ($matched.Count -gt 0) { 'medium' } else { 'low' }
+        objectiveTerms = @($expanded | Sort-Object)
+        matchedPathTerms = $matched
+        expectedFeatures = $expectedFeatures
+        requiredFeatures = $requiredFeatures
+        coveredFeatures = $coveredFeatures
+        missingRequiredFeatures = $missingRequiredFeatures
+        reasons = @(
+            if (-not $aligned) { "Proposed paths do not cover objective feature(s) '$($missingRequiredFeatures -join ', ')'." }
+        )
+        suggestedPaths = $suggestedPaths
+    }
+}
 function Get-Comparison([object]$Forecast, [object]$Actual) {
     $unexpected = [pscustomobject][ordered]@{
         scopes = @(Get-Unexpected $Actual.scopes $Forecast.scopes)
@@ -233,7 +303,8 @@ if ($Action -eq 'simulate') {
     if ($paths.Count -eq 0) { throw 'simulate requires ProposedPath.' }
     $packet = & (Join-Path $PSScriptRoot 'Get-LlmWikiChangePacket.ps1') -Objective $Objective -ChangedPath $paths -Format Json | ConvertFrom-Json
     $snapshot = Get-ImpactSnapshot $packet
-    $result = [pscustomobject][ordered]@{ action = 'simulate'; valid = $true; proposedPaths = $paths; packetFingerprint = $packet.fingerprint; impact = $snapshot }
+    $alignment = Get-ScopeAlignment $Objective $paths
+    $result = [pscustomobject][ordered]@{ action = 'simulate'; valid = $true; proposedPaths = $paths; packetFingerprint = $packet.fingerprint; alignment = $alignment; impact = $snapshot }
 } elseif ($Action -in @('assess', 'create')) {
     $receipt = New-Receipt (Get-Assessment)
     if ($Action -eq 'create') {
@@ -257,6 +328,9 @@ if ($Action -eq 'simulate') {
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 40 } else {
     if ($Action -eq 'simulate') {
         Write-Host "Impact simulation: paths=$(@($result.proposedPaths).Count), blast=$($result.impact.blastRadiusLevel) ($($result.impact.blastRadiusScore)/100)"
+        Write-Host "Objective/path alignment: $($result.alignment.status) (confidence=$($result.alignment.confidence))"
+        foreach ($reason in @($result.alignment.reasons)) { Write-Host " - $reason" }
+        foreach ($path in @($result.alignment.suggestedPaths)) { Write-Host " - Suggested: $path" }
     } else {
         Write-Host "Impact simulation: action=$($result.action), valid=$($result.valid), forecast=$($result.simulation.forecast.blastRadiusScore), actual=$($result.simulation.actual.blastRadiusScore), delta=$($result.simulation.comparison.scoreDelta)"
         foreach ($finding in @($result.simulation.findings)) { Write-Host " - [$($finding.severity)] $($finding.id): $($finding.count)" }
