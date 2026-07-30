@@ -120,6 +120,16 @@ Assert-Wiki (@($billing.projects.name) -contains 'FoodDiary.Application.Billing'
 Assert-Wiki (@($billing.symbols.path | Where-Object { $_ -match '/Billing/' }).Count -gt 0) 'Billing symbols are not ranked into context.'
 Assert-Wiki (@($billing.tests.path | Where-Object { $_ -match '/Billing/' }).Count -gt 0) 'Billing focused tests are missing from context.'
 
+$frontendContext = & (Join-Path $toolsRoot 'Find-LlmWikiContext.ps1') `
+    -Query 'AI dashboard' `
+    -ChangeType Frontend `
+    -ScopePath 'FoodDiary.Web.Client/src/app/features/dashboard;FoodDiary.Web.Client/src/app/components/shared/ai-input-bar' `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (@($frontendContext.frontendSymbols.name) -contains 'AiPhotoResultComponent') 'Scoped frontend context omitted the AI photo component cluster.'
+Assert-Wiki (@($frontendContext.projects).Count -eq 0) 'Frontend-only context retained unrelated .NET projects.'
+Assert-Wiki (@($frontendContext.symbols.path | Where-Object { $_ -match 'MailInbox' }).Count -eq 0) 'Frontend AI context included the unrelated MailInbox cluster.'
+Assert-Wiki (@($frontendContext.query.scopePaths).Count -eq 2) 'Context did not normalize semicolon-delimited planned paths.'
+
 $diffJson = & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') `
     -ChangedPath @(
         'FoodDiary.Presentation.Api/Features/Fasting/FastingController.cs'
@@ -162,6 +172,35 @@ $brief = $usersPacket.brief
 Assert-Wiki ($brief.risk.level -in @('low', 'medium', 'high')) 'Task brief did not classify risk.'
 Assert-Wiki (@($brief.change.directModules) -contains 'Users') 'Task brief did not include the direct module.'
 Assert-Wiki (@($brief.requiredChecks.id) -contains 'architecture-tests') 'Task brief did not include required checks.'
+
+$emptyBriefDiff = [pscustomobject]@{
+    changedPaths = @()
+    scopes = @()
+    modules = @()
+    wikiPages = @()
+    focusedTests = @()
+    recommendedChecks = @()
+    generatedActions = @()
+    warnings = @()
+}
+$unscopedBrief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') -DiffInput $emptyBriefDiff -Compact -Format Json | ConvertFrom-Json
+Assert-Wiki ($unscopedBrief.analysis.mode -eq 'unscoped') 'Empty brief did not expose unscoped analysis mode.'
+Assert-Wiki (@($unscopedBrief.nextSteps).Count -eq 1) 'Empty brief did not return an actionable scoping step.'
+Assert-Wiki ($unscopedBrief.nextSteps[0].recommendedCommand -match 'Intent.*PlannedPath') 'Empty brief did not show the complete pre-diff command shape.'
+
+$interactiveUiBrief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
+    -ProposedPath @(
+        'FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts'
+        'FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.html'
+        'FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.scss'
+    ) `
+    -Intent 'Improve the responsive accessible modal with loading, error, and toggle states.' `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki ($interactiveUiBrief.risk.level -in @('medium', 'high')) 'Interactive responsive modal was incorrectly classified as low risk.'
+Assert-Wiki (@($interactiveUiBrief.risk.reasons) -contains 'modal or dialog interaction flow') 'UI risk omitted modal interaction complexity.'
+Assert-Wiki (@($interactiveUiBrief.risk.reasons) -contains 'responsive layout behavior') 'UI risk omitted responsive layout behavior.'
+Assert-Wiki (@($interactiveUiBrief.risk.reasons) -contains 'accessibility interaction contract') 'UI risk omitted accessibility behavior.'
+Assert-Wiki (@($interactiveUiBrief.risk.reasons) -contains 'multi-state frontend interaction') 'UI risk omitted the frontend state matrix.'
 
 $testPlanJson = & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') `
     -ChangedPath @('FoodDiary.Infrastructure/Persistence/Products/ProductRepository.cs') `
@@ -399,6 +438,24 @@ $externalPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') `
     -Category external `
     -Format Json | ConvertFrom-Json
 Assert-Wiki (@($externalPrivacy.items | Where-Object providerHost -eq 'api.openai.com').Count -gt 0) 'Natural-language privacy query did not resolve the OpenAI image boundary.'
+$unscopedPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') -Category all -Format Json | ConvertFrom-Json
+Assert-Wiki ($unscopedPrivacy.scope.mode -eq 'none') 'Unscoped privacy query unexpectedly inferred a non-feature scope.'
+Assert-Wiki ($unscopedPrivacy.count -eq 0 -and @($unscopedPrivacy.guidance).Count -gt 0) 'Unscoped privacy query returned a noisy repository-wide candidate list.'
+$scopedPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') `
+    -Category all `
+    -ScopePath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result' `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (@($scopedPrivacy.items | Where-Object providerHost -eq 'api.openai.com').Count -gt 0) 'Scoped photo privacy review omitted the external OpenAI image boundary.'
+
+$multiPathBrief = & (Join-Path $wikiRoot 'wiki.ps1') brief `
+    -PlannedPath 'FoodDiary.Web.Client/src/app/features/dashboard;FoodDiary.Web.Client/src/app/components/shared/ai-input-bar' `
+    -Intent 'Improve dashboard AI interaction.' `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (@($multiPathBrief.change.proposedPaths).Count -eq 2) 'Wiki CLI did not normalize the simple multi-path PlannedPath syntax.'
+
+$impactHelp = & (Join-Path $toolsRoot 'Get-LlmWikiImpact.ps1') `
+    -ChangedPath '.llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1'
+Assert-Wiki (($impactHelp -join [Environment]::NewLine) -match '\[id:\s*workflow-impact-simulation;') 'Source-impact output omitted the copyable internal page ID.'
 
 $dependencyJson = & (Join-Path $toolsRoot 'Get-LlmWikiDependencyChanges.ps1') -BaseRef HEAD -Format Json
 $dependencyChanges = $dependencyJson | ConvertFrom-Json

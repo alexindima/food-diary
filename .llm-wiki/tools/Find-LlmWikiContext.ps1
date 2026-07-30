@@ -2,6 +2,8 @@
 param(
     [string]$Module,
     [string]$Query,
+    [Alias('PlannedPath', 'ProposedPath')]
+    [string[]]$ScopePath,
     [ValidateSet('Any', 'Api', 'Backend', 'Frontend', 'Database', 'Tests')]
     [string]$ChangeType = 'Any',
     [ValidateSet('Text', 'Json')]
@@ -45,10 +47,12 @@ function Get-SearchScore {
         return 0
     }
 
-    $normalizedText = $Text.ToLowerInvariant()
+    $normalizedText = ($Text -creplace '([a-z0-9])([A-Z])', '$1 $2').ToLowerInvariant()
     $score = 0
     foreach ($token in $Tokens) {
-        if ($normalizedText.Contains($token)) {
+        $tokenPattern = "(^|[^\p{L}\p{Nd}])$([regex]::Escape($token))([^\p{L}\p{Nd}]|$)"
+        if ($normalizedText -match $tokenPattern -or
+            ($token.Length -ge 4 -and $normalizedText.Contains($token))) {
             $score += $TokenWeight
         }
     }
@@ -62,6 +66,34 @@ function Get-SearchScore {
         }
     }
     return $score
+}
+
+$scopePaths = @(
+    $ScopePath |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        ForEach-Object { $_ -split '[;,]' } |
+        ForEach-Object { $_.Trim().Replace('\', '/') } |
+        Where-Object { $_.Length -gt 0 } |
+        Sort-Object -Unique
+)
+function Get-ScopeAffinity {
+    param([string]$Path)
+    if ($scopePaths.Count -eq 0 -or [string]::IsNullOrWhiteSpace($Path)) { return 0 }
+    $normalizedPath = $Path.Replace('\', '/')
+    foreach ($scopePath in $scopePaths) {
+        $scopeDirectory = if ([IO.Path]::HasExtension($scopePath)) { Split-Path -Parent $scopePath } else { $scopePath }
+        $scopeDirectory = $scopeDirectory.Replace('\', '/').TrimEnd('/')
+        if ($normalizedPath -eq $scopePath -or
+            $normalizedPath.StartsWith("$scopeDirectory/", [StringComparison]::OrdinalIgnoreCase) -or
+            $scopePath.StartsWith("$($normalizedPath.TrimEnd('/'))/", [StringComparison]::OrdinalIgnoreCase)) {
+            return 40
+        }
+        $featureMatch = [regex]::Match($scopePath, '/features/(?<feature>[^/]+)/')
+        if ($featureMatch.Success -and $normalizedPath -match "/features/$([regex]::Escape($featureMatch.Groups['feature'].Value))/") {
+            return 24
+        }
+    }
+    return -8
 }
 
 function Select-ScoredItems {
@@ -85,6 +117,8 @@ $tokens = @(
         Where-Object { $_.Length -ge 2 } |
         Sort-Object -Unique
 )
+$frontendOnlyScope = $ChangeType -eq 'Frontend' -and
+    ($scopePaths.Count -eq 0 -or @($scopePaths | Where-Object { $_ -notmatch '^FoodDiary\.Web\.Client/' }).Count -eq 0)
 $catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
 $symbolIndex = if (Test-Path -LiteralPath $symbolIndexPath) {
     Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json
@@ -191,6 +225,7 @@ $changeTypeContextProjects = @{
 foreach ($project in $catalog.dotnet.projects) {
     $searchable = "$($project.name) $($project.path)"
     $score = Get-SearchScore $searchable $tokens 10 20
+    if ($frontendOnlyScope) { $score = 0 } else { $score += Get-ScopeAffinity $project.path }
     if (@($changeTypeContextProjects[$ChangeType]) -contains $project.name) {
         $score += 3
     }
@@ -207,6 +242,7 @@ $frontendProjectCandidates = [System.Collections.Generic.List[object]]::new()
 foreach ($frontendProject in $catalog.frontend.projects) {
     $searchable = "$($frontendProject.name) $($frontendProject.root) $($frontendProject.sourceRoot)"
     $score = Get-SearchScore $searchable $tokens 10 20
+    $score += Get-ScopeAffinity "$($frontendProject.sourceRoot)"
     if ($ChangeType -eq 'Frontend') {
         $score += 3
     }
@@ -228,6 +264,7 @@ if ($null -ne $frontendIndex) {
     $frontendFeatureCandidates = [System.Collections.Generic.List[object]]::new()
     foreach ($feature in $frontendIndex.features) {
         $score = Get-SearchScore "$($feature.area) $($feature.name) $($feature.root)" $tokens 10 20
+        $score += Get-ScopeAffinity $feature.root
         if ($score -gt 0) {
             $frontendFeatureCandidates.Add([pscustomobject]@{
                 area = $feature.area
@@ -244,6 +281,7 @@ if ($null -ne $frontendIndex) {
     $frontendSymbolCandidates = [System.Collections.Generic.List[object]]::new()
     foreach ($frontendSymbol in $frontendIndex.symbols) {
         $score = Get-SearchScore "$($frontendSymbol.name) $($frontendSymbol.role) $($frontendSymbol.selector) $($frontendSymbol.path)" $tokens 8 18
+        $score += Get-ScopeAffinity $frontendSymbol.path
         if ($score -gt 0) {
             $frontendSymbolCandidates.Add([pscustomobject]@{
                 name = $frontendSymbol.name
@@ -260,6 +298,7 @@ if ($null -ne $frontendIndex) {
     $frontendRouteCandidates = [System.Collections.Generic.List[object]]::new()
     foreach ($frontendRoute in $frontendIndex.routes) {
         $score = Get-SearchScore "$($frontendRoute.path) $($frontendRoute.source)" $tokens 10 20
+        $score += Get-ScopeAffinity $frontendRoute.source
         if ($score -gt 0) {
             $frontendRouteCandidates.Add([pscustomobject]@{
                 route = $frontendRoute.path
@@ -295,6 +334,7 @@ foreach ($controller in $catalog.http.controllers) {
     $endpointRoutes = @($controller.endpoints | ForEach-Object { "$($_.verb) $($_.route)" })
     $searchable = "$($controller.name) $($controller.path) $($controller.routePrefix) $($endpointRoutes -join ' ')"
     $score = Get-SearchScore $searchable $tokens 10 20
+    if ($frontendOnlyScope) { $score = 0 } else { $score += Get-ScopeAffinity $controller.path }
     if ($score -gt 0 -and $ChangeType -eq 'Api') {
         $score += 2
     }
@@ -317,6 +357,7 @@ if ($null -ne $symbolIndex) {
     foreach ($symbol in $symbolIndex.symbols) {
         $searchable = "$($symbol.name) $($symbol.role) $($symbol.path)"
         $score = Get-SearchScore $searchable $tokens 8 18
+        if ($frontendOnlyScope) { $score = 0 } else { $score += Get-ScopeAffinity $symbol.path }
         if ($null -ne $matchedModule) {
             $modulePathPattern = "/$([regex]::Escape([string]$matchedModule.name))/"
             if ([string]$symbol.path -match $modulePathPattern) {
@@ -346,6 +387,7 @@ if ($null -ne $symbolIndex) {
     foreach ($registration in $symbolIndex.dependencyInjectionRegistrations) {
         $searchable = "$($registration.service) $($registration.implementation) $($registration.path)"
         $score = Get-SearchScore $searchable $tokens 8 18
+        if ($frontendOnlyScope) { $score = 0 } else { $score += Get-ScopeAffinity $registration.path }
         if ($null -ne $matchedModule -and
             [string]$registration.path -match "/$([regex]::Escape([string]$matchedModule.name))(/|\.)") {
             $score += 12
@@ -444,6 +486,7 @@ if ($ChangeType -eq 'Frontend' -and $null -ne $frontendIndex) {
     )
     foreach ($frontendTestPath in $frontendTestPaths) {
         $score = Get-SearchScore $frontendTestPath $tokens 12 24
+        $score += Get-ScopeAffinity $frontendTestPath
         if ($score -gt 0) {
             $testCandidates.Add([pscustomobject]@{ path = $frontendTestPath; score = $score })
         }
@@ -490,6 +533,7 @@ $context = [ordered]@{
         module = $Module
         text = $Query
         changeType = $ChangeType
+        scopePaths = $scopePaths
     }
     module = $moduleContext
     wikiPages = @($wikiResults | ForEach-Object { [ordered]@{ path = $_.path; score = $_.score } })

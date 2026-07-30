@@ -199,6 +199,22 @@ $toolsRoot = Join-Path $PSScriptRoot 'tools'
 . (Join-Path $toolsRoot 'LlmWikiJson.ps1')
 Enable-LlmWikiStringDateJsonParsing
 
+function Expand-LlmWikiPathList {
+    param([string[]]$Path)
+    return @(
+        $Path |
+            Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+            ForEach-Object { $_ -split '[;,]' } |
+            ForEach-Object { $_.Trim() } |
+            Where-Object { $_.Length -gt 0 } |
+            Sort-Object -Unique
+    )
+}
+
+if ($PSBoundParameters.ContainsKey('ProposedPath')) {
+    $ProposedPath = @(Expand-LlmWikiPathList $ProposedPath)
+}
+
 function Invoke-WikiTool {
     param(
         [string]$Name,
@@ -256,13 +272,15 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' @{ FailOnUnreviewed = $true }
     }
     'context' {
-        Invoke-WikiTool 'Find-LlmWikiContext.ps1' @{
+        $contextArguments = @{
             Module = $Module
             Query = $Query
             ChangeType = $ChangeType
             Format = $Format
             Limit = $Limit
         }
+        if ($PSBoundParameters.ContainsKey('ProposedPath')) { $contextArguments.ScopePath = $ProposedPath }
+        Invoke-WikiTool 'Find-LlmWikiContext.ps1' $contextArguments
     }
     'trace' {
         $traceArguments = @{
@@ -1336,12 +1354,14 @@ switch ($Command) {
         Invoke-WikiTool 'Find-LlmWikiRuntimeTopology.ps1' @{ Query = $Query; Limit = $Limit; Format = $Format }
     }
     'privacy' {
-        Invoke-WikiTool 'Find-LlmWikiSensitiveData.ps1' @{
+        $privacyArguments = @{
             Query = $Query
             Category = $PrivacyCategory
             Limit = $Limit
             Format = $Format
         }
+        if ($PSBoundParameters.ContainsKey('ProposedPath')) { $privacyArguments.ScopePath = $ProposedPath }
+        Invoke-WikiTool 'Find-LlmWikiSensitiveData.ps1' $privacyArguments
     }
     'ui' {
         Invoke-WikiTool 'Find-LlmWikiFrontendContract.ps1' @{
@@ -1765,7 +1785,8 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 task-proof-seal -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-requirements-assess -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-requirements-expand -WorkspacePath .artifacts/llm-wiki/tasks/<name> -Reason <rationale>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 impact-simulate -ProposedPath <path> [-Objective <text>]'
+        Write-Host "  ./.llm-wiki/wiki.ps1 impact-simulate -PlannedPath @('path/one','path/two') [-Objective <text>]"
+        Write-Host "  Multiple paths also accept: -PlannedPath 'path/one;path/two'"
         Write-Host '  ./.llm-wiki/wiki.ps1 task-impact-assess -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-repair-suggest -WorkspacePath <path> -CheckId <failed-check>'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-repair-start -WorkspacePath <path> -CheckId <failed-check> -RepairHypothesis <text> -RepairPath <path> -Owner <agent>'
@@ -1855,7 +1876,7 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 task-finish -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-DryRun]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
         Write-Host '  ./.llm-wiki/wiki.ps1 topology [-Query <text>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 privacy -PrivacyCategory credential'
+        Write-Host "  ./.llm-wiki/wiki.ps1 privacy -PrivacyCategory credential [-PlannedPath @('path/one','path/two')]"
         Write-Host '  ./.llm-wiki/wiki.ps1 ui -FrontendView components -Query autocomplete'
         Write-Host '  ./.llm-wiki/wiki.ps1 domain -DomainView invariants -Query weight'
         Write-Host '  ./.llm-wiki/wiki.ps1 contracts -BackendContractView consumers -Query StartFastingCommand'

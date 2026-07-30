@@ -121,13 +121,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "190e7161706b89961a93577a0d45823fdd0199d4c0d9818b8b2c83790980b93b"
+                                            "sha256":  "d82ce8e5472a1e3d498a24686d6cb749d3846ed050702edd94023a7503800478"
                                         }
                                     ],
-                        "reason":  "Intent inference and analysis provenance enrich task briefs without changing manifest lifecycle or validation.",
+                        "reason":  "Reviewed compact brief next-step metadata; manifest schema remains unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439af4c4db41ef536cca5f30927131b88bdf09a0",
-                        "reviewedAtUtc":  "2026-07-30T14:30:16.3445504Z"
+                        "gitHead":  "9ee37a9ccd4f1777efdfc303df8bbce091f66dad",
+                        "reviewedAtUtc":  "2026-07-30T22:02:38.9217344Z"
                     },
                     {
                         "pageId":  "workflow-change-packet",
@@ -136,13 +136,28 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "190e7161706b89961a93577a0d45823fdd0199d4c0d9818b8b2c83790980b93b"
+                                            "sha256":  "d82ce8e5472a1e3d498a24686d6cb749d3846ed050702edd94023a7503800478"
                                         }
                                     ],
-                        "reason":  "Intent inference and analysis provenance enrich the embedded brief without changing packet composition or fingerprints.",
+                        "reason":  "Reviewed compact brief next-step metadata; packet fingerprint inputs remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439af4c4db41ef536cca5f30927131b88bdf09a0",
-                        "reviewedAtUtc":  "2026-07-30T14:30:18.0728737Z"
+                        "gitHead":  "9ee37a9ccd4f1777efdfc303df8bbce091f66dad",
+                        "reviewedAtUtc":  "2026-07-30T22:02:39.5456714Z"
+                    },
+                    {
+                        "pageId":  "workflow-context-bundles",
+                        "pagePath":  ".llm-wiki/workflows/context-bundles.md",
+                        "pageSha256":  "0b135cd36bc0ddc7e081cff3196a5d6e7c26254db35a24b05f828d0941ac4ecd",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+                                            "sha256":  "13db1e8a95f3692db2ef975a20f3e6972e804bad2698da987bf6be11054861bf"
+                                        }
+                                    ],
+                        "reason":  "Reviewed scoped context ranking; bundle storage and validation semantics are unchanged.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "9ee37a9ccd4f1777efdfc303df8bbce091f66dad",
+                        "reviewedAtUtc":  "2026-07-30T21:38:33.8318808Z"
                     },
                     {
                         "pageId":  "workflow-dependency-rollout",
@@ -162,17 +177,17 @@
                     {
                         "pageId":  "workflow-impact-simulation",
                         "pagePath":  ".llm-wiki/workflows/impact-simulation.md",
-                        "pageSha256":  "95a98ce8ad92c5791b1c5edd2a6bc262b14f6b74ce117d471fe8d7e8045224db",
+                        "pageSha256":  "1c2491681b66a932f1e95b6baf0051b97f38596adfe4229a1c39837ddcf992b6",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "190e7161706b89961a93577a0d45823fdd0199d4c0d9818b8b2c83790980b93b"
+                                            "sha256":  "d82ce8e5472a1e3d498a24686d6cb749d3846ed050702edd94023a7503800478"
                                         }
                                     ],
-                        "reason":  "Intent-inferred paths add a low-confidence pre-diff input; impact simulation semantics remain unchanged.",
+                        "reason":  "Reviewed compact brief next-step metadata; impact snapshot structure remains unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439af4c4db41ef536cca5f30927131b88bdf09a0",
-                        "reviewedAtUtc":  "2026-07-30T14:30:19.3957862Z"
+                        "gitHead":  "9ee37a9ccd4f1777efdfc303df8bbce091f66dad",
+                        "reviewedAtUtc":  "2026-07-30T22:02:40.0889019Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -181,13 +196,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "190e7161706b89961a93577a0d45823fdd0199d4c0d9818b8b2c83790980b93b"
+                                            "sha256":  "d82ce8e5472a1e3d498a24686d6cb749d3846ed050702edd94023a7503800478"
                                         }
                                     ],
-                        "reason":  "Intent inference improves pre-diff context while implementation-plan phases and obligations remain unchanged.",
+                        "reason":  "Reviewed compact brief next-step metadata; plan phases remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439af4c4db41ef536cca5f30927131b88bdf09a0",
-                        "reviewedAtUtc":  "2026-07-30T14:30:20.9820761Z"
+                        "gitHead":  "9ee37a9ccd4f1777efdfc303df8bbce091f66dad",
+                        "reviewedAtUtc":  "2026-07-30T22:02:40.7593897Z"
                     },
                     {
                         "pageId":  "workflow-index-pipeline",
@@ -256,13 +271,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "8d8363e7b1340274a1233e0bd47fd47288f79294835669453280cf279f2e108f"
+                                            "sha256":  "0c4e22faab61bd48ce4caa2f8d2c2ab802b26e14fea01ec0e8554261a6a519c4"
                                         }
                                     ],
-                        "reason":  "Reviewed wiki.ps1 trace dispatch change; task dispatch receipt behavior is unchanged.",
+                        "reason":  "Reviewed normalized PlannedPath forwarding; task dispatch receipt behavior is unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5a8487b11f207bc3a624ae0b629cec441e6c7c5c",
-                        "reviewedAtUtc":  "2026-07-30T16:45:16.8863022Z"
+                        "gitHead":  "9ee37a9ccd4f1777efdfc303df8bbce091f66dad",
+                        "reviewedAtUtc":  "2026-07-30T21:38:35.8986678Z"
                     },
                     {
                         "pageId":  "workflow-trace-feature",

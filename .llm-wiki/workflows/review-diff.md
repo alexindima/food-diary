@@ -60,3 +60,13 @@ automatically requires a new review.
 
 The receipt ledger is append-only review evidence. Adding a receipt records a
 decision; it does not by itself change the review workflow documented here.
+
+Freshness output prints both the page path and its internal ID:
+
+```text
+.llm-wiki/workflows/frontend-contract-review.md
+[id: workflow.frontend-contract-review; current, needs review]
+```
+
+Copy the displayed ID directly into `wiki.ps1 review -Id ...`; no front-matter
+lookup is required.

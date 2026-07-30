@@ -32,7 +32,10 @@ Before implementation creates a diff, pass the expected files explicitly:
 ```powershell
 ./.llm-wiki/wiki.ps1 brief `
   -Intent "Add provider controls to account settings" `
-  -PlannedPath FoodDiary.Application/Authentication/Commands/Example/ExampleCommand.cs
+  -PlannedPath @(
+    'FoodDiary.Web.Client/src/app/features/profile/pages/account.ts'
+    'FoodDiary.Web.Client/src/app/features/profile/pages/account.html'
+  )
 ```
 
 `Intent`/`PlannedPath` are aliases for the standard objective/proposed-path
@@ -43,7 +46,9 @@ If only `-Intent` is supplied, the brief ranks matching C# and frontend symbols
 and returns up to eight inferred paths. This mode is explicitly marked
 `intent-inferred` with low confidence and provenance; confirm it with
 `-PlannedPath` before treating the result as authoritative. An unscoped brief
-warns that no diff, intent, or planned paths were supplied.
+returns a structured `nextSteps` entry with copyable commands instead of only
+an empty risk packet. For simpler shell input, multiple paths may be supplied
+as one semicolon-delimited value: `-PlannedPath 'path/one;path/two'`.
 
 The brief combines changed scopes, directly affected and downstream modules,
 scoped instructions, relevant wiki pages, focused tests, mandatory checks,
@@ -51,6 +56,12 @@ test scenarios, structural hotspots, direct test-reference gaps, review
 obligations, structural violations, and a deterministic risk indicator.
 The score prioritizes review depth; it is not a substitute for engineering
 judgment or a security severity rating.
+
+Frontend risk also accounts for modal/dialog flows, responsive breakpoints,
+accessibility contracts, and multi-state interactions. These signals are
+derived from the intent, path names, and existing scoped source, and keep
+interactive UI changes from defaulting to low risk merely because no API or
+database boundary changed.
 
 For agent context, prefer `brief -Compact -Format Json`. It retains risk,
 paths, instructions, focused tests, scenarios, checks, and review obligations,

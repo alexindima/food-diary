@@ -21,6 +21,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
 $wikiRoot = Split-Path -Parent $toolsRoot
+$repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 
 $common = @{ BaseRef = $BaseRef; Format = 'Json' }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
@@ -249,6 +250,40 @@ if (@($frontendContractImpact.components).Count -gt 0) {
     $riskScore += 2
     $riskReasons.Add('frontend public component contract')
 }
+$frontendPaths = @($changedPathsForQuality | Where-Object { $_ -match '^FoodDiary\.Web\.Client/' })
+$frontendSource = @(
+    foreach ($frontendPath in $frontendPaths) {
+        $absoluteFrontendPath = Join-Path $repositoryRoot $frontendPath
+        if (Test-Path -LiteralPath $absoluteFrontendPath -PathType Leaf) {
+            [System.IO.File]::ReadAllText($absoluteFrontendPath)
+        }
+    }
+) -join [Environment]::NewLine
+$frontendIntentText = ([string]$Intent).ToLowerInvariant()
+if ($frontendPaths.Count -gt 0 -and
+    ((@($frontendPaths | Where-Object { $_ -match '(?i)(dialog|modal)' }).Count -gt 0) -or
+     $frontendIntentText -match '\b(dialog|modal)\b')) {
+    $riskScore += 2
+    $riskReasons.Add('modal or dialog interaction flow')
+}
+if ($frontendPaths.Count -gt 0 -and
+    ($frontendIntentText -match '\b(responsive|viewport|mobile|layout)\b' -or
+     $frontendSource -match '(?m)@media\s*\(')) {
+    $riskScore += 1
+    $riskReasons.Add('responsive layout behavior')
+}
+if ($frontendPaths.Count -gt 0 -and
+    ($frontendIntentText -match '\b(accessibility|accessible|a11y|keyboard|focus)\b' -or
+     $frontendSource -match '(?i)\b(aria-[a-z-]+|role\s*=|tabindex|focus\()')) {
+    $riskScore += 1
+    $riskReasons.Add('accessibility interaction contract')
+}
+if ($frontendPaths.Count -gt 0 -and
+    ($frontendIntentText -match '\b(state|loading|error|empty|toggle|open|close|interactive)\b' -or
+     $frontendSource -match '(?i)\b(signal|computed|isLoading|error|toggle|open|close|expanded|visible)\b')) {
+    $riskScore += 1
+    $riskReasons.Add('multi-state frontend interaction')
+}
 if (@($frontendContractImpact.downstreamConsumers).Count -ge 10) {
     $riskScore += 2
     $riskReasons.Add('broad frontend consumer blast radius')
@@ -318,7 +353,7 @@ $analysisConfidence = switch ($analysisMode) {
 $briefWarnings = [System.Collections.Generic.List[string]]::new()
 foreach ($warning in @($diff.warnings)) { $briefWarnings.Add([string]$warning) }
 if ($analysisMode -eq 'unscoped') {
-    $briefWarnings.Add('No diff, intent, or planned paths were supplied. Use -Intent and -PlannedPath for a useful pre-diff brief.')
+    $briefWarnings.Add("No diff, intent, or planned paths were supplied. Run: ./.llm-wiki/wiki.ps1 brief -Intent '<task>' -PlannedPath @('path/one','path/two')")
 } elseif ($analysisMode -eq 'intent-inferred') {
     $briefWarnings.Add('Paths were inferred heuristically from intent. Confirm them with -PlannedPath before treating risk and test output as authoritative.')
 }
@@ -371,6 +406,19 @@ $brief = [pscustomobject]@{
     backendContractImpact = [pscustomobject]$backendContractImpact
     architectureHealthImpact = [pscustomobject]$architectureHealthImpact
     warnings = @($briefWarnings)
+    nextSteps = @(
+        if ($analysisMode -eq 'unscoped') {
+            [pscustomobject]@{
+                id = 'supply-task-scope'
+                reason = 'A pre-diff brief needs an objective, candidate paths, or both to rank repository evidence.'
+                recommendedCommand = "./.llm-wiki/wiki.ps1 brief -Intent '<task>' -PlannedPath @('path/one','path/two')"
+                alternatives = @(
+                    "./.llm-wiki/wiki.ps1 brief -Intent '<task>'"
+                    "./.llm-wiki/wiki.ps1 brief -PlannedPath 'path/one;path/two'"
+                )
+            }
+        }
+    )
 }
 
 $briefOutput = if ($Compact) {
@@ -400,6 +448,7 @@ $briefOutput = if ($Compact) {
         }
         privacyExternalTransfers = @($privacyImpact.externalTransfers | Select-Object -First $Limit)
         warnings = $brief.warnings
+        nextSteps = $brief.nextSteps
     }
 } else {
     $brief
@@ -412,6 +461,9 @@ if ($Format -eq 'Json') {
 
 Write-Host "Task brief: $($brief.risk.level) risk (score $($brief.risk.score))"
 if ($brief.risk.reasons.Count -gt 0) { Write-Host "Risk factors: $($brief.risk.reasons -join ', ')" }
+foreach ($nextStep in @($brief.nextSteps)) {
+    Write-Host "Next step: $($nextStep.recommendedCommand)"
+}
 Write-Host "Scopes: $($brief.change.scopes -join ', ')"
 Write-Host "Direct modules: $($brief.change.directModules -join ', ')"
 Write-Host "Downstream modules: $($brief.change.downstreamModules -join ', ')"

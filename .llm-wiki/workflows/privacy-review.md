@@ -21,7 +21,16 @@ sources:
 ./.llm-wiki/wiki.ps1 privacy -Category credential
 ./.llm-wiki/wiki.ps1 privacy -Category logging
 ./.llm-wiki/wiki.ps1 privacy -Category boundaries -Query Export
+./.llm-wiki/wiki.ps1 privacy `
+  -PlannedPath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result'
 ```
+
+The default `all` view no longer emits an arbitrary repository-wide first
+page. It scopes itself to a non-wiki Git diff when available; otherwise it
+returns summary counts and a copyable scoping hint. Explicit planned paths are
+ranked first, while related cross-layer candidates require multiple matching
+terms. For example, an AI photo path can still surface the external OpenAI
+image boundary without flooding the result with every image-named field.
 
 For a changed field or flow, review purpose/minimization, consent or lawful
 basis, ownership/authorization, encryption and secret handling, cache/queue/log

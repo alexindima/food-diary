@@ -33,6 +33,9 @@ PowerShell versions that otherwise coerce them into `DateTime`. Nested tools
 therefore compute the same deterministic hashes on Windows and Linux.
 It forwards `-ProposedPath` to the direct `brief` and `test-plan` planning
 commands so they can classify intended files before a Git diff exists.
+The alias `-PlannedPath` accepts normal PowerShell arrays and a
+semicolon-delimited convenience form. Context and privacy commands receive the
+same normalized scope.
 
 `wiki update`, `wiki verify`, `wiki verify-full`, and CI then use the same
 dependency-aware index pipeline:

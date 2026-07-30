@@ -28,14 +28,22 @@ verification commands.
   -ChangeType Backend
 
 ./.llm-wiki/tools/Find-LlmWikiContext.ps1 `
-  -Query localization `
+  -Query "AI dashboard" `
   -ChangeType Frontend `
+  -PlannedPath @(
+    'FoodDiary.Web.Client/src/app/features/dashboard'
+    'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar'
+  ) `
   -Format Json
 ```
 
 `-Module` is matched against the executable application-module graph. `-Query`
 adds free-text search terms. `-ChangeType` adjusts project ranking and emits
-area-specific checks. `-Limit` controls the maximum results per category.
+area-specific checks. `-PlannedPath`/`-ScopePath` boosts candidates in the
+declared directories and feature roots. A frontend-only query suppresses
+unrelated .NET clusters. CamelCase-aware token boundaries ensure a short term
+such as `AI` matches `AiPhotoResult`, but not the letters inside `MailInbox`.
+`-Limit` controls the maximum results per category.
 
 ## Interpretation
 
