@@ -3787,7 +3787,10 @@
         "PORTION_AMOUNT": "Portion weight",
         "PORTION_UNIT": "Portion unit",
         "CANCEL": "Cancel",
-        "APPLY": "Apply values"
+        "APPLY": "Apply values",
+        "HIDE_ANNOTATIONS": "Hide labels",
+        "SHOW_ANNOTATIONS": "Show labels",
+        "ANNOTATIONS_LABEL": "Recognized products on the photo"
     },
     "IMAGE_UPLOAD_FIELD": {
         "SELECT_FILE": "Select a file",

@@ -3935,7 +3935,7 @@
                         "role":  "Component",
                         "selector":  "fd-product-ai-recognition-dialog",
                         "path":  "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.ts",
-                        "line":  47
+                        "line":  74
                     },
                     {
                         "name":  "ProductAiRecognitionResultComponent",
@@ -5681,8 +5681,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  2854,
-                             "russianProperties":  2854,
+                             "englishProperties":  2857,
+                             "russianProperties":  2857,
                              "countsMatch":  true
                          },
                          {

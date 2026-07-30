@@ -42,7 +42,10 @@ public static class AiHttpResponseMappings {
             model.NameLocal,
             model.Amount,
             model.Unit,
-            model.Confidence
+            model.Confidence,
+            model.CenterX,
+            model.CenterY,
+            model.LocationConfidence
         );
     }
 

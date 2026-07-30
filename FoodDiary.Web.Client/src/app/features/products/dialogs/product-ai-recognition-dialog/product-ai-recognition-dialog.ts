@@ -27,6 +27,33 @@ import {
 } from './product-ai-recognition-lib/product-ai-recognition.helpers';
 import { ProductAiRecognitionResultComponent } from './product-ai-recognition-result/product-ai-recognition-result';
 
+const LOCATION_CONFIDENCE_THRESHOLD = 0.35;
+const PERCENT_SCALE = 100;
+const PERCENT_PRECISION = 100;
+const MIDPOINT_PERCENT = 50;
+const CARD_MIN_X_PERCENT = 2;
+const CARD_MAX_X_PERCENT = 70;
+const CARD_MIN_Y_PERCENT = 4;
+const CARD_MAX_Y_PERCENT = 72;
+const CARD_RIGHT_OFFSET_PERCENT = 5;
+const CARD_LEFT_OFFSET_PERCENT = 34;
+const CARD_BELOW_OFFSET_PERCENT = 6;
+const CARD_ABOVE_OFFSET_PERCENT = 30;
+type PhotoAnnotation = {
+    id: string;
+    name: string;
+    amount: number;
+    unit: string;
+    centerX: number;
+    centerY: number;
+    cardX: number;
+    cardY: number;
+    calories: number;
+    protein: number;
+    fat: number;
+    carbs: number;
+};
+
 @Component({
     selector: 'fd-product-ai-recognition-dialog',
     templateUrl: './product-ai-recognition-dialog.html',
@@ -56,6 +83,7 @@ export class ProductAiRecognitionDialogComponent {
     protected readonly hasAnalyzed = signal(false);
     protected readonly errorKey = signal<string | null>(null);
     protected readonly nutritionErrorKey = signal<string | null>(null);
+    protected readonly annotationsVisible = signal(true);
     protected readonly selection = signal<ImageSelection | null>(null);
     protected readonly results = signal<FoodVisionItem[]>([]);
     protected readonly nutrition = signal<FoodNutritionResponse | null>(null);
@@ -99,6 +127,12 @@ export class ProductAiRecognitionDialogComponent {
             .map(item => capitalizeName(item.nameLocal?.trim() ?? item.nameEn.trim()))
             .filter(name => name.length > 0),
     );
+    protected readonly annotations = computed(() => {
+        const nutritionItems = this.nutrition()?.items ?? [];
+        return this.results().flatMap((item, index) =>
+            hasReliableLocation(item) && index < nutritionItems.length ? [buildPhotoAnnotation(item, nutritionItems[index], index)] : [],
+        );
+    });
     protected onImageChanged(selection: ImageSelection | null): void {
         this.selection.set(selection);
         this.errorKey.set(null);
@@ -106,6 +140,7 @@ export class ProductAiRecognitionDialogComponent {
         this.results.set([]);
         this.nutrition.set(null);
         this.hasAnalyzed.set(false);
+        this.annotationsVisible.set(true);
     }
 
     protected startAnalysis(): void {
@@ -114,6 +149,10 @@ export class ProductAiRecognitionDialogComponent {
 
     protected reanalyze(): void {
         this.runAnalysisFlow();
+    }
+
+    protected toggleAnnotations(): void {
+        this.annotationsVisible.update(visible => !visible);
     }
 
     private runAnalysisFlow(): void {
@@ -222,4 +261,55 @@ export class ProductAiRecognitionDialogComponent {
             },
         });
     }
+}
+
+function hasReliableLocation(
+    item: FoodVisionItem,
+): item is FoodVisionItem & { centerX: number; centerY: number; locationConfidence?: number | null } {
+    if (item.centerX === null || item.centerX === undefined || item.centerY === null || item.centerY === undefined) {
+        return false;
+    }
+
+    const coordinatesAreValid = item.centerX >= 0 && item.centerX <= 1 && item.centerY >= 0 && item.centerY <= 1;
+    return coordinatesAreValid && (item.locationConfidence ?? 1) >= LOCATION_CONFIDENCE_THRESHOLD;
+}
+
+function buildPhotoAnnotation(
+    item: FoodVisionItem & { centerX: number; centerY: number },
+    nutrition: FoodNutritionResponse['items'][number],
+    index: number,
+): PhotoAnnotation {
+    const x = toPercentage(item.centerX);
+    const y = toPercentage(item.centerY);
+
+    return {
+        id: `${item.nameEn}-${index}`,
+        name: capitalizeName(item.nameLocal?.trim() ?? item.nameEn.trim()),
+        amount: item.amount,
+        unit: item.unit,
+        centerX: x,
+        centerY: y,
+        cardX: clamp(
+            x < MIDPOINT_PERCENT ? x + CARD_RIGHT_OFFSET_PERCENT : x - CARD_LEFT_OFFSET_PERCENT,
+            CARD_MIN_X_PERCENT,
+            CARD_MAX_X_PERCENT,
+        ),
+        cardY: clamp(
+            y < MIDPOINT_PERCENT ? y + CARD_BELOW_OFFSET_PERCENT : y - CARD_ABOVE_OFFSET_PERCENT,
+            CARD_MIN_Y_PERCENT,
+            CARD_MAX_Y_PERCENT,
+        ),
+        calories: Math.round(nutrition.calories),
+        protein: Math.round(nutrition.protein),
+        fat: Math.round(nutrition.fat),
+        carbs: Math.round(nutrition.carbs),
+    };
+}
+
+function toPercentage(value: number): number {
+    return Math.round(value * PERCENT_SCALE * PERCENT_PRECISION) / PERCENT_PRECISION;
+}
+
+function clamp(value: number, min: number, max: number): number {
+    return Math.min(Math.max(value, min), max);
 }

@@ -241,6 +241,10 @@ public sealed class OpenAiFoodClient(
         string descriptionHint = string.IsNullOrWhiteSpace(description)
             ? string.Empty
             : $"User hint: {description.Trim()}. ";
+        const string locationHint =
+            "For every visible food or drink, estimate its visual center in the image. " +
+            "Return centerX and centerY normalized from 0 at the left/top edge to 1 at the right/bottom edge, " +
+            "plus locationConfidence from 0 to 1. Use null for all three fields only when the item cannot be localized.";
 
         string resolvedPrompt = promptTemplate
             .Replace("{{languageHint}}", languageHint, StringComparison.Ordinal)
@@ -254,7 +258,7 @@ public sealed class OpenAiFoodClient(
                     content = new object[] {
                         new {
                             type = "input_text",
-                            text = descriptionHint + resolvedPrompt,
+                            text = descriptionHint + resolvedPrompt + " " + locationHint,
                         },
                         new {
                             type = "input_image",
@@ -287,7 +291,7 @@ public sealed class OpenAiFoodClient(
                     content = new object[] {
                         new {
                             type = "input_text",
-                            text = resolvedPrompt,
+                            text = resolvedPrompt + " Set centerX, centerY, and locationConfidence to null because no image was provided.",
                         },
                     },
                 },
@@ -314,8 +318,20 @@ public sealed class OpenAiFoodClient(
                                     amount = new { type = "number" },
                                     unit = new { type = "string" },
                                     confidence = new { type = "number" },
+                                    centerX = new { type = new[] { "number", "null" }, minimum = 0, maximum = 1 },
+                                    centerY = new { type = new[] { "number", "null" }, minimum = 0, maximum = 1 },
+                                    locationConfidence = new { type = new[] { "number", "null" }, minimum = 0, maximum = 1 },
                                 },
-                                required = new[] { "nameEn", "nameLocal", "amount", "unit", "confidence" },
+                                required = new[] {
+                                    "nameEn",
+                                    "nameLocal",
+                                    "amount",
+                                    "unit",
+                                    "confidence",
+                                    "centerX",
+                                    "centerY",
+                                    "locationConfidence",
+                                },
                                 additionalProperties = false,
                             },
                         },

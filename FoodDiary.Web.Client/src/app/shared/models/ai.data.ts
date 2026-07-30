@@ -4,6 +4,9 @@ export type FoodVisionItem = {
     amount: number;
     unit: string;
     confidence: number;
+    centerX?: number | null;
+    centerY?: number | null;
+    locationConfidence?: number | null;
 };
 
 export type FoodVisionResponse = {

@@ -88,6 +88,37 @@ describe('ProductAiRecognitionDialogComponent state', () => {
         expect(component['hasAnalyzed']()).toBe(false);
         expect(component['isAnalyzeDisabled']()).toBe(false);
     });
+
+    it('builds photo annotations and lets the user hide them', () => {
+        component['results'].set([createVisionItem()]);
+        component['nutrition'].set(createNutrition());
+
+        expect(component['annotations']()).toEqual([
+            expect.objectContaining({
+                name: 'Apple local',
+                centerX: 42,
+                centerY: 58,
+                calories: PRODUCT_CALORIES,
+                protein: PRODUCT_PROTEINS,
+                fat: PRODUCT_FATS,
+                carbs: PRODUCT_CARBS,
+            }),
+        ]);
+
+        component['toggleAnnotations']();
+
+        expect(component['annotationsVisible']()).toBe(false);
+    });
+
+    it('omits annotations with missing or unreliable locations', () => {
+        component['results'].set([
+            { ...createVisionItem(), centerX: null, centerY: null },
+            { ...createVisionItem(), locationConfidence: 0.2 },
+        ]);
+        component['nutrition'].set(createNutrition());
+
+        expect(component['annotations']()).toEqual([]);
+    });
 });
 
 describe('ProductAiRecognitionDialogComponent analysis', () => {
@@ -182,6 +213,9 @@ function createVisionItem(): FoodVisionItem {
         amount: RECOGNIZED_AMOUNT,
         unit: 'grams',
         confidence: CONFIDENCE,
+        centerX: 0.42,
+        centerY: 0.58,
+        locationConfidence: 0.88,
     };
 }
 
@@ -193,6 +227,18 @@ function createNutrition(): FoodNutritionResponse {
         carbs: PRODUCT_CARBS,
         fiber: PRODUCT_FIBER,
         alcohol: 0,
-        items: [],
+        items: [
+            {
+                name: 'Apple',
+                amount: RECOGNIZED_AMOUNT,
+                unit: 'g',
+                calories: PRODUCT_CALORIES,
+                protein: PRODUCT_PROTEINS,
+                fat: PRODUCT_FATS,
+                carbs: PRODUCT_CARBS,
+                fiber: PRODUCT_FIBER,
+                alcohol: 0,
+            },
+        ],
     };
 }

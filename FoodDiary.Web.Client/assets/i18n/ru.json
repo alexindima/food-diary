@@ -3759,7 +3759,10 @@
         "PORTION_AMOUNT": "Вес порции",
         "PORTION_UNIT": "Единица порции",
         "CANCEL": "Отмена",
-        "APPLY": "Применить значения"
+        "APPLY": "Применить значения",
+        "HIDE_ANNOTATIONS": "Скрыть метки",
+        "SHOW_ANNOTATIONS": "Показать метки",
+        "ANNOTATIONS_LABEL": "Распознанные продукты на фотографии"
     },
     "IMAGE_UPLOAD_FIELD": {
         "SELECT_FILE": "Выберите файл",

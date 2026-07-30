@@ -12,10 +12,66 @@
                 (imageChanged)="onImageChanged($event)"
             />
 
+            @if (nutrition() && annotations().length > 0) {
+                <div class="product-ai-dialog__annotation-toggle">
+                    <fd-ui-button type="button" variant="primary" fill="outline" (click)="toggleAnnotations()">
+                        {{
+                            (annotationsVisible() ? 'PRODUCT_AI_DIALOG.HIDE_ANNOTATIONS' : 'PRODUCT_AI_DIALOG.SHOW_ANNOTATIONS') | translate
+                        }}
+                    </fd-ui-button>
+                </div>
+
+                @if (annotationsVisible()) {
+                    <div class="product-ai-dialog__annotations" [attr.aria-label]="'PRODUCT_AI_DIALOG.ANNOTATIONS_LABEL' | translate">
+                        <div class="product-ai-dialog__annotation-frame">
+                            <img class="product-ai-dialog__annotation-sizer" alt="" [src]="selection()?.url" />
+                            <svg
+                                class="product-ai-dialog__annotation-lines"
+                                aria-hidden="true"
+                                viewBox="0 0 100 100"
+                                preserveAspectRatio="none"
+                            >
+                                @for (annotation of annotations(); track annotation.id) {
+                                    <line
+                                        [attr.x1]="annotation.centerX"
+                                        [attr.y1]="annotation.centerY"
+                                        [attr.x2]="annotation.cardX + 10"
+                                        [attr.y2]="annotation.cardY + 10"
+                                    />
+                                    <circle r="0.8" [attr.cx]="annotation.centerX" [attr.cy]="annotation.centerY" />
+                                }
+                            </svg>
+
+                            @for (annotation of annotations(); track annotation.id) {
+                                <article
+                                    class="product-ai-dialog__annotation-card"
+                                    [style.left.%]="annotation.cardX"
+                                    [style.top.%]="annotation.cardY"
+                                >
+                                    <div class="product-ai-dialog__annotation-title fd-ui-body-sm">
+                                        <strong>{{ annotation.name }}</strong>
+                                        <span> · {{ annotation.amount }} {{ annotation.unit }}</span>
+                                    </div>
+                                    <div class="product-ai-dialog__annotation-nutrition fd-ui-caption">
+                                        <strong> {{ annotation.calories }} {{ 'PRODUCT_LIST.KCAL' | translate }} </strong>
+                                        <span>
+                                            {{ 'PRODUCT_MANAGE.PROTEINS' | translate }} {{ annotation.protein }} ·
+                                            {{ 'PRODUCT_MANAGE.FATS' | translate }} {{ annotation.fat }} ·
+                                            {{ 'PRODUCT_MANAGE.CARBS' | translate }} {{ annotation.carbs }} g
+                                        </span>
+                                    </div>
+                                </article>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+
             @if (statusKey(); as status) {
                 <div
                     class="product-ai-dialog__status fd-ui-pill fd-ui-pill--compact fd-ui-overline"
                     [class.product-ai-dialog__status--loading]="isLoading()"
+                    [class.product-ai-dialog__status--with-annotations]="annotations().length > 0"
                 >
                     {{ status | translate }}
                 </div>

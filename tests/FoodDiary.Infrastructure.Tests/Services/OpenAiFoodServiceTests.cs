@@ -102,6 +102,32 @@ public sealed class OpenAiFoodServiceTests {
     }
 
     [Fact]
+    public async Task AnalyzeFoodImageAsync_RequestsNormalizedCentersAndParsesLocation() {
+        using var httpClient = new HttpClient(new CapturingHttpMessageHandler(_ => CreateVisionSuccessResponse()));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
+            ApiKey = "test-key",
+            VisionModel = "vision-model",
+            VisionFallbackModel = "vision-fallback",
+        });
+
+        Result<OpenAiFoodClientResponse<FoodVisionModel>> result = await client.AnalyzeFoodImageAsync(
+            "https://cdn.example.com/meal.webp",
+            "en",
+            description: null,
+            VisionPrompt,
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        FoodVisionItemModel item = Assert.Single(result.Value.Value.Items);
+        Assert.Equal(0.42m, item.CenterX);
+        Assert.Equal(0.58m, item.CenterY);
+        Assert.Equal(0.88m, item.LocationConfidence);
+        Assert.Contains("normalized from 0", CapturingHttpMessageHandler.LastRequestBody, StringComparison.Ordinal);
+        Assert.Contains("\"centerX\"", CapturingHttpMessageHandler.LastRequestBody, StringComparison.Ordinal);
+        Assert.Contains("\"locationConfidence\"", CapturingHttpMessageHandler.LastRequestBody, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task CalculateNutritionAsync_WhenTransientFailuresExhaustRetries_ReturnsRetryExhaustedError() {
         long? requestCount = null;
         string? outcome = null;
@@ -583,7 +609,7 @@ public sealed class OpenAiFoodServiceTests {
                       "content": [
                         {
                           "type": "output_text",
-                          "text": "{\"items\":[{\"nameEn\":\"Apple\",\"nameLocal\":null,\"amount\":100,\"unit\":\"g\",\"confidence\":0.97}]}"
+                          "text": "{\"items\":[{\"nameEn\":\"Apple\",\"nameLocal\":null,\"amount\":100,\"unit\":\"g\",\"confidence\":0.97,\"centerX\":0.42,\"centerY\":0.58,\"locationConfidence\":0.88}]}"
                         }
                       ]
                     }

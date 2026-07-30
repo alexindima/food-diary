@@ -7,7 +7,7 @@
                     "outputs":  391,
                     "apiCalls":  198,
                     "templatesWithTranslations":  239,
-                    "translationKeys":  1171,
+                    "translationKeys":  1173,
                     "consumerEdges":  898,
                     "consumedComponents":  277,
                     "unconsumedComponents":  121
@@ -16271,13 +16271,18 @@
                                  "keys":  [
                                               "COMMON.CLOSE",
                                               "DISABLED_HINTS.SELECT_RECOGNITION",
+                                              "PRODUCT_AI_DIALOG.ANNOTATIONS_LABEL",
                                               "PRODUCT_AI_DIALOG.APPLY",
                                               "PRODUCT_AI_DIALOG.CANCEL",
                                               "PRODUCT_AI_DIALOG.DESCRIPTION",
                                               "PRODUCT_AI_DIALOG.DESCRIPTION_PLACEHOLDER",
                                               "PRODUCT_AI_DIALOG.IMAGE_DESCRIPTION",
                                               "PRODUCT_AI_DIALOG.IMAGE_LABEL",
-                                              "PRODUCT_AI_DIALOG.TITLE"
+                                              "PRODUCT_AI_DIALOG.TITLE",
+                                              "PRODUCT_LIST.KCAL",
+                                              "PRODUCT_MANAGE.CARBS",
+                                              "PRODUCT_MANAGE.FATS",
+                                              "PRODUCT_MANAGE.PROTEINS"
                                           ]
                              },
                              {
@@ -21704,7 +21709,7 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "products",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.html",
-                              "occurrences":  2,
+                              "occurrences":  3,
                               "inputsUsed":  [
                                                  "disabled",
                                                  "disabledReason",

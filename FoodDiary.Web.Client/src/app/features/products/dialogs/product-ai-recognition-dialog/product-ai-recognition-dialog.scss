@@ -8,6 +8,117 @@
     position: relative;
 }
 
+.product-ai-dialog__annotation-toggle {
+    position: absolute;
+    top: var(--fd-space-sm);
+    right: var(--fd-space-sm);
+    z-index: 5;
+}
+
+.product-ai-dialog__annotations {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    overflow: hidden;
+    border-radius: var(--fd-radius-dialog);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-ai-dialog__annotation-frame {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.product-ai-dialog__annotation-sizer {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 240px;
+    visibility: hidden;
+}
+
+.product-ai-dialog__annotation-lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.product-ai-dialog__annotation-lines line {
+    stroke: var(--fd-color-surface-raised);
+    stroke-width: 0.55;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 45%));
+}
+
+.product-ai-dialog__annotation-lines circle {
+    fill: var(--fd-color-primary-600);
+    stroke: var(--fd-color-surface-raised);
+    stroke-width: 0.45;
+    vector-effect: non-scaling-stroke;
+}
+
+.product-ai-dialog__annotation-card {
+    position: absolute;
+    width: min(12rem, 42%);
+    padding: var(--fd-space-xs) var(--fd-space-sm);
+    border: 1px solid var(--fd-color-border-control-radio);
+    border-radius: var(--fd-radius-md);
+    background: var(--fd-color-surface-raised);
+    box-shadow: var(--fd-shadow-lg);
+    color: var(--fd-color-text);
+    pointer-events: auto;
+}
+
+.product-ai-dialog__annotation-title {
+    display: flex;
+    gap: var(--fd-space-xs);
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.product-ai-dialog__annotation-title strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-ai-dialog__annotation-nutrition {
+    display: flex;
+    gap: var(--fd-space-sm);
+    align-items: baseline;
+    margin-top: var(--fd-space-xs);
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.product-ai-dialog__annotation-nutrition strong {
+    color: var(--fd-color-primary-700);
+}
+
+.product-ai-dialog__annotation-nutrition span {
+    overflow: hidden;
+    color: var(--fd-color-text-muted);
+    text-overflow: ellipsis;
+}
+
+@media #{variables.$media-mobile} {
+    .product-ai-dialog__annotation-card {
+        width: min(10rem, 48%);
+        padding: var(--fd-space-xs);
+    }
+
+    .product-ai-dialog__annotation-nutrition span {
+        display: none;
+    }
+}
+
 .product-ai-dialog__status {
     position: absolute;
     top: var(--fd-space-sm);
@@ -25,6 +136,11 @@
     --fd-pill-color: var(--fd-color-primary-900);
     --fd-pill-border: var(--fd-color-border-ai-loading-pill);
     box-shadow: var(--fd-shadow-accent);
+}
+
+.product-ai-dialog__status--with-annotations {
+    right: auto;
+    left: var(--fd-space-sm);
 }
 
 .product-ai-dialog__scan-overlay {
