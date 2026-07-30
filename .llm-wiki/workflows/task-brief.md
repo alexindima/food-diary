@@ -49,6 +49,10 @@ and returns up to eight inferred paths. This mode is explicitly marked
 returns a structured `nextSteps` entry with copyable commands instead of only
 an empty risk packet. For simpler shell input, multiple paths may be supplied
 as one semicolon-delimited value: `-PlannedPath 'path/one;path/two'`.
+The unscoped response is produced before policy, ownership, test-plan, rollout,
+decision, or compiled-index analysis. With no task evidence to rank, avoiding
+those repository-wide dependencies keeps the result fast and deterministic
+across shells and CI environments.
 
 The brief combines changed scopes, directly affected and downstream modules,
 scoped instructions, relevant wiki pages, focused tests, mandatory checks,

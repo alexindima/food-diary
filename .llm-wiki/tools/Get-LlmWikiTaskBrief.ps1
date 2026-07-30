@@ -79,6 +79,77 @@ $diffArguments.Limit = $Limit
 $diff = if ($null -ne $DiffInput) { $DiffInput } else {
     & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') @diffArguments | ConvertFrom-Json
 }
+
+if ($effectivePaths.Count -eq 0 -and
+    [string]::IsNullOrWhiteSpace($Intent) -and
+    @($diff.changedPaths).Count -eq 0) {
+    $recommendedCommand = "./.llm-wiki/wiki.ps1 brief -Intent '<task>' -PlannedPath @('path/one','path/two')"
+    $emptyBrief = [pscustomobject]@{
+        compact = [bool]$Compact
+        analysis = [pscustomobject]@{
+            mode = 'unscoped'
+            confidence = 'low'
+            provenance = @('caller-input')
+            inferredPaths = @()
+        }
+        risk = [pscustomobject]@{
+            level = 'low'
+            score = 0
+            reasons = @()
+        }
+        change = [pscustomobject]@{
+            intent = ''
+            paths = @()
+            proposedPaths = @()
+            scopes = @()
+            directModules = @()
+            downstreamModules = @()
+        }
+        instructions = @()
+        contextPages = @()
+        focusedTests = @()
+        testScenarios = @()
+        requiredChecks = @()
+        reviewObligations = @()
+        structuralViolations = @()
+        generatedActions = @()
+        impactCounts = [pscustomobject]@{
+            runtime = 0
+            privacyFields = 0
+            privacyExternalTransfers = 0
+            frontendComponents = 0
+            frontendConsumers = 0
+            backendContracts = 0
+            backendConsumers = 0
+            backendConsumerKinds = @()
+            domainTypes = 0
+        }
+        privacyExternalTransfers = @()
+        warnings = @("No diff, intent, or planned paths were supplied. Run: $recommendedCommand")
+        nextSteps = @(
+            [pscustomobject]@{
+                id = 'supply-task-scope'
+                reason = 'A pre-diff brief needs an objective, candidate paths, or both to rank repository evidence.'
+                recommendedCommand = $recommendedCommand
+                alternatives = @(
+                    "./.llm-wiki/wiki.ps1 brief -Intent '<task>'"
+                    "./.llm-wiki/wiki.ps1 brief -PlannedPath 'path/one;path/two'"
+                )
+            }
+        )
+    }
+
+    if ($Format -eq 'Json') {
+        $emptyBrief | ConvertTo-Json -Depth 6
+        exit 0
+    }
+
+    Write-Host 'Task brief: low risk (score 0)'
+    Write-Host "Next step: $recommendedCommand"
+    Write-Host 'Warning: no diff, intent, or planned paths were supplied.'
+    exit 0
+}
+
 $policy = if ($null -ne $PolicyInput) { $PolicyInput } else {
     & (Join-Path $toolsRoot 'Test-LlmWikiChangePolicy.ps1') @common | ConvertFrom-Json
 }

@@ -121,13 +121,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "d82ce8e5472a1e3d498a24686d6cb749d3846ed050702edd94023a7503800478"
+                                            "sha256":  "f9a0814b2603ceac627296c425a947e41cb6eeabf61e09a513d17070eda67978"
                                         }
                                     ],
-                        "reason":  "Reviewed compact brief next-step metadata; manifest schema remains unchanged.",
+                        "reason":  "Deterministic early return applies only when diff, intent, and planned paths are all empty; manifest behavior is unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ee37a9ccd4f1777efdfc303df8bbce091f66dad",
-                        "reviewedAtUtc":  "2026-07-30T22:02:38.9217344Z"
+                        "gitHead":  "33a7de4c766ab18a1f0883982fad60306828b843",
+                        "reviewedAtUtc":  "2026-07-30T23:28:08.6066708Z"
                     },
                     {
                         "pageId":  "workflow-change-packet",
@@ -136,13 +136,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "d82ce8e5472a1e3d498a24686d6cb749d3846ed050702edd94023a7503800478"
+                                            "sha256":  "f9a0814b2603ceac627296c425a947e41cb6eeabf61e09a513d17070eda67978"
                                         }
                                     ],
-                        "reason":  "Reviewed compact brief next-step metadata; packet fingerprint inputs remain unchanged.",
+                        "reason":  "Deterministic early return applies only when diff, intent, and planned paths are all empty; packet behavior is unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ee37a9ccd4f1777efdfc303df8bbce091f66dad",
-                        "reviewedAtUtc":  "2026-07-30T22:02:39.5456714Z"
+                        "gitHead":  "33a7de4c766ab18a1f0883982fad60306828b843",
+                        "reviewedAtUtc":  "2026-07-30T23:28:09.2248077Z"
                     },
                     {
                         "pageId":  "workflow-context-bundles",
@@ -181,13 +181,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "d82ce8e5472a1e3d498a24686d6cb749d3846ed050702edd94023a7503800478"
+                                            "sha256":  "f9a0814b2603ceac627296c425a947e41cb6eeabf61e09a513d17070eda67978"
                                         }
                                     ],
-                        "reason":  "Reviewed compact brief next-step metadata; impact snapshot structure remains unchanged.",
+                        "reason":  "Deterministic early return applies only when diff, intent, and planned paths are all empty; impact simulation behavior is unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ee37a9ccd4f1777efdfc303df8bbce091f66dad",
-                        "reviewedAtUtc":  "2026-07-30T22:02:40.0889019Z"
+                        "gitHead":  "33a7de4c766ab18a1f0883982fad60306828b843",
+                        "reviewedAtUtc":  "2026-07-30T23:28:09.8001544Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -196,13 +196,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "d82ce8e5472a1e3d498a24686d6cb749d3846ed050702edd94023a7503800478"
+                                            "sha256":  "f9a0814b2603ceac627296c425a947e41cb6eeabf61e09a513d17070eda67978"
                                         }
                                     ],
-                        "reason":  "Reviewed compact brief next-step metadata; plan phases remain unchanged.",
+                        "reason":  "Deterministic early return applies only when diff, intent, and planned paths are all empty; implementation planning behavior is unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ee37a9ccd4f1777efdfc303df8bbce091f66dad",
-                        "reviewedAtUtc":  "2026-07-30T22:02:40.7593897Z"
+                        "gitHead":  "33a7de4c766ab18a1f0883982fad60306828b843",
+                        "reviewedAtUtc":  "2026-07-30T23:28:10.5964808Z"
                     },
                     {
                         "pageId":  "workflow-index-pipeline",
