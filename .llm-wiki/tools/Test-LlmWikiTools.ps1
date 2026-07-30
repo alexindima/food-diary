@@ -454,8 +454,10 @@ $multiPathBrief = & (Join-Path $wikiRoot 'wiki.ps1') brief `
 Assert-Wiki (@($multiPathBrief.change.proposedPaths).Count -eq 2) 'Wiki CLI did not normalize the simple multi-path PlannedPath syntax.'
 
 $impactHelp = & (Join-Path $toolsRoot 'Get-LlmWikiImpact.ps1') `
-    -ChangedPath '.llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1'
-Assert-Wiki (($impactHelp -join [Environment]::NewLine) -match '\[id:\s*workflow-impact-simulation;') 'Source-impact output omitted the copyable internal page ID.'
+    -ChangedPath '.llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1' `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (@($impactHelp.impacts).Count -gt 0) 'Source-impact JSON omitted the affected page.'
+Assert-Wiki (@($impactHelp.impacts.id) -contains 'workflow-impact-simulation') 'Source-impact JSON omitted the copyable internal page ID.'
 
 $dependencyJson = & (Join-Path $toolsRoot 'Get-LlmWikiDependencyChanges.ps1') -BaseRef HEAD -Format Json
 $dependencyChanges = $dependencyJson | ConvertFrom-Json

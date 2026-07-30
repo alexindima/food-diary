@@ -70,3 +70,9 @@ Freshness output prints both the page path and its internal ID:
 
 Copy the displayed ID directly into `wiki.ps1 review -Id ...`; no front-matter
 lookup is required.
+
+For assertions and automation, use
+`Get-LlmWikiImpact.ps1 -Format Json`. The structured result exposes
+`impactCount`, `unreviewedCount`, and each affected page's stable `Id`, path,
+changed sources, and review state. Human-readable `Write-Host` output is not a
+machine contract.

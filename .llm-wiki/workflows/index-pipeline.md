@@ -67,10 +67,12 @@ Workers are isolated PowerShell processes with real exit-code propagation. A fai
 
 `wiki verify` is the interactive gate. `wiki verify-full` and CI additionally
 run the portable contract and complete stateful tool-smoke suite. Full
-verification starts index checks and stateful tools as independent processes,
-waits for both, and propagates every non-zero exit. CI runs this gate in its own
-job alongside backend, PostgreSQL, dependency, and frontend jobs, so Wiki
-verification no longer serializes the backend test pipeline.
+verification completes the index freshness checks before starting the stateful
+tools. This prevents tool-smoke readers from observing generated files while
+index workers are replacing them. Index workers remain concurrent within their
+dependency-aware stage, and every non-zero exit is propagated. CI runs this gate
+in its own job alongside backend, PostgreSQL, dependency, and frontend jobs, so
+Wiki verification does not serialize the backend test pipeline.
 
 Use the focused commands before the full gate:
 

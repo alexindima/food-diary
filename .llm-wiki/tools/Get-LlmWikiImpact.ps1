@@ -4,7 +4,9 @@ param(
     [string]$HeadRef,
     [string[]]$ChangedPath,
     [switch]$FailOnUnreviewed,
-    [switch]$VerboseGenerated
+    [switch]$VerboseGenerated,
+    [ValidateSet('Text', 'Json')]
+    [string]$Format = 'Text'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -168,6 +170,18 @@ foreach ($page in $pages) {
         ReviewReceipt = if ($reviewReceipt.Count -gt 0) { $reviewReceipt[0] } else { $null }
         Reviewed = $reviewed
     })
+}
+
+if ($Format -eq 'Json') {
+    [pscustomobject]@{
+        impactCount = $impacts.Count
+        unreviewedCount = @($impacts | Where-Object { -not $_.Reviewed }).Count
+        impacts = @($impacts)
+    } | ConvertTo-Json -Depth 7
+    if ($FailOnUnreviewed -and @($impacts | Where-Object { -not $_.Reviewed }).Count -gt 0) {
+        exit 1
+    }
+    exit 0
 }
 
 if ($impacts.Count -eq 0) {

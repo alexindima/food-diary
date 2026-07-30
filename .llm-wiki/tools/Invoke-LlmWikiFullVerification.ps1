@@ -22,7 +22,6 @@ $checks = @(
     }
 )
 
-$workers = [System.Collections.Generic.List[object]]::new()
 foreach ($check in $checks) {
     Write-Host "Starting LLM Wiki full verification group: $($check.name)"
     $startInfo = New-Object System.Diagnostics.ProcessStartInfo
@@ -35,23 +34,17 @@ foreach ($check in $checks) {
     if (-not $process.Start()) {
         throw "Unable to start LLM Wiki verification group '$($check.name)'."
     }
-    $workers.Add([pscustomobject]@{ name = $check.name; process = $process })
-}
 
-$failures = [System.Collections.Generic.List[string]]::new()
-foreach ($worker in $workers) {
-    $worker.process.WaitForExit()
-    $exitCode = $worker.process.ExitCode
-    $worker.process.Dispose()
-    if ($exitCode -eq 0) {
-        Write-Host "LLM Wiki full verification group passed: $($worker.name)"
-    } else {
-        $failures.Add("$($worker.name) (exit=$exitCode)")
+    try {
+        $process.WaitForExit()
+        if ($process.ExitCode -ne 0) {
+            throw "LLM Wiki full verification failed: $($check.name) (exit=$($process.ExitCode))"
+        }
+    } finally {
+        $process.Dispose()
     }
+
+    Write-Host "LLM Wiki full verification group passed: $($check.name)"
 }
 
-if ($failures.Count -gt 0) {
-    throw "LLM Wiki full verification failed: $($failures -join ', ')"
-}
-
-Write-Host 'LLM Wiki parallel full verification passed.'
+Write-Host 'LLM Wiki full verification passed.'
