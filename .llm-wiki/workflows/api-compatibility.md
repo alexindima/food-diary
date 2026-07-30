@@ -38,3 +38,9 @@ and updated focused/full OpenAPI snapshots.
 Raw OpenAPI schema comparison classifies optional properties as additive and
 removed properties, newly required properties, type/format/reference changes,
 array item changes, and nullability changes as breaking.
+
+When the compact snapshot omits component schemas, the guard also compares
+changed `*HttpModel.cs` primary-constructor properties. Nullable or defaulted
+additions are additive; required additions, removals, requiredness changes, and
+type changes are breaking. DTO findings include their source path as
+provenance and complement rather than replace runtime serialization snapshots.

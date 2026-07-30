@@ -6,7 +6,6 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Get-LlmWikiImpact.ps1
   - .llm-wiki/tools/Add-LlmWikiSourceReview.ps1
-  - .llm-wiki/reviews/source-impact-reviews.json
   - AGENTS.md
 ---
 

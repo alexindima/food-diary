@@ -7,6 +7,9 @@ param(
     [string]$CurrentSnapshotContent,
     [string]$BasePayloadSnapshotContent,
     [string]$CurrentPayloadSnapshotContent,
+    [string]$BaseHttpDtoContent,
+    [string]$CurrentHttpDtoContent,
+    [string]$HttpDtoPath = 'SyntheticHttpModel.cs',
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [switch]$FailOnBreaking
@@ -105,6 +108,76 @@ function Compare-PayloadKeySets {
         }
         if ($beforeProperty.Value -is [System.Management.Automation.PSCustomObject]) {
             Compare-PayloadKeySets $beforeProperty.Value $afterProperty.Value $propertyLocation $Changes
+        }
+    }
+}
+
+function Get-HttpDtoProperties {
+    param([string]$Content)
+
+    $records = [ordered]@{}
+    if ([string]::IsNullOrWhiteSpace($Content)) { return $records }
+    foreach ($recordMatch in [regex]::Matches(
+        $Content,
+        '(?ms)\brecord\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*\((?<body>.*?)\)\s*;')) {
+        $properties = [ordered]@{}
+        foreach ($parameterMatch in [regex]::Matches(
+            $recordMatch.Groups['body'].Value,
+            '(?m)^\s*(?<type>[A-Za-z_][A-Za-z0-9_.?<>,\[\]]*)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)(?:\s*=\s*(?<default>[^,\r\n]+))?\s*,?\s*$')) {
+            $propertyName = $parameterMatch.Groups['name'].Value
+            $serializedName = $propertyName.Substring(0, 1).ToLowerInvariant() + $propertyName.Substring(1)
+            $type = $parameterMatch.Groups['type'].Value
+            $hasDefault = $parameterMatch.Groups['default'].Success
+            $properties[$serializedName] = [pscustomobject]@{
+                type = $type
+                optional = $type.EndsWith('?') -or $hasDefault
+            }
+        }
+        $records[$recordMatch.Groups['name'].Value] = [pscustomobject]$properties
+    }
+    return [pscustomobject]$records
+}
+
+function Compare-HttpDtoContent {
+    param(
+        [string]$BeforeContent,
+        [string]$AfterContent,
+        [string]$Path,
+        [System.Collections.Generic.List[object]]$Changes
+    )
+
+    $beforeRecords = Get-HttpDtoProperties $BeforeContent
+    $afterRecords = Get-HttpDtoProperties $AfterContent
+    foreach ($beforeRecord in Get-Properties $beforeRecords) {
+        $afterRecord = Get-Properties $afterRecords | Where-Object Name -eq $beforeRecord.Name | Select-Object -First 1
+        if ($null -eq $afterRecord) {
+            Add-Change $Changes 'breaking' 'removed-http-dto' "${Path}::$($beforeRecord.Name)" 'Public HTTP DTO was removed.'
+            continue
+        }
+        foreach ($beforeProperty in Get-Properties $beforeRecord.Value) {
+            $afterProperty = Get-Properties $afterRecord.Value | Where-Object Name -eq $beforeProperty.Name | Select-Object -First 1
+            $location = "${Path}::$($beforeRecord.Name).$($beforeProperty.Name)"
+            if ($null -eq $afterProperty) {
+                Add-Change $Changes 'breaking' 'removed-http-dto-property' $location 'Serialized HTTP DTO property was removed.'
+            } elseif ($beforeProperty.Value.type -ne $afterProperty.Value.type) {
+                Add-Change $Changes 'breaking' 'changed-http-dto-property' $location "HTTP DTO property type changed from '$($beforeProperty.Value.type)' to '$($afterProperty.Value.type)'."
+            } elseif ($beforeProperty.Value.optional -and -not $afterProperty.Value.optional) {
+                Add-Change $Changes 'breaking' 'required-http-dto-property' $location 'HTTP DTO property became required.'
+            }
+        }
+        foreach ($afterProperty in Get-Properties $afterRecord.Value) {
+            if (@(Get-Properties $beforeRecord.Value | Where-Object Name -eq $afterProperty.Name).Count -gt 0) { continue }
+            $location = "${Path}::$($beforeRecord.Name).$($afterProperty.Name)"
+            if ($afterProperty.Value.optional) {
+                Add-Change $Changes 'additive' 'added-http-dto-property' $location 'Optional serialized HTTP DTO property was added.'
+            } else {
+                Add-Change $Changes 'breaking' 'added-required-http-dto-property' $location 'Required serialized HTTP DTO property was added.'
+            }
+        }
+    }
+    foreach ($afterRecord in Get-Properties $afterRecords) {
+        if (@(Get-Properties $beforeRecords | Where-Object Name -eq $afterRecord.Name).Count -eq 0) {
+            Add-Change $Changes 'additive' 'added-http-dto' "${Path}::$($afterRecord.Name)" 'Public HTTP DTO was added.'
         }
     }
 }
@@ -280,11 +353,44 @@ if ($comparePayloadSnapshots) {
         $changes
 }
 
+$httpDtoPaths = [System.Collections.Generic.List[string]]::new()
+$compareHttpDtos = (
+    (-not $PSBoundParameters.ContainsKey('BaseSnapshotContent') -and -not $PSBoundParameters.ContainsKey('CurrentSnapshotContent')) -or
+    $PSBoundParameters.ContainsKey('BaseHttpDtoContent') -or
+    $PSBoundParameters.ContainsKey('CurrentHttpDtoContent')
+)
+if ($compareHttpDtos) {
+    if ($PSBoundParameters.ContainsKey('BaseHttpDtoContent') -or $PSBoundParameters.ContainsKey('CurrentHttpDtoContent')) {
+        Compare-HttpDtoContent $BaseHttpDtoContent $CurrentHttpDtoContent $HttpDtoPath $changes
+        $httpDtoPaths.Add($HttpDtoPath)
+    } else {
+        $changedDtoPaths = @(
+            git -C $repositoryRoot diff --name-only --diff-filter=ACMRD $BaseRef -- 'FoodDiary.Presentation.Api/**/*.cs' |
+                Where-Object { $_ -match 'HttpModel\.cs$' } |
+                Sort-Object -Unique
+        )
+        if ($LASTEXITCODE -ne 0) { throw "Unable to collect changed HTTP DTO paths from '$BaseRef'." }
+        foreach ($path in $changedDtoPaths) {
+            $baseDtoLines = @(git -C $repositoryRoot show "${BaseRef}:$path" 2>$null)
+            $baseDtoText = if ($LASTEXITCODE -eq 0) { $baseDtoLines -join [Environment]::NewLine } else { '' }
+            $absoluteDtoPath = Join-Path $repositoryRoot $path
+            $currentDtoText = if (Test-Path -LiteralPath $absoluteDtoPath) {
+                Get-Content -LiteralPath $absoluteDtoPath -Raw
+            } else {
+                ''
+            }
+            Compare-HttpDtoContent $baseDtoText $currentDtoText $path $changes
+            $httpDtoPaths.Add($path)
+        }
+    }
+}
+
 $result = [pscustomobject]@{
     baseRef = $BaseRef
     snapshotPath = $SnapshotPath
     payloadSnapshotPath = $PayloadSnapshotPath
     snapshotFormat = $snapshotFormat
+    httpDtoPaths = @($httpDtoPaths)
     breakingCount = @($changes | Where-Object severity -eq 'breaking').Count
     additiveCount = @($changes | Where-Object severity -eq 'additive').Count
     changes = @($changes)

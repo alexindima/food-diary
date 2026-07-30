@@ -20,6 +20,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
+$wikiRoot = Split-Path -Parent $toolsRoot
 
 $common = @{ BaseRef = $BaseRef; Format = 'Json' }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
@@ -28,6 +29,48 @@ $effectivePaths = @(
         Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
         Sort-Object -Unique
 )
+$inferredPaths = @()
+if ($effectivePaths.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($Intent)) {
+    $ignoredIntentTerms = @(
+        'add', 'change', 'create', 'feature', 'implement', 'make', 'support', 'update'
+    )
+    $intentTokens = @(
+        [regex]::Matches($Intent.ToLowerInvariant(), '[\p{L}\p{Nd}]{4,}') |
+            ForEach-Object { $_.Value } |
+            Where-Object { $_ -notin $ignoredIntentTerms } |
+            Sort-Object -Unique
+    )
+    $candidates = [System.Collections.Generic.List[object]]::new()
+    $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
+    if (Test-Path -LiteralPath $symbolIndexPath) {
+        $symbolIndex = Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json
+        foreach ($symbol in @($symbolIndex.symbols)) {
+            $searchText = "$($symbol.name) $($symbol.path)".ToLowerInvariant()
+            $score = @($intentTokens | Where-Object { $searchText -match [regex]::Escape($_) }).Count
+            if ($score -gt 0) {
+                $candidates.Add([pscustomobject]@{ path = $symbol.path; score = $score; source = 'csharp-symbol-index' })
+            }
+        }
+    }
+    $frontendIntentIndexPath = Join-Path $wikiRoot 'generated/frontend-index.json'
+    if (Test-Path -LiteralPath $frontendIntentIndexPath) {
+        $frontendIntentIndex = Get-Content -LiteralPath $frontendIntentIndexPath -Raw | ConvertFrom-Json
+        foreach ($symbol in @($frontendIntentIndex.symbols)) {
+            $searchText = "$($symbol.name) $($symbol.path) $($symbol.kind)".ToLowerInvariant()
+            $score = @($intentTokens | Where-Object { $searchText -match [regex]::Escape($_) }).Count
+            if ($score -gt 0) {
+                $candidates.Add([pscustomobject]@{ path = $symbol.path; score = $score; source = 'frontend-index' })
+            }
+        }
+    }
+    $inferredPaths = @(
+        $candidates |
+            Sort-Object @{ Expression = 'score'; Descending = $true }, path |
+            Select-Object -ExpandProperty path -Unique |
+            Select-Object -First 8
+    )
+    $effectivePaths = $inferredPaths
+}
 if ($effectivePaths.Count -gt 0) { $common.ChangedPath = $effectivePaths }
 
 $diffArguments = @{} + $common
@@ -52,19 +95,19 @@ $rollout = if ($null -ne $RolloutInput) { $RolloutInput } else {
 $decision = if ($null -ne $DecisionInput) { $DecisionInput } else {
     & (Join-Path $toolsRoot 'Get-LlmWikiDecisionContext.ps1') @common -DiffInput $diff -PolicyInput $policy | ConvertFrom-Json
 }
-$qualityIndexPath = Join-Path (Split-Path -Parent $toolsRoot) 'generated/quality-index.json'
+$qualityIndexPath = Join-Path $wikiRoot 'generated/quality-index.json'
 $qualityIndex = Get-Content -LiteralPath $qualityIndexPath -Raw | ConvertFrom-Json
-$runtimeTopologyPath = Join-Path (Split-Path -Parent $toolsRoot) 'generated/runtime-topology.json'
+$runtimeTopologyPath = Join-Path $wikiRoot 'generated/runtime-topology.json'
 $runtimeTopology = Get-Content -LiteralPath $runtimeTopologyPath -Raw | ConvertFrom-Json
-$sensitiveDataPath = Join-Path (Split-Path -Parent $toolsRoot) 'generated/sensitive-data-index.json'
+$sensitiveDataPath = Join-Path $wikiRoot 'generated/sensitive-data-index.json'
 $sensitiveData = Get-Content -LiteralPath $sensitiveDataPath -Raw | ConvertFrom-Json
-$frontendContractPath = Join-Path (Split-Path -Parent $toolsRoot) 'generated/frontend-contract-index.json'
+$frontendContractPath = Join-Path $wikiRoot 'generated/frontend-contract-index.json'
 $frontendContract = Get-Content -LiteralPath $frontendContractPath -Raw | ConvertFrom-Json
-$domainDataPath = Join-Path (Split-Path -Parent $toolsRoot) 'generated/domain-data-index.json'
+$domainDataPath = Join-Path $wikiRoot 'generated/domain-data-index.json'
 $domainData = Get-Content -LiteralPath $domainDataPath -Raw | ConvertFrom-Json
-$backendContractPath = Join-Path (Split-Path -Parent $toolsRoot) 'generated/backend-contract-index.json'
+$backendContractPath = Join-Path $wikiRoot 'generated/backend-contract-index.json'
 $backendContract = Get-Content -LiteralPath $backendContractPath -Raw | ConvertFrom-Json
-$architectureHealthPath = Join-Path (Split-Path -Parent $toolsRoot) 'generated/architecture-health-index.json'
+$architectureHealthPath = Join-Path $wikiRoot 'generated/architecture-health-index.json'
 $architectureHealth = Get-Content -LiteralPath $architectureHealthPath -Raw | ConvertFrom-Json
 $changedPathsForQuality = @($diff.changedPaths)
 $changedQualityFiles = @($qualityIndex.files | Where-Object { $changedPathsForQuality -contains $_.path })
@@ -94,6 +137,7 @@ $privacyImpact = [ordered]@{
     fields = @($sensitiveData.fields | Where-Object { $changedPathsForQuality -contains $_.path })
     boundaries = @($sensitiveData.boundaryFiles | Where-Object { $changedPathsForQuality -contains $_.path })
     potentialLogging = @($sensitiveData.potentialLogging | Where-Object { $changedPathsForQuality -contains $_.path })
+    externalTransfers = @($sensitiveData.externalTransfers | Where-Object { $changedPathsForQuality -contains $_.path })
 }
 $frontendContractImpact = [ordered]@{
     components = @($frontendContract.components | Where-Object {
@@ -197,6 +241,10 @@ if (@($privacyImpact.fields | Where-Object category -eq 'credential').Count -gt 
     $riskScore += 2
     $riskReasons.Add('credential or sensitive logging review')
 }
+if (@($privacyImpact.externalTransfers).Count -gt 0) {
+    $riskScore += 3
+    $riskReasons.Add('private or sensitive data sent to an external provider')
+}
 if (@($frontendContractImpact.components).Count -gt 0) {
     $riskScore += 2
     $riskReasons.Add('frontend public component contract')
@@ -252,8 +300,42 @@ elseif (@($ownership.downstreamModules).Count -gt 0) { $riskScore += 1; $riskRea
 $policyViolations = @($policy.violations | Where-Object { $null -ne $_ })
 if ($policyViolations.Count -gt 0) { $riskScore += 4; $riskReasons.Add('structural policy violation') }
 $riskLevel = if ($riskScore -ge 7) { 'high' } elseif ($riskScore -ge 3) { 'medium' } else { 'low' }
+$analysisMode = if ($inferredPaths.Count -gt 0) {
+    'intent-inferred'
+} elseif (@($ProposedPath).Count -gt 0) {
+    'planned-paths'
+} elseif (@($diff.changedPaths).Count -gt 0) {
+    'git-diff'
+} else {
+    'unscoped'
+}
+$analysisConfidence = switch ($analysisMode) {
+    'git-diff' { 'high' }
+    'planned-paths' { 'medium' }
+    'intent-inferred' { 'low' }
+    default { 'low' }
+}
+$briefWarnings = [System.Collections.Generic.List[string]]::new()
+foreach ($warning in @($diff.warnings)) { $briefWarnings.Add([string]$warning) }
+if ($analysisMode -eq 'unscoped') {
+    $briefWarnings.Add('No diff, intent, or planned paths were supplied. Use -Intent and -PlannedPath for a useful pre-diff brief.')
+} elseif ($analysisMode -eq 'intent-inferred') {
+    $briefWarnings.Add('Paths were inferred heuristically from intent. Confirm them with -PlannedPath before treating risk and test output as authoritative.')
+}
 
 $brief = [pscustomobject]@{
+    analysis = [pscustomobject]@{
+        mode = $analysisMode
+        confidence = $analysisConfidence
+        provenance = @(
+            if ($analysisMode -eq 'git-diff') { 'git-diff' }
+            if ($analysisMode -eq 'planned-paths') { 'caller-planned-paths' }
+            if ($analysisMode -eq 'intent-inferred') { 'intent-keywords'; 'csharp-symbol-index'; 'frontend-index' }
+            'compiled-indexes'
+            'change-policy'
+        )
+        inferredPaths = @($inferredPaths)
+    }
     risk = [pscustomobject]@{
         level = $riskLevel
         score = $riskScore
@@ -288,12 +370,13 @@ $brief = [pscustomobject]@{
     domainDataImpact = [pscustomobject]$domainDataImpact
     backendContractImpact = [pscustomobject]$backendContractImpact
     architectureHealthImpact = [pscustomobject]$architectureHealthImpact
-    warnings = @($diff.warnings)
+    warnings = @($briefWarnings)
 }
 
 $briefOutput = if ($Compact) {
     [pscustomobject]@{
         compact = $true
+        analysis = $brief.analysis
         risk = $brief.risk
         change = $brief.change
         instructions = $brief.instructions
@@ -307,6 +390,7 @@ $briefOutput = if ($Compact) {
         impactCounts = [pscustomobject]@{
             runtime = $runtimeImpactCount
             privacyFields = @($privacyImpact.fields).Count
+            privacyExternalTransfers = @($privacyImpact.externalTransfers).Count
             frontendComponents = @($frontendContractImpact.components).Count
             frontendConsumers = @($frontendContractImpact.downstreamConsumers).Count
             backendContracts = @($backendContractImpact.contracts).Count
@@ -314,6 +398,7 @@ $briefOutput = if ($Compact) {
             backendConsumerKinds = $backendContractImpact.consumerKinds
             domainTypes = @($domainDataImpact.types).Count
         }
+        privacyExternalTransfers = @($privacyImpact.externalTransfers | Select-Object -First $Limit)
         warnings = $brief.warnings
     }
 } else {

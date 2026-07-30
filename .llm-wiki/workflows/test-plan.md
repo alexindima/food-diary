@@ -41,6 +41,10 @@ symbols, and finally broad downstream context. JSON includes
 `focusedTestDetails` with the rank reason. Use `-Compact` to retain actionable
 tests, commands, and scenarios while reducing context volume.
 
+Each focused test also carries an execution priority: `required` for changed
+tests and direct siblings, `recommended` for symbol references, and
+`contextual` for broad downstream evidence.
+
 Focused Angular commands are derived from the actual `package.json` script and
 the project's `angular.json` test builder. `--include` is emitted only for the
 verified `@angular/build:unit-test` builder; otherwise the planner falls back to

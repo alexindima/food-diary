@@ -60,7 +60,7 @@ $persistence = [System.Collections.Generic.List[object]]::new()
 $configurationFiles = @(
     Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*Configuration.cs' |
         Where-Object {
-            $_.FullName -notmatch '[\\/](Migrations|node_modules|bin|obj)[\\/]' -and
+            $_.FullName -notmatch '[\\/](Migrations|node_modules|bin|obj|\.artifacts|TestResults)[\\/]' -and
             [System.IO.File]::ReadAllText($_.FullName) -match 'IEntityTypeConfiguration|EntityTypeBuilder'
         } |
         Sort-Object FullName

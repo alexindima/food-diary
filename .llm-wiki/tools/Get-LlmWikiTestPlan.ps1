@@ -103,6 +103,7 @@ function Add-RankedTests {
         $rankedFocusedTests.Add([pscustomobject]@{
             path = $path
             rank = $Rank
+            priority = if ($Rank -ge 90) { 'required' } elseif ($Rank -ge 70) { 'recommended' } else { 'contextual' }
             reason = $Reason
         })
     }

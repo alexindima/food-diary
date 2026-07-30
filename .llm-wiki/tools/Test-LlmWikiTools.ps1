@@ -171,6 +171,15 @@ $testPlan = $testPlanJson | ConvertFrom-Json
 Assert-Wiki (@($testPlan.commands.id) -contains 'data-access-integration-tests') 'Test plan did not route persistence integration tests.'
 Assert-Wiki (@($testPlan.scenarios.id) -contains 'persistence-query-shape') 'Test plan did not include query-shape coverage.'
 Assert-Wiki (@($testPlan.focusedTestFiles | Where-Object { $_ -match 'Infrastructure.*Tests' }).Count -gt 0) 'Test plan did not discover a directly referencing infrastructure test.'
+Assert-Wiki (@($testPlan.focusedTestDetails | Where-Object priority -in @('required', 'recommended')).Count -gt 0) 'Test plan did not classify focused-test execution priority.'
+
+$intentBrief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
+    -Intent 'Add food photo annotations from OpenAI recognition' `
+    -Compact `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki ($intentBrief.analysis.mode -eq 'intent-inferred') 'Pre-diff brief did not enter intent-inference mode.'
+Assert-Wiki ($intentBrief.analysis.confidence -eq 'low') 'Intent-inferred brief did not expose heuristic confidence.'
+Assert-Wiki (@($intentBrief.analysis.inferredPaths | Where-Object { $_ -match '(?i)(food|photo|openai)' }).Count -gt 0) 'Intent-inferred brief did not discover a relevant AI/photo path.'
 
 $criticalBriefJson = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
     -ChangedPath @('FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs') `
@@ -286,6 +295,26 @@ $payloadCompatibility = & (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibility.ps
     -Format Json | ConvertFrom-Json
 Assert-Wiki (@($payloadCompatibility.changes.kind) -contains 'added-payload-property') 'API compatibility did not detect an added serialized payload property.'
 
+$baseHttpDto = @'
+public sealed record ExampleHttpModel(
+    string Name);
+'@
+$currentHttpDto = @'
+public sealed record ExampleHttpModel(
+    string Name,
+    decimal? CenterX = null,
+    decimal RequiredValue);
+'@
+$httpDtoCompatibility = & (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibility.ps1') `
+    -BaseSnapshotContent $baseEndpointContract `
+    -CurrentSnapshotContent $baseEndpointContract `
+    -BaseHttpDtoContent $baseHttpDto `
+    -CurrentHttpDtoContent $currentHttpDto `
+    -HttpDtoPath 'Synthetic/ExampleHttpModel.cs' `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (@($httpDtoCompatibility.changes.kind) -contains 'added-http-dto-property') 'API compatibility did not classify an optional HTTP DTO property as additive.'
+Assert-Wiki (@($httpDtoCompatibility.changes.kind) -contains 'added-required-http-dto-property') 'API compatibility did not classify a required HTTP DTO property as breaking.'
+
 $taskContractPath = '.artifacts/llm-wiki/tool-smoke-task-contract.json'
 $absoluteTaskContractPath = Join-Path (Split-Path -Parent $wikiRoot) $taskContractPath
 try {
@@ -352,6 +381,11 @@ Assert-Wiki ($sensitiveData.summary.credential -gt 0) 'Sensitive data index did 
 Assert-Wiki ($sensitiveData.summary.identity -gt 0) 'Sensitive data index did not extract identity candidates.'
 Assert-Wiki ($sensitiveData.summary.health -gt 0) 'Sensitive data index did not extract health candidates.'
 Assert-Wiki ($sensitiveData.summary.boundaryFiles -gt 0) 'Sensitive data index did not identify boundary files.'
+Assert-Wiki ($sensitiveData.summary.externalTransferLeads -gt 0) 'Sensitive data index did not identify external-provider transfer leads.'
+Assert-Wiki (@($sensitiveData.externalTransfers | Where-Object {
+    $_.providerHost -eq 'api.openai.com' -and
+    @($_.dataNames) -contains 'imageUrl'
+}).Count -gt 0) 'Sensitive data index did not connect the food image URL to the external OpenAI boundary.'
 
 $privacyJson = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') `
     -Category credential `
@@ -360,6 +394,11 @@ $privacyJson = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') `
     -Format Json
 $privacy = $privacyJson | ConvertFrom-Json
 Assert-Wiki ($privacy.count -gt 0) 'Sensitive data query did not resolve refresh-token candidates.'
+$externalPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') `
+    -Query 'FoodVision photo OpenAI' `
+    -Category external `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (@($externalPrivacy.items | Where-Object providerHost -eq 'api.openai.com').Count -gt 0) 'Natural-language privacy query did not resolve the OpenAI image boundary.'
 
 $dependencyJson = & (Join-Path $toolsRoot 'Get-LlmWikiDependencyChanges.ps1') -BaseRef HEAD -Format Json
 $dependencyChanges = $dependencyJson | ConvertFrom-Json

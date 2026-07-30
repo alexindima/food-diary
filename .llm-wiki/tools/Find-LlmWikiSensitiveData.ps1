@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$Query,
-    [ValidateSet('all', 'credential', 'identity', 'health', 'financial', 'privateContent', 'logging', 'boundaries')]
+    [ValidateSet('all', 'credential', 'identity', 'health', 'financial', 'privateContent', 'logging', 'boundaries', 'external')]
     [string]$Category = 'all',
     [ValidateRange(1, 100)]
     [int]$Limit = 30,
@@ -16,13 +16,34 @@ $items = if ($Category -eq 'logging') {
     @($index.potentialLogging)
 } elseif ($Category -eq 'boundaries') {
     @($index.boundaryFiles)
+} elseif ($Category -eq 'external') {
+    @($index.externalTransfers)
 } elseif ($Category -eq 'all') {
-    @($index.fields)
+    @($index.fields) + @($index.externalTransfers)
 } else {
     @($index.fields | Where-Object category -eq $Category)
 }
 if (-not [string]::IsNullOrWhiteSpace($Query)) {
-    $items = @($items | Where-Object { ($_ | ConvertTo-Json -Compress) -match [regex]::Escape($Query) })
+    $queryTokens = @(
+        $Query -split '\s+' |
+            Where-Object { $_.Length -ge 2 } |
+            Sort-Object -Unique
+    )
+    $items = @(
+        $items |
+            ForEach-Object {
+                $item = $_
+                $searchText = $item | ConvertTo-Json -Compress
+                $matchCount = @($queryTokens | Where-Object {
+                    $searchText -match [regex]::Escape($_)
+                }).Count
+                if ($matchCount -gt 0) {
+                    [pscustomobject]@{ item = $item; matchCount = $matchCount }
+                }
+            } |
+            Sort-Object matchCount -Descending |
+            Select-Object -ExpandProperty item
+    )
 }
 $items = @($items | Select-Object -First $Limit)
 if ($Format -eq 'Json') {

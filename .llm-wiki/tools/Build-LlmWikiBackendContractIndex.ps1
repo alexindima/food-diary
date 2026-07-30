@@ -51,7 +51,7 @@ $consumerEdges = [System.Collections.Generic.List[object]]::new()
 $sourceFiles = @(
     Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
         Where-Object {
-            $_.FullName -notmatch '[\\/](node_modules|bin|obj|Migrations)[\\/]' -and
+            $_.FullName -notmatch '[\\/](node_modules|bin|obj|Migrations|\.artifacts|TestResults)[\\/]' -and
             $_.Name -notmatch '\.(Designer|g)\.cs$'
         } |
         Sort-Object FullName

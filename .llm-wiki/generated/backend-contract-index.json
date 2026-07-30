@@ -91185,7 +91185,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs",
                               "isTest":  true,
-                              "referenceCount":  20
+                              "referenceCount":  21
                           },
                           {
                               "contract":  "OpenFoodFactsProductHttpResponse",

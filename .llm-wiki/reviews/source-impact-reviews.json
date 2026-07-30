@@ -70,19 +70,34 @@
                         "reviewedAtUtc":  "2026-07-30T10:39:41.4029064Z"
                     },
                     {
+                        "pageId":  "workflow-backend-contract-review",
+                        "pagePath":  ".llm-wiki/workflows/backend-contract-review.md",
+                        "pageSha256":  "e38ac8a4632c1ae729365477f68f5cde28f6eebaf7dd764685faffd319feed6d",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/generated/backend-contract-index.json",
+                                            "sha256":  "0f8ea563157431aa60b7111047fd06f6f9d52e444c967f4c39de306148f8dc2c"
+                                        }
+                                    ],
+                        "reason":  "The index now reflects the committed FoodVision model/test reference changes; backend contract review semantics are unchanged.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "439af4c4db41ef536cca5f30927131b88bdf09a0",
+                        "reviewedAtUtc":  "2026-07-30T14:30:14.8484498Z"
+                    },
+                    {
                         "pageId":  "workflow-change-manifest",
                         "pagePath":  ".llm-wiki/workflows/change-manifest.md",
                         "pageSha256":  "182933effc68070bdf0da58c6fe4733c2f4c7cf005c4fb7c0644bcb021fe01ea",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "6cc4008c6912d3a1db334589f3c0187c835803618b9b19141069382d2260ffe9"
+                                            "sha256":  "190e7161706b89961a93577a0d45823fdd0199d4c0d9818b8b2c83790980b93b"
                                         }
                                     ],
-                        "reason":  "Reviewed after task-brief compact output, intent provenance, test ranking, and consumer-kind classification changes; existing workflow guidance remains accurate.",
+                        "reason":  "Intent inference and analysis provenance enrich task briefs without changing manifest lifecycle or validation.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
-                        "reviewedAtUtc":  "2026-07-30T10:12:04.4097264Z"
+                        "gitHead":  "439af4c4db41ef536cca5f30927131b88bdf09a0",
+                        "reviewedAtUtc":  "2026-07-30T14:30:16.3445504Z"
                     },
                     {
                         "pageId":  "workflow-change-packet",
@@ -91,13 +106,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "6cc4008c6912d3a1db334589f3c0187c835803618b9b19141069382d2260ffe9"
+                                            "sha256":  "190e7161706b89961a93577a0d45823fdd0199d4c0d9818b8b2c83790980b93b"
                                         }
                                     ],
-                        "reason":  "Reviewed after task-brief compact output, intent provenance, test ranking, and consumer-kind classification changes; existing workflow guidance remains accurate.",
+                        "reason":  "Intent inference and analysis provenance enrich the embedded brief without changing packet composition or fingerprints.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
-                        "reviewedAtUtc":  "2026-07-30T10:12:05.7581247Z"
+                        "gitHead":  "439af4c4db41ef536cca5f30927131b88bdf09a0",
+                        "reviewedAtUtc":  "2026-07-30T14:30:18.0728737Z"
                     },
                     {
                         "pageId":  "workflow-dependency-rollout",
@@ -121,13 +136,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "6cc4008c6912d3a1db334589f3c0187c835803618b9b19141069382d2260ffe9"
+                                            "sha256":  "190e7161706b89961a93577a0d45823fdd0199d4c0d9818b8b2c83790980b93b"
                                         }
                                     ],
-                        "reason":  "Reviewed after task-brief compact output, intent provenance, test ranking, and consumer-kind classification changes; existing workflow guidance remains accurate.",
+                        "reason":  "Intent-inferred paths add a low-confidence pre-diff input; impact simulation semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
-                        "reviewedAtUtc":  "2026-07-30T10:12:07.7754179Z"
+                        "gitHead":  "439af4c4db41ef536cca5f30927131b88bdf09a0",
+                        "reviewedAtUtc":  "2026-07-30T14:30:19.3957862Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -136,13 +151,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "6cc4008c6912d3a1db334589f3c0187c835803618b9b19141069382d2260ffe9"
+                                            "sha256":  "190e7161706b89961a93577a0d45823fdd0199d4c0d9818b8b2c83790980b93b"
                                         }
                                     ],
-                        "reason":  "Reviewed after task-brief compact output, intent provenance, test ranking, and consumer-kind classification changes; existing workflow guidance remains accurate.",
+                        "reason":  "Intent inference improves pre-diff context while implementation-plan phases and obligations remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
-                        "reviewedAtUtc":  "2026-07-30T10:12:09.7849609Z"
+                        "gitHead":  "439af4c4db41ef536cca5f30927131b88bdf09a0",
+                        "reviewedAtUtc":  "2026-07-30T14:30:20.9820761Z"
                     },
                     {
                         "pageId":  "workflow-index-pipeline",
@@ -173,6 +188,21 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
                         "reviewedAtUtc":  "2026-07-30T09:40:30.1361816Z"
+                    },
+                    {
+                        "pageId":  "workflow-quality-risk",
+                        "pagePath":  ".llm-wiki/workflows/quality-risk.md",
+                        "pageSha256":  "6dbd01ffd9ba92e32c7d132ca80e70d883a1707164597cbecf5dac86e8bfb292",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/generated/quality-index.json",
+                                            "sha256":  "584a7ca447d3b97e3b6117ee31301326d3ff14dcf6e0f172d9d0c92d54377094"
+                                        }
+                                    ],
+                        "reason":  "The regenerated quality index reflects the larger OpenAiFoodClient; quality scoring semantics are unchanged.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "439af4c4db41ef536cca5f30927131b88bdf09a0",
+                        "reviewedAtUtc":  "2026-07-30T14:30:22.6020611Z"
                     },
                     {
                         "pageId":  "workflow-runtime-impact",

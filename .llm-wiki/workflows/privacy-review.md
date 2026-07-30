@@ -35,3 +35,9 @@ External identity credentials used to bridge an anonymous login attempt into an
 authenticated linking request should remain in memory only. Do not place them
 in URLs, router state persisted across reloads, browser storage, logs,
 telemetry, queues, or error messages.
+
+The index also reports `externalTransfers`: integration clients that combine
+an absolute external HTTP destination with image, prompt, description, text,
+food, nutrition, or similar sensitive parameters. Treat these entries as
+provider-sharing review leads. Verify the actual payload, consent, retention,
+logging, metadata, and provider policy in source.

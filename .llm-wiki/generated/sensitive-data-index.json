@@ -2,7 +2,8 @@
     "schemaVersion":  1,
     "semantics":  {
                       "inventory":  "Name-based candidate sensitive fields. Confirm semantics in source before making privacy claims.",
-                      "potentialLogging":  "A logging call near a candidate field name. This is a review lead, not proof that a runtime value is logged."
+                      "potentialLogging":  "A logging call near a candidate field name. This is a review lead, not proof that a runtime value is logged.",
+                      "externalTransfers":  "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
                   },
     "summary":  {
                     "candidateFields":  1358,
@@ -12,7 +13,8 @@
                     "financial":  191,
                     "privateContent":  297,
                     "boundaryFiles":  173,
-                    "potentialLoggingLeads":  1
+                    "potentialLoggingLeads":  1,
+                    "externalTransferLeads":  1
                 },
     "fields":  [
                    {
@@ -10798,5 +10800,24 @@
                                                     "InvalidSubscriptions"
                                                 ]
                              }
-                         ]
+                         ],
+    "externalTransfers":  [
+                              {
+                                  "path":  "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
+                                  "line":  136,
+                                  "providerHost":  "api.openai.com",
+                                  "dataNames":  [
+                                                    "description",
+                                                    "errorMessage",
+                                                    "errorText",
+                                                    "imageUrl",
+                                                    "promptTemplate",
+                                                    "text"
+                                                ],
+                                  "categories":  [
+                                                     "privateContent"
+                                                 ],
+                                  "evidence":  "External HttpClient destination and sensitive method parameters occur in the same integration client. Verify the runtime data flow in source."
+                              }
+                          ]
 }

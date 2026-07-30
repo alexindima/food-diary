@@ -39,6 +39,12 @@ Before implementation creates a diff, pass the expected files explicitly:
 inputs. Proposed and explicitly changed paths are combined for classification,
 while `change.intent` and `change.proposedPaths` preserve planning provenance.
 
+If only `-Intent` is supplied, the brief ranks matching C# and frontend symbols
+and returns up to eight inferred paths. This mode is explicitly marked
+`intent-inferred` with low confidence and provenance; confirm it with
+`-PlannedPath` before treating the result as authoritative. An unscoped brief
+warns that no diff, intent, or planned paths were supplied.
+
 The brief combines changed scopes, directly affected and downstream modules,
 scoped instructions, relevant wiki pages, focused tests, mandatory checks,
 test scenarios, structural hotspots, direct test-reference gaps, review

@@ -23,6 +23,7 @@ $categories = [ordered]@{
 $fields = [System.Collections.Generic.List[object]]::new()
 $potentialLogging = [System.Collections.Generic.List[object]]::new()
 $boundaryFiles = [System.Collections.Generic.List[object]]::new()
+$externalTransfers = [System.Collections.Generic.List[object]]::new()
 $sourceFiles = @(
     Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
         Where-Object {
@@ -90,14 +91,52 @@ foreach ($file in $sourceFiles) {
             fieldCount = $fileFields.Count
         })
     }
+
+    if ($path -match '(^|/)[^/]*Integrations/' -and
+        $content -match '\bHttpClient\b' -and
+        $content -match '\bSendAsync\s*\(') {
+        $sensitiveParameters = @(
+            [regex]::Matches(
+                $content,
+                '(?m)\b(?:string|byte\[\]|Stream|IFormFile)\??\s+(?<name>[a-zA-Z_][a-zA-Z0-9_]*)\s*(?:,|\))') |
+                ForEach-Object { $_.Groups['name'].Value } |
+                Where-Object {
+                    $_ -match '(?i)(image|photo|picture|prompt|description|message|content|text|food|nutrition|health)'
+                } |
+                Sort-Object -Unique
+        )
+        foreach ($uriMatch in [regex]::Matches($content, 'https://(?<host>[a-zA-Z0-9.-]+)(?:[/"])')) {
+            if ($sensitiveParameters.Count -eq 0) { continue }
+            $categoriesForTransfer = @(
+                if (@($sensitiveParameters | Where-Object { $_ -match '(?i)(food|nutrition|health)' }).Count -gt 0) {
+                    'health'
+                }
+                if (@($sensitiveParameters | Where-Object {
+                    $_ -match '(?i)(image|photo|picture|prompt|description|message|content|text)'
+                }).Count -gt 0) {
+                    'privateContent'
+                }
+            )
+            $externalTransfers.Add([pscustomobject]@{
+                path = $path
+                line = 1 + [regex]::Matches($content.Substring(0, $uriMatch.Index), "`n").Count
+                providerHost = $uriMatch.Groups['host'].Value.ToLowerInvariant()
+                dataNames = $sensitiveParameters
+                categories = @($categoriesForTransfer | Sort-Object -Unique)
+                evidence = 'External HttpClient destination and sensitive method parameters occur in the same integration client. Verify the runtime data flow in source.'
+            })
+        }
+    }
 }
 
 $uniqueFields = @($fields | Sort-Object category, path, line, name -Unique)
+$uniqueExternalTransfers = @($externalTransfers | Sort-Object path, line, providerHost -Unique)
 $result = [ordered]@{
     schemaVersion = 1
     semantics = [ordered]@{
         inventory = 'Name-based candidate sensitive fields. Confirm semantics in source before making privacy claims.'
         potentialLogging = 'A logging call near a candidate field name. This is a review lead, not proof that a runtime value is logged.'
+        externalTransfers = 'An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload.'
     }
     summary = [ordered]@{
         candidateFields = $uniqueFields.Count
@@ -108,10 +147,12 @@ $result = [ordered]@{
         privateContent = @($uniqueFields | Where-Object category -eq 'privateContent').Count
         boundaryFiles = @($boundaryFiles | Sort-Object path -Unique).Count
         potentialLoggingLeads = @($potentialLogging | Sort-Object path, line -Unique).Count
+        externalTransferLeads = $uniqueExternalTransfers.Count
     }
     fields = $uniqueFields
     boundaryFiles = @($boundaryFiles | Sort-Object path -Unique)
     potentialLogging = @($potentialLogging | Sort-Object path, line -Unique)
+    externalTransfers = $uniqueExternalTransfers
 }
 $jsonText = ($result | ConvertTo-Json -Depth 10) + [Environment]::NewLine
 if ($Check) {
