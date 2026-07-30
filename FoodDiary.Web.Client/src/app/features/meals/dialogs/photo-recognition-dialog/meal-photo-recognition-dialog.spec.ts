@@ -26,6 +26,9 @@ const visionItem: FoodVisionItem = {
     amount: SOURCE_AMOUNT,
     unit: 'g',
     confidence: 0.9,
+    centerX: 0.42,
+    centerY: 0.58,
+    locationConfidence: 0.92,
 };
 
 const nutrition: FoodNutritionResponse = {
@@ -73,6 +76,25 @@ describe('MealPhotoRecognitionDialogComponent analysis', () => {
         expect(component['results']()).toEqual([visionItem]);
         expect(component['nutrition']()).toEqual(nutrition);
         expect(component['statusKey']()).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_DONE');
+    });
+
+    it('should build photo annotations and let the user hide them', async () => {
+        const { component } = await setupComponentAsync();
+
+        component['onImageChanged']({ assetId: 'asset-1', url: 'https://example.test/photo.jpg' });
+
+        expect(component['annotations']()).toEqual([
+            expect.objectContaining({
+                name: visionItem.nameLocal,
+                centerX: 42,
+                centerY: 58,
+                calories: BASE_CALORIES,
+            }),
+        ]);
+
+        component['toggleAnnotations']();
+
+        expect(component['annotationsVisible']()).toBe(false);
     });
 
     it('should set premium error when image analysis is forbidden', async () => {

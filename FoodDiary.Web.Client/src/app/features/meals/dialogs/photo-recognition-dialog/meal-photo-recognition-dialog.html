@@ -9,7 +9,11 @@
             [statusKey]="statusKey()"
             [isLoading]="isLoading()"
             [isNutritionLoading]="isNutritionLoading()"
+            [selection]="selection()"
+            [annotations]="annotations()"
+            [annotationsVisible]="annotationsVisible()"
             (imageChanged)="onImageChanged($event)"
+            (annotationsToggled)="toggleAnnotations()"
         />
 
         @if (!isLoading()) {

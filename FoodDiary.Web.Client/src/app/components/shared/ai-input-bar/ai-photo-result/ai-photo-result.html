@@ -18,6 +18,9 @@
         [sourceTextLabelKey]="sourceTextLabelKey()"
         [isAnalyzing]="isAnalyzing()"
         [isNutritionLoading]="isNutritionLoading()"
+        [annotations]="annotations()"
+        [annotationsVisible]="annotationsVisible()"
+        (annotationsToggled)="toggleAnnotations()"
     />
 
     @if (errorKey(); as currentErrorKey) {

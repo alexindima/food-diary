@@ -8,6 +8,50 @@
                 [ngSrc]="previewUrl"
                 [alt]="'AI_INPUT_BAR.PHOTO_PREVIEW_ALT' | translate"
             />
+            @if (annotations().length > 0) {
+                <button class="ai-photo-result__annotation-toggle" type="button" (click)="annotationsToggled.emit()">
+                    {{
+                        (annotationsVisible()
+                            ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.HIDE_ANNOTATIONS'
+                            : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SHOW_ANNOTATIONS'
+                        ) | translate
+                    }}
+                </button>
+                @if (annotationsVisible()) {
+                    <div
+                        class="ai-photo-result__annotations"
+                        [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ANNOTATIONS_LABEL' | translate"
+                    >
+                        <div class="ai-photo-result__annotation-frame">
+                            <img class="ai-photo-result__annotation-sizer" alt="" [src]="previewUrl" />
+                            <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                                @for (annotation of annotations(); track annotation.id) {
+                                    <line
+                                        [attr.x1]="annotation.centerX"
+                                        [attr.y1]="annotation.centerY"
+                                        [attr.x2]="annotation.cardX + 10"
+                                        [attr.y2]="annotation.cardY + 10"
+                                    />
+                                    <circle r="0.8" [attr.cx]="annotation.centerX" [attr.cy]="annotation.centerY" />
+                                }
+                            </svg>
+                            @for (annotation of annotations(); track annotation.id) {
+                                <article
+                                    class="ai-photo-result__annotation-card"
+                                    [style.left.%]="annotation.cardX"
+                                    [style.top.%]="annotation.cardY"
+                                >
+                                    <strong>{{ annotation.name }}</strong> · {{ annotation.amountLabel }}
+                                    <div>
+                                        <strong>{{ annotation.calories }} {{ 'GENERAL.UNITS.KCAL' | translate }}</strong>
+                                        <span>Б {{ annotation.protein }} · Ж {{ annotation.fat }} · У {{ annotation.carbs }} г</span>
+                                    </div>
+                                </article>
+                            }
+                        </div>
+                    </div>
+                }
+            }
         } @else {
             <div class="ai-photo-result__text-preview fd-stack fd-gap-xs">
                 <div class="ai-photo-result__text-preview-label fd-ui-overline">{{ sourceTextLabelKey() | translate }}</div>

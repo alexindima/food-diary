@@ -2101,7 +2101,7 @@
                         "role":  "Component",
                         "selector":  "fd-ai-photo-preview",
                         "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.ts",
-                        "line":  15
+                        "line":  17
                     },
                     {
                         "name":  "AiPhotoResultActionsComponent",
@@ -2122,7 +2122,7 @@
                         "role":  "Component",
                         "selector":  "fd-ai-photo-result",
                         "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts",
-                        "line":  58
+                        "line":  67
                     },
                     {
                         "name":  "PhotoUploadDialogComponent",
@@ -3599,7 +3599,7 @@
                         "role":  "Component",
                         "selector":  "fd-meal-photo-recognition-dialog",
                         "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
-                        "line":  79
+                        "line":  89
                     },
                     {
                         "name":  "MealPhotoResultActionsComponent",
@@ -3620,7 +3620,7 @@
                         "role":  "Component",
                         "selector":  "fd-meal-photo-upload-panel",
                         "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-upload-panel/meal-photo-upload-panel.ts",
-                        "line":  17
+                        "line":  18
                     },
                     {
                         "name":  "MealSatietyLevelDialogComponent",
@@ -5681,8 +5681,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  2857,
-                             "russianProperties":  2857,
+                             "englishProperties":  2860,
+                             "russianProperties":  2860,
                              "countsMatch":  true
                          },
                          {

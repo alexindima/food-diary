@@ -3,6 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import type { MealPhotoAnnotation } from '../meal-photo-recognition-dialog-lib/meal-photo-recognition-dialog.types';
 
 @Component({
     selector: 'fd-meal-photo-upload-panel',
@@ -19,6 +20,10 @@ export class MealPhotoUploadPanelComponent {
     public readonly statusKey = input.required<string | null>();
     public readonly isLoading = input.required<boolean>();
     public readonly isNutritionLoading = input.required<boolean>();
+    public readonly selection = input<ImageSelection | null>(null);
+    public readonly annotations = input<readonly MealPhotoAnnotation[]>([]);
+    public readonly annotationsVisible = input(true);
 
     public readonly imageChanged = output<ImageSelection | null>();
+    public readonly annotationsToggled = output();
 }

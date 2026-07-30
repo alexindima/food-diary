@@ -30,6 +30,7 @@ import type {
     AiEditItemUpdate,
     AiEditUnitOption,
     AiNutritionSummaryItem,
+    AiPhotoAnnotation,
     AiPhotoEditApplied,
     AiResultRow,
     EditableAiItem,
@@ -37,6 +38,14 @@ import type {
 import { AiPhotoResultRowsComponent } from './ai-photo-result-rows/ai-photo-result-rows';
 
 const NUTRITION_FRACTION_THRESHOLD = 0.01;
+const LOCATION_CONFIDENCE_THRESHOLD = 0.35;
+const PERCENT_SCALE = 100;
+const CARD_MIN_X_PERCENT = 2;
+const CARD_MAX_X_PERCENT = 70;
+const CARD_MIN_Y_PERCENT = 4;
+const CARD_MAX_Y_PERCENT = 72;
+const CARD_COLUMN_COUNT = 2;
+const CARD_ROW_GAP_PERCENT = 30;
 
 @Component({
     selector: 'fd-ai-photo-result',
@@ -80,6 +89,7 @@ export class AiPhotoResultComponent {
 
     protected readonly isEditing = signal(false);
     protected readonly isDetailsExpanded = signal(false);
+    protected readonly annotationsVisible = signal(true);
     protected readonly detailsDate = signal(this.getDateInputValue(new Date()));
     protected readonly detailsTime = signal(this.getTimeInputValue(new Date()));
     protected readonly detailsComment = signal('');
@@ -93,6 +103,32 @@ export class AiPhotoResultComponent {
             amountLabel: this.resolveAmountLabel(item),
         })),
     );
+    protected readonly annotations = computed<AiPhotoAnnotation[]>(() => {
+        const nutritionItems = this.nutrition()?.items ?? [];
+        return this.results().flatMap((item, index) => {
+            if (!hasReliableLocation(item) || index >= nutritionItems.length) {
+                return [];
+            }
+            const centerX = item.centerX * PERCENT_SCALE;
+            const centerY = item.centerY * PERCENT_SCALE;
+            const nutrition = nutritionItems[index];
+            return [
+                {
+                    id: `${item.nameEn}-${index}`,
+                    name: this.resolveDisplayName(item),
+                    amountLabel: this.resolveAmountLabel(item),
+                    centerX,
+                    centerY,
+                    cardX: index % CARD_COLUMN_COUNT === 0 ? CARD_MIN_X_PERCENT : CARD_MAX_X_PERCENT,
+                    cardY: Math.min(CARD_MIN_Y_PERCENT + Math.floor(index / CARD_COLUMN_COUNT) * CARD_ROW_GAP_PERCENT, CARD_MAX_Y_PERCENT),
+                    calories: Math.round(nutrition.calories),
+                    protein: Math.round(nutrition.protein),
+                    fat: Math.round(nutrition.fat),
+                    carbs: Math.round(nutrition.carbs),
+                },
+            ];
+        });
+    });
     protected readonly editActionView = computed<AiEditActionView>(() =>
         this.isEditing()
             ? {
@@ -248,6 +284,10 @@ export class AiPhotoResultComponent {
         this.isDetailsExpanded.update(value => !value);
     }
 
+    protected toggleAnnotations(): void {
+        this.annotationsVisible.update(visible => !visible);
+    }
+
     protected updateDetailsDate(value: string): void {
         this.detailsDate.set(value);
     }
@@ -295,4 +335,20 @@ export class AiPhotoResultComponent {
     private getTimeInputValue(date: Date): string {
         return formatTimeInputValue(date);
     }
+}
+
+function hasReliableLocation(
+    item: FoodVisionItem,
+): item is FoodVisionItem & { centerX: number; centerY: number; locationConfidence?: number | null } {
+    return (
+        item.centerX !== null &&
+        item.centerX !== undefined &&
+        item.centerY !== null &&
+        item.centerY !== undefined &&
+        item.centerX >= 0 &&
+        item.centerX <= 1 &&
+        item.centerY >= 0 &&
+        item.centerY <= 1 &&
+        (item.locationConfidence ?? 1) >= LOCATION_CONFIDENCE_THRESHOLD
+    );
 }

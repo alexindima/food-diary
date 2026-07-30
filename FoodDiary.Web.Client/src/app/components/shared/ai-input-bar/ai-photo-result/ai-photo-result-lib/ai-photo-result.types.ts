@@ -3,6 +3,20 @@ import type { FoodNutritionResponse, FoodVisionItem } from '../../../../../share
 
 export type EditableAiItem = AiEditableFoodItem;
 
+export type AiPhotoAnnotation = {
+    id: string;
+    name: string;
+    amountLabel: string;
+    centerX: number;
+    centerY: number;
+    cardX: number;
+    cardY: number;
+    calories: number;
+    protein: number;
+    fat: number;
+    carbs: number;
+};
+
 export type AiResultRow = {
     key: string;
     displayName: string;

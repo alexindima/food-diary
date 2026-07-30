@@ -1,6 +1,21 @@
 import type { AiEditableFoodItem } from '../../../../../shared/lib/ai-photo-edit.utils';
 import type { FoodVisionItem } from '../../../../../shared/models/ai.data';
 
+export type MealPhotoAnnotation = {
+    id: string;
+    name: string;
+    amount: number;
+    unit: string;
+    centerX: number;
+    centerY: number;
+    cardX: number;
+    cardY: number;
+    calories: number;
+    protein: number;
+    fat: number;
+    carbs: number;
+};
+
 export type RecognizedItemView = {
     item: FoodVisionItem;
     displayName: string;

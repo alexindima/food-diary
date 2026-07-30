@@ -13,6 +13,110 @@
     position: relative;
 }
 
+.photo-ai-dialog__annotation-toggle {
+    position: absolute;
+    top: var(--fd-space-sm);
+    right: var(--fd-space-sm);
+    z-index: 5;
+    padding: var(--fd-space-xs) var(--fd-space-sm);
+    border: var(--fd-border-width) solid var(--fd-color-border-control-radio);
+    border-radius: var(--fd-radius-pill);
+    background: var(--fd-bg-dialog);
+    color: var(--fd-color-text);
+    cursor: pointer;
+    box-shadow: var(--fd-shadow-lg);
+}
+
+.photo-ai-dialog__annotations {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: var(--fd-radius-dialog);
+    pointer-events: none;
+}
+
+.photo-ai-dialog__annotation-frame {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.photo-ai-dialog__annotation-sizer {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    visibility: hidden;
+}
+
+.photo-ai-dialog__annotation-lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.photo-ai-dialog__annotation-lines line {
+    stroke: var(--fd-color-surface-raised);
+    stroke-width: 0.55;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 45%));
+}
+
+.photo-ai-dialog__annotation-lines circle {
+    fill: var(--fd-color-primary-600);
+    stroke: var(--fd-color-surface-raised);
+    stroke-width: 0.45;
+    vector-effect: non-scaling-stroke;
+}
+
+.photo-ai-dialog__annotation-card {
+    position: absolute;
+    width: min(12rem, 42%);
+    padding: var(--fd-space-xs) var(--fd-space-sm);
+    border: var(--fd-border-width) solid var(--fd-color-border-control-radio);
+    border-radius: var(--fd-radius-md);
+    background: var(--fd-color-surface-raised);
+    box-shadow: var(--fd-shadow-lg);
+    color: var(--fd-color-text);
+    pointer-events: auto;
+}
+
+.photo-ai-dialog__annotation-title,
+.photo-ai-dialog__annotation-nutrition {
+    display: flex;
+    gap: var(--fd-space-xs);
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.photo-ai-dialog__annotation-title strong,
+.photo-ai-dialog__annotation-nutrition span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.photo-ai-dialog__annotation-nutrition {
+    gap: var(--fd-space-sm);
+    align-items: baseline;
+    margin-top: var(--fd-space-xs);
+}
+
+.photo-ai-dialog__annotation-nutrition strong {
+    color: var(--fd-color-primary-700);
+}
+
+.photo-ai-dialog__annotation-nutrition span {
+    color: var(--fd-color-text-muted);
+}
+
 .photo-ai-dialog__status {
     position: absolute;
     top: var(--fd-space-sm);
@@ -316,6 +420,15 @@
 }
 
 @media #{variables.$media-phablet} {
+    .photo-ai-dialog__annotation-card {
+        width: min(10rem, 48%);
+        padding: var(--fd-space-xs);
+    }
+
+    .photo-ai-dialog__annotation-nutrition span {
+        display: none;
+    }
+
     .photo-ai-dialog__table-head,
     .photo-ai-dialog__table-row {
         grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.8fr);

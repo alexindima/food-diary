@@ -29,6 +29,7 @@ import { MealPhotoNutritionSummaryComponent } from './meal-photo-nutrition-summa
 import type {
     EditableAiItem,
     MacroSummaryItem,
+    MealPhotoAnnotation,
     PhotoAiEditItemDrop,
     PhotoAiEditItemUpdate,
     RecognizedItemView,
@@ -58,6 +59,15 @@ const RESOLUTION_OPTIONS: readonly ResolutionOptionView[] = [
     { value: 'Merged', labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_MERGED' },
 ];
 const NUTRITION_FRACTION_THRESHOLD = 0.01;
+const LOCATION_CONFIDENCE_THRESHOLD = 0.35;
+const PERCENT_SCALE = 100;
+const PERCENT_PRECISION = 100;
+const CARD_MIN_X_PERCENT = 2;
+const CARD_MAX_X_PERCENT = 70;
+const CARD_MIN_Y_PERCENT = 4;
+const CARD_MAX_Y_PERCENT = 72;
+const CARD_COLUMN_COUNT = 2;
+const CARD_ROW_GAP_PERCENT = 30;
 
 @Component({
     selector: 'fd-meal-photo-recognition-dialog',
@@ -91,6 +101,7 @@ export class MealPhotoRecognitionDialogComponent {
     protected readonly isNutritionLoading = signal(false);
     protected readonly nutrition = signal<FoodNutritionResponse | null>(null);
     protected readonly nutritionErrorKey = signal<string | null>(null);
+    protected readonly annotationsVisible = signal(true);
     protected readonly initialSelection = this.dialogData.initialSelection ?? null;
     protected readonly isEditMode = signal(this.dialogData.mode === 'edit');
     protected readonly isEditing = signal(false);
@@ -147,6 +158,14 @@ export class MealPhotoRecognitionDialogComponent {
         return null;
     });
     protected readonly hasSelectionAsset = computed(() => this.selection()?.assetId !== null && this.selection()?.assetId !== undefined);
+    protected readonly annotations = computed(() => {
+        const nutritionItems = this.nutrition()?.items ?? [];
+        return this.results().flatMap((item, index) =>
+            hasReliableLocation(item) && index < nutritionItems.length
+                ? [buildMealPhotoAnnotation(item, nutritionItems[index], index, this.toDisplayName(item))]
+                : [],
+        );
+    });
 
     public constructor() {
         const session = this.dialogData.initialSession;
@@ -188,6 +207,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.isNutritionLoading.set(false);
         this.nutrition.set(null);
         this.nutritionErrorKey.set(null);
+        this.annotationsVisible.set(true);
 
         if (selection?.assetId === null || selection?.assetId === undefined) {
             return;
@@ -209,6 +229,10 @@ export class MealPhotoRecognitionDialogComponent {
         this.nutrition.set(null);
         this.nutritionErrorKey.set(null);
         this.runAnalysis(assetId);
+    }
+
+    protected toggleAnnotations(): void {
+        this.annotationsVisible.update(visible => !visible);
     }
 
     protected addToMeal(): void {
@@ -544,4 +568,48 @@ export class MealPhotoRecognitionDialogComponent {
             numberFormat: hasFraction ? '1.1-1' : '1.0-0',
         };
     }
+}
+
+function hasReliableLocation(
+    item: FoodVisionItem,
+): item is FoodVisionItem & { centerX: number; centerY: number; locationConfidence?: number | null } {
+    return (
+        item.centerX !== null &&
+        item.centerX !== undefined &&
+        item.centerY !== null &&
+        item.centerY !== undefined &&
+        item.centerX >= 0 &&
+        item.centerX <= 1 &&
+        item.centerY >= 0 &&
+        item.centerY <= 1 &&
+        (item.locationConfidence ?? 1) >= LOCATION_CONFIDENCE_THRESHOLD
+    );
+}
+
+function buildMealPhotoAnnotation(
+    item: FoodVisionItem & { centerX: number; centerY: number },
+    nutrition: FoodNutritionResponse['items'][number],
+    index: number,
+    name: string,
+): MealPhotoAnnotation {
+    const centerX = toPercentage(item.centerX);
+    const centerY = toPercentage(item.centerY);
+    return {
+        id: `${item.nameEn}-${index}`,
+        name,
+        amount: item.amount,
+        unit: item.unit,
+        centerX,
+        centerY,
+        cardX: index % CARD_COLUMN_COUNT === 0 ? CARD_MIN_X_PERCENT : CARD_MAX_X_PERCENT,
+        cardY: Math.min(CARD_MIN_Y_PERCENT + Math.floor(index / CARD_COLUMN_COUNT) * CARD_ROW_GAP_PERCENT, CARD_MAX_Y_PERCENT),
+        calories: Math.round(nutrition.calories),
+        protein: Math.round(nutrition.protein),
+        fat: Math.round(nutrition.fat),
+        carbs: Math.round(nutrition.carbs),
+    };
+}
+
+function toPercentage(value: number): number {
+    return Math.round(value * PERCENT_SCALE * PERCENT_PRECISION) / PERCENT_PRECISION;
 }

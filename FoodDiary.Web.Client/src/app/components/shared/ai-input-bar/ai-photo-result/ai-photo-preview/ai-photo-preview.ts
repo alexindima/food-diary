@@ -1,6 +1,8 @@
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+
+import type { AiPhotoAnnotation } from '../ai-photo-result-lib/ai-photo-result.types';
 
 @Component({
     selector: 'fd-ai-photo-preview',
@@ -18,4 +20,7 @@ export class AiPhotoPreviewComponent {
     public readonly sourceTextLabelKey = input.required<string>();
     public readonly isAnalyzing = input.required<boolean>();
     public readonly isNutritionLoading = input.required<boolean>();
+    public readonly annotations = input<readonly AiPhotoAnnotation[]>([]);
+    public readonly annotationsVisible = input(true);
+    public readonly annotationsToggled = output();
 }
