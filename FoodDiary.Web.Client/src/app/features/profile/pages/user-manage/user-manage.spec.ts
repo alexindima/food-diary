@@ -459,6 +459,7 @@ type ProfileManageFacadeMock = {
     isDeleting: ReturnType<typeof signal<boolean>>;
     isSavingProfile: ReturnType<typeof signal<boolean>>;
     isRevokingAiConsent: ReturnType<typeof signal<boolean>>;
+    isLinkingGoogle: ReturnType<typeof signal<boolean>>;
     isUpdatingNotifications: ReturnType<typeof signal<boolean>>;
     webPushSubscriptions: WritableSignal<WebPushSubscriptionItem[]>;
     dietologistRelationship: WritableSignal<DietologistRelationship | null>;
@@ -470,6 +471,7 @@ type ProfileManageFacadeMock = {
     queueProfileAutosave: ReturnType<typeof vi.fn>;
     saveProfileNow: ReturnType<typeof vi.fn>;
     openChangePasswordDialog: ReturnType<typeof vi.fn>;
+    linkGoogle: ReturnType<typeof vi.fn>;
     revokeAiConsent: ReturnType<typeof vi.fn>;
     deleteAccount: ReturnType<typeof vi.fn>;
     updateNotificationPreferences: ReturnType<typeof vi.fn>;
@@ -683,6 +685,7 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
         isDeleting: signal(false),
         isSavingProfile: signal(false),
         isRevokingAiConsent: signal(false),
+        isLinkingGoogle: signal(false),
         isUpdatingNotifications: signal(false),
         webPushSubscriptions: signal([]),
         dietologistRelationship: signal(relationship),
@@ -694,6 +697,7 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
         queueProfileAutosave: vi.fn(),
         saveProfileNow: vi.fn(),
         openChangePasswordDialog: vi.fn(),
+        linkGoogle: vi.fn(),
         revokeAiConsent: vi.fn(),
         deleteAccount: vi.fn(),
         updateNotificationPreferences: vi.fn(),

@@ -30,3 +30,9 @@ mismatch, identity owned by another user, idempotent retry, and refusal to
 replace a different linked identity. Frontend coverage should include the
 explanation state, post-password linking, success/failure navigation, and
 accessible status announcement.
+
+When account linking becomes user-discoverable in settings, add direct component
+and facade tests for connected, unconnected, loading/unavailable, success, and
+failure states. Pair those tests with desktop/mobile rendered evidence and with
+payload/OpenAPI snapshots for any provider-status field added to the user
+response.

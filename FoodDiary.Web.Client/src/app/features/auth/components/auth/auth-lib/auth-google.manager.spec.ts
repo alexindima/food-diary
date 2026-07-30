@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../../../environments/environment';
-import { GoogleIdentityService } from '../../../lib/google-identity.service';
+import { GoogleIdentityService } from '../../../../../shared/auth/google-identity.service';
 import { AuthGoogleManager } from './auth-google.manager';
 
 let googleIdentityServiceSpy: {

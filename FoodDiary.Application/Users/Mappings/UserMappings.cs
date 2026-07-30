@@ -55,7 +55,9 @@ public static class UserMappings {
             user.IsEmailConfirmed,
             user.LastLoginAtUtc,
             user.AiConsentAcceptedAt,
-            user.MustChangePassword
+            user.MustChangePassword,
+            !string.IsNullOrWhiteSpace(user.GoogleIssuer) &&
+            !string.IsNullOrWhiteSpace(user.GoogleSubject)
         );
     }
 

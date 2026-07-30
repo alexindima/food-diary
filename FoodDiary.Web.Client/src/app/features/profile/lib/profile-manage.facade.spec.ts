@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -64,7 +65,12 @@ let notificationService: {
     removeWebPushSubscription: ReturnType<typeof vi.fn>;
 };
 let dialogService: { open: ReturnType<typeof vi.fn> };
-let authService: { onLogoutAsync: ReturnType<typeof vi.fn>; startAdminSso: ReturnType<typeof vi.fn> };
+let authService: {
+    onLogoutAsync: ReturnType<typeof vi.fn>;
+    startAdminSso: ReturnType<typeof vi.fn>;
+    linkGoogle: ReturnType<typeof vi.fn>;
+};
+let toastService: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
 let localizationService: { applyLanguagePreferenceAsync: ReturnType<typeof vi.fn> };
 let navigationService: { navigateToHomeAsync: ReturnType<typeof vi.fn> };
 
@@ -94,6 +100,11 @@ beforeEach(() => {
     authService = {
         onLogoutAsync: vi.fn().mockResolvedValue(void 0),
         startAdminSso: vi.fn().mockReturnValue(of({ code: 'abc123', expiresAtUtc: '2026-04-02T00:00:00Z' })),
+        linkGoogle: vi.fn().mockReturnValue(of({ ...user, hasGoogleIdentity: true })),
+    };
+    toastService = {
+        success: vi.fn(),
+        error: vi.fn(),
     };
     localizationService = {
         applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(void 0),
@@ -110,6 +121,7 @@ beforeEach(() => {
             { provide: UserService, useValue: userService },
             { provide: NotificationService, useValue: notificationService },
             { provide: FdUiDialogService, useValue: dialogService },
+            { provide: FdUiToastService, useValue: toastService },
             { provide: AuthService, useValue: authService },
             { provide: LocalizationService, useValue: localizationService },
             { provide: NavigationService, useValue: navigationService },
@@ -123,6 +135,30 @@ beforeEach(() => {
     });
 
     facade = TestBed.inject(ProfileManageFacade);
+});
+
+describe('ProfileManageFacade Google linking', () => {
+    it('updates the current user and confirms successful linking', () => {
+        facade.initialize();
+
+        facade.linkGoogle('google-credential');
+
+        expect(authService.linkGoogle).toHaveBeenCalledWith('google-credential');
+        expect(facade.user()?.hasGoogleIdentity).toBe(true);
+        expect(facade.isLinkingGoogle()).toBe(false);
+        expect(toastService.success).toHaveBeenCalledWith('USER_MANAGE.GOOGLE_LINK_SUCCESS');
+    });
+
+    it('keeps the account unlinked and reports a failed linking attempt', () => {
+        facade.initialize();
+        authService.linkGoogle.mockReturnValue(throwError(() => new Error('failed')));
+
+        facade.linkGoogle('google-credential');
+
+        expect(facade.user()?.hasGoogleIdentity).not.toBe(true);
+        expect(facade.globalError()).toBe('USER_MANAGE.GOOGLE_LINK_ERROR');
+        expect(toastService.error).toHaveBeenCalledWith('USER_MANAGE.GOOGLE_LINK_ERROR');
+    });
 });
 
 afterEach(() => {

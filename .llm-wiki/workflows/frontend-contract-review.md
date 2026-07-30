@@ -25,3 +25,9 @@ Multi-step authentication flows should also trace transient state across
 components, services, and navigation. The generated API-call view can miss calls
 made through inherited API helpers, so verify literal endpoint suffixes in the
 owning service when `apiCalls` returns no result.
+
+Account-settings components that expose external sign-in providers should treat
+provider status as a public UI contract: review the profile response field, the
+connected and unconnected render branches, the credential output, the consuming
+page, and the unavailable-provider fallback together. Keep the provider
+credential transient and route the HTTP mutation through the owning facade.

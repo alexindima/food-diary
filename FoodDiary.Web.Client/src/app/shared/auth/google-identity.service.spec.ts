@@ -15,7 +15,20 @@ type GoogleIdentityApiMock = {
     renderButton: ReturnType<typeof vi.fn<GoogleIdentityApi['renderButton']>>;
 } & GoogleIdentityApi;
 
-type GoogleIdentityApi = NonNullable<NonNullable<NonNullable<Window['google']>['accounts']>['id']>;
+type GoogleIdentityApi = {
+    cancel: () => void;
+    initialize: (config: { client_id: string; callback: (response: { credential?: string | null }) => void }) => void;
+    prompt: () => void;
+    renderButton: (element: HTMLElement, options: Record<string, unknown>) => void;
+};
+
+const googleWindow = window as Window & {
+    google?: {
+        accounts?: {
+            id?: GoogleIdentityApi;
+        };
+    };
+};
 
 describe('GoogleIdentityService browser initialization', () => {
     let googleIdentityApi: GoogleIdentityApiMock;
@@ -36,7 +49,7 @@ describe('GoogleIdentityService browser initialization', () => {
 
         const initialized = service.initializeAsync({ clientId: CLIENT_ID, callback });
         const script = getGoogleScript();
-        window.google = { accounts: { id: googleIdentityApi } };
+        googleWindow.google = { accounts: { id: googleIdentityApi } };
         script.onload?.(new Event('load'));
         await initialized;
 
@@ -58,7 +71,7 @@ describe('GoogleIdentityService browser initialization', () => {
         const latestCallback = vi.fn();
 
         const initialized = service.initializeAsync({ clientId: CLIENT_ID, callback: firstCallback });
-        window.google = { accounts: { id: googleIdentityApi } };
+        googleWindow.google = { accounts: { id: googleIdentityApi } };
         getGoogleScript().onload?.(new Event('load'));
         await initialized;
 
@@ -93,7 +106,7 @@ describe('GoogleIdentityService browser controls', () => {
     it('renders button and forwards prompt/cancel when Google API is available', () => {
         const service = setupBrowserService();
         const target = document.createElement('div');
-        window.google = { accounts: { id: googleIdentityApi } };
+        googleWindow.google = { accounts: { id: googleIdentityApi } };
 
         service.renderButton(target, 'filled_blue');
         service.prompt();
@@ -135,17 +148,17 @@ describe('GoogleIdentityService browser script errors', () => {
 describe('GoogleIdentityService server guards', () => {
     beforeEach(() => {
         TestBed.resetTestingModule();
-        delete window.google;
+        delete googleWindow.google;
     });
 
     afterEach(() => {
-        delete window.google;
+        delete googleWindow.google;
     });
 
     it('throws during initialization and ignores UI methods outside browser platform', async () => {
         const service = setupServerService();
         const googleApi = createGoogleIdentityApiMock();
-        window.google = { accounts: { id: googleApi } };
+        googleWindow.google = { accounts: { id: googleApi } };
 
         await expect(service.initializeAsync({ clientId: CLIENT_ID, callback: vi.fn() })).rejects.toThrow(
             'Google Identity Services are only available in the browser',
@@ -186,7 +199,7 @@ function resetGoogleIdentityTestState(): void {
     document.head.querySelectorAll('script[src="https://accounts.google.com/gsi/client"]').forEach(script => {
         script.remove();
     });
-    delete window.google;
+    delete googleWindow.google;
 }
 
 function createGoogleIdentityApiMock(): GoogleIdentityApiMock {

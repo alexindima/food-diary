@@ -8,14 +8,14 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1511,
-                    "symbols":  577,
+                    "typescriptFiles":  1513,
+                    "symbols":  578,
                     "routes":  84,
                     "features":  36,
-                    "specs":  544,
+                    "specs":  545,
                     "localeFiles":  5,
                     "roles":  {
-                                  "Component":  393,
+                                  "Component":  394,
                                   "Directive":  12,
                                   "Facade":  52,
                                   "Other":  17,
@@ -255,7 +255,6 @@
                                          "EmailVerificationComponent",
                                          "EmailVerificationPendingComponent",
                                          "EmailVerificationRealtimeService",
-                                         "GoogleIdentityService",
                                          "MobileLoginComponent",
                                          "PasswordResetComponent",
                                          "RequiredPasswordChangeComponent"
@@ -282,7 +281,6 @@
                                        "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/auth/dialogs/auth-dialog/auth-dialog.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/auth/lib/email-verification-realtime.service.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/auth/lib/google-identity.service.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification-pending/email-verification-pending.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/email-verification.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.spec.ts"
@@ -877,7 +875,8 @@
                                          "UserManageDietologistSummaryComponent",
                                          "UserManageNotificationsCardComponent",
                                          "UserManageNotificationsFacade",
-                                         "UserManagePrivacyCardComponent"
+                                         "UserManagePrivacyCardComponent",
+                                         "UserManageSecurityCardComponent"
                                      ],
                          "routes":  [
                                         ""
@@ -897,6 +896,7 @@
                                        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-summary/user-manage-dietologist-summary.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/notifications-card/user-manage-notifications-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/privacy-card/user-manage-privacy-card.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-billing.mapper.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-date.mapper.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-dietologist-form.mapper.spec.ts",
@@ -2538,13 +2538,6 @@
                         "line":  13
                     },
                     {
-                        "name":  "GoogleIdentityService",
-                        "role":  "Service",
-                        "selector":  null,
-                        "path":  "FoodDiary.Web.Client/src/app/features/auth/lib/google-identity.service.ts",
-                        "line":  31
-                    },
-                    {
                         "name":  "EmailVerificationPendingComponent",
                         "role":  "Component",
                         "selector":  "fd-email-verification-pending",
@@ -4068,7 +4061,7 @@
                         "role":  "Facade",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
-                        "line":  28
+                        "line":  29
                     },
                     {
                         "name":  "UserManageAccountCardComponent",
@@ -4141,6 +4134,13 @@
                         "line":  13
                     },
                     {
+                        "name":  "UserManageSecurityCardComponent",
+                        "role":  "Component",
+                        "selector":  "fd-user-manage-security-card",
+                        "path":  "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts",
+                        "line":  16
+                    },
+                    {
                         "name":  "UserManageNotificationsFacade",
                         "role":  "Facade",
                         "selector":  null,
@@ -4152,7 +4152,7 @@
                         "role":  "Component",
                         "selector":  "fd-user-manage",
                         "path":  "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-                        "line":  104
+                        "line":  106
                     },
                     {
                         "name":  "DietologistPromoComponent",
@@ -4810,7 +4810,7 @@
                         "role":  "Service",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-                        "line":  29
+                        "line":  30
                     },
                     {
                         "name":  "GlobalErrorHandler",
@@ -4967,6 +4967,13 @@
                         "line":  50
                     },
                     {
+                        "name":  "GoogleIdentityService",
+                        "role":  "Service",
+                        "selector":  null,
+                        "path":  "FoodDiary.Web.Client/src/app/shared/auth/google-identity.service.ts",
+                        "line":  31
+                    },
+                    {
                         "name":  "SessionEventsService",
                         "role":  "Service",
                         "selector":  null,
@@ -5062,14 +5069,14 @@
                         "role":  "Other",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/shared/models/user.data.ts",
-                        "line":  71
+                        "line":  72
                     },
                     {
                         "name":  "UpdateUserAppearanceDto",
                         "role":  "Other",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/shared/models/user.data.ts",
-                        "line":  120
+                        "line":  121
                     },
                     {
                         "name":  "BrowserNotificationCapabilityService",
@@ -5674,8 +5681,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  2847,
-                             "russianProperties":  2847,
+                             "englishProperties":  2854,
+                             "russianProperties":  2854,
                              "countsMatch":  true
                          },
                          {

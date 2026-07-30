@@ -40,4 +40,5 @@ public sealed record UserModel(
     bool IsEmailConfirmed,
     DateTime? LastLoginAtUtc,
     DateTime? AiConsentAcceptedAt,
-    bool MustChangePassword = false);
+    bool MustChangePassword = false,
+    bool HasGoogleIdentity = false);

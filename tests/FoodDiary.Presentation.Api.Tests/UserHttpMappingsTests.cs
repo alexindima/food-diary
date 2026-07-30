@@ -180,6 +180,7 @@ public sealed class UserHttpMappingsTests {
         Assert.True(response.IsEmailConfirmed);
         Assert.Equal(lastLoginAtUtc, response.LastLoginAtUtc);
         Assert.Equal(aiConsentAcceptedAt, response.AiConsentAcceptedAt);
+        Assert.True(response.HasGoogleIdentity);
     }
 
     [Fact]
@@ -279,5 +280,6 @@ public sealed class UserHttpMappingsTests {
             IsActive: true,
             IsEmailConfirmed: true,
             LastLoginAtUtc: lastLoginAtUtc,
-            AiConsentAcceptedAt: aiConsentAcceptedAt);
+            AiConsentAcceptedAt: aiConsentAcceptedAt,
+            HasGoogleIdentity: true);
 }

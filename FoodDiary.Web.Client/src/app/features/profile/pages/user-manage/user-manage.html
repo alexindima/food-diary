@@ -38,6 +38,14 @@
                     (userFormPatch)="onUserFormPatch($event)"
                 />
 
+                <fd-user-manage-security-card
+                    data-tour-id="user-manage-security"
+                    [email]="accountEmail()"
+                    [hasGoogleIdentity]="hasGoogleIdentity()"
+                    [isLinkingGoogle]="isLinkingGoogle()"
+                    (googleCredential)="linkGoogle($event)"
+                />
+
                 <fd-user-manage-billing-card
                     data-tour-id="user-manage-billing"
                     [isLoadingBilling]="isLoadingBilling()"

@@ -364,6 +364,56 @@
         background: var(--fd-bg-border);
     }
 
+    &__login-method {
+        align-items: center;
+        padding: var(--fd-space-sm);
+        border: 1px solid var(--fd-bg-border);
+        border-radius: var(--fd-radius-md);
+    }
+
+    &__google-mark {
+        display: grid;
+        place-items: center;
+        width: var(--fd-size-control-md);
+        height: var(--fd-size-control-md);
+        flex: 0 0 var(--fd-size-control-md);
+        border-radius: var(--fd-radius-pill);
+        background: var(--fd-bg-surface);
+        color: var(--fd-color-text-strong);
+        font-weight: var(--fd-font-weight-bold);
+    }
+
+    &__login-method-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__login-method-title {
+        color: var(--fd-color-text-strong);
+        font-weight: var(--fd-font-weight-semibold);
+    }
+
+    &__login-method-description,
+    &__connection-status {
+        color: var(--fd-color-text-muted);
+    }
+
+    &__login-method-action {
+        flex: 0 0 auto;
+    }
+
+    &__connection-status--connected {
+        color: var(--fd-color-emerald-300);
+    }
+
+    &__connection-status--unavailable {
+        color: var(--fd-color-danger);
+    }
+
+    &__google-button--busy {
+        pointer-events: none;
+    }
+
     @media #{variables.$media-mobile} {
         &__gender-options {
             gap: var(--fd-space-xs);
@@ -402,6 +452,16 @@
         &__notifications-device-item {
             flex-direction: column;
             align-items: stretch;
+        }
+
+        &__login-method {
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        &__login-method-action {
+            width: 100%;
+            padding-left: calc(var(--fd-size-control-md) + var(--fd-space-sm));
         }
 
         &__switch {

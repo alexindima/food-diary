@@ -75,6 +75,17 @@ public partial class UsersFeatureTests {
         Assert.Null(model.DashboardLayout);
         Assert.True(model.HasPassword);
         Assert.True(model.IsActive);
+        Assert.False(model.HasGoogleIdentity);
+    }
+
+    [Fact]
+    public void UserMappings_ToModel_ReportsLinkedGoogleIdentity() {
+        var user = User.Create("google-linked@example.com", "hash");
+        user.LinkGoogleIdentity("https://accounts.google.com", "google-subject");
+
+        UserModel model = user.ToModel();
+
+        Assert.True(model.HasGoogleIdentity);
     }
 
     [Fact]

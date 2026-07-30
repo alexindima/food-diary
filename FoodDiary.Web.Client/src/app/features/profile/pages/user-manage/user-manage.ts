@@ -51,6 +51,7 @@ import { UserManageBodyCardComponent, type UserManageBodyFormPatch } from '../us
 import { UserManageDietologistCardComponent } from '../user-manage-sections/dietologist-card/user-manage-dietologist-card';
 import { UserManageNotificationsCardComponent } from '../user-manage-sections/notifications-card/user-manage-notifications-card';
 import { UserManagePrivacyCardComponent } from '../user-manage-sections/privacy-card/user-manage-privacy-card';
+import { UserManageSecurityCardComponent } from '../user-manage-sections/security-card/user-manage-security-card';
 import { DEFAULT_DIETOLOGIST_PERMISSIONS } from './user-manage-lib/user-manage.config';
 import type {
     BillingViewModel,
@@ -95,6 +96,7 @@ type UserManageFormPatch = UserManageAccountFormPatch | UserManageBodyFormPatch;
         UserManageDietologistCardComponent,
         UserManageNotificationsCardComponent,
         UserManagePrivacyCardComponent,
+        UserManageSecurityCardComponent,
     ],
     templateUrl: './user-manage.html',
     styleUrl: './user-manage.scss',
@@ -162,6 +164,9 @@ export class UserManageComponent {
         return acceptedAt !== null && acceptedAt !== undefined && acceptedAt.length > 0;
     });
     protected readonly hasPassword = computed(() => this.facade.user()?.hasPassword ?? true);
+    protected readonly hasGoogleIdentity = computed(() => this.facade.user()?.hasGoogleIdentity ?? false);
+    protected readonly accountEmail = computed(() => this.facade.user()?.email ?? '');
+    protected readonly isLinkingGoogle = this.facade.isLinkingGoogle;
     protected readonly passwordActionState = computed<PasswordActionState>(() => {
         const hasPassword = this.hasPassword();
 
@@ -365,6 +370,10 @@ export class UserManageComponent {
 
     protected openChangePasswordDialog(): void {
         this.facade.openChangePasswordDialog();
+    }
+
+    protected linkGoogle(credential: string): void {
+        this.facade.linkGoogle(credential);
     }
 
     protected onRevokeAiConsent(): void {

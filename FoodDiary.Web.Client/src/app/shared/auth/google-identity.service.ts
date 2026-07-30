@@ -6,26 +6,26 @@ type GoogleInitOptions = {
     callback: (credential: string) => void;
 };
 
-declare global {
-    interface Window {
-        google?: {
-            accounts?: {
-                id?: {
-                    initialize: (config: {
-                        client_id: string;
-                        callback: (response: { credential?: string | null }) => void;
-                        ux_mode?: 'popup' | 'redirect';
-                        auto_select?: boolean;
-                        cancel_on_tap_outside?: boolean;
-                    }) => void;
-                    renderButton: (element: HTMLElement, options: Record<string, unknown>) => void;
-                    prompt: () => void;
-                    cancel: () => void;
-                };
-            };
+type GoogleIdentityApi = {
+    initialize: (config: {
+        client_id: string;
+        callback: (response: { credential?: string | null }) => void;
+        ux_mode?: 'popup' | 'redirect';
+        auto_select?: boolean;
+        cancel_on_tap_outside?: boolean;
+    }) => void;
+    renderButton: (element: HTMLElement, options: Record<string, unknown>) => void;
+    prompt: () => void;
+    cancel: () => void;
+};
+
+type GoogleIdentityWindow = Window & {
+    google?: {
+        accounts?: {
+            id?: GoogleIdentityApi;
         };
-    }
-}
+    };
+};
 
 @Service()
 export class GoogleIdentityService {
@@ -51,12 +51,13 @@ export class GoogleIdentityService {
 
         await this.loadScriptAsync();
 
-        if (window.google?.accounts?.id === undefined) {
+        const googleIdentity = this.getGoogleIdentityApi();
+        if (googleIdentity === undefined) {
             throw new Error('Google Identity Services unavailable');
         }
 
         this.callback = options.callback;
-        window.google.accounts.id.initialize({
+        googleIdentity.initialize({
             client_id: options.clientId,
             callback: response => {
                 if (response.credential !== null && response.credential !== undefined && response.credential.length > 0) {
@@ -76,11 +77,12 @@ export class GoogleIdentityService {
             return;
         }
 
-        if (window.google?.accounts?.id === undefined) {
+        const googleIdentity = this.getGoogleIdentityApi();
+        if (googleIdentity === undefined) {
             return;
         }
 
-        window.google.accounts.id.renderButton(target, {
+        googleIdentity.renderButton(target, {
             type: 'standard',
             size: 'large',
             theme,
@@ -96,7 +98,7 @@ export class GoogleIdentityService {
             return;
         }
 
-        window.google?.accounts?.id?.prompt();
+        this.getGoogleIdentityApi()?.prompt();
     }
 
     public cancel(): void {
@@ -104,7 +106,7 @@ export class GoogleIdentityService {
             return;
         }
 
-        window.google?.accounts?.id?.cancel();
+        this.getGoogleIdentityApi()?.cancel();
     }
 
     private async loadScriptAsync(): Promise<void> {
@@ -130,5 +132,10 @@ export class GoogleIdentityService {
             this.renderer.appendChild(this.document.head, script);
         });
         return this.initializationPromise;
+    }
+
+    private getGoogleIdentityApi(): GoogleIdentityApi | undefined {
+        const windowRef = this.document.defaultView as GoogleIdentityWindow | null;
+        return windowRef?.google?.accounts?.id;
     }
 }

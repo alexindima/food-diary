@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { filter, finalize, firstValueFrom, switchMap, tap } from 'rxjs';
 
 import {
@@ -29,6 +30,7 @@ export class ProfileManageFacade {
     private readonly userService = inject(UserService);
     private readonly translateService = inject(TranslateService);
     private readonly dialogService = inject(FdUiDialogService);
+    private readonly toastService = inject(FdUiToastService);
     private readonly navigationService = inject(NavigationService);
     private readonly authService = inject(AuthService);
     private readonly localizationService = inject(LocalizationService);
@@ -47,6 +49,7 @@ export class ProfileManageFacade {
     public readonly isDeleting = signal(false);
     public readonly isSavingProfile = signal(false);
     public readonly isRevokingAiConsent = signal(false);
+    public readonly isLinkingGoogle = signal(false);
     public readonly isUpdatingNotifications = signal(false);
     public readonly webPushSubscriptions = signal<WebPushSubscriptionItem[]>([]);
     public readonly dietologistRelationship = signal<DietologistRelationship | null>(null);
@@ -176,6 +179,32 @@ export class ProfileManageFacade {
                 },
                 error: () => {
                     this.setGlobalError('USER_MANAGE.REVOKE_AI_CONSENT_ERROR');
+                },
+            });
+    }
+
+    public linkGoogle(credential: string): void {
+        if (this.isLinkingGoogle() || credential.length === 0) {
+            return;
+        }
+
+        this.isLinkingGoogle.set(true);
+        this.authService
+            .linkGoogle(credential)
+            .pipe(
+                finalize(() => {
+                    this.isLinkingGoogle.set(false);
+                }),
+            )
+            .subscribe({
+                next: user => {
+                    this.user.set(user);
+                    this.clearGlobalError();
+                    this.toastService.success(this.translateService.instant('USER_MANAGE.GOOGLE_LINK_SUCCESS'));
+                },
+                error: () => {
+                    this.setGlobalError('USER_MANAGE.GOOGLE_LINK_ERROR');
+                    this.toastService.error(this.translateService.instant('USER_MANAGE.GOOGLE_LINK_ERROR'));
                 },
             });
     }

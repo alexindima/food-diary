@@ -15,6 +15,7 @@ import type { GoogleLoginRequest } from '../shared/auth/google-auth.data';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils';
+import type { User } from '../shared/models/user.data';
 import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { ThemeService } from '../shared/theme/theme.service';
 import { ApiService } from './api.service';
@@ -185,8 +186,8 @@ export class AuthService extends ApiService {
         );
     }
 
-    public linkGoogle(credential: string): Observable<void> {
-        return this.post<void>('google/link', { credential }).pipe(
+    public linkGoogle(credential: string): Observable<User> {
+        return this.post<User>('google/link', { credential }).pipe(
             catchError((error: unknown) => rethrowApiError('Google link error', error)),
         );
     }

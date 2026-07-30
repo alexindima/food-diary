@@ -13,6 +13,7 @@ export type User = {
     id: string;
     email: string;
     hasPassword: boolean;
+    hasGoogleIdentity?: boolean;
     mustChangePassword?: boolean;
     username?: string;
     firstName?: string;

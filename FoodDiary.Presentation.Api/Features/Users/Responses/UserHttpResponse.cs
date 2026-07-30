@@ -39,4 +39,5 @@ public sealed record UserHttpResponse(
     bool IsEmailConfirmed,
     DateTime? LastLoginAtUtc,
     DateTime? AiConsentAcceptedAt,
-    bool MustChangePassword);
+    bool MustChangePassword,
+    bool HasGoogleIdentity);
