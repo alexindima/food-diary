@@ -58,3 +58,6 @@ no textual update, record that decision instead of adding a mechanical note:
 The receipt stores the page and changed-source SHA-256 hashes. Freshness accepts
 it only while those hashes still match; a later source or page edit
 automatically requires a new review.
+
+The receipt ledger is append-only review evidence. Adding a receipt records a
+decision; it does not by itself change the review workflow documented here.

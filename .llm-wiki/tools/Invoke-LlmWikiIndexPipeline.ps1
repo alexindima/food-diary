@@ -79,7 +79,7 @@ if ($AffectedOnly) {
     }
     Write-Host "LLM Wiki affected index pipeline: $($normalizedChangedPaths.Count) changed path(s), $($selectedTools.Count) selected tool(s)."
     if ($Plan) {
-        Write-Host "Affected index tools: $(@($selectedTools | Sort-Object) -join ', ')"
+        Write-Output "Affected index tools: $(@($selectedTools | Sort-Object) -join ', ')"
         exit 0
     }
 }

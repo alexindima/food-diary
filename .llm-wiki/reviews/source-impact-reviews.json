@@ -55,6 +55,21 @@
                         "reviewedAtUtc":  "2026-07-30T09:40:25.8083522Z"
                     },
                     {
+                        "pageId":  "workflow.review-diff",
+                        "pagePath":  ".llm-wiki/workflows/review-diff.md",
+                        "pageSha256":  "0e3762a3c2f1107ce770ef8221ef8168d25edac4080619bbd464709085c587bb",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/reviews/source-impact-reviews.json",
+                                            "sha256":  "4d92e36b35c904ffb8a02d5e9910ccefa2dc517aa407a294dafb22b8dfd10e53"
+                                        }
+                                    ],
+                        "reason":  "Reviewed source-impact ledger update for the Linux portability fix; receipt hashing and review workflow remain unchanged.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "0fda827d4bac4a99c79748f2c9bb932dff511a65",
+                        "reviewedAtUtc":  "2026-07-30T10:39:41.4029064Z"
+                    },
+                    {
                         "pageId":  "workflow-change-manifest",
                         "pagePath":  ".llm-wiki/workflows/change-manifest.md",
                         "pageSha256":  "182933effc68070bdf0da58c6fe4733c2f4c7cf005c4fb7c0644bcb021fe01ea",
@@ -128,6 +143,21 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
                         "reviewedAtUtc":  "2026-07-30T10:12:09.7849609Z"
+                    },
+                    {
+                        "pageId":  "workflow-index-pipeline",
+                        "pagePath":  ".llm-wiki/workflows/index-pipeline.md",
+                        "pageSha256":  "ee1056ebcb0deeefbc4c2e1d8ba4573231159d3e3fd3809c44b845d7139b6b40",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
+                                            "sha256":  "4ab7820a2cd59ed984abf1af53d15f1e15ab4844713cef1170d4ee72cfce6cb9"
+                                        }
+                                    ],
+                        "reason":  "Reviewed after making affected index plan output capturable and portable across Windows and Linux; pipeline selection and documented behavior remain unchanged.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "0fda827d4bac4a99c79748f2c9bb932dff511a65",
+                        "reviewedAtUtc":  "2026-07-30T10:36:08.9708375Z"
                     },
                     {
                         "pageId":  "workflow-performance-observability-review",
