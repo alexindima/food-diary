@@ -22,8 +22,11 @@ After regenerating API contract snapshots, compare them with the intended base:
 ```
 
 The guard understands both a raw OpenAPI document and this repository's compact
-`Endpoints` contract snapshot. It reports removed paths, operations, documented
-responses, and newly required parameters as breaking. New paths and operations are additive. It is a
+`Endpoints` contract snapshot. It also compares serialized key sets in
+`payload-contract-snapshots.json`, so response-field additions remain visible
+when the compact endpoint snapshot has no component schemas. It reports removed paths, operations, documented
+responses, and newly required parameters as breaking. New paths, operations,
+documented responses, and component schemas are additive. It is a
 focused compatibility gate, not a substitute for integration tests or review of
 schema semantics, authorization, error shapes, and status-code behavior.
 
@@ -31,3 +34,7 @@ For authentication-provider linking, review the anonymous login operation and
 the authenticated linking operation together. A new linking route may be
 additive while newly documented `409` outcomes still require frontend handling
 and updated focused/full OpenAPI snapshots.
+
+Raw OpenAPI schema comparison classifies optional properties as additive and
+removed properties, newly required properties, type/format/reference changes,
+array item changes, and nullability changes as breaking.

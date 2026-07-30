@@ -48,6 +48,18 @@ The default concurrency is four processes and can be changed for constrained env
 ./.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check -MaxConcurrency 4
 ```
 
+During iteration, select only indexes affected by the current diff:
+
+```powershell
+./.llm-wiki/wiki.ps1 update -AffectedOnly
+./.llm-wiki/wiki.ps1 verify -AffectedOnly
+```
+
+Use `-BaseRef <ref>` for a committed range or `-ChangedPath <path[]>` for an
+explicit scope. The conservative dependency map still runs derived indexes and
+architecture health when their source indexes can change. Final handoff and CI
+continue to use the full pipeline.
+
 Workers are isolated PowerShell processes with real exit-code propagation. A failed worker fails its stage and prevents dependent stages from running. Parallelism changes execution time only; every existing generator and freshness check still runs.
 
 `wiki verify` is the interactive gate. `wiki verify-full` and CI additionally

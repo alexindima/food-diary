@@ -77,7 +77,7 @@ foreach ($rule in $policy.rules) {
         if (-not $requiredChecksById.Contains($check.id)) {
             $requiredChecksById[$check.id] = [pscustomobject][ordered]@{
                 id = $check.id
-                command = $check.command
+                command = ([string]$check.command).Replace('{BaseRef}', $BaseRef)
                 sourceRule = $rule.id
             }
         }

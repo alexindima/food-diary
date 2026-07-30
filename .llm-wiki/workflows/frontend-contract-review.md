@@ -22,9 +22,11 @@ For a changed component, query its selector, inputs, outputs, template, direct s
 Preserve or explicitly migrate public inputs and output payloads. Exercise loading, empty, error, disabled, and permission states where relevant. Verify accessible naming, semantics, keyboard navigation, focus transitions, and error announcements. Shared UI-kit changes need consumer-aware rendered evidence at representative viewport sizes.
 
 Multi-step authentication flows should also trace transient state across
-components, services, and navigation. The generated API-call view can miss calls
-made through inherited API helpers, so verify literal endpoint suffixes in the
-owning service when `apiCalls` returns no result.
+components, services, and navigation. API-call discovery covers direct
+`HttpClient` calls and `get/post/put/patch/delete` helpers invoked by classes
+extending `ApiService`. Inherited calls record the owning public method, base
+URL expression, endpoint argument, and combined URL expression, so queries such
+as `linkGoogle` and `google/link` resolve the same call.
 
 Account-settings components that expose external sign-in providers should treat
 provider status as a public UI contract: review the profile response field, the

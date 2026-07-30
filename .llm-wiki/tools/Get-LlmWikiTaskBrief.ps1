@@ -4,6 +4,7 @@ param(
     [string]$HeadRef,
     [string[]]$ChangedPath,
     [string[]]$ProposedPath,
+    [string]$Intent,
     [object]$DiffInput,
     [object]$PolicyInput,
     [object]$OwnershipInput,
@@ -12,6 +13,7 @@ param(
     [object]$DecisionInput,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
+    [switch]$Compact,
     [ValidateRange(1, 20)]
     [int]$Limit = 8
 )
@@ -116,14 +118,27 @@ $changedBackendContracts = @($backendContract.contracts | Where-Object {
     @($_.definitionPaths | Where-Object { $changedPathsForQuality -contains $_ }).Count -gt 0
 })
 $changedBackendContractNames = @($changedBackendContracts.name)
+$changedBackendConsumerEdges = @($backendContract.consumerEdges | Where-Object {
+    $_.contract -in $changedBackendContractNames
+})
+function Get-BackendConsumerKind {
+    param($Edge)
+    if ($Edge.isTest) { return 'test-fixture' }
+    if ($Edge.consumerPath -match 'Mappings?/|Mapping\.cs$') { return 'mapping' }
+    if ($Edge.consumerPath -match 'Serializ|Json') { return 'serializer' }
+    if ($Edge.consumerPath -match 'Presentation|Controller\.cs$|Http') { return 'http' }
+    return 'compile'
+}
 $backendContractImpact = [ordered]@{
     contracts = $changedBackendContracts
-    productionConsumers = @($backendContract.consumerEdges | Where-Object {
-        $_.contract -in $changedBackendContractNames -and -not $_.isTest
-    })
-    testConsumers = @($backendContract.consumerEdges | Where-Object {
-        $_.contract -in $changedBackendContractNames -and $_.isTest
-    })
+    productionConsumers = @($changedBackendConsumerEdges | Where-Object { -not $_.isTest })
+    testConsumers = @($changedBackendConsumerEdges | Where-Object isTest)
+    consumerKinds = @(
+        $changedBackendConsumerEdges |
+            Group-Object { Get-BackendConsumerKind $_ } |
+            Sort-Object Name |
+            ForEach-Object { [pscustomobject]@{ kind = $_.Name; count = $_.Count } }
+    )
 }
 $architectureHealthImpact = [ordered]@{
     dependencyViolations = @($architectureHealth.projectDependencyViolations)
@@ -245,6 +260,7 @@ $brief = [pscustomobject]@{
         reasons = @($riskReasons)
     }
     change = [pscustomobject]@{
+        intent = $Intent
         paths = @($diff.changedPaths)
         proposedPaths = @($ProposedPath)
         scopes = @($diff.scopes)
@@ -275,8 +291,37 @@ $brief = [pscustomobject]@{
     warnings = @($diff.warnings)
 }
 
+$briefOutput = if ($Compact) {
+    [pscustomobject]@{
+        compact = $true
+        risk = $brief.risk
+        change = $brief.change
+        instructions = $brief.instructions
+        contextPages = @($brief.contextPages | Select-Object -First $Limit)
+        focusedTests = @($brief.focusedTests | Select-Object -First $Limit)
+        testScenarios = @($brief.testScenarios | Select-Object id, description)
+        requiredChecks = $brief.requiredChecks
+        reviewObligations = $brief.reviewObligations
+        structuralViolations = $brief.structuralViolations
+        generatedActions = $brief.generatedActions
+        impactCounts = [pscustomobject]@{
+            runtime = $runtimeImpactCount
+            privacyFields = @($privacyImpact.fields).Count
+            frontendComponents = @($frontendContractImpact.components).Count
+            frontendConsumers = @($frontendContractImpact.downstreamConsumers).Count
+            backendContracts = @($backendContractImpact.contracts).Count
+            backendConsumers = @($backendContractImpact.productionConsumers).Count
+            backendConsumerKinds = $backendContractImpact.consumerKinds
+            domainTypes = @($domainDataImpact.types).Count
+        }
+        warnings = $brief.warnings
+    }
+} else {
+    $brief
+}
+
 if ($Format -eq 'Json') {
-    $brief | ConvertTo-Json -Depth 9
+    $briefOutput | ConvertTo-Json -Depth 9
     exit 0
 }
 

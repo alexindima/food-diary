@@ -5,6 +5,8 @@ status: current
 sources:
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Get-LlmWikiImpact.ps1
+  - .llm-wiki/tools/Add-LlmWikiSourceReview.ps1
+  - .llm-wiki/reviews/source-impact-reviews.json
   - AGENTS.md
 ---
 
@@ -43,3 +45,16 @@ The output is advisory: actual requirements still come from scoped
 After reviewing the packet, run `wiki.ps1 policy` to enforce structural rules.
 For higher-risk or handed-off work, initialize an evidence bundle and resolve
 every required check and review obligation before completion.
+
+When a declared source changed but review confirms that a workflow page needs
+no textual update, record that decision instead of adding a mechanical note:
+
+```powershell
+./.llm-wiki/wiki.ps1 review `
+  -Id workflow-change-manifest `
+  -Reason "Compact brief output does not change manifest semantics."
+```
+
+The receipt stores the page and changed-source SHA-256 hashes. Freshness accepts
+it only while those hashes still match; a later source or page edit
+automatically requires a new review.

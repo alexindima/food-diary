@@ -4,10 +4,12 @@ param(
     [string]$HeadRef,
     [string[]]$ChangedPath,
     [string[]]$ProposedPath,
+    [string]$Intent,
     [object]$DiffInput,
     [object]$PolicyInput,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
+    [switch]$Compact,
     [ValidateRange(1, 30)]
     [int]$Limit = 12
 )
@@ -16,6 +18,8 @@ $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
 $wikiRoot = Split-Path -Parent $toolsRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+$frontendPackage = Get-Content -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Web.Client/package.json') -Raw | ConvertFrom-Json
+$frontendWorkspace = Get-Content -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Web.Client/angular.json') -Raw | ConvertFrom-Json
 $common = @{ BaseRef = $BaseRef; Format = 'Json' }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
 $effectivePaths = @(
@@ -38,6 +42,23 @@ $scopes = @($diff.scopes)
 $scenarios = [System.Collections.Generic.List[object]]::new()
 $discoveredTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $directTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+$siblingTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+$changedTestFiles = @(
+    $diff.changedPaths |
+        Where-Object { $_ -match '\.cs$' -and $_ -match '(^|/)tests/' -or $_ -match '\.(spec|test)\.ts$' } |
+        Sort-Object -Unique
+)
+
+foreach ($changedPath in @($diff.changedPaths | Where-Object {
+    $_ -match '^FoodDiary\.Web\.Client/.+\.(ts|html|scss)$' -and
+    $_ -notmatch '\.(spec|test)\.ts$'
+})) {
+    [string]$siblingTestPath = $changedPath -replace '\.(ts|html|scss)$', '.spec.ts'
+    $absoluteSiblingTestPath = [System.IO.Path]::Combine($repositoryRoot, $siblingTestPath.Replace('/', '\'))
+    if (Test-Path -LiteralPath $absoluteSiblingTestPath) {
+        $null = $siblingTests.Add($siblingTestPath)
+    }
+}
 
 $changedTypeNames = @(
     $diff.changedPaths |
@@ -72,6 +93,25 @@ if ($changedTypeNames.Count -gt 0) {
 }
 foreach ($path in @($directTests | Sort-Object)) { $null = $discoveredTests.Add($path) }
 foreach ($path in @($diff.focusedTests)) { $null = $discoveredTests.Add($path) }
+
+$rankedFocusedTests = [System.Collections.Generic.List[object]]::new()
+$rankedSeen = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+function Add-RankedTests {
+    param([string[]]$Paths, [int]$Rank, [string]$Reason)
+    foreach ($path in @($Paths)) {
+        if ([string]::IsNullOrWhiteSpace($path) -or -not $rankedSeen.Add($path)) { continue }
+        $rankedFocusedTests.Add([pscustomobject]@{
+            path = $path
+            rank = $Rank
+            reason = $Reason
+        })
+    }
+}
+Add-RankedTests $changedTestFiles 100 'changed-test'
+Add-RankedTests @($siblingTests | Sort-Object) 90 'direct-sibling-spec'
+Add-RankedTests @($directTests | Sort-Object) 70 'references-changed-symbol'
+Add-RankedTests @($diff.focusedTests) 40 'downstream-context'
+$selectedFocusedTests = @($rankedFocusedTests | Select-Object -First $Limit)
 
 function Add-Scenario {
     param([string]$Id, [string]$Description, [string]$Evidence)
@@ -162,46 +202,72 @@ $commands = @(@(
 ) | Sort-Object command -Unique)
 
 $frontendFocusedTests = @(
-    $discoveredTests |
+    $selectedFocusedTests.path |
         Where-Object { $_ -match '^FoodDiary\.Web\.Client/.+\.spec\.ts$' } |
-        Sort-Object |
         Select-Object -First 5
 )
 foreach ($testPath in $frontendFocusedTests) {
     $workspacePath = $testPath.Substring('FoodDiary.Web.Client/'.Length)
-    $script = if ($workspacePath -match '^projects/fooddiary-admin/') {
-        'test:ci:admin'
+    $scriptAndProject = if ($workspacePath -match '^projects/fooddiary-admin/') {
+        @('test:ci:admin', 'fooddiary-admin')
     } elseif ($workspacePath -match '^projects/fd-ui-kit/') {
-        'test:ci:ui-kit'
+        @('test:ci:ui-kit', 'fd-ui-kit')
     } elseif ($workspacePath -match '^projects/fd-tour/') {
-        'test:ci:tour'
+        @('test:ci:tour', 'fd-tour')
     } else {
-        'test:ci:app'
+        @('test:ci:app', 'food-diary-web-client')
     }
+    $script = $scriptAndProject[0]
+    $project = $scriptAndProject[1]
+    $scriptExists = $null -ne $frontendPackage.scripts.PSObject.Properties[$script]
+    if (-not $scriptExists) { continue }
+    $builder = $frontendWorkspace.projects.PSObject.Properties[$project].Value.architect.test.builder
+    $supportsInclude = $builder -eq '@angular/build:unit-test'
     $commands += [pscustomobject]@{
         id = 'focused-frontend'
-        command = "cd FoodDiary.Web.Client && npm run $script -- --include=$workspacePath"
+        command = if ($supportsInclude) {
+            "cd FoodDiary.Web.Client && npm run $script -- --include=$workspacePath"
+        } else {
+            "cd FoodDiary.Web.Client && npm run $script"
+        }
         source = 'focused-test'
+        commandEvidence = if ($supportsInclude) {
+            "package.json:$script; angular.json:$project=$builder"
+        } else {
+            "package.json:$script; focused include unsupported by angular.json builder '$builder'"
+        }
     }
 }
 $commands = @($commands | Sort-Object command -Unique)
 
 $result = [pscustomobject]@{
     scopes = $scopes
+    intent = $Intent
     proposedPaths = @($ProposedPath)
     modules = @($diff.modules.name)
-    focusedTestFiles = @(
-        @($directTests | Sort-Object) +
-        @($diff.focusedTests | Where-Object { $_ -notin $directTests } | Sort-Object) |
-            Select-Object -First $Limit
-    )
+    focusedTestFiles = @($selectedFocusedTests.path)
+    focusedTestDetails = $selectedFocusedTests
     commands = @($commands)
     scenarios = @($scenarios)
     reviewObligations = @($policy.reviewObligations)
 }
 
+$resultOutput = if ($Compact) {
+    [pscustomobject]@{
+        compact = $true
+        scopes = $result.scopes
+        modules = $result.modules
+        focusedTests = $result.focusedTestDetails
+        commands = $result.commands
+        scenarios = @($result.scenarios | Select-Object id, description)
+        reviewObligationIds = @($result.reviewObligations.id)
+    }
+} else {
+    $result
+}
+
 if ($Format -eq 'Json') {
-    $result | ConvertTo-Json -Depth 8
+    $resultOutput | ConvertTo-Json -Depth 8
     exit 0
 }
 

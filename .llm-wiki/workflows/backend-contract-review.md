@@ -17,6 +17,10 @@ sources:
 # Review Backend Contract Consumers
 
 Query the changed type and inspect production consumers separately from test coverage. For in-process contracts, review constructors, properties, generic constraints, nullability, implementers, and DI registration.
+Consumer edges distinguish `compile`, `mapping`, `serializer`, `http`, and
+`test-fixture` usage. Prefer mapping/serializer/HTTP evidence for an additive
+optional DTO field instead of treating every transitive compile consumer as an
+equally likely behavioral dependency.
 
 For HTTP, message, or client-package boundaries, also review serialized names and types, required/default behavior, enum evolution, unknown fields, mixed-version compatibility, deployment order, and rollback.
 

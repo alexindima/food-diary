@@ -240,6 +240,52 @@ Assert-Wiki ($endpointCompatibility.snapshotFormat -eq 'endpoint-contract') 'API
 Assert-Wiki ($endpointCompatibility.additiveCount -eq 1) 'API compatibility did not classify an added endpoint-contract path as additive.'
 Assert-Wiki (@($endpointCompatibility.changes.kind) -contains 'added-path') 'API compatibility did not report the added endpoint-contract path.'
 
+$baseSchemaContract = @{
+    openapi = '3.0.4'
+    paths = @{}
+    components = @{ schemas = @{
+        Example = @{
+            type = 'object'
+            properties = @{
+                stable = @{ type = 'string'; nullable = $false }
+            }
+            required = @()
+        }
+    } }
+} | ConvertTo-Json -Depth 10
+$currentSchemaContract = @{
+    openapi = '3.0.4'
+    paths = @{}
+    components = @{ schemas = @{
+        Example = @{
+            type = 'object'
+            properties = @{
+                stable = @{ type = 'string'; nullable = $true }
+                optionalAdded = @{ type = 'boolean' }
+                requiredAdded = @{ type = 'string' }
+            }
+            required = @('requiredAdded')
+        }
+    } }
+} | ConvertTo-Json -Depth 10
+$schemaCompatibility = & (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibility.ps1') `
+    -BaseSnapshotContent $baseSchemaContract `
+    -CurrentSnapshotContent $currentSchemaContract `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (@($schemaCompatibility.changes.kind) -contains 'added-schema-property') 'API compatibility did not classify an optional response property as additive.'
+Assert-Wiki (@($schemaCompatibility.changes.kind) -contains 'added-required-property') 'API compatibility did not classify an added required property as breaking.'
+Assert-Wiki (@($schemaCompatibility.changes.kind) -contains 'changed-schema-property') 'API compatibility did not classify a nullability change as breaking.'
+
+$basePayloadContract = @{ user = @{ keys = @('id') } } | ConvertTo-Json -Depth 6
+$currentPayloadContract = @{ user = @{ keys = @('id', 'hasGoogleIdentity') } } | ConvertTo-Json -Depth 6
+$payloadCompatibility = & (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibility.ps1') `
+    -BaseSnapshotContent $baseEndpointContract `
+    -CurrentSnapshotContent $baseEndpointContract `
+    -BasePayloadSnapshotContent $basePayloadContract `
+    -CurrentPayloadSnapshotContent $currentPayloadContract `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (@($payloadCompatibility.changes.kind) -contains 'added-payload-property') 'API compatibility did not detect an added serialized payload property.'
+
 $taskContractPath = '.artifacts/llm-wiki/tool-smoke-task-contract.json'
 $absoluteTaskContractPath = Join-Path (Split-Path -Parent $wikiRoot) $taskContractPath
 try {
@@ -358,10 +404,40 @@ Assert-Wiki (@($proposedTestPlan.scopes) -contains 'Frontend') 'Test plan ignore
 Assert-Wiki (@($proposedTestPlan.commands.command | Where-Object { $_ -match 'npm run test:ci:app -- --include=' }).Count -gt 0) 'Test plan did not emit a supported focused Angular test command.'
 Assert-Wiki (@($proposedTestPlan.commands.command | Where-Object { $_ -match '(^|\s)--run(\s|$)' }).Count -eq 0) 'Test plan emitted the unsupported Angular --run option.'
 
+$rankedPlan = & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') `
+    -ChangedPath @(
+        'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts'
+        'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.spec.ts'
+        'tests/FoodDiary.Presentation.Api.Tests/UserHttpMappingsTests.cs'
+    ) `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki ($rankedPlan.focusedTestDetails[0].reason -eq 'changed-test') 'Test plan did not rank an explicitly changed test first.'
+Assert-Wiki (@($rankedPlan.focusedTestFiles | Select-Object -First 3) -contains 'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.spec.ts') 'Test plan allowed downstream noise to displace the changed component spec.'
+
+$compactBrief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
+    -ChangedPath $proposedBackendPath `
+    -Compact `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki ([bool]$compactBrief.compact) 'Task brief compact mode did not identify its compact response.'
+Assert-Wiki ($null -ne $compactBrief.impactCounts) 'Task brief compact mode omitted impact counts.'
+Assert-Wiki ($null -eq $compactBrief.backendContractImpact) 'Task brief compact mode retained verbose consumer payloads.'
+
+$affectedPlan = & (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') `
+    -AffectedOnly `
+    -Plan `
+    -ChangedPath 'FoodDiary.Web.Client/src/app/services/auth.service.ts'
+$affectedPlanText = $affectedPlan -join [Environment]::NewLine
+Assert-Wiki ($affectedPlanText -match 'Build-LlmWikiFrontendContractIndex.ps1') 'Affected index plan omitted the frontend contract index.'
+Assert-Wiki ($affectedPlanText -notmatch 'Build-LlmWikiDomainDataIndex.ps1') 'Affected frontend-only index plan included the unrelated domain/data index.'
+
 $frontendContract = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/frontend-contract-index.json') -Raw | ConvertFrom-Json
 Assert-Wiki ($frontendContract.summary.components -gt 0) 'Frontend contract index did not discover Angular components.'
 Assert-Wiki ($frontendContract.summary.apiCalls -gt 0) 'Frontend contract index did not discover direct HTTP calls.'
 Assert-Wiki ($frontendContract.summary.consumerEdges -gt 0) 'Frontend contract index did not discover selector consumers.'
+$linkGoogleApiCall = @($frontendContract.apiCalls | Where-Object publicMethod -eq 'linkGoogle')
+Assert-Wiki ($linkGoogleApiCall.Count -eq 1) 'Frontend contract index did not discover linkGoogle through inherited ApiService helpers.'
+Assert-Wiki ($linkGoogleApiCall[0].transport -eq 'InheritedApiService') 'Frontend contract index did not classify linkGoogle as an inherited API helper call.'
+Assert-Wiki ($linkGoogleApiCall[0].resolvedUrlExpression -match 'google/link$') 'Frontend contract index did not resolve the linkGoogle endpoint expression.'
 $uiJson = & (Join-Path $toolsRoot 'Find-LlmWikiFrontendContract.ps1') -View components -Query Autocomplete -Format Json
 $ui = $uiJson | ConvertFrom-Json
 Assert-Wiki (@($ui.components).Count -gt 0) 'Frontend contract query did not resolve Autocomplete.'

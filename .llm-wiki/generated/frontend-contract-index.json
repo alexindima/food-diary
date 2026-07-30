@@ -5,7 +5,7 @@
                     "componentsWithoutDirectSpecs":  107,
                     "inputs":  1139,
                     "outputs":  391,
-                    "apiCalls":  46,
+                    "apiCalls":  198,
                     "templatesWithTranslations":  239,
                     "translationKeys":  1171,
                     "consumerEdges":  898,
@@ -12424,7 +12424,11 @@
                          "responseType":  "CompatibleMarketingAttributionSummary",
                          "urlExpression":  "this.summaryUrl",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/api/admin-acquisition.service.ts",
-                         "line":  20
+                         "line":  20,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "this.summaryUrl"
                      },
                      {
                          "feature":  "admin-ai-usage",
@@ -12432,7 +12436,11 @@
                          "responseType":  "AdminAiUsageSummary",
                          "urlExpression":  "this.aiUsageUrl",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-usage/api/admin-ai-usage.service.ts",
-                         "line":  14
+                         "line":  14,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "this.aiUsageUrl"
                      },
                      {
                          "feature":  "admin-auth",
@@ -12440,7 +12448,11 @@
                          "responseType":  "AdminSsoStartResponse",
                          "urlExpression":  "`${this.authUrl}/admin-sso/start`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-                         "line":  110
+                         "line":  110,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.authUrl}/admin-sso/start`"
                      },
                      {
                          "feature":  "admin-auth",
@@ -12448,7 +12460,11 @@
                          "responseType":  "AuthenticationResponse",
                          "urlExpression":  "`${this.authUrl}/admin-sso/exchange`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-                         "line":  125
+                         "line":  125,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.authUrl}/admin-sso/exchange`"
                      },
                      {
                          "feature":  "admin-dashboard",
@@ -12456,7 +12472,11 @@
                          "responseType":  "AdminDashboardSummary",
                          "urlExpression":  "this.baseUrl",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/api/admin-dashboard.service.ts",
-                         "line":  14
+                         "line":  14,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "this.baseUrl"
                      },
                      {
                          "feature":  "admin-dashboard",
@@ -12464,7 +12484,11 @@
                          "responseType":  "FastingTelemetrySummary",
                          "urlExpression":  "`${this.baseUrl}/fasting`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/api/admin-telemetry.service.ts",
-                         "line":  16
+                         "line":  16,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/fasting`"
                      },
                      {
                          "feature":  "admin-email-templates",
@@ -12472,7 +12496,11 @@
                          "responseType":  "AdminEmailTemplate[]",
                          "urlExpression":  "this.baseUrl",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/api/admin-email-templates.service.ts",
-                         "line":  18
+                         "line":  18,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "this.baseUrl"
                      },
                      {
                          "feature":  "admin-email-templates",
@@ -12480,7 +12508,11 @@
                          "responseType":  "AdminEmailTemplate",
                          "urlExpression":  "`${this.baseUrl}/${key}/${locale}`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/api/admin-email-templates.service.ts",
-                         "line":  22
+                         "line":  22,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${key}/${locale}`"
                      },
                      {
                          "feature":  "admin-email-templates",
@@ -12488,7 +12520,11 @@
                          "responseType":  "void",
                          "urlExpression":  "`${this.baseUrl}/test`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/api/admin-email-templates.service.ts",
-                         "line":  26
+                         "line":  26,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/test`"
                      },
                      {
                          "feature":  "admin-lessons",
@@ -12496,7 +12532,11 @@
                          "responseType":  "AdminLesson[]",
                          "urlExpression":  "this.baseUrl",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/api/admin-lessons.service.ts",
-                         "line":  20
+                         "line":  20,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "this.baseUrl"
                      },
                      {
                          "feature":  "admin-lessons",
@@ -12504,7 +12544,11 @@
                          "responseType":  "AdminLesson",
                          "urlExpression":  "this.baseUrl",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/api/admin-lessons.service.ts",
-                         "line":  24
+                         "line":  24,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "this.baseUrl"
                      },
                      {
                          "feature":  "admin-lessons",
@@ -12512,7 +12556,11 @@
                          "responseType":  "AdminLesson",
                          "urlExpression":  "`${this.baseUrl}/${id}`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/api/admin-lessons.service.ts",
-                         "line":  28
+                         "line":  28,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${id}`"
                      },
                      {
                          "feature":  "admin-lessons",
@@ -12520,7 +12568,11 @@
                          "responseType":  "AdminLessonsImportResponse",
                          "urlExpression":  "`${this.baseUrl}/import`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/api/admin-lessons.service.ts",
-                         "line":  32
+                         "line":  32,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/import`"
                      },
                      {
                          "feature":  "admin-lessons",
@@ -12528,7 +12580,11 @@
                          "responseType":  "void",
                          "urlExpression":  "`${this.baseUrl}/${id}`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/api/admin-lessons.service.ts",
-                         "line":  36
+                         "line":  36,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${id}`"
                      },
                      {
                          "feature":  "admin-mail-inbox",
@@ -12536,7 +12592,11 @@
                          "responseType":  "AdminMailInboxMessageSummary[]",
                          "urlExpression":  "this.baseUrl",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox.service.ts",
-                         "line":  15
+                         "line":  15,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "this.baseUrl"
                      },
                      {
                          "feature":  "admin-mail-inbox",
@@ -12544,7 +12604,11 @@
                          "responseType":  "AdminMailInboxMessageDetails",
                          "urlExpression":  "`${this.baseUrl}/${id}`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox.service.ts",
-                         "line":  19
+                         "line":  19,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${id}`"
                      },
                      {
                          "feature":  "admin-mail-inbox",
@@ -12552,7 +12616,11 @@
                          "responseType":  "void",
                          "urlExpression":  "`${this.baseUrl}/${id}/read`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox.service.ts",
-                         "line":  23
+                         "line":  23,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${id}/read`"
                      },
                      {
                          "feature":  "admin-moderation",
@@ -12560,7 +12628,11 @@
                          "responseType":  "void",
                          "urlExpression":  "`${this.baseUrl}/${reportId}/review`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-moderation.service.ts",
-                         "line":  38
+                         "line":  38,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${reportId}/review`"
                      },
                      {
                          "feature":  "admin-moderation",
@@ -12568,7 +12640,11 @@
                          "responseType":  "void",
                          "urlExpression":  "`${this.baseUrl}/${reportId}/dismiss`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-moderation.service.ts",
-                         "line":  42
+                         "line":  42,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${reportId}/dismiss`"
                      },
                      {
                          "feature":  "admin-users",
@@ -12576,7 +12652,11 @@
                          "responseType":  "AdminUserCreation",
                          "urlExpression":  "this.baseUrl",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-                         "line":  37
+                         "line":  37,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "this.baseUrl"
                      },
                      {
                          "feature":  "admin-users",
@@ -12584,7 +12664,11 @@
                          "responseType":  "AdminUser",
                          "urlExpression":  "`${this.baseUrl}/${userId}`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-                         "line":  64
+                         "line":  64,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${userId}`"
                      },
                      {
                          "feature":  "admin-users",
@@ -12592,7 +12676,11 @@
                          "responseType":  "void",
                          "urlExpression":  "`${this.baseUrl}/${userId}/password`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-                         "line":  68
+                         "line":  68,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${userId}/password`"
                      },
                      {
                          "feature":  "admin-users",
@@ -12600,7 +12688,11 @@
                          "responseType":  "AdminUser",
                          "urlExpression":  "`${this.baseUrl}/${userId}`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-                         "line":  72
+                         "line":  72,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${userId}`"
                      },
                      {
                          "feature":  "admin-users",
@@ -12608,7 +12700,11 @@
                          "responseType":  "AdminUserRoleAuditEvent[]",
                          "urlExpression":  "`${this.baseUrl}/${userId}/role-audit`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-                         "line":  77
+                         "line":  77,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${userId}/role-audit`"
                      },
                      {
                          "feature":  "admin-users",
@@ -12616,7 +12712,11 @@
                          "responseType":  "AdminImpersonationStart",
                          "urlExpression":  "`${this.baseUrl}/${userId}/impersonation`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-                         "line":  81
+                         "line":  81,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${userId}/impersonation`"
                      },
                      {
                          "feature":  "admin-users",
@@ -12624,7 +12724,539 @@
                          "responseType":  "AdminUserLoginDeviceSummary[]",
                          "urlExpression":  "`${this.baseUrl}/login-summary`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-                         "line":  134
+                         "line":  134,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/login-summary`"
+                     },
+                     {
+                         "feature":  "cycle-tracking",
+                         "method":  "GET",
+                         "responseType":  "CycleResponse | null",
+                         "urlExpression":  "\u0027current\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
+                         "line":  21,
+                         "publicMethod":  "getCurrent",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.cycles",
+                         "resolvedUrlExpression":  "environment.apiUrls.cycles/current"
+                     },
+                     {
+                         "feature":  "cycle-tracking",
+                         "method":  "GET",
+                         "responseType":  "CycleNutritionSummary | null",
+                         "urlExpression":  "\u0027current/nutrition-summary\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
+                         "line":  27,
+                         "publicMethod":  "getNutritionSummary",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.cycles",
+                         "resolvedUrlExpression":  "environment.apiUrls.cycles/current/nutrition-summary"
+                     },
+                     {
+                         "feature":  "cycle-tracking",
+                         "method":  "POST",
+                         "responseType":  "CycleResponse",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
+                         "line":  33,
+                         "publicMethod":  "create",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.cycles",
+                         "resolvedUrlExpression":  "environment.apiUrls.cycles/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "cycle-tracking",
+                         "method":  "PUT",
+                         "responseType":  "CycleLogDay",
+                         "urlExpression":  "`${cycleProfileId}/days`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
+                         "line":  37,
+                         "publicMethod":  "upsertDay",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.cycles",
+                         "resolvedUrlExpression":  "environment.apiUrls.cycles/`${cycleProfileId}/days`"
+                     },
+                     {
+                         "feature":  "cycle-tracking",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "`${cycleProfileId}/days`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
+                         "line":  44,
+                         "publicMethod":  "clearDay",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.cycles",
+                         "resolvedUrlExpression":  "environment.apiUrls.cycles/`${cycleProfileId}/days`"
+                     },
+                     {
+                         "feature":  "cycle-tracking",
+                         "method":  "PUT",
+                         "responseType":  "CycleResponse",
+                         "urlExpression":  "`${cycleProfileId}/factors`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
+                         "line":  50,
+                         "publicMethod":  "upsertFactor",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.cycles",
+                         "resolvedUrlExpression":  "environment.apiUrls.cycles/`${cycleProfileId}/factors`"
+                     },
+                     {
+                         "feature":  "dashboard",
+                         "method":  "GET",
+                         "responseType":  "DashboardSnapshot",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard.service.ts",
+                         "line":  50,
+                         "publicMethod":  "requestSnapshot",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dashboard",
+                         "resolvedUrlExpression":  "environment.apiUrls.dashboard/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "GET",
+                         "responseType":  "DietologistRelationship | null",
+                         "urlExpression":  "\u0027relationship\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  43,
+                         "publicMethod":  "getRelationship",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/relationship"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "GET",
+                         "responseType":  "DietologistInvitationForCurrentUser",
+                         "urlExpression":  "`invitations/${invitationId}/current-user`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  47,
+                         "publicMethod":  "getInvitationForCurrentUser",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/`invitations/${invitationId}/current-user`"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "GET",
+                         "responseType":  "ClientSummary[]",
+                         "urlExpression":  "\u0027clients\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  51,
+                         "publicMethod":  "getMyClients",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/clients"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "GET",
+                         "responseType":  "AttentionSignal[]",
+                         "urlExpression":  "\u0027clients/attention\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  55,
+                         "publicMethod":  "getAttentionSignals",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/clients/attention"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "PUT",
+                         "responseType":  "void",
+                         "urlExpression":  "`clients/attention/${encodeURIComponent(signal.id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  63,
+                         "publicMethod":  "setAttentionSignalState",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/`clients/attention/${encodeURIComponent(signal.id"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "GET",
+                         "responseType":  "DashboardSnapshot",
+                         "urlExpression":  "`clients/${clientUserId}/dashboard`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  91,
+                         "publicMethod":  "getClientDashboard",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/`clients/${clientUserId}/dashboard`"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "GET",
+                         "responseType":  "DietologistClientGoals",
+                         "urlExpression":  "`clients/${clientUserId}/goals`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  95,
+                         "publicMethod":  "getClientGoals",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/`clients/${clientUserId}/goals`"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "GET",
+                         "responseType":  "DietologistRecommendation[]",
+                         "urlExpression":  "`clients/${clientUserId}/recommendations`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  99,
+                         "publicMethod":  "getRecommendationsForClient",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/`clients/${clientUserId}/recommendations`"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "`clients/${clientUserId}`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  103,
+                         "publicMethod":  "disconnectClient",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/`clients/${clientUserId}`"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "POST",
+                         "responseType":  "DietologistRecommendation",
+                         "urlExpression":  "`clients/${clientUserId}/recommendations`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  107,
+                         "publicMethod":  "createRecommendation",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/`clients/${clientUserId}/recommendations`"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "GET",
+                         "responseType":  "ClientTask[]",
+                         "urlExpression":  "`clients/${clientUserId}/tasks`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  111,
+                         "publicMethod":  "getTasksForClient",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/`clients/${clientUserId}/tasks`"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "POST",
+                         "responseType":  "ClientTask",
+                         "urlExpression":  "`clients/${clientUserId}/tasks`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  115,
+                         "publicMethod":  "createTask",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/`clients/${clientUserId}/tasks`"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "PUT",
+                         "responseType":  "ClientTask",
+                         "urlExpression":  "`clients/tasks/${taskId}/cancel`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  119,
+                         "publicMethod":  "cancelTask",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/`clients/tasks/${taskId}/cancel`"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "GET",
+                         "responseType":  "RecommendationTemplate[]",
+                         "urlExpression":  "\u0027recommendation-templates\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  123,
+                         "publicMethod":  "searchRecommendationTemplates",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/recommendation-templates"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "POST",
+                         "responseType":  "RecommendationTemplate",
+                         "urlExpression":  "\u0027recommendation-templates\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  127,
+                         "publicMethod":  "createRecommendationTemplate",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/recommendation-templates"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "PUT",
+                         "responseType":  "RecommendationTemplate",
+                         "urlExpression":  "`recommendation-templates/${templateId}`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  131,
+                         "publicMethod":  "updateRecommendationTemplate",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/`recommendation-templates/${templateId}`"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "`recommendation-templates/${templateId}`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  135,
+                         "publicMethod":  "archiveRecommendationTemplate",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/`recommendation-templates/${templateId}`"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "POST",
+                         "responseType":  "BulkRecommendationResult",
+                         "urlExpression":  "\u0027recommendations/bulk\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  139,
+                         "publicMethod":  "bulkCreateRecommendations",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/recommendations/bulk"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "POST",
+                         "responseType":  "void",
+                         "urlExpression":  "\u0027invite\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  143,
+                         "publicMethod":  "invite",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/invite"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "POST",
+                         "responseType":  "void",
+                         "urlExpression":  "`invitations/${invitationId}/accept-current-user`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  147,
+                         "publicMethod":  "acceptInvitationForCurrentUser",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/`invitations/${invitationId}/accept-current-user`"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "POST",
+                         "responseType":  "void",
+                         "urlExpression":  "`invitations/${invitationId}/decline-current-user`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  151,
+                         "publicMethod":  "declineInvitationForCurrentUser",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/`invitations/${invitationId}/decline-current-user`"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "PUT",
+                         "responseType":  "void",
+                         "urlExpression":  "\u0027permissions\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  155,
+                         "publicMethod":  "updatePermissions",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/permissions"
+                     },
+                     {
+                         "feature":  "dietologist",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "\u0027relationship\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
+                         "line":  159,
+                         "publicMethod":  "revokeRelationship",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.dietologist",
+                         "resolvedUrlExpression":  "environment.apiUrls.dietologist/relationship"
+                     },
+                     {
+                         "feature":  "explore",
+                         "method":  "POST",
+                         "responseType":  "RecipeComment",
+                         "urlExpression":  "`${recipeId}/comments`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/explore/api/comment.service.ts",
+                         "line":  23,
+                         "publicMethod":  "createComment",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.recipes/`${recipeId}/comments`"
+                     },
+                     {
+                         "feature":  "explore",
+                         "method":  "PATCH",
+                         "responseType":  "RecipeComment",
+                         "urlExpression":  "`${recipeId}/comments/${commentId}`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/explore/api/comment.service.ts",
+                         "line":  29,
+                         "publicMethod":  "updateComment",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.recipes/`${recipeId}/comments/${commentId}`"
+                     },
+                     {
+                         "feature":  "explore",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "`${recipeId}/comments/${commentId}`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/explore/api/comment.service.ts",
+                         "line":  35,
+                         "publicMethod":  "deleteComment",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.recipes/`${recipeId}/comments/${commentId}`"
+                     },
+                     {
+                         "feature":  "explore",
+                         "method":  "GET",
+                         "responseType":  "RecipeLikeStatus",
+                         "urlExpression":  "`${recipeId}/likes`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/explore/api/like.service.ts",
+                         "line":  14,
+                         "publicMethod":  "getStatus",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.recipes/`${recipeId}/likes`"
+                     },
+                     {
+                         "feature":  "explore",
+                         "method":  "POST",
+                         "responseType":  "RecipeLikeStatus",
+                         "urlExpression":  "`${recipeId}/likes/toggle`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/explore/api/like.service.ts",
+                         "line":  20,
+                         "publicMethod":  "toggle",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.recipes/`${recipeId}/likes/toggle`"
+                     },
+                     {
+                         "feature":  "explore",
+                         "method":  "POST",
+                         "responseType":  "ContentReport",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/explore/api/report.service.ts",
+                         "line":  14,
+                         "publicMethod":  "create",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.reports",
+                         "resolvedUrlExpression":  "environment.apiUrls.reports/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "fasting",
+                         "method":  "POST",
+                         "responseType":  "FastingSession",
+                         "urlExpression":  "\u0027start\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/fasting/api/fasting.service.ts",
+                         "line":  26,
+                         "publicMethod":  "start",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.fasting",
+                         "resolvedUrlExpression":  "environment.apiUrls.fasting/start"
+                     },
+                     {
+                         "feature":  "fasting",
+                         "method":  "PUT",
+                         "responseType":  "FastingSession",
+                         "urlExpression":  "\u0027end\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/fasting/api/fasting.service.ts",
+                         "line":  32,
+                         "publicMethod":  "end",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.fasting",
+                         "resolvedUrlExpression":  "environment.apiUrls.fasting/end"
+                     },
+                     {
+                         "feature":  "fasting",
+                         "method":  "PUT",
+                         "responseType":  "FastingSession",
+                         "urlExpression":  "\u0027current/duration\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/fasting/api/fasting.service.ts",
+                         "line":  36,
+                         "publicMethod":  "extend",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.fasting",
+                         "resolvedUrlExpression":  "environment.apiUrls.fasting/current/duration"
+                     },
+                     {
+                         "feature":  "fasting",
+                         "method":  "PUT",
+                         "responseType":  "FastingSession",
+                         "urlExpression":  "\u0027current/duration/reduce\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/fasting/api/fasting.service.ts",
+                         "line":  42,
+                         "publicMethod":  "reduceTarget",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.fasting",
+                         "resolvedUrlExpression":  "environment.apiUrls.fasting/current/duration/reduce"
+                     },
+                     {
+                         "feature":  "fasting",
+                         "method":  "PUT",
+                         "responseType":  "FastingSession",
+                         "urlExpression":  "\u0027current/check-in\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/fasting/api/fasting.service.ts",
+                         "line":  48,
+                         "publicMethod":  "updateCheckIn",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.fasting",
+                         "resolvedUrlExpression":  "environment.apiUrls.fasting/current/check-in"
+                     },
+                     {
+                         "feature":  "fasting",
+                         "method":  "PUT",
+                         "responseType":  "FastingSession",
+                         "urlExpression":  "\u0027current/skip-day\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/fasting/api/fasting.service.ts",
+                         "line":  54,
+                         "publicMethod":  "skipCyclicDay",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.fasting",
+                         "resolvedUrlExpression":  "environment.apiUrls.fasting/current/skip-day"
+                     },
+                     {
+                         "feature":  "fasting",
+                         "method":  "PUT",
+                         "responseType":  "FastingSession",
+                         "urlExpression":  "\u0027current/postpone-day\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/fasting/api/fasting.service.ts",
+                         "line":  60,
+                         "publicMethod":  "postponeCyclicDay",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.fasting",
+                         "resolvedUrlExpression":  "environment.apiUrls.fasting/current/postpone-day"
+                     },
+                     {
+                         "feature":  "fasting",
+                         "method":  "GET",
+                         "responseType":  "FastingOverview",
+                         "urlExpression":  "\u0027overview\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/fasting/api/fasting.service.ts",
+                         "line":  119,
+                         "publicMethod":  "requestOverview",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.fasting",
+                         "resolvedUrlExpression":  "environment.apiUrls.fasting/overview"
                      },
                      {
                          "feature":  "fooddiary-admin",
@@ -12632,7 +13264,635 @@
                          "responseType":  "TranslationDictionary",
                          "urlExpression":  "`./assets/i18n/${normalizedLang}/core.json`",
                          "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/i18n/admin-translation.loader.ts",
-                         "line":  15
+                         "line":  15,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`./assets/i18n/${normalizedLang}/core.json`"
+                     },
+                     {
+                         "feature":  "goals",
+                         "method":  "GET",
+                         "responseType":  "GoalsResponse",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/goals/api/goals.service.ts",
+                         "line":  14,
+                         "publicMethod":  "getGoals",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.goals",
+                         "resolvedUrlExpression":  "environment.apiUrls.goals/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "goals",
+                         "method":  "GET",
+                         "responseType":  "GoalsResponse",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/goals/api/goals.service.ts",
+                         "line":  18,
+                         "publicMethod":  "getGoalsStrict",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.goals",
+                         "resolvedUrlExpression":  "environment.apiUrls.goals/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "goals",
+                         "method":  "PATCH",
+                         "responseType":  "GoalsResponse",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/goals/api/goals.service.ts",
+                         "line":  22,
+                         "publicMethod":  "updateGoals",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.goals",
+                         "resolvedUrlExpression":  "environment.apiUrls.goals/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "hydration",
+                         "method":  "GET",
+                         "responseType":  "HydrationDaily",
+                         "urlExpression":  "\u0027daily\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/hydration/api/hydration.service.ts",
+                         "line":  15,
+                         "publicMethod":  "getDaily",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.hydration",
+                         "resolvedUrlExpression":  "environment.apiUrls.hydration/daily"
+                     },
+                     {
+                         "feature":  "hydration",
+                         "method":  "GET",
+                         "responseType":  "HydrationEntry[]",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/hydration/api/hydration.service.ts",
+                         "line":  28,
+                         "publicMethod":  "getEntries",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.hydration",
+                         "resolvedUrlExpression":  "environment.apiUrls.hydration/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "hydration",
+                         "method":  "POST",
+                         "responseType":  "HydrationEntry",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/hydration/api/hydration.service.ts",
+                         "line":  39,
+                         "publicMethod":  "getEntries",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.hydration",
+                         "resolvedUrlExpression":  "environment.apiUrls.hydration/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "meals",
+                         "method":  "GET",
+                         "responseType":  "FavoriteMeal[]",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/meals/api/favorite-meal.service.ts",
+                         "line":  14,
+                         "publicMethod":  "getAll",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.favoriteMeals",
+                         "resolvedUrlExpression":  "environment.apiUrls.favoriteMeals/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "meals",
+                         "method":  "GET",
+                         "responseType":  "boolean",
+                         "urlExpression":  "`check/${mealId}`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/meals/api/favorite-meal.service.ts",
+                         "line":  18,
+                         "publicMethod":  "isFavorite",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.favoriteMeals",
+                         "resolvedUrlExpression":  "environment.apiUrls.favoriteMeals/`check/${mealId}`"
+                     },
+                     {
+                         "feature":  "meals",
+                         "method":  "POST",
+                         "responseType":  "FavoriteMeal",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/meals/api/favorite-meal.service.ts",
+                         "line":  24,
+                         "publicMethod":  "add",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.favoriteMeals",
+                         "resolvedUrlExpression":  "environment.apiUrls.favoriteMeals/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "meals",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/meals/api/favorite-meal.service.ts",
+                         "line":  30,
+                         "publicMethod":  "remove",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.favoriteMeals",
+                         "resolvedUrlExpression":  "environment.apiUrls.favoriteMeals/id"
+                     },
+                     {
+                         "feature":  "meals",
+                         "method":  "GET",
+                         "responseType":  "ConsumptionOverview",
+                         "urlExpression":  "\u0027overview\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
+                         "line":  64,
+                         "publicMethod":  "queryOverview",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.consumptions",
+                         "resolvedUrlExpression":  "environment.apiUrls.consumptions/overview"
+                     },
+                     {
+                         "feature":  "meals",
+                         "method":  "GET",
+                         "responseType":  "ConsumptionResponseDto",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
+                         "line":  78,
+                         "publicMethod":  "getById",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.consumptions",
+                         "resolvedUrlExpression":  "environment.apiUrls.consumptions/id"
+                     },
+                     {
+                         "feature":  "meals",
+                         "method":  "POST",
+                         "responseType":  "ConsumptionResponseDto",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
+                         "line":  85,
+                         "publicMethod":  "create",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.consumptions",
+                         "resolvedUrlExpression":  "environment.apiUrls.consumptions/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "meals",
+                         "method":  "PATCH",
+                         "responseType":  "ConsumptionResponseDto",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
+                         "line":  92,
+                         "publicMethod":  "update",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.consumptions",
+                         "resolvedUrlExpression":  "environment.apiUrls.consumptions/id"
+                     },
+                     {
+                         "feature":  "meals",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
+                         "line":  99,
+                         "publicMethod":  "deleteById",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.consumptions",
+                         "resolvedUrlExpression":  "environment.apiUrls.consumptions/id"
+                     },
+                     {
+                         "feature":  "meals",
+                         "method":  "POST",
+                         "responseType":  "ConsumptionResponseDto",
+                         "urlExpression":  "`${id}/repeat`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
+                         "line":  103,
+                         "publicMethod":  "repeat",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.consumptions",
+                         "resolvedUrlExpression":  "environment.apiUrls.consumptions/`${id}/repeat`"
+                     },
+                     {
+                         "feature":  "premium",
+                         "method":  "GET",
+                         "responseType":  "BillingOverview",
+                         "urlExpression":  "\u0027overview\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
+                         "line":  20,
+                         "publicMethod":  "getOverview",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.billing",
+                         "resolvedUrlExpression":  "environment.apiUrls.billing/overview"
+                     },
+                     {
+                         "feature":  "premium",
+                         "method":  "POST",
+                         "responseType":  "BillingOverview",
+                         "urlExpression":  "\u0027trial\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
+                         "line":  24,
+                         "publicMethod":  "startPremiumTrial",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.billing",
+                         "resolvedUrlExpression":  "environment.apiUrls.billing/trial"
+                     },
+                     {
+                         "feature":  "premium",
+                         "method":  "POST",
+                         "responseType":  "CheckoutSessionResponse",
+                         "urlExpression":  "\u0027checkout-session\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
+                         "line":  31,
+                         "publicMethod":  "createCheckoutSession",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.billing",
+                         "resolvedUrlExpression":  "environment.apiUrls.billing/checkout-session"
+                     },
+                     {
+                         "feature":  "premium",
+                         "method":  "POST",
+                         "responseType":  "PortalSessionResponse",
+                         "urlExpression":  "\u0027portal-session\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
+                         "line":  37,
+                         "publicMethod":  "createPortalSession",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.billing",
+                         "resolvedUrlExpression":  "environment.apiUrls.billing/portal-session"
+                     },
+                     {
+                         "feature":  "products",
+                         "method":  "GET",
+                         "responseType":  "FavoriteProduct[]",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
+                         "line":  14,
+                         "publicMethod":  "getAll",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.favoriteProducts",
+                         "resolvedUrlExpression":  "environment.apiUrls.favoriteProducts/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "products",
+                         "method":  "GET",
+                         "responseType":  "boolean",
+                         "urlExpression":  "`check/${productId}`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
+                         "line":  20,
+                         "publicMethod":  "isFavorite",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.favoriteProducts",
+                         "resolvedUrlExpression":  "environment.apiUrls.favoriteProducts/`check/${productId}`"
+                     },
+                     {
+                         "feature":  "products",
+                         "method":  "POST",
+                         "responseType":  "FavoriteProduct",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
+                         "line":  26,
+                         "publicMethod":  "add",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.favoriteProducts",
+                         "resolvedUrlExpression":  "environment.apiUrls.favoriteProducts/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "products",
+                         "method":  "PUT",
+                         "responseType":  "FavoriteProduct",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
+                         "line":  32,
+                         "publicMethod":  "update",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.favoriteProducts",
+                         "resolvedUrlExpression":  "environment.apiUrls.favoriteProducts/id"
+                     },
+                     {
+                         "feature":  "products",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
+                         "line":  38,
+                         "publicMethod":  "remove",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.favoriteProducts",
+                         "resolvedUrlExpression":  "environment.apiUrls.favoriteProducts/id"
+                     },
+                     {
+                         "feature":  "products",
+                         "method":  "GET",
+                         "responseType":  "OpenFoodFactsProduct | null",
+                         "urlExpression":  "`products/${barcode}`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/products/api/open-food-facts.service.ts",
+                         "line":  17,
+                         "publicMethod":  "searchByBarcode",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.openFoodFacts",
+                         "resolvedUrlExpression":  "environment.apiUrls.openFoodFacts/`products/${barcode}`"
+                     },
+                     {
+                         "feature":  "products",
+                         "method":  "GET",
+                         "responseType":  "OpenFoodFactsProduct[]",
+                         "urlExpression":  "\u0027products\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/products/api/open-food-facts.service.ts",
+                         "line":  23,
+                         "publicMethod":  "search",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.openFoodFacts",
+                         "resolvedUrlExpression":  "environment.apiUrls.openFoodFacts/products"
+                     },
+                     {
+                         "feature":  "products",
+                         "method":  "GET",
+                         "responseType":  "Product",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
+                         "line":  45,
+                         "publicMethod":  "getById",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.products",
+                         "resolvedUrlExpression":  "environment.apiUrls.products/id"
+                     },
+                     {
+                         "feature":  "products",
+                         "method":  "GET",
+                         "responseType":  "ProductOverview",
+                         "urlExpression":  "\u0027overview\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
+                         "line":  60,
+                         "publicMethod":  "queryOverview",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.products",
+                         "resolvedUrlExpression":  "environment.apiUrls.products/overview"
+                     },
+                     {
+                         "feature":  "products",
+                         "method":  "GET",
+                         "responseType":  "Product[]",
+                         "urlExpression":  "\u0027recent\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
+                         "line":  101,
+                         "publicMethod":  "getRecent",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.products",
+                         "resolvedUrlExpression":  "environment.apiUrls.products/recent"
+                     },
+                     {
+                         "feature":  "products",
+                         "method":  "GET",
+                         "responseType":  "ProductSearchSuggestion[]",
+                         "urlExpression":  "\u0027suggestions\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
+                         "line":  107,
+                         "publicMethod":  "searchSuggestions",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.products",
+                         "resolvedUrlExpression":  "environment.apiUrls.products/suggestions"
+                     },
+                     {
+                         "feature":  "products",
+                         "method":  "POST",
+                         "responseType":  "Product",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
+                         "line":  113,
+                         "publicMethod":  "create",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.products",
+                         "resolvedUrlExpression":  "environment.apiUrls.products/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "products",
+                         "method":  "PATCH",
+                         "responseType":  "Product",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
+                         "line":  117,
+                         "publicMethod":  "update",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.products",
+                         "resolvedUrlExpression":  "environment.apiUrls.products/id"
+                     },
+                     {
+                         "feature":  "products",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
+                         "line":  121,
+                         "publicMethod":  "deleteById",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.products",
+                         "resolvedUrlExpression":  "environment.apiUrls.products/id"
+                     },
+                     {
+                         "feature":  "products",
+                         "method":  "POST",
+                         "responseType":  "Product",
+                         "urlExpression":  "`${id}/duplicate`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
+                         "line":  125,
+                         "publicMethod":  "duplicate",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.products",
+                         "resolvedUrlExpression":  "environment.apiUrls.products/`${id}/duplicate`"
+                     },
+                     {
+                         "feature":  "recipes",
+                         "method":  "GET",
+                         "responseType":  "FavoriteRecipe[]",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recipes/api/favorite-recipe.service.ts",
+                         "line":  14,
+                         "publicMethod":  "getAll",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.favoriteRecipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.favoriteRecipes/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "recipes",
+                         "method":  "GET",
+                         "responseType":  "boolean",
+                         "urlExpression":  "`check/${recipeId}`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recipes/api/favorite-recipe.service.ts",
+                         "line":  20,
+                         "publicMethod":  "isFavorite",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.favoriteRecipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.favoriteRecipes/`check/${recipeId}`"
+                     },
+                     {
+                         "feature":  "recipes",
+                         "method":  "POST",
+                         "responseType":  "FavoriteRecipe",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recipes/api/favorite-recipe.service.ts",
+                         "line":  26,
+                         "publicMethod":  "add",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.favoriteRecipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.favoriteRecipes/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "recipes",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recipes/api/favorite-recipe.service.ts",
+                         "line":  32,
+                         "publicMethod":  "remove",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.favoriteRecipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.favoriteRecipes/id"
+                     },
+                     {
+                         "feature":  "recipes",
+                         "method":  "GET",
+                         "responseType":  "Recipe",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
+                         "line":  48,
+                         "publicMethod":  "getById",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.recipes/id"
+                     },
+                     {
+                         "feature":  "recipes",
+                         "method":  "GET",
+                         "responseType":  "Recipe[]",
+                         "urlExpression":  "\u0027recent\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
+                         "line":  53,
+                         "publicMethod":  "getRecent",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.recipes/recent"
+                     },
+                     {
+                         "feature":  "recipes",
+                         "method":  "GET",
+                         "responseType":  "RecipeOverview",
+                         "urlExpression":  "\u0027overview\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
+                         "line":  74,
+                         "publicMethod":  "queryOverview",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.recipes/overview"
+                     },
+                     {
+                         "feature":  "recipes",
+                         "method":  "POST",
+                         "responseType":  "Recipe",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
+                         "line":  87,
+                         "publicMethod":  "create",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.recipes/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "recipes",
+                         "method":  "PATCH",
+                         "responseType":  "Recipe",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
+                         "line":  116,
+                         "publicMethod":  "update",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.recipes/id"
+                     },
+                     {
+                         "feature":  "recipes",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
+                         "line":  120,
+                         "publicMethod":  "deleteById",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.recipes/id"
+                     },
+                     {
+                         "feature":  "recipes",
+                         "method":  "POST",
+                         "responseType":  "Recipe",
+                         "urlExpression":  "`${id}/duplicate`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
+                         "line":  124,
+                         "publicMethod":  "duplicate",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.recipes/`${id}/duplicate`"
+                     },
+                     {
+                         "feature":  "recommendations",
+                         "method":  "GET",
+                         "responseType":  "ClientTask[]",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recommendations/api/client-tasks.service.ts",
+                         "line":  13,
+                         "publicMethod":  "getMyTasks",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.clientTasks",
+                         "resolvedUrlExpression":  "environment.apiUrls.clientTasks/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "recommendations",
+                         "method":  "PUT",
+                         "responseType":  "ClientTask",
+                         "urlExpression":  "`${taskId}/status`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recommendations/api/client-tasks.service.ts",
+                         "line":  17,
+                         "publicMethod":  "changeStatus",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.clientTasks",
+                         "resolvedUrlExpression":  "environment.apiUrls.clientTasks/`${taskId}/status`"
+                     },
+                     {
+                         "feature":  "recommendations",
+                         "method":  "GET",
+                         "responseType":  "DietologistRecommendation[]",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recommendations/api/recommendations.service.ts",
+                         "line":  17,
+                         "publicMethod":  "getMyRecommendations",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recommendations",
+                         "resolvedUrlExpression":  "environment.apiUrls.recommendations/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "recommendations",
+                         "method":  "PUT",
+                         "responseType":  "void",
+                         "urlExpression":  "`${recommendationId}/read`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recommendations/api/recommendations.service.ts",
+                         "line":  21,
+                         "publicMethod":  "markAsRead",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recommendations",
+                         "resolvedUrlExpression":  "environment.apiUrls.recommendations/`${recommendationId}/read`"
+                     },
+                     {
+                         "feature":  "recommendations",
+                         "method":  "GET",
+                         "responseType":  "RecommendationComment[]",
+                         "urlExpression":  "`${recommendationId}/comments`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recommendations/api/recommendations.service.ts",
+                         "line":  25,
+                         "publicMethod":  "getComments",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recommendations",
+                         "resolvedUrlExpression":  "environment.apiUrls.recommendations/`${recommendationId}/comments`"
+                     },
+                     {
+                         "feature":  "recommendations",
+                         "method":  "POST",
+                         "responseType":  "RecommendationComment",
+                         "urlExpression":  "`${recommendationId}/comments`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/recommendations/api/recommendations.service.ts",
+                         "line":  29,
+                         "publicMethod":  "createComment",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recommendations",
+                         "resolvedUrlExpression":  "environment.apiUrls.recommendations/`${recommendationId}/comments`"
                      },
                      {
                          "feature":  "shell",
@@ -12640,7 +13900,11 @@
                          "responseType":  "T",
                          "urlExpression":  "`${this.baseUrl}/${endpoint}`",
                          "path":  "FoodDiary.Web.Client/src/app/services/api.service.ts",
-                         "line":  16
+                         "line":  16,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${endpoint}`"
                      },
                      {
                          "feature":  "shell",
@@ -12648,7 +13912,11 @@
                          "responseType":  "T",
                          "urlExpression":  "`${this.baseUrl}/${endpoint}`",
                          "path":  "FoodDiary.Web.Client/src/app/services/api.service.ts",
-                         "line":  21
+                         "line":  21,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${endpoint}`"
                      },
                      {
                          "feature":  "shell",
@@ -12656,7 +13924,11 @@
                          "responseType":  "T",
                          "urlExpression":  "`${this.baseUrl}/${endpoint}`",
                          "path":  "FoodDiary.Web.Client/src/app/services/api.service.ts",
-                         "line":  26
+                         "line":  26,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${endpoint}`"
                      },
                      {
                          "feature":  "shell",
@@ -12664,7 +13936,11 @@
                          "responseType":  "T",
                          "urlExpression":  "`${this.baseUrl}/${endpoint}`",
                          "path":  "FoodDiary.Web.Client/src/app/services/api.service.ts",
-                         "line":  31
+                         "line":  31,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${endpoint}`"
                      },
                      {
                          "feature":  "shell",
@@ -12672,7 +13948,11 @@
                          "responseType":  "T",
                          "urlExpression":  "`${this.baseUrl}/${endpoint}`",
                          "path":  "FoodDiary.Web.Client/src/app/services/api.service.ts",
-                         "line":  36
+                         "line":  36,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${endpoint}`"
                      },
                      {
                          "feature":  "shell",
@@ -12680,7 +13960,155 @@
                          "responseType":  "",
                          "urlExpression":  "`${this.baseUrl}/${endpoint}`",
                          "path":  "FoodDiary.Web.Client/src/app/services/api.service.ts",
-                         "line":  41
+                         "line":  41,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${endpoint}`"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "POST",
+                         "responseType":  "AuthResponse",
+                         "urlExpression":  "\u0027login\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+                         "line":  130,
+                         "publicMethod":  "login",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.auth",
+                         "resolvedUrlExpression":  "environment.apiUrls.auth/login"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "POST",
+                         "responseType":  "AuthResponse",
+                         "urlExpression":  "\u0027register\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+                         "line":  139,
+                         "publicMethod":  "register",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.auth",
+                         "resolvedUrlExpression":  "environment.apiUrls.auth/register"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "POST",
+                         "responseType":  "void",
+                         "urlExpression":  "\u0027verify-email\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+                         "line":  153,
+                         "publicMethod":  "verifyEmail",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.auth",
+                         "resolvedUrlExpression":  "environment.apiUrls.auth/verify-email"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "POST",
+                         "responseType":  "void",
+                         "urlExpression":  "\u0027verify-email/resend\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+                         "line":  162,
+                         "publicMethod":  "resendEmailVerification",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.auth",
+                         "resolvedUrlExpression":  "environment.apiUrls.auth/verify-email/resend"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "POST",
+                         "responseType":  "AuthResponse",
+                         "urlExpression":  "\u0027restore\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+                         "line":  168,
+                         "publicMethod":  "restoreAccount",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.auth",
+                         "resolvedUrlExpression":  "environment.apiUrls.auth/restore"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "POST",
+                         "responseType":  "AuthResponse",
+                         "urlExpression":  "\u0027google\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+                         "line":  181,
+                         "publicMethod":  "loginWithGoogle",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.auth",
+                         "resolvedUrlExpression":  "environment.apiUrls.auth/google"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "POST",
+                         "responseType":  "User",
+                         "urlExpression":  "\u0027google/link\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+                         "line":  190,
+                         "publicMethod":  "linkGoogle",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.auth",
+                         "resolvedUrlExpression":  "environment.apiUrls.auth/google/link"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "POST",
+                         "responseType":  "void",
+                         "urlExpression":  "\u0027password-reset/request\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+                         "line":  196,
+                         "publicMethod":  "requestPasswordReset",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.auth",
+                         "resolvedUrlExpression":  "environment.apiUrls.auth/password-reset/request"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "POST",
+                         "responseType":  "AuthResponse",
+                         "urlExpression":  "\u0027password-reset/confirm\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+                         "line":  203,
+                         "publicMethod":  "confirmPasswordReset",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.auth",
+                         "resolvedUrlExpression":  "environment.apiUrls.auth/password-reset/confirm"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "POST",
+                         "responseType":  "AdminSsoStartResponse",
+                         "urlExpression":  "\u0027admin-sso/start\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+                         "line":  212,
+                         "publicMethod":  "startAdminSso",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.auth",
+                         "resolvedUrlExpression":  "environment.apiUrls.auth/admin-sso/start"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "POST",
+                         "responseType":  "AuthResponse",
+                         "urlExpression":  "\u0027refresh\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+                         "line":  226,
+                         "publicMethod":  "refreshToken",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.auth",
+                         "resolvedUrlExpression":  "environment.apiUrls.auth/refresh"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "POST",
+                         "responseType":  "unknown",
+                         "urlExpression":  "\u0027telegram/link\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+                         "line":  362,
+                         "publicMethod":  "linkTelegramIfAvailable",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.auth",
+                         "resolvedUrlExpression":  "environment.apiUrls.auth/telegram/link"
                      },
                      {
                          "feature":  "shell",
@@ -12688,7 +14116,11 @@
                          "responseType":  "void",
                          "urlExpression":  "this.baseUrl",
                          "path":  "FoodDiary.Web.Client/src/app/services/logging-api.service.ts",
-                         "line":  37
+                         "line":  37,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "this.baseUrl"
                      },
                      {
                          "feature":  "shell",
@@ -12696,7 +14128,203 @@
                          "responseType":  "",
                          "urlExpression":  "uploadUrl",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts",
-                         "line":  34
+                         "line":  34,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "uploadUrl"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "GET",
+                         "responseType":  "RecipeLookup",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/recipe-lookup.service.ts",
+                         "line":  15,
+                         "publicMethod":  "getById",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.recipes",
+                         "resolvedUrlExpression":  "environment.apiUrls.recipes/id"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "GET",
+                         "responseType":  "UserProfileOverview",
+                         "urlExpression":  "\u0027overview\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  58,
+                         "publicMethod":  "getOverview",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/overview"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "GET",
+                         "responseType":  "User",
+                         "urlExpression":  "\u0027info\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  70,
+                         "publicMethod":  "getInfo",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/info"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "GET",
+                         "responseType":  "User",
+                         "urlExpression":  "\u0027info\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  82,
+                         "publicMethod":  "getInfoSilently",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/info"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "PATCH",
+                         "responseType":  "User",
+                         "urlExpression":  "\u0027info\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  94,
+                         "publicMethod":  "update",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/info"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "PATCH",
+                         "responseType":  "User",
+                         "urlExpression":  "\u0027preferences/appearance\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  103,
+                         "publicMethod":  "updateAppearance",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/preferences/appearance"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "PATCH",
+                         "responseType":  "User",
+                         "urlExpression":  "\u0027info\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  112,
+                         "publicMethod":  "updateDashboardLayout",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/info"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "PATCH",
+                         "responseType":  "void",
+                         "urlExpression":  "\u0027password\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  121,
+                         "publicMethod":  "changePassword",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/password"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "PATCH",
+                         "responseType":  "void",
+                         "urlExpression":  "\u0027password/set\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  128,
+                         "publicMethod":  "setPassword",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/password/set"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "POST",
+                         "responseType":  "void",
+                         "urlExpression":  "\u0027ai-consent\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  141,
+                         "publicMethod":  "acceptAiConsent",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/ai-consent"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "\u0027ai-consent\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  153,
+                         "publicMethod":  "revokeAiConsent",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/ai-consent"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  165,
+                         "publicMethod":  "deleteCurrentUser",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "GET",
+                         "responseType":  "DesiredWeightResponse",
+                         "urlExpression":  "\u0027desired-weight\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  175,
+                         "publicMethod":  "getDesiredWeight",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/desired-weight"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "PUT",
+                         "responseType":  "DesiredWeightResponse",
+                         "urlExpression":  "\u0027desired-weight\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  182,
+                         "publicMethod":  "updateDesiredWeight",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/desired-weight"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "GET",
+                         "responseType":  "DesiredWaistResponse",
+                         "urlExpression":  "\u0027desired-waist\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  191,
+                         "publicMethod":  "getDesiredWaist",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/desired-waist"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "PUT",
+                         "responseType":  "DesiredWaistResponse",
+                         "urlExpression":  "\u0027desired-waist\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  198,
+                         "publicMethod":  "updateDesiredWaist",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/desired-waist"
                      },
                      {
                          "feature":  "shell",
@@ -12704,7 +14332,11 @@
                          "responseType":  "TranslationDictionary",
                          "urlExpression":  "url",
                          "path":  "FoodDiary.Web.Client/src/app/shared/i18n/food-diary-translation.loader.ts",
-                         "line":  67
+                         "line":  67,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "url"
                      },
                      {
                          "feature":  "shell",
@@ -12712,7 +14344,11 @@
                          "responseType":  "void",
                          "urlExpression":  "this.baseUrl",
                          "path":  "FoodDiary.Web.Client/src/app/shared/marketing/marketing-attribution.service.ts",
-                         "line":  54
+                         "line":  54,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "this.baseUrl"
                      },
                      {
                          "feature":  "shell",
@@ -12720,7 +14356,11 @@
                          "responseType":  "void",
                          "urlExpression":  "this.baseUrl",
                          "path":  "FoodDiary.Web.Client/src/app/shared/marketing/marketing-attribution.service.ts",
-                         "line":  105
+                         "line":  105,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "this.baseUrl"
                      },
                      {
                          "feature":  "shell",
@@ -12728,7 +14368,11 @@
                          "responseType":  "void",
                          "urlExpression":  "`${this.baseUrl}/${notificationId}/read`",
                          "path":  "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-                         "line":  164
+                         "line":  164,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${notificationId}/read`"
                      },
                      {
                          "feature":  "shell",
@@ -12736,7 +14380,11 @@
                          "responseType":  "void",
                          "urlExpression":  "`${this.baseUrl}/read-all`",
                          "path":  "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-                         "line":  177
+                         "line":  177,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/read-all`"
                      },
                      {
                          "feature":  "shell",
@@ -12744,7 +14392,11 @@
                          "responseType":  "ScheduledNotificationResponse",
                          "urlExpression":  "`${this.baseUrl}/test/schedule`",
                          "path":  "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-                         "line":  186
+                         "line":  186,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/test/schedule`"
                      },
                      {
                          "feature":  "shell",
@@ -12752,7 +14404,11 @@
                          "responseType":  "NotificationPreferences",
                          "urlExpression":  "`${this.baseUrl}/preferences`",
                          "path":  "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-                         "line":  190
+                         "line":  190,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/preferences`"
                      },
                      {
                          "feature":  "shell",
@@ -12760,7 +14416,11 @@
                          "responseType":  "NotificationPreferences",
                          "urlExpression":  "`${this.baseUrl}/preferences`",
                          "path":  "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-                         "line":  194
+                         "line":  194,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/preferences`"
                      },
                      {
                          "feature":  "shell",
@@ -12768,7 +14428,11 @@
                          "responseType":  "WebPushSubscriptionItem[]",
                          "urlExpression":  "`${this.baseUrl}/push/subscriptions`",
                          "path":  "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-                         "line":  198
+                         "line":  198,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/push/subscriptions`"
                      },
                      {
                          "feature":  "shell",
@@ -12776,7 +14440,11 @@
                          "responseType":  "WebPushConfiguration",
                          "urlExpression":  "`${this.baseUrl}/push/config`",
                          "path":  "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-                         "line":  202
+                         "line":  202,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/push/config`"
                      },
                      {
                          "feature":  "shell",
@@ -12784,7 +14452,347 @@
                          "responseType":  "void",
                          "urlExpression":  "`${this.baseUrl}/push/subscription`",
                          "path":  "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-                         "line":  206
+                         "line":  206,
+                         "publicMethod":  null,
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  null,
+                         "resolvedUrlExpression":  "`${this.baseUrl}/push/subscription`"
+                     },
+                     {
+                         "feature":  "shopping-lists",
+                         "method":  "GET",
+                         "responseType":  "ShoppingList",
+                         "urlExpression":  "\u0027current\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
+                         "line":  14,
+                         "publicMethod":  "getCurrent",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.shoppingLists",
+                         "resolvedUrlExpression":  "environment.apiUrls.shoppingLists/current"
+                     },
+                     {
+                         "feature":  "shopping-lists",
+                         "method":  "GET",
+                         "responseType":  "ShoppingListSummary[]",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
+                         "line":  20,
+                         "publicMethod":  "getAll",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.shoppingLists",
+                         "resolvedUrlExpression":  "environment.apiUrls.shoppingLists/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "shopping-lists",
+                         "method":  "GET",
+                         "responseType":  "ShoppingList",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
+                         "line":  26,
+                         "publicMethod":  "getById",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.shoppingLists",
+                         "resolvedUrlExpression":  "environment.apiUrls.shoppingLists/id"
+                     },
+                     {
+                         "feature":  "shopping-lists",
+                         "method":  "POST",
+                         "responseType":  "ShoppingList",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
+                         "line":  30,
+                         "publicMethod":  "create",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.shoppingLists",
+                         "resolvedUrlExpression":  "environment.apiUrls.shoppingLists/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "shopping-lists",
+                         "method":  "PATCH",
+                         "responseType":  "ShoppingList",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
+                         "line":  34,
+                         "publicMethod":  "update",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.shoppingLists",
+                         "resolvedUrlExpression":  "environment.apiUrls.shoppingLists/id"
+                     },
+                     {
+                         "feature":  "shopping-lists",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
+                         "line":  40,
+                         "publicMethod":  "deleteById",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.shoppingLists",
+                         "resolvedUrlExpression":  "environment.apiUrls.shoppingLists/id"
+                     },
+                     {
+                         "feature":  "statistics",
+                         "method":  "GET",
+                         "responseType":  "AggregatedStatistics[]",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/statistics/api/statistics.service.ts",
+                         "line":  19,
+                         "publicMethod":  "getAggregatedStatistics",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.statistics",
+                         "resolvedUrlExpression":  "environment.apiUrls.statistics/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "usda",
+                         "method":  "GET",
+                         "responseType":  "UsdaFood[]",
+                         "urlExpression":  "\u0027foods\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/usda/api/usda.service.ts",
+                         "line":  17,
+                         "publicMethod":  "searchFoods",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.usda",
+                         "resolvedUrlExpression":  "environment.apiUrls.usda/foods"
+                     },
+                     {
+                         "feature":  "usda",
+                         "method":  "GET",
+                         "responseType":  "UsdaFoodDetail",
+                         "urlExpression":  "`foods/${fdcId}`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/usda/api/usda.service.ts",
+                         "line":  23,
+                         "publicMethod":  "getFoodDetail",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.usda",
+                         "resolvedUrlExpression":  "environment.apiUrls.usda/`foods/${fdcId}`"
+                     },
+                     {
+                         "feature":  "usda",
+                         "method":  "PUT",
+                         "responseType":  "void",
+                         "urlExpression":  "`products/${productId}/link`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/usda/api/usda.service.ts",
+                         "line":  29,
+                         "publicMethod":  "linkProduct",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.usda",
+                         "resolvedUrlExpression":  "environment.apiUrls.usda/`products/${productId}/link`"
+                     },
+                     {
+                         "feature":  "usda",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "`products/${productId}/link`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/usda/api/usda.service.ts",
+                         "line":  35,
+                         "publicMethod":  "unlinkProduct",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.usda",
+                         "resolvedUrlExpression":  "environment.apiUrls.usda/`products/${productId}/link`"
+                     },
+                     {
+                         "feature":  "usda",
+                         "method":  "GET",
+                         "responseType":  "DailyMicronutrientSummary",
+                         "urlExpression":  "\u0027daily-micronutrients\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/usda/api/usda.service.ts",
+                         "line":  41,
+                         "publicMethod":  "getDailyMicronutrients",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.usda",
+                         "resolvedUrlExpression":  "environment.apiUrls.usda/daily-micronutrients"
+                     },
+                     {
+                         "feature":  "waist-history",
+                         "method":  "GET",
+                         "responseType":  "WaistEntry[]",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
+                         "line":  29,
+                         "publicMethod":  "getEntries",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.waists",
+                         "resolvedUrlExpression":  "environment.apiUrls.waists/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "waist-history",
+                         "method":  "GET",
+                         "responseType":  "WaistEntry | null",
+                         "urlExpression":  "\u0027latest\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
+                         "line":  35,
+                         "publicMethod":  "getLatest",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.waists",
+                         "resolvedUrlExpression":  "environment.apiUrls.waists/latest"
+                     },
+                     {
+                         "feature":  "waist-history",
+                         "method":  "POST",
+                         "responseType":  "WaistEntry",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
+                         "line":  41,
+                         "publicMethod":  "create",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.waists",
+                         "resolvedUrlExpression":  "environment.apiUrls.waists/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "waist-history",
+                         "method":  "PUT",
+                         "responseType":  "WaistEntry",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
+                         "line":  45,
+                         "publicMethod":  "update",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.waists",
+                         "resolvedUrlExpression":  "environment.apiUrls.waists/id"
+                     },
+                     {
+                         "feature":  "waist-history",
+                         "method":  "GET",
+                         "responseType":  "WaistEntrySummaryPoint[]",
+                         "urlExpression":  "\u0027summary\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
+                         "line":  59,
+                         "publicMethod":  "getSummary",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.waists",
+                         "resolvedUrlExpression":  "environment.apiUrls.waists/summary"
+                     },
+                     {
+                         "feature":  "wearables",
+                         "method":  "GET",
+                         "responseType":  "WearableConnection[]",
+                         "urlExpression":  "\u0027connections\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/wearables/api/wearable.service.ts",
+                         "line":  14,
+                         "publicMethod":  "getConnections",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.wearables",
+                         "resolvedUrlExpression":  "environment.apiUrls.wearables/connections"
+                     },
+                     {
+                         "feature":  "wearables",
+                         "method":  "GET",
+                         "responseType":  "WearableAuthUrl",
+                         "urlExpression":  "`${provider}/auth-url`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/wearables/api/wearable.service.ts",
+                         "line":  20,
+                         "publicMethod":  "getAuthUrl",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.wearables",
+                         "resolvedUrlExpression":  "environment.apiUrls.wearables/`${provider}/auth-url`"
+                     },
+                     {
+                         "feature":  "wearables",
+                         "method":  "POST",
+                         "responseType":  "WearableConnection",
+                         "urlExpression":  "`${provider}/connect`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/wearables/api/wearable.service.ts",
+                         "line":  26,
+                         "publicMethod":  "connect",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.wearables",
+                         "resolvedUrlExpression":  "environment.apiUrls.wearables/`${provider}/connect`"
+                     },
+                     {
+                         "feature":  "wearables",
+                         "method":  "DELETE",
+                         "responseType":  "void",
+                         "urlExpression":  "`${provider}/disconnect`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/wearables/api/wearable.service.ts",
+                         "line":  32,
+                         "publicMethod":  "disconnect",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.wearables",
+                         "resolvedUrlExpression":  "environment.apiUrls.wearables/`${provider}/disconnect`"
+                     },
+                     {
+                         "feature":  "wearables",
+                         "method":  "POST",
+                         "responseType":  "WearableDailySummary",
+                         "urlExpression":  "`${provider}/sync`",
+                         "path":  "FoodDiary.Web.Client/src/app/features/wearables/api/wearable.service.ts",
+                         "line":  38,
+                         "publicMethod":  "sync",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.wearables",
+                         "resolvedUrlExpression":  "environment.apiUrls.wearables/`${provider}/sync`"
+                     },
+                     {
+                         "feature":  "wearables",
+                         "method":  "GET",
+                         "responseType":  "WearableDailySummary",
+                         "urlExpression":  "\u0027daily-summary\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/wearables/api/wearable.service.ts",
+                         "line":  44,
+                         "publicMethod":  "getDailySummary",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.wearables",
+                         "resolvedUrlExpression":  "environment.apiUrls.wearables/daily-summary"
+                     },
+                     {
+                         "feature":  "weight-history",
+                         "method":  "GET",
+                         "responseType":  "WeightEntry[]",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/weight-history/api/weight-entries.service.ts",
+                         "line":  29,
+                         "publicMethod":  "getEntries",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.weights",
+                         "resolvedUrlExpression":  "environment.apiUrls.weights/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "weight-history",
+                         "method":  "GET",
+                         "responseType":  "WeightEntry | null",
+                         "urlExpression":  "\u0027latest\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/weight-history/api/weight-entries.service.ts",
+                         "line":  35,
+                         "publicMethod":  "getLatest",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.weights",
+                         "resolvedUrlExpression":  "environment.apiUrls.weights/latest"
+                     },
+                     {
+                         "feature":  "weight-history",
+                         "method":  "POST",
+                         "responseType":  "WeightEntry",
+                         "urlExpression":  "\u0027\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/weight-history/api/weight-entries.service.ts",
+                         "line":  41,
+                         "publicMethod":  "create",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.weights",
+                         "resolvedUrlExpression":  "environment.apiUrls.weights/\u0027\u0027"
+                     },
+                     {
+                         "feature":  "weight-history",
+                         "method":  "PUT",
+                         "responseType":  "WeightEntry",
+                         "urlExpression":  "id",
+                         "path":  "FoodDiary.Web.Client/src/app/features/weight-history/api/weight-entries.service.ts",
+                         "line":  47,
+                         "publicMethod":  "update",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.weights",
+                         "resolvedUrlExpression":  "environment.apiUrls.weights/id"
+                     },
+                     {
+                         "feature":  "weight-history",
+                         "method":  "GET",
+                         "responseType":  "WeightEntrySummaryPoint[]",
+                         "urlExpression":  "\u0027summary\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/weight-history/api/weight-entries.service.ts",
+                         "line":  61,
+                         "publicMethod":  "getSummary",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.weights",
+                         "resolvedUrlExpression":  "environment.apiUrls.weights/summary"
                      }
                  ],
     "translationUsage":  [

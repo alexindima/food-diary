@@ -4,7 +4,7 @@ param(
     [ValidateSet(
         'help', 'update', 'lint', 'smoke', 'verify', 'verify-full', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
-        'diff', 'impact', 'ownership', 'api-compat', 'policy',
+        'diff', 'impact', 'review', 'ownership', 'api-compat', 'policy',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-validate',
         'task-circuit-list', 'task-circuit-open', 'task-circuit-reset', 'task-circuit-verify', 'task-circuit-prune',
         'task-decompose-list', 'task-decompose-plan', 'task-decompose-verify', 'task-decompose-apply', 'task-decompose-prune',
@@ -71,7 +71,10 @@ param(
     [string]$BaseRef = 'HEAD',
     [string]$HeadRef,
     [string[]]$ChangedPath,
+    [Alias('PlannedPath')]
     [string[]]$ProposedPath,
+    [switch]$AffectedOnly,
+    [switch]$Compact,
     [switch]$FailOnUnreviewed,
     [switch]$Check,
     [string]$EvidencePath = '.artifacts/llm-wiki/evidence.json',
@@ -100,6 +103,7 @@ param(
     [string]$Fix,
     [string[]]$PathPattern,
     [string[]]$Verification,
+    [Alias('Intent')]
     [string]$Objective,
     [string[]]$Criterion,
     [string]$CriterionId,
@@ -212,7 +216,9 @@ function Invoke-WikiTool {
 
 switch ($Command) {
     'update' {
-        Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1'
+        $indexArguments = @{ AffectedOnly = $AffectedOnly; BaseRef = $BaseRef }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
+        Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments
     }
     'lint' {
         Invoke-WikiTool 'Test-LlmWiki.ps1' @{ Format = $Format }
@@ -228,7 +234,9 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
         Invoke-WikiTool 'Test-LlmWiki.ps1'
         Invoke-WikiTool 'Test-LlmWikiLint.ps1'
-        Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' @{ Check = $true }
+        $indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
+        Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments
         Invoke-WikiTool 'Invoke-LlmWikiEvals.ps1'
         Invoke-WikiTool 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' }
         Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' @{ FailOnViolation = $true }
@@ -278,6 +286,8 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $briefArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $briefArguments.ChangedPath = $ChangedPath }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $briefArguments.ProposedPath = $ProposedPath }
+        if ($PSBoundParameters.ContainsKey('Objective')) { $briefArguments.Intent = $Objective }
+        if ($Compact) { $briefArguments.Compact = $true }
         Invoke-WikiTool 'Get-LlmWikiTaskBrief.ps1' $briefArguments
     }
     { $_ -in @('implementation-plan', 'plan') } {
@@ -296,6 +306,8 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $testPlanArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $testPlanArguments.ChangedPath = $ChangedPath }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $testPlanArguments.ProposedPath = $ProposedPath }
+        if ($PSBoundParameters.ContainsKey('Objective')) { $testPlanArguments.Intent = $Objective }
+        if ($Compact) { $testPlanArguments.Compact = $true }
         Invoke-WikiTool 'Get-LlmWikiTestPlan.ps1' $testPlanArguments
     }
     'decision' {
@@ -1387,6 +1399,12 @@ switch ($Command) {
         }
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
     }
+    'review' {
+        $reviewArguments = @{ Id = $Id; Reason = $Reason; BaseRef = $BaseRef }
+        if ($PSBoundParameters.ContainsKey('HeadRef')) { $reviewArguments.HeadRef = $HeadRef }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $reviewArguments.ChangedPath = $ChangedPath }
+        Invoke-WikiTool 'Add-LlmWikiSourceReview.ps1' $reviewArguments
+    }
     'ownership' {
         $ownershipArguments = @{ BaseRef = $BaseRef; Format = $Format }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $ownershipArguments.HeadRef = $HeadRef }
@@ -1646,10 +1664,10 @@ switch ($Command) {
         Write-Host 'FoodDiary LLM Wiki'
         Write-Host ''
         Write-Host 'Usage:'
-        Write-Host '  ./.llm-wiki/wiki.ps1 update'
+        Write-Host '  ./.llm-wiki/wiki.ps1 update [-AffectedOnly] [-BaseRef <ref>] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 lint [-Format Json]'
         Write-Host '  ./.llm-wiki/wiki.ps1 smoke -SmokeGroup portable|linux|tools'
-        Write-Host '  ./.llm-wiki/wiki.ps1 verify'
+        Write-Host '  ./.llm-wiki/wiki.ps1 verify [-AffectedOnly] [-BaseRef <ref>] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify-full'
         Write-Host '  ./.llm-wiki/wiki.ps1 context -Module Billing -ChangeType Api'
         Write-Host '  ./.llm-wiki/wiki.ps1 trace -Query StartPremiumTrial'
@@ -1835,6 +1853,7 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 debt'
         Write-Host '  ./.llm-wiki/wiki.ps1 diff'
         Write-Host '  ./.llm-wiki/wiki.ps1 impact -FailOnUnreviewed'
+        Write-Host '  ./.llm-wiki/wiki.ps1 review -Id <page-id> -Reason <reason> [-BaseRef <ref>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 ownership'
         Write-Host '  ./.llm-wiki/wiki.ps1 api-compat -BaseRef HEAD -FailOnBreaking'
         Write-Host '  ./.llm-wiki/wiki.ps1 policy [-RequireEvidence]'

@@ -37,6 +37,9 @@ foreach ($file in $tsFiles) {
     $content = [System.IO.File]::ReadAllText($file.FullName)
     $path = ConvertTo-RepositoryPath $file.FullName
     $feature = Get-Feature $path
+    $inheritsApiService = $content -match '\bclass\s+[A-Za-z_][A-Za-z0-9_]*\s+extends\s+ApiService\b'
+    $baseUrlMatch = [regex]::Match($content, '(?m)\bbaseUrl\s*=\s*(?<value>[^;\r\n]+)')
+    $baseUrlExpression = if ($baseUrlMatch.Success) { $baseUrlMatch.Groups['value'].Value.Trim() } else { $null }
     $componentMatch = [regex]::Match(
         $content,
         '(?ms)@Component\s*\(\s*\{(?<metadata>.*?)\}\s*\)\s*(?:export\s+)?(?:default\s+)?class\s+(?<class>[A-Za-z_][A-Za-z0-9_]*)')
@@ -88,7 +91,45 @@ foreach ($file in $tsFiles) {
             urlExpression = $match.Groups['url'].Value.Trim()
             path = $path
             line = 1 + [regex]::Matches($content.Substring(0, $match.Index), "`n").Count
+            publicMethod = $null
+            transport = 'HttpClient'
+            baseUrlExpression = $null
+            resolvedUrlExpression = $match.Groups['url'].Value.Trim()
         })
+    }
+
+    if ($inheritsApiService) {
+        foreach ($match in [regex]::Matches(
+            $content,
+            '(?m)\bthis\.(?<method>get|post|put|patch|delete)\s*(?:<(?<response>[^>]+)>)?\s*\(\s*(?<url>[^,\r\n\)]+)')) {
+            $methodMatches = [regex]::Matches(
+                $content.Substring(0, $match.Index),
+                '(?m)^\s*(?:public|protected|private)\s+(?:async\s+)?(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*\([^)]*\)\s*:\s*[^{\r\n]+\{')
+            $publicMethod = if ($methodMatches.Count -gt 0) {
+                $methodMatches[$methodMatches.Count - 1].Groups['name'].Value
+            } else {
+                $null
+            }
+            $urlExpression = $match.Groups['url'].Value.Trim()
+            $literalUrlMatch = [regex]::Match($urlExpression, "^['`"](?<value>[^'`"]+)['`"]$")
+            $resolvedUrlExpression = if ($literalUrlMatch.Success -and -not [string]::IsNullOrWhiteSpace($baseUrlExpression)) {
+                "$baseUrlExpression/$($literalUrlMatch.Groups['value'].Value)"
+            } else {
+                "$baseUrlExpression/$urlExpression"
+            }
+            $apiCalls.Add([pscustomobject]@{
+                feature = $feature
+                method = $match.Groups['method'].Value.ToUpperInvariant()
+                responseType = $match.Groups['response'].Value.Trim()
+                urlExpression = $urlExpression
+                path = $path
+                line = 1 + [regex]::Matches($content.Substring(0, $match.Index), "`n").Count
+                publicMethod = $publicMethod
+                transport = 'InheritedApiService'
+                baseUrlExpression = $baseUrlExpression
+                resolvedUrlExpression = $resolvedUrlExpression
+            })
+        }
     }
 }
 

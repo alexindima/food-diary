@@ -10,6 +10,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+$reviewLedgerPath = Join-Path $wikiRoot 'reviews/source-impact-reviews.json'
 
 function ConvertTo-RepositoryPath {
     param([string]$Path)
@@ -80,6 +81,19 @@ function Get-PageMetadata {
     }
 }
 
+function Get-ContentHash([string]$RepositoryPath) {
+    $absolutePath = Join-Path $repositoryRoot $RepositoryPath
+    if (-not (Test-Path -LiteralPath $absolutePath -PathType Leaf)) { return '<missing>' }
+    $normalizedContent = [System.IO.File]::ReadAllText($absolutePath).Replace("`r`n", "`n").Replace("`r", "`n")
+    $sha256 = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $hash = $sha256.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($normalizedContent))
+        return ([System.BitConverter]::ToString($hash) -replace '-', '').ToLowerInvariant()
+    } finally {
+        $sha256.Dispose()
+    }
+}
+
 if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
     $gitArguments = @('diff', '--name-only', '--diff-filter=ACMRD', $BaseRef)
     if (-not [string]::IsNullOrWhiteSpace($HeadRef)) {
@@ -118,6 +132,11 @@ $pages = @(
         Where-Object { $_.FullName -ne (Join-Path $wikiRoot 'README.md') } |
         ForEach-Object { Get-PageMetadata $_ }
 )
+$sourceReviews = if (Test-Path -LiteralPath $reviewLedgerPath) {
+    @((Get-Content -LiteralPath $reviewLedgerPath -Raw | ConvertFrom-Json).reviews)
+} else {
+    @()
+}
 
 $impacts = [System.Collections.Generic.List[object]]::new()
 foreach ($page in $pages) {
@@ -127,7 +146,18 @@ foreach ($page in $pages) {
     }
 
     $pageChanged = $changedPathSet.ContainsKey($page.Path)
-    $reviewed = $pageChanged -or $page.Status -eq 'stale' -or -not [string]::IsNullOrWhiteSpace($page.GeneratedBy)
+    $reviewReceipt = @($sourceReviews | Where-Object pageId -eq $page.Id | Where-Object {
+        $candidateReview = $_
+        $candidateReview.pagePath -eq $page.Path -and
+        $candidateReview.pageSha256 -eq (Get-ContentHash $page.Path) -and
+        @($changedSources | Where-Object {
+            $sourcePath = $_
+            @($candidateReview.sources | Where-Object {
+                $_.path -eq $sourcePath -and $_.sha256 -eq (Get-ContentHash $sourcePath)
+            }).Count -eq 0
+        }).Count -eq 0
+    } | Select-Object -First 1)
+    $reviewed = $pageChanged -or $page.Status -eq 'stale' -or -not [string]::IsNullOrWhiteSpace($page.GeneratedBy) -or $reviewReceipt.Count -gt 0
     $impacts.Add([pscustomobject]@{
         Id = $page.Id
         Path = $page.Path
@@ -135,6 +165,7 @@ foreach ($page in $pages) {
         GeneratedBy = $page.GeneratedBy
         ChangedSources = $changedSources
         PageChanged = $pageChanged
+        ReviewReceipt = if ($reviewReceipt.Count -gt 0) { $reviewReceipt[0] } else { $null }
         Reviewed = $reviewed
     })
 }
@@ -147,7 +178,7 @@ if ($impacts.Count -eq 0) {
 Write-Host "LLM Wiki source impact:"
 foreach ($impact in @($impacts | Where-Object { [string]::IsNullOrWhiteSpace($_.GeneratedBy) })) {
     $reviewState = if ($impact.Reviewed) {
-        'reviewed'
+        if ($null -ne $impact.ReviewReceipt) { 'reviewed by receipt' } else { 'reviewed' }
     } else {
         'needs review'
     }
@@ -173,7 +204,7 @@ if ($VerboseGenerated) {
 $unreviewed = @($impacts | Where-Object { -not $_.Reviewed })
 if ($FailOnUnreviewed -and $unreviewed.Count -gt 0) {
     Write-Host ''
-    Write-Host 'Update each affected page in this change set or set its status to stale.'
+    Write-Host 'Update each affected page, set it stale, or record a source review with wiki.ps1 review -Id <page-id> -Reason <reason>.'
     exit 1
 }
 

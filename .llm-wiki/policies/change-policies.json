@@ -32,7 +32,7 @@
       "requiredChecks": [
         {
           "id": "api-compatibility",
-          "command": "./.llm-wiki/wiki.ps1 api-compat -BaseRef HEAD -FailOnBreaking"
+          "command": "./.llm-wiki/wiki.ps1 api-compat -BaseRef {BaseRef} -FailOnBreaking"
         },
         {
           "id": "presentation-api-tests",

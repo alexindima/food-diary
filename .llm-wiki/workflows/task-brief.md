@@ -30,11 +30,14 @@ Use one command to prepare or review a change:
 Before implementation creates a diff, pass the expected files explicitly:
 
 ```powershell
-./.llm-wiki/wiki.ps1 brief -ProposedPath FoodDiary.Application/Authentication/Commands/Example/ExampleCommand.cs
+./.llm-wiki/wiki.ps1 brief `
+  -Intent "Add provider controls to account settings" `
+  -PlannedPath FoodDiary.Application/Authentication/Commands/Example/ExampleCommand.cs
 ```
 
-Proposed and already changed paths are combined for classification, while
-`change.proposedPaths` preserves their planning provenance in JSON output.
+`Intent`/`PlannedPath` are aliases for the standard objective/proposed-path
+inputs. Proposed and explicitly changed paths are combined for classification,
+while `change.intent` and `change.proposedPaths` preserve planning provenance.
 
 The brief combines changed scopes, directly affected and downstream modules,
 scoped instructions, relevant wiki pages, focused tests, mandatory checks,
@@ -42,3 +45,7 @@ test scenarios, structural hotspots, direct test-reference gaps, review
 obligations, structural violations, and a deterministic risk indicator.
 The score prioritizes review depth; it is not a substitute for engineering
 judgment or a security severity rating.
+
+For agent context, prefer `brief -Compact -Format Json`. It retains risk,
+paths, instructions, focused tests, scenarios, checks, and review obligations,
+but replaces large consumer and contract objects with impact counts.

@@ -1,0 +1,193 @@
+﻿{
+    "schemaVersion":  1,
+    "reviews":  [
+                    {
+                        "pageId":  "workflow.change-policy",
+                        "pagePath":  ".llm-wiki/workflows/change-policy.md",
+                        "pageSha256":  "3cddc70c9de8617c8ad3e97fff346fab0f7c586e72f13dfd0caa7acbb5967c15",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/policies/change-policies.json",
+                                            "sha256":  "4315483b0409bccda0223d3d5e02910f005fcfa3bb44b9a6661d86a05f7c2066"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+                                            "sha256":  "cafa21a70c365162e78cba4356d62595d92c137bc90441637f05dcb30fd00173"
+                                        }
+                                    ],
+                        "reason":  "API compatibility command now binds the selected BaseRef; policy triggers and obligations are unchanged.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
+                        "reviewedAtUtc":  "2026-07-30T09:40:24.6551580Z"
+                    },
+                    {
+                        "pageId":  "workflow.evals",
+                        "pagePath":  ".llm-wiki/workflows/evals.md",
+                        "pageSha256":  "a56903981fe1beecefa43b3ce94d33e50d90896c77fa85e7c01558a3d2ea96bc",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+                                            "sha256":  "cafa21a70c365162e78cba4356d62595d92c137bc90441637f05dcb30fd00173"
+                                        }
+                                    ],
+                        "reason":  "Policy command templating does not change eval lifecycle semantics.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
+                        "reviewedAtUtc":  "2026-07-30T09:40:25.2858014Z"
+                    },
+                    {
+                        "pageId":  "workflow.evidence-bundle",
+                        "pagePath":  ".llm-wiki/workflows/evidence-bundle.md",
+                        "pageSha256":  "31675f8bc98c7ba9e3c471f4ebd01c95665f6154fc3e61ab22b42c71c5fb6dd1",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/policies/change-policies.json",
+                                            "sha256":  "4315483b0409bccda0223d3d5e02910f005fcfa3bb44b9a6661d86a05f7c2066"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+                                            "sha256":  "cafa21a70c365162e78cba4356d62595d92c137bc90441637f05dcb30fd00173"
+                                        }
+                                    ],
+                        "reason":  "Required API checks keep the same identity and now preserve the caller BaseRef.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
+                        "reviewedAtUtc":  "2026-07-30T09:40:25.8083522Z"
+                    },
+                    {
+                        "pageId":  "workflow-change-manifest",
+                        "pagePath":  ".llm-wiki/workflows/change-manifest.md",
+                        "pageSha256":  "182933effc68070bdf0da58c6fe4733c2f4c7cf005c4fb7c0644bcb021fe01ea",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "6cc4008c6912d3a1db334589f3c0187c835803618b9b19141069382d2260ffe9"
+                                        }
+                                    ],
+                        "reason":  "Reviewed after task-brief compact output, intent provenance, test ranking, and consumer-kind classification changes; existing workflow guidance remains accurate.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
+                        "reviewedAtUtc":  "2026-07-30T10:12:04.4097264Z"
+                    },
+                    {
+                        "pageId":  "workflow-change-packet",
+                        "pagePath":  ".llm-wiki/workflows/change-packet.md",
+                        "pageSha256":  "804103ec5966e53e88bb558a1594a6ea3af858d1ecfffd1c0467fca4652eeafe",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "6cc4008c6912d3a1db334589f3c0187c835803618b9b19141069382d2260ffe9"
+                                        }
+                                    ],
+                        "reason":  "Reviewed after task-brief compact output, intent provenance, test ranking, and consumer-kind classification changes; existing workflow guidance remains accurate.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
+                        "reviewedAtUtc":  "2026-07-30T10:12:05.7581247Z"
+                    },
+                    {
+                        "pageId":  "workflow-dependency-rollout",
+                        "pagePath":  ".llm-wiki/workflows/dependency-rollout.md",
+                        "pageSha256":  "df4209603b0f2b8bc530661b139629bcc37735664ff7e59754f78e7713d0d20b",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/policies/change-policies.json",
+                                            "sha256":  "4315483b0409bccda0223d3d5e02910f005fcfa3bb44b9a6661d86a05f7c2066"
+                                        }
+                                    ],
+                        "reason":  "The BaseRef command template does not change dependency or rollout classification.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
+                        "reviewedAtUtc":  "2026-07-30T09:40:27.4693820Z"
+                    },
+                    {
+                        "pageId":  "workflow-impact-simulation",
+                        "pagePath":  ".llm-wiki/workflows/impact-simulation.md",
+                        "pageSha256":  "95a98ce8ad92c5791b1c5edd2a6bc262b14f6b74ce117d471fe8d7e8045224db",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "6cc4008c6912d3a1db334589f3c0187c835803618b9b19141069382d2260ffe9"
+                                        }
+                                    ],
+                        "reason":  "Reviewed after task-brief compact output, intent provenance, test ranking, and consumer-kind classification changes; existing workflow guidance remains accurate.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
+                        "reviewedAtUtc":  "2026-07-30T10:12:07.7754179Z"
+                    },
+                    {
+                        "pageId":  "workflow-implementation-plan",
+                        "pagePath":  ".llm-wiki/workflows/implementation-plan.md",
+                        "pageSha256":  "5fb2306c601b67e7ffb505202bf8cd578acdcaf02e52504ced7d85931247d28f",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "6cc4008c6912d3a1db334589f3c0187c835803618b9b19141069382d2260ffe9"
+                                        }
+                                    ],
+                        "reason":  "Reviewed after task-brief compact output, intent provenance, test ranking, and consumer-kind classification changes; existing workflow guidance remains accurate.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
+                        "reviewedAtUtc":  "2026-07-30T10:12:09.7849609Z"
+                    },
+                    {
+                        "pageId":  "workflow-performance-observability-review",
+                        "pagePath":  ".llm-wiki/workflows/performance-observability-review.md",
+                        "pageSha256":  "0d3f137f64fa7b1f3299dc26881c5bfc9dfd9ab2ed9f11a0d1507cbf324ff541",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/policies/change-policies.json",
+                                            "sha256":  "4315483b0409bccda0223d3d5e02910f005fcfa3bb44b9a6661d86a05f7c2066"
+                                        }
+                                    ],
+                        "reason":  "API BaseRef templating does not change performance or observability obligations.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
+                        "reviewedAtUtc":  "2026-07-30T09:40:30.1361816Z"
+                    },
+                    {
+                        "pageId":  "workflow-runtime-impact",
+                        "pagePath":  ".llm-wiki/workflows/runtime-impact.md",
+                        "pageSha256":  "f76e9e0aeb3642ca5dbda529bb9b4b9598b30d636df9df042d6a0d0edd2e9233",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/policies/change-policies.json",
+                                            "sha256":  "4315483b0409bccda0223d3d5e02910f005fcfa3bb44b9a6661d86a05f7c2066"
+                                        }
+                                    ],
+                        "reason":  "API BaseRef templating does not change runtime topology classification.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
+                        "reviewedAtUtc":  "2026-07-30T09:40:30.9121559Z"
+                    },
+                    {
+                        "pageId":  "workflow-task-dispatch-receipts",
+                        "pagePath":  ".llm-wiki/workflows/task-dispatch-receipts.md",
+                        "pageSha256":  "53406623ef3ba445dd93d7e8adbfa5488e34c924696a4a009089b98ffbdca75f",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/wiki.ps1",
+                                            "sha256":  "8b87797d72cada775783a0b71112a15a75c1ed6d53319de6dfca9ba8694d9ef6"
+                                        }
+                                    ],
+                        "reason":  "Router additions are limited to review, compact planning, and affected indexes; dispatch lifecycle is unchanged.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
+                        "reviewedAtUtc":  "2026-07-30T09:40:31.7976900Z"
+                    },
+                    {
+                        "pageId":  "workflow-verification-planner",
+                        "pagePath":  ".llm-wiki/workflows/verification-planner.md",
+                        "pageSha256":  "368dfe1e9684ead7a5e3207edd05e55477d432ae1f9627814d62bfeb9559fb84",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/policies/change-policies.json",
+                                            "sha256":  "4315483b0409bccda0223d3d5e02910f005fcfa3bb44b9a6661d86a05f7c2066"
+                                        }
+                                    ],
+                        "reason":  "The API compatibility check identity is stable and now uses the requested comparison base.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
+                        "reviewedAtUtc":  "2026-07-30T09:40:32.5175153Z"
+                    }
+                ]
+}
