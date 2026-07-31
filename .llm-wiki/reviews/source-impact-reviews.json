@@ -72,13 +72,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "9fd233a6772186844f2ee77b66feb0c14025823e328b9922b397cf86904c688e"
+                                            "sha256":  "f309f44158308d6de47e4117da0d5bca8a32ef0e527f7ca8d9625aac4a657889"
                                         }
                                     ],
-                        "reason":  "Re-reviewed the final frontend contract after adding focus trapping and Escape dismissal; selector/API shapes remain compatible and the new accessibility behavior is internal.",
+                        "reason":  "Regenerated contract index; component changes preserve selector, inputs, outputs, API payloads, and consumer compatibility.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "96d06abc8c7074dae8a26f753d81683e4bd411bf",
-                        "reviewedAtUtc":  "2026-07-30T20:45:45.8773677Z"
+                        "gitHead":  "9ddf7638c55a77d00dfc1caafdcbe21f0222586e",
+                        "reviewedAtUtc":  "2026-07-31T22:26:44.4562904Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -159,13 +159,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "099d3998557675dcc0ec2efd4e09e3c6f4d127d5544128075dc1d4ccbefdc702"
+                                            "sha256":  "d83d878bd935e796e5b0a2715c5bbaab29175d9d6e2a588d2b82e0a551e808cd"
                                         }
                                     ],
-                        "reason":  "Reviewed generated ownership classification changes; architecture-health semantics remain unchanged.",
+                        "reason":  "Regenerated index after internal frontend-only modal layout changes; no project dependency or architecture edge changed.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5a8487b11f207bc3a624ae0b629cec441e6c7c5c",
-                        "reviewedAtUtc":  "2026-07-30T16:45:15.1991569Z"
+                        "gitHead":  "9ddf7638c55a77d00dfc1caafdcbe21f0222586e",
+                        "reviewedAtUtc":  "2026-07-31T22:26:43.8649955Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -393,13 +393,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "041527d4dd79f71987f92688211c871c74d08dfc6ef380b68f9185ecbf983acc"
+                                            "sha256":  "bed76aab538039dd8a8b52f34acea6cb9d46db8cfe583694c650d39b83288abd"
                                         }
                                     ],
-                        "reason":  "Reviewed after adding deterministic frontend annotation layout optimizer and focused geometry tests; generated quality index refreshed, workflow guidance remains accurate.",
+                        "reason":  "Regenerated quality index after focused component tests; no unresolved test-reference regression introduced.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "a1a20a055fd48535e3f5be9ce469d7dff3803fdd",
-                        "reviewedAtUtc":  "2026-07-31T01:03:35.4765533Z"
+                        "gitHead":  "9ddf7638c55a77d00dfc1caafdcbe21f0222586e",
+                        "reviewedAtUtc":  "2026-07-31T22:26:44.9535180Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -482,14 +482,18 @@
                         "pageSha256":  "41967b1d6a8a4232d51034f79db7c10045672d7b8d62c58b2bb870ae64488ba0",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/generated/frontend-contract-index.json",
+                                            "sha256":  "f309f44158308d6de47e4117da0d5bca8a32ef0e527f7ca8d9625aac4a657889"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "4a7fe9fb7bd8d3f886239fd4661dfddb3d8dd5170f102f0951f5b41ad1f07db6"
+                                            "sha256":  "700f5bccf57f24ec987182b883f6de8c22c5a2d684c3b5f243f6bdf0bc0ce0f4"
                                         }
                                     ],
-                        "reason":  "Reviewed after adding deterministic frontend annotation layout module; generated frontend index refreshed, feature tracing workflow remains accurate.",
+                        "reason":  "Regenerated frontend and contract indexes; authoritative AI photo result component and current consumer trace were verified during implementation.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "a1a20a055fd48535e3f5be9ce469d7dff3803fdd",
-                        "reviewedAtUtc":  "2026-07-31T01:03:36.1271180Z"
+                        "gitHead":  "9ddf7638c55a77d00dfc1caafdcbe21f0222586e",
+                        "reviewedAtUtc":  "2026-07-31T22:26:45.4960901Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

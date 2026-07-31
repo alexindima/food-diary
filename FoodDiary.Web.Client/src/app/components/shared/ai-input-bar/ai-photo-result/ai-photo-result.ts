@@ -5,7 +5,6 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output, si
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 
-import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { recalculateEditedAiNutrition } from '../../../../shared/lib/ai-nutrition-edit.utils';
 import {
     buildAiEditableItems,
@@ -22,7 +21,6 @@ import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/m
 import type { AiInputBarMealDetails } from '../ai-input-bar.types';
 import { AiPhotoDetailsPanelComponent } from './ai-photo-details-panel/ai-photo-details-panel';
 import { AiPhotoEditListComponent } from './ai-photo-edit-list/ai-photo-edit-list';
-import { AiPhotoNutritionSummaryComponent } from './ai-photo-nutrition-summary/ai-photo-nutrition-summary';
 import { AiPhotoPreviewComponent } from './ai-photo-preview/ai-photo-preview';
 import { AiPhotoResultActionsComponent } from './ai-photo-result-actions/ai-photo-result-actions';
 import { optimizeAiPhotoAnnotationLayout } from './ai-photo-result-lib/ai-photo-annotation-layout';
@@ -32,7 +30,6 @@ import type {
     AiEditItemDrop,
     AiEditItemUpdate,
     AiEditUnitOption,
-    AiNutritionSummaryItem,
     AiPhotoAnnotation,
     AiPhotoEditApplied,
     AiResultRow,
@@ -40,7 +37,6 @@ import type {
 } from './ai-photo-result-lib/ai-photo-result.types';
 import { AiPhotoResultRowsComponent } from './ai-photo-result-rows/ai-photo-result-rows';
 
-const NUTRITION_FRACTION_THRESHOLD = 0.01;
 const LOCATION_CONFIDENCE_THRESHOLD = 0.35;
 const PERCENT_SCALE = 100;
 
@@ -56,7 +52,6 @@ const PERCENT_SCALE = 100;
         AiPhotoResultActionsComponent,
         AiPhotoEditListComponent,
         AiPhotoResultRowsComponent,
-        AiPhotoNutritionSummaryComponent,
         AiPhotoDetailsPanelComponent,
     ],
     templateUrl: './ai-photo-result.html',
@@ -91,7 +86,7 @@ export class AiPhotoResultComponent {
 
     protected readonly isEditing = signal(false);
     protected readonly isDetailsExpanded = signal(false);
-    protected readonly isProductsExpanded = signal(false);
+    protected readonly isPortraitImage = signal(false);
     protected readonly annotationsVisible = signal(true);
     protected readonly selectedAnnotationId = signal<string | null>(null);
     protected readonly detailsDate = signal(this.getDateInputValue(new Date()));
@@ -100,14 +95,16 @@ export class AiPhotoResultComponent {
     protected readonly preMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
     protected readonly postMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
     protected readonly editItems = signal<EditableAiItem[]>([]);
-    protected readonly resultRows = computed<AiResultRow[]>(() =>
-        this.results().map((item, index) => ({
+    protected readonly resultRows = computed<AiResultRow[]>(() => {
+        const nutritionItems = this.nutrition()?.items ?? [];
+        return this.results().map((item, index) => ({
             key: item.nameEn,
             annotationId: hasReliableLocation(item) ? `${item.nameEn}-${index}` : null,
             displayName: this.resolveDisplayName(item),
             amountLabel: this.resolveAmountLabel(item),
-        })),
-    );
+            calories: nutritionItems[index]?.calories ?? null,
+        }));
+    });
     protected readonly annotations = computed<AiPhotoAnnotation[]>(() => {
         const nutritionItems = this.nutrition()?.items ?? [];
         const annotations = this.results().flatMap((item, index) => {
@@ -140,7 +137,7 @@ export class AiPhotoResultComponent {
                 },
             ];
         });
-        return optimizeAiPhotoAnnotationLayout(annotations);
+        return optimizeAiPhotoAnnotationLayout(annotations, this.isPortraitImage());
     });
     protected readonly activeAnnotationId = computed(
         () =>
@@ -148,12 +145,6 @@ export class AiPhotoResultComponent {
             this.annotations().at(0)?.id ??
             null,
     );
-    protected readonly productsAccordionLabel = computed(() => {
-        const key = this.isProductsExpanded()
-            ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.COLLAPSE_PRODUCTS'
-            : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EXPAND_PRODUCTS';
-        return this.translateService.instant(key, { count: this.results().length });
-    });
     protected readonly editActionView = computed<AiEditActionView>(() =>
         this.isEditing()
             ? {
@@ -178,21 +169,6 @@ export class AiPhotoResultComponent {
                   labelKey: 'MEAL_DETAILS.ADD',
               },
     );
-    protected readonly nutritionSummary = computed<AiNutritionSummaryItem[]>(() => {
-        const nutrition = this.nutrition();
-        if (nutrition === null) {
-            return [];
-        }
-
-        return [
-            { labelKey: 'GENERAL.NUTRIENTS.CALORIES', value: this.resolveMacroLabel(nutrition.calories, 'GENERAL.UNITS.KCAL') },
-            { labelKey: 'GENERAL.NUTRIENTS.PROTEIN', value: this.resolveMacroLabel(nutrition.protein, 'GENERAL.UNITS.G') },
-            { labelKey: 'GENERAL.NUTRIENTS.FAT', value: this.resolveMacroLabel(nutrition.fat, 'GENERAL.UNITS.G') },
-            { labelKey: 'GENERAL.NUTRIENTS.CARB', value: this.resolveMacroLabel(nutrition.carbs, 'GENERAL.UNITS.G') },
-            { labelKey: 'GENERAL.NUTRIENTS.FIBER', value: this.resolveMacroLabel(nutrition.fiber, 'GENERAL.UNITS.G') },
-            { labelKey: 'GENERAL.NUTRIENTS.ALCOHOL', value: this.resolveMacroLabel(nutrition.alcohol, 'GENERAL.UNITS.G') },
-        ];
-    });
     protected readonly submitDisabled = computed(
         () =>
             this.results().length === 0 ||
@@ -219,17 +195,6 @@ export class AiPhotoResultComponent {
         const unitKey = resolveAiPhotoUnitKey(item.unit);
         const unitLabel = unitKey !== null ? this.translateService.instant(unitKey) : item.unit;
         return unitLabel.length > 0 ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
-    }
-
-    private resolveMacroLabel(value: number, unitKey: string): string {
-        const locale = resolveTranslateLanguage(this.translateService);
-        const hasFraction = Math.abs(value % 1) > NUTRITION_FRACTION_THRESHOLD;
-        const formatter = new Intl.NumberFormat(locale, {
-            maximumFractionDigits: hasFraction ? 1 : 0,
-            minimumFractionDigits: hasFraction ? 1 : 0,
-        });
-        const unitLabel = this.translateService.instant(unitKey);
-        return `${formatter.format(value)} ${unitLabel}`.trim();
     }
 
     private resolveUnitLabel(unit: string): string {
@@ -311,10 +276,6 @@ export class AiPhotoResultComponent {
 
     protected toggleAnnotations(): void {
         this.annotationsVisible.update(visible => !visible);
-    }
-
-    protected toggleProducts(): void {
-        this.isProductsExpanded.update(expanded => !expanded);
     }
 
     protected dismissPhotoDialog(): void {

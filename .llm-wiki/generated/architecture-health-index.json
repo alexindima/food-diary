@@ -8,7 +8,7 @@
                     "moduleCycleNodes":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
-                    "selectorUnreferencedComponents":  121,
+                    "selectorUnreferencedComponents":  122,
                     "componentsWithoutDirectSpecs":  107,
                     "criticalSymbolsWithoutTestReferences":  26,
                     "explicitDebtMarkers":  2
@@ -859,6 +859,14 @@
                                                "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-consent-dialog/ai-consent-dialog.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/ai-consent-dialog/ai-consent-dialog.html",
                                                "specPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-consent-dialog/ai-consent-dialog.spec.ts"
+                                           },
+                                           {
+                                               "class":  "AiPhotoNutritionSummaryComponent",
+                                               "selector":  "fd-ai-photo-nutrition-summary",
+                                               "feature":  "shared",
+                                               "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-nutrition-summary/ai-photo-nutrition-summary.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-nutrition-summary/ai-photo-nutrition-summary.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-nutrition-summary/ai-photo-nutrition-summary.spec.ts"
                                            },
                                            {
                                                "class":  "BadgeComponent",

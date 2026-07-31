@@ -101,6 +101,14 @@ describe('AI photo annotation layout', () => {
         expect(optimizeAiPhotoAnnotationLayout(annotations)).toEqual(optimizeAiPhotoAnnotationLayout(annotations));
     });
 
+    it('places portrait annotation cards outside the photo bounds', () => {
+        const layout = optimizeAiPhotoAnnotationLayout(createAnnotations(SCENARIOS[0]), true);
+
+        expect(layout.some(annotation => annotation.cardX < 0)).toBe(true);
+        expect(layout.some(annotation => annotation.cardX > FRAME_SIZE)).toBe(true);
+        expect(evaluateAiPhotoAnnotationLayout(layout).cardOverlaps).toBe(0);
+    });
+
     it('returns an empty layout without search work', () => {
         expect(optimizeAiPhotoAnnotationLayout([])).toEqual([]);
     });

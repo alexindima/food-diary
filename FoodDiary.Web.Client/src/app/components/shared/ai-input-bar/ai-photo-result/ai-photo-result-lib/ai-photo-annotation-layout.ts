@@ -34,6 +34,9 @@ export type AiPhotoLayoutMetrics = {
 const FRAME_SIZE = 100;
 const CARD_WIDTH = 28;
 const CARD_HEIGHT = 15;
+const PORTRAIT_CARD_WIDTH = 68;
+const PORTRAIT_LEFT_CARD_X = -72;
+const PORTRAIT_RIGHT_CARD_X = 104;
 const CARD_EDGE_GAP = 2;
 const SIDE_SLOT_COUNT = 5;
 const HORIZONTAL_SLOT_COUNT = 3;
@@ -54,12 +57,15 @@ const WEIGHT_CONNECTOR_PRODUCT_PROXIMITY = 4_000;
 const WEIGHT_DISTANCE = 1;
 const WEIGHT_SIDE_PREFERENCE = 0.35;
 
-export function optimizeAiPhotoAnnotationLayout(annotations: readonly AiPhotoAnnotation[]): AiPhotoAnnotation[] {
+export function optimizeAiPhotoAnnotationLayout(
+    annotations: readonly AiPhotoAnnotation[],
+    allowCardsOutsidePhoto = false,
+): AiPhotoAnnotation[] {
     if (annotations.length === 0) {
         return [];
     }
 
-    const slots = createPerimeterSlots();
+    const slots = createPerimeterSlots(allowCardsOutsidePhoto);
     const ordered = [...annotations].sort(compareByConstraint);
     let beam: SearchState[] = [{ assignments: new Map(), occupiedSlots: new Set(), cost: 0 }];
 
@@ -174,12 +180,25 @@ function evaluatePairs(
     return { cardOverlaps, connectorCrossings, connectorCardIntersections };
 }
 
-function createPerimeterSlots(): Rect[] {
+function createPerimeterSlots(allowCardsOutsidePhoto: boolean): Rect[] {
     const slots: Rect[] = [];
     for (let index = 0; index < SIDE_SLOT_COUNT; index++) {
         const y = CARD_EDGE_GAP + index * SIDE_SLOT_STEP;
-        slots.push({ x: CARD_EDGE_GAP, y, width: CARD_WIDTH, height: CARD_HEIGHT });
-        slots.push({ x: RIGHT_CARD_X, y, width: CARD_WIDTH, height: CARD_HEIGHT });
+        slots.push({
+            x: allowCardsOutsidePhoto ? PORTRAIT_LEFT_CARD_X : CARD_EDGE_GAP,
+            y,
+            width: allowCardsOutsidePhoto ? PORTRAIT_CARD_WIDTH : CARD_WIDTH,
+            height: CARD_HEIGHT,
+        });
+        slots.push({
+            x: allowCardsOutsidePhoto ? PORTRAIT_RIGHT_CARD_X : RIGHT_CARD_X,
+            y,
+            width: allowCardsOutsidePhoto ? PORTRAIT_CARD_WIDTH : CARD_WIDTH,
+            height: CARD_HEIGHT,
+        });
+    }
+    if (allowCardsOutsidePhoto) {
+        return slots;
     }
     for (let index = 0; index < HORIZONTAL_SLOT_COUNT; index++) {
         const x = CARD_EDGE_GAP + index * HORIZONTAL_SLOT_STEP;

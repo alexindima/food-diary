@@ -7,8 +7,15 @@
             [disabled]="item.annotationId === null"
             (click)="item.annotationId && rowSelected.emit(item.annotationId)"
         >
-            <span class="ai-photo-result__item-name fd-ui-body-sm">{{ item.displayName }}</span>
-            <span class="ai-photo-result__item-amount fd-ui-caption">{{ item.amountLabel }}</span>
+            <span class="ai-photo-result__item-copy">
+                <span class="ai-photo-result__item-name fd-ui-body-sm">{{ item.displayName }}</span>
+                <span class="ai-photo-result__item-amount fd-ui-caption">{{ item.amountLabel }}</span>
+            </span>
+            @if (item.calories !== null) {
+                <strong class="ai-photo-result__item-calories fd-ui-body-sm">
+                    {{ item.calories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}
+                </strong>
+            }
         </button>
     }
 </div>

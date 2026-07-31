@@ -1,15 +1,17 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { AiPhotoResultRowsComponent } from './ai-photo-result-rows';
 
 async function setupAiPhotoResultRowsAsync(): Promise<ComponentFixture<AiPhotoResultRowsComponent>> {
     await TestBed.configureTestingModule({
         imports: [AiPhotoResultRowsComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AiPhotoResultRowsComponent);
-    fixture.componentRef.setInput('rows', [{ key: 'egg', annotationId: 'egg-0', displayName: 'Egg', amountLabel: '100 g' }]);
+    fixture.componentRef.setInput('rows', [{ key: 'egg', annotationId: 'egg-0', displayName: 'Egg', amountLabel: '100 g', calories: 155 }]);
     return fixture;
 }
 
@@ -21,6 +23,7 @@ describe('AiPhotoResultRowsComponent', () => {
         const text = (fixture.nativeElement as HTMLElement).textContent;
         expect(text).toContain('Egg');
         expect(text).toContain('100 g');
+        expect(text).toContain('155');
     });
 
     it('emits the selected annotation', async () => {

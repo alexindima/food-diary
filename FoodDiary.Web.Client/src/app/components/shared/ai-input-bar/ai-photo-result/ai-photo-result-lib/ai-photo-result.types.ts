@@ -31,6 +31,7 @@ export type AiResultRow = {
     annotationId: string | null;
     displayName: string;
     amountLabel: string;
+    calories: number | null;
 };
 
 export type AiNutritionSummaryItem = {

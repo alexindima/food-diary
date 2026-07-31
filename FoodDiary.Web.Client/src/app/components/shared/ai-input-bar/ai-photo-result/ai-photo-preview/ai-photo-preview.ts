@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import type { AiPhotoAnnotation } from '../ai-photo-result-lib/ai-photo-result.types';
@@ -26,6 +26,9 @@ export class AiPhotoPreviewComponent {
     public readonly activeAnnotationId = input<string | null>(null);
     public readonly annotationsToggled = output();
     public readonly annotationSelected = output<string>();
+    public readonly imageOrientationChanged = output<boolean>();
+    protected readonly isPortrait = signal(false);
+    protected readonly imageAspectRatio = signal('auto');
 
     protected readonly usesCompactAnnotations = computed(() => this.annotations().length > this.expandedAnnotationLimit);
     protected readonly activeAnnotation = computed(
@@ -46,4 +49,14 @@ export class AiPhotoPreviewComponent {
                   .filter(item => item.annotation.id !== this.activeAnnotation()?.id)
             : [],
     );
+
+    protected onImageLoaded(event: Event): void {
+        const image = event.currentTarget;
+        if (image instanceof HTMLImageElement) {
+            const isPortrait = image.naturalHeight > image.naturalWidth;
+            this.isPortrait.set(isPortrait);
+            this.imageAspectRatio.set(`${image.naturalWidth} / ${image.naturalHeight}`);
+            this.imageOrientationChanged.emit(isPortrait);
+        }
+    }
 }

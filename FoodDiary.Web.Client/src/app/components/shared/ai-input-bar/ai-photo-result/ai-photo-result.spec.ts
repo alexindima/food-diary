@@ -73,7 +73,7 @@ async function setupAiPhotoResultAsync(): Promise<AiPhotoResultTestContext> {
 }
 
 describe('AiPhotoResultComponent view models', () => {
-    it('builds localized result rows and nutrition summary', async () => {
+    it('builds localized result rows with calories', async () => {
         const { component, fixture, translateService } = await setupAiPhotoResultAsync();
         vi.spyOn(translateService, 'instant').mockImplementation((key: string) => {
             if (key === 'GENERAL.UNITS.G') {
@@ -85,11 +85,9 @@ describe('AiPhotoResultComponent view models', () => {
         vi.spyOn(translateService, 'getCurrentLang').mockReturnValue('en');
         fixture.detectChanges();
 
-        expect(component['resultRows']()).toEqual([{ key: 'egg', annotationId: null, displayName: 'Яйцо', amountLabel: '100 g' }]);
-        expect(component['nutritionSummary']()[1]).toEqual({
-            labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
-            value: '12.3 g',
-        });
+        expect(component['resultRows']()).toEqual([
+            { key: 'egg', annotationId: null, displayName: 'Яйцо', amountLabel: '100 g', calories: 155 },
+        ]);
     });
 
     it('switches edit action and details toggle views from component state', async () => {

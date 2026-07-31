@@ -317,6 +317,14 @@
                          "structuralRiskScore":  62.24
                      },
                      {
+                         "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-lib/ai-photo-annotation-layout.ts",
+                         "nonBlankLines":  330,
+                         "decisionPoints":  37,
+                         "criticalSymbols":  0,
+                         "unreferencedCriticalSymbols":  0,
+                         "structuralRiskScore":  62.1
+                     },
+                     {
                          "path":  "FoodDiary.Web.Client/src/app/components/shared/meal-card/meal-card.ts",
                          "nonBlankLines":  227,
                          "decisionPoints":  38,
@@ -347,14 +355,6 @@
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
                          "structuralRiskScore":  60.94
-                     },
-                     {
-                         "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-lib/ai-photo-annotation-layout.ts",
-                         "nonBlankLines":  311,
-                         "decisionPoints":  36,
-                         "criticalSymbols":  0,
-                         "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  60.22
                      },
                      {
                          "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete.ts",
@@ -509,20 +509,20 @@
                          "structuralRiskScore":  51.62
                      },
                      {
+                         "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts",
+                         "nonBlankLines":  316,
+                         "decisionPoints":  30,
+                         "criticalSymbols":  0,
+                         "unreferencedCriticalSymbols":  0,
+                         "structuralRiskScore":  51.32
+                     },
+                     {
                          "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/ux-playbook.stories.ts",
                          "nonBlankLines":  239,
                          "decisionPoints":  31,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
                          "structuralRiskScore":  51.28
-                     },
-                     {
-                         "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts",
-                         "nonBlankLines":  352,
-                         "decisionPoints":  29,
-                         "criticalSymbols":  0,
-                         "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  50.54
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts",
@@ -24184,11 +24184,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.ts",
-                      "nonBlankLines":  44,
-                      "decisionPoints":  2,
+                      "nonBlankLines":  56,
+                      "decisionPoints":  3,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.88
+                      "structuralRiskScore":  5.62
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-actions/ai-photo-result-actions.ts",
@@ -24200,35 +24200,35 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-lib/ai-photo-annotation-layout.ts",
-                      "nonBlankLines":  311,
-                      "decisionPoints":  36,
+                      "nonBlankLines":  330,
+                      "decisionPoints":  37,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  60.22
+                      "structuralRiskScore":  62.1
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-lib/ai-photo-result.types.ts",
-                      "nonBlankLines":  60,
+                      "nonBlankLines":  61,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.2
+                      "structuralRiskScore":  1.22
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-rows/ai-photo-result-rows.ts",
-                      "nonBlankLines":  16,
+                      "nonBlankLines":  19,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.32
+                      "structuralRiskScore":  0.38
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts",
-                      "nonBlankLines":  352,
-                      "decisionPoints":  29,
+                      "nonBlankLines":  316,
+                      "decisionPoints":  30,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  50.54
+                      "structuralRiskScore":  51.32
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/photo-upload-dialog/photo-upload-dialog.ts",

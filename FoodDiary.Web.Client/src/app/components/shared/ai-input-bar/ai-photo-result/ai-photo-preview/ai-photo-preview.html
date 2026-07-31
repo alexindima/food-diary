@@ -7,6 +7,7 @@
                 height="1024"
                 [src]="previewUrl"
                 [alt]="'AI_INPUT_BAR.PHOTO_PREVIEW_ALT' | translate"
+                (load)="onImageLoaded($event)"
             />
             @if (annotations().length > 0) {
                 <button class="ai-photo-result__annotation-toggle" type="button" (click)="annotationsToggled.emit()">
@@ -22,7 +23,11 @@
                         class="ai-photo-result__annotations"
                         [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ANNOTATIONS_LABEL' | translate"
                     >
-                        <div class="ai-photo-result__annotation-frame">
+                        <div
+                            class="ai-photo-result__annotation-frame"
+                            [class.ai-photo-result__annotation-frame--portrait]="isPortrait()"
+                            [style.aspect-ratio]="imageAspectRatio()"
+                        >
                             <img class="ai-photo-result__annotation-sizer" alt="" [src]="previewUrl" />
                             <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                                 @for (annotation of cardAnnotations(); track annotation.id) {

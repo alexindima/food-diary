@@ -4,13 +4,13 @@
                     "components":  399,
                     "componentsWithoutDirectSpecs":  107,
                     "inputs":  1203,
-                    "outputs":  401,
+                    "outputs":  402,
                     "apiCalls":  206,
-                    "templatesWithTranslations":  239,
-                    "translationKeys":  1174,
-                    "consumerEdges":  898,
-                    "consumedComponents":  277,
-                    "unconsumedComponents":  121
+                    "templatesWithTranslations":  240,
+                    "translationKeys":  1177,
+                    "consumerEdges":  897,
+                    "consumedComponents":  276,
+                    "unconsumedComponents":  122
                 },
     "components":  [
                        {
@@ -9776,6 +9776,10 @@
                                            {
                                                "name":  "annotationSelected",
                                                "type":  "string"
+                                           },
+                                           {
+                                               "name":  "imageOrientationChanged",
+                                               "type":  "boolean"
                                            }
                                        ],
                            "specPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.spec.ts"
@@ -17415,9 +17419,20 @@
                              },
                              {
                                  "feature":  "shared",
+                                 "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-rows/ai-photo-result-rows.html",
+                                 "keys":  [
+                                              "GENERAL.UNITS.KCAL"
+                                          ]
+                             },
+                             {
+                                 "feature":  "shared",
                                  "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.html",
                                  "keys":  [
                                               "COMMON.CANCEL",
+                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.PHOTO_STAGE",
+                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.PRODUCTS_PANEL",
+                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.PRODUCT_COUNT",
+                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE",
                                               "GENERAL.UNITS.KCAL"
                                           ]
                              },
@@ -18307,20 +18322,6 @@
                                                  ]
                           },
                           {
-                              "component":  "AiPhotoNutritionSummaryComponent",
-                              "selector":  "fd-ai-photo-nutrition-summary",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-nutrition-summary/ai-photo-nutrition-summary.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "items"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
                               "component":  "AiPhotoPreviewComponent",
                               "selector":  "fd-ai-photo-preview",
                               "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.ts",
@@ -18339,7 +18340,8 @@
                                              ],
                               "outputsHandled":  [
                                                      "annotationSelected",
-                                                     "annotationsToggled"
+                                                     "annotationsToggled",
+                                                     "imageOrientationChanged"
                                                  ]
                           },
                           {
