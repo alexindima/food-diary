@@ -120,14 +120,14 @@
                         "pageSha256":  "182933effc68070bdf0da58c6fe4733c2f4c7cf005c4fb7c0644bcb021fe01ea",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-                                            "sha256":  "7c6024b7196e006b110200c02c9509a695e74a80a251dd3bc78f42b9f6277a23"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "7fa2bcbeca5118cee6d72e4fcb174c709adb71d5ddf14ba707ebde09ca5aebe1"
                                         }
                                     ],
-                        "reason":  "Adding hashed browser artifacts to standalone evidence does not change manifest scope, phase, or reconciliation semantics.",
+                        "reason":  "Risk calibration and intent candidate ranking do not change manifest scope reconciliation semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ddd147adcc1fb14c9a7d1e7346ef0d87dfcab7ad",
-                        "reviewedAtUtc":  "2026-07-31T07:43:21.6401985Z"
+                        "gitHead":  "110ce08a12c5ee817baf2ec2fcbf55aa209f471c",
+                        "reviewedAtUtc":  "2026-07-31T09:40:43.5519869Z"
                     },
                     {
                         "pageId":  "workflow-change-packet",
@@ -136,13 +136,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "f9a0814b2603ceac627296c425a947e41cb6eeabf61e09a513d17070eda67978"
+                                            "sha256":  "7fa2bcbeca5118cee6d72e4fcb174c709adb71d5ddf14ba707ebde09ca5aebe1"
                                         }
                                     ],
-                        "reason":  "Deterministic early return applies only when diff, intent, and planned paths are all empty; packet behavior is unchanged.",
+                        "reason":  "Risk calibration and intent candidate ranking do not change packet generation semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "33a7de4c766ab18a1f0883982fad60306828b843",
-                        "reviewedAtUtc":  "2026-07-30T23:28:09.2248077Z"
+                        "gitHead":  "110ce08a12c5ee817baf2ec2fcbf55aa209f471c",
+                        "reviewedAtUtc":  "2026-07-31T09:40:45.0614758Z"
                     },
                     {
                         "pageId":  "workflow-context-bundles",
@@ -181,13 +181,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "f9a0814b2603ceac627296c425a947e41cb6eeabf61e09a513d17070eda67978"
+                                            "sha256":  "7fa2bcbeca5118cee6d72e4fcb174c709adb71d5ddf14ba707ebde09ca5aebe1"
                                         }
                                     ],
-                        "reason":  "Deterministic early return applies only when diff, intent, and planned paths are all empty; impact simulation behavior is unchanged.",
+                        "reason":  "Risk calibration and intent candidate ranking do not change impact simulation semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "33a7de4c766ab18a1f0883982fad60306828b843",
-                        "reviewedAtUtc":  "2026-07-30T23:28:09.8001544Z"
+                        "gitHead":  "110ce08a12c5ee817baf2ec2fcbf55aa209f471c",
+                        "reviewedAtUtc":  "2026-07-31T09:40:47.0472632Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -196,13 +196,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "f9a0814b2603ceac627296c425a947e41cb6eeabf61e09a513d17070eda67978"
+                                            "sha256":  "7fa2bcbeca5118cee6d72e4fcb174c709adb71d5ddf14ba707ebde09ca5aebe1"
                                         }
                                     ],
-                        "reason":  "Deterministic early return applies only when diff, intent, and planned paths are all empty; implementation planning behavior is unchanged.",
+                        "reason":  "Risk calibration changes brief inputs only; implementation-plan phase and validation semantics are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "33a7de4c766ab18a1f0883982fad60306828b843",
-                        "reviewedAtUtc":  "2026-07-30T23:28:10.5964808Z"
+                        "gitHead":  "110ce08a12c5ee817baf2ec2fcbf55aa209f471c",
+                        "reviewedAtUtc":  "2026-07-31T09:40:49.4110058Z"
                     },
                     {
                         "pageId":  "workflow-index-pipeline",

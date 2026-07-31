@@ -67,6 +67,19 @@ derived from the intent, path names, and existing scoped source, and keep
 interactive UI changes from defaulting to low risk merely because no API or
 database boundary changed.
 
+Intent inference uses explicit frontend and backend vocabulary before ranking
+symbols. Visual terms such as SVG, SCSS, styling, layout, and component keep
+the candidate set in frontend sources unless the intent also names a backend
+concern. Only candidates within one point of the best score are retained.
+
+Presentation-only changes contain templates, styles, SVG, and tests but no
+production TypeScript. Existing state-related words in those files do not by
+themselves imply changed interaction behavior. Their risk profile and uncertain
+intent-inferred work are capped at medium unless API, database, deployment,
+configuration, security, or privacy evidence independently requires more.
+The risk packet exposes `rawScore`, `profile`, and `calibration` so callers can
+see when such a cap was applied.
+
 For agent context, prefer `brief -Compact -Format Json`. It retains risk,
 paths, instructions, focused tests, scenarios, checks, and review obligations,
 but replaces large consumer and contract objects with impact counts.

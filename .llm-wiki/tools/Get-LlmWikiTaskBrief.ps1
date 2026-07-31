@@ -41,11 +41,15 @@ if ($effectivePaths.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($Intent))
             Where-Object { $_ -notin $ignoredIntentTerms } |
             Sort-Object -Unique
     )
+    $normalizedIntent = $Intent.ToLowerInvariant()
+    $frontendIntent = $normalizedIntent -match '\b(frontend|component|template|html|css|scss|svg|style|styling|visual|layout|responsive|viewport|icon|colour|color|animation)\b'
+    $backendIntent = $normalizedIntent -match '\b(backend|handler|command|query|controller|endpoint|database|migration|repository|service|domain|api)\b'
     $candidates = [System.Collections.Generic.List[object]]::new()
     $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
     if (Test-Path -LiteralPath $symbolIndexPath) {
         $symbolIndex = Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json
         foreach ($symbol in @($symbolIndex.symbols)) {
+            if ($frontendIntent -and -not $backendIntent) { continue }
             $searchText = "$($symbol.name) $($symbol.path)".ToLowerInvariant()
             $score = @($intentTokens | Where-Object { $searchText -match [regex]::Escape($_) }).Count
             if ($score -gt 0) {
@@ -57,15 +61,19 @@ if ($effectivePaths.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($Intent))
     if (Test-Path -LiteralPath $frontendIntentIndexPath) {
         $frontendIntentIndex = Get-Content -LiteralPath $frontendIntentIndexPath -Raw | ConvertFrom-Json
         foreach ($symbol in @($frontendIntentIndex.symbols)) {
-            $searchText = "$($symbol.name) $($symbol.path) $($symbol.kind)".ToLowerInvariant()
+            $searchText = "$($symbol.name) $($symbol.path) $($symbol.role) $($symbol.selector)".ToLowerInvariant()
             $score = @($intentTokens | Where-Object { $searchText -match [regex]::Escape($_) }).Count
+            if ($frontendIntent) { $score += 4 }
             if ($score -gt 0) {
                 $candidates.Add([pscustomobject]@{ path = $symbol.path; score = $score; source = 'frontend-index' })
             }
         }
     }
+    $maximumCandidateScore = @($candidates | Measure-Object score -Maximum).Maximum
+    $minimumCandidateScore = if ($null -eq $maximumCandidateScore) { 1 } else { [Math]::Max(1, $maximumCandidateScore - 1) }
     $inferredPaths = @(
         $candidates |
+            Where-Object score -ge $minimumCandidateScore |
             Sort-Object @{ Expression = 'score'; Descending = $true }, path |
             Select-Object -ExpandProperty path -Unique |
             Select-Object -First 8
@@ -331,6 +339,12 @@ $frontendSource = @(
     }
 ) -join [Environment]::NewLine
 $frontendIntentText = ([string]$Intent).ToLowerInvariant()
+$frontendProductionPaths = @($frontendPaths | Where-Object { $_ -notmatch '\.(spec\.ts|test\.mjs)$' })
+$frontendBehaviorPaths = @($frontendProductionPaths | Where-Object { $_ -match '\.ts$' })
+$frontendPresentationOnly = $frontendPaths.Count -gt 0 -and
+    @($diff.scopes | Where-Object { $_ -notin @('Frontend', 'Tests') }).Count -eq 0 -and
+    $frontendBehaviorPaths.Count -eq 0 -and
+    @($frontendProductionPaths | Where-Object { $_ -notmatch '\.(html|s?css|svg)$' }).Count -eq 0
 if ($frontendPaths.Count -gt 0 -and
     ((@($frontendPaths | Where-Object { $_ -match '(?i)(dialog|modal)' }).Count -gt 0) -or
      $frontendIntentText -match '\b(dialog|modal)\b')) {
@@ -351,7 +365,7 @@ if ($frontendPaths.Count -gt 0 -and
 }
 if ($frontendPaths.Count -gt 0 -and
     ($frontendIntentText -match '\b(state|loading|error|empty|toggle|open|close|interactive)\b' -or
-     $frontendSource -match '(?i)\b(signal|computed|isLoading|error|toggle|open|close|expanded|visible)\b')) {
+     (-not $frontendPresentationOnly -and $frontendSource -match '(?i)\b(signal|computed|isLoading|error|toggle|open|close|expanded|visible)\b'))) {
     $riskScore += 1
     $riskReasons.Add('multi-state frontend interaction')
 }
@@ -405,6 +419,19 @@ if (@($ownership.downstreamModules).Count -ge 10) { $riskScore += 2; $riskReason
 elseif (@($ownership.downstreamModules).Count -gt 0) { $riskScore += 1; $riskReasons.Add('downstream module impact') }
 $policyViolations = @($policy.violations | Where-Object { $null -ne $_ })
 if ($policyViolations.Count -gt 0) { $riskScore += 4; $riskReasons.Add('structural policy violation') }
+$rawRiskScore = $riskScore
+$riskCalibration = 'none'
+if ($frontendPresentationOnly -and $riskScore -gt 4) {
+    $riskScore = 4
+    $riskCalibration = 'frontend-presentation-only-cap'
+}
+if ($inferredPaths.Count -gt 0 -and
+    $riskScore -gt 4 -and
+    @($diff.scopes | Where-Object { $_ -in @('Api', 'Database', 'Deployment', 'Configuration') }).Count -eq 0 -and
+    @($policy.matchedRules.id | Where-Object { $_ -in @('security-sensitive', 'privacy-data-lifecycle') }).Count -eq 0) {
+    $riskScore = 4
+    $riskCalibration = 'intent-inference-cap'
+}
 $riskLevel = if ($riskScore -ge 7) { 'high' } elseif ($riskScore -ge 3) { 'medium' } else { 'low' }
 $analysisMode = if ($inferredPaths.Count -gt 0) {
     'intent-inferred'
@@ -445,6 +472,9 @@ $brief = [pscustomobject]@{
     risk = [pscustomobject]@{
         level = $riskLevel
         score = $riskScore
+        rawScore = $rawRiskScore
+        profile = if ($frontendPresentationOnly) { 'frontend-presentation-only' } else { 'general' }
+        calibration = $riskCalibration
         reasons = @($riskReasons)
     }
     change = [pscustomobject]@{
@@ -455,7 +485,12 @@ $brief = [pscustomobject]@{
         directModules = @($ownership.directModules)
         downstreamModules = @($ownership.downstreamModules)
     }
-    instructions = @($ownership.ownershipGuides | Select-Object -ExpandProperty guide -Unique)
+    instructions = @($ownership.ownershipGuides |
+        Select-Object -ExpandProperty guide -Unique |
+        Where-Object {
+            @($diff.scopes) -contains 'Backend' -or
+            $_ -notmatch '^(FoodDiary\.(Application|Domain|Infrastructure)|MailInbox/|MailRelay/)'
+        })
     contextPages = @($diff.wikiPages.path)
     focusedTests = @($testPlan.focusedTestFiles)
     testScenarios = @($testPlan.scenarios)

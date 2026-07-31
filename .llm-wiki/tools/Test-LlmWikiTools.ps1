@@ -208,6 +208,30 @@ Assert-Wiki (@($interactiveUiBrief.risk.reasons) -contains 'responsive layout be
 Assert-Wiki (@($interactiveUiBrief.risk.reasons) -contains 'accessibility interaction contract') 'UI risk omitted accessibility behavior.'
 Assert-Wiki (@($interactiveUiBrief.risk.reasons) -contains 'multi-state frontend interaction') 'UI risk omitted the frontend state matrix.'
 
+$localVisualIntentBrief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
+    -Intent 'Improve photo annotation visibility with clearer SVG connectors and point styling.' `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (@($localVisualIntentBrief.change.scopes) -contains 'Frontend') 'Visual frontend intent did not infer frontend scope.'
+Assert-Wiki (@($localVisualIntentBrief.change.scopes) -notcontains 'Backend') 'Visual frontend intent incorrectly inferred backend scope.'
+Assert-Wiki ($localVisualIntentBrief.risk.score -le 4) 'Intent-inferred local visual work received excessive risk.'
+Assert-Wiki (@($localVisualIntentBrief.instructions | Where-Object { $_ -match 'Application|Domain|Infrastructure' }).Count -eq 0) 'Frontend intent retained a backend scoped guide.'
+Assert-Wiki (@($localVisualIntentBrief.requiredChecks.id) -contains 'frontend-verify') 'Frontend intent omitted frontend verification.'
+Assert-Wiki (@($localVisualIntentBrief.requiredChecks.id) -notcontains 'architecture-tests') 'Frontend intent incorrectly required architecture tests.'
+Assert-Wiki (@($localVisualIntentBrief.testScenarios.id | Where-Object { $_ -match '^backend-' }).Count -eq 0) 'Frontend intent retained backend test scenarios.'
+
+$localVisualDiffBrief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
+    -ChangedPath @(
+        'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.html'
+        'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.spec.ts'
+        'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.scss'
+    ) `
+    -Intent 'Improve photo annotation visibility with clearer SVG connectors and point styling.' `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki ($localVisualDiffBrief.risk.profile -eq 'frontend-presentation-only') 'Local visual diff did not receive the presentation-only risk profile.'
+Assert-Wiki ($localVisualDiffBrief.risk.score -le 4) 'Local visual diff received excessive risk.'
+Assert-Wiki (@($localVisualDiffBrief.change.scopes | Where-Object { $_ -notin @('Frontend', 'Tests') }).Count -eq 0) 'Local visual diff inferred an unrelated scope.'
+Assert-Wiki (@($localVisualDiffBrief.requiredChecks.id) -notcontains 'architecture-tests') 'Local visual diff incorrectly required architecture tests.'
+
 $testPlanJson = & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') `
     -ChangedPath @('FoodDiary.Infrastructure/Persistence/Products/ProductRepository.cs') `
     -Format Json `
