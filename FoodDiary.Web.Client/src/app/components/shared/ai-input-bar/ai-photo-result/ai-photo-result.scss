@@ -149,20 +149,36 @@
 
 .ai-photo-result__annotation-frame polyline {
     fill: none;
-    stroke: var(--fd-color-surface-raised);
-    stroke-width: 0.55;
+    stroke-linecap: round;
+    stroke-linejoin: round;
     vector-effect: non-scaling-stroke;
 }
 
-.ai-photo-result__annotation-frame circle {
-    fill: var(--fd-color-primary-600);
+.ai-photo-result__annotation-connector-outline {
+    stroke: var(--fd-color-primary-600);
+    stroke-width: 2.25;
+}
+
+.ai-photo-result__annotation-connector-core {
     stroke: var(--fd-color-surface-raised);
-    stroke-width: 0.45;
-    vector-effect: non-scaling-stroke;
+    stroke-width: 0.9;
+}
+
+.ai-photo-result__annotation-point {
+    position: absolute;
+    z-index: 2;
+    width: var(--fd-size-icon-xs);
+    height: var(--fd-size-icon-xs);
+    border: var(--fd-border-width-strong) solid var(--fd-color-surface-raised);
+    border-radius: var(--fd-radius-pill);
+    background: var(--fd-color-primary-600);
+    box-shadow: var(--fd-shadow-md);
+    transform: translate(-50%, -50%);
 }
 
 .ai-photo-result__annotation-card {
     position: absolute;
+    z-index: 2;
     width: min(12rem, 42%);
     padding: var(--fd-space-xs) var(--fd-space-sm);
     overflow: hidden;

@@ -71,6 +71,13 @@ describe('AiPhotoPreviewComponent', () => {
         fixture.detectChanges();
 
         expect((fixture.nativeElement as HTMLElement).querySelectorAll('.ai-photo-result__annotation-card')).toHaveLength(SIX_PRODUCTS);
+        expect((fixture.nativeElement as HTMLElement).querySelectorAll('.ai-photo-result__annotation-point')).toHaveLength(SIX_PRODUCTS);
+        expect((fixture.nativeElement as HTMLElement).querySelectorAll('.ai-photo-result__annotation-connector-outline')).toHaveLength(
+            SIX_PRODUCTS,
+        );
+        expect((fixture.nativeElement as HTMLElement).querySelectorAll('.ai-photo-result__annotation-connector-core')).toHaveLength(
+            SIX_PRODUCTS,
+        );
         expect((fixture.nativeElement as HTMLElement).querySelectorAll('.ai-photo-result__annotation-marker')).toHaveLength(0);
     });
 

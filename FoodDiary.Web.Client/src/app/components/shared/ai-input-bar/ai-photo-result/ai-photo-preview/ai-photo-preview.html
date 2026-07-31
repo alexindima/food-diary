@@ -26,10 +26,21 @@
                             <img class="ai-photo-result__annotation-sizer" alt="" [src]="previewUrl" />
                             <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                                 @for (annotation of cardAnnotations(); track annotation.id) {
-                                    <polyline [attr.points]="annotation.connectorPath" />
-                                    <circle r="0.8" [attr.cx]="annotation.centerX" [attr.cy]="annotation.centerY" />
+                                    <polyline
+                                        class="ai-photo-result__annotation-connector-outline"
+                                        [attr.points]="annotation.connectorPath"
+                                    />
+                                    <polyline class="ai-photo-result__annotation-connector-core" [attr.points]="annotation.connectorPath" />
                                 }
                             </svg>
+                            @for (annotation of cardAnnotations(); track annotation.id) {
+                                <span
+                                    class="ai-photo-result__annotation-point"
+                                    aria-hidden="true"
+                                    [style.left.%]="annotation.centerX"
+                                    [style.top.%]="annotation.centerY"
+                                ></span>
+                            }
                             @for (annotation of cardAnnotations(); track annotation.id) {
                                 <button
                                     class="ai-photo-result__annotation-card"
