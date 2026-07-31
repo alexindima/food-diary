@@ -147,7 +147,8 @@
     height: 100%;
 }
 
-.ai-photo-result__annotation-frame line {
+.ai-photo-result__annotation-frame polyline {
+    fill: none;
     stroke: var(--fd-color-surface-raised);
     stroke-width: 0.55;
     vector-effect: non-scaling-stroke;

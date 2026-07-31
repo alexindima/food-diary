@@ -14,6 +14,8 @@ const CENTER_Y_STEP = 5;
 const RIGHT_CARD_X = 70;
 const CARD_Y_START = 4;
 const CARD_Y_STEP = 20;
+const CARD_WIDTH = 28;
+const CARD_HEIGHT = 15;
 
 function createAnnotations(count: number): AiPhotoAnnotation[] {
     return Array.from({ length: count }, (_, index) => ({
@@ -24,6 +26,13 @@ function createAnnotations(count: number): AiPhotoAnnotation[] {
         centerY: CENTER_Y_START + index * CENTER_Y_STEP,
         cardX: index % 2 === 0 ? 2 : RIGHT_CARD_X,
         cardY: CARD_Y_START + Math.floor(index / 2) * CARD_Y_STEP,
+        cardWidth: CARD_WIDTH,
+        cardHeight: CARD_HEIGHT,
+        connectorPoints: [
+            { x: CENTER_X_START + index * CENTER_X_STEP, y: CENTER_Y_START + index * CENTER_Y_STEP },
+            { x: index % 2 === 0 ? CARD_WIDTH + 2 : RIGHT_CARD_X, y: CARD_Y_START + index * CARD_Y_STEP },
+        ],
+        connectorPath: '',
         calories: 100,
         protein: 10,
         fat: 5,

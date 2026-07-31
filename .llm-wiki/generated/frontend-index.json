@@ -8,11 +8,11 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1513,
+                    "typescriptFiles":  1515,
                     "symbols":  578,
                     "routes":  84,
                     "features":  36,
-                    "specs":  545,
+                    "specs":  546,
                     "localeFiles":  5,
                     "roles":  {
                                   "Component":  394,
@@ -2122,7 +2122,7 @@
                         "role":  "Component",
                         "selector":  "fd-ai-photo-result",
                         "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts",
-                        "line":  74
+                        "line":  69
                     },
                     {
                         "name":  "PhotoUploadDialogComponent",

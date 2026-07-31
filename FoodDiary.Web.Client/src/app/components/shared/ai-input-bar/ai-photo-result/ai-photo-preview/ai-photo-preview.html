@@ -26,12 +26,7 @@
                             <img class="ai-photo-result__annotation-sizer" alt="" [src]="previewUrl" />
                             <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                                 @for (annotation of cardAnnotations(); track annotation.id) {
-                                    <line
-                                        [attr.x1]="annotation.centerX"
-                                        [attr.y1]="annotation.centerY"
-                                        [attr.x2]="annotation.cardX + 10"
-                                        [attr.y2]="annotation.cardY + 10"
-                                    />
+                                    <polyline [attr.points]="annotation.connectorPath" />
                                     <circle r="0.8" [attr.cx]="annotation.centerX" [attr.cy]="annotation.centerY" />
                                 }
                             </svg>
@@ -41,6 +36,7 @@
                                     type="button"
                                     [style.left.%]="annotation.cardX"
                                     [style.top.%]="annotation.cardY"
+                                    [style.width.%]="annotation.cardWidth"
                                     [attr.aria-label]="annotation.name"
                                     (click)="annotationSelected.emit(annotation.id)"
                                 >

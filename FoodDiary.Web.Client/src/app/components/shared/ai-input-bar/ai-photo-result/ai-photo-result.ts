@@ -25,6 +25,7 @@ import { AiPhotoEditListComponent } from './ai-photo-edit-list/ai-photo-edit-lis
 import { AiPhotoNutritionSummaryComponent } from './ai-photo-nutrition-summary/ai-photo-nutrition-summary';
 import { AiPhotoPreviewComponent } from './ai-photo-preview/ai-photo-preview';
 import { AiPhotoResultActionsComponent } from './ai-photo-result-actions/ai-photo-result-actions';
+import { optimizeAiPhotoAnnotationLayout } from './ai-photo-result-lib/ai-photo-annotation-layout';
 import type {
     AiDetailsToggleView,
     AiEditActionView,
@@ -42,12 +43,6 @@ import { AiPhotoResultRowsComponent } from './ai-photo-result-rows/ai-photo-resu
 const NUTRITION_FRACTION_THRESHOLD = 0.01;
 const LOCATION_CONFIDENCE_THRESHOLD = 0.35;
 const PERCENT_SCALE = 100;
-const CARD_MIN_X_PERCENT = 2;
-const CARD_MAX_X_PERCENT = 70;
-const CARD_MIN_Y_PERCENT = 4;
-const CARD_MAX_Y_PERCENT = 72;
-const CARD_COLUMN_COUNT = 2;
-const CARD_ROW_GAP_PERCENT = 30;
 
 @Component({
     selector: 'fd-ai-photo-result',
@@ -115,7 +110,7 @@ export class AiPhotoResultComponent {
     );
     protected readonly annotations = computed<AiPhotoAnnotation[]>(() => {
         const nutritionItems = this.nutrition()?.items ?? [];
-        return this.results().flatMap((item, index) => {
+        const annotations = this.results().flatMap((item, index) => {
             if (!hasReliableLocation(item) || index >= nutritionItems.length) {
                 return [];
             }
@@ -129,8 +124,15 @@ export class AiPhotoResultComponent {
                     amountLabel: this.resolveAmountLabel(item),
                     centerX,
                     centerY,
-                    cardX: index % CARD_COLUMN_COUNT === 0 ? CARD_MIN_X_PERCENT : CARD_MAX_X_PERCENT,
-                    cardY: Math.min(CARD_MIN_Y_PERCENT + Math.floor(index / CARD_COLUMN_COUNT) * CARD_ROW_GAP_PERCENT, CARD_MAX_Y_PERCENT),
+                    cardX: 0,
+                    cardY: 0,
+                    cardWidth: 0,
+                    cardHeight: 0,
+                    connectorPoints: [
+                        { x: centerX, y: centerY },
+                        { x: centerX, y: centerY },
+                    ] as const,
+                    connectorPath: `${centerX},${centerY} ${centerX},${centerY}`,
                     calories: Math.round(nutrition.calories),
                     protein: Math.round(nutrition.protein),
                     fat: Math.round(nutrition.fat),
@@ -138,6 +140,7 @@ export class AiPhotoResultComponent {
                 },
             ];
         });
+        return optimizeAiPhotoAnnotationLayout(annotations);
     });
     protected readonly activeAnnotationId = computed(
         () =>

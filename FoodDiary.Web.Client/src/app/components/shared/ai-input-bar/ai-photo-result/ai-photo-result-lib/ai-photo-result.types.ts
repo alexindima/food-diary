@@ -3,6 +3,11 @@ import type { FoodNutritionResponse, FoodVisionItem } from '../../../../../share
 
 export type EditableAiItem = AiEditableFoodItem;
 
+export type AiPhotoConnectorPoint = {
+    x: number;
+    y: number;
+};
+
 export type AiPhotoAnnotation = {
     id: string;
     name: string;
@@ -11,6 +16,10 @@ export type AiPhotoAnnotation = {
     centerY: number;
     cardX: number;
     cardY: number;
+    cardWidth: number;
+    cardHeight: number;
+    connectorPoints: readonly [AiPhotoConnectorPoint, AiPhotoConnectorPoint];
+    connectorPath: string;
     calories: number;
     protein: number;
     fat: number;
