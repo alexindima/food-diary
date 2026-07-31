@@ -1,5 +1,6 @@
-import { signal } from '@angular/core';
-import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
+import { type ComponentFixture, DeferBlockState, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { BehaviorSubject, of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -74,6 +75,51 @@ async function createComponentAsync(
 
     fixture = TestBed.createComponent(MainComponent);
 }
+
+async function createRenderedComponentAsync(): Promise<void> {
+    TestBed.overrideComponent(MainComponent, {
+        set: {
+            imports: [],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        },
+    });
+
+    routeStub = {
+        queryParamMap: queryParamMapSubject.asObservable(),
+        snapshot: {
+            routeConfig: { path: '' },
+            paramMap: convertToParamMap({}),
+            queryParamMap: convertToParamMap({}),
+        },
+    };
+
+    await TestBed.configureTestingModule({
+        imports: [MainComponent],
+        providers: [
+            { provide: PublicAuthDialogService, useValue: authDialogServiceMock },
+            { provide: AuthService, useValue: authServiceMock },
+            { provide: NavigationService, useValue: navigationServiceMock },
+            { provide: Router, useValue: routerMock },
+            { provide: ActivatedRoute, useValue: routeStub },
+        ],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(MainComponent);
+}
+
+describe('MainComponent deferred preview', () => {
+    it('renders a stable fallback when the deferred preview fails to load', async () => {
+        await createRenderedComponentAsync();
+        fixture.detectChanges();
+
+        const deferBlocks = await fixture.getDeferBlocks();
+
+        expect(deferBlocks).toHaveLength(1);
+        await deferBlocks[0]?.render(DeferBlockState.Error);
+        expect(fixture.debugElement.query(By.css('[data-testid="landing-preview-error"]'))).not.toBeNull();
+    });
+});
 
 describe('MainComponent', () => {
     it('opens auth dialog from auth query param with return query params', async () => {
