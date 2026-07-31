@@ -41,7 +41,13 @@ The selector combines mandatory task scope with semantic discovery:
 - Wiki pages selected by diff impact;
 - focused tests from the task packet;
 - active durable memories whose scope matches the changed paths;
-- semantically related Wiki pages, guides, C# or frontend symbols, and tests.
+- semantically related Wiki pages, guides, C# or frontend symbols, ranked
+  tracked implementation files, and tests.
+
+When planned frontend paths are available, implementation-file discovery stays
+inside those paths and records whether relevance came from the path, source
+content, or both. Context bundles can therefore prefer concrete implementation
+sources without widening the declared task scope.
 
 Every item records its kind, score, inclusion reasons, existence state, source
 SHA-256, and a bounded excerpt. Generic task verbs are removed from the semantic

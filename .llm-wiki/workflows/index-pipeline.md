@@ -56,7 +56,14 @@ During iteration, select only indexes affected by the current diff:
 ```powershell
 ./.llm-wiki/wiki.ps1 update -AffectedOnly
 ./.llm-wiki/wiki.ps1 verify -AffectedOnly
+./.llm-wiki/wiki.ps1 verify-fast
 ```
+
+`verify-fast` is the explicit local iteration gate. It runs lint, the
+dependency-aware affected-index check, change policy, and source-impact review,
+then reminds the caller to run the full `verify` before handoff. If any index
+check is stale, the pipeline emits one canonical `wiki.ps1 update` repair
+command in addition to the focused `update -AffectedOnly` option.
 
 Use `-BaseRef <ref>` for a committed range or `-ChangedPath <path[]>` for an
 explicit scope. The conservative dependency map still runs derived indexes and

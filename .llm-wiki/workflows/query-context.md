@@ -14,8 +14,8 @@ sources:
 Use the context resolver before exploring a cross-cutting change. It returns a
 compact, ranked packet of wiki pages, scoped instructions, projects,
 controllers, C# symbols, dependency-injection registrations, tests, module
-dependencies, Angular features/routes/symbols/localization, and recommended
-verification commands.
+dependencies, Angular features/routes/symbols/localization, ranked
+implementation files, and recommended verification commands.
 
 ## Examples
 
@@ -44,6 +44,13 @@ declared directories and feature roots. A frontend-only query suppresses
 unrelated .NET clusters. CamelCase-aware token boundaries ensure a short term
 such as `AI` matches `AiPhotoResult`, but not the letters inside `MailInbox`.
 `-Limit` controls the maximum results per category.
+
+For frontend work, `implementationFiles` searches tracked TypeScript, template,
+and stylesheet sources. Planned paths are a hard boundary when supplied; files
+outside that scope are excluded. Results expose whether the query matched the
+path, content, or both, plus provenance and score. This list is intended to
+answer “where is the implementation?” more directly than the broader feature
+and symbol sections.
 
 ## Interpretation
 

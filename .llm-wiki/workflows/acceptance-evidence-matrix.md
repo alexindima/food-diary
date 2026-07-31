@@ -48,4 +48,8 @@ Resolve only after observing evidence:
 
 Validation rejects unmapped, pending, rejected, or satisfied-but-unverified criteria. A satisfied criterion needs either an explicit evidence note or a mapped check/review resolved in the evidence bundle. `not-applicable` requires a reason.
 
+Visual and browser-backed criteria may map to a review resolved through
+`evidence-artifact`. The evidence bundle stores the artifact kind, workspace
+path, and SHA-256 while the review lineage records the exact attestation.
+
 The matrix prevents green infrastructure checks from being mistaken for proof that every requested behavior was delivered.

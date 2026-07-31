@@ -34,6 +34,12 @@ are not committed.
   -Status not-applicable `
   -Reason "No Swagger-visible surface changed."
 
+./.llm-wiki/wiki.ps1 evidence-artifact `
+  -Id frontend-visual-evidence `
+  -OutputPath .artifacts/browser/mobile-layout.png `
+  -EvidenceKind screenshot `
+  -Reason "Responsive interaction verified at the mobile breakpoint."
+
 ./.llm-wiki/wiki.ps1 evidence-validate
 ./.llm-wiki/wiki.ps1 task-lineage `
   -WorkspacePath .artifacts/llm-wiki/tasks/my-task `
@@ -45,6 +51,12 @@ are not committed.
 policy-required checks and review obligations are resolved. The generated
 Markdown summary is suitable for task handoff or a pull-request description,
 but it remains supporting evidence rather than a substitute for CI logs.
+
+`evidence-artifact` hashes an existing screenshot, browser log, accessibility
+report, or video inside the repository workspace, links it to a pending review
+obligation, and completes that review with lineage-backed provenance. Summaries
+show the artifact path and SHA-256, so browser work performed earlier in the
+task no longer has to be represented only by a manual text attestation.
 
 `evidence-run` executes the trusted command declared by the matched repository
 policy and records its exit status and duration automatically. It resolves the

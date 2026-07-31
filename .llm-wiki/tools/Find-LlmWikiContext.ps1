@@ -259,6 +259,7 @@ $frontendProjectResults = Select-ScoredItems $frontendProjectCandidates
 $frontendFeatureResults = @()
 $frontendSymbolResults = @()
 $frontendRouteResults = @()
+$implementationFileResults = @()
 $localizationResults = @()
 if ($null -ne $frontendIndex) {
     $frontendFeatureCandidates = [System.Collections.Generic.List[object]]::new()
@@ -327,6 +328,41 @@ if ($null -ne $frontendIndex) {
         }
     }
     $localizationResults = Select-ScoredItems $localizationCandidates
+
+    $implementationFileCandidates = [System.Collections.Generic.List[object]]::new()
+    $trackedFrontendFiles = @(& git -C $repositoryRoot ls-files -- 'FoodDiary.Web.Client/**/*.ts' 'FoodDiary.Web.Client/**/*.html' 'FoodDiary.Web.Client/**/*.scss')
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Unable to enumerate tracked frontend implementation files.'
+    }
+    foreach ($implementationPath in $trackedFrontendFiles) {
+        $scopeAffinity = Get-ScopeAffinity $implementationPath
+        if ($scopePaths.Count -gt 0 -and $scopeAffinity -lt 0) {
+            continue
+        }
+        $absoluteImplementationPath = Join-Path $repositoryRoot $implementationPath
+        $pathScore = Get-SearchScore $implementationPath $tokens 14 30
+        $contentScore = 0
+        if (Test-Path -LiteralPath $absoluteImplementationPath -PathType Leaf) {
+            $content = Get-Content -LiteralPath $absoluteImplementationPath -Raw
+            $contentScore = [Math]::Min((Get-SearchScore $content $tokens 2 8), 16)
+        }
+        $score = $pathScore + $contentScore + $scopeAffinity
+        if ($score -gt 0) {
+            $implementationFileCandidates.Add([pscustomobject]@{
+                path = $implementationPath
+                score = $score
+                match = if ($pathScore -gt 0 -and $contentScore -gt 0) {
+                    'path-and-content'
+                } elseif ($pathScore -gt 0) {
+                    'path'
+                } else {
+                    'content'
+                }
+                provenance = 'tracked-source'
+            })
+        }
+    }
+    $implementationFileResults = Select-ScoredItems $implementationFileCandidates
 }
 
 $controllerCandidates = [System.Collections.Generic.List[object]]::new()
@@ -553,6 +589,7 @@ $context = [ordered]@{
     frontendFeatures = @($frontendFeatureResults)
     frontendSymbols = @($frontendSymbolResults)
     frontendRoutes = @($frontendRouteResults)
+    implementationFiles = @($implementationFileResults)
     localization = @($localizationResults)
     controllers = @($controllerResults | ForEach-Object {
         [ordered]@{
@@ -634,6 +671,10 @@ Write-ContextSection 'Frontend symbols' @($context.frontendSymbols) {
 Write-ContextSection 'Frontend routes' @($context.frontendRoutes) {
     param($item)
     "'$($item.route)' - $($item.path):$($item.line)"
+}
+Write-ContextSection 'Implementation files' @($context.implementationFiles) {
+    param($item)
+    "$($item.path) [match: $($item.match), score: $($item.score)]"
 }
 Write-ContextSection 'Localization files' @($context.localization) {
     param($item)

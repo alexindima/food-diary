@@ -60,6 +60,8 @@ The command creates:
 - implementation manifest;
 - acceptance matrix;
 - evidence bundle;
+- optional hashed browser, accessibility, screenshot, or video artifacts linked
+  to review obligations in that evidence bundle;
 - initial review report;
 - workspace descriptor linking every artifact.
 

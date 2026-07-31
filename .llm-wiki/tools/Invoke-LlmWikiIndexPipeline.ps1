@@ -121,6 +121,9 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
         $startInfo.WorkingDirectory = $repositoryRoot
         $startInfo.UseShellExecute = $false
         $startInfo.Arguments = "-NoLogo -NoProfile -File `"$scriptPath`"$(if ($CheckMode) { ' -Check' } else { '' })"
+        $startInfo.EnvironmentVariables['GIT_CONFIG_COUNT'] = '1'
+        $startInfo.EnvironmentVariables['GIT_CONFIG_KEY_0'] = 'core.safecrlf'
+        $startInfo.EnvironmentVariables['GIT_CONFIG_VALUE_0'] = 'false'
         $process = New-Object System.Diagnostics.Process
         $process.StartInfo = $startInfo
         if (-not $process.Start()) { throw "Unable to start $toolName." }
@@ -135,6 +138,13 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
         $worker.process.Dispose()
     }
     if ($failed.Count -gt 0) {
+        if ($CheckMode) {
+            Write-Host ''
+            Write-Host 'One or more compiled indexes are stale. Regenerate the complete dependency-aware set with:'
+            Write-Host '  ./.llm-wiki/wiki.ps1 update'
+            Write-Host 'For an iterative scoped refresh, use:'
+            Write-Host '  ./.llm-wiki/wiki.ps1 update -AffectedOnly'
+        }
         throw "LLM Wiki index pipeline stage '$StageName' failed: $($failed -join ', ')"
     }
 }

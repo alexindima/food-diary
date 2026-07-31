@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true, Position = 0)]
-    [ValidateSet('init', 'run', 'check', 'review', 'summary', 'validate')]
+    [ValidateSet('init', 'run', 'check', 'review', 'artifact', 'summary', 'validate')]
     [string]$Action,
 
     [string]$Path = '.artifacts/llm-wiki/evidence.json',
@@ -15,6 +15,8 @@ param(
     [string]$Reason,
     [double]$DurationSeconds,
     [string]$OutputPath,
+    [ValidateSet('screenshot', 'browser-log', 'accessibility-report', 'video')]
+    [string]$ArtifactKind = 'screenshot',
     [switch]$NoExitOnFailure
 )
 
@@ -94,6 +96,18 @@ function Get-EvidenceMarkdown {
         }
     }
     $lines.Add('')
+    $lines.Add('## Browser and Visual Artifacts')
+    $lines.Add('')
+    if (@($Evidence.artifacts).Count -eq 0) {
+        $lines.Add('No browser or visual artifacts were recorded.')
+    } else {
+        $lines.Add('| Kind | Path | Review | SHA-256 |')
+        $lines.Add('| --- | --- | --- | --- |')
+        foreach ($artifact in @($Evidence.artifacts)) {
+            $lines.Add("| $($artifact.kind) | ``$($artifact.path)`` | $($artifact.reviewId) | ``$($artifact.sha256)`` |")
+        }
+    }
+    $lines.Add('')
     $unresolvedChecks = @($Evidence.checks | Where-Object { $_.status -notin @('passed', 'not-applicable') })
     $unresolvedReviews = @($Evidence.reviews | Where-Object { $_.status -notin @('completed', 'not-applicable') })
     $lines.Add('## Handoff')
@@ -160,6 +174,7 @@ switch ($Action) {
                     }
                 }
             )
+            artifacts = @()
             structuralViolations = @($policy.violations)
         }
         Write-EvidenceFile $evidence
@@ -300,6 +315,57 @@ switch ($Action) {
         $entry[0] | Add-Member -NotePropertyName lineage -NotePropertyValue $lineage -Force
         Write-EvidenceFile $evidence
         Write-Host "Recorded review '$Id' as '$Status'."
+    }
+    'artifact' {
+        if ([string]::IsNullOrWhiteSpace($Id) -or [string]::IsNullOrWhiteSpace($OutputPath)) {
+            throw 'artifact requires -Id and -OutputPath.'
+        }
+        if ([string]::IsNullOrWhiteSpace($Reason)) {
+            throw 'artifact requires -Reason.'
+        }
+        $evidence = Read-EvidenceFile
+        $review = @($evidence.reviews | Where-Object { $_.id -eq $Id } | Select-Object -First 1)
+        if ($review.Count -eq 0) {
+            throw "Review obligation is not present in the evidence bundle: $Id"
+        }
+        $absoluteArtifactPath = if ([System.IO.Path]::IsPathRooted($OutputPath)) {
+            [System.IO.Path]::GetFullPath($OutputPath)
+        } else {
+            [System.IO.Path]::GetFullPath((Join-Path $repositoryRoot $OutputPath))
+        }
+        $repositoryPrefix = $repositoryRoot.TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar
+        if (-not $absoluteArtifactPath.StartsWith($repositoryPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+            throw 'Evidence artifact must be inside the repository workspace.'
+        }
+        if (-not (Test-Path -LiteralPath $absoluteArtifactPath -PathType Leaf)) {
+            throw "Evidence artifact does not exist: $OutputPath"
+        }
+        $relativeArtifactPath = $absoluteArtifactPath.Substring($repositoryPrefix.Length).Replace('\', '/')
+        $artifactHash = (Get-FileHash -LiteralPath $absoluteArtifactPath -Algorithm SHA256).Hash.ToLowerInvariant()
+        $artifact = [pscustomobject]@{
+            kind = $ArtifactKind
+            path = $relativeArtifactPath
+            reviewId = $Id
+            sha256 = $artifactHash
+            reason = $Reason
+        }
+        $evidence | Add-Member -NotePropertyName artifacts -NotePropertyValue @($evidence.artifacts) -Force
+        $evidence.artifacts = @($evidence.artifacts | Where-Object {
+            $_.reviewId -ne $Id -or $_.path -ne $relativeArtifactPath
+        }) + $artifact
+        $review[0].status = 'completed'
+        $review[0].reason = "$Reason Artifact: $relativeArtifactPath ($ArtifactKind, sha256=$artifactHash)."
+        $lineage = & (Join-Path $PSScriptRoot 'New-LlmWikiEvidenceLineage.ps1') `
+            -Kind review-attestation `
+            -EvidencePath $Path `
+            -Id $Id `
+            -Definition ([string]$review[0].description) `
+            -Reason $review[0].reason `
+            -Status completed `
+            -Format Json | ConvertFrom-Json
+        $review[0] | Add-Member -NotePropertyName lineage -NotePropertyValue $lineage -Force
+        Write-EvidenceFile $evidence
+        Write-Host "Recorded $ArtifactKind artifact '$relativeArtifactPath' and completed review '$Id'."
     }
     'summary' {
         $evidence = Read-EvidenceFile

@@ -37,6 +37,7 @@ The scorecard evaluates:
 - manifest scope and obligation drift;
 - acceptance criteria coverage;
 - resolved check and review evidence;
+- hashed browser and visual artifacts attached to resolved review obligations;
 - privacy-sensitive impact;
 - specialized rollout readiness.
 

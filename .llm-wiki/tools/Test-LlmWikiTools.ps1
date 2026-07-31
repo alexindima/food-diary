@@ -129,6 +129,12 @@ Assert-Wiki (@($frontendContext.frontendSymbols.name) -contains 'AiPhotoResultCo
 Assert-Wiki (@($frontendContext.projects).Count -eq 0) 'Frontend-only context retained unrelated .NET projects.'
 Assert-Wiki (@($frontendContext.symbols.path | Where-Object { $_ -match 'MailInbox' }).Count -eq 0) 'Frontend AI context included the unrelated MailInbox cluster.'
 Assert-Wiki (@($frontendContext.query.scopePaths).Count -eq 2) 'Context did not normalize semicolon-delimited planned paths.'
+Assert-Wiki (@($frontendContext.implementationFiles).Count -gt 0) 'Scoped frontend context omitted ranked implementation files.'
+Assert-Wiki (@($frontendContext.implementationFiles | Where-Object {
+    $_.path -like 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/*' -and
+    $_.provenance -eq 'tracked-source' -and
+    $_.match -in @('path', 'content', 'path-and-content')
+}).Count -gt 0) 'Frontend implementation search omitted scoped provenance and match evidence.'
 
 $diffJson = & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') `
     -ChangedPath @(
@@ -4560,14 +4566,30 @@ try {
 
 $evidencePath = '.artifacts/llm-wiki/tool-smoke-evidence.json'
 $absoluteEvidencePath = Join-Path (Split-Path -Parent $wikiRoot) $evidencePath
+$visualArtifactPath = '.artifacts/llm-wiki/tool-smoke-mobile-layout.png'
+$absoluteVisualArtifactPath = Join-Path (Split-Path -Parent $wikiRoot) $visualArtifactPath
 try {
     & (Join-Path $toolsRoot 'Manage-LlmWikiEvidence.ps1') init `
         -Path $evidencePath `
-        -ChangedPath @(
-            'FoodDiary.Web.Client/assets/i18n/en/common.json'
-            'FoodDiary.Web.Client/assets/i18n/ru/common.json'
-        ) | Out-Null
+        -ChangedPath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts' | Out-Null
     $evidence = Get-Content -LiteralPath $absoluteEvidencePath -Raw | ConvertFrom-Json
+    [System.IO.File]::WriteAllBytes($absoluteVisualArtifactPath, [byte[]](137, 80, 78, 71, 13, 10, 26, 10))
+    & (Join-Path $toolsRoot 'Manage-LlmWikiEvidence.ps1') artifact `
+        -Path $evidencePath `
+        -Id frontend-visual-evidence `
+        -OutputPath $visualArtifactPath `
+        -ArtifactKind screenshot `
+        -Reason 'Smoke-test responsive browser evidence.' | Out-Null
+    $artifactEvidence = Get-Content -LiteralPath $absoluteEvidencePath -Raw | ConvertFrom-Json
+    Assert-Wiki (@($artifactEvidence.artifacts | Where-Object {
+        $_.reviewId -eq 'frontend-visual-evidence' -and
+        $_.kind -eq 'screenshot' -and
+        $_.sha256 -match '^[a-f0-9]{64}$'
+    }).Count -eq 1) 'Browser evidence artifact was not linked with a SHA-256 fingerprint.'
+    Assert-Wiki (@($artifactEvidence.reviews | Where-Object {
+        $_.id -eq 'frontend-visual-evidence' -and $_.status -eq 'completed'
+    }).Count -eq 1) 'Browser evidence artifact did not resolve the visual review obligation.'
+    $evidence = $artifactEvidence
     foreach ($check in $evidence.checks) {
         & (Join-Path $toolsRoot 'Manage-LlmWikiEvidence.ps1') check `
             -Path $evidencePath `
@@ -4576,6 +4598,7 @@ try {
             -Reason 'Smoke-test resolution.' | Out-Null
     }
     foreach ($review in $evidence.reviews) {
+        if ($review.status -eq 'completed') { continue }
         & (Join-Path $toolsRoot 'Manage-LlmWikiEvidence.ps1') review `
             -Path $evidencePath `
             -Id $review.id `
@@ -4586,10 +4609,7 @@ try {
     $resolvedLineages = @($resolvedEvidence.checks.lineage) + @($resolvedEvidence.reviews.lineage)
     Assert-Wiki (@($resolvedLineages | Where-Object { $_.compatibilityFingerprint -match '^[a-f0-9]{64}$' }).Count -eq $resolvedLineages.Count) 'Resolved standalone evidence omitted compatibility lineage.'
     $evidencePolicyJson = & (Join-Path $toolsRoot 'Test-LlmWikiChangePolicy.ps1') `
-        -ChangedPath @(
-            'FoodDiary.Web.Client/assets/i18n/en/common.json'
-            'FoodDiary.Web.Client/assets/i18n/ru/common.json'
-        ) `
+        -ChangedPath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts' `
         -EvidencePath $evidencePath `
         -RequireEvidence `
         -Format Json
@@ -4598,6 +4618,9 @@ try {
 } finally {
     if (Test-Path -LiteralPath $absoluteEvidencePath) {
         Remove-Item -LiteralPath $absoluteEvidencePath -Force
+    }
+    if (Test-Path -LiteralPath $absoluteVisualArtifactPath) {
+        Remove-Item -LiteralPath $absoluteVisualArtifactPath -Force
     }
 }
 

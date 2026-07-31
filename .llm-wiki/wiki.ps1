@@ -2,10 +2,10 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'update', 'lint', 'smoke', 'verify', 'verify-full', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
+        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify', 'verify-full', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'diff', 'impact', 'review', 'ownership', 'api-compat', 'policy',
-        'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-validate',
+        'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
         'task-circuit-list', 'task-circuit-open', 'task-circuit-reset', 'task-circuit-verify', 'task-circuit-prune',
         'task-decompose-list', 'task-decompose-plan', 'task-decompose-verify', 'task-decompose-apply', 'task-decompose-prune',
         'task-verification-plan', 'task-verification-show', 'task-verification-verify', 'task-verification-run',
@@ -120,6 +120,8 @@ param(
     [string[]]$ExcludedPath,
     [double]$DurationSeconds,
     [string]$OutputPath,
+    [ValidateSet('screenshot', 'browser-log', 'accessibility-report', 'video')]
+    [string]$EvidenceKind = 'screenshot',
     [string]$ExportPath,
     [string]$ImportPath,
     [string]$PolicyPath = '.llm-wiki/policies/workspace-policies.json',
@@ -195,6 +197,16 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$gitConfigCount = 0
+if (-not [string]::IsNullOrWhiteSpace($env:GIT_CONFIG_COUNT)) {
+    $parsedGitConfigCount = 0
+    if ([int]::TryParse($env:GIT_CONFIG_COUNT, [ref]$parsedGitConfigCount)) {
+        $gitConfigCount = $parsedGitConfigCount
+    }
+}
+Set-Item -LiteralPath "Env:GIT_CONFIG_KEY_$gitConfigCount" -Value 'core.safecrlf'
+Set-Item -LiteralPath "Env:GIT_CONFIG_VALUE_$gitConfigCount" -Value 'false'
+$env:GIT_CONFIG_COUNT = [string]($gitConfigCount + 1)
 $toolsRoot = Join-Path $PSScriptRoot 'tools'
 . (Join-Path $toolsRoot 'LlmWikiJson.ps1')
 Enable-LlmWikiStringDateJsonParsing
@@ -259,6 +271,23 @@ switch ($Command) {
         Invoke-WikiTool 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' }
         Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' @{ FailOnViolation = $true }
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' @{ FailOnUnreviewed = $true }
+    }
+    'verify-fast' {
+        Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
+        Invoke-WikiTool 'Test-LlmWiki.ps1'
+        Invoke-WikiTool 'Test-LlmWikiLint.ps1'
+        $indexArguments = @{ Check = $true; AffectedOnly = $true; BaseRef = $BaseRef }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
+        Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments
+        $policyArguments = @{ FailOnViolation = $true }
+        $impactArguments = @{ FailOnUnreviewed = $true }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) {
+            $policyArguments.ChangedPath = $ChangedPath
+            $impactArguments.ChangedPath = $ChangedPath
+        }
+        Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' $policyArguments
+        Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
+        Write-Host 'Fast scoped verification passed. Run wiki.ps1 verify before final handoff.'
     }
     'verify-full' {
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
@@ -1503,6 +1532,16 @@ switch ($Command) {
             Reason = $Reason
         }
     }
+    'evidence-artifact' {
+        Invoke-WikiTool 'Manage-LlmWikiEvidence.ps1' @{
+            Action = 'artifact'
+            Path = $EvidencePath
+            Id = $Id
+            OutputPath = $OutputPath
+            ArtifactKind = $EvidenceKind
+            Reason = $Reason
+        }
+    }
     'evidence-validate' {
         Invoke-WikiTool 'Manage-LlmWikiEvidence.ps1' @{
             Action = 'validate'
@@ -1699,6 +1738,7 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 update [-AffectedOnly] [-BaseRef <ref>] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 lint [-Format Json]'
         Write-Host '  ./.llm-wiki/wiki.ps1 smoke -SmokeGroup portable|linux|tools'
+        Write-Host '  ./.llm-wiki/wiki.ps1 verify-fast [-BaseRef <ref>] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify [-AffectedOnly] [-BaseRef <ref>] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify-full'
         Write-Host '  ./.llm-wiki/wiki.ps1 context -Module Billing -ChangeType Api'
@@ -1894,6 +1934,7 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 evidence-run -Id <id>'
         Write-Host '  ./.llm-wiki/wiki.ps1 evidence-check -Id <id> -Status passed'
         Write-Host '  ./.llm-wiki/wiki.ps1 evidence-review -Id <id> -Status completed -Reason <text>'
+        Write-Host '  ./.llm-wiki/wiki.ps1 evidence-artifact -Id <review-id> -OutputPath <file> -EvidenceKind screenshot -Reason <text>'
         Write-Host '  ./.llm-wiki/wiki.ps1 evidence-validate'
         Write-Host '  ./.llm-wiki/wiki.ps1 handoff [-OutputPath <path>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 evals [-Detailed]'

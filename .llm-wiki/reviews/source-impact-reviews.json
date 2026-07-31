@@ -120,14 +120,14 @@
                         "pageSha256":  "182933effc68070bdf0da58c6fe4733c2f4c7cf005c4fb7c0644bcb021fe01ea",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "f9a0814b2603ceac627296c425a947e41cb6eeabf61e09a513d17070eda67978"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+                                            "sha256":  "7c6024b7196e006b110200c02c9509a695e74a80a251dd3bc78f42b9f6277a23"
                                         }
                                     ],
-                        "reason":  "Deterministic early return applies only when diff, intent, and planned paths are all empty; manifest behavior is unchanged.",
+                        "reason":  "Adding hashed browser artifacts to standalone evidence does not change manifest scope, phase, or reconciliation semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "33a7de4c766ab18a1f0883982fad60306828b843",
-                        "reviewedAtUtc":  "2026-07-30T23:28:08.6066708Z"
+                        "gitHead":  "ddd147adcc1fb14c9a7d1e7346ef0d87dfcab7ad",
+                        "reviewedAtUtc":  "2026-07-31T07:43:21.6401985Z"
                     },
                     {
                         "pageId":  "workflow-change-packet",
@@ -271,13 +271,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "0c4e22faab61bd48ce4caa2f8d2c2ab802b26e14fea01ec0e8554261a6a519c4"
+                                            "sha256":  "30ff1314472400d94522aed2f1f97e4d5c19e4b627f95521400f8de609fd073c"
                                         }
                                     ],
-                        "reason":  "Reviewed normalized PlannedPath forwarding; task dispatch receipt behavior is unchanged.",
+                        "reason":  "New verify/evidence routes and process-local Git warning suppression do not change task dispatch receipt semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ee37a9ccd4f1777efdfc303df8bbce091f66dad",
-                        "reviewedAtUtc":  "2026-07-30T21:38:35.8986678Z"
+                        "gitHead":  "ddd147adcc1fb14c9a7d1e7346ef0d87dfcab7ad",
+                        "reviewedAtUtc":  "2026-07-31T07:43:55.3258813Z"
                     },
                     {
                         "pageId":  "workflow-trace-feature",
