@@ -1,0 +1,50 @@
+[CmdletBinding()]
+param(
+    [string]$TasksPath = '.artifacts/llm-wiki/tasks',
+    [ValidateSet('Text', 'Json')]
+    [string]$Format = 'Text'
+)
+
+$ErrorActionPreference = 'Stop'
+$repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+$root = Join-Path $repositoryRoot $TasksPath
+$items = [Collections.Generic.List[object]]::new()
+if (Test-Path -LiteralPath $root -PathType Container) {
+    foreach ($directory in @(Get-ChildItem -LiteralPath $root -Directory)) {
+        if ($directory.Name.StartsWith('.')) { continue }
+        $workspacePath = Join-Path $directory.FullName 'workspace.json'
+        if (-not (Test-Path -LiteralPath $workspacePath -PathType Leaf)) { continue }
+        $workspace = Get-Content -LiteralPath $workspacePath -Raw | ConvertFrom-Json
+        $evidencePath = Join-Path $directory.FullName 'evidence.json'
+        $manifestPath = Join-Path $directory.FullName 'change-manifest.json'
+        $acceptancePath = Join-Path $directory.FullName 'acceptance-matrix.json'
+        $completionPath = Join-Path $directory.FullName 'completion.json'
+        $evidence = if (Test-Path -LiteralPath $evidencePath) { Get-Content -LiteralPath $evidencePath -Raw | ConvertFrom-Json } else { $null }
+        $items.Add([pscustomobject][ordered]@{
+            id = $directory.Name
+            objective = [string]$workspace.objective
+            state = $(if (Test-Path -LiteralPath $completionPath -PathType Leaf) { 'sealed' } elseif (-not [string]::IsNullOrWhiteSpace([string]$workspace.state)) { [string]$workspace.state } else { 'in-progress' })
+            hasManifest = Test-Path -LiteralPath $manifestPath
+            hasAcceptance = Test-Path -LiteralPath $acceptancePath
+            resolvedChecks = @($evidence.checks | Where-Object status -in @('passed', 'not-applicable')).Count
+            failedChecks = @($evidence.checks | Where-Object status -eq 'failed').Count
+            resolvedReviews = @($evidence.reviews | Where-Object status -in @('completed', 'not-applicable')).Count
+        })
+    }
+}
+$result = [pscustomobject][ordered]@{
+    schemaVersion = 1
+    workspaceCount = $items.Count
+    readyOrSealedCount = @($items | Where-Object state -in @('ready', 'sealed', 'complete')).Count
+    failedCheckCount = [int](($items | Measure-Object failedChecks -Sum).Sum)
+    ceremony = [pscustomobject][ordered]@{
+        manifestAdoptionPercent = $(if ($items.Count -eq 0) { 0 } else { [Math]::Round(100 * @($items | Where-Object hasManifest).Count / $items.Count, 1) })
+        acceptanceAdoptionPercent = $(if ($items.Count -eq 0) { 0 } else { [Math]::Round(100 * @($items | Where-Object hasAcceptance).Count / $items.Count, 1) })
+    }
+    workspaces = @($items)
+    note = 'These are local workflow adoption and outcome signals, not a quality score. Use retrospectives and CI evidence for causal conclusions.'
+}
+if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 8; exit 0 }
+Write-Host "Wiki workflow metrics: $($result.workspaceCount) workspace(s), $($result.readyOrSealedCount) ready/sealed, $($result.failedCheckCount) failed check(s)"
+Write-Host "Ceremony adoption: manifest=$($result.ceremony.manifestAdoptionPercent)%, acceptance=$($result.ceremony.acceptanceAdoptionPercent)%"
+Write-Host $result.note

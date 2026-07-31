@@ -51,19 +51,23 @@ $hasArchitecturalEvidence = $architecturalIntent -or [bool]$brief.decisionContex
 $scopeKnown = $paths.Count -gt 0 -and $scopes.Count -gt 0
 $productionScopes = @($scopes | Where-Object { $_ -notin @('Tests', 'Documentation', 'Localization') })
 $crossCutting = $productionScopes.Count -gt 1 -or @($brief.change.directModules + $brief.change.downstreamModules | Select-Object -Unique).Count -gt 2
+$wikiInternal = @($paths | Where-Object { $_ -match '^\.llm-wiki/' }).Count -gt 0
 
 $profile = 'feature'
 if ($hasCriticalEvidence) { $profile = 'critical' }
 elseif ($hasArchitecturalEvidence) { $profile = 'architectural' }
 elseif ($presentationOnly -and $scopeKnown -and [int]$brief.risk.score -le 4) { $profile = 'tiny' }
 elseif ($bugIntent -and -not $crossCutting) { $profile = 'bug' }
-elseif (-not $featureIntent -and [int]$brief.risk.score -le 2 -and $scopeKnown -and -not $crossCutting) { $profile = 'tiny' }
+elseif (-not $featureIntent -and [int]$brief.risk.score -le 2 -and $scopeKnown -and -not $crossCutting -and -not $wikiInternal) { $profile = 'tiny' }
 
 $confidence = if (-not $scopeKnown) { 'low' } elseif ([string]$brief.analysis.confidence -eq 'high') { 'high' } else { 'medium' }
 $requiresPathDiscovery = -not $scopeKnown
 $requiresDecisionCheckpoint = $profile -in @('critical', 'architectural') -or [bool]$brief.decisionContext.reviewRequired
 $requiresDesign = $profile -in @('feature', 'critical', 'architectural')
 $requiresWorkspace = $profile -in @('critical', 'architectural') -or $crossCutting
+$experiencePolicyPath = Join-Path (Split-Path -Parent $PSScriptRoot) 'policies/experience-policies.json'
+$experiencePolicy = Get-Content -LiteralPath $experiencePolicyPath -Raw | ConvertFrom-Json
+$ceremonyBudget = $experiencePolicy.ceremonyBudgets.$profile
 
 $stages = [Collections.Generic.List[object]]::new()
 function Add-Stage([string]$Id, [string]$Purpose, [string]$Command, [bool]$Required, [string]$CompletionEvidence) {
@@ -122,6 +126,8 @@ $result = [pscustomobject][ordered]@{
     requiresDecisionCheckpoint = $requiresDecisionCheckpoint
     requiresDesign = $requiresDesign
     requiresWorkspace = $requiresWorkspace
+    ceremonyBudget = $ceremonyBudget
+    ceremonyPrinciples = @($experiencePolicy.principles)
     reasons = @($reasons)
     inferred = [pscustomobject][ordered]@{
         paths = $paths
@@ -136,6 +142,7 @@ $result = [pscustomobject][ordered]@{
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 10; exit 0 }
 Write-Host "Adaptive workflow: $profile ($confidence confidence)"
 Write-Host "Objective: $Objective"
+Write-Host "Ceremony budget: $($ceremonyBudget.label), at most $($ceremonyBudget.maximumRequiredStages) required stage(s)"
 foreach ($reason in $result.reasons) { Write-Host "Reason: $reason" }
 Write-Host ''
 foreach ($stage in $result.stages) {

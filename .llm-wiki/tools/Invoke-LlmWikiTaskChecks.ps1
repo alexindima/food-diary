@@ -81,18 +81,21 @@ if (-not $DryRun -and $plans.Count -gt 0) {
             -Path "$normalizedWorkspacePath/evidence.json" `
             -Id $plan.id `
             -NoExitOnFailure 2>&1)
-        $exitCode = if ($null -eq $LASTEXITCODE) { 0 } else { [int]$LASTEXITCODE }
+        $updatedEvidence = Get-Content -LiteralPath $evidenceAbsolutePath -Raw | ConvertFrom-Json
+        $recordedResult = & (Join-Path $PSScriptRoot 'Resolve-LlmWikiRecordedCheckResult.ps1') `
+            -Evidence $updatedEvidence `
+            -Id $plan.id
+        $exitCode = [int]$recordedResult.exitCode
         $finishedAt = [DateTime]::UtcNow
         $durationSeconds = [Math]::Round(($finishedAt - $startedAt).TotalSeconds, 2)
         [System.IO.File]::WriteAllLines(
             $logAbsolutePath,
             @($runOutput | ForEach-Object { [string]$_ }),
             [System.Text.UTF8Encoding]::new($false))
-        $status = if ($exitCode -eq 0) { 'passed' } else { 'failed' }
+        $status = [string]$recordedResult.status
         if ($exitCode -ne 0) { $failureCount++ }
 
-        $updatedEvidence = Get-Content -LiteralPath $evidenceAbsolutePath -Raw | ConvertFrom-Json
-        $updatedEntry = $updatedEvidence.checks | Where-Object id -eq $plan.id | Select-Object -First 1
+        $updatedEntry = $recordedResult.entry
         if ($null -eq $updatedEntry.PSObject.Properties['logPath']) {
             $updatedEntry | Add-Member -NotePropertyName logPath -NotePropertyValue $plan.logPath
         } else {
@@ -111,13 +114,18 @@ if (-not $DryRun -and $plans.Count -gt 0) {
             $evidenceAbsolutePath,
             (($updatedEvidence | ConvertTo-Json -Depth 15) + [Environment]::NewLine),
             [System.Text.UTF8Encoding]::new($false))
-        & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') record `
-            -WorkspacePath $normalizedWorkspacePath `
-            -CheckId $plan.id `
-            -Status $status `
-            -DurationSeconds $durationSeconds `
-            -Command $plan.command `
-            -AsOfUtc $finishedAt | Out-Null
+        # The Wiki's own verification reads the tracked telemetry registry. Recording
+        # that check here would mutate its input after every successful run and make
+        # the evidence invalidate itself during the workspace refresh below.
+        if ($plan.id -ne 'wiki-verify') {
+            & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') record `
+                -WorkspacePath $normalizedWorkspacePath `
+                -CheckId $plan.id `
+                -Status $status `
+                -DurationSeconds $durationSeconds `
+                -Command $plan.command `
+                -AsOfUtc $finishedAt | Out-Null
+        }
 
         $runs.Add([pscustomobject][ordered]@{
             id = $plan.id

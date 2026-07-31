@@ -1,4 +1,42 @@
 {
-  "schemaVersion": 2,
-  "events": []
+    "schemaVersion":  2,
+    "events":  [
+                   {
+                       "schemaVersion":  2,
+                       "eventId":  "7f2f6284836348f88e216b6590044905",
+                       "workspace":  ".artifacts/llm-wiki/tasks/wiki-developer-experience",
+                       "recordedAtUtc":  "2026-07-31T13:40:17.4507820Z",
+                       "completionFingerprint":  "dfe6ba86e138e7fc4726ac40fc49652d95f08ca565b16a5ae95f90899b888d04",
+                       "retrospectiveHash":  "c268b7c6425421480421a4bbf8af327b20acd8d5c0bcf006752bc7200059406d",
+                       "instructionSetFingerprint":  "c2747526a0ecd822dbcd3e63118387b43632e27b1a2c86cf99755c4ce0ee3b33",
+                       "sources":  [
+                                       {
+                                           "path":  "AGENTS.md",
+                                           "fingerprint":  "4e2db42accf2a8d8d6769c90e66742c8796d9793b39c95a179b89ba8607f4571"
+                                       }
+                                   ],
+                       "taskSignals":  {
+                                           "riskLevel":  "low",
+                                           "complexityScore":  20,
+                                           "complexityBandUpperBound":  34,
+                                           "cohortKey":  "low|complexity\u003c=34",
+                                           "modelRouteId":  "unrouted",
+                                           "contextStrategyId":  "default"
+                                       },
+                       "outcome":  {
+                                       "score":  96.25,
+                                       "quality":  "good",
+                                       "readinessScore":  100,
+                                       "confidenceScore":  95,
+                                       "critiqueScore":  90,
+                                       "verificationScore":  100,
+                                       "repairAttempts":  0,
+                                       "falseNegativeCount":  0
+                                   },
+                       "success":  true,
+                       "policyFingerprint":  "71eeba62debc3c8107d20ecfd9fcf45734b24402c75e859ab537d7fea7adca18",
+                       "previousEventHash":  "",
+                       "eventHash":  "dbad605a6005f9a67af07de4f9190d9465c734c6a2493b15e0391c06c405cee7"
+                   }
+               ]
 }

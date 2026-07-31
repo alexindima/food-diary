@@ -1,0 +1,70 @@
+---
+id: workflow-developer-experience
+kind: workflow
+status: current
+title: Use the compact LLM Wiki developer experience
+summary: Drive normal work through a small facade while preserving existing adaptive, manifest, journey, evidence, and delivery sources of truth.
+tags:
+  - workflow
+  - developer-experience
+  - planning
+sources:
+  - .llm-wiki/tools/Get-LlmWikiExperience.ps1
+  - .llm-wiki/tools/Get-LlmWikiSolutionComparison.ps1
+  - .llm-wiki/tools/Get-LlmWikiPhaseStatus.ps1
+  - .llm-wiki/tools/Get-LlmWikiManualQaPlan.ps1
+  - .llm-wiki/tools/Get-LlmWikiWorkflowMetrics.ps1
+  - .llm-wiki/tools/Get-LlmWikiResearchPacket.ps1
+  - .llm-wiki/policies/experience-policies.json
+---
+
+# Compact LLM Wiki developer experience
+
+Normal development has five user-facing steps:
+
+```text
+develop -> next -> phase-next -> validate -> handoff
+```
+
+Start or inspect work with one command:
+
+```powershell
+./.llm-wiki/wiki.ps1 next -Intent "Fix the invitation link" -PlannedPath '<known path>'
+./.llm-wiki/wiki.ps1 next -WorkspacePath .artifacts/llm-wiki/tasks/<name>
+```
+
+`next` prints exactly one recommended action and a short preview of later work.
+It derives state from the adaptive route or existing governed workspace; it does
+not create a second workflow record. `status` exposes the same compact pipeline
+without replacing the detailed delivery and task status commands.
+
+When a durable choice exists, compare options before design:
+
+```powershell
+./.llm-wiki/wiki.ps1 solutions -Intent '<outcome>' `
+  -Option '<bounded option>','<structural option>'
+```
+
+The comparison is derived advice. Record the selected option and source evidence
+through the existing `design -Decision` or task journal.
+
+For governed work, inspect implementation phases with `phase-status` or
+`phase-next`. `phase-complete -FailOnInvalid` verifies the selected manifest
+phase against the current Git diff. Phase state is never stored separately from
+the manifest and Git evidence.
+
+Generate manual exploratory coverage with `qa`. Journey cases come from the
+durable product journey catalog; generic failure and retry cases are always
+included, while accessibility, localization, and mobile cases are added only for
+frontend scope. Generated output is disposable unless a reviewed scenario is
+promoted into the journey catalog.
+
+`workflow-metrics` summarizes local workspace adoption and outcomes. Metrics are
+signals for retrospective improvement, not proof that the Wiki caused quality.
+Ceremony budgets keep tiny and bug work short and reserve governed workspaces and
+independent critique for evidence that requires them.
+
+Research packets expose five stable lanes—flow, tests, integrations, precedents,
+and guidance—so independent investigation can be parallelized without making
+agent-specific scratch output part of the Wiki contract. Design checkpoints expose
+one review checkpoint per implementation slice.

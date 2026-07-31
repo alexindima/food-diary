@@ -3082,6 +3082,15 @@ try {
     Assert-Wiki (@($taskRunPlan.plans.id) -contains 'architecture-tests') 'Task-run omitted the canonical required check.'
     Assert-Wiki (-not (Test-Path -LiteralPath (Join-Path $absoluteTaskWorkspacePath 'logs'))) 'Task-run dry run created a logs directory.'
 
+    $recordedFailure = & (Join-Path $toolsRoot 'Resolve-LlmWikiRecordedCheckResult.ps1') `
+        -Evidence ([pscustomobject]@{ checks = @([pscustomobject]@{ id = 'wiki-verify'; status = 'failed' }) }) `
+        -Id 'wiki-verify'
+    Assert-Wiki ($recordedFailure.status -eq 'failed' -and $recordedFailure.exitCode -eq 1) 'Task-run would convert a recorded failed evidence check into a successful execution.'
+    $recordedPass = & (Join-Path $toolsRoot 'Resolve-LlmWikiRecordedCheckResult.ps1') `
+        -Evidence ([pscustomobject]@{ checks = @([pscustomobject]@{ id = 'wiki-verify'; status = 'passed' }) }) `
+        -Id 'wiki-verify'
+    Assert-Wiki ($recordedPass.status -eq 'passed' -and $recordedPass.exitCode -eq 0) 'Task-run did not preserve a recorded passed evidence check.'
+
     $workspaceEvidencePath = Join-Path $absoluteTaskWorkspacePath 'evidence.json'
     $originalWorkspaceEvidence = Get-Content -LiteralPath $workspaceEvidencePath -Raw
     $tamperedWorkspaceEvidence = $originalWorkspaceEvidence | ConvertFrom-Json

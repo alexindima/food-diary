@@ -100,7 +100,7 @@ if (-not $workflow.scopeKnown) {
 if ($workflow.requiresDecisionCheckpoint) {
     $openQuestions.Add([pscustomobject][ordered]@{ id = 'resolve-design-boundary'; blocking = $true; question = 'Which compatibility, privacy, provider, persistence, or architecture choice must be fixed before editing?'; evidenceNeeded = 'Record a source-grounded decision or explicit assumption in the task journal.' })
 }
-if (@($context.implementationFiles).Count -eq 0 -and @($context.symbols).Count -eq 0 -and @($context.frontendSymbols).Count -eq 0) {
+if ($scopePaths.Count -eq 0 -and @($context.implementationFiles).Count -eq 0 -and @($context.symbols).Count -eq 0 -and @($context.frontendSymbols).Count -eq 0) {
     $openQuestions.Add([pscustomobject][ordered]@{ id = 'locate-implementation'; blocking = $true; question = 'The context index found no ranked implementation file. What exact symbol or route names the flow?'; evidenceNeeded = 'Use trace or source search and rerun research with PlannedPath.' })
 }
 
@@ -126,6 +126,13 @@ $result = [pscustomobject][ordered]@{
         guides = @($context.agentGuides | Select-Object -First $Limit)
         wikiPages = @($context.wikiPages | Select-Object -First $Limit)
     }
+    researchLanes = @(
+        [pscustomobject][ordered]@{ id = 'flow'; purpose = 'Current implementation and entry points'; evidenceCount = $implementationFiles.Count + $symbolFiles.Count + $frontendFiles.Count; sources = @($implementationFiles.path + $symbolFiles.path + $frontendFiles.path | Sort-Object -Unique) }
+        [pscustomobject][ordered]@{ id = 'tests'; purpose = 'Focused regression and contract evidence'; evidenceCount = @($context.tests).Count; sources = @($context.tests.path | Select-Object -First $Limit) }
+        [pscustomobject][ordered]@{ id = 'integrations'; purpose = 'Runtime, provider, DI, and delivery boundaries'; evidenceCount = @($context.httpClients + $context.hostedServices + $context.webhooks + $context.dependencyInjection | Where-Object { $null -ne $_ }).Count; sources = @($context.httpClients.path + $context.hostedServices.path + $context.webhooks.path + $context.dependencyInjection.path | Where-Object { $_ } | Sort-Object -Unique | Select-Object -First $Limit) }
+        [pscustomobject][ordered]@{ id = 'precedents'; purpose = 'Git precedents and verified failure knowledge'; evidenceCount = @($precedents.precedents).Count + $failureMatches.Count; sources = @($precedents.precedents.shortHash + $failureMatches.id) }
+        [pscustomobject][ordered]@{ id = 'guidance'; purpose = 'Scoped instructions and governed Wiki context'; evidenceCount = @($context.agentGuides).Count + @($context.wikiPages).Count; sources = @($context.agentGuides.path + $context.wikiPages.path | Sort-Object -Unique | Select-Object -First $Limit) }
+    )
     boundaries = [pscustomobject][ordered]@{
         runtime = @($context.httpClients + $context.hostedServices + $context.webhooks | Where-Object { $null -ne $_ } | Select-Object -First $Limit)
         privacy = [pscustomobject][ordered]@{
@@ -162,6 +169,7 @@ Write-Host "Grounded paths: $($result.discovery.groundedPaths.Count)"
 foreach ($item in $result.discovery.implementationFiles) { Write-Host "  Source: $($item.path) (score=$($item.score), $($item.provenance))" }
 foreach ($item in $result.precedents) { Write-Host "  Precedent: $($item.shortHash) $($item.subject)" }
 foreach ($item in $result.knownFailures) { Write-Host "  Known failure: $($item.id) - $($item.symptom)" }
+foreach ($lane in $result.researchLanes) { Write-Host "  Lane $($lane.id): $($lane.evidenceCount) evidence item(s) - $($lane.purpose)" }
 foreach ($item in $result.openQuestions) { Write-Host "  OPEN [$($item.id)]: $($item.question)" }
 Write-Host "Ready to design: $($result.readiness.readyToDesign)"
 Write-Host "Ready to implement: $($result.readiness.readyToImplement)"

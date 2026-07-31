@@ -15,9 +15,12 @@ sources:
 
 # Learn from verification outcomes
 
-Every real task-check execution appends its outcome and elapsed time to
-`verification-telemetry.json`. Events bind the task packet, check id, command,
-workspace policy, and previous event hash. Dry runs never create telemetry.
+Every real task-check execution except `wiki-verify` appends its outcome and
+elapsed time to `verification-telemetry.json`. Events bind the task packet, check
+id, command, workspace policy, and previous event hash. Dry runs never create
+telemetry. The self-verification exception prevents the tracked registry from
+changing after it has just been verified; the task evidence and hashed log still
+record the complete `wiki-verify` execution.
 
 ```powershell
 ./.llm-wiki/wiki.ps1 verification-telemetry-metrics

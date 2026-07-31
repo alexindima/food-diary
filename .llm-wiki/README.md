@@ -47,6 +47,22 @@ Rules:
 Start at [index.md](index.md). Follow the smallest relevant set of pages, then
 open the cited source files before changing code.
 
+For normal work, prefer the compact path:
+
+```powershell
+./.llm-wiki/wiki.ps1 develop -Intent '<task>' -PlannedPath '<known path>'
+./.llm-wiki/wiki.ps1 next -Intent '<task>' -PlannedPath '<known path>'
+./.llm-wiki/wiki.ps1 next -WorkspacePath .artifacts/llm-wiki/tasks/<name>
+./.llm-wiki/wiki.ps1 phase-next -WorkspacePath .artifacts/llm-wiki/tasks/<name>
+./.llm-wiki/wiki.ps1 delivery-validate -WorkspacePath .artifacts/llm-wiki/tasks/<name> -FailOnInvalid
+./.llm-wiki/wiki.ps1 handoff
+```
+
+Use `solutions` when alternatives matter, `qa` for journey-derived manual
+scenarios, and `workflow-metrics` during retrospectives. The longer command
+catalog below is the diagnostic and governance interface; agents should not
+manually orchestrate it when `next` already provides a sufficient action.
+
 The unified developer entrypoint is:
 
 ```powershell

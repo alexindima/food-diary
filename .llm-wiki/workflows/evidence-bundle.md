@@ -9,6 +9,7 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiContentFingerprint.ps1
   - .llm-wiki/tools/Manage-LlmWikiEvidenceCache.ps1
   - .llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1
+  - .llm-wiki/tools/Resolve-LlmWikiRecordedCheckResult.ps1
   - .llm-wiki/tools/Test-LlmWikiChangePolicy.ps1
   - .llm-wiki/policies/change-policies.json
 ---
@@ -102,3 +103,10 @@ log-hash mismatches are excluded. Reuse copies the verified log into the target,
 preserves source completion and compatibility fingerprints in a reuse chain,
 records a journal decision, revalidates target lineage, and rolls back evidence,
 journal, and copied log together on failure.
+
+The task runner intentionally excludes `wiki-verify` from verification telemetry.
+That check validates the tracked telemetry registry, so recording itself would
+mutate a verified input and invalidate the check during the same workspace refresh.
+Its status, duration, log hash, and evidence lineage remain recorded normally.
+Task-run success is derived from that recorded terminal evidence status rather
+than ambient process `$LASTEXITCODE`, which can be overwritten by lineage work.

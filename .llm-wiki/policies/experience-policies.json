@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "ceremonyBudgets": {
+    "tiny": { "label": "minimal", "maximumRequiredStages": 4, "workspace": false, "design": false, "independentReview": false },
+    "bug": { "label": "focused", "maximumRequiredStages": 5, "workspace": false, "design": false, "independentReview": false },
+    "feature": { "label": "designed", "maximumRequiredStages": 7, "workspace": "when-cross-cutting", "design": true, "independentReview": false },
+    "critical": { "label": "governed", "maximumRequiredStages": 11, "workspace": true, "design": true, "independentReview": true },
+    "architectural": { "label": "governed", "maximumRequiredStages": 11, "workspace": true, "design": true, "independentReview": true }
+  },
+  "principles": [
+    "Every required stage must be justified by current intent, path, risk, or policy evidence.",
+    "Facade commands derive state from existing task, manifest, evidence, journey, and Git artifacts.",
+    "A lower-risk profile must not create a governed workspace unless actual evidence elevates the task.",
+    "Internal commands remain available, but normal work should use develop, next, phase-next, validate, and handoff."
+  ]
+}
+

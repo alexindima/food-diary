@@ -61,6 +61,14 @@ $result = [pscustomobject][ordered]@{
         [pscustomobject][ordered]@{ id = 'structural-change'; description = 'Introduce a new abstraction or boundary.'; evaluation = 'Use only when the existing pattern cannot satisfy an explicit invariant; record the decision.' }
     )
     implementationPhases = @($plan.phases)
+    designSlices = @($plan.phases | ForEach-Object {
+        [pscustomobject][ordered]@{
+            id = "slice-$($_.id)"
+            outcome = $_.outcome
+            files = @($_.files)
+            checkpoint = "Confirm the slice outcome, consumer compatibility, and focused verification before continuing to the next phase."
+        }
+    })
     ready = @($decisionQuestions | Where-Object blocking).Count -eq 0 -and @($research.discovery.groundedPaths).Count -gt 0
     nextAction = if (@($decisionQuestions | Where-Object blocking).Count -gt 0) {
         'Resolve blocking decision questions with current-source evidence and record the selected alternative before editing.'

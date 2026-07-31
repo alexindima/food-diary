@@ -218,7 +218,13 @@ switch ($Action) {
         Write-Host "Running evidence check '$Id': $commandToRun"
         $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
         $global:LASTEXITCODE = 0
-        if ($env:OS -eq 'Windows_NT') {
+        if ($env:OS -eq 'Windows_NT' -and $commandToRun -match '^\./\.llm-wiki/wiki\.ps1\s+') {
+            $commandParts = @($commandToRun -split '\s+' | Where-Object { $_ })
+            $scriptPath = $commandParts[0]
+            $scriptArguments = @($commandParts | Select-Object -Skip 1)
+            $hostExecutable = (Get-Process -Id $PID).Path
+            & $hostExecutable -NoLogo -NoProfile -File $scriptPath @scriptArguments
+        } elseif ($env:OS -eq 'Windows_NT') {
             & cmd.exe /d /s /c $commandToRun
         } else {
             & bash -lc $commandToRun

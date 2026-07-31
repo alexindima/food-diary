@@ -104,6 +104,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Use `./.llm-wiki/wiki.ps1 diff` to discover change-set context and `./.llm-wiki/wiki.ps1 verify` before handing off wiki-affecting changes.
 - Use `./.llm-wiki/wiki.ps1 brief` to compile risk, scoped instructions, affected modules, focused tests, and review obligations for a non-trivial change.
 - Start a new bug or feature with `./.llm-wiki/wiki.ps1 develop -Intent <task>`; add `-PlannedPath` when likely files are known. Follow its adaptive `tiny`, `bug`, `feature`, `critical`, or `architectural` route rather than applying the full governed workflow to every change.
+- During implementation, prefer `./.llm-wiki/wiki.ps1 next` for the single recommended action, `phase-next` for governed implementation phases, and `qa` for journey-derived manual scenarios. These facade commands derive from existing Wiki artifacts and do not replace detailed commands when diagnosis is needed.
 - Use `research` before editing a non-trivial existing flow. It combines ranked code context, focused tests, known failures, and Git precedents; verify all inferred paths and historical patterns in current sources.
 - Use `design` only when the adaptive route requires it or when research exposes a blocking product, compatibility, privacy, provider, persistence, or architecture decision.
 - For governed work spanning sessions, use `pause` and `resume`; resume must report clean continuity or require a task refresh before edits continue.

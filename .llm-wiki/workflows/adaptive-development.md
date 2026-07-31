@@ -155,3 +155,19 @@ The adaptive route never replaces deterministic gates:
 The objective is proportional rigor: small local changes stay fast, while sensitive
 or structural changes receive explicit research, decisions, evidence, and independent
 review.
+
+## Compact execution interface
+
+The adaptive route exposes a ceremony budget for every profile. Use `next` to
+obtain one recommended command without manually coordinating the internal tools:
+
+```powershell
+./.llm-wiki/wiki.ps1 next -Intent '<task>' -PlannedPath '<known path>'
+./.llm-wiki/wiki.ps1 next -WorkspacePath .artifacts/llm-wiki/tasks/<name>
+```
+
+When multiple durable approaches remain, run `solutions` before `design`. During
+governed implementation, use `phase-next`; phase state is derived from the change
+manifest and Git diff. Research packets group evidence into flow, tests,
+integrations, precedents, and guidance lanes so investigations can run independently
+without persisting agent scratch output as a second source of truth.

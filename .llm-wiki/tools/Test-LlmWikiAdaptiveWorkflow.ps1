@@ -21,6 +21,7 @@ Assert-Adaptive ($tiny.profile -eq 'tiny') 'Bounded visual work was not routed a
 Assert-Adaptive (-not $tiny.requiresDesign -and -not $tiny.requiresWorkspace) 'Tiny work retained heavyweight design or workspace requirements.'
 Assert-Adaptive (@($tiny.stages.id) -notcontains 'independent-review') 'Tiny work retained critical independent review.'
 Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'verification' -and $_.command -match 'verify-fast' }).Count -eq 1) 'Tiny work did not select verify-fast.'
+Assert-Adaptive ($tiny.ceremonyBudget.label -eq 'minimal') 'Tiny work omitted its minimal ceremony budget.'
 
 $critical = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Fix Google authentication token linking for an existing account.' `
@@ -63,6 +64,34 @@ $research = & (Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1') `
 Assert-Adaptive (@($research.discovery.groundedPaths).Count -gt 0) 'Research did not ground the task in current repository paths.'
 Assert-Adaptive (@($research.precedents).Count -gt 0) 'Research omitted Git precedents.'
 Assert-Adaptive (@($research.authority).Count -ge 2) 'Research omitted authority and provenance guidance.'
+Assert-Adaptive (@($research.researchLanes.id) -contains 'integrations') 'Research packet omitted the integrations investigation lane.'
+
+$solutions = & (Join-Path $PSScriptRoot 'Get-LlmWikiSolutionComparison.ps1') `
+    -Objective 'Improve the Wiki developer experience.' `
+    -Option 'Extend the existing adaptive flow.','Replace it with a second workflow.' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($solutions.alternatives.Count -eq 2 -and $solutions.recommendedOptionId -eq 'OPT-01') 'Solution comparison did not prefer the bounded existing-flow option.'
+
+$qa = & (Join-Path $PSScriptRoot 'Get-LlmWikiManualQaPlan.ps1') `
+    -Objective 'Fix the dietologist invitation email link.' `
+    -ProposedPath 'FoodDiary.Application/Dietologist/Services/DietologistEmailSender.cs' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive (@($qa.journeys) -contains 'FD-DIET') 'Manual QA plan omitted the matched product journey.'
+Assert-Adaptive (@($qa.cases.id) -contains 'QA-ERROR') 'Manual QA plan omitted generic negative coverage.'
+Assert-Adaptive (@($qa.cases.id) -notcontains 'QA-MOBILE') 'Backend-only manual QA plan retained irrelevant frontend ceremony.'
+
+$experience = & (Join-Path $PSScriptRoot 'Get-LlmWikiExperience.ps1') `
+    -Action next `
+    -Objective 'Improve photo annotation visibility with clearer SVG connectors.' `
+    -ProposedPath $visualPaths `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive (-not [string]::IsNullOrWhiteSpace([string]$experience.nextAction)) 'Compact experience did not return one next action.'
+Assert-Adaptive ($experience.ceremonyBudget.label -eq 'minimal') 'Compact experience omitted the routed ceremony budget.'
+
+$metrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkflowMetrics.ps1') `
+    -TasksPath '.artifacts/llm-wiki/no-such-task-root' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($metrics.schemaVersion -eq 1 -and $metrics.workspaceCount -eq 0) 'Workflow metrics did not handle an empty task history.'
 
 $workspaceName = "adaptive-smoke-$([Guid]::NewGuid().ToString('N'))"
 $workspace = ".artifacts/llm-wiki/tasks/$workspaceName"
@@ -137,4 +166,4 @@ if ($failures.Count -gt 0) {
     foreach ($failure in $failures) { Write-Host " - $failure" }
     exit 1
 }
-Write-Host 'Adaptive workflow smoke passed: routing, journeys, delivery gates, controlled replanning, research, precedents, and pause/resume continuity.'
+Write-Host 'Adaptive workflow smoke passed: routing, ceremony budgets, compact next action, solutions, QA journeys, delivery gates, controlled replanning, research, precedents, and pause/resume continuity.'

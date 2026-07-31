@@ -57,6 +57,7 @@ authoritative.
 
 ## Workflows
 
+- [Use the compact developer experience](workflows/developer-experience.md)
 - [Route a change through adaptive AI development](workflows/adaptive-development.md)
 - [Map changes to FoodDiary product journeys](workflows/product-journey-impact.md)
 - [Generate an implementation plan](workflows/implementation-plan.md)
