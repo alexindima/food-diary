@@ -103,6 +103,12 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Treat `.llm-wiki/` as compiled navigation, never as authority over code, tests, accepted ADRs, current `docs/`, or scoped `AGENTS.md`.
 - Use `./.llm-wiki/wiki.ps1 diff` to discover change-set context and `./.llm-wiki/wiki.ps1 verify` before handing off wiki-affecting changes.
 - Use `./.llm-wiki/wiki.ps1 brief` to compile risk, scoped instructions, affected modules, focused tests, and review obligations for a non-trivial change.
+- Start a new bug or feature with `./.llm-wiki/wiki.ps1 develop -Intent <task>`; add `-PlannedPath` when likely files are known. Follow its adaptive `tiny`, `bug`, `feature`, `critical`, or `architectural` route rather than applying the full governed workflow to every change.
+- Use `research` before editing a non-trivial existing flow. It combines ranked code context, focused tests, known failures, and Git precedents; verify all inferred paths and historical patterns in current sources.
+- Use `design` only when the adaptive route requires it or when research exposes a blocking product, compatibility, privacy, provider, persistence, or architecture decision.
+- For governed work spanning sessions, use `pause` and `resume`; resume must report clean continuity or require a task refresh before edits continue.
+- Use `journeys` for behavioral changes to identify affected FoodDiary end-to-end scenarios. In governed work, map applicable journey scenario IDs to acceptance criteria.
+- For governed work, use `delivery-status` during implementation, `delivery-replan -Reason <evidence>` for intentional scope/plan divergence, and `delivery-validate -FailOnInvalid` before completion. Critical and architectural changes also require `delivery-critique -FailOnInvalid`.
 - Use `./.llm-wiki/wiki.ps1 test-plan` to derive focused tests and risk scenarios before implementing or reviewing behavioral changes.
 - Use `./.llm-wiki/wiki.ps1 decision` when project references, dependency injection, deployment, ownership, or module graph changes.
 - Use `dependencies` for manifest changes and `rollout` for migrations, configuration, jobs, providers, or deployment-sensitive changes.

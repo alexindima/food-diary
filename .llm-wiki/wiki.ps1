@@ -2,7 +2,7 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify', 'verify-full', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
+        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify', 'verify-full', 'develop', 'research', 'precedents', 'design', 'pause', 'resume', 'journeys', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'diff', 'impact', 'review', 'ownership', 'api-compat', 'policy',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
@@ -89,6 +89,7 @@ param(
     [string]$Text,
     [string]$NoteId,
     [string]$Resolution,
+    [string[]]$Decision,
     [string]$ManifestPath = '.artifacts/llm-wiki/change-manifest.json',
     [string]$AcceptancePath = '.artifacts/llm-wiki/acceptance-matrix.json',
     [string]$Id,
@@ -268,6 +269,7 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
         Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments
         Invoke-WikiTool 'Invoke-LlmWikiEvals.ps1'
+        Invoke-WikiTool 'Test-LlmWikiAdaptiveWorkflow.ps1'
         Invoke-WikiTool 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' }
         Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' @{ FailOnViolation = $true }
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' @{ FailOnUnreviewed = $true }
@@ -296,6 +298,7 @@ switch ($Command) {
         Invoke-WikiTool 'Test-LlmWikiPortable.ps1'
         Invoke-WikiTool 'Invoke-LlmWikiFullVerification.ps1'
         Invoke-WikiTool 'Invoke-LlmWikiEvals.ps1'
+        Invoke-WikiTool 'Test-LlmWikiAdaptiveWorkflow.ps1'
         Invoke-WikiTool 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' }
         Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' @{ FailOnViolation = $true }
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' @{ FailOnUnreviewed = $true }
@@ -348,6 +351,68 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('Objective')) { $briefArguments.Intent = $Objective }
         if ($Compact) { $briefArguments.Compact = $true }
         Invoke-WikiTool 'Get-LlmWikiTaskBrief.ps1' $briefArguments
+    }
+    'develop' {
+        if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'develop requires -Intent <task description>.' }
+        $workflowArguments = @{ Objective = $Objective; BaseRef = $BaseRef; Format = $Format; Limit = $Limit }
+        if ($PSBoundParameters.ContainsKey('HeadRef')) { $workflowArguments.HeadRef = $HeadRef }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $workflowArguments.ChangedPath = $ChangedPath }
+        if ($PSBoundParameters.ContainsKey('ProposedPath')) { $workflowArguments.ProposedPath = $ProposedPath }
+        Invoke-WikiTool 'Get-LlmWikiAdaptiveWorkflow.ps1' $workflowArguments
+    }
+    'research' {
+        if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'research requires -Intent <task description>.' }
+        $researchArguments = @{ Objective = $Objective; BaseRef = $BaseRef; Format = $Format; Limit = $Limit }
+        if ($PSBoundParameters.ContainsKey('HeadRef')) { $researchArguments.HeadRef = $HeadRef }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $researchArguments.ChangedPath = $ChangedPath }
+        if ($PSBoundParameters.ContainsKey('ProposedPath')) { $researchArguments.ProposedPath = $ProposedPath }
+        Invoke-WikiTool 'Get-LlmWikiResearchPacket.ps1' $researchArguments
+    }
+    'precedents' {
+        if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'precedents requires -Intent <task description>.' }
+        $precedentArguments = @{ Objective = $Objective; Limit = [Math]::Min($Limit, 20); Format = $Format }
+        if ($PSBoundParameters.ContainsKey('ProposedPath')) { $precedentArguments.ScopePath = $ProposedPath }
+        Invoke-WikiTool 'Get-LlmWikiGitPrecedents.ps1' $precedentArguments
+    }
+    'design' {
+        if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'design requires -Intent <task description>.' }
+        $designArguments = @{ Objective = $Objective; BaseRef = $BaseRef; Format = $Format; Limit = $Limit }
+        if ($PSBoundParameters.ContainsKey('HeadRef')) { $designArguments.HeadRef = $HeadRef }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $designArguments.ChangedPath = $ChangedPath }
+        if ($PSBoundParameters.ContainsKey('ProposedPath')) { $designArguments.ProposedPath = $ProposedPath }
+        if ($PSBoundParameters.ContainsKey('Decision')) { $designArguments.Decision = $Decision }
+        Invoke-WikiTool 'Get-LlmWikiDesignCheckpoint.ps1' $designArguments
+    }
+    { $_ -in @('pause', 'resume') } {
+        Invoke-WikiTool 'Manage-LlmWikiAdaptiveSession.ps1' @{
+            Action = $Command
+            WorkspacePath = $WorkspacePath
+            Limit = $Limit
+            Overwrite = $Overwrite
+            Format = $Format
+        }
+    }
+    'journeys' {
+        $journeyArguments = @{ Query = $(if (-not [string]::IsNullOrWhiteSpace($Query)) { $Query } else { $Objective }); Limit = $Limit; Format = $Format }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $journeyArguments.ChangedPath = $ChangedPath }
+        elseif ($PSBoundParameters.ContainsKey('ProposedPath')) { $journeyArguments.ChangedPath = $ProposedPath }
+        Invoke-WikiTool 'Find-LlmWikiProductJourney.ps1' $journeyArguments
+    }
+    { $_ -in @('delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique') } {
+        $deliveryAction = @{
+            'delivery-status' = 'status'
+            'delivery-replan' = 'replan'
+            'delivery-validate' = 'validate'
+            'delivery-critique' = 'critique'
+        }[$Command]
+        Invoke-WikiTool 'Invoke-LlmWikiDeliveryWorkflow.ps1' @{
+            Action = $deliveryAction
+            WorkspacePath = $WorkspacePath
+            Reason = $Reason
+            DryRun = $DryRun
+            FailOnInvalid = $FailOnInvalid
+            Format = $Format
+        }
     }
     { $_ -in @('implementation-plan', 'plan') } {
         $implementationPlanArguments = @{
@@ -1915,6 +1980,17 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 task-policy-impact -WorkspacePath <path> [-Format Json]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-finish -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-DryRun]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
+        Write-Host "  ./.llm-wiki/wiki.ps1 develop -Intent '<task>' [-PlannedPath 'path/one','path/two']"
+        Write-Host "  ./.llm-wiki/wiki.ps1 research -Intent '<task>' [-PlannedPath 'path/one','path/two']"
+        Write-Host "  ./.llm-wiki/wiki.ps1 precedents -Intent '<task>' [-PlannedPath 'path/one','path/two']"
+        Write-Host "  ./.llm-wiki/wiki.ps1 design -Intent '<task>' [-PlannedPath 'path/one','path/two']"
+        Write-Host '  ./.llm-wiki/wiki.ps1 pause -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
+        Write-Host '  ./.llm-wiki/wiki.ps1 resume -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
+        Write-Host "  ./.llm-wiki/wiki.ps1 journeys -Intent '<task>' [-PlannedPath 'path/one','path/two']"
+        Write-Host '  ./.llm-wiki/wiki.ps1 delivery-status -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
+        Write-Host '  ./.llm-wiki/wiki.ps1 delivery-replan -WorkspacePath <task> -Reason <evidence> [-DryRun]'
+        Write-Host '  ./.llm-wiki/wiki.ps1 delivery-validate -WorkspacePath <task> -FailOnInvalid'
+        Write-Host '  ./.llm-wiki/wiki.ps1 delivery-critique -WorkspacePath <task> -FailOnInvalid'
         Write-Host '  ./.llm-wiki/wiki.ps1 topology [-Query <text>]'
         Write-Host "  ./.llm-wiki/wiki.ps1 privacy -PrivacyCategory credential [-PlannedPath @('path/one','path/two')]"
         Write-Host '  ./.llm-wiki/wiki.ps1 ui -FrontendView components -Query autocomplete'

@@ -80,7 +80,14 @@ if ($effectivePaths.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($Intent))
     )
     $effectivePaths = $inferredPaths
 }
-if ($effectivePaths.Count -gt 0) { $common.ChangedPath = $effectivePaths }
+if ($effectivePaths.Count -gt 0) {
+    $common.ChangedPath = $effectivePaths
+} elseif (-not [string]::IsNullOrWhiteSpace($Intent)) {
+    # Intent-first planning must not silently absorb an unrelated dirty worktree.
+    # An explicit empty path list keeps diff collection bounded until discovery
+    # grounds the objective in current repository paths.
+    $common.ChangedPath = @()
+}
 
 $diffArguments = @{} + $common
 $diffArguments.Limit = $Limit
@@ -451,7 +458,11 @@ $analysisConfidence = switch ($analysisMode) {
 $briefWarnings = [System.Collections.Generic.List[string]]::new()
 foreach ($warning in @($diff.warnings)) { $briefWarnings.Add([string]$warning) }
 if ($analysisMode -eq 'unscoped') {
-    $briefWarnings.Add("No diff, intent, or planned paths were supplied. Run: ./.llm-wiki/wiki.ps1 brief -Intent '<task>' -PlannedPath @('path/one','path/two')")
+    if ([string]::IsNullOrWhiteSpace($Intent)) {
+        $briefWarnings.Add("No diff, intent, or planned paths were supplied. Run: ./.llm-wiki/wiki.ps1 brief -Intent '<task>' -PlannedPath @('path/one','path/two')")
+    } else {
+        $briefWarnings.Add("Intent did not ground any repository path. Discover an exact symbol, route, or component, then rerun with -PlannedPath @('path/one','path/two').")
+    }
 } elseif ($analysisMode -eq 'intent-inferred') {
     $briefWarnings.Add('Paths were inferred heuristically from intent. Confirm them with -PlannedPath before treating risk and test output as authoritative.')
 }
@@ -516,7 +527,7 @@ $brief = [pscustomobject]@{
         if ($analysisMode -eq 'unscoped') {
             [pscustomobject]@{
                 id = 'supply-task-scope'
-                reason = 'A pre-diff brief needs an objective, candidate paths, or both to rank repository evidence.'
+                reason = if ([string]::IsNullOrWhiteSpace($Intent)) { 'A pre-diff brief needs an objective, candidate paths, or both to rank repository evidence.' } else { 'The supplied intent did not match a grounded repository path; do not substitute unrelated working-tree changes.' }
                 recommendedCommand = "./.llm-wiki/wiki.ps1 brief -Intent '<task>' -PlannedPath @('path/one','path/two')"
                 alternatives = @(
                     "./.llm-wiki/wiki.ps1 brief -Intent '<task>'"

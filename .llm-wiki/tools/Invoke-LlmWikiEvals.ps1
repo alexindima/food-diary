@@ -88,6 +88,28 @@ foreach ($case in $cases.cases) {
             $failures.Add("$($case.id): implementation phases are not sequentially ordered")
         }
     }
+    if (-not [string]::IsNullOrWhiteSpace([string]$case.expectedAdaptiveProfile)) {
+        $adaptiveJson = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+            -Objective ([string]$case.adaptiveObjective) `
+            -ChangedPath @($case.changedPaths) `
+            -Format Json
+        $adaptive = $adaptiveJson | ConvertFrom-Json
+        $assertions++
+        if ([string]$adaptive.profile -eq [string]$case.expectedAdaptiveProfile) {
+            $passedAssertions++
+        } else {
+            $failures.Add("$($case.id): expected adaptive profile '$($case.expectedAdaptiveProfile)', got '$($adaptive.profile)'")
+        }
+        Test-ExpectedSet $case.id 'adaptive stage' @($case.expectedAdaptiveStages) @($adaptive.stages.id)
+        foreach ($unexpectedStage in @($case.unexpectedAdaptiveStages)) {
+            $assertions++
+            if (@($adaptive.stages.id) -notcontains $unexpectedStage) {
+                $passedAssertions++
+            } else {
+                $failures.Add("$($case.id): unexpected adaptive stage '$unexpectedStage'")
+            }
+        }
+    }
     if (-not [string]::IsNullOrWhiteSpace([string]$case.traceQuery)) {
         $traceJson = & (Join-Path $PSScriptRoot 'Find-LlmWikiTrace.ps1') `
             -Query ([string]$case.traceQuery) `

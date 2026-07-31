@@ -57,6 +57,8 @@ authoritative.
 
 ## Workflows
 
+- [Route a change through adaptive AI development](workflows/adaptive-development.md)
+- [Map changes to FoodDiary product journeys](workflows/product-journey-impact.md)
 - [Generate an implementation plan](workflows/implementation-plan.md)
 - [Compile a change packet](workflows/change-packet.md)
 - [Map acceptance criteria to evidence](workflows/acceptance-evidence-matrix.md)

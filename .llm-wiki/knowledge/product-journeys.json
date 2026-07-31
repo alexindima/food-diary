@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "authority": "reviewed-project-navigation",
+  "journeys": [
+    {
+      "id": "FD-AUTH",
+      "title": "Registration, sign-in, and external account linking",
+      "aliases": ["auth", "authentication", "login", "register", "google", "account linking", "credential"],
+      "pathPatterns": ["Authentication", "Authorization", "ExternalLogin", "Google", "Login", "Register", "profile"],
+      "risk": "critical",
+      "scenarios": ["new-user-registration", "password-sign-in", "external-login", "existing-email-account-link", "invalid-or-owned-provider-id"],
+      "requiredReviewAreas": ["security", "privacy", "api-compatibility"],
+      "evidenceHints": ["application tests", "presentation tests", "frontend state tests", "API contract snapshot"]
+    },
+    {
+      "id": "FD-DIET",
+      "title": "Dietologist invitation and collaboration",
+      "aliases": ["dietologist", "dietitian", "nutritionist", "invitation", "invite", "collaboration"],
+      "pathPatterns": ["Dietologist", "dietologist", "Invitation", "invitation"],
+      "risk": "critical",
+      "scenarios": ["send-invitation", "open-email-link", "authenticated-accept", "authenticated-decline", "expired-or-invalid-invitation"],
+      "requiredReviewAreas": ["security", "privacy", "email-delivery", "routing"],
+      "evidenceHints": ["email sender tests", "application tests", "frontend route tests", "browser navigation"]
+    },
+    {
+      "id": "FD-AI-PHOTO",
+      "title": "Food photo upload and AI analysis",
+      "aliases": ["food photo", "image analysis", "openai", "ai photo", "recognition", "annotation"],
+      "pathPatterns": ["AnalyzeFoodImage", "OpenAi", "AiPhoto", "ai-photo", "FoodImage", "Images", "image-analysis"],
+      "risk": "critical",
+      "scenarios": ["upload-photo", "provider-analysis", "structured-result", "annotation-overlay", "provider-failure", "unsupported-image"],
+      "requiredReviewAreas": ["privacy", "provider-boundary", "security", "responsive-ui"],
+      "evidenceHints": ["AI client tests", "presentation tests", "frontend component tests", "visual evidence"]
+    },
+    {
+      "id": "FD-MEAL",
+      "title": "Meal and consumption tracking",
+      "aliases": ["meal", "consumption", "food diary", "dashboard", "nutrition"],
+      "pathPatterns": ["Consumption", "Meal", "Dashboard", "Nutrition"],
+      "risk": "feature",
+      "scenarios": ["create-consumption", "edit-consumption", "delete-consumption", "daily-summary", "nutrition-totals"],
+      "requiredReviewAreas": ["domain-invariants", "localization", "responsive-ui"],
+      "evidenceHints": ["domain tests", "application tests", "frontend state tests"]
+    },
+    {
+      "id": "FD-CATALOG",
+      "title": "Products, recipes, and reusable food catalog",
+      "aliases": ["product", "recipe", "catalog", "ingredient", "food"],
+      "pathPatterns": ["Products", "Product", "Recipes", "Recipe", "Ingredients", "Catalog"],
+      "risk": "feature",
+      "scenarios": ["create-product", "edit-product", "create-recipe", "ingredient-composition", "search-and-select"],
+      "requiredReviewAreas": ["domain-invariants", "api-compatibility", "localization"],
+      "evidenceHints": ["application tests", "API tests", "frontend interaction tests"]
+    },
+    {
+      "id": "FD-BILLING",
+      "title": "Subscription, billing, and payment lifecycle",
+      "aliases": ["billing", "subscription", "payment", "stripe", "plan", "checkout"],
+      "pathPatterns": ["Billing", "Subscription", "Payment", "Stripe", "Checkout"],
+      "risk": "critical",
+      "scenarios": ["start-checkout", "payment-callback", "activate-subscription", "renewal", "cancellation", "failed-payment", "idempotent-webhook"],
+      "requiredReviewAreas": ["security", "financial-data", "webhook", "rollout"],
+      "evidenceHints": ["billing application tests", "integration tests", "webhook tests", "provider contract review"]
+    },
+    {
+      "id": "FD-MAIL",
+      "title": "Transactional email delivery",
+      "aliases": ["email", "mail", "outbox", "template", "notification"],
+      "pathPatterns": ["Email", "MailRelay", "MailInbox", "Outbox", "Template"],
+      "risk": "critical",
+      "scenarios": ["compose-template", "enqueue-message", "background-delivery", "provider-failure", "retry", "test-email"],
+      "requiredReviewAreas": ["privacy", "delivery", "background-jobs", "operability"],
+      "evidenceHints": ["sender tests", "outbox tests", "job tests", "delivery observability"]
+    },
+    {
+      "id": "FD-TELEGRAM",
+      "title": "Telegram account and bot interaction",
+      "aliases": ["telegram", "bot", "chat", "link telegram"],
+      "pathPatterns": ["Telegram", "FoodDiary.Telegram.Bot"],
+      "risk": "critical",
+      "scenarios": ["link-account", "bot-command", "authorized-action", "invalid-link", "delivery-failure"],
+      "requiredReviewAreas": ["security", "identity", "provider-boundary", "operability"],
+      "evidenceHints": ["bot tests", "application tests", "provider boundary review"]
+    }
+  ]
+}

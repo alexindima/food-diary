@@ -217,6 +217,23 @@
       "expectedViolationRules": []
     },
     {
+      "id": "adaptive-local-photo-visual",
+      "changedPaths": [
+        "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.html",
+        "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.spec.ts",
+        "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.scss"
+      ],
+      "expectedModules": [],
+      "expectedScopes": ["Frontend", "Tests"],
+      "expectedRules": ["frontend-workspace", "frontend-component-contract"],
+      "expectedChecks": ["frontend-verify"],
+      "expectedViolationRules": [],
+      "adaptiveObjective": "Improve photo annotation visibility with clearer SVG connectors and point styling.",
+      "expectedAdaptiveProfile": "tiny",
+      "expectedAdaptiveStages": ["research", "implementation", "change-review", "verification"],
+      "unexpectedAdaptiveStages": ["design", "workspace", "independent-review"]
+    },
+    {
       "id": "dietologist-invitation-email-link-regression",
       "changedPaths": [
         "FoodDiary.Application/Dietologist/Services/DietologistEmailSender.cs"
@@ -226,6 +243,10 @@
       "expectedRules": ["backend-boundaries"],
       "expectedChecks": ["architecture-tests"],
       "expectedViolationRules": [],
+      "adaptiveObjective": "Fix the incorrect link in the dietologist invitation email.",
+      "expectedAdaptiveProfile": "critical",
+      "expectedAdaptiveStages": ["research", "journey-impact", "checkpoint", "design", "workspace", "requirements", "delivery-validation", "independent-review"],
+      "unexpectedAdaptiveStages": [],
       "traceQuery": "dietologist invitation email link",
       "expectedTraceRequests": ["InviteDietologistCommand"],
       "privacyQuery": "DietologistInvitationMessage",

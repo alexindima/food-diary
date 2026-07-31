@@ -2,23 +2,34 @@
     "schemaVersion":  1,
     "reviews":  [
                     {
+                        "pageId":  "system.knowledge-model",
+                        "pagePath":  ".llm-wiki/system/knowledge-model.md",
+                        "pageSha256":  "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
+                        "sources":  [
+                                        {
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "544f320b876f956ac23f8f60d89143b0dee1e24abe86ce6fca1c9817ffdcf356"
+                                        }
+                                    ],
+                        "reason":  "Reviewed after integrating adaptive delivery gates, project journey impact, controlled replanning, and adverse critique commands; existing authority and workflow semantics remain accurate.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "0a57d7e2fc052b4163d4385b0f4282e1de20b0e7",
+                        "reviewedAtUtc":  "2026-07-31T12:19:14.8377601Z"
+                    },
+                    {
                         "pageId":  "workflow.change-policy",
                         "pagePath":  ".llm-wiki/workflows/change-policy.md",
                         "pageSha256":  "3cddc70c9de8617c8ad3e97fff346fab0f7c586e72f13dfd0caa7acbb5967c15",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "4315483b0409bccda0223d3d5e02910f005fcfa3bb44b9a6661d86a05f7c2066"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-                                            "sha256":  "cafa21a70c365162e78cba4356d62595d92c137bc90441637f05dcb30fd00173"
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "544f320b876f956ac23f8f60d89143b0dee1e24abe86ce6fca1c9817ffdcf356"
                                         }
                                     ],
-                        "reason":  "API compatibility command now binds the selected BaseRef; policy triggers and obligations are unchanged.",
+                        "reason":  "Reviewed after integrating adaptive delivery gates, project journey impact, controlled replanning, and adverse critique commands; existing authority and workflow semantics remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
-                        "reviewedAtUtc":  "2026-07-30T09:40:24.6551580Z"
+                        "gitHead":  "0a57d7e2fc052b4163d4385b0f4282e1de20b0e7",
+                        "reviewedAtUtc":  "2026-07-31T12:19:16.0620020Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -26,14 +37,18 @@
                         "pageSha256":  "a56903981fe1beecefa43b3ce94d33e50d90896c77fa85e7c01558a3d2ea96bc",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-                                            "sha256":  "cafa21a70c365162e78cba4356d62595d92c137bc90441637f05dcb30fd00173"
+                                            "path":  ".llm-wiki/evals/cases.json",
+                                            "sha256":  "b6de3885c95afdb40f0ab5b6fa351cbfbf97f3aed622a719df067266115f7658"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiEvals.ps1",
+                                            "sha256":  "34433015c6cb1154ad2c3d8326f9ed8cac19f481e320c8183b84330d16aea83e"
                                         }
                                     ],
-                        "reason":  "Policy command templating does not change eval lifecycle semantics.",
+                        "reason":  "Reviewed after integrating adaptive delivery gates, project journey impact, controlled replanning, and adverse critique commands; existing authority and workflow semantics remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
-                        "reviewedAtUtc":  "2026-07-30T09:40:25.2858014Z"
+                        "gitHead":  "0a57d7e2fc052b4163d4385b0f4282e1de20b0e7",
+                        "reviewedAtUtc":  "2026-07-31T12:19:17.3195050Z"
                     },
                     {
                         "pageId":  "workflow.evidence-bundle",
@@ -70,19 +85,34 @@
                         "reviewedAtUtc":  "2026-07-30T20:45:45.8773677Z"
                     },
                     {
-                        "pageId":  "workflow.review-diff",
-                        "pagePath":  ".llm-wiki/workflows/review-diff.md",
-                        "pageSha256":  "0e3762a3c2f1107ce770ef8221ef8168d25edac4080619bbd464709085c587bb",
+                        "pageId":  "workflow.query-context",
+                        "pagePath":  ".llm-wiki/workflows/query-context.md",
+                        "pageSha256":  "fbde1e3b8cec7d59d3bd96a9e14b252a9c9d6b5c88ee02ac0035f573bb091c0e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/reviews/source-impact-reviews.json",
-                                            "sha256":  "4d92e36b35c904ffb8a02d5e9910ccefa2dc517aa407a294dafb22b8dfd10e53"
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "544f320b876f956ac23f8f60d89143b0dee1e24abe86ce6fca1c9817ffdcf356"
                                         }
                                     ],
-                        "reason":  "Reviewed source-impact ledger update for the Linux portability fix; receipt hashing and review workflow remain unchanged.",
+                        "reason":  "Reviewed after integrating adaptive delivery gates, project journey impact, controlled replanning, and adverse critique commands; existing authority and workflow semantics remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0fda827d4bac4a99c79748f2c9bb932dff511a65",
-                        "reviewedAtUtc":  "2026-07-30T10:39:41.4029064Z"
+                        "gitHead":  "0a57d7e2fc052b4163d4385b0f4282e1de20b0e7",
+                        "reviewedAtUtc":  "2026-07-31T12:19:20.9680113Z"
+                    },
+                    {
+                        "pageId":  "workflow.review-diff",
+                        "pagePath":  ".llm-wiki/workflows/review-diff.md",
+                        "pageSha256":  "fc98ae1eba6a72137dfa02d7b37e13b08738bd2dd7b0408bf971d6f7dda29917",
+                        "sources":  [
+                                        {
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "544f320b876f956ac23f8f60d89143b0dee1e24abe86ce6fca1c9817ffdcf356"
+                                        }
+                                    ],
+                        "reason":  "Reviewed after integrating adaptive delivery gates, project journey impact, controlled replanning, and adverse critique commands; existing authority and workflow semantics remain accurate.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "0a57d7e2fc052b4163d4385b0f4282e1de20b0e7",
+                        "reviewedAtUtc":  "2026-07-31T12:19:22.2546016Z"
                     },
                     {
                         "pageId":  "workflow-architecture-health-review",
@@ -121,13 +151,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "7fa2bcbeca5118cee6d72e4fcb174c709adb71d5ddf14ba707ebde09ca5aebe1"
+                                            "sha256":  "f7a465ff9b491348e65b21896614c3e8648666c78fa2d91aaf9e77d572d7420e"
                                         }
                                     ],
-                        "reason":  "Risk calibration and intent candidate ranking do not change manifest scope reconciliation semantics.",
+                        "reason":  "Intent-only brief isolation changes path discovery only; manifest planning, fingerprints, and validation semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "110ce08a12c5ee817baf2ec2fcbf55aa209f471c",
-                        "reviewedAtUtc":  "2026-07-31T09:40:43.5519869Z"
+                        "gitHead":  "0a57d7e2fc052b4163d4385b0f4282e1de20b0e7",
+                        "reviewedAtUtc":  "2026-07-31T11:05:41.1079285Z"
                     },
                     {
                         "pageId":  "workflow-change-packet",
@@ -136,13 +166,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "7fa2bcbeca5118cee6d72e4fcb174c709adb71d5ddf14ba707ebde09ca5aebe1"
+                                            "sha256":  "f7a465ff9b491348e65b21896614c3e8648666c78fa2d91aaf9e77d572d7420e"
                                         }
                                     ],
-                        "reason":  "Risk calibration and intent candidate ranking do not change packet generation semantics.",
+                        "reason":  "Adaptive routing consumes the existing packet model without changing packet composition or authority.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "110ce08a12c5ee817baf2ec2fcbf55aa209f471c",
-                        "reviewedAtUtc":  "2026-07-31T09:40:45.0614758Z"
+                        "gitHead":  "0a57d7e2fc052b4163d4385b0f4282e1de20b0e7",
+                        "reviewedAtUtc":  "2026-07-31T11:05:42.0302414Z"
                     },
                     {
                         "pageId":  "workflow-context-bundles",
@@ -181,13 +211,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "7fa2bcbeca5118cee6d72e4fcb174c709adb71d5ddf14ba707ebde09ca5aebe1"
+                                            "sha256":  "f7a465ff9b491348e65b21896614c3e8648666c78fa2d91aaf9e77d572d7420e"
                                         }
                                     ],
-                        "reason":  "Risk calibration and intent candidate ranking do not change impact simulation semantics.",
+                        "reason":  "Intent-only brief isolation prevents unrelated dirty-worktree paths from contaminating simulation; impact semantics for grounded paths remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "110ce08a12c5ee817baf2ec2fcbf55aa209f471c",
-                        "reviewedAtUtc":  "2026-07-31T09:40:47.0472632Z"
+                        "gitHead":  "0a57d7e2fc052b4163d4385b0f4282e1de20b0e7",
+                        "reviewedAtUtc":  "2026-07-31T11:05:44.6050244Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -196,28 +226,47 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "7fa2bcbeca5118cee6d72e4fcb174c709adb71d5ddf14ba707ebde09ca5aebe1"
+                                            "sha256":  "f7a465ff9b491348e65b21896614c3e8648666c78fa2d91aaf9e77d572d7420e"
                                         }
                                     ],
-                        "reason":  "Risk calibration changes brief inputs only; implementation-plan phase and validation semantics are unchanged.",
+                        "reason":  "Design checkpoint reuses the existing ordered implementation plan and final gates; plan generation semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "110ce08a12c5ee817baf2ec2fcbf55aa209f471c",
-                        "reviewedAtUtc":  "2026-07-31T09:40:49.4110058Z"
+                        "gitHead":  "0a57d7e2fc052b4163d4385b0f4282e1de20b0e7",
+                        "reviewedAtUtc":  "2026-07-31T11:05:45.4780642Z"
                     },
                     {
                         "pageId":  "workflow-index-pipeline",
                         "pagePath":  ".llm-wiki/workflows/index-pipeline.md",
-                        "pageSha256":  "ee1056ebcb0deeefbc4c2e1d8ba4573231159d3e3fd3809c44b845d7139b6b40",
+                        "pageSha256":  "ac53b52ade59e030aa8c0c21398a1376d9cb658318f33626edd80a38c32ecf2b",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "8d8363e7b1340274a1233e0bd47fd47288f79294835669453280cf279f2e108f"
+                                            "sha256":  "42ee9999a7ce2fd295812a4cd3141c2d7184e7ce5de35725a7c9ba41e5920d02"
                                         }
                                     ],
-                        "reason":  "Reviewed wiki.ps1 trace dispatch change; index pipeline behavior is unchanged.",
+                        "reason":  "Reviewed after integrating adaptive delivery gates, project journey impact, controlled replanning, and adverse critique commands; existing authority and workflow semantics remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5a8487b11f207bc3a624ae0b629cec441e6c7c5c",
-                        "reviewedAtUtc":  "2026-07-30T16:45:15.7555663Z"
+                        "gitHead":  "0a57d7e2fc052b4163d4385b0f4282e1de20b0e7",
+                        "reviewedAtUtc":  "2026-07-31T12:19:18.5895240Z"
+                    },
+                    {
+                        "pageId":  "workflow-learned-regression-evals",
+                        "pagePath":  ".llm-wiki/workflows/learned-regression-evals.md",
+                        "pageSha256":  "14bab99a156fe6e89e7fc0793d3530b46b435db5ade9175325fc18e3d8df1d38",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/evals/cases.json",
+                                            "sha256":  "b6de3885c95afdb40f0ab5b6fa351cbfbf97f3aed622a719df067266115f7658"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiEvals.ps1",
+                                            "sha256":  "34433015c6cb1154ad2c3d8326f9ed8cac19f481e320c8183b84330d16aea83e"
+                                        }
+                                    ],
+                        "reason":  "Reviewed after integrating adaptive delivery gates, project journey impact, controlled replanning, and adverse critique commands; existing authority and workflow semantics remain accurate.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "0a57d7e2fc052b4163d4385b0f4282e1de20b0e7",
+                        "reviewedAtUtc":  "2026-07-31T12:19:19.8169525Z"
                     },
                     {
                         "pageId":  "workflow-performance-observability-review",
@@ -265,19 +314,34 @@
                         "reviewedAtUtc":  "2026-07-30T09:40:30.9121559Z"
                     },
                     {
+                        "pageId":  "workflow-task-brief",
+                        "pagePath":  ".llm-wiki/workflows/task-brief.md",
+                        "pageSha256":  "856c799a5a4895c59e061a28ea7d7388f68676ffd6c7c5ca9787712fab70f2d4",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "f7a465ff9b491348e65b21896614c3e8648666c78fa2d91aaf9e77d572d7420e"
+                                        }
+                                    ],
+                        "reason":  "Intent-only analysis now rejects unrelated working-tree fallback and exposes ungrounded scope; grounded planned-path and actual-diff behavior remains covered.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "0a57d7e2fc052b4163d4385b0f4282e1de20b0e7",
+                        "reviewedAtUtc":  "2026-07-31T11:05:49.6371901Z"
+                    },
+                    {
                         "pageId":  "workflow-task-dispatch-receipts",
                         "pagePath":  ".llm-wiki/workflows/task-dispatch-receipts.md",
                         "pageSha256":  "53406623ef3ba445dd93d7e8adbfa5488e34c924696a4a009089b98ffbdca75f",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "30ff1314472400d94522aed2f1f97e4d5c19e4b627f95521400f8de609fd073c"
+                                            "sha256":  "42ee9999a7ce2fd295812a4cd3141c2d7184e7ce5de35725a7c9ba41e5920d02"
                                         }
                                     ],
-                        "reason":  "New verify/evidence routes and process-local Git warning suppression do not change task dispatch receipt semantics.",
+                        "reason":  "Reviewed after integrating adaptive delivery gates, project journey impact, controlled replanning, and adverse critique commands; existing authority and workflow semantics remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ddd147adcc1fb14c9a7d1e7346ef0d87dfcab7ad",
-                        "reviewedAtUtc":  "2026-07-31T07:43:55.3258813Z"
+                        "gitHead":  "0a57d7e2fc052b4163d4385b0f4282e1de20b0e7",
+                        "reviewedAtUtc":  "2026-07-31T12:19:23.4981757Z"
                     },
                     {
                         "pageId":  "workflow-trace-feature",
