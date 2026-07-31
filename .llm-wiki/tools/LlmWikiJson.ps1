@@ -29,6 +29,33 @@ function ConvertFrom-LlmWikiJson {
     }
 }
 
+function Get-LlmWikiJsonFingerprint {
+    [CmdletBinding()]
+    param(
+        [AllowNull()]
+        [object]$Value,
+        [ValidateRange(1, 100)]
+        [int]$Depth = 30
+    )
+
+    if ($null -eq $Value) { $Value = @() }
+    $json = ConvertTo-Json -InputObject $Value -Depth $Depth -Compress
+    # Windows PowerShell and PowerShell 7 use different JSON serializers. Normalize
+    # HTML-sensitive characters and escape casing before hashing persisted payloads.
+    $json = $json.Replace('&', '\u0026').Replace('<', '\u003c').Replace('>', '\u003e')
+    $json = [regex]::Replace(
+        $json,
+        '\\u[0-9A-Fa-f]{4}',
+        { param($match) $match.Value.ToLowerInvariant() })
+
+    $sha = [Security.Cryptography.SHA256]::Create()
+    try {
+        return ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($json))) -replace '-', '').ToLowerInvariant()
+    } finally {
+        $sha.Dispose()
+    }
+}
+
 function Test-LlmWikiJsonEquivalent {
     [CmdletBinding()]
     param(

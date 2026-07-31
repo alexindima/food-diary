@@ -347,14 +347,14 @@
                         "pageSha256":  "61d91d7cbe073b4d9d81be15b1391daea4fc698ef9abec557da5a9d9b45c26bb",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/knowledge/instruction-outcomes.json",
-                                            "sha256":  "6408a47c4ef32720179c0a4f902435585ab8d23efc4bed42dd542967ead7b22c"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiInstructionOutcome.ps1",
+                                            "sha256":  "789fcb02a0f90012879dbea8c04c00e27a0360d4dc83a17cbe989f7b3b06dde4"
                                         }
                                     ],
-                        "reason":  "Reviewed the successful governed task outcome recorded for the current AGENTS.md instruction set; schema and evaluation semantics are unchanged.",
+                        "reason":  "Reviewed cross-platform canonical JSON hashing and standalone verification; instruction outcome semantics and persisted chain remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
-                        "reviewedAtUtc":  "2026-07-31T13:40:46.6962740Z"
+                        "gitHead":  "d5eb6dc6614140a568feb0ecea95841c174df82f",
+                        "reviewedAtUtc":  "2026-07-31T20:22:08.9685006Z"
                     },
                     {
                         "pageId":  "workflow-learned-regression-evals",
@@ -467,18 +467,14 @@
                         "pageSha256":  "9b0e29adecbb86c5f6468e4b534fe50237ee212864cb61e0daba73c060d652f4",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
-                                            "sha256":  "8dda2f04e09e6ac05e30cf13a9384f448e949b58cc199bcb4db84bca1bb257e3"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-                                            "sha256":  "591bfdd4d941d5fc22cd5e26e90b3bcb930b3ce4535bf4bcb636506bbf09931b"
+                                            "path":  ".llm-wiki/tools/LlmWikiJson.ps1",
+                                            "sha256":  "816cd5df6f9632f8611f05eaadb0acdf8ab7673f65bb4b43d288324a4c751090"
                                         }
                                     ],
-                        "reason":  "Reviewed terminal task-check status propagation: workspace execution now derives pass/fail from the recorded evidence entry, preventing ambient LASTEXITCODE from overriding evidence.",
+                        "reason":  "Reviewed shared JSON fingerprint helper; it normalizes serializer-specific escaping while preserving deterministic SHA-256 behavior.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
-                        "reviewedAtUtc":  "2026-07-31T18:56:04.0111169Z"
+                        "gitHead":  "d5eb6dc6614140a568feb0ecea95841c174df82f",
+                        "reviewedAtUtc":  "2026-07-31T20:22:09.9878435Z"
                     },
                     {
                         "pageId":  "workflow-trace-feature",

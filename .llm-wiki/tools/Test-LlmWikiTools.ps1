@@ -2186,6 +2186,17 @@ try {
     $modelOutcomeRegistryRaw = Get-Content -LiteralPath $modelOutcomeRegistryPath -Raw
     $instructionOutcomeRegistryPath = Join-Path $wikiRoot 'knowledge/instruction-outcomes.json'
     $instructionOutcomeRegistryRaw = Get-Content -LiteralPath $instructionOutcomeRegistryPath -Raw
+    $instructionOutcomeBaselineCount = @((ConvertFrom-LlmWikiJson $instructionOutcomeRegistryRaw).events).Count
+    $dateKindDefaultKey = 'ConvertFrom-Json:DateKind'
+    $hadDateKindDefault = $global:PSDefaultParameterValues.ContainsKey($dateKindDefaultKey)
+    $dateKindDefault = if ($hadDateKindDefault) { $global:PSDefaultParameterValues[$dateKindDefaultKey] } else { $null }
+    try {
+        if ($hadDateKindDefault) { $global:PSDefaultParameterValues.Remove($dateKindDefaultKey) }
+        $standaloneInstructionOutcomeCheck = & (Join-Path $toolsRoot 'Manage-LlmWikiInstructionOutcome.ps1') verify -Format Json | ConvertFrom-LlmWikiJson
+        Assert-Wiki $standaloneInstructionOutcomeCheck.valid 'Standalone instruction outcome verification depends on caller JSON date defaults.'
+    } finally {
+        if ($hadDateKindDefault) { $global:PSDefaultParameterValues[$dateKindDefaultKey] = $dateKindDefault }
+    }
     $instructionOutcomeReceiptPath = Join-Path $absoluteTaskWorkspacePath 'instruction-outcome.json'
     $instructionExperimentRegistryPath = Join-Path $wikiRoot 'knowledge/instruction-experiments.json'
     $instructionExperimentRegistryRaw = Get-Content -LiteralPath $instructionExperimentRegistryPath -Raw
@@ -2249,7 +2260,7 @@ try {
             @($instructionOutcome.outcome.sources | Where-Object { $_.path -eq 'AGENTS.md' -and $_.fingerprint -match '^[a-f0-9]{64}$' }).Count -eq 1 -and
             $instructionOutcomeCheck.valid -and
             $instructionOutcomeMetrics.valid -and
-            $instructionOutcomeMetrics.metrics.validEventCount -eq 1
+            $instructionOutcomeMetrics.metrics.validEventCount -eq ($instructionOutcomeBaselineCount + 1)
         ) 'Instruction outcome learning did not bind applicable instruction fingerprints to the completed task.'
         $instructionTemplate = $instructionOutcome.outcome | ConvertTo-Json -Depth 30 | ConvertFrom-Json
         $instructionTemplate.sources = @($instructionTemplate.sources) + @(
@@ -2281,7 +2292,7 @@ try {
                 policyFingerprint = $instructionEvent.policyFingerprint
                 previousEventHash = $instructionEvent.previousEventHash
             }
-            $instructionEvent.eventHash = Get-WikiObjectFingerprint $instructionPayload
+            $instructionEvent.eventHash = Get-LlmWikiJsonFingerprint $instructionPayload
             $instructionPreviousHash = $instructionEvent.eventHash
             $instructionEvents.Add($instructionEvent)
         }

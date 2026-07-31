@@ -13,16 +13,14 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 $registryPath = Join-Path $wikiRoot 'knowledge/instruction-outcomes.json'
 $policyPath = Join-Path $wikiRoot 'policies/workspace-policies.json'
-$policy = Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json
+$policy = ConvertFrom-LlmWikiJson (Get-Content -LiteralPath $policyPath -Raw)
 $outcomePolicy = $policy.scheduler.verificationPlanner.instructionOutcomes
 
 function Get-Hash([object]$Value) {
-    if ($null -eq $Value) { $Value = @() }
-    $json = ConvertTo-Json -InputObject $Value -Depth 30 -Compress
-    $sha = [Security.Cryptography.SHA256]::Create()
-    try { ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($json))) -replace '-', '').ToLowerInvariant() } finally { $sha.Dispose() }
+    Get-LlmWikiJsonFingerprint -Value $Value
 }
 function Get-FileSha([string]$Path) {
     (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -54,7 +52,7 @@ function Read-Registry {
     if (-not (Test-Path -LiteralPath $registryPath -PathType Leaf)) {
         [pscustomobject][ordered]@{ schemaVersion = 2; events = @() }
     } else {
-        Get-Content -LiteralPath $registryPath -Raw | ConvertFrom-Json
+        ConvertFrom-LlmWikiJson (Get-Content -LiteralPath $registryPath -Raw)
     }
 }
 function Test-Registry([object]$Registry) {
@@ -177,12 +175,12 @@ if ($Action -eq 'observe') {
     foreach ($name in @('change-packet.json', 'completion.json', 'retrospective.json')) {
         if (-not (Test-Path -LiteralPath (Join-Path $absoluteWorkspace $name) -PathType Leaf)) { throw "Instruction outcome input is absent: $workspace/$name" }
     }
-    $completion = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'completion.json') -Raw | ConvertFrom-Json
+    $completion = ConvertFrom-LlmWikiJson (Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'completion.json') -Raw)
     if ([string]$completion.completionFingerprint -in @($registry.events.completionFingerprint)) {
         $result = [pscustomobject][ordered]@{ action = 'observe'; valid = $true; addedCount = 0; eventHash = ''; reason = 'Completion outcome was already observed.' }
     } else {
-        $packet = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'change-packet.json') -Raw | ConvertFrom-Json
-        $retrospectiveValidation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRetrospective.ps1') verify -WorkspacePath $workspace -Format Json | ConvertFrom-Json
+        $packet = ConvertFrom-LlmWikiJson (Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'change-packet.json') -Raw)
+        $retrospectiveValidation = ConvertFrom-LlmWikiJson (& (Join-Path $PSScriptRoot 'Manage-LlmWikiRetrospective.ps1') verify -WorkspacePath $workspace -Format Json)
         if (-not $retrospectiveValidation.valid) { throw "Task retrospective is invalid: $(@($retrospectiveValidation.issues) -join ' ')" }
         $sources = @(@('AGENTS.md') + @($packet.brief.instructions) |
             ForEach-Object { ([string]$_).Replace('\', '/') } |
@@ -201,13 +199,13 @@ if ($Action -eq 'observe') {
         $verificationScore = if ($resolved -eq 0) { 100.0 } else { [Math]::Round([Math]::Max(0, 100.0 * ($resolved - $predictionErrors) / $resolved), 2) }
         $score = [Math]::Round(([double]$retrospective.outcome.readinessScore + [double]$retrospective.outcome.confidenceScore + [double]$retrospective.outcome.critiqueScore + $verificationScore) / 4.0, 2)
         $modelRoutePath = Join-Path $absoluteWorkspace 'model-routing.json'
-        $modelRoute = if (Test-Path -LiteralPath $modelRoutePath -PathType Leaf) { Get-Content -LiteralPath $modelRoutePath -Raw | ConvertFrom-Json } else { $null }
+        $modelRoute = if (Test-Path -LiteralPath $modelRoutePath -PathType Leaf) { ConvertFrom-LlmWikiJson (Get-Content -LiteralPath $modelRoutePath -Raw) } else { $null }
         $complexityScore = if ($null -eq $modelRoute) { [int]$retrospective.outcome.risk.score } else { [int]$modelRoute.signals.complexityScore }
         $riskLevel = if ($null -eq $modelRoute) { [string]$retrospective.outcome.risk.level } else { [string]$modelRoute.signals.riskLevel }
         if ([string]::IsNullOrWhiteSpace($riskLevel)) { $riskLevel = 'unknown' }
         $complexityBand = [int]($outcomePolicy.complexityBandUpperBounds | Where-Object { [int]$_ -ge $complexityScore } | Select-Object -First 1)
         $contextApplicationPath = Join-Path $absoluteWorkspace 'context-strategy-application.json'
-        $contextApplication = if (Test-Path -LiteralPath $contextApplicationPath -PathType Leaf) { Get-Content -LiteralPath $contextApplicationPath -Raw | ConvertFrom-Json } else { $null }
+        $contextApplication = if (Test-Path -LiteralPath $contextApplicationPath -PathType Leaf) { ConvertFrom-LlmWikiJson (Get-Content -LiteralPath $contextApplicationPath -Raw) } else { $null }
         $taskSignals = [pscustomobject][ordered]@{
             riskLevel = $riskLevel
             complexityScore = $complexityScore
@@ -264,7 +262,7 @@ if ($Action -eq 'observe') {
         if (-not (Test-Path -LiteralPath $receiptPath -PathType Leaf)) {
             $issues.Add('instruction-outcome.json is absent.')
         } else {
-            $workspaceReceipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json
+            $workspaceReceipt = ConvertFrom-LlmWikiJson (Get-Content -LiteralPath $receiptPath -Raw)
             $matching = $registry.events | Where-Object eventHash -eq $workspaceReceipt.registryEvent.eventHash | Select-Object -First 1
             if ($null -eq $matching -or (Get-Hash (Get-EventPayload $matching)) -cne (Get-Hash (Get-EventPayload $workspaceReceipt.registryEvent))) { $issues.Add('Workspace instruction outcome does not match the registry.') }
         }
