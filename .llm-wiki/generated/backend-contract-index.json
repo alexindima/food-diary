@@ -3,9 +3,9 @@
     "summary":  {
                     "contracts":  980,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  6799,
+                    "consumerEdges":  6800,
                     "productionConsumerEdges":  4142,
-                    "testConsumerEdges":  2657,
+                    "testConsumerEdges":  2658,
                     "consumedContracts":  980,
                     "unconsumedContracts":  0
                 },
@@ -24847,6 +24847,19 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
                               "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "DailyCaloriesHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/DashboardHttpMappingsTests.cs",
+                              "isTest":  true,
                               "referenceCount":  1
                           },
                           {

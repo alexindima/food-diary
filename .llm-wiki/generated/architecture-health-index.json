@@ -3685,6 +3685,11 @@
                                                                 "name":  "isPending",
                                                                 "type":  "",
                                                                 "required":  false
+                                                            },
+                                                            {
+                                                                "name":  "collapsed",
+                                                                "type":  "",
+                                                                "required":  false
                                                             }
                                                         ],
                                              "outputs":  [
@@ -3714,6 +3719,11 @@
                                                             {
                                                                 "name":  "pendingRoute",
                                                                 "type":  "string | null",
+                                                                "required":  false
+                                                            },
+                                                            {
+                                                                "name":  "collapsed",
+                                                                "type":  "",
                                                                 "required":  false
                                                             }
                                                         ],

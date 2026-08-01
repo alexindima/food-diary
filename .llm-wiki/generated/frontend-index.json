@@ -8,14 +8,14 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1515,
-                    "symbols":  578,
+                    "typescriptFiles":  1517,
+                    "symbols":  579,
                     "routes":  84,
                     "features":  36,
-                    "specs":  546,
+                    "specs":  547,
                     "localeFiles":  5,
                     "roles":  {
-                                  "Component":  394,
+                                  "Component":  395,
                                   "Directive":  12,
                                   "Facade":  52,
                                   "Other":  17,
@@ -345,6 +345,7 @@
                                          "DashboardTdeeBlockComponent",
                                          "DashboardTrendBlockComponent",
                                          "HydrationCardComponent",
+                                         "NutritionWeeklyTrendCardComponent",
                                          "TdeeInsightCardComponent",
                                          "TdeeInsightCardContentComponent",
                                          "TdeeInsightCardDetailsComponent",
@@ -364,6 +365,7 @@
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/cycle-summary-card/cycle-summary-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/daily-advice-card/daily-advice-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-content/tdee-insight-card-content.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.spec.ts",
@@ -1611,7 +1613,7 @@
                         "role":  "Component",
                         "selector":  "fd-ui-sidebar-item",
                         "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/sidebar/fd-ui-sidebar-item.ts",
-                        "line":  14
+                        "line":  15
                     },
                     {
                         "name":  "FdUiSidebarSectionComponent",
@@ -2685,6 +2687,13 @@
                         "line":  18
                     },
                     {
+                        "name":  "NutritionWeeklyTrendCardComponent",
+                        "role":  "Component",
+                        "selector":  "fd-nutrition-weekly-trend-card",
+                        "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
+                        "line":  42
+                    },
+                    {
                         "name":  "TdeeInsightCardContentComponent",
                         "role":  "Component",
                         "selector":  "fd-tdee-insight-card-content",
@@ -2885,7 +2894,7 @@
                         "role":  "Component",
                         "selector":  "fd-dashboard",
                         "path":  "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts",
-                        "line":  90
+                        "line":  92
                     },
                     {
                         "name":  "DietologistService",
@@ -5681,8 +5690,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  2866,
-                             "russianProperties":  2866,
+                             "englishProperties":  2878,
+                             "russianProperties":  2878,
                              "countsMatch":  true
                          },
                          {

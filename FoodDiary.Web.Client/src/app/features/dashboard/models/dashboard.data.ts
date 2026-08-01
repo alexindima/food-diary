@@ -44,6 +44,10 @@ export type DashboardStatistics = {
 export type WeeklyCaloriesPoint = {
     date: string;
     calories: number;
+    proteins?: number;
+    fats?: number;
+    carbs?: number;
+    fiber?: number;
 };
 
 export type DashboardWeight = {

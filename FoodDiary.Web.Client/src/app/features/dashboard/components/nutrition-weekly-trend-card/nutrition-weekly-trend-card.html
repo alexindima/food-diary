@@ -1,0 +1,102 @@
+<section class="nutrition-trend" [attr.aria-label]="'DASHBOARD.NUTRITION_TREND.TITLE' | translate">
+    <header class="nutrition-trend__header fd-row">
+        <h2 class="nutrition-trend__title fd-ui-card-title">{{ 'DASHBOARD.NUTRITION_TREND.TITLE' | translate }}</h2>
+        <span class="nutrition-trend__range fd-ui-action-text">{{ 'DASHBOARD.NUTRITION_TREND.RANGE' | translate }}</span>
+    </header>
+
+    <div class="nutrition-trend__content">
+        <div class="nutrition-trend__chart">
+            <span class="nutrition-trend__unit fd-ui-caption">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+            <div class="nutrition-trend__plot">
+                <div class="nutrition-trend__axis" aria-hidden="true">
+                    @for (tick of ticks(); track tick) {
+                        <span>{{ tick | number: '1.0-0' }}</span>
+                    }
+                </div>
+                <div class="nutrition-trend__grid" aria-hidden="true">
+                    @for (tick of ticks(); track tick) {
+                        <span></span>
+                    }
+                </div>
+                @if (dailyGoal() > 0) {
+                    <div class="nutrition-trend__goal" aria-hidden="true" [style.bottom.%]="goalPosition()">
+                        <span>{{ 'DASHBOARD.NUTRITION_TREND.GOAL' | translate }}</span>
+                        <strong>{{ dailyGoal() | number: '1.0-0' }}</strong>
+                    </div>
+                }
+                <div class="nutrition-trend__bars">
+                    @for (point of trendPoints(); track point.date) {
+                        <div class="nutrition-trend__day" [class.nutrition-trend__day--latest]="point.isLatest">
+                            <div class="nutrition-trend__bar" role="img" [attr.aria-label]="point.label + ': ' + point.calories + ' kcal'">
+                                <span
+                                    class="nutrition-trend__segment nutrition-trend__segment--protein"
+                                    [style.height.%]="point.proteinHeight"
+                                ></span>
+                                <span
+                                    class="nutrition-trend__segment nutrition-trend__segment--carbs"
+                                    [style.height.%]="point.carbHeight"
+                                ></span>
+                                <span
+                                    class="nutrition-trend__segment nutrition-trend__segment--fats"
+                                    [style.height.%]="point.fatHeight"
+                                ></span>
+                                <span
+                                    class="nutrition-trend__segment nutrition-trend__segment--fiber"
+                                    [style.height.%]="point.fiberHeight"
+                                ></span>
+                            </div>
+                            <span class="nutrition-trend__date fd-ui-caption">{{ point.label }}</span>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="nutrition-trend__legend fd-row fd-ui-caption">
+                <span
+                    ><i class="nutrition-trend__swatch nutrition-trend__swatch--protein"></i
+                    >{{ 'GENERAL.NUTRIENTS.PROTEIN' | translate }}</span
+                >
+                <span
+                    ><i class="nutrition-trend__swatch nutrition-trend__swatch--carbs"></i>{{ 'GENERAL.NUTRIENTS.CARB' | translate }}</span
+                >
+                <span><i class="nutrition-trend__swatch nutrition-trend__swatch--fats"></i>{{ 'GENERAL.NUTRIENTS.FAT' | translate }}</span>
+                <span
+                    ><i class="nutrition-trend__swatch nutrition-trend__swatch--fiber"></i
+                    >{{ 'SHARED.NUTRIENTS_SUMMARY.FIBER' | translate }}</span
+                >
+                <span><i class="nutrition-trend__goal-swatch"></i>{{ 'DASHBOARD.NUTRITION_TREND.GOAL' | translate }}</span>
+            </div>
+        </div>
+
+        @if (latestPoint(); as latest) {
+            <aside class="nutrition-trend__insight" [class.nutrition-trend__insight--positive]="!hasCarbExcess()">
+                <div class="nutrition-trend__insight-heading fd-row fd-gap-sm">
+                    <span class="nutrition-trend__insight-icon fd-place-center"
+                        ><fd-ui-icon [name]="hasCarbExcess() ? 'trending_up' : 'check'"
+                    /></span>
+                    <h3 class="fd-ui-action-text">
+                        {{
+                            (hasCarbExcess() ? 'DASHBOARD.NUTRITION_TREND.EXCESS_TITLE' : 'DASHBOARD.NUTRITION_TREND.BALANCED_TITLE')
+                                | translate
+                        }}
+                    </h3>
+                </div>
+                @if (carbGoal(); as goal) {
+                    <p class="fd-ui-body-sm fd-ui-text-muted">
+                        {{
+                            'DASHBOARD.NUTRITION_TREND.CARBS_COMPARISON'
+                                | translate: { current: latest.carbs | number: '1.0-0', goal: goal | number: '1.0-0' }
+                        }}
+                    </p>
+                }
+                <p class="fd-ui-body-sm fd-ui-text-muted">
+                    {{
+                        (hasCarbExcess() ? 'DASHBOARD.NUTRITION_TREND.EXCESS_HINT' : 'DASHBOARD.NUTRITION_TREND.BALANCED_HINT') | translate
+                    }}
+                </p>
+                <button type="button" class="nutrition-trend__details fd-ui-action-text" (click)="details.emit()">
+                    {{ 'DASHBOARD.NUTRITION_TREND.DETAILS' | translate }}
+                </button>
+            </aside>
+        }
+    </div>
+</section>

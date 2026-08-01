@@ -1,15 +1,15 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "components":  399,
+                    "components":  400,
                     "componentsWithoutDirectSpecs":  107,
-                    "inputs":  1207,
-                    "outputs":  404,
+                    "inputs":  1217,
+                    "outputs":  408,
                     "apiCalls":  206,
-                    "templatesWithTranslations":  240,
-                    "translationKeys":  1178,
-                    "consumerEdges":  897,
-                    "consumedComponents":  276,
+                    "templatesWithTranslations":  241,
+                    "translationKeys":  1183,
+                    "consumerEdges":  899,
+                    "consumedComponents":  277,
                     "unconsumedComponents":  122
                 },
     "components":  [
@@ -1782,6 +1782,37 @@
                                            }
                                        ],
                            "specPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.spec.ts"
+                       },
+                       {
+                           "class":  "NutritionWeeklyTrendCardComponent",
+                           "selector":  "fd-nutrition-weekly-trend-card",
+                           "feature":  "dashboard",
+                           "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
+                           "inputs":  [
+                                          {
+                                              "name":  "points",
+                                              "type":  "WeeklyCaloriesPoint[]",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "dailyGoal",
+                                              "type":  "number",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "carbGoal",
+                                              "type":  "number | null",
+                                              "required":  false
+                                          }
+                                      ],
+                           "outputs":  [
+                                           {
+                                               "name":  "details",
+                                               "type":  ""
+                                           }
+                                       ],
+                           "specPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.spec.ts"
                        },
                        {
                            "class":  "TdeeInsightCardComponent",
@@ -5388,6 +5419,16 @@
                                               "name":  "bottomSections",
                                               "type":  "FdUiSidebarSection[]",
                                               "required":  false
+                                          },
+                                          {
+                                              "name":  "collapsed",
+                                              "type":  "",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "collapseAriaLabel",
+                                              "type":  "string | undefined",
+                                              "required":  false
                                           }
                                       ],
                            "outputs":  [
@@ -5406,6 +5447,10 @@
                                            {
                                                "name":  "sectionToggled",
                                                "type":  "FdUiSidebarSectionRequest"
+                                           },
+                                           {
+                                               "name":  "collapsedToggle",
+                                               "type":  ""
                                            }
                                        ],
                            "specPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/sidebar/fd-ui-sidebar.spec.ts"
@@ -5429,6 +5474,11 @@
                                           },
                                           {
                                               "name":  "isPending",
+                                              "type":  "",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "collapsed",
                                               "type":  "",
                                               "required":  false
                                           }
@@ -5460,6 +5510,11 @@
                                           {
                                               "name":  "pendingRoute",
                                               "type":  "string | null",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "collapsed",
+                                              "type":  "",
                                               "required":  false
                                           }
                                       ],
@@ -11909,10 +11964,17 @@
                            "path":  "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar.ts",
                            "templatePath":  "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar.html",
                            "inputs":  [
-
+                                          {
+                                              "name":  "isCollapsed",
+                                              "type":  "",
+                                              "required":  false
+                                          }
                                       ],
                            "outputs":  [
-
+                                           {
+                                               "name":  "collapsedToggle",
+                                               "type":  ""
+                                           }
                                        ],
                            "specPath":  "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar.spec.ts"
                        },
@@ -11987,6 +12049,11 @@
                                               "name":  "isUserMenuOpen",
                                               "type":  "boolean",
                                               "required":  true
+                                          },
+                                          {
+                                              "name":  "isCollapsed",
+                                              "type":  "",
+                                              "required":  false
                                           }
                                       ],
                            "outputs":  [
@@ -12020,6 +12087,10 @@
                                            },
                                            {
                                                "name":  "logout",
+                                               "type":  ""
+                                           },
+                                           {
+                                               "name":  "collapsedToggle",
                                                "type":  ""
                                            }
                                        ],
@@ -12166,6 +12237,11 @@
                                               "name":  "pendingRoute",
                                               "type":  "string | null",
                                               "required":  true
+                                          },
+                                          {
+                                              "name":  "isCollapsed",
+                                              "type":  "",
+                                              "required":  false
                                           }
                                       ],
                            "outputs":  [
@@ -15543,6 +15619,22 @@
                                               "HYDRATION_CARD.GOAL_BODY",
                                               "HYDRATION_CARD.GOAL_TITLE",
                                               "HYDRATION_CARD.TITLE"
+                                          ]
+                             },
+                             {
+                                 "feature":  "dashboard",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
+                                 "keys":  [
+                                              "DASHBOARD.NUTRITION_TREND.CARBS_COMPARISON",
+                                              "DASHBOARD.NUTRITION_TREND.DETAILS",
+                                              "DASHBOARD.NUTRITION_TREND.GOAL",
+                                              "DASHBOARD.NUTRITION_TREND.RANGE",
+                                              "DASHBOARD.NUTRITION_TREND.TITLE",
+                                              "GENERAL.NUTRIENTS.CARB",
+                                              "GENERAL.NUTRIENTS.FAT",
+                                              "GENERAL.NUTRIENTS.PROTEIN",
+                                              "GENERAL.UNITS.KCAL",
+                                              "SHARED.NUTRIENTS_SUMMARY.FIBER"
                                           ]
                              },
                              {
@@ -20196,7 +20288,7 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "fd-ui-kit",
                               "consumerPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/sidebar/fd-ui-sidebar.html",
-                              "occurrences":  1,
+                              "occurrences":  2,
                               "inputsUsed":  [
                                                  "ariaLabel",
                                                  "fill",
@@ -25786,6 +25878,20 @@
                               "selector":  "fd-ui-icon",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "dashboard",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "name"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "dashboard",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-content/tdee-insight-card-content.html",
                               "occurrences":  2,
                               "inputsUsed":  [
@@ -28369,6 +28475,8 @@
                                                  "bottomSections",
                                                  "brandSubtitle",
                                                  "brandTitle",
+                                                 "collapseAriaLabel",
+                                                 "collapsed",
                                                  "logoMaskUrl",
                                                  "notificationAriaLabel",
                                                  "notificationBadge",
@@ -28378,6 +28486,7 @@
                                              ],
                               "outputsHandled":  [
                                                      "actionSelected",
+                                                     "collapsedToggle",
                                                      "notificationClick",
                                                      "routeSelected",
                                                      "sectionToggled"
@@ -28391,6 +28500,7 @@
                               "consumerPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/sidebar/fd-ui-sidebar-section.html",
                               "occurrences":  1,
                               "inputsUsed":  [
+                                                 "collapsed",
                                                  "isPending",
                                                  "item",
                                                  "secondary"
@@ -28408,6 +28518,7 @@
                               "consumerPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/sidebar/fd-ui-sidebar.html",
                               "occurrences":  1,
                               "inputsUsed":  [
+                                                 "collapsed",
                                                  "pendingRoute",
                                                  "section"
                                              ],
@@ -30350,6 +30461,22 @@
                                                  ]
                           },
                           {
+                              "component":  "NutritionWeeklyTrendCardComponent",
+                              "selector":  "fd-nutrition-weekly-trend-card",
+                              "componentPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
+                              "consumerFeature":  "dashboard",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "carbGoal",
+                                                 "dailyGoal",
+                                                 "points"
+                                             ],
+                              "outputsHandled":  [
+                                                     "details"
+                                                 ]
+                          },
+                          {
                               "component":  "PageBodyComponent",
                               "selector":  "fd-page-body",
                               "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/page-body/page-body.ts",
@@ -31986,10 +32113,10 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/shell/app.html",
                               "occurrences":  1,
                               "inputsUsed":  [
-
+                                                 "isCollapsed"
                                              ],
                               "outputsHandled":  [
-
+                                                     "collapsedToggle"
                                                  ]
                           },
                           {
@@ -32006,6 +32133,7 @@
                                                  "desktopBottomItems",
                                                  "foodTrackingItems",
                                                  "isBodyTrackingOpen",
+                                                 "isCollapsed",
                                                  "isFoodTrackingOpen",
                                                  "isUserMenuOpen",
                                                  "pendingRoute",
@@ -32016,6 +32144,7 @@
                                              ],
                               "outputsHandled":  [
                                                      "bodyTrackingToggle",
+                                                     "collapsedToggle",
                                                      "directRouteClick",
                                                      "foodTrackingToggle",
                                                      "logout",
@@ -32077,6 +32206,7 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar-desktop/sidebar-desktop.html",
                               "occurrences":  1,
                               "inputsUsed":  [
+                                                 "isCollapsed",
                                                  "isOpen",
                                                  "pendingRoute",
                                                  "user",

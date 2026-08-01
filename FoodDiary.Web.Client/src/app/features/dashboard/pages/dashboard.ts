@@ -29,6 +29,7 @@ import { ThemeService } from '../../../shared/theme/theme.service';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { AiMealCreateFacade } from '../../meals/lib/ai/ai-meal-create.facade';
+import { NutritionWeeklyTrendCardComponent } from '../components/nutrition-weekly-trend-card/nutrition-weekly-trend-card';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DASHBOARD_FIRST_RESIZE_ENTRY_INDEX, DASHBOARD_LANGUAGE_VERSION_INCREMENT } from './dashboard-lib/dashboard-page.config';
@@ -75,6 +76,7 @@ import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-tre
         DashboardEditHintComponent,
         DashboardFastingBlockComponent,
         DashboardSummaryBlockComponent,
+        NutritionWeeklyTrendCardComponent,
         DashboardMealsBlockComponent,
         DashboardHydrationBlockComponent,
         DashboardCycleBlockComponent,
@@ -112,6 +114,8 @@ export class DashboardComponent {
     protected readonly caloriesBurned = this.facade.caloriesBurned;
     protected readonly meals = this.facade.meals;
     protected readonly weeklyConsumed = this.facade.weeklyConsumed;
+    protected readonly weeklyCalories = this.facade.weeklyCalories;
+    protected readonly carbGoal = this.facade.carbGoal;
     protected readonly hydration = this.facade.hydration;
     protected readonly dailyAdvice = this.facade.dailyAdvice;
     protected readonly isHydrationLoading = this.facade.isHydrationLoading;

@@ -42,14 +42,26 @@ internal static class DashboardStatisticsMapper {
     public static IReadOnlyList<DailyCaloriesModel> ToWeeklyCalories(IReadOnlyList<AggregatedStatisticsModel> responses) {
         return responses
             .OrderBy(response => response.DateFrom)
-            .Select(response => new DailyCaloriesModel(response.DateFrom, response.TotalCalories))
+            .Select(response => new DailyCaloriesModel(
+                response.DateFrom,
+                response.TotalCalories,
+                response.TotalProteins,
+                response.TotalFats,
+                response.TotalCarbs,
+                response.TotalFiber))
             .ToList();
     }
 
     public static IReadOnlyList<DailyCaloriesModel> ToWeeklyCalories(IReadOnlyList<DashboardStatisticsBucketReadModel> responses) {
         return responses
             .OrderBy(response => response.DateFrom)
-            .Select(response => new DailyCaloriesModel(response.DateFrom, response.TotalCalories))
+            .Select(response => new DailyCaloriesModel(
+                response.DateFrom,
+                response.TotalCalories,
+                response.TotalProteins,
+                response.TotalFats,
+                response.TotalCarbs,
+                response.TotalFiber))
             .ToList();
     }
 

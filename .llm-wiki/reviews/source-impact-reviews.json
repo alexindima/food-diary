@@ -68,13 +68,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "1783579f698e6681c2f2e60e0b5cdfc9184fff6274f52a13ef2536b11f63de41"
+                                            "sha256":  "14c2bd274b82b0924a2b94a70f453cc70f7521ba67b86d658fcfdbdf67d20833"
                                         }
                                     ],
-                        "reason":  "Reviewed after merged frontend component and generated contract index updates; workflow guidance remains current.",
+                        "reason":  "Reviewed the new dashboard nutrition trend component, its inputs/output, dashboard consumer, and translated template; the component contract is local to the Dashboard feature and covered by its focused spec.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f4278362e8313a0db5ff859875de3cf044864b7b",
-                        "reviewedAtUtc":  "2026-08-01T15:53:04.2514621Z"
+                        "gitHead":  "8025173ce5f9eafd2702b7010810bc9bcb99a35c",
+                        "reviewedAtUtc":  "2026-08-01T21:53:48.0638150Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -147,13 +147,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "d83d878bd935e796e5b0a2715c5bbaab29175d9d6e2a588d2b82e0a551e808cd"
+                                            "sha256":  "ff98c3d1be2e705fc68f42266ca98f6d8d61ef1474f9a9edfd12d8c9d5d2e8c7"
                                         }
                                     ],
-                        "reason":  "Regenerated index after internal frontend-only modal layout changes; no project dependency or architecture edge changed.",
+                        "reason":  "Reviewed regenerated architecture health after the bounded Dashboard read-model, HTTP response, and frontend component extension; no project-edge or enforced-boundary drift was introduced.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ddf7638c55a77d00dfc1caafdcbe21f0222586e",
-                        "reviewedAtUtc":  "2026-07-31T22:26:43.8649955Z"
+                        "gitHead":  "8025173ce5f9eafd2702b7010810bc9bcb99a35c",
+                        "reviewedAtUtc":  "2026-08-01T21:53:44.7982454Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -162,13 +162,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "0f8ea563157431aa60b7111047fd06f6f9d52e444c967f4c39de306148f8dc2c"
+                                            "sha256":  "56103973623759eb02e43a38f436ff145446bfe266095368b3b23cbb0c102c05"
                                         }
                                     ],
-                        "reason":  "The index now reflects the committed FoodVision model/test reference changes; backend contract review semantics are unchanged.",
+                        "reason":  "Reviewed the additive DailyCaloriesModel and DailyCaloriesHttpResponse nutrient fields plus mapped consumers; defaults preserve application callers and HTTP compatibility checks report no breaking change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439af4c4db41ef536cca5f30927131b88bdf09a0",
-                        "reviewedAtUtc":  "2026-07-30T14:30:14.8484498Z"
+                        "gitHead":  "8025173ce5f9eafd2702b7010810bc9bcb99a35c",
+                        "reviewedAtUtc":  "2026-08-01T21:53:46.2912002Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -375,19 +375,34 @@
                         "reviewedAtUtc":  "2026-08-01T01:45:27.1867588Z"
                     },
                     {
+                        "pageId":  "workflow-privacy-review",
+                        "pagePath":  ".llm-wiki/workflows/privacy-review.md",
+                        "pageSha256":  "ccc7ce4a406748d705aeca097cf3312ad16c1eea5f2bbabd1e362e7b4ac14d76",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/generated/sensitive-data-index.json",
+                                            "sha256":  "17b0c728413ce1135a92d5d52f0fde240a2ee435fca156d9f5dc1b9aed575f8b"
+                                        }
+                                    ],
+                        "reason":  "Reviewed nutrition totals in the regenerated sensitive-data index; the feature reuses the existing user-scoped Dashboard read path and does not add storage, external transfer, logging, or a new privacy boundary.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "8025173ce5f9eafd2702b7010810bc9bcb99a35c",
+                        "reviewedAtUtc":  "2026-08-01T21:53:49.8391138Z"
+                    },
+                    {
                         "pageId":  "workflow-quality-risk",
                         "pagePath":  ".llm-wiki/workflows/quality-risk.md",
                         "pageSha256":  "6dbd01ffd9ba92e32c7d132ca80e70d883a1707164597cbecf5dac86e8bfb292",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "14b06f66ca2ce957914194b3a37c87f6f3348e31ce76cdfba3d7b368bc137dfa"
+                                            "sha256":  "5434441adc48bef9f945539e756486131184b8fd79f08300d57b46fa10ae5572"
                                         }
                                     ],
-                        "reason":  "Reviewed after final mobile annotation search optimization; quality-risk guidance remains current.",
+                        "reason":  "Reviewed regenerated quality metrics for the Dashboard component, mapper, and focused tests; the new behavior has component, application mapping, and presentation mapping coverage.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "91911ac6797901b935a36c3585e649744d86939c",
-                        "reviewedAtUtc":  "2026-08-01T16:34:05.9617780Z"
+                        "gitHead":  "8025173ce5f9eafd2702b7010810bc9bcb99a35c",
+                        "reviewedAtUtc":  "2026-08-01T21:53:51.7148874Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -486,13 +501,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "1783579f698e6681c2f2e60e0b5cdfc9184fff6274f52a13ef2536b11f63de41"
+                                            "sha256":  "14c2bd274b82b0924a2b94a70f453cc70f7521ba67b86d658fcfdbdf67d20833"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/generated/frontend-index.json",
+                                            "sha256":  "8a5b1623d57cba29a1031c8178d07d2d932c23dc7586bdb8c2c59f8273407687"
                                         }
                                     ],
-                        "reason":  "Reviewed after merged frontend contract index updates; feature tracing guidance remains current.",
+                        "reason":  "Reviewed regenerated frontend navigation and consumer traces; Dashboard remains the route and runtime owner for the new nutrition trend card.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f4278362e8313a0db5ff859875de3cf044864b7b",
-                        "reviewedAtUtc":  "2026-08-01T15:53:07.9040793Z"
+                        "gitHead":  "8025173ce5f9eafd2702b7010810bc9bcb99a35c",
+                        "reviewedAtUtc":  "2026-08-01T21:53:53.4466615Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

@@ -54,7 +54,7 @@ public static class DashboardHttpResponseMappings {
     }
 
     private static DailyCaloriesHttpResponse ToHttpResponse(this DailyCaloriesModel model) {
-        return new DailyCaloriesHttpResponse(model.Date, model.Calories);
+        return new DailyCaloriesHttpResponse(model.Date, model.Calories, model.Proteins, model.Fats, model.Carbs, model.Fiber);
     }
 
     private static DashboardWeightHttpResponse ToHttpResponse(this DashboardWeightModel model) {

@@ -91,7 +91,7 @@ public sealed class DashboardHttpMappingsTests {
                 FatGoal: 70,
                 CarbGoal: 200,
                 FiberGoal: 30),
-            [new DailyCaloriesModel(date, 1850)],
+            [new DailyCaloriesModel(date, 1850, Proteins: 120, Fats: 65, Carbs: 180, Fiber: 25)],
             new DashboardWeightModel(
                 new WeightPointModel(date, 80.5),
                 new WeightPointModel(date.AddDays(-1), 81.2),
@@ -154,6 +154,12 @@ public sealed class DashboardHttpMappingsTests {
         Assert.Equal(2100, response.DailyGoal);
         Assert.Equal(1850, response.Statistics.TotalCalories);
         Assert.Single(response.WeeklyCalories);
+        DailyCaloriesHttpResponse weeklyPoint = response.WeeklyCalories[0];
+        Assert.Multiple(
+            () => Assert.Equal(120, weeklyPoint.Proteins),
+            () => Assert.Equal(65, weeklyPoint.Fats),
+            () => Assert.Equal(180, weeklyPoint.Carbs),
+            () => Assert.Equal(25, weeklyPoint.Fiber));
         Assert.Equal(80.5, response.Weight.Latest!.Weight);
         Assert.Equal(88.3, response.Waist.Latest!.Circumference);
         Assert.Equal(0, response.Meals.Total);

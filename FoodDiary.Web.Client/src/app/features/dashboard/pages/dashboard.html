@@ -131,6 +131,13 @@
                             (goalAction)="openGoalsAsync()"
                         />
 
+                        <fd-nutrition-weekly-trend-card
+                            [points]="weeklyCalories()"
+                            [dailyGoal]="snapshot()?.dailyGoal ?? 0"
+                            [carbGoal]="carbGoal()"
+                            (details)="openGoalsAsync()"
+                        />
+
                         <fd-dashboard-meals-block
                             [shouldRender]="layout.shouldRenderBlock('meals')"
                             [state]="blockStates.meals"

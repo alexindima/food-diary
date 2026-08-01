@@ -124,16 +124,26 @@ public class DashboardFeatureTests {
         var day1 = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime day2 = day1.AddDays(1);
         var responses = new List<AggregatedStatisticsModel> {
-            new(day2, day2, 2000, 100, 70, 250, 30),
-            new(day1, day1, 1800, 90, 60, 220, 25),
+            new(day2, day2, 2000, 100, 70, 250, 30, TotalProteins: 100, TotalFats: 70, TotalCarbs: 250, TotalFiber: 30),
+            new(day1, day1, 1800, 90, 60, 220, 25, TotalProteins: 90, TotalFats: 60, TotalCarbs: 220, TotalFiber: 25),
         };
 
         IReadOnlyList<DailyCaloriesModel> calories = DashboardMapping.ToWeeklyCalories(responses);
 
         Assert.Collection(
             calories,
-            c => Assert.Equal(day1, c.Date),
-            c => Assert.Equal(day2, c.Date));
+            c => Assert.Multiple(
+                () => Assert.Equal(day1, c.Date),
+                () => Assert.Equal(90, c.Proteins),
+                () => Assert.Equal(60, c.Fats),
+                () => Assert.Equal(220, c.Carbs),
+                () => Assert.Equal(25, c.Fiber)),
+            c => Assert.Multiple(
+                () => Assert.Equal(day2, c.Date),
+                () => Assert.Equal(100, c.Proteins),
+                () => Assert.Equal(70, c.Fats),
+                () => Assert.Equal(250, c.Carbs),
+                () => Assert.Equal(30, c.Fiber)));
     }
 
     [Fact]

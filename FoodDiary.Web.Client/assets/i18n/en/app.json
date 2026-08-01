@@ -1596,6 +1596,17 @@
         "GOAL_LABEL": "Daily goal",
         "REMAINING_LABEL": "Remaining",
         "MACRO_TITLE": "Macro summary",
+        "NUTRITION_TREND": {
+            "TITLE": "7-day dynamics",
+            "RANGE": "7 days",
+            "GOAL": "Goal",
+            "EXCESS_TITLE": "You exceeded your carbohydrate target today",
+            "BALANCED_TITLE": "Your nutrition is on target today",
+            "CARBS_COMPARISON": "Carbohydrates: {{ current }} g against a target of {{ goal }} g.",
+            "EXCESS_HINT": "Try choosing foods with a lower glycemic index.",
+            "BALANCED_HINT": "Keep following your current nutrition balance.",
+            "DETAILS": "Learn more"
+        },
         "MOTIVATION_TITLE": "Stay motivated",
         "MEALS_SUBTITLE": "Meal log",
         "MEALS_TITLE": "Today's meals",

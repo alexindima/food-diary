@@ -72,6 +72,8 @@ export class DashboardFacade {
     public readonly weeklyConsumed = computed(() =>
         (this.snapshot()?.weeklyCalories ?? []).reduce((sum, point) => sum + point.calories, 0),
     );
+    public readonly weeklyCalories = computed(() => this.snapshot()?.weeklyCalories ?? []);
+    public readonly carbGoal = computed(() => this.snapshot()?.statistics.carbGoal ?? null);
     public readonly hydration = computed(() => this.snapshot()?.hydration ?? null);
     public readonly dailyAdvice = computed(() => this.snapshot()?.advice ?? null);
     public readonly currentFastingSession = computed<FastingSession | null>(() => this.snapshot()?.currentFastingSession ?? null);

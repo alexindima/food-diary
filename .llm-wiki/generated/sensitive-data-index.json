@@ -3389,7 +3389,7 @@
                        "name":  "Calories",
                        "type":  "double",
                        "path":  "FoodDiary.Application/Dashboard/Models/DailyCaloriesModel.cs",
-                       "line":  3
+                       "line":  5
                    },
                    {
                        "category":  "health",
@@ -5762,7 +5762,7 @@
                        "name":  "Calories",
                        "type":  "double",
                        "path":  "FoodDiary.Presentation.Api/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs",
-                       "line":  3
+                       "line":  5
                    },
                    {
                        "category":  "health",
