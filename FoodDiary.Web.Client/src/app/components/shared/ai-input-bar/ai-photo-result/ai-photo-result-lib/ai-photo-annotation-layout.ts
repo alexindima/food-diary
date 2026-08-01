@@ -46,6 +46,7 @@ const SIDE_SLOT_COUNT = 5;
 const HORIZONTAL_SLOT_COUNT = 3;
 const INSIDE_CARD_SLOT_COUNT = SIDE_SLOT_COUNT * 2 + HORIZONTAL_SLOT_COUNT * 2;
 const MOBILE_MAX_CARD_CANDIDATES = 10;
+const MOBILE_BEAM_WIDTH = 400;
 const SIDE_SLOT_STEP = (FRAME_SIZE - CARD_HEIGHT - CARD_EDGE_GAP * 2) / (SIDE_SLOT_COUNT - 1);
 const HORIZONTAL_SLOT_STEP = (FRAME_SIZE - CARD_WIDTH - CARD_EDGE_GAP * 2) / (HORIZONTAL_SLOT_COUNT - 1);
 const RIGHT_CARD_X = FRAME_SIZE - CARD_WIDTH - CARD_EDGE_GAP;
@@ -66,6 +67,7 @@ const WEIGHT_SIDE_PREFERENCE = 0.35;
 export function optimizeAiPhotoAnnotationLayout(
     annotations: readonly AiPhotoAnnotation[],
     allowCardsOutsidePhoto = false,
+    beamWidth = BEAM_WIDTH,
 ): AiPhotoAnnotation[] {
     if (annotations.length === 0) {
         return [];
@@ -98,7 +100,7 @@ export function optimizeAiPhotoAnnotationLayout(
         }
 
         next.sort((left, right) => left.cost - right.cost);
-        beam = next.slice(0, BEAM_WIDTH);
+        beam = next.slice(0, beamWidth);
     }
 
     const best = beam[0];
@@ -137,7 +139,7 @@ export function fitAiPhotoAnnotationLayout(
     const ordered = prioritizeActiveAnnotation(annotations, activeAnnotationId);
     const maximumCount = Math.min(ordered.length, INSIDE_CARD_SLOT_COUNT, MOBILE_MAX_CARD_CANDIDATES);
     for (let count = maximumCount; count > 0; count--) {
-        const layout = optimizeAiPhotoAnnotationLayout(ordered.slice(0, count), false);
+        const layout = optimizeAiPhotoAnnotationLayout(ordered.slice(0, count), false, MOBILE_BEAM_WIDTH);
         const metrics = evaluateLayoutAgainstProducts(layout, annotations);
         if (
             metrics.cardOverlaps === 0 &&
@@ -149,7 +151,7 @@ export function fitAiPhotoAnnotationLayout(
         }
     }
 
-    return optimizeAiPhotoAnnotationLayout(ordered.slice(0, 1), false);
+    return optimizeAiPhotoAnnotationLayout(ordered.slice(0, 1), false, MOBILE_BEAM_WIDTH);
 }
 
 function evaluateLayoutAgainstProducts(
