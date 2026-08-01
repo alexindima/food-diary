@@ -22,6 +22,9 @@ sources:
 
 # Simulate change impact before implementation
 
+Impact simulation may use inferred paths for discovery, but comparison and
+scope commitments require current Git paths or explicit planned paths.
+
 Forecast a hypothetical change without creating a task workspace:
 
 ```powershell

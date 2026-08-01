@@ -17,6 +17,9 @@ sources:
 
 # Generate an Implementation Plan
 
+Do not generate implementation phases from intent-inferred UI paths alone.
+Confirm the runtime owner and rerun with `-PlannedPath` first.
+
 Create a plan from an explicit path set or the current diff:
 
 ```powershell

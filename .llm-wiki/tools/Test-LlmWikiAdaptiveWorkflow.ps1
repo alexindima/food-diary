@@ -49,6 +49,14 @@ $metaVisual = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
 Assert-Adaptive (-not $metaVisual.scopeKnown -and $metaVisual.profile -ne 'critical') 'Ungrounded visual intent was elevated by negated boundary vocabulary.'
 Assert-Adaptive (@($metaVisual.inferred.paths).Count -eq 0) 'Frontend vocabulary alone inferred unrelated runtime owners.'
 
+$ungroundedUiSurface = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Fix disabled buttons and rounded corners in the authentication dialog.' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($ungroundedUiSurface.profile -eq 'ui-discovery') 'Ungrounded local UI surface work was not routed to discovery-only.'
+Assert-Adaptive (-not $ungroundedUiSurface.requiresWorkspace -and -not $ungroundedUiSurface.requiresDesign) 'UI discovery retained governed ceremony.'
+Assert-Adaptive ((@($ungroundedUiSurface.stages.id) -join ',') -eq 'research,reclassify') 'UI discovery emitted implementation stages before grounding paths.'
+Assert-Adaptive ($ungroundedUiSurface.stages[0].command -match 'ui-trace') 'UI discovery did not start with runtime-owner tracing.'
+
 $replanJourney = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1') `
     -Query 'Preserve acceptance evidence during delivery replan.' `
     -Format Json | ConvertFrom-Json

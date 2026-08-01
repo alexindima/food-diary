@@ -18,6 +18,9 @@ sources:
 
 # Govern a Change with a Manifest
 
+Manifest scope must come from the Git diff or caller-confirmed planned paths;
+intent-inferred paths are discovery hints and do not establish governed scope.
+
 Initialize after the intended scope is understood:
 
 ```powershell

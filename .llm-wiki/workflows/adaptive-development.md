@@ -46,6 +46,7 @@ The router selects one FoodDiary-specific profile:
 
 | Profile | Typical change | Required flow |
 |---|---|---|
+| `ui-discovery` | visual/UI intent whose paths are absent or only heuristically inferred | `ui-trace`, grounded research, rerun `develop -PlannedPath`; no implementation yet |
 | `tiny` | bounded presentation-only HTML/SVG/SCSS or equally local low-risk work | research, implementation, diff/test-plan, `verify-fast` |
 | `bug` | corrective behavior in one bounded flow | research, implementation, focused tests, diff, full Wiki verify |
 | `feature` | new behavior or a cross-cutting product slice | research, design, implementation phases, conformance-aware review, full verify |
@@ -55,6 +56,13 @@ The router selects one FoodDiary-specific profile:
 The profile is a routing decision, not a waiver. Actual diff evidence may elevate it.
 Run `develop` again with changed paths, or use `diff` and `task-refresh`, when the
 implementation boundary changes.
+
+Heuristically inferred paths are discovery hints, not grounded scope. Visual
+intent that mentions a sensitive UI surface such as an authentication dialog or
+billing page stays in `ui-discovery` until `ui-trace` confirms the runtime owner
+and the caller supplies `-PlannedPath`. A concrete request to change an auth,
+credential, token, privacy, payment, migration, or provider boundary remains
+`critical`; naming a UI surface alone does not create backend/auth scope.
 
 ## Grounded research
 
