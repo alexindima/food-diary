@@ -577,6 +577,19 @@ $affectedTemplatePlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipelin
 Assert-Wiki ($affectedTemplatePlanText -match 'Build-LlmWikiFrontendIndex.ps1' -and $affectedTemplatePlanText -match 'Build-LlmWikiFrontendContractIndex.ps1') 'Template-only changes omitted frontend indexes.'
 Assert-Wiki ($affectedTemplatePlanText -notmatch 'Build-LlmWikiQualityIndex.ps1' -and $affectedTemplatePlanText -notmatch 'Build-LlmWikiSensitiveDataIndex.ps1') 'Template-only changes selected unrelated quality or sensitive-data indexes.'
 
+$deferredStale = & (Join-Path $toolsRoot 'Get-LlmWikiStaleDisposition.ps1') `
+    -FailedTool @('Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiQualityIndex.ps1') `
+    -WorkspaceChangedPath @('.llm-wiki/generated/frontend-index.json', '.llm-wiki/generated/quality-index.json')
+Assert-Wiki ($deferredStale.canDefer -and $deferredStale.disposition -eq 'deferred-possibly-concurrent') 'Stale diagnostics did not defer fully modified generated artifacts.'
+$blockingStale = & (Join-Path $toolsRoot 'Get-LlmWikiStaleDisposition.ps1') `
+    -FailedTool @('Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiQualityIndex.ps1') `
+    -WorkspaceChangedPath '.llm-wiki/generated/frontend-index.json'
+Assert-Wiki (-not $blockingStale.canDefer -and $blockingStale.disposition -eq 'blocking-stale') 'Stale diagnostics deferred when only some failed artifacts were modified.'
+$unknownStale = & (Join-Path $toolsRoot 'Get-LlmWikiStaleDisposition.ps1') `
+    -FailedTool 'Unknown-IndexTool.ps1' `
+    -WorkspaceChangedPath '.llm-wiki/generated/frontend-index.json'
+Assert-Wiki (-not $unknownStale.canDefer) 'Stale diagnostics deferred an unmapped index failure.'
+
 $visualQaPlan = & (Join-Path $toolsRoot 'Invoke-LlmWikiVisualQa.ps1') -Url 'http://127.0.0.1:4200/dashboard' `
     -FixturePath 'FoodDiary.Web.Client/package.json' -ResultSelector 'fd-ai-photo-result' -Format Json | ConvertFrom-Json
 Assert-Wiki ($visualQaPlan.mode -eq 'plan' -and @($visualQaPlan.checks).Count -eq 4) 'Visual QA did not produce a safe executable upload plan.'

@@ -61,9 +61,15 @@ During iteration, select only indexes affected by the current diff:
 
 `verify-fast` is the explicit local iteration gate. It runs lint, the
 dependency-aware affected-index check, change policy, and source-impact review,
-then reminds the caller to run the full `verify` before handoff. If any index
-check is stale, the pipeline emits one canonical `wiki.ps1 update` repair
-command in addition to the focused `update -AffectedOnly` option.
+then reminds the caller to run the full `verify` before handoff. When every
+stale affected index artifact is already modified in the working tree, the fast
+gate reports the checks as deferred because parallel Wiki work is possible and
+tells the current session not to overwrite them. This is an iteration-only
+diagnostic; source-impact findings caused by those artifacts are reported but
+not enforced in that fast run. Full `verify` remains strict and must pass in
+the integration session before commit, push, or final handoff. In every other
+stale case, the pipeline emits one canonical `wiki.ps1 update` repair command
+in addition to the focused `update -AffectedOnly` option.
 
 Use `-BaseRef <ref>` for a committed range or `-ChangedPath <path[]>` for an
 explicit scope. The conservative dependency map still runs derived indexes and
