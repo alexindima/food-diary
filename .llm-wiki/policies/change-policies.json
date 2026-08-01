@@ -103,7 +103,7 @@
     },
     {
       "id": "frontend-workspace",
-      "description": "Frontend behavior changes require the full frontend verification pipeline.",
+      "description": "Frontend behavior changes require the full frontend verification pipeline before publication; visual-ui-change may use its focused completion gate locally because pre-push and CI run this check.",
       "pathPatterns": [
         "^FoodDiary\\.Web\\.Client/.+\\.(ts|html|scss|json)$"
       ],
@@ -119,7 +119,7 @@
       "reviewObligations": [
         {
           "id": "frontend-visual-evidence",
-          "description": "For rendered UI changes, record route, desktop/mobile viewports, interaction proof, console health, keyboard/accessibility checks, and screenshot location; use not-applicable only for non-rendered changes."
+          "description": "For rendered UI changes, record route, affected viewport(s), interaction proof, console health, relevant keyboard/accessibility checks, and screenshot location. Require mobile evidence only for responsive or mobile scope; otherwise record it as out of scope."
         }
       ]
     },

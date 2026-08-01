@@ -76,6 +76,7 @@ param(
     [Alias('PlannedPath')]
     [string[]]$ProposedPath,
     [switch]$AffectedOnly,
+    [switch]$VisualUiCompletion,
     [switch]$Compact,
     [switch]$FailOnUnreviewed,
     [switch]$Check,
@@ -291,7 +292,11 @@ switch ($Command) {
         }
         Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' $policyArguments
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
-        Write-Host 'Fast scoped verification passed. Run wiki.ps1 verify before final handoff.'
+        if ($VisualUiCompletion) {
+            Write-Host 'Visual UI completion gate passed. Full frontend and Wiki verification remain publication gates enforced by pre-push and CI.'
+        } else {
+            Write-Host 'Fast scoped verification passed. Run wiki.ps1 verify before final handoff.'
+        }
     }
     'verify-full' {
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }

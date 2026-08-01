@@ -21,10 +21,12 @@ Assert-Adaptive ($tiny.profile -eq 'visual-ui-change') 'Bounded visual work did 
 Assert-Adaptive (-not $tiny.requiresDesign -and -not $tiny.requiresWorkspace) 'Visual UI work retained heavyweight design or workspace requirements.'
 Assert-Adaptive (@($tiny.stages.id) -notcontains 'independent-review') 'Visual UI work retained critical independent review.'
 Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'change-review' -and $_.command -match 'verify-fast' }).Count -eq 1) 'Visual UI work did not select verify-fast.'
+Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'change-review' -and $_.command -match 'VisualUiCompletion' -and $_.completionEvidence -match 'publication gate' }).Count -eq 1) 'Visual UI work did not distinguish local completion from publication verification.'
 Assert-Adaptive (@($tiny.stages.id) -contains 'acceptance') 'Visual UI work omitted explicit acceptance.'
 Assert-Adaptive (@($tiny.stages.id) -contains 'focused-tests') 'Visual UI work omitted focused component tests.'
 Assert-Adaptive (@($tiny.stages.id) -contains 'build') 'Visual UI work omitted the frontend build.'
 Assert-Adaptive (@($tiny.stages.id) -contains 'browser-evidence') 'Visual UI work omitted browser evidence.'
+Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'browser-evidence' -and $_.purpose -notmatch 'desktop and mobile' -and $_.completionEvidence -match 'omitted viewports' }).Count -eq 1) 'Visual UI work still required unconditional desktop and mobile evidence.'
 Assert-Adaptive ($tiny.ceremonyBudget.label -eq 'visual-focused') 'Visual UI work omitted its focused ceremony budget.'
 
 $runtimeOwner = & (Join-Path $PSScriptRoot 'Get-LlmWikiFrontendRuntimeOwner.ps1') `

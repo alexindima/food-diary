@@ -558,6 +558,17 @@ $affectedPlanText = $affectedPlan -join [Environment]::NewLine
 Assert-Wiki ($affectedPlanText -match 'Build-LlmWikiFrontendContractIndex.ps1') 'Affected index plan omitted the frontend contract index.'
 Assert-Wiki ($affectedPlanText -notmatch 'Build-LlmWikiDomainDataIndex.ps1') 'Affected frontend-only index plan included the unrelated domain/data index.'
 
+$affectedFrontendTestPlan = & (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') `
+    -AffectedOnly `
+    -Plan `
+    -ChangedPath 'FoodDiary.Web.Client/src/app/components/example/example.spec.ts'
+$affectedFrontendTestPlanText = $affectedFrontendTestPlan -join [Environment]::NewLine
+Assert-Wiki ($affectedFrontendTestPlanText -match 'Build-LlmWikiQualityIndex.ps1') 'Affected frontend test plan omitted the quality index.'
+Assert-Wiki ($affectedFrontendTestPlanText -match 'Build-LlmWikiArchitectureHealthIndex.ps1') 'Affected frontend test plan omitted downstream architecture health.'
+Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiFrontendIndex.ps1') 'Affected frontend test plan included the unrelated frontend source index.'
+Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiFrontendContractIndex.ps1') 'Affected frontend test plan included the unrelated frontend contract index.'
+Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiSensitiveDataIndex.ps1') 'Affected frontend test plan included the unrelated sensitive-data index.'
+
 $frontendContract = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/frontend-contract-index.json') -Raw | ConvertFrom-Json
 Assert-Wiki ($frontendContract.summary.components -gt 0) 'Frontend contract index did not discover Angular components.'
 Assert-Wiki ($frontendContract.summary.apiCalls -gt 0) 'Frontend contract index did not discover direct HTTP calls.'

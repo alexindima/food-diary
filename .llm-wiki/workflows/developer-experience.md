@@ -69,6 +69,10 @@ work with unchanged API, provider, persistence, privacy, security,
 configuration, and architecture boundaries. It requires runtime-owner research,
 acceptance, focused component tests, a frontend build, and browser evidence,
 while avoiding governed critical ceremony and unrelated full-index refreshes.
+Its local completion gate is `verify-fast -VisualUiCompletion`; repository
+pre-push and CI retain the complete frontend and Wiki verification as
+publication gates. Browser QA follows the declared viewport scope instead of
+requiring mobile proof for every desktop-only patch.
 
 Research packets expose five stable lanes—flow, tests, integrations, precedents,
 and guidance—so independent investigation can be parallelized without making
