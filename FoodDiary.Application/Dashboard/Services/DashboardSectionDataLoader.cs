@@ -42,8 +42,11 @@ internal sealed class DashboardSectionDataLoader(
             return UserIdParser.ToFailure<DashboardBuildContext>(userIdResult);
         }
 
-        DateTime dayStart = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.Date);
-        DateTime dayEndStart = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.DateTo ?? request.Date);
+        TimeSpan timeZoneOffset = request.TimeZoneOffsetMinutes.HasValue
+            ? TimeSpan.FromMinutes(request.TimeZoneOffsetMinutes.Value)
+            : TimeSpan.Zero;
+        DateTime dayStart = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.Date).Subtract(timeZoneOffset);
+        DateTime dayEndStart = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.DateTo ?? request.Date).Subtract(timeZoneOffset);
         if (dayEndStart < dayStart) {
             return Result.Failure<DashboardBuildContext>(
                 Errors.Validation.Invalid(nameof(request.DateTo), "DateTo must be later than or equal to Date."));

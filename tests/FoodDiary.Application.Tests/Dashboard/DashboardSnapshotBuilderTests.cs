@@ -97,6 +97,33 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [Fact]
+    public async Task BuildAsync_WithPositiveTimeZoneOffset_UsesLocalCalendarDayUtcBoundaries() {
+        var user = User.Create("dashboard-local-day@example.com", "hash");
+        var sender = new ConfigurableDashboardSender();
+        DashboardSnapshotBuilder builder = CreateBuilder(user, sender);
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                new DateTime(2026, 8, 2, 0, 0, 0, DateTimeKind.Utc),
+                DateTo: null,
+                "en",
+                7,
+                1,
+                10,
+                Sections: Sections(includeStatistics: true),
+                TimeZoneOffsetMinutes: 240),
+            CancellationToken.None);
+
+        DashboardSnapshotModel snapshot = ResultAssert.Success(result);
+        GetStatisticsQuery dailyStatisticsQuery = sender.StatisticsQueries[0];
+        Assert.Multiple(
+            () => Assert.Equal(new DateTime(2026, 8, 1, 20, 0, 0, DateTimeKind.Utc), snapshot.Date),
+            () => Assert.Equal(new DateTime(2026, 8, 1, 20, 0, 0, DateTimeKind.Utc), dailyStatisticsQuery.DateFrom),
+            () => Assert.Equal(new DateTime(2026, 8, 2, 19, 59, 59, 999, DateTimeKind.Utc).AddTicks(9999), dailyStatisticsQuery.DateTo));
+    }
+
+    [Fact]
     public async Task BuildAsync_WhenUserIsMissing_ReturnsAccessFailure() {
         var existingUser = User.Create("dashboard-existing@example.com", "hash");
         DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(

@@ -14,6 +14,16 @@ public class DashboardValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
+    [Theory]
+    [InlineData(-841)]
+    [InlineData(841)]
+    public async Task GetDashboardSnapshot_WithInvalidTimeZoneOffset_HasError(int offsetMinutes) {
+        TestValidationResult<GetDashboardSnapshotQuery> result = await new GetDashboardSnapshotQueryValidator().TestValidateAsync(
+            new GetDashboardSnapshotQuery(Guid.NewGuid(), DateTime.UtcNow, 1, 10, "en", 7, offsetMinutes));
+
+        result.ShouldHaveValidationErrorFor(query => query.TimeZoneOffsetMinutes);
+    }
+
     [Fact]
     public async Task GetDailyAdvice_WithNullUserId_HasError() {
         TestValidationResult<GetDailyAdviceQuery> result = await new GetDailyAdviceQueryValidator().TestValidateAsync(

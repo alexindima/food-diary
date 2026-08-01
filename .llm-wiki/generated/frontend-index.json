@@ -2656,7 +2656,7 @@
                         "role":  "Service",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard.service.ts",
-                        "line":  21
+                        "line":  22
                     },
                     {
                         "name":  "CycleSummaryCardComponent",
@@ -5253,7 +5253,7 @@
                         "role":  "Facade",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar.facade.ts",
-                        "line":  8
+                        "line":  9
                     },
                     {
                         "name":  "SidebarComponent",

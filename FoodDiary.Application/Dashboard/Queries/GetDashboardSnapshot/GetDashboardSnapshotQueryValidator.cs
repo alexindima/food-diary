@@ -13,5 +13,9 @@ public sealed class GetDashboardSnapshotQueryValidator : AbstractValidator<GetDa
             .Must(id => id is not null && id.Value != UserId.Empty)
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
+
+        RuleFor(x => x.TimeZoneOffsetMinutes)
+            .InclusiveBetween(-840, 840)
+            .When(x => x.TimeZoneOffsetMinutes.HasValue);
     }
 }

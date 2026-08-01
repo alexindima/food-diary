@@ -155,9 +155,17 @@ export class DashboardFacade {
 
     private loadDashboardSnapshot(showLoader = true, clearHydrationUpdate = false): void {
         const requestId = this.snapshotRequest.begin({ showLoading: showLoader });
-        const targetDate = getDashboardDateUtc(this.selectedDate());
+        const selectedDate = this.selectedDate();
+        const targetDate = getDashboardDateUtc(selectedDate);
         const locale = this.getCurrentLocale();
-        const query = { date: targetDate, page: 1, pageSize: 10, locale, trendDays: this.trendDays };
+        const query = {
+            date: targetDate,
+            timeZoneOffsetMinutes: -selectedDate.getTimezoneOffset(),
+            page: 1,
+            pageSize: 10,
+            locale,
+            trendDays: this.trendDays,
+        };
         const request$ = showLoader ? this.dashboardService.getSnapshot(query) : this.dashboardService.getSnapshotSilentlyStrict(query);
         const observer: PartialObserver<DashboardSnapshot | null> = {
             next: snapshot => {

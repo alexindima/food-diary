@@ -1,6 +1,7 @@
 import { inject, Service, signal } from '@angular/core';
 
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
+import { getDashboardDateUtc } from '../../features/dashboard/lib/dashboard-date.utils';
 import { UserService } from '../../shared/api/user.service';
 import { NutritionDataInvalidationService } from '../../shared/state/nutrition-data-invalidation.service';
 
@@ -27,9 +28,16 @@ export class SidebarFacade {
     }
 
     public syncDailyProgress(date = new Date()): void {
-        this.dashboardService.getSnapshotSilently({ date, page: 1, pageSize: 1 }).subscribe(snapshot => {
-            this.dailyConsumedKcal.set(snapshot?.statistics.totalCalories ?? 0);
-            this.dailyGoalKcal.set(snapshot?.dailyGoal ?? 0);
-        });
+        this.dashboardService
+            .getSnapshotSilently({
+                date: getDashboardDateUtc(date),
+                timeZoneOffsetMinutes: -date.getTimezoneOffset(),
+                page: 1,
+                pageSize: 1,
+            })
+            .subscribe(snapshot => {
+                this.dailyConsumedKcal.set(snapshot?.statistics.totalCalories ?? 0);
+                this.dailyGoalKcal.set(snapshot?.dailyGoal ?? 0);
+            });
     }
 }

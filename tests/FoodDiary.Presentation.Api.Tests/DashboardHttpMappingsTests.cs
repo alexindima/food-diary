@@ -22,7 +22,7 @@ public sealed class DashboardHttpMappingsTests {
     public void GetDashboardSnapshotHttpQuery_ToQuery_MapsAllFields() {
         var userId = Guid.NewGuid();
         var date = new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
-        var httpQuery = new GetDashboardSnapshotHttpQuery(date, 2, 20, "ru", 14);
+        var httpQuery = new GetDashboardSnapshotHttpQuery(date, 2, 20, "ru", 14, 240);
 
         GetDashboardSnapshotQuery query = httpQuery.ToQuery(userId);
 
@@ -32,6 +32,7 @@ public sealed class DashboardHttpMappingsTests {
         Assert.Equal(20, query.PageSize);
         Assert.Equal("ru", query.Locale);
         Assert.Equal(14, query.TrendDays);
+        Assert.Equal(240, query.TimeZoneOffsetMinutes);
     }
 
     [Fact]

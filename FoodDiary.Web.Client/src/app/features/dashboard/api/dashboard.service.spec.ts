@@ -10,6 +10,7 @@ import { DashboardService } from './dashboard.service';
 
 const BASE_URL = environment.apiUrls.dashboard;
 const TEST_DATE = new Date('2026-03-15T00:00:00.000Z');
+const TEST_TIME_ZONE_OFFSET_MINUTES = 240;
 const MOCK_SNAPSHOT: DashboardSnapshot = {
     date: '2026-03-15',
     dateTo: '2026-03-15',
@@ -63,7 +64,7 @@ describe('DashboardService', () => {
 
 describe('DashboardService snapshot', () => {
     it('should get snapshot with date param', () => {
-        service.getSnapshot({ date: TEST_DATE }).subscribe(result => {
+        service.getSnapshot({ date: TEST_DATE, timeZoneOffsetMinutes: TEST_TIME_ZONE_OFFSET_MINUTES }).subscribe(result => {
             expect(result).toEqual(MOCK_SNAPSHOT);
         });
 
@@ -71,6 +72,7 @@ describe('DashboardService snapshot', () => {
             r =>
                 r.url === `${BASE_URL}/` &&
                 r.params.get('date') === TEST_DATE.toISOString() &&
+                r.params.get('timeZoneOffsetMinutes') === String(TEST_TIME_ZONE_OFFSET_MINUTES) &&
                 r.params.get('page') === '1' &&
                 r.params.get('pageSize') === '10',
         );
@@ -79,14 +81,24 @@ describe('DashboardService snapshot', () => {
     });
 
     it('should include optional params', () => {
-        service.getSnapshot({ date: TEST_DATE, page: 2, pageSize: 20, locale: 'en', trendDays: 7 }).subscribe(result => {
-            expect(result).toEqual(MOCK_SNAPSHOT);
-        });
+        service
+            .getSnapshot({
+                date: TEST_DATE,
+                timeZoneOffsetMinutes: TEST_TIME_ZONE_OFFSET_MINUTES,
+                page: 2,
+                pageSize: 20,
+                locale: 'en',
+                trendDays: 7,
+            })
+            .subscribe(result => {
+                expect(result).toEqual(MOCK_SNAPSHOT);
+            });
 
         const req = httpMock.expectOne(
             r =>
                 r.url === `${BASE_URL}/` &&
                 r.params.get('date') === TEST_DATE.toISOString() &&
+                r.params.get('timeZoneOffsetMinutes') === String(TEST_TIME_ZONE_OFFSET_MINUTES) &&
                 r.params.get('page') === '2' &&
                 r.params.get('pageSize') === '20' &&
                 r.params.get('locale') === 'en' &&
@@ -97,7 +109,7 @@ describe('DashboardService snapshot', () => {
     });
 
     it('should return null on error', () => {
-        service.getSnapshot({ date: TEST_DATE }).subscribe(result => {
+        service.getSnapshot({ date: TEST_DATE, timeZoneOffsetMinutes: TEST_TIME_ZONE_OFFSET_MINUTES }).subscribe(result => {
             expect(result).toBeNull();
         });
 
@@ -108,7 +120,7 @@ describe('DashboardService snapshot', () => {
     it('should rethrow strict snapshot errors', () => {
         const errorSpy = vi.fn();
 
-        service.getSnapshotStrict({ date: TEST_DATE }).subscribe({ error: errorSpy });
+        service.getSnapshotStrict({ date: TEST_DATE, timeZoneOffsetMinutes: TEST_TIME_ZONE_OFFSET_MINUTES }).subscribe({ error: errorSpy });
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
         req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
@@ -119,7 +131,7 @@ describe('DashboardService snapshot', () => {
 
 describe('DashboardService silent snapshot', () => {
     it('should mark silent snapshot requests to skip global loading', () => {
-        service.getSnapshotSilently({ date: TEST_DATE }).subscribe();
+        service.getSnapshotSilently({ date: TEST_DATE, timeZoneOffsetMinutes: TEST_TIME_ZONE_OFFSET_MINUTES }).subscribe();
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
         expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
@@ -127,7 +139,7 @@ describe('DashboardService silent snapshot', () => {
     });
 
     it('should mark strict silent snapshot requests to skip global loading', () => {
-        service.getSnapshotSilentlyStrict({ date: TEST_DATE }).subscribe();
+        service.getSnapshotSilentlyStrict({ date: TEST_DATE, timeZoneOffsetMinutes: TEST_TIME_ZONE_OFFSET_MINUTES }).subscribe();
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
         expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);

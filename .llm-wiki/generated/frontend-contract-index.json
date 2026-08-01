@@ -13271,7 +13271,7 @@
                          "responseType":  "DashboardSnapshot",
                          "urlExpression":  "\u0027\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard.service.ts",
-                         "line":  50,
+                         "line":  51,
                          "publicMethod":  "requestSnapshot",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.dashboard",

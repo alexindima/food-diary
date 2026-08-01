@@ -25159,7 +25159,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
                               "isTest":  true,
-                              "referenceCount":  7
+                              "referenceCount":  8
                           },
                           {
                               "contract":  "DashboardSnapshotRequest",
@@ -32257,7 +32257,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dashboard/DashboardValidatorTests.cs",
                               "isTest":  true,
-                              "referenceCount":  2
+                              "referenceCount":  4
                           },
                           {
                               "contract":  "GetDashboardSnapshotQuery",
@@ -36677,7 +36677,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
                               "isTest":  true,
-                              "referenceCount":  2
+                              "referenceCount":  3
                           },
                           {
                               "contract":  "GetStatisticsQuery",

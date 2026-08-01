@@ -11,6 +11,7 @@ import { DASHBOARD_SNAPSHOT_QUERY_DEFAULTS } from './dashboard-api.tokens';
 
 export type DashboardSnapshotQuery = {
     date: Date;
+    timeZoneOffsetMinutes: number;
     page?: number;
     pageSize?: number;
     locale?: string;
@@ -54,6 +55,7 @@ export class DashboardService extends ApiService {
         const { date, page = this.snapshotQueryDefaults.page, pageSize = this.snapshotQueryDefaults.pageSize, locale, trendDays } = query;
         const params: Record<string, string | number> = {
             date: date.toISOString(),
+            timeZoneOffsetMinutes: query.timeZoneOffsetMinutes,
             page,
             pageSize,
         };

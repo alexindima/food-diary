@@ -7,7 +7,14 @@ namespace FoodDiary.Presentation.Api.Features.Dashboard.Mappings;
 
 public static class DashboardHttpQueryMappings {
     public static GetDashboardSnapshotQuery ToQuery(this GetDashboardSnapshotHttpQuery query, Guid userId) {
-        return new GetDashboardSnapshotQuery(userId, query.Date, query.Page, query.PageSize, query.Locale, query.TrendDays);
+        return new GetDashboardSnapshotQuery(
+            userId,
+            query.Date,
+            query.Page,
+            query.PageSize,
+            query.Locale,
+            query.TrendDays,
+            query.TimeZoneOffsetMinutes);
     }
 
     public static GetDailyAdviceQuery ToQuery(this GetDailyAdviceHttpQuery query, Guid userId) {

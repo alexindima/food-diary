@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
+import { getDashboardDateUtc } from '../../features/dashboard/lib/dashboard-date.utils';
 import { UserService } from '../../shared/api/user.service';
 import { SidebarFacade } from './sidebar.facade';
 
@@ -65,7 +66,12 @@ describe('SidebarFacade', () => {
 
         facade.syncDailyProgress(date);
 
-        expect(dashboardService.getSnapshotSilently).toHaveBeenCalledWith({ date, page: 1, pageSize: 1 });
+        expect(dashboardService.getSnapshotSilently).toHaveBeenCalledWith({
+            date: getDashboardDateUtc(date),
+            timeZoneOffsetMinutes: -date.getTimezoneOffset(),
+            page: 1,
+            pageSize: 1,
+        });
         expect(facade.dailyConsumedKcal()).toBe(CONSUMED_KCAL);
         expect(facade.dailyGoalKcal()).toBe(GOAL_KCAL);
     });

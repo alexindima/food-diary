@@ -8,4 +8,5 @@ public sealed record DashboardSnapshotRequest(
     int TrendDays,
     int Page,
     int PageSize,
-    DashboardSnapshotSections? Sections = null);
+    DashboardSnapshotSections? Sections = null,
+    int? TimeZoneOffsetMinutes = null);

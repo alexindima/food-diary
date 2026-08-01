@@ -29,7 +29,8 @@ public sealed class GetDashboardSnapshotQueryHandler(
                 query.Locale,
                 query.TrendDays,
                 query.Page,
-                query.PageSize),
+                query.PageSize,
+                TimeZoneOffsetMinutes: query.TimeZoneOffsetMinutes),
             cancellationToken).ConfigureAwait(false);
     }
 }
