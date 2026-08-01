@@ -32,8 +32,14 @@ export class PushNotificationService {
             return;
         }
 
-        this.swPush.subscription.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(subscription => {
-            this.setSubscriptionState(subscription);
+        this.swPush.subscription.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: subscription => {
+                this.setSubscriptionState(subscription);
+            },
+            error: () => {
+                this.isSupported.set(false);
+                this.setSubscriptionState(null);
+            },
         });
 
         this.swPush.pushSubscriptionChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(change => {
@@ -64,7 +70,7 @@ export class PushNotificationService {
     }
 
     public async ensureSubscriptionAsync(): Promise<PushNotificationEnableResult> {
-        if (!this.swPush.isEnabled) {
+        if (!this.isSupported()) {
             return 'unsupported';
         }
 

@@ -381,13 +381,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "0d860934143aaedf7015e6d0788ecabff684f8b364e3d1a7c85ebfaf01cb3d3e"
+                                            "sha256":  "6a3c1fc1da4734dbbb066c2b53985c3fc597300c81fe04654ffe1e8861eed2fb"
                                         }
                                     ],
-                        "reason":  "Focused annotation layout coverage increased from 13 to 14 tests; regenerated quality index shows no critical-symbol or test-reference regression.",
+                        "reason":  "The generated quality metric only reflects six added service error-handling lines and its focused regression test; quality-risk workflow guidance remains current.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
-                        "reviewedAtUtc":  "2026-08-01T00:58:08.1540602Z"
+                        "gitHead":  "9658762852d6adcb2e4c42de5e36a79012cb0d20",
+                        "reviewedAtUtc":  "2026-08-01T05:34:17.2109132Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
