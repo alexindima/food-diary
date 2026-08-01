@@ -749,6 +749,7 @@
             "AMOUNT_LABEL": "Количество",
             "UNIT_LABEL": "Единица",
             "CLOSE": "Закрыть",
+            "STATUS_PREPARING": "Подготавливаем изображение",
             "STATUS_ANALYZING": "Идет распознавание",
             "STATUS_DONE": "Распознавание закончено",
             "HIDE_ANNOTATIONS": "Скрыть метки",

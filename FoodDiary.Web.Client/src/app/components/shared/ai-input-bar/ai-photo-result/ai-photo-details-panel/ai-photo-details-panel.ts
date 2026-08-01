@@ -22,6 +22,7 @@ export class AiPhotoDetailsPanelComponent {
     public readonly toggleView = input.required<AiDetailsToggleView>();
     public readonly submitLabelKey = input.required<string>();
     public readonly submitDisabled = input.required<boolean>();
+    public readonly toggleDisabled = input.required<boolean>();
     public readonly date = input.required<string>();
     public readonly time = input.required<string>();
     public readonly comment = input.required<string>();

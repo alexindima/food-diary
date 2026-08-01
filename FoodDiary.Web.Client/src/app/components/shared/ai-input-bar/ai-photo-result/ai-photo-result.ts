@@ -1,9 +1,9 @@
-import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 
 import { recalculateEditedAiNutrition } from '../../../../shared/lib/ai-nutrition-edit.utils';
 import {
@@ -40,12 +40,25 @@ import { AiPhotoResultRowsComponent } from './ai-photo-result-rows/ai-photo-resu
 const LOCATION_CONFIDENCE_THRESHOLD = 0.35;
 const PERCENT_SCALE = 100;
 
+type AiPhotoResultDialogState = {
+    imageUrl: () => string | null;
+    submitLabelKey: () => string;
+    showDetails: () => boolean;
+    results: () => FoodVisionItem[];
+    isAnalyzing: () => boolean;
+    isPreparing: () => boolean;
+    isNutritionLoading: () => boolean;
+    nutrition: () => FoodNutritionResponse | null;
+    errorKey: () => string | null;
+    nutritionErrorKey: () => string | null;
+    isProcessing: () => boolean;
+};
+
 @Component({
     selector: 'fd-ai-photo-result',
     imports: [
         TranslatePipe,
         DecimalPipe,
-        CdkTrapFocus,
         FdUiHintDirective,
         FdUiButtonComponent,
         AiPhotoPreviewComponent,
@@ -57,27 +70,38 @@ const PERCENT_SCALE = 100;
     templateUrl: './ai-photo-result.html',
     styleUrls: ['./ai-photo-result.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        '(document:keydown.escape)': 'dismissPhotoDialog()',
-    },
 })
 export class AiPhotoResultComponent {
     private readonly translateService = inject(TranslateService);
+    private readonly dialogState = inject<AiPhotoResultDialogState | null>(FD_UI_DIALOG_DATA, { optional: true });
     private readonly unitOptions = ['g', 'ml', 'pcs'] as const;
 
     public readonly titleKey = input<string>('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE');
     public readonly imageUrl = input<string | null>(null);
     public readonly sourceText = input<string | null>(null);
     public readonly sourceTextLabelKey = input<string>('AI_INPUT_BAR.TEXT_PREVIEW_LABEL');
-    public readonly submitLabelKey = input.required<string>();
-    public readonly showDetails = input.required<boolean>();
-    public readonly results = input.required<FoodVisionItem[]>();
-    public readonly isAnalyzing = input.required<boolean>();
-    public readonly isNutritionLoading = input.required<boolean>();
-    public readonly nutrition = input.required<FoodNutritionResponse | null>();
-    public readonly errorKey = input.required<string | null>();
-    public readonly nutritionErrorKey = input.required<string | null>();
-    public readonly isProcessing = input.required<boolean>();
+    public readonly submitLabelKey = input<string>('AI_INPUT_BAR.ADD_ACTION');
+    public readonly showDetails = input(false);
+    public readonly results = input<FoodVisionItem[]>([]);
+    public readonly isAnalyzing = input(false);
+    public readonly isPreparing = input(false);
+    public readonly isNutritionLoading = input(false);
+    public readonly nutrition = input<FoodNutritionResponse | null>(null);
+    public readonly errorKey = input<string | null>(null);
+    public readonly nutritionErrorKey = input<string | null>(null);
+    public readonly isProcessing = input(false);
+
+    protected readonly resolvedImageUrl = computed(() => this.dialogState?.imageUrl() ?? this.imageUrl());
+    protected readonly resolvedSubmitLabelKey = computed(() => this.dialogState?.submitLabelKey() ?? this.submitLabelKey());
+    protected readonly resolvedShowDetails = computed(() => this.dialogState?.showDetails() ?? this.showDetails());
+    protected readonly resolvedResults = computed(() => this.dialogState?.results() ?? this.results());
+    protected readonly resolvedIsAnalyzing = computed(() => this.dialogState?.isAnalyzing() ?? this.isAnalyzing());
+    protected readonly resolvedIsPreparing = computed(() => this.dialogState?.isPreparing() ?? this.isPreparing());
+    protected readonly resolvedIsNutritionLoading = computed(() => this.dialogState?.isNutritionLoading() ?? this.isNutritionLoading());
+    protected readonly resolvedNutrition = computed(() => this.dialogState?.nutrition() ?? this.nutrition());
+    protected readonly resolvedErrorKey = computed(() => this.dialogState?.errorKey() ?? this.errorKey());
+    protected readonly resolvedNutritionErrorKey = computed(() => this.dialogState?.nutritionErrorKey() ?? this.nutritionErrorKey());
+    protected readonly resolvedIsProcessing = computed(() => this.dialogState?.isProcessing() ?? this.isProcessing());
 
     public readonly dismissed = output();
     public readonly addToMeal = output<AiInputBarMealDetails>();
@@ -96,8 +120,8 @@ export class AiPhotoResultComponent {
     protected readonly postMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
     protected readonly editItems = signal<EditableAiItem[]>([]);
     protected readonly resultRows = computed<AiResultRow[]>(() => {
-        const nutritionItems = this.nutrition()?.items ?? [];
-        return this.results().map((item, index) => ({
+        const nutritionItems = this.resolvedNutrition()?.items ?? [];
+        return this.resolvedResults().map((item, index) => ({
             key: item.nameEn,
             annotationId: hasReliableLocation(item) ? `${item.nameEn}-${index}` : null,
             displayName: this.resolveDisplayName(item),
@@ -106,8 +130,8 @@ export class AiPhotoResultComponent {
         }));
     });
     protected readonly annotations = computed<AiPhotoAnnotation[]>(() => {
-        const nutritionItems = this.nutrition()?.items ?? [];
-        const annotations = this.results().flatMap((item, index) => {
+        const nutritionItems = this.resolvedNutrition()?.items ?? [];
+        const annotations = this.resolvedResults().flatMap((item, index) => {
             if (!hasReliableLocation(item) || index >= nutritionItems.length) {
                 return [];
             }
@@ -171,11 +195,12 @@ export class AiPhotoResultComponent {
     );
     protected readonly submitDisabled = computed(
         () =>
-            this.results().length === 0 ||
-            this.nutrition() === null ||
-            this.isAnalyzing() ||
-            this.isNutritionLoading() ||
-            this.isProcessing(),
+            this.resolvedResults().length === 0 ||
+            this.resolvedNutrition() === null ||
+            this.resolvedIsAnalyzing() ||
+            this.resolvedIsPreparing() ||
+            this.resolvedIsNutritionLoading() ||
+            this.resolvedIsProcessing(),
     );
     protected readonly editUnitOptions = computed<AiEditUnitOption[]>(() =>
         this.unitOptions.map(unit => ({
@@ -203,7 +228,7 @@ export class AiPhotoResultComponent {
     }
 
     protected startEditing(): void {
-        const editable = buildAiEditableItems(this.results(), this.nutrition(), () => this.createEditId());
+        const editable = buildAiEditableItems(this.resolvedResults(), this.resolvedNutrition(), () => this.createEditId());
         this.editItems.set(editable);
         this.sourceItems.set(editable.map(item => ({ ...item })));
         this.isEditing.set(true);
@@ -227,7 +252,7 @@ export class AiPhotoResultComponent {
 
         this.editApplied.emit({
             items: normalized,
-            nutrition: recalculateEditedAiNutrition(this.nutrition(), this.sourceItems(), edited),
+            nutrition: recalculateEditedAiNutrition(this.resolvedNutrition(), this.sourceItems(), edited),
         });
     }
 
@@ -276,12 +301,6 @@ export class AiPhotoResultComponent {
 
     protected toggleAnnotations(): void {
         this.annotationsVisible.update(visible => !visible);
-    }
-
-    protected dismissPhotoDialog(): void {
-        if (this.imageUrl() !== null) {
-            this.dismissed.emit();
-        }
     }
 
     protected selectAnnotation(id: string): void {

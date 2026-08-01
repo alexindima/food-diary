@@ -5,6 +5,8 @@
         [cropEnabled]="false"
         [resizeMaxDimension]="1536"
         [deleteOnClear]="true"
+        (imagePreparationStarted)="onPhotoPreparationStarted($event)"
+        (imagePreparationFailed)="onPhotoPreparationFailed()"
         (imageChanged)="onPhotoSelected($event)"
     />
     <fd-ui-icon class="ai-input-bar__icon" name="auto_awesome" />
@@ -79,24 +81,5 @@
         (addToMeal)="onTextAddToMeal($event)"
         (editApplied)="onTextEditApplied($event)"
         (reanalyzeRequested)="onTextReanalyze()"
-    />
-}
-@if (hasPhotoResult()) {
-    <fd-ai-photo-result
-        class="ai-input-bar__result-panel"
-        [imageUrl]="photoSelection()?.url ?? null"
-        [submitLabelKey]="submitLabelKey()"
-        [showDetails]="showDetails()"
-        [results]="photoResults()"
-        [isAnalyzing]="photoIsAnalyzing()"
-        [isNutritionLoading]="photoIsNutritionLoading()"
-        [nutrition]="photoNutrition()"
-        [errorKey]="photoErrorKey()"
-        [nutritionErrorKey]="photoNutritionErrorKey()"
-        [isProcessing]="isProcessing()"
-        (dismissed)="dismissPhotoResult()"
-        (addToMeal)="onPhotoAddToMeal($event)"
-        (editApplied)="onPhotoEditApplied($event)"
-        (reanalyzeRequested)="onPhotoReanalyze()"
     />
 }

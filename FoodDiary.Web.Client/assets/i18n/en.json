@@ -749,6 +749,7 @@
             "AMOUNT_LABEL": "Amount",
             "UNIT_LABEL": "Unit",
             "CLOSE": "Close",
+            "STATUS_PREPARING": "Preparing image",
             "STATUS_ANALYZING": "Recognition in progress",
             "STATUS_DONE": "Recognition complete",
             "HIDE_ANNOTATIONS": "Hide labels",

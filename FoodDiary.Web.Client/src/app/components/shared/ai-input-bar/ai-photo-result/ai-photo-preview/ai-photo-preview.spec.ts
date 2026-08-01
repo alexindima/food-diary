@@ -56,6 +56,18 @@ async function setupAiPhotoPreviewAsync(): Promise<ComponentFixture<AiPhotoPrevi
 }
 
 describe('AiPhotoPreviewComponent', () => {
+    it('shows a preparation status over the local image preview', async () => {
+        const fixture = await setupAiPhotoPreviewAsync();
+        fixture.componentRef.setInput('imageUrl', 'blob:local-preview');
+        fixture.componentRef.setInput('sourceText', null);
+        fixture.componentRef.setInput('isPreparing', true);
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.ai-photo-result__scan-overlay')).not.toBeNull();
+        expect(host.querySelector('[role="status"]')?.textContent).toContain('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_PREPARING');
+    });
+
     it('renders source text preview when image is absent', async () => {
         const fixture = await setupAiPhotoPreviewAsync();
         fixture.detectChanges();
@@ -91,6 +103,19 @@ describe('AiPhotoPreviewComponent', () => {
 
         expect((fixture.nativeElement as HTMLElement).querySelectorAll('.ai-photo-result__annotation-card')).toHaveLength(1);
         expect((fixture.nativeElement as HTMLElement).querySelector('.ai-photo-result__annotation-card')?.textContent).toContain('Food 3');
+        expect((fixture.nativeElement as HTMLElement).querySelector('.ai-photo-result__annotation-card--active')).not.toBeNull();
         expect((fixture.nativeElement as HTMLElement).querySelectorAll('.ai-photo-result__annotation-marker')).toHaveLength(SIX_PRODUCTS);
+    });
+
+    it('highlights the selected card when all annotations are expanded', async () => {
+        const fixture = await setupAiPhotoPreviewAsync();
+        fixture.componentRef.setInput('imageUrl', 'https://example.com/meal.png');
+        fixture.componentRef.setInput('sourceText', null);
+        fixture.componentRef.setInput('annotations', createAnnotations(SIX_PRODUCTS));
+        fixture.componentRef.setInput('activeAnnotationId', 'food-4');
+        fixture.detectChanges();
+
+        const activeCard = (fixture.nativeElement as HTMLElement).querySelector('.ai-photo-result__annotation-card--active');
+        expect(activeCard?.textContent).toContain('Food 5');
     });
 });

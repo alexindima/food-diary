@@ -7,30 +7,21 @@
     padding: var(--fd-space-stat-tile-padding);
 }
 
-.ai-photo-result__backdrop {
-    /* A transient AI result owns its state in the input bar, so this local modal avoids duplicating that state in an overlay component. */
-    /* stylelint-disable-next-line declaration-property-value-disallowed-list -- The result must cover the viewport while preserving its live parent state. */
-    position: fixed;
-    inset: 0;
-    z-index: var(--fd-z-index-overlay-backdrop);
+.ai-photo-result--modal {
     width: 100%;
     height: 100%;
-    padding: 0;
-    border: 0;
-    background: var(--fd-bg-overlay);
-    backdrop-filter: blur(8px);
-    cursor: default;
-}
-
-.ai-photo-result--modal {
-    /* stylelint-disable-next-line declaration-property-value-disallowed-list -- The result must cover the viewport while preserving its live parent state. */
-    position: fixed;
-    inset: 4vh 3vw;
-    z-index: var(--fd-z-index-overlay-panel);
-    width: auto;
-    max-height: 92vh;
+    max-height: none;
+    border-radius: var(--fd-radius-dialog);
     overflow: hidden;
     box-shadow: var(--fd-shadow-xl);
+}
+
+.ai-photo-result--modal .ai-photo-result__workspace {
+    flex: 1 1 auto;
+}
+
+.ai-photo-result--modal.ai-photo-result--details-expanded .ai-photo-result__workspace {
+    min-height: 0;
 }
 
 .ai-photo-result__workspace {
@@ -53,7 +44,7 @@
     background: var(--fd-bg-surface-muted);
 }
 
-:host(:where(.ai-input-bar__result-panel)) .ai-photo-result {
+:host(:where(.ai-input-bar__result-panel)) .ai-photo-result:not(.ai-photo-result--modal) {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
@@ -88,6 +79,7 @@
 
 .ai-photo-result__preview-wrap {
     position: relative;
+    width: 100%;
     height: 100%;
     border-radius: 0;
     overflow: hidden;
@@ -207,6 +199,11 @@
     pointer-events: auto;
     text-align: left;
     cursor: pointer;
+}
+
+.ai-photo-result__annotation-card--active {
+    border-color: var(--fd-color-primary-600);
+    background: var(--fd-bg-brand-surface-medium);
 }
 
 .ai-photo-result__annotation-card div {
@@ -562,7 +559,9 @@
         grid-template-rows 0.25s ease,
         opacity 0.2s ease,
         margin-top 0.25s ease;
-    margin-top: calc(0px - var(--fd-space-xxs));
+
+    // The collapsed panel remains a grid item, so cancel the stack gap that would otherwise add extra space below the action row.
+    margin-top: calc(0px - var(--fd-space-sm));
 }
 
 .ai-photo-result__details--expanded {

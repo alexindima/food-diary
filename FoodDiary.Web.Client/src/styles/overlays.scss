@@ -28,6 +28,11 @@
     -webkit-backdrop-filter: blur(8px);
 }
 
+.cdk-overlay-pane.fd-ai-photo-result-dialog-panel .cdk-dialog-container {
+    border-radius: var(--fd-radius-dialog);
+    overflow: hidden;
+}
+
 .fd-ui-dialog-backdrop--detail {
     background: var(--fd-bg-scrim-subtle);
     opacity: 0;

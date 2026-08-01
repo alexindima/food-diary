@@ -3,6 +3,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    DestroyRef,
     effect,
     type ElementRef,
     inject,
@@ -70,6 +71,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     private readonly translateService = inject(TranslateService);
     private readonly logger = inject(FrontendLoggerService);
     private readonly document = inject(DOCUMENT);
+    private readonly destroyRef = inject(DestroyRef);
 
     public readonly label = input<string>('Image');
     public readonly description = input<string>();
@@ -90,6 +92,8 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     public readonly appearance = input<'default' | 'compact' | 'preview' | 'step' | 'hidden'>('default');
 
     public readonly imageChanged = output<ImageSelection | null>();
+    public readonly imagePreparationStarted = output<string>();
+    public readonly imagePreparationFailed = output();
 
     private readonly fileInputRef = viewChild<ElementRef<HTMLInputElement>>('fileInput');
     private readonly cropSurfaceRef = viewChild<ElementRef<HTMLDivElement>>('cropSurface');
@@ -109,10 +113,14 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     private originalFile: File | null = null;
     private cropImageElement: HTMLImageElement | null = null;
     private cropInteraction: CropInteraction | null = null;
+    private pendingPreviewUrl: string | null = null;
 
     protected readonly appearanceClass = computed(() => `image-upload-field--appearance-${this.appearance()}`);
 
     public constructor() {
+        this.destroyRef.onDestroy(() => {
+            this.clearPreparationPreview();
+        });
         effect(() => {
             const value = this.value();
             if (value !== null) {
@@ -185,6 +193,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         this.imageChanged.emit(selection);
         this.isCropping.set(false);
         this.clearCropState();
+        this.clearPreparationPreview();
 
         if (assetId !== null && this.deleteOnClear()) {
             this.imageUploadFacade.deleteAsset(assetId).subscribe({
@@ -317,6 +326,8 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
             return;
         }
 
+        this.emitPreparationPreview(file);
+
         if (this.cropEnabled()) {
             this.startCropping(file);
         } else {
@@ -422,6 +433,8 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
                     maxSizeMb: this.maxSizeMb(),
                 }),
             );
+            this.imagePreparationFailed.emit();
+            this.clearPreparationPreview();
             return;
         }
 
@@ -443,8 +456,30 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
                 },
                 error: () => {
                     this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.UPLOAD_FAILED'));
+                    this.imagePreparationFailed.emit();
+                    this.clearPreparationPreview();
                 },
             });
+    }
+
+    private emitPreparationPreview(file: File): void {
+        this.clearPreparationPreview();
+        const urlApi = this.document.defaultView?.URL;
+        if (urlApi === undefined) {
+            return;
+        }
+
+        this.pendingPreviewUrl = urlApi.createObjectURL(file);
+        this.imagePreparationStarted.emit(this.pendingPreviewUrl);
+    }
+
+    private clearPreparationPreview(): void {
+        if (this.pendingPreviewUrl === null) {
+            return;
+        }
+
+        this.document.defaultView?.URL.revokeObjectURL(this.pendingPreviewUrl);
+        this.pendingPreviewUrl = null;
     }
 
     private confirmCropInternal(): void {

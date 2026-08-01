@@ -50,6 +50,7 @@
                                 <button
                                     class="ai-photo-result__annotation-card"
                                     type="button"
+                                    [class.ai-photo-result__annotation-card--active]="annotation.id === activeAnnotationId()"
                                     [style.left.%]="annotation.cardX"
                                     [style.top.%]="annotation.cardY"
                                     [style.width.%]="annotation.cardWidth"
@@ -90,12 +91,16 @@
                 <div class="ai-photo-result__text-preview-value fd-ui-body">{{ sourceText() }}</div>
             </div>
         }
-        @if (isAnalyzing() || isNutritionLoading()) {
+        @if (isPreparing() || isAnalyzing() || isNutritionLoading()) {
             <div class="ai-photo-result__scan-overlay">
                 <div class="ai-photo-result__scan-line" [class.ai-photo-result__scan-line--nutrition]="isNutritionLoading()"></div>
             </div>
         }
-        @if (isAnalyzing()) {
+        @if (isPreparing()) {
+            <div class="ai-photo-result__status fd-ui-pill fd-ui-pill--compact fd-ui-stat-value" role="status" aria-live="polite">
+                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_PREPARING' | translate }}
+            </div>
+        } @else if (isAnalyzing()) {
             <div class="ai-photo-result__status fd-ui-pill fd-ui-pill--compact fd-ui-stat-value" role="status" aria-live="polite">
                 {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING' | translate }}
             </div>

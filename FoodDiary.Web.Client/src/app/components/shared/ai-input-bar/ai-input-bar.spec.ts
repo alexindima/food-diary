@@ -2,7 +2,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { type Observable, of, throwError } from 'rxjs';
+import { NEVER, type Observable, of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
@@ -16,6 +16,7 @@ import { UserFacade } from '../../../shared/lib/user.facade';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
 import { AiInputBarComponent } from './ai-input-bar';
 import type { AiInputBarMealDetails, AiInputBarResult } from './ai-input-bar.types';
+import { AiPhotoResultComponent } from './ai-photo-result/ai-photo-result';
 
 const RECOGNIZED_AT_PATTERN = /^\d{4}-\d{2}-\d{2}T/;
 const VISION_ITEMS: FoodVisionItem[] = [{ nameEn: 'egg', nameLocal: null, amount: 100, unit: 'g', confidence: 1 }];
@@ -84,7 +85,16 @@ async function setupAiInputBarAsync(
         acceptAiConsent: vi.fn().mockReturnValue(of(void 0)),
     };
     const navigationService = { navigateToPremiumAccessAsync: vi.fn() };
-    const dialogService = { open: vi.fn((): { afterClosed: () => Observable<boolean> } => ({ afterClosed: () => of(true) })) };
+    const dialogService = {
+        open: vi.fn(
+            (
+                component: unknown,
+            ): { afterClosed: () => Observable<boolean>; componentInstance?: null; componentRef?: null; close?: () => void } =>
+                component === AiPhotoResultComponent
+                    ? { componentInstance: null, componentRef: null, close: vi.fn(), afterClosed: () => NEVER }
+                    : { afterClosed: () => of(true) },
+        ),
+    };
 
     await TestBed.configureTestingModule({
         imports: [AiInputBarComponent],
@@ -244,6 +254,23 @@ describe('AiInputBarComponent access gates and errors', () => {
 });
 
 describe('AiInputBarComponent photo recognition', () => {
+    it('opens the modal immediately with the local preview while the image is being prepared', async () => {
+        const { aiFoodService, component, dialogService, fixture } = await setupAiInputBarAsync();
+        fixture.detectChanges();
+
+        component['onPhotoPreparationStarted']('blob:local-preview');
+        fixture.detectChanges();
+
+        expect(dialogService.open).toHaveBeenCalledWith(
+            AiPhotoResultComponent,
+            expect.objectContaining({ size: 'xl', panelClass: 'fd-ai-photo-result-dialog-panel' }),
+        );
+        expect(component['photoSelection']()).toEqual({ url: 'blob:local-preview', assetId: null });
+        expect(component['photoIsPreparing']()).toBe(true);
+        expect(component['isDisabled']()).toBe(true);
+        expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
+    });
+
     it('ignores photo selections without asset id', async () => {
         const { aiFoodService, component, fixture } = await setupAiInputBarAsync();
         fixture.detectChanges();
@@ -255,14 +282,39 @@ describe('AiInputBarComponent photo recognition', () => {
     });
 
     it('runs photo recognition when asset id is present', async () => {
-        const { aiFoodService, component, fixture } = await setupAiInputBarAsync();
+        const { aiFoodService, component, dialogService, fixture } = await setupAiInputBarAsync();
         fixture.detectChanges();
 
         component['onPhotoSelected']({ url: 'https://example.com/photo.jpg', assetId: 'asset-1' });
 
+        expect(dialogService.open).toHaveBeenCalledWith(
+            AiPhotoResultComponent,
+            expect.objectContaining({ size: 'xl', panelClass: 'fd-ai-photo-result-dialog-panel' }),
+        );
         expect(aiFoodService.analyzeFoodImage).toHaveBeenCalledWith({ imageAssetId: 'asset-1' });
+        expect(component['photoIsPreparing']()).toBe(false);
         expect(aiFoodService.calculateNutrition).toHaveBeenCalledWith({ items: VISION_ITEMS });
         expect(component['photoNutrition']()).toEqual(NUTRITION);
+    });
+
+    it('keeps the preparation modal open and replaces its preview URL after upload', async () => {
+        const { component, dialogService, fixture } = await setupAiInputBarAsync();
+        fixture.detectChanges();
+
+        component['onPhotoPreparationStarted']('blob:local-preview');
+        const dialogConfig = dialogService.open.mock.calls[0][1] as {
+            data: { imageUrl: () => string | null; isPreparing: () => boolean };
+        };
+
+        expect(dialogConfig.data.imageUrl()).toBe('blob:local-preview');
+        expect(dialogConfig.data.isPreparing()).toBe(true);
+
+        component['onPhotoSelected']({ url: 'https://cdn.example.com/photo.jpg', assetId: 'asset-1' });
+
+        expect(dialogService.open).toHaveBeenCalledOnce();
+        expect(component['photoSelection']()).toEqual({ url: 'https://cdn.example.com/photo.jpg', assetId: 'asset-1' });
+        expect(dialogConfig.data.imageUrl()).toBe('https://cdn.example.com/photo.jpg');
+        expect(dialogConfig.data.isPreparing()).toBe(false);
     });
 
     it('emits recognized photo meal with image metadata', async () => {

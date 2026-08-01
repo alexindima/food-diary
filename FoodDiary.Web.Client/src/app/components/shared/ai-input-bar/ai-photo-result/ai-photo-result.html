@@ -1,19 +1,10 @@
-@if (imageUrl()) {
-    <button
-        class="ai-photo-result__backdrop"
-        type="button"
-        [attr.aria-label]="'COMMON.CANCEL' | translate"
-        (click)="dismissed.emit()"
-    ></button>
-}
 <div
     class="ai-photo-result fd-stack fd-gap-sm"
-    [class.ai-photo-result--modal]="imageUrl()"
-    [attr.role]="imageUrl() ? 'dialog' : null"
-    [attr.aria-modal]="imageUrl() ? 'true' : null"
-    [attr.aria-label]="imageUrl() ? (titleKey() | translate) : null"
-    [cdkTrapFocus]="imageUrl() !== null"
-    [cdkTrapFocusAutoCapture]="imageUrl() !== null"
+    [class.ai-photo-result--modal]="resolvedImageUrl()"
+    [class.ai-photo-result--details-expanded]="resolvedImageUrl() && isDetailsExpanded()"
+    [attr.role]="resolvedImageUrl() ? 'dialog' : null"
+    [attr.aria-modal]="resolvedImageUrl() ? 'true' : null"
+    [attr.aria-label]="resolvedImageUrl() ? (titleKey() | translate) : null"
 >
     <div class="ai-photo-result__header fd-row fd-justify-between">
         <span class="fd-ui-card-title">{{ titleKey() | translate }}</span>
@@ -28,14 +19,18 @@
         />
     </div>
 
-    <div class="ai-photo-result__workspace" [class.ai-photo-result__workspace--with-products]="!isAnalyzing() && results().length > 0">
+    <div
+        class="ai-photo-result__workspace"
+        [class.ai-photo-result__workspace--with-products]="resolvedImageUrl() || resolvedResults().length > 0"
+    >
         <section class="ai-photo-result__media" [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.PHOTO_STAGE' | translate">
             <fd-ai-photo-preview
-                [imageUrl]="imageUrl()"
+                [imageUrl]="resolvedImageUrl()"
                 [sourceText]="sourceText()"
                 [sourceTextLabelKey]="sourceTextLabelKey()"
-                [isAnalyzing]="isAnalyzing()"
-                [isNutritionLoading]="isNutritionLoading()"
+                [isAnalyzing]="resolvedIsAnalyzing()"
+                [isPreparing]="resolvedIsPreparing()"
+                [isNutritionLoading]="resolvedIsNutritionLoading()"
                 [annotations]="annotations()"
                 [annotationsVisible]="annotationsVisible()"
                 [activeAnnotationId]="activeAnnotationId()"
@@ -45,74 +40,86 @@
             />
         </section>
 
-        @if (!isAnalyzing() && results().length) {
+        @if (resolvedImageUrl() || (!resolvedIsAnalyzing() && resolvedResults().length)) {
             <section class="ai-photo-result__products" [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.PRODUCTS_PANEL' | translate">
                 <header class="ai-photo-result__products-header">
                     <div>
                         <h2 class="ai-photo-result__products-title fd-ui-card-title">
                             {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE' | translate }}
                         </h2>
-                        <span class="ai-photo-result__products-count fd-ui-caption">
-                            {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.PRODUCT_COUNT' | translate: { count: results().length } }}
-                        </span>
+                        @if (resolvedResults().length > 0) {
+                            <span class="ai-photo-result__products-count fd-ui-caption">
+                                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.PRODUCT_COUNT' | translate: { count: resolvedResults().length } }}
+                            </span>
+                        } @else if (resolvedIsAnalyzing()) {
+                            <span class="ai-photo-result__products-count fd-ui-caption" role="status" aria-live="polite">
+                                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING' | translate }}
+                            </span>
+                        }
                     </div>
-                    @if (!isNutritionLoading() && nutrition(); as currentNutrition) {
+                    @if (!resolvedIsNutritionLoading() && resolvedNutrition(); as currentNutrition) {
                         <strong class="ai-photo-result__products-calories fd-ui-body-sm">
                             {{ currentNutrition.calories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}
                         </strong>
                     }
                 </header>
 
-                <div class="ai-photo-result__products-content fd-stack fd-gap-sm">
-                    <fd-ai-photo-result-actions
-                        [isAnalyzing]="isAnalyzing()"
-                        [isEditing]="isEditing()"
-                        [editActionView]="editActionView()"
-                        (reanalyze)="reanalyzeRequested.emit()"
-                        (editAction)="applyEditAction()"
-                        (editCancel)="cancelEditing()"
-                    />
+                @if (resolvedResults().length > 0) {
+                    <div class="ai-photo-result__products-content fd-stack fd-gap-sm">
+                        <fd-ai-photo-result-actions
+                            [isAnalyzing]="resolvedIsAnalyzing()"
+                            [isEditing]="isEditing()"
+                            [editActionView]="editActionView()"
+                            (reanalyze)="reanalyzeRequested.emit()"
+                            (editAction)="applyEditAction()"
+                            (editCancel)="cancelEditing()"
+                        />
 
-                    @if (isEditing()) {
-                        <fd-ai-photo-edit-list
-                            [items]="editItems()"
-                            [unitOptions]="editUnitOptions()"
-                            (itemDropped)="reorderEditItems($event)"
-                            (itemUpdated)="updateEditItemFromView($event)"
-                            (itemRemoved)="removeEditItem($event)"
-                            (itemAdded)="addEditItem()"
-                        />
-                    } @else {
-                        <fd-ai-photo-result-rows
-                            [rows]="resultRows()"
-                            [activeAnnotationId]="activeAnnotationId()"
-                            (rowSelected)="selectAnnotation($event)"
-                        />
-                    }
-                    @if (!isNutritionLoading() && nutritionErrorKey(); as currentNutritionErrorKey) {
-                        <div class="ai-photo-result__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-error-text" role="alert">
-                            {{ currentNutritionErrorKey | translate }}
-                        </div>
-                    }
-                </div>
+                        @if (isEditing()) {
+                            <fd-ai-photo-edit-list
+                                [items]="editItems()"
+                                [unitOptions]="editUnitOptions()"
+                                (itemDropped)="reorderEditItems($event)"
+                                (itemUpdated)="updateEditItemFromView($event)"
+                                (itemRemoved)="removeEditItem($event)"
+                                (itemAdded)="addEditItem()"
+                            />
+                        } @else {
+                            <fd-ai-photo-result-rows
+                                [rows]="resultRows()"
+                                [activeAnnotationId]="activeAnnotationId()"
+                                (rowSelected)="selectAnnotation($event)"
+                            />
+                        }
+                        @if (!resolvedIsNutritionLoading() && resolvedNutritionErrorKey(); as currentNutritionErrorKey) {
+                            <div
+                                class="ai-photo-result__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-error-text"
+                                role="alert"
+                            >
+                                {{ currentNutritionErrorKey | translate }}
+                            </div>
+                        }
+                    </div>
+                }
             </section>
         }
     </div>
 
-    @if (errorKey(); as currentErrorKey) {
+    @if (resolvedErrorKey(); as currentErrorKey) {
         <div class="ai-photo-result__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-error-text" role="alert">
             {{ currentErrorKey | translate }}
         </div>
     }
 
-    @if (!isAnalyzing() && results().length) {
+    @if (resolvedImageUrl() || (!resolvedIsAnalyzing() && resolvedResults().length)) {
         <fd-ai-photo-details-panel
             [isVisible]="!isEditing()"
-            [showDetails]="showDetails()"
+            [showDetails]="resolvedShowDetails()"
             [isExpanded]="isDetailsExpanded()"
             [toggleView]="detailsToggleView()"
-            [submitLabelKey]="submitLabelKey()"
+            [submitLabelKey]="resolvedSubmitLabelKey()"
             [submitDisabled]="submitDisabled()"
+            [toggleDisabled]="submitDisabled()"
             [date]="detailsDate()"
             [time]="detailsTime()"
             [comment]="detailsComment()"

@@ -17,6 +17,7 @@ async function setupAiPhotoDetailsPanelAsync(): Promise<ComponentFixture<AiPhoto
     fixture.componentRef.setInput('toggleView', { labelKey: 'COMMON.SHOW_MORE', icon: 'expand_more' });
     fixture.componentRef.setInput('submitLabelKey', 'COMMON.SAVE');
     fixture.componentRef.setInput('submitDisabled', false);
+    fixture.componentRef.setInput('toggleDisabled', false);
     fixture.componentRef.setInput('date', '2026-05-17');
     fixture.componentRef.setInput('time', '12:30');
     fixture.componentRef.setInput('comment', '');
@@ -47,5 +48,16 @@ describe('AiPhotoDetailsPanelComponent', () => {
 
         expect(toggleSpy).toHaveBeenCalledOnce();
         expect(submitSpy).toHaveBeenCalledOnce();
+    });
+
+    it('disables both actions while recognition is incomplete', async () => {
+        const fixture = await setupAiPhotoDetailsPanelAsync();
+        fixture.componentRef.setInput('submitDisabled', true);
+        fixture.componentRef.setInput('toggleDisabled', true);
+        fixture.detectChanges();
+
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelector<HTMLButtonElement>('.ai-photo-result__details-toggle button')?.disabled).toBe(true);
+        expect(element.querySelector<HTMLButtonElement>('.ai-photo-result__submit-action button')?.disabled).toBe(true);
     });
 });

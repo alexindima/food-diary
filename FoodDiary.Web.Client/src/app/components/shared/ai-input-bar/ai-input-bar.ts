@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
@@ -39,6 +40,7 @@ export class AiInputBarComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly speechRecognition = inject(SpeechRecognitionService);
     private readonly photoUploadField = viewChild(ImageUploadFieldComponent);
+    private readonly photoDialogRef = signal<FdUiDialogRef<AiPhotoResultComponent> | null>(null);
 
     public readonly isProcessing = input<boolean>(false);
     public readonly clearToken = input(0);
@@ -62,6 +64,7 @@ export class AiInputBarComponent {
     private lastTextSource: AiRecognitionSource = 'Text';
 
     protected readonly photoSelection = signal<ImageSelection | null>(null);
+    protected readonly photoIsPreparing = signal(false);
     protected readonly photoIsAnalyzing = this.recognition.photo.analyzing;
     protected readonly photoResults = this.recognition.photo.results;
     protected readonly photoIsNutritionLoading = this.recognition.photo.nutritionLoading;
@@ -69,7 +72,7 @@ export class AiInputBarComponent {
     protected readonly photoErrorKey = this.recognition.photo.errorKey;
     protected readonly photoNutritionErrorKey = this.recognition.photo.nutritionErrorKey;
     protected readonly hasPhotoResult = computed(() => this.photoSelection() !== null);
-    protected readonly hasAttachedResult = computed(() => this.hasTextResult() || this.hasPhotoResult());
+    protected readonly hasAttachedResult = this.hasTextResult;
     protected readonly microphoneIcon = computed(() => (this.isListening() ? 'mic' : 'mic_none'));
     protected readonly textSubmitIcon = computed(() =>
         this.textIsAnalyzing() || this.textIsNutritionLoading() ? 'hourglass_empty' : 'send',
@@ -81,6 +84,7 @@ export class AiInputBarComponent {
             this.textIsAnalyzing() ||
             this.textIsNutritionLoading() ||
             this.photoIsAnalyzing() ||
+            this.photoIsPreparing() ||
             this.photoIsNutritionLoading() ||
             this.isSubmittingMeal(),
     );
@@ -193,11 +197,30 @@ export class AiInputBarComponent {
         }
 
         this.photoSelection.set(selection);
+        this.photoIsPreparing.set(false);
         this.photoErrorKey.set(null);
         this.photoResults.set([]);
         this.photoNutrition.set(null);
         this.photoNutritionErrorKey.set(null);
+        if (this.photoDialogRef() === null) {
+            this.openPhotoResultDialog();
+        }
         this.runPhotoAnalysis(selection.assetId);
+    }
+
+    protected onPhotoPreparationStarted(previewUrl: string): void {
+        this.photoSelection.set({ url: previewUrl, assetId: null });
+        this.photoIsPreparing.set(true);
+        this.photoErrorKey.set(null);
+        this.photoResults.set([]);
+        this.photoNutrition.set(null);
+        this.photoNutritionErrorKey.set(null);
+        this.openPhotoResultDialog();
+    }
+
+    protected onPhotoPreparationFailed(): void {
+        this.photoIsPreparing.set(false);
+        this.photoErrorKey.set('IMAGE_UPLOAD_FIELD.ERRORS.UPLOAD_FAILED');
     }
 
     protected onPhotoAddToMeal(details: AiInputBarMealDetails): void {
@@ -238,7 +261,15 @@ export class AiInputBarComponent {
     }
 
     protected dismissPhotoResult(): void {
+        const dialogRef = this.photoDialogRef();
+        this.photoDialogRef.set(null);
+        dialogRef?.close();
+        this.clearPhotoResult();
+    }
+
+    private clearPhotoResult(): void {
         this.photoSelection.set(null);
+        this.photoIsPreparing.set(false);
         this.recognition.clear(this.recognition.photo);
     }
 
@@ -281,6 +312,53 @@ export class AiInputBarComponent {
 
     private runPhotoAnalysis(assetId: string): void {
         this.recognition.analyzePhoto(assetId);
+    }
+
+    private openPhotoResultDialog(): void {
+        this.photoDialogRef()?.close();
+        const dialogRef = this.fdDialogService.open(AiPhotoResultComponent, {
+            size: 'xl',
+            width: '94vw',
+            height: '92vh',
+            maxWidth: '94vw',
+            panelClass: 'fd-ai-photo-result-dialog-panel',
+            data: {
+                imageUrl: () => this.photoSelection()?.url ?? null,
+                submitLabelKey: () => this.submitLabelKey(),
+                showDetails: () => this.showDetails(),
+                results: () => this.photoResults(),
+                isAnalyzing: () => this.photoIsAnalyzing(),
+                isPreparing: () => this.photoIsPreparing(),
+                isNutritionLoading: () => this.photoIsNutritionLoading(),
+                nutrition: () => this.photoNutrition(),
+                errorKey: () => this.photoErrorKey(),
+                nutritionErrorKey: () => this.photoNutritionErrorKey(),
+                isProcessing: () => this.isProcessing(),
+            },
+        });
+        const component = dialogRef.componentInstance;
+        component?.dismissed.subscribe(() => {
+            this.dismissPhotoResult();
+        });
+        component?.addToMeal.subscribe(details => {
+            this.onPhotoAddToMeal(details);
+        });
+        component?.editApplied.subscribe(result => {
+            this.onPhotoEditApplied(result);
+        });
+        component?.reanalyzeRequested.subscribe(() => {
+            this.onPhotoReanalyze();
+        });
+        this.photoDialogRef.set(dialogRef);
+        dialogRef
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                if (this.photoDialogRef() === dialogRef) {
+                    this.photoDialogRef.set(null);
+                    this.clearPhotoResult();
+                }
+            });
     }
 
     private ensurePremium(): boolean {

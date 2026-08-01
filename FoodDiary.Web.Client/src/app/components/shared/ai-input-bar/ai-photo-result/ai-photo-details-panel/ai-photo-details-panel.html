@@ -1,7 +1,14 @@
 @if (isVisible()) {
     <div class="ai-photo-result__actions fd-ui-actions fd-ui-actions--split">
         @if (showDetails()) {
-            <fd-ui-button class="ai-photo-result__details-toggle" variant="secondary" fill="text" (click)="detailsToggle.emit()">
+            <fd-ui-button
+                class="ai-photo-result__details-toggle"
+                variant="secondary"
+                fill="text"
+                [disabled]="toggleDisabled()"
+                [disabledReason]="toggleDisabled() ? ('DISABLED_HINTS.SELECT_RECOGNITION' | translate) : null"
+                (click)="detailsToggle.emit()"
+            >
                 <span>{{ toggleView().labelKey | translate }}</span>
                 <fd-ui-icon [name]="toggleView().icon" />
             </fd-ui-button>

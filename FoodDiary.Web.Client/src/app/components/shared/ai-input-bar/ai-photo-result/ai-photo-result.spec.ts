@@ -73,6 +73,22 @@ async function setupAiPhotoResultAsync(): Promise<AiPhotoResultTestContext> {
 }
 
 describe('AiPhotoResultComponent view models', () => {
+    it('keeps the products panel visible while an image is being analyzed', async () => {
+        const { fixture } = await setupAiPhotoResultAsync();
+        fixture.componentRef.setInput('imageUrl', 'https://example.com/meal.png');
+        fixture.componentRef.setInput('results', []);
+        fixture.componentRef.setInput('nutrition', null);
+        fixture.componentRef.setInput('isAnalyzing', true);
+        fixture.detectChanges();
+
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelector('.ai-photo-result__workspace--with-products')).not.toBeNull();
+        expect(element.querySelector('.ai-photo-result__products')).not.toBeNull();
+        expect(element.querySelector('.ai-photo-result__products-count')?.getAttribute('role')).toBe('status');
+        expect(element.querySelector('.ai-photo-result__details-toggle')).not.toBeNull();
+        expect(element.querySelector('.ai-photo-result__submit-action')).not.toBeNull();
+    });
+
     it('builds localized result rows with calories', async () => {
         const { component, fixture, translateService } = await setupAiPhotoResultAsync();
         vi.spyOn(translateService, 'instant').mockImplementation((key: string) => {
@@ -102,6 +118,17 @@ describe('AiPhotoResultComponent view models', () => {
 
         expect(component['editActionView']().labelKey).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE');
         expect(component['detailsToggleView']().icon).toBe('expand_less');
+    });
+
+    it('allows the modal workspace to shrink when details are expanded', async () => {
+        const { component, fixture } = await setupAiPhotoResultAsync();
+        fixture.componentRef.setInput('imageUrl', 'https://example.com/meal.png');
+        fixture.detectChanges();
+
+        component['toggleDetails']();
+        fixture.detectChanges();
+
+        expect((fixture.nativeElement as HTMLElement).querySelector('.ai-photo-result--details-expanded')).not.toBeNull();
     });
 });
 
@@ -203,23 +230,5 @@ describe('AiPhotoResultComponent meal details', () => {
             preMealSatietyLevel: 5,
             postMealSatietyLevel: 3,
         });
-    });
-});
-
-describe('AiPhotoResultComponent dialog behavior', () => {
-    it('dismisses only photo-backed results on Escape', async () => {
-        const { component, fixture } = await setupAiPhotoResultAsync();
-        const dismissSpy = vi.fn();
-        component.dismissed.subscribe(dismissSpy);
-        fixture.detectChanges();
-
-        component['dismissPhotoDialog']();
-        expect(dismissSpy).not.toHaveBeenCalled();
-
-        fixture.componentRef.setInput('imageUrl', 'https://example.com/meal.png');
-        fixture.detectChanges();
-        component['dismissPhotoDialog']();
-
-        expect(dismissSpy).toHaveBeenCalledOnce();
     });
 });

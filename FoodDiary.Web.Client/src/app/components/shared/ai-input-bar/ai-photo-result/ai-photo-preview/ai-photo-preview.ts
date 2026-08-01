@@ -20,6 +20,7 @@ export class AiPhotoPreviewComponent {
     public readonly sourceText = input.required<string | null>();
     public readonly sourceTextLabelKey = input.required<string>();
     public readonly isAnalyzing = input.required<boolean>();
+    public readonly isPreparing = input(false);
     public readonly isNutritionLoading = input.required<boolean>();
     public readonly annotations = input<readonly AiPhotoAnnotation[]>([]);
     public readonly annotationsVisible = input(true);
