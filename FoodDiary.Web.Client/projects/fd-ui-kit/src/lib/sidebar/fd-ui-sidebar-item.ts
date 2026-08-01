@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
+import { FdUiHintDirective } from '../hint/fd-ui-hint.directive';
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 import type { FdUiSidebarActionItem, FdUiSidebarItem, FdUiSidebarRouteItem } from './fd-ui-sidebar.models';
 
 @Component({
     selector: 'fd-ui-sidebar-item',
-    imports: [RouterModule, FdUiIconComponent],
+    imports: [RouterModule, FdUiIconComponent, FdUiHintDirective],
     templateUrl: './fd-ui-sidebar-item.html',
     styleUrl: './fd-ui-sidebar-item.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,6 +16,7 @@ export class FdUiSidebarItemComponent {
     public readonly item = input.required<FdUiSidebarItem>();
     public readonly secondary = input(false);
     public readonly isPending = input(false);
+    public readonly collapsed = input(false);
 
     public readonly routeSelected = output<FdUiSidebarRouteItem>();
     public readonly actionSelected = output<FdUiSidebarActionItem>();

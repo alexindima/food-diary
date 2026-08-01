@@ -5,6 +5,8 @@
         class="sidebar__user fd-grid fd-gap-xs fd-align-center"
         aria-haspopup="menu"
         [attr.aria-expanded]="isOpen()"
+        [attr.aria-label]="isCollapsed() ? ('SIDEBAR.USER_MENU' | translate) : null"
+        [class.sidebar__user--collapsed]="isCollapsed()"
         (click)="toggleMenu.emit(userMenuButton)"
     >
         @if (user().profileImage; as profileImage) {
@@ -14,15 +16,22 @@
         } @else {
             <div class="sidebar__avatar fd-place-center">{{ user().username || user().email || 'U' | slice: 0 : 1 | uppercase }}</div>
         }
-        <div class="sidebar__user-meta fd-stack">
-            <div class="sidebar__user-name fd-ui-action-text">{{ user().username || user().email }}</div>
-            <div class="sidebar__user-plan fd-ui-caption">{{ userPlanLabelKey() | translate }}</div>
-        </div>
-        <fd-ui-icon class="sidebar__user-arrow" name="expand_less" [class.is-open]="isOpen()" />
+        @if (!isCollapsed()) {
+            <div class="sidebar__user-meta fd-stack">
+                <div class="sidebar__user-name fd-ui-action-text">{{ user().username || user().email }}</div>
+                <div class="sidebar__user-plan fd-ui-caption">{{ userPlanLabelKey() | translate }}</div>
+            </div>
+            <fd-ui-icon class="sidebar__user-arrow" name="expand_less" [class.is-open]="isOpen()" />
+        }
     </button>
 
     @if (isOpen()) {
-        <div #userMenu class="sidebar__user-menu fd-stack fd-gap-xxs" role="menu" [attr.aria-label]="'SIDEBAR.USER_MENU' | translate">
+        <div
+            #userMenu
+            class="sidebar__user-menu sidebar__user-menu--flyout fd-stack fd-gap-xxs"
+            role="menu"
+            [attr.aria-label]="'SIDEBAR.USER_MENU' | translate"
+        >
             <a
                 routerLink="/profile"
                 routerLinkActive="is-active"

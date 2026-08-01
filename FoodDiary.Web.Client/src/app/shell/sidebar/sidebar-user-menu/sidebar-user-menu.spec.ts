@@ -56,6 +56,24 @@ describe('SidebarUserMenuComponent', () => {
         expect(logoutButton.textContent).toContain('HEADER.LOGOUT');
     });
 
+    it('renders the open collapsed menu as a flyout without clipped identity text', () => {
+        const fixture = createComponent({ isOpen: true, isCollapsed: true });
+        const host = getHost(fixture);
+        const menu = requireElement(host, '[role="menu"]');
+
+        expect(menu.classList).toContain('sidebar__user-menu--flyout');
+        expect(host.querySelector('.sidebar__user-meta')).toBeNull();
+        expect(host.querySelector('.sidebar__user-arrow')).toBeNull();
+        expect(menu.textContent).toContain('HEADER.PROFILE');
+        expect(menu.textContent).toContain('HEADER.LOGOUT');
+    });
+
+    it('renders the expanded menu as the same desktop flyout', () => {
+        const fixture = createComponent({ isOpen: true });
+
+        expect(requireElement(getHost(fixture), '[role="menu"]').classList).toContain('sidebar__user-menu--flyout');
+    });
+
     it('emits the native button element when user toggles the menu', () => {
         const fixture = createComponent({ isOpen: false });
         const toggleSpy = vi.fn();
@@ -105,6 +123,7 @@ describe('SidebarUserMenuComponent', () => {
 
 type CreateOptions = {
     isOpen: boolean;
+    isCollapsed?: boolean;
     pendingRoute?: string | null;
     user?: User;
 };
@@ -120,6 +139,7 @@ function createComponent(options: CreateOptions): ComponentFixture<SidebarUserMe
     fixture.componentRef.setInput('userPlanLabelKey', 'SIDEBAR.PREMIUM');
     fixture.componentRef.setInput('isOpen', options.isOpen);
     fixture.componentRef.setInput('pendingRoute', options.pendingRoute ?? null);
+    fixture.componentRef.setInput('isCollapsed', options.isCollapsed ?? false);
     fixture.detectChanges();
 
     return fixture;

@@ -37,6 +37,7 @@
         position: sticky;
         top: 0;
         height: 100dvh;
+        z-index: var(--fd-z-index-floating-panel);
 
         &--placeholder {
             background: transparent;
@@ -140,6 +141,11 @@ html.cdk-global-scrollblock .fd-root__sidebar {
     --fd-layout-shell-current-mobile-viewport-bottom-padding: var(--fd-layout-shell-mobile-viewport-bottom-padding);
 }
 
+.fd-root--sidebar-collapsed {
+    grid-template-columns: var(--fd-layout-shell-sidebar-collapsed-width) 1fr;
+    --fd-layout-sidebar-width: var(--fd-layout-shell-sidebar-collapsed-width);
+}
+
 .fd-root:not(.fd-root--no-sidebar) .fd-root__main {
     grid-row: 1 / span 1;
     grid-column: 2 / span 1;
@@ -152,6 +158,10 @@ html.cdk-global-scrollblock .fd-root__sidebar {
         min-height: 100dvh;
         --fd-layout-sidebar-width: 0;
         overflow: visible;
+    }
+
+    .fd-root--sidebar-collapsed {
+        --fd-layout-sidebar-width: 0;
     }
 
     .fd-root__sidebar {

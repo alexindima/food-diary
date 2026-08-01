@@ -20,6 +20,7 @@ import { FdUiSidebarItemComponent } from './fd-ui-sidebar-item';
 export class FdUiSidebarSectionComponent {
     public readonly section = input.required<FdUiSidebarSection>();
     public readonly pendingRoute = input<string | null>(null);
+    public readonly collapsed = input(false);
 
     public readonly routeSelected = output<FdUiSidebarRouteItem>();
     public readonly actionSelected = output<FdUiSidebarActionItem>();

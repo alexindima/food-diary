@@ -1,6 +1,8 @@
 <fd-ui-sidebar
     brandTitle="Food Diary"
     logoMaskUrl="/assets/images/header/logo-mask.svg"
+    [collapsed]="isCollapsed()"
+    [collapseAriaLabel]="(isCollapsed() ? 'SIDEBAR.EXPAND' : 'SIDEBAR.COLLAPSE') | translate"
     [brandSubtitle]="brandStatusKey() | translate"
     [notificationAriaLabel]="'NOTIFICATIONS.TITLE' | translate"
     [notificationHint]="'NOTIFICATIONS.TITLE' | translate"
@@ -12,6 +14,7 @@
     (routeSelected)="onSidebarRouteSelected($event.item)"
     (actionSelected)="onSidebarActionSelected($event.item)"
     (sectionToggled)="onSidebarSectionToggle($event.section.id)"
+    (collapsedToggle)="collapsedToggle.emit()"
 >
     @if (currentUser(); as user) {
         <fd-sidebar-user-menu
@@ -20,6 +23,7 @@
             [userPlanLabelKey]="userPlanLabelKey()"
             [isOpen]="isUserMenuOpen()"
             [pendingRoute]="pendingRoute()"
+            [isCollapsed]="isCollapsed()"
             (toggleMenu)="userMenuToggle.emit($event)"
             (directRouteClick)="directRouteClick.emit($event)"
             (logout)="logout.emit()"

@@ -17,6 +17,8 @@ const meta: Meta<FdUiSidebarComponent> = {
         brandTitle: 'FoodDiary',
         brandSubtitle: 'Admin',
         logoText: 'FD',
+        collapsed: false,
+        collapseAriaLabel: 'Collapse sidebar',
         pendingRoute: null,
         notificationBadge: 0,
         sections: [
@@ -54,13 +56,18 @@ const meta: Meta<FdUiSidebarComponent> = {
     render: args => ({
         props: args,
         template: `
-            <div style="display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: 720px; background: var(--fd-bg-page);">
+            <div
+                [style.grid-template-columns]="collapsed ? '72px minmax(0, 1fr)' : '280px minmax(0, 1fr)'"
+                style="display: grid; min-height: 720px; background: var(--fd-bg-page);"
+            >
                 <fd-ui-sidebar
                     [brandTitle]="brandTitle"
                     [brandSubtitle]="brandSubtitle"
                     [logoText]="logoText"
                     [pendingRoute]="pendingRoute"
                     [notificationBadge]="notificationBadge"
+                    [collapsed]="collapsed"
+                    [collapseAriaLabel]="collapseAriaLabel"
                     [sections]="sections"
                     [bottomSections]="bottomSections"
                 >
@@ -80,6 +87,13 @@ export default meta;
 type Story = StoryObj<FdUiSidebarComponent>;
 
 export const Default: Story = {};
+
+export const Collapsed: Story = {
+    args: {
+        collapsed: true,
+        collapseAriaLabel: 'Expand sidebar',
+    },
+};
 
 export const WithNotification: Story = {
     args: {

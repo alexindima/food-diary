@@ -116,6 +116,29 @@ describe('AppComponent shell behavior', () => {
     );
 });
 
+describe('AppComponent sidebar behavior', () => {
+    beforeEach(() => {
+        TestBed.resetTestingModule();
+    });
+
+    it(
+        'toggles the transient desktop sidebar state',
+        async () => {
+            const { component } = await createComponentAsync();
+            const harness = component as unknown as { isSidebarCollapsed: Signal<boolean>; toggleSidebar: () => void };
+
+            expect(harness.isSidebarCollapsed()).toBe(false);
+
+            harness.toggleSidebar();
+            expect(harness.isSidebarCollapsed()).toBe(true);
+
+            harness.toggleSidebar();
+            expect(harness.isSidebarCollapsed()).toBe(false);
+        },
+        SHELL_TEST_TIMEOUT_MS,
+    );
+});
+
 async function createComponentAsync(options: { isAuthenticated?: boolean; shell?: 'authenticated' | 'public' } = {}): Promise<{
     component: AppComponent;
     localizationService: { loadTranslationsForRouteAsync: ReturnType<typeof vi.fn> };

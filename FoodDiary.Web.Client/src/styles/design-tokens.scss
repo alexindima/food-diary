@@ -336,6 +336,7 @@ $fd-page-body-tokens: (
 );
 $fd-layout-shell-tokens: (
     sidebar-width: 260px,
+    sidebar-collapsed-width: 72px,
     impersonation-banner-height: 48px,
     mobile-viewport-bottom-padding: 72px,
     mobile-sheet-bottom: 126px,
@@ -1830,6 +1831,7 @@ $fd-theme-design-tokens: (
         --fd-period-gap: #{fd-token(period-filter, gap)};
         --fd-page-body-gap: #{fd-token(page-body, gap)};
         --fd-layout-shell-sidebar-width: #{fd-token(layout-shell, sidebar-width)};
+        --fd-layout-shell-sidebar-collapsed-width: #{fd-token(layout-shell, sidebar-collapsed-width)};
         --fd-layout-shell-impersonation-banner-height: #{fd-token(layout-shell, impersonation-banner-height)};
         --fd-layout-shell-mobile-viewport-bottom-padding: #{fd-token(layout-shell, mobile-viewport-bottom-padding)};
         --fd-layout-shell-mobile-sheet-bottom: #{fd-token(layout-shell, mobile-sheet-bottom)};

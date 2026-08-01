@@ -1,4 +1,5 @@
 <fd-sidebar-desktop
+    [isCollapsed]="isCollapsed()"
     [brandStatusKey]="brandStatusKey()"
     [unreadNotificationCount]="unreadNotificationCount()"
     [primaryRouteItems]="primaryRouteItems()"
@@ -20,6 +21,7 @@
     (userMenuToggle)="toggleUserMenu($event)"
     (directRouteClick)="onDirectRouteRequest($event)"
     (logout)="logoutAsync()"
+    (collapsedToggle)="toggleCollapsed()"
 />
 
 <fd-sidebar-mobile

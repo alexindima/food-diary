@@ -1,24 +1,38 @@
 @if (routeItem(); as item) {
     <a
         routerLinkActive="is-active"
+        fdUiHintPosition="right"
         [routerLink]="item.route"
         [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
         [class]="itemClasses(item)"
         [class.is-pending]="isPending()"
+        [class.fd-ui-sidebar__link--collapsed]="collapsed()"
+        [attr.aria-label]="collapsed() ? item.label : null"
+        [fdUiHint]="item.label"
+        [fdUiHintDisabled]="!collapsed()"
         (click)="routeSelected.emit(item)"
     >
         <fd-ui-icon [name]="item.icon" />
-        <span class="fd-ui-action-text">{{ item.label }}</span>
+        <span class="fd-ui-action-text" [hidden]="collapsed()">{{ item.label }}</span>
         @if (hasBadge(item)) {
-            <span class="fd-ui-sidebar__badge fd-ui-caption">{{ item.badge }}</span>
+            <span class="fd-ui-sidebar__badge fd-ui-caption" [class.fd-ui-sidebar__badge--collapsed]="collapsed()">{{ item.badge }}</span>
         }
     </a>
 } @else if (actionItem(); as item) {
-    <button type="button" [class]="itemClasses(item)" (click)="actionSelected.emit(item)">
+    <button
+        type="button"
+        fdUiHintPosition="right"
+        [class]="itemClasses(item)"
+        [class.fd-ui-sidebar__link--collapsed]="collapsed()"
+        [attr.aria-label]="collapsed() ? item.label : null"
+        [fdUiHint]="item.label"
+        [fdUiHintDisabled]="!collapsed()"
+        (click)="actionSelected.emit(item)"
+    >
         <fd-ui-icon [name]="item.icon" />
-        <span class="fd-ui-action-text">{{ item.label }}</span>
+        <span class="fd-ui-action-text" [hidden]="collapsed()">{{ item.label }}</span>
         @if (hasBadge(item)) {
-            <span class="fd-ui-sidebar__badge fd-ui-caption">{{ item.badge }}</span>
+            <span class="fd-ui-sidebar__badge fd-ui-caption" [class.fd-ui-sidebar__badge--collapsed]="collapsed()">{{ item.badge }}</span>
         }
     </button>
 }

@@ -33,6 +33,7 @@ export class SidebarUserMenuComponent {
     public readonly userPlanLabelKey = input.required<string>();
     public readonly isOpen = input.required<boolean>();
     public readonly pendingRoute = input.required<string | null>();
+    public readonly isCollapsed = input(false);
 
     public readonly toggleMenu = output<HTMLElement>();
     public readonly directRouteClick = output<SidebarDirectRouteRequest>();

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
@@ -28,10 +28,13 @@ import { FdUiSidebarSectionComponent } from './fd-ui-sidebar-section';
             [pendingRoute]="pendingRoute"
             [sections]="sections"
             [bottomSections]="bottomSections"
+            [collapsed]="collapsed()"
+            collapseAriaLabel="Toggle navigation"
             (notificationClick)="notificationClicks = notificationClicks + 1"
             (routeSelected)="onRouteSelected($event)"
             (actionSelected)="onActionSelected($event)"
             (sectionToggled)="onSectionToggled($event)"
+            (collapsedToggle)="collapseToggleCount = collapseToggleCount + 1"
         >
             <div fdUiSidebarFooter class="test-sidebar-footer">Footer slot</div>
         </fd-ui-sidebar>
@@ -39,6 +42,8 @@ import { FdUiSidebarSectionComponent } from './fd-ui-sidebar-section';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class FdUiSidebarTestHostComponent {
+    public readonly collapsed = signal(false);
+    public collapseToggleCount = 0;
     public pendingRoute = '/reports';
     public notificationClicks = 0;
     public selectedRouteIds: string[] = [];
@@ -87,23 +92,25 @@ class FdUiSidebarTestHostComponent {
     }
 }
 
+const COLLAPSED_ITEM_COUNT = 5;
+
+function setup(): ComponentFixture<FdUiSidebarTestHostComponent> {
+    TestBed.configureTestingModule({
+        imports: [FdUiSidebarTestHostComponent],
+        providers: [provideRouter([])],
+    });
+
+    const fixture = TestBed.createComponent(FdUiSidebarTestHostComponent);
+    fixture.detectChanges();
+
+    return fixture;
+}
+
+function host(fixture: ComponentFixture<FdUiSidebarTestHostComponent>): HTMLElement {
+    return fixture.nativeElement as HTMLElement;
+}
+
 describe('FdUiSidebarComponent', () => {
-    function setup(): ComponentFixture<FdUiSidebarTestHostComponent> {
-        TestBed.configureTestingModule({
-            imports: [FdUiSidebarTestHostComponent],
-            providers: [provideRouter([])],
-        });
-
-        const fixture = TestBed.createComponent(FdUiSidebarTestHostComponent);
-        fixture.detectChanges();
-
-        return fixture;
-    }
-
-    function host(fixture: ComponentFixture<FdUiSidebarTestHostComponent>): HTMLElement {
-        return fixture.nativeElement as HTMLElement;
-    }
-
     it('should render brand text and notification state', () => {
         const fixture = setup();
         const nativeEl = host(fixture);
@@ -126,8 +133,8 @@ describe('FdUiSidebarComponent', () => {
     it('should render the footer after the spacer container', () => {
         const fixture = setup();
         const nativeEl = host(fixture);
-        const sidebar = nativeEl.querySelector<HTMLElement>('.fd-ui-sidebar');
-        const children = Array.from(sidebar?.children ?? []);
+        const scrollContainer = nativeEl.querySelector<HTMLElement>('.fd-ui-sidebar__scroll');
+        const children = Array.from(scrollContainer?.children ?? []);
         const spacerIndex = children.findIndex(child => child.classList.contains('fd-ui-sidebar__spacer'));
         const footerIndex = children.findIndex(child => child.classList.contains('fd-ui-sidebar__footer'));
 
@@ -143,6 +150,35 @@ describe('FdUiSidebarComponent', () => {
         button?.click();
 
         expect(fixture.componentInstance['notificationClicks']).toBe(1);
+    });
+
+    it('should render every item as an accessible icon control when collapsed', () => {
+        const fixture = setup();
+        fixture.componentInstance.collapsed.set(true);
+        fixture.componentInstance.sections[1].expanded = false;
+        fixture.detectChanges();
+        const nativeEl = host(fixture);
+        const controls = nativeEl.querySelectorAll<HTMLElement>('.fd-ui-sidebar__link--collapsed');
+
+        expect(nativeEl.querySelector('.fd-ui-sidebar--collapsed')).toBeTruthy();
+        expect(controls).toHaveLength(COLLAPSED_ITEM_COUNT);
+        expect(Array.from(controls).map(control => control.getAttribute('aria-label'))).toEqual([
+            'Dashboard',
+            'Admin panel',
+            'Meals',
+            'Reports',
+            'Goals',
+        ]);
+        expect(nativeEl.querySelector('.fd-ui-sidebar__section-header')).toBeNull();
+    });
+
+    it('should emit collapse toggle', () => {
+        const fixture = setup();
+        const button = host(fixture).querySelector<HTMLButtonElement>('.fd-ui-sidebar__collapse-toggle button');
+
+        button?.click();
+
+        expect(fixture.componentInstance.collapseToggleCount).toBe(1);
     });
 
     it('should emit route, action, and section toggle events', () => {

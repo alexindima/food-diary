@@ -57,6 +57,7 @@ export class AppComponent {
     protected readonly usesAuthenticatedShell = computed(() => this.isAuthenticated() && this.shellMode() === 'authenticated');
     protected readonly isTopLoaderVisible = computed(() => this.globalLoadingService.isVisible() || this.routeLoadingService.isVisible());
     protected readonly currentPath = signal(this.getCurrentPath());
+    protected readonly isSidebarCollapsed = signal(false);
     protected readonly usesCompactMobileNavigation = computed(() => {
         const path = this.currentPath();
         return path === '/' || path === '/dashboard';
@@ -138,5 +139,9 @@ export class AppComponent {
 
     protected stopImpersonation(): void {
         void this.authService.onLogoutAsync(false);
+    }
+
+    protected toggleSidebar(): void {
+        this.isSidebarCollapsed.update(isCollapsed => !isCollapsed);
     }
 }

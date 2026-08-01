@@ -1435,6 +1435,8 @@
         }
     },
     "SIDEBAR": {
+        "COLLAPSE": "Collapse navigation",
+        "EXPAND": "Expand navigation",
         "PLAN_PRO": "Pro",
         "PLAN_FREE": "Free Account",
         "STATUS_USER": "User",

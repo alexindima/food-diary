@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationCancel, NavigationEnd, NavigationError, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -46,6 +46,8 @@ import { SidebarMobileComponent } from './sidebar-mobile/sidebar-mobile';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent {
+    public readonly isCollapsed = input(false);
+    public readonly collapsedToggle = output();
     private readonly document = inject(DOCUMENT);
     private readonly browserWindow = inject(BrowserWindowService);
     private readonly destroyRef = inject(DestroyRef);
@@ -221,6 +223,11 @@ export class SidebarComponent {
 
     protected toggleFoodTracking(): void {
         this.toggleDesktopSection('food');
+    }
+
+    protected toggleCollapsed(): void {
+        this.closeUserMenu();
+        this.collapsedToggle.emit();
     }
 
     protected toggleBodyTracking(): void {

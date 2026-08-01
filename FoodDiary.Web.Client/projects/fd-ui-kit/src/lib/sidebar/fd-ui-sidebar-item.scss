@@ -101,3 +101,25 @@
     color: var(--fd-color-white);
     font-weight: var(--fd-font-weight-bold);
 }
+
+.fd-ui-sidebar__link--collapsed {
+    display: flex;
+    box-sizing: border-box;
+    justify-content: center;
+    width: var(--fd-size-control-md);
+    min-width: var(--fd-size-control-md);
+    height: var(--fd-size-control-md);
+    min-height: var(--fd-size-control-md);
+    margin-inline: auto;
+    padding: var(--fd-space-xs);
+    border-radius: var(--fd-radius-md);
+}
+
+.fd-ui-sidebar__link--collapsed fd-ui-icon {
+    font-size: var(--fd-size-icon-md);
+}
+
+.fd-ui-sidebar__badge--collapsed {
+    position: absolute;
+    transform: translate(var(--fd-space-xs), calc(-1 * var(--fd-space-xs)));
+}

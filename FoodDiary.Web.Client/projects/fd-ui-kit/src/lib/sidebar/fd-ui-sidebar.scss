@@ -22,13 +22,79 @@
     position: sticky;
     top: 0;
     height: 100dvh;
-    overflow-y: auto;
-    padding: var(--fd-space-lg) var(--fd-space-md);
     background: var(--fd-ui-sidebar-background);
     border-right: var(--fd-ui-sidebar-border);
     box-shadow: var(--fd-ui-sidebar-shadow);
     color: var(--fd-ui-sidebar-text);
+    overflow: visible;
+}
+
+.fd-ui-sidebar__scroll {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: var(--fd-space-lg) var(--fd-space-md);
     gap: var(--fd-space-sidebar-shell-gap);
+}
+
+.fd-ui-sidebar--collapsed {
+    z-index: var(--fd-z-index-floating-panel);
+}
+
+.fd-ui-sidebar--collapsed .fd-ui-sidebar__scroll {
+    gap: 0;
+    padding: var(--fd-space-xxs) var(--fd-space-xs);
+}
+
+.fd-ui-sidebar__collapse-toggle {
+    --fd-button-host-width: var(--fd-size-control-xs);
+    --fd-button-host-min-width: var(--fd-size-control-xs);
+    --fd-button-width: var(--fd-size-control-xs);
+    --fd-button-min-width: var(--fd-size-control-xs);
+    --fd-button-height: var(--fd-size-control-md);
+    --fd-button-height-explicit: var(--fd-size-control-md);
+    --fd-button-padding-x: 0;
+    --fd-button-secondary-background-default: var(--fd-bg-sidebar);
+    --fd-button-secondary-background-hover: var(--fd-bg-surface);
+    --fd-button-secondary-border-default: var(--fd-color-border-dark-muted);
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    position: absolute;
+    top: calc(var(--fd-space-xxl) + var(--fd-space-lg));
+    right: calc(var(--fd-size-control-xs) / -2);
+    z-index: var(--fd-z-index-floating-panel);
+}
+
+.fd-ui-sidebar--collapsed .fd-ui-sidebar__brand {
+    flex-direction: column;
+    flex-shrink: 0;
+    justify-content: center;
+    padding-inline: 0;
+    padding-block: 0;
+    gap: var(--fd-space-xxs);
+    background: transparent;
+    box-shadow: var(--fd-shadow-none);
+    overflow: hidden;
+}
+
+.fd-ui-sidebar--collapsed .fd-ui-sidebar__logo,
+.fd-ui-sidebar--collapsed .fd-ui-sidebar__logo-mark {
+    width: var(--fd-size-control-md);
+    height: var(--fd-size-control-md);
+}
+
+.fd-ui-sidebar--collapsed .fd-ui-sidebar__brand-notifications {
+    --fd-button-host-width: var(--fd-size-control-sm);
+    --fd-button-host-min-width: var(--fd-size-control-sm);
+    --fd-button-width: var(--fd-size-control-sm);
+    --fd-button-min-width: var(--fd-size-control-sm);
+    --fd-button-height: var(--fd-size-control-sm);
+    --fd-button-height-explicit: var(--fd-size-control-sm);
+}
+
+.fd-ui-sidebar--collapsed .fd-ui-sidebar__footer {
+    flex-shrink: 0;
+    padding-top: var(--fd-space-xxs);
+    overflow: hidden;
 }
 
 .fd-ui-sidebar__brand {

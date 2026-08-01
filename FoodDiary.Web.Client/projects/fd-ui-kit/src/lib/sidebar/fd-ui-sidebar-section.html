@@ -1,5 +1,5 @@
 <div class="fd-ui-sidebar__section" [class.fd-ui-sidebar__section--plain]="section().title === undefined">
-    @if (section().title !== undefined) {
+    @if (section().title !== undefined && !collapsed()) {
         @if (section().collapsible === true) {
             <button
                 class="fd-ui-sidebar__section-header fd-row fd-gap-xs fd-justify-between"
@@ -16,13 +16,14 @@
             </div>
         }
     }
-    @if (section().collapsible !== true || section().expanded === true) {
+    @if (collapsed() || section().collapsible !== true || section().expanded === true) {
         <nav class="fd-ui-sidebar__nav fd-grid fd-gap-xxs" [class.fd-ui-sidebar__nav--secondary]="section().secondary === true">
             @for (item of section().items; track item.id) {
                 <fd-ui-sidebar-item
                     [item]="item"
                     [secondary]="section().secondary === true"
                     [isPending]="isPending(item)"
+                    [collapsed]="collapsed()"
                     (routeSelected)="routeSelected.emit($event)"
                     (actionSelected)="actionSelected.emit($event)"
                 />

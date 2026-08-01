@@ -41,3 +41,12 @@ button.fd-ui-sidebar__section-header {
     gap: var(--fd-space-sidebar-nav-gap);
     margin-top: var(--fd-space-sidebar-nav-margin-top);
 }
+
+.fd-ui-sidebar--collapsed .fd-ui-sidebar__section {
+    padding-top: var(--fd-space-xxs);
+}
+
+.fd-ui-sidebar--collapsed .fd-ui-sidebar__nav {
+    gap: 0;
+    margin-top: 0;
+}

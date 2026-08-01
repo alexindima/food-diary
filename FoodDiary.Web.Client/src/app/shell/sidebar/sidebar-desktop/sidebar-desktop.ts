@@ -35,6 +35,7 @@ export class SidebarDesktopComponent {
     public readonly currentUser = input.required<User | null>();
     public readonly userPlanLabelKey = input.required<string>();
     public readonly isUserMenuOpen = input.required<boolean>();
+    public readonly isCollapsed = input(false);
 
     public readonly notificationsOpen = output();
     public readonly routeSelected = output<SidebarRouteItem>();
@@ -44,6 +45,7 @@ export class SidebarDesktopComponent {
     public readonly userMenuToggle = output<HTMLElement>();
     public readonly directRouteClick = output<SidebarDirectRouteRequest>();
     public readonly logout = output();
+    public readonly collapsedToggle = output();
 
     protected readonly sidebarSections = computed<FdUiSidebarSection[]>(() => [
         {
