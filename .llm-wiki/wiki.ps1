@@ -291,17 +291,21 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
         Invoke-WikiTool 'Test-LlmWiki.ps1'
         Invoke-WikiTool 'Test-LlmWikiLint.ps1'
-        $indexArguments = @{ Check = $true; AffectedOnly = $true; BaseRef = $BaseRef }
+        $indexArguments = @{ Check = $true; AffectedOnly = $true; BaseRef = $BaseRef; DeferPossiblyConcurrentStale = $true }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
-        Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments
+        $indexResult = @(Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments)
+        $deferredStale = @($indexResult | Where-Object { $_.deferredStale }).Count -gt 0
         $policyArguments = @{ FailOnViolation = $true }
-        $impactArguments = @{ FailOnUnreviewed = $true }
+        $impactArguments = @{ FailOnUnreviewed = -not $deferredStale }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) {
             $policyArguments.ChangedPath = $ChangedPath
             $impactArguments.ChangedPath = $ChangedPath
         }
         Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' $policyArguments
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
+        if ($deferredStale) {
+            Write-Warning 'Fast source-impact enforcement was deferred with the possibly concurrent stale indexes. Strict verify remains required in the integration session.'
+        }
         if ($VisualUiCompletion) {
             Write-Host 'Visual UI completion gate passed. Full frontend and Wiki verification remain publication gates enforced by pre-push and CI.'
         } else {

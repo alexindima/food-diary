@@ -3,7 +3,7 @@
     "summary":  {
                     "components":  399,
                     "componentsWithoutDirectSpecs":  107,
-                    "inputs":  1206,
+                    "inputs":  1207,
                     "outputs":  404,
                     "apiCalls":  206,
                     "templatesWithTranslations":  240,
@@ -9768,6 +9768,11 @@
                                               "required":  false
                                           },
                                           {
+                                              "name":  "mobileAnnotations",
+                                              "type":  "readonly AiPhotoAnnotation[]",
+                                              "required":  false
+                                          },
+                                          {
                                               "name":  "annotationsVisible",
                                               "type":  "",
                                               "required":  false
@@ -18362,6 +18367,7 @@
                                                  "isAnalyzing",
                                                  "isNutritionLoading",
                                                  "isPreparing",
+                                                 "mobileAnnotations",
                                                  "sourceText",
                                                  "sourceTextLabelKey"
                                              ],
