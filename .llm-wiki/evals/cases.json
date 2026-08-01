@@ -229,8 +229,8 @@
       "expectedChecks": ["frontend-verify"],
       "expectedViolationRules": [],
       "adaptiveObjective": "Improve photo annotation visibility with clearer SVG connectors and point styling.",
-      "expectedAdaptiveProfile": "tiny",
-      "expectedAdaptiveStages": ["research", "implementation", "change-review", "verification"],
+      "expectedAdaptiveProfile": "visual-ui-change",
+      "expectedAdaptiveStages": ["research", "acceptance", "implementation", "change-review", "focused-tests", "build", "browser-evidence"],
       "unexpectedAdaptiveStages": ["design", "workspace", "independent-review"]
     },
     {

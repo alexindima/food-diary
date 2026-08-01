@@ -296,6 +296,12 @@ fingerprints. Packet, evidence, acceptance, review report, and descriptor
 updates roll back together if any refresh stage fails. The append-only task
 journal is never rewritten by refresh.
 
+A resolved criterion is reopened only when its relevant evidence is no longer
+valid. Scope expansion may invalidate a shared check, but the criterion is
+retained when it still has an unchanged mapped path plus an evidence note, or
+another retained check, review, scenario, or focused test. Refresh reports both
+`invalidatedCriteria` and `retainedCriteria`, making preservation auditable.
+
 Resolved evidence is retained only when its lineage still matches the content
 hash of the policy-rule paths it covers. A same-path source edit therefore
 invalidates stale evidence even when the rule and changed-path set are

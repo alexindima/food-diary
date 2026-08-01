@@ -33,8 +33,11 @@ $effectivePaths = @(
 $inferredPaths = @()
 if ($effectivePaths.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($Intent)) {
     $ignoredIntentTerms = @(
-        'add', 'change', 'create', 'feature', 'implement', 'make', 'support', 'update'
+        'add', 'change', 'changing', 'create', 'feature', 'implement', 'improve', 'make', 'routing', 'support', 'update', 'visual', 'without'
     )
+    if ($Intent -match '(?i)\b(without changing|unchanged|no changes? to)\b') {
+        $ignoredIntentTerms += @('api', 'architecture', 'contract', 'contracts', 'privacy', 'provider', 'security')
+    }
     $intentTokens = @(
         [regex]::Matches($Intent.ToLowerInvariant(), '[\p{L}\p{Nd}]{4,}') |
             ForEach-Object { $_.Value } |
@@ -62,9 +65,9 @@ if ($effectivePaths.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($Intent))
         $frontendIntentIndex = Get-Content -LiteralPath $frontendIntentIndexPath -Raw | ConvertFrom-Json
         foreach ($symbol in @($frontendIntentIndex.symbols)) {
             $searchText = "$($symbol.name) $($symbol.path) $($symbol.role) $($symbol.selector)".ToLowerInvariant()
-            $score = @($intentTokens | Where-Object { $searchText -match [regex]::Escape($_) }).Count
-            if ($frontendIntent) { $score += 4 }
-            if ($score -gt 0) {
+            $semanticScore = @($intentTokens | Where-Object { $searchText -match [regex]::Escape($_) }).Count
+            if ($semanticScore -gt 0) {
+                $score = $semanticScore + $(if ($frontendIntent) { 4 } else { 0 })
                 $candidates.Add([pscustomobject]@{ path = $symbol.path; score = $score; source = 'frontend-index' })
             }
         }

@@ -22,6 +22,7 @@ sources:
   - .llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1
   - .llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1
   - .llm-wiki/tools/Find-LlmWikiProductJourney.ps1
+  - .llm-wiki/tools/Get-LlmWikiFrontendRuntimeOwner.ps1
   - .llm-wiki/knowledge/product-journeys.json
 ---
 
@@ -84,6 +85,23 @@ source and note follow-up fixes or superseded architecture before reuse.
 Map the task to durable product journeys with `journeys`. Journey scenarios become
 candidate acceptance mappings and end-to-end regression scope; they remain reviewed
 navigation evidence, not proof of runtime execution.
+
+For a visual frontend change, confirm the runtime owner before accepting an
+inferred path or journey:
+
+```powershell
+./.llm-wiki/wiki.ps1 ui-trace `
+  -Query 'dashboard AI photo annotation result' `
+  -PlannedPath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.html'
+```
+
+The trace walks template consumers from the rendered component back toward the
+feature entry point. A bounded frontend-only layout change with no API,
+provider, persistence, privacy, security, configuration, or architecture
+boundary uses the `visual-ui-change` profile: runtime-owner research, explicit
+acceptance, implementation, focused tests, frontend build, and browser evidence.
+It does not require a governed workspace or full index regeneration merely
+because the surrounding product journey is critical.
 
 Research deliberately exposes blocking open questions instead of filling them with
 heuristics. When no implementation path is grounded, discover an exact route,

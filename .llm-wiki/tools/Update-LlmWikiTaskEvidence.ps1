@@ -160,6 +160,7 @@ $changedScenarioIds = @($oldScenarios.Keys + $newScenarios.Keys | Sort-Object -U
 })
 $newTestPaths = @($newPacket.testPlan.focusedTestFiles)
 $invalidatedCriterionIds = [System.Collections.Generic.List[string]]::new()
+$retainedCriterionIds = [System.Collections.Generic.List[string]]::new()
 foreach ($criterion in @($acceptance.criteria)) {
     $mappedChangedPaths = if ($null -ne $criterion.mapping.PSObject.Properties['changedPaths']) { @($criterion.mapping.changedPaths) } else { @() }
     $mappedChecks = @($criterion.mapping.checkIds)
@@ -174,18 +175,29 @@ foreach ($criterion in @($acceptance.criteria)) {
     $hasMapping = $mappedChangedPaths.Count + $mappedChecks.Count + $mappedReviews.Count + $mappedScenarios.Count + $mappedTests.Count -gt 0
     $unanchoredResolution = -not $hasMapping -and [string]$criterion.status -ne 'pending' -and
         [string]$oldPacket.fingerprint -cne [string]$newPacket.fingerprint
-    if ($mappingChanged -or $unanchoredResolution) {
+    $retainedChangedPaths = @($mappedChangedPaths | Where-Object { $_ -in @($newPacket.diff.changedPaths) })
+    $retainedChecks = @($mappedChecks | Where-Object { $_ -in @($newPacket.policy.requiredChecks.id) -and $_ -notin $invalidatedCheckIds })
+    $retainedReviews = @($mappedReviews | Where-Object { $_ -in @($newPacket.policy.reviewObligations.id) -and $_ -notin $invalidatedReviewIds })
+    $retainedScenarios = @($mappedScenarios | Where-Object { $newScenarios.ContainsKey([string]$_) -and $_ -notin $changedScenarioIds })
+    $retainedTests = @($mappedTests | Where-Object { $_ -in $newTestPaths })
+    $hasDirectEvidence = $retainedChangedPaths.Count -gt 0 -and -not [string]::IsNullOrWhiteSpace([string]$criterion.resolution.evidenceNote)
+    $hasRetainedEvidence = $hasDirectEvidence -or
+        $retainedChecks.Count + $retainedReviews.Count + $retainedScenarios.Count + $retainedTests.Count -gt 0
+    $evidenceInvalidated = $mappingChanged -and -not $hasRetainedEvidence
+    if ($evidenceInvalidated -or $unanchoredResolution) {
         $history.Add((New-HistoryEntry 'acceptance' ([string]$criterion.id) ([string]$criterion.status) $(if ($mappingChanged) { 'mapped-evidence-invalidated' } else { 'unanchored-packet-changed' }) $null))
         $invalidatedCriterionIds.Add([string]$criterion.id)
         $criterion.status = 'pending'
         $criterion.resolution.reason = $null
         $criterion.resolution.evidenceNote = $null
+    } elseif ([string]$criterion.status -in @('satisfied', 'not-applicable')) {
+        $retainedCriterionIds.Add([string]$criterion.id)
     }
-    $criterion.mapping.checkIds = @($mappedChecks | Where-Object { $_ -in @($newPacket.policy.requiredChecks.id) })
-    $criterion.mapping.reviewIds = @($mappedReviews | Where-Object { $_ -in @($newPacket.policy.reviewObligations.id) })
-    $criterion.mapping.scenarioIds = @($mappedScenarios | Where-Object { $newScenarios.ContainsKey([string]$_) })
-    $criterion.mapping.testPaths = @($mappedTests | Where-Object { $_ -in $newTestPaths })
-    $criterion.mapping | Add-Member -NotePropertyName changedPaths -NotePropertyValue @($mappedChangedPaths | Where-Object { $_ -in @($newPacket.diff.changedPaths) }) -Force
+    $criterion.mapping.checkIds = $retainedChecks
+    $criterion.mapping.reviewIds = $retainedReviews
+    $criterion.mapping.scenarioIds = $retainedScenarios
+    $criterion.mapping.testPaths = $retainedTests
+    $criterion.mapping | Add-Member -NotePropertyName changedPaths -NotePropertyValue $retainedChangedPaths -Force
 }
 
 $evidence.checks = @($newChecks)
@@ -221,6 +233,7 @@ $result = [pscustomobject][ordered]@{
     invalidatedChecks = @($invalidatedCheckIds | Sort-Object -Unique)
     invalidatedReviews = @($invalidatedReviewIds | Sort-Object -Unique)
     invalidatedCriteria = @($invalidatedCriterionIds | Sort-Object -Unique)
+    retainedCriteria = @($retainedCriterionIds | Sort-Object -Unique)
     retainedChecks = @($newChecks | Where-Object { $_.id -notin $invalidatedCheckIds } | Select-Object -ExpandProperty id)
     retainedReviews = @($newReviews | Where-Object { $_.id -notin $invalidatedReviewIds } | Select-Object -ExpandProperty id)
     historyEntriesAdded = $history.Count

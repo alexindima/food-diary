@@ -94,6 +94,11 @@ function New-Critique([string]$CreatedAtUtc) {
     $contextSecurity = if (Test-Path -LiteralPath $contextSecurityPath -PathType Leaf) {
         & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextSecurity.ps1') verify -WorkspacePath $workspace -Format Json | ConvertFrom-Json
     } else { $null }
+    $sensitiveContextRequired = @($packet.privacyImpact.fields).Count -gt 0 -or
+        @($packet.privacyImpact.boundaries).Count -gt 0 -or
+        @($packet.privacyImpact.externalTransfers).Count -gt 0 -or
+        @($packet.policy.matchedRules.id | Where-Object { $_ -in @('security-sensitive', 'privacy-data-lifecycle') }).Count -gt 0 -or
+        [bool]$packet.rolloutFlags.externalIntegrations
     $confidencePath = Join-Path $absoluteWorkspace 'confidence-ledger.json'
     $confidence = & (Join-Path $PSScriptRoot 'Manage-LlmWikiConfidenceLedger.ps1') `
         $(if (Test-Path -LiteralPath $confidencePath -PathType Leaf) { 'verify' } else { 'assess' }) `
@@ -136,7 +141,7 @@ function New-Critique([string]$CreatedAtUtc) {
             Add-Finding $findings 'verification-flaky-history' 'verification' 'warning' 'Relevant checks have flaky historical transitions.' 'Obtain fresh stable evidence or fix the flaky checks before high-confidence approval.' @($flakyChecks.checkId)
         }
     }
-    if ($null -eq $contextSecurity) {
+    if ($sensitiveContextRequired -and $null -eq $contextSecurity) {
         Add-Finding $findings 'security-context-unassessed' 'security' 'warning' 'The selected AI context has no trust assessment.' 'Create and review context-security evidence before delegating or sealing sensitive work.'
     } elseif (-not $contextSecurity.valid) {
         Add-Finding $findings 'security-context-invalid' 'security' 'critical' 'AI context security evidence is invalid.' 'Regenerate the trust assessment and resolve integrity or quarantine issues.' @($contextSecurity.issues)

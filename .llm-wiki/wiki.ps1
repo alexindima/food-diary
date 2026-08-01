@@ -2,7 +2,7 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify', 'verify-full', 'develop', 'status', 'next', 'research', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
+        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify', 'verify-full', 'develop', 'status', 'next', 'research', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'diff', 'impact', 'review', 'ownership', 'api-compat', 'policy',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
@@ -427,6 +427,12 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $journeyArguments.ChangedPath = $ChangedPath }
         elseif ($PSBoundParameters.ContainsKey('ProposedPath')) { $journeyArguments.ChangedPath = $ProposedPath }
         Invoke-WikiTool 'Find-LlmWikiProductJourney.ps1' $journeyArguments
+    }
+    'ui-trace' {
+        $uiTraceArguments = @{ Query = $(if (-not [string]::IsNullOrWhiteSpace($Query)) { $Query } else { $Objective }); Limit = $Limit; Format = $Format }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $uiTraceArguments.CandidatePath = $ChangedPath }
+        elseif ($PSBoundParameters.ContainsKey('ProposedPath')) { $uiTraceArguments.CandidatePath = $ProposedPath }
+        Invoke-WikiTool 'Get-LlmWikiFrontendRuntimeOwner.ps1' $uiTraceArguments
     }
     { $_ -in @('delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique') } {
         $deliveryAction = @{

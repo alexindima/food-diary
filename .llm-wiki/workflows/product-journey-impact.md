@@ -44,3 +44,8 @@ touches both `FD-DIET` and `FD-MAIL`; an external account-linking change belongs
 Review the catalog when a durable top-level product flow is introduced, removed,
 or materially changes its trust boundary. Do not add every component or endpoint:
 journeys describe observable user outcomes, not repository structure.
+
+Alias matching uses token boundaries. A workflow word such as `replan` must not
+match the billing alias `plan`. For frontend work, use `ui-trace` first when the
+runtime-owning component is uncertain; journey scoring should consume confirmed
+paths instead of making an early component guess authoritative.
