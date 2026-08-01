@@ -59,6 +59,35 @@ Assert-Adaptive (-not $ungroundedUiSurface.requiresWorkspace -and -not $unground
 Assert-Adaptive ((@($ungroundedUiSurface.stages.id) -join ',') -eq 'research,reclassify') 'UI discovery emitted implementation stages before grounding paths.'
 Assert-Adaptive ($ungroundedUiSurface.stages[0].command -match 'ui-trace') 'UI discovery did not start with runtime-owner tracing.'
 
+$ungroundedDashboardFeature = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Add a dashboard nutrition trend using real daily calorie and macro totals.' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($ungroundedDashboardFeature.profile -eq 'scope-discovery') 'Ungrounded cross-layer feature intent was classified before existing-flow research.'
+Assert-Adaptive (-not $ungroundedDashboardFeature.requiresWorkspace -and -not $ungroundedDashboardFeature.requiresDesign) 'Scope discovery created feature or critical ceremony before grounding paths.'
+Assert-Adaptive ((@($ungroundedDashboardFeature.stages.id) -join ',') -eq 'scope-research,reclassify') 'Scope discovery emitted implementation stages before reclassification.'
+Assert-Adaptive ($ungroundedDashboardFeature.stages[0].command -match 'brief' -and $ungroundedDashboardFeature.stages[0].command -match 'research') 'Scope discovery omitted compact brief or existing-flow research.'
+
+$dashboardFeaturePaths = @(
+    'FoodDiary.Application/Dashboard/Models/DailyCaloriesModel.cs'
+    'FoodDiary.Application/Dashboard/Services/DashboardStatisticsMapper.cs'
+    'FoodDiary.Presentation.Api/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs'
+    'FoodDiary.Web.Client/src/app/features/dashboard/models/dashboard.data.ts'
+    'FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts'
+)
+$groundedDashboardFeature = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Extend the existing dashboard response and UI with a nutrition trend using existing daily calorie and macro totals.' `
+    -ProposedPath $dashboardFeaturePaths `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($groundedDashboardFeature.profile -eq 'feature') 'Grounded existing dashboard contract extension remained critical.'
+Assert-Adaptive (-not $groundedDashboardFeature.requiresWorkspace) 'Bounded single-module dashboard feature retained governed evidence workspace ceremony.'
+Assert-Adaptive ($groundedDashboardFeature.requiresDesign) 'Grounded dashboard feature lost its normal feature design checkpoint.'
+
+$migrationFeature = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Add a database migration to persist daily nutrition trend snapshots.' `
+    -ProposedPath 'FoodDiary.Infrastructure/Persistence/Migrations/AddNutritionTrendSnapshots.cs' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($migrationFeature.profile -eq 'critical' -and $migrationFeature.requiresWorkspace) 'Explicit persistence migration was weakened by scope discovery.'
+
 $replanJourney = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1') `
     -Query 'Preserve acceptance evidence during delivery replan.' `
     -Format Json | ConvertFrom-Json

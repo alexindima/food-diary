@@ -57,3 +57,7 @@ Static adaptive-route cases remain the baseline for ceremony shape. In
 particular, the visual UI case requires the compact five-stage route so learned
 experience cannot silently reintroduce a full research packet, separate
 acceptance ceremony, or verification before browser evidence.
+The existing dashboard contract-extension case likewise prevents sensitive
+read-model references from automatically forcing governed critical ceremony;
+explicit authentication and migration cases preserve the true critical
+boundary.

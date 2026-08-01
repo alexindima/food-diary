@@ -59,17 +59,20 @@ $boundaryChangeIntent = $normalized -match '\b(change|modify|add|remove|replace|
 $criticalUiSurfaceReference = $normalized -match '\b(auth|authentication|login|oauth|payment|billing|privacy|security)\s+(dialog|modal|page|form|button|panel|screen)\b'
 $explicitCriticalBoundaryIntent = -not $criticalUiSurfaceReference -and $normalized -match '\b(fix|change|modify|add|remove|replace|migrate|integrate|link|send|store|persist|expose)\w*\b.{0,48}\b(auth|authentication|login|password|credential|token|secret|oauth|payment|billing|subscription|migration|database|provider|webhook|privacy|security)\b'
 $uiDiscovery = $visualIntent -and -not $scopeKnown -and -not $explicitCriticalBoundaryIntent
+$scopeDiscovery = -not $visualIntent -and -not $scopeKnown -and ($featureIntent -or $bugIntent) -and -not $explicitCriticalBoundaryIntent
 $frontendOnly = $productionScopes.Count -gt 0 -and @($productionScopes | Where-Object { $_ -ne 'Frontend' }).Count -eq 0
 $visualUiChange = $visualIntent -and $scopeKnown -and $frontendOnly -and -not $boundaryChangeIntent -and
     -not $flags.databaseMigration -and -not $flags.externalIntegrations -and -not $flags.configuration -and
     @($brief.architectureHealthImpact.dependencyViolations).Count -eq 0
-$hasCriticalEvidence = -not $visualUiChange -and -not $uiDiscovery -and ($criticalIntent -or $privacyCount -gt 0 -or $flags.databaseMigration -or $flags.externalIntegrations -or $flags.configuration)
+$sensitiveBoundaryChange = $privacyCount -gt 0 -and ($criticalIntent -or $boundaryChangeIntent)
+$hasCriticalEvidence = -not $visualUiChange -and -not $uiDiscovery -and -not $scopeDiscovery -and ($criticalIntent -or $sensitiveBoundaryChange -or $flags.databaseMigration -or $flags.externalIntegrations -or $flags.configuration)
 $hasArchitecturalEvidence = -not $visualUiChange -and ($architecturalIntent -or [bool]$brief.decisionContext.reviewRequired -or @($brief.architectureHealthImpact.dependencyViolations).Count -gt 0)
 $crossCutting = $productionScopes.Count -gt 1 -or @($brief.change.directModules + $brief.change.downstreamModules | Select-Object -Unique).Count -gt 2
 $wikiInternal = @($paths | Where-Object { $_ -match '^\.llm-wiki/' }).Count -gt 0
 
 $profile = 'feature'
 if ($uiDiscovery) { $profile = 'ui-discovery' }
+elseif ($scopeDiscovery) { $profile = 'scope-discovery' }
 elseif ($hasCriticalEvidence) { $profile = 'critical' }
 elseif ($hasArchitecturalEvidence) { $profile = 'architectural' }
 elseif ($visualUiChange) { $profile = 'visual-ui-change' }
@@ -78,9 +81,13 @@ elseif (-not $featureIntent -and [int]$brief.risk.score -le 2 -and $scopeKnown -
 
 $confidence = if (-not $scopeKnown) { 'low' } elseif ([string]$brief.analysis.confidence -eq 'high') { 'high' } else { 'medium' }
 $requiresPathDiscovery = -not $scopeKnown
-$requiresDecisionCheckpoint = $profile -in @('critical', 'architectural') -or [bool]$brief.decisionContext.reviewRequired
+$requiresDecisionCheckpoint = $profile -in @('critical', 'architectural') -or ($profile -notin @('ui-discovery', 'scope-discovery') -and [bool]$brief.decisionContext.reviewRequired)
 $requiresDesign = $profile -in @('feature', 'critical', 'architectural')
-$requiresWorkspace = $profile -in @('critical', 'architectural') -or $crossCutting
+$directModuleCount = @($brief.change.directModules | Select-Object -Unique).Count
+$boundedFeatureScopes = $profile -eq 'feature' -and $scopeKnown -and $directModuleCount -le 1 -and
+    @($productionScopes | Where-Object { $_ -notin @('Backend', 'Api', 'Frontend', 'Contracts') }).Count -eq 0 -and
+    -not $flags.databaseMigration -and -not $flags.externalIntegrations -and -not $flags.configuration
+$requiresWorkspace = $profile -notin @('ui-discovery', 'scope-discovery') -and ($profile -in @('critical', 'architectural') -or ($crossCutting -and -not $boundedFeatureScopes))
 $experiencePolicyPath = Join-Path (Split-Path -Parent $PSScriptRoot) 'policies/experience-policies.json'
 $experiencePolicy = Get-Content -LiteralPath $experiencePolicyPath -Raw | ConvertFrom-Json
 $ceremonyBudget = $experiencePolicy.ceremonyBudgets.$profile
@@ -102,6 +109,9 @@ $pathArgument = if ($paths.Count -gt 0) { " -PlannedPath $(($paths | Select-Obje
 if ($profile -eq 'ui-discovery') {
     Add-Stage 'research' 'Trace the rendered UI path and confirm the runtime-owning component before risk classification.' "./.llm-wiki/wiki.ps1 ui-trace -Query '$escapedObjective'; ./.llm-wiki/wiki.ps1 research -Intent '$escapedObjective'" $true 'Runtime owner and concrete frontend paths are confirmed.'
     Add-Stage 'reclassify' 'Re-run adaptive classification with grounded paths; do not edit while scope is heuristic.' "./.llm-wiki/wiki.ps1 develop -Intent '$escapedObjective' -PlannedPath '<confirmed frontend path(s)>'" $true 'The grounded route is visual-ui-change or evidence explicitly justifies escalation.'
+} elseif ($profile -eq 'scope-discovery') {
+    Add-Stage 'scope-research' 'Compile a compact brief, trace the existing data flow, and confirm whether storage, provider, privacy, or architecture boundaries actually change.' "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective' -Compact; ./.llm-wiki/wiki.ps1 research -Intent '$escapedObjective'" $true 'Concrete paths, the existing producer-to-consumer flow, and any real critical boundary changes are confirmed.'
+    Add-Stage 'reclassify' 'Re-run adaptive classification with evidence-refined intent and grounded paths before creating a workspace or editing.' "./.llm-wiki/wiki.ps1 develop -Intent '<evidence-refined intent>' -PlannedPath '<confirmed path(s)>'" $true 'The grounded route is feature or bug, unless evidence explicitly proves a critical or architectural boundary.'
 } else {
 Add-Stage $(if ($profile -eq 'visual-ui-change') { 'visual-brief' } else { 'research' }) $(if ($profile -eq 'visual-ui-change') { 'Compile a compact constraint brief and confirm whether the runtime owner belongs to the application shell or a reusable UI-kit surface.' } else { 'Compile current code paths, open questions, provider boundaries, failures, and Git precedents.' }) $(if ($profile -eq 'visual-ui-change') { "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective'$pathArgument -Compact; ./.llm-wiki/wiki.ps1 ui-trace -Query '$escapedObjective'$pathArgument" } else { "./.llm-wiki/wiki.ps1 research -Intent '$escapedObjective'$pathArgument" }) $true $(if ($profile -eq 'visual-ui-change') { 'The runtime owner, UI-kit versus application boundary, scoped instructions, design-system constraints, and browser-verifiable outcomes are explicit.' } else { 'Research packet has grounded paths and the runtime owner is confirmed, or explicitly reports unresolved discovery.' })
 Add-Stage 'journey-impact' 'Identify affected FoodDiary user journeys and their end-to-end scenarios.' "./.llm-wiki/wiki.ps1 journeys -Intent '$escapedObjective'$pathArgument" ($profile -notin @('tiny', 'visual-ui-change')) 'Relevant journeys, negative paths, and evidence hints are included in scope.'
@@ -140,6 +150,7 @@ if ($featureIntent) { $reasons.Add('Intent describes new behavior.') }
 if ($presentationOnly) { $reasons.Add('Changed or planned paths form a frontend presentation-only slice.') }
 if ($visualUiChange) { $reasons.Add('Visual frontend scope has no API, provider, persistence, privacy, security, or architecture boundary change.') }
 if ($uiDiscovery) { $reasons.Add('Visual intent is not grounded in concrete paths; runtime-owner discovery must precede risk classification.') }
+if ($scopeDiscovery) { $reasons.Add('Feature or bug intent is not grounded in concrete paths; existing-flow research must precede critical classification and workspace creation.') }
 if ($hasCriticalEvidence) { $reasons.Add('Sensitive, provider, persistence, configuration, or delivery evidence requires the critical workflow.') }
 if ($hasArchitecturalEvidence) { $reasons.Add('Architecture or durable decision evidence requires the architectural workflow.') }
 if ($crossCutting) { $reasons.Add('The inferred change crosses multiple scopes or modules.') }

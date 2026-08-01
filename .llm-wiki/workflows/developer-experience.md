@@ -69,6 +69,13 @@ governed route. It allows only runtime-owner research and grounded
 reclassification; inferred paths cannot authorize edits or introduce backend
 and auth context merely because the named screen belongs to a sensitive journey.
 
+The `scope-discovery` budget applies the same rule to ambiguous non-visual
+features and bugs. It allows a compact brief plus existing-flow research, then
+requires reclassification with refined intent and confirmed paths. No design,
+workspace, security, rollout, or implementation ceremony starts until evidence
+proves the corresponding boundary. Existing sensitive fields remain visible as
+review context without automatically escalating an unchanged data lifecycle.
+
 The `visual-ui-change` budget is a five-stage focused route for bounded frontend
 rendering work with unchanged API, provider, persistence, privacy, security,
 configuration, and architecture boundaries. It starts with a compact brief that

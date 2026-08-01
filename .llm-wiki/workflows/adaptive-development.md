@@ -47,6 +47,7 @@ The router selects one FoodDiary-specific profile:
 | Profile | Typical change | Required flow |
 |---|---|---|
 | `ui-discovery` | visual/UI intent whose paths are absent or only heuristically inferred | `ui-trace`, grounded research, rerun `develop -PlannedPath`; no implementation yet |
+| `scope-discovery` | non-visual feature or bug intent whose data flow and boundary changes are not grounded | compact brief, existing-flow research, rerun `develop` with refined intent and confirmed paths; no workspace or implementation yet |
 | `tiny` | bounded presentation-only HTML/SVG/SCSS or equally local low-risk work | research, implementation, diff/test-plan, `verify-fast` |
 | `bug` | corrective behavior in one bounded flow | research, implementation, focused tests, diff, full Wiki verify |
 | `feature` | new behavior or a cross-cutting product slice | research, design, implementation phases, conformance-aware review, full verify |
@@ -63,6 +64,22 @@ billing page stays in `ui-discovery` until `ui-trace` confirms the runtime owner
 and the caller supplies `-PlannedPath`. A concrete request to change an auth,
 credential, token, privacy, payment, migration, or provider boundary remains
 `critical`; naming a UI surface alone does not create backend/auth scope.
+
+Ungrounded feature and bug intent uses `scope-discovery` when it does not
+explicitly request an auth, credential, migration, persistence, provider,
+privacy, or security boundary change. The discovery route verifies whether the
+requested data is already produced, traces its current read-model and transport
+path, and then re-runs `develop` with evidence-refined intent and confirmed
+paths. It cannot create a governed workspace before reclassification.
+
+Sensitive-data references calibrate review and testing, but their presence in
+an existing read model does not by itself make a change critical. A bounded
+feature that extends one existing application module through its current
+Backend/API/Frontend contract can use the normal feature route without a
+governed evidence workspace. API compatibility, consumer review,
+localization, focused tests, and browser evidence remain applicable. New
+storage, migrations, external providers, changed sensitive-data lifecycle, and
+explicit auth or privacy boundaries still select `critical`.
 
 ## Grounded research
 
