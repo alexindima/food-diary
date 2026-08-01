@@ -3,11 +3,11 @@
     "summary":  {
                     "components":  399,
                     "componentsWithoutDirectSpecs":  107,
-                    "inputs":  1203,
-                    "outputs":  402,
+                    "inputs":  1206,
+                    "outputs":  404,
                     "apiCalls":  206,
                     "templatesWithTranslations":  240,
-                    "translationKeys":  1177,
+                    "translationKeys":  1178,
                     "consumerEdges":  897,
                     "consumedComponents":  276,
                     "unconsumedComponents":  122
@@ -9607,6 +9607,11 @@
                                               "required":  true
                                           },
                                           {
+                                              "name":  "toggleDisabled",
+                                              "type":  "boolean",
+                                              "required":  true
+                                          },
+                                          {
                                               "name":  "date",
                                               "type":  "string",
                                               "required":  true
@@ -9748,6 +9753,11 @@
                                               "required":  true
                                           },
                                           {
+                                              "name":  "isPreparing",
+                                              "type":  "",
+                                              "required":  false
+                                          },
+                                          {
                                               "name":  "isNutritionLoading",
                                               "type":  "boolean",
                                               "required":  true
@@ -9853,47 +9863,52 @@
                                           {
                                               "name":  "submitLabelKey",
                                               "type":  "string",
-                                              "required":  true
+                                              "required":  false
                                           },
                                           {
                                               "name":  "showDetails",
-                                              "type":  "boolean",
-                                              "required":  true
+                                              "type":  "",
+                                              "required":  false
                                           },
                                           {
                                               "name":  "results",
                                               "type":  "FoodVisionItem[]",
-                                              "required":  true
+                                              "required":  false
                                           },
                                           {
                                               "name":  "isAnalyzing",
-                                              "type":  "boolean",
-                                              "required":  true
+                                              "type":  "",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "isPreparing",
+                                              "type":  "",
+                                              "required":  false
                                           },
                                           {
                                               "name":  "isNutritionLoading",
-                                              "type":  "boolean",
-                                              "required":  true
+                                              "type":  "",
+                                              "required":  false
                                           },
                                           {
                                               "name":  "nutrition",
                                               "type":  "FoodNutritionResponse | null",
-                                              "required":  true
+                                              "required":  false
                                           },
                                           {
                                               "name":  "errorKey",
                                               "type":  "string | null",
-                                              "required":  true
+                                              "required":  false
                                           },
                                           {
                                               "name":  "nutritionErrorKey",
                                               "type":  "string | null",
-                                              "required":  true
+                                              "required":  false
                                           },
                                           {
                                               "name":  "isProcessing",
-                                              "type":  "boolean",
-                                              "required":  true
+                                              "type":  "",
+                                              "required":  false
                                           }
                                       ],
                            "outputs":  [
@@ -10667,6 +10682,14 @@
                                            {
                                                "name":  "imageChanged",
                                                "type":  "ImageSelection | null"
+                                           },
+                                           {
+                                               "name":  "imagePreparationStarted",
+                                               "type":  "string"
+                                           },
+                                           {
+                                               "name":  "imagePreparationFailed",
+                                               "type":  ""
                                            }
                                        ],
                            "specPath":  "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.spec.ts"
@@ -17402,6 +17425,7 @@
                                               "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ANNOTATIONS_LABEL",
                                               "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING",
                                               "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_NUTRITION",
+                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_PREPARING",
                                               "GENERAL.UNITS.G",
                                               "GENERAL.UNITS.KCAL",
                                               "NUTRITION_EDITOR.CARBS",
@@ -17433,6 +17457,7 @@
                                               "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.PRODUCTS_PANEL",
                                               "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.PRODUCT_COUNT",
                                               "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE",
+                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING",
                                               "GENERAL.UNITS.KCAL"
                                           ]
                              },
@@ -18291,6 +18316,7 @@
                                                  "submitDisabled",
                                                  "submitLabelKey",
                                                  "time",
+                                                 "toggleDisabled",
                                                  "toggleView"
                                              ],
                               "outputsHandled":  [
@@ -18335,6 +18361,7 @@
                                                  "imageUrl",
                                                  "isAnalyzing",
                                                  "isNutritionLoading",
+                                                 "isPreparing",
                                                  "sourceText",
                                                  "sourceTextLabelKey"
                                              ],
@@ -18368,10 +18395,9 @@
                               "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts",
                               "consumerFeature":  "shared",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.html",
-                              "occurrences":  2,
+                              "occurrences":  1,
                               "inputsUsed":  [
                                                  "errorKey",
-                                                 "imageUrl",
                                                  "isAnalyzing",
                                                  "isNutritionLoading",
                                                  "isProcessing",
@@ -29147,7 +29173,9 @@
                                                  "resizeMaxDimension"
                                              ],
                               "outputsHandled":  [
-                                                     "imageChanged"
+                                                     "imageChanged",
+                                                     "imagePreparationFailed",
+                                                     "imagePreparationStarted"
                                                  ]
                           },
                           {
