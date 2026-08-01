@@ -49,6 +49,11 @@ const SCENARIOS: ReadonlyArray<ReadonlyArray<readonly [number, number]>> = [
 /* eslint-enable @typescript-eslint/no-magic-numbers -- End of geometry fixture coordinates. */
 const SCENARIO_CASES = SCENARIOS.map(points => [points] as const);
 const FRAME_SIZE = 100;
+const PORTRAIT_STAGE_LEFT = -72;
+const PORTRAIT_STAGE_RIGHT = 172;
+const PORTRAIT_STAGE_PADDING = 4;
+const PORTRAIT_TOGGLE_RESERVED_X = 130;
+const PORTRAIT_TOGGLE_RESERVED_BOTTOM = 18;
 
 function createAnnotations(points: ReadonlyArray<readonly [number, number]>): AiPhotoAnnotation[] {
     return points.map(([centerX, centerY], index) => ({
@@ -101,12 +106,37 @@ describe('AI photo annotation layout', () => {
         expect(optimizeAiPhotoAnnotationLayout(annotations)).toEqual(optimizeAiPhotoAnnotationLayout(annotations));
     });
 
-    it('places portrait annotation cards outside the photo bounds', () => {
+    it('places portrait annotation cards outside the photo bounds with stage padding', () => {
         const layout = optimizeAiPhotoAnnotationLayout(createAnnotations(SCENARIOS[0]), true);
 
         expect(layout.some(annotation => annotation.cardX < 0)).toBe(true);
-        expect(layout.some(annotation => annotation.cardX > FRAME_SIZE)).toBe(true);
+        expect(layout.some(annotation => annotation.cardX >= FRAME_SIZE)).toBe(true);
         expect(evaluateAiPhotoAnnotationLayout(layout).cardOverlaps).toBe(0);
+        for (const annotation of layout) {
+            expect(annotation.cardX).toBeGreaterThanOrEqual(PORTRAIT_STAGE_LEFT + PORTRAIT_STAGE_PADDING);
+            expect(annotation.cardX + annotation.cardWidth).toBeLessThanOrEqual(PORTRAIT_STAGE_RIGHT - PORTRAIT_STAGE_PADDING);
+            expect(annotation.cardX < PORTRAIT_TOGGLE_RESERVED_X || annotation.cardY >= PORTRAIT_TOGGLE_RESERVED_BOTTOM).toBe(true);
+        }
+    });
+
+    it('connects products to the center of the nearest card edge and allows angled lines', () => {
+        const layout = optimizeAiPhotoAnnotationLayout(createAnnotations(SCENARIOS[0]), true);
+
+        expect(
+            layout.some(annotation => {
+                const [product, anchor] = annotation.connectorPoints;
+                return product.y !== anchor.y;
+            }),
+        ).toBe(true);
+        for (const annotation of layout) {
+            const [, anchor] = annotation.connectorPoints;
+            const cardCenterY = annotation.cardY + annotation.cardHeight / 2;
+            const cardLeft = annotation.cardX;
+            const cardRight = annotation.cardX + annotation.cardWidth;
+
+            expect(anchor.y).toBe(cardCenterY);
+            expect([cardLeft, cardRight]).toContain(anchor.x);
+        }
     });
 
     it('returns an empty layout without search work', () => {

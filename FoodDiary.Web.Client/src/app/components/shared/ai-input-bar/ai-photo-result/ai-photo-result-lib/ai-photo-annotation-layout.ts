@@ -35,8 +35,12 @@ const FRAME_SIZE = 100;
 const CARD_WIDTH = 28;
 const CARD_HEIGHT = 15;
 const PORTRAIT_CARD_WIDTH = 68;
-const PORTRAIT_LEFT_CARD_X = -72;
-const PORTRAIT_RIGHT_CARD_X = 104;
+const PORTRAIT_STAGE_LEFT = -72;
+const PORTRAIT_STAGE_RIGHT = 172;
+const PORTRAIT_STAGE_PADDING = 4;
+const PORTRAIT_LEFT_CARD_X = PORTRAIT_STAGE_LEFT + PORTRAIT_STAGE_PADDING;
+const PORTRAIT_RIGHT_CARD_X = PORTRAIT_STAGE_RIGHT - PORTRAIT_STAGE_PADDING - PORTRAIT_CARD_WIDTH;
+const PORTRAIT_TOGGLE_RESERVED_AREA: Rect = { x: 130, y: 0, width: 42, height: 18 };
 const CARD_EDGE_GAP = 2;
 const SIDE_SLOT_COUNT = 5;
 const HORIZONTAL_SLOT_COUNT = 3;
@@ -77,7 +81,7 @@ export function optimizeAiPhotoAnnotationLayout(
                     continue;
                 }
 
-                const candidate = createCandidate(annotation, slot, annotations);
+                const candidate = createCandidate(annotation, slot, annotations, allowCardsOutsidePhoto);
                 const pairCost = calculatePairCost(candidate, state.assignments);
                 const assignments = new Map(state.assignments);
                 assignments.set(annotation.id, candidate);
@@ -208,9 +212,14 @@ function createPerimeterSlots(allowCardsOutsidePhoto: boolean): Rect[] {
     return slots;
 }
 
-function createCandidate(annotation: AiPhotoAnnotation, card: Rect, annotations: readonly AiPhotoAnnotation[]): LayoutCandidate {
+function createCandidate(
+    annotation: AiPhotoAnnotation,
+    card: Rect,
+    annotations: readonly AiPhotoAnnotation[],
+    reservePortraitToggle: boolean,
+): LayoutCandidate {
     const center = { x: annotation.centerX, y: annotation.centerY };
-    const anchor = nearestPointOnRect(center, card);
+    const anchor = nearestEdgeCenter(center, card);
     const connector: readonly [Point, Point] = [center, anchor];
     const coveredProducts = annotations.filter(product =>
         pointInsideRect(annotationPoint(product), expandRect(card, PRODUCT_PROTECTION_RADIUS)),
@@ -220,6 +229,7 @@ function createCandidate(annotation: AiPhotoAnnotation, card: Rect, annotations:
     ).length;
     const sidePreference = angularDifference(center, rectCenter(card));
     const connectorLength = distance(center, anchor);
+    const reservedAreaCost = reservePortraitToggle && rectsOverlap(card, PORTRAIT_TOGGLE_RESERVED_AREA) ? WEIGHT_CARD_OVERLAP : 0;
 
     return {
         card,
@@ -228,7 +238,8 @@ function createCandidate(annotation: AiPhotoAnnotation, card: Rect, annotations:
             coveredProducts * WEIGHT_COVERED_PRODUCT +
             proximityCount * WEIGHT_CONNECTOR_PRODUCT_PROXIMITY +
             connectorLength * WEIGHT_DISTANCE +
-            sidePreference * WEIGHT_SIDE_PREFERENCE,
+            sidePreference * WEIGHT_SIDE_PREFERENCE +
+            reservedAreaCost,
     };
 }
 
@@ -280,11 +291,16 @@ function annotationConnector(annotation: AiPhotoAnnotation): readonly [Point, Po
     return annotation.connectorPoints;
 }
 
-function nearestPointOnRect(point: Point, rect: Rect): Point {
-    return {
-        x: clamp(point.x, rect.x, rect.x + rect.width),
-        y: clamp(point.y, rect.y, rect.y + rect.height),
-    };
+function nearestEdgeCenter(point: Point, rect: Rect): Point {
+    const edgeCenters: readonly Point[] = [
+        { x: rect.x + rect.width / 2, y: rect.y },
+        { x: rect.x + rect.width, y: rect.y + rect.height / 2 },
+        { x: rect.x + rect.width / 2, y: rect.y + rect.height },
+        { x: rect.x, y: rect.y + rect.height / 2 },
+    ];
+    return edgeCenters.reduce((nearest, candidate) =>
+        squaredDistance(point, candidate) < squaredDistance(point, nearest) ? candidate : nearest,
+    );
 }
 
 function rectCenter(rect: Rect): Point {

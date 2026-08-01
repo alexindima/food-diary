@@ -381,13 +381,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "bed76aab538039dd8a8b52f34acea6cb9d46db8cfe583694c650d39b83288abd"
+                                            "sha256":  "0d860934143aaedf7015e6d0788ecabff684f8b364e3d1a7c85ebfaf01cb3d3e"
                                         }
                                     ],
-                        "reason":  "Regenerated quality index after focused component tests; no unresolved test-reference regression introduced.",
+                        "reason":  "Focused annotation layout coverage increased from 13 to 14 tests; regenerated quality index shows no critical-symbol or test-reference regression.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ddf7638c55a77d00dfc1caafdcbe21f0222586e",
-                        "reviewedAtUtc":  "2026-07-31T22:26:44.9535180Z"
+                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
+                        "reviewedAtUtc":  "2026-08-01T00:58:08.1540602Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
