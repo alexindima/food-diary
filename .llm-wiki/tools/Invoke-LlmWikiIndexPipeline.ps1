@@ -48,9 +48,13 @@ if ($AffectedOnly) {
             'Build-LlmWikiArchitectureHealthIndex.ps1'
         )) { Add-IndexTool $tool }
     } else {
-        $hasFrontend = @($normalizedChangedPaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/' }).Count -gt 0
+        $frontendPaths = @($normalizedChangedPaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/' })
+        $hasFrontend = $frontendPaths.Count -gt 0
+        $frontendTestOnly = $hasFrontend -and @($frontendPaths | Where-Object { $_ -notmatch '(?:^|/)\w[^/]*\.(?:spec|test)\.ts$' }).Count -eq 0
         $hasCSharp = @($normalizedChangedPaths | Where-Object { $_ -match '\.(cs|csproj)$' }).Count -gt 0
-        if ($hasFrontend) {
+        if ($frontendTestOnly) {
+            Add-IndexTool 'Build-LlmWikiQualityIndex.ps1'
+        } elseif ($hasFrontend) {
             Add-IndexTool 'Build-LlmWikiFrontendIndex.ps1'
             Add-IndexTool 'Build-LlmWikiFrontendContractIndex.ps1'
             Add-IndexTool 'Build-LlmWikiQualityIndex.ps1'

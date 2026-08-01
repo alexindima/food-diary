@@ -22,14 +22,14 @@
                         "pageSha256":  "3cddc70c9de8617c8ad3e97fff346fab0f7c586e72f13dfd0caa7acbb5967c15",
                         "sources":  [
                                         {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "4e2db42accf2a8d8d6769c90e66742c8796d9793b39c95a179b89ba8607f4571"
+                                            "path":  ".llm-wiki/policies/change-policies.json",
+                                            "sha256":  "335be12b113473ee2ebced8cd68ea807f1f2970718fd485647ee9c30cae0fd92"
                                         }
                                     ],
-                        "reason":  "Reviewed the AGENTS.md facade addition; it does not change path classification or policy obligations.",
+                        "reason":  "Reviewed policy phase wording: canonical frontend verification remains required before publication; visual local completion is documented separately.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
-                        "reviewedAtUtc":  "2026-07-31T13:05:25.8005931Z"
+                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
+                        "reviewedAtUtc":  "2026-08-01T01:45:25.4167254Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -49,17 +49,17 @@
                     {
                         "pageId":  "workflow.evidence-bundle",
                         "pagePath":  ".llm-wiki/workflows/evidence-bundle.md",
-                        "pageSha256":  "7823023eea9a2ebe9ea2da33f9ca5f73701ad19efd8107169e66a51869d0e78c",
+                        "pageSha256":  "9fb6d076df2215c09907c9b35fd4b77db66be875fc4bef786efd35d0c3fc7e39",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-                                            "sha256":  "591bfdd4d941d5fc22cd5e26e90b3bcb930b3ce4535bf4bcb636506bbf09931b"
+                                            "path":  ".llm-wiki/policies/change-policies.json",
+                                            "sha256":  "335be12b113473ee2ebced8cd68ea807f1f2970718fd485647ee9c30cae0fd92"
                                         }
                                     ],
-                        "reason":  "Reviewed the evidence runner fix: canonical Wiki checks now execute through the current PowerShell host on Windows; allowlisting, command equality, lineage, and status recording remain unchanged.",
+                        "reason":  "Reviewed: affected-viewport evidence remains compatible with evidence lineage and not-applicable reasons.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
-                        "reviewedAtUtc":  "2026-07-31T13:19:01.7298771Z"
+                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
+                        "reviewedAtUtc":  "2026-08-01T01:45:26.6380644Z"
                     },
                     {
                         "pageId":  "workflow.frontend-contract-review",
@@ -237,13 +237,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "4315483b0409bccda0223d3d5e02910f005fcfa3bb44b9a6661d86a05f7c2066"
+                                            "sha256":  "335be12b113473ee2ebced8cd68ea807f1f2970718fd485647ee9c30cae0fd92"
                                         }
                                     ],
-                        "reason":  "The BaseRef command template does not change dependency or rollout classification.",
+                        "reason":  "Reviewed: publication-gate wording does not change dependency or rollout analysis.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
-                        "reviewedAtUtc":  "2026-07-30T09:40:27.4693820Z"
+                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
+                        "reviewedAtUtc":  "2026-08-01T01:45:26.1176363Z"
                     },
                     {
                         "pageId":  "workflow-developer-experience",
@@ -366,13 +366,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "4315483b0409bccda0223d3d5e02910f005fcfa3bb44b9a6661d86a05f7c2066"
+                                            "sha256":  "335be12b113473ee2ebced8cd68ea807f1f2970718fd485647ee9c30cae0fd92"
                                         }
                                     ],
-                        "reason":  "API BaseRef templating does not change performance or observability obligations.",
+                        "reason":  "Reviewed: frontend visual completion exception does not alter persistence or observability obligations.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
-                        "reviewedAtUtc":  "2026-07-30T09:40:30.1361816Z"
+                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
+                        "reviewedAtUtc":  "2026-08-01T01:45:27.1867588Z"
                     },
                     {
                         "pageId":  "workflow-quality-risk",
@@ -411,13 +411,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "4315483b0409bccda0223d3d5e02910f005fcfa3bb44b9a6661d86a05f7c2066"
+                                            "sha256":  "335be12b113473ee2ebced8cd68ea807f1f2970718fd485647ee9c30cae0fd92"
                                         }
                                     ],
-                        "reason":  "API BaseRef templating does not change runtime topology classification.",
+                        "reason":  "Reviewed: visual-only completion does not alter integration/runtime topology review.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4c9952d897c5658e546fb1e01724dca082cc7e0b",
-                        "reviewedAtUtc":  "2026-07-30T09:40:30.9121559Z"
+                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
+                        "reviewedAtUtc":  "2026-08-01T01:45:27.7759979Z"
                     },
                     {
                         "pageId":  "workflow-task-brief",
@@ -441,13 +441,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "0bd7b90d203588c59b635f2e85a8cb1c1b140dc2d897fbe571d0ec6a99fba9a6"
+                                            "sha256":  "a93ec473d41b69f0c2dd9df04533c24750f873a01a3c99c8f9aaed0c01a5b19b"
                                         }
                                     ],
-                        "reason":  "Reviewed ui-trace facade registration; task dispatch receipt semantics are unchanged.",
+                        "reason":  "Reviewed router switch addition; dispatch routing and receipt inputs remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ddf7638c55a77d00dfc1caafdcbe21f0222586e",
-                        "reviewedAtUtc":  "2026-08-01T00:01:40.5081788Z"
+                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
+                        "reviewedAtUtc":  "2026-08-01T01:45:28.3560484Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",
@@ -463,6 +463,21 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "d5eb6dc6614140a568feb0ecea95841c174df82f",
                         "reviewedAtUtc":  "2026-07-31T20:22:09.9878435Z"
+                    },
+                    {
+                        "pageId":  "workflow-test-plan",
+                        "pagePath":  ".llm-wiki/workflows/test-plan.md",
+                        "pageSha256":  "452ae54eced53d1c2b9c10aaffa81e017d54bfde41b40aaca5d872d6b9169650",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/policies/change-policies.json",
+                                            "sha256":  "335be12b113473ee2ebced8cd68ea807f1f2970718fd485647ee9c30cae0fd92"
+                                        }
+                                    ],
+                        "reason":  "Reviewed: focused visual completion uses ranked focused tests while canonical pre-publication checks remain reported.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
+                        "reviewedAtUtc":  "2026-08-01T01:45:28.9967889Z"
                     },
                     {
                         "pageId":  "workflow-trace-feature",
@@ -489,14 +504,14 @@
                         "pageSha256":  "368dfe1e9684ead7a5e3207edd05e55477d432ae1f9627814d62bfeb9559fb84",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
-                                            "sha256":  "8dda2f04e09e6ac05e30cf13a9384f448e949b58cc199bcb4db84bca1bb257e3"
+                                            "path":  ".llm-wiki/policies/change-policies.json",
+                                            "sha256":  "335be12b113473ee2ebced8cd68ea807f1f2970718fd485647ee9c30cae0fd92"
                                         }
                                     ],
-                        "reason":  "Reviewed terminal task-check status propagation; verification planning is unchanged and execution now preserves the evidence-recorded result.",
+                        "reason":  "Reviewed: governed verification plans still cover every canonical publication check.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
-                        "reviewedAtUtc":  "2026-07-31T18:56:05.6553355Z"
+                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
+                        "reviewedAtUtc":  "2026-08-01T01:45:29.6259823Z"
                     },
                     {
                         "pageId":  "workflow-verification-telemetry",

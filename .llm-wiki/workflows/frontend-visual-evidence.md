@@ -30,8 +30,9 @@ Required evidence:
 - The DOM contains meaningful content and no framework error overlay.
 - Relevant console errors and warnings are absent or explained.
 - The target interaction produces an observed state change.
-- A desktop screenshot supports the result.
-- A mobile viewport is checked when the surface is responsive.
+- A screenshot at the viewport affected by the requested scope supports the result.
+- A mobile viewport is checked when responsive or mobile behavior is in scope;
+  otherwise mobile is recorded as explicitly out of scope.
 - Keyboard focus, clipping, overlap, wrapping, missing assets, loading, empty,
   error, and permission states are checked when relevant.
 - Both English and Russian rendering are checked when UI copy changes.

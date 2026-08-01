@@ -70,6 +70,10 @@ explicit scope. The conservative dependency map still runs derived indexes and
 architecture health when their source indexes can change. Final handoff and CI
 continue to use the full pipeline.
 
+An Angular `*.spec.ts`-only change selects quality plus its downstream
+architecture-health check. It does not run frontend source, frontend contract,
+or sensitive-data generators because test content cannot change those indexes.
+
 Workers are isolated PowerShell processes with real exit-code propagation. A failed worker fails its stage and prevents dependent stages from running. Parallelism changes execution time only; every existing generator and freshness check still runs.
 
 `wiki verify` is the interactive gate. `wiki verify-full` and CI additionally

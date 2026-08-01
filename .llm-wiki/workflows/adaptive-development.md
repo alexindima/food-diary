@@ -103,6 +103,15 @@ acceptance, implementation, focused tests, frontend build, and browser evidence.
 It does not require a governed workspace or full index regeneration merely
 because the surrounding product journey is critical.
 
+For this profile, `verify-fast -VisualUiCompletion` is the local completion
+gate when the final diff remains frontend-only and does not change contracts,
+dependencies, architecture, providers, persistence, privacy, security, or
+configuration. Full `npm run verify` and full Wiki verification are publication
+gates supplied by the repository pre-push hook and CI; they are not repeated
+before local completion. Browser evidence covers the viewport named by scope.
+Mobile evidence is required only for responsive or mobile behavior; otherwise
+record mobile as explicitly out of scope.
+
 Research deliberately exposes blocking open questions instead of filling them with
 heuristics. When no implementation path is grounded, discover an exact route,
 command, handler, component, or service with `trace`/source search and rerun research
