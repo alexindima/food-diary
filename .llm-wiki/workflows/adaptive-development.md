@@ -111,6 +111,10 @@ gates supplied by the repository pre-push hook and CI; they are not repeated
 before local completion. Browser evidence covers the viewport named by scope.
 Mobile evidence is required only for responsive or mobile behavior; otherwise
 record mobile as explicitly out of scope.
+For upload-driven rendering, use `visual-qa`: its default mode validates and
+prints the browser contract without side effects, while `-Run` uses Playwright
+to upload the declared fixture, wait for the expected result selector, reject
+console or page errors, and capture the screenshot automatically.
 
 Research deliberately exposes blocking open questions instead of filling them with
 heuristics. When no implementation path is grounded, discover an exact route,

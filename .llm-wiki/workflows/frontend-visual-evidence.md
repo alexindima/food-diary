@@ -37,6 +37,20 @@ Required evidence:
   error, and permission states are checked when relevant.
 - Both English and Russian rendering are checked when UI copy changes.
 
+For a file-upload flow, use the executable Wiki facade. It is plan-only unless
+`-Run` is supplied; run mode uses the repository Playwright installation,
+optionally restores an authenticated storage state, uploads the fixture, waits
+for the result, fails on console/page errors, and writes a screenshot:
+
+```powershell
+./.llm-wiki/wiki.ps1 visual-qa `
+  -Url 'http://127.0.0.1:4200/dashboard' `
+  -FixturePath '.artifacts/fixtures/meal.jpg' `
+  -TriggerSelector '[aria-label="Recognize from photo"]' `
+  -ResultSelector 'fd-ai-photo-result' `
+  -Run
+```
+
 Record completion in the evidence bundle:
 
 ```powershell

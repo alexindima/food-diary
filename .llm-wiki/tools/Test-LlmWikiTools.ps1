@@ -569,6 +569,18 @@ Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiFrontendIndex
 Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiFrontendContractIndex.ps1') 'Affected frontend test plan included the unrelated frontend contract index.'
 Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiSensitiveDataIndex.ps1') 'Affected frontend test plan included the unrelated sensitive-data index.'
 
+$affectedStylePlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -AffectedOnly -Plan `
+    -ChangedPath 'FoodDiary.Web.Client/src/app/components/example/example.scss') -join [Environment]::NewLine
+Assert-Wiki ($affectedStylePlanText -match 'Affected index tools:\s*$' -and $affectedStylePlanText -notmatch 'Build-LlmWiki') 'Stylesheet-only changes selected indexes that do not read stylesheets.'
+$affectedTemplatePlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -AffectedOnly -Plan `
+    -ChangedPath 'FoodDiary.Web.Client/src/app/components/example/example.html') -join [Environment]::NewLine
+Assert-Wiki ($affectedTemplatePlanText -match 'Build-LlmWikiFrontendIndex.ps1' -and $affectedTemplatePlanText -match 'Build-LlmWikiFrontendContractIndex.ps1') 'Template-only changes omitted frontend indexes.'
+Assert-Wiki ($affectedTemplatePlanText -notmatch 'Build-LlmWikiQualityIndex.ps1' -and $affectedTemplatePlanText -notmatch 'Build-LlmWikiSensitiveDataIndex.ps1') 'Template-only changes selected unrelated quality or sensitive-data indexes.'
+
+$visualQaPlan = & (Join-Path $toolsRoot 'Invoke-LlmWikiVisualQa.ps1') -Url 'http://127.0.0.1:4200/dashboard' `
+    -FixturePath 'FoodDiary.Web.Client/package.json' -ResultSelector 'fd-ai-photo-result' -Format Json | ConvertFrom-Json
+Assert-Wiki ($visualQaPlan.mode -eq 'plan' -and @($visualQaPlan.checks).Count -eq 4) 'Visual QA did not produce a safe executable upload plan.'
+
 $frontendContract = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/frontend-contract-index.json') -Raw | ConvertFrom-Json
 Assert-Wiki ($frontendContract.summary.components -gt 0) 'Frontend contract index did not discover Angular components.'
 Assert-Wiki ($frontendContract.summary.apiCalls -gt 0) 'Frontend contract index did not discover direct HTTP calls.'

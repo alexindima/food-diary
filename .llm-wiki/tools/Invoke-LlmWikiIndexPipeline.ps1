@@ -51,9 +51,16 @@ if ($AffectedOnly) {
         $frontendPaths = @($normalizedChangedPaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/' })
         $hasFrontend = $frontendPaths.Count -gt 0
         $frontendTestOnly = $hasFrontend -and @($frontendPaths | Where-Object { $_ -notmatch '(?:^|/)\w[^/]*\.(?:spec|test)\.ts$' }).Count -eq 0
+        $frontendStyleOnly = $hasFrontend -and @($frontendPaths | Where-Object { $_ -notmatch '\.(?:scss|css)$' }).Count -eq 0
+        $frontendTemplateOnly = $hasFrontend -and @($frontendPaths | Where-Object { $_ -notmatch '\.html$' }).Count -eq 0
         $hasCSharp = @($normalizedChangedPaths | Where-Object { $_ -match '\.(cs|csproj)$' }).Count -gt 0
-        if ($frontendTestOnly) {
+        if ($frontendStyleOnly) {
+            # Current compiled indexes do not read stylesheet contents.
+        } elseif ($frontendTestOnly) {
             Add-IndexTool 'Build-LlmWikiQualityIndex.ps1'
+        } elseif ($frontendTemplateOnly) {
+            Add-IndexTool 'Build-LlmWikiFrontendIndex.ps1'
+            Add-IndexTool 'Build-LlmWikiFrontendContractIndex.ps1'
         } elseif ($hasFrontend) {
             Add-IndexTool 'Build-LlmWikiFrontendIndex.ps1'
             Add-IndexTool 'Build-LlmWikiFrontendContractIndex.ps1'
@@ -131,11 +138,20 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
         $process = New-Object System.Diagnostics.Process
         $process.StartInfo = $startInfo
         if (-not $process.Start()) { throw "Unable to start $toolName." }
-        $workers.Add([pscustomobject]@{ tool = $toolName; process = $process })
+        $workers.Add([pscustomobject]@{ tool = $toolName; process = $process; stopwatch = [System.Diagnostics.Stopwatch]::StartNew(); observed = $false })
     }
     $failed = [System.Collections.Generic.List[string]]::new()
+    while (@($workers | Where-Object { -not $_.observed }).Count -gt 0) {
+        foreach ($worker in @($workers | Where-Object { -not $_.observed })) {
+            if (-not $worker.process.HasExited) { continue }
+            $worker.stopwatch.Stop()
+            $worker.observed = $true
+        }
+        if (@($workers | Where-Object { -not $_.observed }).Count -gt 0) { Start-Sleep -Milliseconds 25 }
+    }
     foreach ($worker in $workers) {
         $worker.process.WaitForExit()
+        Write-Host " - $($worker.tool): $([Math]::Round($worker.stopwatch.Elapsed.TotalSeconds, 2))s"
         if ($worker.process.ExitCode -ne 0) {
             $failed.Add("$($worker.tool) (exit=$($worker.process.ExitCode))")
         }
@@ -153,6 +169,7 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
     }
 }
 
+$pipelineStopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 foreach ($stage in $stages) {
     $tools = @($stage.tools | Where-Object { -not $AffectedOnly -or $selectedTools.Contains($_) })
     if ($tools.Count -eq 0) { continue }
@@ -162,4 +179,5 @@ foreach ($stage in $stages) {
         Invoke-PipelineBatch -StageName $stage.name -ToolNames @($tools[$offset..$last]) -CheckMode ([bool]$Check)
     }
 }
-Write-Host "LLM Wiki index pipeline completed in $(if ($Check) { 'check' } else { 'update' }) mode."
+$pipelineStopwatch.Stop()
+Write-Host "LLM Wiki index pipeline completed in $(if ($Check) { 'check' } else { 'update' }) mode in $([Math]::Round($pipelineStopwatch.Elapsed.TotalSeconds, 2))s."

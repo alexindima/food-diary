@@ -73,6 +73,11 @@ continue to use the full pipeline.
 An Angular `*.spec.ts`-only change selects quality plus its downstream
 architecture-health check. It does not run frontend source, frontend contract,
 or sensitive-data generators because test content cannot change those indexes.
+Stylesheet-only changes select no compiled index because no generator reads CSS
+or SCSS contents. Template-only changes select the frontend and frontend-contract
+indexes plus downstream architecture health, but skip quality and sensitive-data.
+The pipeline prints per-generator and total duration to make remaining hotspots
+visible instead of treating index latency as an opaque fixed cost.
 
 Workers are isolated PowerShell processes with real exit-code propagation. A failed worker fails its stage and prevents dependent stages from running. Parallelism changes execution time only; every existing generator and freshness check still runs.
 
