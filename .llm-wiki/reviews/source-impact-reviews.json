@@ -381,13 +381,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "a63bbcb9091f2353ee688e389b74e0666adc59522b774f054b66d2e0e7ac4bc4"
+                                            "sha256":  "14b06f66ca2ce957914194b3a37c87f6f3348e31ce76cdfba3d7b368bc137dfa"
                                         }
                                     ],
-                        "reason":  "Reviewed after merged frontend tests and quality index updates; risk guidance remains current.",
+                        "reason":  "Reviewed after final mobile annotation search optimization; quality-risk guidance remains current.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f4278362e8313a0db5ff859875de3cf044864b7b",
-                        "reviewedAtUtc":  "2026-08-01T15:53:05.8263525Z"
+                        "gitHead":  "91911ac6797901b935a36c3585e649744d86939c",
+                        "reviewedAtUtc":  "2026-08-01T16:34:05.9617780Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

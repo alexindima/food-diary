@@ -206,11 +206,11 @@
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-lib/ai-photo-annotation-layout.ts",
-                         "nonBlankLines":  378,
+                         "nonBlankLines":  380,
                          "decisionPoints":  43,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  72.06
+                         "structuralRiskScore":  72.1
                      },
                      {
                          "path":  "FoodDiary.Application/Fasting/Mappings/FastingMappings.cs",
@@ -24200,11 +24200,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-lib/ai-photo-annotation-layout.ts",
-                      "nonBlankLines":  378,
+                      "nonBlankLines":  380,
                       "decisionPoints":  43,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  72.06
+                      "structuralRiskScore":  72.1
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-lib/ai-photo-result.types.ts",
