@@ -44,6 +44,8 @@ const PORTRAIT_TOGGLE_RESERVED_AREA: Rect = { x: 130, y: 0, width: 42, height: 1
 const CARD_EDGE_GAP = 2;
 const SIDE_SLOT_COUNT = 5;
 const HORIZONTAL_SLOT_COUNT = 3;
+const INSIDE_CARD_SLOT_COUNT = SIDE_SLOT_COUNT * 2 + HORIZONTAL_SLOT_COUNT * 2;
+const MOBILE_MAX_CARD_CANDIDATES = 10;
 const SIDE_SLOT_STEP = (FRAME_SIZE - CARD_HEIGHT - CARD_EDGE_GAP * 2) / (SIDE_SLOT_COUNT - 1);
 const HORIZONTAL_SLOT_STEP = (FRAME_SIZE - CARD_WIDTH - CARD_EDGE_GAP * 2) / (HORIZONTAL_SLOT_COUNT - 1);
 const RIGHT_CARD_X = FRAME_SIZE - CARD_WIDTH - CARD_EDGE_GAP;
@@ -125,6 +127,35 @@ export function optimizeAiPhotoAnnotationLayout(
 }
 
 export function evaluateAiPhotoAnnotationLayout(annotations: readonly AiPhotoAnnotation[]): AiPhotoLayoutMetrics {
+    return evaluateLayoutAgainstProducts(annotations, annotations);
+}
+
+export function fitAiPhotoAnnotationLayout(
+    annotations: readonly AiPhotoAnnotation[],
+    activeAnnotationId: string | null,
+): AiPhotoAnnotation[] {
+    const ordered = prioritizeActiveAnnotation(annotations, activeAnnotationId);
+    const maximumCount = Math.min(ordered.length, INSIDE_CARD_SLOT_COUNT, MOBILE_MAX_CARD_CANDIDATES);
+    for (let count = maximumCount; count > 0; count--) {
+        const layout = optimizeAiPhotoAnnotationLayout(ordered.slice(0, count), false);
+        const metrics = evaluateLayoutAgainstProducts(layout, annotations);
+        if (
+            metrics.cardOverlaps === 0 &&
+            metrics.coveredProducts === 0 &&
+            metrics.connectorCardIntersections === 0 &&
+            metrics.connectorCrossings === 0
+        ) {
+            return layout;
+        }
+    }
+
+    return optimizeAiPhotoAnnotationLayout(ordered.slice(0, 1), false);
+}
+
+function evaluateLayoutAgainstProducts(
+    annotations: readonly AiPhotoAnnotation[],
+    protectedProducts: readonly AiPhotoAnnotation[],
+): AiPhotoLayoutMetrics {
     const pairMetrics = evaluatePairs(annotations);
     let coveredProducts = 0;
     let connectorProductProximity = 0;
@@ -135,7 +166,7 @@ export function evaluateAiPhotoAnnotationLayout(annotations: readonly AiPhotoAnn
         const connector = annotationConnector(annotation);
         connectorLength += distance(connector[0], connector[1]);
 
-        for (const product of annotations) {
+        for (const product of protectedProducts) {
             const productPoint = annotationPoint(product);
             if (pointInsideRect(productPoint, expandRect(card, PRODUCT_PROTECTION_RADIUS))) {
                 coveredProducts++;
@@ -161,6 +192,11 @@ export function evaluateAiPhotoAnnotationLayout(annotations: readonly AiPhotoAnn
         connectorLength,
         score,
     };
+}
+
+function prioritizeActiveAnnotation(annotations: readonly AiPhotoAnnotation[], activeAnnotationId: string | null): AiPhotoAnnotation[] {
+    const active = annotations.find(annotation => annotation.id === activeAnnotationId);
+    return active === undefined ? [...annotations] : [active, ...annotations.filter(annotation => annotation.id !== active.id)];
 }
 
 function evaluatePairs(

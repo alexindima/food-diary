@@ -7,6 +7,8 @@ import { AiPhotoPreviewComponent } from './ai-photo-preview';
 
 const SIX_PRODUCTS = 6;
 const SEVEN_PRODUCTS = 7;
+const MOBILE_CARD_COUNT = 4;
+const MOBILE_MARKER_COUNT = 3;
 const CENTER_X_START = 10;
 const CENTER_X_STEP = 8;
 const CENTER_Y_START = 20;
@@ -80,17 +82,19 @@ describe('AiPhotoPreviewComponent', () => {
         fixture.componentRef.setInput('imageUrl', 'https://example.com/meal.png');
         fixture.componentRef.setInput('sourceText', null);
         fixture.componentRef.setInput('annotations', createAnnotations(SIX_PRODUCTS));
+        fixture.componentRef.setInput('mobileAnnotations', createAnnotations(SIX_PRODUCTS));
         fixture.detectChanges();
 
-        expect((fixture.nativeElement as HTMLElement).querySelectorAll('.ai-photo-result__annotation-card')).toHaveLength(SIX_PRODUCTS);
-        expect((fixture.nativeElement as HTMLElement).querySelectorAll('.ai-photo-result__annotation-point')).toHaveLength(SIX_PRODUCTS);
-        expect((fixture.nativeElement as HTMLElement).querySelectorAll('.ai-photo-result__annotation-connector-outline')).toHaveLength(
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelectorAll('.ai-photo-result__annotation-card.ai-photo-result__annotation-desktop')).toHaveLength(SIX_PRODUCTS);
+        expect(host.querySelectorAll('.ai-photo-result__annotation-point.ai-photo-result__annotation-desktop')).toHaveLength(SIX_PRODUCTS);
+        expect(host.querySelectorAll('.ai-photo-result__annotation-connector-outline.ai-photo-result__annotation-desktop')).toHaveLength(
             SIX_PRODUCTS,
         );
-        expect((fixture.nativeElement as HTMLElement).querySelectorAll('.ai-photo-result__annotation-connector-core')).toHaveLength(
+        expect(host.querySelectorAll('.ai-photo-result__annotation-connector-core.ai-photo-result__annotation-desktop')).toHaveLength(
             SIX_PRODUCTS,
         );
-        expect((fixture.nativeElement as HTMLElement).querySelectorAll('.ai-photo-result__annotation-marker')).toHaveLength(0);
+        expect(host.querySelectorAll('.ai-photo-result__annotation-marker.ai-photo-result__annotation-desktop')).toHaveLength(0);
     });
 
     it('shows one active card and compact markers above six products', async () => {
@@ -98,13 +102,35 @@ describe('AiPhotoPreviewComponent', () => {
         fixture.componentRef.setInput('imageUrl', 'https://example.com/meal.png');
         fixture.componentRef.setInput('sourceText', null);
         fixture.componentRef.setInput('annotations', createAnnotations(SEVEN_PRODUCTS));
+        fixture.componentRef.setInput('mobileAnnotations', createAnnotations(SEVEN_PRODUCTS));
         fixture.componentRef.setInput('activeAnnotationId', 'food-2');
         fixture.detectChanges();
 
-        expect((fixture.nativeElement as HTMLElement).querySelectorAll('.ai-photo-result__annotation-card')).toHaveLength(1);
-        expect((fixture.nativeElement as HTMLElement).querySelector('.ai-photo-result__annotation-card')?.textContent).toContain('Food 3');
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelectorAll('.ai-photo-result__annotation-card.ai-photo-result__annotation-desktop')).toHaveLength(1);
+        expect(host.querySelector('.ai-photo-result__annotation-card.ai-photo-result__annotation-desktop')?.textContent).toContain(
+            'Food 3',
+        );
         expect((fixture.nativeElement as HTMLElement).querySelector('.ai-photo-result__annotation-card--active')).not.toBeNull();
-        expect((fixture.nativeElement as HTMLElement).querySelectorAll('.ai-photo-result__annotation-marker')).toHaveLength(SIX_PRODUCTS);
+        expect(host.querySelectorAll('.ai-photo-result__annotation-marker.ai-photo-result__annotation-desktop')).toHaveLength(SIX_PRODUCTS);
+    });
+
+    it('renders the fitted mobile cards and turns the remaining products into markers', async () => {
+        const fixture = await setupAiPhotoPreviewAsync();
+        fixture.componentRef.setInput('imageUrl', 'https://example.com/meal.png');
+        fixture.componentRef.setInput('sourceText', null);
+        fixture.componentRef.setInput('annotations', createAnnotations(SEVEN_PRODUCTS));
+        fixture.componentRef.setInput('mobileAnnotations', createAnnotations(SEVEN_PRODUCTS).slice(0, MOBILE_CARD_COUNT));
+        fixture.componentRef.setInput('activeAnnotationId', 'food-5');
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const mobileCards = host.querySelectorAll('.ai-photo-result__annotation-card--mobile');
+        expect(mobileCards).toHaveLength(MOBILE_CARD_COUNT);
+        expect(mobileCards[0].textContent).toContain('Food 1');
+        expect(host.querySelectorAll('.ai-photo-result__annotation-marker.ai-photo-result__annotation-mobile')).toHaveLength(
+            MOBILE_MARKER_COUNT,
+        );
     });
 
     it('highlights the selected card when all annotations are expanded', async () => {
@@ -112,6 +138,7 @@ describe('AiPhotoPreviewComponent', () => {
         fixture.componentRef.setInput('imageUrl', 'https://example.com/meal.png');
         fixture.componentRef.setInput('sourceText', null);
         fixture.componentRef.setInput('annotations', createAnnotations(SIX_PRODUCTS));
+        fixture.componentRef.setInput('mobileAnnotations', createAnnotations(SIX_PRODUCTS));
         fixture.componentRef.setInput('activeAnnotationId', 'food-4');
         fixture.detectChanges();
 

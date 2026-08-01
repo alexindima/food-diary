@@ -23,6 +23,7 @@ export class AiPhotoPreviewComponent {
     public readonly isPreparing = input(false);
     public readonly isNutritionLoading = input.required<boolean>();
     public readonly annotations = input<readonly AiPhotoAnnotation[]>([]);
+    public readonly mobileAnnotations = input<readonly AiPhotoAnnotation[]>([]);
     public readonly annotationsVisible = input(true);
     public readonly activeAnnotationId = input<string | null>(null);
     public readonly annotationsToggled = output();
@@ -50,6 +51,15 @@ export class AiPhotoPreviewComponent {
                   .filter(item => item.annotation.id !== this.activeAnnotation()?.id)
             : [],
     );
+    protected readonly mobileCardAnnotations = computed(() => {
+        return this.mobileAnnotations();
+    });
+    protected readonly mobileMarkerAnnotations = computed(() => {
+        const cardIds = new Set(this.mobileCardAnnotations().map(annotation => annotation.id));
+        return this.annotations()
+            .map((annotation, index) => ({ annotation, number: index + 1 }))
+            .filter(item => !cardIds.has(item.annotation.id));
+    });
 
     protected onImageLoaded(event: Event): void {
         const image = event.currentTarget;

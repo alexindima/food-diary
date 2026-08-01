@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { evaluateAiPhotoAnnotationLayout, optimizeAiPhotoAnnotationLayout } from './ai-photo-annotation-layout';
+import { evaluateAiPhotoAnnotationLayout, fitAiPhotoAnnotationLayout, optimizeAiPhotoAnnotationLayout } from './ai-photo-annotation-layout';
 import type { AiPhotoAnnotation } from './ai-photo-result.types';
 
 /* eslint-disable @typescript-eslint/no-magic-numbers -- Coordinates intentionally describe geometry test fixtures. */
@@ -54,6 +54,11 @@ const PORTRAIT_STAGE_RIGHT = 172;
 const PORTRAIT_STAGE_PADDING = 4;
 const PORTRAIT_TOGGLE_RESERVED_X = 130;
 const PORTRAIT_TOGGLE_RESERVED_BOTTOM = 18;
+const OVERSIZED_PRODUCT_COUNT = 18;
+const OVERSIZED_GRID_COLUMNS = 6;
+const OVERSIZED_GRID_START = 10;
+const OVERSIZED_GRID_X_STEP = 15;
+const OVERSIZED_GRID_Y_STEP = 35;
 
 function createAnnotations(points: ReadonlyArray<readonly [number, number]>): AiPhotoAnnotation[] {
     return points.map(([centerX, centerY], index) => ({
@@ -141,5 +146,30 @@ describe('AI photo annotation layout', () => {
 
     it('returns an empty layout without search work', () => {
         expect(optimizeAiPhotoAnnotationLayout([])).toEqual([]);
+    });
+
+    it('keeps every mobile card when the full layout satisfies the safety constraints', () => {
+        const annotations = createAnnotations(SCENARIOS[0]);
+
+        expect(fitAiPhotoAnnotationLayout(annotations, null)).toHaveLength(annotations.length);
+    });
+
+    it('reduces an oversized mobile layout while preserving the active annotation', () => {
+        const annotations = createAnnotations(
+            Array.from(
+                { length: OVERSIZED_PRODUCT_COUNT },
+                (_, index) =>
+                    [
+                        OVERSIZED_GRID_START + (index % OVERSIZED_GRID_COLUMNS) * OVERSIZED_GRID_X_STEP,
+                        OVERSIZED_GRID_START + Math.floor(index / OVERSIZED_GRID_COLUMNS) * OVERSIZED_GRID_Y_STEP,
+                    ] as const,
+            ),
+        );
+        const activeId = annotations.at(-1)?.id ?? null;
+        const layout = fitAiPhotoAnnotationLayout(annotations, activeId);
+
+        expect(layout.length).toBeGreaterThan(0);
+        expect(layout.length).toBeLessThan(annotations.length);
+        expect(layout.some(annotation => annotation.id === activeId)).toBe(true);
     });
 });

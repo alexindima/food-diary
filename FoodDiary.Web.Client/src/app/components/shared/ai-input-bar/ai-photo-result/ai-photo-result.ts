@@ -23,7 +23,7 @@ import { AiPhotoDetailsPanelComponent } from './ai-photo-details-panel/ai-photo-
 import { AiPhotoEditListComponent } from './ai-photo-edit-list/ai-photo-edit-list';
 import { AiPhotoPreviewComponent } from './ai-photo-preview/ai-photo-preview';
 import { AiPhotoResultActionsComponent } from './ai-photo-result-actions/ai-photo-result-actions';
-import { optimizeAiPhotoAnnotationLayout } from './ai-photo-result-lib/ai-photo-annotation-layout';
+import { fitAiPhotoAnnotationLayout, optimizeAiPhotoAnnotationLayout } from './ai-photo-result-lib/ai-photo-annotation-layout';
 import type {
     AiDetailsToggleView,
     AiEditActionView,
@@ -169,6 +169,7 @@ export class AiPhotoResultComponent {
             this.annotations().at(0)?.id ??
             null,
     );
+    protected readonly mobileAnnotations = computed(() => fitAiPhotoAnnotationLayout(this.annotations(), this.activeAnnotationId()));
     protected readonly editActionView = computed<AiEditActionView>(() =>
         this.isEditing()
             ? {

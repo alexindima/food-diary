@@ -83,7 +83,9 @@
 
     .cdk-overlay-pane.fd-ui-dialog-panel--edge-mobile {
         width: 100dvw !important;
+        height: auto !important;
         max-width: 100dvw !important;
+        max-height: 100dvh !important;
         margin: 0 !important;
     }
 
@@ -91,6 +93,12 @@
         padding: 0 !important;
         margin: 0 !important;
         border-radius: var(--fd-radius-dialog) var(--fd-radius-dialog) 0 0 !important;
+    }
+
+    .cdk-overlay-pane.fd-ai-photo-result-dialog-panel .cdk-dialog-container {
+        height: auto;
+        max-height: 100dvh;
+        border-radius: 0 !important;
     }
     /* stylelint-enable declaration-no-important */
 }

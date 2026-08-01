@@ -32,15 +32,36 @@
                             <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                                 @for (annotation of cardAnnotations(); track annotation.id) {
                                     <polyline
-                                        class="ai-photo-result__annotation-connector-outline"
+                                        class="ai-photo-result__annotation-connector-outline ai-photo-result__annotation-desktop"
                                         [attr.points]="annotation.connectorPath"
                                     />
-                                    <polyline class="ai-photo-result__annotation-connector-core" [attr.points]="annotation.connectorPath" />
+                                    <polyline
+                                        class="ai-photo-result__annotation-connector-core ai-photo-result__annotation-desktop"
+                                        [attr.points]="annotation.connectorPath"
+                                    />
+                                }
+                                @for (annotation of mobileCardAnnotations(); track annotation.id) {
+                                    <polyline
+                                        class="ai-photo-result__annotation-connector-outline ai-photo-result__annotation-mobile"
+                                        [attr.points]="annotation.connectorPath"
+                                    />
+                                    <polyline
+                                        class="ai-photo-result__annotation-connector-core ai-photo-result__annotation-mobile"
+                                        [attr.points]="annotation.connectorPath"
+                                    />
                                 }
                             </svg>
                             @for (annotation of cardAnnotations(); track annotation.id) {
                                 <span
-                                    class="ai-photo-result__annotation-point"
+                                    class="ai-photo-result__annotation-point ai-photo-result__annotation-desktop"
+                                    aria-hidden="true"
+                                    [style.left.%]="annotation.centerX"
+                                    [style.top.%]="annotation.centerY"
+                                ></span>
+                            }
+                            @for (annotation of mobileCardAnnotations(); track annotation.id) {
+                                <span
+                                    class="ai-photo-result__annotation-point ai-photo-result__annotation-mobile"
                                     aria-hidden="true"
                                     [style.left.%]="annotation.centerX"
                                     [style.top.%]="annotation.centerY"
@@ -48,7 +69,7 @@
                             }
                             @for (annotation of cardAnnotations(); track annotation.id) {
                                 <button
-                                    class="ai-photo-result__annotation-card"
+                                    class="ai-photo-result__annotation-card ai-photo-result__annotation-desktop"
                                     type="button"
                                     [class.ai-photo-result__annotation-card--active]="annotation.id === activeAnnotationId()"
                                     [style.left.%]="annotation.cardX"
@@ -69,9 +90,38 @@
                                     </div>
                                 </button>
                             }
+                            @for (annotation of mobileCardAnnotations(); track annotation.id) {
+                                <button
+                                    class="ai-photo-result__annotation-card ai-photo-result__annotation-card--mobile ai-photo-result__annotation-mobile"
+                                    type="button"
+                                    [class.ai-photo-result__annotation-card--active]="annotation.id === activeAnnotationId()"
+                                    [style.left.%]="annotation.cardX"
+                                    [style.top.%]="annotation.cardY"
+                                    [style.width.%]="annotation.cardWidth"
+                                    [attr.aria-label]="annotation.name"
+                                    (click)="annotationSelected.emit(annotation.id)"
+                                >
+                                    <strong>{{ annotation.name }}</strong>
+                                    <span class="ai-photo-result__annotation-mobile-calories">
+                                        {{ annotation.calories }} {{ 'GENERAL.UNITS.KCAL' | translate }}
+                                    </span>
+                                </button>
+                            }
                             @for (marker of markerAnnotations(); track marker.annotation.id) {
                                 <button
-                                    class="ai-photo-result__annotation-marker"
+                                    class="ai-photo-result__annotation-marker ai-photo-result__annotation-desktop"
+                                    type="button"
+                                    [style.left.%]="marker.annotation.centerX"
+                                    [style.top.%]="marker.annotation.centerY"
+                                    [attr.aria-label]="marker.annotation.name"
+                                    (click)="annotationSelected.emit(marker.annotation.id)"
+                                >
+                                    {{ marker.number }}
+                                </button>
+                            }
+                            @for (marker of mobileMarkerAnnotations(); track marker.annotation.id) {
+                                <button
+                                    class="ai-photo-result__annotation-marker ai-photo-result__annotation-mobile"
                                     type="button"
                                     [style.left.%]="marker.annotation.centerX"
                                     [style.top.%]="marker.annotation.centerY"
