@@ -336,6 +336,10 @@ export class AiInputBarComponent {
                 isProcessing: () => this.isProcessing(),
             },
         });
+        this.bindPhotoDialog(dialogRef);
+    }
+
+    private bindPhotoDialog(dialogRef: FdUiDialogRef<AiPhotoResultComponent>): void {
         const component = dialogRef.componentInstance;
         component?.dismissed.subscribe(() => {
             this.dismissPhotoResult();

@@ -68,13 +68,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "631e19c6f4857ea5dff89f5430760b9eb2dccb6df4e7cd9671322d1985432c74"
+                                            "sha256":  "1783579f698e6681c2f2e60e0b5cdfc9184fff6274f52a13ef2536b11f63de41"
                                         }
                                     ],
-                        "reason":  "Regenerated the frontend contract index after the merged AI photo dialog refactor; reviewed selector, inputs, outputs, and consumers, and the workflow guidance remains current.",
+                        "reason":  "Reviewed after merged frontend component and generated contract index updates; workflow guidance remains current.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e0819ceb65c3aff2153a76aeb2740175b3a1eaf0",
-                        "reviewedAtUtc":  "2026-08-01T14:45:44.3958136Z"
+                        "gitHead":  "f4278362e8313a0db5ff859875de3cf044864b7b",
+                        "reviewedAtUtc":  "2026-08-01T15:53:04.2514621Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -381,13 +381,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "953a0128ac4b1878c88e27e49688a6648d3111d93e9c62378643337c45ac6fa2"
+                                            "sha256":  "a63bbcb9091f2353ee688e389b74e0666adc59522b774f054b66d2e0e7ac4bc4"
                                         }
                                     ],
-                        "reason":  "Regenerated quality metrics after the merged AI photo component changes; reviewed the updated line and decision-point metrics, and the quality-risk guidance remains current.",
+                        "reason":  "Reviewed after merged frontend tests and quality index updates; risk guidance remains current.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e0819ceb65c3aff2153a76aeb2740175b3a1eaf0",
-                        "reviewedAtUtc":  "2026-08-01T14:45:48.5589132Z"
+                        "gitHead":  "f4278362e8313a0db5ff859875de3cf044864b7b",
+                        "reviewedAtUtc":  "2026-08-01T15:53:05.8263525Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -486,17 +486,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "631e19c6f4857ea5dff89f5430760b9eb2dccb6df4e7cd9671322d1985432c74"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "a10b307cbff610aafbe5f1554f2865780063315966651d0260b85f97897a35bb"
+                                            "sha256":  "1783579f698e6681c2f2e60e0b5cdfc9184fff6274f52a13ef2536b11f63de41"
                                         }
                                     ],
-                        "reason":  "Regenerated frontend navigation and contract indexes after the merged AI photo dialog refactor; reviewed the runtime owner and consumer trace, and the trace workflow remains current.",
+                        "reason":  "Reviewed after merged frontend contract index updates; feature tracing guidance remains current.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e0819ceb65c3aff2153a76aeb2740175b3a1eaf0",
-                        "reviewedAtUtc":  "2026-08-01T14:45:50.9354373Z"
+                        "gitHead":  "f4278362e8313a0db5ff859875de3cf044864b7b",
+                        "reviewedAtUtc":  "2026-08-01T15:53:07.9040793Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",
