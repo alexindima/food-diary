@@ -68,13 +68,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "f309f44158308d6de47e4117da0d5bca8a32ef0e527f7ca8d9625aac4a657889"
+                                            "sha256":  "631e19c6f4857ea5dff89f5430760b9eb2dccb6df4e7cd9671322d1985432c74"
                                         }
                                     ],
-                        "reason":  "Regenerated contract index; component changes preserve selector, inputs, outputs, API payloads, and consumer compatibility.",
+                        "reason":  "Regenerated the frontend contract index after the merged AI photo dialog refactor; reviewed selector, inputs, outputs, and consumers, and the workflow guidance remains current.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ddf7638c55a77d00dfc1caafdcbe21f0222586e",
-                        "reviewedAtUtc":  "2026-07-31T22:26:44.4562904Z"
+                        "gitHead":  "e0819ceb65c3aff2153a76aeb2740175b3a1eaf0",
+                        "reviewedAtUtc":  "2026-08-01T14:45:44.3958136Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -381,13 +381,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "6a3c1fc1da4734dbbb066c2b53985c3fc597300c81fe04654ffe1e8861eed2fb"
+                                            "sha256":  "953a0128ac4b1878c88e27e49688a6648d3111d93e9c62378643337c45ac6fa2"
                                         }
                                     ],
-                        "reason":  "The generated quality metric only reflects six added service error-handling lines and its focused regression test; quality-risk workflow guidance remains current.",
+                        "reason":  "Regenerated quality metrics after the merged AI photo component changes; reviewed the updated line and decision-point metrics, and the quality-risk guidance remains current.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9658762852d6adcb2e4c42de5e36a79012cb0d20",
-                        "reviewedAtUtc":  "2026-08-01T05:34:17.2109132Z"
+                        "gitHead":  "e0819ceb65c3aff2153a76aeb2740175b3a1eaf0",
+                        "reviewedAtUtc":  "2026-08-01T14:45:48.5589132Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -441,13 +441,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "33f6d956f9dd11769469d5ef485eb3a2b058d35e073c65d1a1bc977bd614d1b5"
+                                            "sha256":  "a93ec473d41b69f0c2dd9df04533c24750f873a01a3c99c8f9aaed0c01a5b19b"
                                         }
                                     ],
-                        "reason":  "Reviewed visual-qa facade parameters and routing; task dispatch lifecycle inputs and receipt fingerprints remain unchanged.",
+                        "reason":  "Reviewed router switch addition; dispatch routing and receipt inputs remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f881bf3fdf36a2ff9697de96c86e8104b3184d1",
-                        "reviewedAtUtc":  "2026-08-01T03:02:04.0305356Z"
+                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
+                        "reviewedAtUtc":  "2026-08-01T01:45:28.3560484Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",
@@ -486,17 +486,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "f309f44158308d6de47e4117da0d5bca8a32ef0e527f7ca8d9625aac4a657889"
+                                            "sha256":  "631e19c6f4857ea5dff89f5430760b9eb2dccb6df4e7cd9671322d1985432c74"
                                         },
                                         {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "700f5bccf57f24ec987182b883f6de8c22c5a2d684c3b5f243f6bdf0bc0ce0f4"
+                                            "sha256":  "a10b307cbff610aafbe5f1554f2865780063315966651d0260b85f97897a35bb"
                                         }
                                     ],
-                        "reason":  "Regenerated frontend and contract indexes; authoritative AI photo result component and current consumer trace were verified during implementation.",
+                        "reason":  "Regenerated frontend navigation and contract indexes after the merged AI photo dialog refactor; reviewed the runtime owner and consumer trace, and the trace workflow remains current.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ddf7638c55a77d00dfc1caafdcbe21f0222586e",
-                        "reviewedAtUtc":  "2026-07-31T22:26:45.4960901Z"
+                        "gitHead":  "e0819ceb65c3aff2153a76aeb2740175b3a1eaf0",
+                        "reviewedAtUtc":  "2026-08-01T14:45:50.9354373Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",
