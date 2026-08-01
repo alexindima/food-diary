@@ -35,6 +35,12 @@ Every critique covers seven policy-required review areas:
 - AI context security;
 - repair and operational closure.
 
+The security review area is always present, but a missing context-security
+artifact becomes a finding only when current packet evidence includes sensitive
+fields, privacy or security policy rules, external transfers, or provider
+integration. A presentation-only UI change does not receive
+`security-context-unassessed` solely because it renders inside an AI journey.
+
 Findings have stable IDs, severity, evidence, a concrete recommendation, and a
 blocking flag. Their penalties are applied to the current confidence score.
 Critical findings produce `reject`; other blocking findings or insufficient

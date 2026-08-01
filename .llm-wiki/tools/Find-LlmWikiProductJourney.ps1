@@ -21,17 +21,21 @@ if ([int]$catalog.schemaVersion -ne 1) { throw 'Unsupported product journey cata
 $paths = @($ChangedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | ForEach-Object { $_.Replace('\', '/') } | Sort-Object -Unique)
 $queryText = [string]$Query
 $journeyMatches = [Collections.Generic.List[object]]::new()
+function Test-QueryPhrase([string]$Text, [string]$Phrase) {
+    if ([string]::IsNullOrWhiteSpace($Text) -or [string]::IsNullOrWhiteSpace($Phrase)) { return $false }
+    $pattern = '(?<![\p{L}\p{Nd}])' + [regex]::Escape($Phrase) + '(?![\p{L}\p{Nd}])'
+    return [regex]::IsMatch($Text, $pattern, [Text.RegularExpressions.RegexOptions]::IgnoreCase)
+}
 foreach ($journey in @($catalog.journeys)) {
     $matchedAliases = @($journey.aliases | Where-Object {
-        -not [string]::IsNullOrWhiteSpace($queryText) -and $queryText.IndexOf([string]$_, [StringComparison]::OrdinalIgnoreCase) -ge 0
+        Test-QueryPhrase $queryText ([string]$_)
     })
     $matchedPaths = @($paths | Where-Object {
         $candidate = $_
         @($journey.pathPatterns | Where-Object { $candidate -match [string]$_ }).Count -gt 0
     })
-    $idMatch = -not [string]::IsNullOrWhiteSpace($queryText) -and (
-        $queryText.IndexOf([string]$journey.id, [StringComparison]::OrdinalIgnoreCase) -ge 0 -or
-        $queryText.IndexOf([string]$journey.title, [StringComparison]::OrdinalIgnoreCase) -ge 0)
+    $idMatch = (Test-QueryPhrase $queryText ([string]$journey.id)) -or
+        (Test-QueryPhrase $queryText ([string]$journey.title))
     $score = ($matchedAliases.Count * 20) + ($matchedPaths.Count * 15) + $(if ($idMatch) { 40 } else { 0 })
     if ($score -gt 0) {
         $journeyMatches.Add([pscustomobject][ordered]@{

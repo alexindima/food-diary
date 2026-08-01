@@ -64,6 +64,12 @@ signals for retrospective improvement, not proof that the Wiki caused quality.
 Ceremony budgets keep tiny and bug work short and reserve governed workspaces and
 independent critique for evidence that requires them.
 
+The `visual-ui-change` budget is a focused route for bounded frontend rendering
+work with unchanged API, provider, persistence, privacy, security,
+configuration, and architecture boundaries. It requires runtime-owner research,
+acceptance, focused component tests, a frontend build, and browser evidence,
+while avoiding governed critical ceremony and unrelated full-index refreshes.
+
 Research packets expose five stable lanes—flow, tests, integrations, precedents,
 and guidance—so independent investigation can be parallelized without making
 agent-specific scratch output part of the Wiki contract. Design checkpoints expose
