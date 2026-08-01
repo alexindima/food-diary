@@ -24,6 +24,13 @@ localization pairs, complete and incomplete EF migration pairs, extracted
 module detection, security-sensitive classification, and real-task navigation
 regressions. Optional `traceQuery` and `privacyQuery` expectations assert that
 an agent can find the expected flow and sensitive fields from a bug description.
+The visual UI regression also fixes the compact five-stage contract: visual
+brief, implementation, focused verification, browser evidence, and completion.
+This protects the reduced ceremony without weakening the publication gate.
+The dashboard contract-extension regression protects the distinction between
+existing sensitive read-model data and a changed sensitive-data lifecycle: the
+former remains a normal feature with API compatibility checks, while explicit
+migration and authentication cases remain critical.
 
 Each policy rule should have:
 

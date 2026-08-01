@@ -230,8 +230,27 @@
       "expectedViolationRules": [],
       "adaptiveObjective": "Improve photo annotation visibility with clearer SVG connectors and point styling.",
       "expectedAdaptiveProfile": "visual-ui-change",
-      "expectedAdaptiveStages": ["research", "acceptance", "implementation", "change-review", "focused-tests", "build", "browser-evidence"],
+      "expectedAdaptiveStages": ["visual-brief", "implementation", "focused-verification", "browser-evidence", "completion"],
       "unexpectedAdaptiveStages": ["design", "workspace", "independent-review"]
+    },
+    {
+      "id": "adaptive-existing-dashboard-contract-extension",
+      "changedPaths": [
+        "FoodDiary.Application/Dashboard/Models/DailyCaloriesModel.cs",
+        "FoodDiary.Application/Dashboard/Services/DashboardStatisticsMapper.cs",
+        "FoodDiary.Presentation.Api/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs",
+        "FoodDiary.Web.Client/src/app/features/dashboard/models/dashboard.data.ts",
+        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts"
+      ],
+      "expectedModules": ["Dashboard"],
+      "expectedScopes": ["Backend", "Api", "Frontend", "Contracts"],
+      "expectedRules": ["backend-boundaries", "api-contract", "frontend-workspace", "backend-public-contract"],
+      "expectedChecks": ["architecture-tests", "api-compatibility", "presentation-api-tests", "api-integration-tests", "frontend-verify"],
+      "expectedViolationRules": [],
+      "adaptiveObjective": "Extend the existing dashboard response and UI with a nutrition trend using existing daily calorie and macro totals.",
+      "expectedAdaptiveProfile": "feature",
+      "expectedAdaptiveStages": ["research", "journey-impact", "design", "implementation", "change-review", "verification"],
+      "unexpectedAdaptiveStages": ["workspace", "requirements", "delivery-validation", "independent-review"]
     },
     {
       "id": "dietologist-invitation-email-link-regression",

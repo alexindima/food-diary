@@ -20,14 +20,16 @@ $tiny = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
 Assert-Adaptive ($tiny.profile -eq 'visual-ui-change') 'Bounded visual work did not receive the visual UI route.'
 Assert-Adaptive (-not $tiny.requiresDesign -and -not $tiny.requiresWorkspace) 'Visual UI work retained heavyweight design or workspace requirements.'
 Assert-Adaptive (@($tiny.stages.id) -notcontains 'independent-review') 'Visual UI work retained critical independent review.'
-Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'change-review' -and $_.command -match 'verify-fast' }).Count -eq 1) 'Visual UI work did not select verify-fast.'
-Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'change-review' -and $_.command -match 'VisualUiCompletion' -and $_.completionEvidence -match 'publication gate' }).Count -eq 1) 'Visual UI work did not distinguish local completion from publication verification.'
-Assert-Adaptive (@($tiny.stages.id) -contains 'acceptance') 'Visual UI work omitted explicit acceptance.'
-Assert-Adaptive (@($tiny.stages.id) -contains 'focused-tests') 'Visual UI work omitted focused component tests.'
-Assert-Adaptive (@($tiny.stages.id) -contains 'build') 'Visual UI work omitted the frontend build.'
+Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'visual-brief' -and $_.command -match 'brief' -and $_.command -match 'Compact' -and $_.completionEvidence -match 'UI-kit' }).Count -eq 1) 'Visual UI work did not start with a compact ownership and design-system brief.'
+Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'completion' -and $_.command -match 'verify-fast' }).Count -eq 1) 'Visual UI work did not select verify-fast as its final local gate.'
+Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'completion' -and $_.command -match 'VisualUiCompletion' -and $_.completionEvidence -match 'publication gate' }).Count -eq 1) 'Visual UI work did not distinguish local completion from publication verification.'
+Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'focused-verification' -and $_.command -match 'test-plan' -and $_.command -match 'npm run build' }).Count -eq 1) 'Visual UI work did not combine focused tests and build into one verification stage.'
+Assert-Adaptive (@($tiny.stages | Where-Object required).Count -eq 5) 'Visual UI work exceeded its five-stage ceremony budget.'
+Assert-Adaptive (@($tiny.stages.id) -notcontains 'acceptance') 'Visual UI work retained a separate acceptance ceremony instead of using the compact brief.'
 Assert-Adaptive (@($tiny.stages.id) -contains 'browser-evidence') 'Visual UI work omitted browser evidence.'
 Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'browser-evidence' -and $_.purpose -notmatch 'desktop and mobile' -and $_.completionEvidence -match 'omitted viewports' }).Count -eq 1) 'Visual UI work still required unconditional desktop and mobile evidence.'
 Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'browser-evidence' -and $_.command -match 'visual-qa' -and $_.command -match 'FixturePath' }).Count -eq 1) 'Visual UI work did not select automated file-upload browser QA.'
+Assert-Adaptive ((@($tiny.stages | Where-Object id -eq 'browser-evidence')[0].order) -lt (@($tiny.stages | Where-Object id -eq 'completion')[0].order)) 'Visual UI work ran verify-fast before browser evidence.'
 Assert-Adaptive ($tiny.ceremonyBudget.label -eq 'visual-focused') 'Visual UI work omitted its focused ceremony budget.'
 
 $runtimeOwner = & (Join-Path $PSScriptRoot 'Get-LlmWikiFrontendRuntimeOwner.ps1') `
@@ -56,6 +58,35 @@ Assert-Adaptive ($ungroundedUiSurface.profile -eq 'ui-discovery') 'Ungrounded lo
 Assert-Adaptive (-not $ungroundedUiSurface.requiresWorkspace -and -not $ungroundedUiSurface.requiresDesign) 'UI discovery retained governed ceremony.'
 Assert-Adaptive ((@($ungroundedUiSurface.stages.id) -join ',') -eq 'research,reclassify') 'UI discovery emitted implementation stages before grounding paths.'
 Assert-Adaptive ($ungroundedUiSurface.stages[0].command -match 'ui-trace') 'UI discovery did not start with runtime-owner tracing.'
+
+$ungroundedDashboardFeature = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Add a dashboard nutrition trend using real daily calorie and macro totals.' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($ungroundedDashboardFeature.profile -eq 'scope-discovery') 'Ungrounded cross-layer feature intent was classified before existing-flow research.'
+Assert-Adaptive (-not $ungroundedDashboardFeature.requiresWorkspace -and -not $ungroundedDashboardFeature.requiresDesign) 'Scope discovery created feature or critical ceremony before grounding paths.'
+Assert-Adaptive ((@($ungroundedDashboardFeature.stages.id) -join ',') -eq 'scope-research,reclassify') 'Scope discovery emitted implementation stages before reclassification.'
+Assert-Adaptive ($ungroundedDashboardFeature.stages[0].command -match 'brief' -and $ungroundedDashboardFeature.stages[0].command -match 'research') 'Scope discovery omitted compact brief or existing-flow research.'
+
+$dashboardFeaturePaths = @(
+    'FoodDiary.Application/Dashboard/Models/DailyCaloriesModel.cs'
+    'FoodDiary.Application/Dashboard/Services/DashboardStatisticsMapper.cs'
+    'FoodDiary.Presentation.Api/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs'
+    'FoodDiary.Web.Client/src/app/features/dashboard/models/dashboard.data.ts'
+    'FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts'
+)
+$groundedDashboardFeature = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Extend the existing dashboard response and UI with a nutrition trend using existing daily calorie and macro totals.' `
+    -ProposedPath $dashboardFeaturePaths `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($groundedDashboardFeature.profile -eq 'feature') 'Grounded existing dashboard contract extension remained critical.'
+Assert-Adaptive (-not $groundedDashboardFeature.requiresWorkspace) 'Bounded single-module dashboard feature retained governed evidence workspace ceremony.'
+Assert-Adaptive ($groundedDashboardFeature.requiresDesign) 'Grounded dashboard feature lost its normal feature design checkpoint.'
+
+$migrationFeature = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Add a database migration to persist daily nutrition trend snapshots.' `
+    -ProposedPath 'FoodDiary.Infrastructure/Persistence/Migrations/AddNutritionTrendSnapshots.cs' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($migrationFeature.profile -eq 'critical' -and $migrationFeature.requiresWorkspace) 'Explicit persistence migration was weakened by scope discovery.'
 
 $replanJourney = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1') `
     -Query 'Preserve acceptance evidence during delivery replan.' `
