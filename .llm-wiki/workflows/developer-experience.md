@@ -64,6 +64,11 @@ signals for retrospective improvement, not proof that the Wiki caused quality.
 Ceremony budgets keep tiny and bug work short and reserve governed workspaces and
 independent critique for evidence that requires them.
 
+The `ui-discovery` budget prevents intent-only UI wording from selecting a
+governed route. It allows only runtime-owner research and grounded
+reclassification; inferred paths cannot authorize edits or introduce backend
+and auth context merely because the named screen belongs to a sensitive journey.
+
 The `visual-ui-change` budget is a focused route for bounded frontend rendering
 work with unchanged API, provider, persistence, privacy, security,
 configuration, and architecture boundaries. It requires runtime-owner research,

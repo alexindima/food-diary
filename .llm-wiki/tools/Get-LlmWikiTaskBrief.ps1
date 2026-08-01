@@ -45,7 +45,7 @@ if ($effectivePaths.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($Intent))
             Sort-Object -Unique
     )
     $normalizedIntent = $Intent.ToLowerInvariant()
-    $frontendIntent = $normalizedIntent -match '\b(frontend|component|template|html|css|scss|svg|style|styling|visual|layout|responsive|viewport|icon|colour|color|animation)\b'
+    $frontendIntent = $normalizedIntent -match '\b(frontend|component|template|html|css|scss|svg|style|styling|visual|layout|responsive|viewport|icon|colour|color|animation|button|disabled|corner|radius|border)\b'
     $backendIntent = $normalizedIntent -match '\b(backend|handler|command|query|controller|endpoint|database|migration|repository|service|domain|api)\b'
     $candidates = [System.Collections.Generic.List[object]]::new()
     $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'

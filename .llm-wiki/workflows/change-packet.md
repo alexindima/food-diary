@@ -17,6 +17,9 @@ sources:
 
 # Compile a Change Packet
 
+A packet exposes intent-inferred paths with low confidence. Confirm them with
+`-PlannedPath` before treating risk, ownership, or required checks as authoritative.
+
 Use one compiled packet when several change-aware views are needed:
 
 ```powershell

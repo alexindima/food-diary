@@ -17,6 +17,10 @@ sources:
 
 # Build a task brief
 
+Intent-inferred paths are low-confidence navigation evidence. For UI work,
+confirm the runtime owner with `ui-trace` and supply `-PlannedPath` before risk
+classification or editing.
+
 The brief computes diff and policy once, then passes those compiled objects to
 ownership, test-plan, rollout, and ADR analysis. Its JSON also includes the
 resolved rollout plan and decision context for downstream planning tools.
