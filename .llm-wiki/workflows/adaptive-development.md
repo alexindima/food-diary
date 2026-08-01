@@ -106,13 +106,23 @@ inferred path or journey:
 The trace walks template consumers from the rendered component back toward the
 feature entry point. A bounded frontend-only layout change with no API,
 provider, persistence, privacy, security, configuration, or architecture
-boundary uses the `visual-ui-change` profile: runtime-owner research, explicit
-acceptance, implementation, focused tests, frontend build, and browser evidence.
+boundary uses the `visual-ui-change` profile: a compact constraint and ownership
+brief, implementation, focused tests with frontend build, browser evidence, and
+a final local completion gate.
 It does not require a governed workspace or full index regeneration merely
 because the surrounding product journey is critical.
 
+The compact visual brief identifies the runtime owner, distinguishes reusable
+UI-kit surfaces from application-shell composition, loads scoped instructions,
+and records browser-verifiable constraints. It does not prescribe the visual
+solution. Layout exploration and UX judgment remain grounded in current code,
+the design system, and browser inspection. A separate acceptance stage and a
+full research packet are unnecessary unless the brief exposes an unresolved
+product, ownership, compatibility, or accessibility decision.
+
 For this profile, `verify-fast -VisualUiCompletion` is the local completion
-gate when the final diff remains frontend-only and does not change contracts,
+gate after focused tests, build, and browser evidence when the final diff
+remains frontend-only and does not change contracts,
 dependencies, architecture, providers, persistence, privacy, security, or
 configuration. Full `npm run verify` and full Wiki verification are publication
 gates supplied by the repository pre-push hook and CI; they are not repeated

@@ -69,12 +69,16 @@ governed route. It allows only runtime-owner research and grounded
 reclassification; inferred paths cannot authorize edits or introduce backend
 and auth context merely because the named screen belongs to a sensitive journey.
 
-The `visual-ui-change` budget is a focused route for bounded frontend rendering
-work with unchanged API, provider, persistence, privacy, security,
-configuration, and architecture boundaries. It requires runtime-owner research,
-acceptance, focused component tests, a frontend build, and browser evidence,
-while avoiding governed critical ceremony and unrelated full-index refreshes.
-Its local completion gate is `verify-fast -VisualUiCompletion`; repository
+The `visual-ui-change` budget is a five-stage focused route for bounded frontend
+rendering work with unchanged API, provider, persistence, privacy, security,
+configuration, and architecture boundaries. It starts with a compact brief that
+confirms runtime ownership, UI-kit versus application-shell placement, scoped
+instructions, design-system constraints, and observable outcomes. It then moves
+directly through implementation, combined focused tests and build, browser
+evidence, and final diff plus `verify-fast`, avoiding a separate acceptance
+ceremony, a full research packet, and unrelated full-index refreshes. The brief
+constrains the work but does not invent the UX solution; current code, the
+design system, and browser inspection remain the design inputs. Repository
 pre-push and CI retain the complete frontend and Wiki verification as
 publication gates. Browser QA follows the declared viewport scope instead of
 requiring mobile proof for every desktop-only patch.

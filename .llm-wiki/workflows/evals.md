@@ -24,6 +24,9 @@ localization pairs, complete and incomplete EF migration pairs, extracted
 module detection, security-sensitive classification, and real-task navigation
 regressions. Optional `traceQuery` and `privacyQuery` expectations assert that
 an agent can find the expected flow and sensitive fields from a bug description.
+The visual UI regression also fixes the compact five-stage contract: visual
+brief, implementation, focused verification, browser evidence, and completion.
+This protects the reduced ceremony without weakening the publication gate.
 
 Each policy rule should have:
 

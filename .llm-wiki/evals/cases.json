@@ -230,7 +230,7 @@
       "expectedViolationRules": [],
       "adaptiveObjective": "Improve photo annotation visibility with clearer SVG connectors and point styling.",
       "expectedAdaptiveProfile": "visual-ui-change",
-      "expectedAdaptiveStages": ["research", "acceptance", "implementation", "change-review", "focused-tests", "build", "browser-evidence"],
+      "expectedAdaptiveStages": ["visual-brief", "implementation", "focused-verification", "browser-evidence", "completion"],
       "unexpectedAdaptiveStages": ["design", "workspace", "independent-review"]
     },
     {
