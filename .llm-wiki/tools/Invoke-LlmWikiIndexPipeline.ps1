@@ -3,6 +3,7 @@ param(
     [switch]$Check,
     [switch]$AffectedOnly,
     [switch]$Plan,
+    [switch]$DeferPossiblyConcurrentStale,
     [string]$BaseRef = 'HEAD',
     [string[]]$ChangedPath,
     [ValidateRange(1, 8)]
@@ -13,6 +14,14 @@ $ErrorActionPreference = 'Stop'
 $toolsRoot = [System.IO.Path]::GetFullPath($PSScriptRoot)
 $shellPath = [System.IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
+
+function Get-WorkspaceChangedPaths {
+    $paths = @(& git -C $repositoryRoot diff --name-only --diff-filter=ACMRD HEAD --)
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to collect workspace changes for stale-index diagnostics.' }
+    $paths += @(& git -C $repositoryRoot ls-files --others --exclude-standard)
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to collect untracked paths for stale-index diagnostics.' }
+    return @($paths | ForEach-Object { $_.Replace('\', '/') } | Sort-Object -Unique)
+}
 
 if ($AffectedOnly -and -not $PSBoundParameters.ContainsKey('ChangedPath')) {
     $ChangedPath = @(& git -C $repositoryRoot diff --name-only --diff-filter=ACMRD $BaseRef --)
@@ -158,6 +167,23 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
         $worker.process.Dispose()
     }
     if ($failed.Count -gt 0) {
+        $failedToolNames = @($failed | ForEach-Object { ($_ -split ' \(exit=')[0] })
+        $workspaceChangedPaths = if ($DeferPossiblyConcurrentStale) { @(Get-WorkspaceChangedPaths) } else { @() }
+        $disposition = & (Join-Path $toolsRoot 'Get-LlmWikiStaleDisposition.ps1') `
+            -FailedTool $failedToolNames `
+            -WorkspaceChangedPath $workspaceChangedPaths
+        $canDefer = $CheckMode -and $DeferPossiblyConcurrentStale -and [bool]$disposition.canDefer
+        if ($canDefer) {
+            Write-Warning "Fast verification deferred $(@($disposition.artifacts).Count) stale index check(s) because every affected generated artifact is already modified in the working tree. This can indicate parallel Wiki work; do not overwrite those artifacts from this session."
+            foreach ($artifact in @($disposition.artifacts)) { Write-Host " - deferred: $artifact" }
+            Write-Host 'Run strict ./.llm-wiki/wiki.ps1 verify in the integration session before commit, push, or final handoff.'
+            Write-Output ([pscustomobject]@{
+                deferredStale = $true
+                disposition = [string]$disposition.disposition
+                artifacts = @($disposition.artifacts)
+            })
+            return
+        }
         if ($CheckMode) {
             Write-Host ''
             Write-Host 'One or more compiled indexes are stale. Regenerate the complete dependency-aware set with:'
