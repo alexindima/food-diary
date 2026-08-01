@@ -441,13 +441,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "a93ec473d41b69f0c2dd9df04533c24750f873a01a3c99c8f9aaed0c01a5b19b"
+                                            "sha256":  "33f6d956f9dd11769469d5ef485eb3a2b058d35e073c65d1a1bc977bd614d1b5"
                                         }
                                     ],
-                        "reason":  "Reviewed router switch addition; dispatch routing and receipt inputs remain unchanged.",
+                        "reason":  "Reviewed visual-qa facade parameters and routing; task dispatch lifecycle inputs and receipt fingerprints remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
-                        "reviewedAtUtc":  "2026-08-01T01:45:28.3560484Z"
+                        "gitHead":  "7f881bf3fdf36a2ff9697de96c86e8104b3184d1",
+                        "reviewedAtUtc":  "2026-08-01T03:02:04.0305356Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",
