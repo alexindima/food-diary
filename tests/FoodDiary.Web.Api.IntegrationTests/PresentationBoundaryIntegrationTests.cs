@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Ai.Requests;
@@ -682,10 +683,35 @@ public sealed class PresentationBoundaryIntegrationTests(
                     ? [.. responses.EnumerateObject()
                         .Select(response => response.Name)
                         .Order(StringComparer.Ordinal)]
-                    : Array.Empty<string>()))
+                    : Array.Empty<string>(),
+                CreateParameterSnapshots(operation.Value)))
             .OrderBy(operation => operation.Method, StringComparer.Ordinal)];
 
         return new EndpointSnapshot(path.ToLowerInvariant(), operations);
+    }
+
+    private static IReadOnlyList<OpenApiParameterSnapshot>? CreateParameterSnapshots(JsonElement operation) {
+        if (!operation.TryGetProperty("parameters", out JsonElement parameters) || parameters.ValueKind != JsonValueKind.Array) {
+            return null;
+        }
+
+        OpenApiParameterSnapshot[] snapshots = [.. parameters.EnumerateArray()
+            .Where(parameter => parameter.TryGetProperty("in", out JsonElement location) &&
+                string.Equals(location.GetString(), "query", StringComparison.Ordinal))
+            .Select(parameter => {
+                JsonElement schema = parameter.GetProperty("schema");
+                return new OpenApiParameterSnapshot(
+                    parameter.GetProperty("name").GetString() ?? string.Empty,
+                    parameter.GetProperty("in").GetString() ?? string.Empty,
+                    parameter.TryGetProperty("required", out JsonElement required) && required.GetBoolean(),
+                    schema.TryGetProperty("type", out JsonElement type) ? type.GetString() ?? string.Empty : string.Empty,
+                    schema.TryGetProperty("format", out JsonElement format) ? format.GetString() : null,
+                    schema.TryGetProperty("default", out JsonElement defaultValue) ? defaultValue.GetRawText() : null);
+            })
+            .OrderBy(parameter => parameter.Location, StringComparer.Ordinal)
+            .ThenBy(parameter => parameter.Name, StringComparer.Ordinal)];
+
+        return snapshots.Length == 0 ? null : snapshots;
     }
 
     private static async Task AssertErrorContractSnapshotAsync(string scenario, ErrorPayload payload) {
@@ -741,5 +767,18 @@ public sealed class PresentationBoundaryIntegrationTests(
     private sealed record EndpointSnapshot(string Path, IReadOnlyList<OperationSnapshot> Operations);
 
     [ExcludeFromCodeCoverage]
-    private sealed record OperationSnapshot(string Method, bool HasRequestBody, IReadOnlyList<string> ResponseCodes);
+    private sealed record OperationSnapshot(
+        string Method,
+        bool HasRequestBody,
+        IReadOnlyList<string> ResponseCodes,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] IReadOnlyList<OpenApiParameterSnapshot>? QueryParameters);
+
+    [ExcludeFromCodeCoverage]
+    private sealed record OpenApiParameterSnapshot(
+        string Name,
+        string Location,
+        bool Required,
+        string Type,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Format,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Default);
 }

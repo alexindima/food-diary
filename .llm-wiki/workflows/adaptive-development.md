@@ -81,6 +81,16 @@ localization, focused tests, and browser evidence remain applicable. New
 storage, migrations, external providers, changed sensitive-data lifecycle, and
 explicit auth or privacy boundaries still select `critical`.
 
+A confirmed bug may cross Frontend, API, Contracts, and Backend while remaining
+bounded when all edits belong to one existing module flow, the API change is
+additive, and no migration, provider, storage, sensitive-data lifecycle, or
+architecture boundary changes. This `bug` variant uses four required stages:
+compact root-cause brief and trace, implementation with regression coverage,
+focused producer/transport/consumer tests, and final diff plus `verify-fast`.
+Journeys and design remain optional unless the trace exposes a product decision
+or a second behavioral flow. Full verification stays enforced by pre-push and
+CI rather than blocking local bug completion.
+
 ## Grounded research
 
 Compile a bounded research packet before editing:

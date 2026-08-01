@@ -253,6 +253,25 @@
       "unexpectedAdaptiveStages": ["workspace", "requirements", "delivery-validation", "independent-review"]
     },
     {
+      "id": "adaptive-dashboard-local-day-bug",
+      "changedPaths": [
+        "FoodDiary.Application/Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
+        "FoodDiary.Application/Dashboard/Services/DashboardSectionDataLoader.cs",
+        "FoodDiary.Presentation.Api/Features/Dashboard/Requests/GetDashboardSnapshotHttpQuery.cs",
+        "FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard.service.ts",
+        "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar.facade.ts"
+      ],
+      "expectedModules": ["Dashboard"],
+      "expectedScopes": ["Backend", "Api", "Frontend", "Contracts"],
+      "expectedRules": ["backend-boundaries", "api-contract", "frontend-workspace", "backend-public-contract"],
+      "expectedChecks": ["architecture-tests", "api-compatibility", "presentation-api-tests", "api-integration-tests", "frontend-verify"],
+      "expectedViolationRules": [],
+      "adaptiveObjective": "Fix dashboard meal aggregation using the local calendar day by adding an optional backward-compatible query parameter to the existing dashboard flow.",
+      "expectedAdaptiveProfile": "bug",
+      "expectedAdaptiveStages": ["bug-brief", "implementation", "focused-verification", "completion"],
+      "unexpectedAdaptiveStages": ["journey-impact", "design", "workspace", "requirements", "verification"]
+    },
+    {
       "id": "dietologist-invitation-email-link-regression",
       "changedPaths": [
         "FoodDiary.Application/Dietologist/Services/DietologistEmailSender.cs"

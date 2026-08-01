@@ -76,6 +76,13 @@ workspace, security, rollout, or implementation ceremony starts until evidence
 proves the corresponding boundary. Existing sensitive fields remain visible as
 review context without automatically escalating an unchanged data lifecycle.
 
+The bounded cross-layer bug route treats layer count as transport shape rather
+than feature scope. Once current sources prove one root cause and one existing
+module flow, an additive Frontend/API/Backend fix uses a compact brief and trace,
+implementation, focused tests, then diff plus `verify-fast`. Journey mapping,
+design, and full local verification become conditional; publication hooks and
+CI remain strict.
+
 The `visual-ui-change` budget is a five-stage focused route for bounded frontend
 rendering work with unchanged API, provider, persistence, privacy, security,
 configuration, and architecture boundaries. It starts with a compact brief that

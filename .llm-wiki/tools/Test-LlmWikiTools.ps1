@@ -318,6 +318,38 @@ Assert-Wiki ($endpointCompatibility.snapshotFormat -eq 'endpoint-contract') 'API
 Assert-Wiki ($endpointCompatibility.additiveCount -eq 1) 'API compatibility did not classify an added endpoint-contract path as additive.'
 Assert-Wiki (@($endpointCompatibility.changes.kind) -contains 'added-path') 'API compatibility did not report the added endpoint-contract path.'
 
+$baseQueryContract = @{
+    OpenApi = '3.0.4'
+    Endpoints = @(
+        @{ Path = '/api/v{version}/query'; Operations = @(
+            @{ Method = 'get'; HasRequestBody = $false; ResponseCodes = @('200'); QueryParameters = @(
+                @{ Name = 'stable'; Location = 'query'; Required = $false; Type = 'string' }
+                @{ Name = 'removed'; Location = 'query'; Required = $false; Type = 'integer'; Format = 'int32' }
+            ) }
+        ) }
+    )
+} | ConvertTo-Json -Depth 10
+$currentQueryContract = @{
+    OpenApi = '3.0.4'
+    Endpoints = @(
+        @{ Path = '/api/v{version}/query'; Operations = @(
+            @{ Method = 'get'; HasRequestBody = $false; ResponseCodes = @('200'); QueryParameters = @(
+                @{ Name = 'stable'; Location = 'query'; Required = $true; Type = 'integer'; Format = 'int32' }
+                @{ Name = 'optionalAdded'; Location = 'query'; Required = $false; Type = 'string' }
+            ) }
+        ) }
+    )
+} | ConvertTo-Json -Depth 10
+$queryCompatibilityJson = & (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibility.ps1') `
+    -BaseSnapshotContent $baseQueryContract `
+    -CurrentSnapshotContent $currentQueryContract `
+    -Format Json
+$queryCompatibility = $queryCompatibilityJson | ConvertFrom-Json
+Assert-Wiki (@($queryCompatibility.changes.kind) -contains 'added-optional-parameter') 'API compatibility did not classify an optional query parameter addition as additive.'
+Assert-Wiki (@($queryCompatibility.changes.kind) -contains 'removed-parameter') 'API compatibility did not classify a removed query parameter as breaking.'
+Assert-Wiki (@($queryCompatibility.changes.kind) -contains 'required-parameter') 'API compatibility did not classify query parameter requiredness as breaking.'
+Assert-Wiki (@($queryCompatibility.changes.kind) -contains 'changed-parameter') 'API compatibility did not classify a query parameter shape change as breaking.'
+
 $baseSchemaContract = @{
     openapi = '3.0.4'
     paths = @{}

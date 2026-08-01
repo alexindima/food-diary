@@ -82,6 +82,24 @@ Assert-Adaptive ($groundedDashboardFeature.profile -eq 'feature') 'Grounded exis
 Assert-Adaptive (-not $groundedDashboardFeature.requiresWorkspace) 'Bounded single-module dashboard feature retained governed evidence workspace ceremony.'
 Assert-Adaptive ($groundedDashboardFeature.requiresDesign) 'Grounded dashboard feature lost its normal feature design checkpoint.'
 
+$dashboardLocalDayBugPaths = @(
+    'FoodDiary.Application/Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs'
+    'FoodDiary.Application/Dashboard/Services/DashboardSectionDataLoader.cs'
+    'FoodDiary.Presentation.Api/Features/Dashboard/Requests/GetDashboardSnapshotHttpQuery.cs'
+    'FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard.service.ts'
+    'FoodDiary.Web.Client/src/app/shell/sidebar/sidebar.facade.ts'
+)
+$dashboardLocalDayBug = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Fix dashboard meal aggregation using the local calendar day by adding an optional backward-compatible query parameter to the existing dashboard flow.' `
+    -ProposedPath $dashboardLocalDayBugPaths `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($dashboardLocalDayBug.profile -eq 'bug') 'Bounded cross-layer Dashboard fix was elevated to feature.'
+Assert-Adaptive (-not $dashboardLocalDayBug.requiresDesign -and -not $dashboardLocalDayBug.requiresWorkspace) 'Bounded cross-layer bug retained design or workspace ceremony.'
+Assert-Adaptive ((@($dashboardLocalDayBug.stages | Where-Object required).id -join ',') -eq 'bug-brief,implementation,focused-verification,completion') 'Bounded cross-layer bug did not receive the four-stage compact route.'
+Assert-Adaptive (@($dashboardLocalDayBug.stages | Where-Object { $_.id -eq 'bug-brief' -and $_.command -match 'Compact' -and $_.command -match 'trace' }).Count -eq 1) 'Bounded cross-layer bug omitted compact root-cause tracing.'
+Assert-Adaptive (@($dashboardLocalDayBug.stages.id) -notcontains 'journey-impact' -and @($dashboardLocalDayBug.stages.id) -notcontains 'design') 'Bounded cross-layer bug retained mandatory journey or design stages.'
+Assert-Adaptive (@($dashboardLocalDayBug.stages | Where-Object { $_.id -eq 'completion' -and $_.command -match 'verify-fast' }).Count -eq 1) 'Bounded cross-layer bug did not finish with the fast local gate.'
+
 $migrationFeature = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Add a database migration to persist daily nutrition trend snapshots.' `
     -ProposedPath 'FoodDiary.Infrastructure/Persistence/Migrations/AddNutritionTrendSnapshots.cs' `

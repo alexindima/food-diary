@@ -12,6 +12,15 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Hours",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            }
           ]
         }
       ]
@@ -58,6 +67,22 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "From",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
+              "Name": "To",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            }
           ]
         }
       ]
@@ -74,6 +99,60 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Kind",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Provider",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Status",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            }
           ]
         }
       ]
@@ -90,6 +169,60 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Kind",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Provider",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Status",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            }
           ]
         }
       ]
@@ -106,6 +239,60 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Kind",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Provider",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Status",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            }
           ]
         }
       ]
@@ -121,6 +308,15 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Recent",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            }
           ]
         }
       ]
@@ -254,6 +450,15 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            }
           ]
         }
       ]
@@ -301,6 +506,28 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Status",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -348,6 +575,15 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Hours",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            }
           ]
         }
       ]
@@ -364,6 +600,40 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "IncludeDeleted",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Status",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -376,6 +646,15 @@
             "403",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "actorUserId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -392,6 +671,22 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "ClientUserId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            }
           ]
         }
       ]
@@ -408,6 +703,28 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -424,6 +741,35 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "UserId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -440,6 +786,22 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            }
           ]
         }
       ]
@@ -469,6 +831,15 @@
             "403",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "actorUserId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -486,6 +857,15 @@
             "403",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "actorUserId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -520,6 +900,15 @@
             "403",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            }
           ]
         }
       ]
@@ -538,6 +927,15 @@
             "429",
             "500",
             "502"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -556,6 +954,15 @@
             "429",
             "500",
             "502"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -574,6 +981,15 @@
             "429",
             "500",
             "502"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -588,6 +1004,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -619,6 +1044,15 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -653,6 +1087,15 @@
             "409",
             "429",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -778,6 +1221,15 @@
             "404",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -846,6 +1298,15 @@
             "404",
             "429",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -862,6 +1323,15 @@
             "401",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -877,6 +1347,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -892,6 +1371,15 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -907,6 +1395,15 @@
             "401",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -935,6 +1432,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -951,6 +1457,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -966,6 +1481,75 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "CaloriesFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "CaloriesTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "DateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "DateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "HasAiSession",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "HasImage",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "MealTypes",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -976,6 +1560,15 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -991,6 +1584,82 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "CaloriesFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "CaloriesTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "DateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "DateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "FavoriteLimit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "HasAiSession",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "HasImage",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "MealTypes",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1006,6 +1675,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -1016,6 +1694,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -1027,6 +1714,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1042,6 +1738,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1057,6 +1762,15 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1071,6 +1785,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1086,6 +1809,29 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "dateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "dateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1102,6 +1848,22 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "date",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -1113,6 +1875,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1129,6 +1900,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1144,6 +1924,56 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Date",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Locale",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "PageSize",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "TimeZoneOffsetMinutes",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "TrendDays",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1159,6 +1989,28 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Date",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Locale",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1174,6 +2026,15 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1190,6 +2051,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1205,6 +2075,15 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1220,6 +2099,50 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "CalorieDeviationPercent",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "InactivityDays",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "LookbackDays",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "SustainedDays",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "WeightChangePercent",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1237,6 +2160,15 @@
             "403",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1253,6 +2185,15 @@
             "403",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1269,6 +2210,15 @@
             "403",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1285,6 +2235,63 @@
             "403",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Date",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "DateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "DateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Locale",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "PageSize",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "TrendDays",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1301,6 +2308,15 @@
             "403",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1316,6 +2332,15 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -1327,6 +2352,15 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1342,6 +2376,15 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -1354,6 +2397,15 @@
             "403",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1369,6 +2421,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1384,6 +2445,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1400,6 +2470,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1415,6 +2494,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1431,6 +2519,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1447,6 +2544,15 @@
             "401",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1461,6 +2567,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1476,6 +2591,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1491,6 +2615,28 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "includeArchived",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean",
+              "Default": "false"
+            },
+            {
+              "Name": "search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -1502,6 +2648,15 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1518,6 +2673,15 @@
             "403",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -1529,6 +2693,15 @@
             "403",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1545,6 +2718,15 @@
             "401",
             "403",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1560,6 +2742,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -1569,6 +2760,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1583,6 +2783,29 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "dateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "dateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -1592,6 +2815,15 @@
             "201",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1606,6 +2838,15 @@
             "204",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -1615,6 +2856,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1629,6 +2879,36 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "dateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "dateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "timeZoneOffsetMinutes",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1643,6 +2923,55 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "dateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "dateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "format",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Default": "\u0022csv\u0022"
+            },
+            {
+              "Name": "locale",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "reportOrigin",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "timeZoneOffsetMinutes",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1657,6 +2986,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1673,6 +3011,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1689,6 +3036,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1705,6 +3061,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1721,6 +3086,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1737,6 +3111,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1752,6 +3135,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1766,6 +3158,43 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "From",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "To",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1780,6 +3209,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1794,6 +3232,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1810,6 +3257,15 @@
             "401",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1824,6 +3280,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1838,6 +3303,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -1849,6 +3323,15 @@
             "401",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1863,6 +3346,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1878,6 +3370,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1892,6 +3393,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -1903,6 +3413,15 @@
             "401",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1917,6 +3436,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1932,6 +3460,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -1943,6 +3480,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1957,6 +3503,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -1968,6 +3523,15 @@
             "401",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1982,6 +3546,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -1997,6 +3570,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2011,6 +3593,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2026,6 +3617,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2037,6 +3637,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2052,6 +3661,22 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "DateUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2063,6 +3688,15 @@
             "401",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2078,6 +3712,22 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "DateUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2093,6 +3743,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2105,6 +3764,15 @@
             "404",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2122,6 +3790,15 @@
             "429",
             "500",
             "502"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2139,6 +3816,15 @@
             "409",
             "500",
             "502"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2153,6 +3839,28 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "category",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "locale",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Default": "\u0022en\u0022"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2167,6 +3875,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2181,6 +3898,15 @@
             "204",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2195,6 +3921,21 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "dietType",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2209,6 +3950,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2223,6 +3973,15 @@
             "201",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2237,6 +3996,15 @@
             "201",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2251,6 +4019,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2266,6 +4043,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2277,6 +4063,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2305,6 +4100,15 @@
             "204",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2315,6 +4119,15 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2329,6 +4142,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2343,6 +4165,15 @@
             "204",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2357,6 +4188,15 @@
             "202",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2371,6 +4211,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2386,6 +4235,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2400,6 +4258,22 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "10"
+            },
+            {
+              "Name": "search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2429,6 +4303,67 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "CaloriesFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "CaloriesTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "HasImage",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "IncludePublic",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "ProductTypes",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2440,6 +4375,15 @@
             "401",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2455,6 +4399,81 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "CaloriesFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "CaloriesTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "FavoriteLimit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "HasImage",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "IncludePublic",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "ProductTypes",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "RecentLimit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2470,6 +4489,28 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "IncludePublic",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2485,6 +4526,22 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "5"
+            },
+            {
+              "Name": "search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2500,6 +4557,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2510,6 +4576,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2522,6 +4597,15 @@
             "404",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2537,6 +4621,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2552,6 +4645,74 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "CaloriesFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "CaloriesTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "Category",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "HasImage",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "IncludePublic",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "MaxTotalTime",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2563,6 +4724,15 @@
             "401",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2577,6 +4747,54 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Category",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "MaxPrepTime",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "SortBy",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2592,6 +4810,88 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "CaloriesFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "CaloriesTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "Category",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "FavoriteLimit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "HasImage",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "IncludePublic",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "MaxTotalTime",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "RecentLimit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2607,6 +4907,28 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "IncludePublic",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2622,6 +4944,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2632,6 +4963,22 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "includePublic",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean",
+              "Default": "true"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2644,6 +4991,15 @@
             "404",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2659,6 +5015,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2673,6 +5038,31 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "20"
+            },
+            {
+              "Name": "page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2682,6 +5072,15 @@
             "201",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2697,6 +5096,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2707,6 +5115,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2721,6 +5138,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2735,6 +5161,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2749,6 +5184,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2764,6 +5208,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2775,6 +5228,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2790,6 +5252,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2804,6 +5275,15 @@
             "201",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2818,6 +5298,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2828,6 +5317,15 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2842,6 +5340,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2857,6 +5364,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2867,6 +5383,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2878,6 +5403,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2893,6 +5427,36 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "DateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "DateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "QuantizationDays",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2907,6 +5471,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2921,6 +5494,22 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "date",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2935,6 +5524,22 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "20"
+            },
+            {
+              "Name": "search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2963,6 +5568,15 @@
             "204",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -2972,6 +5586,15 @@
             "204",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -2987,6 +5610,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3002,6 +5634,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -3012,6 +5653,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3027,6 +5677,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -3038,6 +5697,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3053,6 +5721,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -3064,6 +5741,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3079,6 +5765,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -3090,6 +5785,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3105,6 +5809,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3121,6 +5834,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3137,6 +5859,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3153,6 +5884,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3168,6 +5908,42 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "DateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "DateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Sort",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -3179,6 +5955,15 @@
             "401",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3193,6 +5978,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3208,6 +6002,36 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "DateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "DateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "QuantizationDays",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3223,6 +6047,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -3235,6 +6068,15 @@
             "404",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3249,6 +6091,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3263,6 +6114,22 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "date",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3277,6 +6144,21 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "state",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3291,6 +6173,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3305,6 +6196,15 @@
             "204",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3319,6 +6219,22 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "date",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3333,6 +6249,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3348,6 +6273,42 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "DateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "DateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Sort",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -3359,6 +6320,15 @@
             "401",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3373,6 +6343,15 @@
             "200",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3388,6 +6367,36 @@
             "400",
             "401",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "DateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "DateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "QuantizationDays",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]
@@ -3403,6 +6412,15 @@
             "401",
             "404",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         },
         {
@@ -3415,6 +6433,15 @@
             "404",
             "409",
             "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
           ]
         }
       ]

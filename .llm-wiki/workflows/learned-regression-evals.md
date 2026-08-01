@@ -61,3 +61,6 @@ The existing dashboard contract-extension case likewise prevents sensitive
 read-model references from automatically forcing governed critical ceremony;
 explicit authentication and migration cases preserve the true critical
 boundary.
+The Dashboard local-day case also protects bounded cross-layer bug routing so
+layer count alone cannot restore mandatory journeys, design, or full local
+verification.

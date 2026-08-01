@@ -55,8 +55,20 @@ function ConvertTo-ComparableOpenApi {
                 foreach ($responseCode in @($operation.ResponseCodes)) {
                     $responses[[string]$responseCode] = [ordered]@{}
                 }
+                $parameters = @($operation.QueryParameters | Where-Object { $null -ne $_ } | ForEach-Object {
+                    [ordered]@{
+                        name = [string]$_.Name
+                        in = [string]$_.Location
+                        required = [bool]$_.Required
+                        schema = [ordered]@{
+                            type = [string]$_.Type
+                            format = [string]$_.Format
+                            default = $_.Default
+                        }
+                    }
+                })
                 $operations[[string]$operation.Method.ToLowerInvariant()] = [ordered]@{
-                    parameters = @()
+                    parameters = $parameters
                     responses = $responses
                 }
             }
@@ -234,12 +246,35 @@ foreach ($pathProperty in Get-Properties $before.paths) {
         $beforeParameters = @($methodProperty.Value.parameters)
         $afterParameters = @($afterMethodProperty.Value.parameters)
         foreach ($afterParameter in $afterParameters) {
-            if (-not $afterParameter.required) { continue }
-            $wasPresent = @($beforeParameters | Where-Object {
+            $beforeParameter = @($beforeParameters | Where-Object {
                 $_.name -eq $afterParameter.name -and $_.in -eq $afterParameter.in
+            } | Select-Object -First 1)
+            $location = "$($method.ToUpperInvariant()) ${path}::$($afterParameter.in).$($afterParameter.name)"
+            if ($beforeParameter.Count -eq 0) {
+                if ($afterParameter.required) {
+                    Add-Change $changes 'breaking' 'added-required-parameter' $location 'Required parameter was added.'
+                } else {
+                    Add-Change $changes 'additive' 'added-optional-parameter' $location 'Optional parameter was added.'
+                }
+                continue
+            }
+            $beforeParameter = $beforeParameter[0]
+            if (-not $beforeParameter.required -and $afterParameter.required) {
+                Add-Change $changes 'breaking' 'required-parameter' $location 'Parameter became required.'
+            }
+            $beforeShape = "$($beforeParameter.schema.type)|$($beforeParameter.schema.format)|default=$($beforeParameter.schema.default)"
+            $afterShape = "$($afterParameter.schema.type)|$($afterParameter.schema.format)|default=$($afterParameter.schema.default)"
+            if ($beforeShape -ne $afterShape) {
+                Add-Change $changes 'breaking' 'changed-parameter' $location "Parameter shape changed from '$beforeShape' to '$afterShape'."
+            }
+        }
+        foreach ($beforeParameter in $beforeParameters) {
+            $stillPresent = @($afterParameters | Where-Object {
+                $_.name -eq $beforeParameter.name -and $_.in -eq $beforeParameter.in
             }).Count -gt 0
-            if (-not $wasPresent) {
-                Add-Change $changes 'breaking' 'added-required-parameter' "$($method.ToUpperInvariant()) $path" "Required $($afterParameter.in) parameter '$($afterParameter.name)' was added."
+            if (-not $stillPresent) {
+                $location = "$($method.ToUpperInvariant()) ${path}::$($beforeParameter.in).$($beforeParameter.name)"
+                Add-Change $changes 'breaking' 'removed-parameter' $location 'Public API parameter was removed.'
             }
         }
 

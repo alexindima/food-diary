@@ -31,6 +31,9 @@ The dashboard contract-extension regression protects the distinction between
 existing sensitive read-model data and a changed sensitive-data lifecycle: the
 former remains a normal feature with API compatibility checks, while explicit
 migration and authentication cases remain critical.
+The local-day Dashboard bug regression ensures an additive query parameter can
+cross frontend, HTTP, and application layers without being promoted to a
+feature; the expected route remains the compact four-stage bug workflow.
 
 Each policy rule should have:
 
