@@ -102,6 +102,18 @@ function createPushSubscription(
 }
 
 describe('PushNotificationService subscription support', () => {
+    it('should mark push unsupported when the subscription stream fails', async () => {
+        const subscription = createPushSubscription('https://push.example.com/subscriptions/current');
+        subscription$.next(subscription);
+
+        subscription$.error(new TypeError('PushManager is unavailable'));
+
+        expect(service.isSupported()).toBe(false);
+        expect(service.isSubscribed()).toBe(false);
+        expect(service.currentSubscriptionEndpoint()).toBeNull();
+        await expect(service.ensureSubscriptionAsync()).resolves.toBe('unsupported');
+    });
+
     it('should return unsupported when service worker push is disabled', async () => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({

@@ -654,11 +654,11 @@
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts",
-                         "nonBlankLines":  174,
+                         "nonBlankLines":  180,
                          "decisionPoints":  28,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  45.48
+                         "structuralRiskScore":  45.6
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.ts",
@@ -29840,11 +29840,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts",
-                      "nonBlankLines":  174,
+                      "nonBlankLines":  180,
                       "decisionPoints":  28,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  45.48
+                      "structuralRiskScore":  45.6
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/shared/observability/client-telemetry-session.service.ts",
