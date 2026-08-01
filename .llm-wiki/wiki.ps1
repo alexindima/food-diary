@@ -2,7 +2,7 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify', 'verify-full', 'develop', 'status', 'next', 'research', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
+        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify', 'verify-full', 'develop', 'status', 'next', 'research', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'diff', 'impact', 'review', 'ownership', 'api-compat', 'policy',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
@@ -124,6 +124,16 @@ param(
     [string[]]$ExcludedPath,
     [double]$DurationSeconds,
     [string]$OutputPath,
+    [string]$Url,
+    [string]$FixturePath,
+    [string]$ResultSelector,
+    [string]$TriggerSelector,
+    [string]$FileSelector = 'input[type=file]',
+    [string]$StorageStatePath,
+    [Nullable[int]]$ViewportWidth,
+    [Nullable[int]]$ViewportHeight,
+    [Nullable[int]]$TimeoutMs,
+    [switch]$Run,
     [ValidateSet('screenshot', 'browser-log', 'accessibility-report', 'video')]
     [string]$EvidenceKind = 'screenshot',
     [string]$ExportPath,
@@ -414,6 +424,19 @@ switch ($Command) {
         $qaArguments = @{ Objective = $Objective; Format = $Format }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $qaArguments.ProposedPath = $ProposedPath }
         Invoke-WikiTool 'Get-LlmWikiManualQaPlan.ps1' $qaArguments
+    }
+    'visual-qa' {
+        foreach ($requiredValue in @(@{ name = 'Url'; value = $Url }, @{ name = 'FixturePath'; value = $FixturePath }, @{ name = 'ResultSelector'; value = $ResultSelector })) {
+            if ([string]::IsNullOrWhiteSpace([string]$requiredValue.value)) { throw "visual-qa requires -$($requiredValue.name)." }
+        }
+        $visualQaArguments = @{ Url = $Url; FixturePath = $FixturePath; ResultSelector = $ResultSelector; FileSelector = $FileSelector; Run = $Run; Format = $Format }
+        if ($TriggerSelector) { $visualQaArguments.TriggerSelector = $TriggerSelector }
+        if ($StorageStatePath) { $visualQaArguments.StorageStatePath = $StorageStatePath }
+        if ($OutputPath) { $visualQaArguments.ScreenshotPath = $OutputPath }
+        if ($null -ne $ViewportWidth) { $visualQaArguments.ViewportWidth = $ViewportWidth }
+        if ($null -ne $ViewportHeight) { $visualQaArguments.ViewportHeight = $ViewportHeight }
+        if ($null -ne $TimeoutMs) { $visualQaArguments.TimeoutMs = $TimeoutMs }
+        Invoke-WikiTool 'Invoke-LlmWikiVisualQa.ps1' $visualQaArguments
     }
     'workflow-metrics' {
         Invoke-WikiTool 'Get-LlmWikiWorkflowMetrics.ps1' @{ TasksPath = $TasksPath; Format = $Format }
@@ -2029,6 +2052,7 @@ switch ($Command) {
         Write-Host "  ./.llm-wiki/wiki.ps1 design -Intent '<task>' [-PlannedPath 'path/one','path/two']"
         Write-Host '  ./.llm-wiki/wiki.ps1 phase-status|phase-next|phase-complete -WorkspacePath <task> [-PhaseId <id>]'
         Write-Host "  ./.llm-wiki/wiki.ps1 qa -Intent '<task>' [-PlannedPath 'path/one','path/two']"
+        Write-Host "  ./.llm-wiki/wiki.ps1 visual-qa -Url <url> -FixturePath <file> -ResultSelector <selector> [-TriggerSelector <selector>] [-StorageStatePath <file>] [-Run]"
         Write-Host '  ./.llm-wiki/wiki.ps1 workflow-metrics [-TasksPath .artifacts/llm-wiki/tasks]'
         Write-Host '  ./.llm-wiki/wiki.ps1 pause -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
         Write-Host '  ./.llm-wiki/wiki.ps1 resume -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
