@@ -55,6 +55,15 @@ public sealed class ContainerSupplyChainGuardrailTests {
     }
 
     [Fact]
+    public void DeployWorkflow_SerializesDeploysWithoutCancellingTheActiveRun() {
+        string workflow = ReadDeployWorkflow();
+
+        Assert.Contains("group: fooddiary-production-deploy", workflow, StringComparison.Ordinal);
+        Assert.Contains("cancel-in-progress: false", workflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("cancel-in-progress: true", workflow, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void SigningScript_RejectsPlainManifestsAndVerifiesKeylessSignature() {
         string scriptPath = ArchitectureTestPaths.FromRoot(
             ".github",

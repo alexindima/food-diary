@@ -16,7 +16,7 @@ env:
 
 concurrency:
   group: fooddiary-production-deploy
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
