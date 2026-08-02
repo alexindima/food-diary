@@ -1,5 +1,8 @@
 [CmdletBinding()]
-param([switch]$Check)
+param(
+    [switch]$Check,
+    [switch]$ReuseUnchangedCheck
+)
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
@@ -7,6 +10,58 @@ $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
 $outputPath = Join-Path $wikiRoot 'generated/quality-index.json'
+$cachePath = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-cache/quality-index.json'
+
+function Get-FileSha256([string]$Path) {
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $stream = [System.IO.File]::OpenRead($Path)
+        try { return ([BitConverter]::ToString($sha.ComputeHash($stream)) -replace '-', '').ToLowerInvariant() }
+        finally { $stream.Dispose() }
+    } finally { $sha.Dispose() }
+}
+
+function Get-TextSha256([string]$Value) {
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        return ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($Value))) -replace '-', '').ToLowerInvariant()
+    } finally { $sha.Dispose() }
+}
+
+function Get-QualityInputFingerprint {
+    $sourcePaths = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard -- '*.cs' '*.ts')
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate quality-index inputs.' }
+    $sourcePaths += @(
+        '.llm-wiki/generated/csharp-symbol-index.json'
+        '.llm-wiki/tools/Build-LlmWikiQualityIndex.ps1'
+        '.llm-wiki/tools/LlmWikiJson.ps1'
+    )
+    $entries = foreach ($relativePath in @($sourcePaths | Sort-Object -Unique)) {
+        $absolutePath = Join-Path $repositoryRoot $relativePath
+        if (Test-Path -LiteralPath $absolutePath -PathType Leaf) {
+            "$($relativePath.Replace('\', '/')):$(Get-FileSha256 $absolutePath)"
+        }
+    }
+    return Get-TextSha256 ($entries -join "`n")
+}
+
+$inputFingerprint = Get-QualityInputFingerprint
+if ($Check -and $ReuseUnchangedCheck -and
+    (Test-Path -LiteralPath $cachePath -PathType Leaf) -and
+    (Test-Path -LiteralPath $outputPath -PathType Leaf)) {
+    try {
+        $receipt = Get-Content -LiteralPath $cachePath -Raw | ConvertFrom-Json
+        $outputFingerprint = Get-FileSha256 $outputPath
+        if ([int]$receipt.schemaVersion -eq 1 -and
+            [string]$receipt.inputFingerprint -ceq $inputFingerprint -and
+            [string]$receipt.outputFingerprint -ceq $outputFingerprint) {
+            Write-Host 'Quality index cache hit: inputs, generator, and output are unchanged.'
+            exit 0
+        }
+    } catch {
+        Write-Verbose "Ignoring invalid quality-index cache receipt: $($_.Exception.Message)"
+    }
+}
 
 function ConvertTo-RepositoryPath {
     param([string]$Path)
@@ -156,4 +211,12 @@ if ($Check) {
 
 $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText($outputPath, $jsonText, $utf8WithoutBom)
+$cacheDirectory = Split-Path -Parent $cachePath
+$null = New-Item -ItemType Directory -Path $cacheDirectory -Force
+$receiptJson = ([ordered]@{
+    schemaVersion = 1
+    inputFingerprint = $inputFingerprint
+    outputFingerprint = Get-FileSha256 $outputPath
+} | ConvertTo-Json) + [Environment]::NewLine
+[System.IO.File]::WriteAllText($cachePath, $receiptJson, $utf8WithoutBom)
 Write-Host "Generated .llm-wiki/generated/quality-index.json."

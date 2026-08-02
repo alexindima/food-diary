@@ -601,6 +601,15 @@ Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiFrontendIndex
 Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiFrontendContractIndex.ps1') 'Affected frontend test plan included the unrelated frontend contract index.'
 Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiSensitiveDataIndex.ps1') 'Affected frontend test plan included the unrelated sensitive-data index.'
 
+$qualityBuilderText = Get-Content -LiteralPath (Join-Path $toolsRoot 'Build-LlmWikiQualityIndex.ps1') -Raw
+$indexPipelineText = Get-Content -LiteralPath (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -Raw
+$wikiFacadeText = Get-Content -LiteralPath (Join-Path $wikiRoot 'wiki.ps1') -Raw
+Assert-Wiki ($qualityBuilderText -match 'inputFingerprint' -and $qualityBuilderText -match 'outputFingerprint') 'Quality-index cache does not bind both inputs and generated output.'
+Assert-Wiki ($qualityBuilderText -match 'Build-LlmWikiQualityIndex\.ps1' -and $qualityBuilderText -match 'LlmWikiJson\.ps1') 'Quality-index cache fingerprint omits generator implementation inputs.'
+Assert-Wiki ($indexPipelineText -match "toolName -eq 'Build-LlmWikiQualityIndex\.ps1'" -and $indexPipelineText -match 'ReuseUnchangedChecks') 'Index pipeline does not limit unchanged-check reuse to the quality index.'
+Assert-Wiki ($wikiFacadeText.Contains('DeferPossiblyConcurrentStale = $true; ReuseUnchangedChecks = $true') -and
+    $wikiFacadeText.Contains('$indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef }')) 'Quality-index cache is not isolated to verify-fast.'
+
 $affectedStylePlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -AffectedOnly -Plan `
     -ChangedPath 'FoodDiary.Web.Client/src/app/components/example/example.scss') -join [Environment]::NewLine
 Assert-Wiki ($affectedStylePlanText -match 'Affected index tools:\s*$' -and $affectedStylePlanText -notmatch 'Build-LlmWiki') 'Stylesheet-only changes selected indexes that do not read stylesheets.'

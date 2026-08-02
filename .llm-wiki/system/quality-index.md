@@ -19,3 +19,7 @@ migration, dependency, and test artifacts.
 `testReferenceCount` means that the exact symbol name appears in a test source
 file. It is a navigation signal, not execution, branch, line, mutation, or
 behavioral coverage.
+
+Local `verify-fast` may reuse a content-addressed receipt when source inputs,
+generator implementation, symbol index, and generated output are byte-for-byte
+unchanged. Strict `wiki verify` always performs the full computation.

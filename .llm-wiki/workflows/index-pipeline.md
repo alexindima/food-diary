@@ -15,6 +15,7 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiPortable.ps1
   - .llm-wiki/tools/Test-LlmWikiLinux.ps1
   - .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1
+  - .llm-wiki/tools/Build-LlmWikiQualityIndex.ps1
   - .llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1
   - .llm-wiki/wiki.ps1
   - .github/workflows/ci-tests.yml
@@ -70,6 +71,16 @@ not enforced in that fast run. Full `verify` remains strict and must pass in
 the integration session before commit, push, or final handoff. In every other
 stale case, the pipeline emits one canonical `wiki.ps1 update` repair command
 in addition to the focused `update -AffectedOnly` option.
+
+The quality-index check uses a local content-addressed receipt during
+`verify-fast`. A hit requires matching hashes for every tracked or untracked
+`.cs`/`.ts` input, the C# symbol index, the quality generator and its JSON
+helper, plus the current generated output. The pipeline prints an explicit
+cache-hit message. Any source, generator, dependency-index, or output change
+invalidates the receipt and runs the normal freshness computation. Receipts
+live under ignored `.artifacts/llm-wiki/index-cache`; they are never committed.
+`wiki verify`, publication hooks, and CI deliberately bypass this optimization
+and retain a complete deterministic check.
 
 Use `-BaseRef <ref>` for a committed range or `-ChangedPath <path[]>` for an
 explicit scope. The conservative dependency map still runs derived indexes and

@@ -4,6 +4,7 @@ param(
     [switch]$AffectedOnly,
     [switch]$Plan,
     [switch]$DeferPossiblyConcurrentStale,
+    [switch]$ReuseUnchangedChecks,
     [string]$BaseRef = 'HEAD',
     [string[]]$ChangedPath,
     [ValidateRange(1, 8)]
@@ -140,7 +141,8 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
         $startInfo.FileName = $shellPath
         $startInfo.WorkingDirectory = $repositoryRoot
         $startInfo.UseShellExecute = $false
-        $startInfo.Arguments = "-NoLogo -NoProfile -File `"$scriptPath`"$(if ($CheckMode) { ' -Check' } else { '' })"
+        $reuseArgument = if ($CheckMode -and $ReuseUnchangedChecks -and $toolName -eq 'Build-LlmWikiQualityIndex.ps1') { ' -ReuseUnchangedCheck' } else { '' }
+        $startInfo.Arguments = "-NoLogo -NoProfile -File `"$scriptPath`"$(if ($CheckMode) { ' -Check' } else { '' })$reuseArgument"
         $startInfo.EnvironmentVariables['GIT_CONFIG_COUNT'] = '1'
         $startInfo.EnvironmentVariables['GIT_CONFIG_KEY_0'] = 'core.safecrlf'
         $startInfo.EnvironmentVariables['GIT_CONFIG_VALUE_0'] = 'false'

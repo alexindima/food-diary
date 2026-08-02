@@ -456,13 +456,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "a93ec473d41b69f0c2dd9df04533c24750f873a01a3c99c8f9aaed0c01a5b19b"
+                                            "sha256":  "ea49a340954113c0f7bbb64a763e190104bf0e1748331cc8ce877911c5760380"
                                         }
                                     ],
-                        "reason":  "Reviewed router switch addition; dispatch routing and receipt inputs remain unchanged.",
+                        "reason":  "Reviewed wiki facade change: verify-fast only forwards unchanged-index cache reuse; task dispatch commands and receipt semantics are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
-                        "reviewedAtUtc":  "2026-08-01T01:45:28.3560484Z"
+                        "gitHead":  "4481a86d808beffdfd464859d25f5ed28f10064e",
+                        "reviewedAtUtc":  "2026-08-02T11:29:36.1213897Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",

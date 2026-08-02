@@ -291,7 +291,7 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
         Invoke-WikiTool 'Test-LlmWiki.ps1'
         Invoke-WikiTool 'Test-LlmWikiLint.ps1'
-        $indexArguments = @{ Check = $true; AffectedOnly = $true; BaseRef = $BaseRef; DeferPossiblyConcurrentStale = $true }
+        $indexArguments = @{ Check = $true; AffectedOnly = $true; BaseRef = $BaseRef; DeferPossiblyConcurrentStale = $true; ReuseUnchangedChecks = $true }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
         $indexResult = @(Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments)
         $deferredStale = @($indexResult | Where-Object { $_.deferredStale }).Count -gt 0
