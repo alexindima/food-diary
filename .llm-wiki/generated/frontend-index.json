@@ -2691,7 +2691,7 @@
                         "role":  "Component",
                         "selector":  "fd-nutrition-weekly-trend-card",
                         "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
-                        "line":  44
+                        "line":  53
                     },
                     {
                         "name":  "TdeeInsightCardContentComponent",
@@ -5690,8 +5690,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  2878,
-                             "russianProperties":  2878,
+                             "englishProperties":  2880,
+                             "russianProperties":  2880,
                              "countsMatch":  true
                          },
                          {

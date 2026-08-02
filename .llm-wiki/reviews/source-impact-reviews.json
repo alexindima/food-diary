@@ -68,13 +68,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "14c2bd274b82b0924a2b94a70f453cc70f7521ba67b86d658fcfdbdf67d20833"
+                                            "sha256":  "3c616c56b7ff7db0de2e294d077b299f610cf66f6ad902027c87a5ff9cb79300"
                                         }
                                     ],
-                        "reason":  "Reviewed the new dashboard nutrition trend component, its inputs/output, dashboard consumer, and translated template; the component contract is local to the Dashboard feature and covered by its focused spec.",
+                        "reason":  "Reviewed selector, inputs, output, translations, and the new internal period control; public component contract remains compatible.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8025173ce5f9eafd2702b7010810bc9bcb99a35c",
-                        "reviewedAtUtc":  "2026-08-01T21:53:48.0638150Z"
+                        "gitHead":  "b5845be673c737bce8408fda9d0f5af0284d387f",
+                        "reviewedAtUtc":  "2026-08-02T10:34:25.9286618Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -396,13 +396,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "19c908fe5e20364d3e58ab27fd59a5437f0df6c028adbdf97aebf53ace26d0ec"
+                                            "sha256":  "321b9d82361f7542b9e12da74e6ed7e06b81c71c612d96e0918b9517d8be848e"
                                         }
                                     ],
-                        "reason":  "Reviewed generated quality-index changes for the focused dashboard component and test mapping.",
+                        "reason":  "Reviewed focused component coverage for default seven-day rendering and the three-day interaction.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c13e1eaf9cdb1bcaf6d1424c49581271a4403e25",
-                        "reviewedAtUtc":  "2026-08-02T01:44:24.8886368Z"
+                        "gitHead":  "b5845be673c737bce8408fda9d0f5af0284d387f",
+                        "reviewedAtUtc":  "2026-08-02T10:34:27.2806305Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -500,14 +500,18 @@
                         "pageSha256":  "41967b1d6a8a4232d51034f79db7c10045672d7b8d62c58b2bb870ae64488ba0",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/generated/frontend-contract-index.json",
+                                            "sha256":  "3c616c56b7ff7db0de2e294d077b299f610cf66f6ad902027c87a5ff9cb79300"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "e5b6d702586a775769d77de02eb0e71969db86a65452a9700d1ab58181021aa7"
+                                            "sha256":  "df2864a0b56197e0b50e6bae5d186a9eef2be0a4ae952f8498000790aa2951d7"
                                         }
                                     ],
-                        "reason":  "Reviewed generated frontend-index changes; runtime ownership remains the dashboard weekly trend component.",
+                        "reason":  "Reviewed generated dashboard ownership and consumer trace after adding the internal range selector.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c13e1eaf9cdb1bcaf6d1424c49581271a4403e25",
-                        "reviewedAtUtc":  "2026-08-02T01:44:25.9777892Z"
+                        "gitHead":  "b5845be673c737bce8408fda9d0f5af0284d387f",
+                        "reviewedAtUtc":  "2026-08-02T10:34:29.1521278Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

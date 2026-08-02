@@ -540,8 +540,10 @@
         "REMAINING_LABEL": "Remaining",
         "MACRO_TITLE": "Macro summary",
         "NUTRITION_TREND": {
-            "TITLE": "7-day dynamics",
-            "RANGE": "7 days",
+            "TITLE": "Dynamics",
+            "RANGE_LABEL": "Chart period",
+            "THREE_DAYS": "3 days",
+            "SEVEN_DAYS": "7 days",
             "GOAL": "Goal",
             "EXCESS_TITLE": "You exceeded your carbohydrate target today",
             "BALANCED_TITLE": "Your nutrition is on target today",

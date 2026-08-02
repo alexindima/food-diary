@@ -540,8 +540,10 @@
         "REMAINING_LABEL": "Осталось",
         "MACRO_TITLE": "Баланс нутриентов",
         "NUTRITION_TREND": {
-            "TITLE": "Динамика за 7 дней",
-            "RANGE": "7 дней",
+            "TITLE": "Динамика",
+            "RANGE_LABEL": "Период графика",
+            "THREE_DAYS": "3 дня",
+            "SEVEN_DAYS": "7 дней",
             "GOAL": "Цель",
             "EXCESS_TITLE": "Сегодня вы превысили норму углеводов",
             "BALANCED_TITLE": "Сегодня питание соответствует цели",

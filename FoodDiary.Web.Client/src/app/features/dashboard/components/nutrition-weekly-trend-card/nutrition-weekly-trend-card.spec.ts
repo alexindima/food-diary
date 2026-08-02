@@ -7,6 +7,7 @@ import { NutritionWeeklyTrendCardComponent } from './nutrition-weekly-trend-card
 const DAILY_GOAL = 2258;
 const CARB_GOAL = 115;
 const TREND_DAYS = 7;
+const SHORT_TREND_DAYS = 3;
 const SEGMENTS_PER_DAY = 4;
 const EXPECTED_SEGMENT_COUNT = TREND_DAYS * SEGMENTS_PER_DAY;
 const FIRST_DAY = 18;
@@ -38,6 +39,24 @@ describe('NutritionWeeklyTrendCardComponent', () => {
         (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.nutrition-trend__details')?.click();
 
         expect(detailsSpy).toHaveBeenCalledOnce();
+    });
+
+    it('switches between seven and three visible days', async () => {
+        const fixture = await setupAsync();
+        const element = fixture.nativeElement as HTMLElement;
+        const range = element.querySelector<HTMLSelectElement>('.nutrition-trend__range-select');
+
+        expect(range?.value).toBe('7');
+        expect(element.querySelectorAll('.nutrition-trend__bar')).toHaveLength(TREND_DAYS);
+
+        if (range !== null) {
+            range.value = '3';
+            range.dispatchEvent(new Event('change'));
+            fixture.detectChanges();
+        }
+
+        expect(element.querySelectorAll('.nutrition-trend__bar')).toHaveLength(SHORT_TREND_DAYS);
+        expect(element.querySelector('.nutrition-trend__bars--three-days')).not.toBeNull();
     });
 });
 

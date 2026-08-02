@@ -1,7 +1,19 @@
 <section class="nutrition-trend" [attr.aria-label]="'DASHBOARD.NUTRITION_TREND.TITLE' | translate">
     <header class="nutrition-trend__header fd-row">
         <h2 class="nutrition-trend__title fd-ui-card-title">{{ 'DASHBOARD.NUTRITION_TREND.TITLE' | translate }}</h2>
-        <span class="nutrition-trend__range fd-ui-action-text">{{ 'DASHBOARD.NUTRITION_TREND.RANGE' | translate }}</span>
+        <div class="nutrition-trend__range">
+            <label class="fd-sr-only" for="nutrition-trend-range">{{ 'DASHBOARD.NUTRITION_TREND.RANGE_LABEL' | translate }}</label>
+            <select
+                #rangeSelect
+                id="nutrition-trend-range"
+                class="nutrition-trend__range-select fd-ui-action-text"
+                [value]="visibleDays()"
+                (change)="changeVisibleDays(rangeSelect.value)"
+            >
+                <option value="3">{{ 'DASHBOARD.NUTRITION_TREND.THREE_DAYS' | translate }}</option>
+                <option value="7">{{ 'DASHBOARD.NUTRITION_TREND.SEVEN_DAYS' | translate }}</option>
+            </select>
+        </div>
     </header>
 
     <div class="nutrition-trend__content">
@@ -9,12 +21,15 @@
             <span class="nutrition-trend__unit fd-ui-caption">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
             <div class="nutrition-trend__plot">
                 <div class="nutrition-trend__axis" aria-hidden="true">
-                    @for (tick of ticks(); track tick) {
-                        <span>{{ tick | number: '1.0-0' }}</span>
+                    @for (tick of ticks(); track tick.value) {
+                        <span class="nutrition-trend__tick">
+                            <span class="nutrition-trend__tick-full">{{ tick.value | number: '1.0-0' }}</span>
+                            <span class="nutrition-trend__tick-compact">{{ tick.compactLabel }}</span>
+                        </span>
                     }
                 </div>
                 <div class="nutrition-trend__grid" aria-hidden="true">
-                    @for (tick of ticks(); track tick) {
+                    @for (tick of ticks(); track tick.value) {
                         <span></span>
                     }
                 </div>
@@ -24,7 +39,7 @@
                         <strong>{{ dailyGoal() | number: '1.0-0' }}</strong>
                     </div>
                 }
-                <div class="nutrition-trend__bars">
+                <div class="nutrition-trend__bars" [class.nutrition-trend__bars--three-days]="visibleDays() === 3">
                     @for (point of trendPoints(); track point.date) {
                         <div class="nutrition-trend__day" [class.nutrition-trend__day--latest]="point.isLatest">
                             <div class="nutrition-trend__bar" role="img" [attr.aria-label]="point.label + ': ' + point.calories + ' kcal'">

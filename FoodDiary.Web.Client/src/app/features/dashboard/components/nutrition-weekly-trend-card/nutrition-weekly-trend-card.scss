@@ -8,6 +8,7 @@
 
 .nutrition-trend {
     --nutrition-trend-goal-space: calc(var(--fd-space-xxl) + var(--fd-space-xl));
+    --nutrition-trend-date-space: calc(var(--fd-space-xl) + var(--fd-space-md));
     padding: var(--fd-space-lg);
     border: var(--fd-border-strong);
     border-radius: var(--fd-radius-card);
@@ -27,10 +28,22 @@
     }
 
     &__range {
-        padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-button);
         background: var(--fd-bg-surface-raised);
+    }
+
+    &__range-select {
+        padding: var(--fd-space-xs) var(--fd-space-lg) var(--fd-space-xs) var(--fd-space-sm);
+        border: none;
+        border-radius: inherit;
+        background: transparent;
         color: var(--fd-color-text-muted);
+        cursor: pointer;
+    }
+
+    &__range-select:where(:focus-visible) {
+        outline: var(--fd-outline-focus-strong);
+        outline-offset: var(--fd-outline-offset);
     }
 
     &__content {
@@ -49,6 +62,7 @@
         margin-left: calc(var(--fd-space-xl) + var(--fd-space-sm));
         margin-bottom: var(--fd-space-xs);
         color: var(--fd-color-text-muted);
+        font-size: var(--fd-text-helper-size);
     }
 
     &__plot {
@@ -56,19 +70,19 @@
         height: 270px;
         padding-left: calc(var(--fd-space-xl) + var(--fd-space-sm));
         padding-right: var(--nutrition-trend-goal-space);
-        padding-bottom: var(--fd-space-xl);
+        padding-bottom: var(--nutrition-trend-date-space);
     }
 
     &__axis,
     &__grid {
         position: absolute;
-        inset: 0 var(--nutrition-trend-goal-space) var(--fd-space-xl) 0;
+        inset: 0 var(--nutrition-trend-goal-space) var(--nutrition-trend-date-space) 0;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
     }
 
-    &__axis span {
+    &__tick {
         width: var(--fd-space-xl);
         color: var(--fd-color-text-muted);
         font-size: var(--fd-text-caption-size);
@@ -83,6 +97,14 @@
 
     &__grid span {
         border-top: var(--fd-border-subtle);
+    }
+
+    &__grid span:last-child {
+        border-top: var(--fd-border-strong);
+    }
+
+    &__tick-compact {
+        display: none;
     }
 
     &__goal {
@@ -118,6 +140,10 @@
         gap: var(--fd-space-sm);
         height: 100%;
         align-items: end;
+    }
+
+    &__bars--three-days {
+        grid-template-columns: repeat(3, minmax(24px, 1fr));
     }
 
     &__day {
@@ -172,6 +198,7 @@
         line-height: 1.15;
         padding-top: var(--fd-space-xs);
         color: var(--fd-color-text-muted);
+        font-size: var(--fd-text-helper-size);
         white-space: normal;
     }
 
@@ -306,8 +333,17 @@
             right: var(--nutrition-trend-goal-space);
         }
 
-        &__axis span {
+        &__tick {
             width: calc(var(--fd-space-xl) - var(--fd-space-xs));
+            font-size: var(--fd-text-helper-size);
+        }
+
+        &__tick-full {
+            display: none;
+        }
+
+        &__tick-compact {
+            display: block;
         }
 
         &__grid {
@@ -335,6 +371,10 @@
         &__bars {
             grid-template-columns: repeat(7, minmax(0, 1fr));
             gap: var(--fd-space-xxs);
+        }
+
+        &__bars--three-days {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
         &__bar {
