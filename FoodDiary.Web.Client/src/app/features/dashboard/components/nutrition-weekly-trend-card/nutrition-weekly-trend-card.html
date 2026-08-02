@@ -45,7 +45,10 @@
                                     [style.height.%]="point.fiberHeight"
                                 ></span>
                             </div>
-                            <span class="nutrition-trend__date fd-ui-caption">{{ point.label }}</span>
+                            <span class="nutrition-trend__date fd-ui-caption" [attr.aria-label]="point.label">
+                                <span>{{ point.dayLabel }}</span>
+                                <span>{{ point.monthLabel }}</span>
+                            </span>
                         </div>
                     }
                 </div>
@@ -63,7 +66,6 @@
                     ><i class="nutrition-trend__swatch nutrition-trend__swatch--fiber"></i
                     >{{ 'SHARED.NUTRIENTS_SUMMARY.FIBER' | translate }}</span
                 >
-                <span><i class="nutrition-trend__goal-swatch"></i>{{ 'DASHBOARD.NUTRITION_TREND.GOAL' | translate }}</span>
             </div>
         </div>
 

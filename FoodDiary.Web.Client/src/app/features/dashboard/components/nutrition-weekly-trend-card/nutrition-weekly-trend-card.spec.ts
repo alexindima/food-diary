@@ -25,6 +25,9 @@ describe('NutritionWeeklyTrendCardComponent', () => {
         expect(element.querySelectorAll('.nutrition-trend__segment')).toHaveLength(EXPECTED_SEGMENT_COUNT);
         expect(element.querySelector('.nutrition-trend__insight')?.textContent).toContain('DASHBOARD.NUTRITION_TREND.EXCESS_TITLE');
         expect(element.querySelector('.nutrition-trend__goal strong')?.textContent).toContain('2,258');
+        expect(element.querySelectorAll('.nutrition-trend__date')).toHaveLength(TREND_DAYS);
+        expect(element.querySelector('.nutrition-trend__date')?.children).toHaveLength(2);
+        expect(element.querySelector('.nutrition-trend__legend')?.textContent).not.toContain('DASHBOARD.NUTRITION_TREND.GOAL');
     });
 
     it('emits the details action', async () => {

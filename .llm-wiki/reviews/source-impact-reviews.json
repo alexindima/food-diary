@@ -396,13 +396,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "5434441adc48bef9f945539e756486131184b8fd79f08300d57b46fa10ae5572"
+                                            "sha256":  "19c908fe5e20364d3e58ab27fd59a5437f0df6c028adbdf97aebf53ace26d0ec"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated quality metrics for the Dashboard component, mapper, and focused tests; the new behavior has component, application mapping, and presentation mapping coverage.",
+                        "reason":  "Reviewed generated quality-index changes for the focused dashboard component and test mapping.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8025173ce5f9eafd2702b7010810bc9bcb99a35c",
-                        "reviewedAtUtc":  "2026-08-01T21:53:51.7148874Z"
+                        "gitHead":  "c13e1eaf9cdb1bcaf6d1424c49581271a4403e25",
+                        "reviewedAtUtc":  "2026-08-02T01:44:24.8886368Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -500,18 +500,14 @@
                         "pageSha256":  "41967b1d6a8a4232d51034f79db7c10045672d7b8d62c58b2bb870ae64488ba0",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "14c2bd274b82b0924a2b94a70f453cc70f7521ba67b86d658fcfdbdf67d20833"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "8a5b1623d57cba29a1031c8178d07d2d932c23dc7586bdb8c2c59f8273407687"
+                                            "sha256":  "e5b6d702586a775769d77de02eb0e71969db86a65452a9700d1ab58181021aa7"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated frontend navigation and consumer traces; Dashboard remains the route and runtime owner for the new nutrition trend card.",
+                        "reason":  "Reviewed generated frontend-index changes; runtime ownership remains the dashboard weekly trend component.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8025173ce5f9eafd2702b7010810bc9bcb99a35c",
-                        "reviewedAtUtc":  "2026-08-01T21:53:53.4466615Z"
+                        "gitHead":  "c13e1eaf9cdb1bcaf6d1424c49581271a4403e25",
+                        "reviewedAtUtc":  "2026-08-02T01:44:25.9777892Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

@@ -2691,7 +2691,7 @@
                         "role":  "Component",
                         "selector":  "fd-nutrition-weekly-trend-card",
                         "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
-                        "line":  42
+                        "line":  44
                     },
                     {
                         "name":  "TdeeInsightCardContentComponent",
