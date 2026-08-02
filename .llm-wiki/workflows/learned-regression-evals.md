@@ -64,3 +64,5 @@ boundary.
 The Dashboard local-day case also protects bounded cross-layer bug routing so
 layer count alone cannot restore mandatory journeys, design, or full local
 verification.
+The Dashboard period-selector case protects the same ceremony budget for local
+component interaction, even when the intent introduces new selectable behavior.

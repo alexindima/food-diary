@@ -131,13 +131,19 @@ inferred path or journey:
 ```
 
 The trace walks template consumers from the rendered component back toward the
-feature entry point. A bounded frontend-only layout change with no API,
+feature entry point. A bounded frontend-only layout change or local interaction
+inside an existing component with no route, public component contract, API,
 provider, persistence, privacy, security, configuration, or architecture
 boundary uses the `visual-ui-change` profile: a compact constraint and ownership
 brief, implementation, focused tests with frontend build, browser evidence, and
 a final local completion gate.
 It does not require a governed workspace or full index regeneration merely
 because the surrounding product journey is critical.
+
+Local toggles, selectors, tabs, and component-state changes stay on this route
+when they only alter existing rendering behavior. A new user journey, persisted
+state, navigation route, shared public contract, or API still escalates to a
+feature route.
 
 The compact visual brief identifies the runtime owner, distinguishes reusable
 UI-kit surfaces from application-shell composition, loads scoped instructions,

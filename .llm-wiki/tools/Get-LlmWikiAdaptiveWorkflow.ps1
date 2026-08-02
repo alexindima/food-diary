@@ -47,6 +47,7 @@ $architecturalIntent = $normalized -match '(architect|refactor|module|dependency
 $criticalIntent = $normalized -match '\b(auth|authentication|login|password|credential|token|secret|oauth|google|payment|billing|subscription|migration|database|external provider|webhook|email|invite|privacy|security)\b' -or (Test-IntentTerm $ruCriticalTerms)
 $boundaryNegated = $normalized -match '\b(without changing|unchanged|no changes? to)\b'
 $visualVocabulary = $normalized -match '\b(visual|layout|style|styling|css|scss|html|template|responsive|viewport|spacing|colour|color|icon|label|caption|annotation|overlay|dialog|modal|button|disabled|corner|radius|border)\b'
+$localUiInteractionVocabulary = $normalized -match '\b(toggle|switch|selector|tab|dropdown|period|range|expand|collapse|selected|selection|local state|component state|interaction|interactive)\b'
 if ($boundaryNegated -and $visualVocabulary) {
     $criticalIntent = $false
     $architecturalIntent = $false
@@ -54,7 +55,7 @@ if ($boundaryNegated -and $visualVocabulary) {
 $presentationOnly = [string]$brief.risk.profile -eq 'frontend-presentation-only'
 $scopeKnown = $paths.Count -gt 0 -and $scopes.Count -gt 0 -and [string]$brief.analysis.mode -ne 'intent-inferred'
 $productionScopes = @($scopes | Where-Object { $_ -notin @('Tests', 'Documentation', 'Localization') })
-$visualIntent = $visualVocabulary
+$visualIntent = $visualVocabulary -or $localUiInteractionVocabulary
 $boundaryChangeIntent = $normalized -match '\b(change|modify|add|remove|replace|migrate|integrate|send|store|persist|log|expose)\w*\s+(api|contract|provider|privacy|security|auth|token|credential|database|migration|webhook|payload|data)\b'
 $criticalUiSurfaceReference = $normalized -match '\b(auth|authentication|login|oauth|payment|billing|privacy|security)\s+(dialog|modal|page|form|button|panel|screen)\b'
 $explicitCriticalBoundaryIntent = -not $criticalUiSurfaceReference -and $normalized -match '\b(fix|change|modify|add|remove|replace|migrate|integrate|link|send|store|persist|expose)\w*\b.{0,48}\b(auth|authentication|login|password|credential|token|secret|oauth|payment|billing|subscription|migration|database|provider|webhook|privacy|security)\b'
@@ -156,7 +157,7 @@ $reasons = [Collections.Generic.List[string]]::new()
 if ($bugIntent) { $reasons.Add('Intent describes corrective behavior.') }
 if ($featureIntent) { $reasons.Add('Intent describes new behavior.') }
 if ($presentationOnly) { $reasons.Add('Changed or planned paths form a frontend presentation-only slice.') }
-if ($visualUiChange) { $reasons.Add('Visual frontend scope has no API, provider, persistence, privacy, security, or architecture boundary change.') }
+if ($visualUiChange) { $reasons.Add('Local visual or interactive frontend scope has no API, route, persisted-state, provider, privacy, security, public-contract, or architecture boundary change.') }
 if ($uiDiscovery) { $reasons.Add('Visual intent is not grounded in concrete paths; runtime-owner discovery must precede risk classification.') }
 if ($scopeDiscovery) { $reasons.Add('Feature or bug intent is not grounded in concrete paths; existing-flow research must precede critical classification and workspace creation.') }
 if ($boundedCrossLayerBug) { $reasons.Add('The confirmed bug crosses layers inside one existing module flow without migration, provider, sensitive-data lifecycle, or architecture changes.') }

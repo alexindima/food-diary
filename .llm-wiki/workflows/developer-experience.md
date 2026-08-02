@@ -84,7 +84,8 @@ design, and full local verification become conditional; publication hooks and
 CI remain strict.
 
 The `visual-ui-change` budget is a five-stage focused route for bounded frontend
-rendering work with unchanged API, provider, persistence, privacy, security,
+rendering work and local interaction inside an existing component with unchanged
+routes, public component contracts, API, provider, persistence, privacy, security,
 configuration, and architecture boundaries. It starts with a compact brief that
 confirms runtime ownership, UI-kit versus application-shell placement, scoped
 instructions, design-system constraints, and observable outcomes. It then moves

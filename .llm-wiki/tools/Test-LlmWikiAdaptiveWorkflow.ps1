@@ -32,6 +32,19 @@ Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'browser-evidence' -a
 Assert-Adaptive ((@($tiny.stages | Where-Object id -eq 'browser-evidence')[0].order) -lt (@($tiny.stages | Where-Object id -eq 'completion')[0].order)) 'Visual UI work ran verify-fast before browser evidence.'
 Assert-Adaptive ($tiny.ceremonyBudget.label -eq 'visual-focused') 'Visual UI work omitted its focused ceremony budget.'
 
+$localInteraction = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Add a 3 or 7 day period selector using local component state without changing API, routes, persistence, or public contracts.' `
+    -ProposedPath @(
+        'FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html',
+        'FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts',
+        'FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.spec.ts'
+    ) `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($localInteraction.profile -eq 'visual-ui-change') 'Local interaction inside an existing frontend component was elevated to feature.'
+Assert-Adaptive (@($localInteraction.stages | Where-Object { $_.id -eq 'journey-impact' -and $_.required }).Count -eq 0) 'Local component interaction retained required feature journey ceremony.'
+Assert-Adaptive (@($localInteraction.stages.id) -notcontains 'design') 'Local component interaction retained feature design ceremony.'
+Assert-Adaptive (@($localInteraction.stages.id) -contains 'focused-verification') 'Local component interaction omitted focused verification.'
+
 $runtimeOwner = & (Join-Path $PSScriptRoot 'Get-LlmWikiFrontendRuntimeOwner.ps1') `
     -Query 'Improve AI photo annotation layout on the dashboard result.' `
     -CandidatePath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.html' `

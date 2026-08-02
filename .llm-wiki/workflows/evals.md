@@ -34,6 +34,9 @@ migration and authentication cases remain critical.
 The local-day Dashboard bug regression ensures an additive query parameter can
 cross frontend, HTTP, and application layers without being promoted to a
 feature; the expected route remains the compact four-stage bug workflow.
+The Dashboard period-selector regression keeps local interaction and component
+state on the visual five-stage route when routes, persistence, API, and public
+component contracts remain unchanged.
 
 Each policy rule should have:
 

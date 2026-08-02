@@ -234,6 +234,26 @@
       "unexpectedAdaptiveStages": ["design", "workspace", "independent-review"]
     },
     {
+      "id": "adaptive-dashboard-local-period-selector",
+      "changedPaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
+        "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.scss",
+        "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
+        "FoodDiary.Web.Client/assets/i18n/en/app.json",
+        "FoodDiary.Web.Client/assets/i18n/ru/app.json"
+      ],
+      "expectedModules": [],
+      "expectedScopes": ["Frontend", "Tests", "Localization"],
+      "expectedRules": ["localization-pair", "frontend-workspace", "frontend-component-contract"],
+      "expectedChecks": ["frontend-i18n", "frontend-verify"],
+      "expectedViolationRules": [],
+      "adaptiveObjective": "Add a 3 or 7 day period selector using local component state without changing API, routes, persistence, or public contracts.",
+      "expectedAdaptiveProfile": "visual-ui-change",
+      "expectedAdaptiveStages": ["visual-brief", "implementation", "focused-verification", "browser-evidence", "completion"],
+      "unexpectedAdaptiveStages": ["design", "workspace", "requirements", "verification"]
+    },
+    {
       "id": "adaptive-existing-dashboard-contract-extension",
       "changedPaths": [
         "FoodDiary.Application/Dashboard/Models/DailyCaloriesModel.cs",
