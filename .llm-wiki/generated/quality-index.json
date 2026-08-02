@@ -25184,11 +25184,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
-                      "nonBlankLines":  99,
+                      "nonBlankLines":  103,
                       "decisionPoints":  12,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  19.98
+                      "structuralRiskScore":  20.06
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-content/tdee-insight-card-content.ts",

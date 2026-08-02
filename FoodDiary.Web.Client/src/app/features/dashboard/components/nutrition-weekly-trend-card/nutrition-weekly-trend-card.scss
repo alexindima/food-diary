@@ -166,9 +166,13 @@
     }
 
     &__date {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        line-height: 1.15;
         padding-top: var(--fd-space-xs);
         color: var(--fd-color-text-muted);
-        white-space: nowrap;
+        white-space: normal;
     }
 
     &__day--latest &__date {
@@ -193,11 +197,6 @@
         width: var(--fd-space-md);
         height: var(--fd-space-xs);
         border-radius: var(--fd-radius-xs);
-    }
-
-    &__goal-swatch {
-        width: var(--fd-space-lg);
-        border-top: var(--fd-border-width-strong) dashed var(--fd-color-text-subtle);
     }
 
     &__insight {
@@ -292,16 +291,61 @@
         padding: var(--fd-space-md);
 
         &__plot {
-            overflow-x: auto;
-            min-width: 620px;
+            --nutrition-trend-goal-space: calc(var(--fd-space-xl) + var(--fd-space-sm));
+            height: 230px;
+            padding-left: var(--fd-space-xl);
+            padding-right: var(--nutrition-trend-goal-space);
         }
 
-        &__chart {
-            overflow-x: auto;
+        &__unit {
+            margin-left: var(--fd-space-xl);
+        }
+
+        &__axis,
+        &__grid {
+            right: var(--nutrition-trend-goal-space);
+        }
+
+        &__axis span {
+            width: calc(var(--fd-space-xl) - var(--fd-space-xs));
+        }
+
+        &__grid {
+            left: var(--fd-space-xl);
+        }
+
+        &__goal {
+            left: calc(var(--fd-space-xl) + var(--fd-space-sm));
+            right: var(--nutrition-trend-goal-space);
+
+            span,
+            strong {
+                left: calc(100% + var(--fd-space-xxs));
+            }
+
+            span {
+                display: none;
+            }
+
+            strong {
+                transform: translateY(-50%);
+            }
+        }
+
+        &__bars {
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: var(--fd-space-xxs);
+        }
+
+        &__bar {
+            width: min(32px, 76%);
         }
 
         &__legend {
-            min-width: 620px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: var(--fd-space-sm) var(--fd-space-md);
+            padding-left: var(--fd-space-xl);
         }
     }
 }

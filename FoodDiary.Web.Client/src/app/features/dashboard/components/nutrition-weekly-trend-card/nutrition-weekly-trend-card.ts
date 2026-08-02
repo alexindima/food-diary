@@ -20,6 +20,8 @@ const PERCENT = 100;
 type TrendPoint = {
     date: string;
     label: string;
+    dayLabel: string;
+    monthLabel: string;
     calories: number;
     proteins: number;
     fats: number;
@@ -77,6 +79,8 @@ export class NutritionWeeklyTrendCardComponent {
             return {
                 date: point.date,
                 label: formatDate(point.date, 'd MMM', locale),
+                dayLabel: formatDate(point.date, 'd', locale),
+                monthLabel: formatDate(point.date, 'MMM', locale),
                 calories: point.calories,
                 proteins,
                 fats,
