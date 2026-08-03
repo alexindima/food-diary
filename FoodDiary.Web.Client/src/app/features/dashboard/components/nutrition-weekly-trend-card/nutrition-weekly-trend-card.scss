@@ -28,29 +28,14 @@
     }
 
     &__range {
-        border-radius: var(--fd-radius-button);
-        background: var(--fd-bg-surface-raised);
-    }
-
-    &__range-select {
-        padding: var(--fd-space-xs) var(--fd-space-lg) var(--fd-space-xs) var(--fd-space-sm);
-        border: none;
-        border-radius: inherit;
-        background: transparent;
-        color: var(--fd-color-text-muted);
-        cursor: pointer;
-    }
-
-    &__range-select:where(:focus-visible) {
-        outline: var(--fd-outline-focus-strong);
-        outline-offset: var(--fd-outline-offset);
+        width: max-content;
     }
 
     &__content {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(240px, 280px);
         gap: var(--fd-space-xl);
-        align-items: center;
+        align-items: start;
     }
 
     &__chart {
@@ -133,12 +118,12 @@
     }
 
     &__bars {
-        position: relative;
+        position: absolute;
+        inset: 0 var(--nutrition-trend-goal-space) 0 calc(var(--fd-space-xl) + var(--fd-space-sm));
         z-index: 1;
         display: grid;
         grid-template-columns: repeat(7, minmax(24px, 1fr));
         gap: var(--fd-space-sm);
-        height: 100%;
         align-items: end;
     }
 
@@ -148,7 +133,7 @@
 
     &__day {
         display: grid;
-        grid-template-rows: minmax(0, 1fr) auto;
+        grid-template-rows: minmax(0, 1fr) var(--nutrition-trend-date-space);
         justify-items: center;
         height: 100%;
         min-width: 0;
@@ -281,6 +266,11 @@
         color: var(--fd-color-success);
     }
 
+    &__insight--neutral &__insight-icon {
+        background: var(--fd-bg-brand-tint);
+        color: var(--fd-color-text-muted);
+    }
+
     @container (max-width: 760px) {
         &__content {
             grid-template-columns: 1fr;
@@ -369,6 +359,7 @@
         }
 
         &__bars {
+            left: var(--fd-space-xl);
             grid-template-columns: repeat(7, minmax(0, 1fr));
             gap: var(--fd-space-xxs);
         }

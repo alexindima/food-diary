@@ -31,6 +31,7 @@ import {
     placeholderLabel,
 } from './dashboard-nutrition.utils';
 import { createWaistTrendSignals, createWeightTrendSignals } from './dashboard-trend.utils';
+import { resolveDashboardNutritionInsight } from './nutrition-insight.policy';
 
 @Injectable()
 export class DashboardFacade {
@@ -73,7 +74,7 @@ export class DashboardFacade {
         (this.snapshot()?.weeklyCalories ?? []).reduce((sum, point) => sum + point.calories, 0),
     );
     public readonly weeklyCalories = computed(() => this.snapshot()?.weeklyCalories ?? []);
-    public readonly carbGoal = computed(() => this.snapshot()?.statistics.carbGoal ?? null);
+    public readonly nutritionInsight = computed(() => resolveDashboardNutritionInsight(this.snapshot()));
     public readonly hydration = computed(() => this.snapshot()?.hydration ?? null);
     public readonly dailyAdvice = computed(() => this.snapshot()?.advice ?? null);
     public readonly currentFastingSession = computed<FastingSession | null>(() => this.snapshot()?.currentFastingSession ?? null);

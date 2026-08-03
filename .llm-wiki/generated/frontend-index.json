@@ -8,11 +8,11 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1517,
+                    "typescriptFiles":  1519,
                     "symbols":  579,
                     "routes":  84,
                     "features":  36,
-                    "specs":  547,
+                    "specs":  548,
                     "localeFiles":  5,
                     "roles":  {
                                   "Component":  395,
@@ -377,6 +377,7 @@
                                        "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-nutrition.utils.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-trend.utils.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard.facade.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/dashboard/lib/nutrition-insight.policy.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/lib/tdee-insight-view.mapper.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-lib/dashboard-block-host.directive.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-lib/dashboard-view-state.mapper.spec.ts"
@@ -2691,7 +2692,7 @@
                         "role":  "Component",
                         "selector":  "fd-nutrition-weekly-trend-card",
                         "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
-                        "line":  53
+                        "line":  79
                     },
                     {
                         "name":  "TdeeInsightCardContentComponent",
@@ -2803,7 +2804,7 @@
                         "role":  "Facade",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard.facade.ts",
-                        "line":  36
+                        "line":  37
                     },
                     {
                         "name":  "DashboardBlockHostDirective",
@@ -5690,8 +5691,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  2880,
-                             "russianProperties":  2880,
+                             "englishProperties":  2894,
+                             "russianProperties":  2894,
                              "countsMatch":  true
                          },
                          {

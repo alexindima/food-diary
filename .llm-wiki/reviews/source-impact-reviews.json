@@ -68,13 +68,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "3c616c56b7ff7db0de2e294d077b299f610cf66f6ad902027c87a5ff9cb79300"
+                                            "sha256":  "6bee9238dc131d5a30f4f6b40b6cf4763fd1509ed51ceb640a3aa7fa80908c01"
                                         }
                                     ],
-                        "reason":  "Reviewed selector, inputs, output, translations, and the new internal period control; public component contract remains compatible.",
+                        "reason":  "Reviewed dashboard nutrition insight input migration and existing fd-ui-select ariaLabel contract; all consumers remain compatible.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b5845be673c737bce8408fda9d0f5af0284d387f",
-                        "reviewedAtUtc":  "2026-08-02T10:34:25.9286618Z"
+                        "gitHead":  "10e289c1be7609440c09a19b8247bcdd0974cdc0",
+                        "reviewedAtUtc":  "2026-08-03T20:38:19.4445179Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -396,13 +396,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "321b9d82361f7542b9e12da74e6ed7e06b81c71c612d96e0918b9517d8be848e"
+                                            "sha256":  "21fc6a110a258036c6b1da56e6912f90d4fb6bef8b09cd47cc7efcc91013e1cb"
                                         }
                                     ],
-                        "reason":  "Reviewed focused component coverage for default seven-day rendering and the three-day interaction.",
+                        "reason":  "Reviewed typed insight policy thresholds, empty/in-progress states, focused state-matrix tests, localization, and desktop/mobile evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b5845be673c737bce8408fda9d0f5af0284d387f",
-                        "reviewedAtUtc":  "2026-08-02T10:34:27.2806305Z"
+                        "gitHead":  "10e289c1be7609440c09a19b8247bcdd0974cdc0",
+                        "reviewedAtUtc":  "2026-08-03T20:38:20.1099255Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -501,17 +501,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "3c616c56b7ff7db0de2e294d077b299f610cf66f6ad902027c87a5ff9cb79300"
+                                            "sha256":  "6bee9238dc131d5a30f4f6b40b6cf4763fd1509ed51ceb640a3aa7fa80908c01"
                                         },
                                         {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "df2864a0b56197e0b50e6bae5d186a9eef2be0a4ae952f8498000790aa2951d7"
+                                            "sha256":  "739c4e0239a5f11ebacca6fe8db536b3bd9da2ba7e4c2d146d353e815321fe9b"
                                         }
                                     ],
-                        "reason":  "Reviewed generated dashboard ownership and consumer trace after adding the internal range selector.",
+                        "reason":  "Reviewed DashboardFacade to nutrition insight policy to trend-card flow; no backend, persistence, or provider boundary changed.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b5845be673c737bce8408fda9d0f5af0284d387f",
-                        "reviewedAtUtc":  "2026-08-02T10:34:29.1521278Z"
+                        "gitHead":  "10e289c1be7609440c09a19b8247bcdd0974cdc0",
+                        "reviewedAtUtc":  "2026-08-03T20:38:20.8053077Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

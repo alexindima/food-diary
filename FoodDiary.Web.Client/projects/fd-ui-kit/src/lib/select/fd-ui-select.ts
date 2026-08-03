@@ -48,6 +48,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
 
     public readonly id = input(`fd-ui-select-${uniqueId++}`);
     public readonly label = input<string>();
+    public readonly ariaLabel = input<string>();
     public readonly placeholder = input<string>();
     public readonly error = input<string | null>();
     public readonly required = input(false);

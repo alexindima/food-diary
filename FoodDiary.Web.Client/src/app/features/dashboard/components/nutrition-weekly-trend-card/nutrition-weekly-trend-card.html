@@ -1,19 +1,15 @@
 <section class="nutrition-trend" [attr.aria-label]="'DASHBOARD.NUTRITION_TREND.TITLE' | translate">
     <header class="nutrition-trend__header fd-row">
         <h2 class="nutrition-trend__title fd-ui-card-title">{{ 'DASHBOARD.NUTRITION_TREND.TITLE' | translate }}</h2>
-        <div class="nutrition-trend__range">
-            <label class="fd-sr-only" for="nutrition-trend-range">{{ 'DASHBOARD.NUTRITION_TREND.RANGE_LABEL' | translate }}</label>
-            <select
-                #rangeSelect
-                id="nutrition-trend-range"
-                class="nutrition-trend__range-select fd-ui-action-text"
-                [value]="visibleDays()"
-                (change)="changeVisibleDays(rangeSelect.value)"
-            >
-                <option value="3">{{ 'DASHBOARD.NUTRITION_TREND.THREE_DAYS' | translate }}</option>
-                <option value="7">{{ 'DASHBOARD.NUTRITION_TREND.SEVEN_DAYS' | translate }}</option>
-            </select>
-        </div>
+        <fd-ui-select
+            class="nutrition-trend__range"
+            id="nutrition-trend-range"
+            size="sm"
+            [ariaLabel]="'DASHBOARD.NUTRITION_TREND.RANGE_LABEL' | translate"
+            [options]="rangeOptions()"
+            [value]="visibleDays()"
+            (valueChange)="changeVisibleDays($event)"
+        />
     </header>
 
     <div class="nutrition-trend__content">
@@ -84,36 +80,25 @@
             </div>
         </div>
 
-        @if (latestPoint(); as latest) {
-            <aside class="nutrition-trend__insight" [class.nutrition-trend__insight--positive]="!hasCarbExcess()">
-                <div class="nutrition-trend__insight-heading fd-row fd-gap-sm">
-                    <span class="nutrition-trend__insight-icon fd-place-center"
-                        ><fd-ui-icon [name]="hasCarbExcess() ? 'trending_up' : 'check'"
-                    /></span>
-                    <h3 class="fd-ui-action-text">
-                        {{
-                            (hasCarbExcess() ? 'DASHBOARD.NUTRITION_TREND.EXCESS_TITLE' : 'DASHBOARD.NUTRITION_TREND.BALANCED_TITLE')
-                                | translate
-                        }}
-                    </h3>
-                </div>
-                @if (carbGoal(); as goal) {
-                    <p class="fd-ui-body-sm fd-ui-text-muted">
-                        {{
-                            'DASHBOARD.NUTRITION_TREND.CARBS_COMPARISON'
-                                | translate: { current: latest.carbs | number: '1.0-0', goal: goal | number: '1.0-0' }
-                        }}
-                    </p>
-                }
-                <p class="fd-ui-body-sm fd-ui-text-muted">
-                    {{
-                        (hasCarbExcess() ? 'DASHBOARD.NUTRITION_TREND.EXCESS_HINT' : 'DASHBOARD.NUTRITION_TREND.BALANCED_HINT') | translate
-                    }}
-                </p>
+        @let insight = insightView();
+        <aside
+            class="nutrition-trend__insight"
+            [class.nutrition-trend__insight--positive]="insight.tone === 'positive'"
+            [class.nutrition-trend__insight--neutral]="insight.tone === 'neutral'"
+        >
+            <div class="nutrition-trend__insight-heading fd-row fd-gap-sm">
+                <span class="nutrition-trend__insight-icon fd-place-center"><fd-ui-icon [name]="insight.icon" /></span>
+                <h3 class="fd-ui-action-text">{{ insight.title }}</h3>
+            </div>
+            @if (insight.comparison; as comparison) {
+                <p class="fd-ui-body-sm fd-ui-text-muted">{{ comparison }}</p>
+            }
+            <p class="fd-ui-body-sm fd-ui-text-muted">{{ insight.hint }}</p>
+            @if (insight.showDetails) {
                 <button type="button" class="nutrition-trend__details fd-ui-action-text" (click)="details.emit()">
                     {{ 'DASHBOARD.NUTRITION_TREND.DETAILS' | translate }}
                 </button>
-            </aside>
-        }
+            }
+        </aside>
     </div>
 </section>

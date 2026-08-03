@@ -100,6 +100,7 @@ Universal single-line input.
 **Inputs**
 
 - `label?: string`
+- `ariaLabel?: string` (accessible name for compact controls without a visible label)
 - `placeholder?: string`
 - `type?: 'text' | 'number' | 'password' | 'email' | 'tel' | 'date' | 'datetime-local' | 'time'` (default `text`)
 - `error?: string | null`

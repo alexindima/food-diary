@@ -134,7 +134,7 @@
                         <fd-nutrition-weekly-trend-card
                             [points]="weeklyCalories()"
                             [dailyGoal]="snapshot()?.dailyGoal ?? 0"
-                            [carbGoal]="carbGoal()"
+                            [insight]="nutritionInsight()"
                             (details)="openGoalsAsync()"
                         />
 

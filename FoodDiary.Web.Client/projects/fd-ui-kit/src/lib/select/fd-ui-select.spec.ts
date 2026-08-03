@@ -57,6 +57,15 @@ describe('FdUiSelectComponent rendering', () => {
         expect(labelEl.textContent.trim()).toBe('Fruit');
     });
 
+    it('should expose an accessible name without a visible label', async () => {
+        const { fixture, requireElement, host } = await setupSelectAsync();
+        fixture.componentRef.setInput('ariaLabel', 'Chart period');
+        fixture.detectChanges();
+
+        expect(requireElement('.fd-ui-select__control').getAttribute('aria-label')).toBe('Chart period');
+        expect(host().querySelector('.fd-ui-select__label')).toBeNull();
+    });
+
     it('should show required asterisk', async () => {
         const { fixture, requireElement } = await setupSelectAsync();
         fixture.componentRef.setInput('label', 'Fruit');

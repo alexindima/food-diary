@@ -3,12 +3,12 @@
     "summary":  {
                     "components":  400,
                     "componentsWithoutDirectSpecs":  107,
-                    "inputs":  1217,
+                    "inputs":  1218,
                     "outputs":  408,
                     "apiCalls":  206,
                     "templatesWithTranslations":  241,
-                    "translationKeys":  1185,
-                    "consumerEdges":  899,
+                    "translationKeys":  1182,
+                    "consumerEdges":  900,
                     "consumedComponents":  277,
                     "unconsumedComponents":  122
                 },
@@ -1801,9 +1801,9 @@
                                               "required":  true
                                           },
                                           {
-                                              "name":  "carbGoal",
-                                              "type":  "number | null",
-                                              "required":  false
+                                              "name":  "insight",
+                                              "type":  "NutritionInsight",
+                                              "required":  true
                                           }
                                       ],
                            "outputs":  [
@@ -5319,6 +5319,11 @@
                                           },
                                           {
                                               "name":  "label",
+                                              "type":  "string",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "ariaLabel",
                                               "type":  "string",
                                               "required":  false
                                           },
@@ -15625,12 +15630,9 @@
                                  "feature":  "dashboard",
                                  "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
                                  "keys":  [
-                                              "DASHBOARD.NUTRITION_TREND.CARBS_COMPARISON",
                                               "DASHBOARD.NUTRITION_TREND.DETAILS",
                                               "DASHBOARD.NUTRITION_TREND.GOAL",
                                               "DASHBOARD.NUTRITION_TREND.RANGE_LABEL",
-                                              "DASHBOARD.NUTRITION_TREND.SEVEN_DAYS",
-                                              "DASHBOARD.NUTRITION_TREND.THREE_DAYS",
                                               "DASHBOARD.NUTRITION_TREND.TITLE",
                                               "GENERAL.NUTRIENTS.CARB",
                                               "GENERAL.NUTRIENTS.FAT",
@@ -28320,6 +28322,23 @@
                               "component":  "FdUiSelectComponent",
                               "selector":  "fd-ui-select",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+                              "consumerFeature":  "dashboard",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "ariaLabel",
+                                                 "id",
+                                                 "options",
+                                                 "size"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiSelectComponent",
+                              "selector":  "fd-ui-select",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
                               "consumerFeature":  "goals",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macros-card/goals-macros-card.html",
                               "occurrences":  1,
@@ -30470,8 +30489,8 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
                               "occurrences":  1,
                               "inputsUsed":  [
-                                                 "carbGoal",
                                                  "dailyGoal",
+                                                 "insight",
                                                  "points"
                                              ],
                               "outputsHandled":  [

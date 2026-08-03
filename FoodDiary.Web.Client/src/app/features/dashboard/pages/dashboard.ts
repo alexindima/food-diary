@@ -115,7 +115,7 @@ export class DashboardComponent {
     protected readonly meals = this.facade.meals;
     protected readonly weeklyConsumed = this.facade.weeklyConsumed;
     protected readonly weeklyCalories = this.facade.weeklyCalories;
-    protected readonly carbGoal = this.facade.carbGoal;
+    protected readonly nutritionInsight = this.facade.nutritionInsight;
     protected readonly hydration = this.facade.hydration;
     protected readonly dailyAdvice = this.facade.dailyAdvice;
     protected readonly isHydrationLoading = this.facade.isHydrationLoading;

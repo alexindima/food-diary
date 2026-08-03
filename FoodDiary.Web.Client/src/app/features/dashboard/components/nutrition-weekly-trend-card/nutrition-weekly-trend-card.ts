@@ -2,10 +2,11 @@ import { DecimalPipe, formatDate } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiIconComponent } from 'fd-ui-kit';
+import { FdUiIconComponent, FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit';
 import { merge, startWith } from 'rxjs';
 
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
+import type { NutritionInsight, NutritionInsightKind, NutritionInsightMetric } from '../../lib/nutrition-insight.policy';
 import type { WeeklyCaloriesPoint } from '../../models/dashboard.data';
 
 const PROTEIN_CALORIES_PER_GRAM = 4;
@@ -43,9 +44,34 @@ type TrendTick = {
     compactLabel: string;
 };
 
+type InsightConfig = {
+    titleKey: string;
+    hintKey: string;
+    icon: string;
+};
+
+const INSIGHT_CONFIG: Record<NutritionInsightKind, InsightConfig> = {
+    empty: { titleKey: 'EMPTY_TITLE', hintKey: 'EMPTY_HINT', icon: 'restaurant_menu' },
+    'calorie-excess': { titleKey: 'CALORIE_EXCESS_TITLE', hintKey: 'CALORIE_EXCESS_HINT', icon: 'trending_up' },
+    'carb-excess': { titleKey: 'CARB_EXCESS_TITLE', hintKey: 'CARB_EXCESS_HINT', icon: 'trending_up' },
+    'fat-excess': { titleKey: 'FAT_EXCESS_TITLE', hintKey: 'FAT_EXCESS_HINT', icon: 'trending_up' },
+    'protein-deficit': { titleKey: 'PROTEIN_DEFICIT_TITLE', hintKey: 'PROTEIN_DEFICIT_HINT', icon: 'fitness_center' },
+    'fiber-deficit': { titleKey: 'FIBER_DEFICIT_TITLE', hintKey: 'FIBER_DEFICIT_HINT', icon: 'spa' },
+    'in-progress': { titleKey: 'IN_PROGRESS_TITLE', hintKey: 'IN_PROGRESS_HINT', icon: 'schedule' },
+    balanced: { titleKey: 'BALANCED_TITLE', hintKey: 'BALANCED_HINT', icon: 'check' },
+};
+
+const METRIC_LABEL_KEYS: Record<NutritionInsightMetric, string> = {
+    calories: 'GENERAL.CALORIES',
+    proteins: 'GENERAL.NUTRIENTS.PROTEIN',
+    fats: 'GENERAL.NUTRIENTS.FAT',
+    carbs: 'GENERAL.NUTRIENTS.CARB',
+    fiber: 'SHARED.NUTRIENTS_SUMMARY.FIBER',
+};
+
 @Component({
     selector: 'fd-nutrition-weekly-trend-card',
-    imports: [DecimalPipe, FdUiIconComponent, TranslatePipe],
+    imports: [DecimalPipe, FdUiIconComponent, FdUiSelectComponent, TranslatePipe],
     templateUrl: './nutrition-weekly-trend-card.html',
     styleUrl: './nutrition-weekly-trend-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,10 +85,33 @@ export class NutritionWeeklyTrendCardComponent {
 
     public readonly points = input.required<WeeklyCaloriesPoint[]>();
     public readonly dailyGoal = input.required<number>();
-    public readonly carbGoal = input<number | null>(null);
+    public readonly insight = input.required<NutritionInsight>();
     public readonly details = output();
 
     protected readonly visibleDays = signal<TrendRange>(DEFAULT_TREND_DAYS);
+    protected readonly rangeOptions = computed<Array<FdUiSelectOption<TrendRange>>>(() => {
+        this.translationChange();
+
+        return [
+            { value: SHORT_TREND_DAYS, label: this.translateService.instant('DASHBOARD.NUTRITION_TREND.THREE_DAYS') },
+            { value: DEFAULT_TREND_DAYS, label: this.translateService.instant('DASHBOARD.NUTRITION_TREND.SEVEN_DAYS') },
+        ];
+    });
+    protected readonly insightView = computed(() => {
+        this.translationChange();
+        const insight = this.insight();
+        const config = INSIGHT_CONFIG[insight.kind];
+        const keyPrefix = 'DASHBOARD.NUTRITION_TREND.INSIGHT';
+
+        return {
+            title: this.translateService.instant(`${keyPrefix}.${config.titleKey}`),
+            hint: this.translateService.instant(`${keyPrefix}.${config.hintKey}`),
+            comparison: this.buildInsightComparison(insight, keyPrefix),
+            icon: config.icon,
+            tone: insight.tone,
+            showDetails: insight.kind !== 'empty',
+        };
+    });
     private readonly visibleSourcePoints = computed(() => this.points().slice(-this.visibleDays()));
     protected readonly maxCalories = computed(() => {
         const maxStack = Math.max(0, ...this.visibleSourcePoints().map(point => this.calculateStackCalories(point)));
@@ -109,15 +158,8 @@ export class NutritionWeeklyTrendCardComponent {
             };
         });
     });
-    protected readonly latestPoint = computed(() => this.trendPoints().at(-1) ?? null);
-    protected readonly hasCarbExcess = computed(() => {
-        const latest = this.latestPoint();
-        const goal = this.carbGoal();
-        return latest !== null && goal !== null && goal > 0 && latest.carbs > goal;
-    });
-
-    protected changeVisibleDays(value: string): void {
-        this.visibleDays.set(value === String(SHORT_TREND_DAYS) ? SHORT_TREND_DAYS : DEFAULT_TREND_DAYS);
+    protected changeVisibleDays(value: TrendRange | null | undefined): void {
+        this.visibleDays.set(value === SHORT_TREND_DAYS ? SHORT_TREND_DAYS : DEFAULT_TREND_DAYS);
     }
 
     private formatCompactCalories(value: number, locale: string): string {
@@ -135,5 +177,23 @@ export class NutritionWeeklyTrendCardComponent {
             (point.fats ?? 0) * FAT_CALORIES_PER_GRAM +
             (point.fiber ?? 0) * FIBER_CALORIES_PER_GRAM
         );
+    }
+
+    private buildInsightComparison(insight: NutritionInsight, keyPrefix: string): string | null {
+        if (insight.metric === undefined || insight.current === undefined || insight.goal === undefined) {
+            return null;
+        }
+
+        const locale = resolveTranslateLanguage(this.translateService);
+        const format = (value: number): string => new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(value);
+        const params = { current: format(insight.current), goal: format(insight.goal) };
+        if (insight.metric === 'calories') {
+            return this.translateService.instant(`${keyPrefix}.CALORIE_COMPARISON`, params);
+        }
+
+        return this.translateService.instant(`${keyPrefix}.NUTRIENT_COMPARISON`, {
+            ...params,
+            nutrient: this.translateService.instant(METRIC_LABEL_KEYS[insight.metric]),
+        });
     }
 }
