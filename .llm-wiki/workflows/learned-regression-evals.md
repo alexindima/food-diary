@@ -69,3 +69,5 @@ component interaction, even when the intent introduces new selectable behavior.
 The Cycle query-splitting case protects scope discovery before paths are known
 and the compact bug route after Infrastructure and integration-test paths are
 confirmed, while explicit security-incident controls remain critical.
+The Docker and Storybook cases protect evidence-grounded maintenance routing so
+tooling failures cannot silently regain architectural or critical ceremony.

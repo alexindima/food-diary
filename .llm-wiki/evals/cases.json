@@ -270,6 +270,32 @@
       "unexpectedAdaptiveStages": ["design", "workspace", "requirements", "independent-review"]
     },
     {
+      "id": "adaptive-docker-build-maintenance",
+      "changedPaths": ["FoodDiary.Web.Client/Dockerfile"],
+      "expectedModules": [],
+      "expectedScopes": ["Frontend"],
+      "expectedRules": [],
+      "expectedChecks": [],
+      "expectedViolationRules": [],
+      "adaptiveObjective": "Fix the frontend Docker build by copying dependency manifests before npm ci.",
+      "expectedAdaptiveProfile": "maintenance",
+      "expectedAdaptiveStages": ["evidence-brief", "implementation", "targeted-verification", "completion"],
+      "unexpectedAdaptiveStages": ["research", "journey-impact", "design", "workspace", "requirements", "independent-review"]
+    },
+    {
+      "id": "adaptive-storybook-dependency-maintenance",
+      "changedPaths": ["FoodDiary.Web.Client/package.json", "FoodDiary.Web.Client/package-lock.json", "FoodDiary.Web.Client/.npmrc"],
+      "expectedModules": [],
+      "expectedScopes": ["Frontend"],
+      "expectedRules": ["frontend-workspace", "dependency-npm"],
+      "expectedChecks": ["frontend-verify", "npm-vulnerability-audit"],
+      "expectedViolationRules": [],
+      "adaptiveObjective": "Fix Storybook peer dependency compatibility reported by npm install.",
+      "expectedAdaptiveProfile": "maintenance",
+      "expectedAdaptiveStages": ["evidence-brief", "implementation", "targeted-verification", "completion"],
+      "unexpectedAdaptiveStages": ["research", "journey-impact", "design", "workspace", "requirements", "independent-review"]
+    },
+    {
       "id": "adaptive-existing-dashboard-contract-extension",
       "changedPaths": [
         "FoodDiary.Application/Dashboard/Models/DailyCaloriesModel.cs",

@@ -14,7 +14,7 @@ function Get-BaseText {
     param([string]$Path)
     $previousErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = 'SilentlyContinue'
-    $text = git show "${BaseRef}:$Path" 2>$null
+    $text = git -C $repositoryRoot show "${BaseRef}:$Path" 2>$null
     $exitCode = $LASTEXITCODE
     $ErrorActionPreference = $previousErrorActionPreference
     if ($exitCode -ne 0) { return $null }
@@ -35,8 +35,8 @@ function Add-ManifestChange {
 
 $manifestPaths = @(
     @(
-        git ls-files '*.csproj' 'Directory.Build.props' 'package.json'
-        git ls-files --others --exclude-standard -- '*.csproj' 'Directory.Build.props' 'package.json'
+        git -C $repositoryRoot ls-files -- '*.csproj' 'Directory.Build.props' ':(glob)**/package.json'
+        git -C $repositoryRoot ls-files --others --exclude-standard -- '*.csproj' 'Directory.Build.props' ':(glob)**/package.json'
     ) | Where-Object { $_ } | Sort-Object -Unique
 )
 foreach ($path in $manifestPaths) {
@@ -85,7 +85,7 @@ foreach ($path in $manifestPaths) {
     }
 }
 
-$lockfilePaths = @(git ls-files 'package-lock.json' | Where-Object { $_ } | Sort-Object -Unique)
+$lockfilePaths = @(git -C $repositoryRoot ls-files -- 'package-lock.json' ':(glob)**/package-lock.json' | Where-Object { $_ } | Sort-Object -Unique)
 foreach ($path in $lockfilePaths) {
     $beforeText = Get-BaseText $path
     $absolutePath = Join-Path $repositoryRoot $path

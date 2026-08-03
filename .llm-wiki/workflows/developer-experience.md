@@ -78,6 +78,13 @@ review context without automatically escalating an unchanged data lifecycle.
 Database vocabulary in a query/read-model bug follows this discovery rule;
 explicit security incidents and data-lifecycle mutations do not.
 
+The `maintenance` budget treats concrete CI diagnostics, manifest/lockfile
+compatibility errors, and Docker or deployment-build failures as primary
+evidence. It uses four stages: compact evidence brief, bounded implementation,
+the exact failing validation command, and diff plus `verify-fast`. Application
+flow research, handler trace, journeys, and design stay absent unless concrete
+evidence expands the task beyond maintenance.
+
 The bounded cross-layer bug route treats layer count as transport shape rather
 than feature scope. Once current sources prove one root cause and one existing
 module flow, an additive Frontend/API/Backend fix uses a compact brief and trace,

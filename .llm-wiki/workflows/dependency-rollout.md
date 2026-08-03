@@ -26,7 +26,10 @@ task brief or change packet, so deployment flags and obligations stay aligned.
 ```
 
 Dependency review reports added, removed, and version-changed direct NuGet/npm
-references. The rollout plan detects migrations, configuration, dependencies,
+references and changed npm lockfile graphs. Manifest discovery and Git baseline
+reads are anchored to the repository root, so invoking the command from
+`FoodDiary.Web.Client` produces the same result as invoking it from the root.
+The rollout plan detects migrations, configuration, dependencies,
 jobs, external integrations, API, and frontend impact and generates pre-deploy,
 deployment, post-deploy, and rollback prompts.
 

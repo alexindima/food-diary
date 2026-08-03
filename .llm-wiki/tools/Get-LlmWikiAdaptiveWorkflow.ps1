@@ -64,6 +64,9 @@ $explicitCriticalMutationIntent = $normalized -match '\b(migrate|send|store|pers
 $boundedDataQueryBugIntent = $bugIntent -and
     $normalized -match '\b(split[- ]query|n\+1|duplicate (related )?rows?|query performance|slow query|read model query)\b' -and
     $normalized -notmatch '\b(auth|authentication|password|credential|token|secret|oauth|payment|billing|subscription|webhook|privacy|security)\b'
+$ciMaintenanceIntent = $normalized -match '\b(ci|compiler|analy[sz]er|diagnostic|warning|lint|format|ma\d{4})\b'
+$dependencyMaintenanceIntent = $normalized -match '\b(storybook|peer dependenc|dependency compatibility|package[- ]lock|dependency bump|npm install|restore dependenc)\b'
+$deploymentBuildMaintenanceIntent = $normalized -match '\b(docker|dockerfile|container build|image build|deployment build)\b'
 $uiDiscovery = $visualIntent -and -not $scopeKnown -and -not $explicitCriticalBoundaryIntent
 $ungroundedBugDiscovery = $bugIntent -and -not $scopeKnown -and -not $explicitCriticalIncidentIntent -and -not $explicitCriticalMutationIntent
 $scopeDiscovery = -not $visualIntent -and -not $scopeKnown -and (($featureIntent -and -not $explicitCriticalBoundaryIntent) -or $ungroundedBugDiscovery)
@@ -80,11 +83,16 @@ $directModuleCount = @($brief.change.directModules | Select-Object -Unique).Coun
 $boundedCrossLayerBug = $bugIntent -and $scopeKnown -and -not $hasCriticalEvidence -and -not $hasArchitecturalEvidence -and
     $directModuleCount -le 1 -and @($productionScopes | Where-Object { $_ -notin @('Backend', 'Api', 'Frontend', 'Contracts') }).Count -eq 0 -and
     -not $flags.databaseMigration -and -not $flags.externalIntegrations -and -not $flags.configuration
+$maintenanceChange = $scopeKnown -and ($ciMaintenanceIntent -or $dependencyMaintenanceIntent -or $deploymentBuildMaintenanceIntent) -and
+    -not $explicitCriticalIncidentIntent -and -not $explicitCriticalMutationIntent -and -not $boundaryChangeIntent -and
+    -not $flags.databaseMigration -and -not $flags.externalIntegrations
+$maintenanceKind = if ($dependencyMaintenanceIntent) { 'dependency-compatibility' } elseif ($deploymentBuildMaintenanceIntent) { 'deployment-build-fix' } else { 'ci-fix' }
 $wikiInternal = @($paths | Where-Object { $_ -match '^\.llm-wiki/' }).Count -gt 0
 
 $profile = 'feature'
 if ($uiDiscovery) { $profile = 'ui-discovery' }
 elseif ($scopeDiscovery) { $profile = 'scope-discovery' }
+elseif ($maintenanceChange) { $profile = 'maintenance' }
 elseif ($hasCriticalEvidence) { $profile = 'critical' }
 elseif ($hasArchitecturalEvidence) { $profile = 'architectural' }
 elseif ($visualUiChange) { $profile = 'visual-ui-change' }
@@ -98,7 +106,7 @@ $requiresDesign = $profile -in @('feature', 'critical', 'architectural')
 $boundedFeatureScopes = $profile -eq 'feature' -and $scopeKnown -and $directModuleCount -le 1 -and
     @($productionScopes | Where-Object { $_ -notin @('Backend', 'Api', 'Frontend', 'Contracts') }).Count -eq 0 -and
     -not $flags.databaseMigration -and -not $flags.externalIntegrations -and -not $flags.configuration
-$requiresWorkspace = $profile -notin @('ui-discovery', 'scope-discovery') -and ($profile -in @('critical', 'architectural') -or ($crossCutting -and -not $boundedFeatureScopes -and -not $boundedCrossLayerBug))
+$requiresWorkspace = $profile -notin @('ui-discovery', 'scope-discovery', 'maintenance') -and ($profile -in @('critical', 'architectural') -or ($crossCutting -and -not $boundedFeatureScopes -and -not $boundedCrossLayerBug))
 $experiencePolicyPath = Join-Path (Split-Path -Parent $PSScriptRoot) 'policies/experience-policies.json'
 $experiencePolicy = Get-Content -LiteralPath $experiencePolicyPath -Raw | ConvertFrom-Json
 $ceremonyBudget = $experiencePolicy.ceremonyBudgets.$profile
@@ -117,12 +125,25 @@ function Add-Stage([string]$Id, [string]$Purpose, [string]$Command, [bool]$Requi
 
 $escapedObjective = $Objective.Replace("'", "''")
 $pathArgument = if ($paths.Count -gt 0) { " -PlannedPath $(($paths | Select-Object -First $Limit | ForEach-Object { "'$($_.Replace("'", "''"))'" }) -join ',')" } else { '' }
+$changedPathArgument = if ($paths.Count -gt 0) { " -ChangedPath $(($paths | Select-Object -First $Limit | ForEach-Object { "'$($_.Replace("'", "''"))'" }) -join ',')" } else { '' }
 if ($profile -eq 'ui-discovery') {
     Add-Stage 'research' 'Trace the rendered UI path and confirm the runtime-owning component before risk classification.' "./.llm-wiki/wiki.ps1 ui-trace -Query '$escapedObjective'; ./.llm-wiki/wiki.ps1 research -Intent '$escapedObjective'" $true 'Runtime owner and concrete frontend paths are confirmed.'
     Add-Stage 'reclassify' 'Re-run adaptive classification with grounded paths; do not edit while scope is heuristic.' "./.llm-wiki/wiki.ps1 develop -Intent '$escapedObjective' -PlannedPath '<confirmed frontend path(s)>'" $true 'The grounded route is visual-ui-change or evidence explicitly justifies escalation.'
 } elseif ($profile -eq 'scope-discovery') {
     Add-Stage 'scope-research' 'Compile a compact brief, trace the existing data flow, and confirm whether storage, provider, privacy, or architecture boundaries actually change.' "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective' -Compact; ./.llm-wiki/wiki.ps1 research -Intent '$escapedObjective'" $true 'Concrete paths, the existing producer-to-consumer flow, and any real critical boundary changes are confirmed.'
     Add-Stage 'reclassify' 'Re-run adaptive classification with evidence-refined intent and grounded paths before creating a workspace or editing.' "./.llm-wiki/wiki.ps1 develop -Intent '<evidence-refined intent>' -PlannedPath '<confirmed path(s)>'" $true 'The grounded route is feature or bug, unless evidence explicitly proves a critical or architectural boundary.'
+} elseif ($profile -eq 'maintenance') {
+    $maintenanceEvidenceCommand = if ($maintenanceKind -eq 'dependency-compatibility') {
+        "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective'$pathArgument -Compact; ./.llm-wiki/wiki.ps1 dependencies"
+    } elseif ($maintenanceKind -eq 'deployment-build-fix') {
+        "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective'$pathArgument -Compact; ./.llm-wiki/wiki.ps1 rollout$changedPathArgument"
+    } else {
+        "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective'$pathArgument -Compact"
+    }
+    Add-Stage 'evidence-brief' 'Use supplied diagnostics and concrete paths as primary evidence; load only scoped instructions and maintenance obligations.' $maintenanceEvidenceCommand $true 'The diagnostic, exact maintenance boundary, and targeted validation command are explicit without heuristic flow expansion.'
+    Add-Stage 'implementation' 'Apply the smallest compatibility or build fix inside the confirmed maintenance boundary.' '# edit only the confirmed CI, dependency, build, or diagnostic paths' $true 'The external failure is addressed without changing runtime product behavior or architecture boundaries.'
+    Add-Stage 'targeted-verification' 'Re-run the failing analyzer, dependency install/build, container build, or equivalent focused check.' '# run the exact failing command from CI, package metadata, or build evidence' $true 'The original external diagnostic is reproduced as passing.'
+    Add-Stage 'completion' 'Confirm the diff remains maintenance-only and run the fast local gate.' './.llm-wiki/wiki.ps1 diff; ./.llm-wiki/wiki.ps1 verify-fast' $true 'The maintenance boundary is unchanged and fast verification passes; publication hooks remain strict.'
 } elseif ($boundedCrossLayerBug) {
     $bugBriefCommand = if ($boundedDataQueryBugIntent) {
         "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective'$pathArgument -Compact"
@@ -173,6 +194,7 @@ if ($visualUiChange) { $reasons.Add('Local visual or interactive frontend scope 
 if ($uiDiscovery) { $reasons.Add('Visual intent is not grounded in concrete paths; runtime-owner discovery must precede risk classification.') }
 if ($scopeDiscovery) { $reasons.Add('Feature or bug intent is not grounded in concrete paths; existing-flow research must precede critical classification and workspace creation.') }
 if ($boundedCrossLayerBug) { $reasons.Add('The confirmed bug crosses layers inside one existing module flow without migration, provider, sensitive-data lifecycle, or architecture changes.') }
+if ($maintenanceChange) { $reasons.Add("Concrete diagnostics and paths define a bounded $maintenanceKind maintenance change without runtime contract or architecture changes.") }
 if ($hasCriticalEvidence) { $reasons.Add('Sensitive, provider, persistence, configuration, or delivery evidence requires the critical workflow.') }
 if ($hasArchitecturalEvidence) { $reasons.Add('Architecture or durable decision evidence requires the architectural workflow.') }
 if ($crossCutting) { $reasons.Add('The inferred change crosses multiple scopes or modules.') }
@@ -182,6 +204,7 @@ $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     objective = $Objective
     profile = $profile
+    maintenanceKind = $(if ($profile -eq 'maintenance') { $maintenanceKind } else { $null })
     confidence = $confidence
     scopeKnown = $scopeKnown
     requiresPathDiscovery = $requiresPathDiscovery

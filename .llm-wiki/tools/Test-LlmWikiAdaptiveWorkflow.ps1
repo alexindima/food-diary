@@ -67,6 +67,28 @@ $criticalIncident = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1'
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($criticalIncident.profile -eq 'critical') 'Explicit authentication bypass was incorrectly downgraded to scope discovery.'
 
+$dockerMaintenance = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Fix the frontend Docker build by copying dependency manifests before npm ci.' `
+    -ProposedPath 'FoodDiary.Web.Client/Dockerfile' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($dockerMaintenance.profile -eq 'maintenance' -and $dockerMaintenance.maintenanceKind -eq 'deployment-build-fix') 'Bounded Docker build fix did not use deployment maintenance routing.'
+Assert-Adaptive ((@($dockerMaintenance.stages | Where-Object required).id -join ',') -eq 'evidence-brief,implementation,targeted-verification,completion') 'Docker maintenance retained non-focused ceremony.'
+Assert-Adaptive (@($dockerMaintenance.stages.command | Where-Object { $_ -match 'trace|research|design' }).Count -eq 0) 'Docker maintenance invoked heuristic application-flow discovery.'
+
+$dependencyMaintenance = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Fix Storybook peer dependency compatibility reported by npm install.' `
+    -ProposedPath @('FoodDiary.Web.Client/package.json', 'FoodDiary.Web.Client/package-lock.json', 'FoodDiary.Web.Client/.npmrc') `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($dependencyMaintenance.profile -eq 'maintenance' -and $dependencyMaintenance.maintenanceKind -eq 'dependency-compatibility') 'Storybook compatibility fix did not use dependency maintenance routing.'
+Assert-Adaptive (@($dependencyMaintenance.stages | Where-Object { $_.id -eq 'evidence-brief' -and $_.command -match 'dependencies' }).Count -eq 1) 'Dependency maintenance omitted manifest analysis.'
+
+$ciMaintenance = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Fix MA0002 CI diagnostics by adding StringComparer.Ordinal at the reported call sites.' `
+    -ProposedPath @('FoodDiary.Application/OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs', 'FoodDiary.Infrastructure/Persistence/OpenFoodFacts/OpenFoodFactsProductCacheRepository.cs') `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($ciMaintenance.profile -eq 'maintenance' -and $ciMaintenance.maintenanceKind -eq 'ci-fix') 'Path-grounded analyzer diagnostics did not use CI maintenance routing.'
+Assert-Adaptive (-not $ciMaintenance.requiresDesign -and -not $ciMaintenance.requiresWorkspace) 'CI maintenance retained governed ceremony.'
+
 $runtimeOwner = & (Join-Path $PSScriptRoot 'Get-LlmWikiFrontendRuntimeOwner.ps1') `
     -Query 'Improve AI photo annotation layout on the dashboard result.' `
     -CandidatePath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.html' `

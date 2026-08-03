@@ -524,6 +524,13 @@ Assert-Wiki (@($impactHelp.impacts.id) -contains 'workflow-impact-simulation') '
 $dependencyJson = & (Join-Path $toolsRoot 'Get-LlmWikiDependencyChanges.ps1') -BaseRef HEAD -Format Json
 $dependencyChanges = $dependencyJson | ConvertFrom-Json
 Assert-Wiki ($dependencyChanges.changeCount -eq 0) 'Unchanged dependency manifests produced dependency changes.'
+Push-Location (Join-Path $repositoryRoot 'FoodDiary.Web.Client')
+try {
+    $dependencyFromFrontend = & (Join-Path $toolsRoot 'Get-LlmWikiDependencyChanges.ps1') -BaseRef HEAD -Format Json | ConvertFrom-Json
+} finally {
+    Pop-Location
+}
+Assert-Wiki ($dependencyFromFrontend.changeCount -eq 0) 'Dependency analysis changed behavior when invoked from the frontend subdirectory.'
 
 $rolloutJson = & (Join-Path $toolsRoot 'Get-LlmWikiRolloutPlan.ps1') `
     -ChangedPath @(

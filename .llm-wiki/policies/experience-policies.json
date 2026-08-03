@@ -5,6 +5,7 @@
     "ui-discovery": { "label": "discovery-only", "maximumRequiredStages": 2, "workspace": false, "design": false, "independentReview": false },
     "scope-discovery": { "label": "discovery-only", "maximumRequiredStages": 2, "workspace": false, "design": false, "independentReview": false },
     "visual-ui-change": { "label": "visual-focused", "maximumRequiredStages": 5, "workspace": false, "design": false, "independentReview": false },
+    "maintenance": { "label": "evidence-focused", "maximumRequiredStages": 4, "workspace": false, "design": false, "independentReview": false },
     "bug": { "label": "focused", "maximumRequiredStages": 5, "workspace": false, "design": false, "independentReview": false },
     "feature": { "label": "designed", "maximumRequiredStages": 7, "workspace": "when-cross-cutting", "design": true, "independentReview": false },
     "critical": { "label": "governed", "maximumRequiredStages": 11, "workspace": true, "design": true, "independentReview": true },

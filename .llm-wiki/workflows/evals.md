@@ -40,6 +40,8 @@ component contracts remain unchanged.
 The Cycle repository regression prevents database vocabulary in a bounded
 query-performance bug from forcing critical ceremony and prevents handler trace
 from displacing explicit Infrastructure and integration-test paths.
+Docker-build and Storybook dependency regressions protect the four-stage
+maintenance route and ensure concrete diagnostics outrank heuristic discovery.
 
 Each policy rule should have:
 
