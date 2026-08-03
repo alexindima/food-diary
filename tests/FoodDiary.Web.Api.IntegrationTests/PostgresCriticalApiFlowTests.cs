@@ -69,7 +69,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         Assert.NotNull(refreshPayload);
         Assert.False(string.IsNullOrWhiteSpace(refreshPayload.AccessToken));
         Assert.False(string.IsNullOrWhiteSpace(refreshPayload.RefreshToken));
-        Assert.NotEqual(originalRefreshToken, refreshPayload.RefreshToken);
+        Assert.NotEqual(originalRefreshToken, refreshPayload.RefreshToken, StringComparer.Ordinal);
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", refreshPayload.AccessToken);
         HttpResponseMessage usersInfoResponse = await client.GetAsync("/api/v1/users/info");

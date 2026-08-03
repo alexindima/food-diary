@@ -334,7 +334,7 @@ public partial class AdminFeatureTests {
         Assert.Equal("<a href=\"https://fooddiary.club/dietologist-invitations/demo\">FoodDiary</a>", transport.Body);
         Assert.Contains(
             "Alex Johnson on FoodDiary: https://fooddiary.club/dietologist-invitations/demo",
-            transport.AlternateViewBodies);
+            transport.AlternateViewBodies, StringComparer.Ordinal);
     }
 
     [Fact]

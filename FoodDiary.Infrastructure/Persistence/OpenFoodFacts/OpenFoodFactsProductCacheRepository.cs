@@ -51,7 +51,7 @@ internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext con
         CancellationToken cancellationToken = default) {
         var candidates = products
             .Where(product => !string.IsNullOrWhiteSpace(product.Barcode) && !string.IsNullOrWhiteSpace(product.Name))
-            .DistinctBy(product => product.Barcode.Trim())
+            .DistinctBy(product => product.Barcode.Trim(), StringComparer.Ordinal)
             .ToList();
         if (candidates.Count == 0) {
             return;

@@ -37,10 +37,10 @@ public sealed class CollaborationAuditInterceptorTests {
 
         string[] actions = [.. context.AuditEntries.Select(entry => entry.Action)];
         Assert.Multiple(
-            () => Assert.Contains("dietologist.invitation.created", actions),
-            () => Assert.Contains("dietologist.recommendation.created", actions),
-            () => Assert.Contains("dietologist.task.created", actions),
-            () => Assert.Contains("dietologist.bulk-recipient.sent", actions));
+            () => Assert.Contains("dietologist.invitation.created", actions, StringComparer.Ordinal),
+            () => Assert.Contains("dietologist.recommendation.created", actions, StringComparer.Ordinal),
+            () => Assert.Contains("dietologist.task.created", actions, StringComparer.Ordinal),
+            () => Assert.Contains("dietologist.bulk-recipient.sent", actions, StringComparer.Ordinal));
     }
 
     [Fact]
@@ -113,13 +113,13 @@ public sealed class CollaborationAuditInterceptorTests {
 
         string[] actions = [.. context.AuditEntries.Select(entry => entry.Action)];
         Assert.Multiple(
-            () => Assert.Contains("dietologist.invitation.accepted", actions),
-            () => Assert.Contains("dietologist.invitation.declined", actions),
-            () => Assert.Contains("dietologist.relationship.disconnected", actions),
-            () => Assert.Contains("dietologist.permissions.updated", actions),
-            () => Assert.Contains("dietologist.recommendation.read", actions),
-            () => Assert.Contains("dietologist.task.cancelled", actions),
-            () => Assert.Contains("dietologist.task.status-changed", actions));
+            () => Assert.Contains("dietologist.invitation.accepted", actions, StringComparer.Ordinal),
+            () => Assert.Contains("dietologist.invitation.declined", actions, StringComparer.Ordinal),
+            () => Assert.Contains("dietologist.relationship.disconnected", actions, StringComparer.Ordinal),
+            () => Assert.Contains("dietologist.permissions.updated", actions, StringComparer.Ordinal),
+            () => Assert.Contains("dietologist.recommendation.read", actions, StringComparer.Ordinal),
+            () => Assert.Contains("dietologist.task.cancelled", actions, StringComparer.Ordinal),
+            () => Assert.Contains("dietologist.task.status-changed", actions, StringComparer.Ordinal));
     }
 
     private static DietologistInvitation CreateInvitation(UserId clientId) =>

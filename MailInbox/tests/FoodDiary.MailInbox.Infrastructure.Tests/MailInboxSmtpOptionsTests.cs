@@ -103,7 +103,7 @@ public sealed class MailInboxSmtpOptionsTests {
         Assert.Equal("mail.fooddiary.club", options.ServerName);
         Assert.Equal(2526, options.Port);
         Assert.Equal(4096, options.MaxMessageSizeBytes);
-        Assert.Contains("admin@fooddiary.club", options.AllowedRecipients);
+        Assert.Contains("admin@fooddiary.club", options.AllowedRecipients, StringComparer.Ordinal);
     }
 
     [Fact]

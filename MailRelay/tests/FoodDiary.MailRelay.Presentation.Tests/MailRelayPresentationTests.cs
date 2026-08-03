@@ -677,7 +677,7 @@ public sealed class MailRelayPresentationTests {
 
         Assert.Equal("message", response.Message);
         Assert.Equal("trace", response.TraceId);
-        Assert.Contains("field", response.Errors!.Keys);
+        Assert.Contains("field", response.Errors!.Keys, StringComparer.Ordinal);
     }
 
     [Fact]
@@ -726,7 +726,7 @@ public sealed class MailRelayPresentationTests {
         Assert.NotNull(provider.GetRequiredService<MailRelayTelemetryActionFilter>());
         Assert.NotNull(provider.GetRequiredService<ProviderWebhookAuthorizer>());
         Assert.Equal("Validation.Invalid", response.Error);
-        Assert.Contains("request.email", response.Errors!.Keys);
+        Assert.Contains("request.email", response.Errors!.Keys, StringComparer.Ordinal);
     }
 
     [Fact]

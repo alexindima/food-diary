@@ -51,7 +51,7 @@ public sealed class CreateAdminUserCommandHandlerTests {
         User capturedUser = Assert.IsType<User>(createdUser);
         Assert.True(capturedUser.IsEmailConfirmed);
         Assert.True(capturedUser.MustChangePassword);
-        Assert.Contains(RoleNames.Dietologist, capturedUser.GetRoleNames());
+        Assert.Contains(RoleNames.Dietologist, capturedUser.GetRoleNames(), StringComparer.Ordinal);
         AdminUserCreationModel creation = result.Value;
         Assert.NotEmpty(creation.TemporaryPassword);
         Assert.True(creation.CredentialsEmailQueued);

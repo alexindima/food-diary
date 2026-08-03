@@ -47,7 +47,7 @@ public sealed class ShoppingListCreationServiceTests {
         Assert.NotNull(persisted);
         Assert.Multiple(
             () => Assert.Equal("Weekly groceries", persisted.Name),
-            () => Assert.Equal(["First", "Second"], result.Value.Items.Select(static item => item.Name)),
+            () => Assert.Equal(["First", "Second"], result.Value.Items.Select(static item => item.Name), StringComparer.Ordinal),
             () => Assert.False(result.Value.Items[0].IsChecked),
             () => Assert.Equal("Monday breakfast", Assert.Single(result.Value.Items[0].Sources).Label),
             () => Assert.Equal(mealPlanId.Value, result.Value.Items[0].Sources[0].MealPlanId),

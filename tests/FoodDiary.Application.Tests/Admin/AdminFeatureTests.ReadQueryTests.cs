@@ -335,7 +335,7 @@ public partial class AdminFeatureTests {
         ResultAssert.Success(result);
         Assert.Equal(user.Id.Value, result.Value.Id);
         Assert.Equal("admin@example.com", result.Value.Email);
-        Assert.Contains(RoleNames.Admin, result.Value.Roles);
+        Assert.Contains(RoleNames.Admin, result.Value.Roles, StringComparer.Ordinal);
     }
 
 

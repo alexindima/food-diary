@@ -18,10 +18,10 @@ public sealed class CorsOptionsSetupTests {
         Assert.NotNull(policy);
         Assert.Equal(["http://localhost:4200", "http://localhost:4300"], policy.Origins);
         Assert.True(policy.SupportsCredentials);
-        Assert.Contains("GET", policy.Methods);
-        Assert.Contains("PATCH", policy.Methods);
-        Assert.Contains("Authorization", policy.Headers);
-        Assert.Contains("X-Correlation-Id", policy.ExposedHeaders);
+        Assert.Contains("GET", policy.Methods, StringComparer.Ordinal);
+        Assert.Contains("PATCH", policy.Methods, StringComparer.Ordinal);
+        Assert.Contains("Authorization", policy.Headers, StringComparer.Ordinal);
+        Assert.Contains("X-Correlation-Id", policy.ExposedHeaders, StringComparer.Ordinal);
     }
 
     [Fact]
