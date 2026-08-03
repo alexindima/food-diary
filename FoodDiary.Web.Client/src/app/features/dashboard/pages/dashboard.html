@@ -126,9 +126,7 @@
                             [state]="blockStates.summary"
                             [isEditingLayout]="layout.isEditingLayout()"
                             [data]="dashboardSummaryData()"
-                            [caloriesBurned]="caloriesBurned()"
                             (blockToggle)="layout.toggleBlock('summary')"
-                            (goalAction)="openGoalsAsync()"
                         />
 
                         <fd-nutrition-weekly-trend-card

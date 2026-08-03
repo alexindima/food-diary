@@ -1,0 +1,112 @@
+<section class="nutrition-trend" [attr.aria-label]="'DASHBOARD.NUTRITION_TREND.TITLE' | translate">
+    <fd-dashboard-widget-frame [title]="'DASHBOARD.NUTRITION_TREND.TITLE' | translate">
+        <fd-ui-select
+            fdDashboardWidgetHeaderEnd
+            class="nutrition-trend__range"
+            id="nutrition-trend-range"
+            size="sm"
+            [ariaLabel]="'DASHBOARD.NUTRITION_TREND.RANGE_LABEL' | translate"
+            [options]="rangeOptions()"
+            [value]="visibleDays()"
+            (valueChange)="changeVisibleDays($event)"
+        />
+
+        <div class="nutrition-trend__content">
+            <div class="nutrition-trend__chart">
+                <span class="nutrition-trend__unit fd-ui-caption">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+                <div class="nutrition-trend__plot">
+                    <div class="nutrition-trend__axis" aria-hidden="true">
+                        @for (tick of ticks(); track tick.value) {
+                            <span class="nutrition-trend__tick">
+                                <span class="nutrition-trend__tick-full">{{ tick.value | number: '1.0-0' }}</span>
+                                <span class="nutrition-trend__tick-compact">{{ tick.compactLabel }}</span>
+                            </span>
+                        }
+                    </div>
+                    <div class="nutrition-trend__grid" aria-hidden="true">
+                        @for (tick of ticks(); track tick.value) {
+                            <span></span>
+                        }
+                    </div>
+                    @if (dailyGoal() > 0) {
+                        <div class="nutrition-trend__goal" aria-hidden="true" [style.bottom.%]="goalPosition()">
+                            <span>{{ 'DASHBOARD.NUTRITION_TREND.GOAL' | translate }}</span>
+                            <strong>{{ dailyGoal() | number: '1.0-0' }}</strong>
+                        </div>
+                    }
+                    <div class="nutrition-trend__bars" [class.nutrition-trend__bars--three-days]="visibleDays() === 3">
+                        @for (point of trendPoints(); track point.date) {
+                            <div class="nutrition-trend__day" [class.nutrition-trend__day--latest]="point.isLatest">
+                                <div
+                                    class="nutrition-trend__bar"
+                                    role="img"
+                                    [attr.aria-label]="point.label + ': ' + point.calories + ' kcal'"
+                                >
+                                    <span
+                                        class="nutrition-trend__segment nutrition-trend__segment--protein"
+                                        [style.height.%]="point.proteinHeight"
+                                    ></span>
+                                    <span
+                                        class="nutrition-trend__segment nutrition-trend__segment--carbs"
+                                        [style.height.%]="point.carbHeight"
+                                    ></span>
+                                    <span
+                                        class="nutrition-trend__segment nutrition-trend__segment--fats"
+                                        [style.height.%]="point.fatHeight"
+                                    ></span>
+                                    <span
+                                        class="nutrition-trend__segment nutrition-trend__segment--fiber"
+                                        [style.height.%]="point.fiberHeight"
+                                    ></span>
+                                </div>
+                                <span class="nutrition-trend__date fd-ui-caption" [attr.aria-label]="point.label">
+                                    <span>{{ point.dayLabel }}</span>
+                                    <span>{{ point.monthLabel }}</span>
+                                </span>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="nutrition-trend__legend fd-row fd-ui-caption">
+                    <span
+                        ><i class="nutrition-trend__swatch nutrition-trend__swatch--protein"></i
+                        >{{ 'GENERAL.NUTRIENTS.PROTEIN' | translate }}</span
+                    >
+                    <span
+                        ><i class="nutrition-trend__swatch nutrition-trend__swatch--carbs"></i
+                        >{{ 'GENERAL.NUTRIENTS.CARB' | translate }}</span
+                    >
+                    <span
+                        ><i class="nutrition-trend__swatch nutrition-trend__swatch--fats"></i
+                        >{{ 'GENERAL.NUTRIENTS.FAT' | translate }}</span
+                    >
+                    <span
+                        ><i class="nutrition-trend__swatch nutrition-trend__swatch--fiber"></i
+                        >{{ 'SHARED.NUTRIENTS_SUMMARY.FIBER' | translate }}</span
+                    >
+                </div>
+            </div>
+
+            @let insight = insightView();
+            <aside
+                class="nutrition-trend__insight"
+                [class.nutrition-trend__insight--positive]="insight.tone === 'positive'"
+                [class.nutrition-trend__insight--neutral]="insight.tone === 'neutral'"
+            >
+                <div class="nutrition-trend__insight-heading fd-row fd-gap-sm">
+                    <span class="nutrition-trend__insight-icon fd-place-center"><fd-ui-icon [name]="insight.icon" /></span>
+                    <h3 class="fd-ui-action-text">{{ insight.title }}</h3>
+                </div>
+                @if (insight.comparison; as comparison) {
+                    <p class="fd-ui-body-sm fd-ui-text-muted">{{ comparison }}</p>
+                }
+                <p class="fd-ui-body-sm fd-ui-text-muted">{{ insight.hint }}</p>
+                @if (insight.showDetails) {
+                    <button type="button" class="nutrition-trend__details fd-ui-action-text" (click)="details.emit()">
+                        {{ 'DASHBOARD.NUTRITION_TREND.DETAILS' | translate }}
+                    </button>
+                }
+            </aside>
+        </div>
+    </fd-dashboard-widget-frame>
+</section>

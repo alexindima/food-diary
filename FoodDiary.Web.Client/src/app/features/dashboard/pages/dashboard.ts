@@ -19,6 +19,7 @@ import { FdUiDatePickerButtonComponent } from 'fd-ui-kit/date-picker-button/fd-u
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
 import type { AiInputBarResult } from '../../../components/shared/ai-input-bar/ai-input-bar.types';
+import { NutritionWeeklyTrendCardComponent } from '../../../components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
 import { NavigationService } from '../../../services/navigation.service';
@@ -29,7 +30,6 @@ import { ThemeService } from '../../../shared/theme/theme.service';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { AiMealCreateFacade } from '../../meals/lib/ai/ai-meal-create.facade';
-import { NutritionWeeklyTrendCardComponent } from '../components/nutrition-weekly-trend-card/nutrition-weekly-trend-card';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DASHBOARD_FIRST_RESIZE_ENTRY_INDEX, DASHBOARD_LANGUAGE_VERSION_INCREMENT } from './dashboard-lib/dashboard-page.config';
@@ -111,7 +111,6 @@ export class DashboardComponent {
     protected readonly isTodaySelected = this.facade.isTodaySelected;
     protected readonly snapshot = this.facade.snapshot;
     protected readonly isLoading = this.facade.isLoading;
-    protected readonly caloriesBurned = this.facade.caloriesBurned;
     protected readonly meals = this.facade.meals;
     protected readonly weeklyConsumed = this.facade.weeklyConsumed;
     protected readonly weeklyCalories = this.facade.weeklyCalories;

@@ -1,9 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { NutritionInsight } from '../../lib/nutrition-insight.policy';
-import { NutritionWeeklyTrendCardComponent } from './nutrition-weekly-trend-card';
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
+import { type NutritionTrendInsight, NutritionWeeklyTrendCardComponent } from './nutrition-weekly-trend-card';
 
 const DAILY_GOAL = 2258;
 const TREND_DAYS = 7;
@@ -16,7 +15,7 @@ const DAILY_CALORIE_INCREMENT = 50;
 const LATEST_POINT_INDEX = TREND_DAYS - 1;
 const EXCESS_CARBS = 224;
 const REGULAR_CARBS = 180;
-const DEFAULT_INSIGHT: NutritionInsight = { kind: 'carb-excess', tone: 'warning', metric: 'carbs', current: EXCESS_CARBS, goal: 115 };
+const DEFAULT_INSIGHT: NutritionTrendInsight = { kind: 'carb-excess', tone: 'warning', metric: 'carbs', current: EXCESS_CARBS, goal: 115 };
 
 describe('NutritionWeeklyTrendCardComponent', () => {
     it('renders seven accessible stacked daily bars and an excess insight', async () => {
@@ -70,7 +69,7 @@ describe('NutritionWeeklyTrendCardComponent', () => {
     });
 });
 
-async function setupAsync(insight: NutritionInsight = DEFAULT_INSIGHT): Promise<ComponentFixture<NutritionWeeklyTrendCardComponent>> {
+async function setupAsync(insight: NutritionTrendInsight = DEFAULT_INSIGHT): Promise<ComponentFixture<NutritionWeeklyTrendCardComponent>> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
             imports: [NutritionWeeklyTrendCardComponent],

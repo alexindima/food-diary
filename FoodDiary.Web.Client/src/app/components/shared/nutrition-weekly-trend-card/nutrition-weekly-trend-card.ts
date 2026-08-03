@@ -5,9 +5,8 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiIconComponent, FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit';
 import { merge, startWith } from 'rxjs';
 
-import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
-import type { NutritionInsight, NutritionInsightKind, NutritionInsightMetric } from '../../lib/nutrition-insight.policy';
-import type { WeeklyCaloriesPoint } from '../../models/dashboard.data';
+import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
+import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboard-widget-frame';
 
 const PROTEIN_CALORIES_PER_GRAM = 4;
 const CARB_CALORIES_PER_GRAM = 4;
@@ -19,6 +18,25 @@ const DEFAULT_TREND_DAYS = 7;
 const CALORIE_SCALE_STEP = 500;
 const ONE_THOUSAND = 1000;
 const PERCENT = 100;
+
+export type NutritionInsightKind =
+    'empty' | 'calorie-excess' | 'carb-excess' | 'fat-excess' | 'protein-deficit' | 'fiber-deficit' | 'in-progress' | 'balanced';
+export type NutritionInsightMetric = 'calories' | 'proteins' | 'fats' | 'carbs' | 'fiber';
+export type NutritionTrendInsight = {
+    kind: NutritionInsightKind;
+    tone: 'neutral' | 'positive' | 'warning';
+    metric?: NutritionInsightMetric;
+    current?: number;
+    goal?: number;
+};
+export type NutritionTrendPoint = {
+    date: string;
+    calories: number;
+    proteins?: number;
+    fats?: number;
+    carbs?: number;
+    fiber?: number;
+};
 
 type TrendRange = typeof SHORT_TREND_DAYS | typeof DEFAULT_TREND_DAYS;
 
@@ -71,7 +89,7 @@ const METRIC_LABEL_KEYS: Record<NutritionInsightMetric, string> = {
 
 @Component({
     selector: 'fd-nutrition-weekly-trend-card',
-    imports: [DecimalPipe, FdUiIconComponent, FdUiSelectComponent, TranslatePipe],
+    imports: [DecimalPipe, FdUiIconComponent, FdUiSelectComponent, TranslatePipe, DashboardWidgetFrameComponent],
     templateUrl: './nutrition-weekly-trend-card.html',
     styleUrl: './nutrition-weekly-trend-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -83,9 +101,9 @@ export class NutritionWeeklyTrendCardComponent {
         { initialValue: null },
     );
 
-    public readonly points = input.required<WeeklyCaloriesPoint[]>();
+    public readonly points = input.required<NutritionTrendPoint[]>();
     public readonly dailyGoal = input.required<number>();
-    public readonly insight = input.required<NutritionInsight>();
+    public readonly insight = input.required<NutritionTrendInsight>();
     public readonly details = output();
 
     protected readonly visibleDays = signal<TrendRange>(DEFAULT_TREND_DAYS);
@@ -170,7 +188,7 @@ export class NutritionWeeklyTrendCardComponent {
         return `${new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(value / ONE_THOUSAND)}k`;
     }
 
-    private calculateStackCalories(point: WeeklyCaloriesPoint): number {
+    private calculateStackCalories(point: NutritionTrendPoint): number {
         return (
             (point.proteins ?? 0) * PROTEIN_CALORIES_PER_GRAM +
             (point.carbs ?? 0) * CARB_CALORIES_PER_GRAM +
@@ -179,7 +197,7 @@ export class NutritionWeeklyTrendCardComponent {
         );
     }
 
-    private buildInsightComparison(insight: NutritionInsight, keyPrefix: string): string | null {
+    private buildInsightComparison(insight: NutritionTrendInsight, keyPrefix: string): string | null {
         if (insight.metric === undefined || insight.current === undefined || insight.goal === undefined) {
             return null;
         }

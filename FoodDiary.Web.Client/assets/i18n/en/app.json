@@ -1624,6 +1624,10 @@
             },
             "DETAILS": "Learn more"
         },
+        "DAY_SUMMARY": {
+            "TITLE": "Day summary",
+            "GOAL_MARKER": "Nutrient goal"
+        },
         "MOTIVATION_TITLE": "Stay motivated",
         "MEALS_SUBTITLE": "Meal log",
         "MEALS_TITLE": "Today's meals",

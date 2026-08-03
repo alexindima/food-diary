@@ -9,7 +9,7 @@
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
                     "selectorUnreferencedComponents":  122,
-                    "componentsWithoutDirectSpecs":  107,
+                    "componentsWithoutDirectSpecs":  108,
                     "criticalSymbolsWithoutTestReferences":  26,
                     "explicitDebtMarkers":  2
                 },
@@ -1953,20 +1953,11 @@
                                                                 "name":  "data",
                                                                 "type":  "DashboardSummaryData",
                                                                 "required":  true
-                                                            },
-                                                            {
-                                                                "name":  "caloriesBurned",
-                                                                "type":  "number",
-                                                                "required":  true
                                                             }
                                                         ],
                                              "outputs":  [
                                                              {
                                                                  "name":  "blockToggle",
-                                                                 "type":  ""
-                                                             },
-                                                             {
-                                                                 "name":  "goalAction",
                                                                  "type":  ""
                                                              }
                                                          ],
@@ -4248,6 +4239,24 @@
                                                                  "name":  "manualAction",
                                                                  "type":  ""
                                                              }
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
+                                             "class":  "DayNutritionSummaryComponent",
+                                             "selector":  "fd-day-nutrition-summary",
+                                             "feature":  "shared",
+                                             "path":  "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.html",
+                                             "inputs":  [
+                                                            {
+                                                                "name":  "data",
+                                                                "type":  "DayNutritionSummaryData",
+                                                                "required":  true
+                                                            }
+                                                        ],
+                                             "outputs":  [
+
                                                          ],
                                              "specPath":  null
                                          },

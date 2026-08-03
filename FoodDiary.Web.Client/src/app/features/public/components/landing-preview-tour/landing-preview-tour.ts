@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, DestroyRef, effect, type ElementRef
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { DashboardSummaryCardComponent } from '../../../../components/shared/dashboard-summary-card/dashboard-summary-card';
+import { DayNutritionSummaryComponent } from '../../../../components/shared/day-nutrition-summary/day-nutrition-summary';
 import { MealsPreviewComponent } from '../../../../components/shared/meals-preview/meals-preview';
 import type { MealPreviewEntry } from '../../../../components/shared/meals-preview/meals-preview-lib/meals-preview.types';
+import { NutritionWeeklyTrendCardComponent } from '../../../../components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card';
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card';
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card';
 import { AuthService } from '../../../../services/auth.service';
@@ -20,7 +21,8 @@ import { buildLandingPreviewContent, type LandingPreviewContent } from './landin
     selector: 'fd-landing-preview-tour',
     imports: [
         TranslatePipe,
-        DashboardSummaryCardComponent,
+        DayNutritionSummaryComponent,
+        NutritionWeeklyTrendCardComponent,
         MealsPreviewComponent,
         ProductCardComponent,
         RecipeCardComponent,
@@ -40,6 +42,7 @@ export class LandingPreviewTourComponent {
 
     protected isAuthenticated = this.authService.isAuthenticated;
     protected heroSummaryCard: LandingPreviewContent['heroSummaryCard'] = buildLandingPreviewContent(key => key).heroSummaryCard;
+    protected nutritionTrend: LandingPreviewContent['nutritionTrend'] = buildLandingPreviewContent(key => key).nutritionTrend;
     protected guestMealEntries: MealPreviewEntry[] = [];
     protected previewProducts: Product[] = [];
     protected previewRecipes: Recipe[] = [];
@@ -75,6 +78,7 @@ export class LandingPreviewTourComponent {
     private refreshPreviewContent(): void {
         const content = buildLandingPreviewContent(key => this.translateService.instant(key));
         this.heroSummaryCard = content.heroSummaryCard;
+        this.nutritionTrend = content.nutritionTrend;
         this.previewProducts = content.previewProducts;
         this.previewRecipes = content.previewRecipes;
         this.previewQuickItems = content.previewQuickItems;

@@ -12,16 +12,7 @@
             </div>
         }
         <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
-            <fd-dashboard-summary-card
-                class="dashboard__card dashboard__card--ring"
-                [dailyGoal]="data().dailyGoal"
-                [dailyConsumed]="data().dailyConsumed"
-                [weeklyConsumed]="data().weeklyConsumed"
-                [weeklyGoal]="data().weeklyGoal"
-                [nutrientBars]="data().nutrientBars"
-                [caloriesBurned]="caloriesBurned()"
-                (goalAction)="goalAction.emit()"
-            />
+            <fd-day-nutrition-summary [data]="data()" />
         </fd-dashboard-card-shell>
     </div>
 }

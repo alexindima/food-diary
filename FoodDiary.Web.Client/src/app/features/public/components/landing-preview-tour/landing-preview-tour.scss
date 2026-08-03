@@ -95,6 +95,11 @@
     margin: 0;
 }
 
+.landing-preview__trend-card {
+    min-width: 0;
+    animation: landingFadeUp 780ms ease-out both;
+}
+
 .landing-preview__showcase {
     display: grid;
     gap: var(--fd-landing-grid-gap);

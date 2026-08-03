@@ -1,0 +1,64 @@
+<section class="day-summary" [attr.aria-label]="'DASHBOARD.DAY_SUMMARY.TITLE' | translate">
+    <fd-dashboard-widget-frame [title]="'DASHBOARD.DAY_SUMMARY.TITLE' | translate">
+        <div class="day-summary__layout">
+            <div class="day-summary__calories">
+                <div class="day-summary__ring">
+                    <svg viewBox="0 0 240 240" aria-hidden="true" focusable="false">
+                        <circle class="day-summary__ring-track" cx="120" cy="120" r="104" />
+                        <circle
+                            class="day-summary__ring-progress"
+                            cx="120"
+                            cy="120"
+                            r="104"
+                            [class.day-summary__ring-progress--excess]="dailyPercent() > 100"
+                            [attr.stroke-dasharray]="ringDasharray()"
+                        />
+                    </svg>
+                    <div class="day-summary__ring-content">
+                        <div class="day-summary__percent fd-ui-metric-hero">
+                            {{ dailyPercent() }}<span class="fd-ui-metric-unit">%</span>
+                        </div>
+                        <div class="day-summary__calorie-value fd-ui-stat-value">
+                            {{ data().dailyConsumed | number: '1.0-0' }} / {{ data().dailyGoal | number: '1.0-0' }}
+                            {{ 'CONSUMPTION_RING.UNIT' | translate }}
+                        </div>
+                        <div class="day-summary__weekly fd-ui-body-sm">
+                            {{ 'CONSUMPTION_RING.WEEKLY_LABEL' | translate }}: {{ weeklyPercent() }}%
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-summary__nutrients">
+                @for (bar of bars(); track bar.id) {
+                    <div class="day-summary__nutrient">
+                        <div class="day-summary__nutrient-header">
+                            <span class="day-summary__nutrient-label fd-ui-body-sm">{{ bar.labelText }}</span>
+                            <span class="day-summary__nutrient-value fd-ui-meta-text">
+                                {{ bar.current | number: '1.0-0' }} / {{ bar.target | number: '1.0-0' }} {{ bar.unitText }}
+                            </span>
+                            <strong
+                                class="day-summary__nutrient-percent fd-ui-body-sm"
+                                [class.day-summary__nutrient-percent--excess]="bar.isExcess"
+                                >{{ bar.percent }}%</strong
+                            >
+                        </div>
+                        <div class="day-summary__track fd-ui-progress-track">
+                            <div
+                                class="day-summary__fill fd-ui-progress-fill"
+                                [style.background]="bar.background"
+                                [style.width.%]="bar.fillWidth"
+                            ></div>
+                            @if (showGoalMarkers()) {
+                                <span
+                                    class="day-summary__goal"
+                                    [style.left.%]="goalPosition()"
+                                    [attr.aria-label]="'DASHBOARD.DAY_SUMMARY.GOAL_MARKER' | translate"
+                                ></span>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </fd-dashboard-widget-frame>
+</section>

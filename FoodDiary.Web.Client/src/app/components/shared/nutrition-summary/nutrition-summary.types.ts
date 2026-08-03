@@ -9,11 +9,3 @@ export type NutrientBar = {
     colorStart: string;
     colorEnd: string;
 };
-
-export type NutrientBarViewModel = {
-    labelText: string;
-    unitText: string;
-    valueColor: string;
-    fillBackground: string;
-    fillWidth: number;
-} & NutrientBar;

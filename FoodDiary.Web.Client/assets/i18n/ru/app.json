@@ -1141,6 +1141,10 @@
             },
             "DETAILS": "Подробнее"
         },
+        "DAY_SUMMARY": {
+            "TITLE": "Сводка дня",
+            "GOAL_MARKER": "Цель по нутриенту"
+        },
         "MOTIVATION_TITLE": "Мотивация",
         "MEALS_SUBTITLE": "Журнал приёмов",
         "MEALS_TITLE": "Сегодняшние приёмы пищи",

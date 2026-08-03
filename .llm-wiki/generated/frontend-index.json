@@ -8,11 +8,11 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1519,
+                    "typescriptFiles":  1517,
                     "symbols":  579,
                     "routes":  84,
                     "features":  36,
-                    "specs":  548,
+                    "specs":  547,
                     "localeFiles":  5,
                     "roles":  {
                                   "Component":  395,
@@ -345,7 +345,6 @@
                                          "DashboardTdeeBlockComponent",
                                          "DashboardTrendBlockComponent",
                                          "HydrationCardComponent",
-                                         "NutritionWeeklyTrendCardComponent",
                                          "TdeeInsightCardComponent",
                                          "TdeeInsightCardContentComponent",
                                          "TdeeInsightCardDetailsComponent",
@@ -365,7 +364,6 @@
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/cycle-summary-card/cycle-summary-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/daily-advice-card/daily-advice-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-content/tdee-insight-card-content.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.spec.ts",
@@ -2177,13 +2175,6 @@
                         "line":  27
                     },
                     {
-                        "name":  "DashboardSummaryCardComponent",
-                        "role":  "Component",
-                        "selector":  "fd-dashboard-summary-card",
-                        "path":  "FoodDiary.Web.Client/src/app/components/shared/dashboard-summary-card/dashboard-summary-card.ts",
-                        "line":  41
-                    },
-                    {
                         "name":  "DashboardWidgetFrameComponent",
                         "role":  "Component",
                         "selector":  "fd-dashboard-widget-frame",
@@ -2196,6 +2187,13 @@
                         "selector":  "fd-dashboard-widget-header",
                         "path":  "FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-header/dashboard-widget-header.ts",
                         "line":  11
+                    },
+                    {
+                        "name":  "DayNutritionSummaryComponent",
+                        "role":  "Component",
+                        "selector":  "fd-day-nutrition-summary",
+                        "path":  "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.ts",
+                        "line":  35
                     },
                     {
                         "name":  "DynamicProgressBarComponent",
@@ -2364,6 +2362,13 @@
                         "selector":  "fd-nutrition-editor",
                         "path":  "FoodDiary.Web.Client/src/app/components/shared/nutrition-editor/nutrition-editor.ts",
                         "line":  56
+                    },
+                    {
+                        "name":  "NutritionWeeklyTrendCardComponent",
+                        "role":  "Component",
+                        "selector":  "fd-nutrition-weekly-trend-card",
+                        "path":  "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
+                        "line":  97
                     },
                     {
                         "name":  "PageBodyComponent",
@@ -2686,13 +2691,6 @@
                         "selector":  "fd-hydration-card",
                         "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.ts",
                         "line":  18
-                    },
-                    {
-                        "name":  "NutritionWeeklyTrendCardComponent",
-                        "role":  "Component",
-                        "selector":  "fd-nutrition-weekly-trend-card",
-                        "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
-                        "line":  79
                     },
                     {
                         "name":  "TdeeInsightCardContentComponent",
@@ -4204,7 +4202,7 @@
                         "role":  "Component",
                         "selector":  "fd-landing-preview-tour",
                         "path":  "FoodDiary.Web.Client/src/app/features/public/components/landing-preview-tour/landing-preview-tour.ts",
-                        "line":  33
+                        "line":  35
                     },
                     {
                         "name":  "LandingStepsComponent",
@@ -5691,8 +5689,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  2894,
-                             "russianProperties":  2894,
+                             "englishProperties":  2897,
+                             "russianProperties":  2897,
                              "countsMatch":  true
                          },
                          {

@@ -16,17 +16,6 @@
     box-shadow: var(--fd-shadow-lg);
     color: var(--fd-color-text);
 
-    &__header {
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--fd-space-md);
-        margin-bottom: var(--fd-space-lg);
-    }
-
-    &__title {
-        margin: 0;
-    }
-
     &__range {
         width: max-content;
     }

@@ -9,13 +9,7 @@
 
             <div class="landing-preview__showcase-grid">
                 <div class="landing-preview__hero-card landing-preview__hero-card--embedded">
-                    <fd-dashboard-summary-card
-                        [dailyGoal]="heroSummaryCard.dailyGoal"
-                        [dailyConsumed]="heroSummaryCard.dailyConsumed"
-                        [weeklyConsumed]="heroSummaryCard.weeklyConsumed"
-                        [weeklyGoal]="heroSummaryCard.weeklyGoal"
-                        [nutrientBars]="heroSummaryCard.nutrientBars"
-                    />
+                    <fd-day-nutrition-summary [data]="heroSummaryCard" />
                 </div>
 
                 <div class="landing-preview__meals-card">
@@ -37,6 +31,15 @@
                         <span>{{ 'LANDING_PREVIEW_TOUR.PREVIEW.BLOCKS.SUMMARY.SUBTITLE' | translate }}</span>
                     </div>
                 </div>
+            </div>
+
+            <div class="landing-preview__trend-card">
+                <fd-nutrition-weekly-trend-card
+                    [points]="nutritionTrend.points"
+                    [dailyGoal]="nutritionTrend.dailyGoal"
+                    [insight]="nutritionTrend.insight"
+                    (details)="navigateToAuthAsync('register')"
+                />
             </div>
         </div>
 

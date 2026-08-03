@@ -1,0 +1,153 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+    min-width: 0;
+    container-type: inline-size;
+}
+
+.day-summary {
+    padding: var(--fd-space-lg);
+    border: var(--fd-border-strong);
+    border-radius: var(--fd-radius-card);
+    background: var(--fd-bg-surface);
+    box-shadow: var(--fd-shadow-lg);
+    color: var(--fd-color-text);
+
+    &__layout {
+        display: grid;
+        grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.45fr);
+        gap: var(--fd-space-xl);
+        align-items: center;
+    }
+
+    &__calories {
+        display: grid;
+        place-items: center;
+    }
+
+    &__ring {
+        position: relative;
+        width: min(100%, 300px);
+        aspect-ratio: 1;
+    }
+    &__ring svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+    }
+    &__ring circle {
+        fill: none;
+        stroke-width: 18;
+        stroke-linecap: round;
+    }
+    &__ring-track {
+        stroke: var(--fd-color-border-summary-track);
+    }
+    &__ring-progress {
+        stroke: var(--fd-color-primary-500);
+        transition: stroke-dasharray 0.4s ease;
+    }
+    &__ring-progress--excess {
+        stroke: var(--fd-color-warning);
+    }
+
+    &__ring-content {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--fd-space-xs);
+        text-align: center;
+    }
+
+    &__percent {
+        color: var(--fd-color-text-strong);
+    }
+    &__percent span,
+    &__weekly {
+        color: var(--fd-color-text-muted);
+    }
+    &__nutrients {
+        display: grid;
+        gap: var(--fd-space-lg);
+        min-width: 0;
+    }
+    &__nutrient {
+        display: grid;
+        gap: var(--fd-space-xs);
+    }
+
+    &__nutrient-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(3.5rem, auto);
+        align-items: baseline;
+        gap: var(--fd-space-md);
+    }
+
+    &__nutrient-value {
+        color: var(--fd-color-text-muted);
+        white-space: nowrap;
+    }
+    &__nutrient-percent {
+        color: var(--fd-color-text-muted);
+        text-align: right;
+    }
+    &__nutrient-percent--excess {
+        color: var(--fd-color-warning);
+    }
+
+    &__track {
+        position: relative;
+        width: 100%;
+        overflow: visible;
+        --fd-progress-height: var(--fd-size-progress-height-xl);
+        --fd-progress-radius: var(--fd-radius-pill);
+        --fd-progress-track-background: var(--fd-bg-progress-track-strong);
+    }
+
+    &__fill {
+        position: absolute;
+        inset: 0 auto 0 0;
+        border-radius: inherit;
+        transition: width 0.4s ease;
+    }
+
+    &__goal {
+        position: absolute;
+        top: calc(var(--fd-space-xs) * -1);
+        bottom: calc(var(--fd-space-xs) * -1);
+        border-left: var(--fd-border-width-strong) dashed var(--fd-color-text-subtle);
+        transform: translateX(-50%);
+        pointer-events: none;
+    }
+
+    @container (max-width: 680px) {
+        &__layout {
+            grid-template-columns: 1fr;
+            gap: var(--fd-space-lg);
+        }
+        &__ring {
+            width: min(100%, 260px);
+        }
+    }
+
+    @media #{variables.$media-mobile} {
+        padding: var(--fd-space-md);
+
+        &__nutrient-header {
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: var(--fd-space-xs) var(--fd-space-sm);
+        }
+
+        &__nutrient-percent {
+            grid-column: 2;
+        }
+        &__nutrient-value {
+            grid-column: 1;
+            grid-row: 2;
+        }
+    }
+}

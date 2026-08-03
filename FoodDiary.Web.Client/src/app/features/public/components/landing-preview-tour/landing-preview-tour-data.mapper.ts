@@ -1,5 +1,10 @@
-import type { NutrientBar } from '../../../../components/shared/dashboard-summary-card/dashboard-summary-card.types';
+/* eslint-disable @typescript-eslint/no-magic-numbers -- Static landing preview fixtures intentionally expose concrete nutrition values. */
 import type { MealPreviewEntry } from '../../../../components/shared/meals-preview/meals-preview-lib/meals-preview.types';
+import type { NutrientBar } from '../../../../components/shared/nutrition-summary/nutrition-summary.types';
+import type {
+    NutritionTrendInsight,
+    NutritionTrendPoint,
+} from '../../../../components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card';
 import type { QuickMealItem } from '../../../meals/lib/quick/quick-meal.service';
 import type { Meal } from '../../../meals/models/meal.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
@@ -13,6 +18,11 @@ export type LandingPreviewContent = {
         weeklyGoal: number;
         nutrientBars: NutrientBar[];
     };
+    nutritionTrend: {
+        points: NutritionTrendPoint[];
+        dailyGoal: number;
+        insight: NutritionTrendInsight;
+    };
     guestMealEntries: MealPreviewEntry[];
     previewProducts: Product[];
     previewRecipes: Recipe[];
@@ -20,6 +30,11 @@ export type LandingPreviewContent = {
 };
 
 type TranslateFn = (key: string) => string;
+const PREVIEW_CALORIE_TOTALS = [1540, 1820, 1670, 2140, 1760, 1980, 1450];
+const PREVIEW_PROTEIN_RATIO = 0.032;
+const PREVIEW_FAT_RATIO = 0.03;
+const PREVIEW_CARB_RATIO = 0.055;
+const PREVIEW_FIBER_RATIO = 0.007;
 
 export function buildLandingPreviewContent(translate: TranslateFn, now: Date = new Date()): LandingPreviewContent {
     const previewProducts = buildPreviewProducts(translate, now);
@@ -27,10 +42,34 @@ export function buildLandingPreviewContent(translate: TranslateFn, now: Date = n
 
     return {
         heroSummaryCard: buildHeroSummaryCard(),
+        nutritionTrend: buildNutritionTrend(now),
         guestMealEntries: buildGuestMeals(translate, now),
         previewProducts,
         previewRecipes,
         previewQuickItems: buildPreviewQuickItems(previewProducts, previewRecipes),
+    };
+}
+
+function buildNutritionTrend(now: Date): LandingPreviewContent['nutritionTrend'] {
+    const totals = PREVIEW_CALORIE_TOTALS;
+    const points = totals.map((calories, index) => {
+        const date = new Date(now);
+        date.setDate(now.getDate() - (totals.length - 1 - index));
+
+        return {
+            date: date.toISOString(),
+            calories,
+            proteins: Math.round(calories * PREVIEW_PROTEIN_RATIO),
+            fats: Math.round(calories * PREVIEW_FAT_RATIO),
+            carbs: Math.round(calories * PREVIEW_CARB_RATIO),
+            fiber: Math.round(calories * PREVIEW_FIBER_RATIO),
+        };
+    });
+
+    return {
+        points,
+        dailyGoal: 2000,
+        insight: { kind: 'in-progress', tone: 'neutral', metric: 'calories', current: 1450, goal: 2000 },
     };
 }
 

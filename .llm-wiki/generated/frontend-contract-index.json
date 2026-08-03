@@ -2,13 +2,13 @@
     "schemaVersion":  1,
     "summary":  {
                     "components":  400,
-                    "componentsWithoutDirectSpecs":  107,
-                    "inputs":  1218,
-                    "outputs":  408,
+                    "componentsWithoutDirectSpecs":  108,
+                    "inputs":  1212,
+                    "outputs":  406,
                     "apiCalls":  206,
                     "templatesWithTranslations":  241,
-                    "translationKeys":  1182,
-                    "consumerEdges":  900,
+                    "translationKeys":  1181,
+                    "consumerEdges":  901,
                     "consumedComponents":  277,
                     "unconsumedComponents":  122
                 },
@@ -1608,20 +1608,11 @@
                                               "name":  "data",
                                               "type":  "DashboardSummaryData",
                                               "required":  true
-                                          },
-                                          {
-                                              "name":  "caloriesBurned",
-                                              "type":  "number",
-                                              "required":  true
                                           }
                                       ],
                            "outputs":  [
                                            {
                                                "name":  "blockToggle",
-                                               "type":  ""
-                                           },
-                                           {
-                                               "name":  "goalAction",
                                                "type":  ""
                                            }
                                        ],
@@ -1782,37 +1773,6 @@
                                            }
                                        ],
                            "specPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.spec.ts"
-                       },
-                       {
-                           "class":  "NutritionWeeklyTrendCardComponent",
-                           "selector":  "fd-nutrition-weekly-trend-card",
-                           "feature":  "dashboard",
-                           "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "points",
-                                              "type":  "WeeklyCaloriesPoint[]",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "dailyGoal",
-                                              "type":  "number",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "insight",
-                                              "type":  "NutritionInsight",
-                                              "required":  true
-                                          }
-                                      ],
-                           "outputs":  [
-                                           {
-                                               "name":  "details",
-                                               "type":  ""
-                                           }
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.spec.ts"
                        },
                        {
                            "class":  "TdeeInsightCardComponent",
@@ -10149,52 +10109,6 @@
                            "specPath":  "FoodDiary.Web.Client/src/app/components/shared/daily-progress-card/daily-progress-card.spec.ts"
                        },
                        {
-                           "class":  "DashboardSummaryCardComponent",
-                           "selector":  "fd-dashboard-summary-card",
-                           "feature":  "shared",
-                           "path":  "FoodDiary.Web.Client/src/app/components/shared/dashboard-summary-card/dashboard-summary-card.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/dashboard-summary-card/dashboard-summary-card.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "dailyGoal",
-                                              "type":  "number",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "dailyConsumed",
-                                              "type":  "number",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "weeklyConsumed",
-                                              "type":  "number",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "weeklyGoal",
-                                              "type":  "number | null",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "nutrientBars",
-                                              "type":  "NutrientBar[] | null",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "caloriesBurned",
-                                              "type":  "number",
-                                              "required":  false
-                                          }
-                                      ],
-                           "outputs":  [
-                                           {
-                                               "name":  "goalAction",
-                                               "type":  ""
-                                           }
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/components/shared/dashboard-summary-card/dashboard-summary-card.spec.ts"
-                       },
-                       {
                            "class":  "DashboardWidgetFrameComponent",
                            "selector":  "fd-dashboard-widget-frame",
                            "feature":  "shared",
@@ -10269,6 +10183,24 @@
 
                                        ],
                            "specPath":  "FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-header/dashboard-widget-header.spec.ts"
+                       },
+                       {
+                           "class":  "DayNutritionSummaryComponent",
+                           "selector":  "fd-day-nutrition-summary",
+                           "feature":  "shared",
+                           "path":  "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.html",
+                           "inputs":  [
+                                          {
+                                              "name":  "data",
+                                              "type":  "DayNutritionSummaryData",
+                                              "required":  true
+                                          }
+                                      ],
+                           "outputs":  [
+
+                                       ],
+                           "specPath":  null
                        },
                        {
                            "class":  "DynamicProgressBarComponent",
@@ -11416,6 +11348,37 @@
 
                                        ],
                            "specPath":  null
+                       },
+                       {
+                           "class":  "NutritionWeeklyTrendCardComponent",
+                           "selector":  "fd-nutrition-weekly-trend-card",
+                           "feature":  "shared",
+                           "path":  "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
+                           "inputs":  [
+                                          {
+                                              "name":  "points",
+                                              "type":  "NutritionTrendPoint[]",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "dailyGoal",
+                                              "type":  "number",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "insight",
+                                              "type":  "NutritionTrendInsight",
+                                              "required":  true
+                                          }
+                                      ],
+                           "outputs":  [
+                                           {
+                                               "name":  "details",
+                                               "type":  ""
+                                           }
+                                       ],
+                           "specPath":  "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.spec.ts"
                        },
                        {
                            "class":  "PageBodyComponent",
@@ -15628,21 +15591,6 @@
                              },
                              {
                                  "feature":  "dashboard",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
-                                 "keys":  [
-                                              "DASHBOARD.NUTRITION_TREND.DETAILS",
-                                              "DASHBOARD.NUTRITION_TREND.GOAL",
-                                              "DASHBOARD.NUTRITION_TREND.RANGE_LABEL",
-                                              "DASHBOARD.NUTRITION_TREND.TITLE",
-                                              "GENERAL.NUTRIENTS.CARB",
-                                              "GENERAL.NUTRIENTS.FAT",
-                                              "GENERAL.NUTRIENTS.PROTEIN",
-                                              "GENERAL.UNITS.KCAL",
-                                              "SHARED.NUTRIENTS_SUMMARY.FIBER"
-                                          ]
-                             },
-                             {
-                                 "feature":  "dashboard",
                                  "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-content/tdee-insight-card-content.html",
                                  "keys":  [
                                               "TDEE_CARD.APPLY",
@@ -17610,13 +17558,12 @@
                              },
                              {
                                  "feature":  "shared",
-                                 "path":  "FoodDiary.Web.Client/src/app/components/shared/dashboard-summary-card/dashboard-summary-card.html",
+                                 "path":  "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.html",
                                  "keys":  [
-                                              "CONSUMPTION_RING.BURNED",
                                               "CONSUMPTION_RING.UNIT",
                                               "CONSUMPTION_RING.WEEKLY_LABEL",
-                                              "DASHBOARD_SUMMARY.GOALS_ACTION",
-                                              "DASHBOARD_SUMMARY.TITLE"
+                                              "DASHBOARD.DAY_SUMMARY.GOAL_MARKER",
+                                              "DASHBOARD.DAY_SUMMARY.TITLE"
                                           ]
                              },
                              {
@@ -17708,6 +17655,21 @@
                                               "NUTRITION_EDITOR.FATS",
                                               "NUTRITION_EDITOR.FIBER",
                                               "NUTRITION_EDITOR.PROTEINS"
+                                          ]
+                             },
+                             {
+                                 "feature":  "shared",
+                                 "path":  "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
+                                 "keys":  [
+                                              "DASHBOARD.NUTRITION_TREND.DETAILS",
+                                              "DASHBOARD.NUTRITION_TREND.GOAL",
+                                              "DASHBOARD.NUTRITION_TREND.RANGE_LABEL",
+                                              "DASHBOARD.NUTRITION_TREND.TITLE",
+                                              "GENERAL.NUTRIENTS.CARB",
+                                              "GENERAL.NUTRIENTS.FAT",
+                                              "GENERAL.NUTRIENTS.PROTEIN",
+                                              "GENERAL.UNITS.KCAL",
+                                              "SHARED.NUTRIENTS_SUMMARY.FIBER"
                                           ]
                              },
                              {
@@ -19213,52 +19175,13 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
                               "occurrences":  1,
                               "inputsUsed":  [
-                                                 "caloriesBurned",
                                                  "data",
                                                  "isEditingLayout",
                                                  "shouldRender",
                                                  "state"
                                              ],
                               "outputsHandled":  [
-                                                     "blockToggle",
-                                                     "goalAction"
-                                                 ]
-                          },
-                          {
-                              "component":  "DashboardSummaryCardComponent",
-                              "selector":  "fd-dashboard-summary-card",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/dashboard-summary-card/dashboard-summary-card.ts",
-                              "consumerFeature":  "dashboard",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-summary-block/dashboard-summary-block.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "caloriesBurned",
-                                                 "dailyConsumed",
-                                                 "dailyGoal",
-                                                 "nutrientBars",
-                                                 "weeklyConsumed",
-                                                 "weeklyGoal"
-                                             ],
-                              "outputsHandled":  [
-                                                     "goalAction"
-                                                 ]
-                          },
-                          {
-                              "component":  "DashboardSummaryCardComponent",
-                              "selector":  "fd-dashboard-summary-card",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/dashboard-summary-card/dashboard-summary-card.ts",
-                              "consumerFeature":  "public",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/public/components/landing-preview-tour/landing-preview-tour.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "dailyConsumed",
-                                                 "dailyGoal",
-                                                 "nutrientBars",
-                                                 "weeklyConsumed",
-                                                 "weeklyGoal"
-                                             ],
-                              "outputsHandled":  [
-
+                                                     "blockToggle"
                                                  ]
                           },
                           {
@@ -19309,7 +19232,21 @@
                               "selector":  "fd-dashboard-widget-frame",
                               "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-frame/dashboard-widget-frame.ts",
                               "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/dashboard-summary-card/dashboard-summary-card.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "DashboardWidgetFrameComponent",
+                              "selector":  "fd-dashboard-widget-frame",
+                              "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-frame/dashboard-widget-frame.ts",
+                              "consumerFeature":  "shared",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "title"
@@ -19423,6 +19360,34 @@
                                                  "iconName",
                                                  "iconTone",
                                                  "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "DayNutritionSummaryComponent",
+                              "selector":  "fd-day-nutrition-summary",
+                              "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.ts",
+                              "consumerFeature":  "dashboard",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-summary-block/dashboard-summary-block.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "data"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "DayNutritionSummaryComponent",
+                              "selector":  "fd-day-nutrition-summary",
+                              "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.ts",
+                              "consumerFeature":  "public",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/public/components/landing-preview-tour/landing-preview-tour.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "data"
                                              ],
                               "outputsHandled":  [
 
@@ -25840,6 +25805,20 @@
                               "selector":  "fd-ui-icon",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "shared",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "name"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "shared",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-summary/statistics-summary.html",
                               "occurrences":  2,
                               "inputsUsed":  [
@@ -25870,20 +25849,6 @@
                               "consumerFeature":  "dashboard",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/daily-advice-card/daily-advice-card.html",
                               "occurrences":  3,
-                              "inputsUsed":  [
-                                                 "name"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiIconComponent",
-                              "selector":  "fd-ui-icon",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
-                              "consumerFeature":  "dashboard",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
-                              "occurrences":  1,
                               "inputsUsed":  [
                                                  "name"
                                              ],
@@ -28307,12 +28272,14 @@
                               "component":  "FdUiSelectComponent",
                               "selector":  "fd-ui-select",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
-                              "consumerFeature":  "cycle-tracking",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
-                              "occurrences":  5,
+                              "consumerFeature":  "shared",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
+                              "occurrences":  1,
                               "inputsUsed":  [
-                                                 "label",
-                                                 "options"
+                                                 "ariaLabel",
+                                                 "id",
+                                                 "options",
+                                                 "size"
                                              ],
                               "outputsHandled":  [
 
@@ -28322,14 +28289,12 @@
                               "component":  "FdUiSelectComponent",
                               "selector":  "fd-ui-select",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
-                              "consumerFeature":  "dashboard",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
-                              "occurrences":  1,
+                              "consumerFeature":  "cycle-tracking",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
+                              "occurrences":  5,
                               "inputsUsed":  [
-                                                 "ariaLabel",
-                                                 "id",
-                                                 "options",
-                                                 "size"
+                                                 "label",
+                                                 "options"
                                              ],
                               "outputsHandled":  [
 
@@ -30196,23 +30161,6 @@
                               "component":  "NoticeBannerComponent",
                               "selector":  "fd-notice-banner",
                               "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/notice-banner/notice-banner.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/dashboard-summary-card/dashboard-summary-card.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "actionLabel",
-                                                 "message",
-                                                 "title",
-                                                 "type"
-                                             ],
-                              "outputsHandled":  [
-                                                     "action"
-                                                 ]
-                          },
-                          {
-                              "component":  "NoticeBannerComponent",
-                              "selector":  "fd-notice-banner",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/notice-banner/notice-banner.ts",
                               "consumerFeature":  "dashboard",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/cycle-summary-card/cycle-summary-card.html",
                               "occurrences":  1,
@@ -30484,9 +30432,25 @@
                           {
                               "component":  "NutritionWeeklyTrendCardComponent",
                               "selector":  "fd-nutrition-weekly-trend-card",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
+                              "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
                               "consumerFeature":  "dashboard",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "dailyGoal",
+                                                 "insight",
+                                                 "points"
+                                             ],
+                              "outputsHandled":  [
+                                                     "details"
+                                                 ]
+                          },
+                          {
+                              "component":  "NutritionWeeklyTrendCardComponent",
+                              "selector":  "fd-nutrition-weekly-trend-card",
+                              "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
+                              "consumerFeature":  "public",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/public/components/landing-preview-tour/landing-preview-tour.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "dailyGoal",
