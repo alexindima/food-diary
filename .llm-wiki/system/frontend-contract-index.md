@@ -17,3 +17,7 @@ Use `./.llm-wiki/wiki.ps1 ui -FrontendView components -Query <name>` before chan
 Use `./.llm-wiki/wiki.ps1 ui -FrontendView consumers -Query <selector>` to inspect the blast radius of a public UI contract.
 
 Regenerate with `./.llm-wiki/wiki.ps1 frontend-contract`; freshness is enforced by `verify` and CI.
+
+Local `verify-fast` may reuse a content-addressed receipt when TypeScript and
+template inputs, generator/helper implementation, and generated output are
+unchanged. Strict `wiki verify` always recomputes the index.

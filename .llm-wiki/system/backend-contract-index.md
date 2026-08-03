@@ -19,3 +19,7 @@ The generated index maps commands, queries, events, requests, responses, and int
 ```
 
 Duplicate short type names are marked ambiguous because static text indexing cannot fully resolve namespaces. Confirm ambiguous edges in source before making compatibility decisions.
+
+Local `verify-fast` may reuse a content-addressed receipt when C# sources, the
+symbol index, generator/helper implementation, and generated output are
+unchanged. Strict `wiki verify` always recomputes the index.

@@ -141,7 +141,8 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
         $startInfo.FileName = $shellPath
         $startInfo.WorkingDirectory = $repositoryRoot
         $startInfo.UseShellExecute = $false
-        $reuseArgument = if ($CheckMode -and $ReuseUnchangedChecks -and $toolName -eq 'Build-LlmWikiQualityIndex.ps1') { ' -ReuseUnchangedCheck' } else { '' }
+        $cacheableTools = @('Build-LlmWikiQualityIndex.ps1', 'Build-LlmWikiBackendContractIndex.ps1', 'Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiFrontendContractIndex.ps1')
+        $reuseArgument = if ($CheckMode -and $ReuseUnchangedChecks -and $toolName -in $cacheableTools) { ' -ReuseUnchangedCheck' } else { '' }
         $startInfo.Arguments = "-NoLogo -NoProfile -File `"$scriptPath`"$(if ($CheckMode) { ' -Check' } else { '' })$reuseArgument"
         $startInfo.EnvironmentVariables['GIT_CONFIG_COUNT'] = '1'
         $startInfo.EnvironmentVariables['GIT_CONFIG_KEY_0'] = 'core.safecrlf'

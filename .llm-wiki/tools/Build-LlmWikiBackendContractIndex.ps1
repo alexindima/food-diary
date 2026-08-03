@@ -1,12 +1,17 @@
 [CmdletBinding()]
-param([switch]$Check)
+param([switch]$Check, [switch]$ReuseUnchangedCheck)
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $symbolIndex = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/csharp-symbol-index.json') -Raw | ConvertFrom-Json
 $outputPath = Join-Path $wikiRoot 'generated/backend-contract-index.json'
+$cachePath = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-cache/backend-contract-index.json'
+$cacheInputs = @(Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' | Where-Object { $_.FullName -notmatch '[\/](node_modules|bin|obj|Migrations|\.artifacts|TestResults)[\/]' -and $_.Name -notmatch '\.(Designer|g)\.cs$' } | ForEach-Object { $_.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/') }) + @('.llm-wiki/generated/csharp-symbol-index.json', '.llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1', '.llm-wiki/tools/LlmWikiJson.ps1', '.llm-wiki/tools/LlmWikiIndexCache.ps1')
+$inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $cacheInputs
+if ($Check -and $ReuseUnchangedCheck -and (Test-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint)) { Write-Host 'Backend contract index cache hit: inputs, generator, and output are unchanged.'; exit 0 }
 
 function ConvertTo-RepositoryPath([string]$Path) {
     [System.IO.Path]::GetFullPath($Path).Substring($repositoryRoot.Length + 1).Replace('\', '/')
@@ -103,4 +108,5 @@ if ($Check) {
 }
 $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText($outputPath, $jsonText, $utf8WithoutBom)
+Write-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint
 Write-Host 'Generated .llm-wiki/generated/backend-contract-index.json.'

@@ -456,13 +456,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "ea49a340954113c0f7bbb64a763e190104bf0e1748331cc8ce877911c5760380"
+                                            "sha256":  "387d0fbda22868a6b47e916857b3523eb9ac2c0350d9d3171b6c3cb65c07bda0"
                                         }
                                     ],
-                        "reason":  "Reviewed wiki facade change: verify-fast only forwards unchanged-index cache reuse; task dispatch commands and receipt semantics are unchanged.",
+                        "reason":  "Reviewed smoke facade change: tools -AffectedOnly dispatches focused smoke groups; task dispatch commands and receipt semantics are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4481a86d808beffdfd464859d25f5ed28f10064e",
-                        "reviewedAtUtc":  "2026-08-02T11:29:36.1213897Z"
+                        "gitHead":  "59be6beb987b13d940a91bf8b70b1f35a0be8d49",
+                        "reviewedAtUtc":  "2026-08-03T14:42:08.5558789Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",

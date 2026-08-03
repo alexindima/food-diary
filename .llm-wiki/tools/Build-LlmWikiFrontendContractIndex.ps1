@@ -1,12 +1,19 @@
 [CmdletBinding()]
-param([switch]$Check)
+param([switch]$Check, [switch]$ReuseUnchangedCheck)
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $frontendRoot = Join-Path $repositoryRoot 'FoodDiary.Web.Client'
 $outputPath = Join-Path $wikiRoot 'generated/frontend-contract-index.json'
+$cachePath = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-cache/frontend-contract-index.json'
+$cacheInputs = @(
+    Get-ChildItem -LiteralPath $frontendRoot -Recurse -File | Where-Object { $_.Extension -in @('.ts', '.html') -and $_.FullName -notmatch '[\/](node_modules|dist[^\/]*|coverage|\.angular)[\/]' } | ForEach-Object { $_.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/') }
+) + @('.llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1', '.llm-wiki/tools/LlmWikiJson.ps1', '.llm-wiki/tools/LlmWikiIndexCache.ps1')
+$inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $cacheInputs
+if ($Check -and $ReuseUnchangedCheck -and (Test-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint)) { Write-Host 'Frontend contract index cache hit: inputs, generator, and output are unchanged.'; exit 0 }
 
 function ConvertTo-RepositoryPath {
     param([string]$Path)
@@ -272,4 +279,5 @@ if ($Check) {
 }
 $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText($outputPath, $jsonText, $utf8WithoutBom)
+Write-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint
 Write-Host "Generated .llm-wiki/generated/frontend-contract-index.json."

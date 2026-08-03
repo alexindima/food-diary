@@ -271,7 +271,15 @@ switch ($Command) {
         switch ($SmokeGroup) {
             'portable' { Invoke-WikiTool 'Test-LlmWikiPortable.ps1' }
             'linux' { Invoke-WikiTool 'Test-LlmWikiLinux.ps1' }
-            'tools' { Invoke-WikiTool 'Test-LlmWikiTools.ps1' }
+            'tools' {
+                if ($AffectedOnly) {
+                    $smokeArguments = @{ BaseRef = $BaseRef }
+                    if ($PSBoundParameters.ContainsKey('ChangedPath')) { $smokeArguments.ChangedPath = $ChangedPath }
+                    Invoke-WikiTool 'Invoke-LlmWikiAffectedSmoke.ps1' $smokeArguments
+                } else {
+                    Invoke-WikiTool 'Test-LlmWikiTools.ps1'
+                }
+            }
         }
     }
     'verify' {
@@ -1870,7 +1878,7 @@ switch ($Command) {
         Write-Host 'Usage:'
         Write-Host '  ./.llm-wiki/wiki.ps1 update [-AffectedOnly] [-BaseRef <ref>] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 lint [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 smoke -SmokeGroup portable|linux|tools'
+        Write-Host '  ./.llm-wiki/wiki.ps1 smoke -SmokeGroup portable|linux|tools [-AffectedOnly] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify-fast [-BaseRef <ref>] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify [-AffectedOnly] [-BaseRef <ref>] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify-full'

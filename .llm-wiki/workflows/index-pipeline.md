@@ -16,6 +16,11 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiLinux.ps1
   - .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1
   - .llm-wiki/tools/Build-LlmWikiQualityIndex.ps1
+  - .llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1
+  - .llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1
+  - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
+  - .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1
+  - .llm-wiki/tools/LlmWikiIndexCache.ps1
   - .llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1
   - .llm-wiki/wiki.ps1
   - .github/workflows/ci-tests.yml
@@ -72,15 +77,21 @@ the integration session before commit, push, or final handoff. In every other
 stale case, the pipeline emits one canonical `wiki.ps1 update` repair command
 in addition to the focused `update -AffectedOnly` option.
 
-The quality-index check uses a local content-addressed receipt during
-`verify-fast`. A hit requires matching hashes for every tracked or untracked
-`.cs`/`.ts` input, the C# symbol index, the quality generator and its JSON
+The quality, backend-contract, frontend, and frontend-contract checks use local
+content-addressed receipts during `verify-fast`. A hit requires matching hashes
+for every declared source input, upstream compiled index, generator and shared
 helper, plus the current generated output. The pipeline prints an explicit
 cache-hit message. Any source, generator, dependency-index, or output change
-invalidates the receipt and runs the normal freshness computation. Receipts
+invalidates its receipt and runs the normal freshness computation. Receipts
 live under ignored `.artifacts/llm-wiki/index-cache`; they are never committed.
 `wiki verify`, publication hooks, and CI deliberately bypass this optimization
 and retain a complete deterministic check.
+
+Use `wiki smoke -SmokeGroup tools -AffectedOnly` during iteration. Its dispatcher
+maps adaptive-routing, dependency-analysis, and facade changes to existing
+focused regression suites and prints per-group duration. Unknown shared-tool
+changes fall back to the complete monolithic tools smoke. The ordinary tools
+smoke and `verify-full` remain complete stateful publication/CI gates.
 
 Use `-BaseRef <ref>` for a committed range or `-ChangedPath <path[]>` for an
 explicit scope. The conservative dependency map still runs derived indexes and
