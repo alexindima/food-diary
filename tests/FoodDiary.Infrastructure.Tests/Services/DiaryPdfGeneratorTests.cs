@@ -211,8 +211,8 @@ public sealed class DiaryPdfGeneratorTests {
         Assert.True(pdf.Length > 1024);
         Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
         Assert.Equal(2, imageHandler.RequestCount);
-        Assert.Contains("https://93.184.216.34/rice.png", imageHandler.RequestedUrls);
-        Assert.Contains("https://93.184.216.34/carrot.png", imageHandler.RequestedUrls);
+        Assert.Contains("https://93.184.216.34/rice.png", imageHandler.RequestedUrls, StringComparer.Ordinal);
+        Assert.Contains("https://93.184.216.34/carrot.png", imageHandler.RequestedUrls, StringComparer.Ordinal);
     }
 
     [Fact]
@@ -236,8 +236,8 @@ public sealed class DiaryPdfGeneratorTests {
         Assert.True(pdf.Length > 1024);
         Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
         Assert.Equal(2, imageHandler.RequestCount);
-        Assert.Contains("https://93.184.216.34/ai-1.png", imageHandler.RequestedUrls);
-        Assert.Contains("https://93.184.216.34/ai-2.png", imageHandler.RequestedUrls);
+        Assert.Contains("https://93.184.216.34/ai-1.png", imageHandler.RequestedUrls, StringComparer.Ordinal);
+        Assert.Contains("https://93.184.216.34/ai-2.png", imageHandler.RequestedUrls, StringComparer.Ordinal);
     }
 
     [Fact]

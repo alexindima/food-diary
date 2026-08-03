@@ -19,7 +19,7 @@ public class PasswordHasherTests {
         string hash1 = _hasher.Hash("password123");
         string hash2 = _hasher.Hash("password123");
 
-        Assert.NotEqual(hash1, hash2);
+        Assert.NotEqual(hash1, hash2, StringComparer.Ordinal);
     }
 
     [Fact]

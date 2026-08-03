@@ -36,7 +36,7 @@ public sealed class MediatorTests {
 
         EchoResponse echoResponse = Assert.IsType<EchoResponse>(response);
         Assert.Equal("handled:mediator-object", echoResponse.Value);
-        Assert.Equal(["first:mediator-object", "second:mediator-object"], NotificationLog.Entries.Order(StringComparer.Ordinal));
+        Assert.Equal(["first:mediator-object", "second:mediator-object"], NotificationLog.Entries.Order(StringComparer.Ordinal), StringComparer.Ordinal);
     }
 
     [Fact]
@@ -159,7 +159,7 @@ public sealed class MediatorTests {
 
         await publisher.Publish(new SampleNotification("typed"));
 
-        Assert.Equal(["first:typed", "second:typed"], NotificationLog.Entries.Order(StringComparer.Ordinal));
+        Assert.Equal(["first:typed", "second:typed"], NotificationLog.Entries.Order(StringComparer.Ordinal), StringComparer.Ordinal);
     }
 
     [Fact]
@@ -170,7 +170,7 @@ public sealed class MediatorTests {
 
         await publisher.Publish((object)new SampleNotification("object"));
 
-        Assert.Equal(["first:object", "second:object"], NotificationLog.Entries.Order(StringComparer.Ordinal));
+        Assert.Equal(["first:object", "second:object"], NotificationLog.Entries.Order(StringComparer.Ordinal), StringComparer.Ordinal);
     }
 
     [Fact]

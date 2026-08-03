@@ -49,7 +49,7 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
             await migrator.MigrateAsync(InitialMigration);
 
             IEnumerable<string> appliedMigrations = await initialContext.Database.GetAppliedMigrationsAsync();
-            Assert.Equal([InitialMigration], appliedMigrations);
+            Assert.Equal([InitialMigration], appliedMigrations, StringComparer.Ordinal);
         }
 
         await using FoodDiaryDbContext upgradedContext = databaseFixture.CreateDbContext(connectionString);

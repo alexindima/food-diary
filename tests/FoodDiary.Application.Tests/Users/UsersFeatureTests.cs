@@ -119,8 +119,8 @@ public partial class UsersFeatureTests {
         Assert.Equal(1000, adminModel.AiInputTokenLimit);
         Assert.Equal(2000, adminModel.AiOutputTokenLimit);
         Assert.NotNull(adminModel.AiConsentAcceptedAt);
-        Assert.Contains(RoleNames.Admin, adminModel.Roles);
-        Assert.Contains(RoleNames.Support, adminModel.Roles);
+        Assert.Contains(RoleNames.Admin, adminModel.Roles, StringComparer.Ordinal);
+        Assert.Contains(RoleNames.Support, adminModel.Roles, StringComparer.Ordinal);
     }
 
     private static User CreateMappedUser() {

@@ -27,7 +27,7 @@ internal sealed class OpenFoodFactsCachedProductSearch(
 
         return externalProducts
             .Concat(cachedProducts)
-            .DistinctBy(product => product.Barcode)
+            .DistinctBy(product => product.Barcode, StringComparer.Ordinal)
             .Take(limit)
             .ToList();
     }

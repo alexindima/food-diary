@@ -95,7 +95,7 @@ public class AuthenticationTokenServiceTests {
 
         _ = service.IssueAccessToken(user);
 
-        Assert.Contains("Premium", jwt.LastAccessRoles);
+        Assert.Contains("Premium", jwt.LastAccessRoles, StringComparer.Ordinal);
         Assert.Equal(now.AddDays(7), jwt.LastAccessExpiresAtUtc);
     }
 

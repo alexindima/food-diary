@@ -268,7 +268,7 @@ public sealed class EmailOutboxTests {
             Now,
             cancellationToken: CancellationToken.None);
 
-        Assert.Equal(["Expired lock", "First due"], claimed.Select(static message => message.Subject));
+        Assert.Equal(["Expired lock", "First due"], claimed.Select(static message => message.Subject), StringComparer.Ordinal);
         EmailOutboxMessage claimedMessage = claimed[0];
         Assert.Multiple(
             () => Assert.NotNull(claimedMessage.LockedUntilUtc),

@@ -268,7 +268,7 @@ public class DashboardFeatureTests {
         ConsumptionModel mappedMeal = Assert.Single(model.Items);
         Assert.Equal(1, model.Total);
         Assert.Equal(mealId, mappedMeal.Id);
-        Assert.Equal(["manual", "ai"], mappedMeal.Items.Select(item => item.Origin));
+        Assert.Equal(["manual", "ai"], mappedMeal.Items.Select(item => item.Origin), StringComparer.Ordinal);
         Assert.Equal([itemA, itemB], mappedMeal.Items.Select(item => item.Id));
         Assert.Equal([sessionA, sessionB], mappedMeal.AiSessions.Select(session => session.Id));
         Assert.Equal([aiItemA, aiItemB], mappedMeal.AiSessions[0].Items.Select(item => item.Id));

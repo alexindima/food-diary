@@ -195,7 +195,7 @@ public sealed class MailInboxApplicationTests {
         Assert.True(result.IsFailure);
         Assert.False(nextCalled);
         Assert.Equal(ErrorKind.Validation, result.Error?.Kind);
-        Assert.Contains("Limit", result.Error?.Details?.Keys ?? []);
+        Assert.Contains("Limit", result.Error?.Details?.Keys ?? [], StringComparer.Ordinal);
     }
 
     [Fact]

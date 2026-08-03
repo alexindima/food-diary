@@ -116,7 +116,7 @@ public sealed class BaseApiControllerTests {
         ApiErrorHttpResponse payload = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
         Assert.Equal(StatusCodes.Status400BadRequest, objectResult.StatusCode);
         Assert.NotNull(payload.Errors);
-        Assert.Contains("email", payload.Errors.Keys);
+        Assert.Contains("email", payload.Errors.Keys, StringComparer.Ordinal);
         Assert.Equal("trace-base-controller", payload.TraceId);
     }
 

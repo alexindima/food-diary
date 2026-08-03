@@ -449,8 +449,8 @@ public class LayeringTests {
         string[] controllerFiles = Directory.GetFiles(Path.Combine(root, "FoodDiary.Presentation.Api", "Controllers"), "*Controller.cs");
         string?[] names = [.. controllerFiles.Select(Path.GetFileNameWithoutExtension)];
 
-        Assert.Contains("BaseApiController", names);
-        Assert.Contains("AuthorizedController", names);
+        Assert.Contains("BaseApiController", names, StringComparer.Ordinal);
+        Assert.Contains("AuthorizedController", names, StringComparer.Ordinal);
         Assert.Equal(2, names.Length);
     }
 

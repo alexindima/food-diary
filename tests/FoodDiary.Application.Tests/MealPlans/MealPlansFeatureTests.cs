@@ -354,7 +354,7 @@ public class MealPlansFeatureTests {
 
         ResultAssert.Success(result);
         Assert.Equal(DietType.Keto, repository.LastDietTypeFilter);
-        Assert.Equal(["Keto curated", "User plan"], result.Value.Select(plan => plan.Name));
+        Assert.Equal(["Keto curated", "User plan"], result.Value.Select(plan => plan.Name), StringComparer.Ordinal);
     }
 
     [Fact]
@@ -383,7 +383,7 @@ public class MealPlansFeatureTests {
         Assert.True(model.IsCurated);
         Assert.Equal([1, 2], model.Days.Select(day => day.DayNumber));
         IReadOnlyList<MealPlanMealModel> firstDayMeals = model.Days[0].Meals;
-        Assert.Equal([nameof(MealType.Breakfast), nameof(MealType.Dinner)], firstDayMeals.Select(meal => meal.MealType));
+        Assert.Equal([nameof(MealType.Breakfast), nameof(MealType.Dinner)], firstDayMeals.Select(meal => meal.MealType), StringComparer.Ordinal);
         Assert.Equal(100, firstDayMeals[0].Calories);
         Assert.Equal(10, firstDayMeals[0].Proteins);
         Assert.Equal(400, firstDayMeals[1].Calories);
@@ -435,7 +435,7 @@ public class MealPlansFeatureTests {
 
         Assert.Equal("Read model plan", model.Name);
         MealPlanDayModel day = Assert.Single(model.Days);
-        Assert.Equal(["Breakfast", "Dinner"], day.Meals.Select(meal => meal.MealType));
+        Assert.Equal(["Breakfast", "Dinner"], day.Meals.Select(meal => meal.MealType), StringComparer.Ordinal);
         Assert.Equal(200, day.Meals[0].Calories);
         Assert.Equal(20, day.Meals[1].Proteins);
         Assert.Equal(50, day.Meals[1].Carbs);

@@ -107,7 +107,7 @@ public class WeeklyCheckInCalculatorTests {
 
         IReadOnlyList<string> suggestions = WeeklyCheckInCalculator.GenerateSuggestions(summary, trends, 2000);
 
-        Assert.Contains("suggestion.log_more_days", suggestions);
+        Assert.Contains("suggestion.log_more_days", suggestions, StringComparer.Ordinal);
     }
 
     [Fact]
@@ -117,7 +117,7 @@ public class WeeklyCheckInCalculatorTests {
 
         IReadOnlyList<string> suggestions = WeeklyCheckInCalculator.GenerateSuggestions(summary, trends, 2000);
 
-        Assert.Contains("suggestion.over_calorie_goal", suggestions);
+        Assert.Contains("suggestion.over_calorie_goal", suggestions, StringComparer.Ordinal);
     }
 
     [Fact]
@@ -127,7 +127,7 @@ public class WeeklyCheckInCalculatorTests {
 
         IReadOnlyList<string> suggestions = WeeklyCheckInCalculator.GenerateSuggestions(summary, trends, 2000);
 
-        Assert.Contains("suggestion.on_track", suggestions);
+        Assert.Contains("suggestion.on_track", suggestions, StringComparer.Ordinal);
     }
 
     [Fact]
@@ -137,7 +137,7 @@ public class WeeklyCheckInCalculatorTests {
 
         IReadOnlyList<string> suggestions = WeeklyCheckInCalculator.GenerateSuggestions(summary, trends, dailyCalorieTarget: null);
 
-        Assert.Contains("suggestion.weight_increasing", suggestions);
+        Assert.Contains("suggestion.weight_increasing", suggestions, StringComparer.Ordinal);
     }
 
     [Fact]
@@ -147,7 +147,7 @@ public class WeeklyCheckInCalculatorTests {
 
         IReadOnlyList<string> suggestions = WeeklyCheckInCalculator.GenerateSuggestions(summary, trends, dailyCalorieTarget: null);
 
-        Assert.Contains("suggestion.weight_decreasing", suggestions);
+        Assert.Contains("suggestion.weight_decreasing", suggestions, StringComparer.Ordinal);
     }
 
     [Fact]
@@ -157,7 +157,7 @@ public class WeeklyCheckInCalculatorTests {
 
         IReadOnlyList<string> suggestions = WeeklyCheckInCalculator.GenerateSuggestions(summary, trends, dailyCalorieTarget: null);
 
-        Assert.Contains("suggestion.drink_more_water", suggestions);
+        Assert.Contains("suggestion.drink_more_water", suggestions, StringComparer.Ordinal);
     }
 
     [Fact]
@@ -167,7 +167,7 @@ public class WeeklyCheckInCalculatorTests {
 
         IReadOnlyList<string> suggestions = WeeklyCheckInCalculator.GenerateSuggestions(summary, trends, dailyCalorieTarget: null);
 
-        Assert.Contains("suggestion.low_protein", suggestions);
+        Assert.Contains("suggestion.low_protein", suggestions, StringComparer.Ordinal);
     }
 
     [Fact]
@@ -177,7 +177,7 @@ public class WeeklyCheckInCalculatorTests {
 
         IReadOnlyList<string> suggestions = WeeklyCheckInCalculator.GenerateSuggestions(summary, trends, dailyCalorieTarget: null);
 
-        Assert.Contains("suggestion.keep_going", suggestions);
+        Assert.Contains("suggestion.keep_going", suggestions, StringComparer.Ordinal);
     }
 
     private static DashboardStatisticsBucketReadModel CreateNutritionBucket(

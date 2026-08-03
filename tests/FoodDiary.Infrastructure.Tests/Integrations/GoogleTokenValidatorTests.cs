@@ -57,8 +57,8 @@ public sealed class GoogleTokenValidatorTests {
 
         string[] issuers = Assert.IsType<string[]>(field.GetValue(null));
 
-        Assert.Contains("https://accounts.google.com", issuers);
-        Assert.Contains("accounts.google.com", issuers);
+        Assert.Contains("https://accounts.google.com", issuers, StringComparer.Ordinal);
+        Assert.Contains("accounts.google.com", issuers, StringComparer.Ordinal);
     }
 
     [Fact]
