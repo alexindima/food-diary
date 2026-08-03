@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.ContentReports.Models;
+using FoodDiary.Application.Abstractions.Cycles.Models;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Application.Abstractions.Exercises.Models;
@@ -52,6 +53,7 @@ using FoodDiary.Infrastructure.Persistence.ShoppingLists;
 using FoodDiary.Infrastructure.Persistence.Tracking;
 using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Caching.Memory;
 using Npgsql;
 
@@ -602,6 +604,47 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotEmpty(byId.FertilitySignals);
         Assert.Equal(profile.Id, current?.Id);
         Assert.Equal(profile.Id, Assert.Single(profiles).Id);
+    }
+
+    [RequiresDockerFact]
+    public async Task CycleRepository_CurrentReadModel_DoesNotUseSingleQueryForMultipleCollections() {
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseNpgsql(connectionString)
+            .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.MultipleCollectionIncludeWarning))
+            .Options;
+
+        await using var context = new FoodDiaryDbContext(options);
+        await context.Database.MigrateAsync();
+
+        var user = User.Create($"cycle-read-model-{Guid.NewGuid():N}@example.com", "hash");
+        DateTime today = DateTime.UtcNow.Date;
+        var profile = CycleProfile.Create(
+            user.Id,
+            today.AddDays(-28),
+            CycleTrackingMode.TryingToConceive,
+            averageCycleLength: 30,
+            averagePeriodLength: 6,
+            lutealLength: 13,
+            isRegular: true,
+            isOnboardingComplete: true,
+            showFertilityEstimates: true,
+            discreetNotifications: false,
+            notes: "Initial");
+        AddCycleDetails(profile, today);
+        context.Users.Add(user);
+        context.CycleProfiles.Add(profile);
+        await context.SaveChangesAsync();
+
+        var repository = new CycleRepository(context);
+        CycleProfileReadModel? readModel = await repository.GetCurrentReadModelAsync(user.Id);
+
+        Assert.NotNull(readModel);
+        Assert.Multiple(
+            () => Assert.Equal(2, readModel.BleedingEntries.Count),
+            () => Assert.Single(readModel.SymptomEntries),
+            () => Assert.Single(readModel.Factors),
+            () => Assert.Single(readModel.FertilitySignals));
     }
 
     [RequiresDockerFact]

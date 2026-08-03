@@ -44,9 +44,9 @@ public sealed class CycleRepository(FoodDiaryDbContext context) : ICycleReposito
         UserId userId,
         CancellationToken cancellationToken = default) {
         return await context.CycleProfiles
-            .AsNoTracking()
+            .AsNoTracking().AsSplitQuery()
             .Where(profile => profile.UserId == userId)
-            .OrderByDescending(profile => profile.CreatedOnUtc)
+            .OrderByDescending(profile => profile.CreatedOnUtc).ThenByDescending(profile => profile.Id)
             .Select(profile => new CycleProfileReadModel(
                 profile.Id.Value,
                 profile.UserId.Value,
