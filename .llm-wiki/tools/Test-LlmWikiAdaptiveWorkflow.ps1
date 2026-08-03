@@ -45,6 +45,28 @@ Assert-Adaptive (@($localInteraction.stages | Where-Object { $_.id -eq 'journey-
 Assert-Adaptive (@($localInteraction.stages.id) -notcontains 'design') 'Local component interaction retained feature design ceremony.'
 Assert-Adaptive (@($localInteraction.stages.id) -contains 'focused-verification') 'Local component interaction omitted focused verification.'
 
+$ungroundedInfrastructureBug = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Fix the cycle database read query because split-query loading is slow and duplicates related rows.' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($ungroundedInfrastructureBug.profile -eq 'scope-discovery') 'Ungrounded database query bug was elevated before its paths and boundary were confirmed.'
+Assert-Adaptive (@($ungroundedInfrastructureBug.stages.id) -contains 'scope-research') 'Ungrounded database query bug omitted compact scope research.'
+Assert-Adaptive (@($ungroundedInfrastructureBug.stages.id) -notcontains 'design') 'Ungrounded database query bug required premature design ceremony.'
+
+$groundedInfrastructureBug = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Fix the cycle database read query because split-query loading is slow and duplicates related rows.' `
+    -ProposedPath @(
+        'FoodDiary.Infrastructure/Persistence/Tracking/CycleRepository.cs',
+        'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
+    ) `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($groundedInfrastructureBug.profile -eq 'bug') 'Grounded data-query fix did not use the bounded bug route.'
+Assert-Adaptive (@($groundedInfrastructureBug.stages | Where-Object id -eq 'bug-brief')[0].command -notmatch 'trace') 'Grounded repository query fix invoked handler trace despite explicit paths.'
+
+$criticalIncident = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Fix an authentication bypass that allows unauthorized account access.' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($criticalIncident.profile -eq 'critical') 'Explicit authentication bypass was incorrectly downgraded to scope discovery.'
+
 $runtimeOwner = & (Join-Path $PSScriptRoot 'Get-LlmWikiFrontendRuntimeOwner.ps1') `
     -Query 'Improve AI photo annotation layout on the dashboard result.' `
     -CandidatePath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.html' `

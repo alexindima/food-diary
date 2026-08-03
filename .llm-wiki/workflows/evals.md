@@ -37,6 +37,9 @@ feature; the expected route remains the compact four-stage bug workflow.
 The Dashboard period-selector regression keeps local interaction and component
 state on the visual five-stage route when routes, persistence, API, and public
 component contracts remain unchanged.
+The Cycle repository regression prevents database vocabulary in a bounded
+query-performance bug from forcing critical ceremony and prevents handler trace
+from displacing explicit Infrastructure and integration-test paths.
 
 Each policy rule should have:
 

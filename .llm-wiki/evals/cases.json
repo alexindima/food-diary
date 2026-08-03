@@ -254,6 +254,22 @@
       "unexpectedAdaptiveStages": ["design", "workspace", "requirements", "verification"]
     },
     {
+      "id": "adaptive-cycle-query-splitting-bug",
+      "changedPaths": [
+        "FoodDiary.Infrastructure/Persistence/Tracking/CycleRepository.cs",
+        "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs"
+      ],
+      "expectedModules": [],
+      "expectedScopes": ["Backend", "Tests"],
+      "expectedRules": ["backend-boundaries", "performance-data-access", "quality-critical-path"],
+      "expectedChecks": ["architecture-tests"],
+      "expectedViolationRules": [],
+      "adaptiveObjective": "Fix the cycle database read query because split-query loading is slow and duplicates related rows.",
+      "expectedAdaptiveProfile": "bug",
+      "expectedAdaptiveStages": ["bug-brief", "implementation", "focused-verification", "completion"],
+      "unexpectedAdaptiveStages": ["design", "workspace", "requirements", "independent-review"]
+    },
+    {
       "id": "adaptive-existing-dashboard-contract-extension",
       "changedPaths": [
         "FoodDiary.Application/Dashboard/Models/DailyCaloriesModel.cs",

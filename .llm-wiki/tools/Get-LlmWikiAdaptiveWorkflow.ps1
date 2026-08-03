@@ -59,14 +59,21 @@ $visualIntent = $visualVocabulary -or $localUiInteractionVocabulary
 $boundaryChangeIntent = $normalized -match '\b(change|modify|add|remove|replace|migrate|integrate|send|store|persist|log|expose)\w*\s+(api|contract|provider|privacy|security|auth|token|credential|database|migration|webhook|payload|data)\b'
 $criticalUiSurfaceReference = $normalized -match '\b(auth|authentication|login|oauth|payment|billing|privacy|security)\s+(dialog|modal|page|form|button|panel|screen)\b'
 $explicitCriticalBoundaryIntent = -not $criticalUiSurfaceReference -and $normalized -match '\b(fix|change|modify|add|remove|replace|migrate|integrate|link|send|store|persist|expose)\w*\b.{0,48}\b(auth|authentication|login|password|credential|token|secret|oauth|payment|billing|subscription|migration|database|provider|webhook|privacy|security)\b'
+$explicitCriticalIncidentIntent = $normalized -match '\b(bypass|unauthori[sz]ed|privilege escalation|credential leak|token leak|secret leak|data leak|exfiltrat|account takeover)\b'
+$explicitCriticalMutationIntent = $normalized -match '\b(migrate|send|store|persist|expose|delete|rotate|revoke)\w*\b.{0,48}\b(auth|password|credential|token|secret|payment|billing|subscription|database|provider|webhook|privacy|security|data)\b'
+$boundedDataQueryBugIntent = $bugIntent -and
+    $normalized -match '\b(split[- ]query|n\+1|duplicate (related )?rows?|query performance|slow query|read model query)\b' -and
+    $normalized -notmatch '\b(auth|authentication|password|credential|token|secret|oauth|payment|billing|subscription|webhook|privacy|security)\b'
 $uiDiscovery = $visualIntent -and -not $scopeKnown -and -not $explicitCriticalBoundaryIntent
-$scopeDiscovery = -not $visualIntent -and -not $scopeKnown -and ($featureIntent -or $bugIntent) -and -not $explicitCriticalBoundaryIntent
+$ungroundedBugDiscovery = $bugIntent -and -not $scopeKnown -and -not $explicitCriticalIncidentIntent -and -not $explicitCriticalMutationIntent
+$scopeDiscovery = -not $visualIntent -and -not $scopeKnown -and (($featureIntent -and -not $explicitCriticalBoundaryIntent) -or $ungroundedBugDiscovery)
 $frontendOnly = $productionScopes.Count -gt 0 -and @($productionScopes | Where-Object { $_ -ne 'Frontend' }).Count -eq 0
 $visualUiChange = $visualIntent -and $scopeKnown -and $frontendOnly -and -not $boundaryChangeIntent -and
     -not $flags.databaseMigration -and -not $flags.externalIntegrations -and -not $flags.configuration -and
     @($brief.architectureHealthImpact.dependencyViolations).Count -eq 0
-$sensitiveBoundaryChange = $privacyCount -gt 0 -and ($criticalIntent -or $boundaryChangeIntent)
-$hasCriticalEvidence = -not $visualUiChange -and -not $uiDiscovery -and -not $scopeDiscovery -and ($criticalIntent -or $sensitiveBoundaryChange -or $flags.databaseMigration -or $flags.externalIntegrations -or $flags.configuration)
+$criticalIntentForRouting = $criticalIntent -and -not $boundedDataQueryBugIntent
+$sensitiveBoundaryChange = $privacyCount -gt 0 -and ($criticalIntentForRouting -or $boundaryChangeIntent)
+$hasCriticalEvidence = -not $visualUiChange -and -not $uiDiscovery -and -not $scopeDiscovery -and ($criticalIntentForRouting -or $sensitiveBoundaryChange -or $flags.databaseMigration -or $flags.externalIntegrations -or $flags.configuration)
 $hasArchitecturalEvidence = -not $visualUiChange -and ($architecturalIntent -or [bool]$brief.decisionContext.reviewRequired -or @($brief.architectureHealthImpact.dependencyViolations).Count -gt 0)
 $crossCutting = $productionScopes.Count -gt 1 -or @($brief.change.directModules + $brief.change.downstreamModules | Select-Object -Unique).Count -gt 2
 $directModuleCount = @($brief.change.directModules | Select-Object -Unique).Count
@@ -117,7 +124,12 @@ if ($profile -eq 'ui-discovery') {
     Add-Stage 'scope-research' 'Compile a compact brief, trace the existing data flow, and confirm whether storage, provider, privacy, or architecture boundaries actually change.' "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective' -Compact; ./.llm-wiki/wiki.ps1 research -Intent '$escapedObjective'" $true 'Concrete paths, the existing producer-to-consumer flow, and any real critical boundary changes are confirmed.'
     Add-Stage 'reclassify' 'Re-run adaptive classification with evidence-refined intent and grounded paths before creating a workspace or editing.' "./.llm-wiki/wiki.ps1 develop -Intent '<evidence-refined intent>' -PlannedPath '<confirmed path(s)>'" $true 'The grounded route is feature or bug, unless evidence explicitly proves a critical or architectural boundary.'
 } elseif ($boundedCrossLayerBug) {
-    Add-Stage 'bug-brief' 'Confirm the root cause, one existing flow, direct module owner, downstream consumers, and additive API boundary.' "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective'$pathArgument -Compact; ./.llm-wiki/wiki.ps1 trace -Query '$escapedObjective'" $true 'The root cause and bounded edit surface are explicit; no migration, storage, provider, privacy-lifecycle, or architecture change is present.'
+    $bugBriefCommand = if ($boundedDataQueryBugIntent) {
+        "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective'$pathArgument -Compact"
+    } else {
+        "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective'$pathArgument -Compact; ./.llm-wiki/wiki.ps1 trace -Query '$escapedObjective'"
+    }
+    Add-Stage 'bug-brief' 'Confirm the root cause, one existing flow, direct module owner, downstream consumers, and additive API boundary.' $bugBriefCommand $true 'The root cause and bounded edit surface are explicit; no migration, storage, provider, privacy-lifecycle, or architecture change is present.'
     Add-Stage 'implementation' 'Apply the smallest compatible fix inside the confirmed flow and add regression coverage.' '# edit the confirmed source and regression tests' $true 'The root cause is fixed without broadening the existing flow or contract.'
     Add-Stage 'focused-verification' 'Derive and run only checks covering the changed flow and known downstream consumers.' "./.llm-wiki/wiki.ps1 test-plan -Intent '$escapedObjective'$pathArgument; # run focused tests from the plan" $true 'Focused producer, transport, consumer, and regression tests pass.'
     Add-Stage 'completion' 'Confirm the actual diff remains bounded and run the fast local gate.' './.llm-wiki/wiki.ps1 diff; ./.llm-wiki/wiki.ps1 verify-fast' $true 'The diff matches the confirmed bug boundary and fast verification passes; full verification remains the publication gate.'

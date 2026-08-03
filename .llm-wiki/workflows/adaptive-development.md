@@ -67,7 +67,11 @@ credential, token, privacy, payment, migration, or provider boundary remains
 
 Ungrounded feature and bug intent uses `scope-discovery` when it does not
 explicitly request an auth, credential, migration, persistence, provider,
-privacy, or security boundary change. The discovery route verifies whether the
+privacy, or security boundary change. Merely naming a database or sensitive
+entity in a corrective query/read-model intent does not prove such a change.
+Explicit incidents such as authorization bypass or credential/data leakage,
+and explicit migration, storage, exposure, rotation, or revocation actions,
+still escalate immediately. The discovery route verifies whether the
 requested data is already produced, traces its current read-model and transport
 path, and then re-runs `develop` with evidence-refined intent and confirmed
 paths. It cannot create a governed workspace before reclassification.
@@ -87,6 +91,9 @@ additive, and no migration, provider, storage, sensitive-data lifecycle, or
 architecture boundary changes. This `bug` variant uses four required stages:
 compact root-cause brief and trace, implementation with regression coverage,
 focused producer/transport/consumer tests, and final diff plus `verify-fast`.
+For an explicitly grounded repository/query-performance fix, the compact brief
+replaces handler trace because request-handler discovery is the wrong tool for
+that edit boundary.
 Journeys and design remain optional unless the trace exposes a product decision
 or a second behavioral flow. Full verification stays enforced by pre-push and
 CI rather than blocking local bug completion.

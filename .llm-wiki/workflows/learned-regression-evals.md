@@ -66,3 +66,6 @@ layer count alone cannot restore mandatory journeys, design, or full local
 verification.
 The Dashboard period-selector case protects the same ceremony budget for local
 component interaction, even when the intent introduces new selectable behavior.
+The Cycle query-splitting case protects scope discovery before paths are known
+and the compact bug route after Infrastructure and integration-test paths are
+confirmed, while explicit security-incident controls remain critical.
