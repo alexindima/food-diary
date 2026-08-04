@@ -230,11 +230,11 @@
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.ts",
-                         "nonBlankLines":  359,
+                         "nonBlankLines":  374,
                          "decisionPoints":  42,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  70.18
+                         "structuralRiskScore":  70.48
                      },
                      {
                          "path":  "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
@@ -24144,11 +24144,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.ts",
-                      "nonBlankLines":  359,
+                      "nonBlankLines":  374,
                       "decisionPoints":  42,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  70.18
+                      "structuralRiskScore":  70.48
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.types.ts",

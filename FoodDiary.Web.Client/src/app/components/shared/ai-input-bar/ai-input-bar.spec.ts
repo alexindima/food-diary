@@ -253,6 +253,26 @@ describe('AiInputBarComponent access gates and errors', () => {
     });
 });
 
+describe('AiInputBarComponent repeated photo recognition', () => {
+    it('keeps the next photo modal open after a successful create clears the previous result', async () => {
+        const { component, dialogService, fixture } = await setupAiInputBarAsync('create');
+        fixture.detectChanges();
+
+        fixture.componentRef.setInput('clearToken', 1);
+        fixture.detectChanges();
+
+        component['onPhotoPreparationStarted']('blob:second-photo');
+        fixture.detectChanges();
+
+        expect(dialogService.open).toHaveBeenCalledWith(
+            AiPhotoResultComponent,
+            expect.objectContaining({ panelClass: 'fd-ai-photo-result-dialog-panel' }),
+        );
+        expect(component['photoSelection']()).toEqual({ url: 'blob:second-photo', assetId: null });
+        expect(component['photoDialogRef']()).not.toBeNull();
+    });
+});
+
 describe('AiInputBarComponent photo recognition', () => {
     it('opens the modal immediately with the local preview while the image is being prepared', async () => {
         const { aiFoodService, component, dialogService, fixture } = await setupAiInputBarAsync();

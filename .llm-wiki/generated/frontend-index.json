@@ -2074,7 +2074,7 @@
                         "role":  "Component",
                         "selector":  "fd-ai-input-bar",
                         "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.ts",
-                        "line":  33
+                        "line":  45
                     },
                     {
                         "name":  "AiPhotoDetailsPanelComponent",

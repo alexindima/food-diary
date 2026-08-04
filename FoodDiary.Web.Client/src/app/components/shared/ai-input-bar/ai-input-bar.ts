@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    input,
+    output,
+    signal,
+    untracked,
+    viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
@@ -96,9 +108,12 @@ export class AiInputBarComponent {
 
     public constructor() {
         effect(() => {
-            if (this.clearToken() > 0) {
-                this.clearState();
-            }
+            const clearToken = this.clearToken();
+            untracked(() => {
+                if (clearToken > 0) {
+                    this.clearState();
+                }
+            });
         });
     }
 
