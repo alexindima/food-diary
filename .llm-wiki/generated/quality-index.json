@@ -118,11 +118,11 @@
                      },
                      {
                          "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
-                         "nonBlankLines":  462,
-                         "decisionPoints":  50,
+                         "nonBlankLines":  471,
+                         "decisionPoints":  52,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  84.24
+                         "structuralRiskScore":  87.42
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard-lib/client-dashboard.mapper.ts",
@@ -23024,11 +23024,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
-                      "nonBlankLines":  462,
-                      "decisionPoints":  50,
+                      "nonBlankLines":  471,
+                      "decisionPoints":  52,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  84.24
+                      "structuralRiskScore":  87.42
                   },
                   {
                       "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/loader/fd-ui-loader.stories.ts",
@@ -25208,19 +25208,19 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.config.ts",
-                      "nonBlankLines":  5,
+                      "nonBlankLines":  8,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
+                      "structuralRiskScore":  0.16
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.ts",
-                      "nonBlankLines":  79,
-                      "decisionPoints":  6,
+                      "nonBlankLines":  121,
+                      "decisionPoints":  14,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.58
+                      "structuralRiskScore":  23.42
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/dashboard/dashboard.routes.ts",
@@ -25352,11 +25352,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-trend.utils.ts",
-                      "nonBlankLines":  81,
-                      "decisionPoints":  5,
+                      "nonBlankLines":  64,
+                      "decisionPoints":  3,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  9.12
+                      "structuralRiskScore":  5.78
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard.facade.ts",
@@ -25520,11 +25520,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-trend-block/dashboard-trend-block.ts",
-                      "nonBlankLines":  36,
+                      "nonBlankLines":  41,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.72
+                      "structuralRiskScore":  0.82
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts",

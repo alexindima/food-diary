@@ -24,6 +24,7 @@ const SMALL_MULTI_SERIES_VALUE = 24;
 const MULTI_SERIES_COUNT = 4;
 const MULTI_SERIES_POINT_COUNT = 8;
 const GAP_SEGMENT_COUNT = 2;
+const QUARTER_POSITION_X = 26;
 
 // eslint-disable-next-line max-lines-per-function -- Line chart primitive behaviors are easier to scan in one component suite.
 describe('FdUiLineChartComponent', () => {
@@ -83,6 +84,20 @@ describe('FdUiLineChartComponent', () => {
 
         expect(component['pointViews']()[0]?.x).toBe(SPARKLINE_CHART_LEFT_X);
         expect(component['pointViews']()[1]?.x).toBe(SPARKLINE_CHART_RIGHT_X);
+    });
+
+    it('supports proportional x positions and value suffixes', () => {
+        fixture.componentRef.setInput('valueSuffix', 'kg');
+        fixture.componentRef.setInput('points', [
+            { label: 'Jul 7', value: 118, xPosition: 0 },
+            { label: 'Jul 14', value: 116, xPosition: 0.25 },
+            { label: 'Aug 4', value: 113, xPosition: 1 },
+        ]);
+        fixture.detectChanges();
+
+        expect(component['pointViews']()[1]?.x).toBe(QUARTER_POSITION_X);
+        expect(host().querySelectorAll('.fd-ui-line-chart__point')[1].getAttribute('title')).toBe('Jul 14: 116 kg');
+        expect(component['ariaLabel']()).toContain('Aug 4 113 kg');
     });
 
     it('extends sparkline area below the zero line stroke', () => {

@@ -7,6 +7,7 @@ import { FdUiLineChartYAxisComponent } from './fd-ui-line-chart-y-axis';
 export type FdUiLineChartPoint = {
     label: string;
     value: number | null;
+    xPosition?: number;
 };
 
 export type FdUiLineChartSeries = {
@@ -389,7 +390,7 @@ export class FdUiLineChartComponent {
                 series.points.map(point => {
                     const seriesLabel = shouldPrefixSeriesLabel && series.label.trim().length > 0 ? `${series.label} ` : '';
 
-                    return `${seriesLabel}${point.label} ${point.value}`;
+                    return `${seriesLabel}${point.label} ${this.formatAxisValue(point.value)}`;
                 }),
             )
             .join(', ');
@@ -454,8 +455,7 @@ export class FdUiLineChartComponent {
                 return;
             }
 
-            const xStep = series.points.length > 1 ? (this.chartRight() - this.chartLeft()) / (series.points.length - 1) : 0;
-            const x = series.points.length > 1 ? this.chartLeft() + index * xStep : LINE_CHART_VIEWBOX_WIDTH / 2;
+            const x = this.resolvePointX(point, index, series.points.length);
             const y = this.chartBottom() - ((value - options.minValue) / options.effectiveRange) * options.availableHeight;
             const label = point.label.trim().length > 0 ? point.label : this.emptyLabel();
             const tooltipPrefix = options.shouldPrefixTooltip ? `${series.label}, ` : '';
@@ -469,7 +469,7 @@ export class FdUiLineChartComponent {
                 xPercent: `${x}%`,
                 yPercent: `${(y / LINE_CHART_VIEWBOX_HEIGHT) * LINE_CHART_PERCENTAGE_SCALE}%`,
                 color: series.color,
-                tooltip: `${tooltipPrefix}${label}: ${value}`,
+                tooltip: `${tooltipPrefix}${label}: ${this.formatAxisValue(value)}`,
             });
         });
 
@@ -478,6 +478,17 @@ export class FdUiLineChartComponent {
         }
 
         return groups;
+    }
+
+    private resolvePointX(point: FdUiLineChartPoint, index: number, pointCount: number): number {
+        const explicitPosition = point.xPosition;
+        if (explicitPosition !== undefined && Number.isFinite(explicitPosition)) {
+            const normalizedPosition = this.clamp(explicitPosition, 0, 1);
+            return this.chartLeft() + normalizedPosition * (this.chartRight() - this.chartLeft());
+        }
+
+        const xStep = pointCount > 1 ? (this.chartRight() - this.chartLeft()) / (pointCount - 1) : 0;
+        return pointCount > 1 ? this.chartLeft() + index * xStep : LINE_CHART_VIEWBOX_WIDTH / 2;
     }
 
     private buildAreaPath(path: string, points: readonly FdUiLineChartPointViewModel[]): string {

@@ -5222,7 +5222,19 @@
     },
     "WEIGHT_TREND_CARD": {
         "LAST_7_DAYS": "Last 7 days",
-        "NO_DATA": "No weight data yet"
+        "LAST_30_DAYS": "30 days",
+        "LATEST_MEASUREMENT": "Latest measurement",
+        "NO_CHANGE": "Stable",
+        "FIRST_MEASUREMENT": "First measurement recorded. Add two more to see the trend.",
+        "TWO_MEASUREMENTS": "One more measurement will unlock the trend chart.",
+        "STABLE_TREND": "Your weight was stable across the recorded measurements.",
+        "FIRST_WAIST_MEASUREMENT": "First measurement recorded. Add two more to see the trend.",
+        "TWO_WAIST_MEASUREMENTS": "One more measurement will unlock the trend chart.",
+        "STABLE_WAIST_TREND": "Your waist measurement was stable across the recorded measurements.",
+        "EMPTY_TITLE": "No measurements yet",
+        "NO_DATA": "Add your first measurement to track weight changes over time.",
+        "ADD_WEIGHT": "Add weight",
+        "ADD_WAIST": "Add waist measurement"
     },
     "WAIST_CARD": {
         "TITLE": "Waist trend",

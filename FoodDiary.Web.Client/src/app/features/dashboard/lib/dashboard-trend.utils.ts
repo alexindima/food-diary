@@ -1,10 +1,8 @@
 import { computed, type Signal } from '@angular/core';
 
-import { compareDatesAsc } from '../../../shared/lib/local-date.utils';
 import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
 import type { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
 import type { WeightTrendPoint } from '../components/weight-trend-card/weight-trend-card';
-import { getWeightTrendRange } from './dashboard-date.utils';
 
 type WeightTrendValuePoint = WeightTrendPoint & { value: number };
 
@@ -14,29 +12,15 @@ function hasTrendValue(point: WeightTrendPoint): point is WeightTrendValuePoint 
     return point.value !== null;
 }
 
-function buildFallbackTrend(latestValue: number | null, selectedDate: Date, trendDays: number): WeightTrendPoint[] {
-    if (latestValue === null || latestValue <= 0) {
-        return [];
-    }
-
-    const { start } = getWeightTrendRange(selectedDate, trendDays);
-    const points: WeightTrendPoint[] = [];
-
-    for (let i = 0; i < trendDays; i++) {
-        const date = new Date(start);
-        date.setDate(start.getDate() + i);
-        points.push({ date: date.toISOString(), value: latestValue });
-    }
-
-    return points;
-}
-
 function computeTrendChange(series: WeightTrendPoint[]): number | null {
-    const ordered = [...series].sort((a, b) => compareDatesAsc(a.date, b.date));
-    const first = ordered.find(hasTrendValue);
-    const last = [...ordered].reverse().find(hasTrendValue);
+    const validPoints = series.filter(hasTrendValue);
+    if (validPoints.length === 0) {
+        return null;
+    }
 
-    if (first === undefined || last === undefined) {
+    const first = validPoints[0];
+    const last = validPoints.at(-1);
+    if (last === undefined) {
         return null;
     }
 
@@ -45,16 +29,13 @@ function computeTrendChange(series: WeightTrendPoint[]): number | null {
 }
 
 function computeTrendCurrent(series: WeightTrendPoint[], fallbackValue: number | null): number | null {
-    const ordered = [...series].sort((a, b) => compareDatesAsc(a.date, b.date));
-    const last = [...ordered].reverse().find(hasTrendValue);
-    return last !== undefined ? last.value : fallbackValue;
+    const validPoints = series.filter(hasTrendValue);
+    return validPoints.at(-1)?.value ?? fallbackValue;
 }
 
 export function createWeightTrendSignals(
     weightTrendPoints: Signal<WeightEntrySummaryPoint[]>,
     latestWeight: Signal<number | null>,
-    selectedDate: Signal<Date>,
-    trendDays: number,
 ): {
     weightTrendSeries: Signal<WeightTrendPoint[]>;
     weightTrendChange: Signal<number | null>;
@@ -65,7 +46,7 @@ export function createWeightTrendSignals(
             date: point.startDate,
             value: point.averageWeight > 0 ? point.averageWeight : null,
         }));
-        return points.length > 0 ? points : buildFallbackTrend(latestWeight(), selectedDate(), trendDays);
+        return points;
     });
 
     const weightTrendChange = computed(() => computeTrendChange(weightTrendSeries()));
@@ -77,8 +58,6 @@ export function createWeightTrendSignals(
 export function createWaistTrendSignals(
     waistTrendPoints: Signal<WaistEntrySummaryPoint[]>,
     latestWaist: Signal<number | null>,
-    selectedDate: Signal<Date>,
-    trendDays: number,
 ): {
     waistTrendSeries: Signal<WeightTrendPoint[]>;
     waistTrendChange: Signal<number | null>;
@@ -89,7 +68,7 @@ export function createWaistTrendSignals(
             date: point.startDate,
             value: point.averageCircumference > 0 ? point.averageCircumference : null,
         }));
-        return points.length > 0 ? points : buildFallbackTrend(latestWaist(), selectedDate(), trendDays);
+        return points;
     });
 
     const waistTrendChange = computed(() => computeTrendChange(waistTrendSeries()));

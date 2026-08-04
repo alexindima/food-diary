@@ -68,13 +68,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "f65bda45953e3a242ba41fb03ed38b8041fea448082d62687060d47b15b40837"
+                                            "sha256":  "bb78c03f7bc070b5530e68b0b97ef49e1261478934d3822f1f929462df3b3333"
                                         }
                                     ],
-                        "reason":  "Reviewed the new shared summary and trend selectors, inputs, outputs, translations, and dashboard and landing consumers.",
+                        "reason":  "Reviewed regenerated frontend contracts after the dashboard weight trend and shared line-chart changes; selectors and public inputs remain compatible.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c934fc615f2c40640ea9751d811344eeaf4958f9",
-                        "reviewedAtUtc":  "2026-08-03T22:52:21.3350329Z"
+                        "gitHead":  "ed8c81f8c9d25762b9796a33aa1cd920825388ec",
+                        "reviewedAtUtc":  "2026-08-04T00:16:58.1050293Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -147,13 +147,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "657ef2e84f79d8ca45f1976ea842d1ce8b7dc2ac56595120154ad82babf8a2e8"
+                                            "sha256":  "6cd62a3fa841d0277d9e6ff1832fe0098141a6b90caac995ba276b74ed62d2e7"
                                         }
                                     ],
-                        "reason":  "Shared frontend nutrition components changed without project dependency or architecture edge changes.",
+                        "reason":  "Dashboard weight trend remains within the existing frontend and dashboard API dependency boundaries.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c934fc615f2c40640ea9751d811344eeaf4958f9",
-                        "reviewedAtUtc":  "2026-08-03T22:52:20.6565404Z"
+                        "gitHead":  "ed8c81f8c9d25762b9796a33aa1cd920825388ec",
+                        "reviewedAtUtc":  "2026-08-03T23:29:45.3465469Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -396,13 +396,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "03da4d3cc53d75b9b1cef2fbe298b701522af283655246e9a7ce60f00d235064"
+                                            "sha256":  "2dfa33292cc7918152dfd97f3c0d8900701b91a1cdeeab6c969aa57394b7a3c6"
                                         }
                                     ],
-                        "reason":  "Full frontend verify passed after removing the legacy summary card and adding focused summary scale tests.",
+                        "reason":  "Reviewed regenerated quality index after focused line-chart styling and tests; no new untested critical symbol or runtime risk was introduced.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c934fc615f2c40640ea9751d811344eeaf4958f9",
-                        "reviewedAtUtc":  "2026-08-03T22:52:22.0605082Z"
+                        "gitHead":  "ed8c81f8c9d25762b9796a33aa1cd920825388ec",
+                        "reviewedAtUtc":  "2026-08-04T00:16:58.7861121Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -501,17 +501,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "f65bda45953e3a242ba41fb03ed38b8041fea448082d62687060d47b15b40837"
+                                            "sha256":  "bb78c03f7bc070b5530e68b0b97ef49e1261478934d3822f1f929462df3b3333"
                                         },
                                         {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "4c3938592d893dc0dc82e11e8fa97784bf3176ac916f12cc06f8afc14fe3497c"
+                                            "sha256":  "2799bf103f64cea53560e86c6a31dc8f3816939fb87216c992c62ccd12929a69"
                                         }
                                     ],
-                        "reason":  "Reviewed dashboard and public landing rendering paths after replacing the legacy nutrition summary and sharing the weekly trend.",
+                        "reason":  "Reviewed regenerated frontend index after dashboard weight trend work; ownership remains Dashboard and the shared fd-ui-kit line chart.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c934fc615f2c40640ea9751d811344eeaf4958f9",
-                        "reviewedAtUtc":  "2026-08-03T22:52:22.7651279Z"
+                        "gitHead":  "ed8c81f8c9d25762b9796a33aa1cd920825388ec",
+                        "reviewedAtUtc":  "2026-08-04T00:16:59.5813569Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

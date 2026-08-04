@@ -2061,6 +2061,31 @@
                                                                 "required":  false
                                                             },
                                                             {
+                                                                "name":  "actionLabelKey",
+                                                                "type":  "string",
+                                                                "required":  false
+                                                            },
+                                                            {
+                                                                "name":  "actionRoute",
+                                                                "type":  "string",
+                                                                "required":  false
+                                                            },
+                                                            {
+                                                                "name":  "firstMeasurementKey",
+                                                                "type":  "string",
+                                                                "required":  false
+                                                            },
+                                                            {
+                                                                "name":  "twoMeasurementsKey",
+                                                                "type":  "string",
+                                                                "required":  false
+                                                            },
+                                                            {
+                                                                "name":  "stableTrendKey",
+                                                                "type":  "string",
+                                                                "required":  false
+                                                            },
+                                                            {
                                                                 "name":  "iconName",
                                                                 "type":  "string | null",
                                                                 "required":  false

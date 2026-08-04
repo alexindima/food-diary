@@ -1493,7 +1493,7 @@
                         "role":  "Component",
                         "selector":  "fd-ui-line-chart",
                         "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
-                        "line":  127
+                        "line":  128
                     },
                     {
                         "name":  "FdUiLoaderComponent",
@@ -2718,7 +2718,7 @@
                         "role":  "Component",
                         "selector":  "fd-weight-trend-card",
                         "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.ts",
-                        "line":  28
+                        "line":  34
                     },
                     {
                         "name":  "DashboardAppearanceDialogComponent",
@@ -5689,8 +5689,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  2897,
-                             "russianProperties":  2897,
+                             "englishProperties":  2909,
+                             "russianProperties":  2909,
                              "countsMatch":  true
                          },
                          {

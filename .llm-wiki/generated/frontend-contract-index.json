@@ -3,12 +3,12 @@
     "summary":  {
                     "components":  400,
                     "componentsWithoutDirectSpecs":  108,
-                    "inputs":  1212,
+                    "inputs":  1222,
                     "outputs":  406,
                     "apiCalls":  206,
-                    "templatesWithTranslations":  241,
-                    "translationKeys":  1181,
-                    "consumerEdges":  901,
+                    "templatesWithTranslations":  242,
+                    "translationKeys":  1184,
+                    "consumerEdges":  902,
                     "consumedComponents":  277,
                     "unconsumedComponents":  122
                 },
@@ -1716,6 +1716,31 @@
                                               "required":  false
                                           },
                                           {
+                                              "name":  "actionLabelKey",
+                                              "type":  "string",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "actionRoute",
+                                              "type":  "string",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "firstMeasurementKey",
+                                              "type":  "string",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "twoMeasurementsKey",
+                                              "type":  "string",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "stableTrendKey",
+                                              "type":  "string",
+                                              "required":  false
+                                          },
+                                          {
                                               "name":  "iconName",
                                               "type":  "string | null",
                                               "required":  false
@@ -2021,6 +2046,31 @@
                                               "name":  "timeframeLabel",
                                               "type":  "string",
                                               "required":  true
+                                          },
+                                          {
+                                              "name":  "actionLabelKey",
+                                              "type":  "string",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "actionRoute",
+                                              "type":  "string",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "firstMeasurementKey",
+                                              "type":  "string",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "twoMeasurementsKey",
+                                              "type":  "string",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "stableTrendKey",
+                                              "type":  "string",
+                                              "required":  false
                                           },
                                           {
                                               "name":  "points",
@@ -15620,6 +15670,15 @@
                              },
                              {
                                  "feature":  "dashboard",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.html",
+                                 "keys":  [
+                                              "WEIGHT_TREND_CARD.EMPTY_TITLE",
+                                              "WEIGHT_TREND_CARD.LATEST_MEASUREMENT",
+                                              "WEIGHT_TREND_CARD.NO_CHANGE"
+                                          ]
+                             },
+                             {
+                                 "feature":  "dashboard",
                                  "path":  "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog.html",
                                  "keys":  [
                                               "DASHBOARD.APPEARANCE.THEME_HINT",
@@ -15738,7 +15797,7 @@
                                  "feature":  "dashboard",
                                  "path":  "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-trend-block/dashboard-trend-block.html",
                                  "keys":  [
-                                              "WEIGHT_TREND_CARD.LAST_7_DAYS"
+                                              "WEIGHT_TREND_CARD.LAST_30_DAYS"
                                           ]
                              },
                              {
@@ -19211,16 +19270,21 @@
                               "occurrences":  2,
                               "inputsUsed":  [
                                                  "accentColor",
+                                                 "actionLabelKey",
+                                                 "actionRoute",
                                                  "cardClass",
                                                  "change",
                                                  "current",
                                                  "emptyStateKey",
+                                                 "firstMeasurementKey",
                                                  "iconName",
                                                  "isLoading",
                                                  "points",
                                                  "shouldRender",
+                                                 "stableTrendKey",
                                                  "state",
                                                  "title",
+                                                 "twoMeasurementsKey",
                                                  "unitKey"
                                              ],
                               "outputsHandled":  [
@@ -21207,6 +21271,22 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "dashboard",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-content/tdee-insight-card-content.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "fill",
+                                                 "size",
+                                                 "variant"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiButtonComponent",
+                              "selector":  "fd-ui-button",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+                              "consumerFeature":  "dashboard",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "fill",
@@ -27221,10 +27301,13 @@
                               "inputsUsed":  [
                                                  "fillColor",
                                                  "lineColor",
+                                                 "maxValue",
+                                                 "minValue",
                                                  "points",
                                                  "showArea",
                                                  "showPoints",
-                                                 "title"
+                                                 "title",
+                                                 "valueSuffix"
                                              ],
                               "outputsHandled":  [
 
@@ -32916,14 +32999,19 @@
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "accentColor",
+                                                 "actionLabelKey",
+                                                 "actionRoute",
                                                  "change",
                                                  "currentWeight",
                                                  "emptyStateKey",
+                                                 "firstMeasurementKey",
                                                  "iconName",
                                                  "isLoading",
                                                  "points",
+                                                 "stableTrendKey",
                                                  "timeframeLabel",
                                                  "title",
+                                                 "twoMeasurementsKey",
                                                  "unitKey"
                                              ],
                               "outputsHandled":  [

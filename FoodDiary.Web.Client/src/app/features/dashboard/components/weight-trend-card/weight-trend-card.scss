@@ -16,15 +16,19 @@
     background: var(--wt-surface);
     color: var(--fd-color-text);
     overflow: hidden;
+    position: relative;
 
     &--loading {
         opacity: 0.75;
         pointer-events: none;
     }
 
-    &__header {
-        margin-bottom: var(--fd-space-xs);
-        min-width: 0;
+    &--with-chart {
+        min-height: calc((var(--fd-size-control-xl) * 3) + var(--fd-space-lg));
+    }
+
+    &__period {
+        white-space: nowrap;
     }
 
     &__delta {
@@ -32,7 +36,7 @@
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-text);
         --fd-pill-min-height: var(--fd-size-pill-height-relaxed);
-        margin-bottom: var(--fd-space-xs);
+        flex: 0 0 auto;
 
         &--positive {
             --fd-pill-bg: var(--fd-bg-status-success);
@@ -46,7 +50,7 @@
     }
 
     &__value-row {
-        margin-bottom: var(--fd-space-xs);
+        line-height: 1;
     }
 
     &__value {
@@ -54,16 +58,32 @@
     }
 
     &__chart {
-        --fd-line-chart-height: var(--fd-size-control-md);
-        height: var(--fd-size-control-md);
-        margin: var(--fd-space-xxs) calc(0px - var(--fd-space-xs)) var(--fd-space-xxs);
+        position: absolute;
+        right: calc(var(--fd-space-card-profile-gap) + var(--fd-space-sm));
+        bottom: var(--fd-space-md);
+        left: calc(var(--fd-space-card-profile-gap) + var(--fd-space-sm));
+        height: var(--fd-size-control-sm);
+    }
+
+    &__chart fd-ui-line-chart {
+        --fd-line-chart-height: var(--fd-size-control-sm);
+    }
+
+    &__sparse {
+        margin-top: var(--fd-space-sm);
+        padding-top: var(--fd-space-sm);
+        border-top: var(--fd-border-subtle);
     }
 
     &__empty {
-        margin: var(--fd-space-xs) 0 var(--fd-space-xxs);
+        padding-top: var(--fd-space-xs);
     }
 
-    &__footer {
-        margin-top: var(--fd-space-xxs);
+    &__empty-title {
+        color: var(--fd-color-text);
+    }
+
+    &__action {
+        align-self: flex-start;
     }
 }

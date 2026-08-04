@@ -85,8 +85,8 @@ export class DashboardFacade {
     public readonly isWaistTrendLoading = computed(() => this.isLoading());
     public readonly isAdviceLoading = computed(() => this.isLoading());
 
-    public readonly weightTrend = createWeightTrendSignals(this.weightTrendPoints, this.latestWeight, this.selectedDate, this.trendDays);
-    public readonly waistTrend = createWaistTrendSignals(this.waistTrendPoints, this.latestWaist, this.selectedDate, this.trendDays);
+    public readonly weightTrend = createWeightTrendSignals(this.weightTrendPoints, this.latestWeight);
+    public readonly waistTrend = createWaistTrendSignals(this.waistTrendPoints, this.latestWaist);
     public readonly nutrientBars = createNutrientBarsSignal(this.snapshot);
     public readonly consumptionRingData = createConsumptionRingSignal(this.snapshot, this.weeklyConsumed, this.nutrientBars);
     public readonly mealPreviewEntries = createMealPreviewSignal(this.meals, this.isTodaySelected);

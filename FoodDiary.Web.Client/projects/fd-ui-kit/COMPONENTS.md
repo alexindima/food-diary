@@ -80,12 +80,13 @@ Responsive line chart for compact trends and sparklines.
 **Inputs**
 
 - `title?: string`
-- `points?: FdUiLineChartPoint[]`
+- `points?: FdUiLineChartPoint[]` (`xPosition` optionally places a point proportionally from `0` to `1`)
 - `emptyLabel?: string`
 - `lineColor?: string`
 - `fillColor?: string`
 - `showArea?: boolean`
 - `showPoints?: boolean`
+- `valueSuffix?: string` (used in axes, tooltips, and accessible summaries)
 
 **CSS variables**
 

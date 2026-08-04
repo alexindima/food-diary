@@ -32,6 +32,11 @@ export class DashboardTrendBlockComponent {
     public readonly title = input<string>('WEIGHT_CARD.TITLE');
     public readonly unitKey = input<string>('WEIGHT_CARD.KG');
     public readonly emptyStateKey = input<string>('WEIGHT_TREND_CARD.NO_DATA');
+    public readonly actionLabelKey = input<string>('WEIGHT_TREND_CARD.ADD_WEIGHT');
+    public readonly actionRoute = input<string>('/weight-history');
+    public readonly firstMeasurementKey = input<string>('WEIGHT_TREND_CARD.FIRST_MEASUREMENT');
+    public readonly twoMeasurementsKey = input<string>('WEIGHT_TREND_CARD.TWO_MEASUREMENTS');
+    public readonly stableTrendKey = input<string>('WEIGHT_TREND_CARD.STABLE_TREND');
     public readonly iconName = input<string | null>('monitor_weight');
     public readonly accentColor = input<string>('var(--fd-color-blue-500)');
 

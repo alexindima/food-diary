@@ -7,12 +7,17 @@
                     [title]="title()"
                     [unitKey]="unitKey()"
                     [emptyStateKey]="emptyStateKey()"
+                    [actionLabelKey]="actionLabelKey()"
+                    [actionRoute]="actionRoute()"
+                    [firstMeasurementKey]="firstMeasurementKey()"
+                    [twoMeasurementsKey]="twoMeasurementsKey()"
+                    [stableTrendKey]="stableTrendKey()"
                     [iconName]="iconName()"
                     [accentColor]="accentColor()"
                     [currentWeight]="current()"
                     [change]="change()"
                     [points]="points()"
-                    [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
+                    [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_30_DAYS' | translate"
                     [isLoading]="isLoading()"
                 />
             </fd-dashboard-card-shell>
