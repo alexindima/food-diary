@@ -87,6 +87,8 @@
         right: var(--nutrition-trend-goal-space);
         border-top: var(--fd-border-width-strong) dashed var(--fd-color-text-subtle);
         z-index: 2;
+        animation: nutrition-trend-goal-reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+        transform-origin: left center;
 
         span,
         strong {
@@ -137,6 +139,26 @@
         align-self: end;
         border-radius: var(--fd-radius-sm) var(--fd-radius-sm) 0 0;
         overflow: hidden;
+        outline: none;
+        animation: nutrition-trend-bar-reveal 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: calc(var(--nutrition-trend-day-index, 0) * 70ms + 100ms);
+        transform-origin: bottom center;
+        transition:
+            filter 0.18s ease,
+            transform 0.18s ease;
+    }
+
+    &__day:where(:hover, :focus-within) &__bar {
+        filter: brightness(1.08) saturate(1.08);
+        transform: translateY(calc(var(--fd-space-xxs) * -1));
+    }
+
+    &__bar:where(:focus-visible) {
+        box-shadow: var(--fd-shadow-focus);
+    }
+
+    &__day:where(:hover, :focus-within) &__date {
+        color: var(--fd-color-text);
     }
 
     &__segment {
@@ -367,5 +389,30 @@
             gap: var(--fd-space-sm) var(--fd-space-md);
             padding-left: var(--fd-space-xl);
         }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__goal,
+        &__bar {
+            animation: none;
+            transition: none;
+        }
+    }
+}
+
+@keyframes nutrition-trend-bar-reveal {
+    from {
+        clip-path: inset(100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes nutrition-trend-goal-reveal {
+    from {
+        opacity: 0;
+        transform: scaleX(0);
     }
 }

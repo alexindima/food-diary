@@ -83,7 +83,11 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     );
     protected readonly selectedIndex = computed(() => this.options().findIndex(option => this.isEqual(option.value, this.internalValue())));
 
-    protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.selectedIndex() >= 0);
+    protected readonly shouldFloatLabel = computed(() => {
+        const label = this.label();
+
+        return label !== undefined && label.trim().length > 0 && (this.isFocused() || this.selectedIndex() >= 0);
+    });
 
     protected readonly selectedLabel = computed(() => {
         const selectedIndex = this.selectedIndex();

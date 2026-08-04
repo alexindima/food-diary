@@ -1598,7 +1598,11 @@
         "MACRO_TITLE": "Macro summary",
         "DAY_SUMMARY": {
             "TITLE": "Day summary",
-            "GOAL_MARKER": "Nutrient goal"
+            "GOAL_MARKER": "Nutrient goal",
+            "CALORIE_PROGRESS": "Daily calorie progress",
+            "REMAINING": "{{value}} {{unit}} remaining",
+            "EXCEEDED_BY": "Exceeded by {{value}} {{unit}}",
+            "TARGET_REACHED": "Target reached"
         },
         "MOTIVATION_TITLE": "Stay motivated",
         "MEALS_SUBTITLE": "Meal log",

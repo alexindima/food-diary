@@ -23,6 +23,7 @@ describe('NutritionWeeklyTrendCardComponent', () => {
         const element = fixture.nativeElement as HTMLElement;
 
         expect(element.querySelectorAll('.nutrition-trend__bar')).toHaveLength(TREND_DAYS);
+        expect(element.querySelectorAll('.nutrition-trend__bar[tabindex="0"]')).toHaveLength(TREND_DAYS);
         expect(element.querySelectorAll('.nutrition-trend__segment')).toHaveLength(EXPECTED_SEGMENT_COUNT);
         expect(element.querySelector('.nutrition-trend__insight')?.textContent).toContain('NUTRITION_TREND.INSIGHT.CARB_EXCESS_TITLE');
         expect(element.querySelector('.nutrition-trend__goal strong')?.textContent).toContain('2,258');

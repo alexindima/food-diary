@@ -7,7 +7,7 @@
                     "outputs":  406,
                     "apiCalls":  206,
                     "templatesWithTranslations":  242,
-                    "translationKeys":  1190,
+                    "translationKeys":  1191,
                     "consumerEdges":  902,
                     "consumedComponents":  277,
                     "unconsumedComponents":  122
@@ -17627,6 +17627,7 @@
                                  "keys":  [
                                               "CONSUMPTION_RING.UNIT",
                                               "CONSUMPTION_RING.WEEKLY_LABEL",
+                                              "DASHBOARD.DAY_SUMMARY.CALORIE_PROGRESS",
                                               "DASHBOARD.DAY_SUMMARY.GOAL_MARKER",
                                               "DASHBOARD.DAY_SUMMARY.TITLE"
                                           ]

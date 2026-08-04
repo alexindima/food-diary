@@ -36,10 +36,15 @@
                     }
                     <div class="nutrition-trend__bars" [class.nutrition-trend__bars--three-days]="visibleDays() === 3">
                         @for (point of trendPoints(); track point.date) {
-                            <div class="nutrition-trend__day" [class.nutrition-trend__day--latest]="point.isLatest">
+                            <div
+                                class="nutrition-trend__day"
+                                [class.nutrition-trend__day--latest]="point.isLatest"
+                                [style.--nutrition-trend-day-index]="$index"
+                            >
                                 <div
                                     class="nutrition-trend__bar"
                                     role="img"
+                                    tabindex="0"
                                     [attr.aria-label]="point.label + ': ' + point.calories + ' kcal'"
                                 >
                                     <span

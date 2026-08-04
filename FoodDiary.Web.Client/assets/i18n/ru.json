@@ -569,7 +569,11 @@
         "MACRO_TITLE": "Баланс нутриентов",
         "DAY_SUMMARY": {
             "TITLE": "Сводка дня",
-            "GOAL_MARKER": "Цель по нутриенту"
+            "GOAL_MARKER": "Цель по нутриенту",
+            "CALORIE_PROGRESS": "Прогресс калорий за день",
+            "REMAINING": "Осталось {{value}} {{unit}}",
+            "EXCEEDED_BY": "Превышено на {{value}} {{unit}}",
+            "TARGET_REACHED": "Цель достигнута"
         },
         "MOTIVATION_TITLE": "Мотивация",
         "MEALS_SUBTITLE": "Журнал приёмов",

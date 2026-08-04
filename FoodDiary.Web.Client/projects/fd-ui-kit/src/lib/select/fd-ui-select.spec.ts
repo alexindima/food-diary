@@ -182,11 +182,21 @@ describe('FdUiSelectComponent computed state', () => {
         component['onFocus']();
 
         expect(component['selectedLabel']()).toBe('Choose fruit');
-        expect(component['shouldFloatLabel']()).toBe(true);
+        expect(component['shouldFloatLabel']()).toBe(false);
     });
 });
 
 describe('FdUiSelectComponent classes', () => {
+    it('should not reserve floating-label space when label is omitted', async () => {
+        const { component, fixture, requireElement } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        component.value.set('banana');
+        fixture.detectChanges();
+
+        expect(requireElement('.fd-ui-select').classList).not.toContain('fd-ui-select--floating');
+        expect(requireElement('.fd-ui-select__control').textContent.trim()).toBe('Banana');
+    });
+
     it('should apply size class', async () => {
         const { fixture, requireElement } = await setupSelectAsync();
         fixture.componentRef.setInput('size', 'lg');

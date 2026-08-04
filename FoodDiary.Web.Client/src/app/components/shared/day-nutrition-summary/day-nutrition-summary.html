@@ -2,8 +2,17 @@
     <fd-dashboard-widget-frame [title]="'DASHBOARD.DAY_SUMMARY.TITLE' | translate">
         <div class="day-summary__layout">
             <div class="day-summary__calories">
-                <div class="day-summary__ring">
-                    <svg viewBox="0 0 240 240" aria-hidden="true" focusable="false">
+                <div
+                    class="day-summary__ring"
+                    role="progressbar"
+                    tabindex="0"
+                    aria-describedby="day-summary-calorie-tooltip"
+                    [attr.aria-label]="'DASHBOARD.DAY_SUMMARY.CALORIE_PROGRESS' | translate"
+                    [attr.aria-valuemin]="0"
+                    [attr.aria-valuemax]="100"
+                    [attr.aria-valuenow]="dailyProgressValue()"
+                >
+                    <svg viewBox="0 0 240 240" aria-hidden="true" focusable="false" [style.--day-summary-ring-length]="ringCircumference">
                         <circle class="day-summary__ring-track" cx="120" cy="120" r="104" />
                         <circle
                             class="day-summary__ring-progress"
@@ -26,11 +35,20 @@
                             {{ 'CONSUMPTION_RING.WEEKLY_LABEL' | translate }}: {{ weeklyPercent() }}%
                         </div>
                     </div>
+                    <span id="day-summary-calorie-tooltip" class="day-summary__tooltip" role="tooltip">
+                        {{ calorieComparisonText() }}
+                    </span>
                 </div>
             </div>
             <div class="day-summary__nutrients">
                 @for (bar of bars(); track bar.id) {
-                    <div class="day-summary__nutrient">
+                    <div
+                        class="day-summary__nutrient"
+                        tabindex="0"
+                        [attr.aria-describedby]="'day-summary-tooltip-' + bar.id"
+                        [attr.aria-label]="bar.labelText + ': ' + bar.comparisonText"
+                        [style.--day-summary-index]="$index"
+                    >
                         <div class="day-summary__nutrient-header">
                             <span class="day-summary__nutrient-label fd-ui-body-sm">{{ bar.labelText }}</span>
                             <span class="day-summary__nutrient-value fd-ui-meta-text">
@@ -56,6 +74,9 @@
                                 ></span>
                             }
                         </div>
+                        <span class="day-summary__tooltip" role="tooltip" [id]="'day-summary-tooltip-' + bar.id">
+                            {{ bar.comparisonText }}
+                        </span>
                     </div>
                 }
             </div>

@@ -30,6 +30,8 @@
         position: relative;
         width: min(100%, 300px);
         aspect-ratio: 1;
+        border-radius: 50%;
+        outline: none;
     }
     &__ring svg {
         width: 100%;
@@ -46,6 +48,8 @@
     }
     &__ring-progress {
         stroke: var(--fd-color-primary-500);
+        stroke-dashoffset: 0;
+        animation: day-summary-ring-reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
         transition: stroke-dasharray 0.4s ease;
     }
     &__ring-progress--excess {
@@ -76,8 +80,11 @@
         min-width: 0;
     }
     &__nutrient {
+        position: relative;
         display: grid;
         gap: var(--fd-space-xs);
+        border-radius: var(--fd-radius-sm);
+        outline: none;
     }
 
     &__nutrient-header {
@@ -112,7 +119,70 @@
         position: absolute;
         inset: 0 auto 0 0;
         border-radius: inherit;
-        transition: width 0.4s ease;
+        animation: day-summary-bar-reveal 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: calc(var(--day-summary-index, 0) * 70ms + 120ms);
+        transition:
+            width 0.4s ease,
+            filter 0.18s ease,
+            transform 0.18s ease;
+        transform-origin: left center;
+    }
+
+    &__ring:where(:hover, :focus-visible) &__ring-progress {
+        filter: brightness(1.08) saturate(1.08);
+        stroke-width: 20;
+    }
+
+    &__nutrient:where(:hover, :focus-visible) &__fill {
+        filter: brightness(1.08) saturate(1.08);
+        transform: scaleY(1.16);
+    }
+
+    &__ring:focus-visible,
+    &__nutrient:focus-visible {
+        box-shadow: var(--fd-shadow-focus);
+    }
+
+    &__tooltip {
+        position: absolute;
+        right: 0;
+        bottom: calc(100% + var(--fd-space-xs));
+        z-index: var(--fd-z-index-floating-panel);
+        max-width: min(240px, 100%);
+        padding: var(--fd-space-xs) var(--fd-space-sm);
+        border: var(--fd-border-default);
+        border-radius: var(--fd-radius-sm);
+        background: var(--fd-bg-surface-raised);
+        box-shadow: var(--fd-shadow-md);
+        color: var(--fd-color-text);
+        font-size: var(--fd-text-caption-size);
+        line-height: var(--fd-text-caption-line-height);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(var(--fd-space-xs));
+        transition:
+            opacity 0.16s ease,
+            transform 0.16s ease,
+            visibility 0.16s ease;
+        visibility: hidden;
+        white-space: nowrap;
+    }
+
+    &__ring &__tooltip {
+        right: 50%;
+        bottom: var(--fd-space-md);
+        transform: translate(50%, var(--fd-space-xs));
+    }
+
+    &__ring:where(:hover, :focus-visible) &__tooltip,
+    &__nutrient:where(:hover, :focus-visible) &__tooltip {
+        opacity: 1;
+        transform: translateY(0);
+        visibility: visible;
+    }
+
+    &__ring:where(:hover, :focus-visible) &__tooltip {
+        transform: translate(50%, 0);
     }
 
     &__goal {
@@ -149,5 +219,34 @@
             grid-column: 1;
             grid-row: 2;
         }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__ring-progress,
+        &__fill {
+            animation: none;
+        }
+
+        &__ring-progress,
+        &__fill,
+        &__tooltip {
+            transition: none;
+        }
+    }
+}
+
+@keyframes day-summary-ring-reveal {
+    from {
+        stroke-dashoffset: var(--day-summary-ring-length);
+    }
+}
+
+@keyframes day-summary-bar-reveal {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0);
     }
 }

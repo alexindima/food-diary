@@ -68,13 +68,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "4b23f87c3a26bfa2f0166572244ab807d7fcef2996d90c0d87aa7a6db36598f5"
+                                            "sha256":  "3ff71d42bd7ce85042296db4407016db97a3f8a7922e3df678c6c6f6197c6e04"
                                         }
                                     ],
-                        "reason":  "Контракт hydration-card проверен: обязательные inputs и outputs сохранены, output addClick по-прежнему number, API принимает выбранный объём.",
+                        "reason":  "Компонент сохранил selector, обязательный input и модель данных; изменения ограничены внутренними aria/animation presentation details.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d992256c415335beaaeb58a14f99c487f537a190",
-                        "reviewedAtUtc":  "2026-08-04T18:05:37.7402050Z"
+                        "gitHead":  "f585f105fe7f040b3aec19c0aa9235cc466e651d",
+                        "reviewedAtUtc":  "2026-08-04T21:25:49.6541529Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -162,13 +162,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "56103973623759eb02e43a38f436ff145446bfe266095368b3b23cbb0c102c05"
+                                            "sha256":  "89a5efea73e6e1b489b713fa525fece0ea2d42d94ad4e416391d4dd248677637"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive DailyCaloriesModel and DailyCaloriesHttpResponse nutrient fields plus mapped consumers; defaults preserve application callers and HTTP compatibility checks report no breaking change.",
+                        "reason":  "Текущий diff не содержит backend-кода или контрактов; изменения ограничены Angular shared widgets, fd-ui-select, локализацией и сгенерированными frontend Wiki-индексами.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8025173ce5f9eafd2702b7010810bc9bcb99a35c",
-                        "reviewedAtUtc":  "2026-08-01T21:53:46.2912002Z"
+                        "gitHead":  "af8294bfddff8b8011ace01e7a50d06e569a9504",
+                        "reviewedAtUtc":  "2026-08-04T22:38:34.2782915Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -396,13 +396,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "4a31b3d811e45650fee97d9047eb6dcca2ae7de11e7c695e26ae2042aef235a3"
+                                            "sha256":  "b04ac3638caedc0c79bd843c38389dac3bdf5b99c29a13e89a4d7ab8b096715e"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated quality metadata; changes reflect the current hydration tests and Wiki verification tests without changing the quality-risk workflow.",
+                        "reason":  "Изменения ограничены анимацией общего графика и исправлением вычисления floating label в select; покрыты unit-тестами, browser interaction и prefers-reduced-motion.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "76a103e75f80fad0ace2dfbdef458339f9e93b34",
-                        "reviewedAtUtc":  "2026-08-04T20:18:24.0485971Z"
+                        "gitHead":  "f585f105fe7f040b3aec19c0aa9235cc466e651d",
+                        "reviewedAtUtc":  "2026-08-04T21:43:42.0573971Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -501,17 +501,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "4b23f87c3a26bfa2f0166572244ab807d7fcef2996d90c0d87aa7a6db36598f5"
+                                            "sha256":  "3ff71d42bd7ce85042296db4407016db97a3f8a7922e3df678c6c6f6197c6e04"
                                         },
                                         {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "4641c2189b7b1f3d7da521002ae916d89b374b5e027e83fdb35e7aef2ac139b1"
+                                            "sha256":  "08d61d1259bf7400a5f0be3f431fcbcf84e4f193e1d3e29d432bf7f3bb13168e"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated frontend metadata; changes reflect the current hydration component and do not change feature tracing guidance.",
+                        "reason":  "Проверены текущие consumers и frontend index; публичный контракт и поток загрузки данных не изменены.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "76a103e75f80fad0ace2dfbdef458339f9e93b34",
-                        "reviewedAtUtc":  "2026-08-04T20:18:25.6160362Z"
+                        "gitHead":  "f585f105fe7f040b3aec19c0aa9235cc466e651d",
+                        "reviewedAtUtc":  "2026-08-04T21:25:51.2553891Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",
