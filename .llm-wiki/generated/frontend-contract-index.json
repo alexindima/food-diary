@@ -7,7 +7,7 @@
                     "outputs":  406,
                     "apiCalls":  206,
                     "templatesWithTranslations":  242,
-                    "translationKeys":  1184,
+                    "translationKeys":  1190,
                     "consumerEdges":  902,
                     "consumedComponents":  277,
                     "unconsumedComponents":  122
@@ -15633,9 +15633,15 @@
                                  "keys":  [
                                               "DISABLED_HINTS.OPERATION_BUSY",
                                               "GENERAL.UNITS.ML",
+                                              "HYDRATION_CARD.ADD_AMOUNT",
                                               "HYDRATION_CARD.GOAL_ACTION",
                                               "HYDRATION_CARD.GOAL_BODY",
+                                              "HYDRATION_CARD.GOAL_REACHED",
                                               "HYDRATION_CARD.GOAL_TITLE",
+                                              "HYDRATION_CARD.OF_GOAL",
+                                              "HYDRATION_CARD.PROGRESS_LABEL",
+                                              "HYDRATION_CARD.QUICK_ADD_LABEL",
+                                              "HYDRATION_CARD.REMAINING",
                                               "HYDRATION_CARD.TITLE"
                                           ]
                              },
@@ -19359,6 +19365,8 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.html",
                               "occurrences":  1,
                               "inputsUsed":  [
+                                                 "iconName",
+                                                 "iconTone",
                                                  "title"
                                              ],
                               "outputsHandled":  [
@@ -21254,10 +21262,11 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.html",
                               "occurrences":  1,
                               "inputsUsed":  [
-                                                 "appearance",
+                                                 "ariaLabel",
                                                  "disabled",
                                                  "disabledReason",
                                                  "fill",
+                                                 "fullWidth",
                                                  "size",
                                                  "variant"
                                              ],

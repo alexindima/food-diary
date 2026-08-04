@@ -1,49 +1,82 @@
-<div class="hydration-card fd-min-w-0" [class.hydration-card--loading]="isLoading()">
-    <fd-dashboard-widget-frame [title]="'HYDRATION_CARD.TITLE' | translate">
-        @if (canAdd()) {
-            <fd-ui-button
-                fdDashboardWidgetHeaderEnd
-                size="sm"
-                variant="primary"
-                fill="solid"
-                appearance="brand-action"
-                class="hydration-card__add"
-                [disabled]="isLoading()"
-                [disabledReason]="isLoading() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
-                (click)="onAdd()"
-            >
-                +{{ addAmount() }} {{ 'GENERAL.UNITS.ML' | translate }}
-            </fd-ui-button>
+<div
+    class="hydration-card fd-min-w-0"
+    [class.hydration-card--loading]="isLoading()"
+    [class.hydration-card--goal-reached]="isGoalReached()"
+    [attr.aria-busy]="isLoading()"
+>
+    <fd-dashboard-widget-frame iconName="water_drop" iconTone="info" [title]="'HYDRATION_CARD.TITLE' | translate">
+        @if (hasGoal()) {
+            <span fdDashboardWidgetHeaderEnd class="hydration-card__percent fd-ui-stat-value"> {{ percent() | number: '1.0-0' }}% </span>
         }
-        <div class="hydration-card__content fd-stack fd-gap-sm">
-            <div class="hydration-card__value fd-row fd-align-baseline fd-gap-xxs">
-                <span class="hydration-card__liters fd-ui-metric-hero fd-min-w-0">{{ total() | number: '1.0-0' }}</span>
-                <span class="hydration-card__unit fd-ui-metric-unit">
-                    @if (hasGoal()) {
-                        / {{ goal() | number: '1.0-0' }} {{ 'GENERAL.UNITS.ML' | translate }}
-                    } @else {
-                        {{ 'GENERAL.UNITS.ML' | translate }}
-                    }
-                </span>
-            </div>
-            @if (hasGoal()) {
-                <div class="hydration-card__progress fd-row fd-gap-xs">
-                    <div class="hydration-card__progress-track fd-ui-progress-track">
-                        <div class="hydration-card__progress-fill fd-ui-progress-fill" [style.width]="trackWidth()"></div>
-                    </div>
-                    <div class="hydration-card__percent fd-ui-stat-value">{{ percent() | number: '1.0-0' }}%</div>
-                </div>
-            } @else {
-                <fd-notice-banner
-                    type="info"
-                    [title]="'HYDRATION_CARD.GOAL_TITLE' | translate"
-                    [message]="'HYDRATION_CARD.GOAL_BODY' | translate"
-                    [actionLabel]="'HYDRATION_CARD.GOAL_ACTION' | translate"
-                    (action)="onGoalAction()"
-                />
-            }
-        </div>
-    </fd-dashboard-widget-frame>
 
-    <div class="hydration-card__watermark" aria-hidden="true"></div>
+        @if (hasGoal()) {
+            <div class="hydration-card__overview">
+                <div
+                    class="hydration-card__vessel"
+                    role="progressbar"
+                    [attr.aria-label]="'HYDRATION_CARD.PROGRESS_LABEL' | translate"
+                    [attr.aria-valuemin]="0"
+                    [attr.aria-valuemax]="goal()"
+                    [attr.aria-valuenow]="progressValue()"
+                >
+                    <div class="hydration-card__vessel-inner">
+                        <div class="hydration-card__water" [class.hydration-card__water--empty]="total() <= 0" [style.height]="fillLevel()">
+                            <span class="hydration-card__bubble hydration-card__bubble--one"></span>
+                            <span class="hydration-card__bubble hydration-card__bubble--two"></span>
+                            <span class="hydration-card__bubble hydration-card__bubble--three"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hydration-card__metrics fd-stack fd-gap-xxs">
+                    <div class="hydration-card__value fd-row fd-align-baseline fd-gap-xxs">
+                        <span class="hydration-card__total fd-ui-metric-hero fd-min-w-0">{{ total() | number: '1.0-0' }}</span>
+                        <span class="hydration-card__unit fd-ui-metric-unit">{{ 'GENERAL.UNITS.ML' | translate }}</span>
+                    </div>
+                    <div class="hydration-card__goal fd-ui-caption">
+                        {{ 'HYDRATION_CARD.OF_GOAL' | translate: { goal: (goal() | number: '1.0-0') } }}
+                    </div>
+                    <div class="hydration-card__remaining fd-ui-body-sm">
+                        @if (isGoalReached()) {
+                            {{ 'HYDRATION_CARD.GOAL_REACHED' | translate }}
+                        } @else {
+                            {{ 'HYDRATION_CARD.REMAINING' | translate: { value: (remaining() | number: '1.0-0') } }}
+                        }
+                    </div>
+                </div>
+            </div>
+        } @else {
+            <div class="hydration-card__value hydration-card__value--without-goal fd-row fd-align-baseline fd-gap-xxs">
+                <span class="hydration-card__total fd-ui-metric-hero fd-min-w-0">{{ total() | number: '1.0-0' }}</span>
+                <span class="hydration-card__unit fd-ui-metric-unit">{{ 'GENERAL.UNITS.ML' | translate }}</span>
+            </div>
+            <fd-notice-banner
+                type="info"
+                [title]="'HYDRATION_CARD.GOAL_TITLE' | translate"
+                [message]="'HYDRATION_CARD.GOAL_BODY' | translate"
+                [actionLabel]="'HYDRATION_CARD.GOAL_ACTION' | translate"
+                (action)="onGoalAction()"
+            />
+        }
+
+        @if (canAdd()) {
+            <div class="hydration-card__quick-add" role="group" [attr.aria-label]="'HYDRATION_CARD.QUICK_ADD_LABEL' | translate">
+                @for (amount of addAmounts; track amount) {
+                    <fd-ui-button
+                        class="hydration-card__quick-action"
+                        size="sm"
+                        [variant]="amount === primaryAddAmount ? 'primary' : 'secondary'"
+                        [fill]="amount === primaryAddAmount ? 'solid' : 'outline'"
+                        [fullWidth]="true"
+                        [ariaLabel]="'HYDRATION_CARD.ADD_AMOUNT' | translate: { value: amount }"
+                        [disabled]="isLoading()"
+                        [disabledReason]="isLoading() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                        (click)="onAdd(amount)"
+                    >
+                        +{{ amount }}
+                    </fd-ui-button>
+                }
+            </div>
+        }
+    </fd-dashboard-widget-frame>
 </div>

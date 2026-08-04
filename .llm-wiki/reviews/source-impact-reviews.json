@@ -68,13 +68,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "b4421d3c388e42ca2838afdfbcfc38b1460a7fb449bc418fc0453be8adeca7e2"
+                                            "sha256":  "4b23f87c3a26bfa2f0166572244ab807d7fcef2996d90c0d87aa7a6db36598f5"
                                         }
                                     ],
-                        "reason":  "Reviewed shared nutrition trend translation namespace move from dashboard app bundle to core; component selector, inputs, outputs, and API shape remain unchanged.",
+                        "reason":  "Контракт hydration-card проверен: обязательные inputs и outputs сохранены, output addClick по-прежнему number, API принимает выбранный объём.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e053284ce5ddd17af2ee5988252c5fc8bfe01c16",
-                        "reviewedAtUtc":  "2026-08-04T13:12:26.3993317Z"
+                        "gitHead":  "d992256c415335beaaeb58a14f99c487f537a190",
+                        "reviewedAtUtc":  "2026-08-04T18:05:37.7402050Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -396,13 +396,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "7f8840478028b2ba84aefaa69df3a70145b22669d021fdd16a19a39ce5b228ea"
+                                            "sha256":  "b81a4a95d9a90a0e321237d42051ca031ae29336307927c7fb425f68e4959cde"
                                         }
                                     ],
-                        "reason":  "Reviewed merged AI input-bar regression coverage: the regenerated quality index records current test references; quality-risk interpretation and thresholds are unchanged.",
+                        "reason":  "Финальная калибровка уменьшает амплитуду SVG-волны и толщину рамки; логика, данные и контракт не меняются.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ed22f383db05c2f63c0aee2abe2ab738212ab64f",
-                        "reviewedAtUtc":  "2026-08-04T10:35:20.6458434Z"
+                        "gitHead":  "d992256c415335beaaeb58a14f99c487f537a190",
+                        "reviewedAtUtc":  "2026-08-04T18:54:40.5434640Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -501,17 +501,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "b4421d3c388e42ca2838afdfbcfc38b1460a7fb449bc418fc0453be8adeca7e2"
+                                            "sha256":  "4b23f87c3a26bfa2f0166572244ab807d7fcef2996d90c0d87aa7a6db36598f5"
                                         },
                                         {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "83fb489d3a6992efe7215e0da8689bcab9eb5192eaa33d24d8f087a11b05620a"
+                                            "sha256":  "256fd654c251b1a1825e46bbd3d2a785b2735fc75054e3490608899a529910fc"
                                         }
                                     ],
-                        "reason":  "Reviewed frontend ownership after moving NutritionWeeklyTrendCard translations to core; shared component remains consumed by dashboard and landing preview.",
+                        "reason":  "Проверены потребитель hydration-card и существующий facade: backend-контракт не меняется, быстрые порции передаются существующим number payload.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e053284ce5ddd17af2ee5988252c5fc8bfe01c16",
-                        "reviewedAtUtc":  "2026-08-04T13:12:27.0900350Z"
+                        "gitHead":  "d992256c415335beaaeb58a14f99c487f537a190",
+                        "reviewedAtUtc":  "2026-08-04T18:05:39.5863608Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

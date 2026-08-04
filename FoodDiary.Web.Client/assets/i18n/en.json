@@ -5279,7 +5279,13 @@
         "TITLE": "Hydration",
         "GOAL_TITLE": "Hydration goal missing",
         "GOAL_BODY": "Set a daily water target to track progress.",
-        "GOAL_ACTION": "Add goal"
+        "GOAL_ACTION": "Add goal",
+        "PROGRESS_LABEL": "Daily water progress",
+        "OF_GOAL": "of {{goal}} ml",
+        "REMAINING": "{{value}} ml remaining",
+        "GOAL_REACHED": "Daily goal reached",
+        "QUICK_ADD_LABEL": "Quick water amounts",
+        "ADD_AMOUNT": "Add {{value}} ml of water"
     },
     "CYCLE_CARD": {
         "TITLE": "Cycle",

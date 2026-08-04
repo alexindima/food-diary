@@ -6,7 +6,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
 import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner';
 import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
-import { HYDRATION_CARD_ADD_STEP_ML, HYDRATION_CARD_MAX_PERCENT, HYDRATION_CARD_TRACK_WIDTH_MAX_PERCENT } from './hydration-card.config';
+import { HYDRATION_CARD_ADD_AMOUNTS_ML, HYDRATION_CARD_MAX_PERCENT, HYDRATION_CARD_PRIMARY_ADD_AMOUNT_ML } from './hydration-card.config';
 
 @Component({
     selector: 'fd-hydration-card',
@@ -16,8 +16,6 @@ import { HYDRATION_CARD_ADD_STEP_ML, HYDRATION_CARD_MAX_PERCENT, HYDRATION_CARD_
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HydrationCardComponent {
-    private readonly addStep = HYDRATION_CARD_ADD_STEP_ML;
-
     public readonly total = input.required<number>();
     public readonly goal = input.required<number | null>();
     public readonly isLoading = input.required<boolean>();
@@ -25,7 +23,8 @@ export class HydrationCardComponent {
     public readonly addClick = output<number>();
     public readonly goalAction = output();
 
-    protected readonly addAmount = computed(() => Math.max(1, this.addStep));
+    protected readonly addAmounts = HYDRATION_CARD_ADD_AMOUNTS_ML;
+    protected readonly primaryAddAmount = HYDRATION_CARD_PRIMARY_ADD_AMOUNT_ML;
     protected readonly hasGoal = computed(() => {
         const goal = this.goal();
         return goal !== null && goal > 0;
@@ -37,14 +36,19 @@ export class HydrationCardComponent {
         const value = (this.total() / (this.goal() ?? 1)) * PERCENT_MULTIPLIER;
         return Math.max(0, Math.min(value, HYDRATION_CARD_MAX_PERCENT)); // allow slight overflow visualization
     });
+    protected readonly fillLevel = computed(() => `${Math.min(this.percent(), PERCENT_MULTIPLIER)}%`);
+    protected readonly progressValue = computed(() => Math.min(Math.max(0, this.total()), this.goal() ?? 0));
+    protected readonly remaining = computed(() => Math.max(0, (this.goal() ?? 0) - this.total()));
+    protected readonly isGoalReached = computed(() => this.hasGoal() && this.remaining() === 0);
 
-    protected readonly trackWidth = computed(() => `${Math.min(this.percent(), HYDRATION_CARD_TRACK_WIDTH_MAX_PERCENT)}%`);
-
-    protected onAdd(): void {
+    protected onAdd(amount: number): void {
         if (!this.canAdd()) {
             return;
         }
-        this.addClick.emit(this.addAmount());
+        if (!(HYDRATION_CARD_ADD_AMOUNTS_ML as readonly number[]).includes(amount)) {
+            return;
+        }
+        this.addClick.emit(amount);
     }
 
     protected onGoalAction(): void {
