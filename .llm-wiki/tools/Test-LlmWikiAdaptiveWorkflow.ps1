@@ -32,6 +32,14 @@ Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'browser-evidence' -a
 Assert-Adaptive ((@($tiny.stages | Where-Object id -eq 'browser-evidence')[0].order) -lt (@($tiny.stages | Where-Object id -eq 'completion')[0].order)) 'Visual UI work ran verify-fast before browser evidence.'
 Assert-Adaptive ($tiny.ceremonyBudget.label -eq 'visual-focused') 'Visual UI work omitted its focused ceremony budget.'
 
+$visualTiny = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Adjust the dashboard glass shape with CSS only.' `
+    -ProposedPath 'FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.scss' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($visualTiny.profile -eq 'visual-ui-change' -and $visualTiny.workflowVariant -eq 'visual-tiny') 'CSS-only work did not select the visual-tiny variant.'
+Assert-Adaptive (@($visualTiny.stages | Where-Object { $_.id -eq 'visual-brief' -and $_.command -notmatch 'ui-trace' }).Count -eq 1) 'Visual-tiny work retraced an already grounded runtime owner.'
+Assert-Adaptive (@($visualTiny.stages | Where-Object { $_.id -eq 'focused-verification' -and $_.command -match 'stylelint' -and $_.command -notmatch 'npm run build|test-plan' }).Count -eq 1) 'Visual-tiny work retained component-test or build ceremony during iteration.'
+
 $localInteraction = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Add a 3 or 7 day period selector using local component state without changing API, routes, persistence, or public contracts.' `
     -ProposedPath @(

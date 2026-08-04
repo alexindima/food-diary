@@ -45,6 +45,15 @@ try {
     Assert-Cache (-not $scopeMiss.hit) 'Verification cache ignored a changed verification scope.'
     $modeMiss = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') -Action Check -RepositoryRoot $fixtureRoot -BaseRef HEAD -ChangedPath 'source.txt' -Mode visual-ui
     Assert-Cache (-not $modeMiss.hit) 'Verification cache ignored a changed completion mode.'
+    [IO.File]::WriteAllText((Join-Path $fixtureRoot 'view.scss'), '.card { color: red; }')
+    $visualArguments = @{ RepositoryRoot = $fixtureRoot; BaseRef = 'HEAD'; ChangedPath = @('source.txt', 'view.scss'); Mode = 'visual-ui' }
+    $null = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') -Action Record @visualArguments
+    [IO.File]::WriteAllText((Join-Path $fixtureRoot 'view.scss'), '.card { color: blue; }')
+    $styleDelta = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') -Action Check @visualArguments
+    Assert-Cache (-not $styleDelta.hit -and $styleDelta.incrementalStyleOnly -and @($styleDelta.incrementalPaths) -contains 'view.scss') 'Visual verification did not isolate a stylesheet-only delta.'
+    [IO.File]::WriteAllText((Join-Path $fixtureRoot 'source.txt'), 'changed again')
+    $sourceDelta = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') -Action Check @visualArguments
+    Assert-Cache (-not $sourceDelta.incrementalStyleOnly) 'Visual verification reused index evidence after a non-style change.'
     & git -C $fixtureRoot -c user.name='LLM Wiki' -c user.email='llm-wiki@example.invalid' commit --quiet --allow-empty -m next-head
     if ($LASTEXITCODE -ne 0) { throw 'Unable to advance verification-cache fixture HEAD.' }
     $headMiss = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') -Action Check @arguments
@@ -53,4 +62,4 @@ try {
     if (Test-Path -LiteralPath $fixtureRoot) { Remove-Item -LiteralPath $fixtureRoot -Recurse -Force }
 }
 
-Write-Host 'LLM Wiki verification-cache smoke passed: identical state reuses success; content, untracked files, scope, and mode invalidate it.'
+Write-Host 'LLM Wiki verification-cache smoke passed: identical state reuses success; visual style deltas reuse scoped evidence; other changes invalidate it.'

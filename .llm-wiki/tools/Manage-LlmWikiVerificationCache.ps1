@@ -39,11 +39,13 @@ $workspacePaths = @(
     Invoke-Git @('ls-files', '--others', '--exclude-standard')
 ) | Where-Object { $_ } | ForEach-Object { ConvertTo-RepositoryPath $_ } | Sort-Object -Unique
 $workspaceMetadata = @(Invoke-Git @('diff', '--raw', 'HEAD', '--'))
-$workspaceEntries = @($workspacePaths | ForEach-Object { "$_`:$(Get-FileSha256 (Join-Path $RepositoryRoot $_))" })
+$workspaceEntries = @($workspacePaths | ForEach-Object {
+    [ordered]@{ path = $_; hash = Get-FileSha256 (Join-Path $RepositoryRoot $_) }
+})
 $scope = @($ChangedPath | Where-Object { $_ } | ForEach-Object { ConvertTo-RepositoryPath $_ } | Sort-Object -Unique)
 $environment = "pwsh=$($PSVersionTable.PSVersion);os=$([Runtime.InteropServices.RuntimeInformation]::OSDescription);arch=$([Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture)"
 $fingerprint = Get-Sha256 (@(
-    'schema=1'
+    'schema=2'
     "head=$head"
     "baseRef=$BaseRef"
     "resolvedBase=$resolvedBase"
@@ -51,23 +53,44 @@ $fingerprint = Get-Sha256 (@(
     "environment=$environment"
     "scope=$($scope -join '|')"
     "gitRaw=$($workspaceMetadata -join '|')"
-    $workspaceEntries
+    @($workspaceEntries | ForEach-Object { "$($_.path):$($_.hash)" })
 ) -join "`n")
 
 $gitDirectory = (Invoke-Git @('rev-parse', '--absolute-git-dir') | Select-Object -First 1)
 $receiptPath = Join-Path $gitDirectory 'llm-wiki/verification-cache/verify-fast.json'
 $hit = $false
+$incrementalStyleOnly = $false
+$incrementalPaths = @()
 if (Test-Path -LiteralPath $receiptPath -PathType Leaf) {
     try {
         $receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json
-        $hit = [int]$receipt.schemaVersion -eq 1 -and [string]$receipt.fingerprint -ceq $fingerprint
+        $hit = [int]$receipt.schemaVersion -eq 2 -and [string]$receipt.fingerprint -ceq $fingerprint
+        $compatibleReceipt = [int]$receipt.schemaVersion -eq 2 -and
+            [string]$receipt.head -ceq $head -and
+            [string]$receipt.resolvedBase -ceq $resolvedBase -and
+            [string]$receipt.mode -ceq $Mode -and
+            [string]$receipt.environment -ceq $environment -and
+            (@($receipt.scope) -join '|') -ceq ($scope -join '|')
+        if (-not $hit -and $compatibleReceipt -and $Mode -eq 'visual-ui') {
+            $previousEntries = @{}
+            foreach ($entry in @($receipt.workspaceEntries)) { $previousEntries[[string]$entry.path] = [string]$entry.hash }
+            $currentEntries = @{}
+            foreach ($entry in $workspaceEntries) { $currentEntries[[string]$entry.path] = [string]$entry.hash }
+            $allPaths = @($previousEntries.Keys + $currentEntries.Keys | Sort-Object -Unique)
+            $incrementalPaths = @($allPaths | Where-Object {
+                -not $previousEntries.ContainsKey($_) -or -not $currentEntries.ContainsKey($_) -or
+                $previousEntries[$_] -cne $currentEntries[$_]
+            })
+            $incrementalStyleOnly = $incrementalPaths.Count -gt 0 -and
+                @($incrementalPaths | Where-Object { $_ -notmatch '\.(?:scss|css)$' }).Count -eq 0
+        }
     } catch { $hit = $false }
 }
 
 if ($Action -eq 'Record') {
     $null = New-Item -ItemType Directory -Path (Split-Path -Parent $receiptPath) -Force
     $receipt = [ordered]@{
-        schemaVersion = 1
+        schemaVersion = 2
         fingerprint = $fingerprint
         recordedAtUtc = [DateTime]::UtcNow.ToString('o')
         head = $head
@@ -77,6 +100,7 @@ if ($Action -eq 'Record') {
         environment = $environment
         scope = $scope
         workspacePaths = @($workspacePaths)
+        workspaceEntries = @($workspaceEntries)
     }
     [IO.File]::WriteAllText($receiptPath, (($receipt | ConvertTo-Json -Depth 5) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
     $hit = $true
@@ -88,4 +112,6 @@ return [pscustomobject]@{
     receiptPath = $receiptPath
     workspacePathCount = @($workspacePaths).Count
     scopePathCount = $scope.Count
+    incrementalStyleOnly = $incrementalStyleOnly
+    incrementalPaths = @($incrementalPaths)
 }

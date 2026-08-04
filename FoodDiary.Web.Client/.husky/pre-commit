@@ -1,6 +1,6 @@
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR)
 . FoodDiary.Web.Client/.husky/progress.sh
-hook_progress_init "pre-commit" 9
+hook_progress_init "pre-commit" 10
 
 STAGED_FRONTEND_FORMATTABLE_FILES=$(echo "$STAGED_FILES" | grep -E '^FoodDiary\.Web\.Client/(src|projects)/.*\.(ts|html)$' || true)
 STAGED_FRONTEND_LINT_FILES=$(echo "$STAGED_FILES" | grep -E '^FoodDiary\.Web\.Client/(src|projects)/.*\.(ts|html)$' || true)
@@ -16,6 +16,8 @@ HAS_I18N=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(assets/i18n
 HAS_STORYBOOK=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(\.storybook/.*|projects/fd-ui-kit/src/.*\.stories\.(ts|mdx)|package\.json|angular\.json)$' || true)
 HAS_CS=$(echo "$STAGED_FILES" | grep -c '\.cs$' || true)
 HAS_INFRA_MIGRATIONS=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Infrastructure/Migrations/.*\.cs$' || true)
+WIKI_INDEX_INPUT_FILES=$(echo "$STAGED_FILES" | grep -E '^(FoodDiary\.Web\.Client/.*\.(ts|html)|.*\.(cs|csproj)|\.llm-wiki/(tools|policies)/|Directory\.|.*\.slnx?$)' || true)
+WIKI_POWERSHELL=$(command -v pwsh || command -v powershell.exe || true)
 
 cd FoodDiary.Web.Client
 
@@ -84,6 +86,16 @@ else
 fi
 
 cd ..
+
+if [ -n "$WIKI_INDEX_INPUT_FILES" ]; then
+  if [ -z "$WIKI_POWERSHELL" ]; then
+    echo "PowerShell is required for the LLM Wiki index freshness check."
+    exit 1
+  fi
+  hook_run "LLM Wiki affected index freshness" "$WIKI_POWERSHELL" -NoLogo -NoProfile -File .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check -AffectedOnly -ReuseUnchangedChecks -ChangedPath "$WIKI_INDEX_INPUT_FILES" || exit 1
+else
+  hook_step_skip "LLM Wiki affected index freshness" "no compiled-index inputs changed"
+fi
 
 PRE_COMMIT_ARTIFACTS_PATH=.artifacts/pre-commit
 

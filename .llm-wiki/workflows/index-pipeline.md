@@ -21,6 +21,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
   - .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1
   - .llm-wiki/tools/LlmWikiIndexCache.ps1
+  - .llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1
   - .llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1
   - .llm-wiki/wiki.ps1
   - .github/workflows/ci-tests.yml
@@ -83,9 +84,18 @@ content-addressed receipt under the ignored Git directory. The receipt binds
 HEAD, resolved base ref, explicit task scope, completion mode, PowerShell/OS
 identity, and hashes of every modified or untracked file. Repeating the command
 with the identical state returns immediately. Git raw metadata is included so a
-file-mode-only change also invalidates the receipt. Any commit, content change,
-new or deleted file, scope change, mode change, or runtime change invalidates the whole
-gate receipt. Strict `verify`, `verify-full`, pre-push, and CI never consume it.
+file-mode-only change also invalidates the receipt. An exact match returns
+immediately. In visual UI mode, a stylesheet-only delta since the last successful
+receipt reuses prior source-index and source-review evidence, then reruns the cheap
+policy/impact checks only for that CSS/SCSS delta. Any non-style edit, commit, new
+or deleted non-style file, scope change, mode change, or runtime change invalidates
+that incremental reuse. Strict `verify`, `verify-full`, publication hooks, and CI
+never consume it.
+
+The pre-commit hook runs the affected compiled-index freshness check when staged
+source or Wiki generator inputs change. This catches a final TS/test edit made
+after index generation before the stale artifacts can reach CI. CSS/SCSS-only
+commits skip the compiled-index check because no compiled index reads stylesheets.
 
 Adaptive workflow regression, the integration-scan contract, and the deterministic
 eval suite are independent read-only checks, so strict and affected verification

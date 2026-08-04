@@ -61,7 +61,8 @@ The router selects one FoodDiary-specific profile:
 | `ui-discovery` | visual/UI intent whose paths are absent or only heuristically inferred | `ui-trace`, grounded research, rerun `develop -PlannedPath`; no implementation yet |
 | `scope-discovery` | non-visual feature or bug intent whose data flow and boundary changes are not grounded | compact brief, existing-flow research, rerun `develop` with refined intent and confirmed paths; no workspace or implementation yet |
 | `maintenance` | path-grounded CI diagnostics, dependency compatibility, or deployment/container build fixes without runtime contract changes | evidence brief, implementation, exact failing check, diff plus `verify-fast` |
-| `tiny` | bounded presentation-only HTML/SVG/SCSS or equally local low-risk work | research, implementation, diff/test-plan, `verify-fast` |
+| `tiny` | bounded presentation-only HTML/SVG or equally local low-risk work | research, implementation, diff/test-plan, `verify-fast` |
+| `visual-ui-change` / `visual-tiny` | grounded frontend presentation work; the `visual-tiny` variant is CSS/SCSS-only | compact constraints, implementation, focused checks, browser evidence, `verify-fast -VisualUiCompletion`; `visual-tiny` uses stylelint without retracing, tests, or a build during each iteration |
 | `bug` | corrective behavior in one bounded flow | research, implementation, focused tests, diff, `verify-fast`; strict publication verification stays in hooks and CI |
 | `feature` | new behavior or a cross-cutting product slice | research, design, implementation phases, conformance-aware review, full verify |
 | `critical` | auth, credentials, identity/private data, payments, migrations, providers, email/invitations, configuration, or delivery boundaries | research, decision checkpoint, design, governed workspace, full verify, independent critique |
@@ -70,6 +71,11 @@ The router selects one FoodDiary-specific profile:
 The profile is a routing decision, not a waiver. Actual diff evidence may elevate it.
 Run `develop` again with changed paths, or use `diff` and `task-refresh`, when the
 implementation boundary changes.
+
+For a grounded CSS/SCSS-only scope, the router reports the `visual-tiny`
+workflow variant. It does not repeat runtime-owner tracing or component test/build
+ceremony during visual calibration. Browser evidence and stylelint remain local
+iteration gates; strict publication checks still run before integration and in CI.
 
 Heuristically inferred paths are discovery hints, not grounded scope. Visual
 intent that mentions a sensitive UI surface such as an authentication dialog or

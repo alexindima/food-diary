@@ -41,6 +41,7 @@ if ($AffectedOnly) {
     $normalizedChangedPaths = @(
         $ChangedPath |
             Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+            ForEach-Object { $_ -split '[\r\n;]+' } |
             ForEach-Object { $_.Replace('\', '/') } |
             Sort-Object -Unique
     )

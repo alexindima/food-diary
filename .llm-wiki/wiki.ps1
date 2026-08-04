@@ -321,18 +321,22 @@ switch ($Command) {
             Write-Host 'Local completion remains valid. Strict publication verification is enforced by pre-push and CI.'
             break
         }
+        $effectiveChangedPath = if ($verificationCache.incrementalStyleOnly) {
+            Write-Host "Visual iteration delta: $(@($verificationCache.incrementalPaths).Count) stylesheet path(s); reusing prior source-index and review evidence."
+            @($verificationCache.incrementalPaths)
+        } else { @($ChangedPath) }
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
         Invoke-WikiTool 'Test-LlmWiki.ps1'
         Invoke-WikiTool 'Test-LlmWikiLint.ps1'
         $indexArguments = @{ Check = $true; AffectedOnly = $true; BaseRef = $BaseRef; DeferPossiblyConcurrentStale = $true; ReuseUnchangedChecks = $true }
-        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
+        if ($verificationCache.incrementalStyleOnly -or $PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $effectiveChangedPath }
         $indexResult = @(Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments)
         $deferredStale = @($indexResult | Where-Object { $_.deferredStale }).Count -gt 0
         $policyArguments = @{ FailOnViolation = $true }
         $impactArguments = @{ FailOnUnreviewed = -not $deferredStale }
-        if ($PSBoundParameters.ContainsKey('ChangedPath')) {
-            $policyArguments.ChangedPath = $ChangedPath
-            $impactArguments.ChangedPath = $ChangedPath
+        if ($verificationCache.incrementalStyleOnly -or $PSBoundParameters.ContainsKey('ChangedPath')) {
+            $policyArguments.ChangedPath = $effectiveChangedPath
+            $impactArguments.ChangedPath = $effectiveChangedPath
         }
         Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' $policyArguments
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments

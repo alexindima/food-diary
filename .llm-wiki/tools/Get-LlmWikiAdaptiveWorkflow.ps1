@@ -74,6 +74,8 @@ $frontendOnly = $productionScopes.Count -gt 0 -and @($productionScopes | Where-O
 $visualUiChange = $visualIntent -and $scopeKnown -and $frontendOnly -and -not $boundaryChangeIntent -and
     -not $flags.databaseMigration -and -not $flags.externalIntegrations -and -not $flags.configuration -and
     @($brief.architectureHealthImpact.dependencyViolations).Count -eq 0
+$visualTiny = $visualUiChange -and $paths.Count -gt 0 -and
+    @($paths | Where-Object { $_ -notmatch '\.(?:scss|css)$' }).Count -eq 0
 $criticalIntentForRouting = $criticalIntent -and -not $boundedDataQueryBugIntent
 $sensitiveBoundaryChange = $privacyCount -gt 0 -and ($criticalIntentForRouting -or $boundaryChangeIntent)
 $hasCriticalEvidence = -not $visualUiChange -and -not $uiDiscovery -and -not $scopeDiscovery -and ($criticalIntentForRouting -or $sensitiveBoundaryChange -or $flags.databaseMigration -or $flags.externalIntegrations -or $flags.configuration)
@@ -155,7 +157,7 @@ if ($profile -eq 'ui-discovery') {
     Add-Stage 'focused-verification' 'Derive and run only checks covering the changed flow and known downstream consumers.' "./.llm-wiki/wiki.ps1 test-plan -Intent '$escapedObjective'$pathArgument; # run focused tests from the plan" $true 'Focused producer, transport, consumer, and regression tests pass.'
     Add-Stage 'completion' 'Confirm the actual diff remains bounded and run the fast local gate.' './.llm-wiki/wiki.ps1 diff; ./.llm-wiki/wiki.ps1 verify-fast' $true 'The diff matches the confirmed bug boundary and fast verification passes; full verification remains the publication gate.'
 } else {
-Add-Stage $(if ($profile -eq 'visual-ui-change') { 'visual-brief' } else { 'research' }) $(if ($profile -eq 'visual-ui-change') { 'Compile a compact constraint brief and confirm whether the runtime owner belongs to the application shell or a reusable UI-kit surface.' } else { 'Compile current code paths, open questions, provider boundaries, failures, and Git precedents.' }) $(if ($profile -eq 'visual-ui-change') { "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective'$pathArgument -Compact; ./.llm-wiki/wiki.ps1 ui-trace -Query '$escapedObjective'$pathArgument" } else { "./.llm-wiki/wiki.ps1 research -Intent '$escapedObjective'$pathArgument" }) $true $(if ($profile -eq 'visual-ui-change') { 'The runtime owner, UI-kit versus application boundary, scoped instructions, design-system constraints, and browser-verifiable outcomes are explicit.' } else { 'Research packet has grounded paths and the runtime owner is confirmed, or explicitly reports unresolved discovery.' })
+Add-Stage $(if ($profile -eq 'visual-ui-change') { 'visual-brief' } else { 'research' }) $(if ($visualTiny) { 'Load scoped style and design-system constraints without retracing the already grounded component tree.' } elseif ($profile -eq 'visual-ui-change') { 'Compile a compact constraint brief and confirm whether the runtime owner belongs to the application shell or a reusable UI-kit surface.' } else { 'Compile current code paths, open questions, provider boundaries, failures, and Git precedents.' }) $(if ($visualTiny) { "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective'$pathArgument -Compact" } elseif ($profile -eq 'visual-ui-change') { "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective'$pathArgument -Compact; ./.llm-wiki/wiki.ps1 ui-trace -Query '$escapedObjective'$pathArgument" } else { "./.llm-wiki/wiki.ps1 research -Intent '$escapedObjective'$pathArgument" }) $true $(if ($visualTiny) { 'Scoped instructions, design tokens, affected viewport, and browser-verifiable outcome are explicit.' } elseif ($profile -eq 'visual-ui-change') { 'The runtime owner, UI-kit versus application boundary, scoped instructions, design-system constraints, and browser-verifiable outcomes are explicit.' } else { 'Research packet has grounded paths and the runtime owner is confirmed, or explicitly reports unresolved discovery.' })
 Add-Stage 'journey-impact' 'Identify affected FoodDiary user journeys and their end-to-end scenarios.' "./.llm-wiki/wiki.ps1 journeys -Intent '$escapedObjective'$pathArgument" ($profile -notin @('tiny', 'visual-ui-change')) 'Relevant journeys, negative paths, and evidence hints are included in scope.'
 if ($requiresDecisionCheckpoint) {
     Add-Stage 'checkpoint' 'Resolve architectural, contract, privacy, or rollout choices before editing.' "./.llm-wiki/wiki.ps1 research -Intent '$escapedObjective'$pathArgument -Format Json" $true 'Every blocking decision is resolved or recorded as an explicit assumption.'
@@ -169,7 +171,11 @@ if ($requiresWorkspace) {
 }
 Add-Stage 'implementation' 'Implement only the selected design and declared scope.' '# edit source and tests; use task-note for decisions or blockers' $true 'Behavior and focused tests are implemented.'
 if ($profile -eq 'visual-ui-change') {
-    Add-Stage 'focused-verification' 'Derive and run focused component checks, then compile the frontend.' "./.llm-wiki/wiki.ps1 test-plan -Intent '$escapedObjective'; # run the focused component tests; cd FoodDiary.Web.Client && npm run build" $true 'Focused component tests and the production frontend build pass.'
+    if ($visualTiny) {
+        Add-Stage 'focused-verification' 'Check only the changed stylesheet during visual iteration.' '# run stylelint for the changed stylesheet; defer the production build to the publication gate' $true 'The changed stylesheet passes stylelint.'
+    } else {
+        Add-Stage 'focused-verification' 'Derive and run focused component checks, then compile the frontend.' "./.llm-wiki/wiki.ps1 test-plan -Intent '$escapedObjective'; # run the focused component tests; cd FoodDiary.Web.Client && npm run build" $true 'Focused component tests and the production frontend build pass.'
+    }
     Add-Stage 'browser-evidence' 'Verify the changed rendering at the viewport(s) affected by the requested scope.' "./.llm-wiki/wiki.ps1 visual-qa -Url '<local URL>' -FixturePath '<upload fixture>' -TriggerSelector '<optional trigger>' -ResultSelector '<expected result>' -Run" $true 'Automated browser evidence proves upload, the affected viewport, visible result, screenshot, and console health; omitted viewports are explicitly out of scope.'
     Add-Stage 'completion' 'Confirm the final diff stays inside the visual owner slice and run the local completion gate.' "./.llm-wiki/wiki.ps1 diff; ./.llm-wiki/wiki.ps1 verify-fast -VisualUiCompletion" $true 'Actual paths remain visual-only and the local completion gate passes after focused checks and browser evidence; full verification is deferred to the enforced publication gate.'
 } else {
@@ -204,6 +210,7 @@ $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     objective = $Objective
     profile = $profile
+    workflowVariant = $(if ($visualTiny) { 'visual-tiny' } else { $profile })
     maintenanceKind = $(if ($profile -eq 'maintenance') { $maintenanceKind } else { $null })
     confidence = $confidence
     scopeKnown = $scopeKnown

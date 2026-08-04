@@ -2690,7 +2690,7 @@
                         "role":  "Component",
                         "selector":  "fd-hydration-card",
                         "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.ts",
-                        "line":  22
+                        "line":  18
                     },
                     {
                         "name":  "TdeeInsightCardContentComponent",
