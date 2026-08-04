@@ -17720,14 +17720,14 @@
                                  "feature":  "shared",
                                  "path":  "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
                                  "keys":  [
-                                              "DASHBOARD.NUTRITION_TREND.DETAILS",
-                                              "DASHBOARD.NUTRITION_TREND.GOAL",
-                                              "DASHBOARD.NUTRITION_TREND.RANGE_LABEL",
-                                              "DASHBOARD.NUTRITION_TREND.TITLE",
                                               "GENERAL.NUTRIENTS.CARB",
                                               "GENERAL.NUTRIENTS.FAT",
                                               "GENERAL.NUTRIENTS.PROTEIN",
                                               "GENERAL.UNITS.KCAL",
+                                              "NUTRITION_TREND.DETAILS",
+                                              "NUTRITION_TREND.GOAL",
+                                              "NUTRITION_TREND.RANGE_LABEL",
+                                              "NUTRITION_TREND.TITLE",
                                               "SHARED.NUTRIENTS_SUMMARY.FIBER"
                                           ]
                              },

@@ -5689,16 +5689,16 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  2909,
-                             "russianProperties":  2909,
+                             "englishProperties":  2883,
+                             "russianProperties":  2883,
                              "countsMatch":  true
                          },
                          {
                              "name":  "core.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  505,
-                             "russianProperties":  505,
+                             "englishProperties":  531,
+                             "russianProperties":  531,
                              "countsMatch":  true
                          },
                          {

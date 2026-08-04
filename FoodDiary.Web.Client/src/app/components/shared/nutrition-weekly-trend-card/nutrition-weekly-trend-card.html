@@ -1,11 +1,11 @@
-<section class="nutrition-trend" [attr.aria-label]="'DASHBOARD.NUTRITION_TREND.TITLE' | translate">
-    <fd-dashboard-widget-frame [title]="'DASHBOARD.NUTRITION_TREND.TITLE' | translate">
+<section class="nutrition-trend" [attr.aria-label]="'NUTRITION_TREND.TITLE' | translate">
+    <fd-dashboard-widget-frame [title]="'NUTRITION_TREND.TITLE' | translate">
         <fd-ui-select
             fdDashboardWidgetHeaderEnd
             class="nutrition-trend__range"
             id="nutrition-trend-range"
             size="sm"
-            [ariaLabel]="'DASHBOARD.NUTRITION_TREND.RANGE_LABEL' | translate"
+            [ariaLabel]="'NUTRITION_TREND.RANGE_LABEL' | translate"
             [options]="rangeOptions()"
             [value]="visibleDays()"
             (valueChange)="changeVisibleDays($event)"
@@ -30,7 +30,7 @@
                     </div>
                     @if (dailyGoal() > 0) {
                         <div class="nutrition-trend__goal" aria-hidden="true" [style.bottom.%]="goalPosition()">
-                            <span>{{ 'DASHBOARD.NUTRITION_TREND.GOAL' | translate }}</span>
+                            <span>{{ 'NUTRITION_TREND.GOAL' | translate }}</span>
                             <strong>{{ dailyGoal() | number: '1.0-0' }}</strong>
                         </div>
                     }
@@ -103,7 +103,7 @@
                 <p class="fd-ui-body-sm fd-ui-text-muted">{{ insight.hint }}</p>
                 @if (insight.showDetails) {
                     <button type="button" class="nutrition-trend__details fd-ui-action-text" (click)="details.emit()">
-                        {{ 'DASHBOARD.NUTRITION_TREND.DETAILS' | translate }}
+                        {{ 'NUTRITION_TREND.DETAILS' | translate }}
                     </button>
                 }
             </aside>

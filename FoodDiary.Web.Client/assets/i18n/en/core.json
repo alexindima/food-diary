@@ -57,6 +57,34 @@
             "ALCOHOL": "Alcohol"
         }
     },
+    "NUTRITION_TREND": {
+        "TITLE": "Dynamics",
+        "RANGE_LABEL": "Chart period",
+        "THREE_DAYS": "3 days",
+        "SEVEN_DAYS": "7 days",
+        "GOAL": "Goal",
+        "INSIGHT": {
+            "EMPTY_TITLE": "No nutrition data yet",
+            "EMPTY_HINT": "Log your first meal to see a nutrition insight for this day.",
+            "IN_PROGRESS_TITLE": "Your day is still taking shape",
+            "IN_PROGRESS_HINT": "Keep logging meals. The insight will become more useful as the day fills in.",
+            "CALORIE_EXCESS_TITLE": "Your calorie target has been exceeded",
+            "CALORIE_EXCESS_HINT": "Consider lighter choices for the rest of the day and focus on hunger cues.",
+            "CARB_EXCESS_TITLE": "Your carbohydrate target has been exceeded",
+            "CARB_EXCESS_HINT": "For the next meal, consider vegetables, protein, and foods with a lower glycemic index.",
+            "FAT_EXCESS_TITLE": "Your fat target has been exceeded",
+            "FAT_EXCESS_HINT": "For the rest of the day, favor leaner protein sources and lighter preparation methods.",
+            "PROTEIN_DEFICIT_TITLE": "Protein is below your target",
+            "PROTEIN_DEFICIT_HINT": "Add a protein source to one of your next meals.",
+            "FIBER_DEFICIT_TITLE": "Fiber is below your target",
+            "FIBER_DEFICIT_HINT": "Vegetables, legumes, whole grains, or berries can help close the gap.",
+            "BALANCED_TITLE": "Today's nutrition is close to your targets",
+            "BALANCED_HINT": "The main indicators are within a reasonable range. Keep following your current balance.",
+            "CALORIE_COMPARISON": "Calories: {{ current }} of {{ goal }} kcal.",
+            "NUTRIENT_COMPARISON": "{{ nutrient }}: {{ current }} of {{ goal }} g."
+        },
+        "DETAILS": "Learn more"
+    },
     "HEADER": {
         "HOME": "Home",
         "LOGIN": "Login",

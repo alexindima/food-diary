@@ -24,13 +24,11 @@ describe('NutritionWeeklyTrendCardComponent', () => {
 
         expect(element.querySelectorAll('.nutrition-trend__bar')).toHaveLength(TREND_DAYS);
         expect(element.querySelectorAll('.nutrition-trend__segment')).toHaveLength(EXPECTED_SEGMENT_COUNT);
-        expect(element.querySelector('.nutrition-trend__insight')?.textContent).toContain(
-            'DASHBOARD.NUTRITION_TREND.INSIGHT.CARB_EXCESS_TITLE',
-        );
+        expect(element.querySelector('.nutrition-trend__insight')?.textContent).toContain('NUTRITION_TREND.INSIGHT.CARB_EXCESS_TITLE');
         expect(element.querySelector('.nutrition-trend__goal strong')?.textContent).toContain('2,258');
         expect(element.querySelectorAll('.nutrition-trend__date')).toHaveLength(TREND_DAYS);
         expect(element.querySelector('.nutrition-trend__date')?.children).toHaveLength(2);
-        expect(element.querySelector('.nutrition-trend__legend')?.textContent).not.toContain('DASHBOARD.NUTRITION_TREND.GOAL');
+        expect(element.querySelector('.nutrition-trend__legend')?.textContent).not.toContain('NUTRITION_TREND.GOAL');
     });
 
     it('emits the details action', async () => {
@@ -47,7 +45,7 @@ describe('NutritionWeeklyTrendCardComponent', () => {
         const fixture = await setupAsync({ kind: 'empty', tone: 'neutral' });
         const element = fixture.nativeElement as HTMLElement;
 
-        expect(element.querySelector('.nutrition-trend__insight')?.textContent).toContain('DASHBOARD.NUTRITION_TREND.INSIGHT.EMPTY_TITLE');
+        expect(element.querySelector('.nutrition-trend__insight')?.textContent).toContain('NUTRITION_TREND.INSIGHT.EMPTY_TITLE');
         expect(element.querySelector('.nutrition-trend__insight--neutral')).not.toBeNull();
         expect(element.querySelector('.nutrition-trend__details')).toBeNull();
     });
@@ -57,8 +55,8 @@ describe('NutritionWeeklyTrendCardComponent', () => {
         const element = fixture.nativeElement as HTMLElement;
         const range = element.querySelector<HTMLButtonElement>('.nutrition-trend__range .fd-ui-select__control');
 
-        expect(range?.textContent).toContain('DASHBOARD.NUTRITION_TREND.SEVEN_DAYS');
-        expect(range?.getAttribute('aria-label')).toBe('DASHBOARD.NUTRITION_TREND.RANGE_LABEL');
+        expect(range?.textContent).toContain('NUTRITION_TREND.SEVEN_DAYS');
+        expect(range?.getAttribute('aria-label')).toBe('NUTRITION_TREND.RANGE_LABEL');
         expect(element.querySelectorAll('.nutrition-trend__bar')).toHaveLength(TREND_DAYS);
 
         fixture.componentInstance['changeVisibleDays'](SHORT_TREND_DAYS);

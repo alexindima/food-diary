@@ -68,13 +68,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "bb78c03f7bc070b5530e68b0b97ef49e1261478934d3822f1f929462df3b3333"
+                                            "sha256":  "b4421d3c388e42ca2838afdfbcfc38b1460a7fb449bc418fc0453be8adeca7e2"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated frontend contracts after the dashboard weight trend and shared line-chart changes; selectors and public inputs remain compatible.",
+                        "reason":  "Reviewed shared nutrition trend translation namespace move from dashboard app bundle to core; component selector, inputs, outputs, and API shape remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ed8c81f8c9d25762b9796a33aa1cd920825388ec",
-                        "reviewedAtUtc":  "2026-08-04T00:16:58.1050293Z"
+                        "gitHead":  "e053284ce5ddd17af2ee5988252c5fc8bfe01c16",
+                        "reviewedAtUtc":  "2026-08-04T13:12:26.3993317Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -500,14 +500,18 @@
                         "pageSha256":  "41967b1d6a8a4232d51034f79db7c10045672d7b8d62c58b2bb870ae64488ba0",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/generated/frontend-contract-index.json",
+                                            "sha256":  "b4421d3c388e42ca2838afdfbcfc38b1460a7fb449bc418fc0453be8adeca7e2"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "60a353c01600000c97f221a834b04470c087cb2b742a2c4b1c42e211fc361221"
+                                            "sha256":  "83fb489d3a6992efe7215e0da8689bcab9eb5192eaa33d24d8f087a11b05620a"
                                         }
                                     ],
-                        "reason":  "Reviewed merged AI input-bar symbol update: the regenerated frontend index reflects the existing component fix; feature-tracing workflow and ownership semantics are unchanged.",
+                        "reason":  "Reviewed frontend ownership after moving NutritionWeeklyTrendCard translations to core; shared component remains consumed by dashboard and landing preview.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ed22f383db05c2f63c0aee2abe2ab738212ab64f",
-                        "reviewedAtUtc":  "2026-08-04T10:35:21.0869410Z"
+                        "gitHead":  "e053284ce5ddd17af2ee5988252c5fc8bfe01c16",
+                        "reviewedAtUtc":  "2026-08-04T13:12:27.0900350Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

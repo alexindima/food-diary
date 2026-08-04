@@ -111,15 +111,15 @@ export class NutritionWeeklyTrendCardComponent {
         this.translationChange();
 
         return [
-            { value: SHORT_TREND_DAYS, label: this.translateService.instant('DASHBOARD.NUTRITION_TREND.THREE_DAYS') },
-            { value: DEFAULT_TREND_DAYS, label: this.translateService.instant('DASHBOARD.NUTRITION_TREND.SEVEN_DAYS') },
+            { value: SHORT_TREND_DAYS, label: this.translateService.instant('NUTRITION_TREND.THREE_DAYS') },
+            { value: DEFAULT_TREND_DAYS, label: this.translateService.instant('NUTRITION_TREND.SEVEN_DAYS') },
         ];
     });
     protected readonly insightView = computed(() => {
         this.translationChange();
         const insight = this.insight();
         const config = INSIGHT_CONFIG[insight.kind];
-        const keyPrefix = 'DASHBOARD.NUTRITION_TREND.INSIGHT';
+        const keyPrefix = 'NUTRITION_TREND.INSIGHT';
 
         return {
             title: this.translateService.instant(`${keyPrefix}.${config.titleKey}`),
