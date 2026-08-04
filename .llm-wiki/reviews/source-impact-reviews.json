@@ -404,13 +404,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "2dfa33292cc7918152dfd97f3c0d8900701b91a1cdeeab6c969aa57394b7a3c6"
+                                            "sha256":  "7f8840478028b2ba84aefaa69df3a70145b22669d021fdd16a19a39ce5b228ea"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated quality index after focused line-chart styling and tests; no new untested critical symbol or runtime risk was introduced.",
+                        "reason":  "Reviewed merged AI input-bar regression coverage: the regenerated quality index records current test references; quality-risk interpretation and thresholds are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ed8c81f8c9d25762b9796a33aa1cd920825388ec",
-                        "reviewedAtUtc":  "2026-08-04T00:16:58.7861121Z"
+                        "gitHead":  "ed22f383db05c2f63c0aee2abe2ab738212ab64f",
+                        "reviewedAtUtc":  "2026-08-04T10:35:20.6458434Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -508,18 +508,14 @@
                         "pageSha256":  "41967b1d6a8a4232d51034f79db7c10045672d7b8d62c58b2bb870ae64488ba0",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "bb78c03f7bc070b5530e68b0b97ef49e1261478934d3822f1f929462df3b3333"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "2799bf103f64cea53560e86c6a31dc8f3816939fb87216c992c62ccd12929a69"
+                                            "sha256":  "60a353c01600000c97f221a834b04470c087cb2b742a2c4b1c42e211fc361221"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated frontend index after dashboard weight trend work; ownership remains Dashboard and the shared fd-ui-kit line chart.",
+                        "reason":  "Reviewed merged AI input-bar symbol update: the regenerated frontend index reflects the existing component fix; feature-tracing workflow and ownership semantics are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ed8c81f8c9d25762b9796a33aa1cd920825388ec",
-                        "reviewedAtUtc":  "2026-08-04T00:16:59.5813569Z"
+                        "gitHead":  "ed22f383db05c2f63c0aee2abe2ab738212ab64f",
+                        "reviewedAtUtc":  "2026-08-04T10:35:21.0869410Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",
