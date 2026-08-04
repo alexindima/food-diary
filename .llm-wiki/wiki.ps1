@@ -2,7 +2,7 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify', 'verify-full', 'develop', 'status', 'next', 'research', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
+        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify', 'verify-full', 'develop', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'diff', 'impact', 'review', 'ownership', 'api-compat', 'policy',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
@@ -92,6 +92,7 @@ param(
     [string]$Resolution,
     [string[]]$Decision,
     [string[]]$Option,
+    [string[]]$BoundaryEvidence,
     [string]$PhaseId,
     [string]$ManifestPath = '.artifacts/llm-wiki/change-manifest.json',
     [string]$AcceptancePath = '.artifacts/llm-wiki/acceptance-matrix.json',
@@ -435,6 +436,14 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $researchArguments.ProposedPath = $ProposedPath }
         Invoke-WikiTool 'Get-LlmWikiResearchPacket.ps1' $researchArguments
     }
+    'integration-scan' {
+        if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'integration-scan requires -Intent <task description>.' }
+        $integrationArguments = @{ Objective = $Objective; BaseRef = $BaseRef; Format = $Format; Limit = $Limit }
+        if ($PSBoundParameters.ContainsKey('HeadRef')) { $integrationArguments.HeadRef = $HeadRef }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $integrationArguments.ChangedPath = $ChangedPath }
+        if ($PSBoundParameters.ContainsKey('ProposedPath')) { $integrationArguments.ProposedPath = $ProposedPath }
+        Invoke-WikiTool 'Get-LlmWikiIntegrationScan.ps1' $integrationArguments
+    }
     'precedents' {
         if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'precedents requires -Intent <task description>.' }
         $precedentArguments = @{ Objective = $Objective; Limit = [Math]::Min($Limit, 20); Format = $Format }
@@ -446,6 +455,7 @@ switch ($Command) {
         $solutionArguments = @{ Objective = $Objective; Format = $Format }
         if ($PSBoundParameters.ContainsKey('Option')) { $solutionArguments.Option = $Option }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $solutionArguments.ProposedPath = $ProposedPath }
+        if ($PSBoundParameters.ContainsKey('BoundaryEvidence')) { $solutionArguments.BoundaryEvidence = $BoundaryEvidence }
         Invoke-WikiTool 'Get-LlmWikiSolutionComparison.ps1' $solutionArguments
     }
     'design' {
@@ -2091,8 +2101,9 @@ switch ($Command) {
         Write-Host "  ./.llm-wiki/wiki.ps1 develop -Intent '<task>' [-PlannedPath 'path/one','path/two']"
         Write-Host "  ./.llm-wiki/wiki.ps1 next|status [-WorkspacePath <task>] [-Intent '<new task>']"
         Write-Host "  ./.llm-wiki/wiki.ps1 research -Intent '<task>' [-PlannedPath 'path/one','path/two']"
+        Write-Host "  ./.llm-wiki/wiki.ps1 integration-scan -Intent '<task>' [-PlannedPath 'path/one','path/two']"
         Write-Host "  ./.llm-wiki/wiki.ps1 precedents -Intent '<task>' [-PlannedPath 'path/one','path/two']"
-        Write-Host "  ./.llm-wiki/wiki.ps1 solutions -Intent '<task>' [-Option '<option one>','<option two>']"
+        Write-Host "  ./.llm-wiki/wiki.ps1 solutions -Intent '<task>' [-Option '<option one>','<option two>'] [-BoundaryEvidence '<current-source proof>']"
         Write-Host "  ./.llm-wiki/wiki.ps1 design -Intent '<task>' [-PlannedPath 'path/one','path/two']"
         Write-Host '  ./.llm-wiki/wiki.ps1 phase-status|phase-next|phase-complete -WorkspacePath <task> [-PhaseId <id>]'
         Write-Host "  ./.llm-wiki/wiki.ps1 qa -Intent '<task>' [-PlannedPath 'path/one','path/two']"

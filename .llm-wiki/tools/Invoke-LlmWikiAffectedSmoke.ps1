@@ -29,7 +29,7 @@ function Add-Group([string]$Name) { if (-not $groups.Contains($Name)) { $groups.
 
 $hasUnknownToolChange = $false
 foreach ($path in $paths) {
-    if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Test-LlmWikiAdaptiveWorkflow|Invoke-LlmWikiAdaptiveVerification)|evals/|policies/experience-policies\.json|workflows/(adaptive-development|developer-experience|evals|learned-regression-evals)\.md)') {
+    if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Get-LlmWikiSolutionComparison|Get-LlmWikiDesignCheckpoint|Test-LlmWikiAdaptiveWorkflow|Get-LlmWikiIntegrationScan|Test-LlmWikiIntegrationScan|Invoke-LlmWikiAdaptiveVerification)|evals/|policies/experience-policies\.json|workflows/(adaptive-development|developer-experience|integration-scan|evals|learned-regression-evals)\.md)') {
         Add-Group 'adaptive-routing'
     } elseif ($path -match '^\.llm-wiki/(tools/Get-LlmWikiDependencyChanges|workflows/dependency-rollout\.md)') {
         Add-Group 'dependency-analysis'

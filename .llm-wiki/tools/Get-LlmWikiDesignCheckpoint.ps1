@@ -42,6 +42,43 @@ $decisionQuestions = @($research.openQuestions | ForEach-Object {
 $invariantCandidates = @($plan.phases | ForEach-Object { $_.stopConditions }) +
     @($plan.finalGates | ForEach-Object { "Gate $($_.id): $($_.command)" })
 $invariants = @($invariantCandidates | Where-Object { $_ } | Select-Object -Unique)
+$verticalSliceProfiles = @('feature', 'critical', 'architectural')
+$usesVerticalSlices = $verticalSliceProfiles -contains [string]$research.workflow.profile
+$implementationPhase = @($plan.phases | Where-Object id -eq 'implementation' | Select-Object -First 1)
+$contractPhases = @($plan.phases | Where-Object id -in @('contracts', 'domain-data'))
+$verificationPhase = @($plan.phases | Where-Object id -eq 'focused-verification' | Select-Object -First 1)
+$publicationPhases = @($plan.phases | Where-Object id -in @('generated-artifacts', 'release-readiness'))
+$designSlices = if ($usesVerticalSlices) {
+    @(
+        [pscustomobject][ordered]@{
+            id = 'slice-minimum-behavior'
+            title = 'Deliver the smallest observable behavior'
+            outcome = 'One acceptance-relevant behavior works end to end through its current runtime owner and closest reliable test.'
+            files = @($implementationPhase.files + $verificationPhase.files | Where-Object { $_ } | Select-Object -Unique)
+            actions = @('Choose one observable acceptance outcome.', 'Implement only the path required for that outcome.', 'Add and run its closest focused test before expanding scope.')
+            evidence = @($verificationPhase.evidence)
+            checkpoint = 'Confirm the behavior is observable, tested, and still inside the declared boundary.'
+        }
+        [pscustomobject][ordered]@{
+            id = 'slice-compatibility-and-failure'
+            title = 'Complete compatibility and failure behavior'
+            outcome = 'Consumers, boundary cases, and failure behavior are compatible and independently verifiable.'
+            files = @($contractPhases.files + $implementationPhase.files + $verificationPhase.files | Where-Object { $_ } | Select-Object -Unique)
+            actions = @($contractPhases.actions + 'Exercise negative, boundary, and downstream-consumer scenarios.' | Where-Object { $_ } | Select-Object -Unique)
+            evidence = @($contractPhases.evidence + $verificationPhase.evidence | Where-Object { $_ } | Select-Object -Unique)
+            checkpoint = 'Stop if compatibility, migration, privacy, or error semantics require a different design decision.'
+        }
+        [pscustomobject][ordered]@{
+            id = 'slice-release-proof'
+            title = 'Produce publication proof'
+            outcome = 'Generated artifacts, rollout checks, and final evidence prove the complete change is publishable.'
+            files = @($publicationPhases.files | Where-Object { $_ } | Select-Object -Unique)
+            actions = @($publicationPhases.actions | Where-Object { $_ } | Select-Object -Unique)
+            evidence = @($publicationPhases.evidence | Where-Object { $_ } | Select-Object -Unique)
+            checkpoint = 'Complete only after strict gates and acceptance evidence pass on the final diff.'
+        }
+    )
+} else { @() }
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     objective = $Objective
@@ -61,14 +98,12 @@ $result = [pscustomobject][ordered]@{
         [pscustomobject][ordered]@{ id = 'structural-change'; description = 'Introduce a new abstraction or boundary.'; evaluation = 'Use only when the existing pattern cannot satisfy an explicit invariant; record the decision.' }
     )
     implementationPhases = @($plan.phases)
-    designSlices = @($plan.phases | ForEach-Object {
-        [pscustomobject][ordered]@{
-            id = "slice-$($_.id)"
-            outcome = $_.outcome
-            files = @($_.files)
-            checkpoint = "Confirm the slice outcome, consumer compatibility, and focused verification before continuing to the next phase."
-        }
-    })
+    sliceStrategy = [pscustomobject][ordered]@{
+        enabled = $usesVerticalSlices
+        kind = if ($usesVerticalSlices) { 'vertical-outcome' } else { 'none' }
+        reason = if ($usesVerticalSlices) { 'Large feature, critical, and architectural profiles benefit from acceptance-oriented end-to-end slices.' } else { 'Tiny, maintenance, and bounded bug work avoids slice-planning ceremony.' }
+    }
+    designSlices = @($designSlices)
     ready = @($decisionQuestions | Where-Object blocking).Count -eq 0 -and @($research.discovery.groundedPaths).Count -gt 0
     nextAction = if (@($decisionQuestions | Where-Object blocking).Count -gt 0) {
         'Resolve blocking decision questions with current-source evidence and record the selected alternative before editing.'
@@ -81,4 +116,7 @@ Write-Host "Design checkpoint: $($result.profile), ready=$($result.ready)"
 Write-Host "Objective: $Objective"
 foreach ($question in $result.decisionQuestions) { Write-Host "OPEN [$($question.id)]: $($question.question)" }
 foreach ($phase in $result.implementationPhases) { Write-Host "Phase $($phase.order): $($phase.title) - $($phase.outcome)" }
+if ($result.sliceStrategy.enabled) {
+    foreach ($slice in $result.designSlices) { Write-Host "Vertical slice $($slice.id): $($slice.outcome)" }
+}
 Write-Host "Next: $($result.nextAction)"

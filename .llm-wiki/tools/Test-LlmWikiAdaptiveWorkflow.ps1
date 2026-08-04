@@ -225,8 +225,39 @@ Assert-Adaptive (@($research.researchLanes.id) -contains 'integrations') 'Resear
 $solutions = & (Join-Path $PSScriptRoot 'Get-LlmWikiSolutionComparison.ps1') `
     -Objective 'Improve the Wiki developer experience.' `
     -Option 'Extend the existing adaptive flow.','Replace it with a second workflow.' `
+    -ProposedPath '.llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1' `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($solutions.alternatives.Count -eq 2 -and $solutions.recommendedOptionId -eq 'OPT-01') 'Solution comparison did not prefer the bounded existing-flow option.'
+Assert-Adaptive ($solutions.schemaVersion -eq 2) 'Solution comparison did not expose the evidence-backed schema.'
+Assert-Adaptive ($solutions.alternatives[0].evidenceCoverage.groundedPathCount -gt 0) 'Solution comparison omitted grounded current-source evidence.'
+Assert-Adaptive (@($solutions.alternatives[1].rejectionConditions).Count -gt 0 -and -not [string]::IsNullOrWhiteSpace($solutions.alternatives[1].decisionChangesWhen)) 'Solution comparison omitted rejection or decision-change criteria.'
+Assert-Adaptive ($solutions.alternatives[1].recommendation -eq 'requires-boundary-evidence' -and $solutions.alternatives[1].evidenceCoverage.status -ne 'grounded') 'Structural alternative was treated as grounded without boundary evidence.'
+
+$groundedStructuralSolutions = & (Join-Path $PSScriptRoot 'Get-LlmWikiSolutionComparison.ps1') `
+    -Objective 'Replace a boundary that cannot preserve the required invariant.' `
+    -Option 'Extend the existing boundary.','Introduce a separate subsystem.' `
+    -ProposedPath '.llm-wiki/tools/Get-LlmWikiSolutionComparison.ps1' `
+    -BoundaryEvidence '.llm-wiki/tools/Get-LlmWikiSolutionComparison.ps1: the current option model cannot represent the required boundary invariant.' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($groundedStructuralSolutions.alternatives[1].evidenceCoverage.status -eq 'grounded') 'Explicit structural boundary evidence did not close the evidence gap.'
+Assert-Adaptive (@($groundedStructuralSolutions.alternatives[1].evidence | Where-Object kind -eq 'boundary-evidence').Count -eq 1) 'Structural comparison omitted caller-supplied boundary evidence.'
+
+$architecturalDesign = & (Join-Path $PSScriptRoot 'Get-LlmWikiDesignCheckpoint.ps1') `
+    -Objective 'Introduce a durable architecture boundary for Wiki planning.' `
+    -ProposedPath '.llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1' `
+    -Decision 'Preserve existing phase contracts and add acceptance-oriented slices as an additive output.' `
+    -Limit 4 `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($architecturalDesign.sliceStrategy.enabled -and $architecturalDesign.sliceStrategy.kind -eq 'vertical-outcome') 'Architectural design did not enable vertical outcome slices.'
+Assert-Adaptive (@($architecturalDesign.designSlices).Count -eq 3) 'Architectural design did not produce the bounded three-slice decomposition.'
+Assert-Adaptive (@($architecturalDesign.designSlices.id) -contains 'slice-minimum-behavior') 'Vertical decomposition omitted the minimum observable behavior slice.'
+
+$bugDesign = & (Join-Path $PSScriptRoot 'Get-LlmWikiDesignCheckpoint.ps1') `
+    -Objective 'Fix a local Wiki output formatting bug.' `
+    -ProposedPath '.llm-wiki/tools/Get-LlmWikiSolutionComparison.ps1' `
+    -Limit 4 `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive (-not $bugDesign.sliceStrategy.enabled -and @($bugDesign.designSlices).Count -eq 0) 'Bounded bug design gained vertical-slice ceremony.'
 
 $qa = & (Join-Path $PSScriptRoot 'Get-LlmWikiManualQaPlan.ps1') `
     -Objective 'Fix the dietologist invitation email link.' `

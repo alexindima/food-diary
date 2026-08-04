@@ -282,3 +282,25 @@ governed implementation, use `phase-next`; phase state is derived from the chang
 manifest and Git diff. Research packets group evidence into flow, tests,
 integrations, precedents, and guidance lanes so investigations can run independently
 without persisting agent scratch output as a second source of truth.
+
+`solutions` reports current-source coverage, matching Git precedent counts, explicit
+tradeoffs, rejection conditions, and the evidence that would change the recommendation.
+A low-cost option remains only a starting recommendation while its evidence is partial;
+structural work is not preferred without proof that the existing boundary cannot satisfy
+an explicit invariant. Supply that current-source proof with `solutions -BoundaryEvidence`;
+the structural alternative remains partial while the proof is absent.
+
+For `feature`, `critical`, and `architectural` profiles, `design` additionally emits
+acceptance-oriented vertical slices: minimum observable behavior, compatibility and
+failure behavior, then publication proof. Each slice includes implementation and its
+closest verification instead of separating all backend, frontend, and tests into broad
+horizontal phases. `tiny`, `maintenance`, and bounded `bug` profiles emit no vertical
+slice ceremony.
+
+For cross-layer, API, provider, external-data, asynchronous, `critical`, or
+`architectural` work, run `integration-scan` to compose inbound consumers,
+outbound dependencies, side effects, async continuations, external boundaries,
+and focused verification into one read-only view. It reuses existing indexes and
+research evidence and never becomes another source of truth. The command remains
+opt-in and reports `recommended=false` for bounded work without integration evidence,
+so small routes gain no mandatory stage.

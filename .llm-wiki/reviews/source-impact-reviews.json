@@ -317,25 +317,17 @@
                     {
                         "pageId":  "workflow-index-pipeline",
                         "pagePath":  ".llm-wiki/workflows/index-pipeline.md",
-                        "pageSha256":  "dc31135c51f84aca7eed860029d523e425bd950c9cd5bf2256931772e8585cb5",
+                        "pageSha256":  "fcc158e59ef8f77ef21b7db551d76e90b3cc2a84be1a133d8ab19da5f0cc43cc",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "1de8ce4c08979fa28895c23769cd7fc450e389f91c29e21a1349dd58305e6410"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
-                                            "sha256":  "2750c0d6d754840e8a206da71077125332c3a80e6b7ca0bafc163f212e0ae2b6"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "fd9920e60139f5b9e43cf3f36d946a9839d1dc3f543066f64b7274f8f74287dc"
+                                            "sha256":  "9a4d6fba5341f2f6036f87d8cd029ccb8e34057d437a41a3b611fde62a91fff9"
                                         }
                                     ],
-                        "reason":  "Reviewed task-delta facade integration: index selection remains explicit, strict full verification remains uncached, and only affected-path discovery changes.",
+                        "reason":  "Reviewed the additive solutions -BoundaryEvidence facade parameter; index selection, generation, cache, and verification pipeline behavior are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "10e289c1be7609440c09a19b8247bcdd0974cdc0",
-                        "reviewedAtUtc":  "2026-08-04T00:47:53.2620027Z"
+                        "gitHead":  "6059c322590854f6462916d8199e04536d1345b5",
+                        "reviewedAtUtc":  "2026-08-04T11:24:23.1316416Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -464,13 +456,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "dc5395a80165a61c9eff5292cdbbf6d007ff8368d534ea9e5b99938358f7fb46"
+                                            "sha256":  "9a4d6fba5341f2f6036f87d8cd029ccb8e34057d437a41a3b611fde62a91fff9"
                                         }
                                     ],
-                        "reason":  "Reviewed shared facade optimization: verify-fast cache lookup and parallel adaptive checks do not alter task dispatch, lease, receipt, or strict publication semantics.",
+                        "reason":  "Reviewed the additive solutions -BoundaryEvidence facade parameter; task dispatch, receipt ownership, lifecycle, and reconciliation behavior are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "979ca8ca0d93235ce7f5f42310e1739534a887ea",
-                        "reviewedAtUtc":  "2026-08-04T10:24:02.6284950Z"
+                        "gitHead":  "6059c322590854f6462916d8199e04536d1345b5",
+                        "reviewedAtUtc":  "2026-08-04T11:24:23.5083246Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",

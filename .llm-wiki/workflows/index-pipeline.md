@@ -87,9 +87,11 @@ file-mode-only change also invalidates the receipt. Any commit, content change,
 new or deleted file, scope change, mode change, or runtime change invalidates the whole
 gate receipt. Strict `verify`, `verify-full`, pre-push, and CI never consume it.
 
-Adaptive workflow regression and the deterministic eval suite are independent
-read-only checks, so strict and affected verification run them concurrently and
-still fail if either process fails. Their individual durations remain visible.
+Adaptive workflow regression, the integration-scan contract, and the deterministic
+eval suite are independent read-only checks, so strict and affected verification
+run them concurrently and still fail if any process fails. Their individual
+durations remain visible; the sub-second integration contract does not extend the
+critical path beyond the existing adaptive/eval work.
 
 The quality, backend-contract, frontend, and frontend-contract checks use local
 content-addressed receipts during `verify-fast`. A hit requires matching hashes
@@ -102,10 +104,11 @@ live under ignored `.artifacts/llm-wiki/index-cache`; they are never committed.
 and retain a complete deterministic check.
 
 Use `wiki smoke -SmokeGroup tools -AffectedOnly` during iteration. Its dispatcher
-maps adaptive-routing, dependency-analysis, and facade changes to existing
-focused regression suites and prints per-group duration. Unknown shared-tool
-changes fall back to the complete monolithic tools smoke. The ordinary tools
-smoke and `verify-full` remain complete stateful publication/CI gates.
+maps adaptive routing, solution/design planning, integration scanning,
+dependency analysis, and facade changes to existing focused regression suites
+and prints per-group duration. Only genuinely unknown shared-tool changes fall
+back to the complete monolithic tools smoke. The ordinary tools smoke and
+`verify-full` remain complete stateful publication/CI gates.
 
 Use `-BaseRef <ref>` for a committed range or `-ChangedPath <path[]>` for an
 explicit scope. The conservative dependency map still runs derived indexes and

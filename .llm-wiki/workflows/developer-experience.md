@@ -42,11 +42,15 @@ When a durable choice exists, compare options before design:
 
 ```powershell
 ./.llm-wiki/wiki.ps1 solutions -Intent '<outcome>' `
-  -Option '<bounded option>','<structural option>'
+  -Option '<bounded option>','<structural option>' `
+  -BoundaryEvidence '<current-source proof when a new boundary is required>'
 ```
 
-The comparison is derived advice. Record the selected option and source evidence
-through the existing `design -Decision` or task journal.
+The comparison is derived advice. It reports grounded current paths, matching Git
+precedent counts, tradeoffs, rejection conditions, and the evidence that would
+change its recommendation. Missing evidence remains explicit, so a structural
+option cannot appear grounded merely because it was proposed. Record the selected
+option and source evidence through the existing `design -Decision` or task journal.
 
 For governed work, inspect implementation phases with `phase-status` or
 `phase-next`. `phase-complete -FailOnInvalid` verifies the selected manifest
@@ -110,5 +114,7 @@ requiring mobile proof for every desktop-only patch.
 
 Research packets expose five stable lanes—flow, tests, integrations, precedents,
 and guidance—so independent investigation can be parallelized without making
-agent-specific scratch output part of the Wiki contract. Design checkpoints expose
-one review checkpoint per implementation slice.
+agent-specific scratch output part of the Wiki contract. For `feature`, `critical`,
+and `architectural` work, design checkpoints add three acceptance-oriented vertical
+slices that keep behavior and its closest verification together. Smaller profiles
+do not gain slice-planning ceremony.

@@ -7,6 +7,7 @@ $repositoryRoot = [IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
 $shellPath = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 $checks = @(
     [pscustomobject]@{ name = 'adaptive workflow'; script = Join-Path $toolsRoot 'Test-LlmWikiAdaptiveWorkflow.ps1' }
+    [pscustomobject]@{ name = 'integration scan'; script = Join-Path $toolsRoot 'Test-LlmWikiIntegrationScan.ps1' }
     [pscustomobject]@{ name = 'evals'; script = Join-Path $toolsRoot 'Invoke-LlmWikiEvals.ps1' }
 )
 $workers = [Collections.Generic.List[object]]::new()
