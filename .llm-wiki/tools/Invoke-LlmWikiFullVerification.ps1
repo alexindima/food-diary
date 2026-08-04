@@ -11,6 +11,11 @@ $shellPath = [System.IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 
 $checks = @(
     [pscustomobject]@{
+        name = 'task baseline'
+        script = Join-Path $toolsRoot 'Test-LlmWikiTaskBaseline.ps1'
+        arguments = ''
+    }
+    [pscustomobject]@{
         name = 'indexes'
         script = Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1'
         arguments = "-Check -MaxConcurrency $IndexConcurrency"

@@ -611,12 +611,17 @@ Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiSensitiveData
 $qualityBuilderText = Get-Content -LiteralPath (Join-Path $toolsRoot 'Build-LlmWikiQualityIndex.ps1') -Raw
 $indexPipelineText = Get-Content -LiteralPath (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -Raw
 $wikiFacadeText = Get-Content -LiteralPath (Join-Path $wikiRoot 'wiki.ps1') -Raw
+$taskBaselineText = Get-Content -LiteralPath (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Raw
 Assert-Wiki ($qualityBuilderText -match 'inputFingerprint' -and $qualityBuilderText -match 'outputFingerprint') 'Quality-index cache does not bind both inputs and generated output.'
 Assert-Wiki ($qualityBuilderText -match 'Build-LlmWikiQualityIndex\.ps1' -and $qualityBuilderText -match 'LlmWikiJson\.ps1') 'Quality-index cache fingerprint omits generator implementation inputs.'
 Assert-Wiki ($indexPipelineText -match "cacheableTools = @\('Build-LlmWikiQualityIndex\.ps1', 'Build-LlmWikiBackendContractIndex\.ps1', 'Build-LlmWikiFrontendIndex\.ps1', 'Build-LlmWikiFrontendContractIndex\.ps1'\)" -and
     $indexPipelineText -match '\$CheckMode -and \$ReuseUnchangedChecks -and \$toolName -in \$cacheableTools') 'Index pipeline does not limit unchanged-check reuse to the approved cacheable indexes in check mode.'
 Assert-Wiki ($wikiFacadeText.Contains('DeferPossiblyConcurrentStale = $true; ReuseUnchangedChecks = $true') -and
     $wikiFacadeText.Contains('$indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef }')) 'Index cache reuse is not isolated to verify-fast.'
+Assert-Wiki ($wikiFacadeText -match "(?s)\$Command -eq 'develop'.+Manage-LlmWikiTaskBaseline\.ps1.+Action Capture" -and
+    $wikiFacadeText -match "(?s)-not \$PSBoundParameters\.ContainsKey\('ChangedPath'\).+Action ChangedPaths") 'Wiki facade does not capture and reuse a task baseline while preserving explicit changed paths.'
+Assert-Wiki ($taskBaselineText -match "rev-parse', 'HEAD'" -and $taskBaselineText -match 'initialChangedPaths' -and
+    $taskBaselineText -match 'baselineFingerprint.+Get-PathFingerprint') 'Task baseline does not bind the starting HEAD and pre-existing file contents.'
 
 $affectedStylePlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -AffectedOnly -Plan `
     -ChangedPath 'FoodDiary.Web.Client/src/app/components/example/example.scss') -join [Environment]::NewLine

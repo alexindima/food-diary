@@ -241,6 +241,17 @@ if ($PSBoundParameters.ContainsKey('ProposedPath')) {
     $ProposedPath = @(Expand-LlmWikiPathList $ProposedPath)
 }
 
+$deltaAwareCommands = @('update', 'smoke', 'verify', 'verify-fast', 'verify-full', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'ownership', 'policy')
+if ($Command -eq 'develop') {
+    & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -Format Text
+} elseif ($Command -in $deltaAwareCommands -and -not $PSBoundParameters.ContainsKey('ChangedPath')) {
+    $taskBaseline = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action ChangedPaths -Format Object
+    if ($taskBaseline.available) {
+        $ChangedPath = @($taskBaseline.changedPaths)
+        $PSBoundParameters['ChangedPath'] = $ChangedPath
+    }
+}
+
 function Invoke-WikiTool {
     param(
         [string]$Name,
@@ -292,8 +303,14 @@ switch ($Command) {
         Invoke-WikiTool 'Invoke-LlmWikiEvals.ps1'
         Invoke-WikiTool 'Test-LlmWikiAdaptiveWorkflow.ps1'
         Invoke-WikiTool 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' }
-        Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' @{ FailOnViolation = $true }
-        Invoke-WikiTool 'Get-LlmWikiImpact.ps1' @{ FailOnUnreviewed = $true }
+        $policyArguments = @{ FailOnViolation = $true }
+        $impactArguments = @{ FailOnUnreviewed = $true }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) {
+            $policyArguments.ChangedPath = $ChangedPath
+            $impactArguments.ChangedPath = $ChangedPath
+        }
+        Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' $policyArguments
+        Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
     }
     'verify-fast' {
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
@@ -329,8 +346,14 @@ switch ($Command) {
         Invoke-WikiTool 'Invoke-LlmWikiEvals.ps1'
         Invoke-WikiTool 'Test-LlmWikiAdaptiveWorkflow.ps1'
         Invoke-WikiTool 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' }
-        Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' @{ FailOnViolation = $true }
-        Invoke-WikiTool 'Get-LlmWikiImpact.ps1' @{ FailOnUnreviewed = $true }
+        $policyArguments = @{ FailOnViolation = $true }
+        $impactArguments = @{ FailOnUnreviewed = $true }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) {
+            $policyArguments.ChangedPath = $ChangedPath
+            $impactArguments.ChangedPath = $ChangedPath
+        }
+        Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' $policyArguments
+        Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
     }
     'context' {
         $contextArguments = @{
