@@ -36,7 +36,7 @@ foreach ($path in $paths) {
         Add-Group 'adaptive-routing'
     } elseif ($path -match '^\.llm-wiki/(tools/Get-LlmWikiDependencyChanges|workflows/dependency-rollout\.md)') {
         Add-Group 'dependency-analysis'
-    } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Test-LlmWikiStrictAffected)|wiki\.ps1|workflows/index-pipeline\.md)') {
+    } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiObservedStage|Test-LlmWikiStrictAffected)|wiki\.ps1|workflows/index-pipeline\.md)') {
         Add-Group 'facade-contract'
     } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiFrontendTrace|Find-LlmWikiTrace|Test-LlmWikiTraceOutput)\.ps1$') {
         Add-Group 'trace-output'

@@ -7,15 +7,32 @@ $facadeText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/wik
 $fullVerificationText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1') -Raw
 
 if ($facadeText -notmatch "'verify-strict-affected'") { throw 'Wiki facade does not expose verify-strict-affected.' }
-$caseMatch = [regex]::Match($facadeText, "(?s)'verify-strict-affected'\s*\{(?<body>.*?)\n\s*\}\n\s*'verify-full'")
-if (-not $caseMatch.Success) { throw 'Unable to isolate verify-strict-affected implementation.' }
-$body = $caseMatch.Groups['body'].Value
+if (-not $facadeText.Contains("`$Command = 'verify-fast'") -or -not $facadeText.Contains('Compatibility alias: verify -Fast -> verify-fast')) {
+    throw 'Wiki facade does not support the verify -Fast compatibility alias.'
+}
+foreach ($progressContract in @('Starting Wiki verify stage:', 'Wiki verify stage still running:', 'Wiki verify stage timed out:', 'Run separately:')) {
+    if (-not $facadeText.Contains($progressContract)) { throw "Observed verify omitted '$progressContract'." }
+}
+if ($facadeText -match 'Start-Job' -or -not $facadeText.Contains('Invoke-LlmWikiObservedStage.ps1')) {
+    throw 'Observed verify must use an inherited-output child process rather than a buffered PowerShell job.'
+}
+$verifyStart = $facadeText.IndexOf("    'verify' {")
+$verifyEnd = $facadeText.IndexOf("    'verify-fast' {", $verifyStart)
+$verifyBody = if ($verifyStart -ge 0 -and $verifyEnd -gt $verifyStart) { $facadeText.Substring($verifyStart, $verifyEnd - $verifyStart) } else { '' }
+if (@([regex]::Matches($verifyBody, 'Invoke-ObservedWikiStage')).Count -lt 8) {
+    throw 'Ordinary verify does not route every verification stage through the observed runner.'
+}
+$strictStart = $facadeText.IndexOf("    'verify-strict-affected' {")
+$strictEnd = $facadeText.IndexOf("    'verify-full' {", $strictStart)
+if ($strictStart -lt 0 -or $strictEnd -le $strictStart) { throw 'Unable to isolate verify-strict-affected implementation.' }
+$body = $facadeText.Substring($strictStart, $strictEnd - $strictStart)
 foreach ($required in @('AffectedOnly = $true', 'Invoke-LlmWikiAffectedSmoke.ps1', 'FailOnViolation = $true', 'FailOnUnreviewed = $true')) {
     if (-not $body.Contains($required)) { throw "Strict affected verification omitted '$required'." }
 }
 if ($body -match 'ReuseUnchangedChecks|DeferPossiblyConcurrentStale') {
     throw 'Strict affected verification unexpectedly enables cache reuse or stale deferral.'
 }
+if ($body -match 'Invoke-ObservedWikiStage') { throw 'Strict affected verification accidentally inherited the full observed verify stages.' }
 
 $frontendSmoke = @(& (Join-Path $repositoryRoot '.llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1') `
     -Plan -ChangedPath 'FoodDiary.Web.Client/src/app/example/example.ts' 6>&1 | ForEach-Object { $_.ToString() })

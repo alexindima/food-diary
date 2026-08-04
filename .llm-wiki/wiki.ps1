@@ -78,6 +78,7 @@ param(
     [switch]$AffectedOnly,
     [switch]$VisualUiCompletion,
     [switch]$FullTrace,
+    [switch]$Fast,
     [switch]$Compact,
     [switch]$FailOnUnreviewed,
     [switch]$Check,
@@ -243,6 +244,12 @@ if ($PSBoundParameters.ContainsKey('ProposedPath')) {
     $ProposedPath = @(Expand-LlmWikiPathList $ProposedPath)
 }
 
+if ($Fast) {
+    if ($Command -ne 'verify') { throw '-Fast is supported only with the verify command.' }
+    $Command = 'verify-fast'
+    Write-Host 'Compatibility alias: verify -Fast -> verify-fast'
+}
+
 $deltaAwareCommands = @('update', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'ownership', 'policy')
 if ($Command -eq 'develop') {
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -Format Text
@@ -271,6 +278,55 @@ function Invoke-WikiTool {
     }
 }
 
+function Invoke-ObservedWikiStage {
+    param(
+        [string]$Name,
+        [string]$ToolName,
+        [hashtable]$ToolArguments = @{},
+        [int]$TimeoutSeconds = 120,
+        [string]$StandaloneCommand
+    )
+    $toolPath = Join-Path $toolsRoot $ToolName
+    $stopwatch = [Diagnostics.Stopwatch]::StartNew()
+    Write-Host "Starting Wiki verify stage: $Name (timeout=${TimeoutSeconds}s)"
+    $serializableArguments = @{}
+    foreach ($entry in $ToolArguments.GetEnumerator()) {
+        $serializableArguments[$entry.Key] = if ($entry.Value -is [Management.Automation.SwitchParameter]) { [bool]$entry.Value } else { $entry.Value }
+    }
+    $argumentsJson = $serializableArguments | ConvertTo-Json -Depth 5 -Compress
+    $argumentsBase64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($argumentsJson))
+    $stageWrapper = Join-Path $toolsRoot 'Invoke-LlmWikiObservedStage.ps1'
+    $shellPath = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
+    $startInfo = New-Object Diagnostics.ProcessStartInfo
+    $startInfo.FileName = $shellPath
+    $startInfo.WorkingDirectory = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
+    $startInfo.UseShellExecute = $false
+    $startInfo.Arguments = "-NoLogo -NoProfile -File `"$stageWrapper`" -ToolPath `"$toolPath`" -ArgumentsBase64 $argumentsBase64"
+    $process = New-Object Diagnostics.Process
+    $process.StartInfo = $startInfo
+    if (-not $process.Start()) { throw "Unable to start Wiki verify stage: $Name" }
+    $nextHeartbeat = 30
+    try {
+        while (-not $process.WaitForExit(1000)) {
+            if ($stopwatch.Elapsed.TotalSeconds -ge $nextHeartbeat) {
+                Write-Host "Wiki verify stage still running: $Name ($([Math]::Round($stopwatch.Elapsed.TotalSeconds))s)"
+                $nextHeartbeat += 30
+            }
+            if ($stopwatch.Elapsed.TotalSeconds -ge $TimeoutSeconds) {
+                $process.Kill()
+                throw "Wiki verify stage timed out: $Name after ${TimeoutSeconds}s. Run separately: $StandaloneCommand"
+            }
+        }
+        if ($process.ExitCode -ne 0) {
+            throw "Wiki verify stage failed: $Name (exit=$($process.ExitCode)). Run separately: $StandaloneCommand"
+        }
+    } finally {
+        $process.Dispose()
+        $stopwatch.Stop()
+    }
+    Write-Host "Wiki verify stage passed: $Name ($([Math]::Round($stopwatch.Elapsed.TotalSeconds, 2))s)"
+}
+
 switch ($Command) {
     'update' {
         $indexArguments = @{ AffectedOnly = $AffectedOnly; BaseRef = $BaseRef }
@@ -296,22 +352,22 @@ switch ($Command) {
         }
     }
     'verify' {
-        Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
-        Invoke-WikiTool 'Test-LlmWiki.ps1'
-        Invoke-WikiTool 'Test-LlmWikiLint.ps1'
         $indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
-        Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments
-        Invoke-WikiTool 'Invoke-LlmWikiAdaptiveVerification.ps1'
-        Invoke-WikiTool 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' }
         $policyArguments = @{ FailOnViolation = $true }
         $impactArguments = @{ FailOnUnreviewed = $true }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) {
             $policyArguments.ChangedPath = $ChangedPath
             $impactArguments.ChangedPath = $ChangedPath
         }
-        Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' $policyArguments
-        Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
+        Invoke-ObservedWikiStage 'workspace policy' 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true } 60 './.llm-wiki/wiki.ps1 workspace-policy'
+        Invoke-ObservedWikiStage 'page contracts' 'Test-LlmWiki.ps1' @{} 60 './.llm-wiki/wiki.ps1 lint'
+        Invoke-ObservedWikiStage 'lint regression' 'Test-LlmWikiLint.ps1' @{} 120 './.llm-wiki/tools/Test-LlmWikiLint.ps1'
+        Invoke-ObservedWikiStage 'indexes' 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments 300 './.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check'
+        Invoke-ObservedWikiStage 'adaptive verification' 'Invoke-LlmWikiAdaptiveVerification.ps1' @{} 300 './.llm-wiki/tools/Invoke-LlmWikiAdaptiveVerification.ps1'
+        Invoke-ObservedWikiStage 'failure knowledge' 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' } 60 './.llm-wiki/wiki.ps1 failures -Check'
+        Invoke-ObservedWikiStage 'change policy' 'Test-LlmWikiChangePolicy.ps1' $policyArguments 60 './.llm-wiki/wiki.ps1 policy -FailOnViolation'
+        Invoke-ObservedWikiStage 'source impact' 'Get-LlmWikiImpact.ps1' $impactArguments 60 './.llm-wiki/wiki.ps1 impact -FailOnUnreviewed'
     }
     'verify-fast' {
         $verificationMode = if ($VisualUiCompletion) { 'visual-ui' } else { 'default' }
@@ -1952,7 +2008,7 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 smoke -SmokeGroup portable|linux|tools [-AffectedOnly] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify-fast [-BaseRef <ref>] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify-strict-affected [-BaseRef <ref>] [-ChangedPath <path[]>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 verify [-AffectedOnly] [-BaseRef <ref>] [-ChangedPath <path[]>]'
+        Write-Host '  ./.llm-wiki/wiki.ps1 verify [-Fast] [-AffectedOnly] [-BaseRef <ref>] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify-full'
         Write-Host '  ./.llm-wiki/wiki.ps1 context -Module Billing -ChangeType Api'
         Write-Host '  ./.llm-wiki/wiki.ps1 trace -Query <backend-request-or-frontend-symbol> [-TraceView Auto|Backend|Frontend] [-FullTrace]'

@@ -21,6 +21,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
   - .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1
   - .llm-wiki/tools/Test-LlmWikiStrictAffected.ps1
+  - .llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1
   - .llm-wiki/tools/LlmWikiIndexCache.ps1
   - .llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1
   - .llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1
@@ -80,6 +81,13 @@ not enforced in that fast run. Full `verify` remains strict and must pass in
 the integration session before commit, push, or final handoff. In every other
 stale case, the pipeline emits one canonical `wiki.ps1 update` repair command
 in addition to the focused `update -AffectedOnly` option.
+
+`verify -Fast` is a supported compatibility spelling of `verify-fast`. Ordinary
+`verify` runs every stage through an observed runner: it prints stage start and
+duration, emits a heartbeat every 30 seconds, applies a stage-specific timeout,
+and reports the exact standalone diagnostic command when a stage fails or times
+out. Index and adaptive verification each receive five minutes; cheap contract,
+policy, and impact stages use shorter limits.
 
 `verify-strict-affected` is the final local gate for a grounded visual UI change.
 It is read-only and deliberately bypasses verification and index caches, stale
