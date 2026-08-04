@@ -464,13 +464,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "fd9920e60139f5b9e43cf3f36d946a9839d1dc3f543066f64b7274f8f74287dc"
+                                            "sha256":  "dc5395a80165a61c9eff5292cdbbf6d007ff8368d534ea9e5b99938358f7fb46"
                                         }
                                     ],
-                        "reason":  "Reviewed shared facade change: task dispatch commands and receipt semantics are unchanged; baseline resolution is limited to delta-aware development commands.",
+                        "reason":  "Reviewed shared facade optimization: verify-fast cache lookup and parallel adaptive checks do not alter task dispatch, lease, receipt, or strict publication semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "10e289c1be7609440c09a19b8247bcdd0974cdc0",
-                        "reviewedAtUtc":  "2026-08-04T00:47:53.5951543Z"
+                        "gitHead":  "979ca8ca0d93235ce7f5f42310e1739534a887ea",
+                        "reviewedAtUtc":  "2026-08-04T10:24:02.6284950Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",

@@ -29,7 +29,7 @@ function Add-Group([string]$Name) { if (-not $groups.Contains($Name)) { $groups.
 
 $hasUnknownToolChange = $false
 foreach ($path in $paths) {
-    if ($path -match '^\.llm-wiki/(tools/Get-LlmWikiAdaptiveWorkflow|tools/Test-LlmWikiAdaptiveWorkflow|evals/|policies/experience-policies\.json|workflows/(adaptive-development|developer-experience|evals|learned-regression-evals)\.md)') {
+    if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Test-LlmWikiAdaptiveWorkflow|Invoke-LlmWikiAdaptiveVerification)|evals/|policies/experience-policies\.json|workflows/(adaptive-development|developer-experience|evals|learned-regression-evals)\.md)') {
         Add-Group 'adaptive-routing'
     } elseif ($path -match '^\.llm-wiki/(tools/Get-LlmWikiDependencyChanges|workflows/dependency-rollout\.md)') {
         Add-Group 'dependency-analysis'
@@ -37,6 +37,8 @@ foreach ($path in $paths) {
         Add-Group 'facade-contract'
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiTaskBaseline|Test-LlmWikiTaskBaseline)\.ps1$') {
         Add-Group 'task-baseline'
+    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|Invoke-LlmWikiFullVerification)\.ps1$') {
+        Add-Group 'verification-cache'
     } elseif ($path -match '^\.llm-wiki/tools/') {
         $hasUnknownToolChange = $true
     }
@@ -50,9 +52,7 @@ foreach ($group in $groups) {
     $stopwatch = [Diagnostics.Stopwatch]::StartNew()
     switch ($group) {
         'adaptive-routing' {
-            & (Join-Path $toolsRoot 'Test-LlmWikiAdaptiveWorkflow.ps1')
-            if (-not $?) { exit 1 }
-            & (Join-Path $toolsRoot 'Invoke-LlmWikiEvals.ps1')
+            & (Join-Path $toolsRoot 'Invoke-LlmWikiAdaptiveVerification.ps1')
             if (-not $?) { exit 1 }
         }
         'dependency-analysis' {
@@ -75,6 +75,10 @@ foreach ($group in $groups) {
         }
         'task-baseline' {
             & (Join-Path $toolsRoot 'Test-LlmWikiTaskBaseline.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'verification-cache' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiVerificationCache.ps1')
             if (-not $?) { exit 1 }
         }
         'full-tools' {

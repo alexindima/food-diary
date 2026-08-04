@@ -17,6 +17,7 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1
   - .llm-wiki/tools/Manage-LlmWikiAdaptiveSession.ps1
   - .llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1
+  - .llm-wiki/tools/Invoke-LlmWikiAdaptiveVerification.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1
   - .llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1
@@ -25,6 +26,8 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiFrontendRuntimeOwner.ps1
   - .llm-wiki/tools/Manage-LlmWikiTaskBaseline.ps1
   - .llm-wiki/tools/Test-LlmWikiTaskBaseline.ps1
+  - .llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1
+  - .llm-wiki/tools/Test-LlmWikiVerificationCache.ps1
   - .llm-wiki/knowledge/product-journeys.json
 ---
 
@@ -59,7 +62,7 @@ The router selects one FoodDiary-specific profile:
 | `scope-discovery` | non-visual feature or bug intent whose data flow and boundary changes are not grounded | compact brief, existing-flow research, rerun `develop` with refined intent and confirmed paths; no workspace or implementation yet |
 | `maintenance` | path-grounded CI diagnostics, dependency compatibility, or deployment/container build fixes without runtime contract changes | evidence brief, implementation, exact failing check, diff plus `verify-fast` |
 | `tiny` | bounded presentation-only HTML/SVG/SCSS or equally local low-risk work | research, implementation, diff/test-plan, `verify-fast` |
-| `bug` | corrective behavior in one bounded flow | research, implementation, focused tests, diff, full Wiki verify |
+| `bug` | corrective behavior in one bounded flow | research, implementation, focused tests, diff, `verify-fast`; strict publication verification stays in hooks and CI |
 | `feature` | new behavior or a cross-cutting product slice | research, design, implementation phases, conformance-aware review, full verify |
 | `critical` | auth, credentials, identity/private data, payments, migrations, providers, email/invitations, configuration, or delivery boundaries | research, decision checkpoint, design, governed workspace, full verify, independent critique |
 | `architectural` | project references, DI/ownership boundaries, module topology, or durable architecture constraints | research, decision checkpoint, design, governed workspace, conformance, independent critique |

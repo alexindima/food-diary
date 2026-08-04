@@ -300,8 +300,7 @@ switch ($Command) {
         $indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
         Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments
-        Invoke-WikiTool 'Invoke-LlmWikiEvals.ps1'
-        Invoke-WikiTool 'Test-LlmWikiAdaptiveWorkflow.ps1'
+        Invoke-WikiTool 'Invoke-LlmWikiAdaptiveVerification.ps1'
         Invoke-WikiTool 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' }
         $policyArguments = @{ FailOnViolation = $true }
         $impactArguments = @{ FailOnUnreviewed = $true }
@@ -313,6 +312,14 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
     }
     'verify-fast' {
+        $verificationMode = if ($VisualUiCompletion) { 'visual-ui' } else { 'default' }
+        $verificationCacheArguments = @{ Action = 'Check'; BaseRef = $BaseRef; ChangedPath = @($ChangedPath); Mode = $verificationMode }
+        $verificationCache = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') @verificationCacheArguments
+        if ($verificationCache.hit) {
+            Write-Host "Fast scoped verification cache hit: repository state and scope are unchanged ($($verificationCache.fingerprint.Substring(0, 12)))."
+            Write-Host 'Local completion remains valid. Strict publication verification is enforced by pre-push and CI.'
+            break
+        }
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
         Invoke-WikiTool 'Test-LlmWiki.ps1'
         Invoke-WikiTool 'Test-LlmWikiLint.ps1'
@@ -330,11 +337,14 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
         if ($deferredStale) {
             Write-Warning 'Fast source-impact enforcement was deferred with the possibly concurrent stale indexes. Strict verify remains required in the integration session.'
+        } else {
+            $verificationCacheArguments.Action = 'Record'
+            $null = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') @verificationCacheArguments
         }
         if ($VisualUiCompletion) {
             Write-Host 'Visual UI completion gate passed. Full frontend and Wiki verification remain publication gates enforced by pre-push and CI.'
         } else {
-            Write-Host 'Fast scoped verification passed. Run wiki.ps1 verify before final handoff.'
+            Write-Host 'Fast scoped verification passed as the local completion gate. Strict publication verification remains enforced by pre-push and CI.'
         }
     }
     'verify-full' {
@@ -343,8 +353,7 @@ switch ($Command) {
         Invoke-WikiTool 'Test-LlmWikiLint.ps1'
         Invoke-WikiTool 'Test-LlmWikiPortable.ps1'
         Invoke-WikiTool 'Invoke-LlmWikiFullVerification.ps1'
-        Invoke-WikiTool 'Invoke-LlmWikiEvals.ps1'
-        Invoke-WikiTool 'Test-LlmWikiAdaptiveWorkflow.ps1'
+        Invoke-WikiTool 'Invoke-LlmWikiAdaptiveVerification.ps1'
         Invoke-WikiTool 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' }
         $policyArguments = @{ FailOnViolation = $true }
         $impactArguments = @{ FailOnUnreviewed = $true }

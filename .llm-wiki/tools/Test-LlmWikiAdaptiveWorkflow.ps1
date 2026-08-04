@@ -157,6 +157,17 @@ Assert-Adaptive (@($dashboardLocalDayBug.stages | Where-Object { $_.id -eq 'bug-
 Assert-Adaptive (@($dashboardLocalDayBug.stages.id) -notcontains 'journey-impact' -and @($dashboardLocalDayBug.stages.id) -notcontains 'design') 'Bounded cross-layer bug retained mandatory journey or design stages.'
 Assert-Adaptive (@($dashboardLocalDayBug.stages | Where-Object { $_.id -eq 'completion' -and $_.command -match 'verify-fast' }).Count -eq 1) 'Bounded cross-layer bug did not finish with the fast local gate.'
 
+$localReactiveBug = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Fix an Angular effect that accidentally tracks signal reads inside clearState and reopens the existing result.' `
+    -ProposedPath @(
+        'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.ts',
+        'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.spec.ts'
+    ) `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($localReactiveBug.profile -eq 'bug') 'Local reactive bug was not classified as a bounded bug.'
+Assert-Adaptive (@($localReactiveBug.stages | Where-Object { $_.id -eq 'completion' -and $_.command -match 'verify-fast' }).Count -eq 1) 'Local reactive bug did not finish with the fast local gate.'
+Assert-Adaptive (@($localReactiveBug.stages.command | Where-Object { $_ -match 'wiki\.ps1 verify$' }).Count -eq 0) 'Local reactive bug retained a mandatory local full Wiki verify.'
+
 $migrationFeature = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Add a database migration to persist daily nutrition trend snapshots.' `
     -ProposedPath 'FoodDiary.Infrastructure/Persistence/Migrations/AddNutritionTrendSnapshots.cs' `

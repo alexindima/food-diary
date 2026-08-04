@@ -65,9 +65,10 @@ During iteration, select only indexes affected by the current diff:
 ./.llm-wiki/wiki.ps1 verify-fast
 ```
 
-`verify-fast` is the explicit local iteration gate. It runs lint, the
+`verify-fast` is the explicit local completion gate for tiny, visual UI,
+maintenance, and bounded bug work. It runs lint, the
 dependency-aware affected-index check, change policy, and source-impact review,
-then reminds the caller to run the full `verify` before handoff. When every
+while strict full verification remains enforced by pre-push and CI. When every
 stale affected index artifact is already modified in the working tree, the fast
 gate reports the checks as deferred because parallel Wiki work is possible and
 tells the current session not to overwrite them. This is an iteration-only
@@ -76,6 +77,19 @@ not enforced in that fast run. Full `verify` remains strict and must pass in
 the integration session before commit, push, or final handoff. In every other
 stale case, the pipeline emits one canonical `wiki.ps1 update` repair command
 in addition to the focused `update -AffectedOnly` option.
+
+After a successful non-deferred run, `verify-fast` stores a worktree-local
+content-addressed receipt under the ignored Git directory. The receipt binds
+HEAD, resolved base ref, explicit task scope, completion mode, PowerShell/OS
+identity, and hashes of every modified or untracked file. Repeating the command
+with the identical state returns immediately. Git raw metadata is included so a
+file-mode-only change also invalidates the receipt. Any commit, content change,
+new or deleted file, scope change, mode change, or runtime change invalidates the whole
+gate receipt. Strict `verify`, `verify-full`, pre-push, and CI never consume it.
+
+Adaptive workflow regression and the deterministic eval suite are independent
+read-only checks, so strict and affected verification run them concurrently and
+still fail if either process fails. Their individual durations remain visible.
 
 The quality, backend-contract, frontend, and frontend-contract checks use local
 content-addressed receipts during `verify-fast`. A hit requires matching hashes
