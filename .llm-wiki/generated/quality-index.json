@@ -25216,11 +25216,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.ts",
-                      "nonBlankLines":  121,
+                      "nonBlankLines":  118,
                       "decisionPoints":  14,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  23.42
+                      "structuralRiskScore":  23.36
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/dashboard/dashboard.routes.ts",
