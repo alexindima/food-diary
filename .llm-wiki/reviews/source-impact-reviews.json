@@ -68,13 +68,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "3ff71d42bd7ce85042296db4407016db97a3f8a7922e3df678c6c6f6197c6e04"
+                                            "sha256":  "df2763dc1b1aacbd07464e3a2c070d165c3988fe70833240d77b29530094d3c9"
                                         }
                                     ],
-                        "reason":  "Компонент сохранил selector, обязательный input и модель данных; изменения ограничены внутренними aria/animation presentation details.",
+                        "reason":  "DashboardCardShell получил необязательный hoverable=true, fdCardHover — disabled=false; существующие consumers полностью совместимы, summary и hydration явно отключают hover.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f585f105fe7f040b3aec19c0aa9235cc466e651d",
-                        "reviewedAtUtc":  "2026-08-04T21:25:49.6541529Z"
+                        "gitHead":  "2fd17336d8967b87622300c40229627df2dde225",
+                        "reviewedAtUtc":  "2026-08-04T23:04:09.1839248Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -147,13 +147,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "6cd62a3fa841d0277d9e6ff1832fe0098141a6b90caac995ba276b74ed62d2e7"
+                                            "sha256":  "4662d52ecab91fd8369d79cc9ed234861447cccc87a587bc70cf2f862aab8556"
                                         }
                                     ],
-                        "reason":  "Dashboard weight trend remains within the existing frontend and dashboard API dependency boundaries.",
+                        "reason":  "Изменения ограничены Angular inputs/directive behavior и не меняют зависимости проектов или модулей.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ed8c81f8c9d25762b9796a33aa1cd920825388ec",
-                        "reviewedAtUtc":  "2026-08-03T23:29:45.3465469Z"
+                        "gitHead":  "2fd17336d8967b87622300c40229627df2dde225",
+                        "reviewedAtUtc":  "2026-08-04T23:04:08.4294688Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -396,13 +396,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "b04ac3638caedc0c79bd843c38389dac3bdf5b99c29a13e89a4d7ab8b096715e"
+                                            "sha256":  "909189a2094028002f5fdd63794dd9a1a56aa216b86a3d2f6d785febe6f43851"
                                         }
                                     ],
-                        "reason":  "Изменения ограничены анимацией общего графика и исправлением вычисления floating label в select; покрыты unit-тестами, browser interaction и prefers-reduced-motion.",
+                        "reason":  "Отключён только внешний hover для двух информационных карточек; директива покрыта regression test, browser hover state и console health.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f585f105fe7f040b3aec19c0aa9235cc466e651d",
-                        "reviewedAtUtc":  "2026-08-04T21:43:42.0573971Z"
+                        "gitHead":  "2fd17336d8967b87622300c40229627df2dde225",
+                        "reviewedAtUtc":  "2026-08-04T23:04:09.9687189Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -497,21 +497,17 @@
                     {
                         "pageId":  "workflow-trace-feature",
                         "pagePath":  ".llm-wiki/workflows/trace-feature.md",
-                        "pageSha256":  "41967b1d6a8a4232d51034f79db7c10045672d7b8d62c58b2bb870ae64488ba0",
+                        "pageSha256":  "aa8a6cbad3f7ccd39d71249321bc2a2450bad77ed00f7de72a1935fc813d5981",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "3ff71d42bd7ce85042296db4407016db97a3f8a7922e3df678c6c6f6197c6e04"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "08d61d1259bf7400a5f0be3f431fcbcf84e4f193e1d3e29d432bf7f3bb13168e"
+                                            "sha256":  "df2763dc1b1aacbd07464e3a2c070d165c3988fe70833240d77b29530094d3c9"
                                         }
                                     ],
-                        "reason":  "Проверены текущие consumers и frontend index; публичный контракт и поток загрузки данных не изменены.",
+                        "reason":  "Проверены consumers DashboardCardShell и card-hover directive; внутренние действия воды и сводки не изменены.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f585f105fe7f040b3aec19c0aa9235cc466e651d",
-                        "reviewedAtUtc":  "2026-08-04T21:25:51.2553891Z"
+                        "gitHead":  "2fd17336d8967b87622300c40229627df2dde225",
+                        "reviewedAtUtc":  "2026-08-04T23:04:11.0165223Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

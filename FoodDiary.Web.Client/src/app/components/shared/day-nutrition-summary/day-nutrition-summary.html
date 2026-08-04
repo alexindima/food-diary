@@ -20,6 +20,7 @@
                             cy="120"
                             r="104"
                             [class.day-summary__ring-progress--excess]="dailyPercent() > 100"
+                            [class.day-summary__ring-progress--zero]="dailyProgressValue() === 0"
                             [attr.stroke-dasharray]="ringDasharray()"
                         />
                     </svg>

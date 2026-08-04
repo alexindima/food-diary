@@ -1,4 +1,4 @@
-import { DestroyRef, Directive, ElementRef, inject, input, Renderer2 } from '@angular/core';
+import { DestroyRef, Directive, effect, ElementRef, inject, input, Renderer2 } from '@angular/core';
 
 @Directive({
     selector: '[fdCardHover]',
@@ -13,6 +13,7 @@ import { DestroyRef, Directive, ElementRef, inject, input, Renderer2 } from '@an
 export class FdCardHoverDirective {
     public readonly fdCardHoverShadow = input<string | null>(null);
     public readonly fdCardHoverTransform = input<string | null>(null);
+    public readonly fdCardHoverDisabled = input(false);
 
     private readonly originalTransform: string | null = null;
     private readonly originalBoxShadow: string | null = null;
@@ -31,8 +32,14 @@ export class FdCardHoverDirective {
         this.originalCursor = style.cursor.length > 0 ? style.cursor : null;
         this.originalTransition = style.transition.length > 0 ? style.transition : null;
 
-        this.renderer.setStyle(element, 'cursor', 'pointer');
-        this.renderer.setStyle(element, 'transition', 'transform 0.2s ease, box-shadow 0.2s ease');
+        effect(() => {
+            if (this.fdCardHoverDisabled()) {
+                this.cleanupStyles();
+                return;
+            }
+
+            this.applyBaseStyles();
+        });
         this.destroyRef.onDestroy(() => {
             this.cleanupStyles();
         });
@@ -55,6 +62,10 @@ export class FdCardHoverDirective {
     }
 
     private applyHoverStyles(): void {
+        if (this.fdCardHoverDisabled()) {
+            return;
+        }
+
         const element: HTMLElement = this.elementRef.nativeElement;
         const styles = getComputedStyle(element);
         const cssTransform = styles.getPropertyValue('--fd-card-hover-transform').trim();
@@ -68,6 +79,12 @@ export class FdCardHoverDirective {
     private clearHoverStyles(): void {
         this.restoreStyle('transform', this.originalTransform);
         this.restoreStyle('box-shadow', this.originalBoxShadow);
+    }
+
+    private applyBaseStyles(): void {
+        const element: HTMLElement = this.elementRef.nativeElement;
+        this.renderer.setStyle(element, 'cursor', 'pointer');
+        this.renderer.setStyle(element, 'transition', 'transform 0.2s ease, box-shadow 0.2s ease');
     }
 
     private cleanupStyles(): void {

@@ -133,6 +133,7 @@
                             [points]="weeklyCalories()"
                             [dailyGoal]="snapshot()?.dailyGoal ?? 0"
                             [insight]="nutritionInsight()"
+                            [isToday]="isTodaySelected()"
                             (details)="openGoalsAsync()"
                         />
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { FdCardHoverDirective } from '../../../../shared/ui/card-hover.directive';
 
@@ -9,4 +9,6 @@ import { FdCardHoverDirective } from '../../../../shared/ui/card-hover.directive
     styleUrl: './dashboard-card-shell.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardCardShellComponent {}
+export class DashboardCardShellComponent {
+    public readonly hoverable = input(true);
+}

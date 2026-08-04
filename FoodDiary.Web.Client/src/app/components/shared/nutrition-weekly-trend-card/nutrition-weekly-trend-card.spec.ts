@@ -51,6 +51,18 @@ describe('NutritionWeeklyTrendCardComponent', () => {
         expect(element.querySelector('.nutrition-trend__details')).toBeNull();
     });
 
+    it('renders a historical state instead of a current-day insight for a past date', async () => {
+        const fixture = await setupAsync({ kind: 'in-progress', tone: 'neutral' });
+        fixture.componentRef.setInput('isToday', false);
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+
+        expect(element.querySelector('.nutrition-trend__insight')?.textContent).toContain('NUTRITION_TREND.INSIGHT.HISTORICAL_TITLE');
+        expect(element.querySelector('.nutrition-trend__insight')?.textContent).toContain('NUTRITION_TREND.INSIGHT.HISTORICAL_HINT');
+        expect(element.querySelector('.nutrition-trend__insight')?.textContent).not.toContain('NUTRITION_TREND.INSIGHT.IN_PROGRESS_TITLE');
+        expect(element.querySelector('.nutrition-trend__details')).toBeNull();
+    });
+
     it('switches between seven and three visible days', async () => {
         const fixture = await setupAsync();
         const element = fixture.nativeElement as HTMLElement;

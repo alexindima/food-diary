@@ -6,9 +6,11 @@ import { FdCardHoverDirective } from './card-hover.directive';
 
 @Component({
     imports: [FdCardHoverDirective],
-    template: ' <button fdCardHover [fdCardHoverTransform]="transform" [fdCardHoverShadow]="shadow">Hover</button> ',
+    template:
+        ' <button fdCardHover [fdCardHoverDisabled]="disabled" [fdCardHoverTransform]="transform" [fdCardHoverShadow]="shadow">Hover</button> ',
 })
 class CardHoverHostComponent {
+    public disabled = false;
     public transform: string | null = 'translateY(-2px)';
     public shadow: string | null = '0 8px 24px rgba(0, 0, 0, 0.16)';
 }
@@ -40,6 +42,21 @@ describe('FdCardHoverDirective', () => {
 
         expect(element.style.transform).toBe('translateY(-2px)');
         expect(element.style.boxShadow).toBe('0 8px 24px rgba(0, 0, 0, 0.16)');
+    });
+
+    it('should remove hover behavior when disabled', () => {
+        const fixture = createFixture();
+        const element = getButton(fixture);
+        fixture.componentInstance.disabled = true;
+        fixture.detectChanges();
+
+        element.dispatchEvent(new Event('mouseenter'));
+        fixture.detectChanges();
+
+        expect(element.style.cursor).toBe('');
+        expect(element.style.transition).toBe('');
+        expect(element.style.transform).toBe('');
+        expect(element.style.boxShadow).toBe('');
     });
 });
 

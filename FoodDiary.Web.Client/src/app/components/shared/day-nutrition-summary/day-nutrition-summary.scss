@@ -55,6 +55,9 @@
     &__ring-progress--excess {
         stroke: var(--fd-color-warning);
     }
+    &__ring-progress--zero {
+        animation: day-summary-ring-zero-reveal 0.25s ease-out both;
+    }
 
     &__ring-content {
         position: absolute;
@@ -238,6 +241,12 @@
 @keyframes day-summary-ring-reveal {
     from {
         stroke-dashoffset: var(--day-summary-ring-length);
+    }
+}
+
+@keyframes day-summary-ring-zero-reveal {
+    from {
+        opacity: 0;
     }
 }
 

@@ -104,6 +104,7 @@ export class NutritionWeeklyTrendCardComponent {
     public readonly points = input.required<NutritionTrendPoint[]>();
     public readonly dailyGoal = input.required<number>();
     public readonly insight = input.required<NutritionTrendInsight>();
+    public readonly isToday = input(true);
     public readonly details = output();
 
     protected readonly visibleDays = signal<TrendRange>(DEFAULT_TREND_DAYS);
@@ -117,9 +118,20 @@ export class NutritionWeeklyTrendCardComponent {
     });
     protected readonly insightView = computed(() => {
         this.translationChange();
+        const keyPrefix = 'NUTRITION_TREND.INSIGHT';
+        if (!this.isToday()) {
+            return {
+                title: this.translateService.instant(`${keyPrefix}.HISTORICAL_TITLE`),
+                hint: this.translateService.instant(`${keyPrefix}.HISTORICAL_HINT`),
+                comparison: null,
+                icon: 'history',
+                tone: 'neutral' as const,
+                showDetails: false,
+            };
+        }
+
         const insight = this.insight();
         const config = INSIGHT_CONFIG[insight.kind];
-        const keyPrefix = 'NUTRITION_TREND.INSIGHT';
 
         return {
             title: this.translateService.instant(`${keyPrefix}.${config.titleKey}`),

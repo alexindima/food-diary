@@ -24592,11 +24592,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
-                      "nonBlankLines":  194,
-                      "decisionPoints":  13,
+                      "nonBlankLines":  205,
+                      "decisionPoints":  14,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  23.38
+                      "structuralRiskScore":  25.1
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/page-body/page-body.ts",
@@ -25160,11 +25160,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-card-shell/dashboard-card-shell.ts",
-                      "nonBlankLines":  10,
+                      "nonBlankLines":  12,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
+                      "structuralRiskScore":  0.24
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.config.ts",
@@ -29952,11 +29952,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/shared/ui/card-hover.directive.ts",
-                      "nonBlankLines":  75,
-                      "decisionPoints":  4,
+                      "nonBlankLines":  89,
+                      "decisionPoints":  6,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.5
+                      "structuralRiskScore":  10.78
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/shared/ui/layout/page-container.directive.ts",

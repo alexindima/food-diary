@@ -1663,7 +1663,11 @@
                                              "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-card-shell/dashboard-card-shell.ts",
                                              "templatePath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-card-shell/dashboard-card-shell.html",
                                              "inputs":  [
-
+                                                            {
+                                                                "name":  "hoverable",
+                                                                "type":  "",
+                                                                "required":  false
+                                                            }
                                                         ],
                                              "outputs":  [
 

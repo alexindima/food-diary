@@ -3,7 +3,7 @@
     "summary":  {
                     "components":  400,
                     "componentsWithoutDirectSpecs":  108,
-                    "inputs":  1222,
+                    "inputs":  1224,
                     "outputs":  406,
                     "apiCalls":  206,
                     "templatesWithTranslations":  242,
@@ -1304,7 +1304,11 @@
                            "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-card-shell/dashboard-card-shell.ts",
                            "templatePath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-card-shell/dashboard-card-shell.html",
                            "inputs":  [
-
+                                          {
+                                              "name":  "hoverable",
+                                              "type":  "",
+                                              "required":  false
+                                          }
                                       ],
                            "outputs":  [
 
@@ -11420,6 +11424,11 @@
                                               "name":  "insight",
                                               "type":  "NutritionTrendInsight",
                                               "required":  true
+                                          },
+                                          {
+                                              "name":  "isToday",
+                                              "type":  "",
+                                              "required":  false
                                           }
                                       ],
                            "outputs":  [
@@ -19076,7 +19085,7 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-hydration-block/dashboard-hydration-block.html",
                               "occurrences":  1,
                               "inputsUsed":  [
-
+                                                 "hoverable"
                                              ],
                               "outputsHandled":  [
 
@@ -19090,7 +19099,7 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-summary-block/dashboard-summary-block.html",
                               "occurrences":  1,
                               "inputsUsed":  [
-
+                                                 "hoverable"
                                              ],
                               "outputsHandled":  [
 
@@ -30532,6 +30541,7 @@
                               "inputsUsed":  [
                                                  "dailyGoal",
                                                  "insight",
+                                                 "isToday",
                                                  "points"
                                              ],
                               "outputsHandled":  [

@@ -7,7 +7,7 @@
         (blockActivated)="blockToggle.emit()"
     >
         @defer (on viewport) {
-            <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
+            <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()" [hoverable]="false">
                 <fd-hydration-card
                     class="dashboard__card dashboard__card--hydration"
                     [total]="cardState().total"

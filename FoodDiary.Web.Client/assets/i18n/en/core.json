@@ -66,6 +66,8 @@
         "INSIGHT": {
             "EMPTY_TITLE": "No nutrition data yet",
             "EMPTY_HINT": "Log your first meal to see a nutrition insight for this day.",
+            "HISTORICAL_TITLE": "Viewing a past day",
+            "HISTORICAL_HINT": "These are the results for the selected date. Switch to today to see your current nutrition insight.",
             "IN_PROGRESS_TITLE": "Your day is still taking shape",
             "IN_PROGRESS_HINT": "Keep logging meals. The insight will become more useful as the day fills in.",
             "CALORIE_EXCESS_TITLE": "Your calorie target has been exceeded",

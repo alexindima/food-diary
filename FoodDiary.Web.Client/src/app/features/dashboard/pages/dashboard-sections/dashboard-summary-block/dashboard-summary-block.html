@@ -11,7 +11,7 @@
                 {{ 'DASHBOARD.SETTINGS.LOCKED' | translate }}
             </div>
         }
-        <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
+        <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()" [hoverable]="false">
             <fd-day-nutrition-summary [data]="data()" />
         </fd-dashboard-card-shell>
     </div>
