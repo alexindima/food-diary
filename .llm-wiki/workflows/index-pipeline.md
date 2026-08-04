@@ -125,6 +125,10 @@ explicit scope. The conservative dependency map still runs derived indexes and
 architecture health when their source indexes can change. Final handoff and CI
 continue to use the full pipeline.
 
+Plan mode emits `Affected path count` and `Affected index tools` on the ordinary
+PowerShell output stream. Tests and shell hooks should consume these stable plan
+fields instead of parsing human-oriented `Write-Host` diagnostics.
+
 An Angular `*.spec.ts`-only change selects quality plus its downstream
 architecture-health check. It does not run frontend source, frontend contract,
 or sensitive-data generators because test content cannot change those indexes.

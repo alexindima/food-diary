@@ -101,6 +101,7 @@ if ($AffectedOnly) {
     }
     Write-Host "LLM Wiki affected index pipeline: $($normalizedChangedPaths.Count) changed path(s), $($selectedTools.Count) selected tool(s)."
     if ($Plan) {
+        Write-Output "Affected path count: $($normalizedChangedPaths.Count)"
         Write-Output "Affected index tools: $(@($selectedTools | Sort-Object) -join ', ')"
         exit 0
     }

@@ -630,7 +630,7 @@ $affectedStylePlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.p
 Assert-Wiki ($affectedStylePlanText -match 'Affected index tools:\s*$' -and $affectedStylePlanText -notmatch 'Build-LlmWiki') 'Stylesheet-only changes selected indexes that do not read stylesheets.'
 $affectedMultilinePlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -AffectedOnly -Plan `
     -ChangedPath "FoodDiary.Web.Client/src/app/components/example/example.spec.ts`nFoodDiary.Web.Client/src/app/components/example/example.scss") -join [Environment]::NewLine
-Assert-Wiki ($affectedMultilinePlanText -match '2 changed path\(s\)' -and $affectedMultilinePlanText -match 'Build-LlmWikiQualityIndex.ps1') 'Affected index pipeline did not normalize newline-delimited hook paths.'
+Assert-Wiki ($affectedMultilinePlanText -match 'Affected path count: 2' -and $affectedMultilinePlanText -match 'Build-LlmWikiQualityIndex.ps1') 'Affected index pipeline did not normalize newline-delimited hook paths.'
 $affectedTemplatePlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -AffectedOnly -Plan `
     -ChangedPath 'FoodDiary.Web.Client/src/app/components/example/example.html') -join [Environment]::NewLine
 Assert-Wiki ($affectedTemplatePlanText -match 'Build-LlmWikiFrontendIndex.ps1' -and $affectedTemplatePlanText -match 'Build-LlmWikiFrontendContractIndex.ps1') 'Template-only changes omitted frontend indexes.'
