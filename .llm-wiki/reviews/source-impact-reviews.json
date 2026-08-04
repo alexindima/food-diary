@@ -317,17 +317,25 @@
                     {
                         "pageId":  "workflow-index-pipeline",
                         "pagePath":  ".llm-wiki/workflows/index-pipeline.md",
-                        "pageSha256":  "ac53b52ade59e030aa8c0c21398a1376d9cb658318f33626edd80a38c32ecf2b",
+                        "pageSha256":  "dc31135c51f84aca7eed860029d523e425bd950c9cd5bf2256931772e8585cb5",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+                                            "sha256":  "1de8ce4c08979fa28895c23769cd7fc450e389f91c29e21a1349dd58305e6410"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
+                                            "sha256":  "2750c0d6d754840e8a206da71077125332c3a80e6b7ca0bafc163f212e0ae2b6"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "0bd7b90d203588c59b635f2e85a8cb1c1b140dc2d897fbe571d0ec6a99fba9a6"
+                                            "sha256":  "fd9920e60139f5b9e43cf3f36d946a9839d1dc3f543066f64b7274f8f74287dc"
                                         }
                                     ],
-                        "reason":  "Reviewed ui-trace facade registration; index generation and affected-tool selection are unchanged.",
+                        "reason":  "Reviewed task-delta facade integration: index selection remains explicit, strict full verification remains uncached, and only affected-path discovery changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ddf7638c55a77d00dfc1caafdcbe21f0222586e",
-                        "reviewedAtUtc":  "2026-08-01T00:01:37.8276830Z"
+                        "gitHead":  "10e289c1be7609440c09a19b8247bcdd0974cdc0",
+                        "reviewedAtUtc":  "2026-08-04T00:47:53.2620027Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -456,13 +464,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "387d0fbda22868a6b47e916857b3523eb9ac2c0350d9d3171b6c3cb65c07bda0"
+                                            "sha256":  "fd9920e60139f5b9e43cf3f36d946a9839d1dc3f543066f64b7274f8f74287dc"
                                         }
                                     ],
-                        "reason":  "Reviewed smoke facade change: tools -AffectedOnly dispatches focused smoke groups; task dispatch commands and receipt semantics are unchanged.",
+                        "reason":  "Reviewed shared facade change: task dispatch commands and receipt semantics are unchanged; baseline resolution is limited to delta-aware development commands.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "59be6beb987b13d940a91bf8b70b1f35a0be8d49",
-                        "reviewedAtUtc":  "2026-08-03T14:42:08.5558789Z"
+                        "gitHead":  "10e289c1be7609440c09a19b8247bcdd0974cdc0",
+                        "reviewedAtUtc":  "2026-08-04T00:47:53.5951543Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",

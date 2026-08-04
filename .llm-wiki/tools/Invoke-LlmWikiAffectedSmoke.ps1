@@ -35,6 +35,8 @@ foreach ($path in $paths) {
         Add-Group 'dependency-analysis'
     } elseif ($path -match '^\.llm-wiki/(tools/Invoke-LlmWikiAffectedSmoke|wiki\.ps1|workflows/index-pipeline\.md)') {
         Add-Group 'facade-contract'
+    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiTaskBaseline|Test-LlmWikiTaskBaseline)\.ps1$') {
+        Add-Group 'task-baseline'
     } elseif ($path -match '^\.llm-wiki/tools/') {
         $hasUnknownToolChange = $true
     }
@@ -69,6 +71,10 @@ foreach ($group in $groups) {
             & (Join-Path $toolsRoot 'Test-LlmWiki.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiLint.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'task-baseline' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiTaskBaseline.ps1')
             if (-not $?) { exit 1 }
         }
         'full-tools' {

@@ -23,6 +23,8 @@ sources:
   - .llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1
   - .llm-wiki/tools/Find-LlmWikiProductJourney.ps1
   - .llm-wiki/tools/Get-LlmWikiFrontendRuntimeOwner.ps1
+  - .llm-wiki/tools/Manage-LlmWikiTaskBaseline.ps1
+  - .llm-wiki/tools/Test-LlmWikiTaskBaseline.ps1
   - .llm-wiki/knowledge/product-journeys.json
 ---
 
@@ -39,6 +41,13 @@ Add `-PlannedPath 'path/one;path/two'` whenever likely files are known. Intent-o
 classification is allowed, including Russian task descriptions, but remains lower
 confidence until repository paths are grounded. Do not treat an inferred path as
 authorization to edit it.
+
+`develop` captures the starting `HEAD` and fingerprints any already modified or
+untracked files in the current worktree. Later delta-aware facade commands use
+only paths changed after that capture, so unrelated work that was already present
+does not expand affected indexes, policy checks, or source-impact reviews. A
+subsequent edit to an already dirty file is still detected. Explicit
+`-ChangedPath` always overrides the captured task delta.
 
 ## Profiles
 
