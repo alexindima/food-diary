@@ -20,6 +20,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1
   - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
   - .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1
+  - .llm-wiki/tools/Test-LlmWikiStrictAffected.ps1
   - .llm-wiki/tools/LlmWikiIndexCache.ps1
   - .llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1
   - .llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1
@@ -64,6 +65,7 @@ During iteration, select only indexes affected by the current diff:
 ./.llm-wiki/wiki.ps1 update -AffectedOnly
 ./.llm-wiki/wiki.ps1 verify -AffectedOnly
 ./.llm-wiki/wiki.ps1 verify-fast
+./.llm-wiki/wiki.ps1 verify-strict-affected
 ```
 
 `verify-fast` is the explicit local completion gate for tiny, visual UI,
@@ -78,6 +80,12 @@ not enforced in that fast run. Full `verify` remains strict and must pass in
 the integration session before commit, push, or final handoff. In every other
 stale case, the pipeline emits one canonical `wiki.ps1 update` repair command
 in addition to the focused `update -AffectedOnly` option.
+
+`verify-strict-affected` is the final local gate for a grounded visual UI change.
+It is read-only and deliberately bypasses verification and index caches, stale
+deferral, and unrelated full-repository smoke. It runs portable lint, affected
+indexes, affected smoke, change policy, and source impact. CI continues to run
+`verify-full`, so scoped strictness never replaces repository-wide integration.
 
 After a successful non-deferred run, `verify-fast` stores a worktree-local
 content-addressed receipt under the ignored Git directory. The receipt binds

@@ -2,7 +2,7 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify', 'verify-full', 'develop', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
+        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'diff', 'impact', 'review', 'ownership', 'api-compat', 'policy',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
@@ -77,6 +77,7 @@ param(
     [string[]]$ProposedPath,
     [switch]$AffectedOnly,
     [switch]$VisualUiCompletion,
+    [switch]$FullTrace,
     [switch]$Compact,
     [switch]$FailOnUnreviewed,
     [switch]$Check,
@@ -242,7 +243,7 @@ if ($PSBoundParameters.ContainsKey('ProposedPath')) {
     $ProposedPath = @(Expand-LlmWikiPathList $ProposedPath)
 }
 
-$deltaAwareCommands = @('update', 'smoke', 'verify', 'verify-fast', 'verify-full', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'ownership', 'policy')
+$deltaAwareCommands = @('update', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'ownership', 'policy')
 if ($Command -eq 'develop') {
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -Format Text
 } elseif ($Command -in $deltaAwareCommands -and -not $PSBoundParameters.ContainsKey('ChangedPath')) {
@@ -352,6 +353,29 @@ switch ($Command) {
             Write-Host 'Fast scoped verification passed as the local completion gate. Strict publication verification remains enforced by pre-push and CI.'
         }
     }
+    'verify-strict-affected' {
+        Write-Host 'Strict affected verification: read-only, uncached, and scoped to the current task delta.'
+        Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
+        Invoke-WikiTool 'Test-LlmWiki.ps1'
+        Invoke-WikiTool 'Test-LlmWikiLint.ps1'
+        Invoke-WikiTool 'Test-LlmWikiPortable.ps1'
+        $strictIndexArguments = @{ Check = $true; AffectedOnly = $true; BaseRef = $BaseRef }
+        $strictSmokeArguments = @{ BaseRef = $BaseRef }
+        $policyArguments = @{ FailOnViolation = $true }
+        $impactArguments = @{ FailOnUnreviewed = $true }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) {
+            $strictIndexArguments.ChangedPath = $ChangedPath
+            $strictSmokeArguments.ChangedPath = $ChangedPath
+            $policyArguments.ChangedPath = $ChangedPath
+            $impactArguments.ChangedPath = $ChangedPath
+        }
+        Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $strictIndexArguments
+        Invoke-WikiTool 'Invoke-LlmWikiAffectedSmoke.ps1' $strictSmokeArguments
+        Invoke-WikiTool 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' }
+        Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' $policyArguments
+        Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
+        Write-Host 'Strict affected verification passed. Full repository verification remains the CI gate.'
+    }
     'verify-full' {
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
         Invoke-WikiTool 'Test-LlmWiki.ps1'
@@ -384,6 +408,7 @@ switch ($Command) {
         $traceArguments = @{
             Query = $Query; Format = $Format; Limit = [Math]::Min($Limit, 30)
         }
+        if (-not $FullTrace -and $Format -eq 'Text') { $traceArguments.Compact = $true }
         if ($TraceView -eq 'Frontend') {
             Invoke-WikiTool 'Find-LlmWikiFrontendTrace.ps1' $traceArguments
         } elseif ($TraceView -eq 'Backend') {
@@ -1926,10 +1951,11 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 lint [-Format Json]'
         Write-Host '  ./.llm-wiki/wiki.ps1 smoke -SmokeGroup portable|linux|tools [-AffectedOnly] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify-fast [-BaseRef <ref>] [-ChangedPath <path[]>]'
+        Write-Host '  ./.llm-wiki/wiki.ps1 verify-strict-affected [-BaseRef <ref>] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify [-AffectedOnly] [-BaseRef <ref>] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify-full'
         Write-Host '  ./.llm-wiki/wiki.ps1 context -Module Billing -ChangeType Api'
-        Write-Host '  ./.llm-wiki/wiki.ps1 trace -Query <backend-request-or-frontend-symbol> [-TraceView Auto|Backend|Frontend]'
+        Write-Host '  ./.llm-wiki/wiki.ps1 trace -Query <backend-request-or-frontend-symbol> [-TraceView Auto|Backend|Frontend] [-FullTrace]'
         Write-Host '  ./.llm-wiki/wiki.ps1 packet -Objective <text> [-OutputPath <path>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 brief'
         Write-Host '  ./.llm-wiki/wiki.ps1 plan -Objective <text> [-ChangedPath <path>]'

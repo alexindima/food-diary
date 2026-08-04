@@ -34,6 +34,7 @@ $checks = @(
 
 foreach ($check in $checks) {
     Write-Host "Starting LLM Wiki full verification group: $($check.name)"
+    $groupStopwatch = [Diagnostics.Stopwatch]::StartNew()
     $startInfo = New-Object System.Diagnostics.ProcessStartInfo
     $startInfo.FileName = $shellPath
     $startInfo.WorkingDirectory = $repositoryRoot
@@ -46,7 +47,13 @@ foreach ($check in $checks) {
     }
 
     try {
-        $process.WaitForExit()
+        $nextProgressAt = 30
+        while (-not $process.WaitForExit(1000)) {
+            if ($groupStopwatch.Elapsed.TotalSeconds -ge $nextProgressAt) {
+                Write-Host "LLM Wiki full verification group still running: $($check.name) ($([Math]::Round($groupStopwatch.Elapsed.TotalSeconds))s)"
+                $nextProgressAt += 30
+            }
+        }
         if ($process.ExitCode -ne 0) {
             throw "LLM Wiki full verification failed: $($check.name) (exit=$($process.ExitCode))"
         }
@@ -54,7 +61,8 @@ foreach ($check in $checks) {
         $process.Dispose()
     }
 
-    Write-Host "LLM Wiki full verification group passed: $($check.name)"
+    $groupStopwatch.Stop()
+    Write-Host "LLM Wiki full verification group passed: $($check.name) ($([Math]::Round($groupStopwatch.Elapsed.TotalSeconds, 2))s)"
 }
 
 Write-Host 'LLM Wiki full verification passed.'

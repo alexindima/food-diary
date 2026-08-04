@@ -62,7 +62,7 @@ The router selects one FoodDiary-specific profile:
 | `scope-discovery` | non-visual feature or bug intent whose data flow and boundary changes are not grounded | compact brief, existing-flow research, rerun `develop` with refined intent and confirmed paths; no workspace or implementation yet |
 | `maintenance` | path-grounded CI diagnostics, dependency compatibility, or deployment/container build fixes without runtime contract changes | evidence brief, implementation, exact failing check, diff plus `verify-fast` |
 | `tiny` | bounded presentation-only HTML/SVG or equally local low-risk work | research, implementation, diff/test-plan, `verify-fast` |
-| `visual-ui-change` / `visual-tiny` | grounded frontend presentation work; the `visual-tiny` variant is CSS/SCSS-only | compact constraints, implementation, focused checks, browser evidence, `verify-fast -VisualUiCompletion`; `visual-tiny` uses stylelint without retracing, tests, or a build during each iteration |
+| `visual-ui-change` / `visual-tiny` | grounded frontend presentation work; the `visual-tiny` variant is CSS/SCSS-only | compact constraints, implementation, focused checks, browser evidence, `verify-strict-affected`; `visual-tiny` uses stylelint without retracing, tests, or a build during each iteration |
 | `bug` | corrective behavior in one bounded flow | research, implementation, focused tests, diff, `verify-fast`; strict publication verification stays in hooks and CI |
 | `feature` | new behavior or a cross-cutting product slice | research, design, implementation phases, conformance-aware review, full verify |
 | `critical` | auth, credentials, identity/private data, payments, migrations, providers, email/invitations, configuration, or delivery boundaries | research, decision checkpoint, design, governed workspace, full verify, independent critique |
@@ -188,8 +188,14 @@ the design system, and browser inspection. A separate acceptance stage and a
 full research packet are unnecessary unless the brief exposes an unresolved
 product, ownership, compatibility, or accessibility decision.
 
-For this profile, `verify-fast -VisualUiCompletion` is the local completion
-gate after focused tests, build, and browser evidence when the final diff
+During visual iteration, `verify-fast -VisualUiCompletion` remains the cached local
+feedback gate. Final local completion uses `verify-strict-affected`: it is read-only,
+uncached, rejects stale affected indexes, and runs affected smoke, policy, and impact
+checks without expanding to unrelated repository areas. Full repository verification
+remains the CI gate.
+
+For this profile, the local completion gate follows focused tests, build, and
+browser evidence when the final diff
 remains frontend-only and does not change contracts,
 dependencies, architecture, providers, persistence, privacy, security, or
 configuration. Full `npm run verify` and full Wiki verification are publication

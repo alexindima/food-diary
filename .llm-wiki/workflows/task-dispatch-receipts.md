@@ -35,6 +35,8 @@ scenarios while retaining lint and its regression fixtures, index, eval,
 policy, and impact checks.
 The router's pre-diff `-ProposedPath` forwarding is limited to `brief` and
 `test-plan`; dispatch lifecycle inputs and receipt fingerprints are unchanged.
+Scoped verification and trace presentation flags are also independent facade
+options; they do not enter dispatch payloads, leases, or receipt fingerprints.
 Use `wiki smoke -SmokeGroup tools` to run the stateful dispatch lifecycle
 directly; full verification runs that group alongside independent index checks.
 The unified router preserves ISO timestamps as JSON strings before dispatching

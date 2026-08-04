@@ -12,6 +12,7 @@ tags:
 sources:
   - .llm-wiki/tools/Find-LlmWikiTrace.ps1
   - .llm-wiki/tools/Find-LlmWikiFrontendTrace.ps1
+  - .llm-wiki/tools/Test-LlmWikiTraceOutput.ps1
   - .llm-wiki/generated/frontend-index.json
   - .llm-wiki/generated/frontend-contract-index.json
 ---
@@ -30,6 +31,10 @@ The default `-TraceView Auto` selects frontend trace when the query resolves an
 indexed frontend symbol and otherwise falls back to the backend request trace.
 Use `-TraceView Frontend` or `-TraceView Backend` to force a view. Use
 `-Format Json` when another tool or agent will consume the result.
+
+Text output is compact by default: one best match, bounded direct consumers,
+routes, calls, and tests. Use `-FullTrace` only when broad dependency discovery
+is intentional. JSON remains complete so composed tools do not lose evidence.
 
 Backend queries may be exact request names or short natural-language descriptions.
 Terms are normalized through common English and Russian aliases, then candidates

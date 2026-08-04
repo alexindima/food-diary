@@ -5,7 +5,8 @@ param(
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateRange(1, 30)]
-    [int]$Limit = 10
+    [int]$Limit = 10,
+    [switch]$Compact
 )
 
 $ErrorActionPreference = 'Stop'
@@ -163,13 +164,15 @@ if ($Format -eq 'Json') {
     exit 0
 }
 
-foreach ($trace in $traces) {
+$displayTraces = if ($Compact) { @($traces | Select-Object -First 1) } else { @($traces) }
+foreach ($trace in $displayTraces) {
     Write-Host "$($trace.symbol.name) [$($trace.symbol.role)]"
     Write-Host "  Source: $($trace.symbol.path):$($trace.symbol.line)"
-    foreach ($route in $trace.routes) { Write-Host "  Route: /$($route.path) ($($route.source):$($route.line))" }
-    foreach ($consumer in $trace.upstreamConsumers) { Write-Host "  Upstream: $($consumer.name) ($($consumer.path):$($consumer.line))" }
-    foreach ($consumer in $trace.selectorConsumers) { Write-Host "  Template consumer: $($consumer.consumerPath)" }
-    foreach ($apiCall in $trace.apiCalls) { Write-Host "  API: $($apiCall.method) $($apiCall.resolvedUrlExpression) ($($apiCall.path):$($apiCall.line))" }
-    foreach ($test in $trace.tests) { Write-Host "  Test: $test" }
+    foreach ($route in @($trace.routes | Select-Object -First $(if ($Compact) { 3 } else { 1000 }))) { Write-Host "  Route: /$($route.path) ($($route.source):$($route.line))" }
+    foreach ($consumer in @($trace.upstreamConsumers | Select-Object -First $(if ($Compact) { 5 } else { 1000 }))) { Write-Host "  Upstream: $($consumer.name) ($($consumer.path):$($consumer.line))" }
+    foreach ($consumer in @($trace.selectorConsumers | Select-Object -First $(if ($Compact) { 5 } else { 1000 }))) { Write-Host "  Template consumer: $($consumer.consumerPath)" }
+    foreach ($apiCall in @($trace.apiCalls | Select-Object -First $(if ($Compact) { 3 } else { 1000 }))) { Write-Host "  API: $($apiCall.method) $($apiCall.resolvedUrlExpression) ($($apiCall.path):$($apiCall.line))" }
+    foreach ($test in @($trace.tests | Select-Object -First $(if ($Compact) { 5 } else { 1000 }))) { Write-Host "  Test: $test" }
+    if ($Compact) { Write-Host '  Compact trace: use -FullTrace for every match and consumer.' }
     Write-Host ''
 }

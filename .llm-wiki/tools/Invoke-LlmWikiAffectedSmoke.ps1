@@ -28,13 +28,18 @@ $groups = [Collections.Generic.List[string]]::new()
 function Add-Group([string]$Name) { if (-not $groups.Contains($Name)) { $groups.Add($Name) } }
 
 $hasUnknownToolChange = $false
+$wikiRelevantPathCount = 0
 foreach ($path in $paths) {
+    if ($path -notmatch '^\.llm-wiki/') { continue }
+    $wikiRelevantPathCount++
     if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Get-LlmWikiSolutionComparison|Get-LlmWikiDesignCheckpoint|Test-LlmWikiAdaptiveWorkflow|Get-LlmWikiIntegrationScan|Test-LlmWikiIntegrationScan|Invoke-LlmWikiAdaptiveVerification)|evals/|policies/experience-policies\.json|workflows/(adaptive-development|developer-experience|integration-scan|evals|learned-regression-evals)\.md)') {
         Add-Group 'adaptive-routing'
     } elseif ($path -match '^\.llm-wiki/(tools/Get-LlmWikiDependencyChanges|workflows/dependency-rollout\.md)') {
         Add-Group 'dependency-analysis'
-    } elseif ($path -match '^\.llm-wiki/(tools/Invoke-LlmWikiAffectedSmoke|wiki\.ps1|workflows/index-pipeline\.md)') {
+    } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Test-LlmWikiStrictAffected)|wiki\.ps1|workflows/index-pipeline\.md)') {
         Add-Group 'facade-contract'
+    } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiFrontendTrace|Find-LlmWikiTrace|Test-LlmWikiTraceOutput)\.ps1$') {
+        Add-Group 'trace-output'
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiTaskBaseline|Test-LlmWikiTaskBaseline)\.ps1$') {
         Add-Group 'task-baseline'
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|Invoke-LlmWikiFullVerification)\.ps1$') {
@@ -42,6 +47,10 @@ foreach ($path in $paths) {
     } elseif ($path -match '^\.llm-wiki/tools/') {
         $hasUnknownToolChange = $true
     }
+}
+if ($wikiRelevantPathCount -eq 0) {
+    Write-Host 'Affected tools smoke: no LLM Wiki implementation paths changed; nothing to run.'
+    exit 0
 }
 if ($hasUnknownToolChange -or $groups.Count -eq 0) { Add-Group 'full-tools' }
 
@@ -71,6 +80,12 @@ foreach ($group in $groups) {
             & (Join-Path $toolsRoot 'Test-LlmWiki.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiLint.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiStrictAffected.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'trace-output' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiTraceOutput.ps1')
             if (-not $?) { exit 1 }
         }
         'task-baseline' {
