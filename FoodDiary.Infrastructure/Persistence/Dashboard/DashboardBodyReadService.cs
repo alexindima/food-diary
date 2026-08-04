@@ -34,7 +34,7 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
             ? await GetWaistTrendEntriesAsync(userId, normalizedTrendStart, normalizedDayStart, cancellationToken).ConfigureAwait(false)
             : [];
         int hydrationTotalMl = includeHydration
-            ? await GetHydrationTotalAsync(userId, normalizedDayStart, normalizedDayEndStart, cancellationToken).ConfigureAwait(false)
+            ? await GetHydrationTotalAsync(userId, dayStart, dayEndStart, cancellationToken).ConfigureAwait(false)
             : 0;
 
         return new DashboardBodyReadModel(
@@ -106,7 +106,7 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
         DateTime dayStart,
         DateTime dayEndStart,
         CancellationToken cancellationToken) {
-        DateTime dayEndExclusive = dayEndStart.AddDays(1);
+        DateTime dayEndExclusive = dayEndStart.AddTicks(1);
         return await context.HydrationEntries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId && entry.Timestamp >= dayStart && entry.Timestamp < dayEndExclusive)

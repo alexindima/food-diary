@@ -80,12 +80,57 @@ public sealed class DashboardReadServiceTests {
         Assert.Equal(error, result.Error);
     }
 
-    private static DashboardReadService CreateService(
-        IDashboardStatisticsReadService? statisticsReadService = null,
-        IDashboardMealsReadService? mealsReadService = null) {
-        IDashboardStatisticsReadService resolvedStatisticsReadService = statisticsReadService ?? CreateSuccessfulStatisticsReadService();
+    [Fact]
+    public async Task GetSnapshotDataAsync_PreservesExactDayBoundariesForBodyData() {
         IDashboardBodyReadService bodyReadService = Substitute.For<IDashboardBodyReadService>();
         bodyReadService
+            .GetBodyAsync(
+                Arg.Any<UserId>(),
+                Arg.Any<DateTime>(),
+                Arg.Any<DateTime>(),
+                Arg.Any<DateTime>(),
+                Arg.Any<int>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(new DashboardBodyReadModel([], [], [], [], HydrationTotalMl: 0)));
+        DashboardReadService service = CreateService(bodyReadService: bodyReadService);
+        var userId = UserId.New();
+        var dayStart = new DateTime(2026, 8, 4, 20, 0, 0, DateTimeKind.Utc);
+        DateTime dayEnd = dayStart.AddDays(1).AddTicks(-1);
+
+        Result<DashboardReadModel> result = await service.GetSnapshotDataAsync(
+            userId,
+            dayStart,
+            dayEnd,
+            dayStart.AddDays(-6),
+            periodDays: 1,
+            page: 1,
+            pageSize: 10,
+            Sections(),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        await bodyReadService.Received(1).GetBodyAsync(
+            userId,
+            dayStart,
+            dayEnd,
+            dayStart.AddDays(-6),
+            trendQuantizationDays: 1,
+            includeWeight: false,
+            includeWaist: false,
+            includeHydration: false,
+            CancellationToken.None);
+    }
+
+    private static DashboardReadService CreateService(
+        IDashboardStatisticsReadService? statisticsReadService = null,
+        IDashboardMealsReadService? mealsReadService = null,
+        IDashboardBodyReadService? bodyReadService = null) {
+        IDashboardStatisticsReadService resolvedStatisticsReadService = statisticsReadService ?? CreateSuccessfulStatisticsReadService();
+        IDashboardBodyReadService resolvedBodyReadService = bodyReadService ?? Substitute.For<IDashboardBodyReadService>();
+        resolvedBodyReadService
             .GetBodyAsync(
                 Arg.Any<UserId>(),
                 Arg.Any<DateTime>(),
@@ -101,7 +146,7 @@ public sealed class DashboardReadServiceTests {
 
         return new DashboardReadService(
             resolvedStatisticsReadService,
-            bodyReadService,
+            resolvedBodyReadService,
             resolvedMealsReadService);
     }
 

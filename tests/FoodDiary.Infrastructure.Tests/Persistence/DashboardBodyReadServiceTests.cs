@@ -35,7 +35,7 @@ public sealed class DashboardBodyReadServiceTests {
         DashboardBodyReadModel result = await readService.GetBodyAsync(
             user.Id,
             UtcDate(2026, 6, 1),
-            UtcDate(2026, 6, 2),
+            UtcEndOfDay(2026, 6, 2),
             UtcDate(2026, 5, 31),
             trendQuantizationDays: 1,
             includeWeight: true,
@@ -60,6 +60,34 @@ public sealed class DashboardBodyReadServiceTests {
             first => Assert.Equal(90, first.AverageCircumference),
             second => Assert.Equal(88, second.AverageCircumference));
         Assert.Equal(750, result.HydrationTotalMl);
+    }
+
+    [Fact]
+    public async Task GetBodyAsync_WithLocalDayUtcBoundaries_ExcludesAdjacentCalendarDays() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var user = User.Create($"dashboard-body-time-zone-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        context.HydrationEntries.AddRange(
+            HydrationEntry.Create(user.Id, UtcInstant(2026, 8, 4, 19), 1500),
+            HydrationEntry.Create(user.Id, UtcInstant(2026, 8, 4, 20), 250),
+            HydrationEntry.Create(user.Id, UtcInstant(2026, 8, 5, 19), 350),
+            HydrationEntry.Create(user.Id, UtcInstant(2026, 8, 5, 20), 500));
+        await context.SaveChangesAsync();
+
+        var readService = new DashboardBodyReadService(context);
+
+        DashboardBodyReadModel result = await readService.GetBodyAsync(
+            user.Id,
+            UtcInstant(2026, 8, 4, 20),
+            UtcInstant(2026, 8, 5, 20).AddTicks(-1),
+            UtcDate(2026, 8, 4),
+            trendQuantizationDays: 1,
+            includeWeight: false,
+            includeWaist: false,
+            includeHydration: true,
+            CancellationToken.None);
+
+        Assert.Equal(600, result.HydrationTotalMl);
     }
 
     [Fact]
@@ -131,4 +159,7 @@ public sealed class DashboardBodyReadServiceTests {
 
     private static DateTime UtcInstant(int year, int month, int day, int hour) =>
         new(year, month, day, hour, 0, 0, DateTimeKind.Utc);
+
+    private static DateTime UtcEndOfDay(int year, int month, int day) =>
+        UtcDate(year, month, day).AddDays(1).AddTicks(-1);
 }

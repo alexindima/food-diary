@@ -51120,7 +51120,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs",
                               "isTest":  true,
-                              "referenceCount":  2
+                              "referenceCount":  5
                           },
                           {
                               "contract":  "IDashboardMealsReadService",

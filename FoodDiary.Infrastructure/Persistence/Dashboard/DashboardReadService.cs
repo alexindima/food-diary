@@ -44,7 +44,7 @@ internal sealed class DashboardReadService(
         DashboardBodyReadModel body = await bodyReadService.GetBodyAsync(
             userId,
             dayStart,
-            dayEnd.Date,
+            dayEnd,
             trendStart,
             trendQuantizationDays: 1,
             sections.IncludeWeight,
