@@ -21,7 +21,17 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
-$knowledgePath = Join-Path $wikiRoot 'knowledge/memories.json'
+$canonicalKnowledgePath = [IO.Path]::GetFullPath((Join-Path $wikiRoot 'knowledge/memories.json'))
+$knowledgePath = $canonicalKnowledgePath
+if (-not [string]::IsNullOrWhiteSpace($env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH)) {
+    $testRegistryRoot = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts/llm-wiki'))
+    $candidateKnowledgePath = [IO.Path]::GetFullPath($env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH)
+    $testRegistryPrefix = $testRegistryRoot.TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
+    if (-not $candidateKnowledgePath.StartsWith($testRegistryPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'LLM_WIKI_TEST_MEMORY_REGISTRY_PATH must resolve under .artifacts/llm-wiki.'
+    }
+    $knowledgePath = $candidateKnowledgePath
+}
 $policy = Get-Content -LiteralPath (Join-Path $wikiRoot 'policies/workspace-policies.json') -Raw | ConvertFrom-Json
 $memoryPolicy = $policy.scheduler.contextBundles.memory
 

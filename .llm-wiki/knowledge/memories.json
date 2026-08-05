@@ -1,40 +1,4 @@
 {
-    "schemaVersion":  1,
-    "events":  [
-                   {
-                       "schemaVersion":  1,
-                       "sequence":  1,
-                       "kind":  "promoted",
-                       "id":  "smoke-scheduler-context",
-                       "createdAtUtc":  "2026-08-04T20:35:51.4496764Z",
-                       "previousHash":  "",
-                       "memory":  {
-                                      "statement":  "Synthetic scheduler work requires durable context.",
-                                      "rationale":  "Validated by smoke; password=memory-redaction-secret.",
-                                      "scopePaths":  [
-                                                         ".*"
-                                                     ],
-                                      "tags":  [
-
-                                               ],
-                                      "evidence":  [
-                                                       "Synthetic scheduler smoke validation."
-                                                   ],
-                                      "reviewAfterDays":  180,
-                                      "duplicateOverride":  null,
-                                      "source":  {
-                                                     "workspace":  ".artifacts/llm-wiki/tasks/tool-smoke-cache-source",
-                                                     "journalId":  "J-0003",
-                                                     "journalGitHead":  "c8e46eb3f18d8725373e6f0a95c239394a3e66b0",
-                                                     "packetFingerprint":  "3333333333333333333333333333333333333333333333333333333333333333"
-                                                 },
-                                      "sources":  [
-
-                                                  ]
-                                  },
-                       "targetId":  "",
-                       "reason":  "",
-                       "eventHash":  "0f3ed760b10a8334857d831b981b29774651bdd345c74a450a7b2e72c5ba2582"
-                   }
-               ]
+  "schemaVersion": 1,
+  "events": []
 }

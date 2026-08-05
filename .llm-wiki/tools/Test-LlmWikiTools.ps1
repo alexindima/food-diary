@@ -6,7 +6,17 @@ $toolsRoot = $PSScriptRoot
 $wikiRoot = Split-Path -Parent $toolsRoot
 $repositoryRoot = Split-Path -Parent $wikiRoot
 $errors = [System.Collections.Generic.List[string]]::new()
-$memoryRegistryPath = Join-Path $wikiRoot 'knowledge/memories.json'
+$canonicalMemoryRegistryPath = Join-Path $wikiRoot 'knowledge/memories.json'
+$canonicalMemoryRegistryHash = (Get-FileHash -LiteralPath $canonicalMemoryRegistryPath -Algorithm SHA256).Hash
+$memoryRegistryPath = Join-Path $repositoryRoot '.artifacts/llm-wiki/tool-smoke-memory-registry.json'
+$previousTestMemoryRegistryPath = $env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH
+New-Item -ItemType Directory -Path (Split-Path -Parent $memoryRegistryPath) -Force | Out-Null
+[IO.File]::WriteAllText(
+    $memoryRegistryPath,
+    "{`n  `"schemaVersion`": 1,`n  `"events`": []`n}`n",
+    [Text.UTF8Encoding]::new($false))
+$env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH = $memoryRegistryPath
+$schedulerMemoryId = "smoke-scheduler-context-$([guid]::NewGuid().ToString('N'))"
 
 function Assert-Wiki {
     param(
@@ -3519,7 +3529,7 @@ try {
         & (Join-Path $toolsRoot 'Manage-LlmWikiMemory.ps1') promote `
             -WorkspacePath $cacheSourceWorkspacePath `
             -JournalId $schedulerMemoryJournalId `
-            -Id 'smoke-scheduler-context' `
+            -Id $schedulerMemoryId `
             -ScopePath '.*' `
             -Evidence 'Synthetic scheduler smoke validation.' `
             -AsOfUtc ([DateTime]::UtcNow) | Out-Null
@@ -3811,7 +3821,7 @@ try {
             $learnedContextMetrics.metrics.validQualityAdjustmentCount -eq 1 -and
             $learnedGuideItem.learningAdjustment -eq 12 -and
             @($learnedContextBundle.bundle.items | Where-Object path -eq '.editorconfig').Count -eq 1 -and
-            @($learnedContextBundle.bundle.memories | Where-Object id -eq 'smoke-scheduler-context').Count -eq 1 -and
+            @($learnedContextBundle.bundle.memories | Where-Object id -eq $schedulerMemoryId).Count -eq 1 -and
             (($learnedContextBundle.bundle.memories | ConvertTo-Json -Depth 10) -notmatch 'memory-redaction-secret')
         ) 'Context feedback did not improve learned ranking after the minimum sample threshold.'
         $adaptiveSchedule = & (Join-Path $toolsRoot 'Get-LlmWikiTaskSchedule.ps1') -MaxConcurrency 2 -AsOfUtc $leaseNow.AddMinutes(1) -Format Json | ConvertFrom-Json
@@ -4761,6 +4771,18 @@ try {
     if (Test-Path -LiteralPath $absoluteVisualArtifactPath) {
         Remove-Item -LiteralPath $absoluteVisualArtifactPath -Force
     }
+}
+
+$canonicalMemoryRegistryHashAfter = (Get-FileHash -LiteralPath $canonicalMemoryRegistryPath -Algorithm SHA256).Hash
+Assert-Wiki ($canonicalMemoryRegistryHashAfter -ceq $canonicalMemoryRegistryHash) `
+    'Tool smoke tests modified the canonical durable-memory registry.'
+if ([string]::IsNullOrWhiteSpace($previousTestMemoryRegistryPath)) {
+    Remove-Item Env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH -ErrorAction SilentlyContinue
+} else {
+    $env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH = $previousTestMemoryRegistryPath
+}
+if (Test-Path -LiteralPath $memoryRegistryPath) {
+    Remove-Item -LiteralPath $memoryRegistryPath -Force
 }
 
 if ($errors.Count -gt 0) {
