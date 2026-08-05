@@ -665,6 +665,25 @@ diff --git a/example.html b/example.html
 '@
 Assert-Wiki (-not (Test-LlmWikiPresentationOnlyTemplateDiff $behavioralTemplateDiff)) 'Behavioral template diff was incorrectly treated as presentation-only.'
 
+$routingToolPlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -AffectedOnly -Plan `
+    -ChangedPath '.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1') -join [Environment]::NewLine
+Assert-Wiki ($routingToolPlanText -match 'Affected index tools:\s*$' -and $routingToolPlanText -notmatch 'Build-LlmWiki') 'Routing-only Wiki change unnecessarily selected compiled indexes.'
+$wikiTestPlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -AffectedOnly -Plan `
+    -ChangedPath '.llm-wiki/tools/Test-LlmWikiTools.ps1') -join [Environment]::NewLine
+Assert-Wiki ($wikiTestPlanText -match 'Affected index tools:\s*$' -and $wikiTestPlanText -notmatch 'Build-LlmWiki') 'Wiki test-only change unnecessarily selected compiled indexes.'
+$frontendBuilderPlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -AffectedOnly -Plan `
+    -ChangedPath '.llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1') -join [Environment]::NewLine
+Assert-Wiki ($frontendBuilderPlanText -match 'Build-LlmWikiFrontendIndex.ps1' -and $frontendBuilderPlanText -notmatch 'Build-LlmWikiArchitectureHealthIndex.ps1') 'Frontend-index builder change selected unrelated downstream indexes.'
+$contractBuilderPlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -AffectedOnly -Plan `
+    -ChangedPath '.llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1') -join [Environment]::NewLine
+Assert-Wiki ($contractBuilderPlanText -match 'Build-LlmWikiFrontendContractIndex.ps1' -and $contractBuilderPlanText -match 'Build-LlmWikiArchitectureHealthIndex.ps1' -and
+    $contractBuilderPlanText -notmatch 'Build-LlmWikiQualityIndex.ps1') 'Frontend-contract builder dependency closure is incorrect.'
+$sharedJsonPlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -AffectedOnly -Plan `
+    -ChangedPath '.llm-wiki/tools/LlmWikiJson.ps1') -join [Environment]::NewLine
+$sharedJsonToolCount = [regex]::Matches($sharedJsonPlanText, 'Build-LlmWiki').Count
+Assert-Wiki ($sharedJsonToolCount -eq 12) 'Shared JSON helper change did not select every compiled index.'
+& (Join-Path $toolsRoot 'Test-LlmWikiIndexSelection.ps1')
+
 $deferredStale = & (Join-Path $toolsRoot 'Get-LlmWikiStaleDisposition.ps1') `
     -FailedTool @('Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiQualityIndex.ps1') `
     -WorkspaceChangedPath @('.llm-wiki/generated/frontend-index.json', '.llm-wiki/generated/quality-index.json')

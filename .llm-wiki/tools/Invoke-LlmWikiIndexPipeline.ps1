@@ -35,8 +35,33 @@ if ($AffectedOnly -and -not $PSBoundParameters.ContainsKey('ChangedPath')) {
 }
 
 $selectedTools = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+$allIndexTools = @(
+    'Build-LlmWikiCatalog.ps1', 'Build-LlmWikiSymbolIndex.ps1', 'Build-LlmWikiFrontendIndex.ps1',
+    'Build-LlmWikiFrontendContractIndex.ps1', 'Build-LlmWikiDomainDataIndex.ps1',
+    'Build-LlmWikiConfigurationIndex.ps1', 'Build-LlmWikiRuntimeTopology.ps1',
+    'Build-LlmWikiSensitiveDataIndex.ps1', 'Build-LlmWikiBackendContractIndex.ps1',
+    'Build-LlmWikiQualityIndex.ps1', 'Build-LlmWikiModulePages.ps1',
+    'Build-LlmWikiArchitectureHealthIndex.ps1'
+)
 function Add-IndexTool([string]$Name) {
     $null = $selectedTools.Add($Name)
+}
+function Add-IndexToolWithDependents([string]$Name) {
+    Add-IndexTool $Name
+    switch ($Name) {
+        'Build-LlmWikiCatalog.ps1' {
+            Add-IndexTool 'Build-LlmWikiModulePages.ps1'
+            Add-IndexTool 'Build-LlmWikiArchitectureHealthIndex.ps1'
+        }
+        'Build-LlmWikiSymbolIndex.ps1' {
+            Add-IndexTool 'Build-LlmWikiBackendContractIndex.ps1'
+            Add-IndexTool 'Build-LlmWikiQualityIndex.ps1'
+            Add-IndexTool 'Build-LlmWikiArchitectureHealthIndex.ps1'
+        }
+        { $_ -in @('Build-LlmWikiFrontendContractIndex.ps1', 'Build-LlmWikiBackendContractIndex.ps1', 'Build-LlmWikiQualityIndex.ps1') } {
+            Add-IndexTool 'Build-LlmWikiArchitectureHealthIndex.ps1'
+        }
+    }
 }
 if ($AffectedOnly) {
     $normalizedChangedPaths = @(
@@ -50,16 +75,21 @@ if ($AffectedOnly) {
         Write-Host 'LLM Wiki affected index pipeline: no changed paths; nothing to do.'
         exit 0
     }
-    if (@($normalizedChangedPaths | Where-Object { $_ -match '^\.llm-wiki/(tools|policies)/|^Directory\.|\.slnx?$' }).Count -gt 0) {
-        foreach ($tool in @(
-            'Build-LlmWikiCatalog.ps1', 'Build-LlmWikiSymbolIndex.ps1', 'Build-LlmWikiFrontendIndex.ps1',
-            'Build-LlmWikiFrontendContractIndex.ps1', 'Build-LlmWikiDomainDataIndex.ps1',
-            'Build-LlmWikiConfigurationIndex.ps1', 'Build-LlmWikiRuntimeTopology.ps1',
-            'Build-LlmWikiSensitiveDataIndex.ps1', 'Build-LlmWikiBackendContractIndex.ps1',
-            'Build-LlmWikiQualityIndex.ps1', 'Build-LlmWikiModulePages.ps1',
-            'Build-LlmWikiArchitectureHealthIndex.ps1'
-        )) { Add-IndexTool $tool }
+    $requiresAllIndexes = @($normalizedChangedPaths | Where-Object {
+        $_ -match '^Directory\.|\.slnx?$|^\.llm-wiki/tools/LlmWikiJson\.ps1$'
+    }).Count -gt 0
+    if ($requiresAllIndexes) {
+        foreach ($tool in $allIndexTools) { Add-IndexTool $tool }
     } else {
+        foreach ($wikiToolPath in @($normalizedChangedPaths | Where-Object { $_ -match '^\.llm-wiki/tools/Build-LlmWiki[^/]+\.ps1$' })) {
+            $builderName = Split-Path -Leaf $wikiToolPath
+            if ($builderName -in $allIndexTools) {
+                Add-IndexToolWithDependents $builderName
+            } else {
+                foreach ($tool in $allIndexTools) { Add-IndexTool $tool }
+            }
+        }
+
         $frontendPaths = @($normalizedChangedPaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/' })
         $hasCSharp = @($normalizedChangedPaths | Where-Object { $_ -match '\.(cs|csproj)$' }).Count -gt 0
         $frontendTests = @($frontendPaths | Where-Object { $_ -match '(?:^|/)\w[^/]*\.(?:spec|test)\.ts$' })
@@ -67,26 +97,23 @@ if ($AffectedOnly) {
         $frontendTemplates = @($frontendPaths | Where-Object { $_ -match '\.html$' })
 
         if ($frontendTests.Count -gt 0) {
-            Add-IndexTool 'Build-LlmWikiQualityIndex.ps1'
+            Add-IndexToolWithDependents 'Build-LlmWikiQualityIndex.ps1'
         }
         if ($frontendSources.Count -gt 0) {
             Add-IndexTool 'Build-LlmWikiFrontendIndex.ps1'
-            Add-IndexTool 'Build-LlmWikiFrontendContractIndex.ps1'
-            Add-IndexTool 'Build-LlmWikiQualityIndex.ps1'
+            Add-IndexToolWithDependents 'Build-LlmWikiFrontendContractIndex.ps1'
+            Add-IndexToolWithDependents 'Build-LlmWikiQualityIndex.ps1'
         }
         foreach ($templatePath in $frontendTemplates) {
             $templateDiff = Get-LlmWikiPathDiff -RepositoryRoot $repositoryRoot -Path $templatePath
             if (-not (Test-LlmWikiPresentationOnlyTemplateDiff -DiffText $templateDiff)) {
-                Add-IndexTool 'Build-LlmWikiFrontendContractIndex.ps1'
+                Add-IndexToolWithDependents 'Build-LlmWikiFrontendContractIndex.ps1'
             }
         }
         if ($hasCSharp) {
-            Add-IndexTool 'Build-LlmWikiCatalog.ps1'
-            Add-IndexTool 'Build-LlmWikiSymbolIndex.ps1'
-            Add-IndexTool 'Build-LlmWikiBackendContractIndex.ps1'
-            Add-IndexTool 'Build-LlmWikiQualityIndex.ps1'
+            Add-IndexToolWithDependents 'Build-LlmWikiCatalog.ps1'
+            Add-IndexToolWithDependents 'Build-LlmWikiSymbolIndex.ps1'
             Add-IndexTool 'Build-LlmWikiSensitiveDataIndex.ps1'
-            Add-IndexTool 'Build-LlmWikiModulePages.ps1'
         }
         if (@($normalizedChangedPaths | Where-Object {
             $_ -match 'Domain/|Persistence/|Migrations?/|DbContext|Configuration\.cs$'
@@ -97,11 +124,6 @@ if ($AffectedOnly) {
         if (@($normalizedChangedPaths | Where-Object {
             $_ -match 'HostedService|Recurring|Webhook|Integrations/|JobManager/|docker-compose'
         }).Count -gt 0) { Add-IndexTool 'Build-LlmWikiRuntimeTopology.ps1' }
-        if (@($selectedTools | Where-Object {
-            $_ -in @('Build-LlmWikiCatalog.ps1', 'Build-LlmWikiBackendContractIndex.ps1', 'Build-LlmWikiFrontendContractIndex.ps1', 'Build-LlmWikiQualityIndex.ps1')
-        }).Count -gt 0) {
-            Add-IndexTool 'Build-LlmWikiArchitectureHealthIndex.ps1'
-        }
     }
     Write-Host "LLM Wiki affected index pipeline: $($normalizedChangedPaths.Count) changed path(s), $($selectedTools.Count) selected tool(s)."
     if ($Plan) {
