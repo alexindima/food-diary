@@ -13,8 +13,8 @@
                 </div>
                 <div
                     class="weight-history-page__entry-change fd-ui-caption"
-                    [class.weight-history-page__entry-change--loss]="item.change !== null && item.change < 0"
-                    [class.weight-history-page__entry-change--gain]="item.change !== null && item.change > 0"
+                    [class.weight-history-page__entry-change--loss]="item.tone === 'positive'"
+                    [class.weight-history-page__entry-change--gain]="item.tone === 'negative'"
                 >
                     @if (item.change === null || item.change === 0) {
                         —

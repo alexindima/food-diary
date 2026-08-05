@@ -646,8 +646,24 @@ $affectedMultilinePlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeli
 Assert-Wiki ($affectedMultilinePlanText -match 'Affected path count: 2' -and $affectedMultilinePlanText -match 'Build-LlmWikiQualityIndex.ps1') 'Affected index pipeline did not normalize newline-delimited hook paths.'
 $affectedTemplatePlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -AffectedOnly -Plan `
     -ChangedPath 'FoodDiary.Web.Client/src/app/components/example/example.html') -join [Environment]::NewLine
-Assert-Wiki ($affectedTemplatePlanText -match 'Build-LlmWikiFrontendIndex.ps1' -and $affectedTemplatePlanText -match 'Build-LlmWikiFrontendContractIndex.ps1') 'Template-only changes omitted frontend indexes.'
+Assert-Wiki ($affectedTemplatePlanText -match 'Build-LlmWikiFrontendContractIndex.ps1' -and $affectedTemplatePlanText -notmatch 'Build-LlmWikiFrontendIndex.ps1') 'Template-only changes did not select the template-reading contract index exclusively.'
 Assert-Wiki ($affectedTemplatePlanText -notmatch 'Build-LlmWikiQualityIndex.ps1' -and $affectedTemplatePlanText -notmatch 'Build-LlmWikiSensitiveDataIndex.ps1') 'Template-only changes selected unrelated quality or sensitive-data indexes.'
+
+. (Join-Path $toolsRoot 'LlmWikiChangeSemantics.ps1')
+$presentationOnlyTemplateDiff = @'
+diff --git a/example.html b/example.html
+@@ -1 +1 @@
+-<div class="entry-actions entry-actions--dialog">
++<div class="entry-actions">
+'@
+Assert-Wiki (Test-LlmWikiPresentationOnlyTemplateDiff $presentationOnlyTemplateDiff) 'Class-only template diff was not recognized as presentation-only.'
+$behavioralTemplateDiff = @'
+diff --git a/example.html b/example.html
+@@ -1 +1 @@
+-<button class="entry-action">Edit</button>
++<button class="entry-action" (click)="edit.emit()">Edit</button>
+'@
+Assert-Wiki (-not (Test-LlmWikiPresentationOnlyTemplateDiff $behavioralTemplateDiff)) 'Behavioral template diff was incorrectly treated as presentation-only.'
 
 $deferredStale = & (Join-Path $toolsRoot 'Get-LlmWikiStaleDisposition.ps1') `
     -FailedTool @('Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiQualityIndex.ps1') `

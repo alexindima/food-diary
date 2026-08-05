@@ -16,13 +16,15 @@ import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-cont
 import { WeightHistoryChartCardComponent } from '../../components/weight-history-chart-card/weight-history-chart-card';
 import { WeightHistoryEntriesCardComponent } from '../../components/weight-history-entries-card/weight-history-entries-card';
 import { WeightHistoryGoalCardComponent } from '../../components/weight-history-goal-card/weight-history-goal-card';
-import { WeightHistoryEntryDialogComponent } from '../../dialogs/weight-history-entry-dialog/weight-history-entry-dialog';
 import {
     WeightHistoryEntriesDialogComponent,
+    type WeightHistoryEntriesDialogData,
     type WeightHistoryEntriesDialogResult,
 } from '../../dialogs/weight-history-entries-dialog/weight-history-entries-dialog';
+import { WeightHistoryEntryDialogComponent } from '../../dialogs/weight-history-entry-dialog/weight-history-entry-dialog';
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 import { WEIGHT_HISTORY_RANGE_TABS } from '../../lib/weight-history-page.config';
+import { getWeightChangeTone, getWeightRemainingToGoal } from '../../lib/weight-history-progress.utils';
 import type { WeightEntry } from '../../models/weight-entry.data';
 import { WEIGHT_HISTORY_TOUR } from './weight-history-tour';
 
@@ -71,7 +73,7 @@ export class WeightHistoryPageComponent {
     protected readonly latestWeight = this.facade.latestWeight;
     protected readonly isMobileView = this.viewportService.isMobile;
 
-    protected readonly weightChange = computed<{ value: number; isDecrease: boolean; isIncrease: boolean } | null>(() => {
+    protected readonly weightChange = computed<{ value: number; tone: 'positive' | 'negative' | 'neutral' } | null>(() => {
         const values = this.facade
             .rollingMonthSummaryPoints()
             .map(point => point.averageWeight)
@@ -84,14 +86,17 @@ export class WeightHistoryPageComponent {
         }
 
         const value = latestValue - firstValue;
-        return { value, isDecrease: value <= 0, isIncrease: value > 0 };
+        return { value, tone: getWeightChangeTone(value, latestValue, this.desiredWeight()) };
     });
 
     protected readonly weightToGoal = computed<{ value: number } | null>(() => {
         const latestWeight = this.latestWeight();
         const desiredWeight = this.desiredWeight();
 
-        return latestWeight === null || desiredWeight === null ? null : { value: Math.max(0, latestWeight - desiredWeight) };
+        const startWeight = this.entriesDescending().at(-1)?.weight;
+        return latestWeight === null || desiredWeight === null || startWeight === undefined
+            ? null
+            : { value: getWeightRemainingToGoal(startWeight, latestWeight, desiredWeight) };
     });
 
     protected readonly rangeTabs = WEIGHT_HISTORY_RANGE_TABS;
@@ -133,10 +138,14 @@ export class WeightHistoryPageComponent {
 
     protected openEntriesDialog(): void {
         this.dialogService
-            .open<WeightHistoryEntriesDialogComponent, WeightEntry[], WeightHistoryEntriesDialogResult>(
+            .open<WeightHistoryEntriesDialogComponent, WeightHistoryEntriesDialogData, WeightHistoryEntriesDialogResult>(
                 WeightHistoryEntriesDialogComponent,
                 {
-                    data: this.entriesDescending(),
+                    data: {
+                        entries: this.entriesDescending(),
+                        currentWeight: this.latestWeight(),
+                        desiredWeight: this.desiredWeight(),
+                    },
                     preset: 'form',
                 },
             )

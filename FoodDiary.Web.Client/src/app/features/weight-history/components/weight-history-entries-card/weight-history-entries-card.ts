@@ -7,6 +7,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { buildWeightEntryViewModels } from '../../lib/weight-history-chart.mapper';
+import { getWeightChangeTone } from '../../lib/weight-history-progress.utils';
 import type { WeightEntry } from '../../models/weight-entry.data';
 
 const RECENT_ENTRY_LIMIT = 5;
@@ -23,14 +24,18 @@ export class WeightHistoryEntriesCardComponent {
 
     public readonly isLoading = input.required<boolean>();
     public readonly entries = input.required<WeightEntry[]>();
+    public readonly currentWeight = input.required<number | null>();
+    public readonly desiredWeight = input.required<number | null>();
     protected readonly items = computed(() => {
         const today = formatDateInputValue(new Date());
         return buildWeightEntryViewModels(this.entries(), resolveTranslateLanguage(this.translateService)).map((item, index, items) => {
             const olderEntry = items.at(index + 1)?.entry;
+            const change = olderEntry === undefined ? null : item.entry.weight - olderEntry.weight;
             return {
                 ...item,
                 isToday: item.entry.date.startsWith(today),
-                change: olderEntry === undefined ? null : item.entry.weight - olderEntry.weight,
+                change,
+                tone: getWeightChangeTone(change, this.currentWeight(), this.desiredWeight()),
             };
         });
     });
@@ -39,5 +44,5 @@ export class WeightHistoryEntriesCardComponent {
 
     public readonly editEntry = output<WeightEntry>();
     public readonly removeEntry = output<WeightEntry>();
-    public readonly showAllEntries = output<void>();
+    public readonly showAllEntries = output();
 }

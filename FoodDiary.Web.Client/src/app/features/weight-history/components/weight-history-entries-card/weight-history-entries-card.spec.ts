@@ -6,6 +6,10 @@ import type { WeightEntry } from '../../models/weight-entry.data';
 import { WeightHistoryEntriesCardComponent } from './weight-history-entries-card';
 
 const ENTRY_WEIGHT = 71.5;
+const OLDER_ENTRY_WEIGHT = 74.5;
+const DEFAULT_DESIRED_WEIGHT = 70;
+const GAIN_DESIRED_WEIGHT = 90;
+const EXPECTED_WEIGHT_CHANGE = '-3';
 
 describe('WeightHistoryEntriesCardComponent', () => {
     it('renders empty state when entries list is empty', () => {
@@ -23,6 +27,7 @@ describe('WeightHistoryEntriesCardComponent', () => {
                 dateLabel: '05/15/2026',
                 isToday: false,
                 change: null,
+                tone: 'neutral',
             },
         ]);
         expect(getText(fixture)).toContain(String(ENTRY_WEIGHT));
@@ -46,9 +51,21 @@ describe('WeightHistoryEntriesCardComponent', () => {
         expect(removeHandler).toHaveBeenCalledWith(entry);
         expect(showAllHandler).toHaveBeenCalledOnce();
     });
+
+    it('renders weight loss as negative when the goal requires weight gain', () => {
+        const latestEntry = createEntry();
+        const olderEntry = { ...createEntry(), id: 'entry-2', date: '2026-05-14T00:00:00Z', weight: OLDER_ENTRY_WEIGHT };
+        const { fixture } = setupComponent([latestEntry, olderEntry], GAIN_DESIRED_WEIGHT);
+        const element = fixture.nativeElement as HTMLElement;
+
+        expect(element.querySelector('.weight-history-page__entry-change--gain')?.textContent).toContain(EXPECTED_WEIGHT_CHANGE);
+    });
 });
 
-function setupComponent(entries: WeightEntry[]): {
+function setupComponent(
+    entries: WeightEntry[],
+    desiredWeight = DEFAULT_DESIRED_WEIGHT,
+): {
     component: WeightHistoryEntriesCardComponent;
     fixture: ComponentFixture<WeightHistoryEntriesCardComponent>;
 } {
@@ -60,6 +77,8 @@ function setupComponent(entries: WeightEntry[]): {
     const fixture = TestBed.createComponent(WeightHistoryEntriesCardComponent);
     fixture.componentRef.setInput('isLoading', false);
     fixture.componentRef.setInput('entries', entries);
+    fixture.componentRef.setInput('currentWeight', ENTRY_WEIGHT);
+    fixture.componentRef.setInput('desiredWeight', desiredWeight);
     fixture.detectChanges();
 
     return {

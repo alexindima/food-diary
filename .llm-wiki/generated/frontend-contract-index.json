@@ -3,7 +3,7 @@
     "summary":  {
                     "components":  402,
                     "componentsWithoutDirectSpecs":  110,
-                    "inputs":  1238,
+                    "inputs":  1240,
                     "outputs":  407,
                     "apiCalls":  206,
                     "templatesWithTranslations":  243,
@@ -12871,6 +12871,16 @@
                                               "name":  "entries",
                                               "type":  "WeightEntry[]",
                                               "required":  true
+                                          },
+                                          {
+                                              "name":  "currentWeight",
+                                              "type":  "number | null",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "desiredWeight",
+                                              "type":  "number | null",
+                                              "required":  true
                                           }
                                       ],
                            "outputs":  [
@@ -12884,7 +12894,7 @@
                                            },
                                            {
                                                "name":  "showAllEntries",
-                                               "type":  "void"
+                                               "type":  ""
                                            }
                                        ],
                            "specPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-entries-card/weight-history-entries-card.spec.ts"
@@ -33207,6 +33217,8 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
                               "occurrences":  1,
                               "inputsUsed":  [
+                                                 "currentWeight",
+                                                 "desiredWeight",
                                                  "entries",
                                                  "isLoading"
                                              ],

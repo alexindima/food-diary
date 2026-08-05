@@ -4,9 +4,10 @@ import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
+import { getWeightRemainingToGoal } from '../../lib/weight-history-progress.utils';
 import type { WeightEntry } from '../../models/weight-entry.data';
 
 const PERCENT_MAX = 100;
@@ -38,18 +39,15 @@ export class WeightHistoryGoalCardComponent {
             return null;
         }
 
-        const totalDistance = oldest - goal;
-        const completedDistance = oldest - current;
+        const goalDirection = Math.sign(goal - oldest);
+        const totalDistance = Math.abs(goal - oldest);
+        const completedDistance = (current - oldest) * goalDirection;
         const percent =
-            totalDistance <= 0
-                ? current <= goal
-                    ? PERCENT_MAX
-                    : 0
-                : Math.min(PERCENT_MAX, Math.max(0, (completedDistance / totalDistance) * PERCENT_MAX));
-        const lost = oldest - current;
-        const remaining = Math.max(0, current - goal);
+            totalDistance === 0 ? PERCENT_MAX : Math.min(PERCENT_MAX, Math.max(0, (completedDistance / totalDistance) * PERCENT_MAX));
+        const lost = completedDistance;
+        const remaining = getWeightRemainingToGoal(oldest, current, goal);
         const daysElapsed = this.daysBetweenEntries();
-        const weeklyRate = daysElapsed > 0 ? (lost / daysElapsed) * DAYS_PER_WEEK : 0;
+        const weeklyRate = daysElapsed > 0 ? (completedDistance / daysElapsed) * DAYS_PER_WEEK : 0;
         const daysToGoal = weeklyRate > 0 ? Math.ceil((remaining / weeklyRate) * DAYS_PER_WEEK) : null;
 
         return { percent, lost, remaining, weeklyRate, daysToGoal, startWeight: oldest, currentWeight: current, goalWeight: goal };

@@ -66,8 +66,8 @@
                         <div class="weight-history-page__metric-label fd-ui-body-sm">{{ 'WEIGHT_HISTORY.RANGE_CHANGE' | translate }}</div>
                         <div
                             class="weight-history-page__metric-value fd-ui-metric-lg"
-                            [class.weight-history-page__metric-value--positive]="weightChange()?.isDecrease"
-                            [class.weight-history-page__metric-value--negative]="weightChange()?.isIncrease"
+                            [class.weight-history-page__metric-value--positive]="weightChange()?.tone === 'positive'"
+                            [class.weight-history-page__metric-value--negative]="weightChange()?.tone === 'negative'"
                         >
                             @if (weightChange(); as change) {
                                 {{ change.value > 0 ? '+' : '' }}{{ change.value | number: '1.0-2' }}
@@ -157,6 +157,8 @@
                     data-tour-id="weight-history-entries"
                     [isLoading]="isLoading()"
                     [entries]="entriesDescending()"
+                    [currentWeight]="latestWeight()"
+                    [desiredWeight]="desiredWeight()"
                     (editEntry)="startEdit($event)"
                     (removeEntry)="deleteEntry($event)"
                     (showAllEntries)="openEntriesDialog()"

@@ -12,6 +12,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiChangeSemantics.ps1')
 $toolsRoot = [System.IO.Path]::GetFullPath($PSScriptRoot)
 $shellPath = [System.IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
@@ -60,23 +61,24 @@ if ($AffectedOnly) {
         )) { Add-IndexTool $tool }
     } else {
         $frontendPaths = @($normalizedChangedPaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/' })
-        $hasFrontend = $frontendPaths.Count -gt 0
-        $frontendTestOnly = $hasFrontend -and @($frontendPaths | Where-Object { $_ -notmatch '(?:^|/)\w[^/]*\.(?:spec|test)\.ts$' }).Count -eq 0
-        $frontendStyleOnly = $hasFrontend -and @($frontendPaths | Where-Object { $_ -notmatch '\.(?:scss|css)$' }).Count -eq 0
-        $frontendTemplateOnly = $hasFrontend -and @($frontendPaths | Where-Object { $_ -notmatch '\.html$' }).Count -eq 0
         $hasCSharp = @($normalizedChangedPaths | Where-Object { $_ -match '\.(cs|csproj)$' }).Count -gt 0
-        if ($frontendStyleOnly) {
-            # Current compiled indexes do not read stylesheet contents.
-        } elseif ($frontendTestOnly) {
+        $frontendTests = @($frontendPaths | Where-Object { $_ -match '(?:^|/)\w[^/]*\.(?:spec|test)\.ts$' })
+        $frontendSources = @($frontendPaths | Where-Object { $_ -match '\.ts$' -and $_ -notmatch '(?:^|/)\w[^/]*\.(?:spec|test)\.ts$' })
+        $frontendTemplates = @($frontendPaths | Where-Object { $_ -match '\.html$' })
+
+        if ($frontendTests.Count -gt 0) {
             Add-IndexTool 'Build-LlmWikiQualityIndex.ps1'
-        } elseif ($frontendTemplateOnly) {
+        }
+        if ($frontendSources.Count -gt 0) {
             Add-IndexTool 'Build-LlmWikiFrontendIndex.ps1'
             Add-IndexTool 'Build-LlmWikiFrontendContractIndex.ps1'
-        } elseif ($hasFrontend) {
-            Add-IndexTool 'Build-LlmWikiFrontendIndex.ps1'
-            Add-IndexTool 'Build-LlmWikiFrontendContractIndex.ps1'
             Add-IndexTool 'Build-LlmWikiQualityIndex.ps1'
-            Add-IndexTool 'Build-LlmWikiSensitiveDataIndex.ps1'
+        }
+        foreach ($templatePath in $frontendTemplates) {
+            $templateDiff = Get-LlmWikiPathDiff -RepositoryRoot $repositoryRoot -Path $templatePath
+            if (-not (Test-LlmWikiPresentationOnlyTemplateDiff -DiffText $templateDiff)) {
+                Add-IndexTool 'Build-LlmWikiFrontendContractIndex.ps1'
+            }
         }
         if ($hasCSharp) {
             Add-IndexTool 'Build-LlmWikiCatalog.ps1'
@@ -95,7 +97,9 @@ if ($AffectedOnly) {
         if (@($normalizedChangedPaths | Where-Object {
             $_ -match 'HostedService|Recurring|Webhook|Integrations/|JobManager/|docker-compose'
         }).Count -gt 0) { Add-IndexTool 'Build-LlmWikiRuntimeTopology.ps1' }
-        if ($selectedTools.Count -gt 0) {
+        if (@($selectedTools | Where-Object {
+            $_ -in @('Build-LlmWikiCatalog.ps1', 'Build-LlmWikiBackendContractIndex.ps1', 'Build-LlmWikiFrontendContractIndex.ps1', 'Build-LlmWikiQualityIndex.ps1')
+        }).Count -gt 0) {
             Add-IndexTool 'Build-LlmWikiArchitectureHealthIndex.ps1'
         }
     }
