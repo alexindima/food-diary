@@ -12,6 +12,7 @@ export default defineConfig({
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',
         headless: true,
+        reducedMotion: 'reduce',
     },
     webServer: {
         command: 'npx ng serve --host 127.0.0.1 --port 4201',

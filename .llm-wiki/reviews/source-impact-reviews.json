@@ -396,13 +396,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "a90fd9d10e6c997277310fe27b59938d4a84a510bf28e6a2af84f12f522a565f"
+                                            "sha256":  "3242afcde1a6a2a90041fdef5e797a58e7abc9c486e48274bc9ecd8226018f74"
                                         }
                                     ],
-                        "reason":  "Reviewed updated quality index after correcting history range tests and waist feature boundary.",
+                        "reason":  "Reviewed quality index after making accessibility smoke deterministic with the reduced-motion user preference; production runtime behavior is unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f9817ac548152a6bc52731ceaa6c3b1c6d964b6a",
-                        "reviewedAtUtc":  "2026-08-05T14:09:41.1878513Z"
+                        "gitHead":  "c3f7cc26d27c22f153357c03c112c21fe55e04e1",
+                        "reviewedAtUtc":  "2026-08-05T18:17:38.8246389Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

@@ -22456,11 +22456,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/playwright.client.smoke.config.ts",
-                      "nonBlankLines":  22,
+                      "nonBlankLines":  23,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.44
+                      "structuralRiskScore":  0.46
                   },
                   {
                       "path":  "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
