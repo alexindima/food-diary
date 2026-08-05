@@ -38,10 +38,16 @@ foreach ($path in $paths) {
         Add-Group 'dependency-analysis'
     } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiObservedStage|Test-LlmWikiStrictAffected)|wiki\.ps1|workflows/index-pipeline\.md)') {
         Add-Group 'facade-contract'
+    } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiIndexPipeline|Test-LlmWikiIndexSelection)\.ps1$') {
+        Add-Group 'index-selection'
     } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiFrontendTrace|Find-LlmWikiTrace|Test-LlmWikiTraceOutput)\.ps1$') {
         Add-Group 'trace-output'
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiTaskBaseline|Test-LlmWikiTaskBaseline)\.ps1$') {
         Add-Group 'task-baseline'
+    } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiUiContinuation|Test-LlmWikiUiContinuation|Get-LlmWikiTestPlan|Test-LlmWikiTools)\.ps1$') {
+        Add-Group 'ui-continuation'
+    } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiReviewReport|Test-LlmWikiReviewReport)\.ps1$') {
+        Add-Group 'reporting'
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|Invoke-LlmWikiFullVerification)\.ps1$') {
         Add-Group 'verification-cache'
     } elseif ($path -match '^\.llm-wiki/tools/') {
@@ -90,6 +96,18 @@ foreach ($group in $groups) {
         }
         'task-baseline' {
             & (Join-Path $toolsRoot 'Test-LlmWikiTaskBaseline.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'index-selection' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiIndexSelection.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'ui-continuation' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiUiContinuation.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'reporting' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiReviewReport.ps1')
             if (-not $?) { exit 1 }
         }
         'verification-cache' {

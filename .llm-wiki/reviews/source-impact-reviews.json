@@ -420,6 +420,21 @@
                         "reviewedAtUtc":  "2026-07-31T13:19:03.6954450Z"
                     },
                     {
+                        "pageId":  "workflow-review-report",
+                        "pagePath":  ".llm-wiki/workflows/review-report.md",
+                        "pageSha256":  "f6faf2c921173ed7a4df00c4c4726eed8ceef64dc24bbc1e7dabad3b76d24ce6",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
+                                            "sha256":  "cb72a4210ba0bf4da4ff4e6069b9042c2cb68d36cbc30161302187084ebc84de"
+                                        }
+                                    ],
+                        "reason":  "Reviewed final delivery-report logic: only evidence whose changed-path set matches the current packet is reported as executed; unrelated artifacts remain recommendations only.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "2f618662baacec028b5d50547a125c66ed6d15e0",
+                        "reviewedAtUtc":  "2026-08-05T22:58:35.5931912Z"
+                    },
+                    {
                         "pageId":  "workflow-runtime-impact",
                         "pagePath":  ".llm-wiki/workflows/runtime-impact.md",
                         "pageSha256":  "f76e9e0aeb3642ca5dbda529bb9b4b9598b30d636df9df042d6a0d0edd2e9233",
@@ -452,17 +467,17 @@
                     {
                         "pageId":  "workflow-task-dispatch-receipts",
                         "pagePath":  ".llm-wiki/workflows/task-dispatch-receipts.md",
-                        "pageSha256":  "53406623ef3ba445dd93d7e8adbfa5488e34c924696a4a009089b98ffbdca75f",
+                        "pageSha256":  "070d29cda436beb2ad9a41b8d4cf73369245770fccc12fc6a998aaa79336f388",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "927cd3d67073cbe9df1603e544e029b0b43a1577b1fac891bd19f05de556704c"
+                                            "sha256":  "d7a46b1ea5d373804056f9079081feabb6cd6c9c218dc4dc51ebbeb90dc4d54a"
                                         }
                                     ],
-                        "reason":  "Reviewed verify-fast facade changes; task dispatch and receipt semantics are unchanged, while visual verification receipts now isolate safe style-only deltas.",
+                        "reason":  "Reviewed facade change: continue-ui and numbered verify progress do not alter governed task dispatch or receipt semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "76a103e75f80fad0ace2dfbdef458339f9e93b34",
-                        "reviewedAtUtc":  "2026-08-04T20:18:24.7339474Z"
+                        "gitHead":  "2f618662baacec028b5d50547a125c66ed6d15e0",
+                        "reviewedAtUtc":  "2026-08-05T22:53:07.2477418Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",

@@ -50,3 +50,8 @@ Focused Angular commands are derived from the actual `package.json` script and
 the project's `angular.json` test builder. `--include` is emitted only for the
 verified `@angular/build:unit-test` builder; otherwise the planner falls back to
 the full project test script and says why in `commandEvidence`.
+
+Commands are grouped by obligation. `required` covers triggered policy and direct
+owners, `recommended` covers close consumers, and `full-regression` is the broad
+safety net normally delegated to pre-push or CI. The causal reason is printed
+with every command.

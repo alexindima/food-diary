@@ -129,6 +129,10 @@ live under ignored `.artifacts/llm-wiki/index-cache`; they are never committed.
 `wiki verify`, publication hooks, and CI deliberately bypass this optimization
 and retain a complete deterministic check.
 
+Frontend test-only changes select the quality index without forcing architecture
+health. Architecture health remains tied to project/catalog and public-contract
+inputs; stylesheet-only changes select no compiled index.
+
 Use `wiki smoke -SmokeGroup tools -AffectedOnly` during iteration. Its dispatcher
 maps adaptive routing, solution/design planning, integration scanning,
 dependency analysis, and facade changes to existing focused regression suites

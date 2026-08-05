@@ -78,13 +78,25 @@ if (Test-Path -LiteralPath $frontendContractPath) {
     }
 }
 
-$changedTypeNames = @(
-    $diff.changedPaths |
-        Where-Object { $_ -match '\.(cs|ts)$' } |
-        ForEach-Object { [System.IO.Path]::GetFileNameWithoutExtension($_) } |
-        Where-Object { $_.Length -ge 5 } |
-        Sort-Object -Unique
-)
+$changedTypeNames = @($diff.changedPaths | Where-Object { $_ -match '\.(cs|ts)$' } | ForEach-Object {
+    $changedSourcePath = Join-Path $repositoryRoot $_
+    if (Test-Path -LiteralPath $changedSourcePath -PathType Leaf) {
+        $sourceText = [IO.File]::ReadAllText($changedSourcePath)
+        $patterns = if ($_ -match '\.ts$') {
+            @(
+                '(?m)^(?:export\s+)?(?:default\s+)?(?:abstract\s+)?(?:class|interface|type|enum|function)\s+([A-Za-z_$][\w$]*)'
+                '(?m)^(?:export\s+)?const\s+([A-Za-z_$][\w$]*)'
+            )
+        } else {
+            @('(?m)^\s*(?:public\s+|internal\s+|protected\s+|private\s+|sealed\s+|abstract\s+|static\s+|partial\s+)*(?:class|interface|record|struct|enum)\s+([A-Za-z_][\w]*)')
+        }
+        foreach ($pattern in $patterns) {
+            foreach ($match in [regex]::Matches($sourceText, $pattern)) {
+                if ($match.Groups[1].Value.Length -ge 5) { $match.Groups[1].Value }
+            }
+        }
+    }
+} | Sort-Object -Unique)
 if ($changedTypeNames.Count -gt 0) {
     $testFiles = @()
     foreach ($testRoot in @('tests', 'MailRelay/tests', 'MailInbox/tests', 'FoodDiary.Web.Client/src')) {
@@ -213,11 +225,15 @@ $commands = @(@(
         id = $_.id
         command = $_.command
         source = 'policy'
+        priority = 'required'
+        reason = "triggered-policy:$($_.sourceRule)"
     } }) +
     @($diff.recommendedChecks | ForEach-Object { [pscustomobject]@{
         id = 'recommended'
         command = $_
         source = 'context'
+        priority = 'full-regression'
+        reason = 'broad-change-context'
     } })
 ) | Sort-Object command -Unique)
 
@@ -251,6 +267,8 @@ foreach ($testPath in $frontendFocusedTests) {
             "cd FoodDiary.Web.Client && npm run $script"
         }
         source = 'focused-test'
+        priority = [string](($selectedFocusedTests | Where-Object path -eq $testPath | Select-Object -First 1).priority)
+        reason = [string](($selectedFocusedTests | Where-Object path -eq $testPath | Select-Object -First 1).reason)
         commandEvidence = if ($supportsInclude) {
             "package.json:$script; angular.json:$project=$builder"
         } else {
@@ -296,8 +314,13 @@ Write-Host ''
 Write-Host 'Focused test files:'
 foreach ($path in $result.focusedTestFiles) { Write-Host " - $path" }
 Write-Host ''
-Write-Host 'Commands:'
-foreach ($entry in $result.commands) { Write-Host " - [$($entry.source)] $($entry.command)" }
+Write-Host 'Commands by obligation:'
+foreach ($priority in @('required', 'recommended', 'full-regression', 'contextual')) {
+    $entries = @($result.commands | Where-Object priority -eq $priority)
+    if ($entries.Count -eq 0) { continue }
+    Write-Host " $priority`:"
+    foreach ($entry in $entries) { Write-Host "  - [$($entry.source); $($entry.reason)] $($entry.command)" }
+}
 Write-Host ''
 Write-Host 'Scenarios:'
 foreach ($scenario in $result.scenarios) { Write-Host " - $($scenario.id): $($scenario.description) Evidence: $($scenario.evidence)." }

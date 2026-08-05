@@ -28,7 +28,9 @@ while missing the user flow around it:
 
 The catalog covers authentication and account linking, dietologist collaboration,
 AI photo analysis, meal tracking, the food catalog, billing, transactional mail,
-and Telegram. Each journey declares stable scenario identifiers, elevated review
+Telegram, and weight goal/history behavior. `FD-WEIGHT` covers first goal creation,
+replacement, cancellation, history, gain direction, chart-range independence,
+and today's entry label. Each journey declares stable scenario identifiers, elevated review
 areas, risk, and evidence hints.
 
 Journey matches are reviewed navigation evidence. They do not prove that a path is

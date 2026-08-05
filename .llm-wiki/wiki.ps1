@@ -2,7 +2,7 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
+        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'continue-ui', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'diff', 'impact', 'review', 'ownership', 'api-compat', 'policy',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
@@ -250,7 +250,7 @@ if ($Fast) {
     Write-Host 'Compatibility alias: verify -Fast -> verify-fast'
 }
 
-$deltaAwareCommands = @('update', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'ownership', 'policy')
+$deltaAwareCommands = @('update', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'ownership', 'policy')
 if ($Command -eq 'develop') {
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -Format Text
 } elseif ($Command -in $deltaAwareCommands -and -not $PSBoundParameters.ContainsKey('ChangedPath')) {
@@ -287,8 +287,9 @@ function Invoke-ObservedWikiStage {
         [string]$StandaloneCommand
     )
     $toolPath = Join-Path $toolsRoot $ToolName
+    $script:verifyStageOrdinal++
     $stopwatch = [Diagnostics.Stopwatch]::StartNew()
-    Write-Host "Starting Wiki verify stage: $Name (timeout=${TimeoutSeconds}s)"
+    Write-Host "[$script:verifyStageOrdinal/8] Starting Wiki verify stage: $Name (timeout=${TimeoutSeconds}s)"
     $serializableArguments = @{}
     foreach ($entry in $ToolArguments.GetEnumerator()) {
         $serializableArguments[$entry.Key] = if ($entry.Value -is [Management.Automation.SwitchParameter]) { [bool]$entry.Value } else { $entry.Value }
@@ -309,7 +310,7 @@ function Invoke-ObservedWikiStage {
     try {
         while (-not $process.WaitForExit(1000)) {
             if ($stopwatch.Elapsed.TotalSeconds -ge $nextHeartbeat) {
-                Write-Host "Wiki verify stage still running: $Name ($([Math]::Round($stopwatch.Elapsed.TotalSeconds))s)"
+                Write-Host "[$script:verifyStageOrdinal/8] Wiki verify stage still running: $Name ($([Math]::Round($stopwatch.Elapsed.TotalSeconds))s)"
                 $nextHeartbeat += 30
             }
             if ($stopwatch.Elapsed.TotalSeconds -ge $TimeoutSeconds) {
@@ -324,7 +325,7 @@ function Invoke-ObservedWikiStage {
         $process.Dispose()
         $stopwatch.Stop()
     }
-    Write-Host "Wiki verify stage passed: $Name ($([Math]::Round($stopwatch.Elapsed.TotalSeconds, 2))s)"
+    Write-Host "[$script:verifyStageOrdinal/8] Wiki verify stage passed: $Name ($([Math]::Round($stopwatch.Elapsed.TotalSeconds, 2))s)"
 }
 
 switch ($Command) {
@@ -352,6 +353,7 @@ switch ($Command) {
         }
     }
     'verify' {
+        $script:verifyStageOrdinal = 0
         $indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
         $policyArguments = @{ FailOnViolation = $true }
@@ -506,6 +508,12 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $workflowArguments.ChangedPath = $ChangedPath }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $workflowArguments.ProposedPath = $ProposedPath }
         Invoke-WikiTool 'Get-LlmWikiAdaptiveWorkflow.ps1' $workflowArguments
+    }
+    'continue-ui' {
+        $continueArguments = @{ BaseRef = $BaseRef; Format = $Format }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $continueArguments.ChangedPath = $ChangedPath }
+        if ($PSBoundParameters.ContainsKey('Objective')) { $continueArguments.Intent = $Objective }
+        Invoke-WikiTool 'Get-LlmWikiUiContinuation.ps1' $continueArguments
     }
     { $_ -in @('status', 'next') } {
         $experienceArguments = @{ Action = $Command; WorkspacePath = $WorkspacePath; Format = $Format }
@@ -2185,6 +2193,7 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 task-finish -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-DryRun]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
         Write-Host "  ./.llm-wiki/wiki.ps1 develop -Intent '<task>' [-PlannedPath 'path/one','path/two']"
+        Write-Host "  ./.llm-wiki/wiki.ps1 continue-ui [-Intent '<iteration>'] [-ChangedPath <path[]>]"
         Write-Host "  ./.llm-wiki/wiki.ps1 next|status [-WorkspacePath <task>] [-Intent '<new task>']"
         Write-Host "  ./.llm-wiki/wiki.ps1 research -Intent '<task>' [-PlannedPath 'path/one','path/two']"
         Write-Host "  ./.llm-wiki/wiki.ps1 integration-scan -Intent '<task>' [-PlannedPath 'path/one','path/two']"

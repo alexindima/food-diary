@@ -52,6 +52,14 @@ does not expand affected indexes, policy checks, or source-impact reviews. A
 subsequent edit to an already dirty file is still detected. Explicit
 `-ChangedPath` always overrides the captured task delta.
 
+When `CODEX_THREAD_ID` is available, the baseline is isolated by Codex thread.
+Parallel sessions therefore keep independent snapshots of pre-existing dirt even
+though they share the same Git worktree. After runtime ownership and scope are
+confirmed, `wiki.ps1 continue-ui` keeps subsequent frontend iterations on the
+task delta, focused tests, browser evidence, and the visual completion gate. A
+backend, dependency-manifest, or public-entry-point expansion rejects this fast
+path and returns the task to the normal adaptive route.
+
 ## Profiles
 
 The router selects one FoodDiary-specific profile:

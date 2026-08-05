@@ -683,6 +683,8 @@ $sharedJsonPlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1'
 $sharedJsonToolCount = [regex]::Matches($sharedJsonPlanText, 'Build-LlmWiki').Count
 Assert-Wiki ($sharedJsonToolCount -eq 12) 'Shared JSON helper change did not select every compiled index.'
 & (Join-Path $toolsRoot 'Test-LlmWikiIndexSelection.ps1')
+& (Join-Path $toolsRoot 'Test-LlmWikiUiContinuation.ps1')
+& (Join-Path $toolsRoot 'Test-LlmWikiReviewReport.ps1')
 
 $deferredStale = & (Join-Path $toolsRoot 'Get-LlmWikiStaleDisposition.ps1') `
     -FailedTool @('Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiQualityIndex.ps1') `

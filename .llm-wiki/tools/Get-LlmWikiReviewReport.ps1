@@ -54,6 +54,11 @@ $readinessArguments = @{
     Format = 'Json'
 }
 $readiness = & (Join-Path $PSScriptRoot 'Get-LlmWikiReleaseReadiness.ps1') @readinessArguments | ConvertFrom-Json
+$evidenceAbsolute = Resolve-OutputPath $EvidencePath
+$evidence = if (Test-Path -LiteralPath $evidenceAbsolute -PathType Leaf) { Get-Content -LiteralPath $evidenceAbsolute -Raw | ConvertFrom-Json } else { $null }
+$evidenceApplicable = $null -ne $evidence -and
+    (@($evidence.change.changedPaths | Sort-Object) -join '|') -ceq (@($packet.diff.changedPaths | Sort-Object) -join '|')
+$testCommands = @($packet.testPlan.commands)
 
 $report = [pscustomobject][ordered]@{
     schemaVersion = 1
@@ -70,6 +75,13 @@ $report = [pscustomobject][ordered]@{
     requiredChecks = @($packet.policy.requiredChecks)
     reviewObligations = @($packet.policy.reviewObligations)
     testScenarios = @($packet.testPlan.scenarios)
+    testCommands = [pscustomobject][ordered]@{
+        required = @($testCommands | Where-Object priority -eq 'required')
+        recommended = @($testCommands | Where-Object priority -eq 'recommended')
+        fullRegression = @($testCommands | Where-Object priority -eq 'full-regression')
+    }
+    executedChecks = $(if (-not $evidenceApplicable) { @() } else { @($evidence.checks) })
+    generatedPaths = @($packet.diff.changedPaths | Where-Object { $_ -match '^\.llm-wiki/generated/' })
     blockingDimensions = @($readiness.blockingDimensions)
     unassessedDimensions = @($readiness.unassessedDimensions)
 }
@@ -124,6 +136,30 @@ if ($Format -eq 'Json') {
             $lines.Add("- ``$(ConvertTo-MarkdownCell $check.command)`` (policy: $(ConvertTo-MarkdownCell $check.sourceRule))")
         }
     }
+    $lines.Add('')
+    $lines.Add('### Check execution')
+    $lines.Add('')
+    if (@($report.executedChecks).Count -eq 0) {
+        $lines.Add('- No evidence bundle was found; commands below are recommendations, not proof of execution.')
+    } else {
+        foreach ($check in $report.executedChecks) {
+            $duration = if ($null -eq $check.durationSeconds) { '' } else { ", $($check.durationSeconds)s" }
+            $lines.Add(('- **{0}**{1} - `{2}`' -f (ConvertTo-MarkdownCell $check.status), $duration, (ConvertTo-MarkdownCell $check.command)))
+        }
+    }
+    $lines.Add('')
+    $lines.Add('### Additional verification tiers')
+    $lines.Add('')
+    foreach ($tier in @('recommended', 'fullRegression')) {
+        foreach ($check in @($report.testCommands.$tier)) {
+            $lines.Add(('- **{0}:** `{1}` - {2}' -f $tier, (ConvertTo-MarkdownCell $check.command), (ConvertTo-MarkdownCell $check.reason)))
+        }
+    }
+    $lines.Add('')
+    $lines.Add('### Generated artifacts')
+    $lines.Add('')
+    if (@($report.generatedPaths).Count -eq 0) { $lines.Add('- None changed.') }
+    else { foreach ($path in $report.generatedPaths) { $lines.Add("- ``$(ConvertTo-MarkdownCell $path)``") } }
     $lines.Add('')
     $lines.Add('### Review obligations')
     $lines.Add('')

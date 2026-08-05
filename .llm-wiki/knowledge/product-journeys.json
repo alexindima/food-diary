@@ -43,6 +43,16 @@
       "evidenceHints": ["domain tests", "application tests", "frontend state tests"]
     },
     {
+      "id": "FD-WEIGHT",
+      "title": "Weight entries, goal lifecycle, and progress history",
+      "aliases": ["weight", "weight history", "weight goal", "body weight", "progress chart", "вес", "цель веса"],
+      "pathPatterns": ["WeightHistory", "WeightGoal", "weight-history", "weight-goal", "weight-summary", "weight-trend"],
+      "risk": "feature",
+      "scenarios": ["weight-entry-today-date-label", "weight-goal-first-create", "weight-goal-replace", "weight-goal-cancel", "weight-goal-history", "weight-goal-gain-direction", "weight-goal-chart-range-independence"],
+      "requiredReviewAreas": ["domain-invariants", "api-compatibility", "migration-safety", "localization", "responsive-ui"],
+      "evidenceHints": ["domain and application tests", "API contract snapshot", "frontend state tests", "browser range and goal lifecycle evidence"]
+    },
+    {
       "id": "FD-CATALOG",
       "title": "Products, recipes, and reusable food catalog",
       "aliases": ["product", "recipe", "catalog", "ingredient", "food"],

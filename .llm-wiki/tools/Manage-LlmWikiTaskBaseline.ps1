@@ -3,6 +3,7 @@ param(
     [ValidateSet('Capture', 'ChangedPaths', 'Status')]
     [string]$Action,
     [string]$RepositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path,
+    [string]$SessionId = $env:CODEX_THREAD_ID,
     [ValidateSet('Object', 'Text', 'Json')]
     [string]$Format = 'Object'
 )
@@ -42,7 +43,11 @@ function Get-PathFingerprint([string]$RepositoryPath) {
 
 $gitDirectory = (Invoke-Git @('rev-parse', '--absolute-git-dir') | Select-Object -First 1)
 $stateDirectory = Join-Path $gitDirectory 'llm-wiki'
-$baselinePath = Join-Path $stateDirectory 'task-baseline.json'
+$sessionKey = if ([string]::IsNullOrWhiteSpace($SessionId)) { 'default' } else {
+    $normalizedSessionId = $SessionId -replace '[^a-zA-Z0-9_.-]', '-'
+    if ($normalizedSessionId.Length -gt 80) { $normalizedSessionId.Substring(0, 80) } else { $normalizedSessionId }
+}
+$baselinePath = Join-Path $stateDirectory "task-baseline-$sessionKey.json"
 
 if ($Action -eq 'Capture') {
     $head = (Invoke-Git @('rev-parse', 'HEAD') | Select-Object -First 1)
@@ -58,9 +63,9 @@ if ($Action -eq 'Capture') {
     }
     $null = New-Item -ItemType Directory -Path $stateDirectory -Force
     $baseline | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $baselinePath -Encoding utf8
-    $result = [pscustomobject]@{ available = $true; baselinePath = $baselinePath; head = $head; initialChangedPaths = $initialPaths; changedPaths = @() }
+    $result = [pscustomobject]@{ available = $true; sessionKey = $sessionKey; baselinePath = $baselinePath; head = $head; initialChangedPaths = $initialPaths; changedPaths = @() }
 } elseif (-not (Test-Path -LiteralPath $baselinePath -PathType Leaf)) {
-    $result = [pscustomobject]@{ available = $false; baselinePath = $baselinePath; head = $null; initialChangedPaths = @(); changedPaths = @() }
+    $result = [pscustomobject]@{ available = $false; sessionKey = $sessionKey; baselinePath = $baselinePath; head = $null; initialChangedPaths = @(); changedPaths = @() }
 } else {
     $baseline = Get-Content -LiteralPath $baselinePath -Raw | ConvertFrom-Json
     $currentPaths = @(Get-ChangedPaths ([string]$baseline.head))
@@ -73,6 +78,7 @@ if ($Action -eq 'Capture') {
     }
     $result = [pscustomobject]@{
         available = $true
+        sessionKey = $sessionKey
         baselinePath = $baselinePath
         head = [string]$baseline.head
         initialChangedPaths = @($baseline.initialChangedPaths)

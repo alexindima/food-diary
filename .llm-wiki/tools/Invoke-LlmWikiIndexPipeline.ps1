@@ -97,12 +97,12 @@ if ($AffectedOnly) {
         $frontendTemplates = @($frontendPaths | Where-Object { $_ -match '\.html$' })
 
         if ($frontendTests.Count -gt 0) {
-            Add-IndexToolWithDependents 'Build-LlmWikiQualityIndex.ps1'
+            Add-IndexTool 'Build-LlmWikiQualityIndex.ps1'
         }
         if ($frontendSources.Count -gt 0) {
             Add-IndexTool 'Build-LlmWikiFrontendIndex.ps1'
             Add-IndexToolWithDependents 'Build-LlmWikiFrontendContractIndex.ps1'
-            Add-IndexToolWithDependents 'Build-LlmWikiQualityIndex.ps1'
+            Add-IndexTool 'Build-LlmWikiQualityIndex.ps1'
         }
         foreach ($templatePath in $frontendTemplates) {
             $templateDiff = Get-LlmWikiPathDiff -RepositoryRoot $repositoryRoot -Path $templatePath
