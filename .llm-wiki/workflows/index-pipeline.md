@@ -157,8 +157,15 @@ visible instead of treating index latency as an opaque fixed cost.
 Workers are isolated PowerShell processes with real exit-code propagation. A failed worker fails its stage and prevents dependent stages from running. Parallelism changes execution time only; every existing generator and freshness check still runs.
 
 `wiki verify` is the interactive gate. `wiki verify-full` and CI additionally
-run the portable contract and complete stateful tool-smoke suite. Full
-verification completes the index freshness checks before starting the stateful
+run the portable contract and an adaptive stateful tool-smoke suite. Its `Core`
+profile always validates navigation, contracts, policies, indexes, acceptance,
+evidence, and durable-memory isolation. The governed task-workspace and
+orchestration lifecycle remains in the `Full` profile and is selected when the
+commit changes those tools or scheduler policy. Use
+`./.llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1 -FullTools` to force it.
+Use `-CoreTools` only for focused profiling of the Core pipeline; CI keeps the
+conservative automatic selection.
+Full verification completes the index freshness checks before starting the stateful
 tools. This prevents tool-smoke readers from observing generated files while
 index workers are replacing them. Index workers remain concurrent within their
 dependency-aware stage, and every non-zero exit is propagated. CI runs this gate

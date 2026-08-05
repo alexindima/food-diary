@@ -5,6 +5,7 @@ $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $facadeText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') -Raw
 $fullVerificationText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1') -Raw
+$toolSmokeText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools/Test-LlmWikiTools.ps1') -Raw
 
 if ($facadeText -notmatch "'verify-strict-affected'") { throw 'Wiki facade does not expose verify-strict-affected.' }
 if (-not $facadeText.Contains("`$Command = 'verify-fast'") -or -not $facadeText.Contains('Compatibility alias: verify -Fast -> verify-fast')) {
@@ -41,6 +42,15 @@ if (($frontendSmoke -join "`n") -notmatch 'no LLM Wiki implementation paths chan
 }
 if ($fullVerificationText -notmatch 'still running' -or $fullVerificationText -notmatch 'groupStopwatch') {
     throw 'Full verification does not expose periodic per-group progress and duration.'
+}
+if ($fullVerificationText -notmatch 'LLM Wiki tool verification profile' -or $fullVerificationText -notmatch '\$FullTools' -or $fullVerificationText -notmatch '\$CoreTools') {
+    throw 'Full verification does not expose its adaptive tool profile and explicit override.'
+}
+if ($fullVerificationText -notmatch 'Test-LlmWikiMemoryIsolation\.ps1') {
+    throw 'Full verification omitted unconditional durable-memory isolation coverage.'
+}
+if ($toolSmokeText -notmatch "ValidateSet\('Core', 'Full'\)" -or $toolSmokeText -notmatch 'Skipped governed task-workspace and orchestration smoke coverage') {
+    throw 'Tool smoke suite omitted its observable Core and Full profiles.'
 }
 
 Write-Host 'LLM Wiki strict-affected smoke passed: scoped publication checks are uncached and non-deferred.'

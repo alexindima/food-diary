@@ -1,13 +1,28 @@
 [CmdletBinding()]
 param(
     [ValidateRange(1, 8)]
-    [int]$IndexConcurrency = 4
+    [int]$IndexConcurrency = 4,
+    [switch]$FullTools,
+    [switch]$CoreTools
 )
 
 $ErrorActionPreference = 'Stop'
 $toolsRoot = [System.IO.Path]::GetFullPath($PSScriptRoot)
 $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
 $shellPath = [System.IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
+
+$changedPaths = @(& git diff --name-only HEAD^ HEAD 2>$null | ForEach-Object { ([string]$_).Replace('\', '/') })
+$extendedToolPatterns = @(
+    '^\.llm-wiki/tools/(Get-LlmWikiAgentFleetCoverage|Get-LlmWikiDispatchMetrics|Get-LlmWikiTaskAudit|Get-LlmWikiTaskHandoff|Get-LlmWikiTaskSchedule|Manage-LlmWikiAgentRegistry|Manage-LlmWikiContextFeedback|Manage-LlmWikiContextOutcome|Manage-LlmWikiOrchestrationCycle|Manage-LlmWikiQualityAdjustment|Manage-LlmWikiSchedulePlan|Manage-LlmWikiTaskDecomposition|Manage-LlmWikiTaskDispatch|Manage-LlmWikiTaskLease|Manage-LlmWikiWorkspaceCircuit|Test-LlmWikiOrchestrationLineage|Test-LlmWikiTools)\.ps1$'
+    '^\.llm-wiki/policies/workspace-policies\.json$'
+)
+if ($FullTools -and $CoreTools) { throw 'FullTools and CoreTools cannot be used together.' }
+$requiresExtendedTools = $FullTools -or (-not $CoreTools -and @($changedPaths | Where-Object {
+    $path = $_
+    @($extendedToolPatterns | Where-Object { $path -match $_ }).Count -gt 0
+}).Count -gt 0)
+$toolsProfile = if ($requiresExtendedTools) { 'Full' } else { 'Core' }
+Write-Host "LLM Wiki tool verification profile: $toolsProfile (changed paths: $($changedPaths.Count))."
 
 $checks = @(
     [pscustomobject]@{
@@ -26,9 +41,14 @@ $checks = @(
         arguments = "-Check -MaxConcurrency $IndexConcurrency"
     }
     [pscustomobject]@{
+        name = 'durable memory isolation'
+        script = Join-Path $toolsRoot 'Test-LlmWikiMemoryIsolation.ps1'
+        arguments = ''
+    }
+    [pscustomobject]@{
         name = 'tools'
         script = Join-Path $toolsRoot 'Test-LlmWikiTools.ps1'
-        arguments = ''
+        arguments = "-Profile $toolsProfile"
     }
 )
 

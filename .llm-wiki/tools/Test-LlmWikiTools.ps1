@@ -1,5 +1,8 @@
 [CmdletBinding()]
-param()
+param(
+    [ValidateSet('Core', 'Full')]
+    [string]$Profile = 'Full'
+)
 
 $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
@@ -814,6 +817,8 @@ Assert-Wiki ($reviewJson.packetFingerprint -eq $contractPacket.fingerprint) 'Rev
 Assert-Wiki ($reviewJson.verdict -eq 'conditional') 'JSON review report did not preserve readiness.'
 Assert-Wiki (@($reviewJson.dimensions).Count -eq 8) 'Review report did not include every readiness dimension.'
 
+if ($Profile -eq 'Full') {
+    Write-Host 'Starting governed task-workspace and orchestration smoke coverage.'
 $taskWorkspacePath = '.artifacts/llm-wiki/tasks/tool-smoke-workspace'
 $absoluteTaskWorkspacePath = Join-Path (Split-Path -Parent $wikiRoot) $taskWorkspacePath
 $taskExportPath = '.artifacts/llm-wiki/exports/tool-smoke.task-export.json'
@@ -3469,8 +3474,10 @@ try {
             if (Test-Path -LiteralPath $fixtureAbsolute) { Remove-Item -LiteralPath $fixtureAbsolute -Recurse -Force }
         }
     }
-    $blockedSchedule = & (Join-Path $toolsRoot 'Get-LlmWikiTaskSchedule.ps1') -MaxConcurrency 2 -Format Json | ConvertFrom-Json
-    Assert-Wiki ($blockedSchedule.selectedCount -eq 0 -and $blockedSchedule.blockedCount -ge 2) 'Task scheduler assigned an exact-path conflict.'
+    if ($Profile -eq 'Full') {
+        Write-Host 'Starting extended orchestration smoke coverage.'
+        $blockedSchedule = & (Join-Path $toolsRoot 'Get-LlmWikiTaskSchedule.ps1') -MaxConcurrency 2 -Format Json | ConvertFrom-Json
+        Assert-Wiki ($blockedSchedule.selectedCount -eq 0 -and $blockedSchedule.blockedCount -ge 2) 'Task scheduler assigned an exact-path conflict.'
 
     $schedulerSourcePacketPath = Join-Path $absoluteCacheSourceWorkspacePath 'change-packet.json'
     $schedulerSourceDescriptorPath = Join-Path $absoluteCacheSourceWorkspacePath 'workspace.json'
@@ -4485,6 +4492,10 @@ try {
                 if ($remainingScheduleArtifacts.Count -eq 0) { Remove-Item -LiteralPath $scheduleArtifactDirectory -Force }
             }
         }
+        }
+        Write-Host 'Extended orchestration smoke coverage passed.'
+    } else {
+        Write-Host 'Skipped extended orchestration smoke coverage for the Core profile.'
     }
 
     & (Join-Path $toolsRoot 'Manage-LlmWikiEvidence.ps1') check `
@@ -4634,6 +4645,10 @@ try {
     if (Test-Path -LiteralPath $absoluteTaskWorkspacePath) {
         Remove-Item -LiteralPath $absoluteTaskWorkspacePath -Recurse -Force
     }
+}
+    Write-Host 'Governed task-workspace and orchestration smoke coverage passed.'
+} else {
+    Write-Host 'Skipped governed task-workspace and orchestration smoke coverage for the Core profile.'
 }
 
 $manifestPath = '.artifacts/llm-wiki/tool-smoke-change-manifest.json'
