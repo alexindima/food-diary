@@ -144,6 +144,19 @@ describe('ImageUploadFieldComponent clearing', () => {
 });
 
 describe('ImageUploadFieldComponent interactions', () => {
+    it('removes hidden upload controls from the accessibility tree and tab order', async () => {
+        const { fixture } = await setupImageUploadFieldAsync();
+        fixture.componentRef.setInput('appearance', 'hidden');
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const dropzone = host.querySelector('.image-upload-field__dropzone') as HTMLElement;
+
+        expect(dropzone.getAttribute('role')).toBeNull();
+        expect(dropzone.getAttribute('tabindex')).toBe('-1');
+        expect(dropzone.getAttribute('aria-hidden')).toBe('true');
+    });
+
     it('does not open file picker when disabled or already selected', async () => {
         const { component, fixture } = await setupImageUploadFieldAsync();
         const clickSpy = vi.fn();

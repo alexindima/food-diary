@@ -196,6 +196,9 @@ test.describe('authenticated accessibility', () => {
             for (const route of ACCESSIBILITY_ROUTES) {
                 await page.goto(route);
                 await expect(page.locator('body')).toBeVisible();
+                if (route === '/dashboard' && viewport.name === 'mobile') {
+                    await expect(page.getByPlaceholder('Describe your meal, e.g. "two eggs and toast"...')).toBeVisible();
+                }
                 const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
 
                 expect(results.violations, `Accessibility violations on ${route} (${viewport.name})`).toEqual([]);

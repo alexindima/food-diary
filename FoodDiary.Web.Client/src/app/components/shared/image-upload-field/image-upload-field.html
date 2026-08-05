@@ -1,8 +1,9 @@
 <div [class]="`image-upload-field fd-stack fd-gap-xs ${appearanceClass()}`" [class.image-upload-field--disabled]="disabled()">
     <div
         class="image-upload-field__dropzone fd-place-center"
-        role="button"
-        tabindex="0"
+        [attr.role]="appearance() === 'hidden' ? null : 'button'"
+        [attr.tabindex]="appearance() === 'hidden' ? -1 : 0"
+        [attr.aria-hidden]="appearance() === 'hidden' ? true : null"
         [attr.aria-label]="'IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate"
         [attr.aria-disabled]="disabled() || isUploading()"
         [attr.aria-busy]="isUploading()"
