@@ -1,10 +1,11 @@
 <fd-ui-card class="weight-history-page__card weight-history-page__card--chart" [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate">
-    @if (isLoading()) {
-        <div class="weight-history-page__loader fd-ui-body-sm">{{ 'WEIGHT_HISTORY.LOADING' | translate }}</div>
-    } @else {
+    <ng-content select="[chartControls]" />
+
+    <div class="weight-history-page__chart-viewport">
         @if (hasPoints()) {
             <fd-ui-line-chart
                 class="weight-history-page__chart"
+                [class.weight-history-page__chart--loading]="isLoading()"
                 lineColor="var(--fd-color-primary-600)"
                 xAxisLabelLayout="stacked"
                 [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate"
@@ -15,8 +16,14 @@
                 [showGrid]="true"
                 [valueSuffix]="'GENERAL.UNITS.KG' | translate"
             />
-        } @else {
+        } @else if (!isLoading()) {
             <p class="weight-history-page__empty-chart fd-ui-body-sm">{{ 'WEIGHT_HISTORY.NO_DATA_FOR_CHART' | translate }}</p>
         }
-    }
+
+        @if (isLoading()) {
+            <div class="weight-history-page__chart-loading fd-ui-body-sm" role="status">
+                {{ 'WEIGHT_HISTORY.LOADING' | translate }}
+            </div>
+        }
+    </div>
 </fd-ui-card>

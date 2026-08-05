@@ -70,6 +70,7 @@ export class WeightHistoryFacade {
     public readonly desiredWeight = signal<number | null>(null);
     public readonly isDesiredWeightSaving = signal(false);
     public readonly summaryPoints = signal<WeightEntrySummaryPoint[]>([]);
+    public readonly rollingMonthSummaryPoints = signal<WeightEntrySummaryPoint[]>([]);
     public readonly isSummaryLoading = signal(false);
     public readonly customRangeModel = signal<WeightCustomRangeFormModel>({ range: null });
     public readonly customRangeForm = form(this.customRangeModel);
@@ -180,6 +181,7 @@ export class WeightHistoryFacade {
             this.entrySaveVersion.update(version => version + 1);
             this.invalidation.reportBodyMetricMutation();
             this.loadEntries(false, true);
+            this.loadRollingMonthSummaryIfNeeded();
             if (editingId !== null) {
                 this.resetEditingState();
                 return;
@@ -222,6 +224,7 @@ export class WeightHistoryFacade {
             .subscribe(() => {
                 this.invalidation.reportBodyMetricMutation();
                 this.loadEntries(false, true);
+                this.loadRollingMonthSummaryIfNeeded();
                 if (this.editingEntryId() === entry.id) {
                     this.resetEditingState();
                 }
@@ -313,7 +316,7 @@ export class WeightHistoryFacade {
                 }
             });
 
-        this.loadSummary(summaryParams);
+        this.loadSummary(summaryParams, this.selectedRange() === 'month');
     }
 
     private loadDesiredWeight(): void {
@@ -335,7 +338,7 @@ export class WeightHistoryFacade {
             });
     }
 
-    private loadSummary(filters: WeightEntrySummaryFilters): void {
+    private loadSummary(filters: WeightEntrySummaryFilters, updateRollingMonth = false): void {
         this.isSummaryLoading.set(true);
         this.weightEntriesService
             .getSummary(filters)
@@ -347,6 +350,23 @@ export class WeightHistoryFacade {
             )
             .subscribe(points => {
                 this.summaryPoints.set(points);
+                if (updateRollingMonth) {
+                    this.rollingMonthSummaryPoints.set(points);
+                }
+            });
+    }
+
+    private loadRollingMonthSummaryIfNeeded(): void {
+        if (this.selectedRange() === 'month') {
+            return;
+        }
+
+        const { summaryParams } = buildWeightHistoryFiltersForRange('month', null);
+        this.weightEntriesService
+            .getSummary(summaryParams)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(points => {
+                this.rollingMonthSummaryPoints.set(points);
             });
     }
 

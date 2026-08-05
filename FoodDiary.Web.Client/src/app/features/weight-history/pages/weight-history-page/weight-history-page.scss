@@ -9,6 +9,7 @@
 
     &__period {
         width: 100%;
+        margin-top: var(--fd-space-sm);
     }
 
     &__summary {
@@ -133,6 +134,27 @@
         margin: 0;
         color: var(--fd-color-slate-400);
         text-align: center;
+    }
+
+    &__chart-viewport {
+        position: relative;
+        min-height: 350px;
+        display: grid;
+        align-items: center;
+    }
+
+    &__chart--loading {
+        opacity: 0.55;
+    }
+
+    &__chart-loading {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: var(--fd-color-text-muted);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 18%, transparent);
+        pointer-events: none;
     }
 
     &__chart {
@@ -434,6 +456,10 @@
 
         &__chart {
             --fd-line-chart-height: 260px;
+        }
+
+        &__chart-viewport {
+            min-height: 260px;
         }
     }
 }

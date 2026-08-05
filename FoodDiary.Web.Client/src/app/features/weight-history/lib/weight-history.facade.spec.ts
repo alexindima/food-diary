@@ -163,7 +163,7 @@ describe('WeightHistoryFacade entries', () => {
 
 describe('WeightHistoryFacade ranges', () => {
     it('ignores unsupported range values', () => {
-        facade.changeRange('quarter');
+        facade.changeRange('decade');
 
         expect(facade.selectedRange()).toBe('month');
     });

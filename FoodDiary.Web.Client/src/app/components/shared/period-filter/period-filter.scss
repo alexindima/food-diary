@@ -1,18 +1,36 @@
 @use 'variables' as variables;
 
+:host {
+    --fd-period-filter-tabs-basis: 260px;
+    --fd-period-filter-range-basis: 360px;
+    --fd-period-filter-range-max-width: 100%;
+}
+
+:host(.fd-period-filter-host--hide-inactive-range) {
+    --fd-period-filter-tabs-basis: 100%;
+    --fd-period-filter-range-basis: 100%;
+    --fd-period-filter-range-max-width: 360px;
+}
+
 .fd-period-filter {
     &__tabs {
-        flex: 1 1 260px;
+        flex: 1 1 var(--fd-period-filter-tabs-basis);
         min-width: 200px;
     }
 
     &__range {
-        flex: 0 1 360px;
-        max-width: 100%;
+        flex: 0 1 var(--fd-period-filter-range-basis);
+        max-width: var(--fd-period-filter-range-max-width);
         min-width: 240px;
     }
 
     @media #{variables.$media-tablet-up} {
         flex-wrap: nowrap;
+    }
+}
+
+@media #{variables.$media-tablet-up} {
+    :host(.fd-period-filter-host--hide-inactive-range) .fd-period-filter {
+        flex-wrap: wrap;
     }
 }

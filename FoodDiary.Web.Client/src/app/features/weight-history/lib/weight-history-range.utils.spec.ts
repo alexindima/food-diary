@@ -16,14 +16,18 @@ describe('weight history range utils', () => {
     it('validates supported range values', () => {
         expect(isWeightHistoryRange('week')).toBe(true);
         expect(isWeightHistoryRange('month')).toBe(true);
+        expect(isWeightHistoryRange('quarter')).toBe(true);
+        expect(isWeightHistoryRange('halfYear')).toBe(true);
         expect(isWeightHistoryRange('year')).toBe(true);
         expect(isWeightHistoryRange('custom')).toBe(true);
-        expect(isWeightHistoryRange('quarter')).toBe(false);
+        expect(isWeightHistoryRange('decade')).toBe(false);
     });
 
     it('calculates preset ranges from the current date', () => {
         expect(calculateWeightHistoryRangeDates('week', null, NOW).start.toISOString()).toBe('2026-05-08T12:00:00.000Z');
         expect(calculateWeightHistoryRangeDates('month', null, NOW).start.toISOString()).toBe('2026-04-15T12:00:00.000Z');
+        expect(calculateWeightHistoryRangeDates('quarter', null, NOW).start.toISOString()).toBe('2026-02-15T12:00:00.000Z');
+        expect(calculateWeightHistoryRangeDates('halfYear', null, NOW).start.toISOString()).toBe('2025-11-15T12:00:00.000Z');
         expect(calculateWeightHistoryRangeDates('year', null, NOW).start.toISOString()).toBe('2025-05-15T12:00:00.000Z');
     });
 

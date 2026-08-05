@@ -17,6 +17,7 @@ const NON_STRING_RANGE_VALUE = 42;
             [selectedValue]="selectedValue()"
             [rangeField]="rangeForm.range"
             [displayRange]="displayRange()"
+            [hideInactiveRange]="true"
             (rangeChange)="onRangeChange($event)"
         />
     `,
@@ -114,5 +115,10 @@ describe('PeriodFilterComponent', () => {
         hostFixture.detectChanges();
 
         expect(host.rangeForm.range().disabled()).toBe(false);
+        expect(hostFixture.nativeElement.querySelector('fd-ui-date-range-input')).not.toBeNull();
+    });
+
+    it('should hide the custom date range for preset periods when requested', () => {
+        expect(hostFixture.nativeElement.querySelector('fd-ui-date-range-input')).toBeNull();
     });
 });

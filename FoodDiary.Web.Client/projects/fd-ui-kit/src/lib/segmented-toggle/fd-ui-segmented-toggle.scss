@@ -110,4 +110,13 @@
     .fd-ui-segmented-toggle--stack-on-narrow .fd-ui-segmented-toggle__item {
         width: 100%;
     }
+
+    .fd-ui-segmented-toggle--wrap-on-narrow {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .fd-ui-segmented-toggle--wrap-on-narrow .fd-ui-segmented-toggle__item {
+        flex: 1 1 30%;
+    }
 }

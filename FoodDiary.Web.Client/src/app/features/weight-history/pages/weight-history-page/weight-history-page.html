@@ -115,20 +115,6 @@
             </fd-ui-card>
         </section>
 
-        <fd-period-filter
-            class="weight-history-page__period"
-            data-tour-id="weight-history-period"
-            [tabs]="rangeTabs"
-            [selectedValue]="selectedRange()"
-            [rangeField]="customRangeForm.range"
-            [displayRange]="currentRange()"
-            [startLabel]="'WEIGHT_HISTORY.CUSTOM_RANGE_FROM_LABEL' | translate"
-            [endLabel]="'WEIGHT_HISTORY.CUSTOM_RANGE_TO_LABEL' | translate"
-            [startPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
-            [endPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
-            (rangeChange)="changeRange($event)"
-        />
-
         <div class="weight-history-page__chart-section">
             <fd-weight-history-chart-card
                 data-tour-id="weight-history-chart"
@@ -136,7 +122,24 @@
                 [chartPoints]="chartPoints()"
                 [desiredWeight]="desiredWeight()"
                 [goalLabel]="'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: (desiredWeight() | number: '1.0-2') }"
-            />
+            >
+                <fd-period-filter
+                    chartControls
+                    class="weight-history-page__period"
+                    data-tour-id="weight-history-period"
+                    [tabs]="rangeTabs"
+                    [selectedValue]="selectedRange()"
+                    [rangeField]="customRangeForm.range"
+                    [displayRange]="currentRange()"
+                    [hideInactiveRange]="true"
+                    [useSegmentedToggle]="true"
+                    [startLabel]="'WEIGHT_HISTORY.CUSTOM_RANGE_FROM_LABEL' | translate"
+                    [endLabel]="'WEIGHT_HISTORY.CUSTOM_RANGE_TO_LABEL' | translate"
+                    [startPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                    [endPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                    (rangeChange)="changeRange($event)"
+                />
+            </fd-weight-history-chart-card>
         </div>
 
         <div class="weight-history-page__insights fd-grid fd-gap-card-content">

@@ -1,18 +1,34 @@
 ﻿<div class="fd-period-filter fd-row fd-wrap fd-gap-period">
-    <fd-ui-tabs
-        class="fd-period-filter__tabs"
-        [tabs]="tabs()"
-        [selectedValue]="selectedValue()"
-        (selectedValueChange)="onRangeChange($event)"
-    />
+    @if (useSegmentedToggle()) {
+        <fd-ui-segmented-toggle
+            class="fd-period-filter__tabs"
+            appearance="soft"
+            size="sm"
+            [options]="tabs()"
+            [selectedValue]="selectedValue()"
+            [fullWidth]="true"
+            [stackOnNarrow]="false"
+            [wrapOnNarrow]="true"
+            (selectedValueChange)="onRangeChange($event)"
+        />
+    } @else {
+        <fd-ui-tabs
+            class="fd-period-filter__tabs"
+            [tabs]="tabs()"
+            [selectedValue]="selectedValue()"
+            (selectedValueChange)="onRangeChange($event)"
+        />
+    }
 
-    <fd-ui-date-range-input
-        class="fd-period-filter__range"
-        [formField]="rangeField()"
-        [startLabel]="startLabel()"
-        [endLabel]="endLabel()"
-        [startPlaceholder]="startPlaceholder() || ''"
-        [endPlaceholder]="endPlaceholder() || ''"
-        [controlDisabled]="selectedValue() !== 'custom'"
-    />
+    @if (!hideInactiveRange() || selectedValue() === 'custom') {
+        <fd-ui-date-range-input
+            class="fd-period-filter__range"
+            [formField]="rangeField()"
+            [startLabel]="startLabel()"
+            [endLabel]="endLabel()"
+            [startPlaceholder]="startPlaceholder() || ''"
+            [endPlaceholder]="endPlaceholder() || ''"
+            [controlDisabled]="selectedValue() !== 'custom'"
+        />
+    }
 </div>

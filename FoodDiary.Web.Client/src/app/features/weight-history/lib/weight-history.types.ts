@@ -1,6 +1,6 @@
 import type { WeightEntry } from '../models/weight-entry.data';
 
-export type WeightHistoryRange = 'week' | 'month' | 'year' | 'custom';
+export type WeightHistoryRange = 'week' | 'month' | 'quarter' | 'halfYear' | 'year' | 'custom';
 
 export type WeightHistoryDateRange = {
     start: Date;

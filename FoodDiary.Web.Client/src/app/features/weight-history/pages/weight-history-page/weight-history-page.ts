@@ -68,9 +68,10 @@ export class WeightHistoryPageComponent {
     protected readonly isMobileView = this.viewportService.isMobile;
 
     protected readonly weightChange = computed<{ value: number; isDecrease: boolean; isIncrease: boolean } | null>(() => {
-        const values = this.chartPoints()
-            .map(point => point.value)
-            .filter((value): value is number => value !== null);
+        const values = this.facade
+            .rollingMonthSummaryPoints()
+            .map(point => point.averageWeight)
+            .filter(value => value > 0);
 
         const latestValue = values.at(-1);
         const firstValue = values.at(0);

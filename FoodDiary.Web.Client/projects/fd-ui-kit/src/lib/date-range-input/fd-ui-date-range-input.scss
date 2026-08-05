@@ -17,3 +17,13 @@
     font-weight: var(--fd-text-action-weight);
     line-height: 1;
 }
+
+@media #{variables.$media-phablet} {
+    .fd-ui-date-range-input {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .fd-ui-date-range-input__divider {
+        display: none;
+    }
+}

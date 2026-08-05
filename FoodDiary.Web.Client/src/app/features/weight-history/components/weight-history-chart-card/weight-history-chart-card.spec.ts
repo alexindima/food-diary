@@ -9,6 +9,22 @@ const CHART_VALUE = 74.2;
 const DESIRED_WEIGHT = 70;
 
 describe('WeightHistoryChartCardComponent', () => {
+    it('keeps a stable chart viewport while loading', async () => {
+        const { fixture } = await setupComponentAsync([], true);
+
+        expect((fixture.nativeElement as HTMLElement).querySelector('.weight-history-page__chart-viewport')).not.toBeNull();
+        expect(getText(fixture)).toContain('WEIGHT_HISTORY.LOADING');
+    });
+
+    it('keeps existing chart content mounted under the loading overlay', async () => {
+        const { fixture } = await setupComponentAsync([{ label: '2026-05-15', value: CHART_VALUE }], true);
+        const root = fixture.nativeElement as HTMLElement;
+
+        expect(root.querySelector('fd-ui-line-chart')).not.toBeNull();
+        expect(root.querySelector('.weight-history-page__chart-loading')).not.toBeNull();
+        expect(root.querySelector('.weight-history-page__chart--loading')).not.toBeNull();
+    });
+
     it('derives empty state from chart data labels', async () => {
         const { component, fixture } = await setupComponentAsync([]);
 

@@ -1,4 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
+import { EMPTY } from 'rxjs';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from './fd-ui-segmented-toggle';
@@ -28,7 +30,15 @@ describe('FdUiSegmentedToggleComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiSegmentedToggleComponent],
-            providers: [],
+            providers: [
+                {
+                    provide: TranslateService,
+                    useValue: {
+                        instant: (key: string) => key,
+                        onLangChange: EMPTY,
+                    },
+                },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FdUiSegmentedToggleComponent);
@@ -90,6 +100,13 @@ describe('FdUiSegmentedToggleComponent', () => {
         fixture.componentRef.setInput('stackOnNarrow', false);
         fixture.detectChanges();
         expect(container.classList).not.toContain('fd-ui-segmented-toggle--stack-on-narrow');
+    });
+
+    it('should apply narrow wrapping when requested', () => {
+        fixture.componentRef.setInput('wrapOnNarrow', true);
+        fixture.detectChanges();
+
+        expect(requireElement('.fd-ui-segmented-toggle').classList).toContain('fd-ui-segmented-toggle--wrap-on-narrow');
     });
 
     it('should emit selectedValue change', () => {

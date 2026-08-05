@@ -3,8 +3,10 @@ import { MS_PER_DAY } from './time.constants';
 
 const DEFAULT_MONTH_OFFSET = 1;
 const WEEK_DAYS = 7;
+const QUARTER_MONTHS = 3;
+const HALF_YEAR_MONTHS = 6;
 
-export type HistoryRange = 'week' | 'month' | 'year' | 'custom';
+export type HistoryRange = 'week' | 'month' | 'quarter' | 'halfYear' | 'year' | 'custom';
 
 export type HistoryDateRange = {
     start: Date;
@@ -38,7 +40,7 @@ export type HistoryFilterConfig = {
 };
 
 export function isHistoryRange(value: string): value is HistoryRange {
-    return value === 'week' || value === 'month' || value === 'year' || value === 'custom';
+    return value === 'week' || value === 'month' || value === 'quarter' || value === 'halfYear' || value === 'year' || value === 'custom';
 }
 
 export function calculateHistoryRangeDates(
@@ -52,6 +54,12 @@ export function calculateHistoryRangeDates(
         }
         case 'month': {
             return buildOffsetRange(now, date => date.setMonth(date.getMonth() - DEFAULT_MONTH_OFFSET));
+        }
+        case 'quarter': {
+            return buildOffsetRange(now, date => date.setMonth(date.getMonth() - QUARTER_MONTHS));
+        }
+        case 'halfYear': {
+            return buildOffsetRange(now, date => date.setMonth(date.getMonth() - HALF_YEAR_MONTHS));
         }
         case 'year': {
             return buildOffsetRange(now, date => date.setFullYear(date.getFullYear() - DEFAULT_MONTH_OFFSET));
@@ -132,7 +140,9 @@ function getHistoryQuantizationDays(range: HistoryRange, totalDays: number, conf
         case 'week': {
             return 1;
         }
-        case 'month': {
+        case 'month':
+        case 'quarter':
+        case 'halfYear': {
             return config.monthQuantizationDays;
         }
         case 'year': {

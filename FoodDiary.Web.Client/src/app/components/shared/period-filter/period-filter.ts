@@ -1,15 +1,19 @@
 import { ChangeDetectionStrategy, Component, effect, input, output, untracked } from '@angular/core';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input';
+import { FdUiSegmentedToggleComponent } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
 
 type DateRangeValue = { start: Date | null; end: Date | null } | null;
 
 @Component({
     selector: 'fd-period-filter',
-    imports: [FdUiTabsComponent, FdUiDateRangeInputComponent, FormField],
+    imports: [FdUiTabsComponent, FdUiSegmentedToggleComponent, FdUiDateRangeInputComponent, FormField],
     templateUrl: './period-filter.html',
     styleUrls: ['./period-filter.scss'],
+    host: {
+        '[class.fd-period-filter-host--hide-inactive-range]': 'hideInactiveRange()',
+    },
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PeriodFilterComponent {
@@ -21,6 +25,8 @@ export class PeriodFilterComponent {
     public readonly endLabel = input<string>();
     public readonly startPlaceholder = input<string>();
     public readonly endPlaceholder = input<string>();
+    public readonly hideInactiveRange = input(false);
+    public readonly useSegmentedToggle = input(false);
 
     public readonly rangeChange = output<string>();
 
