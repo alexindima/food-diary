@@ -28824,11 +28824,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/waist-history/lib/waist-history-range.utils.ts",
-                      "nonBlankLines":  56,
-                      "decisionPoints":  0,
+                      "nonBlankLines":  55,
+                      "decisionPoints":  3,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.12
+                      "structuralRiskScore":  5.6
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/waist-history/lib/waist-history-wht.mapper.ts",

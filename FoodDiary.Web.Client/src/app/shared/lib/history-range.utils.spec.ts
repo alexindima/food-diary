@@ -23,9 +23,11 @@ describe('history-range.utils', () => {
     it('validates supported range values', () => {
         expect(isHistoryRange('week')).toBe(true);
         expect(isHistoryRange('month')).toBe(true);
+        expect(isHistoryRange('quarter')).toBe(true);
+        expect(isHistoryRange('halfYear')).toBe(true);
         expect(isHistoryRange('year')).toBe(true);
         expect(isHistoryRange('custom')).toBe(true);
-        expect(isHistoryRange('quarter')).toBe(false);
+        expect(isHistoryRange('unsupported')).toBe(false);
     });
 
     it('calculates preset ranges from the current date', () => {

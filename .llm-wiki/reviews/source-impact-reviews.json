@@ -68,13 +68,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "4045085ab6048f4a54689f2d0d2f7120f708d3648c17e24f30adeace44d816a9"
+                                            "sha256":  "8ce7243090c76d20676fde4f1f23bf6d7e73a19db83296d0933bcbb54536067f"
                                         }
                                     ],
-                        "reason":  "Reviewed optional referenceLines contract and all weight history/dashboard consumers; existing consumers remain compatible.",
+                        "reason":  "Reviewed after shared history range expansion; waist-specific guard preserves its narrower public range contract.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "859b9d20a5566ce89801021f0799dded3a470075",
-                        "reviewedAtUtc":  "2026-08-05T08:00:20.6157652Z"
+                        "gitHead":  "f9817ac548152a6bc52731ceaa6c3b1c6d964b6a",
+                        "reviewedAtUtc":  "2026-08-05T14:09:38.7417488Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -317,17 +317,17 @@
                     {
                         "pageId":  "workflow-index-pipeline",
                         "pagePath":  ".llm-wiki/workflows/index-pipeline.md",
-                        "pageSha256":  "fcc158e59ef8f77ef21b7db551d76e90b3cc2a84be1a133d8ab19da5f0cc43cc",
+                        "pageSha256":  "8904d5f317a650f4a40754fd61a0fe1e6372ee8a15534f8f0fd781cf9debc046",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "9a4d6fba5341f2f6036f87d8cd029ccb8e34057d437a41a3b611fde62a91fff9"
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
+                                            "sha256":  "8dec23cc5468da1f560bee0f821953c54a2f89c2dbb060b704c7c5ac301bf69e"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive solutions -BoundaryEvidence facade parameter; index selection, generation, cache, and verification pipeline behavior are unchanged.",
+                        "reason":  "Reviewed generated index pipeline impact; no workflow source changes are required for this range guard fix.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6059c322590854f6462916d8199e04536d1345b5",
-                        "reviewedAtUtc":  "2026-08-04T11:24:23.1316416Z"
+                        "gitHead":  "f9817ac548152a6bc52731ceaa6c3b1c6d964b6a",
+                        "reviewedAtUtc":  "2026-08-05T14:09:39.5953764Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -396,13 +396,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "879ffe1eb05ed7a914b0eb124cbdeedca0e4bceedb0b89f897a0d9addaf784ef"
+                                            "sha256":  "a90fd9d10e6c997277310fe27b59938d4a84a510bf28e6a2af84f12f522a565f"
                                         }
                                     ],
-                        "reason":  "Reviewed line-chart and consumer test coverage; UI-kit and app suites pass.",
+                        "reason":  "Reviewed updated quality index after correcting history range tests and waist feature boundary.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "859b9d20a5566ce89801021f0799dded3a470075",
-                        "reviewedAtUtc":  "2026-08-05T08:00:21.5697379Z"
+                        "gitHead":  "f9817ac548152a6bc52731ceaa6c3b1c6d964b6a",
+                        "reviewedAtUtc":  "2026-08-05T14:09:41.1878513Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -501,17 +501,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "4045085ab6048f4a54689f2d0d2f7120f708d3648c17e24f30adeace44d816a9"
+                                            "sha256":  "8ce7243090c76d20676fde4f1f23bf6d7e73a19db83296d0933bcbb54536067f"
                                         },
                                         {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "c4b0620a5e8ce0129e674da2b107c6842983957603a706cbfbc09ed0b89379ba"
+                                            "sha256":  "6f1c49eda1d0be67e22e06bd0ff397edc93b37d1b62ca4895aca2d8c3f4a3ab7"
                                         }
                                     ],
-                        "reason":  "Reviewed generated frontend source and contract indexes for the reference-line flow.",
+                        "reason":  "Reviewed frontend navigation indexes; implementation paths remain current after the localized guard fix.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "859b9d20a5566ce89801021f0799dded3a470075",
-                        "reviewedAtUtc":  "2026-08-05T08:00:22.4914100Z"
+                        "gitHead":  "f9817ac548152a6bc52731ceaa6c3b1c6d964b6a",
+                        "reviewedAtUtc":  "2026-08-05T14:09:42.6333164Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

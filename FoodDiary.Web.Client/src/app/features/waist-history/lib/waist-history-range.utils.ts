@@ -4,7 +4,6 @@ import {
     calculateHistoryRangeDates as calculateSharedHistoryRangeDates,
     formatHistoryDateInput,
     type HistoryFilterConfig,
-    isHistoryRange,
     normalizeEndOfHistoryDay,
     normalizeStartOfHistoryDay,
 } from '../../../shared/lib/history-range.utils';
@@ -25,7 +24,7 @@ const WAIST_HISTORY_FILTER_CONFIG: HistoryFilterConfig = {
 };
 
 export function isWaistHistoryRange(value: string): value is WaistHistoryRange {
-    return isHistoryRange(value);
+    return value === 'week' || value === 'month' || value === 'year' || value === 'custom';
 }
 
 export function calculateWaistHistoryRangeDates(
