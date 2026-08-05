@@ -12,6 +12,7 @@ const INTERMEDIATE_WEIGHT_OFFSET = 0.5;
 const MINIMUM_CHART_POINTS = 3;
 const MINIMUM_CHART_BOUND_OFFSET = 1;
 const MAXIMUM_CHART_BOUND_OFFSET = 2;
+const TARGET_WEIGHT = 72;
 
 describe('WeightTrendCardComponent', () => {
     it('formats change tone and value', async () => {
@@ -75,6 +76,23 @@ describe('WeightTrendCardComponent', () => {
         expect((fixture.nativeElement as HTMLElement).textContent).toContain('WAIST_CARD.NO_DATA');
         expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('WEIGHT_TREND_CARD.NO_DATA');
     });
+
+    it('passes an optional target to the compact chart without a label', async () => {
+        const { component, fixture } = await setupComponentAsync({
+            targetValue: TARGET_WEIGHT,
+            points: [
+                { date: '2026-05-01', value: CURRENT_WEIGHT + 1 },
+                { date: '2026-05-02', value: CURRENT_WEIGHT + INTERMEDIATE_WEIGHT_OFFSET },
+                { date: '2026-05-03', value: CURRENT_WEIGHT },
+            ],
+        });
+
+        fixture.detectChanges();
+
+        expect(component['referenceLines']()).toEqual([{ value: TARGET_WEIGHT, color: 'var(--fd-color-blue-500)' }]);
+        expect((fixture.nativeElement as HTMLElement).querySelector('.fd-ui-line-chart__reference-line')).not.toBeNull();
+        expect((fixture.nativeElement as HTMLElement).querySelector('.fd-ui-line-chart__reference-label')).toBeNull();
+    });
 });
 
 async function setupComponentAsync(
@@ -84,6 +102,7 @@ async function setupComponentAsync(
         timeframeLabel: string;
         points: WeightTrendPoint[];
         isLoading: boolean;
+        targetValue: number | null;
     }> = {},
 ): Promise<{
     component: WeightTrendCardComponent;
@@ -102,6 +121,7 @@ async function setupComponentAsync(
     fixture.componentRef.setInput('timeframeLabel', overrides.timeframeLabel ?? '30 days');
     fixture.componentRef.setInput('points', overrides.points ?? []);
     fixture.componentRef.setInput('isLoading', overrides.isLoading ?? false);
+    fixture.componentRef.setInput('targetValue', overrides.targetValue ?? null);
 
     return {
         component: fixture.componentInstance,

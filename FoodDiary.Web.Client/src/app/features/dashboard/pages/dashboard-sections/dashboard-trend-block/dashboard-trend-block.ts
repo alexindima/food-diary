@@ -39,6 +39,7 @@ export class DashboardTrendBlockComponent {
     public readonly stableTrendKey = input<string>('WEIGHT_TREND_CARD.STABLE_TREND');
     public readonly iconName = input<string | null>('monitor_weight');
     public readonly accentColor = input<string>('var(--fd-color-blue-500)');
+    public readonly targetValue = input<number | null>(null);
 
     public readonly blockToggle = output();
 }

@@ -134,6 +134,8 @@
                 data-tour-id="weight-history-chart"
                 [isLoading]="isSummaryLoading()"
                 [chartPoints]="chartPoints()"
+                [desiredWeight]="desiredWeight()"
+                [goalLabel]="'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: (desiredWeight() | number: '1.0-2') }"
             />
         </div>
 

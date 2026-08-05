@@ -125,6 +125,7 @@ export class DashboardComponent {
     protected readonly isCycleLoading = this.facade.isCycleLoading;
     protected readonly tdeeInsight = this.facade.tdeeInsight;
     protected readonly weightTrend = this.facade.weightTrend;
+    protected readonly desiredWeight = this.facade.desiredWeight;
     protected readonly waistTrend = this.facade.waistTrend;
     protected readonly nutrientBars = this.facade.nutrientBars;
     protected readonly consumptionRingData = this.facade.consumptionRingData;

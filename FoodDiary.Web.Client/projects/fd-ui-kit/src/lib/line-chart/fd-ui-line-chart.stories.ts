@@ -15,6 +15,7 @@ const meta: Meta<FdUiLineChartComponent> = {
         showPoints: { control: 'boolean' },
         showAxisLabels: { control: 'boolean' },
         showGrid: { control: 'boolean' },
+        referenceLines: { control: 'object' },
     },
 };
 
@@ -72,6 +73,21 @@ export const AxisLabels: Story = {
         showAxisLabels: true,
         showGrid: true,
         showPoints: true,
+    },
+};
+
+export const WithReferenceLine: Story = {
+    args: {
+        title: 'Weight trend',
+        points: [
+            { label: 'May 1', value: 82 },
+            { label: 'May 8', value: 80.5 },
+            { label: 'May 15', value: 79 },
+        ],
+        referenceLines: [{ value: 75, label: 'Goal: 75 kg' }],
+        valueSuffix: 'kg',
+        showAxisLabels: true,
+        showGrid: true,
     },
 };
 

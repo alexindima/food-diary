@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiLineChartComponent, type FdUiLineChartPoint } from 'fd-ui-kit';
+import { FdUiLineChartComponent, type FdUiLineChartPoint, type FdUiLineChartReferenceLine } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
@@ -48,6 +48,7 @@ export class WeightTrendCardComponent {
     public readonly emptyStateKey = input<string>('WEIGHT_TREND_CARD.NO_DATA');
     public readonly iconName = input<string | null>('monitor_weight');
     public readonly accentColor = input<string>('var(--fd-color-blue-500)');
+    public readonly targetValue = input<number | null>(null);
 
     protected readonly measurementPoints = computed<ReadonlyArray<FdUiLineChartPoint & { value: number }>>(() => {
         const points = [...this.points()]
@@ -85,6 +86,10 @@ export class WeightTrendCardComponent {
     protected readonly chartFillColor = computed(
         () => `color-mix(in srgb, ${this.accentColor()} ${WEIGHT_TREND_FILL_COLOR_PERCENT}%, transparent)`,
     );
+    protected readonly referenceLines = computed<readonly FdUiLineChartReferenceLine[]>(() => {
+        const targetValue = this.targetValue();
+        return targetValue === null ? [] : [{ value: targetValue, color: this.accentColor() }];
+    });
 
     protected readonly changeTone = computed<'positive' | 'negative' | 'neutral'>(() => {
         const value = this.change();

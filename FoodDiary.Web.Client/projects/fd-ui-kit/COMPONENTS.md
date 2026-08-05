@@ -81,6 +81,7 @@ Responsive line chart for compact trends and sparklines.
 
 - `title?: string`
 - `points?: FdUiLineChartPoint[]` (`xPosition` optionally places a point proportionally from `0` to `1`)
+- `referenceLines?: FdUiLineChartReferenceLine[]` (horizontal solid/dashed markers; out-of-range values clamp with a small visual edge gap or can be hidden)
 - `emptyLabel?: string`
 - `lineColor?: string`
 - `fillColor?: string`

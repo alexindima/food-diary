@@ -25,6 +25,8 @@ const MULTI_SERIES_COUNT = 4;
 const MULTI_SERIES_POINT_COUNT = 8;
 const GAP_SEGMENT_COUNT = 2;
 const QUARTER_POSITION_X = 26;
+const REFERENCE_LINE_VALUE = 75;
+const REFERENCE_SERIES_MAX_VALUE = 118;
 
 // eslint-disable-next-line max-lines-per-function -- Line chart primitive behaviors are easier to scan in one component suite.
 describe('FdUiLineChartComponent', () => {
@@ -72,6 +74,37 @@ describe('FdUiLineChartComponent', () => {
 
         expect(component['areaPath']()).toContain('Z');
         expect(host().querySelector('.fd-ui-line-chart__area')).not.toBeNull();
+    });
+
+    it('renders and labels reference lines without extending the data range', () => {
+        fixture.componentRef.setInput('points', [
+            { label: 'One', value: 113 },
+            { label: 'Two', value: 118 },
+        ]);
+        fixture.componentRef.setInput('referenceLines', [{ value: REFERENCE_LINE_VALUE, label: 'Goal: 75 kg' }]);
+        fixture.detectChanges();
+
+        const referenceLine = host().querySelector('.fd-ui-line-chart__reference-line');
+        const referenceLabel = host().querySelector('.fd-ui-line-chart__reference-label');
+
+        expect(referenceLine?.getAttribute('y1')).toBe(`${CHART_BOTTOM_Y}`);
+        expect(referenceLine?.classList.contains('fd-ui-line-chart__reference-line--dashed')).toBe(true);
+        expect(referenceLabel?.classList.contains('fd-ui-line-chart__reference-label--bottom')).toBe(true);
+        expect(referenceLabel?.textContent).toContain('Goal: 75 kg');
+        expect(component['pointViews']()[0]?.y).toBeLessThan(CHART_BOTTOM_Y);
+        expect(component['gridLines']().at(-1)?.label).not.toBe('113');
+        expect(component['resolvedMaxValue']()).toBe(REFERENCE_SERIES_MAX_VALUE);
+    });
+
+    it('can hide reference lines outside the data range', () => {
+        fixture.componentRef.setInput('points', [
+            { label: 'One', value: 113 },
+            { label: 'Two', value: 118 },
+        ]);
+        fixture.componentRef.setInput('referenceLines', [{ value: REFERENCE_LINE_VALUE, outOfRangeBehavior: 'hide' }]);
+        fixture.detectChanges();
+
+        expect(host().querySelector('.fd-ui-line-chart__reference-line')).toBeNull();
     });
 
     it('uses full horizontal range for sparklines', () => {

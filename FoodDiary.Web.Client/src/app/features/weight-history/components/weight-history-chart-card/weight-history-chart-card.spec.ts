@@ -6,6 +6,7 @@ import type { WeightHistoryChartPoint } from '../../lib/weight-history-chart.map
 import { WeightHistoryChartCardComponent } from './weight-history-chart-card';
 
 const CHART_VALUE = 74.2;
+const DESIRED_WEIGHT = 70;
 
 describe('WeightHistoryChartCardComponent', () => {
     it('derives empty state from chart data labels', async () => {
@@ -19,6 +20,15 @@ describe('WeightHistoryChartCardComponent', () => {
         const { component } = await setupComponentAsync([{ label: '2026-05-15', value: CHART_VALUE }], true);
 
         expect(component['hasPoints']()).toBe(true);
+    });
+
+    it('passes the desired weight to the chart as a labeled reference line', async () => {
+        const { component, fixture } = await setupComponentAsync([{ label: '2026-05-15', value: CHART_VALUE }]);
+
+        expect(component['referenceLines']()).toEqual([{ value: DESIRED_WEIGHT, label: 'Goal: 70 kg' }]);
+        expect((fixture.nativeElement as HTMLElement).querySelector('.fd-ui-line-chart__reference-label')?.textContent).toContain(
+            'Goal: 70 kg',
+        );
     });
 });
 
@@ -34,6 +44,8 @@ async function setupComponentAsync(
     const fixture = TestBed.createComponent(WeightHistoryChartCardComponent);
     fixture.componentRef.setInput('isLoading', isLoading);
     fixture.componentRef.setInput('chartPoints', chartPoints);
+    fixture.componentRef.setInput('desiredWeight', DESIRED_WEIGHT);
+    fixture.componentRef.setInput('goalLabel', 'Goal: 70 kg');
     fixture.detectChanges();
 
     return {

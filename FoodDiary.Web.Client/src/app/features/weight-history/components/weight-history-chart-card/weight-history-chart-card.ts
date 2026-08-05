@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiCardComponent, FdUiLineChartComponent } from 'fd-ui-kit';
+import { FdUiCardComponent, FdUiLineChartComponent, type FdUiLineChartReferenceLine } from 'fd-ui-kit';
 
 import type { WeightHistoryChartPoint } from '../../lib/weight-history-chart.mapper';
 
@@ -14,5 +14,11 @@ import type { WeightHistoryChartPoint } from '../../lib/weight-history-chart.map
 export class WeightHistoryChartCardComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly chartPoints = input.required<readonly WeightHistoryChartPoint[]>();
+    public readonly desiredWeight = input.required<number | null>();
+    public readonly goalLabel = input.required<string>();
     protected readonly hasPoints = computed(() => this.chartPoints().some(point => point.value !== null));
+    protected readonly referenceLines = computed<readonly FdUiLineChartReferenceLine[]>(() => {
+        const desiredWeight = this.desiredWeight();
+        return desiredWeight === null ? [] : [{ value: desiredWeight, label: this.goalLabel() }];
+    });
 }

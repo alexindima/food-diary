@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-import type { FdUiLineChartXAxisLabelLayout } from './fd-ui-line-chart.types';
+import type { FdUiLineChartReferenceLine, FdUiLineChartXAxisLabelLayout } from './fd-ui-line-chart.types';
 import { FdUiLineChartLegendComponent } from './fd-ui-line-chart-legend';
 import { FdUiLineChartXAxisComponent } from './fd-ui-line-chart-x-axis';
 import { FdUiLineChartYAxisComponent } from './fd-ui-line-chart-y-axis';
 
-export type { FdUiLineChartXAxisLabelLayout } from './fd-ui-line-chart.types';
+export type { FdUiLineChartReferenceLine, FdUiLineChartXAxisLabelLayout } from './fd-ui-line-chart.types';
 
 export type FdUiLineChartPoint = {
     label: string;
@@ -85,6 +85,22 @@ type FdUiLineChartLineSegment = {
     color: string;
 };
 
+type FdUiLineChartReferenceLineViewModel = {
+    label: string | null;
+    color: string;
+    lineStyle: 'solid' | 'dashed';
+    y: number;
+    yPercent: string;
+    edge: 'top' | 'inside' | 'bottom';
+};
+
+type FdUiLineChartReferenceScale = {
+    minValue: number;
+    maxValue: number;
+    top: number;
+    bottom: number;
+};
+
 const LINE_CHART_VIEWBOX_WIDTH = 100;
 const LINE_CHART_VIEWBOX_HEIGHT = 64;
 const LINE_CHART_PADDING = 6;
@@ -121,6 +137,8 @@ const DEFAULT_AXIS_DECIMAL_PLACES = 1;
 const FLAT_RANGE_PADDING_RATIO = 0.05;
 const DEFAULT_LINE_COLOR = 'var(--fd-color-primary-500)';
 const DEFAULT_FILL_COLOR = 'color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent)';
+const DEFAULT_REFERENCE_LINE_COLOR = 'var(--fd-color-primary-500)';
+const DEFAULT_REFERENCE_LINE_EDGE_PADDING_RATIO = 0.15;
 
 @Component({
     selector: 'fd-ui-line-chart',
@@ -144,6 +162,7 @@ export class FdUiLineChartComponent {
     public readonly showAxisLabels = input(false);
     public readonly showGrid = input(false);
     public readonly connectNulls = input(true);
+    public readonly referenceLines = input<readonly FdUiLineChartReferenceLine[]>([]);
     public readonly xAxisLabelLayout = input<FdUiLineChartXAxisLabelLayout>('angled');
     public readonly valueSuffix = input('');
     public readonly axisDecimalPlaces = input(DEFAULT_AXIS_DECIMAL_PLACES);
@@ -198,13 +217,22 @@ export class FdUiLineChartComponent {
         const numeric = this.numericValues();
         const actualMinValue = Math.min(...numeric);
         const actualMaxValue = Math.max(...numeric);
+        if (this.hasClampedReferenceBelow(actualMinValue)) {
+            return Math.max(0, actualMinValue - this.getReferenceEdgePadding(actualMinValue, actualMaxValue, 'below'));
+        }
+        if (this.hasClampedReferenceAbove(actualMaxValue)) {
+            return actualMinValue;
+        }
+
         if (actualMinValue !== 0 && actualMinValue === actualMaxValue && numeric.length > 0) {
             return Math.max(0, actualMinValue - this.getFlatRangePadding(actualMinValue));
         }
 
         return actualMinValue;
     });
-    private readonly resolvedMaxValue = computed(() => {
+    private readonly resolvedMaxValue = computed(() => this.resolveMaxValue());
+
+    private resolveMaxValue(): number {
         const minValue = this.resolvedMinValue();
         const explicitMaxValue = this.maxValue();
         if (explicitMaxValue !== null && explicitMaxValue > minValue) {
@@ -213,9 +241,11 @@ export class FdUiLineChartComponent {
 
         const numeric = this.numericValues();
         const actualMaxValue = Math.max(...numeric);
-        const paddedMaxValue = this.shouldPadFlatRange(numeric, actualMaxValue)
-            ? actualMaxValue + this.getFlatRangePadding(actualMaxValue)
-            : actualMaxValue;
+        const actualMinValue = Math.min(...numeric);
+        if (this.hasClampedReferenceBelow(actualMinValue) && !this.hasClampedReferenceAbove(actualMaxValue)) {
+            return actualMaxValue;
+        }
+        const paddedMaxValue = this.resolvePaddedMaxValue(numeric, actualMinValue, actualMaxValue);
 
         if (paddedMaxValue > minValue) {
             return this.getNiceMaxValue(minValue, paddedMaxValue);
@@ -231,7 +261,17 @@ export class FdUiLineChartComponent {
         }
 
         return this.getNiceMaxValue(minValue, minValue + 1);
-    });
+    }
+
+    private resolvePaddedMaxValue(numeric: readonly number[], actualMinValue: number, actualMaxValue: number): number {
+        if (this.hasClampedReferenceAbove(actualMaxValue)) {
+            return actualMaxValue + this.getReferenceEdgePadding(actualMinValue, actualMaxValue, 'above');
+        }
+
+        return this.shouldPadFlatRange(numeric, actualMaxValue)
+            ? actualMaxValue + this.getFlatRangePadding(actualMaxValue)
+            : actualMaxValue;
+    }
     protected readonly gridLines = computed<readonly FdUiLineChartGridLine[]>(() => {
         const minValue = this.resolvedMinValue();
         const maxValue = this.resolvedMaxValue();
@@ -375,7 +415,73 @@ export class FdUiLineChartComponent {
     protected readonly lineSegments = computed<readonly FdUiLineChartLineSegment[]>(() =>
         this.seriesViews().flatMap(series => series.paths.map(path => ({ path, color: series.color }))),
     );
+    protected readonly referenceLineViews = computed<readonly FdUiLineChartReferenceLineViewModel[]>(() => {
+        const scale: FdUiLineChartReferenceScale = {
+            minValue: this.resolvedMinValue(),
+            maxValue: this.resolvedMaxValue(),
+            top: this.chartTop(),
+            bottom: this.chartBottom(),
+        };
+
+        return this.referenceLines()
+            .filter(referenceLine => this.shouldRenderReferenceLine(referenceLine, scale))
+            .map(referenceLine => this.buildReferenceLineView(referenceLine, scale));
+    });
     protected readonly visiblePoints = computed<readonly FdUiLineChartPointViewModel[]>(() => (this.showPoints() ? this.pointViews() : []));
+
+    private buildReferenceLineView(
+        referenceLine: FdUiLineChartReferenceLine,
+        scale: FdUiLineChartReferenceScale,
+    ): FdUiLineChartReferenceLineViewModel {
+        const belowRange = referenceLine.value < scale.minValue;
+        const aboveRange = referenceLine.value > scale.maxValue;
+        const range = scale.maxValue - scale.minValue;
+        const clampedValue = this.clamp(referenceLine.value, scale.minValue, scale.maxValue);
+        const y = scale.bottom - ((clampedValue - scale.minValue) / (range > 0 ? range : 1)) * (scale.bottom - scale.top);
+        const label = referenceLine.label?.trim();
+
+        return {
+            label: label !== undefined && label.length > 0 ? label : null,
+            color: referenceLine.color ?? DEFAULT_REFERENCE_LINE_COLOR,
+            lineStyle: referenceLine.lineStyle ?? 'dashed',
+            y,
+            yPercent: `${(y / LINE_CHART_VIEWBOX_HEIGHT) * LINE_CHART_PERCENTAGE_SCALE}%`,
+            edge: aboveRange ? 'top' : belowRange ? 'bottom' : 'inside',
+        };
+    }
+
+    private shouldRenderReferenceLine(referenceLine: FdUiLineChartReferenceLine, scale: FdUiLineChartReferenceScale): boolean {
+        if (!Number.isFinite(referenceLine.value)) {
+            return false;
+        }
+
+        const isOutsideRange = referenceLine.value < scale.minValue || referenceLine.value > scale.maxValue;
+        return !isOutsideRange || referenceLine.outOfRangeBehavior !== 'hide';
+    }
+
+    private getReferenceEdgePadding(actualMinValue: number, actualMaxValue: number, edge: 'above' | 'below'): number {
+        const range = actualMaxValue - actualMinValue;
+        const fallbackPadding = range === 0 ? this.getFlatRangePadding(edge === 'below' ? actualMinValue : actualMaxValue) : 0;
+        const referenceLines = this.referenceLines().filter(referenceLine => {
+            const isOutside = edge === 'below' ? referenceLine.value < actualMinValue : referenceLine.value > actualMaxValue;
+            return isOutside && referenceLine.outOfRangeBehavior !== 'hide';
+        });
+        const ratio = Math.max(...referenceLines.map(line => line.edgePaddingRatio ?? DEFAULT_REFERENCE_LINE_EDGE_PADDING_RATIO));
+
+        return Math.max(range * ratio, fallbackPadding);
+    }
+
+    private hasClampedReferenceAbove(actualMaxValue: number): boolean {
+        return this.referenceLines().some(
+            referenceLine => referenceLine.value > actualMaxValue && referenceLine.outOfRangeBehavior !== 'hide',
+        );
+    }
+
+    private hasClampedReferenceBelow(actualMinValue: number): boolean {
+        return this.referenceLines().some(
+            referenceLine => referenceLine.value < actualMinValue && referenceLine.outOfRangeBehavior !== 'hide',
+        );
+    }
 
     protected readonly linePath = computed(() => {
         return this.seriesViews()[0]?.path ?? '';

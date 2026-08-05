@@ -26,10 +26,35 @@
                     @for (area of areaSegments(); track $index) {
                         <path class="fd-ui-line-chart__area" [attr.d]="area.path" [style.fill]="area.fill" />
                     }
+                    @for (referenceLine of referenceLineViews(); track $index) {
+                        <line
+                            class="fd-ui-line-chart__reference-line"
+                            [class.fd-ui-line-chart__reference-line--dashed]="referenceLine.lineStyle === 'dashed'"
+                            [attr.x1]="chartLeft()"
+                            [attr.x2]="chartRight()"
+                            [attr.y1]="referenceLine.y"
+                            [attr.y2]="referenceLine.y"
+                            [style.stroke]="referenceLine.color"
+                        />
+                    }
                     @for (line of lineSegments(); track $index) {
                         <path class="fd-ui-line-chart__line" [attr.d]="line.path" [style.stroke]="line.color" />
                     }
                 </svg>
+
+                @for (referenceLine of referenceLineViews(); track $index) {
+                    @if (referenceLine.label) {
+                        <span
+                            class="fd-ui-line-chart__reference-label fd-ui-caption"
+                            [class.fd-ui-line-chart__reference-label--top]="referenceLine.edge === 'top'"
+                            [class.fd-ui-line-chart__reference-label--bottom]="referenceLine.edge === 'bottom'"
+                            [style.--fd-line-chart-reference-color]="referenceLine.color"
+                            [style.top]="referenceLine.yPercent"
+                        >
+                            {{ referenceLine.label }}
+                        </span>
+                    }
+                }
 
                 @for (point of visiblePoints(); track $index) {
                     <span

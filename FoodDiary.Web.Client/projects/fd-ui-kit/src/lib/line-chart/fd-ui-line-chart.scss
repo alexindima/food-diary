@@ -57,8 +57,33 @@
 
 .fd-ui-line-chart__axis,
 .fd-ui-line-chart__grid-line,
+.fd-ui-line-chart__reference-line,
 .fd-ui-line-chart__line {
     vector-effect: non-scaling-stroke;
+}
+
+.fd-ui-line-chart__reference-line {
+    stroke-width: 1;
+
+    &--dashed {
+        stroke-dasharray: 4 3;
+    }
+}
+
+.fd-ui-line-chart__reference-label {
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    max-width: 50%;
+    color: var(--fd-line-chart-reference-color);
+    line-height: 1.4;
+    pointer-events: none;
+    transform: translateY(calc(-100% - (var(--fd-space-xxs) / 2)));
+    white-space: nowrap;
+
+    &--top {
+        transform: translateY(calc(var(--fd-space-xxs) / 2));
+    }
 }
 
 .fd-ui-line-chart__line,

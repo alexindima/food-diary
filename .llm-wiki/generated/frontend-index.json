@@ -1494,7 +1494,7 @@
                         "role":  "Component",
                         "selector":  "fd-ui-line-chart",
                         "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
-                        "line":  132
+                        "line":  150
                     },
                     {
                         "name":  "FdUiLoaderComponent",

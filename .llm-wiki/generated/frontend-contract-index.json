@@ -3,7 +3,7 @@
     "summary":  {
                     "components":  401,
                     "componentsWithoutDirectSpecs":  109,
-                    "inputs":  1230,
+                    "inputs":  1235,
                     "outputs":  406,
                     "apiCalls":  206,
                     "templatesWithTranslations":  242,
@@ -1753,6 +1753,11 @@
                                               "name":  "accentColor",
                                               "type":  "string",
                                               "required":  false
+                                          },
+                                          {
+                                              "name":  "targetValue",
+                                              "type":  "number | null",
+                                              "required":  false
                                           }
                                       ],
                            "outputs":  [
@@ -2104,6 +2109,11 @@
                                           {
                                               "name":  "accentColor",
                                               "type":  "string",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "targetValue",
+                                              "type":  "number | null",
                                               "required":  false
                                           }
                                       ],
@@ -4641,6 +4651,11 @@
                                           {
                                               "name":  "connectNulls",
                                               "type":  "",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "referenceLines",
+                                              "type":  "readonly FdUiLineChartReferenceLine[]",
                                               "required":  false
                                           },
                                           {
@@ -12808,6 +12823,16 @@
                                               "name":  "chartPoints",
                                               "type":  "readonly WeightHistoryChartPoint[]",
                                               "required":  true
+                                          },
+                                          {
+                                              "name":  "desiredWeight",
+                                              "type":  "number | null",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "goalLabel",
+                                              "type":  "string",
+                                              "required":  true
                                           }
                                       ],
                            "outputs":  [
@@ -19361,6 +19386,7 @@
                                                  "shouldRender",
                                                  "stableTrendKey",
                                                  "state",
+                                                 "targetValue",
                                                  "title",
                                                  "twoMeasurementsKey",
                                                  "unitKey"
@@ -27421,6 +27447,7 @@
                                                  "maxValue",
                                                  "minValue",
                                                  "points",
+                                                 "referenceLines",
                                                  "showArea",
                                                  "showPoints",
                                                  "title",
@@ -27482,6 +27509,7 @@
                               "inputsUsed":  [
                                                  "lineColor",
                                                  "points",
+                                                 "referenceLines",
                                                  "showArea",
                                                  "showAxisLabels",
                                                  "showGrid",
@@ -33043,6 +33071,8 @@
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "chartPoints",
+                                                 "desiredWeight",
+                                                 "goalLabel",
                                                  "isLoading"
                                              ],
                               "outputsHandled":  [
@@ -33119,6 +33149,7 @@
                                                  "isLoading",
                                                  "points",
                                                  "stableTrendKey",
+                                                 "targetValue",
                                                  "timeframeLabel",
                                                  "title",
                                                  "twoMeasurementsKey",

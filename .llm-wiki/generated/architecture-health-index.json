@@ -2114,6 +2114,11 @@
                                                                 "name":  "accentColor",
                                                                 "type":  "string",
                                                                 "required":  false
+                                                            },
+                                                            {
+                                                                "name":  "targetValue",
+                                                                "type":  "number | null",
+                                                                "required":  false
                                                             }
                                                         ],
                                              "outputs":  [

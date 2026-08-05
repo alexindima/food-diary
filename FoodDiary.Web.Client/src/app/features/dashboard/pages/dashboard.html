@@ -181,6 +181,7 @@
                             [current]="weightTrend.weightTrendCurrent()"
                             [change]="weightTrend.weightTrendChange()"
                             [points]="weightTrend.weightTrendSeries()"
+                            [targetValue]="desiredWeight()"
                             [isLoading]="isWeightTrendLoading()"
                             (blockToggle)="layout.toggleBlock('weight')"
                         />
