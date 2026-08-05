@@ -425,14 +425,6 @@
     }
 
     &__entry-actions {
-        opacity: 0;
-    }
-
-    &__entry-actions--dialog {
-        opacity: 1;
-    }
-
-    :where(&__entry:hover, &__entry:focus-within) &__entry-actions {
         opacity: 1;
     }
 

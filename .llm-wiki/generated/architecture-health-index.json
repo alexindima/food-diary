@@ -8,8 +8,8 @@
                     "moduleCycleNodes":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
-                    "selectorUnreferencedComponents":  124,
-                    "componentsWithoutDirectSpecs":  109,
+                    "selectorUnreferencedComponents":  125,
+                    "componentsWithoutDirectSpecs":  110,
                     "criticalSymbolsWithoutTestReferences":  26,
                     "explicitDebtMarkers":  2
                 },
@@ -1059,6 +1059,14 @@
                                                "path":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-bmi-card/weight-history-bmi-card.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-bmi-card/weight-history-bmi-card.html",
                                                "specPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-bmi-card/weight-history-bmi-card.spec.ts"
+                                           },
+                                           {
+                                               "class":  "WeightHistoryEntriesDialogComponent",
+                                               "selector":  "fd-weight-history-entries-dialog",
+                                               "feature":  "weight-history",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.html",
+                                               "specPath":  null
                                            },
                                            {
                                                "class":  "WeightHistoryEntryDialogComponent",
@@ -4453,6 +4461,20 @@
                                              "feature":  "weekly-check-in",
                                              "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.ts",
                                              "templatePath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
+                                             "inputs":  [
+
+                                                        ],
+                                             "outputs":  [
+
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
+                                             "class":  "WeightHistoryEntriesDialogComponent",
+                                             "selector":  "fd-weight-history-entries-dialog",
+                                             "feature":  "weight-history",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.html",
                                              "inputs":  [
 
                                                         ],

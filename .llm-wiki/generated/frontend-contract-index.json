@@ -1,16 +1,16 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "components":  401,
-                    "componentsWithoutDirectSpecs":  109,
-                    "inputs":  1235,
-                    "outputs":  406,
+                    "components":  402,
+                    "componentsWithoutDirectSpecs":  110,
+                    "inputs":  1238,
+                    "outputs":  407,
                     "apiCalls":  206,
-                    "templatesWithTranslations":  242,
-                    "translationKeys":  1204,
-                    "consumerEdges":  903,
+                    "templatesWithTranslations":  243,
+                    "translationKeys":  1209,
+                    "consumerEdges":  907,
                     "consumedComponents":  276,
-                    "unconsumedComponents":  124
+                    "unconsumedComponents":  125
                 },
     "components":  [
                        {
@@ -5340,6 +5340,11 @@
                                           },
                                           {
                                               "name":  "stackOnNarrow",
+                                              "type":  "",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "wrapOnNarrow",
                                               "type":  "",
                                               "required":  false
                                           }
@@ -11570,6 +11575,16 @@
                                               "name":  "endPlaceholder",
                                               "type":  "string",
                                               "required":  false
+                                          },
+                                          {
+                                              "name":  "hideInactiveRange",
+                                              "type":  "",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "useSegmentedToggle",
+                                              "type":  "",
+                                              "required":  false
                                           }
                                       ],
                            "outputs":  [
@@ -12866,9 +12881,27 @@
                                            {
                                                "name":  "removeEntry",
                                                "type":  "WeightEntry"
+                                           },
+                                           {
+                                               "name":  "showAllEntries",
+                                               "type":  "void"
                                            }
                                        ],
                            "specPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-entries-card/weight-history-entries-card.spec.ts"
+                       },
+                       {
+                           "class":  "WeightHistoryEntriesDialogComponent",
+                           "selector":  "fd-weight-history-entries-dialog",
+                           "feature":  "weight-history",
+                           "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.html",
+                           "inputs":  [
+
+                                      ],
+                           "outputs":  [
+
+                                       ],
+                           "specPath":  null
                        },
                        {
                            "class":  "WeightHistoryEntryDialogComponent",
@@ -18217,6 +18250,7 @@
                                               "WEIGHT_HISTORY.LOADING",
                                               "WEIGHT_HISTORY.NO_ENTRIES",
                                               "WEIGHT_HISTORY.RECENT_ENTRIES_TITLE",
+                                              "WEIGHT_HISTORY.SHOW_ALL_ENTRIES",
                                               "WEIGHT_HISTORY.TODAY"
                                           ]
                              },
@@ -18242,14 +18276,28 @@
                                               "WEIGHT_HISTORY.EDIT_GOAL",
                                               "WEIGHT_HISTORY.GOAL_AVERAGE_RATE",
                                               "WEIGHT_HISTORY.GOAL_CARD_TITLE",
+                                              "WEIGHT_HISTORY.GOAL_CURRENT_WEIGHT",
                                               "WEIGHT_HISTORY.GOAL_DAYS_TO_GOAL",
                                               "WEIGHT_HISTORY.GOAL_PERIOD_CHANGE",
                                               "WEIGHT_HISTORY.GOAL_PLACEHOLDER",
                                               "WEIGHT_HISTORY.GOAL_PROGRESS_TITLE",
                                               "WEIGHT_HISTORY.GOAL_REMAINING",
+                                              "WEIGHT_HISTORY.GOAL_START_WEIGHT",
+                                              "WEIGHT_HISTORY.GOAL_TARGET_WEIGHT",
                                               "WEIGHT_HISTORY.GOAL_VALUE",
                                               "WEIGHT_HISTORY.KG_PER_WEEK",
                                               "WEIGHT_HISTORY.SAVE_GOAL"
+                                          ]
+                             },
+                             {
+                                 "feature":  "weight-history",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.html",
+                                 "keys":  [
+                                              "DASHBOARD.KG",
+                                              "WEIGHT_HISTORY.ALL_ENTRIES_TITLE",
+                                              "WEIGHT_HISTORY.DELETE",
+                                              "WEIGHT_HISTORY.EDIT",
+                                              "WEIGHT_HISTORY.TODAY"
                                           ]
                              },
                              {
@@ -23258,6 +23306,7 @@
                                                  "ariaLabel",
                                                  "fill",
                                                  "icon",
+                                                 "size",
                                                  "type",
                                                  "variant"
                                              ],
@@ -23293,6 +23342,26 @@
                                                  "fill",
                                                  "icon",
                                                  "loading",
+                                                 "type",
+                                                 "variant"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiButtonComponent",
+                              "selector":  "fd-ui-button",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+                              "consumerFeature":  "weight-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.html",
+                              "occurrences":  2,
+                              "inputsUsed":  [
+                                                 "appearance",
+                                                 "ariaLabel",
+                                                 "fill",
+                                                 "icon",
+                                                 "size",
                                                  "type",
                                                  "variant"
                                              ],
@@ -25356,6 +25425,21 @@
                                                  ]
                           },
                           {
+                              "component":  "FdUiDialogShellComponent",
+                              "selector":  "fd-ui-dialog-shell",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog-shell/fd-ui-dialog-shell.ts",
+                              "consumerFeature":  "weight-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "size",
+                                                 "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
                               "component":  "FdUiEmojiPickerComponent",
                               "selector":  "fd-ui-emoji-picker",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/emoji-picker/fd-ui-emoji-picker.ts",
@@ -26494,6 +26578,21 @@
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "name"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "weight-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
+                              "occurrences":  3,
+                              "inputsUsed":  [
+                                                 "name",
+                                                 "size"
                                              ],
                               "outputsHandled":  [
 
@@ -28272,6 +28371,25 @@
                                                  "emptyMessage",
                                                  "loadingLabel",
                                                  "state"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiSegmentedToggleComponent",
+                              "selector":  "fd-ui-segmented-toggle",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
+                              "consumerFeature":  "shared",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/period-filter/period-filter.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "appearance",
+                                                 "fullWidth",
+                                                 "options",
+                                                 "size",
+                                                 "stackOnNarrow",
+                                                 "wrapOnNarrow"
                                              ],
                               "outputsHandled":  [
 
@@ -31453,11 +31571,13 @@
                                                  "displayRange",
                                                  "endLabel",
                                                  "endPlaceholder",
+                                                 "hideInactiveRange",
                                                  "rangeField",
                                                  "selectedValue",
                                                  "startLabel",
                                                  "startPlaceholder",
-                                                 "tabs"
+                                                 "tabs",
+                                                 "useSegmentedToggle"
                                              ],
                               "outputsHandled":  [
                                                      "rangeChange"
@@ -33092,7 +33212,8 @@
                                              ],
                               "outputsHandled":  [
                                                      "editEntry",
-                                                     "removeEntry"
+                                                     "removeEntry",
+                                                     "showAllEntries"
                                                  ]
                           },
                           {

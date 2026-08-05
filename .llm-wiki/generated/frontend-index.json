@@ -8,14 +8,14 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1519,
-                    "symbols":  580,
+                    "typescriptFiles":  1520,
+                    "symbols":  581,
                     "routes":  84,
                     "features":  36,
                     "specs":  547,
                     "localeFiles":  5,
                     "roles":  {
-                                  "Component":  396,
+                                  "Component":  397,
                                   "Directive":  12,
                                   "Facade":  52,
                                   "Other":  17,
@@ -1186,6 +1186,7 @@
                                          "WeightHistoryBmiCardComponent",
                                          "WeightHistoryChartCardComponent",
                                          "WeightHistoryEntriesCardComponent",
+                                         "WeightHistoryEntriesDialogComponent",
                                          "WeightHistoryEntryDialogComponent",
                                          "WeightHistoryFacade",
                                          "WeightHistoryFormCardComponent",
@@ -1599,7 +1600,7 @@
                         "role":  "Component",
                         "selector":  "fd-ui-segmented-toggle",
                         "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
-                        "line":  22
+                        "line":  25
                     },
                     {
                         "name":  "FdUiSelectComponent",
@@ -2390,7 +2391,7 @@
                         "role":  "Component",
                         "selector":  "fd-period-filter",
                         "path":  "FoodDiary.Web.Client/src/app/components/shared/period-filter/period-filter.ts",
-                        "line":  15
+                        "line":  19
                     },
                     {
                         "name":  "PremiumRequiredDialogComponent",
@@ -4763,7 +4764,14 @@
                         "role":  "Component",
                         "selector":  "fd-weight-history-goal-card",
                         "path":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.ts",
-                        "line":  22
+                        "line":  23
+                    },
+                    {
+                        "name":  "WeightHistoryEntriesDialogComponent",
+                        "role":  "Component",
+                        "selector":  "fd-weight-history-entries-dialog",
+                        "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.ts",
+                        "line":  26
                     },
                     {
                         "name":  "WeightHistoryEntryDialogComponent",
@@ -4784,7 +4792,7 @@
                         "role":  "Component",
                         "selector":  "fd-weight-history-page",
                         "path":  "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.ts",
-                        "line":  47
+                        "line":  51
                     },
                     {
                         "name":  "AuthInterceptor",
@@ -5697,8 +5705,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  2911,
-                             "russianProperties":  2911,
+                             "englishProperties":  2917,
+                             "russianProperties":  2917,
                              "countsMatch":  true
                          },
                          {
