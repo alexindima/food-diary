@@ -25,27 +25,57 @@
             </div>
 
             <div class="weight-history-page__goal-stats fd-grid">
-                <div class="weight-history-page__goal-stat">
-                    <div class="weight-history-page__goal-stat-value fd-ui-stat-value">
-                        {{ progress.lost | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                <div class="weight-history-page__goal-stat fd-row fd-align-center">
+                    <div class="weight-history-page__goal-stat-icon"><fd-ui-icon name="monitor_weight" size="lg" /></div>
+                    <div>
+                        <div class="weight-history-page__goal-stat-value fd-ui-stat-value">
+                            {{ progress.lost | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                        </div>
+                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_PERIOD_CHANGE' | translate }}</div>
                     </div>
-                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_PERIOD_CHANGE' | translate }}</div>
                 </div>
-                <div class="weight-history-page__goal-stat">
-                    <div class="weight-history-page__goal-stat-value fd-ui-stat-value">
-                        @if (progress.daysToGoal !== null) {
-                            {{ progress.daysToGoal }}
-                        } @else {
-                            —
-                        }
+                <div class="weight-history-page__goal-stat fd-row fd-align-center">
+                    <div class="weight-history-page__goal-stat-icon"><fd-ui-icon name="calendar_today" size="lg" /></div>
+                    <div>
+                        <div class="weight-history-page__goal-stat-value fd-ui-stat-value">
+                            @if (progress.daysToGoal !== null) {
+                                {{ progress.daysToGoal }}
+                            } @else {
+                                —
+                            }
+                        </div>
+                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_DAYS_TO_GOAL' | translate }}</div>
                     </div>
-                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_DAYS_TO_GOAL' | translate }}</div>
                 </div>
-                <div class="weight-history-page__goal-stat">
-                    <div class="weight-history-page__goal-stat-value fd-ui-stat-value">
-                        {{ progress.weeklyRate | number: '1.0-2' }} {{ 'WEIGHT_HISTORY.KG_PER_WEEK' | translate }}
+                <div class="weight-history-page__goal-stat fd-row fd-align-center">
+                    <div class="weight-history-page__goal-stat-icon"><fd-ui-icon name="trending_down" size="lg" /></div>
+                    <div>
+                        <div class="weight-history-page__goal-stat-value fd-ui-stat-value">
+                            {{ progress.weeklyRate | number: '1.0-2' }} {{ 'WEIGHT_HISTORY.KG_PER_WEEK' | translate }}
+                        </div>
+                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_AVERAGE_RATE' | translate }}</div>
                     </div>
-                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_AVERAGE_RATE' | translate }}</div>
+                </div>
+            </div>
+
+            <div class="weight-history-page__goal-journey fd-grid">
+                <div>
+                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_START_WEIGHT' | translate }}</div>
+                    <div class="weight-history-page__goal-journey-value fd-ui-body-sm">
+                        {{ progress.startWeight | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                    </div>
+                </div>
+                <div>
+                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_CURRENT_WEIGHT' | translate }}</div>
+                    <div class="weight-history-page__goal-journey-value fd-ui-body-sm">
+                        {{ progress.currentWeight | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                    </div>
+                </div>
+                <div>
+                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_TARGET_WEIGHT' | translate }}</div>
+                    <div class="weight-history-page__goal-journey-value fd-ui-body-sm">
+                        {{ progress.goalWeight | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                    </div>
                 </div>
             </div>
         </div>

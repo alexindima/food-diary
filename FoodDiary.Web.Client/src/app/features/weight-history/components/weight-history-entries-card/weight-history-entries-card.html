@@ -12,12 +12,12 @@
                 @for (item of visibleItems(); track item.entry.id) {
                     <div class="weight-history-page__entry fd-grid fd-align-center">
                         <div class="weight-history-page__entry-date fd-row fd-align-center fd-gap-actions">
-                            <span class="fd-ui-body">{{ item.dateLabel }}</span>
+                            <span class="fd-ui-caption">{{ item.dateLabel }}</span>
                             @if (item.isToday) {
                                 <span class="weight-history-page__entry-today fd-ui-caption">{{ 'WEIGHT_HISTORY.TODAY' | translate }}</span>
                             }
                         </div>
-                        <div class="weight-history-page__entry-weight fd-ui-stat-value">
+                        <div class="weight-history-page__entry-weight fd-ui-caption">
                             {{ item.entry.weight | number: '1.0-2' }} {{ 'DASHBOARD.KG' | translate }}
                         </div>
                         <div
@@ -35,7 +35,8 @@
                         <div class="weight-history-page__entry-actions fd-row fd-gap-actions fd-justify-end">
                             <fd-ui-button
                                 type="button"
-                                appearance="toolbar"
+                                appearance="plain-icon"
+                                size="xs"
                                 fill="text"
                                 variant="secondary"
                                 icon="edit"
@@ -44,7 +45,8 @@
                             />
                             <fd-ui-button
                                 type="button"
-                                appearance="toolbar"
+                                appearance="plain-icon"
+                                size="xs"
                                 fill="text"
                                 variant="danger"
                                 icon="delete"
@@ -61,10 +63,10 @@
                     type="button"
                     variant="secondary"
                     fill="outline"
-                    [icon]="isExpanded() ? 'expand_less' : 'chevron_right'"
-                    (click)="toggleEntries()"
+                    icon="open_in_new"
+                    (click)="showAllEntries.emit()"
                 >
-                    {{ (isExpanded() ? 'WEIGHT_HISTORY.SHOW_RECENT_ENTRIES' : 'WEIGHT_HISTORY.SHOW_ALL_ENTRIES') | translate }}
+                    {{ 'WEIGHT_HISTORY.SHOW_ALL_ENTRIES' | translate }}
                 </fd-ui-button>
             }
         }

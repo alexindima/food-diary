@@ -17,6 +17,10 @@ import { WeightHistoryChartCardComponent } from '../../components/weight-history
 import { WeightHistoryEntriesCardComponent } from '../../components/weight-history-entries-card/weight-history-entries-card';
 import { WeightHistoryGoalCardComponent } from '../../components/weight-history-goal-card/weight-history-goal-card';
 import { WeightHistoryEntryDialogComponent } from '../../dialogs/weight-history-entry-dialog/weight-history-entry-dialog';
+import {
+    WeightHistoryEntriesDialogComponent,
+    type WeightHistoryEntriesDialogResult,
+} from '../../dialogs/weight-history-entries-dialog/weight-history-entries-dialog';
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 import { WEIGHT_HISTORY_RANGE_TABS } from '../../lib/weight-history-page.config';
 import type { WeightEntry } from '../../models/weight-entry.data';
@@ -123,6 +127,25 @@ export class WeightHistoryPageComponent {
             .subscribe(() => {
                 if (this.facade.isEditing()) {
                     this.facade.cancelEdit();
+                }
+            });
+    }
+
+    protected openEntriesDialog(): void {
+        this.dialogService
+            .open<WeightHistoryEntriesDialogComponent, WeightEntry[], WeightHistoryEntriesDialogResult>(
+                WeightHistoryEntriesDialogComponent,
+                {
+                    data: this.entriesDescending(),
+                    preset: 'form',
+                },
+            )
+            .afterClosed()
+            .subscribe(result => {
+                if (result?.action === 'edit') {
+                    this.startEdit(result.entry);
+                } else if (result?.action === 'remove') {
+                    this.deleteEntry(result.entry);
                 }
             });
     }

@@ -33,14 +33,18 @@ describe('WeightHistoryEntriesCardComponent', () => {
         const { component } = setupComponent([entry]);
         const editHandler = vi.fn();
         const removeHandler = vi.fn();
+        const showAllHandler = vi.fn();
         component['editEntry'].subscribe(editHandler);
         component['removeEntry'].subscribe(removeHandler);
+        component['showAllEntries'].subscribe(showAllHandler);
 
         component['editEntry'].emit(entry);
         component['removeEntry'].emit(entry);
+        component['showAllEntries'].emit();
 
         expect(editHandler).toHaveBeenCalledWith(entry);
         expect(removeHandler).toHaveBeenCalledWith(entry);
+        expect(showAllHandler).toHaveBeenCalledOnce();
     });
 });
 

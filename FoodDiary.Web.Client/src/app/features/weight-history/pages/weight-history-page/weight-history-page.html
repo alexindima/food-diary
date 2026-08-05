@@ -159,6 +159,7 @@
                     [entries]="entriesDescending()"
                     (editEntry)="startEdit($event)"
                     (removeEntry)="deleteEntry($event)"
+                    (showAllEntries)="openEntriesDialog()"
                 />
             } @placeholder {
                 <div class="weight-history-page__placeholder" aria-hidden="true"></div>

@@ -5,6 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import type { WeightEntry } from '../../models/weight-entry.data';
 
@@ -14,7 +15,7 @@ const MILLISECONDS_PER_DAY = 86_400_000;
 
 @Component({
     selector: 'fd-weight-history-goal-card',
-    imports: [DecimalPipe, FormField, FdUiButtonComponent, FdUiCardComponent, FdUiInputComponent, TranslatePipe],
+    imports: [DecimalPipe, FormField, FdUiButtonComponent, FdUiCardComponent, FdUiIconComponent, FdUiInputComponent, TranslatePipe],
     templateUrl: './weight-history-goal-card.html',
     styleUrl: '../../pages/weight-history-page/weight-history-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,7 +52,7 @@ export class WeightHistoryGoalCardComponent {
         const weeklyRate = daysElapsed > 0 ? (lost / daysElapsed) * DAYS_PER_WEEK : 0;
         const daysToGoal = weeklyRate > 0 ? Math.ceil((remaining / weeklyRate) * DAYS_PER_WEEK) : null;
 
-        return { percent, lost, remaining, weeklyRate, daysToGoal };
+        return { percent, lost, remaining, weeklyRate, daysToGoal, startWeight: oldest, currentWeight: current, goalWeight: goal };
     });
 
     protected startEditing(): void {

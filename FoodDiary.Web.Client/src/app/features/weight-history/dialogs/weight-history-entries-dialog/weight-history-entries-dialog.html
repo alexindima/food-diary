@@ -1,0 +1,52 @@
+<fd-ui-dialog-shell size="md" [title]="'WEIGHT_HISTORY.ALL_ENTRIES_TITLE' | translate">
+    <div class="weight-history-page__entries weight-history-page__entries--dialog">
+        @for (item of items(); track item.entry.id) {
+            <div class="weight-history-page__entry fd-grid fd-align-center">
+                <div class="weight-history-page__entry-date fd-row fd-align-center fd-gap-actions">
+                    <span class="fd-ui-caption">{{ item.dateLabel }}</span>
+                    @if (item.isToday) {
+                        <span class="weight-history-page__entry-today fd-ui-caption">{{ 'WEIGHT_HISTORY.TODAY' | translate }}</span>
+                    }
+                </div>
+                <div class="weight-history-page__entry-weight fd-ui-caption">
+                    {{ item.entry.weight | number: '1.0-2' }} {{ 'DASHBOARD.KG' | translate }}
+                </div>
+                <div
+                    class="weight-history-page__entry-change fd-ui-caption"
+                    [class.weight-history-page__entry-change--loss]="item.change !== null && item.change < 0"
+                    [class.weight-history-page__entry-change--gain]="item.change !== null && item.change > 0"
+                >
+                    @if (item.change === null || item.change === 0) {
+                        —
+                    } @else {
+                        {{ item.change > 0 ? '+' : '' }}{{ item.change | number: '1.0-2' }} {{ 'DASHBOARD.KG' | translate }}
+                    }
+                </div>
+                <div
+                    class="weight-history-page__entry-actions weight-history-page__entry-actions--dialog fd-row fd-gap-actions fd-justify-end"
+                >
+                    <fd-ui-button
+                        type="button"
+                        appearance="plain-icon"
+                        size="xs"
+                        fill="text"
+                        variant="secondary"
+                        icon="edit"
+                        [ariaLabel]="'WEIGHT_HISTORY.EDIT' | translate"
+                        (click)="select('edit', item.entry)"
+                    />
+                    <fd-ui-button
+                        type="button"
+                        appearance="plain-icon"
+                        size="xs"
+                        fill="text"
+                        variant="danger"
+                        icon="delete"
+                        [ariaLabel]="'WEIGHT_HISTORY.DELETE' | translate"
+                        (click)="select('remove', item.entry)"
+                    />
+                </div>
+            </div>
+        }
+    </div>
+</fd-ui-dialog-shell>
