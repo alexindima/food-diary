@@ -1,6 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { fdUiFormatDateInputValue } from '../date/fd-ui-date.utils';
 import { FdUiDateInputComponent } from './fd-ui-date-input';
 
 const TEST_YEAR = 2025;
@@ -237,6 +238,22 @@ function registerStateTests(): void {
 
             const inputEl = requireInputElement('.fd-ui-date-input__control');
             expect(inputEl.value).toBeTruthy();
+        });
+
+        it('should display the supplied today label for the local current date', () => {
+            fixture.componentRef.setInput('todayLabel', 'Today');
+            component.value.set(fdUiFormatDateInputValue(new Date()));
+            fixture.detectChanges();
+
+            expect(requireInputElement('.fd-ui-date-input__control').value).toBe('Today');
+        });
+
+        it('should preserve formatted dates when the selected date is not today', () => {
+            fixture.componentRef.setInput('todayLabel', 'Today');
+            component.value.set(MARCH_DATE_STRING);
+            fixture.detectChanges();
+
+            expect(requireInputElement('.fd-ui-date-input__control').value).not.toBe('Today');
         });
     });
 }

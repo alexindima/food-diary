@@ -18,6 +18,7 @@ import type {
     UpdateUserAppearanceDto,
     UpdateUserDto,
     User,
+    WeightGoalHistoryItem,
 } from '../models/user.data';
 import type { NotificationPreferences, WebPushSubscriptionItem } from '../notifications/notification.service';
 
@@ -178,12 +179,36 @@ export class UserService extends ApiService {
         );
     }
 
+    public getWeightGoal(): Observable<DesiredWeightResponse> {
+        return this.get<DesiredWeightResponse>('desired-weight').pipe(
+            catchError((error: unknown) =>
+                fallbackApiError('Get weight goal error', error, {
+                    desiredWeight: null,
+                    startWeight: null,
+                    startedAtUtc: null,
+                }),
+            ),
+        );
+    }
+
+    public getWeightGoalHistory(): Observable<WeightGoalHistoryItem[]> {
+        return this.get<WeightGoalHistoryItem[]>('weight-goals').pipe(
+            catchError((error: unknown) => fallbackApiError('Get weight goal history error', error, [])),
+        );
+    }
+
     public updateDesiredWeight(value: number | null): Observable<number | null> {
         return this.put<DesiredWeightResponse>('desired-weight', {
             desiredWeight: value,
         }).pipe(
             map(response => response.desiredWeight ?? null),
             catchError((error: unknown) => rethrowApiError('Update desired weight error', error)),
+        );
+    }
+
+    public updateWeightGoal(value: number | null): Observable<DesiredWeightResponse> {
+        return this.put<DesiredWeightResponse>('desired-weight', { desiredWeight: value }).pipe(
+            catchError((error: unknown) => rethrowApiError('Update weight goal error', error)),
         );
     }
 

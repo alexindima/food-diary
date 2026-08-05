@@ -57,14 +57,8 @@
         height: 100%;
     }
 
-    &__goal-input {
-        width: 100%;
-    }
-
     &__goal-summary {
         margin-top: var(--fd-space-md);
-        padding-bottom: var(--fd-space-card-content-gap);
-        border-bottom: var(--fd-border-subtle);
     }
 
     &__goal-heading {
@@ -76,7 +70,7 @@
     }
 
     &__goal-progress {
-        height: var(--fd-size-progress-height-md);
+        height: var(--fd-size-progress-height-lg);
         overflow: hidden;
         border-radius: var(--fd-radius-pill);
         background: var(--fd-bg-surface-inset);
@@ -91,6 +85,8 @@
 
     &__goal-stats {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+        row-gap: var(--fd-space-card-content-gap);
+        padding-top: var(--fd-space-sm);
     }
 
     &__goal-stat {
@@ -99,11 +95,11 @@
         border-right: var(--fd-border-subtle);
         gap: var(--fd-space-md);
 
-        &:first-child {
+        &:nth-child(3n + 1) {
             padding-left: 0;
         }
 
-        &:last-child {
+        &:nth-child(3n) {
             padding-right: 0;
             border-right: 0;
         }
@@ -120,28 +116,28 @@
         color: var(--fd-color-primary-600);
     }
 
-    &__goal-journey {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: var(--fd-space-sm);
-        padding: var(--fd-space-sm);
-        border: var(--fd-border-subtle);
+    &__goal-actions {
+        margin-top: var(--fd-space-card-content-gap);
+    }
+
+    &__goal-empty {
+        margin-top: var(--fd-space-card-content-gap);
+    }
+
+    &__goal-last {
+        padding: var(--fd-space-card-profile-gap);
+        border: var(--fd-border-width) solid var(--fd-color-border-subtle);
         border-radius: var(--fd-radius-md);
-        background: var(--fd-bg-surface-muted);
+        background: var(--fd-color-surface-subtle);
     }
 
-    &__goal-journey-value {
-        margin-top: var(--fd-space-micro);
-        color: var(--fd-color-text);
-        font-weight: var(--fd-text-action-weight);
+    &__goal-last-change {
+        color: var(--fd-color-primary);
+        white-space: nowrap;
     }
 
-    &__goal-editor {
-        margin-top: var(--fd-space-card-content-gap);
-    }
-
-    &__goal-edit-button {
-        width: 100%;
-        margin-top: var(--fd-space-card-content-gap);
+    &__goal-primary-action {
+        margin-inline-start: auto;
     }
 
     &__card--chart {
@@ -429,8 +425,9 @@
     }
 
     &__entries-toggle {
-        width: 100%;
+        width: fit-content;
         margin-top: var(--fd-space-card-header-gap);
+        margin-left: auto;
     }
 
     &__loader,

@@ -1,16 +1,16 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "components":  402,
-                    "componentsWithoutDirectSpecs":  110,
-                    "inputs":  1240,
-                    "outputs":  407,
-                    "apiCalls":  206,
-                    "templatesWithTranslations":  243,
-                    "translationKeys":  1209,
-                    "consumerEdges":  907,
+                    "components":  404,
+                    "componentsWithoutDirectSpecs":  112,
+                    "inputs":  1243,
+                    "outputs":  408,
+                    "apiCalls":  209,
+                    "templatesWithTranslations":  245,
+                    "translationKeys":  1217,
+                    "consumerEdges":  911,
                     "consumedComponents":  276,
-                    "unconsumedComponents":  125
+                    "unconsumedComponents":  127
                 },
     "components":  [
                        {
@@ -3865,6 +3865,11 @@
                                           },
                                           {
                                               "name":  "placeholder",
+                                              "type":  "string",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "todayLabel",
                                               "type":  "string",
                                               "required":  false
                                           },
@@ -12805,6 +12810,20 @@
                            "specPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-trends/weekly-check-in-trends.spec.ts"
                        },
                        {
+                           "class":  "WeightGoalHistoryDialogComponent",
+                           "selector":  "fd-weight-goal-history-dialog",
+                           "feature":  "weight-history",
+                           "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.html",
+                           "inputs":  [
+
+                                      ],
+                           "outputs":  [
+
+                                       ],
+                           "specPath":  null
+                       },
+                       {
                            "class":  "WeightHistoryBmiCardComponent",
                            "selector":  "fd-weight-history-bmi-card",
                            "feature":  "weight-history",
@@ -12971,36 +12990,64 @@
                            "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
                            "inputs":  [
                                           {
-                                              "name":  "weightField",
-                                              "type":  "FieldTree\u003cstring\u003e",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "isSaving",
-                                              "type":  "boolean",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "entries",
-                                              "type":  "readonly WeightEntry[]",
-                                              "required":  true
-                                          },
-                                          {
                                               "name":  "currentWeight",
                                               "type":  "number | null",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "currentWeightDate",
+                                              "type":  "string | null",
                                               "required":  true
                                           },
                                           {
                                               "name":  "desiredWeight",
                                               "type":  "number | null",
                                               "required":  true
+                                          },
+                                          {
+                                              "name":  "startWeight",
+                                              "type":  "number | null",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "startedAtUtc",
+                                              "type":  "string | null",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "hasGoalHistory",
+                                              "type":  "boolean",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "lastCompletedGoal",
+                                              "type":  "WeightGoalHistoryItem | null",
+                                              "required":  true
                                           }
                                       ],
                            "outputs":  [
                                            {
-                                               "name":  "saveGoal",
+                                               "name":  "configureGoal",
+                                               "type":  ""
+                                           },
+                                           {
+                                               "name":  "viewGoalHistory",
                                                "type":  ""
                                            }
+                                       ],
+                           "specPath":  null
+                       },
+                       {
+                           "class":  "WeightHistoryGoalDialogComponent",
+                           "selector":  "fd-weight-history-goal-dialog",
+                           "feature":  "weight-history",
+                           "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.html",
+                           "inputs":  [
+
+                                      ],
+                           "outputs":  [
+
                                        ],
                            "specPath":  null
                        },
@@ -14826,7 +14873,7 @@
                          "responseType":  "UserProfileOverview",
                          "urlExpression":  "\u0027overview\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  58,
+                         "line":  59,
                          "publicMethod":  "getOverview",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14838,7 +14885,7 @@
                          "responseType":  "User",
                          "urlExpression":  "\u0027info\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  70,
+                         "line":  71,
                          "publicMethod":  "getInfo",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14850,7 +14897,7 @@
                          "responseType":  "User",
                          "urlExpression":  "\u0027info\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  82,
+                         "line":  83,
                          "publicMethod":  "getInfoSilently",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14862,7 +14909,7 @@
                          "responseType":  "User",
                          "urlExpression":  "\u0027info\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  94,
+                         "line":  95,
                          "publicMethod":  "update",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14874,7 +14921,7 @@
                          "responseType":  "User",
                          "urlExpression":  "\u0027preferences/appearance\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  103,
+                         "line":  104,
                          "publicMethod":  "updateAppearance",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14886,7 +14933,7 @@
                          "responseType":  "User",
                          "urlExpression":  "\u0027info\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  112,
+                         "line":  113,
                          "publicMethod":  "updateDashboardLayout",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14898,7 +14945,7 @@
                          "responseType":  "void",
                          "urlExpression":  "\u0027password\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  121,
+                         "line":  122,
                          "publicMethod":  "changePassword",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14910,7 +14957,7 @@
                          "responseType":  "void",
                          "urlExpression":  "\u0027password/set\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  128,
+                         "line":  129,
                          "publicMethod":  "setPassword",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14922,7 +14969,7 @@
                          "responseType":  "void",
                          "urlExpression":  "\u0027ai-consent\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  141,
+                         "line":  142,
                          "publicMethod":  "acceptAiConsent",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14934,7 +14981,7 @@
                          "responseType":  "void",
                          "urlExpression":  "\u0027ai-consent\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  153,
+                         "line":  154,
                          "publicMethod":  "revokeAiConsent",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14946,7 +14993,7 @@
                          "responseType":  "void",
                          "urlExpression":  "\u0027\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  165,
+                         "line":  166,
                          "publicMethod":  "deleteCurrentUser",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14958,8 +15005,44 @@
                          "responseType":  "DesiredWeightResponse",
                          "urlExpression":  "\u0027desired-weight\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  175,
+                         "line":  176,
                          "publicMethod":  "getDesiredWeight",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/desired-weight"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "GET",
+                         "responseType":  "DesiredWeightResponse",
+                         "urlExpression":  "\u0027desired-weight\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  183,
+                         "publicMethod":  "getWeightGoal",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/desired-weight"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "GET",
+                         "responseType":  "WeightGoalHistoryItem[]",
+                         "urlExpression":  "\u0027weight-goals\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  195,
+                         "publicMethod":  "getWeightGoalHistory",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/weight-goals"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "PUT",
+                         "responseType":  "DesiredWeightResponse",
+                         "urlExpression":  "\u0027desired-weight\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  201,
+                         "publicMethod":  "updateDesiredWeight",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
                          "resolvedUrlExpression":  "environment.apiUrls.users/desired-weight"
@@ -14970,8 +15053,8 @@
                          "responseType":  "DesiredWeightResponse",
                          "urlExpression":  "\u0027desired-weight\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  182,
-                         "publicMethod":  "updateDesiredWeight",
+                         "line":  210,
+                         "publicMethod":  "updateWeightGoal",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
                          "resolvedUrlExpression":  "environment.apiUrls.users/desired-weight"
@@ -14982,7 +15065,7 @@
                          "responseType":  "DesiredWaistResponse",
                          "urlExpression":  "\u0027desired-waist\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  191,
+                         "line":  216,
                          "publicMethod":  "getDesiredWaist",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14994,7 +15077,7 @@
                          "responseType":  "DesiredWaistResponse",
                          "urlExpression":  "\u0027desired-waist\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  198,
+                         "line":  223,
                          "publicMethod":  "updateDesiredWaist",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -18272,6 +18355,7 @@
                                               "WEIGHT_HISTORY.CANCEL_EDIT",
                                               "WEIGHT_HISTORY.DATE_LABEL",
                                               "WEIGHT_HISTORY.DATE_PLACEHOLDER",
+                                              "WEIGHT_HISTORY.TODAY",
                                               "WEIGHT_HISTORY.UPDATE",
                                               "WEIGHT_HISTORY.WEIGHT_LABEL",
                                               "WEIGHT_HISTORY.WEIGHT_PLACEHOLDER"
@@ -18282,21 +18366,34 @@
                                  "path":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
                                  "keys":  [
                                               "GENERAL.UNITS.KG",
-                                              "WEIGHT_HISTORY.CANCEL_EDIT",
-                                              "WEIGHT_HISTORY.EDIT_GOAL",
                                               "WEIGHT_HISTORY.GOAL_AVERAGE_RATE",
-                                              "WEIGHT_HISTORY.GOAL_CARD_TITLE",
                                               "WEIGHT_HISTORY.GOAL_CURRENT_WEIGHT",
                                               "WEIGHT_HISTORY.GOAL_DAYS_TO_GOAL",
+                                              "WEIGHT_HISTORY.GOAL_EMPTY_DESCRIPTION",
+                                              "WEIGHT_HISTORY.GOAL_HISTORY",
+                                              "WEIGHT_HISTORY.GOAL_NOT_SET",
                                               "WEIGHT_HISTORY.GOAL_PERIOD_CHANGE",
-                                              "WEIGHT_HISTORY.GOAL_PLACEHOLDER",
                                               "WEIGHT_HISTORY.GOAL_PROGRESS_TITLE",
                                               "WEIGHT_HISTORY.GOAL_REMAINING",
+                                              "WEIGHT_HISTORY.GOAL_START_DATE",
                                               "WEIGHT_HISTORY.GOAL_START_WEIGHT",
-                                              "WEIGHT_HISTORY.GOAL_TARGET_WEIGHT",
                                               "WEIGHT_HISTORY.GOAL_VALUE",
                                               "WEIGHT_HISTORY.KG_PER_WEEK",
-                                              "WEIGHT_HISTORY.SAVE_GOAL"
+                                              "WEIGHT_HISTORY.LAST_GOAL",
+                                              "WEIGHT_HISTORY.LAST_GOAL_CHANGE",
+                                              "WEIGHT_HISTORY.NO_GOAL_HISTORY_DESCRIPTION",
+                                              "WEIGHT_HISTORY.NO_GOAL_HISTORY_TITLE"
+                                          ]
+                             },
+                             {
+                                 "feature":  "weight-history",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.html",
+                                 "keys":  [
+                                              "GENERAL.UNITS.KG",
+                                              "WEIGHT_HISTORY.GOAL_HISTORY",
+                                              "WEIGHT_HISTORY.GOAL_NOW",
+                                              "WEIGHT_HISTORY.GOAL_START_WEIGHT",
+                                              "WEIGHT_HISTORY.GOAL_VALUE"
                                           ]
                              },
                              {
@@ -18308,6 +18405,16 @@
                                               "WEIGHT_HISTORY.DELETE",
                                               "WEIGHT_HISTORY.EDIT",
                                               "WEIGHT_HISTORY.TODAY"
+                                          ]
+                             },
+                             {
+                                 "feature":  "weight-history",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.html",
+                                 "keys":  [
+                                              "WEIGHT_HISTORY.CANCEL_GOAL",
+                                              "WEIGHT_HISTORY.DESIRED_WEIGHT_LABEL",
+                                              "WEIGHT_HISTORY.GOAL_CARD_TITLE",
+                                              "WEIGHT_HISTORY.GOAL_PLACEHOLDER"
                                           ]
                              },
                              {
@@ -23347,11 +23454,10 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "weight-history",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
-                              "occurrences":  3,
+                              "occurrences":  2,
                               "inputsUsed":  [
                                                  "fill",
                                                  "icon",
-                                                 "loading",
                                                  "type",
                                                  "variant"
                                              ],
@@ -23372,6 +23478,23 @@
                                                  "fill",
                                                  "icon",
                                                  "size",
+                                                 "type",
+                                                 "variant"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiButtonComponent",
+                              "selector":  "fd-ui-button",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+                              "consumerFeature":  "weight-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.html",
+                              "occurrences":  2,
+                              "inputsUsed":  [
+                                                 "fill",
+                                                 "loading",
                                                  "type",
                                                  "variant"
                                              ],
@@ -24737,7 +24860,8 @@
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "label",
-                                                 "placeholder"
+                                                 "placeholder",
+                                                 "todayLabel"
                                              ],
                               "outputsHandled":  [
 
@@ -25330,7 +25454,39 @@
                               "selector":  "fd-ui-dialog",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
                               "consumerFeature":  "weight-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "dismissible",
+                                                 "size",
+                                                 "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiDialogComponent",
+                              "selector":  "fd-ui-dialog",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+                              "consumerFeature":  "weight-history",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "dismissible",
+                                                 "size",
+                                                 "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiDialogComponent",
+                              "selector":  "fd-ui-dialog",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+                              "consumerFeature":  "weight-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "dismissible",
@@ -26599,7 +26755,22 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "weight-history",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
-                              "occurrences":  3,
+                              "occurrences":  7,
+                              "inputsUsed":  [
+                                                 "name",
+                                                 "size"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "weight-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.html",
+                              "occurrences":  1,
                               "inputsUsed":  [
                                                  "name",
                                                  "size"
@@ -27465,10 +27636,11 @@
                               "selector":  "fd-ui-input",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
                               "consumerFeature":  "weight-history",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "ariaLabel",
+                                                 "label",
                                                  "placeholder",
                                                  "step",
                                                  "suffixButtonIcon",
@@ -33254,13 +33426,16 @@
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "currentWeight",
+                                                 "currentWeightDate",
                                                  "desiredWeight",
-                                                 "entries",
-                                                 "isSaving",
-                                                 "weightField"
+                                                 "hasGoalHistory",
+                                                 "lastCompletedGoal",
+                                                 "startWeight",
+                                                 "startedAtUtc"
                                              ],
                               "outputsHandled":  [
-                                                     "saveGoal"
+                                                     "configureGoal",
+                                                     "viewGoalHistory"
                                                  ]
                           },
                           {

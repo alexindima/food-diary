@@ -8,14 +8,14 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1522,
-                    "symbols":  581,
+                    "typescriptFiles":  1524,
+                    "symbols":  583,
                     "routes":  84,
                     "features":  36,
                     "specs":  548,
                     "localeFiles":  5,
                     "roles":  {
-                                  "Component":  397,
+                                  "Component":  399,
                                   "Directive":  12,
                                   "Facade":  52,
                                   "Other":  17,
@@ -1183,6 +1183,7 @@
                          "root":  "FoodDiary.Web.Client/src/app/features/weight-history",
                          "symbols":  [
                                          "WeightEntriesService",
+                                         "WeightGoalHistoryDialogComponent",
                                          "WeightHistoryBmiCardComponent",
                                          "WeightHistoryChartCardComponent",
                                          "WeightHistoryEntriesCardComponent",
@@ -1191,6 +1192,7 @@
                                          "WeightHistoryFacade",
                                          "WeightHistoryFormCardComponent",
                                          "WeightHistoryGoalCardComponent",
+                                         "WeightHistoryGoalDialogComponent",
                                          "WeightHistoryPageComponent"
                                      ],
                          "routes":  [
@@ -4768,6 +4770,13 @@
                         "line":  24
                     },
                     {
+                        "name":  "WeightGoalHistoryDialogComponent",
+                        "role":  "Component",
+                        "selector":  "fd-weight-goal-history-dialog",
+                        "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.ts",
+                        "line":  31
+                    },
+                    {
                         "name":  "WeightHistoryEntriesDialogComponent",
                         "role":  "Component",
                         "selector":  "fd-weight-history-entries-dialog",
@@ -4782,18 +4791,25 @@
                         "line":  15
                     },
                     {
+                        "name":  "WeightHistoryGoalDialogComponent",
+                        "role":  "Component",
+                        "selector":  "fd-weight-history-goal-dialog",
+                        "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.ts",
+                        "line":  17
+                    },
+                    {
                         "name":  "WeightHistoryFacade",
                         "role":  "Facade",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history.facade.ts",
-                        "line":  47
+                        "line":  48
                     },
                     {
                         "name":  "WeightHistoryPageComponent",
                         "role":  "Component",
                         "selector":  "fd-weight-history-page",
                         "path":  "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.ts",
-                        "line":  53
+                        "line":  55
                     },
                     {
                         "name":  "AuthInterceptor",
@@ -4954,7 +4970,7 @@
                         "role":  "Service",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                        "line":  32
+                        "line":  33
                     },
                     {
                         "name":  "LoginRequest",
@@ -5706,8 +5722,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  2917,
-                             "russianProperties":  2917,
+                             "englishProperties":  2934,
+                             "russianProperties":  2934,
                              "countsMatch":  true
                          },
                          {

@@ -9,6 +9,7 @@ const meta: Meta<FdUiDateInputComponent> = {
     argTypes: {
         label: { control: 'text' },
         placeholder: { control: 'text' },
+        todayLabel: { control: 'text' },
         error: { control: 'text' },
         required: { control: 'boolean' },
         size: { control: 'select', options: ['sm', 'md', 'lg'] },
@@ -30,6 +31,14 @@ export const WithValue: Story = {
     render: () => ({
         template: '<fd-ui-date-input label="Birth Date" [value]="\'2000-01-15\'"></fd-ui-date-input>',
     }),
+};
+
+export const TodayLabel: Story = {
+    args: {
+        label: 'Date',
+        todayLabel: 'Today',
+        value: new Date(),
+    },
 };
 
 export const WithError: Story = {

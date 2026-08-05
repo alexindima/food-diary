@@ -2933,6 +2933,49 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("WeightEntries");
                 });
 
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.WeightGoal", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double?>("EndWeight")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime?>("EndedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double>("StartWeight")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("StartedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<double>("TargetWeight")
+                        .HasColumnType("double precision");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("\"Status\" = 'Active'");
+
+                    b.ToTable("WeightGoals");
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.Usda.DailyReferenceValue", b =>
                 {
                     b.Property<int>("Id")
@@ -4588,6 +4631,15 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.WeightGoal", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
+                        .WithMany("WeightGoals")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.Usda.DailyReferenceValue", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.Usda.UsdaNutrient", "Nutrient")
@@ -4816,6 +4868,8 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("WaistEntries");
 
                     b.Navigation("WeightEntries");
+
+                    b.Navigation("WeightGoals");
                 });
 #pragma warning restore 612, 618
         }

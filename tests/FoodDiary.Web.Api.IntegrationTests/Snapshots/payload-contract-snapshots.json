@@ -296,9 +296,22 @@
   },
   "desired-weight": {
     "keys": [
-      "desiredWeight"
+      "desiredWeight",
+      "startWeight",
+      "startedAtUtc"
     ],
-    "desiredWeight": 72.5
+    "desiredWeight": 72.5,
+    "startWeight": 72.5,
+    "hasStartedAtUtc": true
+  },
+  "weight-goal-history": {
+    "count": 2,
+    "statuses": [
+      "Active",
+      "Replaced"
+    ],
+    "allHaveStartDates": true,
+    "completedHasEndWeight": true
   },
   "user-info": {
     "keys": [

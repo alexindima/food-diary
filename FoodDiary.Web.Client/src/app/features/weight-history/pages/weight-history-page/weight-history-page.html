@@ -145,12 +145,15 @@
         <div class="weight-history-page__insights fd-grid fd-gap-card-content">
             <fd-weight-history-goal-card
                 data-tour-id="weight-history-goal"
-                [weightField]="desiredWeightForm.weight"
-                [isSaving]="isDesiredWeightSaving()"
-                [entries]="entriesDescending()"
                 [currentWeight]="latestWeight()"
+                [currentWeightDate]="latestWeightDate()"
                 [desiredWeight]="desiredWeight()"
-                (saveGoal)="saveDesiredWeight()"
+                [startWeight]="weightGoal().startWeight"
+                [startedAtUtc]="weightGoal().startedAtUtc"
+                [hasGoalHistory]="hasCompletedWeightGoals()"
+                [lastCompletedGoal]="lastCompletedWeightGoal()"
+                (configureGoal)="openGoalDialog()"
+                (viewGoalHistory)="openGoalHistoryDialog()"
             />
             @defer (on viewport) {
                 <fd-weight-history-entries-card

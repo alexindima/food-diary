@@ -44,7 +44,34 @@ internal sealed class UserContextService(
         Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
         return userResult.IsFailure
             ? Result.Failure<UserDesiredWeightModel>(userResult.Error)
-            : Result.Success(new UserDesiredWeightModel(userResult.Value.DesiredWeight));
+            : Result.Success(ToDesiredWeightModel(userResult.Value));
+    }
+
+    private static UserDesiredWeightModel ToDesiredWeightModel(User user) {
+        FoodDiary.Domain.Entities.Tracking.WeightGoal? goal = user.WeightGoals.SingleOrDefault(
+            item => item.Status == FoodDiary.Domain.Enums.WeightGoalStatus.Active);
+        return new UserDesiredWeightModel(user.DesiredWeight, goal?.StartWeight, goal?.StartedAtUtc);
+    }
+
+    public async Task<Result<IReadOnlyList<WeightGoalHistoryModel>>> GetWeightGoalHistoryAsync(
+        UserId userId,
+        CancellationToken cancellationToken) {
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure<IReadOnlyList<WeightGoalHistoryModel>>(userResult.Error);
+        }
+
+        WeightGoalHistoryModel[] history = [.. userResult.Value.WeightGoals
+            .OrderByDescending(static goal => goal.StartedAtUtc)
+            .Select(static goal => new WeightGoalHistoryModel(
+                goal.Id.Value,
+                goal.TargetWeight,
+                goal.StartWeight,
+                goal.EndWeight,
+                goal.StartedAtUtc,
+                goal.EndedAtUtc,
+                goal.Status.ToString()))];
+        return Result.Success<IReadOnlyList<WeightGoalHistoryModel>>(history);
     }
 
     public async Task<Result<UserDesiredWaistModel>> GetDesiredWaistAsync(UserId userId, CancellationToken cancellationToken) {

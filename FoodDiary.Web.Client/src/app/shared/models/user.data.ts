@@ -201,6 +201,18 @@ export type SetPasswordRequest = {
 
 export type DesiredWeightResponse = {
     desiredWeight: number | null;
+    startWeight: number | null;
+    startedAtUtc: string | null;
+};
+
+export type WeightGoalHistoryItem = {
+    id: string;
+    targetWeight: number;
+    startWeight: number;
+    endWeight: number | null;
+    startedAtUtc: string;
+    endedAtUtc: string | null;
+    status: 'Active' | 'Replaced' | 'Cancelled';
 };
 
 export type DesiredWaistResponse = {

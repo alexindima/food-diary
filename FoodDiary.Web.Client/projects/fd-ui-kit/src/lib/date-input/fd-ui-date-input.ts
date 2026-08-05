@@ -26,6 +26,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     public readonly label = input<string>();
     public readonly pickerAriaLabel = input<string>();
     public readonly placeholder = input<string>();
+    public readonly todayLabel = input<string>();
     public readonly error = input<string | null>();
     public readonly required = input(false);
     public readonly size = input<FdUiFieldSize>('md');
@@ -57,6 +58,11 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         const value = this.internalValue();
         if (value === null) {
             return '';
+        }
+
+        const todayLabel = this.todayLabel();
+        if (todayLabel !== undefined && this.isToday(value)) {
+            return todayLabel;
         }
 
         return new Intl.DateTimeFormat(this.locale, {
@@ -168,6 +174,11 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
 
     private stripTime(date: Date): Date {
         return fdUiStartOfLocalDay(date);
+    }
+
+    private isToday(date: Date): boolean {
+        const today = new Date();
+        return date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && date.getDate() === today.getDate();
     }
 
     private formatIsoDate(date: Date): string {

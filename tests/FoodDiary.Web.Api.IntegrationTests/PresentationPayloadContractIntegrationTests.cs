@@ -319,7 +319,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         HttpResponseMessage response = await client.GetAsync("/api/v1/users/desired-weight");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         string actual = JsonSerializer.Serialize(
-            BuildDesiredMetricSnapshot(json.RootElement, "desiredWeight"),
+            BuildDesiredWeightSnapshot(json.RootElement),
             IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -345,6 +345,37 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         await AssertPayloadSnapshotAsync("desired-waist", actual);
+    }
+
+    [Fact]
+    public async Task WeightGoalHistory_AfterGoalReplacement_MatchesNormalizedPayloadSnapshot() {
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+        (await client.PutAsJsonAsync("/api/v1/users/desired-weight", new UpdateDesiredWeightHttpRequest(72.5)))
+            .EnsureSuccessStatusCode();
+        (await client.PutAsJsonAsync("/api/v1/users/desired-weight", new UpdateDesiredWeightHttpRequest(73)))
+            .EnsureSuccessStatusCode();
+
+        HttpResponseMessage response = await client.GetAsync("/api/v1/users/weight-goals");
+        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        JsonElement[] goals = [.. json.RootElement.EnumerateArray()];
+        string actual = JsonSerializer.Serialize(
+            new JsonObject {
+                ["count"] = goals.Length,
+                ["statuses"] = ToJsonArray(goals.Select(goal => goal.GetProperty("status").GetString() ?? string.Empty)),
+                ["allHaveStartDates"] = goals.All(goal => goal.GetProperty("startedAtUtc").ValueKind == JsonValueKind.String),
+                ["completedHasEndWeight"] = goals.Single(goal => string.Equals(
+                    goal.GetProperty("status").GetString(),
+                    "Replaced",
+                    StringComparison.Ordinal))
+                    .GetProperty("endWeight").ValueKind == JsonValueKind.Number,
+            },
+            IndentedJsonOptions);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        await AssertPayloadSnapshotAsync("weight-goal-history", actual);
     }
 
     [Fact]
@@ -518,6 +549,16 @@ public sealed class PresentationPayloadContractIntegrationTests(
         return new JsonObject {
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             [propertyName] = root.GetProperty(propertyName).GetDouble(),
+        };
+    }
+
+    private static JsonObject BuildDesiredWeightSnapshot(JsonElement root) {
+        return new JsonObject {
+            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
+            ["desiredWeight"] = root.GetProperty("desiredWeight").GetDouble(),
+            ["startWeight"] = root.GetProperty("startWeight").GetDouble(),
+            ["hasStartedAtUtc"] = root.TryGetProperty("startedAtUtc", out JsonElement startedAtUtc)
+                && startedAtUtc.ValueKind == JsonValueKind.String,
         };
     }
 

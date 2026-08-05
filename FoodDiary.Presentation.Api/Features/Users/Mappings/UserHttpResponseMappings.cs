@@ -51,7 +51,10 @@ public static class UserHttpResponseMappings {
     }
 
     public static UserDesiredWeightHttpResponse ToHttpResponse(this UserDesiredWeightModel model)
-        => new(model.DesiredWeight);
+        => new(model.DesiredWeight, model.StartWeight, model.StartedAtUtc);
+
+    public static WeightGoalHistoryHttpResponse ToHttpResponse(this WeightGoalHistoryModel model) =>
+        new(model.Id, model.TargetWeight, model.StartWeight, model.EndWeight, model.StartedAtUtc, model.EndedAtUtc, model.Status);
 
     public static UserDesiredWaistHttpResponse ToHttpResponse(this UserDesiredWaistModel model)
         => new(model.DesiredWaist);

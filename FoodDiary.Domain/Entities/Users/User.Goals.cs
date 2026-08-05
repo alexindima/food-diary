@@ -1,4 +1,6 @@
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Domain.Entities.Users;
 
@@ -85,6 +87,25 @@ public sealed partial class User {
         EnsureDesiredWeight(desiredWeight, nameof(desiredWeight));
         ApplyGoalState(GetGoalState() with { DesiredWeight = desiredWeight });
         SetModified();
+    }
+
+    public WeightGoal StartWeightGoal(double targetWeight, double startWeight, DateTime startedAtUtc) {
+        EnsureNotDeleted();
+        DateTime nowUtc = startedAtUtc.ToUniversalTime();
+        WeightGoal? activeGoal = _weightGoals.SingleOrDefault(goal => goal.Status == WeightGoalStatus.Active);
+        activeGoal?.Replace(nowUtc, startWeight);
+
+        var goal = WeightGoal.Start(Id, targetWeight, startWeight, nowUtc);
+        _weightGoals.Add(goal);
+        UpdateDesiredWeight(targetWeight);
+        return goal;
+    }
+
+    public void CancelWeightGoal(DateTime endedAtUtc, double endWeight) {
+        EnsureNotDeleted();
+        WeightGoal? activeGoal = _weightGoals.SingleOrDefault(goal => goal.Status == WeightGoalStatus.Active);
+        activeGoal?.Cancel(endedAtUtc, endWeight);
+        UpdateDesiredWeight(desiredWeight: null);
     }
 
     public void UpdateDesiredWaist(double? desiredWaist) {

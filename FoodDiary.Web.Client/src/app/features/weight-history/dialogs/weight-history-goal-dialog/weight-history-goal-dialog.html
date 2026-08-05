@@ -1,0 +1,29 @@
+<fd-ui-dialog
+    size="sm"
+    [title]="(desiredWeight() === null ? 'WEIGHT_HISTORY.SET_GOAL' : 'WEIGHT_HISTORY.CONFIGURE_GOAL') | translate"
+    [dismissible]="!isSaving()"
+    (close)="close()"
+>
+    <div class="fd-stack fd-gap-card-content">
+        <fd-ui-input
+            type="number"
+            [step]="0.1"
+            [label]="'WEIGHT_HISTORY.DESIRED_WEIGHT_LABEL' | translate"
+            [ariaLabel]="'WEIGHT_HISTORY.GOAL_CARD_TITLE' | translate"
+            [placeholder]="'WEIGHT_HISTORY.GOAL_PLACEHOLDER' | translate"
+            [suffixButtonIcon]="weightField().value() ? 'backspace' : undefined"
+            [formField]="weightField"
+            (suffixButtonClicked)="weightField().value.set('')"
+        />
+        <div class="fd-row fd-wrap fd-justify-end fd-gap-actions">
+            @if (desiredWeight() !== null) {
+                <fd-ui-button type="button" variant="danger" fill="text" [loading]="isSaving()" (click)="cancelGoal()">
+                    {{ 'WEIGHT_HISTORY.CANCEL_GOAL' | translate }}
+                </fd-ui-button>
+            }
+            <fd-ui-button type="button" [loading]="isSaving()" (click)="save()">
+                {{ (desiredWeight() === null ? 'WEIGHT_HISTORY.SET_GOAL' : 'WEIGHT_HISTORY.START_NEW_GOAL') | translate }}
+            </fd-ui-button>
+        </div>
+    </div>
+</fd-ui-dialog>

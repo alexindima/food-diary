@@ -62,6 +62,12 @@ Source: `FoodDiary.Presentation.Api/Features/Users/UsersPasswordController.cs`
 - `PATCH /api/v{version:apiVersion}/users/password`
 - `PATCH /api/v{version:apiVersion}/users/password/set`
 
+### WeightGoalsController
+
+Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
+
+- `GET /api/v{version:apiVersion}/users/weight-goals`
+
 ## Focused Tests
 
 - `tests/FoodDiary.Application.Tests/Users/AiConsentTests.cs`

@@ -13,6 +13,7 @@ public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository
 
     private IQueryable<User> UsersWithRoles() =>
         context.Users
+            .Include(u => u.WeightGoals)
             .Include(u => u.UserRoles)
             .ThenInclude(ur => ur.Role);
 

@@ -17,8 +17,8 @@
                     "frontendProjects":  4,
                     "applicationModules":  38,
                     "extractedApplicationModules":  2,
-                    "controllers":  81,
-                    "endpoints":  260,
+                    "controllers":  82,
+                    "endpoints":  261,
                     "agentGuides":  42,
                     "documentationPages":  42
                 },
@@ -4046,6 +4046,18 @@
                                                                "verb":  "PATCH",
                                                                "route":  "/api/v{version:apiVersion}/users/password/set",
                                                                "line":  23
+                                                           }
+                                                       ]
+                                     },
+                                     {
+                                         "name":  "WeightGoalsController",
+                                         "path":  "FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs",
+                                         "routePrefix":  "api/v{version:apiVersion}/users/weight-goals",
+                                         "endpoints":  [
+                                                           {
+                                                               "verb":  "GET",
+                                                               "route":  "/api/v{version:apiVersion}/users/weight-goals",
+                                                               "line":  14
                                                            }
                                                        ]
                                      },

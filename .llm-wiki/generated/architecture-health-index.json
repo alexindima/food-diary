@@ -8,9 +8,9 @@
                     "moduleCycleNodes":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
-                    "selectorUnreferencedComponents":  125,
-                    "componentsWithoutDirectSpecs":  110,
-                    "criticalSymbolsWithoutTestReferences":  26,
+                    "selectorUnreferencedComponents":  127,
+                    "componentsWithoutDirectSpecs":  112,
+                    "criticalSymbolsWithoutTestReferences":  28,
                     "explicitDebtMarkers":  2
                 },
     "projectDependencyViolations":  [
@@ -1053,6 +1053,14 @@
                                                "specPath":  null
                                            },
                                            {
+                                               "class":  "WeightGoalHistoryDialogComponent",
+                                               "selector":  "fd-weight-goal-history-dialog",
+                                               "feature":  "weight-history",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.html",
+                                               "specPath":  null
+                                           },
+                                           {
                                                "class":  "WeightHistoryBmiCardComponent",
                                                "selector":  "fd-weight-history-bmi-card",
                                                "feature":  "weight-history",
@@ -1074,6 +1082,14 @@
                                                "feature":  "weight-history",
                                                "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.html",
+                                               "specPath":  null
+                                           },
+                                           {
+                                               "class":  "WeightHistoryGoalDialogComponent",
+                                               "selector":  "fd-weight-history-goal-dialog",
+                                               "feature":  "weight-history",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.html",
                                                "specPath":  null
                                            },
                                            {
@@ -4470,6 +4486,20 @@
                                              "specPath":  null
                                          },
                                          {
+                                             "class":  "WeightGoalHistoryDialogComponent",
+                                             "selector":  "fd-weight-goal-history-dialog",
+                                             "feature":  "weight-history",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.html",
+                                             "inputs":  [
+
+                                                        ],
+                                             "outputs":  [
+
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
                                              "class":  "WeightHistoryEntriesDialogComponent",
                                              "selector":  "fd-weight-history-entries-dialog",
                                              "feature":  "weight-history",
@@ -4505,36 +4535,64 @@
                                              "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
                                              "inputs":  [
                                                             {
-                                                                "name":  "weightField",
-                                                                "type":  "FieldTree\u003cstring\u003e",
-                                                                "required":  true
-                                                            },
-                                                            {
-                                                                "name":  "isSaving",
-                                                                "type":  "boolean",
-                                                                "required":  true
-                                                            },
-                                                            {
-                                                                "name":  "entries",
-                                                                "type":  "readonly WeightEntry[]",
-                                                                "required":  true
-                                                            },
-                                                            {
                                                                 "name":  "currentWeight",
                                                                 "type":  "number | null",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "currentWeightDate",
+                                                                "type":  "string | null",
                                                                 "required":  true
                                                             },
                                                             {
                                                                 "name":  "desiredWeight",
                                                                 "type":  "number | null",
                                                                 "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "startWeight",
+                                                                "type":  "number | null",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "startedAtUtc",
+                                                                "type":  "string | null",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "hasGoalHistory",
+                                                                "type":  "boolean",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "lastCompletedGoal",
+                                                                "type":  "WeightGoalHistoryItem | null",
+                                                                "required":  true
                                                             }
                                                         ],
                                              "outputs":  [
                                                              {
-                                                                 "name":  "saveGoal",
+                                                                 "name":  "configureGoal",
+                                                                 "type":  ""
+                                                             },
+                                                             {
+                                                                 "name":  "viewGoalHistory",
                                                                  "type":  ""
                                                              }
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
+                                             "class":  "WeightHistoryGoalDialogComponent",
+                                             "selector":  "fd-weight-history-goal-dialog",
+                                             "feature":  "weight-history",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.html",
+                                             "inputs":  [
+
+                                                        ],
+                                             "outputs":  [
+
                                                          ],
                                              "specPath":  null
                                          },
@@ -4635,10 +4693,30 @@
                                                                         ]
                                                  },
                                                  {
+                                                     "name":  "WeightGoalsController",
+                                                     "role":  "Controller",
+                                                     "path":  "FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs",
+                                                     "line":  13,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
                                                      "name":  "GetAdminUsersQueryHandler",
                                                      "role":  "QueryHandler",
                                                      "path":  "FoodDiary.Application/Admin/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
                                                      "line":  8,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
+                                                     "name":  "GetWeightGoalHistoryQueryHandler",
+                                                     "role":  "QueryHandler",
+                                                     "path":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
+                                                     "line":  9,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
 

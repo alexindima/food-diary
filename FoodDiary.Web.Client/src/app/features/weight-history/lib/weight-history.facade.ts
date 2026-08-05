@@ -9,6 +9,7 @@ import { resolveTranslateLanguage } from '../../../shared/i18n/translate-languag
 import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
 import { parseDecimalInput } from '../../../shared/lib/number.utils';
 import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
+import type { DesiredWeightResponse, WeightGoalHistoryItem } from '../../../shared/models/user.data';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { WeightEntriesService } from '../api/weight-entries.service';
 import type {
@@ -62,13 +63,19 @@ export class WeightHistoryFacade {
         calculateWeightHistoryRangeDates(this.selectedRange(), this.customRangeModel().range),
     );
     public readonly entries = signal<WeightEntry[]>([]);
+    public readonly latestEntry = signal<WeightEntry | null>(null);
     public readonly isLoading = signal(false);
     public readonly isSaving = signal(false);
     public readonly entryError = signal<string | null>(null);
     public readonly entrySaveVersion = signal(0);
     public readonly isEditing = signal(false);
-    public readonly desiredWeight = signal<number | null>(null);
+    public readonly weightGoal = signal<DesiredWeightResponse>({ desiredWeight: null, startWeight: null, startedAtUtc: null });
+    public readonly desiredWeight = computed(() => this.weightGoal().desiredWeight);
+    public readonly weightGoalHistory = signal<WeightGoalHistoryItem[]>([]);
+    public readonly hasCompletedWeightGoals = computed(() => this.weightGoalHistory().some(goal => goal.status !== 'Active'));
+    public readonly lastCompletedWeightGoal = computed(() => this.weightGoalHistory().find(goal => goal.status !== 'Active') ?? null);
     public readonly isDesiredWeightSaving = signal(false);
+    public readonly desiredWeightSaveVersion = signal(0);
     public readonly summaryPoints = signal<WeightEntrySummaryPoint[]>([]);
     public readonly rollingMonthSummaryPoints = signal<WeightEntrySummaryPoint[]>([]);
     public readonly isSummaryLoading = signal(false);
@@ -110,10 +117,8 @@ export class WeightHistoryFacade {
         buildWeightHistoryChartPoints(this.summaryPoints(), resolveTranslateLanguage(this.translate)),
     );
 
-    public readonly latestWeight = computed<number | null>(() => {
-        const entries = this.entriesDescending();
-        return entries.length > 0 ? entries[0].weight : null;
-    });
+    public readonly latestWeight = computed<number | null>(() => this.latestEntry()?.weight ?? null);
+    public readonly latestWeightDate = computed<string | null>(() => this.latestEntry()?.date ?? null);
 
     public readonly bmiViewModel = computed(() => buildBmiViewModel(this.userHeightCm(), this.latestWeight()));
 
@@ -144,7 +149,9 @@ export class WeightHistoryFacade {
 
         this.initialized.set(true);
         this.loadDesiredWeight();
+        this.loadWeightGoalHistory();
         this.loadUserProfile();
+        this.loadLatestEntry();
         this.loadEntries();
     }
 
@@ -180,6 +187,7 @@ export class WeightHistoryFacade {
             );
             this.entrySaveVersion.update(version => version + 1);
             this.invalidation.reportBodyMetricMutation();
+            this.loadLatestEntry();
             this.loadEntries(false, true);
             this.loadRollingMonthSummaryIfNeeded();
             if (editingId !== null) {
@@ -204,10 +212,9 @@ export class WeightHistoryFacade {
 
     public cancelEdit(): void {
         this.resetEditingState();
-        const latest = (this.entriesDescending() as Array<WeightEntry | undefined>)[0];
         this.formModel.set({
             date: formatWeightHistoryDateInput(new Date()),
-            weight: latest !== undefined ? latest.weight.toString() : '',
+            weight: this.latestWeight()?.toString() ?? '',
         });
     }
 
@@ -223,6 +230,7 @@ export class WeightHistoryFacade {
             )
             .subscribe(() => {
                 this.invalidation.reportBodyMetricMutation();
+                this.loadLatestEntry();
                 this.loadEntries(false, true);
                 this.loadRollingMonthSummaryIfNeeded();
                 if (this.editingEntryId() === entry.id) {
@@ -243,17 +251,38 @@ export class WeightHistoryFacade {
 
         this.isDesiredWeightSaving.set(true);
         this.userService
-            .updateDesiredWeight(parsedValue)
+            .updateWeightGoal(parsedValue)
             .pipe(
                 finalize(() => {
                     this.isDesiredWeightSaving.set(false);
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(value => {
+            .subscribe(goal => {
                 this.invalidation.reportGoalMutation();
-                this.desiredWeight.set(value);
-                this.desiredWeightModel.set({ weight: value?.toString() ?? '' });
+                this.weightGoal.set(goal);
+                this.desiredWeightModel.set({ weight: goal.desiredWeight?.toString() ?? '' });
+                this.desiredWeightSaveVersion.update(version => version + 1);
+                this.loadWeightGoalHistory();
+            });
+    }
+
+    public cancelWeightGoal(): void {
+        this.isDesiredWeightSaving.set(true);
+        this.userService
+            .updateWeightGoal(null)
+            .pipe(
+                finalize(() => {
+                    this.isDesiredWeightSaving.set(false);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(goal => {
+                this.invalidation.reportGoalMutation();
+                this.weightGoal.set(goal);
+                this.desiredWeightModel.set({ weight: '' });
+                this.desiredWeightSaveVersion.update(version => version + 1);
+                this.loadWeightGoalHistory();
             });
     }
 
@@ -310,22 +339,39 @@ export class WeightHistoryFacade {
             )
             .subscribe(entries => {
                 this.entries.set(entries);
-                if (!this.isEditing() && entries.length > 0) {
-                    const latest = [...entries].sort((a, b) => compareDatesDesc(a.date, b.date))[0];
-                    this.form.weight().value.set(latest.weight.toString());
-                }
             });
 
         this.loadSummary(summaryParams, this.selectedRange() === 'month');
     }
 
+    private loadLatestEntry(): void {
+        this.weightEntriesService
+            .getLatest()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(entry => {
+                this.latestEntry.set(entry);
+                if (!this.isEditing()) {
+                    this.form.weight().value.set(entry?.weight.toString() ?? '');
+                }
+            });
+    }
+
     private loadDesiredWeight(): void {
         this.userService
-            .getDesiredWeight()
+            .getWeightGoal()
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(value => {
-                this.desiredWeight.set(value);
-                this.desiredWeightModel.set({ weight: value?.toString() ?? '' });
+            .subscribe(goal => {
+                this.weightGoal.set(goal);
+                this.desiredWeightModel.set({ weight: goal.desiredWeight?.toString() ?? '' });
+            });
+    }
+
+    private loadWeightGoalHistory(): void {
+        this.userService
+            .getWeightGoalHistory()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(history => {
+                this.weightGoalHistory.set(history);
             });
     }
 

@@ -1085,6 +1085,11 @@ public partial class UsersFeatureTests {
                 : Result.Success(new UserDesiredWeightModel(result.Value.DesiredWeight));
         }
 
+        public Task<Result<IReadOnlyList<WeightGoalHistoryModel>>> GetWeightGoalHistoryAsync(
+            UserId userId,
+            CancellationToken cancellationToken) =>
+            Task.FromResult(Result.Success<IReadOnlyList<WeightGoalHistoryModel>>([]));
+
         public async Task<Result<UserDesiredWaistModel>> GetDesiredWaistAsync(UserId userId, CancellationToken cancellationToken) {
             Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
             return result.IsFailure

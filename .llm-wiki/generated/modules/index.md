@@ -51,7 +51,7 @@ repository catalog. Regenerate it instead of editing it manually.
 | [Statistics](statistics.md) | 1 | 1 | 1 |
 | [Tdee](tdee.md) | 3 | 1 | 1 |
 | [Usda](usda.md) | 2 | 1 | 1 |
-| [Users](users.md) | 1 | 32 | 4 |
+| [Users](users.md) | 1 | 32 | 5 |
 | [WaistEntries](waist-entries.md) | 1 | 2 | 1 |
 | [Wearables](wearables.md) | 1 | 0 | 1 |
 | [WeeklyCheckIn](weekly-check-in.md) | 5 | 0 | 1 |

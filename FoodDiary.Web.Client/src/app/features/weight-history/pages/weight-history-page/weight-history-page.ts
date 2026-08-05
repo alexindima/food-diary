@@ -16,12 +16,14 @@ import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-cont
 import { WeightHistoryChartCardComponent } from '../../components/weight-history-chart-card/weight-history-chart-card';
 import { WeightHistoryEntriesCardComponent } from '../../components/weight-history-entries-card/weight-history-entries-card';
 import { WeightHistoryGoalCardComponent } from '../../components/weight-history-goal-card/weight-history-goal-card';
+import { WeightGoalHistoryDialogComponent } from '../../dialogs/weight-goal-history-dialog/weight-goal-history-dialog';
 import {
     WeightHistoryEntriesDialogComponent,
     type WeightHistoryEntriesDialogData,
     type WeightHistoryEntriesDialogResult,
 } from '../../dialogs/weight-history-entries-dialog/weight-history-entries-dialog';
 import { WeightHistoryEntryDialogComponent } from '../../dialogs/weight-history-entry-dialog/weight-history-entry-dialog';
+import { WeightHistoryGoalDialogComponent } from '../../dialogs/weight-history-goal-dialog/weight-history-goal-dialog';
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 import { WEIGHT_HISTORY_RANGE_TABS } from '../../lib/weight-history-page.config';
 import { getWeightChangeTone, getWeightRemainingToGoal } from '../../lib/weight-history-progress.utils';
@@ -63,14 +65,16 @@ export class WeightHistoryPageComponent {
     protected readonly entries = this.facade.entries;
     protected readonly isLoading = this.facade.isLoading;
     protected readonly desiredWeight = this.facade.desiredWeight;
-    protected readonly isDesiredWeightSaving = this.facade.isDesiredWeightSaving;
+    protected readonly weightGoal = this.facade.weightGoal;
+    protected readonly hasCompletedWeightGoals = this.facade.hasCompletedWeightGoals;
+    protected readonly lastCompletedWeightGoal = this.facade.lastCompletedWeightGoal;
     protected readonly isSummaryLoading = this.facade.isSummaryLoading;
     protected readonly customRangeForm = this.facade.customRangeForm;
     protected readonly entriesDescending = this.facade.entriesDescending;
     protected readonly chartPoints = this.facade.chartPoints;
-    protected readonly desiredWeightForm = this.facade.desiredWeightForm;
     protected readonly bmiViewModel = this.facade.bmiViewModel;
     protected readonly latestWeight = this.facade.latestWeight;
+    protected readonly latestWeightDate = this.facade.latestWeightDate;
     protected readonly isMobileView = this.viewportService.isMobile;
 
     protected readonly weightChange = computed<{ value: number; tone: 'positive' | 'negative' | 'neutral' } | null>(() => {
@@ -93,8 +97,8 @@ export class WeightHistoryPageComponent {
         const latestWeight = this.latestWeight();
         const desiredWeight = this.desiredWeight();
 
-        const startWeight = this.entriesDescending().at(-1)?.weight;
-        return latestWeight === null || desiredWeight === null || startWeight === undefined
+        const startWeight = this.facade.weightGoal().startWeight;
+        return latestWeight === null || desiredWeight === null || startWeight === null
             ? null
             : { value: getWeightRemainingToGoal(startWeight, latestWeight, desiredWeight) };
     });
@@ -118,8 +122,18 @@ export class WeightHistoryPageComponent {
         this.facade.deleteEntry(entry);
     }
 
-    protected saveDesiredWeight(): void {
-        this.facade.saveDesiredWeight();
+    protected openGoalDialog(): void {
+        this.dialogService.open(WeightHistoryGoalDialogComponent, {
+            preset: 'form',
+            providers: [{ provide: WeightHistoryFacade, useValue: this.facade }],
+        });
+    }
+
+    protected openGoalHistoryDialog(): void {
+        this.dialogService.open(WeightGoalHistoryDialogComponent, {
+            preset: 'form',
+            providers: [{ provide: WeightHistoryFacade, useValue: this.facade }],
+        });
     }
 
     protected openEntryDialog(): void {

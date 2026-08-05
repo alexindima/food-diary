@@ -82,6 +82,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     private readonly List<Product> _products = [];
     private readonly List<Recipe> _recipes = [];
     private readonly List<WeightEntry> _weightEntries = [];
+    private readonly List<WeightGoal> _weightGoals = [];
     private readonly List<WaistEntry> _waistEntries = [];
     private readonly List<CycleProfile> _cycles = [];
     private readonly List<HydrationEntry> _hydrationEntries = [];
@@ -91,6 +92,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     public IReadOnlyCollection<Product> Products => _products.AsReadOnly();
     public IReadOnlyCollection<Recipe> Recipes => _recipes.AsReadOnly();
     public IReadOnlyCollection<WeightEntry> WeightEntries => _weightEntries.AsReadOnly();
+    public IReadOnlyCollection<WeightGoal> WeightGoals => _weightGoals.AsReadOnly();
     public IReadOnlyCollection<WaistEntry> WaistEntries => _waistEntries.AsReadOnly();
     public IReadOnlyCollection<CycleProfile> Cycles => _cycles.AsReadOnly();
     public IReadOnlyCollection<HydrationEntry> HydrationEntries => _hydrationEntries.AsReadOnly();

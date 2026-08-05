@@ -7,6 +7,7 @@ namespace FoodDiary.Infrastructure.Persistence;
 
 public sealed partial class FoodDiaryDbContext {
     public DbSet<WeightEntry> WeightEntries => Set<WeightEntry>();
+    public DbSet<WeightGoal> WeightGoals => Set<WeightGoal>();
     public DbSet<WaistEntry> WaistEntries => Set<WaistEntry>();
     public DbSet<CycleProfile> CycleProfiles => Set<CycleProfile>();
     public DbSet<BleedingEntry> CycleBleedingEntries => Set<BleedingEntry>();

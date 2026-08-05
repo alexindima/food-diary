@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "contracts":  980,
+                    "contracts":  983,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  6800,
-                    "productionConsumerEdges":  4142,
+                    "consumerEdges":  6815,
+                    "productionConsumerEdges":  4157,
                     "testConsumerEdges":  2658,
-                    "consumedContracts":  980,
+                    "consumedContracts":  983,
                     "unconsumedContracts":  0
                 },
     "contracts":  [
@@ -5591,6 +5591,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Application/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQuery.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "GetWeightGoalHistoryQuery",
+                          "roles":  [
+                                        "Query"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -11615,6 +11631,22 @@
                           "ambiguous":  false
                       },
                       {
+                          "name":  "IUserCurrentWeightProvider",
+                          "roles":  [
+                                        "Other"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Abstractions/Users/Common/IUserCurrentWeightProvider.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
                           "name":  "IUserDirectoryService",
                           "roles":  [
                                         "Service"
@@ -15676,6 +15708,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Presentation.Api/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "WeightGoalHistoryHttpResponse",
+                          "roles":  [
+                                        "Response"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Presentation.Api/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -37928,6 +37976,32 @@
                               "referenceCount":  2
                           },
                           {
+                              "contract":  "GetWeightGoalHistoryQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "GetWeightGoalHistoryQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Users/Mappings/UserHttpMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
                               "contract":  "GetWeightSummariesHttpQuery",
                               "roles":  [
                                             "Query"
@@ -49675,6 +49749,19 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -55461,6 +55548,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Domain/ValueObjects/Ids/WeightEntryId.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IEntityId",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Domain/ValueObjects/Ids/WeightGoalId.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -71293,6 +71393,19 @@
                                                       "FoodDiary.Application/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -72646,6 +72759,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Users/Queries/GetUserGoals/GetUserGoalsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -78612,6 +78738,19 @@
                                                       "Shared/FoodDiary.Mediator/ISender.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ISender",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "Shared/FoodDiary.Mediator/ISender.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -82397,7 +82536,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandHandler.cs",
                               "isTest":  false,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IUserContextService",
@@ -82410,7 +82549,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Users/Commands/UpdateGoals/UpdateGoalsCommandHandler.cs",
                               "isTest":  false,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IUserContextService",
@@ -82709,6 +82848,58 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
                               "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserCurrentWeightProvider",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserCurrentWeightProvider.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "IUserCurrentWeightProvider",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserCurrentWeightProvider.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Users/Commands/UpdateGoals/UpdateGoalsCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "IUserCurrentWeightProvider",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserCurrentWeightProvider.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserCurrentWeightProvider",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserCurrentWeightProvider.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs",
+                              "isTest":  false,
                               "referenceCount":  1
                           },
                           {
@@ -83462,6 +83653,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Users/Queries/GetUserGoals/GetUserGoalsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -85646,6 +85850,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Users/Queries/GetUserGoals/GetUserGoalsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -99609,7 +99826,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Web.Api.IntegrationTests/PresentationPayloadContractIntegrationTests.cs",
                               "isTest":  true,
-                              "referenceCount":  1
+                              "referenceCount":  3
                           },
                           {
                               "contract":  "UpdateDietologistPermissionsCommand",
@@ -104081,6 +104298,32 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WeightEntryHttpMappingsTests.cs",
                               "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "WeightGoalHistoryHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Users/Mappings/UserHttpResponseMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "WeightGoalHistoryHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs",
+                              "isTest":  false,
                               "referenceCount":  1
                           },
                           {

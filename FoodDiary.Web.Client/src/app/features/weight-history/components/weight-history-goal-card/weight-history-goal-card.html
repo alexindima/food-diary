@@ -56,62 +56,94 @@
                         <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_AVERAGE_RATE' | translate }}</div>
                     </div>
                 </div>
-            </div>
-
-            <div class="weight-history-page__goal-journey fd-grid">
-                <div>
-                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_START_WEIGHT' | translate }}</div>
-                    <div class="weight-history-page__goal-journey-value fd-ui-body-sm">
-                        {{ progress.startWeight | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                <div class="weight-history-page__goal-stat fd-row fd-align-center">
+                    <div class="weight-history-page__goal-stat-icon"><fd-ui-icon name="scale" size="lg" /></div>
+                    <div>
+                        <div class="weight-history-page__goal-stat-value fd-ui-stat-value">
+                            {{ progress.startWeight | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                        </div>
+                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_START_WEIGHT' | translate }}</div>
                     </div>
                 </div>
-                <div>
-                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_CURRENT_WEIGHT' | translate }}</div>
-                    <div class="weight-history-page__goal-journey-value fd-ui-body-sm">
-                        {{ progress.currentWeight | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                <div class="weight-history-page__goal-stat fd-row fd-align-center">
+                    <div class="weight-history-page__goal-stat-icon"><fd-ui-icon name="monitor_weight" size="lg" /></div>
+                    <div>
+                        <div class="weight-history-page__goal-stat-value fd-ui-stat-value">
+                            {{ progress.currentWeight | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                        </div>
+                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_CURRENT_WEIGHT' | translate }}</div>
                     </div>
                 </div>
-                <div>
-                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_TARGET_WEIGHT' | translate }}</div>
-                    <div class="weight-history-page__goal-journey-value fd-ui-body-sm">
-                        {{ progress.goalWeight | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                <div class="weight-history-page__goal-stat fd-row fd-align-center">
+                    <div class="weight-history-page__goal-stat-icon"><fd-ui-icon name="event" size="lg" /></div>
+                    <div>
+                        <div class="weight-history-page__goal-stat-value fd-ui-stat-value">
+                            @if (startDateLabel(); as startedAt) {
+                                {{ startedAt }}
+                            } @else {
+                                —
+                            }
+                        </div>
+                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_START_DATE' | translate }}</div>
                     </div>
                 </div>
             </div>
         </div>
     }
 
-    @if (isEditing()) {
-        <div class="weight-history-page__goal-editor fd-stack fd-gap-card-header">
-            <fd-ui-input
-                class="weight-history-page__goal-input"
-                type="number"
-                [step]="0.1"
-                [ariaLabel]="'WEIGHT_HISTORY.GOAL_CARD_TITLE' | translate"
-                [placeholder]="'WEIGHT_HISTORY.GOAL_PLACEHOLDER' | translate"
-                [suffixButtonIcon]="weightField()().value() ? 'backspace' : undefined"
-                [formField]="weightField()"
-                (suffixButtonClicked)="weightField()().value.set('')"
-            />
-            <div class="weight-history-page__goal-actions fd-row fd-wrap fd-gap-actions">
-                <fd-ui-button type="button" [loading]="isSaving()" (click)="save()">
-                    {{ 'WEIGHT_HISTORY.SAVE_GOAL' | translate }}
-                </fd-ui-button>
-                <fd-ui-button type="button" variant="secondary" fill="text" (click)="cancelEditing()">
-                    {{ 'WEIGHT_HISTORY.CANCEL_EDIT' | translate }}
-                </fd-ui-button>
+    @if (desiredWeight() === null) {
+        <div class="weight-history-page__goal-empty fd-stack fd-gap-card-header">
+            <div class="fd-ui-card-title">{{ 'WEIGHT_HISTORY.GOAL_NOT_SET' | translate }}</div>
+            <div class="fd-ui-body-sm fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_EMPTY_DESCRIPTION' | translate }}</div>
+            <div class="weight-history-page__goal-last fd-stack fd-gap-actions">
+                @if (lastGoalSummary(); as lastGoal) {
+                    <div class="fd-row fd-justify-between fd-align-start fd-gap-actions">
+                        <div>
+                            <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.LAST_GOAL' | translate }}</div>
+                            <div class="fd-ui-card-title">
+                                {{ 'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: lastGoal.targetWeight | number: '1.0-2' } }}
+                            </div>
+                        </div>
+                        @if (lastGoal.change !== null) {
+                            <div class="weight-history-page__goal-last-change fd-row fd-align-center fd-gap-xs fd-ui-stat-value">
+                                <fd-ui-icon name="trending_down" size="sm" />
+                                {{
+                                    'WEIGHT_HISTORY.LAST_GOAL_CHANGE'
+                                        | translate
+                                            : {
+                                                  value:
+                                                      (lastGoal.change > 0 ? '+' : '') +
+                                                      (lastGoal.change | number: '1.0-2') +
+                                                      ' ' +
+                                                      ('GENERAL.UNITS.KG' | translate),
+                                              }
+                                }}
+                            </div>
+                        }
+                    </div>
+                    <div class="fd-ui-caption fd-ui-text-muted">{{ lastGoal.startDate }} — {{ lastGoal.endDate }}</div>
+                } @else {
+                    <div class="fd-ui-card-title">{{ 'WEIGHT_HISTORY.NO_GOAL_HISTORY_TITLE' | translate }}</div>
+                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.NO_GOAL_HISTORY_DESCRIPTION' | translate }}</div>
+                }
             </div>
         </div>
-    } @else {
+    }
+    <div class="weight-history-page__goal-actions fd-row fd-wrap fd-gap-actions">
+        @if (hasGoalHistory()) {
+            <fd-ui-button type="button" variant="secondary" fill="text" icon="history" (click)="viewGoalHistory.emit()">
+                {{ 'WEIGHT_HISTORY.GOAL_HISTORY' | translate }}
+            </fd-ui-button>
+        }
         <fd-ui-button
-            class="weight-history-page__goal-edit-button"
+            class="weight-history-page__goal-primary-action"
             type="button"
             variant="secondary"
             fill="outline"
             icon="track_changes"
-            (click)="startEditing()"
+            (click)="configureGoal.emit()"
         >
-            {{ 'WEIGHT_HISTORY.EDIT_GOAL' | translate }}
+            {{ (desiredWeight() === null ? 'WEIGHT_HISTORY.SET_GOAL' : 'WEIGHT_HISTORY.CONFIGURE_GOAL') | translate }}
         </fd-ui-button>
-    }
+    </div>
 </fd-ui-card>

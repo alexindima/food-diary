@@ -1,0 +1,49 @@
+<fd-ui-dialog size="md" [title]="'WEIGHT_HISTORY.GOAL_HISTORY' | translate" [dismissible]="true" (close)="close()">
+    <div class="weight-goal-history fd-stack fd-gap-card-content">
+        @for (goal of goals(); track goal.id) {
+            <article class="weight-goal-history__item" [class.weight-goal-history__item--active]="goal.status === 'Active'">
+                <div class="fd-row fd-justify-between fd-align-start fd-gap-actions">
+                    <div>
+                        <div class="fd-ui-caption fd-ui-text-muted">{{ goal.statusKey | translate }}</div>
+                        <div class="weight-goal-history__target fd-ui-card-title">
+                            {{ 'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: goal.targetWeight | number: '1.0-2' } }}
+                        </div>
+                    </div>
+                    @if (goal.status === 'Active') {
+                        <fd-ui-icon name="track_changes" size="lg" />
+                    } @else {
+                        <div class="weight-goal-history__change fd-ui-stat-value">
+                            {{ goal.change > 0 ? '+' : '' }}{{ goal.change | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                        </div>
+                    }
+                </div>
+
+                <div class="weight-goal-history__dates fd-ui-body-sm">
+                    {{ goal.startDate }} — {{ goal.endDate ?? ('WEIGHT_HISTORY.GOAL_NOW' | translate) }}
+                </div>
+
+                @if (goal.progress !== null) {
+                    <div class="weight-goal-history__progress-row fd-row fd-align-center fd-gap-actions">
+                        <div class="weight-goal-history__progress" role="progressbar" [attr.aria-valuenow]="goal.progress">
+                            <div class="weight-goal-history__progress-value" [style.width.%]="goal.progress"></div>
+                        </div>
+                        <div class="fd-ui-stat-value">{{ goal.progress | number: '1.0-0' }}%</div>
+                    </div>
+                }
+
+                <div class="weight-goal-history__weights fd-grid fd-ui-caption fd-ui-text-muted">
+                    <span>
+                        {{ 'WEIGHT_HISTORY.GOAL_START_WEIGHT' | translate }}: {{ goal.startWeight | number: '1.0-2' }}
+                        {{ 'GENERAL.UNITS.KG' | translate }}
+                    </span>
+                    <span>
+                        {{
+                            (goal.status === 'Active' ? 'WEIGHT_HISTORY.GOAL_CURRENT_WEIGHT' : 'WEIGHT_HISTORY.GOAL_END_WEIGHT')
+                                | translate
+                        }}: {{ goal.displayEndWeight | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                    </span>
+                </div>
+            </article>
+        }
+    </div>
+</fd-ui-dialog>

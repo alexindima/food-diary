@@ -97,6 +97,11 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .HasForeignKey(w => w.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasMany(e => e.WeightGoals)
+            .WithOne()
+            .HasForeignKey(goal => goal.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.HasMany(e => e.WaistEntries)
             .WithOne(w => w.User)
             .HasForeignKey(w => w.UserId)
@@ -122,6 +127,8 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
         builder.Metadata.FindNavigation(nameof(User.Recipes))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
         builder.Metadata.FindNavigation(nameof(User.WeightEntries))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+        builder.Metadata.FindNavigation(nameof(User.WeightGoals))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
         builder.Metadata.FindNavigation(nameof(User.WaistEntries))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);

@@ -8,23 +8,23 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  2954,
-                    "symbols":  2994,
-                    "interfaceImplementationLinks":  220,
-                    "dependencyInjectionRegistrations":  218,
+                    "sourceFiles":  2965,
+                    "symbols":  3005,
+                    "interfaceImplementationLinks":  221,
+                    "dependencyInjectionRegistrations":  219,
                     "kinds":  {
-                                  "class":  1515,
-                                  "enum":  43,
-                                  "interface":  395,
-                                  "record":  933,
-                                  "record struct":  108
+                                  "class":  1520,
+                                  "enum":  44,
+                                  "interface":  396,
+                                  "record":  936,
+                                  "record struct":  109
                               },
                     "roles":  {
                                   "Command":  149,
                                   "CommandHandler":  145,
-                                  "Configuration":  77,
-                                  "Controller":  84,
-                                  "Entity":  76,
+                                  "Configuration":  78,
+                                  "Controller":  85,
+                                  "Entity":  77,
                                   "Event":  19,
                                   "Factory":  7,
                                   "Handler":  4,
@@ -32,17 +32,17 @@
                                   "Mapper":  8,
                                   "Mapping":  3,
                                   "Options":  55,
-                                  "Other":  1046,
-                                  "Query":  148,
-                                  "QueryHandler":  115,
+                                  "Other":  1050,
+                                  "Query":  149,
+                                  "QueryHandler":  116,
                                   "ReadModelRepository":  29,
                                   "ReadRepository":  50,
                                   "Repository":  103,
                                   "Request":  121,
-                                  "Response":  161,
+                                  "Response":  162,
                                   "Service":  251,
                                   "Validator":  175,
-                                  "ValueObject":  118,
+                                  "ValueObject":  119,
                                   "WriteRepository":  47
                               }
                 },
@@ -3350,6 +3350,13 @@
                         "role":  "Service",
                         "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserCleanupService.cs",
                         "line":  2
+                    },
+                    {
+                        "name":  "IUserCurrentWeightProvider",
+                        "kind":  "interface",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserCurrentWeightProvider.cs",
+                        "line":  4
                     },
                     {
                         "name":  "IUserDirectoryService",
@@ -10797,7 +10804,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandHandler.cs",
-                        "line":  9
+                        "line":  10
                     },
                     {
                         "name":  "UpdateDesiredWeightCommandValidator",
@@ -10818,7 +10825,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Users/Commands/UpdateGoals/UpdateGoalsCommandHandler.cs",
-                        "line":  12
+                        "line":  13
                     },
                     {
                         "name":  "UpdateGoalsCommandValidator",
@@ -11045,6 +11052,13 @@
                         "line":  2
                     },
                     {
+                        "name":  "WeightGoalHistoryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/Users/Models/WeightGoalHistoryModel.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "GetDesiredWaistQuery",
                         "kind":  "record",
                         "role":  "Query",
@@ -11148,6 +11162,20 @@
                         "role":  "Validator",
                         "path":  "FoodDiary.Application/Users/Queries/GetUserGoals/GetUserGoalsQueryValidator.cs",
                         "line":  4
+                    },
+                    {
+                        "name":  "GetWeightGoalHistoryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWeightGoalHistoryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
+                        "line":  9
                     },
                     {
                         "name":  "ProfileOverviewReadService",
@@ -12109,6 +12137,13 @@
                         "line":  8
                     },
                     {
+                        "name":  "WeightGoal",
+                        "kind":  "class",
+                        "role":  "Entity",
+                        "path":  "FoodDiary.Domain/Entities/Tracking/WeightGoal.cs",
+                        "line":  7
+                    },
+                    {
                         "name":  "DailyReferenceValue",
                         "kind":  "class",
                         "role":  "Entity",
@@ -12176,7 +12211,7 @@
                         "kind":  "class",
                         "role":  "Entity",
                         "path":  "FoodDiary.Domain/Entities/Users/User.Goals.cs",
-                        "line":  4
+                        "line":  6
                     },
                     {
                         "name":  "User",
@@ -12491,6 +12526,13 @@
                         "kind":  "enum",
                         "role":  "Other",
                         "path":  "FoodDiary.Domain/Enums/WearableProvider.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WeightGoalStatus",
+                        "kind":  "enum",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Domain/Enums/WeightGoalStatus.cs",
                         "line":  2
                     },
                     {
@@ -13023,6 +13065,13 @@
                         "kind":  "record struct",
                         "role":  "ValueObject",
                         "path":  "FoodDiary.Domain/ValueObjects/Ids/WeightEntryId.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "WeightGoalId",
+                        "kind":  "record struct",
+                        "role":  "ValueObject",
+                        "path":  "FoodDiary.Domain/ValueObjects/Ids/WeightGoalId.cs",
                         "line":  4
                     },
                     {
@@ -13737,6 +13786,13 @@
                         "kind":  "class",
                         "role":  "Configuration",
                         "path":  "FoodDiary.Infrastructure/Persistence/Configurations/BodyMetrics/WeightEntryConfiguration.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "WeightGoalConfiguration",
+                        "kind":  "class",
+                        "role":  "Configuration",
+                        "path":  "FoodDiary.Infrastructure/Persistence/Configurations/BodyMetrics/WeightGoalConfiguration.cs",
                         "line":  7
                     },
                     {
@@ -14886,6 +14942,13 @@
                         "role":  "Service",
                         "path":  "FoodDiary.Infrastructure/Persistence/Users/UserCleanupService.cs",
                         "line":  9
+                    },
+                    {
+                        "name":  "UserCurrentWeightProvider",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs",
+                        "line":  6
                     },
                     {
                         "name":  "UserLoginEventRepository",
@@ -18385,7 +18448,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Presentation.Api/Features/Users/Mappings/UserHttpMappings.cs",
-                        "line":  19
+                        "line":  20
                     },
                     {
                         "name":  "UserHttpResponseMappings",
@@ -18472,6 +18535,13 @@
                         "line":  4
                     },
                     {
+                        "name":  "WeightGoalHistoryHttpResponse",
+                        "kind":  "record",
+                        "role":  "Response",
+                        "path":  "FoodDiary.Presentation.Api/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "UserAiConsentController",
                         "kind":  "class",
                         "role":  "Controller",
@@ -18498,6 +18568,13 @@
                         "role":  "Controller",
                         "path":  "FoodDiary.Presentation.Api/Features/Users/UsersPasswordController.cs",
                         "line":  14
+                    },
+                    {
+                        "name":  "WeightGoalsController",
+                        "kind":  "class",
+                        "role":  "Controller",
+                        "path":  "FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs",
+                        "line":  13
                     },
                     {
                         "name":  "IApiVersionInfo",
@@ -22401,6 +22478,13 @@
                                          "confidence":  "naming-convention"
                                      },
                                      {
+                                         "interface":  "IUserCurrentWeightProvider",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Users/Common/IUserCurrentWeightProvider.cs",
+                                         "implementation":  "UserCurrentWeightProvider",
+                                         "implementationPath":  "FoodDiary.Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
                                          "interface":  "IUserIdentityMutationService",
                                          "interfacePath":  "FoodDiary.Application/Users/Common/IUserIdentityMutationService.cs",
                                          "implementation":  "UserIdentityMutationService",
@@ -23768,46 +23852,53 @@
                                                  "line":  21
                                              },
                                              {
+                                                 "service":  "IUserCurrentWeightProvider",
+                                                 "implementation":  "UserCurrentWeightProvider",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
+                                                 "line":  22
+                                             },
+                                             {
                                                  "service":  "IUserLoginEventRepository",
                                                  "implementation":  "UserLoginEventRepository",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  23
+                                                 "line":  24
                                              },
                                              {
                                                  "service":  "IRefreshTokenSessionRepository",
                                                  "implementation":  "RefreshTokenSessionRepository",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  27
+                                                 "line":  28
                                              },
                                              {
                                                  "service":  "IAdminBillingRepository",
                                                  "implementation":  "AdminBillingRepository",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  31
+                                                 "line":  32
                                              },
                                              {
                                                  "service":  "IAdminImpersonationSessionRepository",
                                                  "implementation":  "AdminImpersonationSessionRepository",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  33
+                                                 "line":  34
                                              },
                                              {
                                                  "service":  "IAdminUserRoleAuditRepository",
                                                  "implementation":  "AdminUserRoleAuditRepository",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  36
+                                                 "line":  37
                                              },
                                              {
                                                  "service":  "IEmailTemplateRepository",
                                                  "implementation":  "EmailTemplateRepository",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  38
+                                                 "line":  39
                                              },
                                              {
                                                  "service":  "IWearableConnectionRepository",

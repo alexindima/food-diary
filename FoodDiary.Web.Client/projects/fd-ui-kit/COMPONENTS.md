@@ -214,6 +214,7 @@ Date input (value as `YYYY-MM-DD`).
 
 - `label?: string`
 - `placeholder?: string`
+- `todayLabel?: string` (optional localized text displayed when the selected value is the local current date)
 - `error?: string | null`
 - `required?: boolean`
 - `size?: 'sm' | 'md' | 'lg'`

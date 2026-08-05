@@ -10,6 +10,7 @@ using FoodDiary.Application.Users.Commands.UpdateUser;
 using FoodDiary.Application.Users.Queries.GetProfileOverview;
 using FoodDiary.Application.Users.Queries.GetDesiredWaist;
 using FoodDiary.Application.Users.Queries.GetDesiredWeight;
+using FoodDiary.Application.Users.Queries.GetWeightGoalHistory;
 using FoodDiary.Application.Users.Queries.GetUserById;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Presentation.Api.Features.Users.Models;
@@ -22,6 +23,7 @@ public static class UserHttpMappings {
         public GetUserByIdQuery ToUserQuery() => new(userId);
         public GetProfileOverviewQuery ToProfileOverviewQuery() => new(userId);
         public GetDesiredWeightQuery ToDesiredWeightQuery() => new(userId);
+        public GetWeightGoalHistoryQuery ToWeightGoalHistoryQuery() => new(userId);
         public GetDesiredWaistQuery ToDesiredWaistQuery() => new(userId);
     }
 
