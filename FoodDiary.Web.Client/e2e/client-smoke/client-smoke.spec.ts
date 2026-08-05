@@ -5,6 +5,15 @@ const MS_PER_SECOND = 1000;
 const AUTH_TOKEN_TTL_SECONDS = 3600;
 const SESSION_RESTORE_DELAY_MS = 750;
 const ACCESSIBILITY_TEST_TIMEOUT_MS = 120_000;
+const ACCESSIBILITY_STABILITY_CSS = `
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        scroll-behavior: auto !important;
+        transition: none !important;
+    }
+`;
 const ACCESSIBILITY_ROUTES = [
     '/dashboard',
     '/products',
@@ -195,10 +204,7 @@ test.describe('authenticated accessibility', () => {
 
             for (const route of ACCESSIBILITY_ROUTES) {
                 await page.goto(route);
-                await expect(page.locator('body')).toBeVisible();
-                if (route === '/dashboard' && viewport.name === 'mobile') {
-                    await expect(page.getByPlaceholder('Describe your meal, e.g. "two eggs and toast"...')).toBeVisible();
-                }
+                await stabilizeAccessibilityPageAsync(page, route);
                 const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
 
                 expect(results.violations, `Accessibility violations on ${route} (${viewport.name})`).toEqual([]);
@@ -206,6 +212,24 @@ test.describe('authenticated accessibility', () => {
         });
     }
 });
+
+async function stabilizeAccessibilityPageAsync(page: Page, route: (typeof ACCESSIBILITY_ROUTES)[number]): Promise<void> {
+    await expect(page.locator('body')).toBeVisible();
+    await expect(page.locator('html')).toHaveAttribute('data-i18n-ready', /^(?:en|ru)$/u);
+    if (route === '/dashboard') {
+        await expect(page.getByPlaceholder('Describe your meal, e.g. "two eggs and toast"...')).toBeVisible();
+    }
+
+    await page.addStyleTag({ content: ACCESSIBILITY_STABILITY_CSS });
+    await page.evaluate(async () => {
+        await new Promise<void>(resolve => {
+            requestAnimationFrame(resolve);
+        });
+        await new Promise<void>(resolve => {
+            requestAnimationFrame(resolve);
+        });
+    });
+}
 
 test.describe('session routing smoke', () => {
     test('keeps prerendered landing hidden while an authenticated root route initializes', async ({ page }) => {

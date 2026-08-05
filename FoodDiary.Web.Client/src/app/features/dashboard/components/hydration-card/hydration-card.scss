@@ -3,6 +3,7 @@
 .hydration-card {
     --hydration-vessel-width: calc(var(--fd-size-control-xl) + var(--fd-space-md));
     --hydration-vessel-height: calc(var(--fd-size-control-xl) * 2);
+    --hydration-accent-text: color-mix(in srgb, var(--fd-color-blue-500) 70%, var(--fd-color-text));
     position: relative;
     width: 100%;
     overflow: hidden;
@@ -19,7 +20,7 @@
     }
 
     &__percent {
-        color: var(--fd-color-blue-500);
+        color: var(--hydration-accent-text);
         white-space: nowrap;
     }
 
@@ -143,7 +144,7 @@
     }
 
     &__remaining {
-        color: var(--fd-color-blue-500);
+        color: var(--hydration-accent-text);
         font-weight: var(--fd-font-weight-semibold);
     }
 

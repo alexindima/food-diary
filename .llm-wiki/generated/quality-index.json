@@ -29488,11 +29488,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/shared/i18n/localization.service.ts",
-                      "nonBlankLines":  132,
+                      "nonBlankLines":  134,
                       "decisionPoints":  19,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  31.14
+                      "structuralRiskScore":  31.18
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/shared/i18n/localized-date.pipe.ts",

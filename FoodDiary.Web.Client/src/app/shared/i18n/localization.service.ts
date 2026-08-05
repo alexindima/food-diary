@@ -50,7 +50,9 @@ export class LocalizationService {
         const domainLang = this.getDomainDefaultLanguage();
         const normalizedLang = this.normalizeLanguage(storedLang ?? domainLang ?? browserLang);
 
-        return firstValueFrom(this.translateService.use(normalizedLang)).then(() => void 0);
+        return firstValueFrom(this.translateService.use(normalizedLang)).then(() => {
+            this.document.documentElement.setAttribute('data-i18n-ready', normalizedLang);
+        });
     }
 
     public async applyLanguagePreferenceAsync(language: string | null | undefined): Promise<void> {
