@@ -3,7 +3,32 @@
         class="weight-history-page__header"
         [title]="'WEIGHT_HISTORY.TITLE' | translate"
         [subtitle]="'WEIGHT_HISTORY.SUBTITLE' | translate"
+        [compactActions]="true"
     >
+        @if (isMobileView()) {
+            <fd-ui-button
+                data-tour-id="weight-history-entry-action"
+                appearance="toolbar"
+                variant="primary"
+                fill="solid"
+                icon="add"
+                [fdUiHint]="'WEIGHT_HISTORY.QUICK_ADD' | translate"
+                [ariaLabel]="'WEIGHT_HISTORY.QUICK_ADD' | translate"
+                (click)="openEntryDialog()"
+            />
+        } @else {
+            <fd-ui-button
+                data-tour-id="weight-history-entry-action"
+                appearance="brand-action"
+                variant="primary"
+                fill="solid"
+                icon="add"
+                [ariaLabel]="'WEIGHT_HISTORY.QUICK_ADD' | translate"
+                (click)="openEntryDialog()"
+            >
+                {{ 'WEIGHT_HISTORY.QUICK_ADD' | translate }}
+            </fd-ui-button>
+        }
         <fd-ui-button
             data-tour-id="weight-history-tour-help"
             appearance="toolbar"
@@ -17,6 +42,79 @@
     </fd-page-header>
 
     <fd-page-body>
+        <section class="weight-history-page__summary" [attr.aria-label]="'WEIGHT_HISTORY.SUMMARY_TITLE' | translate">
+            <fd-ui-card class="weight-history-page__metric-card">
+                <div class="weight-history-page__metric">
+                    <div class="weight-history-page__metric-icon"><fd-ui-icon name="monitor_weight" size="lg" /></div>
+                    <div>
+                        <div class="weight-history-page__metric-label fd-ui-body-sm">{{ 'WEIGHT_HISTORY.CURRENT_WEIGHT' | translate }}</div>
+                        <div class="weight-history-page__metric-value fd-ui-metric-lg">
+                            @if (latestWeight(); as value) {
+                                {{ value | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                            } @else {
+                                —
+                            }
+                        </div>
+                    </div>
+                </div>
+            </fd-ui-card>
+
+            <fd-ui-card class="weight-history-page__metric-card">
+                <div class="weight-history-page__metric">
+                    <div class="weight-history-page__metric-icon"><fd-ui-icon name="trending_down" size="lg" /></div>
+                    <div>
+                        <div class="weight-history-page__metric-label fd-ui-body-sm">{{ 'WEIGHT_HISTORY.RANGE_CHANGE' | translate }}</div>
+                        <div
+                            class="weight-history-page__metric-value fd-ui-metric-lg"
+                            [class.weight-history-page__metric-value--positive]="weightChange()?.isDecrease"
+                            [class.weight-history-page__metric-value--negative]="weightChange()?.isIncrease"
+                        >
+                            @if (weightChange(); as change) {
+                                {{ change.value > 0 ? '+' : '' }}{{ change.value | number: '1.0-2' }}
+                                {{ 'GENERAL.UNITS.KG' | translate }}
+                            } @else {
+                                —
+                            }
+                        </div>
+                    </div>
+                </div>
+            </fd-ui-card>
+
+            <fd-ui-card class="weight-history-page__metric-card">
+                <div class="weight-history-page__metric">
+                    <div class="weight-history-page__metric-icon"><fd-ui-icon name="track_changes" size="lg" /></div>
+                    <div>
+                        <div class="weight-history-page__metric-label fd-ui-body-sm">{{ 'WEIGHT_HISTORY.TO_GOAL' | translate }}</div>
+                        <div class="weight-history-page__metric-value fd-ui-metric-lg">
+                            @if (weightToGoal(); as goal) {
+                                {{ goal.value | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                            } @else {
+                                —
+                            }
+                        </div>
+                        @if (desiredWeight(); as goal) {
+                            <div class="weight-history-page__metric-caption fd-ui-caption">
+                                {{ 'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: goal | number: '1.0-2' } }}
+                            </div>
+                        }
+                    </div>
+                </div>
+            </fd-ui-card>
+
+            <fd-ui-card class="weight-history-page__metric-card">
+                <div class="weight-history-page__metric">
+                    <div class="weight-history-page__metric-icon"><fd-ui-icon name="accessibility_new" size="lg" /></div>
+                    <div>
+                        <div class="weight-history-page__metric-label fd-ui-body-sm">{{ 'WEIGHT_HISTORY.BMI_CARD_TITLE' | translate }}</div>
+                        <div class="weight-history-page__metric-value fd-ui-metric-lg">{{ bmiViewModel()?.value ?? '—' }}</div>
+                        @if (bmiViewModel(); as bmi) {
+                            <div class="weight-history-page__metric-caption fd-ui-caption">{{ bmi.status.labelKey | translate }}</div>
+                        }
+                    </div>
+                </div>
+            </fd-ui-card>
+        </section>
+
         <fd-period-filter
             class="weight-history-page__period"
             data-tour-id="weight-history-period"
@@ -31,34 +129,25 @@
             (rangeChange)="changeRange($event)"
         />
 
-        <fd-weight-history-chart-card data-tour-id="weight-history-chart" [isLoading]="isSummaryLoading()" [chartPoints]="chartPoints()" />
-
-        @defer (on viewport) {
-            <fd-weight-history-bmi-card [viewModel]="bmiViewModel()" />
-        } @placeholder {
-            <div class="weight-history-page__placeholder" aria-hidden="true"></div>
-        }
-
-        <div class="weight-history-page__content weight-history-page__content--form fd-grid fd-gap-card-content">
-            <fd-weight-history-form-card
-                data-tour-id="weight-history-entry-form"
-                [form]="form"
-                [isSaving]="isSaving()"
-                [isEditing]="isEditing()"
-                [error]="entryError()"
-                (editCancel)="cancelEdit()"
+        <div class="weight-history-page__chart-section">
+            <fd-weight-history-chart-card
+                data-tour-id="weight-history-chart"
+                [isLoading]="isSummaryLoading()"
+                [chartPoints]="chartPoints()"
             />
+        </div>
 
+        <div class="weight-history-page__insights fd-grid fd-gap-card-content">
             <fd-weight-history-goal-card
                 data-tour-id="weight-history-goal"
                 [weightField]="desiredWeightForm.weight"
                 [isSaving]="isDesiredWeightSaving()"
+                [entries]="entriesDescending()"
+                [currentWeight]="latestWeight()"
+                [desiredWeight]="desiredWeight()"
                 (saveGoal)="saveDesiredWeight()"
             />
-        </div>
-
-        @defer (on viewport) {
-            <div class="weight-history-page__content weight-history-page__content--full fd-grid fd-gap-card-content">
+            @defer (on viewport) {
                 <fd-weight-history-entries-card
                     data-tour-id="weight-history-entries"
                     [isLoading]="isLoading()"
@@ -66,9 +155,9 @@
                     (editEntry)="startEdit($event)"
                     (removeEntry)="deleteEntry($event)"
                 />
-            </div>
-        } @placeholder {
-            <div class="weight-history-page__placeholder" aria-hidden="true"></div>
-        }
+            } @placeholder {
+                <div class="weight-history-page__placeholder" aria-hidden="true"></div>
+            }
+        </div>
     </fd-page-body>
 </div>

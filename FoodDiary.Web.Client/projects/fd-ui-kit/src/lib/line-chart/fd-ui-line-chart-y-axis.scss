@@ -24,7 +24,7 @@
 
 .fd-ui-line-chart__y-axis-label {
     position: absolute;
-    right: 0;
+    right: calc(-1 * var(--fd-space-sm));
     max-width: 112px;
     transform: translateY(-50%);
 }

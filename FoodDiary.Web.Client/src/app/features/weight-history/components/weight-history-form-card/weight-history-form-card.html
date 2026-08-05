@@ -1,39 +1,37 @@
-<fd-ui-card class="weight-history-page__card weight-history-page__card--form" [title]="'WEIGHT_HISTORY.ADD_ENTRY_TITLE' | translate">
-    <form class="weight-history-page__form fd-stack fd-gap-card-header" [formRoot]="form()">
-        <div class="weight-history-page__form-row fd-grid fd-gap-card-header">
-            <fd-ui-date-input
-                class="weight-history-page__form-control"
-                [label]="'WEIGHT_HISTORY.DATE_LABEL' | translate"
-                [placeholder]="'WEIGHT_HISTORY.DATE_PLACEHOLDER' | translate"
-                [formField]="form().date"
-            />
+<form class="weight-history-page__form fd-stack fd-gap-card-header" [formRoot]="form()">
+    <div class="weight-history-page__form-row weight-history-page__form-row--compact fd-grid fd-gap-card-header">
+        <fd-ui-date-input
+            class="weight-history-page__form-control"
+            [label]="'WEIGHT_HISTORY.DATE_LABEL' | translate"
+            [placeholder]="'WEIGHT_HISTORY.DATE_PLACEHOLDER' | translate"
+            [formField]="form().date"
+        />
 
-            <fd-ui-input
-                class="weight-history-page__form-control"
-                type="number"
-                [step]="0.1"
-                [label]="'WEIGHT_HISTORY.WEIGHT_LABEL' | translate"
-                [placeholder]="'WEIGHT_HISTORY.WEIGHT_PLACEHOLDER' | translate"
-                [formField]="form().weight"
-            />
-        </div>
+        <fd-ui-input
+            class="weight-history-page__form-control"
+            type="number"
+            [step]="0.1"
+            [label]="'WEIGHT_HISTORY.WEIGHT_LABEL' | translate"
+            [placeholder]="'WEIGHT_HISTORY.WEIGHT_PLACEHOLDER' | translate"
+            [formField]="form().weight"
+        />
+    </div>
 
-        <div class="weight-history-page__form-actions fd-row fd-wrap fd-gap-actions">
-            <fd-ui-button type="submit" [loading]="isSaving()">
-                @if (isEditing()) {
-                    {{ 'WEIGHT_HISTORY.UPDATE' | translate }}
-                } @else {
-                    {{ 'WEIGHT_HISTORY.ADD' | translate }}
-                }
-            </fd-ui-button>
+    <div class="weight-history-page__form-actions fd-row fd-wrap fd-gap-actions">
+        <fd-ui-button type="submit" [loading]="isSaving()">
             @if (isEditing()) {
-                <fd-ui-button type="button" variant="secondary" fill="text" (click)="editCancel.emit()">
-                    {{ 'WEIGHT_HISTORY.CANCEL_EDIT' | translate }}
-                </fd-ui-button>
+                {{ 'WEIGHT_HISTORY.UPDATE' | translate }}
+            } @else {
+                {{ 'WEIGHT_HISTORY.ADD' | translate }}
             }
-        </div>
-        @if (error()) {
-            <fd-ui-form-error [error]="error()" />
+        </fd-ui-button>
+        @if (isEditing()) {
+            <fd-ui-button type="button" variant="secondary" fill="text" (click)="editCancel.emit()">
+                {{ 'WEIGHT_HISTORY.CANCEL_EDIT' | translate }}
+            </fd-ui-button>
         }
-    </form>
-</fd-ui-card>
+    </div>
+    @if (error()) {
+        <fd-ui-form-error [error]="error()" />
+    }
+</form>

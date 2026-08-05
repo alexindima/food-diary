@@ -1,12 +1,15 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
+import { formatDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { buildWeightEntryViewModels } from '../../lib/weight-history-chart.mapper';
 import type { WeightEntry } from '../../models/weight-entry.data';
+
+const RECENT_ENTRY_LIMIT = 5;
 
 @Component({
     selector: 'fd-weight-history-entries-card',
@@ -20,8 +23,25 @@ export class WeightHistoryEntriesCardComponent {
 
     public readonly isLoading = input.required<boolean>();
     public readonly entries = input.required<WeightEntry[]>();
-    protected readonly items = computed(() => buildWeightEntryViewModels(this.entries(), resolveTranslateLanguage(this.translateService)));
+    protected readonly isExpanded = signal(false);
+    protected readonly items = computed(() => {
+        const today = formatDateInputValue(new Date());
+        return buildWeightEntryViewModels(this.entries(), resolveTranslateLanguage(this.translateService)).map((item, index, items) => {
+            const olderEntry = items.at(index + 1)?.entry;
+            return {
+                ...item,
+                isToday: item.entry.date.startsWith(today),
+                change: olderEntry === undefined ? null : item.entry.weight - olderEntry.weight,
+            };
+        });
+    });
+    protected readonly visibleItems = computed(() => (this.isExpanded() ? this.items() : this.items().slice(0, RECENT_ENTRY_LIMIT)));
+    protected readonly canToggleEntries = computed(() => this.items().length > RECENT_ENTRY_LIMIT);
 
     public readonly editEntry = output<WeightEntry>();
     public readonly removeEntry = output<WeightEntry>();
+
+    protected toggleEntries(): void {
+        this.isExpanded.update(value => !value);
+    }
 }

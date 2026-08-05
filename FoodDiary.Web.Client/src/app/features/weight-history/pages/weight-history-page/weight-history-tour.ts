@@ -20,7 +20,7 @@ export const WEIGHT_HISTORY_TOUR: LocalizedTourConfig = {
         },
         {
             id: 'entry-form',
-            target: 'weight-history-entry-form',
+            target: 'weight-history-entry-action',
             titleKey: 'ENTRY_FORM_TITLE',
             descriptionKey: 'ENTRY_FORM_DESCRIPTION',
             placement: 'right',

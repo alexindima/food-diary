@@ -11,6 +11,47 @@
         width: 100%;
     }
 
+    &__summary {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--fd-space-card-content-gap);
+    }
+
+    &__metric-card {
+        min-width: 0;
+    }
+
+    &__metric {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--fd-space-md);
+    }
+
+    &__metric-icon {
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        color: var(--fd-color-primary-600);
+    }
+
+    &__metric-label,
+    &__metric-caption {
+        color: var(--fd-color-text-muted);
+    }
+
+    &__metric-value {
+        margin-top: var(--fd-space-xs);
+        color: var(--fd-color-text);
+    }
+
+    &__metric-value--positive {
+        color: var(--fd-color-primary-600);
+    }
+
+    &__metric-value--negative {
+        color: var(--fd-color-danger);
+    }
+
     &__card {
         height: 100%;
     }
@@ -19,8 +60,70 @@
         width: 100%;
     }
 
+    &__goal-summary {
+        padding-bottom: var(--fd-space-card-content-gap);
+        border-bottom: var(--fd-border-subtle);
+    }
+
+    &__goal-heading {
+        min-width: 0;
+    }
+
+    &__goal-percent {
+        color: var(--fd-color-primary-600);
+    }
+
+    &__goal-progress {
+        height: var(--fd-size-progress-height-md);
+        overflow: hidden;
+        border-radius: var(--fd-radius-pill);
+        background: var(--fd-bg-surface-sunken);
+    }
+
+    &__goal-progress-value {
+        height: 100%;
+        min-width: var(--fd-border-width-strong);
+        border-radius: inherit;
+        background: var(--fd-color-primary-600);
+    }
+
+    &__goal-stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    &__goal-stat {
+        min-width: 0;
+        padding-inline: var(--fd-space-md);
+        border-right: var(--fd-border-subtle);
+
+        &:first-child {
+            padding-left: 0;
+        }
+
+        &:last-child {
+            padding-right: 0;
+            border-right: 0;
+        }
+    }
+
+    &__goal-stat-value {
+        color: var(--fd-color-text);
+    }
+
+    &__goal-editor {
+        margin-top: var(--fd-space-card-content-gap);
+    }
+
+    &__goal-edit-button {
+        width: 100%;
+        margin-top: var(--fd-space-card-content-gap);
+    }
+
     &__card--chart {
-        min-height: 320px;
+        --fd-card-height: auto;
+        --fd-card-content-height: auto;
+        min-height: 420px;
+        height: auto;
         display: flex;
         flex-direction: column;
         gap: var(--fd-space-card-content-gap);
@@ -33,8 +136,20 @@
     }
 
     &__chart {
-        --fd-line-chart-height: 260px;
+        --fd-line-chart-height: 350px;
         width: 100%;
+    }
+
+    &__chart-section,
+    &__insights,
+    &__insights > fd-weight-history-goal-card,
+    &__insights > fd-weight-history-entries-card {
+        min-width: 0;
+    }
+
+    &__insights {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: stretch;
     }
 
     &__card--bmi {
@@ -189,27 +304,83 @@
         }
     }
 
+    &__form-row--compact {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+
     &__entries {
-        max-height: 360px;
-        overflow-y: auto;
+        overflow: hidden;
+        border: var(--fd-border-subtle);
+        border-radius: var(--fd-radius-md);
     }
 
     &__entry {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        padding: var(--fd-space-xs) 0;
+        grid-template-columns: minmax(150px, 1.4fr) minmax(88px, 0.65fr) minmax(70px, auto) auto;
+        gap: var(--fd-space-md);
+        min-height: var(--fd-size-control-lg);
+        padding: var(--fd-space-xs) var(--fd-space-md);
         border-bottom: var(--fd-border-subtle);
 
         &:last-child {
             border-bottom: none;
         }
+
+        &:hover {
+            background: var(--fd-bg-surface-hover);
+        }
     }
 
     &__entry-date {
-        color: var(--fd-color-slate-900);
+        min-width: 0;
+        color: var(--fd-color-text-muted);
     }
 
     &__entry-weight {
-        color: var(--fd-color-primary-600);
+        color: var(--fd-color-text);
+        text-align: right;
+    }
+
+    &__entry-today,
+    &__entry-change {
+        padding: var(--fd-space-micro) var(--fd-space-xs);
+        border-radius: var(--fd-radius-sm);
+    }
+
+    &__entry-today {
+        color: var(--fd-color-success);
+        background: var(--fd-bg-success-soft);
+    }
+
+    &__entry-change {
+        --entry-change-min-width: 48px;
+        min-width: var(--entry-change-min-width);
+        color: var(--fd-color-text-muted);
+        background: var(--fd-bg-surface-sunken);
+        text-align: center;
+    }
+
+    &__entry-change--loss {
+        color: var(--fd-color-success);
+        background: var(--fd-bg-success-soft);
+    }
+
+    &__entry-change--gain {
+        color: var(--fd-color-danger);
+        background: var(--fd-bg-danger-soft);
+    }
+
+    &__entry-actions {
+        opacity: 0;
+    }
+
+    :where(&__entry:hover, &__entry:focus-within) &__entry-actions {
+        opacity: 1;
+    }
+
+    &__entries-toggle {
+        width: 100%;
+        margin-top: var(--fd-space-card-header-gap);
     }
 
     &__loader,
@@ -221,12 +392,48 @@
 
     @media #{variables.$media-phablet} {
         &__entry {
-            grid-template-columns: 1fr;
-            text-align: left;
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            gap: var(--fd-space-sm);
         }
 
         &__entry-actions {
-            justify-content: flex-start;
+            grid-column: 1 / -1;
+            justify-content: flex-end;
+            opacity: 1;
+        }
+    }
+
+    @media #{variables.$media-desktop-sm} {
+        &__summary {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        &__insights {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media #{variables.$media-phablet} {
+        &__summary {
+            grid-template-columns: 1fr;
+        }
+
+        &__goal-stats {
+            grid-template-columns: 1fr;
+            gap: var(--fd-space-md);
+        }
+
+        &__goal-stat {
+            padding: 0;
+            border-right: 0;
+        }
+
+        &__card--chart {
+            min-height: 320px;
+        }
+
+        &__chart {
+            --fd-line-chart-height: 260px;
         }
     }
 }

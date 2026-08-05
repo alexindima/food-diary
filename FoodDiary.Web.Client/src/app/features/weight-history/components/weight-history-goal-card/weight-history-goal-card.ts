@@ -1,13 +1,20 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
+import type { WeightEntry } from '../../models/weight-entry.data';
+
+const PERCENT_MAX = 100;
+const DAYS_PER_WEEK = 7;
+const MILLISECONDS_PER_DAY = 86_400_000;
+
 @Component({
     selector: 'fd-weight-history-goal-card',
-    imports: [FormField, FdUiButtonComponent, FdUiCardComponent, FdUiInputComponent, TranslatePipe],
+    imports: [DecimalPipe, FormField, FdUiButtonComponent, FdUiCardComponent, FdUiInputComponent, TranslatePipe],
     templateUrl: './weight-history-goal-card.html',
     styleUrl: '../../pages/weight-history-page/weight-history-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,6 +22,60 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 export class WeightHistoryGoalCardComponent {
     public readonly weightField = input.required<FieldTree<string>>();
     public readonly isSaving = input.required<boolean>();
+    public readonly entries = input.required<readonly WeightEntry[]>();
+    public readonly currentWeight = input.required<number | null>();
+    public readonly desiredWeight = input.required<number | null>();
 
     public readonly saveGoal = output();
+
+    protected readonly isEditing = signal(false);
+    protected readonly progress = computed(() => {
+        const current = this.currentWeight();
+        const goal = this.desiredWeight();
+        const oldest = this.entries().at(-1)?.weight;
+        if (current === null || goal === null || oldest === undefined) {
+            return null;
+        }
+
+        const totalDistance = oldest - goal;
+        const completedDistance = oldest - current;
+        const percent =
+            totalDistance <= 0
+                ? current <= goal
+                    ? PERCENT_MAX
+                    : 0
+                : Math.min(PERCENT_MAX, Math.max(0, (completedDistance / totalDistance) * PERCENT_MAX));
+        const lost = oldest - current;
+        const remaining = Math.max(0, current - goal);
+        const daysElapsed = this.daysBetweenEntries();
+        const weeklyRate = daysElapsed > 0 ? (lost / daysElapsed) * DAYS_PER_WEEK : 0;
+        const daysToGoal = weeklyRate > 0 ? Math.ceil((remaining / weeklyRate) * DAYS_PER_WEEK) : null;
+
+        return { percent, lost, remaining, weeklyRate, daysToGoal };
+    });
+
+    protected startEditing(): void {
+        this.isEditing.set(true);
+    }
+
+    protected cancelEditing(): void {
+        this.isEditing.set(false);
+    }
+
+    protected save(): void {
+        this.saveGoal.emit();
+        this.isEditing.set(false);
+    }
+
+    private daysBetweenEntries(): number {
+        const entries = this.entries();
+        const latestDate = entries.at(0)?.date;
+        const oldestDate = entries.at(-1)?.date;
+        if (latestDate === undefined || oldestDate === undefined) {
+            return 0;
+        }
+
+        const difference = new Date(latestDate).getTime() - new Date(oldestDate).getTime();
+        return Number.isFinite(difference) ? Math.max(0, difference / MILLISECONDS_PER_DAY) : 0;
+    }
 }

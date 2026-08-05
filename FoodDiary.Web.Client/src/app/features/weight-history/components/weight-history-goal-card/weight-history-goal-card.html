@@ -1,19 +1,87 @@
-<fd-ui-card class="weight-history-page__card weight-history-page__card--goal" [title]="'WEIGHT_HISTORY.GOAL_CARD_TITLE' | translate">
-    <div class="weight-history-page__goal-body fd-stack fd-gap-card-header">
-        <fd-ui-input
-            class="weight-history-page__goal-input"
-            type="number"
-            [step]="0.1"
-            [ariaLabel]="'WEIGHT_HISTORY.GOAL_CARD_TITLE' | translate"
-            [placeholder]="'WEIGHT_HISTORY.GOAL_PLACEHOLDER' | translate"
-            [suffixButtonIcon]="weightField()().value() ? 'backspace' : undefined"
-            [formField]="weightField()"
-            (suffixButtonClicked)="weightField()().value.set('')"
-        />
-        <div class="weight-history-page__goal-actions fd-row fd-gap-actions">
-            <fd-ui-button type="button" [loading]="isSaving()" (click)="saveGoal.emit()">
-                {{ 'WEIGHT_HISTORY.SAVE_GOAL' | translate }}
-            </fd-ui-button>
+<fd-ui-card class="weight-history-page__card weight-history-page__card--goal" [title]="'WEIGHT_HISTORY.GOAL_PROGRESS_TITLE' | translate">
+    @if (progress(); as progress) {
+        <div class="weight-history-page__goal-summary fd-stack fd-gap-card-header">
+            <div class="weight-history-page__goal-heading fd-row fd-justify-between fd-align-end fd-gap-card-header">
+                <div>
+                    <div class="fd-ui-card-title">
+                        {{ 'WEIGHT_HISTORY.GOAL_REMAINING' | translate: { value: progress.remaining | number: '1.0-2' } }}
+                    </div>
+                    <div class="fd-ui-caption fd-ui-text-muted">
+                        {{ 'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: desiredWeight() | number: '1.0-2' } }}
+                    </div>
+                </div>
+                <div class="weight-history-page__goal-percent fd-ui-stat-value">{{ progress.percent | number: '1.0-0' }}%</div>
+            </div>
+
+            <div
+                class="weight-history-page__goal-progress"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                [attr.aria-label]="'WEIGHT_HISTORY.GOAL_PROGRESS_TITLE' | translate"
+                [attr.aria-valuenow]="progress.percent"
+            >
+                <div class="weight-history-page__goal-progress-value" [style.width.%]="progress.percent"></div>
+            </div>
+
+            <div class="weight-history-page__goal-stats fd-grid">
+                <div class="weight-history-page__goal-stat">
+                    <div class="weight-history-page__goal-stat-value fd-ui-stat-value">
+                        {{ progress.lost | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                    </div>
+                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_PERIOD_CHANGE' | translate }}</div>
+                </div>
+                <div class="weight-history-page__goal-stat">
+                    <div class="weight-history-page__goal-stat-value fd-ui-stat-value">
+                        @if (progress.daysToGoal !== null) {
+                            {{ progress.daysToGoal }}
+                        } @else {
+                            —
+                        }
+                    </div>
+                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_DAYS_TO_GOAL' | translate }}</div>
+                </div>
+                <div class="weight-history-page__goal-stat">
+                    <div class="weight-history-page__goal-stat-value fd-ui-stat-value">
+                        {{ progress.weeklyRate | number: '1.0-2' }} {{ 'WEIGHT_HISTORY.KG_PER_WEEK' | translate }}
+                    </div>
+                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_AVERAGE_RATE' | translate }}</div>
+                </div>
+            </div>
         </div>
-    </div>
+    }
+
+    @if (isEditing()) {
+        <div class="weight-history-page__goal-editor fd-stack fd-gap-card-header">
+            <fd-ui-input
+                class="weight-history-page__goal-input"
+                type="number"
+                [step]="0.1"
+                [ariaLabel]="'WEIGHT_HISTORY.GOAL_CARD_TITLE' | translate"
+                [placeholder]="'WEIGHT_HISTORY.GOAL_PLACEHOLDER' | translate"
+                [suffixButtonIcon]="weightField()().value() ? 'backspace' : undefined"
+                [formField]="weightField()"
+                (suffixButtonClicked)="weightField()().value.set('')"
+            />
+            <div class="weight-history-page__goal-actions fd-row fd-wrap fd-gap-actions">
+                <fd-ui-button type="button" [loading]="isSaving()" (click)="save()">
+                    {{ 'WEIGHT_HISTORY.SAVE_GOAL' | translate }}
+                </fd-ui-button>
+                <fd-ui-button type="button" variant="secondary" fill="text" (click)="cancelEditing()">
+                    {{ 'WEIGHT_HISTORY.CANCEL_EDIT' | translate }}
+                </fd-ui-button>
+            </div>
+        </div>
+    } @else {
+        <fd-ui-button
+            class="weight-history-page__goal-edit-button"
+            type="button"
+            variant="secondary"
+            fill="outline"
+            icon="track_changes"
+            (click)="startEditing()"
+        >
+            {{ 'WEIGHT_HISTORY.EDIT_GOAL' | translate }}
+        </fd-ui-button>
+    }
 </fd-ui-card>

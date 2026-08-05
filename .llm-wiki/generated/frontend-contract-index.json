@@ -1,16 +1,16 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "components":  400,
-                    "componentsWithoutDirectSpecs":  108,
-                    "inputs":  1224,
+                    "components":  401,
+                    "componentsWithoutDirectSpecs":  109,
+                    "inputs":  1230,
                     "outputs":  406,
                     "apiCalls":  206,
                     "templatesWithTranslations":  242,
-                    "translationKeys":  1191,
-                    "consumerEdges":  902,
-                    "consumedComponents":  277,
-                    "unconsumedComponents":  122
+                    "translationKeys":  1204,
+                    "consumerEdges":  903,
+                    "consumedComponents":  276,
+                    "unconsumedComponents":  124
                 },
     "components":  [
                        {
@@ -4639,6 +4639,16 @@
                                               "required":  false
                                           },
                                           {
+                                              "name":  "connectNulls",
+                                              "type":  "",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "xAxisLabelLayout",
+                                              "type":  "FdUiLineChartXAxisLabelLayout",
+                                              "required":  false
+                                          },
+                                          {
                                               "name":  "valueSuffix",
                                               "type":  "",
                                               "required":  false
@@ -4697,6 +4707,11 @@
                                           {
                                               "name":  "labels",
                                               "type":  "readonly FdUiLineChartXAxisLabelView[]",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "layout",
+                                              "type":  "FdUiLineChartXAxisLabelLayout",
                                               "required":  false
                                           }
                                       ],
@@ -12831,6 +12846,20 @@
                            "specPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-entries-card/weight-history-entries-card.spec.ts"
                        },
                        {
+                           "class":  "WeightHistoryEntryDialogComponent",
+                           "selector":  "fd-weight-history-entry-dialog",
+                           "feature":  "weight-history",
+                           "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.html",
+                           "inputs":  [
+
+                                      ],
+                           "outputs":  [
+
+                                       ],
+                           "specPath":  null
+                       },
+                       {
                            "class":  "WeightHistoryFormCardComponent",
                            "selector":  "fd-weight-history-form-card",
                            "feature":  "weight-history",
@@ -12881,6 +12910,21 @@
                                           {
                                               "name":  "isSaving",
                                               "type":  "boolean",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "entries",
+                                              "type":  "readonly WeightEntry[]",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "currentWeight",
+                                              "type":  "number | null",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "desiredWeight",
+                                              "type":  "number | null",
                                               "required":  true
                                           }
                                       ],
@@ -18145,9 +18189,10 @@
                                               "DASHBOARD.KG",
                                               "WEIGHT_HISTORY.DELETE",
                                               "WEIGHT_HISTORY.EDIT",
-                                              "WEIGHT_HISTORY.HISTORY_TITLE",
                                               "WEIGHT_HISTORY.LOADING",
-                                              "WEIGHT_HISTORY.NO_ENTRIES"
+                                              "WEIGHT_HISTORY.NO_ENTRIES",
+                                              "WEIGHT_HISTORY.RECENT_ENTRIES_TITLE",
+                                              "WEIGHT_HISTORY.TODAY"
                                           ]
                              },
                              {
@@ -18155,7 +18200,6 @@
                                  "path":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-form-card/weight-history-form-card.html",
                                  "keys":  [
                                               "WEIGHT_HISTORY.ADD",
-                                              "WEIGHT_HISTORY.ADD_ENTRY_TITLE",
                                               "WEIGHT_HISTORY.CANCEL_EDIT",
                                               "WEIGHT_HISTORY.DATE_LABEL",
                                               "WEIGHT_HISTORY.DATE_PLACEHOLDER",
@@ -18168,8 +18212,18 @@
                                  "feature":  "weight-history",
                                  "path":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
                                  "keys":  [
+                                              "GENERAL.UNITS.KG",
+                                              "WEIGHT_HISTORY.CANCEL_EDIT",
+                                              "WEIGHT_HISTORY.EDIT_GOAL",
+                                              "WEIGHT_HISTORY.GOAL_AVERAGE_RATE",
                                               "WEIGHT_HISTORY.GOAL_CARD_TITLE",
+                                              "WEIGHT_HISTORY.GOAL_DAYS_TO_GOAL",
+                                              "WEIGHT_HISTORY.GOAL_PERIOD_CHANGE",
                                               "WEIGHT_HISTORY.GOAL_PLACEHOLDER",
+                                              "WEIGHT_HISTORY.GOAL_PROGRESS_TITLE",
+                                              "WEIGHT_HISTORY.GOAL_REMAINING",
+                                              "WEIGHT_HISTORY.GOAL_VALUE",
+                                              "WEIGHT_HISTORY.KG_PER_WEEK",
                                               "WEIGHT_HISTORY.SAVE_GOAL"
                                           ]
                              },
@@ -18177,12 +18231,20 @@
                                  "feature":  "weight-history",
                                  "path":  "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
                                  "keys":  [
+                                              "GENERAL.UNITS.KG",
+                                              "WEIGHT_HISTORY.BMI_CARD_TITLE",
+                                              "WEIGHT_HISTORY.CURRENT_WEIGHT",
                                               "WEIGHT_HISTORY.CUSTOM_RANGE_FROM_LABEL",
                                               "WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER",
                                               "WEIGHT_HISTORY.CUSTOM_RANGE_TO_LABEL",
+                                              "WEIGHT_HISTORY.GOAL_VALUE",
+                                              "WEIGHT_HISTORY.QUICK_ADD",
+                                              "WEIGHT_HISTORY.RANGE_CHANGE",
                                               "WEIGHT_HISTORY.SUBTITLE",
+                                              "WEIGHT_HISTORY.SUMMARY_TITLE",
                                               "WEIGHT_HISTORY.TITLE",
-                                              "WEIGHT_HISTORY.TOUR.START_TOUR"
+                                              "WEIGHT_HISTORY.TOUR.START_TOUR",
+                                              "WEIGHT_HISTORY.TO_GOAL"
                                           ]
                              }
                          ],
@@ -23164,8 +23226,10 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "weight-history",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-entries-card/weight-history-entries-card.html",
-                              "occurrences":  2,
+                              "occurrences":  3,
                               "inputsUsed":  [
+                                                 "appearance",
+                                                 "ariaLabel",
                                                  "fill",
                                                  "icon",
                                                  "type",
@@ -23198,10 +23262,13 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "weight-history",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
-                              "occurrences":  1,
+                              "occurrences":  3,
                               "inputsUsed":  [
+                                                 "fill",
+                                                 "icon",
                                                  "loading",
-                                                 "type"
+                                                 "type",
+                                                 "variant"
                                              ],
                               "outputsHandled":  [
 
@@ -23213,7 +23280,7 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "weight-history",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
-                              "occurrences":  1,
+                              "occurrences":  3,
                               "inputsUsed":  [
                                                  "appearance",
                                                  "ariaLabel",
@@ -24307,7 +24374,7 @@
                               "selector":  "fd-ui-card",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
                               "consumerFeature":  "weight-history",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-form-card/weight-history-form-card.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "title"
@@ -24321,10 +24388,10 @@
                               "selector":  "fd-ui-card",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
                               "consumerFeature":  "weight-history",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
-                              "occurrences":  1,
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
+                              "occurrences":  4,
                               "inputsUsed":  [
-                                                 "title"
+
                                              ],
                               "outputsHandled":  [
 
@@ -25147,6 +25214,22 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/usda/dialogs/usda-food-search-dialog/usda-food-search-dialog.html",
                               "occurrences":  1,
                               "inputsUsed":  [
+                                                 "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiDialogComponent",
+                              "selector":  "fd-ui-dialog",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+                              "consumerFeature":  "weight-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "dismissible",
+                                                 "size",
                                                  "title"
                                              ],
                               "outputsHandled":  [
@@ -26394,6 +26477,21 @@
                               "component":  "FdUiIconComponent",
                               "selector":  "fd-ui-icon",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "weight-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
+                              "occurrences":  4,
+                              "inputsUsed":  [
+                                                 "name",
+                                                 "size"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "shell",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar-mobile/sidebar-mobile.html",
                               "occurrences":  9,
@@ -27388,7 +27486,8 @@
                                                  "showAxisLabels",
                                                  "showGrid",
                                                  "title",
-                                                 "valueSuffix"
+                                                 "valueSuffix",
+                                                 "xAxisLabelLayout"
                                              ],
                               "outputsHandled":  [
 
@@ -27418,6 +27517,7 @@
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "labels",
+                                                 "layout",
                                                  "show"
                                              ],
                               "outputsHandled":  [
@@ -31264,6 +31364,7 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
                               "occurrences":  1,
                               "inputsUsed":  [
+                                                 "compactActions",
                                                  "subtitle",
                                                  "title"
                                              ],
@@ -32934,20 +33035,6 @@
                                                  ]
                           },
                           {
-                              "component":  "WeightHistoryBmiCardComponent",
-                              "selector":  "fd-weight-history-bmi-card",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-bmi-card/weight-history-bmi-card.ts",
-                              "consumerFeature":  "weight-history",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "viewModel"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
                               "component":  "WeightHistoryChartCardComponent",
                               "selector":  "fd-weight-history-chart-card",
                               "componentPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.ts",
@@ -32983,7 +33070,7 @@
                               "selector":  "fd-weight-history-form-card",
                               "componentPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-form-card/weight-history-form-card.ts",
                               "consumerFeature":  "weight-history",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "error",
@@ -33003,6 +33090,9 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
                               "occurrences":  1,
                               "inputsUsed":  [
+                                                 "currentWeight",
+                                                 "desiredWeight",
+                                                 "entries",
                                                  "isSaving",
                                                  "weightField"
                                              ],

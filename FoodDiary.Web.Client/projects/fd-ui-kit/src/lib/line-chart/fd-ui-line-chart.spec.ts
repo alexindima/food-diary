@@ -159,7 +159,27 @@ describe('FdUiLineChartComponent', () => {
         expect(component['ariaLabel']()).toContain('Proteins Mon 10');
     });
 
-    it('breaks line and area paths around null values', () => {
+    it('connects line and area paths across null values by default', () => {
+        fixture.componentRef.setInput('showArea', true);
+        fixture.componentRef.setInput('points', [
+            { label: 'Mon', value: 1 },
+            { label: 'Tue', value: 2 },
+            { label: 'Wed', value: null },
+            { label: 'Thu', value: 4 },
+            { label: 'Fri', value: 5 },
+        ]);
+        fixture.detectChanges();
+
+        const series = component['seriesViews']()[0];
+
+        expect(series.paths).toHaveLength(1);
+        expect(series.areaPaths).toHaveLength(1);
+        expect(host().querySelectorAll('.fd-ui-line-chart__line')).toHaveLength(1);
+        expect(component['linePath']().match(/\bM\b/g)).toHaveLength(1);
+    });
+
+    it('can break line and area paths around null values', () => {
+        fixture.componentRef.setInput('connectNulls', false);
         fixture.componentRef.setInput('showArea', true);
         fixture.componentRef.setInput('points', [
             { label: 'Mon', value: 1 },
@@ -202,6 +222,21 @@ describe('FdUiLineChartComponent', () => {
         expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('81.5 kg');
         expect(host().querySelectorAll('.fd-ui-line-chart__y-axis-label')).toHaveLength(GRID_LINE_COUNT);
         expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('80 kg');
+    });
+
+    it('supports stacked x-axis labels', () => {
+        fixture.componentRef.setInput('points', [
+            { label: '05\nJul', value: 80 },
+            { label: '08\nJul', value: 81 },
+        ]);
+        fixture.componentRef.setInput('showAxisLabels', true);
+        fixture.componentRef.setInput('xAxisLabelLayout', 'stacked');
+        fixture.detectChanges();
+
+        const axis = host().querySelector('.fd-ui-line-chart__x-axis');
+        expect(axis?.classList.contains('fd-ui-line-chart__x-axis--stacked')).toBe(true);
+        expect(axis?.classList.contains('fd-ui-line-chart__x-axis--stacked-two-lines')).toBe(true);
+        expect(axis?.classList.contains('fd-ui-line-chart__x-axis--angled')).toBe(false);
     });
 
     it('limits x-axis labels while keeping range endpoints', () => {

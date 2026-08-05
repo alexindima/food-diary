@@ -8,11 +8,18 @@ export type WeightHistoryChartPoint = {
     value: number | null;
 };
 
-export function buildWeightHistoryChartPoints(points: WeightEntrySummaryPoint[], locale: string): WeightHistoryChartPoint[] {
+export function buildWeightHistoryChartPoints(
+    points: WeightEntrySummaryPoint[],
+    locale: string,
+    currentYear = new Date().getUTCFullYear(),
+): WeightHistoryChartPoint[] {
     const ordered = [...points].sort((a, b) => compareDatesAsc(a.startDate, b.startDate));
+    const firstDate = parseDateValue(ordered[0]?.startDate);
+    const lastDate = parseDateValue(ordered.at(-1)?.startDate);
+    const showYear = firstDate?.getUTCFullYear() !== currentYear || lastDate?.getUTCFullYear() !== currentYear;
 
     return ordered.map(point => ({
-        label: formatWeightHistoryDateLabel(point.startDate, locale),
+        label: formatWeightHistoryDateLabel(point.startDate, locale, showYear),
         value: point.averageWeight > 0 ? point.averageWeight : null,
     }));
 }
@@ -37,7 +44,18 @@ export function formatWeightHistoryNumericDate(value: string, language: string):
     }).format(date);
 }
 
-function formatWeightHistoryDateLabel(dateString: string, locale: string): string {
+function formatWeightHistoryDateLabel(dateString: string, locale: string, showYear: boolean): string {
     const date = parseDateValue(dateString);
-    return date !== null ? new Intl.DateTimeFormat(resolveAppLocale(locale)).format(date) : dateString;
+    if (date === null) {
+        return dateString;
+    }
+
+    const day = new Intl.DateTimeFormat(resolveAppLocale(locale), { day: '2-digit', timeZone: 'UTC' }).format(date);
+    const month = abbreviateMonth(new Intl.DateTimeFormat(resolveAppLocale(locale), { month: 'short', timeZone: 'UTC' }).format(date));
+    return showYear ? `${day}\n${month}\n${date.getUTCFullYear()}` : `${day}\n${month}`;
+}
+
+function abbreviateMonth(month: string): string {
+    const shortMonthLength = 3;
+    return month.endsWith('.') || month.length <= shortMonthLength ? month : `${month.slice(0, shortMonthLength)}.`;
 }

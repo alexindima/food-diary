@@ -65,6 +65,7 @@ export class WeightHistoryFacade {
     public readonly isLoading = signal(false);
     public readonly isSaving = signal(false);
     public readonly entryError = signal<string | null>(null);
+    public readonly entrySaveVersion = signal(0);
     public readonly isEditing = signal(false);
     public readonly desiredWeight = signal<number | null>(null);
     public readonly isDesiredWeightSaving = signal(false);
@@ -176,6 +177,7 @@ export class WeightHistoryFacade {
                     takeUntilDestroyed(this.destroyRef),
                 ),
             );
+            this.entrySaveVersion.update(version => version + 1);
             this.invalidation.reportBodyMetricMutation();
             this.loadEntries(false, true);
             if (editingId !== null) {

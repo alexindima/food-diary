@@ -8,8 +8,8 @@
                     "moduleCycleNodes":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
-                    "selectorUnreferencedComponents":  122,
-                    "componentsWithoutDirectSpecs":  108,
+                    "selectorUnreferencedComponents":  124,
+                    "componentsWithoutDirectSpecs":  109,
                     "criticalSymbolsWithoutTestReferences":  26,
                     "explicitDebtMarkers":  2
                 },
@@ -1050,6 +1050,22 @@
                                                "feature":  "weekly-check-in",
                                                "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
+                                               "specPath":  null
+                                           },
+                                           {
+                                               "class":  "WeightHistoryBmiCardComponent",
+                                               "selector":  "fd-weight-history-bmi-card",
+                                               "feature":  "weight-history",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-bmi-card/weight-history-bmi-card.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-bmi-card/weight-history-bmi-card.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-bmi-card/weight-history-bmi-card.spec.ts"
+                                           },
+                                           {
+                                               "class":  "WeightHistoryEntryDialogComponent",
+                                               "selector":  "fd-weight-history-entry-dialog",
+                                               "feature":  "weight-history",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.html",
                                                "specPath":  null
                                            },
                                            {
@@ -3479,6 +3495,11 @@
                                                                 "name":  "labels",
                                                                 "type":  "readonly FdUiLineChartXAxisLabelView[]",
                                                                 "required":  false
+                                                            },
+                                                            {
+                                                                "name":  "layout",
+                                                                "type":  "FdUiLineChartXAxisLabelLayout",
+                                                                "required":  false
                                                             }
                                                         ],
                                              "outputs":  [
@@ -4436,6 +4457,20 @@
                                              "specPath":  null
                                          },
                                          {
+                                             "class":  "WeightHistoryEntryDialogComponent",
+                                             "selector":  "fd-weight-history-entry-dialog",
+                                             "feature":  "weight-history",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.html",
+                                             "inputs":  [
+
+                                                        ],
+                                             "outputs":  [
+
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
                                              "class":  "WeightHistoryGoalCardComponent",
                                              "selector":  "fd-weight-history-goal-card",
                                              "feature":  "weight-history",
@@ -4450,6 +4485,21 @@
                                                             {
                                                                 "name":  "isSaving",
                                                                 "type":  "boolean",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "entries",
+                                                                "type":  "readonly WeightEntry[]",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "currentWeight",
+                                                                "type":  "number | null",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "desiredWeight",
+                                                                "type":  "number | null",
                                                                 "required":  true
                                                             }
                                                         ],

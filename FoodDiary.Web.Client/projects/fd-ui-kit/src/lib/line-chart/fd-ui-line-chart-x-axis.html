@@ -1,5 +1,12 @@
 @if (show()) {
-    <div class="fd-ui-line-chart__x-axis fd-ui-line-chart__x-axis--angled" aria-hidden="true">
+    <div
+        class="fd-ui-line-chart__x-axis"
+        aria-hidden="true"
+        [class.fd-ui-line-chart__x-axis--angled]="layout() === 'angled'"
+        [class.fd-ui-line-chart__x-axis--stacked]="layout() === 'stacked'"
+        [class.fd-ui-line-chart__x-axis--stacked-two-lines]="layout() === 'stacked' && stackedLineCount() === 2"
+        [class.fd-ui-line-chart__x-axis--stacked-three-lines]="layout() === 'stacked' && stackedLineCount() >= 3"
+    >
         @for (label of labels(); track label.xPercent) {
             <span
                 [class.fd-ui-line-chart__x-axis-label--start]="label.position === 'start'"

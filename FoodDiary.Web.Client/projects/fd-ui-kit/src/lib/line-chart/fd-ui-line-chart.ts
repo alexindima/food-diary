@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
+import type { FdUiLineChartXAxisLabelLayout } from './fd-ui-line-chart.types';
 import { FdUiLineChartLegendComponent } from './fd-ui-line-chart-legend';
 import { FdUiLineChartXAxisComponent } from './fd-ui-line-chart-x-axis';
 import { FdUiLineChartYAxisComponent } from './fd-ui-line-chart-y-axis';
+
+export type { FdUiLineChartXAxisLabelLayout } from './fd-ui-line-chart.types';
 
 export type FdUiLineChartPoint = {
     label: string;
@@ -85,6 +88,7 @@ type FdUiLineChartLineSegment = {
 const LINE_CHART_VIEWBOX_WIDTH = 100;
 const LINE_CHART_VIEWBOX_HEIGHT = 64;
 const LINE_CHART_PADDING = 6;
+const LINE_CHART_STACKED_AXIS_BOTTOM_PADDING = 1;
 const LINE_CHART_SPARKLINE_PADDING = 2;
 const LINE_CHART_LINE_STROKE_WIDTH = 2.4;
 const LINE_CHART_SPARKLINE_AREA_BASELINE_OFFSET = LINE_CHART_LINE_STROKE_WIDTH / 2;
@@ -139,6 +143,8 @@ export class FdUiLineChartComponent {
     public readonly defaultMaxValue = input<number | null>(null);
     public readonly showAxisLabels = input(false);
     public readonly showGrid = input(false);
+    public readonly connectNulls = input(true);
+    public readonly xAxisLabelLayout = input<FdUiLineChartXAxisLabelLayout>('angled');
     public readonly valueSuffix = input('');
     public readonly axisDecimalPlaces = input(DEFAULT_AXIS_DECIMAL_PLACES);
     public readonly density = input<FdUiLineChartDensity>('default');
@@ -147,7 +153,11 @@ export class FdUiLineChartComponent {
     protected readonly chartLeft = computed(() => (this.density() === 'sparkline' ? LINE_CHART_SPARKLINE_LEFT_X : LINE_CHART_LEFT_X));
     protected readonly chartRight = computed(() => (this.density() === 'sparkline' ? LINE_CHART_SPARKLINE_RIGHT_X : LINE_CHART_RIGHT_X));
     protected readonly chartTop = computed(() => this.chartPadding());
-    protected readonly chartBottom = computed(() => LINE_CHART_VIEWBOX_HEIGHT - this.chartPadding());
+    protected readonly chartBottom = computed(() =>
+        this.xAxisLabelLayout() === 'stacked'
+            ? LINE_CHART_VIEWBOX_HEIGHT - LINE_CHART_STACKED_AXIS_BOTTOM_PADDING
+            : LINE_CHART_VIEWBOX_HEIGHT - this.chartPadding(),
+    );
     private readonly areaBaseline = computed(() =>
         this.density() === 'sparkline' ? this.chartBottom() + LINE_CHART_SPARKLINE_AREA_BASELINE_OFFSET : this.chartBottom(),
     );
@@ -226,7 +236,7 @@ export class FdUiLineChartComponent {
         const minValue = this.resolvedMinValue();
         const maxValue = this.resolvedMaxValue();
         const padding = this.chartPadding();
-        const availableHeight = LINE_CHART_VIEWBOX_HEIGHT - padding * 2;
+        const availableHeight = this.chartBottom() - this.chartTop();
         const step = availableHeight / (LINE_CHART_GRID_LINE_COUNT - 1);
         const valueStep = (maxValue - minValue) / (LINE_CHART_GRID_LINE_COUNT - 1);
 
@@ -303,7 +313,7 @@ export class FdUiLineChartComponent {
         const maxValue = this.resolvedMaxValue();
         const valueRange = maxValue - minValue;
         const effectiveRange = valueRange > 0 ? valueRange : 1;
-        const availableHeight = LINE_CHART_VIEWBOX_HEIGHT - this.chartPadding() * 2;
+        const availableHeight = this.chartBottom() - this.chartTop();
 
         return this.resolvedSeries().flatMap(series => {
             const shouldPrefixTooltip = this.series().length > 0 && series.label.trim().length > 0;
@@ -447,7 +457,7 @@ export class FdUiLineChartComponent {
         series.points.forEach((point, index) => {
             const value = point.value;
             if (typeof value !== 'number' || !Number.isFinite(value)) {
-                if (currentGroup.length > 0) {
+                if (!this.connectNulls() && currentGroup.length > 0) {
                     groups.push(currentGroup);
                     currentGroup = [];
                 }

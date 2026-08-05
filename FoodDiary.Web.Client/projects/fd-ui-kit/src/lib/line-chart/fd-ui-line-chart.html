@@ -42,7 +42,7 @@
                 }
             </div>
 
-            <fd-ui-line-chart-x-axis [show]="showAxisLabels()" [labels]="xAxisLabels()" />
+            <fd-ui-line-chart-x-axis [show]="showAxisLabels()" [labels]="xAxisLabels()" [layout]="xAxisLabelLayout()" />
             <fd-ui-line-chart-legend [show]="shouldShowSeriesLegend()" [series]="seriesViews()" />
         </div>
     } @else {

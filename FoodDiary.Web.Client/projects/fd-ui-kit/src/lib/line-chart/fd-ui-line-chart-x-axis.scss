@@ -5,7 +5,7 @@
 
 .fd-ui-line-chart__x-axis {
     position: relative;
-    min-height: var(--fd-text-caption-line-height);
+    min-height: 1lh;
     grid-area: x-axis;
     color: var(--fd-color-text-muted);
     font-size: var(--fd-text-caption-size);
@@ -53,12 +53,33 @@
     transform: translateX(calc(-100% + 0.35em)) rotate(45deg);
 }
 
+.fd-ui-line-chart__x-axis--stacked {
+    min-height: calc(1lh + var(--fd-space-sm));
+}
+
+.fd-ui-line-chart__x-axis--stacked-two-lines {
+    min-height: calc(2lh + var(--fd-space-sm));
+}
+
+.fd-ui-line-chart__x-axis--stacked-three-lines {
+    min-height: calc(3lh + var(--fd-space-sm));
+}
+
+.fd-ui-line-chart__x-axis--stacked span {
+    --fd-line-chart-stacked-label-max-width: 64px;
+    top: var(--fd-space-sm);
+    max-width: var(--fd-line-chart-stacked-label-max-width);
+    white-space: pre-line;
+    text-overflow: clip;
+    transform: translateX(-50%);
+}
+
 @container (max-width: 560px) {
-    .fd-ui-line-chart__x-axis {
+    .fd-ui-line-chart__x-axis--angled {
         min-height: var(--fd-line-chart-angled-axis-height);
     }
 
-    .fd-ui-line-chart__x-axis span {
+    .fd-ui-line-chart__x-axis--angled span {
         top: -6px;
         max-width: 88px;
         text-align: center;
@@ -66,11 +87,11 @@
         transform-origin: 0.35em top;
     }
 
-    .fd-ui-line-chart__x-axis .fd-ui-line-chart__x-axis-label--start {
+    .fd-ui-line-chart__x-axis--angled .fd-ui-line-chart__x-axis-label--start {
         transform: translateX(-0.35em) rotate(45deg);
     }
 
-    .fd-ui-line-chart__x-axis .fd-ui-line-chart__x-axis-label--end {
+    .fd-ui-line-chart__x-axis--angled .fd-ui-line-chart__x-axis-label--end {
         transform: translateX(calc(-100% + 0.35em)) rotate(45deg);
     }
 }

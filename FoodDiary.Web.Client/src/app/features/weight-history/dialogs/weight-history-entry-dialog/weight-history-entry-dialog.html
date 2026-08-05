@@ -1,0 +1,15 @@
+<fd-ui-dialog
+    size="sm"
+    [title]="(isEditing() ? 'WEIGHT_HISTORY.EDIT_ENTRY_TITLE' : 'WEIGHT_HISTORY.ADD_ENTRY_TITLE') | translate"
+    [dismissible]="true"
+    (close)="close()"
+>
+    <fd-weight-history-form-card
+        data-tour-id="weight-history-entry-form"
+        [form]="form"
+        [isSaving]="isSaving()"
+        [isEditing]="isEditing()"
+        [error]="error()"
+        (editCancel)="close()"
+    />
+</fd-ui-dialog>
