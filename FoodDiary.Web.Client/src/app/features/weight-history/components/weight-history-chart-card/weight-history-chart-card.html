@@ -5,9 +5,9 @@
         @if (hasPoints()) {
             <fd-ui-line-chart
                 class="weight-history-page__chart"
-                [class.weight-history-page__chart--loading]="isLoading()"
                 lineColor="var(--fd-color-primary-600)"
                 xAxisLabelLayout="stacked"
+                [class.weight-history-page__chart--loading]="isLoading()"
                 [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate"
                 [points]="chartPoints()"
                 [referenceLines]="referenceLines()"

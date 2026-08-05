@@ -12,21 +12,27 @@ const testOptions: FdUiSegmentedToggleOption[] = [
     { value: 'month', label: 'Month' },
 ];
 
+let component: FdUiSegmentedToggleComponent;
+let fixture: ComponentFixture<FdUiSegmentedToggleComponent>;
+
+function host(): HTMLElement {
+    return fixture.nativeElement as HTMLElement;
+}
+
+function radioButtons(): HTMLButtonElement[] {
+    return Array.from(host().querySelectorAll<HTMLButtonElement>('[role="radio"]'));
+}
+
+function requireElement(selector: string): HTMLElement {
+    const element = host().querySelector<HTMLElement>(selector);
+    if (element === null) {
+        throw new Error(`Expected element ${selector} to exist.`);
+    }
+
+    return element;
+}
+
 describe('FdUiSegmentedToggleComponent', () => {
-    let component: FdUiSegmentedToggleComponent;
-    let fixture: ComponentFixture<FdUiSegmentedToggleComponent>;
-
-    const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
-    const radioButtons = (): HTMLButtonElement[] => Array.from(host().querySelectorAll<HTMLButtonElement>('[role="radio"]'));
-    const requireElement = (selector: string): HTMLElement => {
-        const element = host().querySelector<HTMLElement>(selector);
-        if (element === null) {
-            throw new Error(`Expected element ${selector} to exist.`);
-        }
-
-        return element;
-    };
-
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiSegmentedToggleComponent],
@@ -34,7 +40,7 @@ describe('FdUiSegmentedToggleComponent', () => {
                 {
                     provide: TranslateService,
                     useValue: {
-                        instant: (key: string) => key,
+                        instant: (key: string): string => key,
                         onLangChange: EMPTY,
                     },
                 },

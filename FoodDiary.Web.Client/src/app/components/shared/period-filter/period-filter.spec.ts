@@ -115,10 +115,12 @@ describe('PeriodFilterComponent', () => {
         hostFixture.detectChanges();
 
         expect(host.rangeForm.range().disabled()).toBe(false);
-        expect(hostFixture.nativeElement.querySelector('fd-ui-date-range-input')).not.toBeNull();
+        const element = hostFixture.nativeElement as HTMLElement;
+        expect(element.querySelector('fd-ui-date-range-input')).not.toBeNull();
     });
 
     it('should hide the custom date range for preset periods when requested', () => {
-        expect(hostFixture.nativeElement.querySelector('fd-ui-date-range-input')).toBeNull();
+        const element = hostFixture.nativeElement as HTMLElement;
+        expect(element.querySelector('fd-ui-date-range-input')).toBeNull();
     });
 });
