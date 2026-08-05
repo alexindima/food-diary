@@ -77,7 +77,7 @@
         height: var(--fd-size-progress-height-md);
         overflow: hidden;
         border-radius: var(--fd-radius-pill);
-        background: var(--fd-bg-surface-sunken);
+        background: var(--fd-bg-surface-inset);
     }
 
     &__goal-progress-value {
@@ -327,7 +327,7 @@
         }
 
         &:hover {
-            background: var(--fd-bg-surface-hover);
+            background: var(--fd-bg-surface-muted);
         }
     }
 
@@ -356,7 +356,7 @@
         --entry-change-min-width: 48px;
         min-width: var(--entry-change-min-width);
         color: var(--fd-color-text-muted);
-        background: var(--fd-bg-surface-sunken);
+        background: var(--fd-bg-surface-inset);
         text-align: center;
     }
 

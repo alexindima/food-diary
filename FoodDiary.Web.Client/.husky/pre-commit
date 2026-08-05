@@ -1,6 +1,6 @@
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR)
 . FoodDiary.Web.Client/.husky/progress.sh
-hook_progress_init "pre-commit" 10
+hook_progress_init "pre-commit" 11
 
 STAGED_FRONTEND_FORMATTABLE_FILES=$(echo "$STAGED_FILES" | grep -E '^FoodDiary\.Web\.Client/(src|projects)/.*\.(ts|html)$' || true)
 STAGED_FRONTEND_LINT_FILES=$(echo "$STAGED_FILES" | grep -E '^FoodDiary\.Web\.Client/(src|projects)/.*\.(ts|html)$' || true)
@@ -63,6 +63,12 @@ if [ "$HAS_SCSS" -gt 0 ]; then
   fi
 else
   hook_step_skip "Stylelint" "no .scss files changed"
+fi
+
+if [ "$HAS_SCSS" -gt 0 ]; then
+  hook_run "Design token reference audit" npm run audit:design-tokens || exit 1
+else
+  hook_step_skip "Design token reference audit" "no .scss files changed"
 fi
 
 if [ "$HAS_FRONTEND_DEPS" -gt 0 ]; then
