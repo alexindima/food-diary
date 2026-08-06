@@ -5898,6 +5898,30 @@
       ]
     },
     {
+      "Path": "/api/v{version}/users/waist-goals",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "404",
+            "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/users/weight-goals",
       "Operations": [
         {

@@ -1,3 +1,6 @@
 namespace FoodDiary.Presentation.Api.Features.Users.Responses;
 
-public sealed record UserDesiredWaistHttpResponse(double? DesiredWaist);
+public sealed record UserDesiredWaistHttpResponse(
+    double? DesiredWaist,
+    double? StartWaist,
+    DateTime? StartedAtUtc);

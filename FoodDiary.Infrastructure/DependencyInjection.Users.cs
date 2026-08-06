@@ -20,6 +20,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IUserRoleCatalogService, UserRoleCatalogService>();
         services.AddScoped<IUserRoleMembershipService, UserRoleMembershipService>();
         services.AddScoped<IUserCurrentWeightProvider, UserCurrentWeightProvider>();
+        services.AddScoped<IUserCurrentWaistProvider, UserCurrentWaistProvider>();
 
         services.AddScoped<IUserLoginEventRepository, UserLoginEventRepository>();
         services.AddScoped<IUserLoginEventReadRepository>(static provider => provider.GetRequiredService<IUserLoginEventRepository>());

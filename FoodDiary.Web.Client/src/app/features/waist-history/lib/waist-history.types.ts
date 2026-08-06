@@ -1,6 +1,6 @@
 import type { WaistEntry } from '../models/waist-entry.data';
 
-export type WaistHistoryRange = 'week' | 'month' | 'year' | 'custom';
+export type WaistHistoryRange = 'week' | 'month' | 'quarter' | 'halfYear' | 'year' | 'custom';
 
 export type WaistHistoryDateRange = {
     start: Date;

@@ -1,28 +1,68 @@
-<fd-ui-card class="waist-history-page__card waist-history-page__card--entries" [title]="'WAIST_HISTORY.HISTORY_TITLE' | translate">
+<fd-ui-card class="waist-history-page__card waist-history-page__card--entries" [title]="'WAIST_HISTORY.RECENT_ENTRIES_TITLE' | translate">
     @if (isLoading()) {
         <div class="waist-history-page__loader fd-ui-body-sm">{{ 'WAIST_HISTORY.LOADING' | translate }}</div>
+    } @else if (items().length === 0) {
+        <div class="waist-history-page__empty fd-ui-body-sm">{{ 'WAIST_HISTORY.NO_ENTRIES' | translate }}</div>
     } @else {
-        @if (items().length === 0) {
-            <div class="waist-history-page__empty fd-ui-body-sm">{{ 'WAIST_HISTORY.NO_ENTRIES' | translate }}</div>
-        } @else {
-            <div class="waist-history-page__entries">
-                @for (item of items(); track item.entry.id) {
-                    <div class="waist-history-page__entry">
-                        <div class="waist-history-page__entry-date fd-ui-stat-value">{{ item.dateLabel }}</div>
-                        <div class="waist-history-page__entry-value fd-ui-body">
-                            {{ item.entry.circumference | number: '1.0-2' }} {{ 'WAIST_HISTORY.CM' | translate }}
-                        </div>
-                        <div class="waist-history-page__entry-actions">
-                            <fd-ui-button type="button" fill="text" variant="secondary" icon="edit" (click)="editEntry.emit(item.entry)">
-                                {{ 'WAIST_HISTORY.EDIT' | translate }}
-                            </fd-ui-button>
-                            <fd-ui-button type="button" fill="text" variant="danger" icon="delete" (click)="removeEntry.emit(item.entry)">
-                                {{ 'WAIST_HISTORY.DELETE' | translate }}
-                            </fd-ui-button>
-                        </div>
+        <div class="waist-history-page__entries">
+            @for (item of visibleItems(); track item.entry.id) {
+                <div class="waist-history-page__entry fd-grid fd-align-center">
+                    <div class="waist-history-page__entry-date fd-row fd-align-center fd-gap-actions">
+                        <span class="fd-ui-caption">{{ item.dateLabel }}</span>
+                        @if (item.isToday) {
+                            <span class="waist-history-page__entry-today fd-ui-caption">{{ 'WAIST_HISTORY.TODAY' | translate }}</span>
+                        }
                     </div>
-                }
-            </div>
+                    <div class="waist-history-page__entry-value fd-ui-caption">
+                        {{ item.entry.circumference | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                    </div>
+                    <div
+                        class="waist-history-page__entry-change fd-ui-caption"
+                        [class.waist-history-page__entry-change--loss]="item.change !== null && item.change < 0"
+                        [class.waist-history-page__entry-change--gain]="item.change !== null && item.change > 0"
+                    >
+                        @if (item.change === null || item.change === 0) {
+                            —
+                        } @else {
+                            {{ item.change > 0 ? '+' : '' }}{{ item.change | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                        }
+                    </div>
+                    <div class="waist-history-page__entry-actions fd-row fd-gap-actions fd-justify-end">
+                        <fd-ui-button
+                            type="button"
+                            appearance="plain-icon"
+                            size="xs"
+                            fill="text"
+                            variant="secondary"
+                            icon="edit"
+                            [ariaLabel]="'WAIST_HISTORY.EDIT' | translate"
+                            (click)="editEntry.emit(item.entry)"
+                        />
+                        <fd-ui-button
+                            type="button"
+                            appearance="plain-icon"
+                            size="xs"
+                            fill="text"
+                            variant="danger"
+                            icon="delete"
+                            [ariaLabel]="'WAIST_HISTORY.DELETE' | translate"
+                            (click)="removeEntry.emit(item.entry)"
+                        />
+                    </div>
+                </div>
+            }
+        </div>
+        @if (canToggleEntries()) {
+            <fd-ui-button
+                class="waist-history-page__entries-toggle"
+                type="button"
+                variant="secondary"
+                fill="outline"
+                icon="open_in_new"
+                (click)="showAllEntries.emit()"
+            >
+                {{ 'WAIST_HISTORY.SHOW_ALL_ENTRIES' | translate }}
+            </fd-ui-button>
         }
     }
 </fd-ui-card>

@@ -1,16 +1,16 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "components":  404,
-                    "componentsWithoutDirectSpecs":  112,
-                    "inputs":  1243,
-                    "outputs":  408,
-                    "apiCalls":  209,
-                    "templatesWithTranslations":  245,
-                    "translationKeys":  1217,
-                    "consumerEdges":  911,
-                    "consumedComponents":  276,
-                    "unconsumedComponents":  127
+                    "components":  408,
+                    "componentsWithoutDirectSpecs":  116,
+                    "inputs":  1250,
+                    "outputs":  410,
+                    "apiCalls":  212,
+                    "templatesWithTranslations":  248,
+                    "translationKeys":  1241,
+                    "consumerEdges":  919,
+                    "consumedComponents":  275,
+                    "unconsumedComponents":  132
                 },
     "components":  [
                        {
@@ -12563,6 +12563,20 @@
                            "specPath":  "FoodDiary.Web.Client/src/app/features/usda/dialogs/usda-food-search-dialog/usda-food-search-dialog.spec.ts"
                        },
                        {
+                           "class":  "WaistGoalHistoryDialogComponent",
+                           "selector":  "fd-waist-goal-history-dialog",
+                           "feature":  "waist-history",
+                           "path":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.html",
+                           "inputs":  [
+
+                                      ],
+                           "outputs":  [
+
+                                       ],
+                           "specPath":  null
+                       },
+                       {
                            "class":  "WaistHistoryChartCardComponent",
                            "selector":  "fd-waist-history-chart-card",
                            "feature":  "waist-history",
@@ -12577,6 +12591,16 @@
                                           {
                                               "name":  "chartPoints",
                                               "type":  "readonly WaistHistoryChartPoint[]",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "desiredWaist",
+                                              "type":  "number | null",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "goalLabel",
+                                              "type":  "string",
                                               "required":  true
                                           }
                                       ],
@@ -12611,9 +12635,41 @@
                                            {
                                                "name":  "removeEntry",
                                                "type":  "WaistEntry"
+                                           },
+                                           {
+                                               "name":  "showAllEntries",
+                                               "type":  ""
                                            }
                                        ],
                            "specPath":  "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-entries-card/waist-history-entries-card.spec.ts"
+                       },
+                       {
+                           "class":  "WaistHistoryEntriesDialogComponent",
+                           "selector":  "fd-waist-history-entries-dialog",
+                           "feature":  "waist-history",
+                           "path":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.html",
+                           "inputs":  [
+
+                                      ],
+                           "outputs":  [
+
+                                       ],
+                           "specPath":  null
+                       },
+                       {
+                           "class":  "WaistHistoryEntryDialogComponent",
+                           "selector":  "fd-waist-history-entry-dialog",
+                           "feature":  "waist-history",
+                           "path":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entry-dialog/waist-history-entry-dialog.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entry-dialog/waist-history-entry-dialog.html",
+                           "inputs":  [
+
+                                      ],
+                           "outputs":  [
+
+                                       ],
+                           "specPath":  null
                        },
                        {
                            "class":  "WaistHistoryFormCardComponent",
@@ -12659,21 +12715,64 @@
                            "templatePath":  "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.html",
                            "inputs":  [
                                           {
-                                              "name":  "circumferenceField",
-                                              "type":  "FieldTree\u003cstring\u003e",
+                                              "name":  "currentWaist",
+                                              "type":  "number | null",
                                               "required":  true
                                           },
                                           {
-                                              "name":  "isSaving",
+                                              "name":  "currentWaistDate",
+                                              "type":  "string | null",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "desiredWaist",
+                                              "type":  "number | null",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "startWaist",
+                                              "type":  "number | null",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "startedAtUtc",
+                                              "type":  "string | null",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "hasGoalHistory",
                                               "type":  "boolean",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "lastCompletedGoal",
+                                              "type":  "WaistGoalHistoryItem | null",
                                               "required":  true
                                           }
                                       ],
                            "outputs":  [
                                            {
-                                               "name":  "saveGoal",
+                                               "name":  "configureGoal",
+                                               "type":  ""
+                                           },
+                                           {
+                                               "name":  "viewGoalHistory",
                                                "type":  ""
                                            }
+                                       ],
+                           "specPath":  null
+                       },
+                       {
+                           "class":  "WaistHistoryGoalDialogComponent",
+                           "selector":  "fd-waist-history-goal-dialog",
+                           "feature":  "waist-history",
+                           "path":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.html",
+                           "inputs":  [
+
+                                      ],
+                           "outputs":  [
+
                                        ],
                            "specPath":  null
                        },
@@ -14873,7 +14972,7 @@
                          "responseType":  "UserProfileOverview",
                          "urlExpression":  "\u0027overview\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  59,
+                         "line":  60,
                          "publicMethod":  "getOverview",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14885,7 +14984,7 @@
                          "responseType":  "User",
                          "urlExpression":  "\u0027info\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  71,
+                         "line":  72,
                          "publicMethod":  "getInfo",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14897,7 +14996,7 @@
                          "responseType":  "User",
                          "urlExpression":  "\u0027info\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  83,
+                         "line":  84,
                          "publicMethod":  "getInfoSilently",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14909,7 +15008,7 @@
                          "responseType":  "User",
                          "urlExpression":  "\u0027info\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  95,
+                         "line":  96,
                          "publicMethod":  "update",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14921,7 +15020,7 @@
                          "responseType":  "User",
                          "urlExpression":  "\u0027preferences/appearance\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  104,
+                         "line":  105,
                          "publicMethod":  "updateAppearance",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14933,7 +15032,7 @@
                          "responseType":  "User",
                          "urlExpression":  "\u0027info\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  113,
+                         "line":  114,
                          "publicMethod":  "updateDashboardLayout",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14945,7 +15044,7 @@
                          "responseType":  "void",
                          "urlExpression":  "\u0027password\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  122,
+                         "line":  123,
                          "publicMethod":  "changePassword",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14957,7 +15056,7 @@
                          "responseType":  "void",
                          "urlExpression":  "\u0027password/set\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  129,
+                         "line":  130,
                          "publicMethod":  "setPassword",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14969,7 +15068,7 @@
                          "responseType":  "void",
                          "urlExpression":  "\u0027ai-consent\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  142,
+                         "line":  143,
                          "publicMethod":  "acceptAiConsent",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14981,7 +15080,7 @@
                          "responseType":  "void",
                          "urlExpression":  "\u0027ai-consent\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  154,
+                         "line":  155,
                          "publicMethod":  "revokeAiConsent",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -14993,7 +15092,7 @@
                          "responseType":  "void",
                          "urlExpression":  "\u0027\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  166,
+                         "line":  167,
                          "publicMethod":  "deleteCurrentUser",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -15005,7 +15104,7 @@
                          "responseType":  "DesiredWeightResponse",
                          "urlExpression":  "\u0027desired-weight\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  176,
+                         "line":  177,
                          "publicMethod":  "getDesiredWeight",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -15017,7 +15116,7 @@
                          "responseType":  "DesiredWeightResponse",
                          "urlExpression":  "\u0027desired-weight\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  183,
+                         "line":  184,
                          "publicMethod":  "getWeightGoal",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -15029,7 +15128,7 @@
                          "responseType":  "WeightGoalHistoryItem[]",
                          "urlExpression":  "\u0027weight-goals\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  195,
+                         "line":  196,
                          "publicMethod":  "getWeightGoalHistory",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -15041,7 +15140,7 @@
                          "responseType":  "DesiredWeightResponse",
                          "urlExpression":  "\u0027desired-weight\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  201,
+                         "line":  202,
                          "publicMethod":  "updateDesiredWeight",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -15053,7 +15152,7 @@
                          "responseType":  "DesiredWeightResponse",
                          "urlExpression":  "\u0027desired-weight\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  210,
+                         "line":  211,
                          "publicMethod":  "updateWeightGoal",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
@@ -15065,8 +15164,44 @@
                          "responseType":  "DesiredWaistResponse",
                          "urlExpression":  "\u0027desired-waist\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  216,
+                         "line":  217,
                          "publicMethod":  "getDesiredWaist",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/desired-waist"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "GET",
+                         "responseType":  "DesiredWaistResponse",
+                         "urlExpression":  "\u0027desired-waist\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  224,
+                         "publicMethod":  "getWaistGoal",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/desired-waist"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "GET",
+                         "responseType":  "WaistGoalHistoryItem[]",
+                         "urlExpression":  "\u0027waist-goals\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  236,
+                         "publicMethod":  "getWaistGoalHistory",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.users",
+                         "resolvedUrlExpression":  "environment.apiUrls.users/waist-goals"
+                     },
+                     {
+                         "feature":  "shell",
+                         "method":  "PUT",
+                         "responseType":  "DesiredWaistResponse",
+                         "urlExpression":  "\u0027desired-waist\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
+                         "line":  242,
+                         "publicMethod":  "updateDesiredWaist",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
                          "resolvedUrlExpression":  "environment.apiUrls.users/desired-waist"
@@ -15077,8 +15212,8 @@
                          "responseType":  "DesiredWaistResponse",
                          "urlExpression":  "\u0027desired-waist\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-                         "line":  223,
-                         "publicMethod":  "updateDesiredWaist",
+                         "line":  251,
+                         "publicMethod":  "updateWaistGoal",
                          "transport":  "InheritedApiService",
                          "baseUrlExpression":  "environment.apiUrls.users",
                          "resolvedUrlExpression":  "environment.apiUrls.users/desired-waist"
@@ -18207,12 +18342,14 @@
                                  "feature":  "waist-history",
                                  "path":  "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-entries-card/waist-history-entries-card.html",
                                  "keys":  [
-                                              "WAIST_HISTORY.CM",
+                                              "GENERAL.UNITS.CM",
                                               "WAIST_HISTORY.DELETE",
                                               "WAIST_HISTORY.EDIT",
-                                              "WAIST_HISTORY.HISTORY_TITLE",
                                               "WAIST_HISTORY.LOADING",
-                                              "WAIST_HISTORY.NO_ENTRIES"
+                                              "WAIST_HISTORY.NO_ENTRIES",
+                                              "WAIST_HISTORY.RECENT_ENTRIES_TITLE",
+                                              "WAIST_HISTORY.SHOW_ALL_ENTRIES",
+                                              "WAIST_HISTORY.TODAY"
                                           ]
                              },
                              {
@@ -18220,12 +18357,12 @@
                                  "path":  "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-form-card/waist-history-form-card.html",
                                  "keys":  [
                                               "WAIST_HISTORY.ADD",
-                                              "WAIST_HISTORY.ADD_ENTRY_TITLE",
                                               "WAIST_HISTORY.CANCEL_EDIT",
                                               "WAIST_HISTORY.CIRCUMFERENCE_LABEL",
                                               "WAIST_HISTORY.CIRCUMFERENCE_PLACEHOLDER",
                                               "WAIST_HISTORY.DATE_LABEL",
                                               "WAIST_HISTORY.DATE_PLACEHOLDER",
+                                              "WAIST_HISTORY.TODAY",
                                               "WAIST_HISTORY.UPDATE"
                                           ]
                              },
@@ -18233,9 +18370,23 @@
                                  "feature":  "waist-history",
                                  "path":  "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.html",
                                  "keys":  [
-                                              "WAIST_HISTORY.GOAL_CARD_TITLE",
-                                              "WAIST_HISTORY.GOAL_PLACEHOLDER",
-                                              "WAIST_HISTORY.SAVE_GOAL"
+                                              "GENERAL.UNITS.CM",
+                                              "WAIST_HISTORY.CM_PER_WEEK",
+                                              "WAIST_HISTORY.GOAL_AVERAGE_RATE",
+                                              "WAIST_HISTORY.GOAL_CURRENT_WAIST",
+                                              "WAIST_HISTORY.GOAL_DAYS_TO_GOAL",
+                                              "WAIST_HISTORY.GOAL_EMPTY_DESCRIPTION",
+                                              "WAIST_HISTORY.GOAL_HISTORY",
+                                              "WAIST_HISTORY.GOAL_NOT_SET",
+                                              "WAIST_HISTORY.GOAL_PERIOD_CHANGE",
+                                              "WAIST_HISTORY.GOAL_PROGRESS_TITLE",
+                                              "WAIST_HISTORY.GOAL_REMAINING",
+                                              "WAIST_HISTORY.GOAL_START_DATE",
+                                              "WAIST_HISTORY.GOAL_START_WAIST",
+                                              "WAIST_HISTORY.GOAL_VALUE",
+                                              "WAIST_HISTORY.LAST_GOAL",
+                                              "WAIST_HISTORY.NO_GOAL_HISTORY_DESCRIPTION",
+                                              "WAIST_HISTORY.NO_GOAL_HISTORY_TITLE"
                                           ]
                              },
                              {
@@ -18250,14 +18401,54 @@
                              },
                              {
                                  "feature":  "waist-history",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.html",
+                                 "keys":  [
+                                              "GENERAL.UNITS.CM",
+                                              "WAIST_HISTORY.GOAL_HISTORY",
+                                              "WAIST_HISTORY.GOAL_NOW",
+                                              "WAIST_HISTORY.GOAL_START_WAIST",
+                                              "WAIST_HISTORY.GOAL_VALUE"
+                                          ]
+                             },
+                             {
+                                 "feature":  "waist-history",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.html",
+                                 "keys":  [
+                                              "GENERAL.UNITS.CM",
+                                              "WAIST_HISTORY.ALL_ENTRIES_TITLE",
+                                              "WAIST_HISTORY.DELETE",
+                                              "WAIST_HISTORY.EDIT",
+                                              "WAIST_HISTORY.TODAY"
+                                          ]
+                             },
+                             {
+                                 "feature":  "waist-history",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.html",
+                                 "keys":  [
+                                              "WAIST_HISTORY.CANCEL_GOAL",
+                                              "WAIST_HISTORY.DESIRED_WAIST_LABEL",
+                                              "WAIST_HISTORY.GOAL_CARD_TITLE",
+                                              "WAIST_HISTORY.GOAL_PLACEHOLDER"
+                                          ]
+                             },
+                             {
+                                 "feature":  "waist-history",
                                  "path":  "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
                                  "keys":  [
+                                              "GENERAL.UNITS.CM",
+                                              "WAIST_HISTORY.CURRENT_WAIST",
                                               "WAIST_HISTORY.CUSTOM_RANGE_FROM_LABEL",
                                               "WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER",
                                               "WAIST_HISTORY.CUSTOM_RANGE_TO_LABEL",
+                                              "WAIST_HISTORY.GOAL_VALUE",
+                                              "WAIST_HISTORY.QUICK_ADD",
+                                              "WAIST_HISTORY.RANGE_CHANGE",
                                               "WAIST_HISTORY.SUBTITLE",
+                                              "WAIST_HISTORY.SUMMARY_TITLE",
                                               "WAIST_HISTORY.TITLE",
-                                              "WAIST_HISTORY.TOUR.START_TOUR"
+                                              "WAIST_HISTORY.TOUR.START_TOUR",
+                                              "WAIST_HISTORY.TO_GOAL",
+                                              "WAIST_HISTORY.WHT_CARD_TITLE"
                                           ]
                              },
                              {
@@ -23318,10 +23509,13 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "waist-history",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-entries-card/waist-history-entries-card.html",
-                              "occurrences":  2,
+                              "occurrences":  3,
                               "inputsUsed":  [
+                                                 "appearance",
+                                                 "ariaLabel",
                                                  "fill",
                                                  "icon",
+                                                 "size",
                                                  "type",
                                                  "variant"
                                              ],
@@ -23352,10 +23546,49 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "waist-history",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.html",
-                              "occurrences":  1,
+                              "occurrences":  2,
                               "inputsUsed":  [
+                                                 "fill",
+                                                 "icon",
+                                                 "type",
+                                                 "variant"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiButtonComponent",
+                              "selector":  "fd-ui-button",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+                              "consumerFeature":  "waist-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.html",
+                              "occurrences":  2,
+                              "inputsUsed":  [
+                                                 "appearance",
+                                                 "ariaLabel",
+                                                 "fill",
+                                                 "icon",
+                                                 "size",
+                                                 "type",
+                                                 "variant"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiButtonComponent",
+                              "selector":  "fd-ui-button",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+                              "consumerFeature":  "waist-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.html",
+                              "occurrences":  2,
+                              "inputsUsed":  [
+                                                 "fill",
                                                  "loading",
-                                                 "type"
+                                                 "type",
+                                                 "variant"
                                              ],
                               "outputsHandled":  [
 
@@ -23367,7 +23600,7 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "waist-history",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
-                              "occurrences":  1,
+                              "occurrences":  3,
                               "inputsUsed":  [
                                                  "appearance",
                                                  "ariaLabel",
@@ -24490,20 +24723,6 @@
                               "selector":  "fd-ui-card",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
                               "consumerFeature":  "waist-history",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-form-card/waist-history-form-card.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "title"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiCardComponent",
-                              "selector":  "fd-ui-card",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-                              "consumerFeature":  "waist-history",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.html",
                               "occurrences":  1,
                               "inputsUsed":  [
@@ -24522,6 +24741,20 @@
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiCardComponent",
+                              "selector":  "fd-ui-card",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+                              "consumerFeature":  "waist-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
+                              "occurrences":  4,
+                              "inputsUsed":  [
+
                                              ],
                               "outputsHandled":  [
 
@@ -24845,7 +25078,8 @@
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "label",
-                                                 "placeholder"
+                                                 "placeholder",
+                                                 "todayLabel"
                                              ],
                               "outputsHandled":  [
 
@@ -25453,6 +25687,54 @@
                               "component":  "FdUiDialogComponent",
                               "selector":  "fd-ui-dialog",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+                              "consumerFeature":  "waist-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "dismissible",
+                                                 "size",
+                                                 "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiDialogComponent",
+                              "selector":  "fd-ui-dialog",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+                              "consumerFeature":  "waist-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entry-dialog/waist-history-entry-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "dismissible",
+                                                 "size",
+                                                 "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiDialogComponent",
+                              "selector":  "fd-ui-dialog",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+                              "consumerFeature":  "waist-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "dismissible",
+                                                 "size",
+                                                 "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiDialogComponent",
+                              "selector":  "fd-ui-dialog",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
                               "consumerFeature":  "weight-history",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.html",
                               "occurrences":  1,
@@ -25581,6 +25863,21 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog-shell/fd-ui-dialog-shell.ts",
                               "consumerFeature":  "fasting",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-safety-dialog/fasting-safety-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "size",
+                                                 "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiDialogShellComponent",
+                              "selector":  "fd-ui-dialog-shell",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog-shell/fd-ui-dialog-shell.ts",
+                              "consumerFeature":  "waist-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "size",
@@ -26725,6 +27022,51 @@
                               "component":  "FdUiIconComponent",
                               "selector":  "fd-ui-icon",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "waist-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.html",
+                              "occurrences":  7,
+                              "inputsUsed":  [
+                                                 "name",
+                                                 "size"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "waist-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "name",
+                                                 "size"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "waist-history",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
+                              "occurrences":  4,
+                              "inputsUsed":  [
+                                                 "name",
+                                                 "size"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "weekly-check-in",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-suggestions-card/weekly-check-in-suggestions-card.html",
                               "occurrences":  1,
@@ -27601,10 +27943,11 @@
                               "selector":  "fd-ui-input",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
                               "consumerFeature":  "waist-history",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "ariaLabel",
+                                                 "label",
                                                  "placeholder",
                                                  "step",
                                                  "suffixButtonIcon",
@@ -27770,11 +28113,13 @@
                               "inputsUsed":  [
                                                  "lineColor",
                                                  "points",
+                                                 "referenceLines",
                                                  "showArea",
                                                  "showAxisLabels",
                                                  "showGrid",
                                                  "title",
-                                                 "valueSuffix"
+                                                 "valueSuffix",
+                                                 "xAxisLabelLayout"
                                              ],
                               "outputsHandled":  [
 
@@ -31662,6 +32007,7 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
                               "occurrences":  1,
                               "inputsUsed":  [
+                                                 "compactActions",
                                                  "subtitle",
                                                  "title"
                                              ],
@@ -31732,11 +32078,13 @@
                                                  "displayRange",
                                                  "endLabel",
                                                  "endPlaceholder",
+                                                 "hideInactiveRange",
                                                  "rangeField",
                                                  "selectedValue",
                                                  "startLabel",
                                                  "startPlaceholder",
-                                                 "tabs"
+                                                 "tabs",
+                                                 "useSegmentedToggle"
                                              ],
                               "outputsHandled":  [
                                                      "rangeChange"
@@ -33254,6 +33602,8 @@
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "chartPoints",
+                                                 "desiredWaist",
+                                                 "goalLabel",
                                                  "isLoading"
                                              ],
                               "outputsHandled":  [
@@ -33273,7 +33623,8 @@
                                              ],
                               "outputsHandled":  [
                                                      "editEntry",
-                                                     "removeEntry"
+                                                     "removeEntry",
+                                                     "showAllEntries"
                                                  ]
                           },
                           {
@@ -33281,7 +33632,7 @@
                               "selector":  "fd-waist-history-form-card",
                               "componentPath":  "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-form-card/waist-history-form-card.ts",
                               "consumerFeature":  "waist-history",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entry-dialog/waist-history-entry-dialog.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "error",
@@ -33301,25 +33652,17 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
                               "occurrences":  1,
                               "inputsUsed":  [
-                                                 "circumferenceField",
-                                                 "isSaving"
+                                                 "currentWaist",
+                                                 "currentWaistDate",
+                                                 "desiredWaist",
+                                                 "hasGoalHistory",
+                                                 "lastCompletedGoal",
+                                                 "startWaist",
+                                                 "startedAtUtc"
                                              ],
                               "outputsHandled":  [
-                                                     "saveGoal"
-                                                 ]
-                          },
-                          {
-                              "component":  "WaistHistoryWhtCardComponent",
-                              "selector":  "fd-waist-history-wht-card",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-wht-card/waist-history-wht-card.ts",
-                              "consumerFeature":  "waist-history",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "viewModel"
-                                             ],
-                              "outputsHandled":  [
-
+                                                     "configureGoal",
+                                                     "viewGoalHistory"
                                                  ]
                           },
                           {

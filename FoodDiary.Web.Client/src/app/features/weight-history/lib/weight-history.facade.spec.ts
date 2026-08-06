@@ -218,6 +218,19 @@ describe('WeightHistoryFacade entries', () => {
 });
 
 describe('WeightHistoryFacade ranges', () => {
+    it('keeps recent entries independent from the selected chart range', () => {
+        facade.initialize();
+        TestBed.tick();
+        const recentEntries = facade.entries();
+        weightEntriesService.getEntries.mockClear();
+
+        facade.changeRange('quarter');
+        TestBed.tick();
+
+        expect(weightEntriesService.getEntries).not.toHaveBeenCalled();
+        expect(facade.entries()).toEqual(recentEntries);
+    });
+
     it('ignores unsupported range values', () => {
         facade.changeRange('decade');
 

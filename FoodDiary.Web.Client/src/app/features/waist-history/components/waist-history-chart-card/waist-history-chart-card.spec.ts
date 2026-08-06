@@ -34,6 +34,8 @@ async function setupComponentAsync(
     const fixture = TestBed.createComponent(WaistHistoryChartCardComponent);
     fixture.componentRef.setInput('isLoading', isLoading);
     fixture.componentRef.setInput('chartPoints', chartPoints);
+    fixture.componentRef.setInput('desiredWaist', null);
+    fixture.componentRef.setInput('goalLabel', 'Goal');
     fixture.detectChanges();
 
     return {

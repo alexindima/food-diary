@@ -1,0 +1,41 @@
+<fd-ui-dialog size="md" [title]="'WAIST_HISTORY.GOAL_HISTORY' | translate" [dismissible]="true" (close)="close()">
+    <div class="waist-goal-history fd-stack fd-gap-card-content">
+        @for (goal of goals(); track goal.id) {
+            <article class="waist-goal-history__item" [class.waist-goal-history__item--active]="goal.status === 'Active'">
+                <div class="fd-row fd-justify-between fd-align-start fd-gap-actions">
+                    <div>
+                        <div class="fd-ui-caption fd-ui-text-muted">{{ goal.statusKey | translate }}</div>
+                        <div class="fd-ui-card-title">
+                            {{ 'WAIST_HISTORY.GOAL_VALUE' | translate: { value: goal.targetWaist | number: '1.0-2' } }}
+                        </div>
+                    </div>
+                    @if (goal.status === 'Active') {
+                        <fd-ui-icon name="track_changes" size="lg" />
+                    } @else {
+                        <div class="fd-ui-stat-value">
+                            {{ goal.change > 0 ? '+' : '' }}{{ goal.change | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                        </div>
+                    }
+                </div>
+                <div class="fd-ui-body-sm">{{ goal.startDate }} — {{ goal.endDate ?? ('WAIST_HISTORY.GOAL_NOW' | translate) }}</div>
+                @if (goal.progress !== null) {
+                    <div class="waist-goal-history__progress-row fd-row fd-align-center fd-gap-actions">
+                        <div class="waist-goal-history__progress" role="progressbar" [attr.aria-valuenow]="goal.progress">
+                            <div class="waist-goal-history__progress-value" [style.width.%]="goal.progress"></div>
+                        </div>
+                        <div class="fd-ui-stat-value">{{ goal.progress | number: '1.0-0' }}%</div>
+                    </div>
+                }
+                <div class="waist-goal-history__values fd-grid fd-ui-caption fd-ui-text-muted">
+                    <span
+                        >{{ 'WAIST_HISTORY.GOAL_START_WAIST' | translate }}: {{ goal.startWaist | number: '1.0-2' }}
+                        {{ 'GENERAL.UNITS.CM' | translate }}</span
+                    ><span
+                        >{{ (goal.status === 'Active' ? 'WAIST_HISTORY.GOAL_CURRENT_WAIST' : 'WAIST_HISTORY.GOAL_END_WAIST') | translate }}:
+                        {{ goal.displayEndWaist | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}</span
+                    >
+                </div>
+            </article>
+        }
+    </div>
+</fd-ui-dialog>

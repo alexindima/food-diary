@@ -9,10 +9,11 @@ import { resolveTranslateLanguage } from '../../../shared/i18n/translate-languag
 import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
 import { parseDecimalInput } from '../../../shared/lib/number.utils';
 import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
+import type { DesiredWaistResponse, WaistGoalHistoryItem } from '../../../shared/models/user.data';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { WaistEntriesService } from '../api/waist-entries.service';
 import type { CreateWaistEntryPayload, WaistEntry, WaistEntrySummaryFilters, WaistEntrySummaryPoint } from '../models/waist-entry.data';
-import { MAX_DESIRED_WAIST_CM, MAX_WAIST_CM, MIN_WAIST_CM } from './waist-history.constants';
+import { MAX_DESIRED_WAIST_CM, MAX_WAIST_CM, MIN_WAIST_CM, WAIST_HISTORY_ENTRIES_LIMIT_MAX } from './waist-history.constants';
 import type { WaistHistoryCustomRange, WaistHistoryDateRange, WaistHistoryRange } from './waist-history.types';
 import { buildWaistHistoryChartPoints } from './waist-history-chart.mapper';
 import {
@@ -60,13 +61,21 @@ export class WaistHistoryFacade {
     public readonly isLoading = signal(false);
     public readonly isSaving = signal(false);
     public readonly entryError = signal<string | null>(null);
+    public readonly entrySaveVersion = signal(0);
     public readonly isEditing = signal(false);
     public readonly summaryPoints = signal<WaistEntrySummaryPoint[]>([]);
+    public readonly rollingMonthSummaryPoints = signal<WaistEntrySummaryPoint[]>([]);
     public readonly isSummaryLoading = signal(false);
     public readonly customRangeModel = signal<WaistCustomRangeFormModel>({ range: null });
     public readonly customRangeForm = form(this.customRangeModel);
-    public readonly desiredWaist = signal<number | null>(null);
+    public readonly waistGoal = signal<DesiredWaistResponse>({ desiredWaist: null, startWaist: null, startedAtUtc: null });
+    public readonly desiredWaist = computed(() => this.waistGoal().desiredWaist);
+    public readonly waistGoalHistory = signal<WaistGoalHistoryItem[]>([]);
+    public readonly hasCompletedWaistGoals = computed(() => this.waistGoalHistory().some(goal => goal.status !== 'Active'));
+    public readonly lastCompletedWaistGoal = computed(() => this.waistGoalHistory().find(goal => goal.status !== 'Active') ?? null);
     public readonly isDesiredWaistSaving = signal(false);
+    public readonly desiredWaistSaveVersion = signal(0);
+    public readonly latestEntry = signal<WaistEntry | null>(null);
     public readonly desiredWaistModel = signal<DesiredWaistFormModel>({ circumference: '' });
     public readonly desiredWaistForm = form(this.desiredWaistModel);
 
@@ -102,10 +111,8 @@ export class WaistHistoryFacade {
         buildWaistHistoryChartPoints(this.summaryPoints(), resolveTranslateLanguage(this.translate)),
     );
 
-    public readonly latestWaist = computed<number | null>(() => {
-        const entries = this.entriesDescending();
-        return entries.length > 0 ? entries[0].circumference : null;
-    });
+    public readonly latestWaist = computed<number | null>(() => this.latestEntry()?.circumference ?? null);
+    public readonly latestWaistDate = computed<string | null>(() => this.latestEntry()?.date ?? null);
 
     public readonly whtViewModel = computed(() => buildWhtViewModel(this.userHeightCm(), this.latestWaist()));
 
@@ -137,6 +144,9 @@ export class WaistHistoryFacade {
         this.initialized.set(true);
         this.loadUserProfile();
         this.loadDesiredWaist();
+        this.loadWaistGoalHistory();
+        this.loadLatestEntry();
+        this.loadHistoryEntries();
         this.loadEntries();
     }
 
@@ -170,8 +180,12 @@ export class WaistHistoryFacade {
                     takeUntilDestroyed(this.destroyRef),
                 ),
             );
+            this.entrySaveVersion.update(version => version + 1);
             this.invalidation.reportBodyMetricMutation();
-            this.loadEntries(false, true);
+            this.loadLatestEntry();
+            this.loadHistoryEntries(false);
+            this.loadEntries(true);
+            this.loadRollingMonthSummaryIfNeeded();
             if (editingId !== null) {
                 this.resetEditingState();
                 return;
@@ -213,7 +227,10 @@ export class WaistHistoryFacade {
             )
             .subscribe(() => {
                 this.invalidation.reportBodyMetricMutation();
-                this.loadEntries(false, true);
+                this.loadLatestEntry();
+                this.loadHistoryEntries(false);
+                this.loadEntries(true);
+                this.loadRollingMonthSummaryIfNeeded();
                 if (this.editingEntryId() === entry.id) {
                     this.resetEditingState();
                 }
@@ -232,17 +249,38 @@ export class WaistHistoryFacade {
 
         this.isDesiredWaistSaving.set(true);
         this.userService
-            .updateDesiredWaist(parsedValue)
+            .updateWaistGoal(parsedValue)
             .pipe(
                 finalize(() => {
                     this.isDesiredWaistSaving.set(false);
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(value => {
+            .subscribe(goal => {
                 this.invalidation.reportGoalMutation();
-                this.desiredWaist.set(value);
-                this.desiredWaistModel.set({ circumference: value?.toString() ?? '' });
+                this.waistGoal.set(goal);
+                this.desiredWaistModel.set({ circumference: goal.desiredWaist?.toString() ?? '' });
+                this.desiredWaistSaveVersion.update(version => version + 1);
+                this.loadWaistGoalHistory();
+            });
+    }
+
+    public cancelWaistGoal(): void {
+        this.isDesiredWaistSaving.set(true);
+        this.userService
+            .updateWaistGoal(null)
+            .pipe(
+                finalize(() => {
+                    this.isDesiredWaistSaving.set(false);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(goal => {
+                this.invalidation.reportGoalMutation();
+                this.waistGoal.set(goal);
+                this.desiredWaistModel.set({ circumference: '' });
+                this.desiredWaistSaveVersion.update(version => version + 1);
+                this.loadWaistGoalHistory();
             });
     }
 
@@ -274,23 +312,25 @@ export class WaistHistoryFacade {
         return parsedValue === null || parsedValue <= 0 || parsedValue > MAX_DESIRED_WAIST_CM ? undefined : parsedValue;
     }
 
-    private loadEntries(showLoader = true, force = false): void {
-        const { entriesParams, summaryParams, rangeKey } = buildWaistHistoryFiltersForRange(
-            this.selectedRange(),
-            this.customRangeModel().range,
-        );
+    private loadEntries(force = false): void {
+        const { summaryParams, rangeKey } = buildWaistHistoryFiltersForRange(this.selectedRange(), this.customRangeModel().range);
 
         if (!force && rangeKey === this.lastLoadedRangeKey) {
             return;
         }
 
         this.lastLoadedRangeKey = rangeKey;
+        this.loadSummary(summaryParams, this.selectedRange() === 'month');
+        this.loadLatestEntry();
+    }
+
+    private loadHistoryEntries(showLoader = true): void {
         if (showLoader) {
             this.isLoading.set(true);
         }
 
         this.waistEntriesService
-            .getEntries(entriesParams)
+            .getEntries({ limit: WAIST_HISTORY_ENTRIES_LIMIT_MAX, sort: 'desc' })
             .pipe(
                 finalize(() => {
                     this.isLoading.set(false);
@@ -304,11 +344,9 @@ export class WaistHistoryFacade {
                     this.form.circumference().value.set(latest.circumference.toString());
                 }
             });
-
-        this.loadSummary(summaryParams);
     }
 
-    private loadSummary(filters: WaistEntrySummaryFilters): void {
+    private loadSummary(filters: WaistEntrySummaryFilters, updateRollingMonth = false): void {
         this.isSummaryLoading.set(true);
         this.waistEntriesService
             .getSummary(filters)
@@ -320,6 +358,23 @@ export class WaistHistoryFacade {
             )
             .subscribe(points => {
                 this.summaryPoints.set(points);
+                if (updateRollingMonth) {
+                    this.rollingMonthSummaryPoints.set(points);
+                }
+            });
+    }
+
+    private loadRollingMonthSummaryIfNeeded(): void {
+        if (this.selectedRange() === 'month') {
+            return;
+        }
+
+        const { summaryParams } = buildWaistHistoryFiltersForRange('month', null);
+        this.waistEntriesService
+            .getSummary(summaryParams)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(points => {
+                this.rollingMonthSummaryPoints.set(points);
             });
     }
 
@@ -334,11 +389,29 @@ export class WaistHistoryFacade {
 
     private loadDesiredWaist(): void {
         this.userService
-            .getDesiredWaist()
+            .getWaistGoal()
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(value => {
-                this.desiredWaist.set(value);
-                this.desiredWaistModel.set({ circumference: value?.toString() ?? '' });
+            .subscribe(goal => {
+                this.waistGoal.set(goal);
+                this.desiredWaistModel.set({ circumference: goal.desiredWaist?.toString() ?? '' });
+            });
+    }
+
+    private loadWaistGoalHistory(): void {
+        this.userService
+            .getWaistGoalHistory()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(history => {
+                this.waistGoalHistory.set(history);
+            });
+    }
+
+    private loadLatestEntry(): void {
+        this.waistEntriesService
+            .getLatest()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(entry => {
+                this.latestEntry.set(entry);
             });
     }
 

@@ -15,22 +15,27 @@ let facade: WaistHistoryFacade;
 let waistEntriesService: {
     create: ReturnType<typeof vi.fn>;
     getEntries: ReturnType<typeof vi.fn>;
+    getLatest: ReturnType<typeof vi.fn>;
     getSummary: ReturnType<typeof vi.fn>;
     remove: ReturnType<typeof vi.fn>;
     update: ReturnType<typeof vi.fn>;
 };
 let userService: {
-    getDesiredWaist: ReturnType<typeof vi.fn>;
+    getWaistGoal: ReturnType<typeof vi.fn>;
+    getWaistGoalHistory: ReturnType<typeof vi.fn>;
     getInfo: ReturnType<typeof vi.fn>;
-    updateDesiredWaist: ReturnType<typeof vi.fn>;
+    updateWaistGoal: ReturnType<typeof vi.fn>;
 };
 
 beforeEach(() => {
     waistEntriesService = createWaistEntriesServiceMock();
     userService = {
-        getDesiredWaist: vi.fn().mockReturnValue(of(TARGET_WAIST)),
+        getWaistGoal: vi.fn().mockReturnValue(of({ desiredWaist: TARGET_WAIST, startWaist: 84, startedAtUtc: '2026-03-01T00:00:00Z' })),
+        getWaistGoalHistory: vi.fn().mockReturnValue(of([])),
         getInfo: vi.fn().mockReturnValue(of({ height: 180 })),
-        updateDesiredWaist: vi.fn().mockReturnValue(of(UPDATED_TARGET_WAIST)),
+        updateWaistGoal: vi
+            .fn()
+            .mockReturnValue(of({ desiredWaist: UPDATED_TARGET_WAIST, startWaist: 82, startedAtUtc: '2026-04-01T00:00:00Z' })),
     };
 
     TestBed.configureTestingModule({
@@ -58,7 +63,7 @@ describe('WaistHistoryFacade loading', () => {
 
         expect(waistEntriesService.getEntries).toHaveBeenCalledTimes(1);
         expect(waistEntriesService.getSummary).toHaveBeenCalledTimes(1);
-        expect(userService.getDesiredWaist).toHaveBeenCalledTimes(1);
+        expect(userService.getWaistGoal).toHaveBeenCalledTimes(1);
         expect(userService.getInfo).toHaveBeenCalledTimes(1);
         expect(facade.entries()).toHaveLength(2);
         expect(facade.summaryPoints()).toHaveLength(1);
@@ -161,8 +166,21 @@ describe('WaistHistoryFacade entries', () => {
 });
 
 describe('WaistHistoryFacade ranges', () => {
-    it('ignores unsupported range values', () => {
+    it('keeps recent entries independent from the selected chart range', () => {
+        facade.initialize();
+        TestBed.tick();
+        const recentEntries = facade.entries();
+        waistEntriesService.getEntries.mockClear();
+
         facade.changeRange('quarter');
+        TestBed.tick();
+
+        expect(waistEntriesService.getEntries).not.toHaveBeenCalled();
+        expect(facade.entries()).toEqual(recentEntries);
+    });
+
+    it('ignores unsupported range values', () => {
+        facade.changeRange('unsupported');
 
         expect(facade.selectedRange()).toBe('month');
     });
@@ -182,7 +200,7 @@ describe('WaistHistoryFacade desired waist', () => {
 
         facade.saveDesiredWaist();
 
-        expect(userService.updateDesiredWaist).toHaveBeenCalledWith(UPDATED_TARGET_WAIST);
+        expect(userService.updateWaistGoal).toHaveBeenCalledWith(UPDATED_TARGET_WAIST);
         expect(facade.desiredWaist()).toBe(UPDATED_TARGET_WAIST);
         expect(facade.desiredWaistModel().circumference).toBe(`${UPDATED_TARGET_WAIST}`);
     });
@@ -199,6 +217,7 @@ function createWaistEntriesServiceMock(): typeof waistEntriesService {
         getSummary: vi
             .fn()
             .mockReturnValue(of([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumference: 82 }])),
+        getLatest: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 })),
         create: vi.fn().mockReturnValue(of({ id: 'entry-3', userId: 'user-1', date: '2026-04-02T00:00:00Z', circumference: 81.7 })),
         update: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 })),
         remove: vi.fn().mockReturnValue(of(void 0)),

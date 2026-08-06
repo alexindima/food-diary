@@ -18,6 +18,7 @@ import type {
     UpdateUserAppearanceDto,
     UpdateUserDto,
     User,
+    WaistGoalHistoryItem,
     WeightGoalHistoryItem,
 } from '../models/user.data';
 import type { NotificationPreferences, WebPushSubscriptionItem } from '../notifications/notification.service';
@@ -219,12 +220,36 @@ export class UserService extends ApiService {
         );
     }
 
+    public getWaistGoal(): Observable<DesiredWaistResponse> {
+        return this.get<DesiredWaistResponse>('desired-waist').pipe(
+            catchError((error: unknown) =>
+                fallbackApiError('Get waist goal error', error, {
+                    desiredWaist: null,
+                    startWaist: null,
+                    startedAtUtc: null,
+                }),
+            ),
+        );
+    }
+
+    public getWaistGoalHistory(): Observable<WaistGoalHistoryItem[]> {
+        return this.get<WaistGoalHistoryItem[]>('waist-goals').pipe(
+            catchError((error: unknown) => fallbackApiError('Get waist goal history error', error, [])),
+        );
+    }
+
     public updateDesiredWaist(value: number | null): Observable<number | null> {
         return this.put<DesiredWaistResponse>('desired-waist', {
             desiredWaist: value,
         }).pipe(
             map(response => response.desiredWaist ?? null),
             catchError((error: unknown) => rethrowApiError('Update desired waist error', error)),
+        );
+    }
+
+    public updateWaistGoal(value: number | null): Observable<DesiredWaistResponse> {
+        return this.put<DesiredWaistResponse>('desired-waist', { desiredWaist: value }).pipe(
+            catchError((error: unknown) => rethrowApiError('Update waist goal error', error)),
         );
     }
 }

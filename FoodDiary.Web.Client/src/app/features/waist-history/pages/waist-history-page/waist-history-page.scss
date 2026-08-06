@@ -1,9 +1,6 @@
 @use 'variables' as variables;
 
 .waist-history-page {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-page-section-gap);
     margin: 0 auto;
 
     &__header {
@@ -12,30 +9,120 @@
 
     &__period {
         width: 100%;
+        margin-top: var(--fd-space-md);
+    }
+
+    &__summary {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--fd-space-card-content-gap);
+    }
+
+    &__metric-card {
+        min-width: 0;
+    }
+
+    &__metric {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--fd-space-md);
+    }
+
+    &__metric-icon {
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        color: var(--fd-color-primary-600);
+    }
+
+    &__metric-label,
+    &__metric-caption {
+        color: var(--fd-color-text-muted);
+    }
+
+    &__metric-value {
+        margin-top: var(--fd-space-xs);
+        color: var(--fd-color-text);
+    }
+
+    &__metric-value--positive {
+        color: var(--fd-color-primary-600);
+    }
+
+    &__metric-value--negative {
+        color: var(--fd-color-danger);
     }
 
     &__card {
         height: 100%;
     }
 
-    &__goal-body {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-card-header-gap);
+    &__goal-summary {
+        margin-top: var(--fd-space-md);
     }
-
-    &__goal-input {
-        width: 100%;
+    &__goal-heading {
+        min-width: 0;
     }
-
+    &__goal-percent {
+        color: var(--fd-color-primary-600);
+    }
+    &__goal-progress {
+        height: var(--fd-size-progress-height-lg);
+        overflow: hidden;
+        border-radius: var(--fd-radius-pill);
+        background: var(--fd-bg-surface-inset);
+    }
+    &__goal-progress-value {
+        height: 100%;
+        min-width: var(--fd-border-width-strong);
+        border-radius: inherit;
+        background: var(--fd-color-primary-600);
+    }
+    &__goal-stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        row-gap: var(--fd-space-card-content-gap);
+        padding-top: var(--fd-space-sm);
+    }
+    &__goal-stat {
+        min-width: 0;
+        padding-inline: var(--fd-space-md);
+        border-right: var(--fd-border-subtle);
+        gap: var(--fd-space-md);
+        &:nth-child(3n + 1) {
+            padding-left: 0;
+        }
+        &:nth-child(3n) {
+            padding-right: 0;
+            border-right: 0;
+        }
+    }
+    &__goal-stat-icon {
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        color: var(--fd-color-primary-600);
+    }
     &__goal-actions {
-        display: flex;
-        gap: var(--fd-space-actions-gap);
-        flex-wrap: wrap;
+        margin-top: var(--fd-space-card-content-gap);
+    }
+    &__goal-empty {
+        margin-top: var(--fd-space-card-content-gap);
+    }
+    &__goal-last {
+        padding: var(--fd-space-card-profile-gap);
+        border: var(--fd-border-width) solid var(--fd-color-border-subtle);
+        border-radius: var(--fd-radius-md);
+        background: var(--fd-color-surface-subtle);
+    }
+    &__goal-primary-action {
+        margin-inline-start: auto;
     }
 
     &__card--chart {
-        min-height: 320px;
+        --fd-card-height: auto;
+        --fd-card-content-height: auto;
+        min-height: 420px;
+        height: auto;
         display: flex;
         flex-direction: column;
         gap: var(--fd-space-card-content-gap);
@@ -48,8 +135,41 @@
     }
 
     &__chart {
-        --fd-line-chart-height: 260px;
+        --fd-line-chart-height: 350px;
         width: 100%;
+    }
+
+    &__chart-viewport {
+        position: relative;
+        min-height: 350px;
+        display: grid;
+        align-items: center;
+    }
+
+    &__chart--loading {
+        opacity: 0.55;
+    }
+
+    &__chart-loading {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: var(--fd-color-text-muted);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 18%, transparent);
+        pointer-events: none;
+    }
+
+    &__chart-section,
+    &__insights,
+    &__insights > fd-waist-history-goal-card,
+    &__insights > fd-waist-history-entries-card {
+        min-width: 0;
+    }
+
+    &__insights {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: stretch;
     }
 
     &__placeholder {
@@ -105,6 +225,11 @@
         }
     }
 
+    &__form-row--compact {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+
     &__form-actions {
         display: flex;
         gap: var(--fd-space-actions-gap);
@@ -112,39 +237,83 @@
     }
 
     &__entries {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-card-header-gap);
-        max-height: 360px;
+        margin-top: var(--fd-space-md);
+        overflow: hidden;
+        border: var(--fd-border-subtle);
+        border-radius: var(--fd-radius-md);
+    }
+
+    &__entries--dialog {
+        max-height: min(60vh, 560px);
+        margin-top: 0;
         overflow-y: auto;
     }
 
     &__entry {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: var(--fd-space-card-header-gap);
+        grid-template-columns: minmax(150px, 1.4fr) minmax(88px, 0.65fr) minmax(70px, auto) auto;
+        gap: var(--fd-space-sm);
         align-items: center;
-        padding: var(--fd-space-xs) 0;
+        min-height: var(--fd-size-control-sm);
+        padding: 0 var(--fd-space-xs);
         border-bottom: var(--fd-border-subtle);
 
         &:last-child {
             border-bottom: none;
         }
+
+        &:hover {
+            background: var(--fd-bg-surface-muted);
+        }
     }
 
     &__entry-date {
-        color: var(--fd-color-slate-900);
+        min-width: 0;
+        color: var(--fd-color-text-muted);
     }
 
     &__entry-value {
-        color: var(--fd-color-sky-500);
+        color: var(--fd-color-text);
+        font-weight: var(--fd-text-action-weight);
+        text-align: right;
+    }
+
+    &__entry-today,
+    &__entry-change {
+        padding: var(--fd-space-micro) var(--fd-space-xs);
+        border-radius: var(--fd-radius-sm);
+    }
+
+    &__entry-today {
+        color: var(--fd-color-success);
+        background: var(--fd-bg-success-soft);
+    }
+
+    &__entry-change {
+        --entry-change-min-width: 48px;
+        min-width: var(--entry-change-min-width);
+        color: var(--fd-color-text-muted);
+        background: var(--fd-bg-control-surface-mixed);
+        text-align: center;
+    }
+
+    &__entry-change--loss {
+        color: var(--fd-color-success);
+        background: var(--fd-bg-success-soft);
+    }
+
+    &__entry-change--gain {
+        color: var(--fd-color-danger);
+        background: var(--fd-bg-danger-soft);
     }
 
     &__entry-actions {
-        display: flex;
-        gap: var(--fd-space-actions-gap);
-        justify-content: flex-end;
-        flex-wrap: wrap;
+        opacity: 1;
+    }
+
+    &__entries-toggle {
+        width: fit-content;
+        margin-top: var(--fd-space-card-header-gap);
+        margin-left: auto;
     }
 
     &__wht-top {
@@ -276,13 +445,48 @@
     }
 
     @media #{variables.$media-phablet} {
-        &__entry {
+        &__goal-stats {
             grid-template-columns: 1fr;
-            text-align: left;
+            gap: var(--fd-space-md);
+        }
+        &__goal-stat {
+            padding: 0;
+            border-right: 0;
+        }
+        &__entry {
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            gap: var(--fd-space-sm);
         }
 
         &__entry-actions {
-            justify-content: flex-start;
+            grid-column: 1 / -1;
+            justify-content: flex-end;
+        }
+    }
+
+    @media #{variables.$media-desktop-sm} {
+        &__summary {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        &__insights {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media #{variables.$media-phablet} {
+        &__summary {
+            grid-template-columns: 1fr;
+        }
+
+        &__card--chart {
+            min-height: 320px;
+        }
+
+        &__chart,
+        &__chart-viewport {
+            --fd-line-chart-height: 260px;
+            min-height: 260px;
         }
     }
 }

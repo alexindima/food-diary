@@ -21,6 +21,8 @@ describe('WaistHistoryEntriesCardComponent', () => {
             {
                 entry: createEntry(),
                 dateLabel: '05/15/2026',
+                isToday: false,
+                change: null,
             },
         ]);
         expect(getText(fixture)).toContain(String(ENTRY_CIRCUMFERENCE));

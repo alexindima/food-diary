@@ -14,10 +14,11 @@ namespace FoodDiary.Application.Users.Commands.UpdateGoals;
 public sealed class UpdateGoalsCommandHandler(
     IUserContextService userContextService,
     IUserCurrentWeightProvider currentWeightProvider,
+    IUserCurrentWaistProvider currentWaistProvider,
     TimeProvider? timeProvider = null)
     : ICommandHandler<UpdateGoalsCommand, Result<GoalsModel>> {
     public UpdateGoalsCommandHandler(IUserContextService userContextService)
-        : this(userContextService, NullCurrentWeightProvider.Instance) {
+        : this(userContextService, NullCurrentWeightProvider.Instance, NullCurrentWaistProvider.Instance) {
     }
 
     public async Task<Result<GoalsModel>> Handle(UpdateGoalsCommand command, CancellationToken cancellationToken) {
@@ -45,7 +46,7 @@ public sealed class UpdateGoalsCommandHandler(
                 FiberTarget: command.FiberTarget,
                 WaterGoal: command.WaterGoal,
                 DesiredWeight: null,
-                DesiredWaist: command.DesiredWaist,
+                DesiredWaist: null,
                 CalorieCyclingEnabled: command.CalorieCyclingEnabled,
                 MondayCalories: command.MondayCalories,
                 TuesdayCalories: command.TuesdayCalories,
@@ -63,6 +64,15 @@ public sealed class UpdateGoalsCommandHandler(
                 DateTime startedAtUtc = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
                 currentUser.StartWeightGoal(command.DesiredWeight.Value, startWeight, startedAtUtc);
             }
+
+            if (command.DesiredWaist.HasValue && command.DesiredWaist != currentUser.DesiredWaist) {
+                double? trackedWaist = await currentWaistProvider
+                    .GetCurrentWaistAsync(userId, cancellationToken)
+                    .ConfigureAwait(false);
+                double startWaist = trackedWaist ?? command.DesiredWaist.Value;
+                DateTime startedAtUtc = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
+                currentUser.StartWaistGoal(command.DesiredWaist.Value, startWaist, startedAtUtc);
+            }
         } catch (ArgumentOutOfRangeException ex) {
             return Result.Failure<GoalsModel>(
                 Errors.Validation.Invalid(ex.ParamName ?? nameof(UpdateGoalsCommand), ex.Message));
@@ -77,6 +87,13 @@ public sealed class UpdateGoalsCommandHandler(
         public static readonly NullCurrentWeightProvider Instance = new();
 
         public Task<double?> GetCurrentWeightAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<double?>(null);
+    }
+
+    private sealed class NullCurrentWaistProvider : IUserCurrentWaistProvider {
+        public static readonly NullCurrentWaistProvider Instance = new();
+
+        public Task<double?> GetCurrentWaistAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<double?>(null);
     }
 }

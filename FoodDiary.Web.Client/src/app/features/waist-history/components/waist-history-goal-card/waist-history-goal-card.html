@@ -1,19 +1,118 @@
-<fd-ui-card class="waist-history-page__card waist-history-page__card--goal" [title]="'WAIST_HISTORY.GOAL_CARD_TITLE' | translate">
-    <div class="waist-history-page__goal-body">
-        <fd-ui-input
-            class="waist-history-page__goal-input"
-            type="number"
-            [step]="0.1"
-            [ariaLabel]="'WAIST_HISTORY.GOAL_CARD_TITLE' | translate"
-            [placeholder]="'WAIST_HISTORY.GOAL_PLACEHOLDER' | translate"
-            [suffixButtonIcon]="circumferenceField()().value() ? 'backspace' : undefined"
-            [formField]="circumferenceField()"
-            (suffixButtonClicked)="circumferenceField()().value.set('')"
-        />
-        <div class="waist-history-page__goal-actions">
-            <fd-ui-button type="button" [loading]="isSaving()" (click)="saveGoal.emit()">
-                {{ 'WAIST_HISTORY.SAVE_GOAL' | translate }}
-            </fd-ui-button>
+<fd-ui-card class="waist-history-page__card waist-history-page__card--goal" [title]="'WAIST_HISTORY.GOAL_PROGRESS_TITLE' | translate">
+    @if (progress(); as progress) {
+        <div class="waist-history-page__goal-summary fd-stack fd-gap-card-header">
+            <div class="waist-history-page__goal-heading fd-row fd-justify-between fd-align-end fd-gap-card-header">
+                <div>
+                    <div class="fd-ui-card-title">
+                        {{ 'WAIST_HISTORY.GOAL_REMAINING' | translate: { value: progress.remaining | number: '1.0-2' } }}
+                    </div>
+                    <div class="fd-ui-caption fd-ui-text-muted">
+                        {{ 'WAIST_HISTORY.GOAL_VALUE' | translate: { value: desiredWaist() | number: '1.0-2' } }}
+                    </div>
+                </div>
+                <div class="waist-history-page__goal-percent fd-ui-stat-value">{{ progress.percent | number: '1.0-0' }}%</div>
+            </div>
+            <div
+                class="waist-history-page__goal-progress"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                [attr.aria-valuenow]="progress.percent"
+            >
+                <div class="waist-history-page__goal-progress-value" [style.width.%]="progress.percent"></div>
+            </div>
+            <div class="waist-history-page__goal-stats fd-grid">
+                <div class="waist-history-page__goal-stat fd-row fd-align-center">
+                    <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="straighten" size="lg" /></div>
+                    <div>
+                        <div class="fd-ui-stat-value">{{ progress.change | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}</div>
+                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_PERIOD_CHANGE' | translate }}</div>
+                    </div>
+                </div>
+                <div class="waist-history-page__goal-stat fd-row fd-align-center">
+                    <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="calendar_today" size="lg" /></div>
+                    <div>
+                        <div class="fd-ui-stat-value">{{ progress.daysToGoal ?? '—' }}</div>
+                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_DAYS_TO_GOAL' | translate }}</div>
+                    </div>
+                </div>
+                <div class="waist-history-page__goal-stat fd-row fd-align-center">
+                    <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="trending_down" size="lg" /></div>
+                    <div>
+                        <div class="fd-ui-stat-value">
+                            {{ progress.weeklyRate | number: '1.0-2' }} {{ 'WAIST_HISTORY.CM_PER_WEEK' | translate }}
+                        </div>
+                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_AVERAGE_RATE' | translate }}</div>
+                    </div>
+                </div>
+                <div class="waist-history-page__goal-stat fd-row fd-align-center">
+                    <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="hourglass_top" size="lg" /></div>
+                    <div>
+                        <div class="fd-ui-stat-value">{{ progress.startWaist | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}</div>
+                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_START_WAIST' | translate }}</div>
+                    </div>
+                </div>
+                <div class="waist-history-page__goal-stat fd-row fd-align-center">
+                    <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="straighten" size="lg" /></div>
+                    <div>
+                        <div class="fd-ui-stat-value">
+                            {{ progress.currentWaist | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                        </div>
+                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_CURRENT_WAIST' | translate }}</div>
+                    </div>
+                </div>
+                <div class="waist-history-page__goal-stat fd-row fd-align-center">
+                    <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="event" size="lg" /></div>
+                    <div>
+                        <div class="fd-ui-stat-value">{{ startDateLabel() ?? '—' }}</div>
+                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_START_DATE' | translate }}</div>
+                    </div>
+                </div>
+            </div>
         </div>
+    }
+    @if (desiredWaist() === null) {
+        <div class="waist-history-page__goal-empty fd-stack fd-gap-card-header">
+            <div class="fd-ui-card-title">{{ 'WAIST_HISTORY.GOAL_NOT_SET' | translate }}</div>
+            <div class="fd-ui-body-sm fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_EMPTY_DESCRIPTION' | translate }}</div>
+            <div class="waist-history-page__goal-last fd-stack fd-gap-actions">
+                @if (lastGoalSummary(); as lastGoal) {
+                    <div class="fd-row fd-justify-between fd-align-start fd-gap-actions">
+                        <div>
+                            <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.LAST_GOAL' | translate }}</div>
+                            <div class="fd-ui-card-title">
+                                {{ 'WAIST_HISTORY.GOAL_VALUE' | translate: { value: lastGoal.targetWaist | number: '1.0-2' } }}
+                            </div>
+                        </div>
+                        @if (lastGoal.change !== null) {
+                            <div class="fd-row fd-align-center fd-gap-xs fd-ui-stat-value">
+                                <fd-ui-icon name="trending_down" size="sm" />{{ lastGoal.change > 0 ? '+' : ''
+                                }}{{ lastGoal.change | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                            </div>
+                        }
+                    </div>
+                    <div class="fd-ui-caption fd-ui-text-muted">{{ lastGoal.startDate }} — {{ lastGoal.endDate }}</div>
+                } @else {
+                    <div class="fd-ui-card-title">{{ 'WAIST_HISTORY.NO_GOAL_HISTORY_TITLE' | translate }}</div>
+                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.NO_GOAL_HISTORY_DESCRIPTION' | translate }}</div>
+                }
+            </div>
+        </div>
+    }
+    <div class="waist-history-page__goal-actions fd-row fd-wrap fd-gap-actions">
+        @if (hasGoalHistory()) {
+            <fd-ui-button type="button" variant="secondary" fill="text" icon="history" (click)="viewGoalHistory.emit()">{{
+                'WAIST_HISTORY.GOAL_HISTORY' | translate
+            }}</fd-ui-button>
+        }
+        <fd-ui-button
+            class="waist-history-page__goal-primary-action"
+            type="button"
+            variant="secondary"
+            fill="outline"
+            icon="track_changes"
+            (click)="configureGoal.emit()"
+            >{{ (desiredWaist() === null ? 'WAIST_HISTORY.SET_GOAL' : 'WAIST_HISTORY.CONFIGURE_GOAL') | translate }}</fd-ui-button
+        >
     </div>
 </fd-ui-card>

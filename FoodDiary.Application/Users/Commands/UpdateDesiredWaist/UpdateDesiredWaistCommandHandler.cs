@@ -1,4 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Models;
@@ -7,8 +8,15 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 
-public sealed class UpdateDesiredWaistCommandHandler(IUserContextService userContextService)
+public sealed class UpdateDesiredWaistCommandHandler(
+    IUserContextService userContextService,
+    IUserCurrentWaistProvider currentWaistProvider,
+    TimeProvider? timeProvider = null)
     : ICommandHandler<UpdateDesiredWaistCommand, Result<UserDesiredWaistModel>> {
+    public UpdateDesiredWaistCommandHandler(IUserContextService userContextService)
+        : this(userContextService, NullCurrentWaistProvider.Instance) {
+    }
+
     public async Task<Result<UserDesiredWaistModel>> Handle(
         UpdateDesiredWaistCommand command,
         CancellationToken cancellationToken) {
@@ -27,9 +35,29 @@ public sealed class UpdateDesiredWaistCommandHandler(IUserContextService userCon
         }
 
         User currentUser = userResult.Value;
-        currentUser.UpdateDesiredWaist(command.DesiredWaist);
+        DateTime nowUtc = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
+        double? trackedWaist = await currentWaistProvider
+            .GetCurrentWaistAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+        double? activeGoalStartWaist = currentUser.WaistGoals.SingleOrDefault(
+            goal => goal.Status == FoodDiary.Domain.Enums.WaistGoalStatus.Active)?.StartWaist;
+        double currentWaist = trackedWaist ?? activeGoalStartWaist ?? command.DesiredWaist ?? 1;
+        if (command.DesiredWaist.HasValue) {
+            currentUser.StartWaistGoal(command.DesiredWaist.Value, currentWaist, nowUtc);
+        } else {
+            currentUser.CancelWaistGoal(nowUtc, currentWaist);
+        }
         await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
-        return Result.Success(new UserDesiredWaistModel(currentUser.DesiredWaist));
+        FoodDiary.Domain.Entities.Tracking.WaistGoal? activeGoal = currentUser.WaistGoals.SingleOrDefault(
+            goal => goal.Status == FoodDiary.Domain.Enums.WaistGoalStatus.Active);
+        return Result.Success(new UserDesiredWaistModel(currentUser.DesiredWaist, activeGoal?.StartWaist, activeGoal?.StartedAtUtc));
+    }
+
+    private sealed class NullCurrentWaistProvider : IUserCurrentWaistProvider {
+        public static readonly NullCurrentWaistProvider Instance = new();
+
+        public Task<double?> GetCurrentWaistAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<double?>(null);
     }
 }

@@ -217,6 +217,18 @@ export type WeightGoalHistoryItem = {
 
 export type DesiredWaistResponse = {
     desiredWaist: number | null;
+    startWaist: number | null;
+    startedAtUtc: string | null;
+};
+
+export type WaistGoalHistoryItem = {
+    id: string;
+    targetWaist: number;
+    startWaist: number;
+    endWaist: number | null;
+    startedAtUtc: string;
+    endedAtUtc: string | null;
+    status: 'Active' | 'Replaced' | 'Cancelled';
 };
 
 export enum Gender {

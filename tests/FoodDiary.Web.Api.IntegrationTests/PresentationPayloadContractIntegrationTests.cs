@@ -340,7 +340,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         HttpResponseMessage response = await client.GetAsync("/api/v1/users/desired-waist");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         string actual = JsonSerializer.Serialize(
-            BuildDesiredMetricSnapshot(json.RootElement, "desiredWaist"),
+            BuildDesiredWaistSnapshot(json.RootElement),
             IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -376,6 +376,37 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         await AssertPayloadSnapshotAsync("weight-goal-history", actual);
+    }
+
+    [Fact]
+    public async Task WaistGoalHistory_AfterGoalReplacement_MatchesNormalizedPayloadSnapshot() {
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+        (await client.PutAsJsonAsync("/api/v1/users/desired-waist", new UpdateDesiredWaistHttpRequest(81.5)))
+            .EnsureSuccessStatusCode();
+        (await client.PutAsJsonAsync("/api/v1/users/desired-waist", new UpdateDesiredWaistHttpRequest(80)))
+            .EnsureSuccessStatusCode();
+
+        HttpResponseMessage response = await client.GetAsync("/api/v1/users/waist-goals");
+        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        JsonElement[] goals = [.. json.RootElement.EnumerateArray()];
+        string actual = JsonSerializer.Serialize(
+            new JsonObject {
+                ["count"] = goals.Length,
+                ["statuses"] = ToJsonArray(goals.Select(goal => goal.GetProperty("status").GetString() ?? string.Empty)),
+                ["allHaveStartDates"] = goals.All(goal => goal.GetProperty("startedAtUtc").ValueKind == JsonValueKind.String),
+                ["completedHasEndWaist"] = goals.Single(goal => string.Equals(
+                    goal.GetProperty("status").GetString(),
+                    "Replaced",
+                    StringComparison.Ordinal))
+                    .GetProperty("endWaist").ValueKind == JsonValueKind.Number,
+            },
+            IndentedJsonOptions);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        await AssertPayloadSnapshotAsync("waist-goal-history", actual);
     }
 
     [Fact]
@@ -545,13 +576,6 @@ public sealed class PresentationPayloadContractIntegrationTests(
         };
     }
 
-    private static JsonObject BuildDesiredMetricSnapshot(JsonElement root, string propertyName) {
-        return new JsonObject {
-            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
-            [propertyName] = root.GetProperty(propertyName).GetDouble(),
-        };
-    }
-
     private static JsonObject BuildDesiredWeightSnapshot(JsonElement root) {
         return new JsonObject {
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
@@ -559,6 +583,15 @@ public sealed class PresentationPayloadContractIntegrationTests(
             ["startWeight"] = root.GetProperty("startWeight").GetDouble(),
             ["hasStartedAtUtc"] = root.TryGetProperty("startedAtUtc", out JsonElement startedAtUtc)
                 && startedAtUtc.ValueKind == JsonValueKind.String,
+        };
+    }
+
+    private static JsonObject BuildDesiredWaistSnapshot(JsonElement root) {
+        return new JsonObject {
+            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
+            ["desiredWaist"] = root.GetProperty("desiredWaist").GetDouble(),
+            ["startWaist"] = root.GetProperty("startWaist").GetDouble(),
+            ["hasStartedAtUtc"] = root.GetProperty("startedAtUtc").ValueKind == JsonValueKind.String,
         };
     }
 

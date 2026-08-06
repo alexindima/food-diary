@@ -1,9 +1,34 @@
-<div class="waist-history-page" fdPageContainer>
+<div class="waist-history-page fd-stack fd-gap-page-header" fdPageContainer>
     <fd-page-header
         class="waist-history-page__header"
         [title]="'WAIST_HISTORY.TITLE' | translate"
         [subtitle]="'WAIST_HISTORY.SUBTITLE' | translate"
+        [compactActions]="true"
     >
+        @if (isMobileView()) {
+            <fd-ui-button
+                data-tour-id="waist-history-entry-action"
+                appearance="toolbar"
+                variant="primary"
+                fill="solid"
+                icon="add"
+                [fdUiHint]="'WAIST_HISTORY.QUICK_ADD' | translate"
+                [ariaLabel]="'WAIST_HISTORY.QUICK_ADD' | translate"
+                (click)="openEntryDialog()"
+            />
+        } @else {
+            <fd-ui-button
+                data-tour-id="waist-history-entry-action"
+                appearance="brand-action"
+                variant="primary"
+                fill="solid"
+                icon="add"
+                [ariaLabel]="'WAIST_HISTORY.QUICK_ADD' | translate"
+                (click)="openEntryDialog()"
+            >
+                {{ 'WAIST_HISTORY.QUICK_ADD' | translate }}
+            </fd-ui-button>
+        }
         <fd-ui-button
             data-tour-id="waist-history-tour-help"
             appearance="toolbar"
@@ -17,58 +42,127 @@
     </fd-page-header>
 
     <fd-page-body>
-        <fd-period-filter
-            class="waist-history-page__period"
-            data-tour-id="waist-history-period"
-            [tabs]="rangeTabs"
-            [selectedValue]="selectedRange()"
-            [rangeField]="customRangeForm.range"
-            [displayRange]="currentRange()"
-            [startLabel]="'WAIST_HISTORY.CUSTOM_RANGE_FROM_LABEL' | translate"
-            [endLabel]="'WAIST_HISTORY.CUSTOM_RANGE_TO_LABEL' | translate"
-            [startPlaceholder]="'WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
-            [endPlaceholder]="'WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
-            (rangeChange)="changeRange($event)"
-        />
+        <section class="waist-history-page__summary" [attr.aria-label]="'WAIST_HISTORY.SUMMARY_TITLE' | translate">
+            <fd-ui-card class="waist-history-page__metric-card"
+                ><div class="waist-history-page__metric">
+                    <div class="waist-history-page__metric-icon"><fd-ui-icon name="straighten" size="lg" /></div>
+                    <div>
+                        <div class="waist-history-page__metric-label fd-ui-body-sm">{{ 'WAIST_HISTORY.CURRENT_WAIST' | translate }}</div>
+                        <div class="waist-history-page__metric-value fd-ui-metric-lg">
+                            @if (latestWaist(); as value) {
+                                {{ value | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                            } @else {
+                                —
+                            }
+                        </div>
+                    </div>
+                </div></fd-ui-card
+            >
+            <fd-ui-card class="waist-history-page__metric-card"
+                ><div class="waist-history-page__metric">
+                    <div class="waist-history-page__metric-icon"><fd-ui-icon name="trending_down" size="lg" /></div>
+                    <div>
+                        <div class="waist-history-page__metric-label fd-ui-body-sm">{{ 'WAIST_HISTORY.RANGE_CHANGE' | translate }}</div>
+                        <div
+                            class="waist-history-page__metric-value fd-ui-metric-lg"
+                            [class.waist-history-page__metric-value--positive]="waistChange()?.tone === 'positive'"
+                            [class.waist-history-page__metric-value--negative]="waistChange()?.tone === 'negative'"
+                        >
+                            @if (waistChange(); as change) {
+                                {{ change.value > 0 ? '+' : '' }}{{ change.value | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                            } @else {
+                                —
+                            }
+                        </div>
+                    </div>
+                </div></fd-ui-card
+            >
+            <fd-ui-card class="waist-history-page__metric-card"
+                ><div class="waist-history-page__metric">
+                    <div class="waist-history-page__metric-icon"><fd-ui-icon name="track_changes" size="lg" /></div>
+                    <div>
+                        <div class="waist-history-page__metric-label fd-ui-body-sm">{{ 'WAIST_HISTORY.TO_GOAL' | translate }}</div>
+                        <div class="waist-history-page__metric-value fd-ui-metric-lg">
+                            @if (waistToGoal(); as value) {
+                                {{ value | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                            } @else {
+                                —
+                            }
+                        </div>
+                        @if (desiredWaist(); as goal) {
+                            <div class="waist-history-page__metric-caption fd-ui-caption">
+                                {{ 'WAIST_HISTORY.GOAL_VALUE' | translate: { value: goal | number: '1.0-2' } }}
+                            </div>
+                        }
+                    </div>
+                </div></fd-ui-card
+            >
+            <fd-ui-card class="waist-history-page__metric-card"
+                ><div class="waist-history-page__metric">
+                    <div class="waist-history-page__metric-icon"><fd-ui-icon name="monitor_heart" size="lg" /></div>
+                    <div>
+                        <div class="waist-history-page__metric-label fd-ui-body-sm">{{ 'WAIST_HISTORY.WHT_CARD_TITLE' | translate }}</div>
+                        <div class="waist-history-page__metric-value fd-ui-metric-lg">{{ whtViewModel()?.value ?? '—' }}</div>
+                        @if (whtViewModel(); as wht) {
+                            <div class="waist-history-page__metric-caption fd-ui-caption">{{ wht.status.labelKey | translate }}</div>
+                        }
+                    </div>
+                </div></fd-ui-card
+            >
+        </section>
 
-        <fd-waist-history-chart-card data-tour-id="waist-history-chart" [isLoading]="isSummaryLoading()" [chartPoints]="chartPoints()" />
-
-        @defer (on viewport) {
-            <fd-waist-history-wht-card [viewModel]="whtViewModel()" />
-        } @placeholder {
-            <div class="waist-history-page__placeholder" aria-hidden="true"></div>
-        }
-
-        <div class="waist-history-page__content waist-history-page__content--form">
-            <fd-waist-history-form-card
-                data-tour-id="waist-history-entry-form"
-                [form]="form"
-                [isSaving]="isSaving()"
-                [isEditing]="isEditing()"
-                [error]="entryError()"
-                (editCancel)="cancelEdit()"
-            />
-
-            <fd-waist-history-goal-card
-                data-tour-id="waist-history-goal"
-                [circumferenceField]="desiredWaistForm.circumference"
-                [isSaving]="isDesiredWaistSaving()"
-                (saveGoal)="saveDesiredWaist()"
-            />
+        <div class="waist-history-page__chart-section">
+            <fd-waist-history-chart-card
+                data-tour-id="waist-history-chart"
+                [isLoading]="isSummaryLoading()"
+                [chartPoints]="chartPoints()"
+                [desiredWaist]="desiredWaist()"
+                [goalLabel]="'WAIST_HISTORY.GOAL_VALUE' | translate: { value: (desiredWaist() | number: '1.0-2') }"
+            >
+                <fd-period-filter
+                    chartControls
+                    class="waist-history-page__period"
+                    data-tour-id="waist-history-period"
+                    [tabs]="rangeTabs"
+                    [selectedValue]="selectedRange()"
+                    [rangeField]="customRangeForm.range"
+                    [displayRange]="currentRange()"
+                    [hideInactiveRange]="true"
+                    [useSegmentedToggle]="true"
+                    [startLabel]="'WAIST_HISTORY.CUSTOM_RANGE_FROM_LABEL' | translate"
+                    [endLabel]="'WAIST_HISTORY.CUSTOM_RANGE_TO_LABEL' | translate"
+                    [startPlaceholder]="'WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                    [endPlaceholder]="'WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                    (rangeChange)="changeRange($event)"
+                />
+            </fd-waist-history-chart-card>
         </div>
 
-        @defer (on viewport) {
-            <div class="waist-history-page__content waist-history-page__content--full">
+        <div class="waist-history-page__insights fd-grid fd-gap-card-content">
+            <fd-waist-history-goal-card
+                data-tour-id="waist-history-goal"
+                [currentWaist]="latestWaist()"
+                [currentWaistDate]="latestWaistDate()"
+                [desiredWaist]="desiredWaist()"
+                [startWaist]="waistGoal().startWaist"
+                [startedAtUtc]="waistGoal().startedAtUtc"
+                [hasGoalHistory]="hasCompletedWaistGoals()"
+                [lastCompletedGoal]="lastCompletedWaistGoal()"
+                (configureGoal)="openGoalDialog()"
+                (viewGoalHistory)="openGoalHistoryDialog()"
+            />
+            @defer (on viewport) {
                 <fd-waist-history-entries-card
                     data-tour-id="waist-history-entries"
                     [isLoading]="isLoading()"
                     [entries]="entriesDescending()"
                     (editEntry)="startEdit($event)"
                     (removeEntry)="deleteEntry($event)"
+                    (showAllEntries)="openEntriesDialog()"
                 />
-            </div>
-        } @placeholder {
-            <div class="waist-history-page__placeholder" aria-hidden="true"></div>
-        }
+            } @placeholder {
+                <div class="waist-history-page__placeholder" aria-hidden="true"></div>
+            }
+        </div>
     </fd-page-body>
 </div>

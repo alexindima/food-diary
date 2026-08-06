@@ -16,14 +16,18 @@ describe('waist history range utils', () => {
     it('validates supported range values', () => {
         expect(isWaistHistoryRange('week')).toBe(true);
         expect(isWaistHistoryRange('month')).toBe(true);
+        expect(isWaistHistoryRange('quarter')).toBe(true);
+        expect(isWaistHistoryRange('halfYear')).toBe(true);
         expect(isWaistHistoryRange('year')).toBe(true);
         expect(isWaistHistoryRange('custom')).toBe(true);
-        expect(isWaistHistoryRange('quarter')).toBe(false);
+        expect(isWaistHistoryRange('unsupported')).toBe(false);
     });
 
     it('calculates preset ranges from the current date', () => {
         expect(calculateWaistHistoryRangeDates('week', null, NOW).start.toISOString()).toBe('2026-05-08T12:00:00.000Z');
         expect(calculateWaistHistoryRangeDates('month', null, NOW).start.toISOString()).toBe('2026-04-15T12:00:00.000Z');
+        expect(calculateWaistHistoryRangeDates('quarter', null, NOW).start.toISOString()).toBe('2026-02-15T12:00:00.000Z');
+        expect(calculateWaistHistoryRangeDates('halfYear', null, NOW).start.toISOString()).toBe('2025-11-15T12:00:00.000Z');
         expect(calculateWaistHistoryRangeDates('year', null, NOW).start.toISOString()).toBe('2025-05-15T12:00:00.000Z');
     });
 

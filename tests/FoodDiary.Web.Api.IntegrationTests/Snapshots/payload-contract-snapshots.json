@@ -290,9 +290,13 @@
   },
   "desired-waist": {
     "keys": [
-      "desiredWaist"
+      "desiredWaist",
+      "startWaist",
+      "startedAtUtc"
     ],
-    "desiredWaist": 81.5
+    "desiredWaist": 81.5,
+    "startWaist": 81.5,
+    "hasStartedAtUtc": true
   },
   "desired-weight": {
     "keys": [
@@ -428,5 +432,14 @@
     ],
     "webPushSubscriptionsCount": 0,
     "dietologistRelationshipIsNull": true
+  },
+  "waist-goal-history": {
+    "count": 2,
+    "statuses": [
+      "Active",
+      "Replaced"
+    ],
+    "allHaveStartDates": true,
+    "completedHasEndWaist": true
   }
 }

@@ -115,6 +115,25 @@ public sealed partial class User {
         SetModified();
     }
 
+    public WaistGoal StartWaistGoal(double targetWaist, double startWaist, DateTime startedAtUtc) {
+        EnsureNotDeleted();
+        DateTime nowUtc = startedAtUtc.ToUniversalTime();
+        WaistGoal? activeGoal = _waistGoals.SingleOrDefault(goal => goal.Status == WaistGoalStatus.Active);
+        activeGoal?.Replace(nowUtc, startWaist);
+
+        var goal = WaistGoal.Start(Id, targetWaist, startWaist, nowUtc);
+        _waistGoals.Add(goal);
+        UpdateDesiredWaist(targetWaist);
+        return goal;
+    }
+
+    public void CancelWaistGoal(DateTime endedAtUtc, double endWaist) {
+        EnsureNotDeleted();
+        WaistGoal? activeGoal = _waistGoals.SingleOrDefault(goal => goal.Status == WaistGoalStatus.Active);
+        activeGoal?.Cancel(endedAtUtc, endWaist);
+        UpdateDesiredWaist(desiredWaist: null);
+    }
+
     private bool ApplyAiTokenLimitChanges(UserAiTokenLimitUpdate update) {
         UserAiQuotaState currentState = GetAiQuotaState();
         UserAiQuotaState nextState = currentState.WithLimits(update.InputLimit, update.OutputLimit);

@@ -18,7 +18,7 @@ import type {
     WeightEntrySummaryFilters,
     WeightEntrySummaryPoint,
 } from '../models/weight-entry.data';
-import { MAX_WEIGHT_KG, MIN_WEIGHT_KG } from './weight-history.constants';
+import { MAX_WEIGHT_KG, MIN_WEIGHT_KG, WEIGHT_HISTORY_ENTRIES_LIMIT_MAX } from './weight-history.constants';
 import type { WeightHistoryCustomRange, WeightHistoryDateRange, WeightHistoryRange } from './weight-history.types';
 import { buildBmiViewModel } from './weight-history-bmi.mapper';
 import { buildWeightHistoryChartPoints } from './weight-history-chart.mapper';
@@ -152,6 +152,7 @@ export class WeightHistoryFacade {
         this.loadWeightGoalHistory();
         this.loadUserProfile();
         this.loadLatestEntry();
+        this.loadHistoryEntries();
         this.loadEntries();
     }
 
@@ -188,7 +189,8 @@ export class WeightHistoryFacade {
             this.entrySaveVersion.update(version => version + 1);
             this.invalidation.reportBodyMetricMutation();
             this.loadLatestEntry();
-            this.loadEntries(false, true);
+            this.loadHistoryEntries(false);
+            this.loadEntries(true);
             this.loadRollingMonthSummaryIfNeeded();
             if (editingId !== null) {
                 this.resetEditingState();
@@ -231,7 +233,8 @@ export class WeightHistoryFacade {
             .subscribe(() => {
                 this.invalidation.reportBodyMetricMutation();
                 this.loadLatestEntry();
-                this.loadEntries(false, true);
+                this.loadHistoryEntries(false);
+                this.loadEntries(true);
                 this.loadRollingMonthSummaryIfNeeded();
                 if (this.editingEntryId() === entry.id) {
                     this.resetEditingState();
@@ -314,23 +317,24 @@ export class WeightHistoryFacade {
         this.customRangeModel.set({ range: null });
     }
 
-    private loadEntries(showLoader = true, force = false): void {
-        const { entriesParams, summaryParams, rangeKey } = buildWeightHistoryFiltersForRange(
-            this.selectedRange(),
-            this.customRangeModel().range,
-        );
+    private loadEntries(force = false): void {
+        const { summaryParams, rangeKey } = buildWeightHistoryFiltersForRange(this.selectedRange(), this.customRangeModel().range);
 
         if (!force && rangeKey === this.lastLoadedRangeKey) {
             return;
         }
 
         this.lastLoadedRangeKey = rangeKey;
+        this.loadSummary(summaryParams, this.selectedRange() === 'month');
+    }
+
+    private loadHistoryEntries(showLoader = true): void {
         if (showLoader) {
             this.isLoading.set(true);
         }
 
         this.weightEntriesService
-            .getEntries(entriesParams)
+            .getEntries({ limit: WEIGHT_HISTORY_ENTRIES_LIMIT_MAX, sort: 'desc' })
             .pipe(
                 finalize(() => {
                     this.isLoading.set(false);
@@ -340,8 +344,6 @@ export class WeightHistoryFacade {
             .subscribe(entries => {
                 this.entries.set(entries);
             });
-
-        this.loadSummary(summaryParams, this.selectedRange() === 'month');
     }
 
     private loadLatestEntry(): void {

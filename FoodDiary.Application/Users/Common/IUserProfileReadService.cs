@@ -10,5 +10,6 @@ public interface IUserProfileReadService {
     Task<Result<UserDesiredWeightModel>> GetDesiredWeightAsync(UserId userId, CancellationToken cancellationToken);
     Task<Result<IReadOnlyList<WeightGoalHistoryModel>>> GetWeightGoalHistoryAsync(UserId userId, CancellationToken cancellationToken);
     Task<Result<UserDesiredWaistModel>> GetDesiredWaistAsync(UserId userId, CancellationToken cancellationToken);
+    Task<Result<IReadOnlyList<WaistGoalHistoryModel>>> GetWaistGoalHistoryAsync(UserId userId, CancellationToken cancellationToken);
     Task<Result<UserNotificationPreferencesModel>> GetNotificationPreferencesAsync(UserId userId, CancellationToken cancellationToken);
 }
