@@ -1,11 +1,14 @@
 using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
 using FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
+using FoodDiary.Application.WeightEntries.Queries.GetWeightHistoryPageSummary;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
 
 public static class WeightEntryHttpQueryMappings {
+    public static GetWeightHistoryPageSummaryQuery ToQuery(this GetWeightHistoryPageSummaryHttpQuery query, Guid userId) =>
+        new(userId, query.DateFrom, query.DateTo, query.QuantizationDays, query.EntriesLimit);
     public static GetLatestWeightEntryQuery ToLatestQuery(this Guid userId) => new(userId);
 
     public static GetWeightEntriesQuery ToQuery(this GetWeightEntriesHttpQuery query, Guid userId) {

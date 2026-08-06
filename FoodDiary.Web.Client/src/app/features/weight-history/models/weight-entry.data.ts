@@ -30,3 +30,16 @@ export type WeightEntrySummaryFilters = {
     dateTo: string;
     quantizationDays: number;
 };
+
+export type WeightHistoryPageSummary = {
+    entries: WeightEntry[];
+    summary: WeightEntrySummaryPoint[];
+    height: number | null;
+    goal: DesiredWeightResponse;
+    goalHistory: WeightGoalHistoryItem[];
+};
+
+export type WeightHistoryPageSummaryFilters = WeightEntrySummaryFilters & {
+    entriesLimit: number;
+};
+import type { DesiredWeightResponse, WeightGoalHistoryItem } from '../../../shared/models/user.data';

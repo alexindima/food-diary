@@ -141,13 +141,8 @@ export class WaistHistoryFacade {
             return;
         }
 
+        this.loadPageSummary();
         this.initialized.set(true);
-        this.loadUserProfile();
-        this.loadDesiredWaist();
-        this.loadWaistGoalHistory();
-        this.loadLatestEntry();
-        this.loadHistoryEntries();
-        this.loadEntries();
     }
 
     public submit(): void {
@@ -182,9 +177,7 @@ export class WaistHistoryFacade {
             );
             this.entrySaveVersion.update(version => version + 1);
             this.invalidation.reportBodyMetricMutation();
-            this.loadLatestEntry();
-            this.loadHistoryEntries(false);
-            this.loadEntries(true);
+            this.loadPageSummary(true);
             this.loadRollingMonthSummaryIfNeeded();
             if (editingId !== null) {
                 this.resetEditingState();
@@ -227,9 +220,7 @@ export class WaistHistoryFacade {
             )
             .subscribe(() => {
                 this.invalidation.reportBodyMetricMutation();
-                this.loadLatestEntry();
-                this.loadHistoryEntries(false);
-                this.loadEntries(true);
+                this.loadPageSummary(true);
                 this.loadRollingMonthSummaryIfNeeded();
                 if (this.editingEntryId() === entry.id) {
                     this.resetEditingState();
@@ -321,28 +312,50 @@ export class WaistHistoryFacade {
 
         this.lastLoadedRangeKey = rangeKey;
         this.loadSummary(summaryParams, this.selectedRange() === 'month');
-        this.loadLatestEntry();
     }
 
-    private loadHistoryEntries(showLoader = true): void {
-        if (showLoader) {
-            this.isLoading.set(true);
+    private loadPageSummary(force = false): void {
+        const { summaryParams, rangeKey } = buildWaistHistoryFiltersForRange(this.selectedRange(), this.customRangeModel().range);
+        if (!force && rangeKey === this.lastLoadedRangeKey) {
+            return;
         }
 
+        this.lastLoadedRangeKey = rangeKey;
+        this.isLoading.set(true);
+        this.isSummaryLoading.set(true);
         this.waistEntriesService
-            .getEntries({ limit: WAIST_HISTORY_ENTRIES_LIMIT_MAX, sort: 'desc' })
+            .getPageSummary({ ...summaryParams, entriesLimit: WAIST_HISTORY_ENTRIES_LIMIT_MAX })
             .pipe(
                 finalize(() => {
                     this.isLoading.set(false);
+                    this.isSummaryLoading.set(false);
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(entries => {
-                this.entries.set(entries);
-                if (!this.isEditing() && entries.length > 0) {
-                    const latest = [...entries].sort((a, b) => compareDatesDesc(a.date, b.date))[0];
-                    this.form.circumference().value.set(latest.circumference.toString());
+            .subscribe(page => {
+                const latestEntry = page.entries.at(0) ?? null;
+                this.entries.set(page.entries);
+                this.latestEntry.set(latestEntry);
+                this.summaryPoints.set(page.summary);
+                if (this.selectedRange() === 'month') {
+                    this.rollingMonthSummaryPoints.set(page.summary);
                 }
+                this.userHeightCm.set(page.height);
+                this.waistGoal.set(page.goal);
+                this.waistGoalHistory.set(page.goalHistory);
+                this.desiredWaistModel.set({ circumference: page.goal.desiredWaist?.toString() ?? '' });
+                if (!this.isEditing()) {
+                    this.form.circumference().value.set(latestEntry?.circumference.toString() ?? '');
+                }
+            });
+    }
+
+    private loadWaistGoalHistory(): void {
+        this.userService
+            .getWaistGoalHistory()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(history => {
+                this.waistGoalHistory.set(history);
             });
     }
 
@@ -375,43 +388,6 @@ export class WaistHistoryFacade {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(points => {
                 this.rollingMonthSummaryPoints.set(points);
-            });
-    }
-
-    private loadUserProfile(): void {
-        this.userService
-            .getInfo()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(user => {
-                this.userHeightCm.set(user?.height ?? null);
-            });
-    }
-
-    private loadDesiredWaist(): void {
-        this.userService
-            .getWaistGoal()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(goal => {
-                this.waistGoal.set(goal);
-                this.desiredWaistModel.set({ circumference: goal.desiredWaist?.toString() ?? '' });
-            });
-    }
-
-    private loadWaistGoalHistory(): void {
-        this.userService
-            .getWaistGoalHistory()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(history => {
-                this.waistGoalHistory.set(history);
-            });
-    }
-
-    private loadLatestEntry(): void {
-        this.waistEntriesService
-            .getLatest()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(entry => {
-                this.latestEntry.set(entry);
             });
     }
 

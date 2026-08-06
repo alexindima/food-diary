@@ -12,6 +12,8 @@ import type {
     WaistEntryFilters,
     WaistEntrySummaryFilters,
     WaistEntrySummaryPoint,
+    WaistHistoryPageSummary,
+    WaistHistoryPageSummaryFilters,
 } from '../models/waist-entry.data';
 
 @Service()
@@ -58,6 +60,19 @@ export class WaistEntriesService extends ApiService {
 
         return this.get<WaistEntrySummaryPoint[]>('summary', params).pipe(
             catchError((error: unknown) => fallbackApiError('Waist summary fetch error', error, [])),
+        );
+    }
+
+    public getPageSummary(filters: WaistHistoryPageSummaryFilters): Observable<WaistHistoryPageSummary> {
+        const params: ApiQueryParams = {
+            dateFrom: filters.dateFrom,
+            dateTo: filters.dateTo,
+            quantizationDays: filters.quantizationDays,
+            entriesLimit: filters.entriesLimit,
+        };
+
+        return this.get<WaistHistoryPageSummary>('page-summary', params).pipe(
+            catchError((error: unknown) => rethrowApiError('Waist history page summary fetch error', error)),
         );
     }
 }

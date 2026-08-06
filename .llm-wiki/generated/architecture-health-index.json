@@ -10,7 +10,7 @@
                     "unconsumedBackendContracts":  0,
                     "selectorUnreferencedComponents":  132,
                     "componentsWithoutDirectSpecs":  116,
-                    "criticalSymbolsWithoutTestReferences":  30,
+                    "criticalSymbolsWithoutTestReferences":  32,
                     "explicitDebtMarkers":  2
                 },
     "projectDependencyViolations":  [
@@ -4858,10 +4858,30 @@
                                                                         ]
                                                  },
                                                  {
+                                                     "name":  "GetWaistHistoryPageSummaryQueryHandler",
+                                                     "role":  "QueryHandler",
+                                                     "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
+                                                     "line":  13,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
                                                      "name":  "GetWeightGoalHistoryQueryHandler",
                                                      "role":  "QueryHandler",
                                                      "path":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
                                                      "line":  9,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
+                                                     "name":  "GetWeightHistoryPageSummaryQueryHandler",
+                                                     "role":  "QueryHandler",
+                                                     "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
+                                                     "line":  13,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
 

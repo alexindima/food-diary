@@ -30,3 +30,16 @@ export type WaistEntrySummaryFilters = {
     dateTo: string;
     quantizationDays: number;
 };
+
+export type WaistHistoryPageSummary = {
+    entries: WaistEntry[];
+    summary: WaistEntrySummaryPoint[];
+    height: number | null;
+    goal: DesiredWaistResponse;
+    goalHistory: WaistGoalHistoryItem[];
+};
+
+export type WaistHistoryPageSummaryFilters = WaistEntrySummaryFilters & {
+    entriesLimit: number;
+};
+import type { DesiredWaistResponse, WaistGoalHistoryItem } from '../../../shared/models/user.data';

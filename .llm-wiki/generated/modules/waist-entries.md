@@ -33,6 +33,7 @@ Source: `FoodDiary.Presentation.Api/Features/WaistEntries/WaistEntriesController
 - `GET /api/v{version:apiVersion}/waist-entries`
 - `GET /api/v{version:apiVersion}/waist-entries/latest`
 - `GET /api/v{version:apiVersion}/waist-entries/summary`
+- `GET /api/v{version:apiVersion}/waist-entries/page-summary`
 - `POST /api/v{version:apiVersion}/waist-entries`
 - `PUT /api/v{version:apiVersion}/waist-entries/{id:guid}`
 - `DELETE /api/v{version:apiVersion}/waist-entries/{id:guid}`

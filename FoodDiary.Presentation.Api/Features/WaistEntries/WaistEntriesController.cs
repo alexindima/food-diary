@@ -29,6 +29,14 @@ public sealed class WaistEntriesController(ISender mediator) : AuthorizedControl
     public Task<IActionResult> GetSummary([FromCurrentUser] Guid userId, [FromQuery] GetWaistSummariesHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.Select(item => item.ToHttpResponse()).ToList());
 
+    [HttpGet("page-summary")]
+    [ProducesResponseType<WaistHistoryPageSummaryHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetPageSummary(
+        [FromCurrentUser] Guid userId,
+        [FromQuery] GetWaistHistoryPageSummaryHttpQuery query) =>
+        HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
+
     [HttpPost]
     [ProducesResponseType<WaistEntryHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
@@ -50,4 +58,3 @@ public sealed class WaistEntriesController(ISender mediator) : AuthorizedControl
     public Task<IActionResult> Delete(Guid id, [FromCurrentUser] Guid userId) =>
         HandleNoContent(id.ToDeleteCommand(userId));
 }
-

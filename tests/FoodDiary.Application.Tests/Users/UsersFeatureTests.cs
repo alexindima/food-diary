@@ -1095,6 +1095,30 @@ public partial class UsersFeatureTests {
             CancellationToken cancellationToken) =>
             Task.FromResult(Result.Success<IReadOnlyList<WaistGoalHistoryModel>>([]));
 
+        public async Task<Result<WeightHistoryProfileModel>> GetWeightHistoryProfileAsync(
+            UserId userId,
+            CancellationToken cancellationToken) {
+            Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            return result.IsFailure
+                ? Result.Failure<WeightHistoryProfileModel>(result.Error)
+                : Result.Success(new WeightHistoryProfileModel(
+                    result.Value.Height,
+                    new UserDesiredWeightModel(result.Value.DesiredWeight),
+                    []));
+        }
+
+        public async Task<Result<WaistHistoryProfileModel>> GetWaistHistoryProfileAsync(
+            UserId userId,
+            CancellationToken cancellationToken) {
+            Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            return result.IsFailure
+                ? Result.Failure<WaistHistoryProfileModel>(result.Error)
+                : Result.Success(new WaistHistoryProfileModel(
+                    result.Value.Height,
+                    new UserDesiredWaistModel(result.Value.DesiredWaist),
+                    []));
+        }
+
         public async Task<Result<UserDesiredWaistModel>> GetDesiredWaistAsync(UserId userId, CancellationToken cancellationToken) {
             Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
             return result.IsFailure

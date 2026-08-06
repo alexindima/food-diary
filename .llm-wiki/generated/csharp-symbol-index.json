@@ -8,15 +8,15 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  2976,
-                    "symbols":  3016,
+                    "sourceFiles":  2988,
+                    "symbols":  3028,
                     "interfaceImplementationLinks":  222,
                     "dependencyInjectionRegistrations":  220,
                     "kinds":  {
-                                  "class":  1525,
+                                  "class":  1527,
                                   "enum":  45,
                                   "interface":  397,
-                                  "record":  939,
+                                  "record":  949,
                                   "record struct":  110
                               },
                     "roles":  {
@@ -32,14 +32,14 @@
                                   "Mapper":  8,
                                   "Mapping":  3,
                                   "Options":  55,
-                                  "Other":  1054,
-                                  "Query":  150,
-                                  "QueryHandler":  117,
+                                  "Other":  1058,
+                                  "Query":  154,
+                                  "QueryHandler":  119,
                                   "ReadModelRepository":  29,
                                   "ReadRepository":  50,
                                   "Repository":  103,
                                   "Request":  121,
-                                  "Response":  163,
+                                  "Response":  165,
                                   "Service":  251,
                                   "Validator":  175,
                                   "ValueObject":  120,
@@ -11066,10 +11066,24 @@
                         "line":  2
                     },
                     {
+                        "name":  "WaistHistoryProfileModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/Users/Models/WaistHistoryProfileModel.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "WeightGoalHistoryModel",
                         "kind":  "record",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Users/Models/WeightGoalHistoryModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WeightHistoryProfileModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/Users/Models/WeightHistoryProfileModel.cs",
                         "line":  2
                     },
                     {
@@ -11325,6 +11339,13 @@
                         "line":  2
                     },
                     {
+                        "name":  "WaistHistoryPageSummaryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/WaistEntries/Models/WaistHistoryPageSummaryModel.cs",
+                        "line":  4
+                    },
+                    {
                         "name":  "GetLatestWaistEntryQuery",
                         "kind":  "record",
                         "role":  "Query",
@@ -11365,6 +11386,20 @@
                         "role":  "Validator",
                         "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryValidator.cs",
                         "line":  4
+                    },
+                    {
+                        "name":  "GetWaistHistoryPageSummaryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWaistHistoryPageSummaryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
+                        "line":  13
                     },
                     {
                         "name":  "GetWaistSummariesQuery",
@@ -11668,6 +11703,13 @@
                         "line":  2
                     },
                     {
+                        "name":  "WeightHistoryPageSummaryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/WeightEntries/Models/WeightHistoryPageSummaryModel.cs",
+                        "line":  4
+                    },
+                    {
                         "name":  "GetLatestWeightEntryQuery",
                         "kind":  "record",
                         "role":  "Query",
@@ -11708,6 +11750,20 @@
                         "role":  "Validator",
                         "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryValidator.cs",
                         "line":  4
+                    },
+                    {
+                        "name":  "GetWeightHistoryPageSummaryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWeightHistoryPageSummaryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
+                        "line":  13
                     },
                     {
                         "name":  "GetWeightSummariesQuery",
@@ -18686,14 +18742,14 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Presentation.Api/Features/WaistEntries/Mappings/WaistEntryHttpQueryMappings.cs",
-                        "line":  7
+                        "line":  8
                     },
                     {
                         "name":  "WaistEntryHttpResponseMappings",
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Presentation.Api/Features/WaistEntries/Mappings/WaistEntryHttpResponseMappings.cs",
-                        "line":  5
+                        "line":  6
                     },
                     {
                         "name":  "CreateWaistEntryHttpRequest",
@@ -18707,6 +18763,13 @@
                         "kind":  "record",
                         "role":  "Query",
                         "path":  "FoodDiary.Presentation.Api/Features/WaistEntries/Requests/GetWaistEntriesHttpQuery.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "GetWaistHistoryPageSummaryHttpQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Presentation.Api/Features/WaistEntries/Requests/GetWaistHistoryPageSummaryHttpQuery.cs",
                         "line":  2
                     },
                     {
@@ -18736,6 +18799,13 @@
                         "role":  "Response",
                         "path":  "FoodDiary.Presentation.Api/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs",
                         "line":  2
+                    },
+                    {
+                        "name":  "WaistHistoryPageSummaryHttpResponse",
+                        "kind":  "record",
+                        "role":  "Response",
+                        "path":  "FoodDiary.Presentation.Api/Features/WaistEntries/Responses/WaistHistoryPageSummaryHttpResponse.cs",
+                        "line":  4
                     },
                     {
                         "name":  "WaistEntriesController",
@@ -18833,14 +18903,14 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Presentation.Api/Features/WeightEntries/Mappings/WeightEntryHttpQueryMappings.cs",
-                        "line":  7
+                        "line":  8
                     },
                     {
                         "name":  "WeightEntryHttpResponseMappings",
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Presentation.Api/Features/WeightEntries/Mappings/WeightEntryHttpResponseMappings.cs",
-                        "line":  5
+                        "line":  6
                     },
                     {
                         "name":  "CreateWeightEntryHttpRequest",
@@ -18854,6 +18924,13 @@
                         "kind":  "record",
                         "role":  "Query",
                         "path":  "FoodDiary.Presentation.Api/Features/WeightEntries/Requests/GetWeightEntriesHttpQuery.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "GetWeightHistoryPageSummaryHttpQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Presentation.Api/Features/WeightEntries/Requests/GetWeightHistoryPageSummaryHttpQuery.cs",
                         "line":  2
                     },
                     {
@@ -18883,6 +18960,13 @@
                         "role":  "Response",
                         "path":  "FoodDiary.Presentation.Api/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs",
                         "line":  2
+                    },
+                    {
+                        "name":  "WeightHistoryPageSummaryHttpResponse",
+                        "kind":  "record",
+                        "role":  "Response",
+                        "path":  "FoodDiary.Presentation.Api/Features/WeightEntries/Responses/WeightHistoryPageSummaryHttpResponse.cs",
+                        "line":  4
                     },
                     {
                         "name":  "WeightEntriesController",

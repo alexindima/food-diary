@@ -33,6 +33,7 @@ Source: `FoodDiary.Presentation.Api/Features/WeightEntries/WeightEntriesControll
 - `GET /api/v{version:apiVersion}/weight-entries`
 - `GET /api/v{version:apiVersion}/weight-entries/latest`
 - `GET /api/v{version:apiVersion}/weight-entries/summary`
+- `GET /api/v{version:apiVersion}/weight-entries/page-summary`
 - `POST /api/v{version:apiVersion}/weight-entries`
 - `PUT /api/v{version:apiVersion}/weight-entries/{id:guid}`
 - `DELETE /api/v{version:apiVersion}/weight-entries/{id:guid}`

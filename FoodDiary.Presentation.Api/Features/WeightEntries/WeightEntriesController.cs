@@ -29,6 +29,14 @@ public sealed class WeightEntriesController(ISender mediator) : AuthorizedContro
     public Task<IActionResult> GetSummary([FromCurrentUser] Guid userId, [FromQuery] GetWeightSummariesHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.Select(item => item.ToHttpResponse()).ToList());
 
+    [HttpGet("page-summary")]
+    [ProducesResponseType<WeightHistoryPageSummaryHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetPageSummary(
+        [FromCurrentUser] Guid userId,
+        [FromQuery] GetWeightHistoryPageSummaryHttpQuery query) =>
+        HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
+
     [HttpPost]
     [ProducesResponseType<WeightEntryHttpResponse>(StatusCodes.Status201Created)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
@@ -50,4 +58,3 @@ public sealed class WeightEntriesController(ISender mediator) : AuthorizedContro
     public Task<IActionResult> Delete(Guid id, [FromCurrentUser] Guid userId) =>
         HandleNoContent(id.ToDeleteCommand(userId));
 }
-

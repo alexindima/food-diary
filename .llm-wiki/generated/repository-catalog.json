@@ -18,7 +18,7 @@
                     "applicationModules":  38,
                     "extractedApplicationModules":  2,
                     "controllers":  83,
-                    "endpoints":  262,
+                    "endpoints":  264,
                     "agentGuides":  42,
                     "documentationPages":  42
                 },
@@ -4111,19 +4111,24 @@
                                                                "line":  26
                                                            },
                                                            {
+                                                               "verb":  "GET",
+                                                               "route":  "/api/v{version:apiVersion}/waist-entries/page-summary",
+                                                               "line":  32
+                                                           },
+                                                           {
                                                                "verb":  "POST",
                                                                "route":  "/api/v{version:apiVersion}/waist-entries",
-                                                               "line":  32
+                                                               "line":  40
                                                            },
                                                            {
                                                                "verb":  "PUT",
                                                                "route":  "/api/v{version:apiVersion}/waist-entries/{id:guid}",
-                                                               "line":  39
+                                                               "line":  47
                                                            },
                                                            {
                                                                "verb":  "DELETE",
                                                                "route":  "/api/v{version:apiVersion}/waist-entries/{id:guid}",
-                                                               "line":  47
+                                                               "line":  55
                                                            }
                                                        ]
                                      },
@@ -4197,19 +4202,24 @@
                                                                "line":  26
                                                            },
                                                            {
+                                                               "verb":  "GET",
+                                                               "route":  "/api/v{version:apiVersion}/weight-entries/page-summary",
+                                                               "line":  32
+                                                           },
+                                                           {
                                                                "verb":  "POST",
                                                                "route":  "/api/v{version:apiVersion}/weight-entries",
-                                                               "line":  32
+                                                               "line":  40
                                                            },
                                                            {
                                                                "verb":  "PUT",
                                                                "route":  "/api/v{version:apiVersion}/weight-entries/{id:guid}",
-                                                               "line":  39
+                                                               "line":  47
                                                            },
                                                            {
                                                                "verb":  "DELETE",
                                                                "route":  "/api/v{version:apiVersion}/weight-entries/{id:guid}",
-                                                               "line":  47
+                                                               "line":  55
                                                            }
                                                        ]
                                      },

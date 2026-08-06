@@ -6,13 +6,13 @@
                       "externalTransfers":  "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
                   },
     "summary":  {
-                    "candidateFields":  1379,
+                    "candidateFields":  1385,
                     "credential":  147,
                     "identity":  141,
-                    "health":  603,
+                    "health":  609,
                     "financial":  191,
                     "privateContent":  297,
-                    "boundaryFiles":  175,
+                    "boundaryFiles":  177,
                     "potentialLoggingLeads":  1,
                     "externalTransferLeads":  1
                 },
@@ -4310,6 +4310,13 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "Height",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application/Users/Models/WaistHistoryProfileModel.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "health",
                        "name":  "TargetWeight",
                        "type":  "double",
                        "path":  "FoodDiary.Application/Users/Models/WeightGoalHistoryModel.cs",
@@ -4331,6 +4338,13 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "Height",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application/Users/Models/WeightHistoryProfileModel.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "health",
                        "name":  "WaistEntryId",
                        "type":  "Guid",
                        "path":  "FoodDiary.Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommand.cs",
@@ -4342,6 +4356,13 @@
                        "type":  "Guid",
                        "path":  "FoodDiary.Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommand.cs",
                        "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Height",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application/WaistEntries/Models/WaistHistoryPageSummaryModel.cs",
+                       "line":  8
                    },
                    {
                        "category":  "health",
@@ -4468,6 +4489,13 @@
                        "type":  "double",
                        "path":  "FoodDiary.Application/WeightEntries/Models/WeightEntrySummaryModel.cs",
                        "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Height",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application/WeightEntries/Models/WeightHistoryPageSummaryModel.cs",
+                       "line":  8
                    },
                    {
                        "category":  "health",
@@ -6494,6 +6522,13 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "Height",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Presentation.Api/Features/WaistEntries/Responses/WaistHistoryPageSummaryHttpResponse.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "health",
                        "name":  "CaloriesBurned",
                        "type":  "double?",
                        "path":  "FoodDiary.Presentation.Api/Features/Wearables/Responses/WearableDailySummaryHttpResponse.cs",
@@ -6603,6 +6638,13 @@
                        "type":  "double",
                        "path":  "FoodDiary.Presentation.Api/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs",
                        "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Height",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Presentation.Api/Features/WeightEntries/Responses/WeightHistoryPageSummaryHttpResponse.cs",
+                       "line":  8
                    },
                    {
                        "category":  "identity",
@@ -10684,6 +10726,13 @@
                               "fieldCount":  3
                           },
                           {
+                              "path":  "FoodDiary.Presentation.Api/Features/WaistEntries/Responses/WaistHistoryPageSummaryHttpResponse.cs",
+                              "categories":  [
+                                                 "health"
+                                             ],
+                              "fieldCount":  1
+                          },
+                          {
                               "path":  "FoodDiary.Presentation.Api/Features/Wearables/Responses/WearableDailySummaryHttpResponse.cs",
                               "categories":  [
                                                  "health"
@@ -10727,6 +10776,13 @@
                           },
                           {
                               "path":  "FoodDiary.Presentation.Api/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs",
+                              "categories":  [
+                                                 "health"
+                                             ],
+                              "fieldCount":  1
+                          },
+                          {
+                              "path":  "FoodDiary.Presentation.Api/Features/WeightEntries/Responses/WeightHistoryPageSummaryHttpResponse.cs",
                               "categories":  [
                                                  "health"
                                              ],

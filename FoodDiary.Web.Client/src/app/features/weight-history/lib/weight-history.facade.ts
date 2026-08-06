@@ -147,13 +147,8 @@ export class WeightHistoryFacade {
             return;
         }
 
+        this.loadPageSummary();
         this.initialized.set(true);
-        this.loadDesiredWeight();
-        this.loadWeightGoalHistory();
-        this.loadUserProfile();
-        this.loadLatestEntry();
-        this.loadHistoryEntries();
-        this.loadEntries();
     }
 
     public submit(): void {
@@ -188,9 +183,7 @@ export class WeightHistoryFacade {
             );
             this.entrySaveVersion.update(version => version + 1);
             this.invalidation.reportBodyMetricMutation();
-            this.loadLatestEntry();
-            this.loadHistoryEntries(false);
-            this.loadEntries(true);
+            this.loadPageSummary(true);
             this.loadRollingMonthSummaryIfNeeded();
             if (editingId !== null) {
                 this.resetEditingState();
@@ -232,9 +225,7 @@ export class WeightHistoryFacade {
             )
             .subscribe(() => {
                 this.invalidation.reportBodyMetricMutation();
-                this.loadLatestEntry();
-                this.loadHistoryEntries(false);
-                this.loadEntries(true);
+                this.loadPageSummary(true);
                 this.loadRollingMonthSummaryIfNeeded();
                 if (this.editingEntryId() === entry.id) {
                     this.resetEditingState();
@@ -328,43 +319,39 @@ export class WeightHistoryFacade {
         this.loadSummary(summaryParams, this.selectedRange() === 'month');
     }
 
-    private loadHistoryEntries(showLoader = true): void {
-        if (showLoader) {
-            this.isLoading.set(true);
+    private loadPageSummary(force = false): void {
+        const { summaryParams, rangeKey } = buildWeightHistoryFiltersForRange(this.selectedRange(), this.customRangeModel().range);
+        if (!force && rangeKey === this.lastLoadedRangeKey) {
+            return;
         }
 
+        this.lastLoadedRangeKey = rangeKey;
+        this.isLoading.set(true);
+        this.isSummaryLoading.set(true);
         this.weightEntriesService
-            .getEntries({ limit: WEIGHT_HISTORY_ENTRIES_LIMIT_MAX, sort: 'desc' })
+            .getPageSummary({ ...summaryParams, entriesLimit: WEIGHT_HISTORY_ENTRIES_LIMIT_MAX })
             .pipe(
                 finalize(() => {
                     this.isLoading.set(false);
+                    this.isSummaryLoading.set(false);
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(entries => {
-                this.entries.set(entries);
-            });
-    }
-
-    private loadLatestEntry(): void {
-        this.weightEntriesService
-            .getLatest()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(entry => {
-                this.latestEntry.set(entry);
-                if (!this.isEditing()) {
-                    this.form.weight().value.set(entry?.weight.toString() ?? '');
+            .subscribe(page => {
+                const latestEntry = page.entries.at(0) ?? null;
+                this.entries.set(page.entries);
+                this.latestEntry.set(latestEntry);
+                this.summaryPoints.set(page.summary);
+                if (this.selectedRange() === 'month') {
+                    this.rollingMonthSummaryPoints.set(page.summary);
                 }
-            });
-    }
-
-    private loadDesiredWeight(): void {
-        this.userService
-            .getWeightGoal()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(goal => {
-                this.weightGoal.set(goal);
-                this.desiredWeightModel.set({ weight: goal.desiredWeight?.toString() ?? '' });
+                this.userHeightCm.set(page.height);
+                this.weightGoal.set(page.goal);
+                this.weightGoalHistory.set(page.goalHistory);
+                this.desiredWeightModel.set({ weight: page.goal.desiredWeight?.toString() ?? '' });
+                if (!this.isEditing()) {
+                    this.form.weight().value.set(latestEntry?.weight.toString() ?? '');
+                }
             });
     }
 
@@ -374,15 +361,6 @@ export class WeightHistoryFacade {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(history => {
                 this.weightGoalHistory.set(history);
-            });
-    }
-
-    private loadUserProfile(): void {
-        this.userService
-            .getInfo()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(user => {
-                this.userHeightCm.set(user?.height ?? null);
             });
     }
 

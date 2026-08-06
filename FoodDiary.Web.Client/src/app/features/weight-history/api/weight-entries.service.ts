@@ -12,6 +12,8 @@ import type {
     WeightEntryFilters,
     WeightEntrySummaryFilters,
     WeightEntrySummaryPoint,
+    WeightHistoryPageSummary,
+    WeightHistoryPageSummaryFilters,
 } from '../models/weight-entry.data';
 
 @Service()
@@ -60,6 +62,19 @@ export class WeightEntriesService extends ApiService {
 
         return this.get<WeightEntrySummaryPoint[]>('summary', params).pipe(
             catchError((error: unknown) => fallbackApiError('Weight summary fetch error', error, [])),
+        );
+    }
+
+    public getPageSummary(filters: WeightHistoryPageSummaryFilters): Observable<WeightHistoryPageSummary> {
+        const params: ApiQueryParams = {
+            dateFrom: filters.dateFrom,
+            dateTo: filters.dateTo,
+            quantizationDays: filters.quantizationDays,
+            entriesLimit: filters.entriesLimit,
+        };
+
+        return this.get<WeightHistoryPageSummary>('page-summary', params).pipe(
+            catchError((error: unknown) => rethrowApiError('Weight history page summary fetch error', error)),
         );
     }
 }

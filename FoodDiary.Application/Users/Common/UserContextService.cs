@@ -61,17 +61,7 @@ internal sealed class UserContextService(
             return Result.Failure<IReadOnlyList<WeightGoalHistoryModel>>(userResult.Error);
         }
 
-        WeightGoalHistoryModel[] history = [.. userResult.Value.WeightGoals
-            .OrderByDescending(static goal => goal.StartedAtUtc)
-            .Select(static goal => new WeightGoalHistoryModel(
-                goal.Id.Value,
-                goal.TargetWeight,
-                goal.StartWeight,
-                goal.EndWeight,
-                goal.StartedAtUtc,
-                goal.EndedAtUtc,
-                goal.Status.ToString()))];
-        return Result.Success<IReadOnlyList<WeightGoalHistoryModel>>(history);
+        return Result.Success(ToWeightGoalHistory(userResult.Value));
     }
 
     public async Task<Result<UserDesiredWaistModel>> GetDesiredWaistAsync(UserId userId, CancellationToken cancellationToken) {
@@ -95,7 +85,53 @@ internal sealed class UserContextService(
             return Result.Failure<IReadOnlyList<WaistGoalHistoryModel>>(userResult.Error);
         }
 
-        WaistGoalHistoryModel[] history = [.. userResult.Value.WaistGoals
+        return Result.Success(ToWaistGoalHistory(userResult.Value));
+    }
+
+    public async Task<Result<WeightHistoryProfileModel>> GetWeightHistoryProfileAsync(
+        UserId userId,
+        CancellationToken cancellationToken) {
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure<WeightHistoryProfileModel>(userResult.Error);
+        }
+
+        User user = userResult.Value;
+        return Result.Success(new WeightHistoryProfileModel(
+            user.Height,
+            ToDesiredWeightModel(user),
+            ToWeightGoalHistory(user)));
+    }
+
+    public async Task<Result<WaistHistoryProfileModel>> GetWaistHistoryProfileAsync(
+        UserId userId,
+        CancellationToken cancellationToken) {
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure<WaistHistoryProfileModel>(userResult.Error);
+        }
+
+        User user = userResult.Value;
+        return Result.Success(new WaistHistoryProfileModel(
+            user.Height,
+            ToDesiredWaistModel(user),
+            ToWaistGoalHistory(user)));
+    }
+
+    private static IReadOnlyList<WeightGoalHistoryModel> ToWeightGoalHistory(User user) =>
+        [.. user.WeightGoals
+            .OrderByDescending(static goal => goal.StartedAtUtc)
+            .Select(static goal => new WeightGoalHistoryModel(
+                goal.Id.Value,
+                goal.TargetWeight,
+                goal.StartWeight,
+                goal.EndWeight,
+                goal.StartedAtUtc,
+                goal.EndedAtUtc,
+                goal.Status.ToString()))];
+
+    private static IReadOnlyList<WaistGoalHistoryModel> ToWaistGoalHistory(User user) =>
+        [.. user.WaistGoals
             .OrderByDescending(static goal => goal.StartedAtUtc)
             .Select(static goal => new WaistGoalHistoryModel(
                 goal.Id.Value,
@@ -105,8 +141,6 @@ internal sealed class UserContextService(
                 goal.StartedAtUtc,
                 goal.EndedAtUtc,
                 goal.Status.ToString()))];
-        return Result.Success<IReadOnlyList<WaistGoalHistoryModel>>(history);
-    }
 
     public async Task<Result<UserNotificationPreferencesModel>> GetNotificationPreferencesAsync(UserId userId, CancellationToken cancellationToken) {
         Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);

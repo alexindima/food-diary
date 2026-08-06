@@ -4610,7 +4610,7 @@
                         "role":  "Service",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
-                        "line":  18
+                        "line":  20
                     },
                     {
                         "name":  "WaistHistoryChartCardComponent",
@@ -4764,7 +4764,7 @@
                         "role":  "Service",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/features/weight-history/api/weight-entries.service.ts",
-                        "line":  18
+                        "line":  20
                     },
                     {
                         "name":  "WeightHistoryBmiCardComponent",
