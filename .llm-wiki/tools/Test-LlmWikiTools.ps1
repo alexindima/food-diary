@@ -616,7 +616,7 @@ $affectedFrontendTestPlan = & (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline
     -ChangedPath 'FoodDiary.Web.Client/src/app/components/example/example.spec.ts'
 $affectedFrontendTestPlanText = $affectedFrontendTestPlan -join [Environment]::NewLine
 Assert-Wiki ($affectedFrontendTestPlanText -match 'Build-LlmWikiQualityIndex.ps1') 'Affected frontend test plan omitted the quality index.'
-Assert-Wiki ($affectedFrontendTestPlanText -match 'Build-LlmWikiArchitectureHealthIndex.ps1') 'Affected frontend test plan omitted downstream architecture health.'
+Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiArchitectureHealthIndex.ps1') 'Affected frontend test plan included the unrelated architecture health index.'
 Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiFrontendIndex.ps1') 'Affected frontend test plan included the unrelated frontend source index.'
 Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiFrontendContractIndex.ps1') 'Affected frontend test plan included the unrelated frontend contract index.'
 Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiSensitiveDataIndex.ps1') 'Affected frontend test plan included the unrelated sensitive-data index.'
