@@ -95,6 +95,13 @@ implementation, focused parity verification, and strict affected completion.
 It remains lightweight only while provider, sensitive-data lifecycle, security,
 configuration, and architecture boundaries stay unchanged.
 
+The `test-only` budget is based on changed paths rather than vocabulary found in
+the code under test. It uses four stages: compact coverage brief, assertion or
+fixture implementation, focused execution, then affected refresh plus
+`verify-fast`. It omits journeys, design, privacy, rollout, and governed
+workspace ceremony. Test project manifests and runner configuration are not
+eligible because they can change dependencies or execution infrastructure.
+
 The bounded cross-layer bug route treats layer count as transport shape rather
 than feature scope. Once current sources prove one root cause and one existing
 module flow, an additive Frontend/API/Backend fix uses a compact brief and trace,

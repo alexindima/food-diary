@@ -78,6 +78,7 @@ The router selects one FoodDiary-specific profile:
 | `visual-ui-change` / `visual-tiny` | grounded frontend presentation work; the `visual-tiny` variant is CSS/SCSS-only | compact constraints, implementation, focused checks, browser evidence, `verify-strict-affected`; `visual-tiny` uses stylelint without retracing, tests, or a build during each iteration |
 | `bug` | corrective behavior in one bounded flow | research, implementation, focused tests, diff, `verify-fast`; strict publication verification stays in hooks and CI |
 | `pattern-extension` | grounded extension of a current, tested repository precedent, including an analogous additive API or migration | precedent brief, compatibility delta, implementation, focused parity tests, `verify-strict-affected` |
+| `test-only` | grounded additions or strengthening inside test sources/fixtures only | coverage brief, test implementation, focused test execution, affected refresh plus `verify-fast` |
 | `feature` | new behavior or a cross-cutting product slice | research, design, implementation phases, conformance-aware review, full verify |
 | `critical` | auth, credentials, identity/private data, payments, migrations, providers, email/invitations, configuration, or delivery boundaries | research, decision checkpoint, design, governed workspace, full verify, independent critique |
 | `architectural` | project references, DI/ownership boundaries, module topology, or durable architecture constraints | research, decision checkpoint, design, governed workspace, conformance, independent critique |
@@ -124,6 +125,14 @@ configuration, sensitive-data lifecycle, security incident, or architecture
 boundary changes. The route verifies a current precedent and its tests, checks
 only the API/migration/rollout delta that actually applies, and avoids a fresh
 design workspace. Mentioning a pattern never downgrades real critical evidence.
+
+When every grounded path is a test source or fixture, the router uses
+`test-only`. Names such as authentication, OpenTelemetry, outbox, provider, or
+privacy describe the production behavior being covered; they do not imply that
+those production boundaries changed. The route still requires the test to prove
+an explicit branch or invariant and calls out removed or relaxed assertions.
+Project files, dependency manifests, runner configuration, production sources,
+migrations, and API snapshots are excluded and route normally.
 
 Sensitive-data references calibrate review and testing, but their presence in
 an existing read model does not by itself make a change critical. A bounded

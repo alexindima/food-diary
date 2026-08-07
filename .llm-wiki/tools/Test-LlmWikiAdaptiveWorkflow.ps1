@@ -182,6 +182,25 @@ $migrationFeature = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1'
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($migrationFeature.profile -eq 'critical' -and $migrationFeature.requiresWorkspace) 'Explicit persistence migration was weakened by scope discovery.'
 
+$criticalCoverageOnly = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Add coverage for OpenTelemetry, email outbox, and provider failure behavior without changing production code.' `
+    -ProposedPath @(
+        'tests/FoodDiary.Web.Api.Tests/Extensions/OpenTelemetryConfigurationTests.cs',
+        'tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs',
+        'tests/FoodDiary.Infrastructure.Tests/Services/AiPromptProviderTests.cs'
+    ) `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($criticalCoverageOnly.profile -eq 'test-only') 'Test-only coverage inherited critical risk from unchanged production code.'
+Assert-Adaptive (-not $criticalCoverageOnly.requiresDecisionCheckpoint -and -not $criticalCoverageOnly.requiresDesign -and -not $criticalCoverageOnly.requiresWorkspace) 'Test-only coverage retained governed ceremony.'
+Assert-Adaptive ((@($criticalCoverageOnly.stages | Where-Object required).id -join ',') -eq 'coverage-brief,test-implementation,focused-verification,completion') 'Test-only coverage did not use the four-stage focused route.'
+Assert-Adaptive (@($criticalCoverageOnly.stages.command | Where-Object { $_ -match 'journeys|design|privacy|rollout|wiki\.ps1 verify$' }).Count -eq 0) 'Test-only coverage retained unrelated product or critical workflow commands.'
+
+$testInfrastructureChange = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Update the infrastructure test project dependencies.' `
+    -ProposedPath 'tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($testInfrastructureChange.profile -ne 'test-only') 'A test project dependency change was incorrectly treated as test-source-only work.'
+
 $patternExtension = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Port the existing weight-goal pattern to waist goals by following the same repository precedent.' `
     -ProposedPath @(

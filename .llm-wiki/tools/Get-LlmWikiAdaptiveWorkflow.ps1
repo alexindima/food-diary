@@ -55,6 +55,17 @@ if ($boundaryNegated -and $visualVocabulary) {
 $presentationOnly = [string]$brief.risk.profile -eq 'frontend-presentation-only'
 $scopeKnown = $paths.Count -gt 0 -and $scopes.Count -gt 0 -and [string]$brief.analysis.mode -ne 'intent-inferred'
 $productionScopes = @($scopes | Where-Object { $_ -notin @('Tests', 'Documentation', 'Localization') })
+$testSourcePaths = @($paths | Where-Object {
+    $_ -match '(?i)(^|/)(tests?|__tests__)/' -or
+    $_ -match '(?i)\.Tests?/' -or
+    $_ -match '(?i)(?:^|/)[^/]*(?:Tests?|Specs?)\.cs$' -or
+    $_ -match '(?i)\.(?:spec|test)\.ts$' -or
+    $_ -match '^\.llm-wiki/tools/Test-LlmWiki[^/]*\.ps1$'
+})
+$testInfrastructurePaths = @($paths | Where-Object {
+    $_ -match '(?i)(?:\.csproj|\.fsproj|\.props|\.targets|\.runsettings|package(?:-lock)?\.json|playwright\.config|vitest\.config|jest\.config|Directory\.Build)'
+})
+$testOnlyChange = $scopeKnown -and $paths.Count -gt 0 -and $testSourcePaths.Count -eq $paths.Count -and $testInfrastructurePaths.Count -eq 0
 $visualIntent = $visualVocabulary -or $localUiInteractionVocabulary
 $boundaryChangeIntent = $normalized -match '\b(change|modify|add|remove|replace|migrate|integrate|send|store|persist|log|expose)\w*\s+(api|contract|provider|privacy|security|auth|token|credential|database|migration|webhook|payload|data)\b'
 $criticalUiSurfaceReference = $normalized -match '\b(auth|authentication|login|oauth|payment|billing|privacy|security)\s+(dialog|modal|page|form|button|panel|screen)\b'
@@ -96,7 +107,8 @@ $boundedPatternExtension = $patternExtensionIntent -and $scopeKnown -and -not $e
 $wikiInternal = @($paths | Where-Object { $_ -match '^\.llm-wiki/' }).Count -gt 0
 
 $profile = 'feature'
-if ($uiDiscovery) { $profile = 'ui-discovery' }
+if ($testOnlyChange) { $profile = 'test-only' }
+elseif ($uiDiscovery) { $profile = 'ui-discovery' }
 elseif ($scopeDiscovery) { $profile = 'scope-discovery' }
 elseif ($maintenanceChange) { $profile = 'maintenance' }
 elseif ($boundedPatternExtension) { $profile = 'pattern-extension' }
@@ -108,12 +120,12 @@ elseif (-not $featureIntent -and [int]$brief.risk.score -le 2 -and $scopeKnown -
 
 $confidence = if (-not $scopeKnown) { 'low' } elseif ([string]$brief.analysis.confidence -eq 'high') { 'high' } else { 'medium' }
 $requiresPathDiscovery = -not $scopeKnown
-$requiresDecisionCheckpoint = $profile -in @('critical', 'architectural') -or ($profile -notin @('ui-discovery', 'scope-discovery') -and [bool]$brief.decisionContext.reviewRequired)
+$requiresDecisionCheckpoint = $profile -in @('critical', 'architectural') -or ($profile -notin @('ui-discovery', 'scope-discovery', 'test-only') -and [bool]$brief.decisionContext.reviewRequired)
 $requiresDesign = $profile -in @('feature', 'critical', 'architectural')
 $boundedFeatureScopes = $profile -eq 'feature' -and $scopeKnown -and $directModuleCount -le 1 -and
     @($productionScopes | Where-Object { $_ -notin @('Backend', 'Api', 'Frontend', 'Contracts') }).Count -eq 0 -and
     -not $flags.databaseMigration -and -not $flags.externalIntegrations -and -not $flags.configuration
-$requiresWorkspace = $profile -notin @('ui-discovery', 'scope-discovery', 'maintenance', 'pattern-extension') -and ($profile -in @('critical', 'architectural') -or ($crossCutting -and -not $boundedFeatureScopes -and -not $boundedCrossLayerBug))
+$requiresWorkspace = $profile -notin @('ui-discovery', 'scope-discovery', 'maintenance', 'pattern-extension', 'test-only') -and ($profile -in @('critical', 'architectural') -or ($crossCutting -and -not $boundedFeatureScopes -and -not $boundedCrossLayerBug))
 $experiencePolicyPath = Join-Path (Split-Path -Parent $PSScriptRoot) 'policies/experience-policies.json'
 $experiencePolicy = Get-Content -LiteralPath $experiencePolicyPath -Raw | ConvertFrom-Json
 $ceremonyBudget = $experiencePolicy.ceremonyBudgets.$profile
@@ -133,7 +145,12 @@ function Add-Stage([string]$Id, [string]$Purpose, [string]$Command, [bool]$Requi
 $escapedObjective = $Objective.Replace("'", "''")
 $pathArgument = if ($paths.Count -gt 0) { " -PlannedPath $(($paths | Select-Object -First $Limit | ForEach-Object { "'$($_.Replace("'", "''"))'" }) -join ',')" } else { '' }
 $changedPathArgument = if ($paths.Count -gt 0) { " -ChangedPath $(($paths | Select-Object -First $Limit | ForEach-Object { "'$($_.Replace("'", "''"))'" }) -join ',')" } else { '' }
-if ($profile -eq 'ui-discovery') {
+if ($profile -eq 'test-only') {
+    Add-Stage 'coverage-brief' 'Identify the production behavior, missing branch, and closest focused test command without treating referenced critical code as a changed boundary.' "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective'$pathArgument -Compact; ./.llm-wiki/wiki.ps1 test-plan -Intent '$escapedObjective'$pathArgument" $true 'Every changed path is test-only, the behavior under test is explicit, and no manifest, configuration, production, API, migration, provider, or architecture file changes.'
+    Add-Stage 'test-implementation' 'Add or strengthen assertions and fixtures without weakening existing behavioral guarantees.' '# edit only the grounded test sources and fixtures; review removed or relaxed assertions explicitly' $true 'New assertions prove the intended behavior and no existing assertion, negative case, or invariant is silently weakened.'
+    Add-Stage 'focused-verification' 'Run the smallest test project or frontend spec set that exercises the changed tests.' '# run the required focused commands from test-plan' $true 'The changed tests execute and pass, including the new or strengthened assertion.'
+    Add-Stage 'completion' 'Confirm the diff remains test-only, refresh only affected compiled artifacts when stale, and run the fast gate.' './.llm-wiki/wiki.ps1 diff; ./.llm-wiki/wiki.ps1 update -AffectedOnly; ./.llm-wiki/wiki.ps1 verify-fast' $true 'The final diff remains test-only, affected indexes are current, and fast verification passes; publication hooks and CI retain full regression coverage.'
+} elseif ($profile -eq 'ui-discovery') {
     Add-Stage 'research' 'Trace the rendered UI path and confirm the runtime-owning component before risk classification.' "./.llm-wiki/wiki.ps1 ui-trace -Query '$escapedObjective'; ./.llm-wiki/wiki.ps1 research -Intent '$escapedObjective'" $true 'Runtime owner and concrete frontend paths are confirmed.'
     Add-Stage 'reclassify' 'Re-run adaptive classification with grounded paths; do not edit while scope is heuristic.' "./.llm-wiki/wiki.ps1 develop -Intent '$escapedObjective' -PlannedPath '<confirmed frontend path(s)>'" $true 'The grounded route is visual-ui-change or evidence explicitly justifies escalation.'
 } elseif ($profile -eq 'scope-discovery') {
@@ -213,6 +230,7 @@ if ($scopeDiscovery) { $reasons.Add('Feature or bug intent is not grounded in co
 if ($boundedCrossLayerBug) { $reasons.Add('The confirmed bug crosses layers inside one existing module flow without migration, provider, sensitive-data lifecycle, or architecture changes.') }
 if ($maintenanceChange) { $reasons.Add("Concrete diagnostics and paths define a bounded $maintenanceKind maintenance change without runtime contract or architecture changes.") }
 if ($boundedPatternExtension) { $reasons.Add('The objective explicitly extends an existing repository pattern through grounded paths, so compatibility delta and focused parity checks replace design-from-scratch ceremony.') }
+if ($testOnlyChange) { $reasons.Add('Every grounded path is a test source or fixture, so referenced production risks guide coverage but do not classify unchanged production boundaries as critical.') }
 if ($hasCriticalEvidence) { $reasons.Add('Sensitive, provider, persistence, configuration, or delivery evidence requires the critical workflow.') }
 if ($hasArchitecturalEvidence) { $reasons.Add('Architecture or durable decision evidence requires the architectural workflow.') }
 if ($crossCutting) { $reasons.Add('The inferred change crosses multiple scopes or modules.') }

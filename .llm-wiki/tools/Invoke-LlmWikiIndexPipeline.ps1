@@ -94,10 +94,16 @@ if ($AffectedOnly) {
         }
 
         $frontendPaths = @($normalizedChangedPaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/' })
-        $hasCSharp = @($normalizedChangedPaths | Where-Object { $_ -match '\.(cs|csproj)$' }).Count -gt 0
+        $csharpPaths = @($normalizedChangedPaths | Where-Object { $_ -match '\.cs$' })
+        $csharpTestPaths = @($csharpPaths | Where-Object {
+            $_ -match '(?i)(^|/)(tests?|__tests__)/' -or $_ -match '(?i)\.Tests?/' -or $_ -match '(?i)(?:^|/)[^/]*(?:Tests?|Specs?)\.cs$'
+        })
+        $productionCSharpPaths = @($csharpPaths | Where-Object { $_ -notin $csharpTestPaths })
+        $hasCSharpProjectChange = @($normalizedChangedPaths | Where-Object { $_ -match '\.csproj$' }).Count -gt 0
         $frontendTests = @($frontendPaths | Where-Object { $_ -match '(?:^|/)\w[^/]*\.(?:spec|test)\.ts$' })
         $frontendSources = @($frontendPaths | Where-Object { $_ -match '\.ts$' -and $_ -notmatch '(?:^|/)\w[^/]*\.(?:spec|test)\.ts$' })
         $frontendTemplates = @($frontendPaths | Where-Object { $_ -match '\.html$' })
+        $productionChangedPaths = @($normalizedChangedPaths | Where-Object { $_ -notin $csharpTestPaths -and $_ -notin $frontendTests })
 
         if ($frontendTests.Count -gt 0) {
             Add-IndexTool 'Build-LlmWikiQualityIndex.ps1'
@@ -113,18 +119,21 @@ if ($AffectedOnly) {
                 Add-IndexToolWithDependents 'Build-LlmWikiFrontendContractIndex.ps1'
             }
         }
-        if ($hasCSharp) {
+        if ($csharpTestPaths.Count -gt 0) {
+            Add-IndexTool 'Build-LlmWikiQualityIndex.ps1'
+        }
+        if ($productionCSharpPaths.Count -gt 0 -or $hasCSharpProjectChange) {
             Add-IndexToolWithDependents 'Build-LlmWikiCatalog.ps1'
             Add-IndexToolWithDependents 'Build-LlmWikiSymbolIndex.ps1'
             Add-IndexTool 'Build-LlmWikiSensitiveDataIndex.ps1'
         }
-        if (@($normalizedChangedPaths | Where-Object {
+        if (@($productionChangedPaths | Where-Object {
             $_ -match 'Domain/|Persistence/|Migrations?/|DbContext|Configuration\.cs$'
         }).Count -gt 0) { Add-IndexTool 'Build-LlmWikiDomainDataIndex.ps1' }
-        if (@($normalizedChangedPaths | Where-Object {
+        if (@($productionChangedPaths | Where-Object {
             $_ -match 'appsettings|\.env|Options\.cs$|docker-compose|\.github/workflows/'
         }).Count -gt 0) { Add-IndexTool 'Build-LlmWikiConfigurationIndex.ps1' }
-        if (@($normalizedChangedPaths | Where-Object {
+        if (@($productionChangedPaths | Where-Object {
             $_ -match 'HostedService|Recurring|Webhook|Integrations/|JobManager/|docker-compose'
         }).Count -gt 0) { Add-IndexTool 'Build-LlmWikiRuntimeTopology.ps1' }
     }

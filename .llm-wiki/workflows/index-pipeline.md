@@ -143,8 +143,9 @@ live under ignored `.artifacts/llm-wiki/index-cache`; they are never committed.
 `wiki verify`, publication hooks, and CI deliberately bypass this optimization
 and retain a complete deterministic check.
 
-Frontend test-only changes select the quality index without forcing architecture
-health. Architecture health remains tied to project/catalog and public-contract
+Frontend and C# test-source-only changes select the quality index without
+forcing catalog, symbol, contract, sensitive-data, module-page, or architecture
+rebuilds. Architecture health remains tied to project/catalog and public-contract
 inputs; stylesheet-only changes select no compiled index.
 
 Use `wiki smoke -SmokeGroup tools -AffectedOnly` during iteration. Its dispatcher

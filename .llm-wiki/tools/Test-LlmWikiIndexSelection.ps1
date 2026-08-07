@@ -27,6 +27,22 @@ Assert-Plan ($frontendPlan -match 'Build-LlmWikiFrontendIndex.ps1' -and $fronten
 $frontendTestPlan = Get-IndexPlan 'FoodDiary.Web.Client/src/app/example/example.spec.ts'
 Assert-Plan ($frontendTestPlan -match 'Build-LlmWikiQualityIndex.ps1' -and $frontendTestPlan -notmatch 'Build-LlmWikiArchitectureHealthIndex.ps1') 'Frontend tests should update quality without architecture health.'
 
+$csharpTestPlan = Get-IndexPlan 'tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs'
+Assert-Plan ($csharpTestPlan -match 'Build-LlmWikiQualityIndex.ps1') 'C# tests should update the quality index.'
+foreach ($unexpectedTool in @(
+    'Build-LlmWikiCatalog.ps1',
+    'Build-LlmWikiSymbolIndex.ps1',
+    'Build-LlmWikiBackendContractIndex.ps1',
+    'Build-LlmWikiSensitiveDataIndex.ps1',
+    'Build-LlmWikiModulePages.ps1',
+    'Build-LlmWikiArchitectureHealthIndex.ps1'
+)) {
+    Assert-Plan ($csharpTestPlan -notmatch [regex]::Escape($unexpectedTool)) "C# test-only change selected unrelated index: $unexpectedTool"
+}
+
+$productionCSharpPlan = Get-IndexPlan 'FoodDiary.Infrastructure/Persistence/EmailOutbox.cs'
+Assert-Plan ($productionCSharpPlan -match 'Build-LlmWikiCatalog.ps1' -and $productionCSharpPlan -match 'Build-LlmWikiSymbolIndex.ps1') 'Production C# changes lost conservative index coverage.'
+
 $contractPlan = Get-IndexPlan '.llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1'
 Assert-Plan ($contractPlan -match 'Build-LlmWikiFrontendContractIndex.ps1' -and $contractPlan -match 'Build-LlmWikiArchitectureHealthIndex.ps1' -and
     $contractPlan -notmatch 'Build-LlmWikiQualityIndex.ps1') 'Frontend contract builder dependency closure is incorrect.'
