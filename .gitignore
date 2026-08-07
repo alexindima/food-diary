@@ -1,6 +1,7 @@
 /FoodDiary.Web.Client/node_modules/
 /FoodDiary.Web.Client/node_modules_old/
 /FoodDiary.Web.Client/.angular/
+/.angular/
 /FoodDiary.Web.Client/.lighthouseci/
 /FoodDiary.Web.Client/.tmp/
 /FoodDiary.Web.Client/coverage/
@@ -63,3 +64,5 @@ Thumbs.db
 /.artifacts/
 /.playwright-cli/
 /output/playwright/
+/FoodDiary.Web.Client/test-results/
+/FoodDiary.Web.Client/playwright-report/

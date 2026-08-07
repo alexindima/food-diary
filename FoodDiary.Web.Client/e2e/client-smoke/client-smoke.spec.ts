@@ -5,6 +5,9 @@ const MS_PER_SECOND = 1000;
 const AUTH_TOKEN_TTL_SECONDS = 3600;
 const SESSION_RESTORE_DELAY_MS = 750;
 const ACCESSIBILITY_TEST_TIMEOUT_MS = 120_000;
+const NETWORK_AUDIT_TEST_TIMEOUT_MS = 180_000;
+const API_ERROR_STATUS_MIN = 400;
+const NETWORK_AUDIT_DEFAULT_MAX_REQUESTS = 8;
 const ACCESSIBILITY_STABILITY_CSS = `
     *,
     *::before,
@@ -39,6 +42,16 @@ const ACCESSIBILITY_ROUTES = [
     '/dietologist',
     '/recommendations',
 ] as const;
+const NETWORK_AUDIT_ROUTES = [
+    ...ACCESSIBILITY_ROUTES,
+    '/products/p1/edit',
+    '/meals/meal-1/edit',
+    '/recipes/recipe-1/edit',
+    '/meal-plans/plan-1',
+    '/lessons/lesson-1',
+    '/dietologist/clients/client-1',
+    '/dietologist-invitations/invitation-1',
+] as const;
 const TEST_IMAGE_URLS = [
     createSvgDataUrl('#f97316', '1'),
     createSvgDataUrl('#22c55e', '2'),
@@ -47,6 +60,8 @@ const TEST_IMAGE_URLS = [
 ] as const;
 const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { matches: pathname => pathname.endsWith('/users/info'), createResponse: createUser },
+    { matches: pathname => pathname.endsWith('/weight-entries/page-summary'), createResponse: createWeightHistoryPageSummary },
+    { matches: pathname => pathname.endsWith('/waist-entries/page-summary'), createResponse: createWaistHistoryPageSummary },
     { matches: pathname => pathname.endsWith('/dashboard'), createResponse: createDashboardSnapshot },
     { matches: pathname => pathname.endsWith('/consumptions/overview'), createResponse: createMealsOverview },
     { matches: pathname => pathname.endsWith('/cycles/current'), createResponse: () => null },
@@ -54,6 +69,10 @@ const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { matches: pathname => pathname.endsWith('/usda/daily-micronutrients'), createResponse: createDailyMicronutrients },
     { matches: pathname => pathname.endsWith('/notifications/unread-count'), createResponse: () => ({ count: 2 }) },
     { matches: pathname => pathname.endsWith('/notifications'), createResponse: () => [] },
+    {
+        matches: pathname => pathname.endsWith('/dietologist/invitations/invitation-1/current-user'),
+        createResponse: createDietologistInvitation,
+    },
     { matches: pathname => pathname.endsWith('/client-tasks'), createResponse: () => [] },
     { matches: pathname => pathname.endsWith('/recommendations/rec-1/comments'), createResponse: () => [] },
     { matches: pathname => pathname.endsWith('/recommendations'), createResponse: createRecommendations },
@@ -213,6 +232,71 @@ test.describe('authenticated accessibility', () => {
     }
 });
 
+test.describe('authenticated network audit', () => {
+    test('@network-audit has no duplicate GET requests or failed API responses on initial route load', async ({ browser }, testInfo) => {
+        test.setTimeout(NETWORK_AUDIT_TEST_TIMEOUT_MS);
+        const report: NetworkAuditRouteResult[] = [];
+
+        for (const routePath of NETWORK_AUDIT_ROUTES) {
+            const page = await browser.newPage();
+            const requests: NetworkAuditRequest[] = [];
+            page.on('response', response => {
+                const request = response.request();
+                const url = new URL(request.url());
+                if (!url.pathname.startsWith('/api/v1/')) {
+                    return;
+                }
+
+                requests.push({
+                    method: request.method(),
+                    resource: normalizeAuditResource(url),
+                    status: response.status(),
+                });
+            });
+
+            await authenticateUserAsync(page, routePath.startsWith('/dietologist') ? 'Dietologist' : 'User');
+            await mockAuthenticatedClientApiAsync(page);
+            await page.goto(routePath);
+            await expect(page.locator('body')).toBeVisible();
+            await expect(page.locator('html')).toHaveAttribute('data-i18n-ready', /^(?:en|ru)$/u);
+            await waitForNetworkAuditSettleAsync(page);
+
+            const duplicateGets = findDuplicateGetRequests(requests);
+            const failedRequests = requests.filter(request => request.status >= API_ERROR_STATUS_MIN);
+            report.push({
+                route: routePath,
+                requestCount: requests.length,
+                uniqueRequestCount: new Set(requests.map(request => `${request.method} ${request.resource}`)).size,
+                duplicateGets,
+                failedRequests,
+                requests,
+            });
+
+            await page.close();
+        }
+
+        await testInfo.attach('network-audit.json', {
+            body: Buffer.from(JSON.stringify(report, null, 2), 'utf8'),
+            contentType: 'application/json',
+        });
+        const reportTable = formatNetworkAuditTable(report);
+        await testInfo.attach('network-audit.md', {
+            body: Buffer.from(reportTable, 'utf8'),
+            contentType: 'text/markdown',
+        });
+        process.stdout.write(`\n${reportTable}\n`);
+
+        const routesWithDuplicateGets = report.filter(result => result.duplicateGets.length > 0);
+        const routesWithFailedRequests = report.filter(result => result.failedRequests.length > 0);
+        const routesOverRequestBudget = report.filter(result => result.requestCount > NETWORK_AUDIT_DEFAULT_MAX_REQUESTS);
+        expect.soft(routesWithDuplicateGets, formatNetworkAuditFailures('Duplicate GET requests', routesWithDuplicateGets)).toEqual([]);
+        expect.soft(routesWithFailedRequests, formatNetworkAuditFailures('Failed API requests', routesWithFailedRequests)).toEqual([]);
+        expect
+            .soft(routesOverRequestBudget, formatNetworkAuditFailures('API request budget exceeded', routesOverRequestBudget))
+            .toEqual([]);
+    });
+});
+
 async function stabilizeAccessibilityPageAsync(page: Page, route: (typeof ACCESSIBILITY_ROUTES)[number]): Promise<void> {
     await expect(page.locator('body')).toBeVisible();
     await expect(page.locator('html')).toHaveAttribute('data-i18n-ready', /^(?:en|ru)$/u);
@@ -229,6 +313,67 @@ async function stabilizeAccessibilityPageAsync(page: Page, route: (typeof ACCESS
             requestAnimationFrame(resolve);
         });
     });
+}
+
+async function waitForNetworkAuditSettleAsync(page: Page): Promise<void> {
+    await page.evaluate(async () => {
+        await new Promise<void>(resolve => {
+            requestAnimationFrame(resolve);
+        });
+        await new Promise<void>(resolve => {
+            requestAnimationFrame(resolve);
+        });
+    });
+}
+
+function normalizeAuditResource(url: URL): string {
+    const sortedSearchParams = [...url.searchParams.entries()].sort(([leftKey, leftValue], [rightKey, rightValue]) =>
+        `${leftKey}=${leftValue}`.localeCompare(`${rightKey}=${rightValue}`),
+    );
+    const query = new URLSearchParams(sortedSearchParams).toString();
+    return query.length === 0 ? url.pathname : `${url.pathname}?${query}`;
+}
+
+function findDuplicateGetRequests(requests: readonly NetworkAuditRequest[]): string[] {
+    const counts = new Map<string, number>();
+    for (const request of requests) {
+        if (request.method !== 'GET') {
+            continue;
+        }
+
+        counts.set(request.resource, (counts.get(request.resource) ?? 0) + 1);
+    }
+
+    return [...counts.entries()]
+        .filter(([, count]) => count > 1)
+        .map(([resource, count]) => `${resource} ×${count}`)
+        .sort((left, right) => left.localeCompare(right));
+}
+
+function formatNetworkAuditFailures(title: string, results: readonly NetworkAuditRouteResult[]): string {
+    const details = results.map(result => {
+        let issues: string;
+        if (title.startsWith('Duplicate')) {
+            issues = result.duplicateGets.join(', ');
+        } else if (title.startsWith('Failed')) {
+            issues = result.failedRequests.map(request => `${request.method} ${request.resource} (${request.status})`).join(', ');
+        } else {
+            issues = `${result.requestCount} requests (budget ${NETWORK_AUDIT_DEFAULT_MAX_REQUESTS})`;
+        }
+        return `${result.route}: ${issues}`;
+    });
+    return `${title}\n${details.join('\n')}`;
+}
+
+function formatNetworkAuditTable(results: readonly NetworkAuditRouteResult[]): string {
+    const header = '| Route | Requests | Unique | Duplicates | API resources |';
+    const separator = '| --- | ---: | ---: | --- | --- |';
+    const rows = results.map(result => {
+        const resources = result.requests.map(request => `${request.method} ${request.resource}`).join('<br>');
+        const duplicates = result.duplicateGets.join('<br>');
+        return `| ${result.route} | ${result.requestCount} | ${result.uniqueRequestCount} | ${duplicates === '' ? '—' : duplicates} | ${resources === '' ? '—' : resources} |`;
+    });
+    return [header, separator, ...rows].join('\n');
 }
 
 test.describe('session routing smoke', () => {
@@ -555,6 +700,26 @@ function createUser(): Record<string, unknown> {
     };
 }
 
+function createWeightHistoryPageSummary(): Record<string, unknown> {
+    return {
+        entries: [],
+        summary: [],
+        height: 175,
+        goal: { desiredWeight: null, startWeight: null, startedAtUtc: null },
+        goalHistory: [],
+    };
+}
+
+function createWaistHistoryPageSummary(): Record<string, unknown> {
+    return {
+        entries: [],
+        summary: [],
+        height: 175,
+        goal: { desiredWaist: null, startWaist: null, startedAtUtc: null },
+        goalHistory: [],
+    };
+}
+
 function createTdeeInsight(): Record<string, unknown> {
     return {
         estimatedTdee: 2100,
@@ -831,6 +996,19 @@ function createDietologistClients(): Array<Record<string, unknown>> {
     ];
 }
 
+function createDietologistInvitation(): Record<string, unknown> {
+    return {
+        invitationId: 'invitation-1',
+        clientUserId: 'client-1',
+        clientEmail: 'client@example.test',
+        clientFirstName: 'Taylor',
+        clientLastName: 'Example',
+        status: 'Pending',
+        createdAtUtc: '2026-07-01T10:00:00.000Z',
+        expiresAtUtc: '2026-07-08T10:00:00.000Z',
+    };
+}
+
 function jsonResponse(body: unknown): { status: number; contentType: string; body: string } {
     return {
         status: 200,
@@ -859,4 +1037,19 @@ function encodeSegment(value: Record<string, unknown>): string {
 type ClientApiMock = {
     matches: (pathname: string) => boolean;
     createResponse: () => unknown;
+};
+
+type NetworkAuditRequest = {
+    method: string;
+    resource: string;
+    status: number;
+};
+
+type NetworkAuditRouteResult = {
+    route: string;
+    requestCount: number;
+    uniqueRequestCount: number;
+    duplicateGets: string[];
+    failedRequests: NetworkAuditRequest[];
+    requests: NetworkAuditRequest[];
 };

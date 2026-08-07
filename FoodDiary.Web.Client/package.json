@@ -85,6 +85,7 @@
         "check:i18n": "node scripts/check-i18n.mjs",
         "check:seo-prerender": "node scripts/check-prerender-html.mjs",
         "test:e2e:client:smoke": "npx playwright test -c playwright.client.smoke.config.ts",
+        "test:e2e:client:network-audit": "npx playwright test -c playwright.client.network-audit.config.ts",
         "test:e2e:client:accessibility": "npx playwright test -c playwright.client.smoke.config.ts --grep \"authenticated accessibility\"",
         "test:e2e:client:smoke:ui": "npx playwright test -c playwright.client.smoke.config.ts --ui",
         "test:e2e:admin:smoke": "npx playwright test -c playwright.admin.smoke.config.ts",

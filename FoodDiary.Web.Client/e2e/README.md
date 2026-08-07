@@ -15,6 +15,7 @@ Local run:
 ```bash
 npm run test:e2e:admin:smoke
 npm run test:e2e:client:smoke
+npm run test:e2e:client:network-audit
 ```
 
 Interactive UI mode:
@@ -31,3 +32,4 @@ Notes:
 - client smoke starts the Angular client dev server on `http://127.0.0.1:4201`
 - CI runs both smoke suites after the corresponding unit tests and builds
 - deterministic API fixtures cover public, authenticated user, admin, meal-plan detail, and lesson-detail states
+- the client network audit covers authenticated routes separately from smoke CI, prints and attaches a route-to-endpoint table, attaches `network-audit.json`, and fails on duplicate identical GET requests, more than 8 API requests per initial route load, or API responses with status 400 and above

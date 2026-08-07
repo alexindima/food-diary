@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  3969,
+                    "productionFiles":  3970,
                     "criticalSymbols":  522,
                     "criticalSymbolsWithTestReferences":  490,
                     "criticalSymbolsWithoutTestReferences":  32,
@@ -22727,12 +22727,20 @@
                       "structuralRiskScore":  0.44
                   },
                   {
-                      "path":  "FoodDiary.Web.Client/playwright.client.smoke.config.ts",
-                      "nonBlankLines":  23,
+                      "path":  "FoodDiary.Web.Client/playwright.client.network-audit.config.ts",
+                      "nonBlankLines":  27,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.46
+                      "structuralRiskScore":  0.54
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/playwright.client.smoke.config.ts",
+                      "nonBlankLines":  24,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.48
                   },
                   {
                       "path":  "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
