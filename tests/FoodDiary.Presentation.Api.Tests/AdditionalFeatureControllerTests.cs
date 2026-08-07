@@ -35,6 +35,8 @@ using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WaistEntries.Queries.GetLatestWaistEntry;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
+using FoodDiary.Application.WaistEntries.Queries.GetWaistHistoryPageSummary;
+using FoodDiary.Application.Users.Models;
 using FoodDiary.Application.WeeklyCheckIn.Models;
 using FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
 using FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
@@ -44,6 +46,7 @@ using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
+using FoodDiary.Application.WeightEntries.Queries.GetWeightHistoryPageSummary;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Fasting;
 using FoodDiary.Presentation.Api.Features.Fasting.Requests;
@@ -204,6 +207,18 @@ public sealed class AdditionalFeatureControllerTests {
         Assert.IsType<List<WeightEntrySummaryHttpResponse>>(Assert.IsType<OkObjectResult>(await summaryController.GetSummary(userId, new GetWeightSummariesHttpQuery(date.AddDays(-7), date))).Value);
         Assert.IsType<GetWeightSummariesQuery>(summarySender.Request);
 
+        var pageModel = new WeightHistoryPageSummaryModel(
+            [model],
+            [summary],
+            180,
+            new UserDesiredWeightModel(72),
+            []);
+        CapturedSender pageSender = SubstituteSender.Capture(Result.Success(pageModel));
+        WeightEntriesController pageController = CreateController(new WeightEntriesController(pageSender));
+        var pageQuery = new GetWeightHistoryPageSummaryHttpQuery(date.AddDays(-30), date);
+        Assert.IsType<WeightHistoryPageSummaryHttpResponse>(Assert.IsType<OkObjectResult>(await pageController.GetPageSummary(userId, pageQuery)).Value);
+        Assert.IsType<GetWeightHistoryPageSummaryQuery>(pageSender.Request);
+
         CapturedSender createSender = SubstituteSender.Capture(Result.Success(model));
         WeightEntriesController createController = CreateController(new WeightEntriesController(createSender));
         Assert.IsType<CreatedResult>(await createController.Create(userId, new CreateWeightEntryHttpRequest(date, 75.5)));
@@ -246,6 +261,18 @@ public sealed class AdditionalFeatureControllerTests {
         WaistEntriesController summaryController = CreateController(new WaistEntriesController(summarySender));
         Assert.IsType<List<WaistEntrySummaryHttpResponse>>(Assert.IsType<OkObjectResult>(await summaryController.GetSummary(userId, new GetWaistSummariesHttpQuery(date.AddDays(-7), date))).Value);
         Assert.IsType<GetWaistSummariesQuery>(summarySender.Request);
+
+        var pageModel = new WaistHistoryPageSummaryModel(
+            [model],
+            [summary],
+            180,
+            new UserDesiredWaistModel(75),
+            []);
+        CapturedSender pageSender = SubstituteSender.Capture(Result.Success(pageModel));
+        WaistEntriesController pageController = CreateController(new WaistEntriesController(pageSender));
+        var pageQuery = new GetWaistHistoryPageSummaryHttpQuery(date.AddDays(-30), date);
+        Assert.IsType<WaistHistoryPageSummaryHttpResponse>(Assert.IsType<OkObjectResult>(await pageController.GetPageSummary(userId, pageQuery)).Value);
+        Assert.IsType<GetWaistHistoryPageSummaryQuery>(pageSender.Request);
 
         CapturedSender createSender = SubstituteSender.Capture(Result.Success(model));
         WaistEntriesController createController = CreateController(new WaistEntriesController(createSender));

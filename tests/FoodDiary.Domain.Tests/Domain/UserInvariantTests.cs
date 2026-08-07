@@ -1,5 +1,6 @@
 using System.Reflection;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects;
@@ -173,6 +174,34 @@ public class UserInvariantTests {
         Assert.Equal(321, user.AiInputTokenLimit);
         Assert.Equal(654, user.AiOutputTokenLimit);
         Assert.NotNull(user.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void CancelWeightGoal_ClosesActiveGoalAndClearsDesiredWeight() {
+        var user = User.Create("test@example.com", "hash");
+        DateTime startedAtUtc = new(2026, 8, 5, 12, 0, 0, DateTimeKind.Utc);
+        WeightGoal goal = user.StartWeightGoal(72, 81.5, startedAtUtc);
+
+        user.CancelWeightGoal(startedAtUtc.AddDays(1), 80);
+
+        Assert.Multiple(
+            () => Assert.Equal(WeightGoalStatus.Cancelled, goal.Status),
+            () => Assert.Equal(80, goal.EndWeight),
+            () => Assert.Null(user.DesiredWeight));
+    }
+
+    [Fact]
+    public void CancelWaistGoal_ClosesActiveGoalAndClearsDesiredWaist() {
+        var user = User.Create("test@example.com", "hash");
+        DateTime startedAtUtc = new(2026, 8, 6, 12, 0, 0, DateTimeKind.Utc);
+        WaistGoal goal = user.StartWaistGoal(75, 88.5, startedAtUtc);
+
+        user.CancelWaistGoal(startedAtUtc.AddDays(1), 87);
+
+        Assert.Multiple(
+            () => Assert.Equal(WaistGoalStatus.Cancelled, goal.Status),
+            () => Assert.Equal(87, goal.EndWaist),
+            () => Assert.Null(user.DesiredWaist));
     }
 
     [Fact]

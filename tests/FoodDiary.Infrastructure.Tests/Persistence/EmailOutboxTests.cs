@@ -3,8 +3,12 @@ using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Outbox;
+using FoodDiary.Infrastructure.Persistence.Images;
+using FoodDiary.Infrastructure.Persistence.Notifications;
+using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
+using System.Reflection;
 
 namespace FoodDiary.Infrastructure.Tests.Persistence;
 
@@ -206,6 +210,97 @@ public sealed class EmailOutboxTests {
     }
 
     [Fact]
+    public async Task ReplayTooling_ListsAndPreviewsImageAndWebPushDeadLetters() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var image = ImageObjectDeletionOutboxMessage.Create("users/test/dead.webp", Now.AddMinutes(-3));
+        image.MarkDeadLettered("image failure", Now.AddMinutes(-2));
+        var webPush = NotificationWebPushOutboxMessage.Create(NotificationId.New(), Now.AddMinutes(-2));
+        webPush.MarkDeadLettered("push failure", Now.AddMinutes(-1));
+        context.ImageObjectDeletionOutbox.Add(image);
+        context.NotificationWebPushOutbox.Add(webPush);
+        await context.SaveChangesAsync();
+        var service = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
+
+        IReadOnlyList<OutboxDeadLetterMessageModel> all = await service.ListDeadLettersAsync(
+            outboxName: null,
+            limit: 10,
+            CancellationToken.None);
+        OutboxDeadLetterMessageModel? imagePreview = await service.GetDeadLetterAsync("image_object_deletion", image.Id, CancellationToken.None);
+        OutboxDeadLetterMessageModel? pushPreview = await service.GetDeadLetterAsync("notification_web_push", webPush.Id, CancellationToken.None);
+
+        Assert.NotNull(imagePreview);
+        Assert.NotNull(pushPreview);
+        Assert.Multiple(
+            () => Assert.Equal(2, all.Count),
+            () => Assert.Equal(image.ObjectKey, imagePreview.Summary),
+            () => Assert.Equal(webPush.NotificationId.Value.ToString(), pushPreview.Summary));
+    }
+
+    [Fact]
+    public async Task ReplayAsync_WithInvalidArgumentsOrMessageState_Throws() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var active = EmailOutboxMessage.Create(CreateEmailMessage(), Now);
+        context.EmailOutbox.Add(active);
+        await context.SaveChangesAsync();
+        var service = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => service.ReplayAsync(
+            "email", active.Id, "operator", "reason", expectedAttemptCount: 0, CancellationToken.None));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => service.ReplayAsync(
+            "email", active.Id, "operator", "reason", expectedAttemptCount: 1, CancellationToken.None));
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(201)]
+    public async Task ListDeadLettersAsync_WithInvalidLimit_Throws(int limit) {
+        await using FoodDiaryDbContext context = CreateContext();
+        var service = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            service.ListDeadLettersAsync(outboxName: null, limit, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task GetDeadLetterAsync_WithEmptyMessageId_Throws() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var service = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
+
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            service.GetDeadLetterAsync("email", Guid.Empty, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task DefensiveOutboxSwitchFallbacks_RejectUnsupportedMessageTypes() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var service = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
+        MethodInfo findAsync = typeof(OutboxDeadLetterReplayService).GetMethod(
+            "FindAsync",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+        var findTask = (Task<IOutboxMessage?>)findAsync.Invoke(
+            service,
+            ["unsupported", Guid.NewGuid(), false, CancellationToken.None])!;
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => findTask);
+
+        var unsupported = new UnsupportedOutboxMessage();
+        MethodInfo toModel = typeof(OutboxDeadLetterReplayService).GetMethod(
+            "ToModel",
+            BindingFlags.Static | BindingFlags.NonPublic,
+            binder: null,
+            [typeof(string), typeof(IOutboxMessage)],
+            modifiers: null)!;
+        MethodInfo getLastError = typeof(OutboxDeadLetterReplayService).GetMethod(
+            "GetLastError",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+
+        TargetInvocationException modelException = Assert.Throws<TargetInvocationException>(() =>
+            toModel.Invoke(obj: null, ["unsupported", unsupported]));
+        Assert.IsType<ArgumentOutOfRangeException>(modelException.InnerException);
+        Assert.Null(getLastError.Invoke(obj: null, [unsupported]));
+    }
+
+    [Fact]
     public void Create_WithInvalidRequiredFields_Throws() {
         Assert.Multiple(
             () => Assert.Equal("message", Assert.Throws<ArgumentException>(() =>
@@ -316,5 +411,19 @@ public sealed class EmailOutboxTests {
     private sealed class ThrowingEmailTransport : IEmailTransport {
         public Task SendAsync(EmailMessage message, CancellationToken cancellationToken) =>
             Task.FromException(new InvalidOperationException("Simulated email transport failure."));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class UnsupportedOutboxMessage : IOutboxMessage {
+        public DateTime CreatedOnUtc => Now;
+        public int AttemptCount => 1;
+        public DateTime? ProcessedOnUtc => null;
+        public DateTime? DeadLetteredOnUtc => Now;
+
+        public void MarkClaimed(DateTime lockedUntilUtc, string lockedBy) { }
+        public void MarkProcessed(DateTime processedOnUtc) { }
+        public void MarkDeadLettered(string error, DateTime deadLetteredOnUtc) { }
+        public void MarkFailed(string error, DateTime nextAttemptOnUtc) { }
+        public void MarkReplayed(DateTime nextAttemptOnUtc) { }
     }
 }

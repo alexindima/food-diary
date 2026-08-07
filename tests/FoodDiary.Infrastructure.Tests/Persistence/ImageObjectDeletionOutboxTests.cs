@@ -162,6 +162,23 @@ public sealed class ImageObjectDeletionOutboxTests {
             () => Assert.Equal("final failure", message.LastError));
     }
 
+    [Fact]
+    public void MarkReplayed_ClearsDeadLetterAndLockState() {
+        DateTime now = DateTime.UtcNow;
+        var message = ImageObjectDeletionOutboxMessage.Create("users/test/image.webp", now.AddMinutes(-2));
+        message.MarkClaimed(now.AddMinutes(5), "worker");
+        message.MarkDeadLettered("failure", now.AddMinutes(-1));
+
+        message.MarkReplayed(now);
+
+        Assert.Multiple(
+            () => Assert.Equal(now, message.NextAttemptOnUtc),
+            () => Assert.Null(message.DeadLetteredOnUtc),
+            () => Assert.Null(message.LockedUntilUtc),
+            () => Assert.Null(message.LockedBy),
+            () => Assert.Null(message.LastError));
+    }
+
     private static FoodDiaryDbContext CreateContext() {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))

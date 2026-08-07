@@ -66,6 +66,31 @@ public sealed class DependencyInjectionTests {
         Assert.NotNull(provider.GetRequiredService<MeterProvider>());
     }
 
+    [Fact]
+    public void AddJobManagerOpenTelemetry_WithoutEndpoint_ReturnsServicesWithoutTelemetryRegistration() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = new ConfigurationBuilder().Build();
+
+        IServiceCollection result = services.AddJobManagerOpenTelemetry(configuration);
+
+        Assert.Same(services, result);
+        Assert.Empty(services);
+    }
+
+    [Fact]
+    public void AddJobManagerOpenTelemetry_WithInvalidEndpoint_Throws() {
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase) {
+                ["OpenTelemetry:Otlp:Endpoint"] = "not-an-absolute-uri",
+            })
+            .Build();
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() =>
+            new ServiceCollection().AddJobManagerOpenTelemetry(configuration));
+
+        Assert.Contains("valid absolute URI", exception.Message, StringComparison.Ordinal);
+    }
+
     private static ServiceCollection CreateProductionServices(IConfiguration configuration) {
         var services = new ServiceCollection();
 

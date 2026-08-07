@@ -212,6 +212,32 @@ public sealed class InitializerTests {
         Assert.Equal(3, command.ExpectedAttemptCount);
     }
 
+    [Fact]
+    public void InitializerCommandParse_WithAuditOptions_ParsesCommand() {
+        var command = InitializerCommand.Parse([
+            "replay-outbox",
+            "--requested-by",
+            "operator@example.test",
+            "--reason",
+            "incident recovery",
+        ]);
+
+        Assert.NotNull(command);
+        Assert.Multiple(
+            () => Assert.Equal("operator@example.test", command.RequestedBy),
+            () => Assert.Equal("incident recovery", command.Reason));
+    }
+
+    [Theory]
+    [InlineData("--requested-by")]
+    [InlineData("--reason")]
+    public void InitializerCommandParse_WithMissingAuditOptionValue_Throws(string option) {
+        InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() =>
+            InitializerCommand.Parse(["replay-outbox", option]));
+
+        Assert.Contains($"Missing value for {option}", ex.Message, StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData("0")]
     [InlineData("-1")]

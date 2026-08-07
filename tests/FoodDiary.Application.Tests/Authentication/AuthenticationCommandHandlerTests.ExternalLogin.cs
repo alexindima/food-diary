@@ -8,6 +8,10 @@ using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FluentValidation.TestHelper;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
@@ -221,5 +225,82 @@ public sealed partial class AuthenticationCommandHandlerTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.GoogleIdentityDifferent", result.Error.Code);
         Assert.Equal("existing-subject", user.GoogleSubject);
+    }
+
+    [Fact]
+    public async Task LinkGoogleHandler_WithEmptyUserId_ReturnsValidationFailure() {
+        var repository = new StubUserRepository();
+        var handler = new LinkGoogleCommandHandler(
+            repository,
+            repository,
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(
+                GoogleIssuer,
+                GoogleSubject,
+                "user@example.com",
+                FirstName: null,
+                LastName: null,
+                Locale: null)));
+
+        Result<UserModel> result = await handler.Handle(new LinkGoogleCommand(Guid.Empty, "credential"), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task LinkGoogleHandler_WhenCredentialValidationFails_ReturnsFailure() {
+        var repository = new StubUserRepository();
+        var handler = new LinkGoogleCommandHandler(
+            repository,
+            repository,
+            new StubGoogleTokenValidator(
+                new GoogleIdentityPayload(
+                    GoogleIssuer,
+                    GoogleSubject,
+                    "user@example.com",
+                    FirstName: null,
+                    LastName: null,
+                    Locale: null),
+                validateFailure: true));
+
+        Result<UserModel> result = await handler.Handle(new LinkGoogleCommand(Guid.NewGuid(), "bad"), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task LinkGoogleHandler_WhenUserAccessFails_ReturnsFailure() {
+        IUserContextService contextService = Substitute.For<IUserContextService>();
+        contextService
+            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<User>(Errors.Authentication.InvalidToken));
+        var handler = new LinkGoogleCommandHandler(
+            contextService,
+            new StubUserRepository(),
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(
+                GoogleIssuer,
+                GoogleSubject,
+                "user@example.com",
+                FirstName: null,
+                LastName: null,
+                Locale: null)));
+
+        Result<UserModel> result = await handler.Handle(new LinkGoogleCommand(Guid.NewGuid(), "credential"), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public void LinkGoogleCommandValidator_ValidatesRequiredFields() {
+        var validator = new LinkGoogleCommandValidator();
+
+        TestValidationResult<LinkGoogleCommand> invalid = validator.TestValidate(new LinkGoogleCommand(Guid.Empty, ""));
+        TestValidationResult<LinkGoogleCommand> valid = validator.TestValidate(new LinkGoogleCommand(Guid.NewGuid(), "credential"));
+
+        invalid.ShouldHaveValidationErrorFor(command => command.UserId).WithErrorCode("Validation.Required");
+        invalid.ShouldHaveValidationErrorFor(command => command.Credential).WithErrorCode("Validation.Required");
+        valid.ShouldNotHaveAnyValidationErrors();
     }
 }

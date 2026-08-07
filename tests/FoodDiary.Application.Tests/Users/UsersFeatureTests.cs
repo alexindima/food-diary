@@ -489,6 +489,21 @@ public partial class UsersFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateDesiredWeightHandler_WithNullValue_CancelsActiveGoal() {
+        var user = User.Create("desired-weight-cancel@example.com", "hash");
+        user.StartWeightGoal(72.5, 80, DateTime.UtcNow.AddDays(-1));
+        var handler = new UpdateDesiredWeightCommandHandler(new SingleUserRepository(user));
+
+        Result<UserDesiredWeightModel> result = await handler.Handle(
+            new UpdateDesiredWeightCommand(user.Id.Value, DesiredWeight: null),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Null(result.Value.DesiredWeight);
+        Assert.DoesNotContain(user.WeightGoals, goal => goal.Status == WeightGoalStatus.Active);
+    }
+
+    [Fact]
     public async Task UpdateDesiredWaistHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new UpdateDesiredWaistCommandHandler(new SingleUserRepository(User.Create("desired-waist@example.com", "hash")));
 
@@ -531,6 +546,21 @@ public partial class UsersFeatureTests {
         ResultAssert.Success(result);
         Assert.Equal(78.5, result.Value.DesiredWaist);
         Assert.Equal(78.5, user.DesiredWaist);
+    }
+
+    [Fact]
+    public async Task UpdateDesiredWaistHandler_WithNullValue_CancelsActiveGoal() {
+        var user = User.Create("desired-waist-cancel@example.com", "hash");
+        user.StartWaistGoal(78.5, 85, DateTime.UtcNow.AddDays(-1));
+        var handler = new UpdateDesiredWaistCommandHandler(new SingleUserRepository(user));
+
+        Result<UserDesiredWaistModel> result = await handler.Handle(
+            new UpdateDesiredWaistCommand(user.Id.Value, DesiredWaist: null),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Null(result.Value.DesiredWaist);
+        Assert.DoesNotContain(user.WaistGoals, goal => goal.Status == WaistGoalStatus.Active);
     }
 
     [Fact]

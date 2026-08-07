@@ -78,6 +78,8 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 
 - `tests/FoodDiary.Application.Tests/Users/AiConsentTests.cs`
 - `tests/FoodDiary.Application.Tests/Users/CurrentUserAccessPolicyTests.cs`
+- `tests/FoodDiary.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs`
+- `tests/FoodDiary.Application.Tests/Users/HistoryProfileCoverageTests.cs`
 - `tests/FoodDiary.Application.Tests/Users/UpdateUserCommandHandlerTests.cs`
 - `tests/FoodDiary.Application.Tests/Users/UserApplicationServiceDelegationTests.cs`
 - `tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs`
