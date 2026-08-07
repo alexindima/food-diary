@@ -17,6 +17,7 @@ public sealed class TelegramBotWorker(
     IHttpClientFactory httpClientFactory,
     TimeProvider timeProvider)
     : BackgroundService {
+    private static readonly TimeSpan PollingErrorRetryDelay = TimeSpan.FromSeconds(2);
     private readonly TelegramBotOptions _options = options.Value;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
@@ -216,14 +217,14 @@ public sealed class TelegramBotWorker(
         return response.IsSuccessStatusCode;
     }
 
-    private Task HandleErrorAsync(ITelegramBotClient tBotClient, Exception exception, CancellationToken cancellationToken) {
+    private async Task HandleErrorAsync(ITelegramBotClient tBotClient, Exception exception, CancellationToken cancellationToken) {
         if (exception is ApiRequestException apiRequestException) {
             logger.LogWarning(exception, "Telegram API error: {Code} {Message}", apiRequestException.ErrorCode, apiRequestException.Message);
-            return Task.CompletedTask;
+        } else {
+            logger.LogError(exception, "Telegram bot error");
         }
 
-        logger.LogError(exception, "Telegram bot error");
-        return Task.CompletedTask;
+        await Task.Delay(PollingErrorRetryDelay, timeProvider, cancellationToken).ConfigureAwait(false);
     }
 
     private sealed record TelegramBotAuthRequest(long TelegramUserId);

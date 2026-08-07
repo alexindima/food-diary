@@ -897,14 +897,14 @@
                        "name":  "AccessToken",
                        "type":  "string",
                        "path":  "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-                       "line":  231
+                       "line":  232
                    },
                    {
                        "category":  "credential",
                        "name":  "RefreshToken",
                        "type":  "string",
                        "path":  "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-                       "line":  231
+                       "line":  232
                    },
                    {
                        "category":  "credential",
@@ -2381,7 +2381,7 @@
                        "name":  "AmountMl",
                        "type":  "int",
                        "path":  "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-                       "line":  233
+                       "line":  234
                    },
                    {
                        "category":  "health",
@@ -7519,7 +7519,7 @@
                        "name":  "TelegramUserId",
                        "type":  "long",
                        "path":  "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-                       "line":  229
+                       "line":  230
                    },
                    {
                        "category":  "identity",

@@ -363,17 +363,33 @@ public sealed class TelegramBotWorkerTests {
     }
 
     [Fact]
-    public async Task HandleErrorAsync_WithApiRequestException_Completes() {
-        TelegramBotWorker worker = CreateWorker(new RecordingTelegramBotClient(), new RecordingHttpClientFactory(), CreateOptions());
+    public async Task HandleErrorAsync_WithApiRequestException_LogsWarningAndHonorsCancellation() {
+        var logger = new RecordingLogger<TelegramBotWorker>();
+        TelegramBotWorker worker = CreateWorker(new RecordingTelegramBotClient(), new RecordingHttpClientFactory(), CreateOptions(), logger);
+        using var cts = new CancellationTokenSource();
 
-        await InvokeHandleErrorAsync(worker, new ApiRequestException("bad request", 400));
+        Task handling = InvokeHandleErrorAsync(worker, new ApiRequestException("bad request", 400), cts.Token);
+        Assert.False(handling.IsCompleted);
+
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => handling);
+        Assert.Contains(logger.Entries, entry => entry.Level == LogLevel.Warning && entry.Message.Contains("Telegram API error", StringComparison.Ordinal));
     }
 
     [Fact]
-    public async Task HandleErrorAsync_WithUnexpectedException_Completes() {
-        TelegramBotWorker worker = CreateWorker(new RecordingTelegramBotClient(), new RecordingHttpClientFactory(), CreateOptions());
+    public async Task HandleErrorAsync_WithUnexpectedException_LogsErrorAndHonorsCancellation() {
+        var logger = new RecordingLogger<TelegramBotWorker>();
+        TelegramBotWorker worker = CreateWorker(new RecordingTelegramBotClient(), new RecordingHttpClientFactory(), CreateOptions(), logger);
+        using var cts = new CancellationTokenSource();
 
-        await InvokeHandleErrorAsync(worker, new InvalidOperationException("boom"));
+        Task handling = InvokeHandleErrorAsync(worker, new InvalidOperationException("boom"), cts.Token);
+        Assert.False(handling.IsCompleted);
+
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => handling);
+        Assert.Contains(logger.Entries, entry => entry.Level == LogLevel.Error && entry.Message.Contains("Telegram bot error", StringComparison.Ordinal));
     }
 
     private static TelegramBotOptions CreateOptions() =>
@@ -452,11 +468,14 @@ public sealed class TelegramBotWorkerTests {
         return (Task)method!.Invoke(worker, [cancellationToken])!;
     }
 
-    private static Task InvokeHandleErrorAsync(TelegramBotWorker worker, Exception exception) {
+    private static Task InvokeHandleErrorAsync(
+        TelegramBotWorker worker,
+        Exception exception,
+        CancellationToken cancellationToken = default) {
         MethodInfo? method = typeof(TelegramBotWorker).GetMethod(
             "HandleErrorAsync",
             System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-        return (Task)method!.Invoke(worker, [new RecordingTelegramBotClient(), exception, CancellationToken.None])!;
+        return (Task)method!.Invoke(worker, [new RecordingTelegramBotClient(), exception, cancellationToken])!;
     }
 
     private static async Task<string?> InvokeTryGetAccessTokenAsync(TelegramBotWorker worker, long telegramUserId) {
@@ -495,6 +514,7 @@ public sealed class TelegramBotWorkerTests {
     [ExcludeFromCodeCoverage]
     private sealed class RecordingLogger<T> : ILogger<T> {
         public List<string> Messages { get; } = [];
+        public List<(LogLevel Level, string Message)> Entries { get; } = [];
 
         public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
         public bool IsEnabled(LogLevel logLevel) => true;
@@ -505,7 +525,9 @@ public sealed class TelegramBotWorkerTests {
             TState state,
             Exception? exception,
             Func<TState, Exception?, string> formatter) {
-            Messages.Add(formatter(state, exception));
+            string message = formatter(state, exception);
+            Messages.Add(message);
+            Entries.Add((logLevel, message));
         }
     }
 

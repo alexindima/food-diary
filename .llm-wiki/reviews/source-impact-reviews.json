@@ -381,13 +381,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "17b0c728413ce1135a92d5d52f0fde240a2ee435fca156d9f5dc1b9aed575f8b"
+                                            "sha256":  "985c6a6938839b2752a723fbc632823a0bf8e570ff8b3b36b5045a641290f035"
                                         }
                                     ],
-                        "reason":  "Reviewed nutrition totals in the regenerated sensitive-data index; the feature reuses the existing user-scoped Dashboard read path and does not add storage, external transfer, logging, or a new privacy boundary.",
+                        "reason":  "Reviewed after Telegram polling backoff change: sensitive-data index differences only shift line numbers for unchanged existing fields; no privacy lifecycle or logging behavior changed.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8025173ce5f9eafd2702b7010810bc9bcb99a35c",
-                        "reviewedAtUtc":  "2026-08-01T21:53:49.8391138Z"
+                        "gitHead":  "170c09f0adac1cb9ef39b03ddb15034d886878c4",
+                        "reviewedAtUtc":  "2026-08-07T05:24:50.0353131Z"
                     },
                     {
                         "pageId":  "workflow-quality-risk",
@@ -396,13 +396,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "8d6625671fc84cdd4cc7f05936daff140b69223b7cc7935872d202c6e04d5afb"
+                                            "sha256":  "11752a686457061130e13a943428208bcc7707a9b70c3795388df61eb38d9357"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated quality index after accessibility smoke stabilization, translation readiness synchronization, and contrast fixes; source mappings and risk guidance remain accurate.",
+                        "reason":  "Reviewed after Telegram polling backoff change: quality index reflects one added nonblank line and a deterministic structural score adjustment; quality-risk guidance remains current.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "3c4c3883821c4f08f24ac884396994772144c032",
-                        "reviewedAtUtc":  "2026-08-05T19:08:01.0057293Z"
+                        "gitHead":  "170c09f0adac1cb9ef39b03ddb15034d886878c4",
+                        "reviewedAtUtc":  "2026-08-07T05:24:50.6330981Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

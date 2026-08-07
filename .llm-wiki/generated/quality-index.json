@@ -22440,11 +22440,11 @@
                   },
                   {
                       "path":  "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-                      "nonBlankLines":  192,
+                      "nonBlankLines":  193,
                       "decisionPoints":  23,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  38.34
+                      "structuralRiskScore":  38.36
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Build/ApiBuildInfo.cs",
