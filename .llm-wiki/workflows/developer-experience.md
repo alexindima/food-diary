@@ -89,6 +89,12 @@ the exact failing validation command, and diff plus `verify-fast`. Application
 flow research, handler trace, journeys, and design stay absent unless concrete
 evidence expands the task beyond maintenance.
 
+The `pattern-extension` budget treats a grounded, current repository precedent
+as design evidence. Its five stages are precedent brief, compatibility delta,
+implementation, focused parity verification, and strict affected completion.
+It remains lightweight only while provider, sensitive-data lifecycle, security,
+configuration, and architecture boundaries stay unchanged.
+
 The bounded cross-layer bug route treats layer count as transport shape rather
 than feature scope. Once current sources prove one root cause and one existing
 module flow, an additive Frontend/API/Backend fix uses a compact brief and trace,

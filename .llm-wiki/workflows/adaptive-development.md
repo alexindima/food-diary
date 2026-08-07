@@ -25,6 +25,7 @@ sources:
   - .llm-wiki/tools/Find-LlmWikiProductJourney.ps1
   - .llm-wiki/tools/Get-LlmWikiFrontendRuntimeOwner.ps1
   - .llm-wiki/tools/Manage-LlmWikiTaskBaseline.ps1
+  - .llm-wiki/tools/Resolve-LlmWikiSession.ps1
   - .llm-wiki/tools/Test-LlmWikiTaskBaseline.ps1
   - .llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1
   - .llm-wiki/tools/Test-LlmWikiVerificationCache.ps1
@@ -52,7 +53,11 @@ does not expand affected indexes, policy checks, or source-impact reviews. A
 subsequent edit to an already dirty file is still detected. Explicit
 `-ChangedPath` always overrides the captured task delta.
 
-When `CODEX_THREAD_ID` is available, the baseline is isolated by Codex thread.
+Baselines use a Wiki-owned internal UUID. A Codex thread/task environment value,
+when available, is only an external lookup hint; one active internal session can
+be recovered without it, while ambiguous concurrent sessions must supply
+`-TaskSessionId` or `-WorkspacePath`. Governed facade commands resolve the same
+session workspace after commits, so delivery state is not lost when HEAD moves.
 Parallel sessions therefore keep independent snapshots of pre-existing dirt even
 though they share the same Git worktree. After runtime ownership and scope are
 confirmed, `wiki.ps1 continue-ui` keeps subsequent frontend iterations on the
@@ -72,6 +77,7 @@ The router selects one FoodDiary-specific profile:
 | `tiny` | bounded presentation-only HTML/SVG or equally local low-risk work | research, implementation, diff/test-plan, `verify-fast` |
 | `visual-ui-change` / `visual-tiny` | grounded frontend presentation work; the `visual-tiny` variant is CSS/SCSS-only | compact constraints, implementation, focused checks, browser evidence, `verify-strict-affected`; `visual-tiny` uses stylelint without retracing, tests, or a build during each iteration |
 | `bug` | corrective behavior in one bounded flow | research, implementation, focused tests, diff, `verify-fast`; strict publication verification stays in hooks and CI |
+| `pattern-extension` | grounded extension of a current, tested repository precedent, including an analogous additive API or migration | precedent brief, compatibility delta, implementation, focused parity tests, `verify-strict-affected` |
 | `feature` | new behavior or a cross-cutting product slice | research, design, implementation phases, conformance-aware review, full verify |
 | `critical` | auth, credentials, identity/private data, payments, migrations, providers, email/invitations, configuration, or delivery boundaries | research, decision checkpoint, design, governed workspace, full verify, independent critique |
 | `architectural` | project references, DI/ownership boundaries, module topology, or durable architecture constraints | research, decision checkpoint, design, governed workspace, conformance, independent critique |
@@ -111,6 +117,13 @@ unless evidence reveals a runtime, security, persistence, or architecture
 boundary. Dependency maintenance runs `dependencies`; deployment-build
 maintenance runs `rollout`; both finish by rerunning the original failing
 command and `verify-fast`.
+
+An explicit request to port, mirror, or repeat an existing repository pattern
+uses `pattern-extension` when target paths are grounded and no provider,
+configuration, sensitive-data lifecycle, security incident, or architecture
+boundary changes. The route verifies a current precedent and its tests, checks
+only the API/migration/rollout delta that actually applies, and avoids a fresh
+design workspace. Mentioning a pattern never downgrades real critical evidence.
 
 Sensitive-data references calibrate review and testing, but their presence in
 an existing read model does not by itself make a change critical. A bounded

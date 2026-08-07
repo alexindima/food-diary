@@ -8,11 +8,14 @@ param(
     [string]$BaseRef = 'HEAD',
     [string[]]$ChangedPath,
     [ValidateRange(1, 8)]
-    [int]$MaxConcurrency = 4
+    [int]$MaxConcurrency = 4,
+    [ValidateRange(30, 3600)]
+    [int]$ToolTimeoutSeconds = 600
 )
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiChangeSemantics.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1')
 $toolsRoot = [System.IO.Path]::GetFullPath($PSScriptRoot)
 $shellPath = [System.IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
@@ -178,12 +181,24 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
         $process = New-Object System.Diagnostics.Process
         $process.StartInfo = $startInfo
         if (-not $process.Start()) { throw "Unable to start $toolName." }
-        $workers.Add([pscustomobject]@{ tool = $toolName; process = $process; stopwatch = [System.Diagnostics.Stopwatch]::StartNew(); observed = $false })
+        $workers.Add([pscustomobject]@{ tool = $toolName; process = $process; stopwatch = [System.Diagnostics.Stopwatch]::StartNew(); observed = $false; nextHeartbeat = 30 })
     }
     $failed = [System.Collections.Generic.List[string]]::new()
     while (@($workers | Where-Object { -not $_.observed }).Count -gt 0) {
         foreach ($worker in @($workers | Where-Object { -not $_.observed })) {
-            if (-not $worker.process.HasExited) { continue }
+            if (-not $worker.process.HasExited) {
+                if ($worker.stopwatch.Elapsed.TotalSeconds -ge $worker.nextHeartbeat) {
+                    Write-Host " - $($worker.tool): still running ($([Math]::Round($worker.stopwatch.Elapsed.TotalSeconds))s)"
+                    $worker.nextHeartbeat += 30
+                }
+                if ($worker.stopwatch.Elapsed.TotalSeconds -ge $ToolTimeoutSeconds) {
+                    Stop-LlmWikiProcessTree -Process $worker.process
+                    $worker.stopwatch.Stop()
+                    $worker.observed = $true
+                    $failed.Add("$($worker.tool) (timeout=${ToolTimeoutSeconds}s)")
+                }
+                continue
+            }
             $worker.stopwatch.Stop()
             $worker.observed = $true
         }
@@ -192,7 +207,7 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
     foreach ($worker in $workers) {
         $worker.process.WaitForExit()
         Write-Host " - $($worker.tool): $([Math]::Round($worker.stopwatch.Elapsed.TotalSeconds, 2))s"
-        if ($worker.process.ExitCode -ne 0) {
+        if (-not $worker.process.HasExited -or $worker.process.ExitCode -ne 0) {
             $failed.Add("$($worker.tool) (exit=$($worker.process.ExitCode))")
         }
         $worker.process.Dispose()
@@ -227,13 +242,55 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
 }
 
 $pipelineStopwatch = [System.Diagnostics.Stopwatch]::StartNew()
-foreach ($stage in $stages) {
-    $tools = @($stage.tools | Where-Object { -not $AffectedOnly -or $selectedTools.Contains($_) })
-    if ($tools.Count -eq 0) { continue }
-    Write-Host "LLM Wiki index stage: $($stage.name) ($($tools.Count) tool(s))"
-    for ($offset = 0; $offset -lt $tools.Count; $offset += $MaxConcurrency) {
-        $last = [Math]::Min($offset + $MaxConcurrency - 1, $tools.Count - 1)
-        Invoke-PipelineBatch -StageName $stage.name -ToolNames @($tools[$offset..$last]) -CheckMode ([bool]$Check)
+$updateLock = $null
+$transactionRoot = $null
+$generatedRoot = Join-Path $repositoryRoot '.llm-wiki/generated'
+try {
+    if (-not $Check) {
+        $gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
+        if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve Git directory for the index transaction.' }
+        $transactionStateRoot = Join-Path $gitDirectory 'llm-wiki/index-transactions'
+        $null = New-Item -ItemType Directory -Path $transactionStateRoot -Force
+        $lockPath = Join-Path $transactionStateRoot 'update.lock'
+        try {
+            $updateLock = [IO.File]::Open($lockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+        } catch {
+            throw 'Another LLM Wiki index update is already running. Wait for it to finish instead of producing overlapping generated files.'
+        }
+        $transactionRoot = Join-Path $transactionStateRoot ([guid]::NewGuid().ToString('N'))
+        $backupRoot = Join-Path $transactionRoot 'generated'
+        $null = New-Item -ItemType Directory -Path $backupRoot -Force
+        foreach ($item in @(Get-ChildItem -LiteralPath $generatedRoot -Force)) {
+            Copy-Item -LiteralPath $item.FullName -Destination $backupRoot -Recurse -Force
+        }
+        Write-Host "LLM Wiki index transaction started: rollback snapshot captured."
+    }
+
+    foreach ($stage in $stages) {
+        $tools = @($stage.tools | Where-Object { -not $AffectedOnly -or $selectedTools.Contains($_) })
+        if ($tools.Count -eq 0) { continue }
+        Write-Host "LLM Wiki index stage: $($stage.name) ($($tools.Count) tool(s))"
+        for ($offset = 0; $offset -lt $tools.Count; $offset += $MaxConcurrency) {
+            $last = [Math]::Min($offset + $MaxConcurrency - 1, $tools.Count - 1)
+            Invoke-PipelineBatch -StageName $stage.name -ToolNames @($tools[$offset..$last]) -CheckMode ([bool]$Check)
+        }
+    }
+} catch {
+    if ($transactionRoot) {
+        Write-Warning 'LLM Wiki index update failed; restoring the generated tree from the transaction snapshot.'
+        foreach ($item in @(Get-ChildItem -LiteralPath $generatedRoot -Force)) {
+            Remove-Item -LiteralPath $item.FullName -Recurse -Force
+        }
+        $backupRoot = Join-Path $transactionRoot 'generated'
+        foreach ($item in @(Get-ChildItem -LiteralPath $backupRoot -Force)) {
+            Copy-Item -LiteralPath $item.FullName -Destination $generatedRoot -Recurse -Force
+        }
+    }
+    throw
+} finally {
+    if ($updateLock) { $updateLock.Dispose() }
+    if ($transactionRoot -and (Test-Path -LiteralPath $transactionRoot)) {
+        Remove-Item -LiteralPath $transactionRoot -Recurse -Force
     }
 }
 $pipelineStopwatch.Stop()

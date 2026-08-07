@@ -182,6 +182,17 @@ $migrationFeature = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1'
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($migrationFeature.profile -eq 'critical' -and $migrationFeature.requiresWorkspace) 'Explicit persistence migration was weakened by scope discovery.'
 
+$patternExtension = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Port the existing weight-goal pattern to waist goals by following the same repository precedent.' `
+    -ProposedPath @(
+        'FoodDiary.Domain/Features/WaistGoals/WaistGoal.cs',
+        'FoodDiary.Presentation.Api/Features/WaistGoals/WaistGoalsController.cs'
+    ) `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($patternExtension.profile -eq 'pattern-extension') 'Grounded extension of an existing repository pattern was routed as design-from-scratch work.'
+Assert-Adaptive (-not $patternExtension.requiresDesign -and -not $patternExtension.requiresWorkspace) 'Pattern extension retained governed design ceremony.'
+Assert-Adaptive ((@($patternExtension.stages | Where-Object required).id -join ',') -eq 'precedent-brief,compatibility-delta,implementation,focused-verification,completion') 'Pattern extension did not retain the precedent-focused five-stage route.'
+
 $replanJourney = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1') `
     -Query 'Preserve acceptance evidence during delivery replan.' `
     -Format Json | ConvertFrom-Json

@@ -25,6 +25,7 @@ sources:
   - .llm-wiki/tools/LlmWikiIndexCache.ps1
   - .llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1
   - .llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1
+  - .llm-wiki/tools/LlmWikiProcess.ps1
   - .llm-wiki/wiki.ps1
   - .github/workflows/ci-tests.yml
 ---
@@ -88,6 +89,19 @@ duration, emits a heartbeat every 30 seconds, applies a stage-specific timeout,
 and reports the exact standalone diagnostic command when a stage fails or times
 out. Index and adaptive verification each receive five minutes; cheap contract,
 policy, and impact stages use shorter limits.
+
+Each index worker also emits its own heartbeat and has an independent timeout.
+Timeout handling terminates the complete process tree on Windows and modern
+.NET runtimes, preventing abandoned PowerShell descendants. Update mode holds an
+exclusive repository-local lock and snapshots the generated tree; an internal
+failure or worker timeout restores that snapshot before releasing the lock, so
+parallel sessions cannot publish overlapping or partially successful updates.
+
+Local strict and exhaustive verification can opt into
+`-ResumePassedStages`. Each passed stage receipt is keyed by HEAD plus hashes of
+all modified and untracked files. Unchanged reruns skip only completed stages;
+any source edit invalidates the receipt set. Hooks and CI omit this switch and
+therefore remain fully uncached.
 
 `verify-strict-affected` is the final local gate for a grounded visual UI change.
 It is read-only and deliberately bypasses verification and index caches, stale

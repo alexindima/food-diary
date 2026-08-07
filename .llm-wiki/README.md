@@ -63,6 +63,31 @@ scenarios, and `workflow-metrics` during retrospectives. The longer command
 catalog below is the diagnostic and governance interface; agents should not
 manually orchestrate it when `next` already provides a sufficient action.
 
+Task identity is owned by the Wiki, not by a Codex-specific environment
+variable. `develop` creates an internal UUID under the repository Git directory;
+known Codex task/thread variables are treated only as optional external hints.
+When there is one active task, later commands recover it automatically. With
+multiple active tasks and no stable hint, the Wiki refuses to guess and asks for
+`-TaskSessionId` or an explicit `-WorkspacePath`. Governed commands without an
+explicit workspace use the session workspace, so a commit does not lose the
+delivery state.
+
+Adaptive routing includes `pattern-extension` for grounded requests that copy a
+current, tested repository precedent. It checks the compatibility delta,
+migrations and consumers where applicable, but skips design-from-scratch and
+critical ceremony unless actual security, provider or architecture evidence
+requires it.
+
+Index updates are serialized and transaction-backed. Every index worker emits a
+heartbeat, has its own timeout, and a failed update restores the generated tree.
+Verification timeouts terminate the complete subprocess tree and print the exact
+standalone command for diagnosis; publication CI still runs uncached strict
+verification.
+For an interrupted local strict or exhaustive run, use `verify
+-ResumePassedStages` or `verify-full -ResumePassedStages`; receipts are
+content-addressed by HEAD and working-tree file hashes, while CI omits the
+switch and therefore never trusts local cache.
+
 The unified developer entrypoint is:
 
 ```powershell

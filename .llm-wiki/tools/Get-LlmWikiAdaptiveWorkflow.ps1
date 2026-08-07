@@ -67,6 +67,8 @@ $boundedDataQueryBugIntent = $bugIntent -and
 $ciMaintenanceIntent = $normalized -match '\b(ci|compiler|analy[sz]er|diagnostic|warning|lint|format|ma\d{4})\b'
 $dependencyMaintenanceIntent = $normalized -match '\b(storybook|peer dependenc|dependency compatibility|package[- ]lock|dependency bump|npm install|restore dependenc)\b'
 $deploymentBuildMaintenanceIntent = $normalized -match '\b(docker|dockerfile|container build|image build|deployment build)\b'
+$ruPatternTerms = @(ConvertFrom-UnicodeEscape '\u043f\u043e\u0020\u0430\u043d\u0430\u043b\u043e\u0433\u0438\u0438'; ConvertFrom-UnicodeEscape '\u043a\u0430\u043a\u0020\u0443\u0436\u0435'; ConvertFrom-UnicodeEscape '\u043f\u0435\u0440\u0435\u043d\u0435\u0441\u0442\u0438\u0020\u043f\u0430\u0442\u0442\u0435\u0440\u043d'; ConvertFrom-UnicodeEscape '\u043f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c\u0020\u0434\u043b\u044f')
+$patternExtensionIntent = $normalized -match '\b(follow|reuse|mirror|port|replicate|same as|existing pattern|analogous to)\b' -or (Test-IntentTerm $ruPatternTerms)
 $uiDiscovery = $visualIntent -and -not $scopeKnown -and -not $explicitCriticalBoundaryIntent
 $ungroundedBugDiscovery = $bugIntent -and -not $scopeKnown -and -not $explicitCriticalIncidentIntent -and -not $explicitCriticalMutationIntent
 $scopeDiscovery = -not $visualIntent -and -not $scopeKnown -and (($featureIntent -and -not $explicitCriticalBoundaryIntent) -or $ungroundedBugDiscovery)
@@ -89,12 +91,15 @@ $maintenanceChange = $scopeKnown -and ($ciMaintenanceIntent -or $dependencyMaint
     -not $explicitCriticalIncidentIntent -and -not $explicitCriticalMutationIntent -and -not $boundaryChangeIntent -and
     -not $flags.databaseMigration -and -not $flags.externalIntegrations
 $maintenanceKind = if ($dependencyMaintenanceIntent) { 'dependency-compatibility' } elseif ($deploymentBuildMaintenanceIntent) { 'deployment-build-fix' } else { 'ci-fix' }
+$boundedPatternExtension = $patternExtensionIntent -and $scopeKnown -and -not $explicitCriticalIncidentIntent -and
+    -not $flags.externalIntegrations -and -not $flags.configuration -and -not $sensitiveBoundaryChange -and -not $hasArchitecturalEvidence
 $wikiInternal = @($paths | Where-Object { $_ -match '^\.llm-wiki/' }).Count -gt 0
 
 $profile = 'feature'
 if ($uiDiscovery) { $profile = 'ui-discovery' }
 elseif ($scopeDiscovery) { $profile = 'scope-discovery' }
 elseif ($maintenanceChange) { $profile = 'maintenance' }
+elseif ($boundedPatternExtension) { $profile = 'pattern-extension' }
 elseif ($hasCriticalEvidence) { $profile = 'critical' }
 elseif ($hasArchitecturalEvidence) { $profile = 'architectural' }
 elseif ($visualUiChange) { $profile = 'visual-ui-change' }
@@ -108,7 +113,7 @@ $requiresDesign = $profile -in @('feature', 'critical', 'architectural')
 $boundedFeatureScopes = $profile -eq 'feature' -and $scopeKnown -and $directModuleCount -le 1 -and
     @($productionScopes | Where-Object { $_ -notin @('Backend', 'Api', 'Frontend', 'Contracts') }).Count -eq 0 -and
     -not $flags.databaseMigration -and -not $flags.externalIntegrations -and -not $flags.configuration
-$requiresWorkspace = $profile -notin @('ui-discovery', 'scope-discovery', 'maintenance') -and ($profile -in @('critical', 'architectural') -or ($crossCutting -and -not $boundedFeatureScopes -and -not $boundedCrossLayerBug))
+$requiresWorkspace = $profile -notin @('ui-discovery', 'scope-discovery', 'maintenance', 'pattern-extension') -and ($profile -in @('critical', 'architectural') -or ($crossCutting -and -not $boundedFeatureScopes -and -not $boundedCrossLayerBug))
 $experiencePolicyPath = Join-Path (Split-Path -Parent $PSScriptRoot) 'policies/experience-policies.json'
 $experiencePolicy = Get-Content -LiteralPath $experiencePolicyPath -Raw | ConvertFrom-Json
 $ceremonyBudget = $experiencePolicy.ceremonyBudgets.$profile
@@ -146,6 +151,12 @@ if ($profile -eq 'ui-discovery') {
     Add-Stage 'implementation' 'Apply the smallest compatibility or build fix inside the confirmed maintenance boundary.' '# edit only the confirmed CI, dependency, build, or diagnostic paths' $true 'The external failure is addressed without changing runtime product behavior or architecture boundaries.'
     Add-Stage 'targeted-verification' 'Re-run the failing analyzer, dependency install/build, container build, or equivalent focused check.' '# run the exact failing command from CI, package metadata, or build evidence' $true 'The original external diagnostic is reproduced as passing.'
     Add-Stage 'completion' 'Confirm the diff remains maintenance-only and run the fast local gate.' './.llm-wiki/wiki.ps1 diff; ./.llm-wiki/wiki.ps1 verify-fast' $true 'The maintenance boundary is unchanged and fast verification passes; publication hooks remain strict.'
+} elseif ($profile -eq 'pattern-extension') {
+    Add-Stage 'precedent-brief' 'Ground the target in one current, tested repository precedent and describe only the intentional delta.' "./.llm-wiki/wiki.ps1 precedents -Intent '$escapedObjective'$pathArgument; ./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective'$pathArgument -Compact" $true 'A current source-and-test precedent, target paths, and the deliberate behavioral or schema delta are explicit.'
+    Add-Stage 'compatibility-delta' 'Check API, migration, rollout, and consumer obligations only where the copied pattern crosses those boundaries.' "./.llm-wiki/wiki.ps1 rollout$changedPathArgument; ./.llm-wiki/wiki.ps1 api-compat" $true 'Migration and additive API compatibility are proven when applicable; irrelevant governance is skipped.'
+    Add-Stage 'implementation' 'Extend the proven pattern without redesigning its established architecture.' '# mirror the precedent in the grounded target paths and add target-specific regression coverage' $true 'The target follows the precedent and contains only documented deltas.'
+    Add-Stage 'focused-verification' 'Run the precedent-equivalent target tests plus changed contract or migration checks.' "./.llm-wiki/wiki.ps1 test-plan -Intent '$escapedObjective'$pathArgument; # run required checks only" $true 'Required target, contract, and migration checks pass.'
+    Add-Stage 'completion' 'Confirm bounded parity with the precedent and run the strict affected gate.' './.llm-wiki/wiki.ps1 diff; ./.llm-wiki/wiki.ps1 verify-strict-affected' $true 'The implementation remains precedent-bounded and strict affected verification passes.'
 } elseif ($boundedCrossLayerBug) {
     $bugBriefCommand = if ($boundedDataQueryBugIntent) {
         "./.llm-wiki/wiki.ps1 brief -Intent '$escapedObjective'$pathArgument -Compact"
@@ -201,6 +212,7 @@ if ($uiDiscovery) { $reasons.Add('Visual intent is not grounded in concrete path
 if ($scopeDiscovery) { $reasons.Add('Feature or bug intent is not grounded in concrete paths; existing-flow research must precede critical classification and workspace creation.') }
 if ($boundedCrossLayerBug) { $reasons.Add('The confirmed bug crosses layers inside one existing module flow without migration, provider, sensitive-data lifecycle, or architecture changes.') }
 if ($maintenanceChange) { $reasons.Add("Concrete diagnostics and paths define a bounded $maintenanceKind maintenance change without runtime contract or architecture changes.") }
+if ($boundedPatternExtension) { $reasons.Add('The objective explicitly extends an existing repository pattern through grounded paths, so compatibility delta and focused parity checks replace design-from-scratch ceremony.') }
 if ($hasCriticalEvidence) { $reasons.Add('Sensitive, provider, persistence, configuration, or delivery evidence requires the critical workflow.') }
 if ($hasArchitecturalEvidence) { $reasons.Add('Architecture or durable decision evidence requires the architectural workflow.') }
 if ($crossCutting) { $reasons.Add('The inferred change crosses multiple scopes or modules.') }

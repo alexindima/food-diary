@@ -36,7 +36,8 @@ policy, and impact checks.
 The router's pre-diff `-ProposedPath` forwarding is limited to `brief` and
 `test-plan`; dispatch lifecycle inputs and receipt fingerprints are unchanged.
 Scoped verification, the `verify -Fast` alias, observed verification progress,
-and trace presentation flags are independent facade options; they do not enter
+content-addressed stage resume, session workspace resolution, and trace
+presentation flags are independent facade options; they do not enter
 dispatch payloads, leases, or receipt fingerprints.
 Use `wiki smoke -SmokeGroup tools` to run the stateful dispatch lifecycle
 directly; full verification runs that group alongside independent index checks.

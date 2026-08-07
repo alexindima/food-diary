@@ -3,7 +3,7 @@ param(
     [ValidateSet('Capture', 'ChangedPaths', 'Status')]
     [string]$Action,
     [string]$RepositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path,
-    [string]$SessionId = $env:CODEX_THREAD_ID,
+    [string]$SessionId,
     [ValidateSet('Object', 'Text', 'Json')]
     [string]$Format = 'Object'
 )
@@ -41,6 +41,8 @@ function Get-PathFingerprint([string]$RepositoryPath) {
     }
 }
 
+$session = & (Join-Path $PSScriptRoot 'Resolve-LlmWikiSession.ps1') -SessionId $SessionId -Create:($Action -eq 'Capture') -RepositoryRoot $RepositoryRoot -Format Object
+$SessionId = [string]$session.id
 $gitDirectory = (Invoke-Git @('rev-parse', '--absolute-git-dir') | Select-Object -First 1)
 $stateDirectory = Join-Path $gitDirectory 'llm-wiki'
 $sessionKey = if ([string]::IsNullOrWhiteSpace($SessionId)) { 'default' } else {
