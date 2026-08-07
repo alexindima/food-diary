@@ -632,9 +632,9 @@ Assert-Wiki ($indexPipelineText -match "cacheableTools = @\('Build-LlmWikiQualit
 Assert-Wiki ($wikiFacadeText.Contains('DeferPossiblyConcurrentStale = $true; ReuseUnchangedChecks = $true') -and
     $wikiFacadeText.Contains('$indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef }')) 'Index cache reuse is not isolated to verify-fast.'
 Assert-Wiki ($wikiFacadeText.Contains("`$Command -eq 'develop'") -and
-    $wikiFacadeText.Contains("Manage-LlmWikiTaskBaseline.ps1') -Action Capture -Format Text") -and
+    $wikiFacadeText.Contains("Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId `$TaskSessionId -Format Text") -and
     $wikiFacadeText.Contains("-not `$PSBoundParameters.ContainsKey('ChangedPath')") -and
-    $wikiFacadeText.Contains("Manage-LlmWikiTaskBaseline.ps1') -Action ChangedPaths -Format Object")) 'Wiki facade does not capture and reuse a task baseline while preserving explicit changed paths.'
+    $wikiFacadeText.Contains("Manage-LlmWikiTaskBaseline.ps1') -Action ChangedPaths -SessionId `$TaskSessionId -Format Object")) 'Wiki facade does not capture and reuse a task baseline while preserving explicit changed paths.'
 Assert-Wiki ($taskBaselineText -match "rev-parse', 'HEAD'" -and $taskBaselineText -match 'initialChangedPaths' -and
     $taskBaselineText -match 'baselineFingerprint.+Get-PathFingerprint') 'Task baseline does not bind the starting HEAD and pre-existing file contents.'
 
