@@ -15,6 +15,18 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$wikiRoot = Split-Path -Parent $PSScriptRoot
+$repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiQueryCache.ps1')
+$queryCacheEntry = $null
+if ($Format -eq 'Json') {
+    $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'research' -Arguments @{
+        Objective = $Objective; BaseRef = $BaseRef; HeadRef = $HeadRef
+        ChangedPath = @($ChangedPath); ProposedPath = @($ProposedPath); Limit = $Limit
+    }
+    $cachedResearch = Read-LlmWikiQueryCache -Entry $queryCacheEntry
+    if ($null -ne $cachedResearch) { Write-Output $cachedResearch; exit 0 }
+}
 $common = @{ Objective = $Objective; BaseRef = $BaseRef; Format = 'Json'; Limit = $Limit }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
 if ($PSBoundParameters.ContainsKey('ChangedPath')) { $common.ChangedPath = $ChangedPath }
@@ -162,7 +174,12 @@ $result = [pscustomobject][ordered]@{
     }
 }
 
-if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 12; exit 0 }
+if ($Format -eq 'Json') {
+    $resultJson = $result | ConvertTo-Json -Depth 12
+    Write-LlmWikiQueryCache -Entry $queryCacheEntry -Content $resultJson
+    Write-Output $resultJson
+    exit 0
+}
 Write-Host "Research packet: $($result.workflow.profile) workflow, $($result.workflow.confidence) confidence"
 Write-Host "Objective: $Objective"
 Write-Host "Grounded paths: $($result.discovery.groundedPaths.Count)"

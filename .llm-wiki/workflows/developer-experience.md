@@ -15,6 +15,8 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiManualQaPlan.ps1
   - .llm-wiki/tools/Get-LlmWikiWorkflowMetrics.ps1
   - .llm-wiki/tools/Get-LlmWikiResearchPacket.ps1
+  - .llm-wiki/tools/LlmWikiQueryCache.ps1
+  - .llm-wiki/tools/Test-LlmWikiQueryCache.ps1
   - .llm-wiki/policies/experience-policies.json
 ---
 
@@ -67,6 +69,14 @@ promoted into the journey catalog.
 signals for retrospective improvement, not proof that the Wiki caused quality.
 Ceremony budgets keep tiny and bug work short and reserve governed workspaces and
 independent critique for evidence that requires them.
+
+Repeated structured planning queries reuse a content-addressed cache under the
+ignored Git directory. Task briefs, research packets, and test plans include the
+current commit, normalized arguments, and hashes of every modified or untracked
+file in their key. Any workspace edit therefore invalidates the result instead
+of returning stale navigation. Injected test inputs bypass the cache, and the
+cache stores only derived JSON; authoritative sources and generated Wiki pages
+remain unchanged.
 
 The `ui-discovery` budget prevents intent-only UI wording from selecting a
 governed route. It allows only runtime-owner research and grounded

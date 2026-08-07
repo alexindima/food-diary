@@ -50,6 +50,8 @@ foreach ($path in $paths) {
         Add-Group 'reporting'
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|Invoke-LlmWikiFullVerification)\.ps1$') {
         Add-Group 'verification-cache'
+    } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiQueryCache|Test-LlmWikiQueryCache|Get-LlmWikiTaskBrief|Get-LlmWikiResearchPacket|Get-LlmWikiTestPlan)\.ps1$') {
+        Add-Group 'query-cache'
     } elseif ($path -match '^\.llm-wiki/tools/') {
         $hasUnknownToolChange = $true
     }
@@ -112,6 +114,10 @@ foreach ($group in $groups) {
         }
         'verification-cache' {
             & (Join-Path $toolsRoot 'Test-LlmWikiVerificationCache.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'query-cache' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiQueryCache.ps1')
             if (-not $?) { exit 1 }
         }
         'full-tools' {

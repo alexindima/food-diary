@@ -18,6 +18,17 @@ $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
 $wikiRoot = Split-Path -Parent $toolsRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $toolsRoot 'LlmWikiQueryCache.ps1')
+$queryCacheEntry = $null
+$cacheEligible = $Format -eq 'Json' -and $null -eq $DiffInput -and $null -eq $PolicyInput
+if ($cacheEligible) {
+    $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'test-plan' -Arguments @{
+        BaseRef = $BaseRef; HeadRef = $HeadRef; ChangedPath = @($ChangedPath)
+        ProposedPath = @($ProposedPath); Intent = $Intent; Compact = [bool]$Compact; Limit = $Limit
+    }
+    $cachedTestPlan = Read-LlmWikiQueryCache -Entry $queryCacheEntry
+    if ($null -ne $cachedTestPlan) { Write-Output $cachedTestPlan; exit 0 }
+}
 $frontendPackage = Get-Content -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Web.Client/package.json') -Raw | ConvertFrom-Json
 $frontendWorkspace = Get-Content -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Web.Client/angular.json') -Raw | ConvertFrom-Json
 $common = @{ BaseRef = $BaseRef; Format = 'Json' }
@@ -305,7 +316,9 @@ $resultOutput = if ($Compact) {
 }
 
 if ($Format -eq 'Json') {
-    $resultOutput | ConvertTo-Json -Depth 8
+    $resultJson = $resultOutput | ConvertTo-Json -Depth 8
+    if ($queryCacheEntry) { Write-LlmWikiQueryCache -Entry $queryCacheEntry -Content $resultJson }
+    Write-Output $resultJson
     exit 0
 }
 

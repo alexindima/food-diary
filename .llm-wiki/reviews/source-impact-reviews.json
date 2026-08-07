@@ -173,32 +173,32 @@
                     {
                         "pageId":  "workflow-change-manifest",
                         "pagePath":  ".llm-wiki/workflows/change-manifest.md",
-                        "pageSha256":  "182933effc68070bdf0da58c6fe4733c2f4c7cf005c4fb7c0644bcb021fe01ea",
+                        "pageSha256":  "1873fb9a30e3af135a64e1ed7b95edb8739f21e9b232c060391eaa0ed1183f72",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "542038c6beb00e6d453780c5a5c39923ce55a99cd1795b9b336c256baaeecc79"
+                                            "sha256":  "4b8b2ef2195bc52fadf588f50037af85a50290fab3dfe15e1e634c1a7382c9c5"
                                         }
                                     ],
-                        "reason":  "Reviewed stricter intent candidate grounding; manifest schema and scope enforcement are unchanged.",
+                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ddf7638c55a77d00dfc1caafdcbe21f0222586e",
-                        "reviewedAtUtc":  "2026-08-01T00:01:32.4144932Z"
+                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
+                        "reviewedAtUtc":  "2026-08-07T18:52:46.7423776Z"
                     },
                     {
                         "pageId":  "workflow-change-packet",
                         "pagePath":  ".llm-wiki/workflows/change-packet.md",
-                        "pageSha256":  "804103ec5966e53e88bb558a1594a6ea3af858d1ecfffd1c0467fca4652eeafe",
+                        "pageSha256":  "a78df40d6573d1d9334e04c7ef92268b22a1d511cf2bdda6445652fc0d299fc0",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "542038c6beb00e6d453780c5a5c39923ce55a99cd1795b9b336c256baaeecc79"
+                                            "sha256":  "4b8b2ef2195bc52fadf588f50037af85a50290fab3dfe15e1e634c1a7382c9c5"
                                         }
                                     ],
-                        "reason":  "Reviewed stricter intent candidate grounding; packet schema and compilation semantics are unchanged.",
+                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ddf7638c55a77d00dfc1caafdcbe21f0222586e",
-                        "reviewedAtUtc":  "2026-08-01T00:01:33.7888046Z"
+                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
+                        "reviewedAtUtc":  "2026-08-07T18:52:47.3058182Z"
                     },
                     {
                         "pageId":  "workflow-context-bundles",
@@ -287,47 +287,51 @@
                     {
                         "pageId":  "workflow-impact-simulation",
                         "pagePath":  ".llm-wiki/workflows/impact-simulation.md",
-                        "pageSha256":  "1c2491681b66a932f1e95b6baf0051b97f38596adfe4229a1c39837ddcf992b6",
+                        "pageSha256":  "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "542038c6beb00e6d453780c5a5c39923ce55a99cd1795b9b336c256baaeecc79"
+                                            "sha256":  "4b8b2ef2195bc52fadf588f50037af85a50290fab3dfe15e1e634c1a7382c9c5"
                                         }
                                     ],
-                        "reason":  "Reviewed stricter intent candidate grounding; impact forecast comparison semantics are unchanged.",
+                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ddf7638c55a77d00dfc1caafdcbe21f0222586e",
-                        "reviewedAtUtc":  "2026-08-01T00:01:35.1086383Z"
+                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
+                        "reviewedAtUtc":  "2026-08-07T18:52:47.9374563Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
                         "pagePath":  ".llm-wiki/workflows/implementation-plan.md",
-                        "pageSha256":  "5fb2306c601b67e7ffb505202bf8cd578acdcaf02e52504ced7d85931247d28f",
+                        "pageSha256":  "b334aa33b376b21b605d36121ee2c03148cc7d97176a7f2c319f463426c3574d",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "542038c6beb00e6d453780c5a5c39923ce55a99cd1795b9b336c256baaeecc79"
+                                            "sha256":  "4b8b2ef2195bc52fadf588f50037af85a50290fab3dfe15e1e634c1a7382c9c5"
                                         }
                                     ],
-                        "reason":  "Reviewed stricter intent candidate grounding; implementation phase generation is unchanged.",
+                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ddf7638c55a77d00dfc1caafdcbe21f0222586e",
-                        "reviewedAtUtc":  "2026-08-01T00:01:36.4559504Z"
+                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
+                        "reviewedAtUtc":  "2026-08-07T18:52:48.7393179Z"
                     },
                     {
                         "pageId":  "workflow-index-pipeline",
                         "pagePath":  ".llm-wiki/workflows/index-pipeline.md",
-                        "pageSha256":  "8904d5f317a650f4a40754fd61a0fe1e6372ee8a15534f8f0fd781cf9debc046",
+                        "pageSha256":  "f5f0a130869c7a7a4fee8d47462410c9bf8fad65d4865a2ca3b05a2d91af83ca",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-                                            "sha256":  "8dec23cc5468da1f560bee0f821953c54a2f89c2dbb060b704c7c5ac301bf69e"
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+                                            "sha256":  "0db5a0c2cd1e84cb2c59388bdb25742f6d5f1646d997f0171a9d5df7d8d288ef"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
+                                            "sha256":  "44f4af467cd26db4940f87bab24630dabe7d93a25cacd885307efe783115f275"
                                         }
                                     ],
-                        "reason":  "Reviewed generated index pipeline impact; no workflow source changes are required for this range guard fix.",
+                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f9817ac548152a6bc52731ceaa6c3b1c6d964b6a",
-                        "reviewedAtUtc":  "2026-08-05T14:09:39.5953764Z"
+                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
+                        "reviewedAtUtc":  "2026-08-07T18:52:49.4348482Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -343,6 +347,25 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "d5eb6dc6614140a568feb0ecea95841c174df82f",
                         "reviewedAtUtc":  "2026-07-31T20:22:08.9685006Z"
+                    },
+                    {
+                        "pageId":  "workflow-integration-scan",
+                        "pagePath":  ".llm-wiki/workflows/integration-scan.md",
+                        "pageSha256":  "a952661d5073668178342e7b7131b00a3ea21d502dae2ea219a05a41d7094cdb",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+                                            "sha256":  "cc784ce36768fe49c9308562bacc4f9a80f1a1975ab08666354c03529ba1a473"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "4b8b2ef2195bc52fadf588f50037af85a50290fab3dfe15e1e634c1a7382c9c5"
+                                        }
+                                    ],
+                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
+                        "reviewedAtUtc":  "2026-08-07T18:52:50.0936100Z"
                     },
                     {
                         "pageId":  "workflow-learned-regression-evals",
@@ -452,17 +475,17 @@
                     {
                         "pageId":  "workflow-task-brief",
                         "pagePath":  ".llm-wiki/workflows/task-brief.md",
-                        "pageSha256":  "856c799a5a4895c59e061a28ea7d7388f68676ffd6c7c5ca9787712fab70f2d4",
+                        "pageSha256":  "5b0035be778c175914d29999e36b30dae6b04e0683647ace85fe88ffdb4509fb",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "542038c6beb00e6d453780c5a5c39923ce55a99cd1795b9b336c256baaeecc79"
+                                            "sha256":  "4b8b2ef2195bc52fadf588f50037af85a50290fab3dfe15e1e634c1a7382c9c5"
                                         }
                                     ],
-                        "reason":  "Reviewed semantic candidate scoring fix; task brief now refuses unrelated frontend candidates while retaining its documented risk model.",
+                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ddf7638c55a77d00dfc1caafdcbe21f0222586e",
-                        "reviewedAtUtc":  "2026-08-01T00:01:39.1380303Z"
+                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
+                        "reviewedAtUtc":  "2026-08-07T18:52:50.8758586Z"
                     },
                     {
                         "pageId":  "workflow-task-dispatch-receipts",
@@ -497,17 +520,17 @@
                     {
                         "pageId":  "workflow-test-plan",
                         "pagePath":  ".llm-wiki/workflows/test-plan.md",
-                        "pageSha256":  "452ae54eced53d1c2b9c10aaffa81e017d54bfde41b40aaca5d872d6b9169650",
+                        "pageSha256":  "58431db00a85f5a9da2ea8a0aa2d2910509884d52c68707826ae9c8c3bd23e16",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "335be12b113473ee2ebced8cd68ea807f1f2970718fd485647ee9c30cae0fd92"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+                                            "sha256":  "6510169ab3b5ef5640e413553b731a6e44718dbab642ded10ece8c208fe8c6cd"
                                         }
                                     ],
-                        "reason":  "Reviewed: focused visual completion uses ranked focused tests while canonical pre-publication checks remain reported.",
+                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
-                        "reviewedAtUtc":  "2026-08-01T01:45:28.9967889Z"
+                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
+                        "reviewedAtUtc":  "2026-08-07T18:52:51.6356877Z"
                     },
                     {
                         "pageId":  "workflow-trace-feature",

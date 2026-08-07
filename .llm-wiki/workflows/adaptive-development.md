@@ -29,6 +29,8 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiTaskBaseline.ps1
   - .llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1
   - .llm-wiki/tools/Test-LlmWikiVerificationCache.ps1
+  - .llm-wiki/tools/LlmWikiQueryCache.ps1
+  - .llm-wiki/tools/Test-LlmWikiQueryCache.ps1
   - .llm-wiki/knowledge/product-journeys.json
 ---
 
@@ -170,6 +172,9 @@ The packet combines ranked current-source paths, symbols, routes, DI, focused te
 scoped guides, Wiki pages, verified failure knowledge, and Git precedents. Every
 category exposes provenance. Current code, tests, accepted ADRs, current docs, and
 scoped `AGENTS.md` remain authoritative; indexes and history are navigation evidence.
+Structured research, brief, and test-plan results are cached only while the commit,
+arguments, and complete dirty-worktree content fingerprint are identical. This makes
+repeated adaptive composition fast without weakening freshness after an edit.
 
 Git history can also be queried directly:
 

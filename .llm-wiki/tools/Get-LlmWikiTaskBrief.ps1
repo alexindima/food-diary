@@ -22,6 +22,29 @@ $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
 $wikiRoot = Split-Path -Parent $toolsRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $toolsRoot 'LlmWikiQueryCache.ps1')
+
+$cacheEligible = $Format -eq 'Json' -and
+    $null -eq $DiffInput -and $null -eq $PolicyInput -and $null -eq $OwnershipInput -and
+    $null -eq $TestPlanInput -and $null -eq $RolloutInput -and $null -eq $DecisionInput
+$queryCacheEntry = $null
+if ($cacheEligible) {
+    $cacheArguments = @{
+        BaseRef = $BaseRef
+        HeadRef = $HeadRef
+        ChangedPath = @($ChangedPath)
+        ProposedPath = @($ProposedPath)
+        Intent = $Intent
+        Compact = [bool]$Compact
+        Limit = $Limit
+    }
+    $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'task-brief' -Arguments $cacheArguments
+    $cachedBrief = Read-LlmWikiQueryCache -Entry $queryCacheEntry
+    if ($null -ne $cachedBrief) {
+        Write-Output $cachedBrief
+        exit 0
+    }
+}
 
 $common = @{ BaseRef = $BaseRef; Format = 'Json' }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
@@ -575,7 +598,9 @@ $briefOutput = if ($Compact) {
 }
 
 if ($Format -eq 'Json') {
-    $briefOutput | ConvertTo-Json -Depth 9
+    $briefJson = $briefOutput | ConvertTo-Json -Depth 9
+    if ($queryCacheEntry) { Write-LlmWikiQueryCache -Entry $queryCacheEntry -Content $briefJson }
+    Write-Output $briefJson
     exit 0
 }
 
