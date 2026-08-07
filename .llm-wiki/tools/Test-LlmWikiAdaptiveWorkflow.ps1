@@ -1,5 +1,8 @@
 [CmdletBinding()]
-param()
+param(
+    [ValidateSet('All', 'Routing', 'Experience')]
+    [string]$Group = 'All'
+)
 
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
@@ -13,6 +16,7 @@ $visualPaths = @(
     'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.html'
     'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.scss'
 )
+if ($Group -in @('All', 'Routing')) {
 $tiny = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Improve photo annotation visibility with clearer SVG connectors and point styling.' `
     -ProposedPath $visualPaths `
@@ -241,7 +245,9 @@ $ungrounded = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive (-not $ungrounded.scopeKnown -and $ungrounded.requiresPathDiscovery) 'Ungrounded intent silently absorbed working-tree paths.'
 Assert-Adaptive ($ungrounded.confidence -eq 'low') 'Ungrounded intent did not expose low confidence.'
+}
 
+if ($Group -in @('All', 'Experience')) {
 $precedents = & (Join-Path $PSScriptRoot 'Get-LlmWikiGitPrecedents.ps1') `
     -Objective 'Improve photo annotation visibility' `
     -ScopePath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result' `
@@ -385,10 +391,11 @@ try {
 } finally {
     if (Test-Path -LiteralPath $deliveryAbsolute) { Remove-Item -LiteralPath $deliveryAbsolute -Recurse -Force }
 }
+}
 
 if ($failures.Count -gt 0) {
     Write-Host "Adaptive workflow smoke failed with $($failures.Count) error(s):"
     foreach ($failure in $failures) { Write-Host " - $failure" }
     exit 1
 }
-Write-Host 'Adaptive workflow smoke passed: routing, ceremony budgets, compact next action, solutions, QA journeys, delivery gates, controlled replanning, research, precedents, and pause/resume continuity.'
+Write-Host "Adaptive workflow smoke passed ($Group): routing, ceremony budgets, compact next action, solutions, QA journeys, delivery gates, controlled replanning, research, precedents, and pause/resume continuity."

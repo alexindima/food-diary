@@ -309,6 +309,12 @@ The objective is proportional rigor: small local changes stay fast, while sensit
 or structural changes receive explicit research, decisions, evidence, and independent
 review.
 
+The strict regression gate preserves this coverage while running independent
+parts concurrently. Routing profiles and ceremony budgets run in one group;
+research, solutions, QA, handoff, and delivery lifecycle run in another. The
+standalone smoke command defaults to `-Group All`, so the grouped orchestrator
+changes scheduling only and does not remove assertions.
+
 ## Compact execution interface
 
 The adaptive route exposes a ceremony budget for every profile. Use `next` to

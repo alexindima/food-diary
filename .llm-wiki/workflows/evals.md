@@ -53,3 +53,10 @@ Each policy rule should have:
 These evals measure routing and policy correctness, not the quality of generated
 application code. Real-task outcome evals can be added after several weeks of
 usage data.
+
+Strict adaptive verification partitions the suite into three stable shards and
+runs them beside the independent routing and experience regression groups. Case
+order determines shard membership, every static or promoted case is selected
+exactly once, and a failure in any shard fails the whole gate. Direct `wiki
+evals` remains a single-process complete run; `-ShardIndex` and `-ShardCount`
+are internal performance controls for the orchestrator.

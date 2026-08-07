@@ -127,11 +127,13 @@ source or Wiki generator inputs change. This catches a final TS/test edit made
 after index generation before the stale artifacts can reach CI. CSS/SCSS-only
 commits skip the compiled-index check because no compiled index reads stylesheets.
 
-Adaptive workflow regression, the integration-scan contract, and the deterministic
-eval suite are independent read-only checks, so strict and affected verification
-run them concurrently and still fail if any process fails. Their individual
-durations remain visible; the sub-second integration contract does not extend the
-critical path beyond the existing adaptive/eval work.
+Adaptive routing regression, adaptive experience/lifecycle regression, the
+integration-scan contract, and three deterministic eval shards are independent
+read-only checks, so strict verification runs them concurrently and still fails
+if any process fails. Shards partition cases by stable source order; every case
+runs exactly once and each shard reports its own assertion total. Their
+individual durations remain visible, and `Test-LlmWikiAdaptiveWorkflow.ps1`
+still defaults to `-Group All` for a simple standalone full regression.
 
 The quality, backend-contract, frontend, and frontend-contract checks use local
 content-addressed receipts during `verify-fast`. A hit requires matching hashes

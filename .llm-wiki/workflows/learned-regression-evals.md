@@ -43,6 +43,9 @@ Static evals cover known architectural scenarios. Learned evals extend that suit
 - Only valid retrospectives from sealed workspaces can produce candidates.
 - Signals below the policy threshold are ignored; a task with no strong signal creates no candidate.
 - Observation identity is deterministic over changed paths and signal IDs, making retries idempotent.
+- Verification shards append promoted cases before assigning stable positions,
+  so every active learned case runs exactly once and any shard failure fails the
+  aggregate adaptive gate.
 - The exact eval case and its provenance are hashed into an append-only event chain.
 - Approval never activates a case. Application is separate and requires the captured expectations to pass first.
 - Static and learned case IDs must remain globally unique.

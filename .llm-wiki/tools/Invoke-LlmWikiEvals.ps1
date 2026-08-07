@@ -1,6 +1,10 @@
 [CmdletBinding()]
 param(
-    [switch]$Detailed
+    [switch]$Detailed,
+    [ValidateRange(0, 15)]
+    [int]$ShardIndex = 0,
+    [ValidateRange(1, 16)]
+    [int]$ShardCount = 1
 )
 
 $ErrorActionPreference = 'Stop'
@@ -10,6 +14,7 @@ $cases = Get-Content -LiteralPath $casesPath -Raw | ConvertFrom-Json
 $promoted = & (Join-Path $PSScriptRoot 'Manage-LlmWikiEvalPromotion.ps1') list -FailOnInvalid -Format Json | ConvertFrom-Json
 $promotedCases = @($promoted.candidates | Where-Object materialization -eq 'applied' | ForEach-Object { $_.case })
 $cases.cases = @($cases.cases) + $promotedCases
+if ($ShardIndex -ge $ShardCount) { throw 'ShardIndex must be smaller than ShardCount.' }
 $policyPath = Join-Path $wikiRoot 'policies/change-policies.json'
 $policyDefinition = Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json
 $failures = [System.Collections.Generic.List[string]]::new()
@@ -58,7 +63,12 @@ foreach ($rule in $policyDefinition.rules) {
     }
 }
 
-foreach ($case in $cases.cases) {
+$selectedCases = @(
+    for ($caseIndex = 0; $caseIndex -lt $cases.cases.Count; $caseIndex++) {
+        if (($caseIndex % $ShardCount) -eq $ShardIndex) { $cases.cases[$caseIndex] }
+    }
+)
+foreach ($case in $selectedCases) {
     $diffJson = & (Join-Path $PSScriptRoot 'Get-LlmWikiDiffContext.ps1') `
         -ChangedPath @($case.changedPaths) `
         -Format Json
@@ -160,4 +170,4 @@ if ($failures.Count -gt 0) {
     exit 1
 }
 
-Write-Host "LLM Wiki evals passed: $($cases.cases.Count) cases ($($promotedCases.Count) promoted), $passedAssertions/$assertions assertions ($score%)."
+Write-Host "LLM Wiki evals passed: $($selectedCases.Count)/$($cases.cases.Count) cases in shard $($ShardIndex + 1)/$ShardCount ($($promotedCases.Count) promoted), $passedAssertions/$assertions assertions ($score%)."
