@@ -52,4 +52,18 @@ public sealed class WaistGoalInvariantTests {
 
         Assert.Throws<InvalidOperationException>(() => goal.Replace(startedAtUtc.AddDays(2), 86));
     }
+
+    [Fact]
+    public void Start_WithEmptyUserId_Throws() {
+        Assert.Throws<ArgumentException>(() =>
+            WaistGoal.Start(new UserId(Guid.Empty), 75, 88.5, DateTime.UtcNow));
+    }
+
+    [Fact]
+    public void Cancel_WhenEndedBeforeStart_Throws() {
+        DateTime startedAtUtc = new(2026, 8, 6, 12, 0, 0, DateTimeKind.Utc);
+        var goal = WaistGoal.Start(UserId.New(), 75, 88.5, startedAtUtc);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => goal.Cancel(startedAtUtc.AddTicks(-1), 87));
+    }
 }

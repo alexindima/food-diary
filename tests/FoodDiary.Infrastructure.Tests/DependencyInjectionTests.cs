@@ -18,6 +18,7 @@ using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.DailyAdvices.Common;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Ai;
@@ -27,6 +28,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Dashboard;
+using FoodDiary.Infrastructure.Persistence.Dietologist;
 using FoodDiary.Infrastructure.Persistence.Tracking;
 using FoodDiary.Infrastructure.Services;
 using FoodDiary.Integrations;
@@ -289,6 +291,37 @@ public sealed class DependencyInjectionTests {
             services,
             static descriptor => descriptor.ServiceType == typeof(DatabaseCommandTelemetryInterceptor));
         Assert.Equal(ServiceLifetime.Singleton, interceptorDescriptor.Lifetime);
+    }
+
+    [Fact]
+    public void AddInfrastructure_DietologistRepositoryAliasesResolveThroughScopedConcreteInstances() {
+        var services = new ServiceCollection();
+        services.AddSingleton(Substitute.For<IPublisher>());
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
+            ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
+            ["Jwt:Issuer"] = "FoodDiary",
+            ["Jwt:Audience"] = "FoodDiaryClients",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
+        });
+        services.AddInfrastructure(configuration);
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+        IServiceProvider scoped = scope.ServiceProvider;
+
+        Assert.Multiple(
+            () => Assert.Same(scoped.GetRequiredService<IRecommendationCommentRepository>(), scoped.GetRequiredService<IRecommendationCommentWriteRepository>()),
+            () => Assert.Same(scoped.GetRequiredService<IRecommendationCommentRepository>(), scoped.GetRequiredService<IRecommendationCommentReadModelRepository>()),
+            () => Assert.Same(scoped.GetRequiredService<IClientTaskRepository>(), scoped.GetRequiredService<IClientTaskWriteRepository>()),
+            () => Assert.Same(scoped.GetRequiredService<IClientTaskRepository>(), scoped.GetRequiredService<IClientTaskReadModelRepository>()),
+            () => Assert.Same(scoped.GetRequiredService<IRecommendationTemplateRepository>(), scoped.GetRequiredService<IRecommendationTemplateWriteRepository>()),
+            () => Assert.Same(scoped.GetRequiredService<IRecommendationTemplateRepository>(), scoped.GetRequiredService<IRecommendationTemplateReadModelRepository>()),
+            () => Assert.Same(scoped.GetRequiredService<IRecommendationBulkDispatchRepository>(), scoped.GetRequiredService<IRecommendationBulkDispatchLookupRepository>()),
+            () => Assert.Same(scoped.GetRequiredService<IRecommendationBulkDispatchRepository>(), scoped.GetRequiredService<IRecommendationBulkDispatchWriteRepository>()),
+            () => Assert.IsType<AttentionSignalMetricsReadService>(scoped.GetRequiredService<IAttentionSignalMetricsReadService>()));
     }
 
     [Fact]

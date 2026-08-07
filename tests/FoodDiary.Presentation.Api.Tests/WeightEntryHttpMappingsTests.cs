@@ -5,9 +5,12 @@ using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
+using FoodDiary.Application.WeightEntries.Queries.GetWeightHistoryPageSummary;
+using FoodDiary.Application.Users.Models;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Responses;
+using FoodDiary.Presentation.Api.Features.Users.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -107,6 +110,23 @@ public sealed class WeightEntryHttpMappingsTests {
     }
 
     [Fact]
+    public void GetWeightHistoryPageSummaryHttpQuery_ToQuery_MapsAllFields() {
+        var userId = Guid.NewGuid();
+        DateTime from = new(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateTime to = from.AddDays(30);
+        var httpQuery = new GetWeightHistoryPageSummaryHttpQuery(from, to, 5, 250);
+
+        GetWeightHistoryPageSummaryQuery query = httpQuery.ToQuery(userId);
+
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(from, query.DateFrom),
+            () => Assert.Equal(to, query.DateTo),
+            () => Assert.Equal(5, query.QuantizationDays),
+            () => Assert.Equal(250, query.EntriesLimit));
+    }
+
+    [Fact]
     public void WeightEntryModel_ToHttpResponse_MapsAllFields() {
         var id = Guid.NewGuid();
         var userId = Guid.NewGuid();
@@ -134,5 +154,32 @@ public sealed class WeightEntryHttpMappingsTests {
             () => Assert.Equal(from, response.StartDate),
             () => Assert.Equal(to, response.EndDate),
             () => Assert.Equal(75.2, response.AverageWeight));
+    }
+
+    [Fact]
+    public void WeightHistoryPageSummaryModel_ToHttpResponse_MapsNestedContract() {
+        var userId = Guid.NewGuid();
+        var entryId = Guid.NewGuid();
+        var goalId = Guid.NewGuid();
+        DateTime date = new(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc);
+        var model = new WeightHistoryPageSummaryModel(
+            [new WeightEntryModel(entryId, userId, date, 75.5)],
+            [new WeightEntrySummaryModel(date, date.AddDays(3), 75.2)],
+            180,
+            new UserDesiredWeightModel(72, 81.5, date),
+            [new WeightGoalHistoryModel(goalId, 72, 81.5, 80, date, date.AddDays(10), "Cancelled")]);
+
+        WeightHistoryPageSummaryHttpResponse response = model.ToHttpResponse();
+
+        WeightEntryHttpResponse entry = Assert.Single(response.Entries);
+        WeightEntrySummaryHttpResponse summary = Assert.Single(response.Summary);
+        WeightGoalHistoryHttpResponse history = Assert.Single(response.GoalHistory);
+        Assert.Multiple(
+            () => Assert.Equal(entryId, entry.Id),
+            () => Assert.Equal(75.2, summary.AverageWeight),
+            () => Assert.Equal(180, response.Height),
+            () => Assert.Equal(72, response.Goal.DesiredWeight),
+            () => Assert.Equal(goalId, history.Id),
+            () => Assert.Equal("Cancelled", history.Status));
     }
 }

@@ -392,6 +392,16 @@ public sealed class TelegramBotWorkerTests {
         Assert.Contains(logger.Entries, entry => entry.Level == LogLevel.Error && entry.Message.Contains("Telegram bot error", StringComparison.Ordinal));
     }
 
+    [Fact]
+    public async Task HandleErrorAsync_WhenRetryDelayElapses_Completes() {
+        TelegramBotWorker worker = CreateWorker(
+            new RecordingTelegramBotClient(),
+            new RecordingHttpClientFactory(),
+            CreateOptions());
+
+        await InvokeHandleErrorAsync(worker, new InvalidOperationException("boom"));
+    }
+
     private static TelegramBotOptions CreateOptions() =>
         new() {
             Token = "telegram-token",

@@ -5,9 +5,12 @@ using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WaistEntries.Queries.GetLatestWaistEntry;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
+using FoodDiary.Application.WaistEntries.Queries.GetWaistHistoryPageSummary;
+using FoodDiary.Application.Users.Models;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Responses;
+using FoodDiary.Presentation.Api.Features.Users.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -107,6 +110,23 @@ public sealed class WaistEntryHttpMappingsTests {
     }
 
     [Fact]
+    public void GetWaistHistoryPageSummaryHttpQuery_ToQuery_MapsAllFields() {
+        var userId = Guid.NewGuid();
+        DateTime from = new(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateTime to = from.AddDays(30);
+        var httpQuery = new GetWaistHistoryPageSummaryHttpQuery(from, to, 5, 250);
+
+        GetWaistHistoryPageSummaryQuery query = httpQuery.ToQuery(userId);
+
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(from, query.DateFrom),
+            () => Assert.Equal(to, query.DateTo),
+            () => Assert.Equal(5, query.QuantizationDays),
+            () => Assert.Equal(250, query.EntriesLimit));
+    }
+
+    [Fact]
     public void WaistEntryModel_ToHttpResponse_MapsAllFields() {
         var id = Guid.NewGuid();
         var userId = Guid.NewGuid();
@@ -134,5 +154,32 @@ public sealed class WaistEntryHttpMappingsTests {
             () => Assert.Equal(from, response.StartDate),
             () => Assert.Equal(to, response.EndDate),
             () => Assert.Equal(80.2, response.AverageCircumference));
+    }
+
+    [Fact]
+    public void WaistHistoryPageSummaryModel_ToHttpResponse_MapsNestedContract() {
+        var userId = Guid.NewGuid();
+        var entryId = Guid.NewGuid();
+        var goalId = Guid.NewGuid();
+        DateTime date = new(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc);
+        var model = new WaistHistoryPageSummaryModel(
+            [new WaistEntryModel(entryId, userId, date, 80.5)],
+            [new WaistEntrySummaryModel(date, date.AddDays(3), 80.2)],
+            180,
+            new UserDesiredWaistModel(75, 88.5, date),
+            [new WaistGoalHistoryModel(goalId, 75, 88.5, 87, date, date.AddDays(10), "Cancelled")]);
+
+        WaistHistoryPageSummaryHttpResponse response = model.ToHttpResponse();
+
+        WaistEntryHttpResponse entry = Assert.Single(response.Entries);
+        WaistEntrySummaryHttpResponse summary = Assert.Single(response.Summary);
+        WaistGoalHistoryHttpResponse history = Assert.Single(response.GoalHistory);
+        Assert.Multiple(
+            () => Assert.Equal(entryId, entry.Id),
+            () => Assert.Equal(80.2, summary.AverageCircumference),
+            () => Assert.Equal(180, response.Height),
+            () => Assert.Equal(75, response.Goal.DesiredWaist),
+            () => Assert.Equal(goalId, history.Id),
+            () => Assert.Equal("Cancelled", history.Status));
     }
 }

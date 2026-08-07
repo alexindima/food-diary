@@ -56,4 +56,18 @@ public sealed class WeightGoalInvariantTests {
 
         Assert.Throws<InvalidOperationException>(() => goal.Replace(startedAtUtc.AddDays(2), 79));
     }
+
+    [Fact]
+    public void Start_WithEmptyUserId_Throws() {
+        Assert.Throws<ArgumentException>(() =>
+            WeightGoal.Start(new UserId(Guid.Empty), 72, 81.5, DateTime.UtcNow));
+    }
+
+    [Fact]
+    public void Cancel_WhenEndedBeforeStart_Throws() {
+        DateTime startedAtUtc = new(2026, 8, 5, 12, 0, 0, DateTimeKind.Utc);
+        var goal = WeightGoal.Start(UserId.New(), 72, 81.5, startedAtUtc);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => goal.Cancel(startedAtUtc.AddTicks(-1), 80));
+    }
 }

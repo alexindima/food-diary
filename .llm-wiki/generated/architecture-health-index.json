@@ -10,7 +10,7 @@
                     "unconsumedBackendContracts":  0,
                     "selectorUnreferencedComponents":  132,
                     "componentsWithoutDirectSpecs":  116,
-                    "criticalSymbolsWithoutTestReferences":  32,
+                    "criticalSymbolsWithoutTestReferences":  27,
                     "explicitDebtMarkers":  2
                 },
     "projectDependencyViolations":  [
@@ -4848,46 +4848,6 @@
                                                                         ]
                                                  },
                                                  {
-                                                     "name":  "GetWaistGoalHistoryQueryHandler",
-                                                     "role":  "QueryHandler",
-                                                     "path":  "FoodDiary.Application/Users/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQueryHandler.cs",
-                                                     "line":  9,
-                                                     "testReferenceCount":  0,
-                                                     "testReferences":  [
-
-                                                                        ]
-                                                 },
-                                                 {
-                                                     "name":  "GetWaistHistoryPageSummaryQueryHandler",
-                                                     "role":  "QueryHandler",
-                                                     "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
-                                                     "line":  13,
-                                                     "testReferenceCount":  0,
-                                                     "testReferences":  [
-
-                                                                        ]
-                                                 },
-                                                 {
-                                                     "name":  "GetWeightGoalHistoryQueryHandler",
-                                                     "role":  "QueryHandler",
-                                                     "path":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
-                                                     "line":  9,
-                                                     "testReferenceCount":  0,
-                                                     "testReferences":  [
-
-                                                                        ]
-                                                 },
-                                                 {
-                                                     "name":  "GetWeightHistoryPageSummaryQueryHandler",
-                                                     "role":  "QueryHandler",
-                                                     "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
-                                                     "line":  13,
-                                                     "testReferenceCount":  0,
-                                                     "testReferences":  [
-
-                                                                        ]
-                                                 },
-                                                 {
                                                      "name":  "AddFavoriteProductCommandValidator",
                                                      "role":  "Validator",
                                                      "path":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandValidator.cs",
@@ -5001,16 +4961,6 @@
                                                      "name":  "IngestMailRelayDeliveryEventCommandValidator",
                                                      "role":  "Validator",
                                                      "path":  "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommandValidator.cs",
-                                                     "line":  4,
-                                                     "testReferenceCount":  0,
-                                                     "testReferences":  [
-
-                                                                        ]
-                                                 },
-                                                 {
-                                                     "name":  "LinkGoogleCommandValidator",
-                                                     "role":  "Validator",
-                                                     "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandValidator.cs",
                                                      "line":  4,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [

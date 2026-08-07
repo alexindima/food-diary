@@ -16,6 +16,8 @@ public sealed class FoodDiaryDbContextTests {
         Assert.NotNull(context.RecipeIngredients);
         Assert.NotNull(context.ShoppingListItemSources);
         Assert.NotNull(context.ExerciseEntries);
+        Assert.NotNull(context.WeightGoals);
+        Assert.NotNull(context.WaistGoals);
         Assert.NotNull(context.NutritionLessons);
         Assert.NotNull(context.UserLessonProgress);
         Assert.NotNull(context.MealPlans);

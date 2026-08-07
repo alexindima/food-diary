@@ -69,6 +69,43 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     private static readonly TimeProvider FixedTime = new FixedDateTimeProvider(FixedNow);
 
     [RequiresDockerFact]
+    public async Task OutboxDeadLetterReplayService_ReplaysImageAndWebPushInsideTransactions() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"replay-{Guid.NewGuid():N}@example.com", "hash");
+        var notification = Notification.Create(user.Id, "info", "{}");
+        var image = ImageObjectDeletionOutboxMessage.Create("users/test/replay.webp", FixedNow.AddMinutes(-2));
+        var webPush = NotificationWebPushOutboxMessage.Create(notification.Id, FixedNow.AddMinutes(-2));
+        image.MarkDeadLettered("image failure", FixedNow.AddMinutes(-1));
+        webPush.MarkDeadLettered("push failure", FixedNow.AddMinutes(-1));
+        context.Users.Add(user);
+        context.Notifications.Add(notification);
+        context.ImageObjectDeletionOutbox.Add(image);
+        context.NotificationWebPushOutbox.Add(webPush);
+        await context.SaveChangesAsync();
+        var service = new OutboxDeadLetterReplayService(context, FixedTime);
+
+        await service.ReplayAsync(
+            "image_object_deletion",
+            image.Id,
+            "operator@example.com",
+            "Storage recovered",
+            expectedAttemptCount: 1,
+            CancellationToken.None);
+        await service.ReplayAsync(
+            "notification_web_push",
+            webPush.Id,
+            "operator@example.com",
+            "Push provider recovered",
+            expectedAttemptCount: 1,
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Null(image.DeadLetteredOnUtc),
+            () => Assert.Null(webPush.DeadLetteredOnUtc),
+            () => Assert.Equal(2, context.OutboxReplayAudits.Count()));
+    }
+
+    [RequiresDockerFact]
     public async Task NutritionLessonRepository_CoversFilteredTrackingProgressAndDeletePaths() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"lesson-{Guid.NewGuid():N}@example.com", "hash");

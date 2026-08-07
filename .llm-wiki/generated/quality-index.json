@@ -7,8 +7,8 @@
     "summary":  {
                     "productionFiles":  3970,
                     "criticalSymbols":  522,
-                    "criticalSymbolsWithTestReferences":  490,
-                    "criticalSymbolsWithoutTestReferences":  32,
+                    "criticalSymbolsWithTestReferences":  495,
+                    "criticalSymbolsWithoutTestReferences":  27,
                     "debtMarkers":  2
                 },
     "hotspots":  [
@@ -6347,8 +6347,8 @@
                       "nonBlankLines":  14,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.28
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.28
                   },
                   {
                       "path":  "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommand.cs",
@@ -13347,8 +13347,8 @@
                       "nonBlankLines":  26,
                       "decisionPoints":  1,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  9.02
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.02
                   },
                   {
                       "path":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs",
@@ -13363,8 +13363,8 @@
                       "nonBlankLines":  26,
                       "decisionPoints":  1,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  9.02
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.02
                   },
                   {
                       "path":  "FoodDiary.Application/Users/Services/ProfileOverviewReadService.cs",
@@ -13571,8 +13571,8 @@
                       "nonBlankLines":  63,
                       "decisionPoints":  5,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  15.76
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  10.76
                   },
                   {
                       "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQuery.cs",
@@ -13987,8 +13987,8 @@
                       "nonBlankLines":  63,
                       "decisionPoints":  5,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  15.76
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  10.76
                   },
                   {
                       "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQuery.cs",
@@ -36049,9 +36049,9 @@
                                 "role":  "QueryHandler",
                                 "path":  "FoodDiary.Application/Users/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQueryHandler.cs",
                                 "line":  9,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Application.Tests/Users/HistoryProfileCoverageTests.cs"
                                                    ]
                             },
                             {
@@ -36059,9 +36059,9 @@
                                 "role":  "QueryHandler",
                                 "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
                                 "line":  13,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs"
                                                    ]
                             },
                             {
@@ -36155,9 +36155,9 @@
                                 "role":  "QueryHandler",
                                 "path":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
                                 "line":  9,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Application.Tests/Users/HistoryProfileCoverageTests.cs"
                                                    ]
                             },
                             {
@@ -36165,9 +36165,9 @@
                                 "role":  "QueryHandler",
                                 "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
                                 "line":  13,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs"
                                                    ]
                             },
                             {
@@ -37366,9 +37366,9 @@
                                 "role":  "Validator",
                                 "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandValidator.cs",
                                 "line":  4,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ExternalLogin.cs"
                                                    ]
                             },
                             {

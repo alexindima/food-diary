@@ -164,6 +164,23 @@ public sealed class NotificationWebPushOutboxTests {
             () => Assert.Equal("dead-letter reason", message.LastError));
     }
 
+    [Fact]
+    public void MarkReplayed_ClearsDeadLetterAndLockState() {
+        DateTime now = DateTime.UtcNow;
+        var message = NotificationWebPushOutboxMessage.Create(NotificationId.New(), now.AddMinutes(-2));
+        message.MarkClaimed(now.AddMinutes(5), "worker");
+        message.MarkDeadLettered("failure", now.AddMinutes(-1));
+
+        message.MarkReplayed(now);
+
+        Assert.Multiple(
+            () => Assert.Equal(now, message.NextAttemptOnUtc),
+            () => Assert.Null(message.DeadLetteredOnUtc),
+            () => Assert.Null(message.LockedUntilUtc),
+            () => Assert.Null(message.LockedBy),
+            () => Assert.Null(message.LastError));
+    }
+
     private static async Task<Notification> SeedNotificationAsync(FoodDiaryDbContext context, string email) {
         var user = User.Create(email, "hash");
         var notification = Notification.Create(user.Id, "info", "{}");
