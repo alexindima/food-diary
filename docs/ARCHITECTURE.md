@@ -124,7 +124,7 @@ Important tests:
 - `LayeringTests` protects primary backend layering.
 - `MailRelayArchitectureTests` and `MailInboxArchitectureTests` protect supporting service boundaries.
 - `ApplicationGuardrailTests` protects application-layer conventions.
-- `AsyncMethodGuardrailTests` protects async naming and cancellation-token conventions.
+- `FoodDiary.Analyzers` protects local C# conventions during compilation, including async naming and cancellation-token requirements; solution-wide dependency and structure rules remain in `FoodDiary.ArchitectureTests`.
 - `ClientPackageBoundaryTests` protects typed service clients.
 - `HostCompositionBoundaryTests` protects host-only concerns.
 - Dedicated guardrail tests also protect domain shape, operational hosts, backend resources, presentation HTTP contracts, and package/root-folder placement.

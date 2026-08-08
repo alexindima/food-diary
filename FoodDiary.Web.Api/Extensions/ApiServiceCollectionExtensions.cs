@@ -18,32 +18,30 @@ namespace FoodDiary.Web.Api.Extensions;
 public static class ApiServiceCollectionExtensions {
     extension(IServiceCollection services) {
         public IServiceCollection AddApiServices(IConfiguration configuration, IHostEnvironment? environment = null) {
-            services.AddApplicationModules(configuration, environment);
-            services.AddApiOptions();
-            services.AddApiAuthentication();
-            services.AddApiHostServices();
-            services.AddApiDataProtection(configuration);
-            services.AddSingleton<IWearableTokenProtector, WearableTokenProtector>();
-            services.AddApiSwagger();
-            services.AddConfiguredOpenTelemetry();
-            services.AddApiHealthChecks();
-
-            return services;
+            return services
+                .AddApplicationModules(configuration, environment)
+                .AddApiOptions()
+                .AddApiAuthentication()
+                .AddApiHostServices()
+                .AddApiDataProtection(configuration)
+                .AddSingleton<IWearableTokenProtector, WearableTokenProtector>()
+                .AddApiSwagger()
+                .AddConfiguredOpenTelemetry()
+                .AddApiHealthChecks();
         }
         private IServiceCollection AddApplicationModules(IConfiguration configuration, IHostEnvironment? environment) {
-            services.AddApplication();
-            services.AddBillingModule();
-            services.AddMarketingModule();
-            services.AddInfrastructure(configuration);
-            services.AddIntegrations(configuration);
-            services.AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>();
-            services.AddSingleton<IDiaryPdfReportTextProvider, DiaryPdfReportResourceTextProvider>();
-            services.AddSingleton<INotificationTestScheduler, NotificationTestScheduler>();
-            services.AddApiDistributedCache(configuration, environment);
-            services.AddPresentationApi();
-            services.AddEndpointsApiExplorer();
-
-            return services;
+            return services
+                .AddApplication()
+                .AddBillingModule()
+                .AddMarketingModule()
+                .AddInfrastructure(configuration)
+                .AddIntegrations(configuration)
+                .AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>()
+                .AddSingleton<IDiaryPdfReportTextProvider, DiaryPdfReportResourceTextProvider>()
+                .AddSingleton<INotificationTestScheduler, NotificationTestScheduler>()
+                .AddApiDistributedCache(configuration, environment)
+                .AddPresentationApi()
+                .AddEndpointsApiExplorer();
         }
         private IServiceCollection AddApiDistributedCache(IConfiguration configuration, IHostEnvironment? environment) {
             string? redisConnectionString = configuration.GetConnectionString("Redis");

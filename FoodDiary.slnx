@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Tests/">
+    <Project Path="tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj" />
     <Project Path="tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj" />
     <Project Path="tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj" />
     <Project Path="tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj" />
@@ -30,6 +31,7 @@
     <Project Path="tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj" />
     <Project Path="tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj" />
   </Folder>
+  <Project Path="FoodDiary.Analyzers/FoodDiary.Analyzers.csproj" />
   <Project Path="FoodDiary.Application/FoodDiary.Application.csproj" />
   <Project Path="FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj" />
   <Project Path="FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj" />

@@ -341,18 +341,6 @@ public class LayeringTests {
     }
 
     [Fact]
-    public void InfrastructureConcreteClasses_AreSealedOrStatic() {
-        string root = GetRepositoryRoot();
-        string infrastructureRoot = Path.Combine(root, "FoodDiary.Infrastructure");
-
-        string[] violations = SourceScanner.FindUnsealedConcreteClassDeclarations(
-            [infrastructureRoot],
-            static path => !path.Contains($"{Path.DirectorySeparatorChar}Migrations{Path.DirectorySeparatorChar}", StringComparison.Ordinal));
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
     public void PresentationApiProject_ReferencesApplication_ButNotInfrastructure() {
         HashSet<string> references = GetProjectReferences("FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj");
 

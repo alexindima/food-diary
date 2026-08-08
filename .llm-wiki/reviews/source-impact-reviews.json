@@ -2,19 +2,83 @@
     "schemaVersion":  1,
     "reviews":  [
                     {
+                        "pageId":  "index",
+                        "pagePath":  ".llm-wiki/index.md",
+                        "pageSha256":  "c4bb6a75a90ab7c79f6a01e1fda3fe34b619a09e6123e4040fe43a566260875a",
+                        "sources":  [
+                                        {
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "31a289928b511838b4774d2e16a426084067b7c0829cc45ae97554579bc816bd"
+                                        },
+                                        {
+                                            "path":  "docs/ARCHITECTURE.md",
+                                            "sha256":  "677af26b197c8be76be1c8734750e2a17be36bd57f1c477e2266f46dd7b17878"
+                                        }
+                                    ],
+                        "reason":  "Reviewed analyzer project guidance and architecture documentation; navigation remains accurate after generated catalog refresh.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
+                        "reviewedAtUtc":  "2026-08-08T15:21:52.8837689Z"
+                    },
+                    {
+                        "pageId":  "module.mail-services",
+                        "pagePath":  ".llm-wiki/modules/mail-services.md",
+                        "pageSha256":  "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
+                        "sources":  [
+                                        {
+                                            "path":  "docs/ARCHITECTURE.md",
+                                            "sha256":  "677af26b197c8be76be1c8734750e2a17be36bd57f1c477e2266f46dd7b17878"
+                                        }
+                                    ],
+                        "reason":  "Reviewed mail-service module page; analyzer wiring is build-only and does not change mail-service runtime boundaries.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
+                        "reviewedAtUtc":  "2026-08-08T15:21:55.0614188Z"
+                    },
+                    {
+                        "pageId":  "module.primary-backend",
+                        "pagePath":  ".llm-wiki/modules/primary-backend.md",
+                        "pageSha256":  "eef6d06f24e7641eacbe6dd9ffad96bf3af2c508635e7b04cc9bb1f6a2ecbe72",
+                        "sources":  [
+                                        {
+                                            "path":  "FoodDiary.Web.Api/AGENTS.md",
+                                            "sha256":  "d6254348357bbb0eb69d16763edf177b94dcba1b942577b4c1816a014dcaae9a"
+                                        }
+                                    ],
+                        "reason":  "Reviewed after documenting fluent IServiceCollection composition; module ownership and architecture remain unchanged.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
+                        "reviewedAtUtc":  "2026-08-08T15:45:01.0864531Z"
+                    },
+                    {
+                        "pageId":  "system.architecture",
+                        "pagePath":  ".llm-wiki/system/architecture.md",
+                        "pageSha256":  "db8ec229f2fd9d661b5737dbd6112c28b9d356334ebb19c26e801907f4a22afc",
+                        "sources":  [
+                                        {
+                                            "path":  "docs/ARCHITECTURE.md",
+                                            "sha256":  "677af26b197c8be76be1c8734750e2a17be36bd57f1c477e2266f46dd7b17878"
+                                        }
+                                    ],
+                        "reason":  "Reviewed architecture page; FoodDiary.Analyzers is compiler tooling and does not alter runtime layer direction.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
+                        "reviewedAtUtc":  "2026-08-08T15:21:54.3256364Z"
+                    },
+                    {
                         "pageId":  "system.knowledge-model",
                         "pagePath":  ".llm-wiki/system/knowledge-model.md",
                         "pageSha256":  "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "4e2db42accf2a8d8d6769c90e66742c8796d9793b39c95a179b89ba8607f4571"
+                                            "sha256":  "31a289928b511838b4774d2e16a426084067b7c0829cc45ae97554579bc816bd"
                                         }
                                     ],
-                        "reason":  "Reviewed the new AGENTS.md facade guidance; it preserves the documented authority model and adds no new source-of-truth tier.",
+                        "reason":  "Reviewed guidance impact; adding a scoped analyzer AGENTS guide preserves the documented authority model.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
-                        "reviewedAtUtc":  "2026-07-31T13:05:22.0024262Z"
+                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
+                        "reviewedAtUtc":  "2026-08-08T15:21:55.7971900Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -22,14 +86,14 @@
                         "pageSha256":  "3cddc70c9de8617c8ad3e97fff346fab0f7c586e72f13dfd0caa7acbb5967c15",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "335be12b113473ee2ebced8cd68ea807f1f2970718fd485647ee9c30cae0fd92"
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "31a289928b511838b4774d2e16a426084067b7c0829cc45ae97554579bc816bd"
                                         }
                                     ],
-                        "reason":  "Reviewed policy phase wording: canonical frontend verification remains required before publication; visual local completion is documented separately.",
+                        "reason":  "Reviewed change-policy page; analyzer and Wiki generator changes trigger existing policies without changing their semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
-                        "reviewedAtUtc":  "2026-08-01T01:45:25.4167254Z"
+                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
+                        "reviewedAtUtc":  "2026-08-08T15:21:53.6478467Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -83,13 +147,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "7aa825d04019958dc308268d3756e98a2b27697362c4be71aa27518c4cae539d"
+                                            "sha256":  "565df85b90283b3586726acb38c851fed4093b45492d580be6af3b6ef73f5b91"
+                                        },
+                                        {
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "31a289928b511838b4774d2e16a426084067b7c0829cc45ae97554579bc816bd"
                                         }
                                     ],
-                        "reason":  "Reviewed after Paddle billing hardening; generated indexes and current workflow guidance remain accurate.",
+                        "reason":  "Reviewed regenerated repository catalog; the new analyzer and test projects are correctly represented as build tooling.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
-                        "reviewedAtUtc":  "2026-08-08T09:36:25.0788576Z"
+                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
+                        "reviewedAtUtc":  "2026-08-08T15:21:50.6115188Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -98,13 +166,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "4e2db42accf2a8d8d6769c90e66742c8796d9793b39c95a179b89ba8607f4571"
+                                            "sha256":  "31a289928b511838b4774d2e16a426084067b7c0829cc45ae97554579bc816bd"
                                         }
                                     ],
-                        "reason":  "Reviewed the AGENTS.md facade addition; diff review and freshness semantics are unchanged.",
+                        "reason":  "Reviewed guide impact; scoped AGENTS addition does not change the documented review workflow.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
-                        "reviewedAtUtc":  "2026-07-31T13:05:31.6806055Z"
+                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
+                        "reviewedAtUtc":  "2026-08-08T15:21:51.3885100Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -400,21 +468,17 @@
                     {
                         "pageId":  "workflow-index-pipeline",
                         "pagePath":  ".llm-wiki/workflows/index-pipeline.md",
-                        "pageSha256":  "f5f0a130869c7a7a4fee8d47462410c9bf8fad65d4865a2ca3b05a2d91af83ca",
+                        "pageSha256":  "ca276bbd07823ed70e36ee2c6ae4807dcc3d4c4a7152015f22ca8bb0138bac91",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "8403f9bda5d10de0bf82d75407d36a368acff4ad7d697a1452201eed449a13e5"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
-                                            "sha256":  "f1057792976cb436e53610fea1db3b4e152c19e02cf1789404a83bbb5ea5d5d1"
+                                            "sha256":  "06eb2b03d1d031c81a19c8e266c1a0f1670ed1969539f3c061200289ad98eaf1"
                                         }
                                     ],
-                        "reason":  "Reviewed governed-delivery hardening. Existing domain semantics remain unchanged; only status separation, atomic refresh, generated-scope isolation, and focused regression coverage were added.",
+                        "reason":  "Reviewed index-pipeline page after making generators tolerate deleted working-tree files; transactional update behavior remains unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
-                        "reviewedAtUtc":  "2026-08-08T11:15:38.4777359Z"
+                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
+                        "reviewedAtUtc":  "2026-08-08T15:21:52.2773583Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -532,13 +596,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "cdf936b4f48b947d93902e19548e32216ed68a9ec14fa17f39d8e4da88583afd"
+                                            "sha256":  "d159d8d5fb7a8f6550369fc7db3bb62bd311ef0d63c698e9555b74594a535836"
                                         }
                                     ],
-                        "reason":  "Reviewed payment authorization, concurrency, boundary, and error paths; focused regression tests plus real PostgreSQL and WebApplicationFactory coverage were added.",
+                        "reason":  "Reviewed regenerated quality index impact; analyzer test ownership replaces duplicate architecture-test references.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "71bf2466ed53eccd7ef769c6a3e31a5ad354d145",
-                        "reviewedAtUtc":  "2026-08-08T14:06:43.4297987Z"
+                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
+                        "reviewedAtUtc":  "2026-08-08T15:21:49.9050900Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

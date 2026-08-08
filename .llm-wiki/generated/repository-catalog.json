@@ -12,18 +12,38 @@
                     "docs/**/*.md"
                 ],
     "summary":  {
-                    "dotnetProjects":  59,
-                    "testProjects":  28,
+                    "dotnetProjects":  61,
+                    "testProjects":  29,
                     "frontendProjects":  4,
                     "applicationModules":  38,
                     "extractedApplicationModules":  2,
                     "controllers":  83,
                     "endpoints":  265,
-                    "agentGuides":  42,
+                    "agentGuides":  43,
                     "documentationPages":  43
                 },
     "dotnet":  {
                    "projects":  [
+                                    {
+                                        "name":  "FoodDiary.Analyzers",
+                                        "assemblyName":  "FoodDiary.Analyzers",
+                                        "path":  "FoodDiary.Analyzers/FoodDiary.Analyzers.csproj",
+                                        "sdk":  "Microsoft.NET.Sdk",
+                                        "outputType":  "Library",
+                                        "targetFrameworks":  [
+                                                                 "netstandard2.0"
+                                                             ],
+                                        "isTestProject":  false,
+                                        "projectReferences":  [
+
+                                                              ],
+                                        "packageReferences":  [
+                                                                  {
+                                                                      "name":  "Microsoft.CodeAnalysis.CSharp",
+                                                                      "version":  null
+                                                                  }
+                                                              ]
+                                    },
                                     {
                                         "name":  "FoodDiary.Application.Abstractions",
                                         "assemblyName":  "FoodDiary.Application.Abstractions",
@@ -1470,6 +1490,38 @@
                                                               ]
                                     },
                                     {
+                                        "name":  "FoodDiary.Analyzers.Tests",
+                                        "assemblyName":  "FoodDiary.Analyzers.Tests",
+                                        "path":  "tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj",
+                                        "sdk":  "Microsoft.NET.Sdk",
+                                        "outputType":  "Library",
+                                        "targetFrameworks":  [
+                                                                 "net10.0"
+                                                             ],
+                                        "isTestProject":  true,
+                                        "projectReferences":  [
+                                                                  "FoodDiary.Analyzers/FoodDiary.Analyzers.csproj"
+                                                              ],
+                                        "packageReferences":  [
+                                                                  {
+                                                                      "name":  "Microsoft.CodeAnalysis.CSharp",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "Microsoft.NET.Test.Sdk",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "xunit",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "xunit.runner.visualstudio",
+                                                                      "version":  null
+                                                                  }
+                                                              ]
+                                    },
+                                    {
                                         "name":  "FoodDiary.Application.Tests",
                                         "assemblyName":  "FoodDiary.Application.Tests",
                                         "path":  "tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj",
@@ -2109,6 +2161,7 @@
                                         "MailRelay/tests/FoodDiary.MailRelay.Initializer.Tests/FoodDiary.MailRelay.Initializer.Tests.csproj",
                                         "MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/FoodDiary.MailRelay.IntegrationTests.csproj",
                                         "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/FoodDiary.MailRelay.Presentation.Tests.csproj",
+                                        "tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj",
                                         "tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj",
                                         "tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj",
                                         "tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj",
@@ -4374,6 +4427,7 @@
     "knowledgeSources":  {
                              "agentGuides":  [
                                                  "AGENTS.md",
+                                                 "FoodDiary.Analyzers/AGENTS.md",
                                                  "FoodDiary.Application.Abstractions/AGENTS.md",
                                                  "FoodDiary.Application.Billing/AGENTS.md",
                                                  "FoodDiary.Application.Marketing/AGENTS.md",

@@ -321,16 +321,6 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void ApplicationConcreteClasses_AreSealedOrStatic() {
-        string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-
-        string[] violations = SourceScanner.FindUnsealedConcreteClassDeclarations([applicationRoot]);
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
     public void ApplicationSourceFiles_UseSharedEnumParsersForTryParse() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

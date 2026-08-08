@@ -93,6 +93,7 @@ $allDirectories = @(
         Where-Object {
             "/$_/" -notmatch '/(\.git|\.github|\.llm-wiki|docs|node_modules|obj|bin|dist[^/]*|coverage|\.artifacts|TestResults)/'
         } |
+        Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) } |
         ForEach-Object { Get-Item -LiteralPath (Join-Path $repositoryRoot $_) -Force }
 )
 $allTestFiles = @(
@@ -102,6 +103,7 @@ $allTestFiles = @(
             $_ -match '\.cs$' -and
             "/$_/" -notmatch '/(obj|bin|\.artifacts|TestResults)/'
         } |
+        Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) } |
         ForEach-Object { Get-Item -LiteralPath (Join-Path $repositoryRoot $_) -Force }
 )
 

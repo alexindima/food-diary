@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3006,
-                    "symbols":  3046,
+                    "sourceFiles":  3008,
+                    "symbols":  3048,
                     "interfaceImplementationLinks":  223,
                     "dependencyInjectionRegistrations":  222,
                     "kinds":  {
-                                  "class":  1535,
+                                  "class":  1537,
                                   "enum":  45,
                                   "interface":  399,
                                   "record":  957,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  3,
                                   "Options":  55,
-                                  "Other":  1067,
+                                  "Other":  1069,
                                   "Query":  155,
                                   "QueryHandler":  120,
                                   "ReadModelRepository":  29,
@@ -47,6 +47,20 @@
                               }
                 },
     "symbols":  [
+                    {
+                        "name":  "ProjectConventionAnalyzer",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Analyzers/ProjectConventionAnalyzer.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "UseExtensionBlockAnalyzer",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Analyzers/UseExtensionBlockAnalyzer.cs",
+                        "line":  10
+                    },
                     {
                         "name":  "AdminMailInboxErrors",
                         "kind":  "class",
@@ -24402,7 +24416,7 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  26
+                                                 "line":  27
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
@@ -24430,7 +24444,7 @@
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  66
+                                                 "line":  64
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

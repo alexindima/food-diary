@@ -17,4 +17,10 @@
     <PackageReference Include="Meziantou.Analyzer" PrivateAssets="all" />
     <PackageReference Include="Roslynator.Analyzers" PrivateAssets="all" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'FoodDiary.Analyzers' and '$(MSBuildProjectName)' != 'FoodDiary.Analyzers.Tests'">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)FoodDiary.Analyzers\FoodDiary.Analyzers.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
+  </ItemGroup>
 </Project>

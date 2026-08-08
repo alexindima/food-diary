@@ -35,26 +35,6 @@ internal static class CSharpSyntaxReader {
             .FirstOrDefault();
     }
 
-    public static IReadOnlyList<SourceLocation> ReadTargetTypedNewInvocationArguments(string path) {
-        string source = File.ReadAllText(path);
-        SyntaxTree tree = CSharpSyntaxTree.ParseText(source);
-        CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
-
-        return root.DescendantNodes()
-            .OfType<ImplicitObjectCreationExpressionSyntax>()
-            .Where(static expression =>
-                expression.Parent is ArgumentSyntax {
-                    Parent: ArgumentListSyntax {
-                        Parent: InvocationExpressionSyntax,
-                    },
-                })
-            .Select(expression => new SourceLocation(
-                path,
-                tree.GetLineSpan(expression.Span).StartLinePosition.Line + 1,
-                expression.ToString()))
-            .ToArray();
-    }
-
     private static bool IsControllerAction(MethodDeclarationSyntax method) {
         if (method.Parent is not ClassDeclarationSyntax classDeclaration) {
             return false;
@@ -62,12 +42,6 @@ internal static class CSharpSyntaxReader {
 
         return classDeclaration.Identifier.ValueText.EndsWith("Controller", StringComparison.Ordinal) ||
                classDeclaration.Identifier.ValueText.EndsWith("ControllerBase", StringComparison.Ordinal);
-    }
-
-    [ExcludeFromCodeCoverage]
-    internal sealed record SourceLocation(string Path, int Line, string Text) {
-        public string Format(string repositoryRoot) =>
-            string.Create(CultureInfo.InvariantCulture, $"{System.IO.Path.GetRelativePath(repositoryRoot, Path)}:{Line} {Text}");
     }
 
     [ExcludeFromCodeCoverage]

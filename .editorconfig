@@ -121,6 +121,9 @@ dotnet_diagnostic.RCS1261.severity = warning
 resharper_redundant_qualifier_highlighting = error
 resharper_using_statement_resource_initialization_highlighting = warning
 resharper_using_statement_resource_initialization_expression_highlighting = warning
+resharper_convert_to_extension_block_highlighting = hint
+resharper_arrange_trailing_comma_in_multiline_lists_highlighting = none
+resharper_arrange_trailing_comma_in_singleline_lists_highlighting = none
 
 # Keep analyzers strict without forcing noisy public API or logging migrations in one pass.
 dotnet_diagnostic.CA1000.severity = error
@@ -309,3 +312,47 @@ dotnet_diagnostic.MA0051.severity = warning
 
 [tests/FoodDiary.Telegram.Bot.Tests/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
+
+# Build-time project conventions. Rules are disabled by default in the analyzer
+# and activated only for the scopes previously owned by architecture tests.
+[**/*.cs]
+dotnet_diagnostic.FD0005.severity = error
+
+[FoodDiary.{Application,Application.Abstractions,Domain,Infrastructure,Integrations,JobManager,Presentation.Api,Telegram.Bot,Web.Api}/**/*.cs]
+dotnet_diagnostic.FD0002.severity = error
+dotnet_diagnostic.FD0003.severity = error
+dotnet_diagnostic.FD0004.severity = error
+
+[MailInbox/FoodDiary.MailInbox.{Application,Client,Domain,Infrastructure,Presentation,WebApi}/**/*.cs]
+dotnet_diagnostic.FD0002.severity = error
+dotnet_diagnostic.FD0003.severity = error
+dotnet_diagnostic.FD0004.severity = error
+
+[MailRelay/FoodDiary.MailRelay.{Application,Client,Domain,Infrastructure,Initializer,Presentation,WebApi}/**/*.cs]
+dotnet_diagnostic.FD0002.severity = error
+dotnet_diagnostic.FD0003.severity = error
+dotnet_diagnostic.FD0004.severity = error
+
+[FoodDiary.*/**/*.cs]
+dotnet_diagnostic.FD0006.severity = error
+
+[Shared/FoodDiary.Mediator/**/*.cs]
+dotnet_diagnostic.FD0006.severity = error
+
+[tests/**/*.cs]
+dotnet_diagnostic.FD0007.severity = error
+dotnet_diagnostic.FD0009.severity = error
+
+[FoodDiary.{Application,Application.Abstractions,Domain,Infrastructure,Presentation.Api}/**/*.cs]
+dotnet_diagnostic.FD0008.severity = error
+
+[MailInbox/FoodDiary.MailInbox.{Application,Infrastructure,Presentation}/**/*.cs]
+dotnet_diagnostic.FD0008.severity = error
+
+[MailRelay/FoodDiary.MailRelay.{Application,Infrastructure,Presentation}/**/*.cs]
+dotnet_diagnostic.FD0008.severity = error
+
+# Adopt C# 14 extension blocks incrementally.
+[FoodDiary.Web.Api/**/*.cs]
+dotnet_diagnostic.FD0001.severity = error
+resharper_convert_to_extension_block_highlighting = error

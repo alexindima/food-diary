@@ -10,46 +10,48 @@ using OpenTelemetry.Trace;
 namespace FoodDiary.Web.Api.Extensions;
 
 public static class ApiApplicationBuilderExtensions {
-    public static WebApplication UseApiPipeline(this WebApplication app) {
-        app.Services.GetService<TracerProvider>();
-        app.Services.GetService<MeterProvider>();
-        app.UseMiddleware<RequestObservabilityMiddleware>();
-        app.UseExceptionHandler();
-        app.UseForwardedHeaders();
-        app.UseMiddleware<SecurityHeadersMiddleware>();
-        app.UseHttpLogging();
+    extension(WebApplication app) {
+        public WebApplication UseApiPipeline() {
+            app.Services.GetService<TracerProvider>();
+            app.Services.GetService<MeterProvider>();
+            app.UseMiddleware<RequestObservabilityMiddleware>();
+            app.UseExceptionHandler();
+            app.UseForwardedHeaders();
+            app.UseMiddleware<SecurityHeadersMiddleware>();
+            app.UseHttpLogging();
 
-        if (app.Environment.IsDevelopment()) {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        } else {
-            app.UseHsts();
+            if (app.Environment.IsDevelopment()) {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            } else {
+                app.UseHsts();
+            }
+
+            if (app.Services.GetRequiredService<IOptions<ApiHttpsRedirectionOptions>>().Value.Enabled) {
+                app.UseHttpsRedirection();
+            }
+
+            app.UseCors(ApiCompositionConstants.CorsPolicyName);
+            app.UseAuthentication();
+            app.UseRateLimiter();
+            app.UseAuthorization();
+            app.UseMiddleware<ImpersonationAccessGuardMiddleware>();
+            app.UseOutputCache();
+
+            app.MapOperationalEndpoints();
+            app.MapPresentationApi(ApiCompositionConstants.CorsPolicyName);
+
+            return app;
         }
 
-        if (app.Services.GetRequiredService<IOptions<ApiHttpsRedirectionOptions>>().Value.Enabled) {
-            app.UseHttpsRedirection();
+        private void MapOperationalEndpoints() {
+            app.MapHealthChecks("/health/live", new HealthCheckOptions {
+                Predicate = ExcludeHealthChecks,
+            }).WithMetadata(new SuppressRequestAccessLogAttribute());
+            app.MapHealthChecks("/health/ready", new HealthCheckOptions {
+                Predicate = IsReadyHealthCheck,
+            }).WithMetadata(new SuppressRequestAccessLogAttribute());
         }
-
-        app.UseCors(ApiCompositionConstants.CorsPolicyName);
-        app.UseAuthentication();
-        app.UseRateLimiter();
-        app.UseAuthorization();
-        app.UseMiddleware<ImpersonationAccessGuardMiddleware>();
-        app.UseOutputCache();
-
-        app.MapOperationalEndpoints();
-        app.MapPresentationApi(ApiCompositionConstants.CorsPolicyName);
-
-        return app;
-    }
-
-    private static void MapOperationalEndpoints(this WebApplication app) {
-        app.MapHealthChecks("/health/live", new HealthCheckOptions {
-            Predicate = ExcludeHealthChecks,
-        }).WithMetadata(new SuppressRequestAccessLogAttribute());
-        app.MapHealthChecks("/health/ready", new HealthCheckOptions {
-            Predicate = IsReadyHealthCheck,
-        }).WithMetadata(new SuppressRequestAccessLogAttribute());
     }
 
     private static bool ExcludeHealthChecks(HealthCheckRegistration _) => false;

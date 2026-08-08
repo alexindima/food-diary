@@ -31,6 +31,7 @@ Rules for `FoodDiary.Web.Api/`.
 - Keep business logic and HTTP transport behavior out of this project; wire existing modules together instead.
 - Keep cross-cutting concerns in middleware, filters, option validation, or host-level pipeline behaviors as appropriate.
 - Keep telemetry/exporter wiring in this host project, not in `FoodDiary.Presentation.Api`.
+- Compose `IServiceCollection` registration helpers through their fluent return values. Keep the fluent return type for conventional DI extensions, and chain calls at composition boundaries instead of discarding those values.
 - New host configuration sections should use typed options in `Options/` and validate on startup when practical.
 - Treat generated Swagger/OpenAPI output as contract. If host or presentation changes alter it intentionally, update the stored snapshots in `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/` and commit them.
 - Do not commit real secrets or local passwords to `appsettings*.json`; keep repository config as safe placeholders only.

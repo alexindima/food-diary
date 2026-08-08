@@ -8,6 +8,7 @@ Rules for `tests/`.
 - Use tests as living architecture documentation when updating project guides.
 
 ## Test Types
+- `FoodDiary.Analyzers.Tests`: positive, negative, exception, and compatibility coverage for custom build-time Roslyn diagnostics.
 - `FoodDiary.ArchitectureTests`: dependency, structure, naming, async, and boundary guardrails.
 - `FoodDiary.Web.Api.IntegrationTests`: HTTP contract, OpenAPI, and end-to-end API host behavior.
 - `FoodDiary.Web.Api.Tests`: Web.Api host options, middleware, health check, and service unit behavior.
@@ -37,6 +38,7 @@ Rules for `tests/`.
 - Mark every test type and test-only helper type with `[ExcludeFromCodeCoverage]` so test implementation details stay out of dotCover reports.
 
 ## Commands
+- Analyzer tests: `dotnet test tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj`
 - Architecture tests: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 - Shared domain primitive tests: `dotnet test tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj`
 - Core domain tests: `dotnet test tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj`

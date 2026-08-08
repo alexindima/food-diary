@@ -4,6 +4,7 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class ProjectDependencyMatrixTests {
     private static readonly IReadOnlyDictionary<string, string[]> AllowedProductionProjectReferences =
         new Dictionary<string, string[]>(StringComparer.Ordinal) {
+            ["FoodDiary.Analyzers"] = [],
             ["FoodDiary.Application"] = [
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Domain",
@@ -125,6 +126,9 @@ public sealed class ProjectDependencyMatrixTests {
 
     private static readonly IReadOnlyDictionary<string, string[]> AllowedTestProjectReferences =
         new Dictionary<string, string[]>(StringComparer.Ordinal) {
+            ["FoodDiary.Analyzers.Tests"] = [
+                "FoodDiary.Analyzers",
+            ],
             ["FoodDiary.Application.Tests"] = [
                 "FoodDiary.Application",
                 "FoodDiary.Application.Billing",

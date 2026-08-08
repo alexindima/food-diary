@@ -6,10 +6,9 @@ namespace FoodDiary.Web.Api.Extensions;
 public static class ApiOptionsServiceCollectionExtensions {
     extension(IServiceCollection services) {
         internal IServiceCollection AddApiOptions() {
-            services.AddHostBoundaryOptions();
-            services.AddTelemetryAndAuthOptions();
-
-            return services;
+            return services
+                .AddHostBoundaryOptions()
+                .AddTelemetryAndAuthOptions();
         }
 
         private IServiceCollection AddHostBoundaryOptions() {

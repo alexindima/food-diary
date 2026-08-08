@@ -111,15 +111,6 @@ public class DomainModelGuardrailTests {
     }
 
     [Fact]
-    public void DomainConcreteClasses_AreSealedOrStatic() {
-        string domainRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Domain");
-
-        string[] violations = SourceScanner.FindUnsealedConcreteClassDeclarations([domainRoot]);
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
     public void DomainAggregates_DoNotIntroduceNewWidePublicMutators() {
         string[] violations = [.. typeof(User).Assembly
             .GetTypes()

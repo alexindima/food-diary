@@ -530,7 +530,7 @@ Evidence: base controllers, async architecture guardrail tests, application abst
 
 Backend async methods use the `Async` suffix except documented framework entry points. Enforcing this mechanically improves call-site readability and makes accidentally blocking alternatives easier to identify.
 
-Evidence: `tests/FoodDiary.ArchitectureTests/AsyncMethodGuardrailTests.cs`.
+Evidence: `FoodDiary.Analyzers/ProjectConventionAnalyzer.cs` and `tests/FoodDiary.Analyzers.Tests/ProjectConventionAnalyzerTests.cs`.
 
 ### 85. Localization provider abstraction
 

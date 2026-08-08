@@ -133,45 +133,6 @@ public sealed class ApplicationAbstractionsBoundaryTests {
     }
 
     [Fact]
-    public void ApplicationAbstractions_AsyncMethodsAcceptCancellationToken() {
-        string root = ArchitectureTestPaths.RepositoryRoot;
-        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
-
-        string[] violations = [.. SourceScanner.SourceFiles(abstractionsRoot)
-            .SelectMany(path => CSharpSyntaxReader.ReadMethods(path)
-                .Where(static method => method.IsAsyncLike)
-                .Where(static method => !method.Parameters.Contains("CancellationToken", StringComparison.Ordinal))
-                .Select(method => method.Format(root)))
-            .Order(StringComparer.Ordinal)];
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
-    public void ApplicationAbstractions_AsyncMethodsUseAsyncSuffix() {
-        string root = ArchitectureTestPaths.RepositoryRoot;
-        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
-
-        string[] violations = [.. SourceScanner.SourceFiles(abstractionsRoot)
-            .SelectMany(path => CSharpSyntaxReader.ReadMethods(path)
-                .Where(static method => method.IsAsyncLike)
-                .Where(static method => !method.Name.EndsWith("Async", StringComparison.Ordinal))
-                .Select(method => method.Format(root)))
-            .Order(StringComparer.Ordinal)];
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
-    public void ApplicationAbstractions_ConcreteClasses_AreSealedOrStatic() {
-        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
-
-        string[] violations = SourceScanner.FindUnsealedConcreteClassDeclarations([abstractionsRoot]);
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
     public void ApplicationSourceFiles_DoNotBuildBclMailTransportMessages() {
         string applicationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application");
         string[] forbiddenPatterns = [
