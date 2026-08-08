@@ -23,7 +23,7 @@ public sealed class NotificationTestScheduler(
 
     private async Task RunScheduledAsync(Guid userId, int delaySeconds, string type, CancellationToken cancellationToken) {
         try {
-            await Task.Delay(TimeSpan.FromSeconds(delaySeconds), cancellationToken).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromSeconds(delaySeconds), timeProvider, cancellationToken).ConfigureAwait(false);
             using IServiceScope scope = serviceScopeFactory.CreateScope();
             ITestNotificationDeliveryDispatcher dispatcher = scope.ServiceProvider.GetRequiredService<ITestNotificationDeliveryDispatcher>();
             await dispatcher.DispatchAsync(userId, type, cancellationToken).ConfigureAwait(false);

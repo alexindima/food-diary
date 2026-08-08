@@ -18,7 +18,7 @@ public sealed class UpdateGoalsCommandHandler(
     TimeProvider? timeProvider = null)
     : ICommandHandler<UpdateGoalsCommand, Result<GoalsModel>> {
     public UpdateGoalsCommandHandler(IUserContextService userContextService)
-        : this(userContextService, NullCurrentWeightProvider.Instance, NullCurrentWaistProvider.Instance) {
+        : this(userContextService, NullCurrentWeightProvider.Instance, NullCurrentWaistProvider.Instance, TimeProvider.System) {
     }
 
     public async Task<Result<GoalsModel>> Handle(UpdateGoalsCommand command, CancellationToken cancellationToken) {

@@ -86,6 +86,7 @@ dotnet_diagnostic.MA0132.severity = warning
 dotnet_diagnostic.MA0144.severity = warning
 dotnet_diagnostic.MA0150.severity = warning
 dotnet_diagnostic.MA0159.severity = warning
+dotnet_diagnostic.MA0166.severity = error
 dotnet_diagnostic.MA0188.severity = error
 dotnet_diagnostic.MA0193.severity = error
 dotnet_diagnostic.IDE0005.severity = warning
@@ -356,3 +357,20 @@ dotnet_diagnostic.FD0008.severity = error
 [FoodDiary.Web.Api/**/*.cs]
 dotnet_diagnostic.FD0001.severity = error
 resharper_convert_to_extension_block_highlighting = error
+
+# Configuration binding uses option accessors implicitly.
+[FoodDiary.Web.Api/Options/**/*.cs]
+resharper_unused_auto_property_accessor_global_highlighting = none
+resharper_auto_property_can_be_made_get_only_global_highlighting = none
+
+# The explicit partial Program carries ExcludeFromCodeCoverage for dotCover.
+[FoodDiary.Web.Api/Program.cs]
+dotnet_diagnostic.ASP0027.severity = none
+
+# The explicit partial Program carries ExcludeFromCodeCoverage for dotCover.
+[FoodDiary.Telegram.Bot/Program.cs]
+resharper_class_never_instantiated_global_highlighting = none
+
+# This sentinel exception has one fixed meaning and intentionally exposes only a parameterless constructor.
+[FoodDiary.Presentation.Api/Controllers/CurrentUserUnavailableException.cs]
+dotnet_diagnostic.RCS1194.severity = none

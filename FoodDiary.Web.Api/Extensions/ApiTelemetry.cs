@@ -7,7 +7,7 @@ public static class ApiTelemetry {
     public const string TelemetryName = "FoodDiary.Web.Api";
 
     public static readonly ActivitySource ActivitySource = new(TelemetryName);
-    public static readonly Meter Meter = new(TelemetryName);
+    private static readonly Meter Meter = new(TelemetryName);
     public static readonly Counter<long> RequestCounter = Meter.CreateCounter<long>(
         "fooddiary.api.requests",
         unit: "{request}",

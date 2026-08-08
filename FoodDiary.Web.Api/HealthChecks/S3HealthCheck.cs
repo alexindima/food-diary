@@ -16,11 +16,9 @@ public sealed class S3HealthCheck(
         string bucket = s3Options.Value.Bucket;
 
         if (string.IsNullOrWhiteSpace(bucket)) {
-            if (!environment.IsDevelopment()) {
-                return HealthCheckResult.Unhealthy("S3 bucket is not configured.");
-            }
-
-            return HealthCheckResult.Healthy("S3 not configured.");
+            return !environment.IsDevelopment()
+                ? HealthCheckResult.Unhealthy("S3 bucket is not configured.")
+                : HealthCheckResult.Healthy("S3 not configured.");
         }
 
         try {

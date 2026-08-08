@@ -430,11 +430,11 @@
                      },
                      {
                          "path":  "FoodDiary.Web.Api/Extensions/RequestObservabilityMiddleware.cs",
-                         "nonBlankLines":  208,
+                         "nonBlankLines":  209,
                          "decisionPoints":  37,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  59.66
+                         "structuralRiskScore":  59.68
                      },
                      {
                          "path":  "FoodDiary.Application/Consumptions/Mappings/ConsumptionMappings.cs",
@@ -18784,11 +18784,11 @@
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Authorization/PresentationRoleNames.cs",
-                      "nonBlankLines":  8,
+                      "nonBlankLines":  6,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
+                      "structuralRiskScore":  0.12
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Controllers/AuthorizedController.cs",
@@ -22600,11 +22600,11 @@
                   },
                   {
                       "path":  "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-                      "nonBlankLines":  193,
+                      "nonBlankLines":  195,
                       "decisionPoints":  23,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  38.36
+                      "structuralRiskScore":  38.4
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Build/ApiBuildInfo.cs",
@@ -22616,11 +22616,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiApplicationBuilderExtensions.cs",
-                      "nonBlankLines":  50,
+                      "nonBlankLines":  49,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4
+                      "structuralRiskScore":  3.98
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
@@ -22696,11 +22696,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/RequestObservabilityMiddleware.cs",
-                      "nonBlankLines":  208,
+                      "nonBlankLines":  209,
                       "decisionPoints":  37,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  59.66
+                      "structuralRiskScore":  59.68
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/SecurityHeadersMiddleware.cs",
@@ -22720,11 +22720,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/HealthChecks/S3HealthCheck.cs",
-                      "nonBlankLines":  30,
-                      "decisionPoints":  3,
+                      "nonBlankLines":  29,
+                      "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.1
+                      "structuralRiskScore":  3.58
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Options/ApiBuildInfoOptions.cs",

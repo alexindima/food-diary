@@ -6,11 +6,11 @@
                       "externalTransfers":  "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
                   },
     "summary":  {
-                    "candidateFields":  1394,
-                    "credential":  147,
-                    "identity":  141,
+                    "candidateFields":  1391,
+                    "credential":  146,
+                    "identity":  140,
                     "health":  609,
-                    "financial":  200,
+                    "financial":  199,
                     "privateContent":  297,
                     "boundaryFiles":  178,
                     "potentialLoggingLeads":  1,
@@ -897,14 +897,7 @@
                        "name":  "AccessToken",
                        "type":  "string",
                        "path":  "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-                       "line":  232
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "RefreshToken",
-                       "type":  "string",
-                       "path":  "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-                       "line":  232
+                       "line":  234
                    },
                    {
                        "category":  "credential",
@@ -2438,13 +2431,6 @@
                        "type":  "IReadOnlyList\u003cWebPushSubscriptionHttpResponse\u003e",
                        "path":  "FoodDiary.Presentation.Api/Features/Users/Responses/ProfileOverviewHttpResponse.cs",
                        "line":  9
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "AmountMl",
-                       "type":  "int",
-                       "path":  "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-                       "line":  234
                    },
                    {
                        "category":  "health",
@@ -7579,13 +7565,6 @@
                    },
                    {
                        "category":  "identity",
-                       "name":  "TelegramUserId",
-                       "type":  "long",
-                       "path":  "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-                       "line":  230
-                   },
-                   {
-                       "category":  "identity",
                        "name":  "Email",
                        "type":  "string",
                        "path":  "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommand.cs",
@@ -10882,11 +10861,9 @@
                           {
                               "path":  "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
                               "categories":  [
-                                                 "credential",
-                                                 "financial",
-                                                 "identity"
+                                                 "credential"
                                              ],
-                              "fieldCount":  4
+                              "fieldCount":  1
                           },
                           {
                               "path":  "MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",

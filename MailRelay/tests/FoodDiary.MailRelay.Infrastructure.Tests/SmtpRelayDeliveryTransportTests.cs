@@ -210,7 +210,9 @@ public sealed class SmtpRelayDeliveryTransportTests {
         }
 
         public async Task<string> WaitForMessageDataAsync() {
-            Task completed = await Task.WhenAny(_messageData.Task, Task.Delay(TimeSpan.FromSeconds(10))).ConfigureAwait(false);
+            Task completed = await Task.WhenAny(
+                _messageData.Task,
+                Task.Delay(TimeSpan.FromSeconds(10), TimeProvider.System)).ConfigureAwait(false);
             if (!ReferenceEquals(completed, _messageData.Task)) {
                 throw new TimeoutException("SMTP test server did not receive message data.");
             }

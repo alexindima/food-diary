@@ -79123,7 +79123,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Controllers/BaseApiController.cs",
                               "isTest":  false,
-                              "referenceCount":  2
+                              "referenceCount":  1
                           },
                           {
                               "contract":  "ISender",

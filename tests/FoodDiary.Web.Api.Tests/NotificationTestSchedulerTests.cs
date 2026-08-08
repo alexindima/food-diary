@@ -30,7 +30,9 @@ public sealed class NotificationTestSchedulerTests {
         var userId = Guid.NewGuid();
 
         ScheduledNotificationData scheduled = await scheduler.ScheduleAsync(userId, 0, type, CancellationToken.None);
-        (Guid CommandUserId, string CommandType) = await dispatched.Task.WaitAsync(TimeSpan.FromSeconds(3));
+        (Guid CommandUserId, string CommandType) = await dispatched.Task.WaitAsync(
+            TimeSpan.FromSeconds(3),
+            TimeProvider.System);
 
         Assert.Multiple(
             () => Assert.Equal(expectedType, scheduled.Type),

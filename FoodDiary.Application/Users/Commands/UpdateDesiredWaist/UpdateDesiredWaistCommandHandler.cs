@@ -14,7 +14,7 @@ public sealed class UpdateDesiredWaistCommandHandler(
     TimeProvider? timeProvider = null)
     : ICommandHandler<UpdateDesiredWaistCommand, Result<UserDesiredWaistModel>> {
     public UpdateDesiredWaistCommandHandler(IUserContextService userContextService)
-        : this(userContextService, NullCurrentWaistProvider.Instance) {
+        : this(userContextService, NullCurrentWaistProvider.Instance, TimeProvider.System) {
     }
 
     public async Task<Result<UserDesiredWaistModel>> Handle(

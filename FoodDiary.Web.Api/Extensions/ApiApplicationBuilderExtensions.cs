@@ -39,9 +39,7 @@ public static class ApiApplicationBuilderExtensions {
             app.UseOutputCache();
 
             app.MapOperationalEndpoints();
-            app.MapPresentationApi(ApiCompositionConstants.CorsPolicyName);
-
-            return app;
+            return app.MapPresentationApi(ApiCompositionConstants.CorsPolicyName);
         }
 
         private void MapOperationalEndpoints() {

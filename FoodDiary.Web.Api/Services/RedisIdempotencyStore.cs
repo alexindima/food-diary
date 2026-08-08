@@ -94,14 +94,15 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
         }
 
         CompletedEntry? entry = TryDeserialize(cached.ToString());
-        if (entry is null) {
-            await database.KeyDeleteAsync(responseKey).ConfigureAwait(false);
-            return null;
+        if (entry is not null) {
+            return !string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal)
+                ? new IdempotencyReservation(IdempotencyReservationStatus.Conflict)
+                : new IdempotencyReservation(IdempotencyReservationStatus.Replay, entry.StatusCode, entry.Body);
         }
 
-        return !string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal)
-            ? new IdempotencyReservation(IdempotencyReservationStatus.Conflict)
-            : new IdempotencyReservation(IdempotencyReservationStatus.Replay, entry.StatusCode, entry.Body);
+        await database.KeyDeleteAsync(responseKey).ConfigureAwait(false);
+        return null;
+
     }
 
     private static async Task<IdempotencyReservation> TryAcquireAfterExpiredLockAsync(

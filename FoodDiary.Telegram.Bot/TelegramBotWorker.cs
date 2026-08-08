@@ -109,6 +109,7 @@ public sealed class TelegramBotWorker(
     }
 
     private async Task HandleCallbackAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken) {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (callbackQuery.Data is null || callbackQuery.From is null) {
             return;
         }
@@ -191,7 +192,7 @@ public sealed class TelegramBotWorker(
 
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/auth/telegram/bot/auth",
-            new TelegramBotAuthRequest(telegramUserId),
+            new { TelegramUserId = telegramUserId },
             cancellationToken).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode) {
@@ -212,7 +213,10 @@ public sealed class TelegramBotWorker(
         client.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
-        var request = new CreateHydrationRequest(timeProvider.GetUtcNow().UtcDateTime, amountMl);
+        var request = new {
+            TimestampUtc = timeProvider.GetUtcNow().UtcDateTime,
+            AmountMl = amountMl,
+        };
         HttpResponseMessage response = await client.PostAsJsonAsync("/api/hydrations", request, cancellationToken).ConfigureAwait(false);
         return response.IsSuccessStatusCode;
     }
@@ -227,9 +231,5 @@ public sealed class TelegramBotWorker(
         await Task.Delay(PollingErrorRetryDelay, timeProvider, cancellationToken).ConfigureAwait(false);
     }
 
-    private sealed record TelegramBotAuthRequest(long TelegramUserId);
-
-    private sealed record AuthResponse(string AccessToken, string RefreshToken);
-
-    private sealed record CreateHydrationRequest(DateTime TimestampUtc, int AmountMl);
+    private sealed record AuthResponse(string AccessToken);
 }

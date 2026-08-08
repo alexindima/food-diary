@@ -13,14 +13,12 @@ namespace FoodDiary.Presentation.Api.Controllers;
 
 [ApiVersion("1.0")]
 public abstract class BaseApiController(ISender mediator) : ControllerBase {
-    protected ISender Mediator { get; } = mediator;
-
     protected Task Send(IRequest request) {
-        return Mediator.Send(request, HttpContext.RequestAborted);
+        return mediator.Send(request, HttpContext.RequestAborted);
     }
 
-    protected Task<TResponse> Send<TResponse>(IRequest<TResponse> request) {
-        return Mediator.Send(request, HttpContext.RequestAborted);
+    private Task<TResponse> Send<TResponse>(IRequest<TResponse> request) {
+        return mediator.Send(request, HttpContext.RequestAborted);
     }
 
     protected async Task<IActionResult> HandleOk<TResponse, THttpResponse>(
@@ -58,7 +56,7 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         return result.ToNoContentActionResult(this);
     }
 
-    protected async Task<IActionResult> HandleNoContent(Task<Result> resultTask) {
+    private async Task<IActionResult> HandleNoContent(Task<Result> resultTask) {
         Result result = await resultTask;
         return result.ToNoContentActionResult(this);
     }
@@ -112,7 +110,8 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
 
     private PresentationOperationObservation BeginObservation(string operationName, Guid? userId) {
         var stopwatch = Stopwatch.StartNew();
-        Activity? activity = PresentationApiTelemetry.ActivitySource.StartActivity(operationName, ActivityKind.Internal);
+        // ReSharper disable once ExplicitCallerInfoArgument
+        Activity? activity = PresentationApiTelemetry.ActivitySource.StartActivity(operationName);
         string feature = ResolveFeatureName();
         string controllerName = GetType().Name;
         string? route = HttpContext.GetEndpoint()?.DisplayName;

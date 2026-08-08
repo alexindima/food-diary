@@ -517,7 +517,7 @@ public sealed class TelegramBotWorkerTests {
                 return;
             }
 
-            await Task.Delay(TimeSpan.FromMilliseconds(10), timeout.Token).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromMilliseconds(10), TimeProvider.System, timeout.Token).ConfigureAwait(false);
         }
     }
 

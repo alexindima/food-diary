@@ -14,7 +14,7 @@ public sealed class UpdateDesiredWeightCommandHandler(
     TimeProvider? timeProvider = null)
     : ICommandHandler<UpdateDesiredWeightCommand, Result<UserDesiredWeightModel>> {
     public UpdateDesiredWeightCommandHandler(IUserContextService userContextService)
-        : this(userContextService, NullCurrentWeightProvider.Instance) {
+        : this(userContextService, NullCurrentWeightProvider.Instance, TimeProvider.System) {
     }
 
     public async Task<Result<UserDesiredWeightModel>> Handle(

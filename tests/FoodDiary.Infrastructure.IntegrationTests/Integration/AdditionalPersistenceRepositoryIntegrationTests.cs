@@ -438,16 +438,17 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             firstEntered.SetResult();
             await releaseFirst.Task.ConfigureAwait(false);
         });
-        await firstEntered.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        await firstEntered.Task.WaitAsync(TimeSpan.FromSeconds(5), TimeProvider.System);
 
         Task secondTask = secondRunner.ExecuteSerializedAsync("billing-webhook:paddle:sub_123", _ => {
             secondEntered.SetResult();
             return Task.CompletedTask;
         });
 
-        await Assert.ThrowsAsync<TimeoutException>(() => secondEntered.Task.WaitAsync(TimeSpan.FromMilliseconds(250)));
+        await Assert.ThrowsAsync<TimeoutException>(() =>
+            secondEntered.Task.WaitAsync(TimeSpan.FromMilliseconds(250), TimeProvider.System));
         releaseFirst.SetResult();
-        await Task.WhenAll(firstTask, secondTask).WaitAsync(TimeSpan.FromSeconds(5));
+        await Task.WhenAll(firstTask, secondTask).WaitAsync(TimeSpan.FromSeconds(5), TimeProvider.System);
         Assert.True(secondEntered.Task.IsCompletedSuccessfully);
     }
 
