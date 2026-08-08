@@ -18,6 +18,7 @@ using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Admin.Queries.GetAdminAiPrompts;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
+using FoodDiary.Application.Admin.Queries.GetAdminBillingRevenueSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
 using FoodDiary.Application.Admin.Queries.GetAdminContentReports;
@@ -242,6 +243,15 @@ public sealed class AdminControllersCoverageTests {
         var subscription = new AdminBillingSubscriptionReadModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", "stripe", "customer", "sub", "pm", "price", "premium", "active", now, now.AddDays(30), CancelAtPeriodEnd: false, NextBillingAttemptUtc: null, LastWebhookEventId: null, LastSyncedAtUtc: null, now, ModifiedOnUtc: null);
         var payment = new AdminBillingPaymentReadModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", BillingSubscriptionId: null, "stripe", "payment", ExternalCustomerId: null, ExternalSubscriptionId: null, ExternalPaymentMethodId: null, ExternalPriceId: null, Plan: null, "succeeded", "invoice", Amount: null, Currency: null, CurrentPeriodStartUtc: null, CurrentPeriodEndUtc: null, WebhookEventId: null, ProviderMetadataJson: null, now, ModifiedOnUtc: null);
         var webhook = new AdminBillingWebhookEventReadModel(Guid.NewGuid(), "stripe", "event", "invoice.paid", ExternalObjectId: null, "processed", now, PayloadJson: null, ErrorMessage: null, now, ModifiedOnUtc: null);
+
+        var revenue = new AdminBillingRevenueSummaryReadModel(now.AddMonths(-1), now, []);
+        CapturedSender revenueSender = SubstituteSender.Capture(Result.Success(revenue));
+        AdminBillingController revenueController = CreateController(new AdminBillingController(revenueSender));
+        IActionResult revenueResult = await revenueController.GetRevenueSummary(
+            new GetAdminBillingHttpQuery(FromUtc: revenue.FromUtc, ToUtc: revenue.ToUtc));
+        Assert.IsType<AdminBillingRevenueSummaryHttpResponse>(Assert.IsType<OkObjectResult>(revenueResult).Value);
+        GetAdminBillingRevenueSummaryQuery revenueQuery = Assert.IsType<GetAdminBillingRevenueSummaryQuery>(revenueSender.Request);
+        Assert.Equal(revenue.FromUtc, revenueQuery.FromUtc);
 
         CapturedSender subscriptionSender = SubstituteSender.Capture(Result.Success(new PagedResponse<AdminBillingSubscriptionReadModel>([subscription], 1, 10, 1, 1)));
         AdminBillingController subscriptionController = CreateController(new AdminBillingController(subscriptionSender));

@@ -1,6 +1,9 @@
 using System.Reflection;
+using System.Collections;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace FoodDiary.Web.Api.Tests.Extensions;
 
@@ -27,6 +30,44 @@ public sealed class RateLimiterOptionsSetupTests {
         Assert.Equal("ip:198.51.100.25", partitionKey);
     }
 
+    [Fact]
+    public void GetPartitionKey_WhenRemoteIpIsMissing_UsesUnknownIp() {
+        var httpContext = new DefaultHttpContext();
+
+        string partitionKey = InvokeGetPartitionKey(httpContext);
+
+        Assert.Equal("ip:unknown", partitionKey);
+    }
+
+    [Fact]
+    public void GetPartitionKey_WhenAuthenticatedUserHasId_UsesUserId() {
+        var userId = Guid.NewGuid();
+        var httpContext = new DefaultHttpContext {
+            User = new System.Security.Claims.ClaimsPrincipal(
+                new System.Security.Claims.ClaimsIdentity(
+                    [new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, userId.ToString())],
+                    "test")),
+        };
+
+        string partitionKey = InvokeGetPartitionKey(httpContext);
+
+        Assert.Equal($"user:{userId:D}", partitionKey);
+    }
+
+    [Fact]
+    public void Configure_WebhookPolicyFactory_CreatesPartition() {
+        var options = new RateLimiterOptions();
+        new RateLimiterOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiRateLimitingOptions())).Configure(options);
+        object policy = FindPolicy(options, PresentationPolicyNames.WebhookRateLimitPolicyName);
+        Delegate factory = Assert.Single(GetDelegates(policy));
+        var httpContext = new DefaultHttpContext();
+        httpContext.Connection.RemoteIpAddress = System.Net.IPAddress.Parse("198.51.100.25");
+
+        object? partition = factory.DynamicInvoke(httpContext);
+
+        Assert.NotNull(partition);
+    }
+
     private static string InvokeGetPartitionKey(HttpContext httpContext) {
         MethodInfo? method = typeof(RateLimiterOptionsSetup).GetMethod(
             "GetPartitionKey",
@@ -35,5 +76,34 @@ public sealed class RateLimiterOptionsSetupTests {
         Assert.NotNull(method);
         object? result = method.Invoke(null, [httpContext]);
         return Assert.IsType<string>(result);
+    }
+
+    private static object FindPolicy(RateLimiterOptions options, string policyName) {
+        IEnumerable<IDictionary> dictionaries = typeof(RateLimiterOptions)
+            .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+            .Where(property => typeof(IDictionary).IsAssignableFrom(property.PropertyType))
+            .Select(property => property.GetValue(options))
+            .OfType<IDictionary>();
+        IDictionary dictionary = Assert.Single(dictionaries, candidate => candidate.Contains(policyName));
+        object? policy = dictionary[policyName];
+        Assert.NotNull(policy);
+        return policy;
+    }
+
+    private static IReadOnlyList<Delegate> GetDelegates(object instance) {
+        List<Delegate> delegates = [];
+        for (Type? type = instance.GetType(); type is not null; type = type.BaseType) {
+            delegates.AddRange(type
+                .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                .Select(field => field.GetValue(instance))
+                .OfType<Delegate>());
+            delegates.AddRange(type
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                .Where(property => property.GetIndexParameters().Length == 0)
+                .Select(property => property.GetValue(instance))
+                .OfType<Delegate>());
+        }
+
+        return delegates;
     }
 }

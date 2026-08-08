@@ -632,8 +632,18 @@ public partial class BillingFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class NoOpBillingTransactionRunner : IBillingTransactionRunner {
+        public string? LastSerializationKey { get; private set; }
+
         public Task ExecuteAsync(Func<CancellationToken, Task> operation, CancellationToken cancellationToken = default) =>
             operation(cancellationToken);
+
+        public Task ExecuteSerializedAsync(
+            string serializationKey,
+            Func<CancellationToken, Task> operation,
+            CancellationToken cancellationToken = default) {
+            LastSerializationKey = serializationKey;
+            return operation(cancellationToken);
+        }
     }
 
     [ExcludeFromCodeCoverage]

@@ -10,6 +10,7 @@ using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminAiPrompts;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
+using FoodDiary.Application.Admin.Queries.GetAdminBillingRevenueSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
 using FoodDiary.Application.Admin.Queries.GetAdminContentReports;
@@ -35,6 +36,53 @@ using FoodDiary.Application.Admin.Models;
 namespace FoodDiary.Application.Tests.Admin;
 
 public partial class AdminFeatureTests {
+
+    [Fact]
+    public async Task GetAdminBillingRevenueSummaryHandler_UsesExplicitUtcRange() {
+        var repository = new RecordingAdminBillingRepository();
+        var from = new DateTime(2026, 7, 1, 0, 0, 0, DateTimeKind.Local);
+        var to = new DateTime(2026, 8, 1, 0, 0, 0, DateTimeKind.Local);
+        var query = new GetAdminBillingRevenueSummaryQuery(from, to);
+        var handler = new GetAdminBillingRevenueSummaryQueryHandler(new AdminBillingReadService(repository));
+
+        Result<AdminBillingRevenueSummaryReadModel> result = await handler.Handle(query, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(from.ToUniversalTime(), result.Value.FromUtc),
+            () => Assert.Equal(to.ToUniversalTime(), result.Value.ToUtc));
+    }
+
+    [Fact]
+    public async Task GetAdminBillingRevenueSummaryHandler_WhenRangeIsInvalid_ReturnsValidationFailure() {
+        var instant = new DateTime(2026, 8, 1, 0, 0, 0, DateTimeKind.Utc);
+        var handler = new GetAdminBillingRevenueSummaryQueryHandler(
+            new AdminBillingReadService(new RecordingAdminBillingRepository()));
+
+        Result<AdminBillingRevenueSummaryReadModel> result = await handler.Handle(
+            new GetAdminBillingRevenueSummaryQuery(instant, instant),
+            cancellationToken: CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task AdminBillingReadService_WhenRangeIsOmitted_UsesCurrentUtcMonth() {
+        var repository = new RecordingAdminBillingRepository();
+        var timeProvider = new FixedDateTimeProvider(new DateTime(2026, 8, 8, 12, 0, 0, DateTimeKind.Utc));
+        var service = new AdminBillingReadService(repository, timeProvider);
+
+        Result<AdminBillingRevenueSummaryReadModel> result = await service.GetRevenueSummaryAsync(
+            fromUtc: null,
+            toUtc: null,
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(new DateTime(2026, 8, 1, 0, 0, 0, DateTimeKind.Utc), result.Value.FromUtc),
+            () => Assert.Equal(new DateTime(2026, 9, 1, 0, 0, 0, DateTimeKind.Utc), result.Value.ToUtc));
+    }
 
     [Fact]
     public async Task GetAdminBillingPaymentsHandler_NormalizesFiltersAndReturnsPagedPayments() {

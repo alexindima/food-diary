@@ -1032,6 +1032,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             executed = !token.IsCancellationRequested;
             return Task.CompletedTask;
         });
+        await runner.ExecuteSerializedAsync("billing-webhook:coverage:event", _ => Task.CompletedTask);
 
         Assert.True(executed);
         await Assert.ThrowsAsync<DbUpdateException>(() =>

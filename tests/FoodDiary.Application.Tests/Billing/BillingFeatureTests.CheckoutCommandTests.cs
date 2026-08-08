@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Billing.Common;
@@ -258,6 +259,68 @@ public partial class BillingFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
         Assert.Empty(paymentRepository.Payments);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task CreateCheckoutSession_WhenPendingCheckoutIsRecent_ReturnsCheckoutAlreadyInProgress(bool hasModifiedTimestamp) {
+        var user = User.Create("pending-checkout@example.com", "hash");
+        var subscription = BillingSubscription.CreatePending(
+            user.Id,
+            BillingProviderNames.Paddle,
+            "customer_pending",
+            "price_monthly",
+            "monthly");
+        if (hasModifiedTimestamp) {
+            subscription.UpdateCheckoutContext(
+                BillingProviderNames.Paddle,
+                "customer_pending_updated",
+                "price_monthly",
+                "monthly");
+        }
+        var handler = new CreateCheckoutSessionCommandHandler(
+            new FakeUserRepository(user),
+            new InMemoryBillingSubscriptionRepository(subscription),
+            new RecordingBillingPaymentRepository(),
+            new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)),
+            TimeProvider.System);
+
+        Result<BillingCheckoutSessionModel> result = await handler.Handle(
+            new CreateCheckoutSessionCommand(user.Id.Value, "monthly", BillingProviderNames.Paddle),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Billing.CheckoutAlreadyInProgress", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateCheckoutSession_WhenUnitOfWorkHasPendingChanges_SavesChanges() {
+        var user = User.Create("checkout-uow@example.com", "hash");
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.HasPendingChanges.Returns(returnThis: true);
+        var gateway = new FakeBillingProviderGateway(
+            BillingProviderNames.Paddle,
+            checkoutSession: new BillingCheckoutSessionModel(
+                "session_uow",
+                "https://checkout.example/session_uow",
+                "customer_uow",
+                "price_monthly",
+                "monthly"));
+        var handler = new CreateCheckoutSessionCommandHandler(
+            new FakeUserRepository(user),
+            new InMemoryBillingSubscriptionRepository(),
+            new RecordingBillingPaymentRepository(),
+            new FakeBillingProviderGatewayAccessor(gateway),
+            new FixedDateTimeProvider(Now),
+            unitOfWork: unitOfWork);
+
+        Result<BillingCheckoutSessionModel> result = await handler.Handle(
+            new CreateCheckoutSessionCommand(user.Id.Value, "monthly", BillingProviderNames.Paddle),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        await unitOfWork.Received(1).SaveChangesAsync(CancellationToken.None);
     }
 
 }

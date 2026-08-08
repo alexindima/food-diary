@@ -17,14 +17,15 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             $"{container.GetConnectionString()},abortConnect=false").ConfigureAwait(false);
         await using ConfiguredAsyncDisposable connectionDisposal = connection.ConfigureAwait(false);
         var store = new RedisIdempotencyStore(connection);
-        var processingTtl = TimeSpan.FromMilliseconds(150);
+        var staleOwnerProcessingTtl = TimeSpan.FromMilliseconds(150);
+        var currentOwnerProcessingTtl = TimeSpan.FromSeconds(5);
         var responseTtl = TimeSpan.FromMinutes(1);
 
         IdempotencyReservation staleOwner = await store.ReserveAsync(
             "concurrent-request",
             "same-hash",
             responseTtl,
-            processingTtl).ConfigureAwait(false);
+            staleOwnerProcessingTtl).ConfigureAwait(false);
         await WaitUntilAsync(
             async () => !await connection.GetDatabase()
                 .KeyExistsAsync("fooddiary:idempotency:concurrent-request:lock")
@@ -34,7 +35,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             "concurrent-request",
             "same-hash",
             responseTtl,
-            processingTtl).ConfigureAwait(false);
+            currentOwnerProcessingTtl).ConfigureAwait(false);
 
         await store.CompleteAsync(
             "concurrent-request",
@@ -47,7 +48,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             "concurrent-request",
             "same-hash",
             responseTtl,
-            processingTtl).ConfigureAwait(false);
+            currentOwnerProcessingTtl).ConfigureAwait(false);
 
         Assert.Equal(IdempotencyReservationStatus.Acquired, currentOwner.Status);
         Assert.Equal(IdempotencyReservationStatus.InProgress, whileCurrentOwnerActive.Status);
@@ -63,7 +64,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             "concurrent-request",
             "same-hash",
             responseTtl,
-            processingTtl).ConfigureAwait(false);
+            currentOwnerProcessingTtl).ConfigureAwait(false);
 
         Assert.Multiple(
             () => Assert.Equal(IdempotencyReservationStatus.Replay, replay.Status),

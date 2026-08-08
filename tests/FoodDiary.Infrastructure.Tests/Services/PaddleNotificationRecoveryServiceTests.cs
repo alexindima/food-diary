@@ -67,6 +67,52 @@ public sealed class PaddleNotificationRecoveryServiceTests {
         Assert.Empty(handler.Requests);
     }
 
+    [Theory]
+    [InlineData("https://sandbox-api.paddle.com/notifications?page=2")]
+    [InlineData("notifications?page=2")]
+    public async Task ReplayFailedAsync_WithNextPage_FollowsAbsoluteAndRelativeLinks(string next) {
+        var handler = new QueueHandler(
+            JsonResponse($"{{\"data\":[],\"meta\":{{\"pagination\":{{\"next\":\"{next}\"}}}}}}"),
+            JsonResponse("""{"data":[],"meta":{"pagination":{"next":null}}}"""));
+        var service = new PaddleNotificationRecoveryService(new HttpClient(handler), MsOptions.Create(ValidOptions()));
+
+        PaddleNotificationRecoveryResult result = await service.ReplayFailedAsync(CancellationToken.None);
+
+        Assert.Equal(new PaddleNotificationRecoveryResult(0, 0), result);
+        Assert.Equal(2, handler.Requests.Count);
+        Assert.EndsWith("/notifications?page=2", handler.Requests[1].RequestUri?.AbsoluteUri, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("live_client-token", "paddle-api-key", true)]
+    [InlineData("test_client-token", "paddle-api-key", false)]
+    [InlineData("live_client-token", "paddle-sdbx-key", false)]
+    public void HasMatchingEnvironment_ProductionValidatesTokenAndApiKey(
+        string clientSideToken,
+        string apiKey,
+        bool expected) {
+        var options = new PaddleOptions {
+            Environment = PaddleOptions.ProductionEnvironment,
+            ApiBaseUrl = "https://api.paddle.com/",
+            ClientSideToken = clientSideToken,
+            ApiKey = apiKey,
+        };
+
+        Assert.Equal(expected, PaddleOptions.HasMatchingEnvironment(options));
+    }
+
+    [Fact]
+    public void HasMatchingEnvironment_WhenEnvironmentIsUnknown_ReturnsFalse() {
+        var options = new PaddleOptions {
+            Environment = "Development",
+            ApiBaseUrl = "https://api.paddle.com",
+            ClientSideToken = "live_client-token",
+            ApiKey = "paddle-api-key",
+        };
+
+        Assert.False(PaddleOptions.HasMatchingEnvironment(options));
+    }
+
     private static PaddleOptions ValidOptions() => new() {
         Environment = PaddleOptions.SandboxEnvironment,
         ApiKey = "paddle-api-key",

@@ -375,12 +375,111 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await context.SaveChangesAsync();
 
         Assert.Same(payment, await paymentRepository.GetByExternalPaymentIdAsync(BillingProviderNames.Stripe, "payment-1"));
+        payment.ApplyProviderResult(
+            subscription.Id,
+            externalCustomerId: null,
+            externalSubscriptionId: null,
+            externalPaymentMethodId: null,
+            externalPriceId: null,
+            plan: null,
+            status: "refunded",
+            kind: "subscription",
+            amount: null,
+            currency: null,
+            currentPeriodStartUtc: null,
+            currentPeriodEndUtc: null,
+            webhookEventId: null,
+            providerMetadataJson: null);
+        await paymentRepository.UpdateAsync(payment);
 
         var webhookRepository = new BillingWebhookEventRepository(context);
-        await webhookRepository.AddAsync(CreateWebhookEvent());
+        BillingWebhookEvent webhookEvent = await webhookRepository.AddAsync(BillingWebhookEvent.CreateReceived(
+            BillingProviderNames.Stripe,
+            $"event-{Guid.NewGuid():N}",
+            "invoice.paid",
+            externalObjectId: null,
+            DateTime.UtcNow.AddMinutes(-1),
+            "{}",
+            "{}"));
         await context.SaveChangesAsync();
 
-        Assert.True(await webhookRepository.ExistsAsync(BillingProviderNames.Stripe, "event-1"));
+        Assert.True(await webhookRepository.ExistsAsync(BillingProviderNames.Stripe, webhookEvent.EventId));
+        Assert.Same(webhookEvent, await webhookRepository.GetByIdAsync(webhookEvent.Id));
+        Assert.Contains(webhookEvent, await webhookRepository.GetPendingAsync(limit: 10));
+        webhookEvent.MarkProcessed(DateTime.UtcNow);
+        await webhookRepository.UpdateAsync(webhookEvent);
+        await context.SaveChangesAsync();
+    }
+
+    [RequiresDockerFact]
+    public async Task PostgresBillingCheckoutLock_AcquiresAndReleasesAdvisoryLock() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var checkoutLock = new PostgresBillingCheckoutLock(context);
+
+        IAsyncDisposable releaser = await checkoutLock.AcquireAsync(Guid.NewGuid());
+        await releaser.DisposeAsync();
+        await releaser.DisposeAsync();
+
+        Assert.False(context.Database.GetDbConnection().State == System.Data.ConnectionState.Open);
+    }
+
+    [RequiresDockerFact]
+    public async Task BillingTransactionRunner_SerializesMatchingWebhookKeys() {
+        await using FoodDiaryDbContext firstContext = await databaseFixture.CreateDbContextAsync();
+        string connectionString = firstContext.Database.GetConnectionString()!;
+        await using FoodDiaryDbContext secondContext = databaseFixture.CreateDbContext(connectionString);
+        var firstRunner = new EfBillingTransactionRunner(firstContext);
+        var secondRunner = new EfBillingTransactionRunner(secondContext);
+        var firstEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseFirst = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var secondEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        Task firstTask = firstRunner.ExecuteSerializedAsync("billing-webhook:paddle:sub_123", async _ => {
+            firstEntered.SetResult();
+            await releaseFirst.Task.ConfigureAwait(false);
+        });
+        await firstEntered.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+        Task secondTask = secondRunner.ExecuteSerializedAsync("billing-webhook:paddle:sub_123", _ => {
+            secondEntered.SetResult();
+            return Task.CompletedTask;
+        });
+
+        await Assert.ThrowsAsync<TimeoutException>(() => secondEntered.Task.WaitAsync(TimeSpan.FromMilliseconds(250)));
+        releaseFirst.SetResult();
+        await Task.WhenAll(firstTask, secondTask).WaitAsync(TimeSpan.FromSeconds(5));
+        Assert.True(secondEntered.Task.IsCompletedSuccessfully);
+    }
+
+    [RequiresDockerFact]
+    public async Task PostgresBillingCheckoutLock_WhenLockCommandFails_ReleasesItsConnectionReference() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await context.Database.OpenConnectionAsync();
+        var connection = (Npgsql.NpgsqlConnection)context.Database.GetDbConnection();
+        await using (var command = new Npgsql.NpgsqlCommand("BEGIN; SELECT missing_billing_lock_test_function()", connection)) {
+            await Assert.ThrowsAsync<Npgsql.PostgresException>(() => command.ExecuteNonQueryAsync());
+        }
+        var checkoutLock = new PostgresBillingCheckoutLock(context);
+
+        await Assert.ThrowsAsync<Npgsql.PostgresException>(() => checkoutLock.AcquireAsync(Guid.NewGuid()));
+
+        Assert.Equal(System.Data.ConnectionState.Open, context.Database.GetDbConnection().State);
+        await context.Database.CloseConnectionAsync();
+    }
+
+    [Fact]
+    public async Task PostgresBillingCheckoutLock_WhenConnectionCannotBeOpened_PropagatesFailure() {
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseNpgsql("Host=127.0.0.1;Port=1;Database=unavailable;Username=unavailable;Password=unavailable;Timeout=1")
+            .Options;
+        await using var context = new FoodDiaryDbContext(options);
+        var checkoutLock = new PostgresBillingCheckoutLock(context);
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            checkoutLock.AcquireAsync(Guid.NewGuid()));
+
+        Assert.IsType<Npgsql.NpgsqlException>(exception.InnerException);
+        Assert.NotEqual(System.Data.ConnectionState.Open, context.Database.GetDbConnection().State);
     }
 
     [RequiresDockerFact]

@@ -378,6 +378,41 @@ public sealed class BillingGatewayTests {
             string.Equals(request.RequestUri?.AbsolutePath, "/customers", StringComparison.Ordinal));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task PaddleCreateCheckoutSession_WhenRecoveryLookupsFail_CreatesCustomerAndTransaction(bool throwNetworkError) {
+        object lookupFailure = throwNetworkError
+            ? new HttpRequestException("lookup failed")
+            : new HttpResponseMessage(HttpStatusCode.BadGateway) { Content = JsonContent("{}") };
+        var handler = new ScriptedHttpMessageHandler(
+            lookupFailure,
+            new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent("""{"data":{"id":"ctm_new"}}""") },
+            throwNetworkError
+                ? new HttpRequestException("lookup failed")
+                : new HttpResponseMessage(HttpStatusCode.BadGateway) { Content = JsonContent("{}") },
+            new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = JsonContent("""{"data":{"id":"txn_new","checkout":{"url":"https://checkout.paddle.com/txn_new"}}}"""),
+            });
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+                PremiumMonthlyPriceId = "pri_monthly",
+                PremiumYearlyPriceId = "pri_yearly",
+                CheckoutUrl = "https://app.example/billing/paddle",
+            }));
+
+        Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(Guid.NewGuid(), "buyer@example.com", "monthly", ExistingCustomerId: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Equal("txn_new", result.Value.SessionId);
+        Assert.Equal(4, handler.RequestCount);
+    }
+
     [Fact]
     public async Task PaddleCreateCheckoutSession_WhenProviderNotConfigured_ReturnsProviderNotConfigured() {
         var gateway = new PaddleBillingGateway(
@@ -687,6 +722,35 @@ public sealed class BillingGatewayTests {
         Assert.Contains("malformed", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Theory]
+    [InlineData("not-a-number")]
+    [InlineData("9223372036854775807")]
+    public async Task PaddleWebhook_WhenTimestampIsInvalid_ReturnsValidationFailure(string timestamp) {
+        PaddleBillingGateway gateway = CreateConfiguredPaddleWebhookGateway();
+
+        Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
+            "{}",
+            $"ts={timestamp};h1=signature",
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("timestamp is invalid", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task PaddleWebhook_WhenCurrentSignatureDoesNotMatch_ReturnsValidationFailure() {
+        PaddleBillingGateway gateway = CreateConfiguredPaddleWebhookGateway();
+        long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+        Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
+            "{}",
+            string.Create(CultureInfo.InvariantCulture, $"ts={timestamp};h1={new string('0', 64)}"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("signature is invalid", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     [Fact]
     public async Task PaddleWebhook_WhenEventIsNotSupportedBillingEvent_ReturnsNullEvent() {
         string payload = JsonSerializer.Serialize(new {
@@ -700,6 +764,20 @@ public sealed class BillingGatewayTests {
         PaddleBillingGateway gateway = CreateConfiguredPaddleWebhookGateway();
 
         Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(payload, CreatePaddleSignature(payload, "secret"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Null(result.Value);
+    }
+
+    [Fact]
+    public async Task PaddleWebhook_WhenEventTypeIsMissing_ReturnsNullEvent() {
+        const string payload = """{"event_type":"","data":{}}""";
+        PaddleBillingGateway gateway = CreateConfiguredPaddleWebhookGateway();
+
+        Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
+            payload,
+            CreatePaddleSignature(payload, "secret"),
+            CancellationToken.None);
 
         Assert.True(result.IsSuccess, result.Error.Message);
         Assert.Null(result.Value);
@@ -723,8 +801,63 @@ public sealed class BillingGatewayTests {
         Assert.Null(result.Value);
     }
 
+    [Theory]
+    [InlineData("transaction.completed", "", "txn_123")]
+    [InlineData("transaction.completed", "ctm_123", "")]
+    [InlineData("adjustment.updated", "ctm_123", "")]
+    public async Task PaddleWebhook_WhenFinancialIdentifiersAreMissing_ReturnsNullEvent(
+        string eventType,
+        string customerId,
+        string objectId) {
+        string payload = string.Equals(eventType, "transaction.completed", StringComparison.Ordinal)
+            ? JsonSerializer.Serialize(new {
+                event_id = "evt_missing_financial_ids",
+                event_type = eventType,
+                data = new { id = objectId, customer_id = customerId },
+            })
+            : JsonSerializer.Serialize(new {
+                event_id = "evt_missing_financial_ids",
+                event_type = eventType,
+                data = new { id = objectId, transaction_id = "", customer_id = customerId },
+            });
+        PaddleBillingGateway gateway = CreateConfiguredPaddleWebhookGateway();
+
+        Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
+            payload,
+            CreatePaddleSignature(payload, "secret"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Null(result.Value);
+    }
+
     [Fact]
-    public async Task PaddleWebhook_WhenItemsMissing_MapsNullPriceAndTrialDates() {
+    public async Task PaddleWebhook_WhenApprovedAdjustmentAmountIsMissing_MapsNullAmount() {
+        string payload = JsonSerializer.Serialize(new {
+            event_id = "evt_adjustment_without_amount",
+            event_type = "adjustment.updated",
+            data = new {
+                id = "adj_123",
+                transaction_id = "txn_123",
+                customer_id = "ctm_123",
+                status = "approved",
+                action = "refund",
+                currency_code = "USD",
+            },
+        });
+        PaddleBillingGateway gateway = CreateConfiguredPaddleWebhookGateway();
+
+        Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
+            payload,
+            CreatePaddleSignature(payload, "secret"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Null(Assert.IsType<BillingWebhookEventModel>(result.Value).Amount);
+    }
+
+    [Fact]
+    public async Task PaddleWebhook_WhenItemsMissing_ReturnsValidationFailure() {
         var userId = Guid.NewGuid();
         string payload = JsonSerializer.Serialize(new {
             event_id = "evt_no_items",
@@ -747,16 +880,13 @@ public sealed class BillingGatewayTests {
 
         Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(payload, CreatePaddleSignature(payload, "secret"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess, result.Error.Message);
-        Assert.NotNull(result.Value);
-        Assert.Null(result.Value.ExternalPriceId);
-        Assert.Equal("monthly", result.Value.Plan);
-        Assert.Null(result.Value.TrialStartUtc);
-        Assert.Null(result.Value.TrialEndUtc);
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+        Assert.Contains("price", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
-    public async Task PaddleWebhook_WhenPriceIdUnknown_FallsBackToCustomPlan() {
+    public async Task PaddleWebhook_WhenPriceIdUnknown_ReturnsValidationFailure() {
         string payload = JsonSerializer.Serialize(new {
             event_id = "evt_unknown_price",
             event_type = "subscription.updated",
@@ -778,10 +908,9 @@ public sealed class BillingGatewayTests {
 
         Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(payload, CreatePaddleSignature(payload, "secret"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess, result.Error.Message);
-        Assert.NotNull(result.Value);
-        Assert.Equal("pri_unknown", result.Value.ExternalPriceId);
-        Assert.Equal("custom", result.Value.Plan);
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+        Assert.Contains("price", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -1558,7 +1687,7 @@ public sealed class BillingGatewayTests {
     }
 
     [Fact]
-    public async Task StripeWebhook_WhenPriceIdUnknown_FallsBackToMetadataPlan() {
+    public async Task StripeWebhook_WhenPriceIdUnknown_ReturnsValidationFailure() {
         var userId = Guid.NewGuid();
         var currentPeriodStart = new DateTimeOffset(2026, 5, 1, 0, 0, 0, TimeSpan.Zero);
         var currentPeriodEnd = new DateTimeOffset(2026, 6, 1, 0, 0, 0, TimeSpan.Zero);
@@ -1580,10 +1709,9 @@ public sealed class BillingGatewayTests {
             CreateStripeSignature(payload, "whsec_test"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess, result.Error.Message);
-        Assert.NotNull(result.Value);
-        Assert.Equal("price_unknown", result.Value.ExternalPriceId);
-        Assert.Equal("monthly", result.Value.Plan);
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+        Assert.Contains("price", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -2131,6 +2259,22 @@ public sealed class BillingGatewayTests {
             return _responses.Count > 1
                 ? _responses.Dequeue()
                 : _responses.Peek();
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ScriptedHttpMessageHandler(params object[] outcomes) : HttpMessageHandler {
+        private readonly Queue<object> _outcomes = new(outcomes);
+        public int RequestCount { get; private set; }
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken) {
+            RequestCount++;
+            object outcome = _outcomes.Dequeue();
+            return outcome is Exception exception
+                ? Task.FromException<HttpResponseMessage>(exception)
+                : Task.FromResult((HttpResponseMessage)outcome);
         }
     }
 

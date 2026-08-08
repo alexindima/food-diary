@@ -22,6 +22,7 @@ using FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
+using FoodDiary.Application.Admin.Queries.GetAdminBillingRevenueSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
 using FoodDiary.Application.Admin.Queries.GetAdminDashboardSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
@@ -281,6 +282,7 @@ public sealed class AdminHttpMappingsTests {
         GetAdminBillingSubscriptionsQuery subscriptions = httpQuery.ToSubscriptionsQuery();
         GetAdminBillingPaymentsQuery payments = httpQuery.ToPaymentsQuery();
         GetAdminBillingWebhookEventsQuery webhookEvents = httpQuery.ToWebhookEventsQuery();
+        GetAdminBillingRevenueSummaryQuery revenue = httpQuery.ToRevenueSummaryQuery();
 
         Assert.Multiple(
             () => Assert.Equal(3, subscriptions.Page),
@@ -292,7 +294,37 @@ public sealed class AdminHttpMappingsTests {
             () => Assert.Equal(to, subscriptions.ToUtc),
             () => Assert.Equal("invoice", payments.Kind),
             () => Assert.Equal("stripe", webhookEvents.Provider),
-            () => Assert.Equal("active", webhookEvents.Status));
+            () => Assert.Equal("active", webhookEvents.Status),
+            () => Assert.Equal(from, revenue.FromUtc),
+            () => Assert.Equal(to, revenue.ToUtc));
+    }
+
+    [Fact]
+    public void AdminBillingRevenueSummary_ToHttpResponse_MapsCurrencyBreakdown() {
+        DateTime from = DateTime.UtcNow.AddMonths(-1);
+        DateTime to = DateTime.UtcNow;
+        var model = new AdminBillingRevenueSummaryReadModel(
+            from,
+            to,
+            [new AdminBillingRevenueCurrencyReadModel("USD", 100, -10, -5, 2, 87, 4, 15, 3, 82, 3)]);
+
+        AdminBillingRevenueSummaryHttpResponse response = model.ToHttpResponse();
+
+        AdminBillingRevenueCurrencyHttpResponse currency = Assert.Single(response.Currencies);
+        Assert.Multiple(
+            () => Assert.Equal(from, response.FromUtc),
+            () => Assert.Equal(to, response.ToUtc),
+            () => Assert.Equal("USD", currency.Currency),
+            () => Assert.Equal(100, currency.Gross),
+            () => Assert.Equal(-10, currency.Refunds),
+            () => Assert.Equal(-5, currency.Chargebacks),
+            () => Assert.Equal(2, currency.Reversals),
+            () => Assert.Equal(87, currency.Net),
+            () => Assert.Equal(4, currency.SuccessfulPayments),
+            () => Assert.Equal(15, currency.Tax),
+            () => Assert.Equal(3, currency.PaddleFees),
+            () => Assert.Equal(82, currency.PaddleEarnings),
+            () => Assert.Equal(3, currency.EarningsTrackedPayments));
     }
 
     [Theory]
