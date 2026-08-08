@@ -128,7 +128,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
         }
 
         return await context.UserLoginEvents
-            .Where(item => ids.Contains(item.Id))
+            .Where(item => Enumerable.Contains(ids, item.Id))
             .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
     }
 

@@ -43,7 +43,7 @@ public sealed class MarketingAttributionEventRepository(FoodDiaryDbContext conte
         }
 
         return await context.MarketingAttributionEvents
-            .Where(item => ids.Contains(item.Id))
+            .Where(item => Enumerable.Contains(ids, item.Id))
             .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
     }
 

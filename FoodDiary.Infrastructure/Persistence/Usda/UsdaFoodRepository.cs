@@ -123,9 +123,10 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
                 g => (IReadOnlyList<UsdaFoodNutrient>)[.. g]);
     }
 
-    public async Task<IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>>> GetNutrientReadModelsByFdcIdsAsync(
-        IEnumerable<int> fdcIds,
-        CancellationToken cancellationToken = default) {
+    public async Task<IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>>>
+        GetNutrientReadModelsByFdcIdsAsync(
+            IEnumerable<int> fdcIds,
+            CancellationToken cancellationToken = default) {
         var fdcIdList = fdcIds.ToList();
         if (fdcIdList.Count == 0) {
             return new Dictionary<int, IReadOnlyList<UsdaNutrientReadModel>>();

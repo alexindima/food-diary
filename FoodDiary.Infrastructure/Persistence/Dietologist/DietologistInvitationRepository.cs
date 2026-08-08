@@ -184,13 +184,8 @@ public sealed class DietologistInvitationRepository(FoodDiaryDbContext context) 
         EntityEntry<DietologistInvitation> entry = context.Entry(invitation);
         if (entry.State == EntityState.Detached) {
             DietologistInvitation? existing = await context.DietologistInvitations
-                .FirstOrDefaultAsync(i => i.Id == invitation.Id, cancellationToken).ConfigureAwait(false);
-
-            if (existing is null) {
-                throw new DbUpdateConcurrencyException(
+                .FirstOrDefaultAsync(i => i.Id == invitation.Id, cancellationToken).ConfigureAwait(false) ?? throw new DbUpdateConcurrencyException(
                     $"Dietologist invitation '{invitation.Id.Value}' was not found while updating.");
-            }
-
             context.Entry(existing).CurrentValues.SetValues(invitation);
         }
         await Task.CompletedTask.ConfigureAwait(false);

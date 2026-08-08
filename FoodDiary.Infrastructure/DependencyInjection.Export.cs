@@ -13,14 +13,13 @@ public static partial class DependencyInjection {
     internal static Func<IPAddress, int, CancellationToken, ValueTask<Stream>> ConnectRemoteImageSocketAsync { get; set; } =
         ConnectRemoteImageSocketCoreAsync;
 
-    private static IServiceCollection AddExportInfrastructure(this IServiceCollection services) {
+    private static void AddExportInfrastructure(this IServiceCollection services) {
         services.AddHttpClient<IDiaryPdfGenerator, DiaryPdfGenerator>(client => client.Timeout = TimeSpan.FromSeconds(5))
             .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
                 AllowAutoRedirect = false,
                 ConnectCallback = ConnectToAllowedRemoteImageEndpointAsync,
             });
 
-        return services;
     }
 
     private static async ValueTask<Stream> ConnectToAllowedRemoteImageEndpointAsync(

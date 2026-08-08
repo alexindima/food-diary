@@ -19,7 +19,7 @@ internal sealed class RecommendationBulkDispatchRepository(FoodDiaryDbContext co
             .Where(dispatch =>
                 dispatch.DietologistUserId == dietologistUserId &&
                 dispatch.IdempotencyKey == idempotencyKey &&
-                clientIds.Contains(dispatch.ClientUserId))
+                Enumerable.Contains(clientIds, dispatch.ClientUserId))
             .Select(dispatch => new RecommendationBulkDispatchReadModel(
                 dispatch.ClientUserId.Value,
                 dispatch.RecommendationId.Value))

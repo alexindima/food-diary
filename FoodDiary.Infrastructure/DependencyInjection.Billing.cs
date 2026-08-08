@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddBillingInfrastructure(this IServiceCollection services) {
+    private static void AddBillingInfrastructure(this IServiceCollection services) {
         services.AddScoped<IBillingSubscriptionRepository, BillingSubscriptionRepository>();
         services.AddScoped<IBillingSubscriptionReadRepository>(static provider => provider.GetRequiredService<IBillingSubscriptionRepository>());
         services.AddScoped<IBillingSubscriptionReadModelRepository>(static provider => provider.GetRequiredService<IBillingSubscriptionRepository>());
@@ -19,6 +19,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IBillingTransactionRunner, EfBillingTransactionRunner>();
         services.AddScoped<IBillingCheckoutLock, PostgresBillingCheckoutLock>();
 
-        return services;
     }
 }

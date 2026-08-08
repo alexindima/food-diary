@@ -299,9 +299,9 @@ internal sealed class OutboxDeadLetterReplayService(
 
     private static string? GetLastError(IOutboxMessage message) =>
         message switch {
-            Email.EmailOutboxMessage email => email.LastError,
-            Images.ImageObjectDeletionOutboxMessage image => image.LastError,
-            Notifications.NotificationWebPushOutboxMessage notification => notification.LastError,
+            EmailOutboxMessage email => email.LastError,
+            ImageObjectDeletionOutboxMessage image => image.LastError,
+            NotificationWebPushOutboxMessage notification => notification.LastError,
             _ => null,
         };
 }

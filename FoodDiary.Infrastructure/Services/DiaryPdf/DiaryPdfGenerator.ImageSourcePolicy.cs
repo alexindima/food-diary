@@ -5,6 +5,7 @@ namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
     private const int MaxDataUrlBase64Length = ((MaxMealImageBytes + 2) / 3) * 4;
+
     internal static Func<string, CancellationToken, Task<IPAddress[]>> RemoteImageHostResolver { get; set; } =
         static (host, cancellationToken) => Dns.GetHostAddressesAsync(host, cancellationToken);
 
@@ -58,44 +59,41 @@ internal sealed partial class DiaryPdfGenerator {
         }
 
         byte[] bytes = address.GetAddressBytes();
-        if (address.AddressFamily == AddressFamily.InterNetwork) {
-            if (bytes[0] is 0 or 10) {
-                return false;
-            }
-
-            if (bytes[0] == 100 && bytes[1] is >= 64 and <= 127) {
-                return false;
-            }
-
-            if (bytes[0] == 169 && bytes[1] == 254) {
-                return false;
-            }
-
-            if (bytes[0] == 172 && bytes[1] is >= 16 and <= 31) {
-                return false;
-            }
-
-            if (bytes[0] == 192 && bytes[1] == 0 && bytes[2] == 0) {
-                return false;
-            }
-
-            if (bytes[0] == 192 && bytes[1] == 168) {
-                return false;
-            }
-
-            if (bytes[0] == 198 && bytes[1] is 18 or 19) {
-                return false;
-            }
-
-            return bytes[0] < 224;
+        if (address.AddressFamily != AddressFamily.InterNetwork) {
+            return address is { IsIPv6LinkLocal: false, IsIPv6Multicast: false, IsIPv6SiteLocal: false } &&
+                   !address.Equals(IPAddress.IPv6Any) &&
+                   !address.Equals(IPAddress.IPv6Loopback) &&
+                   (bytes[0] & 0xfe) != 0xfc;
         }
 
+        switch (bytes[0]) {
+            case 0 or 10:
+            case 100 when bytes[1] is >= 64 and <= 127:
+                return false;
+        }
+
+        if (bytes[0] == 169 && bytes[1] == 254) {
+            return false;
+        }
+
+        if (bytes[0] == 172 && bytes[1] is >= 16 and <= 31) {
+            return false;
+        }
+
+        if (bytes[0] == 192 && bytes[1] == 0 && bytes[2] == 0) {
+            return false;
+        }
+
+        if (bytes[0] == 192 && bytes[1] == 168) {
+            return false;
+        }
+
+        if (bytes[0] == 198 && bytes[1] is 18 or 19) {
+            return false;
+        }
+
+        return bytes[0] < 224;
+
         // A parsed or DNS-resolved address is always IPv4 or IPv6, so this handles IPv6.
-        return !address.IsIPv6LinkLocal &&
-               !address.IsIPv6Multicast &&
-               !address.IsIPv6SiteLocal &&
-               !address.Equals(IPAddress.IPv6Any) &&
-               !address.Equals(IPAddress.IPv6Loopback) &&
-               (bytes[0] & 0xfe) != 0xfc;
     }
 }

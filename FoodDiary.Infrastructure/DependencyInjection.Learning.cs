@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddLearningPersistence(this IServiceCollection services) {
+    private static void AddLearningPersistence(this IServiceCollection services) {
         services.AddScoped<INutritionLessonRepository, NutritionLessonRepository>();
         services.AddScoped<INutritionLessonReadRepository>(static provider => provider.GetRequiredService<INutritionLessonRepository>());
         services.AddScoped<INutritionLessonReadModelRepository>(static provider => provider.GetRequiredService<INutritionLessonRepository>());
@@ -17,6 +17,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IMealPlanReadModelRepository>(static provider => provider.GetRequiredService<IMealPlanRepository>());
         services.AddScoped<IMealPlanWriteRepository>(static provider => provider.GetRequiredService<IMealPlanRepository>());
 
-        return services;
     }
 }

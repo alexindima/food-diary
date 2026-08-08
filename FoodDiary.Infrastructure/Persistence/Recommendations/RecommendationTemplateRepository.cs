@@ -36,12 +36,24 @@ internal sealed class RecommendationTemplateRepository(FoodDiaryDbContext contex
             .Where(template =>
                 template.DietologistUserId == dietologistUserId &&
                 (includeArchived || !template.IsArchived));
-        if (!string.IsNullOrWhiteSpace(search)) {
-            string pattern = $"%{search.Trim()}%";
-            query = query.Where(template =>
-                EF.Functions.ILike(template.Name, pattern) ||
-                EF.Functions.ILike(template.Text, pattern));
+        if (string.IsNullOrWhiteSpace(search)) {
+            return await query
+                .OrderBy(template => template.Name)
+                .Select(template => new RecommendationTemplateReadModel(
+                    template.Id.Value,
+                    template.Name,
+                    template.Text,
+                    template.IsArchived,
+                    template.CreatedOnUtc,
+                    template.ModifiedOnUtc))
+                .ToListAsync(cancellationToken)
+                .ConfigureAwait(false);
         }
+
+        string pattern = $"%{search.Trim()}%";
+        query = query.Where(template =>
+            EF.Functions.ILike(template.Name, pattern) ||
+            EF.Functions.ILike(template.Text, pattern));
 
         return await query
             .OrderBy(template => template.Name)

@@ -48,7 +48,7 @@ internal sealed class ClientTaskRepository(FoodDiaryDbContext context) : IClient
         CancellationToken cancellationToken = default) =>
         await context.ClientTasks
             .Where(task =>
-                task.Status == FoodDiary.Domain.Enums.ClientTaskStatus.Open &&
+                task.Status == Domain.Enums.ClientTaskStatus.Open &&
                 task.DueAtUtc >= utcNow &&
                 task.DueAtUtc <= dueBeforeUtc &&
                 task.DueReminderSentAtUtc == null)

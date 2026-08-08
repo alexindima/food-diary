@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddUsdaPersistence(this IServiceCollection services) {
+    private static void AddUsdaPersistence(this IServiceCollection services) {
         services.AddScoped<IUsdaFoodRepository, UsdaFoodRepository>();
         services.AddScoped<IUsdaFoodReadRepository>(static provider => provider.GetRequiredService<IUsdaFoodRepository>());
         services.AddScoped<IUsdaFoodReadModelRepository>(static provider => provider.GetRequiredService<IUsdaFoodRepository>());
@@ -13,6 +13,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IUsdaProductLinkReadRepository>(static provider => provider.GetRequiredService<IUsdaProductLinkRepository>());
         services.AddScoped<IUsdaProductLinkWriteRepository>(static provider => provider.GetRequiredService<IUsdaProductLinkRepository>());
 
-        return services;
     }
 }

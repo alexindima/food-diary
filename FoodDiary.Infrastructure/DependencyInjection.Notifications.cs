@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddNotificationPersistence(this IServiceCollection services) {
+    private static void AddNotificationPersistence(this IServiceCollection services) {
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<INotificationReadRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
         services.AddScoped<INotificationLookupRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
@@ -22,6 +22,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IWebPushSubscriptionReadModelRepository>(static provider => provider.GetRequiredService<IWebPushSubscriptionRepository>());
         services.AddScoped<IWebPushSubscriptionWriteRepository>(static provider => provider.GetRequiredService<IWebPushSubscriptionRepository>());
 
-        return services;
     }
 }

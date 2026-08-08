@@ -3,11 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddFoodPersistence(this IServiceCollection services) {
-        return services
-            .AddProductsPersistence()
-            .AddRecipesPersistence()
-            .AddRecentItemsPersistence()
-            .AddMealsPersistence();
+    private static void AddFoodPersistence(this IServiceCollection services) {
+        services.AddProductsPersistence();
+        services.AddRecipesPersistence();
+        services.AddRecentItemsPersistence();
+        services.AddMealsPersistence();
     }
 }

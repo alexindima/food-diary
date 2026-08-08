@@ -114,14 +114,14 @@ public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository
         int limit,
         UserAccountStatusFilter status,
         CancellationToken cancellationToken = default) {
-        (IReadOnlyList<User> Items, int TotalItems) = await GetPagedAsync(
+        (IReadOnlyList<User> items, int totalItems) = await GetPagedAsync(
             search,
             page,
             limit,
             status,
             cancellationToken).ConfigureAwait(false);
 
-        return ([.. Items.Select(ToAdminReadModel)], TotalItems);
+        return ([.. items.Select(ToAdminReadModel)], totalItems);
     }
 
     public async Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)>
@@ -157,10 +157,10 @@ public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository
 
     public async Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<UserAdminReadModel> RecentUsers)>
         GetAdminDashboardSummaryReadModelsAsync(int recentLimit, CancellationToken cancellationToken = default) {
-        (int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers) =
+        (int totalUsers, int activeUsers, int premiumUsers, int deletedUsers, IReadOnlyList<User> recentUsers) =
             await GetAdminDashboardSummaryAsync(recentLimit, cancellationToken).ConfigureAwait(false);
 
-        return (TotalUsers, ActiveUsers, PremiumUsers, DeletedUsers, [.. RecentUsers.Select(ToAdminReadModel)]);
+        return (totalUsers, activeUsers, premiumUsers, deletedUsers, [.. recentUsers.Select(ToAdminReadModel)]);
     }
 
     public async Task<User> AddAsync(User user, CancellationToken cancellationToken = default) {

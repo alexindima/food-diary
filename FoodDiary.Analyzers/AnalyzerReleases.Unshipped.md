@@ -13,3 +13,4 @@ FD0006 | Style | Disabled | Require TimeProvider instead of direct UtcNow access
 FD0007 | Style | Disabled | Require coverage exclusion on test types
 FD0008 | Style | Disabled | Require concrete classes to be closed for inheritance in governed scopes
 FD0009 | Reliability | Disabled | Reject direct test connections to literal external hosts
+FD0010 | Reliability | Disabled | Reject span overloads inside expression trees

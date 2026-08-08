@@ -140,10 +140,10 @@ internal sealed partial class DiaryPdfGenerator {
             string linePath = BuildSmoothPath(points);
             string areaPath = BuildAreaPath(points, height - padding);
 
-            return $$"""
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {{width.ToString(CultureInfo.InvariantCulture)}} {{height.ToString(CultureInfo.InvariantCulture)}}" preserveAspectRatio="none">
-                  <path d="{{areaPath}}" fill="{{fillColor}}" opacity="0.55"/>
-                  <path d="{{linePath}}" fill="none" stroke="{{lineColor}}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            return $"""
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width.ToString(CultureInfo.InvariantCulture)} {height.ToString(CultureInfo.InvariantCulture)}" preserveAspectRatio="none">
+                  <path d="{areaPath}" fill="{fillColor}" opacity="0.55"/>
+                  <path d="{linePath}" fill="none" stroke="{lineColor}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 """;
         }

@@ -65,8 +65,8 @@ internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRec
                 c.Id.Value,
                 c.RecipeId.Value,
                 c.UserId.Value,
-                c.User == null ? null : c.User.Username,
-                c.User == null ? null : c.User.FirstName,
+                c.User.Username,
+                c.User.FirstName,
                 c.Text,
                 c.CreatedOnUtc,
                 c.ModifiedOnUtc))

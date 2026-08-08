@@ -5,13 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddImagePersistence(this IServiceCollection services) {
+    private static void AddImagePersistence(this IServiceCollection services) {
         services.AddScoped<IImageAssetRepository, ImageAssetRepository>();
         services.AddScoped<IImageAssetReadRepository>(static provider => provider.GetRequiredService<IImageAssetRepository>());
         services.AddScoped<IImageAssetWriteRepository>(static provider => provider.GetRequiredService<IImageAssetRepository>());
         services.AddScoped<IImageObjectDeletionOutbox, ImageObjectDeletionOutbox>();
         services.AddScoped<IImageObjectDeletionOutboxProcessor, ImageObjectDeletionOutboxProcessor>();
 
-        return services;
     }
 }

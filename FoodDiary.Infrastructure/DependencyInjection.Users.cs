@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddUserPersistence(this IServiceCollection services) {
+    private static void AddUserPersistence(this IServiceCollection services) {
         services.AddScoped<UserRepository>();
         services.AddScoped<IUserRepository>(static provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<IUserLookupRepository>(static provider => provider.GetRequiredService<UserRepository>());
@@ -42,6 +42,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IEmailTemplateReadModelRepository>(static provider => provider.GetRequiredService<IEmailTemplateRepository>());
         services.AddScoped<IEmailTemplateWriteRepository>(static provider => provider.GetRequiredService<IEmailTemplateRepository>());
 
-        return services;
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddDietologistPersistence(this IServiceCollection services) {
+    private static void AddDietologistPersistence(this IServiceCollection services) {
         services.AddScoped<IDietologistInvitationRepository, DietologistInvitationRepository>();
         services.AddScoped<IDietologistInvitationReadRepository>(static provider => provider.GetRequiredService<IDietologistInvitationRepository>());
         services.AddScoped<IDietologistInvitationReadModelRepository>(static provider => provider.GetRequiredService<IDietologistInvitationRepository>());
@@ -34,6 +34,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IAuditEntryReadService>(services => services.GetRequiredService<AuditEntryService>());
         services.AddScoped<IAuditEntryWriter>(services => services.GetRequiredService<AuditEntryService>());
 
-        return services;
     }
 }

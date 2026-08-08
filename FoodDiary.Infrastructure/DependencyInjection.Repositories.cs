@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddFeatureRepositories(this IServiceCollection services) {
+    private static void AddFeatureRepositories(this IServiceCollection services) {
         services.AddUserPersistence();
         services.AddFoodPersistence();
         services.AddDashboardReadServices();
@@ -22,6 +22,5 @@ public static partial class DependencyInjection {
         services.AddModerationPersistence();
         services.AddUsdaPersistence();
 
-        return services;
     }
 }

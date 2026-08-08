@@ -15,7 +15,7 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
+    private static void AddPersistence(this IServiceCollection services, IConfiguration configuration) {
         services.AddSingleton<DatabaseCommandTelemetryInterceptor>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         services.AddScoped<IOutboxDeadLetterReplayService, OutboxDeadLetterReplayService>();
@@ -41,6 +41,5 @@ public static partial class DependencyInjection {
                     sp.GetRequiredService<CollaborationAuditInterceptor>());
         });
 
-        return services;
     }
 }

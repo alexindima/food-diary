@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddAuthenticationInfrastructure(this IServiceCollection services) {
+    private static void AddAuthenticationInfrastructure(this IServiceCollection services) {
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddSingleton<IAdminSsoService, AdminSsoService>();
@@ -24,6 +24,5 @@ public static partial class DependencyInjection {
         services.AddSingleton<IAiPromptProvider, AiPromptProvider>();
         services.AddSingleton<IAuditLogger, StructuredAuditLogger>();
 
-        return services;
     }
 }

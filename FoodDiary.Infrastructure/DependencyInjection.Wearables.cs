@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddWearablesInfrastructure(this IServiceCollection services) {
+    private static void AddWearablesInfrastructure(this IServiceCollection services) {
         services.AddScoped<IWearableConnectionRepository, WearableConnectionRepository>();
         services.AddScoped<IWearableConnectionReadRepository>(static provider => provider.GetRequiredService<IWearableConnectionRepository>());
         services.AddScoped<IWearableConnectionWriteRepository>(static provider => provider.GetRequiredService<IWearableConnectionRepository>());
@@ -16,6 +16,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IWearableSyncWriteRepository>(static provider => provider.GetRequiredService<IWearableSyncRepository>());
         services.AddSingleton<IWearableOAuthStateService, WearableOAuthStateService>();
 
-        return services;
     }
 }

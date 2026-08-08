@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddTrackingPersistence(this IServiceCollection services) {
+    private static void AddTrackingPersistence(this IServiceCollection services) {
         services.AddScoped<IWeightEntryRepository, WeightEntryRepository>();
         services.AddScoped<IWeightEntryReadRepository>(static provider => provider.GetRequiredService<IWeightEntryRepository>());
         services.AddScoped<IWeightEntryReadModelRepository>(static provider => provider.GetRequiredService<IWeightEntryRepository>());
@@ -35,6 +35,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IExerciseEntryReadModelRepository>(static provider => provider.GetRequiredService<IExerciseEntryRepository>());
         services.AddScoped<IExerciseEntryWriteRepository>(static provider => provider.GetRequiredService<IExerciseEntryRepository>());
 
-        return services;
     }
 }

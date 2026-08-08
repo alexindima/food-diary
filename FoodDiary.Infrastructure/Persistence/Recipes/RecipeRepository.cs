@@ -61,13 +61,8 @@ public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeReposi
     public async Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) {
         EntityEntry<Recipe> entry = context.Entry(recipe);
         if (entry.State == EntityState.Detached) {
-            Recipe? existing = await context.Recipes
-                .FirstOrDefaultAsync(r => r.Id == recipe.Id, cancellationToken).ConfigureAwait(false);
-
-            if (existing is null) {
-                throw new DbUpdateConcurrencyException($"Recipe '{recipe.Id.Value}' was not found while updating nutrition.");
-            }
-
+            Recipe existing = await context.Recipes
+                .FirstOrDefaultAsync(r => r.Id == recipe.Id, cancellationToken).ConfigureAwait(false) ?? throw new DbUpdateConcurrencyException($"Recipe '{recipe.Id.Value}' was not found while updating nutrition.");
             entry = context.Entry(existing);
             entry.CurrentValues.SetValues(recipe);
         }

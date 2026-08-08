@@ -330,6 +330,7 @@ dotnet_diagnostic.MA0051.severity = warning
 # and activated only for the scopes previously owned by architecture tests.
 [**/*.cs]
 dotnet_diagnostic.FD0005.severity = error
+dotnet_diagnostic.FD0010.severity = error
 
 [FoodDiary.{Application,Application.Abstractions,Domain,Infrastructure,Integrations,JobManager,Presentation.Api,Telegram.Bot,Web.Api}/**/*.cs]
 dotnet_diagnostic.FD0002.severity = error

@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddDashboardReadServices(this IServiceCollection services) {
+    private static void AddDashboardReadServices(this IServiceCollection services) {
         services.RemoveAll<IDashboardStatisticsReadService>();
         services.RemoveAll<IDashboardBodyReadService>();
         services.RemoveAll<IDashboardMealsReadService>();
@@ -20,6 +20,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IDashboardMealsReadService>(static provider => provider.GetRequiredService<DashboardMealsReadService>());
         services.AddScoped<IDashboardReadService, DashboardReadService>();
 
-        return services;
     }
 }

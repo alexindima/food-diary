@@ -19,7 +19,7 @@ internal sealed class AttentionSignalMetricsReadService(FoodDiaryDbContext conte
         UserId[] ids = [.. clientUserIds.Distinct()];
         List<UserGoalProjection> goals = await context.Users
             .AsNoTracking()
-            .Where(user => ids.Contains(user.Id))
+            .Where(user => Enumerable.Contains(ids, user.Id))
             .Select(user => new UserGoalProjection(user.Id, user.DailyCalorieTarget ?? 0))
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
@@ -27,7 +27,7 @@ internal sealed class AttentionSignalMetricsReadService(FoodDiaryDbContext conte
         List<MealProjection> meals = await context.Meals
             .AsNoTracking()
             .Where(meal =>
-                ids.Contains(meal.UserId) &&
+                Enumerable.Contains(ids, meal.UserId) &&
                 meal.Date >= dateFromUtc &&
                 meal.Date <= dateToUtc)
             .Select(meal => new MealProjection(
@@ -39,7 +39,7 @@ internal sealed class AttentionSignalMetricsReadService(FoodDiaryDbContext conte
 
         List<LastMealProjection> lastMeals = await context.Meals
             .AsNoTracking()
-            .Where(meal => ids.Contains(meal.UserId))
+            .Where(meal => Enumerable.Contains(ids, meal.UserId))
             .GroupBy(meal => meal.UserId)
             .Select(group => new LastMealProjection(group.Key, group.Max(meal => meal.Date)))
             .ToListAsync(cancellationToken)
@@ -48,7 +48,7 @@ internal sealed class AttentionSignalMetricsReadService(FoodDiaryDbContext conte
         List<WeightProjection> weights = await context.WeightEntries
             .AsNoTracking()
             .Where(entry =>
-                ids.Contains(entry.UserId) &&
+                Enumerable.Contains(ids, entry.UserId) &&
                 entry.Date >= dateFromUtc &&
                 entry.Date <= dateToUtc)
             .OrderBy(entry => entry.Date)

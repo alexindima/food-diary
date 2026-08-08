@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddInfrastructureOptions(this IServiceCollection services, IConfiguration configuration) {
+    private static void AddInfrastructureOptions(this IServiceCollection services, IConfiguration configuration) {
         services.AddOptions<DatabaseOptions>()
             .Bind(configuration.GetSection(DatabaseOptions.SectionName))
             .Validate(static options => !options.EnableRetries || options.MaxRetryCount > 0,
@@ -45,6 +45,5 @@ public static partial class DependencyInjection {
             .ValidateOnStart();
         services.AddSingleton(static sp => sp.GetRequiredService<IOptions<EmailOptions>>().Value);
 
-        return services;
     }
 }
