@@ -27,7 +27,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Authentication.InvalidToken", StringComparison.Ordinal));
     }
 
-
     [Fact]
     public async Task GetConsumptionsOverviewQueryValidator_WithValidUserId_HasNoErrors() {
         var validator = new GetConsumptionsOverviewQueryValidator();
@@ -36,7 +35,6 @@ public partial class ConsumptionsFeatureTests {
 
         Assert.True(result.IsValid);
     }
-
 
     [Fact]
     public async Task GetConsumptionByIdQueryHandler_WithEmptyConsumptionId_ReturnsValidationFailure() {
@@ -58,7 +56,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ConsumptionId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task GetConsumptionByIdQueryHandler_WithExistingConsumption_ReturnsMealModel() {
@@ -83,7 +80,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Single(result.Value.Items);
     }
 
-
     [Fact]
     public async Task GetConsumptionsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetConsumptionsQueryHandler(
@@ -97,7 +93,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetConsumptionsQueryHandler_PreservesDateRangeInstantsForRepositoryQuery() {
@@ -120,7 +115,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal(DateTimeKind.Utc, repository.LastDateTo!.Value.Kind);
     }
 
-
     [Theory]
     [InlineData(null)]
     [InlineData("not-a-meal")]
@@ -139,7 +133,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Success(result);
         Assert.Null(repository.LastMealTypes);
     }
-
 
     [Fact]
     public async Task GetConsumptionsQueryHandler_WithDuplicateValidMealTypes_DistinctsMealTypeFilter() {
@@ -162,7 +155,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Success(result);
         Assert.Equal([MealType.Lunch, MealType.Dinner], repository.LastMealTypes);
     }
-
 
     [Fact]
     public async Task GetConsumptionsQueryHandler_WithMeals_ReturnsMappedFavoriteFlags() {
@@ -190,7 +182,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.True(favoriteMeal.IsFavorite);
         Assert.Equal(favorite.Id.Value, favoriteMeal.FavoriteMealId);
     }
-
 
     [Fact]
     public async Task GetConsumptionsOverviewQueryHandler_ReturnsFavoritePreviewAndFavoriteFlags() {
@@ -221,7 +212,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal(favorite.Id.Value, result.Value.AllConsumptions.Data.Single(x => x.Id == dinner.Id.Value).FavoriteMealId);
     }
 
-
     [Theory]
     [InlineData(null)]
     [InlineData("not-a-meal")]
@@ -240,7 +230,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Success(result);
         Assert.Null(repository.LastMealTypes);
     }
-
 
     [Fact]
     public async Task GetConsumptionsOverviewQueryHandler_WithDuplicateValidMealTypes_DistinctsMealTypeFilter() {
@@ -264,7 +253,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal([MealType.Breakfast, MealType.Snack], repository.LastMealTypes);
     }
 
-
     [Fact]
     public async Task GetConsumptionByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetConsumptionByIdQueryHandler(
@@ -279,7 +267,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-
     [Fact]
     public async Task GetConsumptionsOverviewQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetConsumptionsOverviewQueryHandler(
@@ -293,7 +280,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetConsumptionsOverviewQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
@@ -310,7 +296,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetConsumptionsQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {

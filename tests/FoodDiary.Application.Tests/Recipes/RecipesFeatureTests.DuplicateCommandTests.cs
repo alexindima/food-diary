@@ -23,7 +23,6 @@ public partial class RecipesFeatureTests {
         Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task DuplicateRecipeCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
         DuplicateRecipeCommandHandler handler = DuplicateRecipeHandler(new SingleRecipeRepositoryForCreate());
@@ -35,7 +34,6 @@ public partial class RecipesFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task DuplicateRecipeCommandHandler_WhenOriginalRecipeIsMissing_ReturnsNotAccessible() {
@@ -52,7 +50,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal("Recipe.NotAccessible", result.Error.Code);
     }
 
-
     [Fact]
     public async Task DuplicateRecipeCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("duplicate-recipe-deleted@example.com", "hash");
@@ -68,7 +65,6 @@ public partial class RecipesFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
-
 
     [Fact]
     public async Task DuplicateRecipeCommandHandler_WithExistingRecipe_CopiesFieldsAndClearsImageAsset() {
@@ -107,7 +103,6 @@ public partial class RecipesFeatureTests {
         Assert.True(result.Value.IsOwnedByCurrentUser);
     }
 
-
     [Fact]
     public async Task DuplicateRecipeCommandHandler_WithUnorderedSteps_CopiesStepsInStepNumberOrder() {
         var user = User.Create("duplicate-ordered-steps@example.com", "hash");
@@ -124,7 +119,6 @@ public partial class RecipesFeatureTests {
         Assert.NotNull(repository.LastAddedRecipe);
         Assert.Equal([1, 2, 3], [.. repository.LastAddedRecipe.Steps.Select(step => step.StepNumber)]);
     }
-
 
     [Fact]
     public async Task DuplicateRecipeCommandHandler_WithManualNutrition_CopiesManualValues() {
@@ -147,7 +141,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal(5, repository.LastAddedRecipe.ManualFiber);
         Assert.Equal(1, repository.LastAddedRecipe.ManualAlcohol);
     }
-
 
     [Fact]
     public async Task DuplicateRecipeCommandHandler_ReturnsDuplicatedRecipeWithoutReloadingBeforeCommit() {

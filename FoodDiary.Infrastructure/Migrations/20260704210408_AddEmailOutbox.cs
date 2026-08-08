@@ -26,9 +26,7 @@ public partial class AddEmailOutbox : Migration {
                 ProcessedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 LastError = table.Column<string>(type: "character varying(2048)", maxLength: 2048, nullable: true),
             },
-            constraints: table => {
-                table.PrimaryKey("PK_EmailOutbox", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_EmailOutbox", x => x.Id));
 
         migrationBuilder.CreateIndex(
             name: "IX_EmailOutbox_ProcessedOnUtc_NextAttemptOnUtc",

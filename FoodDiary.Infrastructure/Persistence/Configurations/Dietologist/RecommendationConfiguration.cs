@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Dietologist;
 
-
 internal sealed class RecommendationConfiguration : IEntityTypeConfiguration<Recommendation> {
     public void Configure(EntityTypeBuilder<Recommendation> builder) {
         builder.Property<uint>("xmin").IsRowVersion();

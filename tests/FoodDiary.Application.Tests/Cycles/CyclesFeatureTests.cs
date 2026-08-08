@@ -20,46 +20,6 @@ namespace FoodDiary.Application.Tests.Cycles;
 [ExcludeFromCodeCoverage]
 public partial class CyclesFeatureTests {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private static CreateCycleCommand CreateCommand(Guid userId) =>
         new(
             userId,

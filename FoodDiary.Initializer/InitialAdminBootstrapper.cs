@@ -41,9 +41,7 @@ internal static class InitialAdminBootstrapper {
             BootstrapInitialAdminStatus.SkippedExistingUser => "skipped because the user already exists",
             BootstrapInitialAdminStatus.Created => "created",
             _ => throw new InvalidOperationException(
-                string.Create(
-                    CultureInfo.InvariantCulture,
-                    $"Unknown initial admin bootstrap status '{result.Value.Status}'.")),
+                $"Unknown initial admin bootstrap status '{result.Value.Status}'."),
         };
         Console.WriteLine(
             string.Create(

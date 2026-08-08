@@ -5,7 +5,6 @@ using FoodDiary.Infrastructure.Persistence.Converters;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Notifications;
 
-
 internal sealed class WebPushSubscriptionConfiguration : IEntityTypeConfiguration<WebPushSubscription> {
     public void Configure(EntityTypeBuilder<WebPushSubscription> builder) {
         builder.Property(e => e.Id)

@@ -26,9 +26,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     LastSeenAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     SearchHitCount = table.Column<int>(type: "integer", nullable: false),
                 },
-                constraints: table => {
-                    table.PrimaryKey("PK_OpenFoodFactsProducts", x => x.Barcode);
-                });
+                constraints: table => table.PrimaryKey("PK_OpenFoodFactsProducts", x => x.Barcode));
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenFoodFactsProducts_Brand",

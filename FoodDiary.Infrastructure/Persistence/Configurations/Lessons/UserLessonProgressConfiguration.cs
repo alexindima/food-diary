@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Lessons;
 
-
 internal sealed class UserLessonProgressConfiguration : IEntityTypeConfiguration<UserLessonProgress> {
     public void Configure(EntityTypeBuilder<UserLessonProgress> builder) {
         builder.Property(e => e.Id).HasConversion(

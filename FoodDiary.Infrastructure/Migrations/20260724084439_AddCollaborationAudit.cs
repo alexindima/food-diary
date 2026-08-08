@@ -21,9 +21,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     Metadata = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
                     CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                 },
-                constraints: table => {
-                    table.PrimaryKey("PK_AuditEntries", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_AuditEntries", x => x.Id));
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuditEntries_CreatedAtUtc",

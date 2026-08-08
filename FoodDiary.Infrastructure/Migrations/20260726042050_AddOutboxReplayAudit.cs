@@ -21,9 +21,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     PreviousAttemptCount = table.Column<int>(type: "integer", nullable: false),
                     PreviousError = table.Column<string>(type: "character varying(2048)", maxLength: 2048, nullable: true),
                 },
-                constraints: table => {
-                    table.PrimaryKey("PK_OutboxReplayAudits", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_OutboxReplayAudits", x => x.Id));
 
             migrationBuilder.CreateIndex(
                 name: "IX_OutboxReplayAudits_OutboxName_MessageId_RequestedOnUtc",

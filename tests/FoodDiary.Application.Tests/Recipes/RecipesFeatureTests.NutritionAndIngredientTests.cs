@@ -26,7 +26,6 @@ public partial class RecipesFeatureTests {
         Assert.Contains("Product", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task RecipeIngredientAccessValidator_WithSelfReference_ReturnsValidationFailure() {
         var recipeId = RecipeId.New();
@@ -51,7 +50,6 @@ public partial class RecipesFeatureTests {
         Assert.Contains("itself", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task RecipeIngredientAccessValidator_WithMissingNestedRecipe_ReturnsValidationFailure() {
         var step = new RecipeStepInput(
@@ -75,7 +73,6 @@ public partial class RecipesFeatureTests {
         Assert.Contains("Nested recipe", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task RecipeNutritionUpdater_WhenManualNutrition_DoesNotUpdateRepository() {
         var recipe = Recipe.Create(UserId.New(), "Manual", servings: 1);
@@ -86,7 +83,6 @@ public partial class RecipesFeatureTests {
 
         Assert.Equal(0, repository.UpdateNutritionCallCount);
     }
-
 
     [Fact]
     public async Task RecipeNutritionUpdater_WhenAutoNutritionChanged_UpdatesComputedNutrition() {
@@ -120,7 +116,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal(10, recipe.TotalProteins);
     }
 
-
     [Fact]
     public async Task RecipeNutritionUpdater_WhenComputedNutritionIsAlreadyClose_DoesNotUpdateRepository() {
         var userId = UserId.New();
@@ -132,7 +127,6 @@ public partial class RecipesFeatureTests {
 
         Assert.Equal(0, repository.UpdateNutritionCallCount);
     }
-
 
     [Theory]
     [InlineData(null, null, true)]
@@ -150,7 +144,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal(expected, actual);
     }
 
-
     [Fact]
     public void RecipeManualNutritionValidator_WhenCaloriesExceedLimit_ReturnsFailure() {
         Result<(double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol)> result = RecipeManualNutritionValidator.Validate(
@@ -164,7 +157,6 @@ public partial class RecipesFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
-
 
     [Fact]
     public void RecipeManualNutritionValidator_WhenNutrientExceedsLimit_ReturnsFailure() {

@@ -48,7 +48,6 @@ public partial class RecipesFeatureTests {
         Assert.Contains("calories", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Theory]
     [InlineData(100.0, null, 4.0, 20.0, 2.0, 0.0, "proteins")]
     [InlineData(100.0, 10.0, null, 20.0, 2.0, 0.0, "fats")]
@@ -90,7 +89,6 @@ public partial class RecipesFeatureTests {
         Assert.Null(repository.LastAddedRecipe);
     }
 
-
     [Fact]
     public async Task CreateRecipeCommandHandler_WhenManualNutritionIsNegative_ReturnsValidationFailure() {
         var userId = UserId.New();
@@ -120,7 +118,6 @@ public partial class RecipesFeatureTests {
         Assert.Null(repository.LastAddedRecipe);
     }
 
-
     [Fact]
     public async Task CreateRecipeCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var repository = new SingleRecipeRepositoryForCreate();
@@ -138,7 +135,6 @@ public partial class RecipesFeatureTests {
         Assert.Null(repository.LastAddedRecipe);
     }
 
-
     [Fact]
     public async Task CreateRecipeCommandHandler_WithInvalidVisibility_ReturnsValidationFailure() {
         var repository = new SingleRecipeRepositoryForCreate();
@@ -155,7 +151,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(repository.LastAddedRecipe);
     }
-
 
     [Fact]
     public async Task CreateRecipeCommandHandler_WhenImageAssetAccessFails_ReturnsFailure() {
@@ -177,7 +172,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal("Image.Forbidden", result.Error.Code);
         Assert.Null(repository.LastAddedRecipe);
     }
-
 
     [Fact]
     public async Task CreateRecipeCommandHandler_WhenStepImageAssetAccessFails_ReturnsFailure() {
@@ -209,7 +203,6 @@ public partial class RecipesFeatureTests {
         Assert.Null(repository.LastAddedRecipe);
     }
 
-
     [Fact]
     public async Task CreateRecipeCommandHandler_WithEmptyNestedRecipeId_ReturnsValidationFailure() {
         var repository = new SingleRecipeRepositoryForCreate();
@@ -238,7 +231,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(repository.LastAddedRecipe);
     }
-
 
     [Fact]
     public async Task CreateRecipeCommandHandler_WithNestedRecipeIngredient_PersistsNestedIngredient() {
@@ -270,7 +262,6 @@ public partial class RecipesFeatureTests {
         RecipeIngredient ingredient = Assert.Single(Assert.Single(repository.LastAddedRecipe!.Steps).Ingredients);
         Assert.Equal(nestedRecipeId, ingredient.NestedRecipeId);
     }
-
 
     [Fact]
     public async Task CreateRecipeCommandHandler_WithValidCommand_PersistsAndReturnsOwnedModel() {
@@ -315,7 +306,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal(2, result.Value.Steps.Count);
     }
 
-
     [Fact]
     public async Task CreateRecipeCommandHandler_WithInaccessibleProductIngredient_ReturnsValidationFailure() {
         var user = User.Create("create-recipe-inaccessible-product@example.com", "hash");
@@ -357,7 +347,6 @@ public partial class RecipesFeatureTests {
         Assert.Null(repository.LastAddedRecipe);
     }
 
-
     [Fact]
     public async Task CreateRecipeCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var userId = UserId.New();
@@ -393,7 +382,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task CreateRecipeCommandHandler_WithEmptyStepImageAssetId_ReturnsValidationFailure() {
@@ -437,7 +425,6 @@ public partial class RecipesFeatureTests {
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task CreateRecipeCommandHandler_WithEmptyIngredientProductId_ReturnsValidationFailure() {
         var userId = UserId.New();
@@ -479,7 +466,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task CreateRecipeCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {

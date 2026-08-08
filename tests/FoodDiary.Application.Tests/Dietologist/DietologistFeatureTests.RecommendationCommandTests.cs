@@ -27,7 +27,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task CreateRecommendation_WhenNoAccess_ReturnsFailure() {
         var dietologistId = UserId.New();
@@ -41,7 +40,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task CreateRecommendation_WhenDietologistLoadFailsAfterAccessCheck_ReturnsFailure() {
@@ -57,7 +55,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-
     [Fact]
     public async Task CreateRecommendation_WithEmptyClientUserId_ReturnsValidationFailure() {
         var dietologistId = UserId.New();
@@ -72,7 +69,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result, "Validation.Invalid");
         Assert.Contains("ClientUserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task CreateRecommendation_WhenDietologistDeleted_ReturnsFailure() {
@@ -93,7 +89,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
-
 
     [Fact]
     public async Task CreateRecommendation_WithAccess_Succeeds() {
@@ -121,7 +116,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal(clientId, domainEvent.ClientUserId);
     }
 
-
     [Fact]
     public async Task CreateRecommendation_WhenDietologistBecomesUnavailableAfterAccessCheck_StillRaisesEvent() {
         var dietologistId = UserId.New();
@@ -141,7 +135,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Success(result);
     }
-
 
     [Fact]
     public async Task CreateRecommendation_WhenAnyPermissionIsMissing_ReturnsFailure() {
@@ -176,7 +169,6 @@ public partial class DietologistFeatureTests {
         Assert.Empty(recRepo.Added);
     }
 
-
     [Fact]
     public async Task MarkRecommendationRead_WithNullUserId_ReturnsFailure() {
         var handler = new MarkRecommendationReadCommandHandler(
@@ -188,7 +180,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task MarkRecommendationRead_WhenNotFound_ReturnsFailure() {
@@ -204,7 +195,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task MarkRecommendationRead_WithEmptyRecommendationId_ReturnsValidationFailure() {
         var userId = UserId.New();
@@ -219,7 +209,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result, "Validation.Invalid");
         Assert.Contains("RecommendationId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task MarkRecommendationRead_WhenNotOwned_ReturnsFailure() {
@@ -240,7 +229,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task MarkRecommendationRead_WithValidOwner_Succeeds() {
         var clientId = UserId.New();
@@ -259,7 +247,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Success(result);
         Assert.True(recommendation.IsRead);
     }
-
 
     [Fact]
     public async Task MarkRecommendationRead_WhenUserDeleted_ReturnsFailure() {
@@ -280,7 +267,6 @@ public partial class DietologistFeatureTests {
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
         Assert.False(recommendation.IsRead);
     }
-
 
     [Fact]
     public async Task RecommendationCreatedEventHandler_CreatesNotificationAndPushes() {
@@ -310,7 +296,6 @@ public partial class DietologistFeatureTests {
         Assert.True(pusher.PushCalled);
     }
 
-
     [Fact]
     public async Task RecommendationCreatedEventHandler_WhenDietologistNotFound_UsesEmptyName() {
         var recId = RecommendationId.New();
@@ -333,7 +318,6 @@ public partial class DietologistFeatureTests {
         NewRecommendationNotificationPayload? payload = NotificationPayloadSerializer.Deserialize<NewRecommendationNotificationPayload>(notifRepo.Added[0].PayloadJson);
         Assert.Equal(string.Empty, payload?.DietologistName);
     }
-
 
     [Fact]
     public void NotificationTargetUrlResolver_ForRecommendation_ReturnsRecommendationsPage() {

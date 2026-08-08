@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Billing;
 
-
 internal sealed class BillingWebhookEventConfiguration : IEntityTypeConfiguration<BillingWebhookEvent> {
     public void Configure(EntityTypeBuilder<BillingWebhookEvent> builder) {
         builder.ToTable("BillingWebhookEvents");

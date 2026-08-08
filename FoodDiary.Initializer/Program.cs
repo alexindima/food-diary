@@ -146,7 +146,7 @@ static async Task ReplayOutboxAsync(
         throw new InvalidOperationException("replay-outbox requires --requested-by and --reason.");
     }
 
-    OutboxDeadLetterMessageModel? message = await replayService
+    OutboxDeadLetterMessageModel message = await replayService
         .GetDeadLetterAsync(outboxName, messageId)
         .ConfigureAwait(false)
         ?? throw new InvalidOperationException("Dead-lettered outbox message was not found.");
@@ -220,9 +220,7 @@ static (string OutboxName, Guid MessageId) ParseOutboxTarget(InitializerCommand 
     string[] targetParts = command.TargetMigration?.Split(':', 2) ?? [];
     if (targetParts.Length != 2 || !Guid.TryParse(targetParts[1], out Guid messageId)) {
         throw new InvalidOperationException(
-            string.Create(
-                CultureInfo.InvariantCulture,
-                $"{commandName} requires target '<email|image_object_deletion|notification_web_push>:<message-id>'."));
+                $"{commandName} requires target '<email|image_object_deletion|notification_web_push>:<message-id>'.");
     }
     return (targetParts[0], messageId);
 }
@@ -248,13 +246,13 @@ static async Task ListMigrationsAsync(FoodDiaryDbContext dbContext) {
 
 static async Task PrintStatusAsync(FoodDiaryDbContext dbContext) {
     bool canConnect = await dbContext.Database.CanConnectAsync().ConfigureAwait(false);
-    string[] appliedMigrations = [.. (await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false))];
-    string[] pendingMigrations = [.. (await dbContext.Database.GetPendingMigrationsAsync().ConfigureAwait(false))];
+    string[] appliedMigrations = [.. await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false)];
+    string[] pendingMigrations = [.. await dbContext.Database.GetPendingMigrationsAsync().ConfigureAwait(false)];
 
     Console.WriteLine($"Can connect:       {canConnect}");
     Console.WriteLine($"Applied count:     {appliedMigrations.Length}");
     Console.WriteLine($"Pending count:     {pendingMigrations.Length}");
-    Console.WriteLine($"Current migration: {(appliedMigrations.LastOrDefault() ?? "<none>")}");
+    Console.WriteLine($"Current migration: {appliedMigrations.LastOrDefault() ?? "<none>"}");
 
     if (pendingMigrations.Length > 0) {
         Console.WriteLine("Pending migrations:");
@@ -286,7 +284,7 @@ static async Task RollbackDatabaseAsync(FoodDiaryDbContext dbContext, string? ta
 }
 
 static async Task RollbackLastMigrationAsync(FoodDiaryDbContext dbContext) {
-    string[] appliedMigrations = [.. (await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false))];
+    string[] appliedMigrations = [.. await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false)];
     if (appliedMigrations.Length == 0) {
         Console.WriteLine("Database has no applied migrations.");
         return;

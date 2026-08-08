@@ -10,10 +10,8 @@ using Polly;
 namespace FoodDiary.Integrations;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddFoodDataIntegrations(this IServiceCollection services, IConfiguration configuration) {
-        services.AddHttpClient<IUsdaFoodSearchService, UsdaFoodSearchService>(client => {
-            client.Timeout = TimeSpan.FromSeconds(15);
-        });
+    private static void AddFoodDataIntegrations(this IServiceCollection services, IConfiguration configuration) {
+        services.AddHttpClient<IUsdaFoodSearchService, UsdaFoodSearchService>(client => client.Timeout = TimeSpan.FromSeconds(15));
 
         services.AddHttpClient<IOpenFoodFactsService, OpenFoodFactsService>(client => {
             OpenFoodFactsApiOptions openFoodFactsOptions = configuration
@@ -29,7 +27,5 @@ public static partial class DependencyInjection {
                 BackoffType = DelayBackoffType.Exponential,
             });
         });
-
-        return services;
     }
 }

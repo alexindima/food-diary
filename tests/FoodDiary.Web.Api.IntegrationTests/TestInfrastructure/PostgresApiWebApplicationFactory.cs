@@ -53,9 +53,7 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
 
     protected override void ConfigureWebHost(IWebHostBuilder builder) {
         builder.UseEnvironment("Development");
-        builder.ConfigureLogging(logging => {
-            logging.Services.RemoveAll<ILoggerProvider>();
-        });
+        builder.ConfigureLogging(logging => logging.Services.RemoveAll<ILoggerProvider>());
         builder.ConfigureAppConfiguration((_, configBuilder) => {
             configBuilder.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",

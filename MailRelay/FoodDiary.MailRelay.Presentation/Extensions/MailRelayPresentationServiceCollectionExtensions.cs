@@ -13,9 +13,7 @@ public static class MailRelayPresentationServiceCollectionExtensions {
         services.AddScoped<RelayApiKeyAuthorizationFilter>();
         services.AddHttpClient<ProviderWebhookAuthorizer>();
         services
-            .AddControllers(options => {
-                options.Filters.AddService<MailRelayTelemetryActionFilter>();
-            })
+            .AddControllers(options => options.Filters.AddService<MailRelayTelemetryActionFilter>())
             .ConfigureApiBehaviorOptions(options => {
                 options.InvalidModelStateResponseFactory = context => {
                     var errors = context.ModelState

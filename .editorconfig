@@ -58,6 +58,7 @@ dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggesti
 dotnet_style_prefer_auto_properties = true:suggestion
 dotnet_style_prefer_inferred_anonymous_type_member_names = true:error
 dotnet_style_prefer_inferred_tuple_names = true:error
+dotnet_style_allow_multiple_blank_lines_experimental = false:error
 dotnet_style_prefer_conditional_expression_over_assignment = false:none
 dotnet_style_prefer_conditional_expression_over_return = false:none
 
@@ -90,6 +91,7 @@ dotnet_diagnostic.MA0144.severity = warning
 dotnet_diagnostic.MA0150.severity = warning
 dotnet_diagnostic.MA0159.severity = warning
 dotnet_diagnostic.MA0166.severity = error
+dotnet_diagnostic.MA0185.severity = error
 dotnet_diagnostic.MA0188.severity = error
 dotnet_diagnostic.MA0193.severity = error
 dotnet_diagnostic.MA0206.severity = error
@@ -106,7 +108,9 @@ dotnet_diagnostic.IDE0302.severity = error
 dotnet_diagnostic.IDE0303.severity = error
 dotnet_diagnostic.IDE0304.severity = error
 dotnet_diagnostic.IDE0305.severity = error
+dotnet_diagnostic.IDE2000.severity = error
 dotnet_diagnostic.ASP0015.severity = error
+dotnet_diagnostic.RCS1021.severity = error
 dotnet_diagnostic.RCS1077.severity = error
 dotnet_diagnostic.RCS1049.severity = warning
 dotnet_diagnostic.RCS1124.severity = warning
@@ -200,6 +204,8 @@ dotnet_diagnostic.MA0048.severity = error
 
 [tests/**/*.cs]
 dotnet_diagnostic.MA0048.severity = error
+# xUnit1030 requires test awaits to preserve its synchronization context.
+dotnet_diagnostic.MA0004.severity = none
 
 [**/Migrations/**/*.cs]
 dotnet_diagnostic.MA0048.severity = none
@@ -400,6 +406,11 @@ resharper_class_never_instantiated_global_highlighting = none
 
 # The explicit partial Program carries ExcludeFromCodeCoverage for dotCover.
 [FoodDiary.JobManager/Program.cs]
+dotnet_diagnostic.ASP0027.severity = none
+resharper_class_never_instantiated_global_highlighting = none
+
+# The explicit partial Program carries ExcludeFromCodeCoverage for dotCover.
+[FoodDiary.Initializer/Program.cs]
 dotnet_diagnostic.ASP0027.severity = none
 resharper_class_never_instantiated_global_highlighting = none
 

@@ -11,8 +11,6 @@ namespace FoodDiary.Application.Tests.Fasting;
 public partial class FastingFeatureTests {
     private static readonly DateTime FixedNow = new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc);
 
-
-
     private static ICurrentUserAccessService CreateCurrentUserAccessService(UserId userId) =>
         new StubCurrentUserAccessService(CreateUser(userId));
 

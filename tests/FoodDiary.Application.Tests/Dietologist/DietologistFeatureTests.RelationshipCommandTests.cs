@@ -23,7 +23,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task RevokeInvitation_WhenNothingToRevoke_ReturnsFailure() {
         var userId = UserId.New();
@@ -40,7 +39,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task RevokeInvitation_WhenUserDeleted_ReturnsFailure() {
         var userId = UserId.New();
@@ -56,7 +54,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
-
 
     [Fact]
     public async Task RevokeInvitation_WithPendingInvitation_Succeeds() {
@@ -78,7 +75,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal(DietologistInvitationStatus.Revoked, invitation.Status);
     }
 
-
     [Fact]
     public async Task RevokeInvitation_WithActiveInvitation_Succeeds() {
         var userId = UserId.New();
@@ -98,7 +94,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Success(result);
     }
 
-
     [Fact]
     public async Task DisconnectDietologist_WithNullUserId_ReturnsFailure() {
         var handler = new DisconnectDietologistCommandHandler(
@@ -109,7 +104,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task DisconnectDietologist_WhenNoRelationship_ReturnsFailure() {
@@ -128,7 +122,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task DisconnectDietologist_WithEmptyClientUserId_ReturnsValidationFailure() {
         var dietologistId = UserId.New();
@@ -144,7 +137,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result, "Validation.Invalid");
         Assert.Contains("ClientUserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task DisconnectDietologist_WhenUserDeleted_ReturnsFailure() {
@@ -162,7 +154,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
-
 
     [Fact]
     public async Task DisconnectDietologist_WithActiveRelationship_Succeeds() {
@@ -185,7 +176,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Success(result);
     }
 
-
     [Fact]
     public async Task UpdatePermissions_WithNullUserId_ReturnsFailure() {
         var handler = new UpdateDietologistPermissionsCommandHandler(
@@ -197,7 +187,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task UpdatePermissions_WhenNoActiveRelationship_ReturnsFailure() {
@@ -216,7 +205,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task UpdatePermissions_WhenUserDeleted_ReturnsFailure() {
         var userId = UserId.New();
@@ -233,7 +221,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
-
 
     [Fact]
     public async Task UpdatePermissions_WithActiveRelationship_Succeeds() {

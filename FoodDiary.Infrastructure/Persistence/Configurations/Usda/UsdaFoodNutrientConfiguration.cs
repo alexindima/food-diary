@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Usda;
 
-
 internal sealed class UsdaFoodNutrientConfiguration : IEntityTypeConfiguration<UsdaFoodNutrient> {
     public void Configure(EntityTypeBuilder<UsdaFoodNutrient> builder) {
         builder.ToTable("UsdaFoodNutrients");

@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Recipes;
 
-
 internal sealed class RecipeIngredientConfiguration : IEntityTypeConfiguration<RecipeIngredient> {
     public void Configure(EntityTypeBuilder<RecipeIngredient> builder) {
         builder.Property(e => e.Id).HasConversion(

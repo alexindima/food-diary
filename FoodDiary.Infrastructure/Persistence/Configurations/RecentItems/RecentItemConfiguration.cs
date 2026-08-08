@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.RecentItems;
 
-
 internal sealed class RecentItemConfiguration : IEntityTypeConfiguration<RecentItem> {
     public void Configure(EntityTypeBuilder<RecentItem> builder) {
         builder.Property(e => e.Id).HasConversion(

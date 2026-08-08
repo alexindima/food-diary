@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.ContentReports;
 
-
 internal sealed class ContentReportConfiguration : IEntityTypeConfiguration<ContentReport> {
     public void Configure(EntityTypeBuilder<ContentReport> builder) {
         builder.Property(e => e.Id).HasConversion(

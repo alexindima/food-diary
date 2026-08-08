@@ -92,5 +92,3 @@ namespace FoodDiary.Infrastructure.Migrations {
     }
 }
 
-
-

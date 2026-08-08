@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Meals;
 
-
 internal sealed class MealAiSessionConfiguration : IEntityTypeConfiguration<MealAiSession> {
     public void Configure(EntityTypeBuilder<MealAiSession> builder) {
         builder.Property(e => e.Id)

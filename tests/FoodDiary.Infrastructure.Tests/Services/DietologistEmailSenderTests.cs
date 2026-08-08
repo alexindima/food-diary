@@ -139,9 +139,7 @@ public sealed class DietologistEmailSenderTests {
         IEmailOutbox outbox = Substitute.For<IEmailOutbox>();
         (int Count, string Recipient, string Subject, string HtmlBody) sent = (0, string.Empty, string.Empty, string.Empty);
         outbox
-            .EnqueueAsync(Arg.Do<EmailMessage>(message => {
-                sent = (sent.Count + 1, message.ToAddresses[0], message.Subject, message.HtmlBody);
-            }), Arg.Any<CancellationToken>())
+            .EnqueueAsync(Arg.Do<EmailMessage>(message => sent = (sent.Count + 1, message.ToAddresses[0], message.Subject, message.HtmlBody)), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
         getSent = () => sent;
         return outbox;

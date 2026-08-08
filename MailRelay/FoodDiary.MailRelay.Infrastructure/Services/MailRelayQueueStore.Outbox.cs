@@ -25,9 +25,7 @@ public sealed partial class MailRelayQueueStore {
 
         return await _executor.QueryAsync(
             sql,
-            command => {
-                command.Parameters.AddWithValue("batchSize", _queueOptions.BatchSize);
-            },
+            command => command.Parameters.AddWithValue("batchSize", _queueOptions.BatchSize),
             async (reader, token) => {
                 var result = new List<MailRelayOutboxMessage>();
                 while (await reader.ReadAsync(token).ConfigureAwait(false)) {

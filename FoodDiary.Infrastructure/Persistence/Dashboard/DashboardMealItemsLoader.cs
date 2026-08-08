@@ -71,13 +71,7 @@ internal sealed class DashboardMealItemsLoader(FoodDiaryDbContext context) {
                 item.ProductFiberPerBase ?? 0,
                 item.ProductAlcoholPerBase ?? 0,
                 item.ProductType ?? ProductType.Unknown);
-        bool hasNutritionSnapshot = item.SnapshotBaseAmount.HasValue
-            && item.SnapshotCaloriesPerBase.HasValue
-            && item.SnapshotProteinsPerBase.HasValue
-            && item.SnapshotFatsPerBase.HasValue
-            && item.SnapshotCarbsPerBase.HasValue
-            && item.SnapshotFiberPerBase.HasValue
-            && item.SnapshotAlcoholPerBase.HasValue;
+        bool hasNutritionSnapshot = item is { SnapshotBaseAmount: not null, SnapshotCaloriesPerBase: not null, SnapshotProteinsPerBase: not null, SnapshotFatsPerBase: not null, SnapshotCarbsPerBase: not null, SnapshotFiberPerBase: not null, SnapshotAlcoholPerBase: not null };
 
         return new DashboardMealItemReadModel(
             item.ItemId,

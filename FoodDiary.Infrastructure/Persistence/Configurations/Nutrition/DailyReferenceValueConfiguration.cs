@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Nutrition;
 
-
 internal sealed class DailyReferenceValueConfiguration : IEntityTypeConfiguration<DailyReferenceValue> {
     public void Configure(EntityTypeBuilder<DailyReferenceValue> builder) {
         builder.ToTable("DailyReferenceValues");

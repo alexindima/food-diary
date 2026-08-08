@@ -124,9 +124,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
             new { });
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, acceptResponse);
 
-        string dashboardUrl = string.Create(
-            CultureInfo.InvariantCulture,
-            $"/api/v1/dietologist/clients/{clientUser.UserId}/dashboard?dateFrom=2026-07-01&dateTo=2026-07-14&page=1&pageSize=10&trendDays=14&locale=en");
+        string dashboardUrl = $"/api/v1/dietologist/clients/{clientUser.UserId}/dashboard?dateFrom=2026-07-01&dateTo=2026-07-14&page=1&pageSize=10&trendDays=14&locale=en";
         await AssertStatusCodeAsync(HttpStatusCode.OK, await dietologistUser.Client.GetAsync(dashboardUrl));
 
         var noPermissions = new DietologistPermissionsHttpRequest(

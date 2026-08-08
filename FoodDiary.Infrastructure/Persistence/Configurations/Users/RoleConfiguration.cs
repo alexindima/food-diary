@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Users;
 
-
 internal sealed class RoleConfiguration : IEntityTypeConfiguration<Role> {
     public void Configure(EntityTypeBuilder<Role> builder) {
         builder.Property(e => e.Id).HasConversion(

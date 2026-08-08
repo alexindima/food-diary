@@ -19,7 +19,6 @@ public sealed class WebPushOptions {
                && !string.IsNullOrWhiteSpace(options.PrivateKey)
                && options.Subject.Length <= 256
                && Uri.IsWellFormedUriString(options.Subject, UriKind.Absolute)
-               && options.DefaultUrl.Length > 0
-               && options.DefaultUrl.Length <= 256;
+               && options.DefaultUrl.Length is > 0 and <= 256;
     }
 }

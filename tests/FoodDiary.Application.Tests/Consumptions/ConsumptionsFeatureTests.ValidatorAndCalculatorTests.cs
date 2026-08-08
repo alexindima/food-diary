@@ -19,7 +19,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
-
     [Fact]
     public void ManualNutritionValidator_WhenAlcoholIsNull_DefaultsToZero() {
         Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(100, 10, 5, 20, 3, alcohol: null);
@@ -28,7 +27,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal(0, result.Value.Alcohol);
     }
 
-
     [Fact]
     public void SatietyLevelValidator_WhenPreMealOutOfRange_UsesContractFieldName() {
         Result result = SatietyLevelValidator.Validate(-1, 5);
@@ -36,7 +34,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Contains("PreMealSatietyLevel", result.Error.Message, StringComparison.Ordinal);
     }
-
 
     [Fact]
     public void MealNutritionCalculator_WhenMealHasProductRecipeAndAiItems_CalculatesCombinedTotals() {
@@ -82,7 +79,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal(4.8, result.Fiber, 2);
         Assert.Equal(0, result.Alcohol, 2);
     }
-
 
     [Fact]
     public void MealNutritionCalculator_WhenRecipeItemIsMissingFromLookup_IgnoresRecipeItem() {

@@ -33,7 +33,6 @@ public partial class AdminFeatureTests {
         Assert.Contains("Id", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task DeleteAdminLessonHandler_WithEmptyLessonId_ReturnsValidationFailure() {
         var handler = new DeleteAdminLessonCommandHandler(

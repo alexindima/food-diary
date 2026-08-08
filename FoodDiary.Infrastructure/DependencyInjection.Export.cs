@@ -14,7 +14,7 @@ public static partial class DependencyInjection {
         ConnectRemoteImageSocketCoreAsync;
 
     private static IServiceCollection AddExportInfrastructure(this IServiceCollection services) {
-        services.AddHttpClient<IDiaryPdfGenerator, DiaryPdfGenerator>(client => { client.Timeout = TimeSpan.FromSeconds(5); })
+        services.AddHttpClient<IDiaryPdfGenerator, DiaryPdfGenerator>(client => client.Timeout = TimeSpan.FromSeconds(5))
             .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
                 AllowAutoRedirect = false,
                 ConnectCallback = ConnectToAllowedRemoteImageEndpointAsync,

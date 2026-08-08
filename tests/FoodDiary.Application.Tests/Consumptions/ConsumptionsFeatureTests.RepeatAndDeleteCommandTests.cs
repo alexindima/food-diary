@@ -26,7 +26,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains("ConsumptionId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task DeleteConsumptionCommandHandler_WhenMealIsMissing_ReturnsNotFound() {
         DeleteConsumptionCommandHandler handler = DeleteConsumptionHandler(new CreatingMealRepository());
@@ -38,7 +37,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Consumption.NotFound", result.Error.Code);
     }
-
 
     [Fact]
     public async Task DeleteConsumptionCommandHandler_WhenMealExists_DeletesMeal() {
@@ -54,7 +52,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Success(result);
         Assert.Equal(meal, repository.DeletedMeal);
     }
-
 
     [Fact]
     public async Task RepeatMealCommandHandler_WithExistingMeal_CopiesItemsAndAppliesNutrition() {
@@ -80,7 +77,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal(2, repository.LastAddedMeal.Items.Count);
         Assert.Equal(510, repository.LastAddedMeal.TotalCalories);
     }
-
 
     [Fact]
     public async Task RepeatMealCommandHandler_WithAiAndManualNutrition_CopiesFullConsumption() {
@@ -139,7 +135,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal(430, repository.LastAddedMeal.ManualCalories);
     }
 
-
     [Fact]
     public async Task RepeatMealCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         RepeatMealCommandHandler handler = RepeatMealHandler(
@@ -154,7 +149,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task RepeatMealCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
@@ -173,7 +167,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
-
     [Fact]
     public async Task RepeatMealCommandHandler_WithEmptyMealId_ReturnsValidationFailure() {
         var user = User.Create("repeat-empty-meal-id@example.com", "hash");
@@ -191,7 +184,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains("MealId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task RepeatMealCommandHandler_WhenSourceMealMissing_ReturnsNotFound() {
         var user = User.Create("repeat-missing-source@example.com", "hash");
@@ -207,7 +199,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Consumption.NotFound", result.Error.Code);
     }
-
 
     [Fact]
     public async Task RepeatMealCommandHandler_WithInvalidMealType_ReturnsValidationFailure() {
@@ -228,7 +219,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("MealType", result.Error.Message, StringComparison.Ordinal);
     }
-
 
     [Fact]
     public async Task DeleteConsumptionCommandHandler_WithMissingUserId_ReturnsInvalidToken() {

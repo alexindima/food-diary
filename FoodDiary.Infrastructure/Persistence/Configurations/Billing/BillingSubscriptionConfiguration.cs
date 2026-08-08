@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Billing;
 
-
 internal sealed class BillingSubscriptionConfiguration : IEntityTypeConfiguration<BillingSubscription> {
     public void Configure(EntityTypeBuilder<BillingSubscription> builder) {
         builder.ToTable("BillingSubscriptions");

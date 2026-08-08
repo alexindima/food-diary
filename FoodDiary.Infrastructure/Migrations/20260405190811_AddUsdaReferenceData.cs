@@ -17,9 +17,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     FoodCategoryId = table.Column<int>(type: "integer", nullable: true),
                     FoodCategory = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                 },
-                constraints: table => {
-                    table.PrimaryKey("PK_UsdaFoods", x => x.FdcId);
-                });
+                constraints: table => table.PrimaryKey("PK_UsdaFoods", x => x.FdcId));
 
             migrationBuilder.CreateTable(
                 name: "UsdaNutrients",
@@ -28,9 +26,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     UnitName = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
                 },
-                constraints: table => {
-                    table.PrimaryKey("PK_UsdaNutrients", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_UsdaNutrients", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "UsdaFoodPortions",

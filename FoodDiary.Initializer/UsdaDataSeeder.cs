@@ -132,7 +132,7 @@ internal static class UsdaDataSeeder {
         // Load food categories if available
         var categories = new Dictionary<int, string>();
         if (File.Exists(categoryCsvPath)) {
-            await foreach (string? line in UsdaCsvReader.ReadLinesAsync(categoryCsvPath).ConfigureAwait(false)) {
+            await foreach (string line in UsdaCsvReader.ReadLinesAsync(categoryCsvPath).ConfigureAwait(false)) {
                 string[] fields = UsdaCsvReader.ParseLine(line);
                 if (fields.Length >= 2 && int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int catId)) {
                     categories[catId] = fields[1];
@@ -144,7 +144,7 @@ internal static class UsdaDataSeeder {
         NpgsqlBinaryImporter writer = await connection.BeginBinaryImportAsync(
             """COPY "UsdaFoods" ("FdcId", "Description", "FoodCategoryId", "FoodCategory") FROM STDIN (FORMAT BINARY)""").ConfigureAwait(false);
         await using (writer.ConfigureAwait(false)) {
-            await foreach (string? line in UsdaCsvReader.ReadLinesAsync(foodCsvPath).ConfigureAwait(false)) {
+            await foreach (string line in UsdaCsvReader.ReadLinesAsync(foodCsvPath).ConfigureAwait(false)) {
                 string[] fields = UsdaCsvReader.ParseLine(line);
                 // food.csv: fdc_id, data_type, description, food_category_id, publication_date
                 if (fields.Length < 4) {
@@ -195,7 +195,7 @@ internal static class UsdaDataSeeder {
         NpgsqlBinaryImporter writer = await connection.BeginBinaryImportAsync(
             """COPY "UsdaNutrients" ("Id", "Name", "UnitName") FROM STDIN (FORMAT BINARY)""").ConfigureAwait(false);
         await using (writer.ConfigureAwait(false)) {
-            await foreach (string? line in UsdaCsvReader.ReadLinesAsync(csvPath).ConfigureAwait(false)) {
+            await foreach (string line in UsdaCsvReader.ReadLinesAsync(csvPath).ConfigureAwait(false)) {
                 string[] fields = UsdaCsvReader.ParseLine(line);
                 // nutrient.csv: id, name, unit_name, nutrient_nbr, rank
                 if (fields.Length < 3) {
@@ -231,7 +231,7 @@ internal static class UsdaDataSeeder {
         NpgsqlBinaryImporter writer = await connection.BeginBinaryImportAsync(
             """COPY "UsdaFoodNutrients" ("Id", "FdcId", "NutrientId", "Amount") FROM STDIN (FORMAT BINARY)""").ConfigureAwait(false);
         await using (writer.ConfigureAwait(false)) {
-            await foreach (string? line in UsdaCsvReader.ReadLinesAsync(csvPath).ConfigureAwait(false)) {
+            await foreach (string line in UsdaCsvReader.ReadLinesAsync(csvPath).ConfigureAwait(false)) {
                 string[] fields = UsdaCsvReader.ParseLine(line);
                 // food_nutrient.csv: id, fdc_id, nutrient_id, amount, ...
                 if (fields.Length < 4) {
@@ -283,7 +283,7 @@ internal static class UsdaDataSeeder {
         NpgsqlBinaryImporter writer = await connection.BeginBinaryImportAsync(
             """COPY "UsdaFoodPortions" ("Id", "FdcId", "Amount", "MeasureUnitName", "GramWeight", "PortionDescription", "Modifier") FROM STDIN (FORMAT BINARY)""").ConfigureAwait(false);
         await using (writer.ConfigureAwait(false)) {
-            await foreach (string? line in UsdaCsvReader.ReadLinesAsync(csvPath).ConfigureAwait(false)) {
+            await foreach (string line in UsdaCsvReader.ReadLinesAsync(csvPath).ConfigureAwait(false)) {
                 string[] fields = UsdaCsvReader.ParseLine(line);
                 // food_portion.csv: id, fdc_id, seq_num, amount, measure_unit_id, portion_description, modifier, gram_weight, ...
                 if (fields.Length < 8) {

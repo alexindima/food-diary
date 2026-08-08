@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Admin;
 
-
 internal sealed class AdminImpersonationSessionConfiguration : IEntityTypeConfiguration<AdminImpersonationSession> {
     public void Configure(EntityTypeBuilder<AdminImpersonationSession> builder) {
         builder.Property(e => e.ActorUserId).HasConversion(

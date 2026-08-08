@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Notifications;
 
-
 internal sealed class NotificationConfiguration : IEntityTypeConfiguration<Notification> {
     public void Configure(EntityTypeBuilder<Notification> builder) {
         builder.Property(e => e.Id)

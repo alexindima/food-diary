@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Hydration;
 
-
 internal sealed class HydrationEntryConfiguration : IEntityTypeConfiguration<HydrationEntry> {
     public void Configure(EntityTypeBuilder<HydrationEntry> builder) {
         builder.Property(e => e.Id).HasConversion(

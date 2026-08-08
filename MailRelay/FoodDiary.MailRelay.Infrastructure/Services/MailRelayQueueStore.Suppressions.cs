@@ -22,9 +22,7 @@ public sealed partial class MailRelayQueueStore {
 
         return await _executor.QueryAsync(
             sql,
-            command => {
-                command.Parameters.Add("email", NpgsqlDbType.Text).Value = (object?)MailRelayQueueRowMapper.NormalizeEmail(email) ?? DBNull.Value;
-            },
+            command => command.Parameters.Add("email", NpgsqlDbType.Text).Value = (object?)MailRelayQueueRowMapper.NormalizeEmail(email) ?? DBNull.Value,
             async (reader, token) => {
                 var entries = new List<MailRelaySuppressionEntry>();
                 while (await reader.ReadAsync(token).ConfigureAwait(false)) {
@@ -78,7 +76,6 @@ public sealed partial class MailRelayQueueStore {
         }
     }
 
-
     public async Task<bool> RemoveSuppressionAsync(string email, CancellationToken cancellationToken) {
         const string sql = "delete from mailrelay_suppressions where email = @email;";
 
@@ -87,9 +84,7 @@ public sealed partial class MailRelayQueueStore {
 
         int deletedRows = await _executor.ExecuteAsync(
             sql,
-            command => {
-                command.Parameters.AddWithValue("email", normalizedEmail);
-            },
+            command => command.Parameters.AddWithValue("email", normalizedEmail),
             cancellationToken).ConfigureAwait(false);
 
         return deletedRows > 0;
@@ -117,9 +112,7 @@ public sealed partial class MailRelayQueueStore {
 
         return await _executor.QueryAsync(
             sql,
-            command => {
-                command.Parameters.AddWithValue("emails", normalizedRecipients);
-            },
+            command => command.Parameters.AddWithValue("emails", normalizedRecipients),
             async (reader, token) => {
                 var emails = new List<string>();
                 while (await reader.ReadAsync(token).ConfigureAwait(false)) {

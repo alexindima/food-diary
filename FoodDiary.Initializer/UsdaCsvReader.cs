@@ -17,11 +17,14 @@ internal static class UsdaCsvReader {
         int start = 0;
 
         for (int i = 0; i < line.Length; i++) {
-            if (line[i] == '"') {
-                inQuotes = !inQuotes;
-            } else if (line[i] == ',' && !inQuotes) {
-                fields.Add(ExtractField(line, start, i));
-                start = i + 1;
+            switch (line[i]) {
+                case '"':
+                    inQuotes = !inQuotes;
+                    break;
+                case ',' when !inQuotes:
+                    fields.Add(ExtractField(line, start, i));
+                    start = i + 1;
+                    break;
             }
         }
 
@@ -34,7 +37,7 @@ internal static class UsdaCsvReader {
 
     private static string ExtractField(string line, int start, int end) {
         string field = line[start..end].Trim();
-        if (field.Length >= 2 && field[0] == '"' && field[^1] == '"') {
+        if (field is ['"', _, ..] && field[^1] == '"') {
             field = field[1..^1].Replace("\"\"", "\"", StringComparison.Ordinal);
         }
 

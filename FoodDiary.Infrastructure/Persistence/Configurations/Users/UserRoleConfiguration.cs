@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Users;
 
-
 internal sealed class UserRoleConfiguration : IEntityTypeConfiguration<UserRole> {
     public void Configure(EntityTypeBuilder<UserRole> builder) {
         builder.HasKey(e => new { e.UserId, e.RoleId });

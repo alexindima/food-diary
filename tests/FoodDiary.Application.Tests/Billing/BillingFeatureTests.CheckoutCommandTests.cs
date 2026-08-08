@@ -21,7 +21,6 @@ public partial class BillingFeatureTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-
     [Fact]
     public async Task CreateCheckoutSessionValidator_WithBlankProvider_ReturnsSuccess() {
         TestValidationResult<CreateCheckoutSessionCommand> result = await new CreateCheckoutSessionCommandValidator().TestValidateAsync(
@@ -29,7 +28,6 @@ public partial class BillingFeatureTests {
 
         result.ShouldNotHaveAnyValidationErrors();
     }
-
 
     [Fact]
     public async Task CreateCheckoutSession_WithRequestedProvider_CreatesPendingSubscriptionAndCheckoutPayment() {
@@ -71,7 +69,6 @@ public partial class BillingFeatureTests {
         Assert.Equal("pay_123", payment.ExternalPaymentId);
         Assert.Equal(subscription.Id, payment.BillingSubscriptionId);
     }
-
 
     [Fact]
     public async Task CreateCheckoutSession_WithExistingInactiveSubscription_UpdatesCheckoutContext() {
@@ -118,7 +115,6 @@ public partial class BillingFeatureTests {
         Assert.Equal("session_new", payment.ExternalPaymentId);
     }
 
-
     [Theory]
     [InlineData(null)]
     [InlineData("00000000-0000-0000-0000-000000000000")]
@@ -139,7 +135,6 @@ public partial class BillingFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-
     [Fact]
     public async Task CreateCheckoutSession_WhenUserIsMissing_ReturnsInvalidToken() {
         var handler = new CreateCheckoutSessionCommandHandler(
@@ -156,7 +151,6 @@ public partial class BillingFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task CreateCheckoutSession_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
@@ -182,7 +176,6 @@ public partial class BillingFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Theory]
     [InlineData("active")]
@@ -218,7 +211,6 @@ public partial class BillingFeatureTests {
         Assert.Empty(paymentRepository.Payments);
     }
 
-
     [Fact]
     public async Task CreateCheckoutSession_WhenProviderIsMissing_ReturnsProviderNotConfigured() {
         var user = User.Create("missing-provider@example.com", "hash");
@@ -236,7 +228,6 @@ public partial class BillingFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Billing.ProviderNotConfigured", result.Error.Code);
     }
-
 
     [Fact]
     public async Task CreateCheckoutSession_WhenProviderFails_ReturnsProviderError() {

@@ -19,7 +19,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task InviteDietologist_WhenUserNotFound_ReturnsFailure() {
         InviteDietologistCommandHandler handler = CreateInviteHandler();
@@ -30,7 +29,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task InviteDietologist_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
@@ -45,7 +43,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task InviteDietologist_WhenInvitingSelf_ReturnsFailure() {
@@ -62,7 +59,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task InviteDietologist_WhenAlreadyHasActiveDietologist_ReturnsFailure() {
@@ -84,7 +80,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task InviteDietologist_WhenPendingExists_ReturnsFailure() {
         var userId = UserId.New();
@@ -104,7 +99,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task InviteDietologist_WithValidData_Succeeds() {
@@ -126,7 +120,6 @@ public partial class DietologistFeatureTests {
         Assert.Single(invRepo.Added);
         Assert.True(emailSender.SentCount > 0);
     }
-
 
     [Fact]
     public async Task InviteDietologist_WhenRegisteredDietologistExists_CreatesNotificationAndPushesUpdate() {
@@ -158,7 +151,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal(dietologist.Id, notificationRepo.Added[0].UserId);
     }
 
-
     [Fact]
     public async Task InviteDietologist_WhenEmailEnqueueFailsForUnregisteredDietologist_Throws() {
         var userId = UserId.New();
@@ -177,7 +169,6 @@ public partial class DietologistFeatureTests {
                 new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
                 CancellationToken.None));
     }
-
 
     [Fact]
     public async Task InviteDietologist_WhenEmailEnqueueFailsForRegisteredDietologist_ThrowsBeforeNotificationFallback() {

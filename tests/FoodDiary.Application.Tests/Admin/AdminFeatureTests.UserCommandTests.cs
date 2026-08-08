@@ -118,7 +118,6 @@ public partial class AdminFeatureTests {
         Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "Unknown role.", StringComparison.Ordinal));
     }
 
-
     [Fact]
     public async Task UpdateAdminUserHandler_WithUnknownRoleFromRepository_Fails() {
         User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
@@ -139,7 +138,6 @@ public partial class AdminFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("roles", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithEmptyUserId_ReturnsValidationFailure() {
@@ -165,7 +163,6 @@ public partial class AdminFeatureTests {
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task UpdateAdminUserHandler_WhenUserMissing_ReturnsNotFound() {
         User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
@@ -186,7 +183,6 @@ public partial class AdminFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("User.NotFound", result.Error.Code);
     }
-
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithInvalidLanguage_ReturnsValidationFailure() {
@@ -210,7 +206,6 @@ public partial class AdminFeatureTests {
         Assert.Contains("language", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task UpdateAdminUserHandler_WithUnknownRequestedRole_ReturnsValidationFailure() {
         User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
@@ -232,7 +227,6 @@ public partial class AdminFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Unknown role", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithNullRoles_DoesNotChangeRoles() {
@@ -260,7 +254,6 @@ public partial class AdminFeatureTests {
         Assert.Equal(beforeRoles, afterRoles);
     }
 
-
     [Fact]
     public async Task UpdateAdminUserHandler_WithEmptyRoles_ClearsRoles() {
         User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
@@ -283,7 +276,6 @@ public partial class AdminFeatureTests {
         ResultAssert.Success(result);
         Assert.Empty(user.UserRoles);
     }
-
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithOwnerRoleForNonOwner_ReturnsValidationFailure() {
@@ -310,7 +302,6 @@ public partial class AdminFeatureTests {
         Assert.Equal([RoleNames.Admin], [.. user.GetRoleNames().Order(StringComparer.Ordinal)]);
     }
 
-
     [Fact]
     public async Task UpdateAdminUserHandler_WithOwnerUserWithoutOwnerRole_ReturnsValidationFailure() {
         User user = CreateUserWithRoles("admin@fooddiary.club", [RoleNames.Owner, RoleNames.Admin]);
@@ -335,7 +326,6 @@ public partial class AdminFeatureTests {
         Assert.Contains("Owner and Admin", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Equal([RoleNames.Admin, RoleNames.Owner], [.. user.GetRoleNames().Order(StringComparer.Ordinal)]);
     }
-
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithOwnerUserWithoutAdminRole_ReturnsValidationFailure() {
@@ -362,7 +352,6 @@ public partial class AdminFeatureTests {
         Assert.Equal([RoleNames.Admin, RoleNames.Owner], [.. user.GetRoleNames().Order(StringComparer.Ordinal)]);
     }
 
-
     [Fact]
     public async Task UpdateAdminUserHandler_WithOwnerUserKeepingOwnerAndAdmin_UpdatesRoles() {
         User user = CreateUserWithRoles("admin@fooddiary.club", [RoleNames.Owner, RoleNames.Admin]);
@@ -388,7 +377,6 @@ public partial class AdminFeatureTests {
             [.. user.GetRoleNames().Order(StringComparer.Ordinal)]);
     }
 
-
     [Fact]
     public async Task UpdateAdminUserHandler_WithOwnerUserDeactivation_ReturnsValidationFailure() {
         User user = CreateUserWithRoles("admin@fooddiary.club", [RoleNames.Owner, RoleNames.Admin]);
@@ -413,7 +401,6 @@ public partial class AdminFeatureTests {
         Assert.Contains("Owner user", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.True(user.IsActive);
     }
-
 
     [Fact]
     public async Task UpdateAdminUserHandler_WhenActorRemovesOwnAdminRole_ReturnsValidationFailure() {
@@ -441,7 +428,6 @@ public partial class AdminFeatureTests {
         Assert.Equal([RoleNames.Admin, RoleNames.Premium], [.. user.GetRoleNames().Order(StringComparer.Ordinal)]);
     }
 
-
     [Fact]
     public async Task UpdateAdminUserHandler_WhenActorDeactivatesOwnAccount_ReturnsValidationFailure() {
         User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
@@ -468,7 +454,6 @@ public partial class AdminFeatureTests {
         Assert.True(user.IsActive);
     }
 
-
     [Fact]
     public async Task UpdateAdminUserHandler_WithSameRoles_DoesNotSetModifiedOnUtc() {
         User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
@@ -492,7 +477,6 @@ public partial class AdminFeatureTests {
         ResultAssert.Success(result);
         Assert.Equal(modifiedBefore, user.ModifiedOnUtc);
     }
-
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithRoleChanges_StoresRoleAuditEvents() {
@@ -536,7 +520,6 @@ public partial class AdminFeatureTests {
             });
     }
 
-
     [Fact]
     public async Task UpdateAdminUserHandler_WithEmptyActorUserId_ReturnsValidationFailure() {
         User user = CreateUserWithRoles("admin-empty-actor@example.com", [RoleNames.Admin]);
@@ -561,7 +544,6 @@ public partial class AdminFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ActorUserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithUnchangedAdminAccountFields_DoesNotSetModifiedOnUtc() {
@@ -592,7 +574,6 @@ public partial class AdminFeatureTests {
         Assert.Equal(modifiedBefore, user.ModifiedOnUtc);
     }
 
-
     [Fact]
     public async Task UpdateAdminUserHandler_WithDeletedUserAndActiveToggle_ReturnsValidationFailure() {
         User user = CreateUserWithRoles("deleted-admin@example.com", [RoleNames.Admin]);
@@ -618,7 +599,6 @@ public partial class AdminFeatureTests {
         Assert.Contains("restore flow", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task UpdateAdminUserHandler_WithActiveToggleTrue_ActivatesUser() {
         User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
@@ -640,7 +620,6 @@ public partial class AdminFeatureTests {
         ResultAssert.Success(result);
         Assert.True(user.IsActive);
     }
-
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithActiveToggleFalse_DeactivatesUser() {

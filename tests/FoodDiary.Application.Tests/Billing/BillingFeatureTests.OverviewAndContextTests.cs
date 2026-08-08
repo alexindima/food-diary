@@ -37,7 +37,6 @@ public partial class BillingFeatureTests {
         Assert.Equal(1, repository.UpdateCount);
     }
 
-
     [Fact]
     public async Task BillingUserContextService_WithMissingUser_ReturnsInvalidToken() {
         var repository = new FakeUserRepository();
@@ -51,7 +50,6 @@ public partial class BillingFeatureTests {
 
         ResultAssert.Failure(result, "Authentication.InvalidToken");
     }
-
 
     [Fact]
     public async Task BillingUserContextService_GetAccessibleUserProfileAsync_ReturnsPremiumTrialState() {
@@ -72,7 +70,6 @@ public partial class BillingFeatureTests {
         Assert.Equal(Now.AddDays(7), profile.PremiumTrialEndsAtUtc);
     }
 
-
     [Fact]
     public async Task BillingUserContextService_GetAccessibleUserProfileAsync_WhenUserLoadFails_ReturnsFailure() {
         var userId = UserId.New();
@@ -92,7 +89,6 @@ public partial class BillingFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-
     [Fact]
     public async Task BillingUserContextService_EnsureCanAccessAsync_ForwardsAccessFailure() {
         var user = User.Create("billing-access-deleted@example.com", "hash");
@@ -108,7 +104,6 @@ public partial class BillingFeatureTests {
 
         Assert.Equal("Authentication.InvalidToken", error?.Code);
     }
-
 
     [Fact]
     public async Task GetBillingOverview_WithExistingSubscription_ReturnsBillingTimelineAndRenewalState() {
@@ -157,7 +152,6 @@ public partial class BillingFeatureTests {
         Assert.False(result.Value.ManageBillingAvailable);
     }
 
-
     [Fact]
     public async Task GetBillingOverview_WithExpiredProviderTrial_DoesNotGrantPremium() {
         var user = User.Create("expired-provider-trial@example.com", "hash");
@@ -198,7 +192,6 @@ public partial class BillingFeatureTests {
         Assert.True(result.Value.CanStartPremiumTrial);
     }
 
-
     [Fact]
     public async Task GetBillingOverview_WithInvalidUserId_ReturnsInvalidToken() {
         GetBillingOverviewQueryHandler handler = CreateBillingOverviewHandler(
@@ -213,7 +206,6 @@ public partial class BillingFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-
     [Fact]
     public async Task GetBillingOverview_WhenUserIsMissing_ReturnsInvalidToken() {
         GetBillingOverviewQueryHandler handler = CreateBillingOverviewHandler(
@@ -227,7 +219,6 @@ public partial class BillingFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetBillingOverview_WhenProfileLoadFailsAfterAccessCheck_ReturnsFailure() {
@@ -250,7 +241,6 @@ public partial class BillingFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetBillingOverview_WithBlankSubscriptionStatus_DoesNotGrantPaidPremium() {
@@ -280,7 +270,6 @@ public partial class BillingFeatureTests {
         Assert.Equal(" ", result.Value.SubscriptionStatus);
         Assert.True(result.Value.CanStartPremiumTrial);
     }
-
 
     [Theory]
     [InlineData("trialing", 1, true, false)]

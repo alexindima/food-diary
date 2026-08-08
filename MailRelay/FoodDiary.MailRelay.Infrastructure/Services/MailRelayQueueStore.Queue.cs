@@ -250,7 +250,6 @@ public sealed partial class MailRelayQueueStore {
             cancellationToken).ConfigureAwait(false);
     }
 
-
     public async Task MarkSentAsync(Guid id, CancellationToken cancellationToken) {
         const string sql = """
                            update mailrelay_outbound_emails
@@ -286,7 +285,6 @@ public sealed partial class MailRelayQueueStore {
             }
         }
     }
-
 
     public async Task<MailRelayQueueStats> GetStatsAsync(CancellationToken cancellationToken) {
         const string sql = """
@@ -330,9 +328,7 @@ public sealed partial class MailRelayQueueStore {
 
         return await _executor.QueryAsync(
             sql,
-            command => {
-                command.Parameters.AddWithValue("id", id);
-            },
+            command => command.Parameters.AddWithValue("id", id),
             async (reader, token) => {
                 if (!await reader.ReadAsync(token).ConfigureAwait(false)) {
                     return null;

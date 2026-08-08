@@ -48,7 +48,6 @@ public partial class ConsumptionsFeatureTests {
             () => Assert.Empty(model.AiSessions));
     }
 
-
     [Fact]
     public void ConsumptionMappings_ToModel_MapsReadModelAiSessionsAndItems() {
         var mealId = Guid.NewGuid();

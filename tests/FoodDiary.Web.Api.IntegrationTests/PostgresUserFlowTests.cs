@@ -100,16 +100,16 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         IdPayload? recipe = await createRecipeResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
         Assert.NotNull(recipe);
 
-        HttpResponseMessage duplicateResponse = await client.PostAsJsonAsync(string.Create(CultureInfo.InvariantCulture, $"/api/v1/recipes/{recipe.Id}/duplicate"), new { });
+        HttpResponseMessage duplicateResponse = await client.PostAsJsonAsync($"/api/v1/recipes/{recipe.Id}/duplicate", new { });
         await AssertStatusCodeAsync(HttpStatusCode.OK, duplicateResponse);
         IdPayload? duplicated = await duplicateResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
         Assert.NotNull(duplicated);
         Assert.NotEqual(recipe.Id, duplicated.Id);
 
-        HttpResponseMessage deleteOriginal = await client.DeleteAsync(string.Create(CultureInfo.InvariantCulture, $"/api/v1/recipes/{recipe.Id}"));
+        HttpResponseMessage deleteOriginal = await client.DeleteAsync($"/api/v1/recipes/{recipe.Id}");
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, deleteOriginal);
 
-        HttpResponseMessage getDuplicate = await client.GetAsync(string.Create(CultureInfo.InvariantCulture, $"/api/v1/recipes/{duplicated.Id}"));
+        HttpResponseMessage getDuplicate = await client.GetAsync($"/api/v1/recipes/{duplicated.Id}");
         await AssertStatusCodeAsync(HttpStatusCode.OK, getDuplicate);
     }
 

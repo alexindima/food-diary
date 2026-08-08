@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.Dashboard;
 
 internal sealed class DashboardMealsReadService(FoodDiaryDbContext context) : IDashboardMealsReadService {
-    private readonly DashboardMealFavoritesLoader favoriteMealsLoader = new(context);
-    private readonly DashboardMealItemsLoader mealItemsLoader = new(context);
-    private readonly DashboardMealAiSessionsLoader aiSessionsLoader = new(context);
+    private readonly DashboardMealFavoritesLoader _favoriteMealsLoader = new(context);
+    private readonly DashboardMealItemsLoader _mealItemsLoader = new(context);
+    private readonly DashboardMealAiSessionsLoader _aiSessionsLoader = new(context);
 
     public async Task<Result<DashboardMealsReadModel>> GetMealsAsync(
         UserId userId,
@@ -41,9 +41,9 @@ internal sealed class DashboardMealsReadService(FoodDiaryDbContext context) : ID
         }
 
         MealId[] mealIds = [.. meals.Select(meal => meal.MealId)];
-        IReadOnlyDictionary<MealId, Guid> favoriteIdsByMealId = await favoriteMealsLoader.LoadAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
-        ILookup<MealId, DashboardMealItemReadModel> itemsByMealId = await mealItemsLoader.LoadAsync(mealIds, cancellationToken).ConfigureAwait(false);
-        ILookup<MealId, DashboardMealAiSessionReadModel> aiSessionsByMealId = await aiSessionsLoader.LoadAsync(mealIds, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<MealId, Guid> favoriteIdsByMealId = await _favoriteMealsLoader.LoadAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
+        ILookup<MealId, DashboardMealItemReadModel> itemsByMealId = await _mealItemsLoader.LoadAsync(mealIds, cancellationToken).ConfigureAwait(false);
+        ILookup<MealId, DashboardMealAiSessionReadModel> aiSessionsByMealId = await _aiSessionsLoader.LoadAsync(mealIds, cancellationToken).ConfigureAwait(false);
 
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         return Result.Success(new DashboardMealsReadModel(

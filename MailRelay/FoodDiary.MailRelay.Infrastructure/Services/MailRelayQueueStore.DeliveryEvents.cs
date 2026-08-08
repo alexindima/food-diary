@@ -86,9 +86,7 @@ public sealed partial class MailRelayQueueStore {
 
         return await _executor.QueryAsync(
             sql,
-            command => {
-                command.Parameters.Add("email", NpgsqlDbType.Text).Value = (object?)MailRelayQueueRowMapper.NormalizeEmail(email) ?? DBNull.Value;
-            },
+            command => command.Parameters.Add("email", NpgsqlDbType.Text).Value = (object?)MailRelayQueueRowMapper.NormalizeEmail(email) ?? DBNull.Value,
             async (reader, token) => {
                 var result = new List<MailRelayDeliveryEventEntry>();
                 while (await reader.ReadAsync(token).ConfigureAwait(false)) {

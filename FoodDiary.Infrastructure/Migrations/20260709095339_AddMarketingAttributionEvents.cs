@@ -30,9 +30,7 @@ public partial class AddMarketingAttributionEvents : Migration {
                 CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                 ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
             },
-            constraints: table => {
-                table.PrimaryKey("PK_MarketingAttributionEvents", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_MarketingAttributionEvents", x => x.Id));
 
         migrationBuilder.CreateIndex(
             name: "IX_MarketingAttributionEvents_AnonymousId_OccurredAtUtc",

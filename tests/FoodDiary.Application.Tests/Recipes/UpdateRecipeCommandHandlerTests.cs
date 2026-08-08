@@ -34,27 +34,6 @@ public partial class UpdateRecipeCommandHandlerTests {
             productLookupService,
             recipeLookupService);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private static RecipeStepInput CreateStep(int order, string description) {
         return new RecipeStepInput(
             Order: order,

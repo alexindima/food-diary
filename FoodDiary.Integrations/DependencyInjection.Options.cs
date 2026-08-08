@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.Integrations;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddIntegrationOptions(this IServiceCollection services, IConfiguration configuration) {
+    private static void AddIntegrationOptions(this IServiceCollection services, IConfiguration configuration) {
         services.AddOptions<S3Options>()
             .Bind(configuration.GetSection(S3Options.SectionName))
             .Validate(S3Options.HasValidMaxUploadSize,
@@ -87,8 +87,6 @@ public static partial class DependencyInjection {
             .Validate(GoogleFitOptions.IsEmptyOrComplete,
                 "GoogleFit configuration must be empty or include ClientId, ClientSecret, and an absolute RedirectUri.")
             .ValidateOnStart();
-
-        return services;
     }
 
     private static bool ShouldRequireProviderConfiguration(

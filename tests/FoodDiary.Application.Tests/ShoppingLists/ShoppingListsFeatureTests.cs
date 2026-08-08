@@ -56,45 +56,6 @@ public partial class ShoppingListsFeatureTests {
     private static ShoppingListSummaryReadModel ToSummaryReadModel(ShoppingList list) =>
         new(list.Id.Value, list.Name, list.CreatedOnUtc, list.Items.Count);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     [ExcludeFromCodeCoverage]
     private sealed class NoopShoppingListRepository : IShoppingListRepository {
         public Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.FromResult(list);
@@ -248,7 +209,6 @@ public partial class ShoppingListsFeatureTests {
             Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(
                 ids.Where(_products.ContainsKey).ToDictionary(id => id, id => _products[id]));
     }
-
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) {
         ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();

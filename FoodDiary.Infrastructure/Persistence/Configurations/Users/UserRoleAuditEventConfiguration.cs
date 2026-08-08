@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Users;
 
-
 internal sealed class UserRoleAuditEventConfiguration : IEntityTypeConfiguration<UserRoleAuditEvent> {
     public void Configure(EntityTypeBuilder<UserRoleAuditEvent> builder) {
         builder.Property(e => e.UserId).HasConversion(

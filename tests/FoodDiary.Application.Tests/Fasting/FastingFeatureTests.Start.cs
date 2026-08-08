@@ -322,5 +322,4 @@ public partial class FastingFeatureTests {
         Assert.Empty(occurrenceRepo.StoredOccurrences);
     }
 
-
 }

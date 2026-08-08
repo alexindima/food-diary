@@ -62,7 +62,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal([oldAssetId], cleanup.RequestedAssetIds);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var userId = UserId.New();
@@ -106,7 +105,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithEmptyRecipeId_ReturnsValidationFailure() {
@@ -152,7 +150,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithEmptyConsumptionId_ReturnsValidationFailure() {
         UpdateConsumptionCommandHandler handler = UpdateConsumptionHandler(
@@ -191,7 +188,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains("ConsumptionId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithoutManualOrAiItems_ReturnsRequiredItemsFailure() {
         var user = User.Create("update-without-items@example.com", "hash");
@@ -225,7 +221,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains("Items", result.Error.Message, StringComparison.Ordinal);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WhenMealMissing_ReturnsNotFound() {
         var user = User.Create("update-missing-meal@example.com", "hash");
@@ -239,7 +234,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Consumption.NotFound", result.Error.Code);
     }
-
 
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
@@ -281,7 +275,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
-
 
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithoutImageChange_DoesNotCleanupExistingMealAsset() {
@@ -329,7 +322,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Empty(cleanup.RequestedAssetIds);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WhenMealTypeInvalid_ReturnsValidationFailure() {
         var user = User.Create("invalid-update-meal-type@example.com", "hash");
@@ -369,7 +361,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Unknown meal type value.", result.Error.Message, StringComparison.Ordinal);
     }
-
 
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WhenAiSourceInvalid_ReturnsValidationFailure() {
@@ -413,7 +404,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains("Unknown AI recognition source value.", result.Error.Message, StringComparison.Ordinal);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WhenAiRecognizedAtIsUnspecified_ReturnsValidationFailure() {
         var user = User.Create("invalid-update-ai-time@example.com", "hash");
@@ -456,7 +446,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains("RecognizedAtUtc timestamp kind must be specified.", result.Error.Message, StringComparison.Ordinal);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WhenAutoNutritionFails_ReturnsServiceErrorWithoutPersisting() {
         var user = User.Create("update-nutrition-failure@example.com", "hash");
@@ -498,7 +487,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.False(repository.UpdateCalled);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WhenUpdatedMealCannotBeReloaded_ReturnsInvalidData() {
         var user = User.Create("update-reload-missing@example.com", "hash");
@@ -539,7 +527,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Consumption.InvalidData", result.Error.Code);
         Assert.True(repository.UpdateCalled);
     }
-
 
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithAiSessionDefaults_UpdatesMealAndCleansOldAsset() {
@@ -600,7 +587,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Single(session.Items);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WhenImageAssetAccessFails_ReturnsFailure() {
         var user = User.Create("update-image-failure@example.com", "hash");
@@ -619,7 +605,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.False(repository.UpdateCalled);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var user = User.Create("update-missing-user@example.com", "hash");
@@ -635,7 +620,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
-
 
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WhenSatietyInvalid_ReturnsValidationFailure() {
@@ -653,7 +637,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.False(repository.UpdateCalled);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WhenItemIdentifiersAreMissing_ReturnsValidationFailure() {
         var user = User.Create("update-missing-item-id@example.com", "hash");
@@ -669,7 +652,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
-
 
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
@@ -687,7 +669,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.False(repository.UpdateCalled);
     }
-
 
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithInvalidItemOrigin_ReturnsValidationFailure() {
@@ -708,7 +689,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.False(repository.UpdateCalled);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithEmptySourceAiItemId_ReturnsValidationFailure() {
         var user = User.Create("update-empty-source-ai-item-id@example.com", "hash");
@@ -727,7 +707,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains("Source AI item id", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.False(repository.UpdateCalled);
     }
-
 
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithManualOriginAndSourceAiItemId_ReturnsValidationFailure() {
@@ -748,7 +727,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.False(repository.UpdateCalled);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithRecipeManualOriginAndSourceAiItemId_ReturnsValidationFailure() {
         var user = User.Create("update-recipe-manual-source-ai-item-id@example.com", "hash");
@@ -768,7 +746,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.False(repository.UpdateCalled);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithAiTextItemOrigin_Succeeds() {
         var user = User.Create("update-ai-text-item-origin@example.com", "hash");
@@ -785,7 +762,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Success(result);
         Assert.True(repository.UpdateCalled);
     }
-
 
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithRecipeItem_RegistersRecipeUsage() {
@@ -804,7 +780,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.True(repository.UpdateCalled);
         Assert.Equal(recipeId, recentItems.LastRecipeIds.Single());
     }
-
 
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithEmptyAiSessionImageAssetId_ReturnsValidationFailure() {
@@ -826,7 +801,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.False(repository.UpdateCalled);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WhenAiSessionImageAssetAccessFails_ReturnsFailure() {
         var user = User.Create("update-session-image-failure@example.com", "hash");
@@ -846,7 +820,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Image.Forbidden", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
-
 
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WhenAiSessionNotesTooLong_ReturnsValidationFailure() {
@@ -868,7 +841,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.False(repository.UpdateCalled);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WhenManualNutritionInvalid_ReturnsValidationFailure() {
         var user = User.Create("update-manual-nutrition-failure@example.com", "hash");
@@ -889,7 +861,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.False(repository.UpdateCalled);
     }
 
-
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WhenAiItemInvalid_ReturnsValidationFailure() {
         var user = User.Create("update-invalid-ai-item@example.com", "hash");
@@ -909,7 +880,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
-
 
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithInvalidAiItemResolution_ReturnsValidationFailure() {
@@ -933,7 +903,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains("Unknown AI item resolution value.", result.Error.Message, StringComparison.Ordinal);
         Assert.False(repository.UpdateCalled);
     }
-
 
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithAiItemResolution_Succeeds() {

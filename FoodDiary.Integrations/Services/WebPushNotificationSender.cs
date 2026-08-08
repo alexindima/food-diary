@@ -17,10 +17,10 @@ public sealed class WebPushNotificationSender(
     TimeProvider timeProvider,
     ILogger<WebPushNotificationSender> logger)
     : IWebPushNotificationSender, IWebPushConfigurationProvider {
-    private readonly WebPushOptions options = optionsAccessor.Value;
+    private readonly WebPushOptions _options = optionsAccessor.Value;
 
     public WebPushClientConfiguration GetClientConfiguration() {
-        return new WebPushClientConfiguration(options.Enabled && IsConfigured(), options.PublicKey);
+        return new WebPushClientConfiguration(_options.Enabled && IsConfigured(), _options.PublicKey);
     }
 
     public async Task SendAsync(Notification notification, CancellationToken cancellationToken = default) {
@@ -53,7 +53,7 @@ public sealed class WebPushNotificationSender(
     }
 
     private bool ShouldSkipForConfiguration(Notification notification) {
-        if (options.Enabled && IsConfigured()) {
+        if (_options.Enabled && IsConfigured()) {
             return false;
         }
 
@@ -67,7 +67,7 @@ public sealed class WebPushNotificationSender(
         Notification notification,
         IReadOnlyCollection<WebPushDeliverySubscription> subscriptions,
         CancellationToken cancellationToken) {
-        var vapidDetails = new VapidDetails(options.Subject, options.PublicKey, options.PrivateKey);
+        var vapidDetails = new VapidDetails(_options.Subject, _options.PublicKey, _options.PrivateKey);
         var invalidSubscriptions = new List<WebPushDeliverySubscription>();
         int deliveredCount = 0;
 
@@ -99,9 +99,9 @@ public sealed class WebPushNotificationSender(
     }
 
     private bool IsConfigured() {
-        return !string.IsNullOrWhiteSpace(options.Subject)
-               && !string.IsNullOrWhiteSpace(options.PublicKey)
-               && !string.IsNullOrWhiteSpace(options.PrivateKey);
+        return !string.IsNullOrWhiteSpace(_options.Subject)
+               && !string.IsNullOrWhiteSpace(_options.PublicKey)
+               && !string.IsNullOrWhiteSpace(_options.PrivateKey);
     }
 
     private string BuildPayload(Notification notification, NotificationText text) {
@@ -124,9 +124,9 @@ public sealed class WebPushNotificationSender(
     }
 
     private string ResolveUrl(Notification notification) {
-        string relativePath = NotificationTargetUrlResolver.Resolve(notification.Type, notification.ReferenceId) ?? options.DefaultUrl;
+        string relativePath = NotificationTargetUrlResolver.Resolve(notification.Type, notification.ReferenceId) ?? _options.DefaultUrl;
 
-        if (Uri.TryCreate(options.DefaultUrl, UriKind.Absolute, out Uri? absoluteBase)
+        if (Uri.TryCreate(_options.DefaultUrl, UriKind.Absolute, out Uri? absoluteBase)
             && IsAbsoluteHttpUrl(absoluteBase)
             && Uri.TryCreate(absoluteBase, relativePath, out Uri? targetUrl)) {
             return targetUrl.ToString();
@@ -141,8 +141,7 @@ public sealed class WebPushNotificationSender(
          string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase));
 
     private static bool IsExpiredSubscription(WebPushException ex) {
-        return ex.StatusCode == System.Net.HttpStatusCode.Gone
-               || ex.StatusCode == System.Net.HttpStatusCode.NotFound;
+        return ex.StatusCode is System.Net.HttpStatusCode.Gone or System.Net.HttpStatusCode.NotFound;
     }
 
 }

@@ -27,7 +27,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-
     [Fact]
     public async Task DeleteProductCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("delete-product-deleted-user@example.com", "hash");
@@ -47,7 +46,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
-
     [Fact]
     public async Task DeleteProductCommandHandler_WhenProductMissing_ReturnsNotAccessible() {
         var user = User.Create("delete-product-missing@example.com", "hash");
@@ -65,7 +63,6 @@ public partial class ProductsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Product.NotAccessible", result.Error.Code);
     }
-
 
     [Fact]
     public async Task DeleteProductCommandHandler_WhenProductIsUsed_ReturnsValidationFailure() {
@@ -95,7 +92,6 @@ public partial class ProductsFeatureTests {
         Assert.False(repository.DeleteCalled);
         Assert.Empty(cleanup.RequestedAssetIds);
     }
-
 
     [Fact]
     public async Task DeleteProductCommandHandler_WhenCleanupFails_StillDeletesProductAndReturnsSuccess() {
@@ -128,7 +124,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal([assetId], cleanup.RequestedAssetIds);
     }
 
-
     [Fact]
     public async Task DeleteProductCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
         var handler = new DeleteProductCommandHandler(
@@ -145,7 +140,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task DuplicateProductCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
@@ -164,7 +158,6 @@ public partial class ProductsFeatureTests {
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task DuplicateProductCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var repository = new NoopProductRepository();
@@ -181,7 +174,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-
     [Fact]
     public async Task DuplicateProductCommandHandler_WhenOriginalMissing_ReturnsNotAccessible() {
         var user = User.Create("duplicate-product-missing-original@example.com", "hash");
@@ -195,7 +187,6 @@ public partial class ProductsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Product.NotAccessible", result.Error.Code);
     }
-
 
     [Fact]
     public async Task DuplicateProductCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
@@ -211,7 +202,6 @@ public partial class ProductsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
-
 
     [Fact]
     public async Task DuplicateProductCommandHandler_WithExistingProduct_CopiesFieldsAndClearsImageAsset() {

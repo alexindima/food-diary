@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Favorites;
 
-
 internal sealed class FavoriteMealConfiguration : IEntityTypeConfiguration<FavoriteMeal> {
     public void Configure(EntityTypeBuilder<FavoriteMeal> builder) {
         builder.Property(e => e.Id)

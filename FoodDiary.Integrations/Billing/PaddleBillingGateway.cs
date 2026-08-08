@@ -178,11 +178,11 @@ public sealed class PaddleBillingGateway(
 
             JsonElement data = root.GetProperty("data");
             if (eventType.StartsWith("transaction.", StringComparison.OrdinalIgnoreCase)) {
-                return Task.FromResult(Result.Success<BillingWebhookEventModel?>(CreateTransactionWebhookEvent(root, data, eventType)));
+                return Task.FromResult(Result.Success(CreateTransactionWebhookEvent(root, data, eventType)));
             }
 
             if (eventType.StartsWith("adjustment.", StringComparison.OrdinalIgnoreCase)) {
-                return Task.FromResult(Result.Success<BillingWebhookEventModel?>(CreateAdjustmentWebhookEvent(root, data, eventType)));
+                return Task.FromResult(Result.Success(CreateAdjustmentWebhookEvent(root, data, eventType)));
             }
 
             if (!eventType.StartsWith("subscription.", StringComparison.OrdinalIgnoreCase)) {
@@ -418,7 +418,7 @@ public sealed class PaddleBillingGateway(
     }
 
     private static string CreateCheckoutReference(BillingCheckoutSessionRequestModel request) =>
-        string.Create(CultureInfo.InvariantCulture, $"{request.UserId:N}:{request.Plan.Trim().ToLowerInvariant()}");
+$"{request.UserId:N}:{request.Plan.Trim().ToLowerInvariant()}";
 
     private static bool IsAmbiguousNetworkFailure(Exception exception, CancellationToken cancellationToken) =>
         exception is HttpRequestException ||

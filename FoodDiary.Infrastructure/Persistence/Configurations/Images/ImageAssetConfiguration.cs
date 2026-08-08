@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Images;
 
-
 internal sealed class ImageAssetConfiguration : IEntityTypeConfiguration<ImageAsset> {
     public void Configure(EntityTypeBuilder<ImageAsset> builder) {
         builder.Property(e => e.Id).HasConversion(

@@ -81,7 +81,7 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
         return Result.Success(telegramInitData);
     }
 
-    private static string BuildDataCheckString(Dictionary<string, Microsoft.Extensions.Primitives.StringValues> parsed) {
+    private static string BuildDataCheckString(Dictionary<string, StringValues> parsed) {
         IEnumerable<string> pairs = parsed
             .Where(entry => !string.Equals(entry.Key, "hash", StringComparison.Ordinal))
             .OrderBy(entry => entry.Key, StringComparer.Ordinal)
@@ -116,21 +116,21 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
 
     private sealed class TelegramWebAppUser {
         [JsonPropertyName("id")]
-        public long Id { get; set; }
+        public long Id { get; init; }
 
         [JsonPropertyName("username")]
-        public string? Username { get; set; }
+        public string? Username { get; init; }
 
         [JsonPropertyName("first_name")]
-        public string? FirstName { get; set; }
+        public string? FirstName { get; init; }
 
         [JsonPropertyName("last_name")]
-        public string? LastName { get; set; }
+        public string? LastName { get; init; }
 
         [JsonPropertyName("photo_url")]
-        public string? PhotoUrl { get; set; }
+        public string? PhotoUrl { get; init; }
 
         [JsonPropertyName("language_code")]
-        public string? LanguageCode { get; set; }
+        public string? LanguageCode { get; init; }
     }
 }

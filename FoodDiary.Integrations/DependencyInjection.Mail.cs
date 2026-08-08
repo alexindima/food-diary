@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Integrations;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddMailIntegrations(this IServiceCollection services, IConfiguration configuration) {
+    private static void AddMailIntegrations(this IServiceCollection services, IConfiguration configuration) {
         services.AddMailRelayClient(options => {
             IConfigurationSection section = configuration.GetSection(MailRelayClientOptions.SectionName);
             options.BaseUrl = section["BaseUrl"] ?? string.Empty;
@@ -28,7 +28,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IAdminMailInboxReader, MailInboxClientAdminMailInboxReader>();
         services.AddSingleton<RelayEmailTransport>();
         services.AddSingleton<IEmailTransport>(static sp => sp.GetRequiredService<RelayEmailTransport>());
-
-        return services;
     }
 }

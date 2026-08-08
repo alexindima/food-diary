@@ -28,7 +28,6 @@ public partial class RecipesFeatureTests {
         Assert.False(result.IsValid);
     }
 
-
     [Fact]
     public async Task GetRecipesOverviewQueryValidator_WithValidUserId_Passes() {
         var validator = new GetRecipesOverviewQueryValidator();
@@ -38,7 +37,6 @@ public partial class RecipesFeatureTests {
 
         Assert.True(result.IsValid);
     }
-
 
     [Fact]
     public async Task GetRecipeByIdQueryHandler_WithEmptyRecipeId_ReturnsValidationFailure() {
@@ -53,7 +51,6 @@ public partial class RecipesFeatureTests {
         Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task GetRecipeByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetRecipeByIdQueryHandler(new OverviewRecipeReadService(), new StubUserRepository(User.Create("user@example.com", "hash")));
@@ -65,7 +62,6 @@ public partial class RecipesFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetRecipeByIdQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
@@ -85,7 +81,6 @@ public partial class RecipesFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetRecipeByIdQueryHandler_WithAccessibleRecipe_ReturnsUsageAndOwnerComment() {
@@ -116,7 +111,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal("Private note", result.Value.Comment);
     }
 
-
     [Fact]
     public async Task GetRecipesOverviewQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         GetRecipesOverviewQueryHandler handler = CreateRecipesOverviewHandler(
@@ -132,7 +126,6 @@ public partial class RecipesFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetRecipesOverviewQueryHandler_WhenUserAccessFails_ReturnsAccessFailure() {
@@ -151,7 +144,6 @@ public partial class RecipesFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetRecipesOverviewQueryHandler_WithoutSearch_ReturnsRecentFavoritesAndFavoriteFlags() {
@@ -201,7 +193,6 @@ public partial class RecipesFeatureTests {
         Assert.True(result.Value.AllRecipes.Data.Single(x => x.Id == dinner.Id.Value).IsFavorite);
     }
 
-
     [Fact]
     public async Task GetRecipesOverviewQueryHandler_WhenThereAreNoRecentRecipes_ReturnsEmptyRecentItems() {
         var user = User.Create("overview-no-recents@example.com", "hash");
@@ -222,7 +213,6 @@ public partial class RecipesFeatureTests {
         Assert.Empty(result.Value.RecentItems);
         Assert.Equal(1, recentRepository.GetRecentRecipesCallCount);
     }
-
 
     [Fact]
     public async Task GetRecipesOverviewQueryHandler_WithSearch_SkipsRecentItems() {
@@ -250,7 +240,6 @@ public partial class RecipesFeatureTests {
         Assert.Empty(result.Value.RecentItems);
         Assert.Equal(0, recentRepository.GetRecentRecipesCallCount);
     }
-
 
     [Fact]
     public async Task GetRecipesOverviewQueryHandler_WithHasImageFilter_FiltersRecentItems() {
@@ -280,7 +269,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal(withImage.Id.Value, recent.Id);
     }
 
-
     [Fact]
     public async Task GetRecentRecipesQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         GetRecentRecipesQueryHandler handler = CreateRecentRecipesHandler(new StubRecentItemRepository([]), new OverviewRecipeReadService());
@@ -290,7 +278,6 @@ public partial class RecipesFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetRecentRecipesQueryHandler_WhenNoRecentRecipes_ReturnsEmptyList() {
@@ -304,7 +291,6 @@ public partial class RecipesFeatureTests {
         Assert.Empty(result.Value);
         Assert.Equal(1, recentRepository.GetRecentRecipesCallCount);
     }
-
 
     [Fact]
     public async Task GetRecentRecipesQueryHandler_ReturnsRecipesInRecentOrderAndSkipsMissingItems() {
@@ -347,7 +333,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal(5, result.Value[1].UsageCount);
     }
 
-
     [Fact]
     public async Task ExploreRecipesQueryHandler_ReturnsPagedPublicRecipesAndOwnerFlags() {
         var user = User.Create("explore-recipes@example.com", "hash");
@@ -371,7 +356,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal([owned.Id.Value, publicRecipe.Id.Value], [.. result.Value.Data.Select(x => x.Id)]);
     }
 
-
     [Fact]
     public async Task ExploreRecipesQueryHandler_WithEmptyUserId_ReturnsValidationFailure() {
         var handler = new ExploreRecipesQueryHandler(new OverviewRecipeReadService());
@@ -384,7 +368,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task GetRecipesQueryHandler_WithValidQuery_ReturnsPagedRecipeModels() {
@@ -419,7 +402,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal(5, publicModel.UsageCount);
     }
 
-
     [Fact]
     public async Task GetRecipesQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetRecipesQueryHandler(
@@ -431,7 +413,6 @@ public partial class RecipesFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetRecipesQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {

@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Ai;
 
-
 internal sealed class AiPromptTemplateConfiguration : IEntityTypeConfiguration<AiPromptTemplate> {
     public void Configure(EntityTypeBuilder<AiPromptTemplate> builder) {
         builder.Property(e => e.Id).HasConversion(

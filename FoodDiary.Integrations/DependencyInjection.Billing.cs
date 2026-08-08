@@ -8,7 +8,7 @@ using Stripe;
 namespace FoodDiary.Integrations;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddBillingIntegrations(this IServiceCollection services) {
+    private static void AddBillingIntegrations(this IServiceCollection services) {
         services.AddSingleton<IBillingPublicConfigProvider, BillingPublicConfigProvider>();
         services.AddScoped<IStripeClient>(static sp => {
             StripeOptions options = sp.GetRequiredService<IOptions<StripeOptions>>().Value;
@@ -18,20 +18,12 @@ public static partial class DependencyInjection {
             return new StripeClient(apiKey);
         });
         services.AddScoped<IBillingProviderGateway, StripeBillingGateway>();
-        services.AddHttpClient<PaddleBillingGateway>(client => {
-            client.Timeout = TimeSpan.FromSeconds(30);
-        });
-        services.AddHttpClient<PaddleNotificationRecoveryService>(client => {
-            client.Timeout = TimeSpan.FromSeconds(30);
-        });
+        services.AddHttpClient<PaddleBillingGateway>(client => client.Timeout = TimeSpan.FromSeconds(30));
+        services.AddHttpClient<PaddleNotificationRecoveryService>(client => client.Timeout = TimeSpan.FromSeconds(30));
         services.AddScoped<IBillingProviderGateway>(sp => sp.GetRequiredService<PaddleBillingGateway>());
-        services.AddHttpClient<YooKassaBillingGateway>(client => {
-            client.Timeout = TimeSpan.FromSeconds(30);
-        });
+        services.AddHttpClient<YooKassaBillingGateway>(client => client.Timeout = TimeSpan.FromSeconds(30));
         services.AddScoped<IBillingProviderGateway>(sp => sp.GetRequiredService<YooKassaBillingGateway>());
         services.AddScoped<IBillingRecurringProviderGateway>(sp => sp.GetRequiredService<YooKassaBillingGateway>());
         services.AddScoped<IBillingProviderGatewayAccessor, ConfigurableBillingProviderGatewayAccessor>();
-
-        return services;
     }
 }

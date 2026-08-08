@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Products;
 
-
 internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product> {
     public void Configure(EntityTypeBuilder<Product> builder) {
         builder.Property<uint>("xmin").IsRowVersion();

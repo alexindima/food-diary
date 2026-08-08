@@ -56,7 +56,6 @@ public partial class BillingFeatureTests {
         Assert.True(user.HasRole(RoleNames.Premium));
     }
 
-
     [Fact]
     public async Task BillingRenewalService_WhenRenewalPaymentAlreadyExists_ReturnsRenewed() {
         User user = CreatePremiumUser("renewal-duplicate-payment@example.com");
@@ -92,7 +91,6 @@ public partial class BillingFeatureTests {
         Assert.Equal(0, result.Failed);
         Assert.Empty(paymentRepository.Payments);
     }
-
 
     [Fact]
     public async Task BillingRenewalService_WhenRenewalPaymentExists_SkipsAddingPayment() {
@@ -145,7 +143,6 @@ public partial class BillingFeatureTests {
         Assert.Single(paymentRepository.Payments);
     }
 
-
     [Fact]
     public async Task BillingRenewalService_WhenProviderMissing_DoesNotProcessSubscriptions() {
         var service = new BillingRenewalService(
@@ -166,7 +163,6 @@ public partial class BillingFeatureTests {
         Assert.Equal(0, result.Renewed);
         Assert.Equal(0, result.Failed);
     }
-
 
     [Fact]
     public async Task BillingRenewalService_WhenRenewalFails_MarksPastDueAndRemovesBillingManagedPremiumRole() {
@@ -217,7 +213,6 @@ public partial class BillingFeatureTests {
         Assert.False(user.HasRole(RoleNames.Premium));
     }
 
-
     [Fact]
     public async Task BillingRenewalService_WhenBillingDetailsMissing_MarksPastDueWithoutCallingProvider() {
         User user = CreatePremiumUser("missing-renewal-details@example.com");
@@ -259,7 +254,6 @@ public partial class BillingFeatureTests {
         Assert.False(subscription.PremiumRoleManagedByBilling);
         Assert.False(user.HasRole(RoleNames.Premium));
     }
-
 
     [Fact]
     public async Task BillingRenewalService_ForDeletedUserSubscription_SkipsProviderAndDisablesRenewal() {
@@ -306,7 +300,6 @@ public partial class BillingFeatureTests {
         Assert.Equal(0, userRepository.UpdateCount);
     }
 
-
     [Fact]
     public async Task BillingAccessService_WhenOnlyManagedFlagChanges_PersistsSubscription() {
         var user = User.Create("managed-flag@example.com", "hash");
@@ -330,7 +323,6 @@ public partial class BillingFeatureTests {
         Assert.Equal(1, subscriptionRepository.UpdateCount);
         Assert.Equal(0, userRepository.UpdateCount);
     }
-
 
     [Fact]
     public async Task BillingAccessService_WhenGrantingPremium_AddsRoleAndMarksSubscriptionManaged() {
@@ -357,7 +349,6 @@ public partial class BillingFeatureTests {
         Assert.Equal(1, subscriptionRepository.UpdateCount);
     }
 
-
     [Fact]
     public void BillingAccessService_WithBlankStatus_DoesNotGrantPremiumAccess() {
         var service = new BillingAccessService(
@@ -369,7 +360,6 @@ public partial class BillingFeatureTests {
 
         Assert.False(shouldHavePremium);
     }
-
 
     [Theory]
     [InlineData("trialing", 1, true)]

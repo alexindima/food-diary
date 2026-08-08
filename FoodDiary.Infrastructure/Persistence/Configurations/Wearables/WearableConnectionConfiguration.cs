@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Wearables;
 
-
 internal sealed class WearableConnectionConfiguration : IEntityTypeConfiguration<WearableConnection> {
     public void Configure(EntityTypeBuilder<WearableConnection> builder) {
         builder.Property(e => e.Id).HasConversion(

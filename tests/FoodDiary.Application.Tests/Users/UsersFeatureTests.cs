@@ -60,7 +60,6 @@ public partial class UsersFeatureTests {
             Substitute.For<IRefreshTokenSessionWriteRepository>(),
             TimeProvider.System);
 
-
     [Fact]
     public void UserMappings_ToModel_UsesDefaultPreferencesWhenMissing() {
         var user = User.Create("default-preferences@example.com", "hash");

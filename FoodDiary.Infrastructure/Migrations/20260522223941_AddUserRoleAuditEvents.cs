@@ -23,9 +23,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
-                constraints: table => {
-                    table.PrimaryKey("PK_UserRoleAuditEvents", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_UserRoleAuditEvents", x => x.Id));
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRoleAuditEvents_Action",

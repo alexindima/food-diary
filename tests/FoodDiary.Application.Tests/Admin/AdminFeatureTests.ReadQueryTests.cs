@@ -136,7 +136,6 @@ public partial class AdminFeatureTests {
         Assert.Equal(DateTimeKind.Utc, repository.LastPaymentsFilter?.FromUtc?.Kind);
     }
 
-
     [Theory]
     [InlineData(" ", null)]
     [InlineData(" stripe ", "Stripe")]
@@ -152,7 +151,6 @@ public partial class AdminFeatureTests {
         ResultAssert.Success(result);
         Assert.Equal(expectedProvider, repository.LastPaymentsFilter?.Provider);
     }
-
 
     [Fact]
     public async Task GetAdminBillingSubscriptionsHandler_UsesSubscriptionRepositoryPath() {
@@ -189,7 +187,6 @@ public partial class AdminFeatureTests {
         Assert.Equal("active", repository.LastSubscriptionsFilter?.Status);
     }
 
-
     [Fact]
     public async Task GetAdminBillingWebhookEventsHandler_UsesWebhookRepositoryPath() {
         var repository = new RecordingAdminBillingRepository();
@@ -219,7 +216,6 @@ public partial class AdminFeatureTests {
         Assert.Equal("evt_123", repository.LastWebhookEventsFilter?.Search);
     }
 
-
     [Fact]
     public async Task AdminUserReadService_ExistsIncludingDeletedAsync_UsesLookupRepository() {
         User user = CreateUserWithRoles("admin-read-exists@example.com", [RoleNames.Admin]);
@@ -233,7 +229,6 @@ public partial class AdminFeatureTests {
 
         Assert.True(exists);
     }
-
 
     [Fact]
     public async Task GetAdminAiPromptsQueryHandler_ReturnsTemplates() {
@@ -253,7 +248,6 @@ public partial class AdminFeatureTests {
         Assert.True(model.IsActive);
     }
 
-
     [Fact]
     public async Task GetAdminAiUsageSummaryQueryValidator_WithInvalidRange_Fails() {
         var validator = new GetAdminAiUsageSummaryQueryValidator();
@@ -267,7 +261,6 @@ public partial class AdminFeatureTests {
         Assert.Contains(result.Errors, e => e.ErrorMessage.Contains("From", StringComparison.OrdinalIgnoreCase));
     }
 
-
     [Fact]
     public async Task GetAdminAiUsageSummaryQueryValidator_WithValidRange_Passes() {
         var validator = new GetAdminAiUsageSummaryQueryValidator();
@@ -279,7 +272,6 @@ public partial class AdminFeatureTests {
 
         Assert.True(result.IsValid);
     }
-
 
     [Fact]
     public async Task GetAdminAiUsageSummaryQueryHandler_WithInvertedRange_ReturnsValidationFailure() {
@@ -298,7 +290,6 @@ public partial class AdminFeatureTests {
         Assert.Equal(default, repository.LastToUtc);
     }
 
-
     [Fact]
     public async Task GetAdminAiUsageSummaryQueryHandler_UsesDateTimeProviderForDefaultRange() {
         var dateTimeProvider = new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc));
@@ -313,7 +304,6 @@ public partial class AdminFeatureTests {
         Assert.Equal(new DateTime(2026, 2, 25, 0, 0, 0, DateTimeKind.Utc), aiUsageRepository.LastFromUtc);
         Assert.Equal(new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), aiUsageRepository.LastToUtc);
     }
-
 
     [Fact]
     public async Task GetAdminAiUsageSummaryQueryHandler_MapsDailyBreakdownAndUserSummaries() {
@@ -348,7 +338,6 @@ public partial class AdminFeatureTests {
         Assert.Equal("user@example.com", user.Email);
     }
 
-
     [Fact]
     public async Task GetAdminUserQueryHandler_WithEmptyUserId_ReturnsValidationFailure() {
         User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
@@ -360,7 +349,6 @@ public partial class AdminFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
-
     [Fact]
     public async Task GetAdminUserQueryHandler_WhenUserMissing_ReturnsNotFound() {
         User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
@@ -371,7 +359,6 @@ public partial class AdminFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("User.NotFound", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetAdminUserQueryHandler_WithExistingUser_ReturnsAdminModel() {
@@ -385,7 +372,6 @@ public partial class AdminFeatureTests {
         Assert.Equal("admin@example.com", result.Value.Email);
         Assert.Contains(RoleNames.Admin, result.Value.Roles, StringComparer.Ordinal);
     }
-
 
     [Fact]
     public async Task GetAdminMailInboxMessagesQueryHandler_ReturnsReaderMessages() {
@@ -408,7 +394,6 @@ public partial class AdminFeatureTests {
         Assert.Equal(25, reader.LastLimit);
     }
 
-
     [Fact]
     public async Task GetAdminMailInboxMessageDetailsQueryHandler_WhenMessageMissing_ReturnsNotFound() {
         var messageId = Guid.NewGuid();
@@ -419,7 +404,6 @@ public partial class AdminFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("MailInbox.MessageNotFound", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetAdminMailInboxMessageDetailsQueryHandler_WithExistingMessage_ReturnsDetails() {
@@ -446,7 +430,6 @@ public partial class AdminFeatureTests {
         Assert.Equal(message.Id, reader.LastMessageId);
     }
 
-
     [Fact]
     public async Task GetAdminDashboardSummaryQueryHandler_ReturnsSummaryWithPendingReports() {
         User recentUser = CreateUserWithRoles("recent@example.com", [RoleNames.Premium]);
@@ -469,7 +452,6 @@ public partial class AdminFeatureTests {
         Assert.Equal("recent@example.com", Assert.Single(result.Value.RecentUsers).Email);
         Assert.Equal(2, userRepository.LastRecentLimit);
     }
-
 
     [Fact]
     public async Task GetAdminContentReportsQueryHandler_NormalizesPagingAndMapsReports() {
@@ -494,7 +476,6 @@ public partial class AdminFeatureTests {
         Assert.Equal("resolved", model.AdminNote);
     }
 
-
     [Fact]
     public async Task GetAdminEmailTemplatesQueryHandler_ReturnsTemplates() {
         var template = EmailTemplate.Create(
@@ -516,7 +497,6 @@ public partial class AdminFeatureTests {
         Assert.Equal("Subject", model.Subject);
         Assert.True(model.IsActive);
     }
-
 
     [Fact]
     public async Task GetAdminImpersonationSessionsQueryHandler_NormalizesPagingAndReturnsPagedResponse() {
@@ -548,7 +528,6 @@ public partial class AdminFeatureTests {
         Assert.Equal(" target ", repository.LastSearch);
     }
 
-
     [Fact]
     public async Task GetAdminUserRoleAuditQueryHandler_WithEmptyUserId_ReturnsValidationFailure() {
         var handler = new GetAdminUserRoleAuditQueryHandler(new AdminAuditReadService(
@@ -562,7 +541,6 @@ public partial class AdminFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
-
     [Fact]
     public async Task GetAdminUserRoleAuditQueryHandler_WhenUserMissing_ReturnsNotFound() {
         var handler = new GetAdminUserRoleAuditQueryHandler(new AdminAuditReadService(
@@ -575,7 +553,6 @@ public partial class AdminFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("User.NotFound", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetAdminUserRoleAuditQueryHandler_WithExistingUser_ClampsLimitAndReturnsEvents() {

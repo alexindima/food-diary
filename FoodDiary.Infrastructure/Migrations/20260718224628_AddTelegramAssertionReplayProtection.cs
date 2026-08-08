@@ -16,9 +16,7 @@ public partial class AddTelegramAssertionReplayProtection : Migration {
                 Fingerprint = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
                 ExpiresAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
             },
-            constraints: table => {
-                table.PrimaryKey("PK_ConsumedTelegramAssertions", x => x.Fingerprint);
-            });
+            constraints: table => table.PrimaryKey("PK_ConsumedTelegramAssertions", x => x.Fingerprint));
 
         migrationBuilder.CreateIndex(
             name: "IX_ConsumedTelegramAssertions_ExpiresAtUtc",

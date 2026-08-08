@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.ShoppingLists;
 
-
 internal sealed class ShoppingListItemConfiguration : IEntityTypeConfiguration<ShoppingListItem> {
     public void Configure(EntityTypeBuilder<ShoppingListItem> builder) {
         builder.Property(e => e.Id)

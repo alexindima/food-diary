@@ -95,11 +95,7 @@ internal sealed record InitializerCommand(
 
     private static string ReadOptionValue(string[] args, ref int index, string option) {
         index++;
-        if (index >= args.Length) {
-            throw new InvalidOperationException($"Missing value for {option}.");
-        }
-
-        return args[index];
+        return index >= args.Length ? throw new InvalidOperationException($"Missing value for {option}.") : args[index];
     }
 
     private static int ReadPositiveIntOption(string[] args, ref int index, string option) {

@@ -16,9 +16,7 @@ public partial class AddUserRoles : Migration {
                 CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                 ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
             },
-            constraints: table => {
-                table.PrimaryKey("PK_Roles", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_Roles", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "UserRoles",

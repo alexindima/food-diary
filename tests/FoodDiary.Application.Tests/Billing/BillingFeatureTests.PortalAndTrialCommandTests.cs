@@ -38,7 +38,6 @@ public partial class BillingFeatureTests {
         Assert.Equal("https://billing.example/portal", result.Value.Url);
     }
 
-
     [Fact]
     public async Task CreatePortalSession_WhenUserIdIsInvalid_ReturnsInvalidToken() {
         var handler = new CreatePortalSessionCommandHandler(
@@ -52,7 +51,6 @@ public partial class BillingFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-
     [Fact]
     public async Task CreatePortalSession_WhenUserIsMissing_ReturnsInvalidToken() {
         var handler = new CreatePortalSessionCommandHandler(
@@ -65,7 +63,6 @@ public partial class BillingFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task CreatePortalSession_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
@@ -88,7 +85,6 @@ public partial class BillingFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-
     [Fact]
     public async Task CreatePortalSession_WhenSubscriptionIsMissing_ReturnsUnavailable() {
         var user = User.Create("portal-missing@example.com", "hash");
@@ -102,7 +98,6 @@ public partial class BillingFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Billing.CustomerPortalUnavailable", result.Error.Code);
     }
-
 
     [Fact]
     public async Task CreatePortalSession_WhenProviderIsMissing_ReturnsUnavailable() {
@@ -123,7 +118,6 @@ public partial class BillingFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Billing.CustomerPortalUnavailable", result.Error.Code);
     }
-
 
     [Fact]
     public async Task CreatePortalSession_WhenProviderFails_ReturnsProviderError() {
@@ -147,7 +141,6 @@ public partial class BillingFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
     }
-
 
     [Fact]
     public async Task StartPremiumTrial_ForEligibleUser_SetsTrialAndReturnsTrialOverview() {
@@ -173,7 +166,6 @@ public partial class BillingFeatureTests {
         Assert.Equal(1, userRepository.UpdateCount);
     }
 
-
     [Fact]
     public async Task StartPremiumTrial_WhenAlreadyUsed_ReturnsConflict() {
         var user = User.Create("trial-used@example.com", "hash");
@@ -190,7 +182,6 @@ public partial class BillingFeatureTests {
         Assert.Equal("Billing.TrialAlreadyUsed", result.Error.Code);
     }
 
-
     [Fact]
     public async Task StartPremiumTrial_WithInvalidUserId_ReturnsInvalidToken() {
         var handler = new StartPremiumTrialCommandHandler(
@@ -205,7 +196,6 @@ public partial class BillingFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-
     [Fact]
     public async Task StartPremiumTrial_WhenUserIsMissing_ReturnsInvalidToken() {
         var handler = new StartPremiumTrialCommandHandler(
@@ -219,7 +209,6 @@ public partial class BillingFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task StartPremiumTrial_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
@@ -242,7 +231,6 @@ public partial class BillingFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Theory]
     [InlineData("active")]
@@ -275,7 +263,6 @@ public partial class BillingFeatureTests {
         Assert.Equal(0, userRepository.UpdateCount);
     }
 
-
     [Theory]
     [InlineData("trialing", -1)]
     [InlineData("past_due", -1)]
@@ -306,7 +293,6 @@ public partial class BillingFeatureTests {
         Assert.True(result.Value.PremiumTrialActive);
         Assert.Equal(1, userRepository.UpdateCount);
     }
-
 
     [Fact]
     public async Task StartPremiumTrial_WithBlankSubscriptionStatus_AllowsTrial() {

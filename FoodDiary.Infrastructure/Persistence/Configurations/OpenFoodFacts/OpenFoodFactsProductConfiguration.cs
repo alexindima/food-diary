@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.OpenFoodFacts;
 
-
 internal sealed class OpenFoodFactsProductConfiguration : IEntityTypeConfiguration<OpenFoodFactsProduct> {
     public void Configure(EntityTypeBuilder<OpenFoodFactsProduct> builder) {
         builder.ToTable("OpenFoodFactsProducts");

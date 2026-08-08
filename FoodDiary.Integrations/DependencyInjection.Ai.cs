@@ -7,10 +7,8 @@ using Polly;
 namespace FoodDiary.Integrations;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddAiIntegrations(this IServiceCollection services) {
-        services.AddHttpClient<IOpenAiFoodClient, OpenAiFoodClient>(client => {
-            client.Timeout = TimeSpan.FromSeconds(60);
-        })
+    private static void AddAiIntegrations(this IServiceCollection services) {
+        services.AddHttpClient<IOpenAiFoodClient, OpenAiFoodClient>(client => client.Timeout = TimeSpan.FromSeconds(60))
         .AddResilienceHandler("openai-circuit-breaker", builder => {
             builder.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions {
                 FailureRatio = 0.5,
@@ -19,7 +17,5 @@ public static partial class DependencyInjection {
                 BreakDuration = TimeSpan.FromSeconds(30),
             });
         });
-
-        return services;
     }
 }

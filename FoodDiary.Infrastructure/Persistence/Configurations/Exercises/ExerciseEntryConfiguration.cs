@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Exercises;
 
-
 internal sealed class ExerciseEntryConfiguration : IEntityTypeConfiguration<ExerciseEntry> {
     public void Configure(EntityTypeBuilder<ExerciseEntry> builder) {
         builder.Property(e => e.Id).HasConversion(

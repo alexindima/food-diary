@@ -24,9 +24,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
-                constraints: table => {
-                    table.PrimaryKey("PK_NutritionLessons", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_NutritionLessons", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "UserLessonProgress",

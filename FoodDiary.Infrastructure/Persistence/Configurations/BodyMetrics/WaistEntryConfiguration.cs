@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.BodyMetrics;
 
-
 internal sealed class WaistEntryConfiguration : IEntityTypeConfiguration<WaistEntry> {
     public void Configure(EntityTypeBuilder<WaistEntry> builder) {
         builder.Property(e => e.Id).HasConversion(

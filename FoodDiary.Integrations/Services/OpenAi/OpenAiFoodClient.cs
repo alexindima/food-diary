@@ -346,7 +346,7 @@ public sealed class OpenAiFoodClient(
 
     private static object BuildNutritionRequest(string model, IReadOnlyList<FoodVisionItemModel> items, string promptTemplate) {
         var mappedItems = items.Select(item => new {
-            name = string.IsNullOrWhiteSpace(item.NameEn) ? (item.NameLocal ?? "unknown") : item.NameEn,
+            name = string.IsNullOrWhiteSpace(item.NameEn) ? item.NameLocal ?? "unknown" : item.NameEn,
             amount = item.Amount,
             unit = item.Unit,
         });

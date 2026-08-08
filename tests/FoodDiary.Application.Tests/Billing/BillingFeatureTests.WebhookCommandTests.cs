@@ -291,7 +291,6 @@ public partial class BillingFeatureTests {
         Assert.Empty(webhookEventRepository.Events);
     }
 
-
     [Fact]
     public async Task ProcessBillingWebhook_ForNewEvent_StoresSubscriptionPaymentWebhookAndAddsPremiumRole() {
         var user = User.Create("premium@example.com", "hash");
@@ -353,7 +352,6 @@ public partial class BillingFeatureTests {
         Assert.Equal(0, userRepository.UpdateCount);
     }
 
-
     [Fact]
     public async Task ProcessBillingWebhook_ForDuplicateEvent_ReturnsSuccessWithoutMutation() {
         var user = User.Create("premium@example.com", "hash");
@@ -401,7 +399,6 @@ public partial class BillingFeatureTests {
         Assert.Equal(0, userRepository.UpdateCount);
     }
 
-
     [Fact]
     public async Task ProcessBillingWebhook_WhenProviderIsUnknown_ReturnsInvalidProvider() {
         ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
@@ -418,7 +415,6 @@ public partial class BillingFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Billing.InvalidProvider", result.Error.Code);
     }
-
 
     [Fact]
     public async Task ProcessBillingWebhook_WhenProviderRejectsWebhook_ReturnsProviderError() {
@@ -438,7 +434,6 @@ public partial class BillingFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
     }
-
 
     [Fact]
     public async Task ProcessBillingWebhook_WhenProviderIgnoresWebhook_ReturnsSuccessWithoutMutation() {
@@ -461,7 +456,6 @@ public partial class BillingFeatureTests {
         Assert.Empty(paymentRepository.Payments);
         Assert.Empty(webhookEventRepository.Events);
     }
-
 
     [Fact]
     public async Task ProcessBillingWebhook_WhenSubscriptionAlreadyHandledEvent_ReturnsSuccessWithoutMutation() {
@@ -608,7 +602,6 @@ public partial class BillingFeatureTests {
         Assert.Equal("billing-webhook:yookassa:pm_stable", transactionRunner.LastSerializationKey);
     }
 
-
     [Fact]
     public async Task ProcessBillingWebhook_WhenUserCannotBeResolved_ReturnsValidationFailure() {
         ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
@@ -645,7 +638,6 @@ public partial class BillingFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
     }
-
 
     [Fact]
     public async Task ProcessBillingWebhook_WhenConcurrentDuplicateInsertDetected_ReturnsSuccessWithoutMutation() {
@@ -788,7 +780,6 @@ public partial class BillingFeatureTests {
         Assert.Equal(expectedKind, Assert.Single(repository.Payments).Kind);
     }
 
-
     [Fact]
     public async Task ProcessBillingWebhook_WhenConcurrentDuplicatePaymentDetected_ReturnsSuccess() {
         var user = User.Create("duplicate-payment@example.com", "hash");
@@ -830,7 +821,6 @@ public partial class BillingFeatureTests {
         ResultAssert.Success(result);
         Assert.Empty(paymentRepository.Payments);
     }
-
 
     [Fact]
     public async Task ProcessBillingWebhook_WhenWebhookPaymentAlreadyExists_DoesNotAddDuplicatePayment() {
@@ -887,7 +877,6 @@ public partial class BillingFeatureTests {
         Assert.Single(webhookEventRepository.Events);
     }
 
-
     [Fact]
     public async Task ProcessBillingWebhook_WhenParsedEventIsIncomplete_ReturnsValidationFailureWithoutMutation() {
         var user = User.Create("invalid-webhook@example.com", "hash");
@@ -934,7 +923,6 @@ public partial class BillingFeatureTests {
         Assert.Empty(paymentRepository.Payments);
         Assert.False(user.HasRole(RoleNames.Premium));
     }
-
 
     [Theory]
     [InlineData("event-type")]
@@ -984,7 +972,6 @@ public partial class BillingFeatureTests {
         Assert.Empty(webhookEventRepository.Events);
         Assert.Empty(paymentRepository.Payments);
     }
-
 
     [Fact]
     public async Task ProcessBillingWebhook_ForManualPremiumUser_DoesNotRemovePremiumRoleOnCanceledSubscription() {
@@ -1040,7 +1027,6 @@ public partial class BillingFeatureTests {
         Assert.True(user.HasRole(RoleNames.Premium));
         Assert.False(subscription.PremiumRoleManagedByBilling);
     }
-
 
     [Fact]
     public async Task ProcessBillingWebhook_ForDeletedUserSubscription_StoresEventWithoutGrantingPremiumRole() {
@@ -1101,7 +1087,6 @@ public partial class BillingFeatureTests {
         Assert.False(subscription.PremiumRoleManagedByBilling);
         Assert.Equal(0, userRepository.UpdateCount);
     }
-
 
     [Fact]
     public async Task ProcessBillingWebhook_ForDeletedBillingManagedUser_DisablesManagedPremiumFlag() {

@@ -40,7 +40,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-
     [Fact]
     public async Task CreateProductCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var handler = new CreateProductCommandHandler(new NoopProductRepository(), new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
@@ -72,7 +71,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.Ordinal);
     }
-
 
     [Fact]
     public async Task CreateProductCommandHandler_WithInvalidProductType_ReturnsValidationFailure() {
@@ -109,7 +107,6 @@ public partial class ProductsFeatureTests {
         Assert.Null(repository.LastAddedProduct);
     }
 
-
     [Fact]
     public async Task CreateProductCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("create-product-deleted-user@example.com", "hash");
@@ -126,7 +123,6 @@ public partial class ProductsFeatureTests {
         Assert.Null(repository.LastAddedProduct);
     }
 
-
     [Fact]
     public async Task CreateProductCommandHandler_WithInvalidBaseUnit_ReturnsValidationFailure() {
         var user = User.Create("create-product-invalid-unit@example.com", "hash");
@@ -141,7 +137,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(repository.LastAddedProduct);
     }
-
 
     [Fact]
     public async Task CreateProductCommandHandler_WithInvalidVisibility_ReturnsValidationFailure() {
@@ -158,7 +153,6 @@ public partial class ProductsFeatureTests {
         Assert.Null(repository.LastAddedProduct);
     }
 
-
     [Fact]
     public async Task CreateProductCommandHandler_WithUndefinedNumericProductType_ReturnsValidationFailure() {
         var user = User.Create("create-product-undefined-type@example.com", "hash");
@@ -173,7 +167,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(repository.LastAddedProduct);
     }
-
 
     [Fact]
     public async Task CreateProductCommandHandler_WithValidCommand_PersistsAndReturnsOwnedModel() {
@@ -213,7 +206,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Owner note", result.Value.Comment);
     }
 
-
     [Fact]
     public async Task CreateProductCommandHandler_WithImageAsset_UsesResolvedAssetUrl() {
         var user = User.Create("create-product-image@example.com", "hash");
@@ -252,7 +244,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("https://cdn.test/assets/product.webp", repository.LastAddedProduct!.ImageUrl);
         Assert.Equal(assetId, repository.LastAddedProduct.ImageAssetId);
     }
-
 
     [Fact]
     public async Task CreateProductCommandHandler_WhenImageAssetAccessFails_DoesNotPersist() {

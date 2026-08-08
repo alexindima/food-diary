@@ -605,7 +605,6 @@ public class MealPlansFeatureTests {
         public Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-
         public Task UpdateAsync(ShoppingList list, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 

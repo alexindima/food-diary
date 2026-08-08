@@ -30,7 +30,6 @@ public partial class DietologistFeatureTests {
         Assert.True(model.Permissions.ShareMeals);
     }
 
-
     [Fact]
     public void DietologistMappings_ToRelationshipModel_MapsDomainInvitation() {
         var dietologistId = UserId.New();
@@ -52,7 +51,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal(dietologistId.Value, model.DietologistUserId);
         Assert.Equal(invitation.AcceptedAtUtc, model.AcceptedAtUtc);
     }
-
 
     [Fact]
     public void DietologistMappings_ToClientSummaryModel_MapsProfileWhenShared() {
@@ -86,7 +84,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal(invitation.AcceptedAtUtc, model.AcceptedAtUtc);
     }
 
-
     [Fact]
     public void DietologistMappings_ToCurrentUserInvitationModel_MapsExpiredDomainInvitation() {
         var clientId = UserId.New();
@@ -108,7 +105,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal(invitation.ExpiresAtUtc, model.ExpiresAtUtc);
     }
 
-
     [Fact]
     public void DietologistMappings_ToInvitationModel_MapsClientDetails() {
         var clientId = UserId.New();
@@ -128,7 +124,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal("Jones", model.ClientLastName);
         Assert.Equal(DietologistInvitationStatus.Pending.ToString(), model.Status);
     }
-
 
     [Fact]
     public void DietologistModels_CanBeConstructed() {

@@ -27,7 +27,6 @@ public partial class ProductsFeatureTests {
         Assert.False(result.IsValid);
     }
 
-
     [Fact]
     public async Task GetRecentProductsQueryValidator_WithValidUserId_Passes() {
         var validator = new GetRecentProductsQueryValidator();
@@ -37,7 +36,6 @@ public partial class ProductsFeatureTests {
 
         Assert.True(result.IsValid);
     }
-
 
     [Fact]
     public async Task GetProductsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
@@ -49,7 +47,6 @@ public partial class ProductsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetProductsQueryHandler_ReturnsPagedProductsAndAppliesProductTypeFilter() {
@@ -98,7 +95,6 @@ public partial class ProductsFeatureTests {
         Assert.True(item.IsOwnedByCurrentUser);
     }
 
-
     [Fact]
     public async Task GetProductByIdQueryHandler_WithEmptyProductId_ReturnsValidationFailure() {
         var handler = new GetProductByIdQueryHandler(new OverviewProductReadService(), new StubUserRepository(User.Create("user@example.com", "hash")));
@@ -111,7 +107,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task GetProductByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
@@ -126,7 +121,6 @@ public partial class ProductsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetProductByIdQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
@@ -144,7 +138,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
-
     [Fact]
     public async Task GetProductsQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-product@example.com", "hash");
@@ -158,7 +151,6 @@ public partial class ProductsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetProductByIdQueryHandler_WithAccessibleProduct_ReturnsUsageAndOwnerComment() {
@@ -193,7 +185,6 @@ public partial class ProductsFeatureTests {
         Assert.True(result.Value.IsOwnedByCurrentUser);
         Assert.Equal("Private note", result.Value.Comment);
     }
-
 
     [Fact]
     public async Task GetProductsOverviewQueryHandler_WithoutSearch_ReturnsRecentFavoritesAndFavoriteFlags() {
@@ -254,7 +245,6 @@ public partial class ProductsFeatureTests {
         Assert.True(result.Value.AllProducts.Data.Single(x => x.Id == lunch.Id.Value).IsFavorite);
     }
 
-
     [Fact]
     public async Task GetProductsOverviewQueryHandler_WithSearch_SkipsRecentItems() {
         var user = User.Create("overview-search@example.com", "hash");
@@ -288,7 +278,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal(0, recentRepository.GetRecentProductsCallCount);
     }
 
-
     [Fact]
     public async Task GetProductsOverviewQueryHandler_WhenUserAccessFails_ReturnsAccessFailure() {
         var user = User.Create("overview-inactive-product-user@example.com", "hash");
@@ -307,7 +296,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-
     [Fact]
     public async Task GetProductsOverviewQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         GetProductsOverviewQueryHandler handler = CreateProductsOverviewHandler(
@@ -323,7 +311,6 @@ public partial class ProductsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetProductsOverviewQueryHandler_WhenNoRecentProducts_ReturnsEmptyRecentItems() {
@@ -357,7 +344,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal(1, recentRepository.GetRecentProductsCallCount);
     }
 
-
     [Fact]
     public async Task GetProductsOverviewQueryHandler_WithHasImageFilter_FiltersRecentItems() {
         var user = User.Create("overview-product-image-filter@example.com", "hash");
@@ -385,7 +371,6 @@ public partial class ProductsFeatureTests {
         ProductModel recent = Assert.Single(result.Value.RecentItems);
         Assert.Equal(withImage.Id.Value, recent.Id);
     }
-
 
     [Fact]
     public async Task GetProductsOverviewQueryHandler_WithProductTypes_FiltersDistinctValidTypes() {
@@ -440,7 +425,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal(ProductType.Dairy.ToString(), item.ProductType);
     }
 
-
     [Fact]
     public async Task GetRecentProductsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         GetRecentProductsQueryHandler handler = CreateRecentProductsHandler(new StubRecentItemRepository([]), new OverviewProductReadService());
@@ -450,7 +434,6 @@ public partial class ProductsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetRecentProductsQueryHandler_WhenNoRecentProducts_ReturnsEmptyList() {
@@ -464,7 +447,6 @@ public partial class ProductsFeatureTests {
         Assert.Empty(result.Value);
         Assert.Equal(1, recentRepository.GetRecentProductsCallCount);
     }
-
 
     [Fact]
     public async Task GetRecentProductsQueryHandler_ReturnsProductsInRecentOrderAndSkipsMissingItems() {

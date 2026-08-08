@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Ai;
 
-
 internal sealed class AiUsageConfiguration : IEntityTypeConfiguration<AiUsage> {
     public void Configure(EntityTypeBuilder<AiUsage> builder) {
         builder.Property(e => e.Id)

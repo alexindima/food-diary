@@ -71,7 +71,7 @@ public class BehaviorTests {
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             behavior.Handle(
                 new TestQuery(),
-                _ => { throw new InvalidOperationException("boom"); },
+                _ => throw new InvalidOperationException("boom"),
                 CancellationToken.None));
     }
 
@@ -134,9 +134,7 @@ public class BehaviorTests {
         unitOfWork.HasPendingChanges.Returns(returnThis: true);
         unitOfWork
             .SaveChangesAsync(Arg.Any<CancellationToken>())
-            .Returns(async _ => {
-                await cancellationTokenSource.CancelAsync().ConfigureAwait(false);
-            });
+            .Returns(async _ => await cancellationTokenSource.CancelAsync().ConfigureAwait(false));
         IPostCommitActionQueue postCommitActionQueue = Substitute.For<IPostCommitActionQueue>();
         postCommitActionQueue.HasActions.Returns(returnThis: true);
         postCommitActionQueue

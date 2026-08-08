@@ -35,7 +35,7 @@ internal sealed class AiPromptProvider(
             promptText = template?.PromptText;
         }
 
-        string result = promptText ?? (Fallbacks.GetValueOrDefault(key, key));
+        string result = promptText ?? Fallbacks.GetValueOrDefault(key, key);
         cache.Set(cacheKey, result, CacheDuration);
         return result;
     }

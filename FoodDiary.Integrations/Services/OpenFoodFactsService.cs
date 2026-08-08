@@ -47,22 +47,23 @@ internal sealed class OpenFoodFactsService(
 
             OffProduct p = result.Product;
             string? name = p.ProductName;
-            if (string.IsNullOrWhiteSpace(name)) {
-                outcome = "empty";
-                return null;
+            if (!string.IsNullOrWhiteSpace(name)) {
+                return new OpenFoodFactsProductModel(
+                    barcode,
+                    name,
+                    NullIfEmpty(p.Brands),
+                    NullIfEmpty(p.Categories),
+                    NullIfEmpty(p.ImageUrl),
+                    p.Nutriments?.EnergyKcal100G,
+                    p.Nutriments?.Proteins100G,
+                    p.Nutriments?.Fat100G,
+                    p.Nutriments?.Carbohydrates100G,
+                    p.Nutriments?.Fiber100G);
             }
 
-            return new OpenFoodFactsProductModel(
-                barcode,
-                name,
-                NullIfEmpty(p.Brands),
-                NullIfEmpty(p.Categories),
-                NullIfEmpty(p.ImageUrl),
-                p.Nutriments?.EnergyKcal100G,
-                p.Nutriments?.Proteins100G,
-                p.Nutriments?.Fat100G,
-                p.Nutriments?.Carbohydrates100G,
-                p.Nutriments?.Fiber100G);
+            outcome = "empty";
+            return null;
+
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or System.Text.Json.JsonException) {
             outcome = ResolveFailureOutcome(ex, cancellationToken);
             errorType = ex.GetType().Name;
@@ -85,7 +86,7 @@ internal sealed class OpenFoodFactsService(
         CancellationToken cancellationToken = default) {
         int normalizedLimit = Math.Clamp(limit, 1, 50);
         string cacheKey = GetSearchCacheKey(query, normalizedLimit);
-        if (TryGetCachedSearch(cacheKey, SearchCacheTtl, out IReadOnlyList<OpenFoodFactsProductModel>? freshProducts)) {
+        if (TryGetCachedSearch(cacheKey, SearchCacheTtl, out IReadOnlyList<OpenFoodFactsProductModel> freshProducts)) {
             return freshProducts;
         }
 
@@ -118,7 +119,7 @@ internal sealed class OpenFoodFactsService(
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or System.Text.Json.JsonException) {
             outcome = ResolveFailureOutcome(ex, cancellationToken);
             errorType = ex.GetType().Name;
-            if (TryGetCachedSearch(cacheKey, StaleSearchCacheTtl, out IReadOnlyList<OpenFoodFactsProductModel>? staleProducts)) {
+            if (TryGetCachedSearch(cacheKey, StaleSearchCacheTtl, out IReadOnlyList<OpenFoodFactsProductModel> staleProducts)) {
                 outcome = "stale_cache";
                 logger.LogWarning(ex, "Open Food Facts text search failed for query '{Query}', returning cached result", query);
                 return staleProducts;

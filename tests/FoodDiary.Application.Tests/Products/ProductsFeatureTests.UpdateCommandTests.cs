@@ -74,7 +74,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal([oldAssetId], cleanup.RequestedAssetIds);
     }
 
-
     [Fact]
     public async Task UpdateProductCommandHandler_WithAllUpdateSections_AppliesChangesAndCleansOldAsset() {
         var user = User.Create("update-product-all@example.com", "hash");
@@ -131,7 +130,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal(nameof(Visibility.Public), result.Value.Visibility);
         Assert.Equal([oldAssetId], cleanup.RequestedAssetIds);
     }
-
 
     [Fact]
     public async Task UpdateProductCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
@@ -195,7 +193,6 @@ public partial class ProductsFeatureTests {
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.Ordinal);
     }
 
-
     [Fact]
     public async Task UpdateProductCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
         var handler = new UpdateProductCommandHandler(
@@ -241,7 +238,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task UpdateProductCommandHandler_WithInvalidProductType_ReturnsValidationFailure() {
@@ -304,7 +300,6 @@ public partial class ProductsFeatureTests {
         Assert.False(repository.UpdateCalled);
     }
 
-
     [Fact]
     public async Task UpdateProductCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new UpdateProductCommandHandler(
@@ -321,7 +316,6 @@ public partial class ProductsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task UpdateProductCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
@@ -342,7 +336,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
-
     [Fact]
     public async Task UpdateProductCommandHandler_WithInvalidBaseUnit_ReturnsValidationFailure() {
         var user = User.Create("update-product-invalid-unit@example.com", "hash");
@@ -362,7 +355,6 @@ public partial class ProductsFeatureTests {
         Assert.Contains("BaseUnit", result.Error.Message, StringComparison.Ordinal);
     }
 
-
     [Fact]
     public async Task UpdateProductCommandHandler_WithInvalidVisibility_ReturnsValidationFailure() {
         var user = User.Create("update-product-invalid-visibility@example.com", "hash");
@@ -381,7 +373,6 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Visibility", result.Error.Message, StringComparison.Ordinal);
     }
-
 
     [Fact]
     public async Task UpdateProductCommandHandler_ToStricterUnitWithExistingNutritionAboveLimit_ReturnsValidationFailure() {
@@ -419,7 +410,6 @@ public partial class ProductsFeatureTests {
         Assert.False(repository.UpdateCalled);
     }
 
-
     [Fact]
     public async Task UpdateProductCommandHandler_WithCurrentPieceUnitAndDefaultPortionAboveLimit_ReturnsValidationFailure() {
         var user = User.Create("update-product-piece-limit@example.com", "hash");
@@ -456,7 +446,6 @@ public partial class ProductsFeatureTests {
         Assert.False(repository.UpdateCalled);
     }
 
-
     [Fact]
     public async Task UpdateProductCommandHandler_WhenProductIsMissing_ReturnsNotAccessible() {
         var user = User.Create("update-product-missing@example.com", "hash");
@@ -475,7 +464,6 @@ public partial class ProductsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Product.NotAccessible", result.Error.Code);
     }
-
 
     [Fact]
     public async Task UpdateProductCommandHandler_WhenProductIsUsed_ReturnsValidationFailure() {
@@ -513,7 +501,6 @@ public partial class ProductsFeatureTests {
         Assert.Empty(cleanup.RequestedAssetIds);
     }
 
-
     [Fact]
     public async Task UpdateProductCommandHandler_WhenImageAssetAccessFails_ReturnsFailure() {
         var user = User.Create("update-product-forbidden-image@example.com", "hash");
@@ -533,7 +520,6 @@ public partial class ProductsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Image.Forbidden", result.Error.Code);
     }
-
 
     [Fact]
     public async Task UpdateProductCommandHandler_WithoutChanges_DoesNotPersistOrCleanup() {

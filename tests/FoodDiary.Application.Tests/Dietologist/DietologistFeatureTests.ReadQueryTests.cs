@@ -48,7 +48,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal("Accepted", result.Value.Status);
     }
 
-
     [Fact]
     public async Task GetInvitationForCurrentUser_WithNullUserId_ReturnsFailure() {
         GetInvitationForCurrentUserQueryHandler handler = CreateGetInvitationForCurrentUserHandler();
@@ -60,7 +59,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetInvitationForCurrentUser_WhenUserDeleted_ReturnsFailure() {
@@ -77,7 +75,6 @@ public partial class DietologistFeatureTests {
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
-
     [Fact]
     public async Task GetInvitationForCurrentUser_WhenInvitationMissingAfterUserAccess_ReturnsFailure() {
         var dietologistId = UserId.New();
@@ -93,7 +90,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
 
-
     [Fact]
     public async Task GetInvitationForCurrentUser_WhenInvitationMissing_ReturnsFailure() {
         var dietologistId = UserId.New();
@@ -108,7 +104,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetInvitationForCurrentUser_WhenEmailDoesNotMatch_ReturnsFailure() {
@@ -129,7 +124,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal("Dietologist.AccessDenied", result.Error.Code);
     }
 
-
     [Fact]
     public async Task GetMyDietologist_WithNullUserId_ReturnsFailure() {
         GetMyDietologistQueryHandler handler = CreateGetMyDietologistHandler();
@@ -139,7 +133,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetMyDietologist_WhenNoDietologist_ReturnsNull() {
@@ -157,7 +150,6 @@ public partial class DietologistFeatureTests {
         Assert.Null(result.Value);
     }
 
-
     [Fact]
     public async Task GetMyDietologist_WhenUserDeleted_ReturnsFailure() {
         var userId = UserId.New();
@@ -172,7 +164,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
-
 
     [Fact]
     public async Task GetMyDietologist_WithAcceptedInvitation_ReturnsDietologistInfo() {
@@ -204,7 +195,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal("Smith", result.Value.LastName);
     }
 
-
     [Fact]
     public async Task GetMyClients_WithNullUserId_ReturnsFailure() {
         GetMyClientsQueryHandler handler = CreateGetMyClientsHandler();
@@ -214,7 +204,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetMyClients_WhenNoClients_ReturnsEmptyList() {
@@ -232,7 +221,6 @@ public partial class DietologistFeatureTests {
         Assert.Empty(result.Value);
     }
 
-
     [Fact]
     public async Task GetMyClients_WhenUserDeleted_ReturnsFailure() {
         var userId = UserId.New();
@@ -247,7 +235,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
-
 
     [Fact]
     public async Task GetMyClients_WhenProfileSharingDisabled_HidesProfileFields() {
@@ -301,7 +288,6 @@ public partial class DietologistFeatureTests {
         Assert.False(clientSummary.Permissions.ShareProfile);
     }
 
-
     [Fact]
     public async Task GetInvitationByToken_WhenNotFound_ReturnsFailure() {
         GetInvitationByTokenQueryHandler handler = CreateGetInvitationByTokenHandler();
@@ -311,7 +297,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetInvitationByToken_WithEmptyUserId_ReturnsFailure() {
@@ -324,7 +309,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-
     [Fact]
     public async Task GetInvitationByToken_WithEmptyInvitationId_ReturnsFailure() {
         GetInvitationByTokenQueryHandler handler = CreateGetInvitationByTokenHandler();
@@ -334,7 +318,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetInvitationByToken_WhenExpired_ReturnsFailure() {
@@ -356,7 +339,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task GetInvitationByToken_WhenNotPending_ReturnsFailure() {
         var clientId = UserId.New();
@@ -376,7 +358,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task GetInvitationByToken_WhenCurrentUserEmailDoesNotMatchInvitation_ReturnsFailure() {
         var clientId = UserId.New();
@@ -395,7 +376,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetInvitationByToken_WithPendingInvitation_ReturnsModel() {
@@ -419,7 +399,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal(DietologistInvitationStatus.Pending.ToString(), result.Value.Status);
     }
 
-
     [Fact]
     public async Task GetClientDashboard_WithNullUserId_ReturnsFailure() {
         GetClientDashboardQueryHandler handler = CreateGetClientDashboardHandler();
@@ -430,7 +409,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetClientDashboard_WhenNoAccess_ReturnsFailure() {
@@ -445,7 +423,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetClientDashboard_WhenDietologistAccessFails_ReturnsFailure() {
@@ -468,7 +445,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetClientDashboard_WithEmptyClientId_ReturnsFailure() {
@@ -494,7 +470,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetClientDashboard_WhenMealsAllowedAndStatisticsDenied_ReturnsMaskedDashboard() {
@@ -537,7 +512,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal(dateTo, request.DateTo?.Date);
     }
 
-
     [Fact]
     public async Task GetClientDashboard_WhenNoDashboardPermissions_ReturnsFailure() {
         var dietologistId = UserId.New();
@@ -566,7 +540,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task GetClientDashboard_WhenDietologistDeleted_ReturnsFailure() {
         var dietologistId = UserId.New();
@@ -586,7 +559,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
-
 
     [Fact]
     public async Task GetClientDashboard_WhenDashboardBuilderFails_ReturnsFailure() {
@@ -608,7 +580,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal("Dietologist.AccessDenied", result.Error.Code);
     }
 
-
     [Fact]
     public async Task GetClientGoals_WithNullUserId_ReturnsFailure() {
         GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler();
@@ -619,7 +590,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task GetClientGoals_WhenNoAccess_ReturnsFailure() {
         GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler();
@@ -629,7 +599,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetClientGoals_WhenDietologistEmailLookupFails_ReturnsFailure() {
@@ -646,7 +615,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetClientGoals_WithEmptyClientId_ReturnsFailure() {
@@ -667,7 +635,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task GetClientGoals_WhenDietologistHasNoRelationshipWithClient_ReturnsAccessDenied() {
         var dietologistId = UserId.New();
@@ -683,7 +650,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Dietologist.AccessDenied", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetClientGoals_WhenGoalsDenied_ReturnsFailure() {
@@ -703,7 +669,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetClientGoals_WithAccess_ReturnsUser() {
@@ -726,7 +691,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Success(result);
     }
 
-
     [Fact]
     public async Task GetClientGoals_WhenDietologistDeleted_ReturnsFailure() {
         var dietologistId = UserId.New();
@@ -747,7 +711,6 @@ public partial class DietologistFeatureTests {
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
-
     [Fact]
     public async Task GetClientGoals_WhenClientMissing_ReturnsFailure() {
         var dietologistId = UserId.New();
@@ -767,7 +730,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal("Dietologist.AccessDenied", result.Error.Code);
     }
 
-
     [Fact]
     public async Task GetMyRecommendations_WithNullUserId_ReturnsFailure() {
         GetMyRecommendationsQueryHandler handler = CreateGetMyRecommendationsHandler();
@@ -777,7 +739,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetMyRecommendations_WithValidUser_ReturnsRecommendations() {
@@ -801,7 +762,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal(2, result.Value.Count);
     }
 
-
     [Fact]
     public async Task GetMyRecommendations_WhenUserDeleted_ReturnsFailure() {
         var userId = UserId.New();
@@ -817,7 +777,6 @@ public partial class DietologistFeatureTests {
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
-
     [Fact]
     public async Task GetRecommendationsForClient_WithNullUserId_ReturnsFailure() {
         GetRecommendationsForClientQueryHandler handler = CreateGetRecommendationsForClientHandler();
@@ -827,7 +786,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetMyRecommendations_WhenCurrentUserAccessFails_ReturnsFailure() {
@@ -843,7 +801,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task GetRecommendationsForClient_WhenDietologistAccessFails_ReturnsFailure() {
         var service = new DietologistRecommendationReadService(
@@ -858,7 +815,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetRecommendationsForClient_WithEmptyClientId_ReturnsFailure() {
@@ -878,7 +834,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task GetRecommendationsForClient_WhenNoAccess_ReturnsFailure() {
         var dietologistId = UserId.New();
@@ -892,7 +847,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetRecommendationsForClient_WithAccess_ReturnsRecommendations() {
@@ -918,7 +872,6 @@ public partial class DietologistFeatureTests {
         Assert.Single(result.Value);
     }
 
-
     [Fact]
     public async Task GetRecommendationsForClient_WhenDietologistDeleted_ReturnsFailure() {
         var dietologistId = UserId.New();
@@ -939,7 +892,6 @@ public partial class DietologistFeatureTests {
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
-
     [Fact]
     public async Task GetMyDietologistRelationship_WithNullUserId_ReturnsFailure() {
         GetMyDietologistRelationshipQueryHandler handler = CreateGetMyDietologistRelationshipHandler();
@@ -950,7 +902,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task GetMyDietologistRelationship_WhenUserDeleted_ReturnsFailure() {
@@ -966,7 +917,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
-
 
     [Fact]
     public async Task GetMyDietologistRelationship_WhenPendingInvitationExists_ReturnsRelationship() {
@@ -989,7 +939,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal(DietologistInvitationStatus.Pending.ToString(), result.Value.Status);
     }
 
-
     [Fact]
     public async Task GetInvitationForCurrentUser_WhenEmailLookupFails_ReturnsFailure() {
         GetInvitationForCurrentUserQueryHandler handler = CreateGetInvitationForCurrentUserHandler();
@@ -999,7 +948,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetInvitationForCurrentUser_WithEmptyInvitationId_ReturnsFailure() {
@@ -1014,7 +962,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetMyDietologist_WhenCurrentUserAccessFails_ReturnsFailure() {
@@ -1031,7 +978,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task GetMyClients_WhenCurrentUserAccessFails_ReturnsFailure() {
         var service = new DietologistInvitationReadService(
@@ -1046,7 +992,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task GetMyRelationship_WhenCurrentUserAccessFails_ReturnsFailure() {

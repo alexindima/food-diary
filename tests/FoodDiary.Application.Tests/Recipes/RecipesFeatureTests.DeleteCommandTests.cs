@@ -34,7 +34,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal([recipeAssetId, stepAssetId], cleanup.RequestedAssetIds);
     }
 
-
     [Fact]
     public async Task DeleteRecipeCommandHandler_WithEmptyRecipeId_ReturnsValidationFailure() {
         DeleteRecipeCommandHandler handler = DeleteRecipeHandler(
@@ -50,7 +49,6 @@ public partial class RecipesFeatureTests {
         Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task DeleteRecipeCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var repository = new SingleRecipeRepository(Recipe.Create(UserId.New(), "Soup", servings: 2));
@@ -64,7 +62,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(repository.DeleteCalled);
     }
-
 
     [Fact]
     public async Task DeleteRecipeCommandHandler_WhenRecipeIsMissing_ReturnsNotAccessible() {
@@ -80,7 +77,6 @@ public partial class RecipesFeatureTests {
         Assert.Equal("Recipe.NotAccessible", result.Error.Code);
         Assert.False(repository.DeleteCalled);
     }
-
 
     [Fact]
     public async Task DeleteRecipeCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
@@ -102,7 +98,6 @@ public partial class RecipesFeatureTests {
         Assert.False(repository.DeleteCalled);
     }
 
-
     [Fact]
     public async Task DeleteRecipeCommandHandler_WhenRecipeIsUsed_ReturnsValidationFailure() {
         var userId = UserId.New();
@@ -120,7 +115,6 @@ public partial class RecipesFeatureTests {
         Assert.False(repository.DeleteCalled);
     }
 
-
     [Fact]
     public async Task DeleteRecipeCommandValidator_WithEmptyUserId_ReturnsInvalidToken() {
         var validator = new DeleteRecipeCommandValidator();
@@ -130,7 +124,6 @@ public partial class RecipesFeatureTests {
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Authentication.InvalidToken", StringComparison.Ordinal));
     }
-
 
     [Fact]
     public async Task DeleteRecipeCommandValidator_WhenRecipeIsUsed_HasNoValidationErrors() {
@@ -142,7 +135,6 @@ public partial class RecipesFeatureTests {
 
         Assert.True(result.IsValid);
     }
-
 
     [Fact]
     public async Task DeleteRecipeCommandValidator_WhenRecipeIsUnused_HasNoErrors() {

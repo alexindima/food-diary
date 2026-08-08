@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.ShoppingLists;
 
-
 internal sealed class ShoppingListConfiguration : IEntityTypeConfiguration<ShoppingList> {
     public void Configure(EntityTypeBuilder<ShoppingList> builder) {
         builder.Property<uint>("xmin").IsRowVersion();

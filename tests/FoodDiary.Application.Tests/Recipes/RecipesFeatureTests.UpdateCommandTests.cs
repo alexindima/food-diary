@@ -53,7 +53,6 @@ public partial class RecipesFeatureTests {
         Assert.Contains(result.Errors, error => error.ErrorMessage.IndexOf("Manual nutrition", StringComparison.Ordinal) >= 0);
     }
 
-
     [Fact]
     public async Task UpdateRecipeCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-update-recipe@example.com", "hash");
@@ -99,7 +98,6 @@ public partial class RecipesFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
-
 
     [Fact]
     public async Task UpdateRecipeCommandHandler_WithoutImageChange_DoesNotCleanupExistingRecipeAsset() {

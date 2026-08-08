@@ -1,10 +1,10 @@
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Meals;
-
 
 internal sealed class MealAiItemConfiguration : IEntityTypeConfiguration<MealAiItem> {
     public void Configure(EntityTypeBuilder<MealAiItem> builder) {
@@ -35,7 +35,7 @@ internal sealed class MealAiItemConfiguration : IEntityTypeConfiguration<MealAiI
         builder.Property(e => e.Resolution)
             .HasConversion<string>()
             .HasMaxLength(16)
-            .HasDefaultValue(FoodDiary.Domain.Enums.MealAiItemResolution.Accepted)
+            .HasDefaultValue(MealAiItemResolution.Accepted)
             .HasSentinel((FoodDiary.Domain.Enums.MealAiItemResolution)0);
     }
 }

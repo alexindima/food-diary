@@ -23,7 +23,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
     }
 
-
     [Fact]
     public async Task DeclineInvitation_WithEmptyInvitationId_ReturnsValidationFailure() {
         DeclineInvitationCommandHandler handler = CreateDeclineHandler();
@@ -36,7 +35,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("InvitationId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task DeclineInvitation_WithInvalidToken_ReturnsFailure() {
@@ -55,7 +53,6 @@ public partial class DietologistFeatureTests {
 
         ResultAssert.Failure(result);
     }
-
 
     [Fact]
     public async Task DeclineInvitation_WithValidToken_Succeeds() {
@@ -86,7 +83,6 @@ public partial class DietologistFeatureTests {
         Assert.True(notificationPusher.PushCalled);
         Assert.True(webPushSender.SendCalled);
     }
-
 
     [Fact]
     public async Task DeclineInvitationForCurrentUser_WithMatchingEmail_Succeeds() {
@@ -122,7 +118,6 @@ public partial class DietologistFeatureTests {
         Assert.True(webPushSender.SendCalled);
     }
 
-
     [Fact]
     public async Task DeclineInvitationForCurrentUser_WithNullUserId_ReturnsFailure() {
         DeclineInvitationForCurrentUserCommandHandler handler = CreateDeclineCurrentUserHandler();
@@ -134,7 +129,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task DeclineInvitationForCurrentUser_WhenUserDeleted_ReturnsFailure() {
@@ -152,7 +146,6 @@ public partial class DietologistFeatureTests {
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
-
     [Fact]
     public async Task DeclineInvitationForCurrentUser_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
         var dietologistId = UserId.New();
@@ -166,7 +159,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task DeclineInvitationForCurrentUser_WithEmptyInvitationId_ReturnsValidationFailure() {
@@ -183,7 +175,6 @@ public partial class DietologistFeatureTests {
         Assert.Contains("InvitationId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task DeclineInvitationForCurrentUser_WhenInvitationMissingAfterUserAccess_ReturnsFailure() {
         var dietologistId = UserId.New();
@@ -197,7 +188,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
-
 
     [Fact]
     public async Task DeclineInvitationForCurrentUser_WhenInvitationMissing_ReturnsFailure() {
@@ -214,7 +204,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
-
 
     [Fact]
     public async Task DeclineInvitationForCurrentUser_WhenInvitationAlreadyHandled_ReturnsFailure() {
@@ -237,7 +226,6 @@ public partial class DietologistFeatureTests {
         Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
 
-
     [Fact]
     public async Task DeclineInvitationForCurrentUser_WhenEmailDoesNotMatch_ReturnsFailure() {
         var dietologistId = UserId.New();
@@ -257,7 +245,6 @@ public partial class DietologistFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Dietologist.AccessDenied", result.Error.Code);
     }
-
 
     [Fact]
     public async Task DeclineInvitationForCurrentUser_WhenInvitationExpired_ReturnsFailure() {

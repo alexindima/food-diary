@@ -51,7 +51,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains("Unknown meal type value.", result.Error.Message, StringComparison.Ordinal);
     }
 
-
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithValidCommand_PersistsAndRegistersUsage() {
         var user = User.Create("create-consumption@example.com", "hash");
@@ -100,7 +99,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal(recipeId, recentItems.LastRecipeIds.Single().Value);
     }
 
-
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new CreateConsumptionCommandHandler(
@@ -116,7 +114,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
-
 
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
@@ -135,7 +132,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
-
 
     [Fact]
     public async Task CreateConsumptionCommandHandler_WhenImageAssetAccessFails_ReturnsFailure() {
@@ -157,7 +153,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Image.NotFound", result.Error.Code);
     }
-
 
     [Fact]
     public async Task CreateConsumptionCommandHandler_WhenManualNutritionMissing_ReturnsValidationFailure() {
@@ -197,7 +192,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains("ManualCalories", result.Error.Message, StringComparison.Ordinal);
     }
 
-
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var userId = UserId.New();
@@ -235,7 +229,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
@@ -275,7 +268,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-
     [Fact]
     public async Task CreateConsumptionCommandHandler_WhenItemIdentifiersAreMissing_ReturnsValidationFailure() {
         var user = User.Create("create-missing-item-id@example.com", "hash");
@@ -294,7 +286,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
-
 
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithEmptyRecipeId_ReturnsValidationFailure() {
@@ -315,7 +306,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
-
 
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithInvalidItemOrigin_ReturnsValidationFailure() {
@@ -341,7 +331,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Null(repository.StoredMeal);
     }
 
-
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithEmptySourceAiItemId_ReturnsValidationFailure() {
         var user = User.Create("create-empty-source-ai-item-id@example.com", "hash");
@@ -365,7 +354,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains("Source AI item id", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Null(repository.StoredMeal);
     }
-
 
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithManualOriginAndSourceAiItemId_ReturnsValidationFailure() {
@@ -391,7 +379,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Null(repository.StoredMeal);
     }
 
-
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithRecipeManualOriginAndSourceAiItemId_ReturnsValidationFailure() {
         var user = User.Create("create-recipe-manual-source-ai-item-id@example.com", "hash");
@@ -416,7 +403,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Null(repository.StoredMeal);
     }
 
-
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithAiTextItemOrigin_Succeeds() {
         var user = User.Create("create-ai-text-item-origin@example.com", "hash");
@@ -438,7 +424,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Success(result);
         Assert.NotNull(repository.StoredMeal);
     }
-
 
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithInvalidAiItem_ReturnsValidationFailure() {
@@ -480,7 +465,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Null(repository.StoredMeal);
     }
 
-
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithInvalidAiItemResolution_ReturnsValidationFailure() {
         var user = User.Create("create-invalid-ai-resolution@example.com", "hash");
@@ -508,7 +492,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Null(repository.StoredMeal);
     }
 
-
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithAiItemResolution_Succeeds() {
         var user = User.Create("create-ai-resolution@example.com", "hash");
@@ -534,7 +517,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.NotNull(repository.StoredMeal);
     }
 
-
     [Fact]
     public async Task CreateConsumptionCommandHandler_WhenAiSessionImageAssetAccessFails_ReturnsFailure() {
         var user = User.Create("create-session-image-failure@example.com", "hash");
@@ -556,7 +538,6 @@ public partial class ConsumptionsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Image.Forbidden", result.Error.Code);
     }
-
 
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithEmptyAiSessionImageAssetId_ReturnsValidationFailure() {
@@ -582,7 +563,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Null(repository.StoredMeal);
     }
 
-
     [Fact]
     public async Task CreateConsumptionCommandHandler_WhenAiSessionNotesTooLong_ReturnsValidationFailure() {
         var user = User.Create("create-long-ai-notes@example.com", "hash");
@@ -605,7 +585,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Notes", result.Error.Message, StringComparison.Ordinal);
     }
-
 
     [Fact]
     public async Task CreateConsumptionCommandHandler_WhenAiSourceInvalid_ReturnsValidationFailure() {
@@ -648,7 +627,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Null(repository.StoredMeal);
     }
 
-
     [Fact]
     public async Task CreateConsumptionCommandHandler_WhenAiRecognizedAtIsUnspecified_ReturnsValidationFailure() {
         var user = User.Create("create-unspecified-ai-time@example.com", "hash");
@@ -689,7 +667,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Contains("RecognizedAtUtc timestamp kind must be specified.", result.Error.Message, StringComparison.Ordinal);
         Assert.Null(repository.StoredMeal);
     }
-
 
     [Fact]
     public async Task CreateConsumptionCommandHandler_WithAiSessionDefaultsSourceAndRecognizedAt_Succeeds() {
@@ -733,7 +710,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("recognized", session.Notes);
     }
 
-
     [Fact]
     public async Task CreateConsumptionCommandHandler_ReturnsCreatedMealWithoutReloadingBeforeCommit() {
         var user = User.Create("create-no-reload@example.com", "hash");
@@ -771,7 +747,6 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal("Created", result.Value.Comment);
         Assert.NotNull(repository.StoredMeal);
     }
-
 
     [Fact]
     public async Task CreateConsumptionCommandHandler_WhenAutoNutritionFails_ReturnsServiceErrorWithoutPersisting() {

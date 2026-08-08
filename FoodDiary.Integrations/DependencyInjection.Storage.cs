@@ -10,7 +10,7 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.Integrations;
 
 public static partial class DependencyInjection {
-    private static IServiceCollection AddStorageIntegrations(this IServiceCollection services) {
+    private static void AddStorageIntegrations(this IServiceCollection services) {
         services.AddSingleton<IAmazonS3>(sp => {
             S3Options s3Options = sp.GetRequiredService<IOptions<S3Options>>().Value;
             var credentials = new BasicAWSCredentials(s3Options.AccessKeyId, s3Options.SecretAccessKey);
@@ -28,7 +28,5 @@ public static partial class DependencyInjection {
         });
         services.AddSingleton<IObjectStorageClient, S3ObjectStorageClient>();
         services.AddSingleton<IImageStorageService, S3ImageStorageService>();
-
-        return services;
     }
 }
