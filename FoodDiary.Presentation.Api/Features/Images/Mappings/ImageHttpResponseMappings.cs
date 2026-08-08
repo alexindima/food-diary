@@ -4,11 +4,13 @@ using FoodDiary.Presentation.Api.Features.Images.Responses;
 namespace FoodDiary.Presentation.Api.Features.Images.Mappings;
 
 public static class ImageHttpResponseMappings {
-    public static GetImageUploadUrlHttpResponse ToHttpResponse(this GetImageUploadUrlResult result) {
-        return new GetImageUploadUrlHttpResponse(
-            result.UploadUrl,
-            result.FileUrl,
-            result.ExpiresAtUtc,
-            result.AssetId);
+    extension(GetImageUploadUrlResult result) {
+        public GetImageUploadUrlHttpResponse ToHttpResponse() {
+            return new GetImageUploadUrlHttpResponse(
+                result.UploadUrl,
+                result.FileUrl,
+                result.ExpiresAtUtc,
+                result.AssetId);
+        }
     }
 }

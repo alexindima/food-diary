@@ -8,49 +8,55 @@ using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
 namespace FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
 
 public static class ConsumptionHttpMappings {
-    public static DeleteConsumptionCommand ToDeleteCommand(this Guid consumptionId, Guid userId) =>
-        new(userId, consumptionId);
+    extension(Guid consumptionId) {
+        public DeleteConsumptionCommand ToDeleteCommand(Guid userId) =>
+                new(userId, consumptionId);
+    }
 
-    public static CreateConsumptionCommand ToCommand(this CreateConsumptionHttpRequest request, Guid userId) =>
-        new(
-            userId,
-            request.Date,
-            request.MealType,
-            request.Comment,
-            request.ImageUrl,
-            request.ImageAssetId,
-            ToItemInputs(request.Items),
-            ToAiSessionInputs(request.AiSessions),
-            request.IsNutritionAutoCalculated,
-            request.ManualCalories,
-            request.ManualProteins,
-            request.ManualFats,
-            request.ManualCarbs,
-            request.ManualFiber,
-            request.ManualAlcohol,
-            request.PreMealSatietyLevel,
-            request.PostMealSatietyLevel);
+    extension(CreateConsumptionHttpRequest request) {
+        public CreateConsumptionCommand ToCommand(Guid userId) =>
+                new(
+                    userId,
+                    request.Date,
+                    request.MealType,
+                    request.Comment,
+                    request.ImageUrl,
+                    request.ImageAssetId,
+                    ToItemInputs(request.Items),
+                    ToAiSessionInputs(request.AiSessions),
+                    request.IsNutritionAutoCalculated,
+                    request.ManualCalories,
+                    request.ManualProteins,
+                    request.ManualFats,
+                    request.ManualCarbs,
+                    request.ManualFiber,
+                    request.ManualAlcohol,
+                    request.PreMealSatietyLevel,
+                    request.PostMealSatietyLevel);
+    }
 
-    public static UpdateConsumptionCommand ToCommand(this UpdateConsumptionHttpRequest request, Guid userId, Guid consumptionId) =>
-        new(
-            userId,
-            consumptionId,
-            request.Date,
-            request.MealType,
-            request.Comment,
-            request.ImageUrl,
-            request.ImageAssetId,
-            ToItemInputs(request.Items),
-            ToAiSessionInputs(request.AiSessions),
-            request.IsNutritionAutoCalculated,
-            request.ManualCalories,
-            request.ManualProteins,
-            request.ManualFats,
-            request.ManualCarbs,
-            request.ManualFiber,
-            request.ManualAlcohol,
-            request.PreMealSatietyLevel,
-            request.PostMealSatietyLevel);
+    extension(UpdateConsumptionHttpRequest request) {
+        public UpdateConsumptionCommand ToCommand(Guid userId, Guid consumptionId) =>
+                new(
+                    userId,
+                    consumptionId,
+                    request.Date,
+                    request.MealType,
+                    request.Comment,
+                    request.ImageUrl,
+                    request.ImageAssetId,
+                    ToItemInputs(request.Items),
+                    ToAiSessionInputs(request.AiSessions),
+                    request.IsNutritionAutoCalculated,
+                    request.ManualCalories,
+                    request.ManualProteins,
+                    request.ManualFats,
+                    request.ManualCarbs,
+                    request.ManualFiber,
+                    request.ManualAlcohol,
+                    request.PreMealSatietyLevel,
+                    request.PostMealSatietyLevel);
+    }
 
     private static ConsumptionItemInput ToInput(ConsumptionItemHttpRequest request) =>
         new(request.ProductId, request.RecipeId, request.Amount, request.SourceAiItemId, request.Origin);
@@ -81,8 +87,10 @@ public static class ConsumptionHttpMappings {
     private static List<ConsumptionItemInput> ToItemInputs(IReadOnlyList<ConsumptionItemHttpRequest>? requests) =>
         requests?.Select(ToInput).ToList() ?? [];
 
-    public static RepeatMealCommand ToRepeatCommand(this RepeatMealHttpRequest request, Guid userId, Guid mealId) =>
-        new(userId, mealId, request.TargetDate, request.MealType);
+    extension(RepeatMealHttpRequest request) {
+        public RepeatMealCommand ToRepeatCommand(Guid userId, Guid mealId) =>
+                new(userId, mealId, request.TargetDate, request.MealType);
+    }
 
     private static List<ConsumptionAiSessionInput> ToAiSessionInputs(IReadOnlyList<ConsumptionAiSessionHttpRequest>? requests) =>
         requests?.Select(ToInput).ToList() ?? [];

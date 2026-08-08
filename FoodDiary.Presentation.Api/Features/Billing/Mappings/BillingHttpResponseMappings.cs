@@ -5,30 +5,36 @@ using FoodDiary.Presentation.Api.Features.Billing.Responses;
 namespace FoodDiary.Presentation.Api.Features.Billing.Mappings;
 
 public static class BillingHttpResponseMappings {
-    public static BillingOverviewHttpResponse ToHttpResponse(this BillingOverviewModel model) =>
-        new(
-            model.IsPremium,
-            model.SubscriptionStatus,
-            model.Plan,
-            model.SubscriptionProvider,
-            model.CurrentPeriodStartUtc,
-            model.CurrentPeriodEndUtc,
-            model.NextBillingAttemptUtc,
-            model.CancelAtPeriodEnd,
-            model.RenewalEnabled,
-            model.ManageBillingAvailable,
-            model.PremiumTrialStartUtc,
-            model.PremiumTrialEndUtc,
-            model.PremiumTrialActive,
-            model.PremiumTrialUsed,
-            model.CanStartPremiumTrial,
-            model.Provider,
-            model.PaddleClientToken,
-            model.AvailableProviders);
+    extension(BillingOverviewModel model) {
+        public BillingOverviewHttpResponse ToHttpResponse() =>
+                new(
+                    model.IsPremium,
+                    model.SubscriptionStatus,
+                    model.Plan,
+                    model.SubscriptionProvider,
+                    model.CurrentPeriodStartUtc,
+                    model.CurrentPeriodEndUtc,
+                    model.NextBillingAttemptUtc,
+                    model.CancelAtPeriodEnd,
+                    model.RenewalEnabled,
+                    model.ManageBillingAvailable,
+                    model.PremiumTrialStartUtc,
+                    model.PremiumTrialEndUtc,
+                    model.PremiumTrialActive,
+                    model.PremiumTrialUsed,
+                    model.CanStartPremiumTrial,
+                    model.Provider,
+                    model.PaddleClientToken,
+                    model.AvailableProviders);
+    }
 
-    public static CheckoutSessionHttpResponse ToHttpResponse(this BillingCheckoutSessionModel model) =>
-        new(model.SessionId, model.Url, model.Plan);
+    extension(BillingCheckoutSessionModel model) {
+        public CheckoutSessionHttpResponse ToHttpResponse() =>
+                new(model.SessionId, model.Url, model.Plan);
+    }
 
-    public static PortalSessionHttpResponse ToHttpResponse(this BillingPortalSessionModel model) =>
-        new(model.Url);
+    extension(BillingPortalSessionModel model) {
+        public PortalSessionHttpResponse ToHttpResponse() =>
+                new(model.Url);
+    }
 }

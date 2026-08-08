@@ -7,48 +7,54 @@ using FoodDiary.Presentation.Api.Responses;
 namespace FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
 
 public static class ConsumptionHttpResponseMappings {
-    public static ConsumptionHttpResponse ToHttpResponse(this ConsumptionModel model) {
-        return new ConsumptionHttpResponse(
-            model.Id,
-            model.Date,
-            model.MealType,
-            model.Comment,
-            model.ImageUrl,
-            model.ImageAssetId,
-            model.TotalCalories,
-            model.TotalProteins,
-            model.TotalFats,
-            model.TotalCarbs,
-            model.TotalFiber,
-            model.TotalAlcohol,
-            model.IsNutritionAutoCalculated,
-            model.ManualCalories,
-            model.ManualProteins,
-            model.ManualFats,
-            model.ManualCarbs,
-            model.ManualFiber,
-            model.ManualAlcohol,
-            model.PreMealSatietyLevel,
-            model.PostMealSatietyLevel,
-            model.QualityScore,
-            model.QualityGrade,
-            model.IsFavorite,
-            model.FavoriteMealId,
-            model.Items.ToHttpResponseList(ToHttpResponse),
-            model.AiSessions.ToHttpResponseList(ToHttpResponse)
-        );
+    extension(ConsumptionModel model) {
+        public ConsumptionHttpResponse ToHttpResponse() {
+            return new ConsumptionHttpResponse(
+                model.Id,
+                model.Date,
+                model.MealType,
+                model.Comment,
+                model.ImageUrl,
+                model.ImageAssetId,
+                model.TotalCalories,
+                model.TotalProteins,
+                model.TotalFats,
+                model.TotalCarbs,
+                model.TotalFiber,
+                model.TotalAlcohol,
+                model.IsNutritionAutoCalculated,
+                model.ManualCalories,
+                model.ManualProteins,
+                model.ManualFats,
+                model.ManualCarbs,
+                model.ManualFiber,
+                model.ManualAlcohol,
+                model.PreMealSatietyLevel,
+                model.PostMealSatietyLevel,
+                model.QualityScore,
+                model.QualityGrade,
+                model.IsFavorite,
+                model.FavoriteMealId,
+                model.Items.ToHttpResponseList(ToHttpResponse),
+                model.AiSessions.ToHttpResponseList(ToHttpResponse)
+            );
+        }
     }
 
-    public static PagedHttpResponse<ConsumptionHttpResponse> ToHttpResponse(this PagedResponse<ConsumptionModel> response) {
-        return response.ToPagedHttpResponse(ToHttpResponse);
+    extension(PagedResponse<ConsumptionModel> response) {
+        public PagedHttpResponse<ConsumptionHttpResponse> ToHttpResponse() {
+            return response.ToPagedHttpResponse(ToHttpResponse);
+        }
     }
 
-    public static ConsumptionOverviewHttpResponse ToHttpResponse(this ConsumptionOverviewModel model) {
-        return new ConsumptionOverviewHttpResponse(
-            model.AllConsumptions.ToHttpResponse(),
-            model.FavoriteItems.Select(ToHttpResponse).ToList(),
-            model.FavoriteTotalCount
-        );
+    extension(ConsumptionOverviewModel model) {
+        public ConsumptionOverviewHttpResponse ToHttpResponse() {
+            return new ConsumptionOverviewHttpResponse(
+                model.AllConsumptions.ToHttpResponse(),
+                model.FavoriteItems.Select(ToHttpResponse).ToList(),
+                model.FavoriteTotalCount
+            );
+        }
     }
 
     private static FavoriteMealHttpResponse ToHttpResponse(ConsumptionFavoriteMealModel model) =>
@@ -65,69 +71,75 @@ public static class ConsumptionHttpResponseMappings {
             model.TotalCarbs,
             model.ItemCount);
 
-    private static ConsumptionItemHttpResponse ToHttpResponse(this ConsumptionItemModel model) {
-        return new ConsumptionItemHttpResponse(
-            model.Id,
-            model.ConsumptionId,
-            model.Amount,
-            model.ProductId,
-            model.ProductName,
-            model.ProductImageUrl,
-            model.ProductBaseUnit,
-            model.ProductBaseAmount,
-            model.ProductCaloriesPerBase,
-            model.ProductProteinsPerBase,
-            model.ProductFatsPerBase,
-            model.ProductCarbsPerBase,
-            model.ProductFiberPerBase,
-            model.ProductAlcoholPerBase,
-            model.RecipeId,
-            model.RecipeName,
-            model.RecipeImageUrl,
-            model.RecipeServings,
-            model.RecipeTotalCalories,
-            model.RecipeTotalProteins,
-            model.RecipeTotalFats,
-            model.RecipeTotalCarbs,
-            model.RecipeTotalFiber,
-            model.RecipeTotalAlcohol,
-            model.ProductQualityScore,
-            model.ProductQualityGrade,
-            model.SourceAiItemId,
-            model.Origin
-        );
+    extension(ConsumptionItemModel model) {
+        private ConsumptionItemHttpResponse ToHttpResponse() {
+            return new ConsumptionItemHttpResponse(
+                model.Id,
+                model.ConsumptionId,
+                model.Amount,
+                model.ProductId,
+                model.ProductName,
+                model.ProductImageUrl,
+                model.ProductBaseUnit,
+                model.ProductBaseAmount,
+                model.ProductCaloriesPerBase,
+                model.ProductProteinsPerBase,
+                model.ProductFatsPerBase,
+                model.ProductCarbsPerBase,
+                model.ProductFiberPerBase,
+                model.ProductAlcoholPerBase,
+                model.RecipeId,
+                model.RecipeName,
+                model.RecipeImageUrl,
+                model.RecipeServings,
+                model.RecipeTotalCalories,
+                model.RecipeTotalProteins,
+                model.RecipeTotalFats,
+                model.RecipeTotalCarbs,
+                model.RecipeTotalFiber,
+                model.RecipeTotalAlcohol,
+                model.ProductQualityScore,
+                model.ProductQualityGrade,
+                model.SourceAiItemId,
+                model.Origin
+            );
+        }
     }
 
-    private static ConsumptionAiSessionHttpResponse ToHttpResponse(this ConsumptionAiSessionModel model) {
-        return new ConsumptionAiSessionHttpResponse(
-            model.Id,
-            model.ConsumptionId,
-            model.ImageAssetId,
-            model.ImageUrl,
-            model.Source,
-            model.Status,
-            model.RecognizedAtUtc,
-            model.Notes,
-            model.Items.ToHttpResponseList(ToHttpResponse)
-        );
+    extension(ConsumptionAiSessionModel model) {
+        private ConsumptionAiSessionHttpResponse ToHttpResponse() {
+            return new ConsumptionAiSessionHttpResponse(
+                model.Id,
+                model.ConsumptionId,
+                model.ImageAssetId,
+                model.ImageUrl,
+                model.Source,
+                model.Status,
+                model.RecognizedAtUtc,
+                model.Notes,
+                model.Items.ToHttpResponseList(ToHttpResponse)
+            );
+        }
     }
 
-    private static ConsumptionAiItemHttpResponse ToHttpResponse(this ConsumptionAiItemModel model) {
-        return new ConsumptionAiItemHttpResponse(
-            model.Id,
-            model.SessionId,
-            model.NameEn,
-            model.NameLocal,
-            model.Amount,
-            model.Unit,
-            model.Calories,
-            model.Proteins,
-            model.Fats,
-            model.Carbs,
-            model.Fiber,
-            model.Alcohol,
-            model.Confidence,
-            model.Resolution
-        );
+    extension(ConsumptionAiItemModel model) {
+        private ConsumptionAiItemHttpResponse ToHttpResponse() {
+            return new ConsumptionAiItemHttpResponse(
+                model.Id,
+                model.SessionId,
+                model.NameEn,
+                model.NameLocal,
+                model.Amount,
+                model.Unit,
+                model.Calories,
+                model.Proteins,
+                model.Fats,
+                model.Carbs,
+                model.Fiber,
+                model.Alcohol,
+                model.Confidence,
+                model.Resolution
+            );
+        }
     }
 }

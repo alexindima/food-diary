@@ -8,8 +8,10 @@ using FoodDiary.Presentation.Api.Features.Billing.Requests;
 namespace FoodDiary.Presentation.Api.Features.Billing.Mappings;
 
 public static class BillingHttpMappings {
-    public static CreateCheckoutSessionCommand ToCommand(this CreateCheckoutSessionHttpRequest request, Guid userId) =>
-        new(userId, request.Plan, request.Provider);
+    extension(CreateCheckoutSessionHttpRequest request) {
+        public CreateCheckoutSessionCommand ToCommand(Guid userId) =>
+                new(userId, request.Plan, request.Provider);
+    }
 
     extension(Guid userId) {
         public CreatePortalSessionCommand ToPortalSessionCommand() => new(userId);
@@ -17,6 +19,8 @@ public static class BillingHttpMappings {
         public GetBillingOverviewQuery ToBillingOverviewQuery() => new(userId);
     }
 
-    public static ProcessBillingWebhookCommand ToWebhookCommand(this string provider, string payload, string signatureHeader) =>
-        new(provider, payload, signatureHeader, QueueOnly: true);
+    extension(string provider) {
+        public ProcessBillingWebhookCommand ToWebhookCommand(string payload, string signatureHeader) =>
+                new(provider, payload, signatureHeader, QueueOnly: true);
+    }
 }

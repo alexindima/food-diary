@@ -9,8 +9,10 @@ using FoodDiary.Presentation.Api.Features.FavoriteMeals.Responses;
 namespace FoodDiary.Presentation.Api.Features.FavoriteMeals.Mappings;
 
 public static class FavoriteMealHttpMappings {
-    public static AddFavoriteMealCommand ToCommand(this AddFavoriteMealHttpRequest request, Guid userId) =>
-        new(userId, request.MealId, request.Name);
+    extension(AddFavoriteMealHttpRequest request) {
+        public AddFavoriteMealCommand ToCommand(Guid userId) =>
+                new(userId, request.MealId, request.Name);
+    }
 
     extension(Guid id) {
         public RemoveFavoriteMealCommand ToDeleteCommand(Guid userId) =>
@@ -21,17 +23,19 @@ public static class FavoriteMealHttpMappings {
             new(userId, id);
     }
 
-    public static FavoriteMealHttpResponse ToHttpResponse(this FavoriteMealModel model) =>
-        new(
-            model.Id,
-            model.MealId,
-            model.Name,
-            model.CreatedAtUtc,
-            model.MealDate,
-            model.MealType,
-            model.TotalCalories,
-            model.TotalProteins,
-            model.TotalFats,
-            model.TotalCarbs,
-            model.ItemCount);
+    extension(FavoriteMealModel model) {
+        public FavoriteMealHttpResponse ToHttpResponse() =>
+                new(
+                    model.Id,
+                    model.MealId,
+                    model.Name,
+                    model.CreatedAtUtc,
+                    model.MealDate,
+                    model.MealType,
+                    model.TotalCalories,
+                    model.TotalProteins,
+                    model.TotalFats,
+                    model.TotalCarbs,
+                    model.ItemCount);
+    }
 }

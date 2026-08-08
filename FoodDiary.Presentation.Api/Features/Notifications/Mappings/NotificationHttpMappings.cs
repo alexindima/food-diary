@@ -26,75 +26,97 @@ public static class NotificationHttpMappings {
         public GetWebPushSubscriptionsQuery ToWebPushSubscriptionsQuery() => new(id);
     }
 
-    public static UpdateNotificationPreferencesCommand ToCommand(this UpdateNotificationPreferencesHttpRequest request, Guid userId) =>
-        new(
-            userId,
-            request.PushNotificationsEnabled,
-            request.FastingPushNotificationsEnabled,
-            request.SocialPushNotificationsEnabled,
-            request.FastingCheckInReminderHours,
-            request.FastingCheckInFollowUpReminderHours);
+    extension(UpdateNotificationPreferencesHttpRequest request) {
+        public UpdateNotificationPreferencesCommand ToCommand(Guid userId) =>
+                new(
+                    userId,
+                    request.PushNotificationsEnabled,
+                    request.FastingPushNotificationsEnabled,
+                    request.SocialPushNotificationsEnabled,
+                    request.FastingCheckInReminderHours,
+                    request.FastingCheckInFollowUpReminderHours);
+    }
 
     public static GetWebPushConfigurationQuery ToWebPushConfigurationQuery() => new();
 
-    public static UpsertWebPushSubscriptionCommand ToCommand(this UpsertWebPushSubscriptionHttpRequest request, Guid userId) =>
-        new(
-            userId,
-            request.Endpoint,
-            request.Keys.P256dh,
-            request.Keys.Auth,
-            request.ExpirationTime,
-            request.Locale,
-            request.UserAgent);
+    extension(UpsertWebPushSubscriptionHttpRequest request) {
+        public UpsertWebPushSubscriptionCommand ToCommand(Guid userId) =>
+                new(
+                    userId,
+                    request.Endpoint,
+                    request.Keys.P256dh,
+                    request.Keys.Auth,
+                    request.ExpirationTime,
+                    request.Locale,
+                    request.UserAgent);
+    }
 
-    public static RemoveWebPushSubscriptionCommand ToCommand(this RemoveWebPushSubscriptionHttpRequest request, Guid userId) =>
-        new(userId, request.Endpoint);
+    extension(RemoveWebPushSubscriptionHttpRequest request) {
+        public RemoveWebPushSubscriptionCommand ToCommand(Guid userId) =>
+                new(userId, request.Endpoint);
+    }
 
-    public static ScheduleTestNotificationCommand ToCommand(this ScheduleTestNotificationHttpRequest request, Guid userId) =>
-        new(userId, request.DelaySeconds, request.Type);
+    extension(ScheduleTestNotificationHttpRequest request) {
+        public ScheduleTestNotificationCommand ToCommand(Guid userId) =>
+                new(userId, request.DelaySeconds, request.Type);
+    }
 
-    public static NotificationHttpResponse ToHttpResponse(this NotificationModel model) =>
-        new(model.Id, model.Type, model.Title, model.Body, model.TargetUrl, model.ReferenceId, model.IsRead, model.CreatedAtUtc);
+    extension(NotificationModel model) {
+        public NotificationHttpResponse ToHttpResponse() =>
+                new(model.Id, model.Type, model.Title, model.Body, model.TargetUrl, model.ReferenceId, model.IsRead, model.CreatedAtUtc);
+    }
 
-    public static ScheduledNotificationHttpResponse ToHttpResponse(this ScheduledNotificationModel model) =>
-        new(model.Type, model.DelaySeconds, model.ScheduledAtUtc);
+    extension(ScheduledNotificationModel model) {
+        public ScheduledNotificationHttpResponse ToHttpResponse() =>
+                new(model.Type, model.DelaySeconds, model.ScheduledAtUtc);
+    }
 
-    public static WebPushConfigurationHttpResponse ToHttpResponse(this WebPushConfigurationModel model) =>
-        new(model.Enabled, model.PublicKey);
+    extension(WebPushConfigurationModel model) {
+        public WebPushConfigurationHttpResponse ToHttpResponse() =>
+                new(model.Enabled, model.PublicKey);
+    }
 
-    public static NotificationPreferencesHttpResponse ToHttpResponse(this NotificationPreferencesModel model) =>
-        new(
-            model.PushNotificationsEnabled,
-            model.FastingPushNotificationsEnabled,
-            model.SocialPushNotificationsEnabled,
-            model.FastingCheckInReminderHours,
-            model.FastingCheckInFollowUpReminderHours);
+    extension(NotificationPreferencesModel model) {
+        public NotificationPreferencesHttpResponse ToHttpResponse() =>
+                new(
+                    model.PushNotificationsEnabled,
+                    model.FastingPushNotificationsEnabled,
+                    model.SocialPushNotificationsEnabled,
+                    model.FastingCheckInReminderHours,
+                    model.FastingCheckInFollowUpReminderHours);
+    }
 
-    public static NotificationPreferencesHttpResponse ToHttpResponse(this UserNotificationPreferencesModel model) =>
-        new(
-            model.PushNotificationsEnabled,
-            model.FastingPushNotificationsEnabled,
-            model.SocialPushNotificationsEnabled,
-            model.FastingCheckInReminderHours,
-            model.FastingCheckInFollowUpReminderHours);
+    extension(UserNotificationPreferencesModel model) {
+        public NotificationPreferencesHttpResponse ToHttpResponse() =>
+                new(
+                    model.PushNotificationsEnabled,
+                    model.FastingPushNotificationsEnabled,
+                    model.SocialPushNotificationsEnabled,
+                    model.FastingCheckInReminderHours,
+                    model.FastingCheckInFollowUpReminderHours);
+    }
 
-    public static WebPushSubscriptionHttpResponse ToHttpResponse(this WebPushSubscriptionModel subscription) =>
-        new(
-            subscription.Endpoint,
-            subscription.EndpointHost,
-            subscription.ExpirationTimeUtc,
-            subscription.Locale,
-            subscription.UserAgent,
-            subscription.CreatedAtUtc,
-            subscription.UpdatedAtUtc);
+    extension(WebPushSubscriptionModel subscription) {
+        public WebPushSubscriptionHttpResponse ToHttpResponse() =>
+                new(
+                    subscription.Endpoint,
+                    subscription.EndpointHost,
+                    subscription.ExpirationTimeUtc,
+                    subscription.Locale,
+                    subscription.UserAgent,
+                    subscription.CreatedAtUtc,
+                    subscription.UpdatedAtUtc);
+    }
 
-    public static WebPushSubscriptionHttpResponse ToHttpResponse(this ProfileWebPushSubscriptionModel subscription) =>
-        new(
-            subscription.Endpoint,
-            subscription.EndpointHost,
-            subscription.ExpirationTimeUtc,
-            subscription.Locale,
-            subscription.UserAgent,
-            subscription.CreatedAtUtc,
-            subscription.UpdatedAtUtc);
+    extension(ProfileWebPushSubscriptionModel subscription) {
+        public WebPushSubscriptionHttpResponse ToHttpResponse() =>
+                new(
+                    subscription.Endpoint,
+                    subscription.EndpointHost,
+                    subscription.ExpirationTimeUtc,
+                    subscription.Locale,
+                    subscription.UserAgent,
+                    subscription.CreatedAtUtc,
+                    subscription.UpdatedAtUtc);
+    }
 }

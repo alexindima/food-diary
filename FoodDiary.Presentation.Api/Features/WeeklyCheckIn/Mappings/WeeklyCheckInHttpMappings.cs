@@ -5,39 +5,47 @@ using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Responses;
 namespace FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Mappings;
 
 public static class WeeklyCheckInHttpMappings {
-    public static GetWeeklyCheckInQuery ToQuery(this Guid userId) => new(userId);
+    extension(Guid userId) {
+        public GetWeeklyCheckInQuery ToQuery() => new(userId);
+    }
 
-    public static WeeklyCheckInHttpResponse ToHttpResponse(this WeeklyCheckInModel model) =>
-        new(
-            model.ThisWeek.ToHttpResponse(),
-            model.LastWeek.ToHttpResponse(),
-            model.Trends.ToHttpResponse(),
-            model.Suggestions);
+    extension(WeeklyCheckInModel model) {
+        public WeeklyCheckInHttpResponse ToHttpResponse() =>
+                new(
+                    model.ThisWeek.ToHttpResponse(),
+                    model.LastWeek.ToHttpResponse(),
+                    model.Trends.ToHttpResponse(),
+                    model.Suggestions);
+    }
 
-    private static WeekSummaryHttpResponse ToHttpResponse(this WeekSummaryModel model) =>
-        new(
-            model.TotalCalories,
-            model.AvgDailyCalories,
-            model.AvgProteins,
-            model.AvgFats,
-            model.AvgCarbs,
-            model.MealsLogged,
-            model.DaysLogged,
-            model.WeightStart,
-            model.WeightEnd,
-            model.WaistStart,
-            model.WaistEnd,
-            model.TotalHydrationMl,
-            model.AvgDailyHydrationMl);
+    extension(WeekSummaryModel model) {
+        private WeekSummaryHttpResponse ToHttpResponse() =>
+                new(
+                    model.TotalCalories,
+                    model.AvgDailyCalories,
+                    model.AvgProteins,
+                    model.AvgFats,
+                    model.AvgCarbs,
+                    model.MealsLogged,
+                    model.DaysLogged,
+                    model.WeightStart,
+                    model.WeightEnd,
+                    model.WaistStart,
+                    model.WaistEnd,
+                    model.TotalHydrationMl,
+                    model.AvgDailyHydrationMl);
+    }
 
-    private static WeekTrendHttpResponse ToHttpResponse(this WeekTrendModel model) =>
-        new(
-            model.CalorieChange,
-            model.ProteinChange,
-            model.FatChange,
-            model.CarbChange,
-            model.WeightChange,
-            model.WaistChange,
-            model.HydrationChange,
-            model.MealsLoggedChange);
+    extension(WeekTrendModel model) {
+        private WeekTrendHttpResponse ToHttpResponse() =>
+                new(
+                    model.CalorieChange,
+                    model.ProteinChange,
+                    model.FatChange,
+                    model.CarbChange,
+                    model.WeightChange,
+                    model.WaistChange,
+                    model.HydrationChange,
+                    model.MealsLoggedChange);
+    }
 }

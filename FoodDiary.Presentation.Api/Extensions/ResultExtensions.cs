@@ -7,8 +7,16 @@ using FoodDiary.Presentation.Api.Responses;
 namespace FoodDiary.Presentation.Api.Extensions;
 
 public static class ResultExtensions {
-    public static IActionResult ToActionResult(this Result result) {
-        return result.IsSuccess ? new OkResult() : ErrorResult(result.Error);
+    extension(Result result) {
+        public IActionResult ToActionResult() {
+            return result.IsSuccess ? new OkResult() : ErrorResult(result.Error);
+        }
+
+        public IActionResult ToNoContentActionResult(ControllerBase controller) {
+            return result.IsSuccess
+                ? new NoContentResult()
+                : ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
+        }
     }
 
     extension<T>(Result<T> result) {
@@ -56,23 +64,21 @@ public static class ResultExtensions {
         }
     }
 
-    public static IActionResult ToFileActionResult(this Result<FileExportResult> result, ControllerBase controller) {
-        if (result.IsFailure) {
-            return ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
+    extension(Result<FileExportResult> result) {
+        public IActionResult ToFileActionResult(ControllerBase controller) {
+            if (result.IsFailure) {
+                return ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
+            }
+
+            FileExportResult file = result.Value;
+            return controller.File(file.Content, file.ContentType, file.FileName);
         }
-
-        FileExportResult file = result.Value;
-        return controller.File(file.Content, file.ContentType, file.FileName);
     }
 
-    public static IActionResult ToNoContentActionResult(this Result result, ControllerBase controller) {
-        return result.IsSuccess
-            ? new NoContentResult()
-            : ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
+    extension(Error error) {
+        public IActionResult ToErrorActionResult(int statusCode) =>
+                ErrorResult(error, statusCode);
     }
-
-    public static IActionResult ToErrorActionResult(this Error error, int statusCode) =>
-        ErrorResult(error, statusCode);
 
     private static IActionResult ErrorResult(Error error) =>
         ErrorResult(error, PresentationErrorHttpMapper.MapStatusCode(error));

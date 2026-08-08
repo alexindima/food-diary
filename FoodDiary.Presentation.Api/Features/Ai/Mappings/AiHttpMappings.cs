@@ -9,34 +9,44 @@ using FoodDiary.Presentation.Api.Features.Ai.Requests;
 namespace FoodDiary.Presentation.Api.Features.Ai.Mappings;
 
 public static class AiHttpMappings {
-    public static GetUserAiUsageSummaryQuery ToUsageQuery(this Guid userId) => new(userId);
-
-    public static AnalyzeFoodImageCommand ToCommand(this FoodVisionHttpRequest request, Guid userId) {
-        return new AnalyzeFoodImageCommand(
-            UserId: userId,
-            ImageAssetId: request.ImageAssetId,
-            Description: request.Description);
+    extension(Guid userId) {
+        public GetUserAiUsageSummaryQuery ToUsageQuery() => new(userId);
     }
 
-    public static ParseFoodTextCommand ToCommand(this FoodTextHttpRequest request, Guid userId) {
-        return new ParseFoodTextCommand(UserId: userId, Text: request.Text);
+    extension(FoodVisionHttpRequest request) {
+        public AnalyzeFoodImageCommand ToCommand(Guid userId) {
+            return new AnalyzeFoodImageCommand(
+                UserId: userId,
+                ImageAssetId: request.ImageAssetId,
+                Description: request.Description);
+        }
     }
 
-    public static CalculateFoodNutritionCommand ToCommand(this FoodNutritionHttpRequest request, Guid userId) {
-        return new CalculateFoodNutritionCommand(
-            UserId: userId,
-            Items: request.Items.Select(ToModel).ToList());
+    extension(FoodTextHttpRequest request) {
+        public ParseFoodTextCommand ToCommand(Guid userId) {
+            return new ParseFoodTextCommand(UserId: userId, Text: request.Text);
+        }
     }
 
-    private static FoodVisionItemModel ToModel(this FoodVisionItemHttpModel model) {
-        return new FoodVisionItemModel(
-            model.NameEn,
-            model.NameLocal,
-            model.Amount,
-            model.Unit,
-            model.Confidence,
-            model.CenterX,
-            model.CenterY,
-            model.LocationConfidence);
+    extension(FoodNutritionHttpRequest request) {
+        public CalculateFoodNutritionCommand ToCommand(Guid userId) {
+            return new CalculateFoodNutritionCommand(
+                UserId: userId,
+                Items: request.Items.Select(ToModel).ToList());
+        }
+    }
+
+    extension(FoodVisionItemHttpModel model) {
+        private FoodVisionItemModel ToModel() {
+            return new FoodVisionItemModel(
+                model.NameEn,
+                model.NameLocal,
+                model.Amount,
+                model.Unit,
+                model.Confidence,
+                model.CenterX,
+                model.CenterY,
+                model.LocationConfidence);
+        }
     }
 }

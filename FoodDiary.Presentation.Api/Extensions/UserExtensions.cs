@@ -9,15 +9,17 @@ public static class UserExtensions {
         "sub",
     ];
 
-    public static Guid? GetUserGuid(this ClaimsPrincipal user) {
-        string? userIdValue = UserIdClaimTypes
-            .Select(user.FindFirstValue)
-            .FirstOrDefault(static value => !string.IsNullOrWhiteSpace(value));
+    extension(ClaimsPrincipal user) {
+        public Guid? GetUserGuid() {
+            string? userIdValue = UserIdClaimTypes
+                .Select(user.FindFirstValue)
+                .FirstOrDefault(static value => !string.IsNullOrWhiteSpace(value));
 
-        if (Guid.TryParse(userIdValue, out Guid userGuid) && userGuid != Guid.Empty) {
-            return userGuid;
+            if (Guid.TryParse(userIdValue, out Guid userGuid) && userGuid != Guid.Empty) {
+                return userGuid;
+            }
+
+            return null;
         }
-
-        return null;
     }
 }

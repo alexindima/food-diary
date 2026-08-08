@@ -23,100 +23,124 @@ using FoodDiary.Presentation.Api.Features.Admin.Requests;
 namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
 
 public static class AdminHttpQueryMappings {
-    public static GetAdminBillingRevenueSummaryQuery ToRevenueSummaryQuery(this GetAdminBillingHttpQuery query) =>
-        new(query.FromUtc, query.ToUtc);
+    extension(GetAdminBillingHttpQuery query) {
+        public GetAdminBillingRevenueSummaryQuery ToRevenueSummaryQuery() =>
+                new(query.FromUtc, query.ToUtc);
+
+        public GetAdminBillingSubscriptionsQuery ToSubscriptionsQuery() {
+            return new GetAdminBillingSubscriptionsQuery(
+                query.Page,
+                query.Limit,
+                query.Provider,
+                query.Status,
+                query.Search,
+                query.FromUtc,
+                query.ToUtc);
+        }
+
+        public GetAdminBillingPaymentsQuery ToPaymentsQuery() {
+            return new GetAdminBillingPaymentsQuery(
+                query.Page,
+                query.Limit,
+                query.Provider,
+                query.Status,
+                query.Kind,
+                query.Search,
+                query.FromUtc,
+                query.ToUtc);
+        }
+
+        public GetAdminBillingWebhookEventsQuery ToWebhookEventsQuery() {
+            return new GetAdminBillingWebhookEventsQuery(
+                query.Page,
+                query.Limit,
+                query.Provider,
+                query.Status,
+                query.Search,
+                query.FromUtc,
+                query.ToUtc);
+        }
+    }
 
     public static GetAdminEmailTemplatesQuery ToEmailTemplatesQuery() => new();
     public static GetAdminAiPromptsQuery ToAiPromptsQuery() => new();
     public static GetAdminLessonsQuery ToLessonsQuery() => new();
 
-    public static GetAdminUsersQuery ToQuery(this GetAdminUsersHttpQuery query) {
-        return new GetAdminUsersQuery(query.Page, query.Limit, query.Search, ResolveUserStatus(query));
+    extension(GetAdminUsersHttpQuery query) {
+        public GetAdminUsersQuery ToQuery() {
+            return new GetAdminUsersQuery(query.Page, query.Limit, query.Search, ResolveUserStatus(query));
+        }
     }
 
-    public static GetAdminUserQuery ToAdminUserQuery(this Guid id) {
-        return new GetAdminUserQuery(id);
+    extension(Guid id) {
+        public GetAdminUserQuery ToAdminUserQuery() {
+            return new GetAdminUserQuery(id);
+        }
+
+        public GetAdminMailInboxMessageDetailsQuery ToMailInboxMessageDetailsQuery() {
+            return new GetAdminMailInboxMessageDetailsQuery(id);
+        }
     }
 
-    public static GetAdminUserRoleAuditQuery ToRoleAuditQuery(this GetAdminUserRoleAuditHttpQuery query, Guid userId) {
-        return new GetAdminUserRoleAuditQuery(userId, query.Limit);
+    extension(GetAdminUserRoleAuditHttpQuery query) {
+        public GetAdminUserRoleAuditQuery ToRoleAuditQuery(Guid userId) {
+            return new GetAdminUserRoleAuditQuery(userId, query.Limit);
+        }
     }
 
     private static UserAccountStatusFilter ResolveUserStatus(GetAdminUsersHttpQuery query) {
-        if (Enum.TryParse<UserAccountStatusFilter>(query.Status, ignoreCase: true, out UserAccountStatusFilter status)) {
+        if (Enum.TryParse(query.Status, ignoreCase: true, out UserAccountStatusFilter status)) {
             return status;
         }
 
         return query.IncludeDeleted ? UserAccountStatusFilter.All : UserAccountStatusFilter.Active;
     }
 
-    public static GetAdminUserLoginEventsQuery ToQuery(this GetAdminUserLoginEventsHttpQuery query) {
-        return new GetAdminUserLoginEventsQuery(query.Page, query.Limit, query.UserId, query.Search);
+    extension(GetAdminUserLoginEventsHttpQuery query) {
+        public GetAdminUserLoginEventsQuery ToQuery() {
+            return new GetAdminUserLoginEventsQuery(query.Page, query.Limit, query.UserId, query.Search);
+        }
     }
 
-    public static GetAdminUserLoginSummaryQuery ToQuery(this GetAdminUserLoginSummaryHttpQuery query) {
-        return new GetAdminUserLoginSummaryQuery(query.FromUtc, query.ToUtc);
+    extension(GetAdminUserLoginSummaryHttpQuery query) {
+        public GetAdminUserLoginSummaryQuery ToQuery() {
+            return new GetAdminUserLoginSummaryQuery(query.FromUtc, query.ToUtc);
+        }
     }
 
-    public static GetAdminDashboardSummaryQuery ToQuery(this GetAdminDashboardHttpQuery query) {
-        return new GetAdminDashboardSummaryQuery(Math.Clamp(query.Recent, 1, 20));
+    extension(GetAdminDashboardHttpQuery query) {
+        public GetAdminDashboardSummaryQuery ToQuery() {
+            return new GetAdminDashboardSummaryQuery(Math.Clamp(query.Recent, 1, 20));
+        }
     }
 
-    public static GetAdminAiUsageSummaryQuery ToQuery(this GetAdminAiUsageSummaryHttpQuery query) {
-        return new GetAdminAiUsageSummaryQuery(query.From, query.To);
+    extension(GetAdminAiUsageSummaryHttpQuery query) {
+        public GetAdminAiUsageSummaryQuery ToQuery() {
+            return new GetAdminAiUsageSummaryQuery(query.From, query.To);
+        }
     }
 
-    public static GetAdminBillingSubscriptionsQuery ToSubscriptionsQuery(this GetAdminBillingHttpQuery query) {
-        return new GetAdminBillingSubscriptionsQuery(
-            query.Page,
-            query.Limit,
-            query.Provider,
-            query.Status,
-            query.Search,
-            query.FromUtc,
-            query.ToUtc);
+    extension(GetAdminContentReportsHttpQuery query) {
+        public GetAdminContentReportsQuery ToQuery() {
+            return new GetAdminContentReportsQuery(query.Status, query.Page, query.Limit);
+        }
     }
 
-    public static GetAdminBillingPaymentsQuery ToPaymentsQuery(this GetAdminBillingHttpQuery query) {
-        return new GetAdminBillingPaymentsQuery(
-            query.Page,
-            query.Limit,
-            query.Provider,
-            query.Status,
-            query.Kind,
-            query.Search,
-            query.FromUtc,
-            query.ToUtc);
+    extension(GetAdminMailInboxMessagesHttpQuery query) {
+        public GetAdminMailInboxMessagesQuery ToQuery() {
+            return new GetAdminMailInboxMessagesQuery(query.Limit);
+        }
     }
 
-    public static GetAdminBillingWebhookEventsQuery ToWebhookEventsQuery(this GetAdminBillingHttpQuery query) {
-        return new GetAdminBillingWebhookEventsQuery(
-            query.Page,
-            query.Limit,
-            query.Provider,
-            query.Status,
-            query.Search,
-            query.FromUtc,
-            query.ToUtc);
+    extension(GetFastingTelemetrySummaryHttpQuery query) {
+        public GetFastingTelemetrySummaryQuery ToQuery() {
+            return new GetFastingTelemetrySummaryQuery(query.Hours);
+        }
     }
 
-    public static GetAdminContentReportsQuery ToQuery(this GetAdminContentReportsHttpQuery query) {
-        return new GetAdminContentReportsQuery(query.Status, query.Page, query.Limit);
-    }
-
-    public static GetAdminMailInboxMessagesQuery ToQuery(this GetAdminMailInboxMessagesHttpQuery query) {
-        return new GetAdminMailInboxMessagesQuery(query.Limit);
-    }
-
-    public static GetAdminMailInboxMessageDetailsQuery ToMailInboxMessageDetailsQuery(this Guid id) {
-        return new GetAdminMailInboxMessageDetailsQuery(id);
-    }
-
-    public static GetFastingTelemetrySummaryQuery ToQuery(this GetFastingTelemetrySummaryHttpQuery query) {
-        return new GetFastingTelemetrySummaryQuery(query.Hours);
-    }
-
-    public static GetMarketingAttributionSummaryQuery ToQuery(this GetMarketingAttributionSummaryHttpQuery query) {
-        return new GetMarketingAttributionSummaryQuery(query.Hours);
+    extension(GetMarketingAttributionSummaryHttpQuery query) {
+        public GetMarketingAttributionSummaryQuery ToQuery() {
+            return new GetMarketingAttributionSummaryQuery(query.Hours);
+        }
     }
 }

@@ -6,22 +6,27 @@ using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
 namespace FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;
 
 public static class WaistEntryHttpMappings {
-    public static DeleteWaistEntryCommand ToDeleteCommand(this Guid id, Guid userId) =>
-        new(userId, id);
+    extension(Guid id) {
+        public DeleteWaistEntryCommand ToDeleteCommand(Guid userId) =>
+                new(userId, id);
+    }
 
-    public static CreateWaistEntryCommand ToCommand(this CreateWaistEntryHttpRequest request, Guid userId) =>
-        new(
-            userId,
-            request.Date,
-            request.Circumference);
+    extension(CreateWaistEntryHttpRequest request) {
+        public CreateWaistEntryCommand ToCommand(Guid userId) =>
+                new(
+                    userId,
+                    request.Date,
+                    request.Circumference);
+    }
 
-    public static UpdateWaistEntryCommand ToCommand(
-        this UpdateWaistEntryHttpRequest request,
-        Guid userId,
-        Guid entryId) =>
-        new(
-            userId,
-            entryId,
-            request.Date,
-            request.Circumference);
+    extension(UpdateWaistEntryHttpRequest request) {
+        public UpdateWaistEntryCommand ToCommand(
+                Guid userId,
+                Guid entryId) =>
+                new(
+                    userId,
+                    entryId,
+                    request.Date,
+                    request.Circumference);
+    }
 }

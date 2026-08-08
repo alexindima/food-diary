@@ -12,15 +12,19 @@ public static class OpenFoodFactsHttpMappings {
     public static SearchOpenFoodFactsQuery ToSearchQuery(string search, int limit) =>
         new(search, limit);
 
-    public static OpenFoodFactsProductHttpResponse? ToHttpResponse(
-        this OpenFoodFactsProductModel? model) =>
-        model is null
-            ? null
-            : MapToResponse(model);
+    extension(OpenFoodFactsProductModel? model) {
+        public OpenFoodFactsProductHttpResponse? ToHttpResponse(
+        ) =>
+                model is null
+                    ? null
+                    : MapToResponse(model);
+    }
 
-    public static IReadOnlyList<OpenFoodFactsProductHttpResponse> ToListHttpResponse(
-        this IReadOnlyList<OpenFoodFactsProductModel> models) =>
-        models.Select(MapToResponse).ToList();
+    extension(IReadOnlyList<OpenFoodFactsProductModel> models) {
+        public IReadOnlyList<OpenFoodFactsProductHttpResponse> ToListHttpResponse(
+        ) =>
+                models.Select(MapToResponse).ToList();
+    }
 
     private static OpenFoodFactsProductHttpResponse MapToResponse(OpenFoodFactsProductModel model) =>
         new(model.Barcode,

@@ -16,12 +16,16 @@ public static class LessonHttpMappings {
             new(userId, lessonId);
     }
 
-    public static IReadOnlyList<LessonSummaryHttpResponse> ToHttpResponse(
-        this IReadOnlyList<LessonSummaryModel> models) =>
-        models.Select(m => new LessonSummaryHttpResponse(
-            m.Id, m.Title, m.Summary, m.Category, m.Difficulty, m.EstimatedReadMinutes, m.IsRead)).ToList();
+    extension(IReadOnlyList<LessonSummaryModel> models) {
+        public IReadOnlyList<LessonSummaryHttpResponse> ToHttpResponse(
+        ) =>
+                models.Select(m => new LessonSummaryHttpResponse(
+                    m.Id, m.Title, m.Summary, m.Category, m.Difficulty, m.EstimatedReadMinutes, m.IsRead)).ToList();
+    }
 
-    public static LessonDetailHttpResponse ToHttpResponse(this LessonDetailModel model) =>
-        new(model.Id, model.Title, model.Content, model.Summary, model.Category,
-            model.Difficulty, model.EstimatedReadMinutes, model.IsRead);
+    extension(LessonDetailModel model) {
+        public LessonDetailHttpResponse ToHttpResponse() =>
+                new(model.Id, model.Title, model.Content, model.Summary, model.Category,
+                    model.Difficulty, model.EstimatedReadMinutes, model.IsRead);
+    }
 }

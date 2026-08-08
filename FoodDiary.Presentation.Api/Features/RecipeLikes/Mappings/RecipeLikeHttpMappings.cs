@@ -12,6 +12,8 @@ public static class RecipeLikeHttpMappings {
     public static GetRecipeLikeStatusQuery ToQuery(Guid userId, Guid recipeId) =>
         new(userId, recipeId);
 
-    public static RecipeLikeStatusHttpResponse ToHttpResponse(this RecipeLikeStatusModel model) =>
-        new(model.IsLiked, model.TotalLikes);
+    extension(RecipeLikeStatusModel model) {
+        public RecipeLikeStatusHttpResponse ToHttpResponse() =>
+                new(model.IsLiked, model.TotalLikes);
+    }
 }

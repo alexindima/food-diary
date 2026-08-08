@@ -14,79 +14,93 @@ using FoodDiary.Presentation.Api.Responses;
 namespace FoodDiary.Presentation.Api.Features.Dashboard.Mappings;
 
 public static class DashboardHttpResponseMappings {
-    public static DashboardSnapshotHttpResponse ToHttpResponse(this DashboardSnapshotModel model) {
-        return new DashboardSnapshotHttpResponse(
-            model.Date,
-            model.DateTo,
-            model.DailyGoal,
-            model.WeeklyCalorieGoal,
-            model.Statistics.ToHttpResponse(),
-            model.WeeklyCalories.ToHttpResponseList(ToHttpResponse),
-            model.Weight.ToHttpResponse(),
-            model.Waist.ToHttpResponse(),
-            model.Meals.ToHttpResponse(),
-            model.Hydration?.ToHttpResponse(),
-            model.Advice?.ToHttpResponse(),
-            model.CurrentFastingSession?.ToHttpResponse(),
-            model.WeightTrend?.ToHttpResponseList(static item => item.ToHttpResponse()),
-            model.WaistTrend?.ToHttpResponseList(static item => item.ToHttpResponse()),
-            model.DashboardLayout is null
-                ? null
-                : new DashboardLayoutHttpModel(model.DashboardLayout.Web, model.DashboardLayout.Mobile),
-            model.CaloriesBurned,
-            model.TdeeInsight?.ToHttpResponse(),
-            model.CurrentCycle?.ToHttpResponse()
-        );
+    extension(DashboardSnapshotModel model) {
+        public DashboardSnapshotHttpResponse ToHttpResponse() {
+            return new DashboardSnapshotHttpResponse(
+                model.Date,
+                model.DateTo,
+                model.DailyGoal,
+                model.WeeklyCalorieGoal,
+                model.Statistics.ToHttpResponse(),
+                model.WeeklyCalories.ToHttpResponseList(ToHttpResponse),
+                model.Weight.ToHttpResponse(),
+                model.Waist.ToHttpResponse(),
+                model.Meals.ToHttpResponse(),
+                model.Hydration?.ToHttpResponse(),
+                model.Advice?.ToHttpResponse(),
+                model.CurrentFastingSession?.ToHttpResponse(),
+                model.WeightTrend?.ToHttpResponseList(static item => item.ToHttpResponse()),
+                model.WaistTrend?.ToHttpResponseList(static item => item.ToHttpResponse()),
+                model.DashboardLayout is null
+                    ? null
+                    : new DashboardLayoutHttpModel(model.DashboardLayout.Web, model.DashboardLayout.Mobile),
+                model.CaloriesBurned,
+                model.TdeeInsight?.ToHttpResponse(),
+                model.CurrentCycle?.ToHttpResponse()
+            );
+        }
     }
 
-    private static DashboardStatisticsHttpResponse ToHttpResponse(this DashboardStatisticsModel model) {
-        return new DashboardStatisticsHttpResponse(
-            model.TotalCalories,
-            model.AverageProteins,
-            model.AverageFats,
-            model.AverageCarbs,
-            model.AverageFiber,
-            model.ProteinGoal,
-            model.FatGoal,
-            model.CarbGoal,
-            model.FiberGoal
-        );
+    extension(DashboardStatisticsModel model) {
+        private DashboardStatisticsHttpResponse ToHttpResponse() {
+            return new DashboardStatisticsHttpResponse(
+                model.TotalCalories,
+                model.AverageProteins,
+                model.AverageFats,
+                model.AverageCarbs,
+                model.AverageFiber,
+                model.ProteinGoal,
+                model.FatGoal,
+                model.CarbGoal,
+                model.FiberGoal
+            );
+        }
     }
 
-    private static DailyCaloriesHttpResponse ToHttpResponse(this DailyCaloriesModel model) {
-        return new DailyCaloriesHttpResponse(model.Date, model.Calories, model.Proteins, model.Fats, model.Carbs, model.Fiber);
+    extension(DailyCaloriesModel model) {
+        private DailyCaloriesHttpResponse ToHttpResponse() {
+            return new DailyCaloriesHttpResponse(model.Date, model.Calories, model.Proteins, model.Fats, model.Carbs, model.Fiber);
+        }
     }
 
-    private static DashboardWeightHttpResponse ToHttpResponse(this DashboardWeightModel model) {
-        return new DashboardWeightHttpResponse(
-            model.Latest is null ? null : new WeightPointHttpResponse(model.Latest.Date, model.Latest.Weight),
-            model.Previous is null ? null : new WeightPointHttpResponse(model.Previous.Date, model.Previous.Weight),
-            model.Desired
-        );
+    extension(DashboardWeightModel model) {
+        private DashboardWeightHttpResponse ToHttpResponse() {
+            return new DashboardWeightHttpResponse(
+                model.Latest is null ? null : new WeightPointHttpResponse(model.Latest.Date, model.Latest.Weight),
+                model.Previous is null ? null : new WeightPointHttpResponse(model.Previous.Date, model.Previous.Weight),
+                model.Desired
+            );
+        }
     }
 
-    private static DashboardWaistHttpResponse ToHttpResponse(this DashboardWaistModel model) {
-        return new DashboardWaistHttpResponse(
-            model.Latest is null ? null : new WaistPointHttpResponse(model.Latest.Date, model.Latest.Circumference),
-            model.Previous is null ? null : new WaistPointHttpResponse(model.Previous.Date, model.Previous.Circumference),
-            model.Desired
-        );
+    extension(DashboardWaistModel model) {
+        private DashboardWaistHttpResponse ToHttpResponse() {
+            return new DashboardWaistHttpResponse(
+                model.Latest is null ? null : new WaistPointHttpResponse(model.Latest.Date, model.Latest.Circumference),
+                model.Previous is null ? null : new WaistPointHttpResponse(model.Previous.Date, model.Previous.Circumference),
+                model.Desired
+            );
+        }
     }
 
-    private static DashboardMealsHttpResponse ToHttpResponse(this DashboardMealsModel model) {
-        return new DashboardMealsHttpResponse(
-            model.Items.ToHttpResponseList(static item => item.ToHttpResponse()),
-            model.Total
-        );
+    extension(DashboardMealsModel model) {
+        private DashboardMealsHttpResponse ToHttpResponse() {
+            return new DashboardMealsHttpResponse(
+                model.Items.ToHttpResponseList(static item => item.ToHttpResponse()),
+                model.Total
+            );
+        }
     }
 
-    public static DailyAdviceHttpResponse ToHttpResponse(this DailyAdviceModel model) {
-        return new DailyAdviceHttpResponse(
-            model.Id,
-            model.Locale,
-            model.Value,
-            model.Tag,
-            model.Weight
-        );
+    extension(DailyAdviceModel model) {
+        public DailyAdviceHttpResponse ToHttpResponse() {
+            return new DailyAdviceHttpResponse(
+                model.Id,
+                model.Locale,
+                model.Value,
+                model.Tag,
+                model.Weight
+            );
+        }
     }
 }

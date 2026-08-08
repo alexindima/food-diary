@@ -5,15 +5,19 @@ using FoodDiary.Presentation.Api.Features.Gamification.Responses;
 namespace FoodDiary.Presentation.Api.Features.Gamification.Mappings;
 
 public static class GamificationHttpMappings {
-    public static GetGamificationQuery ToQuery(this Guid userId) =>
-        new(userId);
+    extension(Guid userId) {
+        public GetGamificationQuery ToQuery() =>
+                new(userId);
+    }
 
-    public static GamificationHttpResponse ToHttpResponse(this GamificationModel model) =>
-        new(
-            model.CurrentStreak,
-            model.LongestStreak,
-            model.TotalMealsLogged,
-            model.HealthScore,
-            model.WeeklyAdherence,
-            model.Badges.Select(b => new BadgeHttpResponse(b.Key, b.Category, b.Threshold, b.IsEarned)).ToList());
+    extension(GamificationModel model) {
+        public GamificationHttpResponse ToHttpResponse() =>
+                new(
+                    model.CurrentStreak,
+                    model.LongestStreak,
+                    model.TotalMealsLogged,
+                    model.HealthScore,
+                    model.WeeklyAdherence,
+                    model.Badges.Select(b => new BadgeHttpResponse(b.Key, b.Category, b.Threshold, b.IsEarned)).ToList());
+    }
 }

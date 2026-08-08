@@ -9,26 +9,36 @@ using FoodDiary.Presentation.Api.Features.Exercises.Responses;
 namespace FoodDiary.Presentation.Api.Features.Exercises.Mappings;
 
 public static class ExerciseHttpMappings {
-    public static GetExerciseEntriesQuery ToQuery(this Guid userId, DateTime dateFrom, DateTime dateTo) =>
-        new(userId, dateFrom, dateTo);
+    extension(Guid userId) {
+        public GetExerciseEntriesQuery ToQuery(DateTime dateFrom, DateTime dateTo) =>
+                new(userId, dateFrom, dateTo);
 
-    public static CreateExerciseEntryCommand ToCommand(this CreateExerciseEntryHttpRequest request, Guid userId) =>
-        new(userId, request.Date, request.ExerciseType, request.DurationMinutes,
-            request.CaloriesBurned, request.Name, request.Notes);
+        public DeleteExerciseEntryCommand ToDeleteCommand(Guid entryId) =>
+                new(userId, entryId);
+    }
 
-    public static UpdateExerciseEntryCommand ToCommand(this UpdateExerciseEntryHttpRequest request, Guid userId, Guid entryId) =>
-        new(userId, entryId, request.ExerciseType, request.DurationMinutes,
-            request.CaloriesBurned, request.Name, request.ClearName,
-            request.Notes, request.ClearNotes, request.Date);
+    extension(CreateExerciseEntryHttpRequest request) {
+        public CreateExerciseEntryCommand ToCommand(Guid userId) =>
+                new(userId, request.Date, request.ExerciseType, request.DurationMinutes,
+                    request.CaloriesBurned, request.Name, request.Notes);
+    }
 
-    public static DeleteExerciseEntryCommand ToDeleteCommand(this Guid userId, Guid entryId) =>
-        new(userId, entryId);
+    extension(UpdateExerciseEntryHttpRequest request) {
+        public UpdateExerciseEntryCommand ToCommand(Guid userId, Guid entryId) =>
+                new(userId, entryId, request.ExerciseType, request.DurationMinutes,
+                    request.CaloriesBurned, request.Name, request.ClearName,
+                    request.Notes, request.ClearNotes, request.Date);
+    }
 
-    public static ExerciseEntryHttpResponse ToHttpResponse(this ExerciseEntryModel model) =>
-        new(model.Id, model.Date, model.ExerciseType, model.Name,
-            model.DurationMinutes, model.CaloriesBurned, model.Notes);
+    extension(ExerciseEntryModel model) {
+        public ExerciseEntryHttpResponse ToHttpResponse() =>
+                new(model.Id, model.Date, model.ExerciseType, model.Name,
+                    model.DurationMinutes, model.CaloriesBurned, model.Notes);
+    }
 
-    public static IReadOnlyList<ExerciseEntryHttpResponse> ToHttpResponse(
-        this IReadOnlyList<ExerciseEntryModel> models) =>
-        models.Select(m => m.ToHttpResponse()).ToList();
+    extension(IReadOnlyList<ExerciseEntryModel> models) {
+        public IReadOnlyList<ExerciseEntryHttpResponse> ToHttpResponse(
+        ) =>
+                models.Select(m => m.ToHttpResponse()).ToList();
+    }
 }

@@ -7,68 +7,82 @@ using FoodDiary.Presentation.Api.Features.Users.Responses;
 namespace FoodDiary.Presentation.Api.Features.Users.Mappings;
 
 public static class UserHttpResponseMappings {
-    public static UserHttpResponse ToHttpResponse(this UserModel model) {
-        return new UserHttpResponse(
-            model.Id,
-            model.Email,
-            model.HasPassword,
-            model.Username,
-            model.FirstName,
-            model.LastName,
-            model.BirthDate,
-            model.Gender,
-            model.Weight,
-            model.DesiredWeight,
-            model.DesiredWaist,
-            model.Height,
-            model.ActivityLevel,
-            model.DailyCalorieTarget,
-            model.ProteinTarget,
-            model.FatTarget,
-            model.CarbTarget,
-            model.FiberTarget,
-            model.StepGoal,
-            model.WaterGoal,
-            model.HydrationGoal,
-            model.Language,
-            model.Theme,
-            model.UiStyle,
-            model.PushNotificationsEnabled,
-            model.FastingPushNotificationsEnabled,
-            model.SocialPushNotificationsEnabled,
-            model.FastingCheckInReminderHours,
-            model.FastingCheckInFollowUpReminderHours,
-            model.ProfileImage,
-            model.ProfileImageAssetId,
-            model.DashboardLayout?.ToHttpModel(),
-            model.IsActive,
-            model.IsEmailConfirmed,
-            model.LastLoginAtUtc,
-            model.AiConsentAcceptedAt,
-            model.MustChangePassword,
-            model.HasGoogleIdentity
-        );
+    extension(UserModel model) {
+        public UserHttpResponse ToHttpResponse() {
+            return new UserHttpResponse(
+                model.Id,
+                model.Email,
+                model.HasPassword,
+                model.Username,
+                model.FirstName,
+                model.LastName,
+                model.BirthDate,
+                model.Gender,
+                model.Weight,
+                model.DesiredWeight,
+                model.DesiredWaist,
+                model.Height,
+                model.ActivityLevel,
+                model.DailyCalorieTarget,
+                model.ProteinTarget,
+                model.FatTarget,
+                model.CarbTarget,
+                model.FiberTarget,
+                model.StepGoal,
+                model.WaterGoal,
+                model.HydrationGoal,
+                model.Language,
+                model.Theme,
+                model.UiStyle,
+                model.PushNotificationsEnabled,
+                model.FastingPushNotificationsEnabled,
+                model.SocialPushNotificationsEnabled,
+                model.FastingCheckInReminderHours,
+                model.FastingCheckInFollowUpReminderHours,
+                model.ProfileImage,
+                model.ProfileImageAssetId,
+                model.DashboardLayout?.ToHttpModel(),
+                model.IsActive,
+                model.IsEmailConfirmed,
+                model.LastLoginAtUtc,
+                model.AiConsentAcceptedAt,
+                model.MustChangePassword,
+                model.HasGoogleIdentity
+            );
+        }
     }
 
-    public static UserDesiredWeightHttpResponse ToHttpResponse(this UserDesiredWeightModel model)
-        => new(model.DesiredWeight, model.StartWeight, model.StartedAtUtc);
+    extension(UserDesiredWeightModel model) {
+        public UserDesiredWeightHttpResponse ToHttpResponse()
+                => new(model.DesiredWeight, model.StartWeight, model.StartedAtUtc);
+    }
 
-    public static WeightGoalHistoryHttpResponse ToHttpResponse(this WeightGoalHistoryModel model) =>
-        new(model.Id, model.TargetWeight, model.StartWeight, model.EndWeight, model.StartedAtUtc, model.EndedAtUtc, model.Status);
+    extension(WeightGoalHistoryModel model) {
+        public WeightGoalHistoryHttpResponse ToHttpResponse() =>
+                new(model.Id, model.TargetWeight, model.StartWeight, model.EndWeight, model.StartedAtUtc, model.EndedAtUtc, model.Status);
+    }
 
-    public static UserDesiredWaistHttpResponse ToHttpResponse(this UserDesiredWaistModel model)
-        => new(model.DesiredWaist, model.StartWaist, model.StartedAtUtc);
+    extension(UserDesiredWaistModel model) {
+        public UserDesiredWaistHttpResponse ToHttpResponse()
+                => new(model.DesiredWaist, model.StartWaist, model.StartedAtUtc);
+    }
 
-    public static WaistGoalHistoryHttpResponse ToHttpResponse(this WaistGoalHistoryModel model) =>
-        new(model.Id, model.TargetWaist, model.StartWaist, model.EndWaist, model.StartedAtUtc, model.EndedAtUtc, model.Status);
+    extension(WaistGoalHistoryModel model) {
+        public WaistGoalHistoryHttpResponse ToHttpResponse() =>
+                new(model.Id, model.TargetWaist, model.StartWaist, model.EndWaist, model.StartedAtUtc, model.EndedAtUtc, model.Status);
+    }
 
-    public static ProfileOverviewHttpResponse ToHttpResponse(this ProfileOverviewModel model) =>
-        new(
-            model.User.ToHttpResponse(),
-            model.NotificationPreferences.ToHttpResponse(),
-            model.WebPushSubscriptions.Select(static subscription => subscription.ToHttpResponse()).ToList(),
-            model.DietologistRelationship?.ToHttpResponse());
+    extension(ProfileOverviewModel model) {
+        public ProfileOverviewHttpResponse ToHttpResponse() =>
+                new(
+                    model.User.ToHttpResponse(),
+                    model.NotificationPreferences.ToHttpResponse(),
+                    model.WebPushSubscriptions.Select(static subscription => subscription.ToHttpResponse()).ToList(),
+                    model.DietologistRelationship?.ToHttpResponse());
+    }
 
-    private static DashboardLayoutHttpModel ToHttpModel(this DashboardLayoutModel model)
-        => new(model.Web, model.Mobile);
+    extension(DashboardLayoutModel model) {
+        private DashboardLayoutHttpModel ToHttpModel()
+                => new(model.Web, model.Mobile);
+    }
 }

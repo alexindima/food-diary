@@ -410,19 +410,32 @@ public sealed class AdminHttpMappingsTests {
             ByUser: [new AdminAiUsageUserModel(userId, "user@example.com", 150, 50, 100)]);
 
         AdminAiUsageSummaryHttpResponse response = model.ToHttpResponse();
+        AdminAiUsageDailyHttpResponse daily = Assert.Single(response.ByDay);
+        AdminAiUsageBreakdownHttpResponse operation = Assert.Single(response.ByOperation);
+        AdminAiUsageBreakdownHttpResponse aiModel = Assert.Single(response.ByModel);
+        AdminAiUsageUserHttpResponse user = Assert.Single(response.ByUser);
 
         Assert.Multiple(
             () => Assert.Equal(300, response.TotalTokens),
             () => Assert.Equal(100, response.InputTokens),
             () => Assert.Equal(200, response.OutputTokens),
-            () => Assert.Equal(new DateOnly(2026, 4, 6), Assert.Single(response.ByDay).Date),
-            () => Assert.Equal("meal-analysis", Assert.Single(response.ByOperation).Key),
-            () => Assert.Equal("gpt-test", Assert.Single(response.ByModel).Key));
-        AdminAiUsageUserHttpResponse user = Assert.Single(response.ByUser);
-        Assert.Multiple(
+            () => Assert.Equal(new DateOnly(2026, 4, 6), daily.Date),
+            () => Assert.Equal(30, daily.TotalTokens),
+            () => Assert.Equal(10, daily.InputTokens),
+            () => Assert.Equal(20, daily.OutputTokens),
+            () => Assert.Equal("meal-analysis", operation.Key),
+            () => Assert.Equal(90, operation.TotalTokens),
+            () => Assert.Equal(30, operation.InputTokens),
+            () => Assert.Equal(60, operation.OutputTokens),
+            () => Assert.Equal("gpt-test", aiModel.Key),
+            () => Assert.Equal(120, aiModel.TotalTokens),
+            () => Assert.Equal(40, aiModel.InputTokens),
+            () => Assert.Equal(80, aiModel.OutputTokens),
             () => Assert.Equal(userId, user.Id),
             () => Assert.Equal("user@example.com", user.Email),
-            () => Assert.Equal(150, user.TotalTokens));
+            () => Assert.Equal(150, user.TotalTokens),
+            () => Assert.Equal(50, user.InputTokens),
+            () => Assert.Equal(100, user.OutputTokens));
     }
 
     [Fact]

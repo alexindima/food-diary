@@ -18,9 +18,11 @@ public static class WearableHttpMappings {
 
     public static GetWearableDailySummaryQuery ToDailySummaryQuery(Guid userId, DateTime date) => new(userId, date);
 
-    public static ConnectWearableCommand ToCommand(
-        this ConnectWearableHttpRequest request, Guid userId, string provider) =>
-        new(userId, provider, request.Code, request.State);
+    extension(ConnectWearableHttpRequest request) {
+        public ConnectWearableCommand ToCommand(
+        Guid userId, string provider) =>
+                new(userId, provider, request.Code, request.State);
+    }
 
     public static DisconnectWearableCommand ToDisconnectCommand(Guid userId, string provider) =>
         new(userId, provider);
@@ -28,13 +30,19 @@ public static class WearableHttpMappings {
     public static SyncWearableDataCommand ToSyncCommand(Guid userId, string provider, DateTime date) =>
         new(userId, provider, date);
 
-    public static WearableConnectionHttpResponse ToHttpResponse(this WearableConnectionModel model) =>
-        new(model.Provider, model.ExternalUserId, model.IsActive, model.LastSyncedAtUtc, model.ConnectedAtUtc);
+    extension(WearableConnectionModel model) {
+        public WearableConnectionHttpResponse ToHttpResponse() =>
+                new(model.Provider, model.ExternalUserId, model.IsActive, model.LastSyncedAtUtc, model.ConnectedAtUtc);
+    }
 
-    public static IReadOnlyList<WearableConnectionHttpResponse> ToHttpResponse(
-        this IReadOnlyList<WearableConnectionModel> models) =>
-        models.Select(m => m.ToHttpResponse()).ToList();
+    extension(IReadOnlyList<WearableConnectionModel> models) {
+        public IReadOnlyList<WearableConnectionHttpResponse> ToHttpResponse(
+        ) =>
+                models.Select(m => m.ToHttpResponse()).ToList();
+    }
 
-    public static WearableDailySummaryHttpResponse ToHttpResponse(this WearableDailySummaryModel model) =>
-        new(model.Date, model.Steps, model.HeartRate, model.CaloriesBurned, model.ActiveMinutes, model.SleepMinutes);
+    extension(WearableDailySummaryModel model) {
+        public WearableDailySummaryHttpResponse ToHttpResponse() =>
+                new(model.Date, model.Steps, model.HeartRate, model.CaloriesBurned, model.ActiveMinutes, model.SleepMinutes);
+    }
 }

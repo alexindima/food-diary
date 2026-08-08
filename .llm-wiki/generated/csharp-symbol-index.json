@@ -24388,28 +24388,28 @@
                                                  "implementation":  "InMemoryIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-                                                 "line":  24
+                                                 "line":  25
                                              },
                                              {
                                                  "service":  "IUserIdProvider",
                                                  "implementation":  "UserIdProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-                                                 "line":  60
+                                                 "line":  61
                                              },
                                              {
                                                  "service":  "IEmailVerificationNotifier",
                                                  "implementation":  "EmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-                                                 "line":  61
+                                                 "line":  62
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-                                                 "line":  62
+                                                 "line":  63
                                              },
                                              {
                                                  "service":  "IWearableTokenProtector",

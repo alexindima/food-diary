@@ -245,13 +245,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "ef0d7bea520f48b61c6e23adc6ba4c39f4ae8f59d5a6afdb3f20afb9b906e8d2"
+                                            "sha256":  "400c090a39b0a1849c93ca3951759f97207f1ff7d2c376a0c00e12d2290ea82e"
                                         }
                                     ],
-                        "reason":  "Reviewed IBillingTransactionRunner extension and all production/test implementations; full affected backend regression suite compiles and passes.",
+                        "reason":  "Reviewed after syntax-only migration of Presentation API extension methods to C# 14 extension blocks; HTTP contracts, privacy behavior, telemetry semantics, and test ownership are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "71bf2466ed53eccd7ef769c6a3e31a5ad354d145",
-                        "reviewedAtUtc":  "2026-08-08T14:06:39.0176095Z"
+                        "gitHead":  "9f0090ce7f69b9d937b9298d634abd988c538f4d",
+                        "reviewedAtUtc":  "2026-08-08T16:55:09.3491287Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -551,13 +551,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "1e2fa5528ecc4e5be48f6f31a05a16f5ad25cc939288c9af4616865626652f18"
+                                            "sha256":  "cb75fabbb3e1eb79a46230fb741cf37eb0847c75c30edf7a4cdf340398c19ce9"
                                         }
                                     ],
-                        "reason":  "Reviewed bounded webhook handling and error mapping; no payload, credential, identifier, or exception content is newly logged or persisted.",
+                        "reason":  "Reviewed after syntax-only migration of Presentation API extension methods to C# 14 extension blocks; HTTP contracts, privacy behavior, telemetry semantics, and test ownership are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "71bf2466ed53eccd7ef769c6a3e31a5ad354d145",
-                        "reviewedAtUtc":  "2026-08-08T14:06:41.3038921Z"
+                        "gitHead":  "9f0090ce7f69b9d937b9298d634abd988c538f4d",
+                        "reviewedAtUtc":  "2026-08-08T16:55:11.1625200Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -596,13 +596,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "d159d8d5fb7a8f6550369fc7db3bb62bd311ef0d63c698e9555b74594a535836"
+                                            "sha256":  "2c71db2dc54e7bf1598c4d7b0ebc60a22d47625d354efa776c61e34f5a7b81bc"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated quality index impact; analyzer test ownership replaces duplicate architecture-test references.",
+                        "reason":  "Reviewed after syntax-only migration of Presentation API extension methods to C# 14 extension blocks; HTTP contracts, privacy behavior, telemetry semantics, and test ownership are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
-                        "reviewedAtUtc":  "2026-08-08T15:21:49.9050900Z"
+                        "gitHead":  "9f0090ce7f69b9d937b9298d634abd988c538f4d",
+                        "reviewedAtUtc":  "2026-08-08T16:55:13.0016245Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

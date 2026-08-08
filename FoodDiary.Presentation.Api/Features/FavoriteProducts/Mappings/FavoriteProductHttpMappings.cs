@@ -10,11 +10,15 @@ using FoodDiary.Presentation.Api.Features.FavoriteProducts.Responses;
 namespace FoodDiary.Presentation.Api.Features.FavoriteProducts.Mappings;
 
 public static class FavoriteProductHttpMappings {
-    public static AddFavoriteProductCommand ToCommand(this AddFavoriteProductHttpRequest request, Guid userId) =>
-        new(userId, request.ProductId, request.Name, request.PreferredPortionAmount);
+    extension(AddFavoriteProductHttpRequest request) {
+        public AddFavoriteProductCommand ToCommand(Guid userId) =>
+                new(userId, request.ProductId, request.Name, request.PreferredPortionAmount);
+    }
 
-    public static UpdateFavoriteProductCommand ToCommand(this UpdateFavoriteProductHttpRequest request, Guid userId, Guid favoriteProductId) =>
-        new(userId, favoriteProductId, request.Name, request.PreferredPortionAmount);
+    extension(UpdateFavoriteProductHttpRequest request) {
+        public UpdateFavoriteProductCommand ToCommand(Guid userId, Guid favoriteProductId) =>
+                new(userId, favoriteProductId, request.Name, request.PreferredPortionAmount);
+    }
 
     extension(Guid id) {
         public RemoveFavoriteProductCommand ToDeleteCommand(Guid userId) =>
@@ -25,27 +29,29 @@ public static class FavoriteProductHttpMappings {
             new(userId, id);
     }
 
-    public static FavoriteProductHttpResponse ToHttpResponse(this FavoriteProductModel model) =>
-        new(
-            model.Id,
-            model.ProductId,
-            model.Name,
-            model.CreatedAtUtc,
-            model.ProductName,
-            model.Brand,
-            model.Barcode,
-            model.Comment,
-            model.ImageUrl,
-            model.CaloriesPerBase,
-            model.ProteinsPerBase,
-            model.FatsPerBase,
-            model.CarbsPerBase,
-            model.FiberPerBase,
-            model.AlcoholPerBase,
-            model.QualityScore,
-            model.QualityGrade,
-            model.IsOwnedByCurrentUser,
-            model.BaseUnit,
-            model.PreferredPortionAmount,
-            model.DefaultPortionAmount);
+    extension(FavoriteProductModel model) {
+        public FavoriteProductHttpResponse ToHttpResponse() =>
+                new(
+                    model.Id,
+                    model.ProductId,
+                    model.Name,
+                    model.CreatedAtUtc,
+                    model.ProductName,
+                    model.Brand,
+                    model.Barcode,
+                    model.Comment,
+                    model.ImageUrl,
+                    model.CaloriesPerBase,
+                    model.ProteinsPerBase,
+                    model.FatsPerBase,
+                    model.CarbsPerBase,
+                    model.FiberPerBase,
+                    model.AlcoholPerBase,
+                    model.QualityScore,
+                    model.QualityGrade,
+                    model.IsOwnedByCurrentUser,
+                    model.BaseUnit,
+                    model.PreferredPortionAmount,
+                    model.DefaultPortionAmount);
+    }
 }

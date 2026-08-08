@@ -16,9 +16,11 @@ public static class UsdaHttpMappings {
     public static GetMicronutrientsQuery ToQuery(int fdcId) =>
         new(fdcId);
 
-    public static LinkProductToUsdaFoodCommand ToCommand(
-        this LinkProductToUsdaFoodHttpRequest request, Guid userId, Guid productId) =>
-        new(userId, productId, request.FdcId);
+    extension(LinkProductToUsdaFoodHttpRequest request) {
+        public LinkProductToUsdaFoodCommand ToCommand(
+        Guid userId, Guid productId) =>
+                new(userId, productId, request.FdcId);
+    }
 
     public static UnlinkProductFromUsdaFoodCommand ToUnlinkCommand(Guid userId, Guid productId) =>
         new(userId, productId);
@@ -26,39 +28,49 @@ public static class UsdaHttpMappings {
     public static GetDailyMicronutrientsQuery ToDailyQuery(Guid userId, DateTime date) =>
         new(userId, date);
 
-    public static UsdaFoodHttpResponse ToHttpResponse(this UsdaFoodModel model) =>
-        new(model.FdcId, model.Description, model.FoodCategory);
+    extension(UsdaFoodModel model) {
+        public UsdaFoodHttpResponse ToHttpResponse() =>
+                new(model.FdcId, model.Description, model.FoodCategory);
+    }
 
-    public static IReadOnlyList<UsdaFoodHttpResponse> ToHttpResponse(
-        this IReadOnlyList<UsdaFoodModel> models) =>
-        models.Select(m => m.ToHttpResponse()).ToList();
+    extension(IReadOnlyList<UsdaFoodModel> models) {
+        public IReadOnlyList<UsdaFoodHttpResponse> ToHttpResponse(
+        ) =>
+                models.Select(m => m.ToHttpResponse()).ToList();
+    }
 
-    public static UsdaFoodDetailHttpResponse ToHttpResponse(this UsdaFoodDetailModel model) =>
-        new(model.FdcId,
-            model.Description,
-            model.FoodCategory,
-            model.Nutrients.Select(n => new MicronutrientHttpResponse(
-                n.NutrientId, n.Name, n.Unit, n.AmountPer100g,
-                n.DailyValue, n.PercentDailyValue)).ToList(),
-            model.Portions.Select(p => new UsdaFoodPortionHttpResponse(
-                p.Id, p.Amount, p.MeasureUnitName, p.GramWeight,
-                p.PortionDescription, p.Modifier)).ToList(),
-            model.HealthScores?.ToHttpResponse());
+    extension(UsdaFoodDetailModel model) {
+        public UsdaFoodDetailHttpResponse ToHttpResponse() =>
+                new(model.FdcId,
+                    model.Description,
+                    model.FoodCategory,
+                    model.Nutrients.Select(n => new MicronutrientHttpResponse(
+                        n.NutrientId, n.Name, n.Unit, n.AmountPer100g,
+                        n.DailyValue, n.PercentDailyValue)).ToList(),
+                    model.Portions.Select(p => new UsdaFoodPortionHttpResponse(
+                        p.Id, p.Amount, p.MeasureUnitName, p.GramWeight,
+                        p.PortionDescription, p.Modifier)).ToList(),
+                    model.HealthScores?.ToHttpResponse());
+    }
 
-    public static DailyMicronutrientSummaryHttpResponse ToHttpResponse(
-        this DailyMicronutrientSummaryModel model) =>
-        new(model.Date,
-            model.LinkedProductCount,
-            model.TotalProductCount,
-            model.Nutrients.Select(n => new DailyMicronutrientHttpResponse(
-                n.NutrientId, n.Name, n.Unit, n.TotalAmount,
-                n.DailyValue, n.PercentDailyValue)).ToList(),
-            model.HealthScores?.ToHttpResponse());
+    extension(DailyMicronutrientSummaryModel model) {
+        public DailyMicronutrientSummaryHttpResponse ToHttpResponse(
+        ) =>
+                new(model.Date,
+                    model.LinkedProductCount,
+                    model.TotalProductCount,
+                    model.Nutrients.Select(n => new DailyMicronutrientHttpResponse(
+                        n.NutrientId, n.Name, n.Unit, n.TotalAmount,
+                        n.DailyValue, n.PercentDailyValue)).ToList(),
+                    model.HealthScores?.ToHttpResponse());
+    }
 
-    private static HealthAreaScoresHttpResponse ToHttpResponse(this HealthAreaScoresModel scores) =>
-        new(new HealthAreaScoreHttpResponse(scores.Heart.Score, scores.Heart.Grade),
-            new HealthAreaScoreHttpResponse(scores.Bone.Score, scores.Bone.Grade),
-            new HealthAreaScoreHttpResponse(scores.Immune.Score, scores.Immune.Grade),
-            new HealthAreaScoreHttpResponse(scores.Energy.Score, scores.Energy.Grade),
-            new HealthAreaScoreHttpResponse(scores.Antioxidant.Score, scores.Antioxidant.Grade));
+    extension(HealthAreaScoresModel scores) {
+        private HealthAreaScoresHttpResponse ToHttpResponse() =>
+                new(new HealthAreaScoreHttpResponse(scores.Heart.Score, scores.Heart.Grade),
+                    new HealthAreaScoreHttpResponse(scores.Bone.Score, scores.Bone.Grade),
+                    new HealthAreaScoreHttpResponse(scores.Immune.Score, scores.Immune.Grade),
+                    new HealthAreaScoreHttpResponse(scores.Energy.Score, scores.Energy.Grade),
+                    new HealthAreaScoreHttpResponse(scores.Antioxidant.Score, scores.Antioxidant.Grade));
+    }
 }

@@ -19,21 +19,24 @@ public static class ShoppingListHttpMappings {
             new(userId1, userId);
     }
 
-    public static CreateShoppingListCommand ToCommand(this CreateShoppingListHttpRequest request, Guid userId) =>
-        new(
-            userId,
-            request.Name,
-            request.Items?.Select(ToInput).ToList() ?? []);
+    extension(CreateShoppingListHttpRequest request) {
+        public CreateShoppingListCommand ToCommand(Guid userId) =>
+                new(
+                    userId,
+                    request.Name,
+                    request.Items?.Select(ToInput).ToList() ?? []);
+    }
 
-    public static UpdateShoppingListCommand ToCommand(
-        this UpdateShoppingListHttpRequest request,
-        Guid userId,
-        Guid shoppingListId) =>
-        new(
-            userId,
-            shoppingListId,
-            request.Name,
-            request.Items?.Select(ToInput).ToList());
+    extension(UpdateShoppingListHttpRequest request) {
+        public UpdateShoppingListCommand ToCommand(
+                Guid userId,
+                Guid shoppingListId) =>
+                new(
+                    userId,
+                    shoppingListId,
+                    request.Name,
+                    request.Items?.Select(ToInput).ToList());
+    }
 
     private static ShoppingListItemInput ToInput(ShoppingListItemHttpRequest request) =>
         new(

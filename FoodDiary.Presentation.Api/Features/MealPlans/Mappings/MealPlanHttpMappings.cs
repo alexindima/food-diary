@@ -19,24 +19,34 @@ public static class MealPlanHttpMappings {
             new(userId, planId);
     }
 
-    public static IReadOnlyList<MealPlanSummaryHttpResponse> ToHttpResponse(
-        this IReadOnlyList<MealPlanSummaryModel> models) =>
-        models.Select(m => m.ToHttpResponse()).ToList();
+    extension(IReadOnlyList<MealPlanSummaryModel> models) {
+        public IReadOnlyList<MealPlanSummaryHttpResponse> ToHttpResponse(
+        ) =>
+                models.Select(m => m.ToHttpResponse()).ToList();
+    }
 
-    public static MealPlanSummaryHttpResponse ToHttpResponse(this MealPlanSummaryModel model) =>
-        new(model.Id, model.Name, model.Description, model.DietType,
-            model.DurationDays, model.TargetCaloriesPerDay, model.IsCurated, model.TotalRecipes);
+    extension(MealPlanSummaryModel model) {
+        private MealPlanSummaryHttpResponse ToHttpResponse() =>
+                new(model.Id, model.Name, model.Description, model.DietType,
+                    model.DurationDays, model.TargetCaloriesPerDay, model.IsCurated, model.TotalRecipes);
+    }
 
-    public static MealPlanHttpResponse ToHttpResponse(this MealPlanModel model) =>
-        new(model.Id, model.Name, model.Description, model.DietType,
-            model.DurationDays, model.TargetCaloriesPerDay, model.IsCurated,
-            model.Days.Select(d => d.ToHttpResponse()).ToList());
+    extension(MealPlanModel model) {
+        public MealPlanHttpResponse ToHttpResponse() =>
+                new(model.Id, model.Name, model.Description, model.DietType,
+                    model.DurationDays, model.TargetCaloriesPerDay, model.IsCurated,
+                    model.Days.Select(d => d.ToHttpResponse()).ToList());
+    }
 
-    private static MealPlanDayHttpResponse ToHttpResponse(this MealPlanDayModel day) =>
-        new(day.Id, day.DayNumber,
-            day.Meals.Select(m => m.ToHttpResponse()).ToList());
+    extension(MealPlanDayModel day) {
+        private MealPlanDayHttpResponse ToHttpResponse() =>
+                new(day.Id, day.DayNumber,
+                    day.Meals.Select(m => m.ToHttpResponse()).ToList());
+    }
 
-    private static MealPlanMealHttpResponse ToHttpResponse(this MealPlanMealModel meal) =>
-        new(meal.Id, meal.MealType, meal.RecipeId, meal.RecipeName,
-            meal.Servings, meal.Calories, meal.Proteins, meal.Fats, meal.Carbs);
+    extension(MealPlanMealModel meal) {
+        private MealPlanMealHttpResponse ToHttpResponse() =>
+                new(meal.Id, meal.MealType, meal.RecipeId, meal.RecipeName,
+                    meal.Servings, meal.Calories, meal.Proteins, meal.Fats, meal.Carbs);
+    }
 }

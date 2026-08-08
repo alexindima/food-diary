@@ -14,23 +14,31 @@ public static class RecipeCommentHttpMappings {
     public static GetRecipeCommentsQuery ToQuery(Guid userId, Guid recipeId, int page, int limit) =>
         new(userId, recipeId, page, limit);
 
-    public static CreateRecipeCommentCommand ToCommand(
-        this CreateRecipeCommentHttpRequest request, Guid userId, Guid recipeId) =>
-        new(userId, recipeId, request.Text);
+    extension(CreateRecipeCommentHttpRequest request) {
+        public CreateRecipeCommentCommand ToCommand(
+        Guid userId, Guid recipeId) =>
+                new(userId, recipeId, request.Text);
+    }
 
-    public static UpdateRecipeCommentCommand ToCommand(
-        this UpdateRecipeCommentHttpRequest request, Guid userId, Guid commentId) =>
-        new(userId, commentId, request.Text);
+    extension(UpdateRecipeCommentHttpRequest request) {
+        public UpdateRecipeCommentCommand ToCommand(
+        Guid userId, Guid commentId) =>
+                new(userId, commentId, request.Text);
+    }
 
     public static DeleteRecipeCommentCommand ToDeleteCommand(Guid userId, Guid recipeId, Guid commentId) =>
         new(userId, recipeId, commentId);
 
-    public static RecipeCommentHttpResponse ToHttpResponse(this RecipeCommentModel model) =>
-        new(model.Id, model.RecipeId, model.AuthorId, model.AuthorUsername,
-            model.AuthorFirstName, model.Text, model.CreatedAtUtc,
-            model.ModifiedAtUtc, model.IsOwnedByCurrentUser);
+    extension(RecipeCommentModel model) {
+        public RecipeCommentHttpResponse ToHttpResponse() =>
+                new(model.Id, model.RecipeId, model.AuthorId, model.AuthorUsername,
+                    model.AuthorFirstName, model.Text, model.CreatedAtUtc,
+                    model.ModifiedAtUtc, model.IsOwnedByCurrentUser);
+    }
 
-    public static PagedHttpResponse<RecipeCommentHttpResponse> ToHttpResponse(
-        this PagedResponse<RecipeCommentModel> response) =>
-        response.ToPagedHttpResponse(ToHttpResponse);
+    extension(PagedResponse<RecipeCommentModel> response) {
+        public PagedHttpResponse<RecipeCommentHttpResponse> ToHttpResponse(
+        ) =>
+                response.ToPagedHttpResponse(ToHttpResponse);
+    }
 }

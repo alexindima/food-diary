@@ -18063,7 +18063,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminHttpMappings.cs",
                               "isTest":  false,
-                              "referenceCount":  2
+                              "referenceCount":  1
                           },
                           {
                               "contract":  "AdminReportActionHttpRequest",
@@ -29893,7 +29893,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
                               "isTest":  false,
-                              "referenceCount":  4
+                              "referenceCount":  1
                           },
                           {
                               "contract":  "GetAdminBillingHttpQuery",
@@ -95763,7 +95763,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Dietologist/Mappings/DietologistHttpMappings.cs",
                               "isTest":  false,
-                              "referenceCount":  2
+                              "referenceCount":  1
                           },
                           {
                               "contract":  "RecommendationTemplateHttpRequest",

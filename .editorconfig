@@ -358,6 +358,23 @@ dotnet_diagnostic.FD0008.severity = error
 dotnet_diagnostic.FD0001.severity = error
 resharper_convert_to_extension_block_highlighting = error
 
+[FoodDiary.Presentation.Api/**/*.cs]
+dotnet_diagnostic.FD0001.severity = error
+resharper_convert_to_extension_block_highlighting = error
+
+# ASP.NET Core JSON serialization reads response DTO members implicitly.
+[FoodDiary.Presentation.Api/Responses/*.cs]
+resharper_not_accessed_positional_property_global_highlighting = none
+
+[FoodDiary.Presentation.Api/Responses/**/*.cs]
+resharper_not_accessed_positional_property_global_highlighting = none
+
+[FoodDiary.Presentation.Api/Features/*/Responses/*.cs]
+resharper_not_accessed_positional_property_global_highlighting = none
+
+[FoodDiary.Presentation.Api/Features/*/Responses/**/*.cs]
+resharper_not_accessed_positional_property_global_highlighting = none
+
 # Configuration binding uses option accessors implicitly.
 [FoodDiary.Web.Api/Options/**/*.cs]
 resharper_unused_auto_property_accessor_global_highlighting = none

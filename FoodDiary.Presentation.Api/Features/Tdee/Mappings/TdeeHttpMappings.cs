@@ -5,17 +5,21 @@ using FoodDiary.Presentation.Api.Features.Tdee.Responses;
 namespace FoodDiary.Presentation.Api.Features.Tdee.Mappings;
 
 public static class TdeeHttpMappings {
-    public static GetTdeeInsightQuery ToTdeeQuery(this Guid userId) => new(userId);
+    extension(Guid userId) {
+        public GetTdeeInsightQuery ToTdeeQuery() => new(userId);
+    }
 
-    public static TdeeInsightHttpResponse ToHttpResponse(this TdeeInsightModel model) =>
-        new(
-            model.EstimatedTdee,
-            model.AdaptiveTdee,
-            model.Bmr,
-            model.SuggestedCalorieTarget,
-            model.CurrentCalorieTarget,
-            model.WeightTrendPerWeek,
-            model.Confidence.ToString().ToLowerInvariant(),
-            model.DataDaysUsed,
-            model.GoalAdjustmentHint);
+    extension(TdeeInsightModel model) {
+        public TdeeInsightHttpResponse ToHttpResponse() =>
+                new(
+                    model.EstimatedTdee,
+                    model.AdaptiveTdee,
+                    model.Bmr,
+                    model.SuggestedCalorieTarget,
+                    model.CurrentCalorieTarget,
+                    model.WeightTrendPerWeek,
+                    model.Confidence.ToString().ToLowerInvariant(),
+                    model.DataDaysUsed,
+                    model.GoalAdjustmentHint);
+    }
 }

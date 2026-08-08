@@ -6,22 +6,28 @@ using FoodDiary.Presentation.Api.Features.Dashboard.Requests;
 namespace FoodDiary.Presentation.Api.Features.Dashboard.Mappings;
 
 public static class DashboardHttpQueryMappings {
-    public static GetDashboardSnapshotQuery ToQuery(this GetDashboardSnapshotHttpQuery query, Guid userId) {
-        return new GetDashboardSnapshotQuery(
-            userId,
-            query.Date,
-            query.Page,
-            query.PageSize,
-            query.Locale,
-            query.TrendDays,
-            query.TimeZoneOffsetMinutes);
+    extension(GetDashboardSnapshotHttpQuery query) {
+        public GetDashboardSnapshotQuery ToQuery(Guid userId) {
+            return new GetDashboardSnapshotQuery(
+                userId,
+                query.Date,
+                query.Page,
+                query.PageSize,
+                query.Locale,
+                query.TrendDays,
+                query.TimeZoneOffsetMinutes);
+        }
     }
 
-    public static GetDailyAdviceQuery ToQuery(this GetDailyAdviceHttpQuery query, Guid userId) {
-        return new GetDailyAdviceQuery(userId, query.Date, query.Locale);
+    extension(GetDailyAdviceHttpQuery query) {
+        public GetDailyAdviceQuery ToQuery(Guid userId) {
+            return new GetDailyAdviceQuery(userId, query.Date, query.Locale);
+        }
     }
 
-    public static SendDashboardTestEmailCommand ToTestEmailCommand(this Guid userId) {
-        return new SendDashboardTestEmailCommand(userId);
+    extension(Guid userId) {
+        public SendDashboardTestEmailCommand ToTestEmailCommand() {
+            return new SendDashboardTestEmailCommand(userId);
+        }
     }
 }

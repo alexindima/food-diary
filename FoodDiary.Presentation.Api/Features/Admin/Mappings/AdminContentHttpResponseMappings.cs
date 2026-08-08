@@ -6,21 +6,25 @@ using FoodDiary.Presentation.Api.Responses;
 namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
 
 public static class AdminContentHttpResponseMappings {
-    public static AdminContentReportHttpResponse ToHttpResponse(this AdminContentReportModel model) {
-        return new AdminContentReportHttpResponse(
-            model.Id,
-            model.ReporterId,
-            model.TargetType,
-            model.TargetId,
-            model.Reason,
-            model.Status,
-            model.AdminNote,
-            model.CreatedAtUtc,
-            model.ReviewedAtUtc);
+    extension(AdminContentReportModel model) {
+        public AdminContentReportHttpResponse ToHttpResponse() {
+            return new AdminContentReportHttpResponse(
+                model.Id,
+                model.ReporterId,
+                model.TargetType,
+                model.TargetId,
+                model.Reason,
+                model.Status,
+                model.AdminNote,
+                model.CreatedAtUtc,
+                model.ReviewedAtUtc);
+        }
     }
 
-    public static PagedHttpResponse<AdminContentReportHttpResponse> ToHttpResponse(
-        this PagedResponse<AdminContentReportModel> response) {
-        return response.ToPagedHttpResponse(ToHttpResponse);
+    extension(PagedResponse<AdminContentReportModel> response) {
+        public PagedHttpResponse<AdminContentReportHttpResponse> ToHttpResponse(
+        ) {
+            return response.ToPagedHttpResponse(ToHttpResponse);
+        }
     }
 }

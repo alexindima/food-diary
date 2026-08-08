@@ -29,11 +29,15 @@ public static class UserHttpMappings {
         public GetWaistGoalHistoryQuery ToWaistGoalHistoryQuery() => new(userId);
     }
 
-    public static UpdateDesiredWeightCommand ToDesiredWeightCommand(this UpdateDesiredWeightHttpRequest request, Guid userId) =>
-        new(userId, request.DesiredWeight);
+    extension(UpdateDesiredWeightHttpRequest request) {
+        public UpdateDesiredWeightCommand ToDesiredWeightCommand(Guid userId) =>
+                new(userId, request.DesiredWeight);
+    }
 
-    public static UpdateDesiredWaistCommand ToDesiredWaistCommand(this UpdateDesiredWaistHttpRequest request, Guid userId) =>
-        new(userId, request.DesiredWaist);
+    extension(UpdateDesiredWaistHttpRequest request) {
+        public UpdateDesiredWaistCommand ToDesiredWaistCommand(Guid userId) =>
+                new(userId, request.DesiredWaist);
+    }
 
     extension(Guid userId) {
         public DeleteUserCommand ToDeleteCommand() => new(userId);
@@ -41,55 +45,65 @@ public static class UserHttpMappings {
         public RevokeAiConsentCommand ToRevokeAiConsentCommand() => new(userId);
     }
 
-    public static UpdateUserCommand ToCommand(this UpdateUserHttpRequest request, Guid? userId) {
-        return new UpdateUserCommand(
-            UserId: userId,
-            Username: request.Username,
-            FirstName: request.FirstName,
-            LastName: request.LastName,
-            BirthDate: request.BirthDate,
-            Gender: request.Gender,
-            Weight: request.Weight,
-            Height: request.Height,
-            ActivityLevel: request.ActivityLevel,
-            StepGoal: request.StepGoal,
-            HydrationGoal: request.HydrationGoal,
-            Language: request.Language,
-            Theme: request.Theme,
-            UiStyle: request.UiStyle,
-            PushNotificationsEnabled: request.PushNotificationsEnabled,
-            FastingPushNotificationsEnabled: request.FastingPushNotificationsEnabled,
-            SocialPushNotificationsEnabled: request.SocialPushNotificationsEnabled,
-            ProfileImage: request.ProfileImage,
-            ProfileImageAssetId: request.ProfileImageAssetId,
-            DashboardLayout: request.DashboardLayout?.ToModel(),
-            IsActive: request.IsActive
-        );
+    extension(UpdateUserHttpRequest request) {
+        public UpdateUserCommand ToCommand(Guid? userId) {
+            return new UpdateUserCommand(
+                UserId: userId,
+                Username: request.Username,
+                FirstName: request.FirstName,
+                LastName: request.LastName,
+                BirthDate: request.BirthDate,
+                Gender: request.Gender,
+                Weight: request.Weight,
+                Height: request.Height,
+                ActivityLevel: request.ActivityLevel,
+                StepGoal: request.StepGoal,
+                HydrationGoal: request.HydrationGoal,
+                Language: request.Language,
+                Theme: request.Theme,
+                UiStyle: request.UiStyle,
+                PushNotificationsEnabled: request.PushNotificationsEnabled,
+                FastingPushNotificationsEnabled: request.FastingPushNotificationsEnabled,
+                SocialPushNotificationsEnabled: request.SocialPushNotificationsEnabled,
+                ProfileImage: request.ProfileImage,
+                ProfileImageAssetId: request.ProfileImageAssetId,
+                DashboardLayout: request.DashboardLayout?.ToModel(),
+                IsActive: request.IsActive
+            );
+        }
     }
 
-    public static UpdateUserAppearanceCommand ToCommand(this UpdateUserAppearanceHttpRequest request, Guid? userId) {
-        return new UpdateUserAppearanceCommand(
-            UserId: userId,
-            Theme: request.Theme,
-            UiStyle: request.UiStyle
-        );
+    extension(UpdateUserAppearanceHttpRequest request) {
+        public UpdateUserAppearanceCommand ToCommand(Guid? userId) {
+            return new UpdateUserAppearanceCommand(
+                UserId: userId,
+                Theme: request.Theme,
+                UiStyle: request.UiStyle
+            );
+        }
     }
 
-    public static ChangePasswordCommand ToCommand(this ChangePasswordHttpRequest request, Guid? userId) {
-        return new ChangePasswordCommand(
-            UserId: userId,
-            CurrentPassword: request.CurrentPassword,
-            NewPassword: request.NewPassword
-        );
+    extension(ChangePasswordHttpRequest request) {
+        public ChangePasswordCommand ToCommand(Guid? userId) {
+            return new ChangePasswordCommand(
+                UserId: userId,
+                CurrentPassword: request.CurrentPassword,
+                NewPassword: request.NewPassword
+            );
+        }
     }
 
-    public static SetPasswordCommand ToCommand(this SetPasswordHttpRequest request, Guid? userId) {
-        return new SetPasswordCommand(
-            UserId: userId,
-            NewPassword: request.NewPassword
-        );
+    extension(SetPasswordHttpRequest request) {
+        public SetPasswordCommand ToCommand(Guid? userId) {
+            return new SetPasswordCommand(
+                UserId: userId,
+                NewPassword: request.NewPassword
+            );
+        }
     }
 
-    private static DashboardLayoutModel ToModel(this DashboardLayoutHttpModel model) =>
-        new(model.Web, model.Mobile);
+    extension(DashboardLayoutHttpModel model) {
+        private DashboardLayoutModel ToModel() =>
+                new(model.Web, model.Mobile);
+    }
 }

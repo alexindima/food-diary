@@ -93,8 +93,10 @@ public static class AuthHttpMappings {
         }
     }
 
-    public static RefreshTokenCommand ToCommand(this RefreshTokenHttpRequest request) {
-        return new RefreshTokenCommand(RefreshToken: request.RefreshToken);
+    extension(RefreshTokenHttpRequest request) {
+        public RefreshTokenCommand ToCommand() {
+            return new RefreshTokenCommand(RefreshToken: request.RefreshToken);
+        }
     }
 
     extension(TelegramAuthHttpRequest request) {
@@ -146,23 +148,29 @@ public static class AuthHttpMappings {
         }
     }
 
-    public static VerifyEmailCommand ToCommand(this VerifyEmailHttpRequest request) {
-        return new VerifyEmailCommand(
-            UserId: request.UserId,
-            Token: request.Token);
+    extension(VerifyEmailHttpRequest request) {
+        public VerifyEmailCommand ToCommand() {
+            return new VerifyEmailCommand(
+                UserId: request.UserId,
+                Token: request.Token);
+        }
     }
 
-    public static RequestPasswordResetCommand ToCommand(this RequestPasswordResetHttpRequest request) {
-        return new RequestPasswordResetCommand(
-            Email: request.Email,
-            ClientOrigin: request.ClientOrigin);
+    extension(RequestPasswordResetHttpRequest request) {
+        public RequestPasswordResetCommand ToCommand() {
+            return new RequestPasswordResetCommand(
+                Email: request.Email,
+                ClientOrigin: request.ClientOrigin);
+        }
     }
 
-    public static ConfirmPasswordResetCommand ToCommand(this ConfirmPasswordResetHttpRequest request) {
-        return new ConfirmPasswordResetCommand(
-            UserId: request.UserId,
-            Token: request.Token,
-            NewPassword: request.NewPassword);
+    extension(ConfirmPasswordResetHttpRequest request) {
+        public ConfirmPasswordResetCommand ToCommand() {
+            return new ConfirmPasswordResetCommand(
+                UserId: request.UserId,
+                Token: request.Token,
+                NewPassword: request.NewPassword);
+        }
     }
 
     extension(TelegramLoginWidgetHttpRequest request) {
@@ -189,10 +197,12 @@ public static class AuthHttpMappings {
         }
     }
 
-    private static AuthenticationClientContext ToAuthenticationClientContext(this HttpContext httpContext, string authProvider) {
-        return new AuthenticationClientContext(
-            authProvider,
-            httpContext.Connection.RemoteIpAddress?.ToString(),
-            httpContext.Request.Headers.UserAgent.ToString());
+    extension(HttpContext httpContext) {
+        private AuthenticationClientContext ToAuthenticationClientContext(string authProvider) {
+            return new AuthenticationClientContext(
+                authProvider,
+                httpContext.Connection.RemoteIpAddress?.ToString(),
+                httpContext.Request.Headers.UserAgent.ToString());
+        }
     }
 }

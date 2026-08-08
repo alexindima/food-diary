@@ -37,136 +37,169 @@ using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
 namespace FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
 
 public static class DietologistHttpMappings {
-    public static GetAttentionSignalsQuery ToQuery(this GetAttentionSignalsHttpQuery query, Guid userId) =>
-        new(
-            userId,
-            query.InactivityDays,
-            query.CalorieDeviationPercent,
-            query.SustainedDays,
-            query.WeightChangePercent,
-            query.LookbackDays);
-
-    public static SetAttentionSignalStateCommand ToCommand(
-        this SetAttentionSignalStateHttpRequest request,
-        Guid userId,
-        string signalId) =>
-        new(userId, request.ClientUserId, signalId, request.Action, request.SnoozedUntilUtc);
-
-    public static InviteDietologistCommand ToCommand(this InviteDietologistHttpRequest request, Guid userId) =>
-        new(userId, request.DietologistEmail, request.Permissions.ToInput());
-
-    public static AcceptInvitationCommand ToCommand(this AcceptInvitationHttpRequest request, Guid userId) =>
-        new(request.InvitationId, request.Token, userId);
-
-    public static AcceptInvitationForCurrentUserCommand ToCurrentUserAcceptCommand(this Guid invitationId, Guid userId) =>
-        new(userId, invitationId);
-
-    public static DeclineInvitationCommand ToCommand(this DeclineInvitationHttpRequest request, Guid userId) =>
-        new(request.InvitationId, request.Token, userId);
-
-    public static DeclineInvitationForCurrentUserCommand ToCurrentUserDeclineCommand(this Guid invitationId, Guid userId) =>
-        new(userId, invitationId);
-
-    public static UpdateDietologistPermissionsCommand ToCommand(this UpdateDietologistPermissionsHttpRequest request, Guid userId) =>
-        new(userId, request.Permissions.ToInput());
-
-    public static RevokeInvitationCommand ToRevokeInvitationCommand(this Guid userId) => new(userId);
-
-    public static DisconnectDietologistCommand ToCommand(this DisconnectClientHttpRequest request, Guid userId) =>
-        new(userId, request.ClientUserId);
-
-    public static GetMyDietologistQuery ToMyDietologistQuery(this Guid userId) => new(userId);
-
-    public static GetMyDietologistRelationshipQuery ToMyDietologistRelationshipQuery(this Guid userId) => new(userId);
-
-    public static GetMyClientsQuery ToMyClientsQuery(this Guid userId) => new(userId);
-
-    public static GetInvitationByTokenQuery ToInvitationQuery(this Guid invitationId, Guid userId) => new(userId, invitationId);
-
-    public static GetInvitationForCurrentUserQuery ToCurrentUserInvitationQuery(this Guid invitationId, Guid userId) =>
-        new(userId, invitationId);
-
-    public static GetClientDashboardQuery ToClientDashboardQuery(
-        this GetClientDashboardHttpQuery query, Guid userId, Guid clientUserId, DateTime todayUtc) {
-        DateTime dateFrom = query.DateFrom ?? query.Date ?? todayUtc.Date;
-        DateTime? dateTo = query.DateTo ?? query.Date;
-
-        return new(userId, clientUserId, dateFrom, dateTo, query.Page, query.PageSize, query.Locale, query.TrendDays);
+    extension(GetAttentionSignalsHttpQuery query) {
+        public GetAttentionSignalsQuery ToQuery(Guid userId) =>
+                new(
+                    userId,
+                    query.InactivityDays,
+                    query.CalorieDeviationPercent,
+                    query.SustainedDays,
+                    query.WeightChangePercent,
+                    query.LookbackDays);
     }
 
-    public static GetClientGoalsQuery ToClientGoalsQuery(this Guid clientUserId, Guid userId) =>
-        new(userId, clientUserId);
+    extension(SetAttentionSignalStateHttpRequest request) {
+        public SetAttentionSignalStateCommand ToCommand(
+                Guid userId,
+                string signalId) =>
+                new(userId, request.ClientUserId, signalId, request.Action, request.SnoozedUntilUtc);
+    }
 
-    public static CreateRecommendationCommand ToCommand(
-        this CreateRecommendationHttpRequest request, Guid userId, Guid clientUserId) =>
-        new(userId, clientUserId, request.Text);
+    extension(InviteDietologistHttpRequest request) {
+        public InviteDietologistCommand ToCommand(Guid userId) =>
+                new(userId, request.DietologistEmail, request.Permissions.ToInput());
+    }
 
-    public static CreateClientTaskCommand ToCommand(
-        this CreateClientTaskHttpRequest request,
-        Guid userId,
-        Guid clientUserId) =>
-        new(userId, clientUserId, request.Title, request.Details, request.DueAtUtc);
+    extension(AcceptInvitationHttpRequest request) {
+        public AcceptInvitationCommand ToCommand(Guid userId) =>
+                new(request.InvitationId, request.Token, userId);
+    }
 
-    public static GetClientTasksForDietologistQuery ToClientTasksQuery(this Guid clientUserId, Guid userId) =>
-        new(userId, clientUserId);
+    extension(Guid invitationId) {
+        public AcceptInvitationForCurrentUserCommand ToCurrentUserAcceptCommand(Guid userId) =>
+                new(userId, invitationId);
 
-    public static GetMyClientTasksQuery ToMyClientTasksQuery(this Guid userId) => new(userId);
+        public DeclineInvitationForCurrentUserCommand ToCurrentUserDeclineCommand(Guid userId) =>
+                new(userId, invitationId);
 
-    public static ChangeClientTaskStatusCommand ToCommand(
-        this ChangeClientTaskStatusHttpRequest request,
-        Guid userId,
-        Guid taskId) =>
-        new(userId, taskId, request.Status);
+        public GetInvitationByTokenQuery ToInvitationQuery(Guid userId) => new(userId, invitationId);
 
-    public static CancelClientTaskCommand ToCancelClientTaskCommand(this Guid taskId, Guid userId) =>
-        new(userId, taskId);
+        public GetInvitationForCurrentUserQuery ToCurrentUserInvitationQuery(Guid userId) =>
+                new(userId, invitationId);
+    }
 
-    public static CreateRecommendationTemplateCommand ToCreateTemplateCommand(
-        this RecommendationTemplateHttpRequest request,
+    extension(DeclineInvitationHttpRequest request) {
+        public DeclineInvitationCommand ToCommand(Guid userId) =>
+                new(request.InvitationId, request.Token, userId);
+    }
+
+    extension(UpdateDietologistPermissionsHttpRequest request) {
+        public UpdateDietologistPermissionsCommand ToCommand(Guid userId) =>
+                new(userId, request.Permissions.ToInput());
+    }
+
+    extension(Guid userId) {
+        public RevokeInvitationCommand ToRevokeInvitationCommand() => new(userId);
+
+        public GetMyDietologistQuery ToMyDietologistQuery() => new(userId);
+
+        public GetMyDietologistRelationshipQuery ToMyDietologistRelationshipQuery() => new(userId);
+
+        public GetMyClientsQuery ToMyClientsQuery() => new(userId);
+
+        public GetMyClientTasksQuery ToMyClientTasksQuery() => new(userId);
+
+        public SearchRecommendationTemplatesQuery ToSearchTemplatesQuery(
+                string? search,
+                bool includeArchived) =>
+                new(userId, search, includeArchived);
+
+        public GetMyRecommendationsQuery ToMyRecommendationsQuery() => new(userId);
+    }
+
+    extension(DisconnectClientHttpRequest request) {
+        public DisconnectDietologistCommand ToCommand(Guid userId) =>
+                new(userId, request.ClientUserId);
+    }
+
+    extension(GetClientDashboardHttpQuery query) {
+        public GetClientDashboardQuery ToClientDashboardQuery(
+        Guid userId, Guid clientUserId, DateTime todayUtc) {
+            DateTime dateFrom = query.DateFrom ?? query.Date ?? todayUtc.Date;
+            DateTime? dateTo = query.DateTo ?? query.Date;
+
+            return new(userId, clientUserId, dateFrom, dateTo, query.Page, query.PageSize, query.Locale, query.TrendDays);
+        }
+    }
+
+    extension(Guid clientUserId) {
+        public GetClientGoalsQuery ToClientGoalsQuery(Guid userId) =>
+                new(userId, clientUserId);
+
+        public GetClientTasksForDietologistQuery ToClientTasksQuery(Guid userId) =>
+                new(userId, clientUserId);
+
+        public GetRecommendationsForClientQuery ToRecommendationsForClientQuery(
         Guid userId) =>
-        new(userId, request.Name, request.Text);
+                new(userId, clientUserId);
+    }
 
-    public static UpdateRecommendationTemplateCommand ToUpdateTemplateCommand(
-        this RecommendationTemplateHttpRequest request,
-        Guid templateId,
-        Guid userId) =>
-        new(userId, templateId, request.Name, request.Text);
+    extension(CreateRecommendationHttpRequest request) {
+        public CreateRecommendationCommand ToCommand(
+        Guid userId, Guid clientUserId) =>
+                new(userId, clientUserId, request.Text);
+    }
 
-    public static ArchiveRecommendationTemplateCommand ToArchiveTemplateCommand(this Guid templateId, Guid userId) =>
-        new(userId, templateId);
+    extension(CreateClientTaskHttpRequest request) {
+        public CreateClientTaskCommand ToCommand(
+                Guid userId,
+                Guid clientUserId) =>
+                new(userId, clientUserId, request.Title, request.Details, request.DueAtUtc);
+    }
 
-    public static SearchRecommendationTemplatesQuery ToSearchTemplatesQuery(
-        this Guid userId,
-        string? search,
-        bool includeArchived) =>
-        new(userId, search, includeArchived);
+    extension(ChangeClientTaskStatusHttpRequest request) {
+        public ChangeClientTaskStatusCommand ToCommand(
+                Guid userId,
+                Guid taskId) =>
+                new(userId, taskId, request.Status);
+    }
 
-    public static BulkCreateRecommendationsCommand ToCommand(
-        this BulkCreateRecommendationsHttpRequest request,
-        Guid userId) =>
-        new(userId, request.ClientUserIds, request.Text, request.IdempotencyKey);
+    extension(Guid taskId) {
+        public CancelClientTaskCommand ToCancelClientTaskCommand(Guid userId) =>
+                new(userId, taskId);
+    }
 
-    public static CreateRecommendationCommentCommand ToCommand(
-        this CreateRecommendationCommentHttpRequest request,
-        Guid userId,
-        Guid recommendationId) =>
-        new(userId, recommendationId, request.Text);
+    extension(RecommendationTemplateHttpRequest request) {
+        public CreateRecommendationTemplateCommand ToCreateTemplateCommand(
+                Guid userId) =>
+                new(userId, request.Name, request.Text);
 
-    public static GetRecommendationCommentsQuery ToRecommendationCommentsQuery(
-        this Guid recommendationId,
-        Guid userId) =>
-        new(userId, recommendationId);
+        public UpdateRecommendationTemplateCommand ToUpdateTemplateCommand(
+                Guid templateId,
+                Guid userId) =>
+                new(userId, templateId, request.Name, request.Text);
+    }
 
-    public static GetRecommendationsForClientQuery ToRecommendationsForClientQuery(
-        this Guid clientUserId, Guid userId) =>
-        new(userId, clientUserId);
+    extension(Guid templateId) {
+        public ArchiveRecommendationTemplateCommand ToArchiveTemplateCommand(Guid userId) =>
+                new(userId, templateId);
+    }
 
-    public static GetMyRecommendationsQuery ToMyRecommendationsQuery(this Guid userId) => new(userId);
+    extension(BulkCreateRecommendationsHttpRequest request) {
+        public BulkCreateRecommendationsCommand ToCommand(
+                Guid userId) =>
+                new(userId, request.ClientUserIds, request.Text, request.IdempotencyKey);
+    }
 
-    public static MarkRecommendationReadCommand ToMarkReadCommand(this Guid recommendationId, Guid userId) =>
-        new(userId, recommendationId);
+    extension(CreateRecommendationCommentHttpRequest request) {
+        public CreateRecommendationCommentCommand ToCommand(
+                Guid userId,
+                Guid recommendationId) =>
+                new(userId, recommendationId, request.Text);
+    }
 
-    private static DietologistPermissionsInput ToInput(this DietologistPermissionsHttpRequest request) =>
-        new(request.ShareMeals, request.ShareStatistics, request.ShareWeight,
-            request.ShareWaist, request.ShareGoals, request.ShareHydration, request.ShareProfile, request.ShareFasting);
+    extension(Guid recommendationId) {
+        public GetRecommendationCommentsQuery ToRecommendationCommentsQuery(
+                Guid userId) =>
+                new(userId, recommendationId);
+
+        public MarkRecommendationReadCommand ToMarkReadCommand(Guid userId) =>
+                new(userId, recommendationId);
+    }
+
+    extension(DietologistPermissionsHttpRequest request) {
+        private DietologistPermissionsInput ToInput() =>
+                new(request.ShareMeals, request.ShareStatistics, request.ShareWeight,
+                    request.ShareWaist, request.ShareGoals, request.ShareHydration, request.ShareProfile, request.ShareFasting);
+    }
 }
