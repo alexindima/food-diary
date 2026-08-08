@@ -3,9 +3,9 @@
     "summary":  {
                     "contracts":  998,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  6932,
+                    "consumerEdges":  6940,
                     "productionConsumerEdges":  4232,
-                    "testConsumerEdges":  2700,
+                    "testConsumerEdges":  2708,
                     "consumedContracts":  998,
                     "unconsumedContracts":  0
                 },
@@ -17052,6 +17052,19 @@
                               "referenceCount":  1
                           },
                           {
+                              "contract":  "AdminBillingRevenueCurrencyHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdminHttpMappingsTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
                               "contract":  "AdminBillingRevenueSummaryHttpResponse",
                               "roles":  [
                                             "Response"
@@ -17075,6 +17088,32 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminBillingHttpResponseMappings.cs",
                               "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "AdminBillingRevenueSummaryHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueSummaryHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "AdminBillingRevenueSummaryHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueSummaryHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdminHttpMappingsTests.cs",
+                              "isTest":  true,
                               "referenceCount":  1
                           },
                           {
@@ -19025,7 +19064,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs",
                               "isTest":  false,
-                              "referenceCount":  3
+                              "referenceCount":  4
                           },
                           {
                               "contract":  "ApiErrorHttpResponse",
@@ -19155,7 +19194,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Web.Api.Tests/Extensions/ApiExceptionHandlerTests.cs",
                               "isTest":  true,
-                              "referenceCount":  6
+                              "referenceCount":  7
                           },
                           {
                               "contract":  "ApiErrorHttpResponse",
@@ -19805,7 +19844,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs",
                               "isTest":  true,
-                              "referenceCount":  8
+                              "referenceCount":  15
                           },
                           {
                               "contract":  "BillingWebhookEvent",
@@ -19857,7 +19896,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AdditionalPersistenceRepositoryIntegrationTests.cs",
                               "isTest":  true,
-                              "referenceCount":  3
+                              "referenceCount":  5
                           },
                           {
                               "contract":  "BillingWebhookEvent",
@@ -21924,7 +21963,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs",
                               "isTest":  true,
-                              "referenceCount":  12
+                              "referenceCount":  14
                           },
                           {
                               "contract":  "CreateCheckoutSessionCommand",
@@ -29867,7 +29906,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs",
                               "isTest":  true,
-                              "referenceCount":  3
+                              "referenceCount":  4
                           },
                           {
                               "contract":  "GetAdminBillingHttpQuery",
@@ -29971,6 +30010,45 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
                               "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "GetAdminBillingRevenueSummaryQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "GetAdminBillingRevenueSummaryQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "GetAdminBillingRevenueSummaryQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdminHttpMappingsTests.cs",
+                              "isTest":  true,
                               "referenceCount":  1
                           },
                           {
@@ -44336,6 +44414,19 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.JobManager/Services/BillingWebhookInboxJob.cs",
                               "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IBillingWebhookInboxService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Billing/Common/IBillingWebhookInboxService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.JobManager.Tests/BillingRecoveryJobsTests.cs",
+                              "isTest":  true,
                               "referenceCount":  1
                           },
                           {
@@ -80475,7 +80566,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/BillingWebhookControllerTests.cs",
                               "isTest":  true,
-                              "referenceCount":  4
+                              "referenceCount":  5
                           },
                           {
                               "contract":  "ISender",
@@ -82179,6 +82270,19 @@
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Behaviors/BehaviorTests.cs",
                               "isTest":  true,
                               "referenceCount":  8
+                          },
+                          {
+                              "contract":  "IUnitOfWork",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IUnitOfWork",
@@ -94606,7 +94710,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs",
                               "isTest":  true,
-                              "referenceCount":  18
+                              "referenceCount":  19
                           },
                           {
                               "contract":  "ProcessBillingWebhookCommand",

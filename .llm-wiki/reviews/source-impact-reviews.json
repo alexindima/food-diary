@@ -147,13 +147,13 @@
                         "sources":  [
                                         {
                                             "path":  "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-                                            "sha256":  "7f69422d464351afb8594c32fb52dc942789698a67bdaaa737c4335505827a8f"
+                                            "sha256":  "1047d755dbc6f1d1b32abf95c135c5cf5d9a8ec5ff4157de3ebe79c50823e47a"
                                         }
                                     ],
-                        "reason":  "Reviewed after Paddle billing hardening; generated indexes and current workflow guidance remain accurate.",
+                        "reason":  "Reviewed additive documented 413 response and refreshed focused/full OpenAPI snapshots; no breaking contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
-                        "reviewedAtUtc":  "2026-08-08T09:36:18.8525553Z"
+                        "gitHead":  "71bf2466ed53eccd7ef769c6a3e31a5ad354d145",
+                        "reviewedAtUtc":  "2026-08-08T14:06:34.4760560Z"
                     },
                     {
                         "pageId":  "workflow-architecture-health-review",
@@ -162,13 +162,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "5a94c531230116f41e4e7cf5eb607acbc7a1f7e9ff731af6af4e8cb3dcbcd339"
+                                            "sha256":  "8b95a48e1ed1156cc8fb24142231b7276da9143abc4c221627921791c89836d5"
                                         }
                                     ],
-                        "reason":  "Reviewed after Paddle billing hardening; generated indexes and current workflow guidance remain accurate.",
+                        "reason":  "Reviewed interface extension and composition boundaries; architecture suite passed 544 tests and enforced dependency graph is unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
-                        "reviewedAtUtc":  "2026-08-08T09:36:19.5208857Z"
+                        "gitHead":  "71bf2466ed53eccd7ef769c6a3e31a5ad354d145",
+                        "reviewedAtUtc":  "2026-08-08T14:06:36.8421041Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -177,13 +177,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "a3c6fb77f0201c474a5c4d813d48fae63108326845237ece1caebdd1972e3156"
+                                            "sha256":  "ef0d7bea520f48b61c6e23adc6ba4c39f4ae8f59d5a6afdb3f20afb9b906e8d2"
                                         }
                                     ],
-                        "reason":  "Reviewed after Paddle billing hardening; generated indexes and current workflow guidance remain accurate.",
+                        "reason":  "Reviewed IBillingTransactionRunner extension and all production/test implementations; full affected backend regression suite compiles and passes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
-                        "reviewedAtUtc":  "2026-08-08T09:36:20.3720076Z"
+                        "gitHead":  "71bf2466ed53eccd7ef769c6a3e31a5ad354d145",
+                        "reviewedAtUtc":  "2026-08-08T14:06:39.0176095Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -483,13 +483,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "2c3b325274fa17eefea0049c396ede70faddf2c7d128e121b89fe7499fe81762"
+                                            "sha256":  "1e2fa5528ecc4e5be48f6f31a05a16f5ad25cc939288c9af4616865626652f18"
                                         }
                                     ],
-                        "reason":  "Reviewed Paddle payload retention, secret exclusion, admin authorization, logs, and provider data boundaries; no new user data is sent.",
+                        "reason":  "Reviewed bounded webhook handling and error mapping; no payload, credential, identifier, or exception content is newly logged or persisted.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
-                        "reviewedAtUtc":  "2026-08-08T10:20:31.2597509Z"
+                        "gitHead":  "71bf2466ed53eccd7ef769c6a3e31a5ad354d145",
+                        "reviewedAtUtc":  "2026-08-08T14:06:41.3038921Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -528,13 +528,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "42a05955133b49679ec2cdde857a09745ca81b871d3bd2d36ec6a0f094cc0e5c"
+                                            "sha256":  "cdf936b4f48b947d93902e19548e32216ed68a9ec14fa17f39d8e4da88583afd"
                                         }
                                     ],
-                        "reason":  "Re-reviewed final recovery tests and complete API integration and architecture results.",
+                        "reason":  "Reviewed payment authorization, concurrency, boundary, and error paths; focused regression tests plus real PostgreSQL and WebApplicationFactory coverage were added.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
-                        "reviewedAtUtc":  "2026-08-08T10:29:21.1481849Z"
+                        "gitHead":  "71bf2466ed53eccd7ef769c6a3e31a5ad354d145",
+                        "reviewedAtUtc":  "2026-08-08T14:06:43.4297987Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

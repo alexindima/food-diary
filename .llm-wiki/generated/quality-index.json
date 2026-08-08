@@ -7,18 +7,18 @@
     "summary":  {
                     "productionFiles":  3988,
                     "criticalSymbols":  524,
-                    "criticalSymbolsWithTestReferences":  496,
-                    "criticalSymbolsWithoutTestReferences":  28,
+                    "criticalSymbolsWithTestReferences":  497,
+                    "criticalSymbolsWithoutTestReferences":  27,
                     "debtMarkers":  2
                 },
     "hotspots":  [
                      {
                          "path":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-                         "nonBlankLines":  601,
+                         "nonBlankLines":  603,
                          "decisionPoints":  98,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  159.02
+                         "structuralRiskScore":  159.06
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
@@ -694,11 +694,11 @@
                      },
                      {
                          "path":  "FoodDiary.Integrations/Billing/StripeBillingGateway.cs",
-                         "nonBlankLines":  202,
+                         "nonBlankLines":  203,
                          "decisionPoints":  27,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  44.54
+                         "structuralRiskScore":  44.56
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-lib/fasting-timer-card-display.mapper.ts",
@@ -1600,11 +1600,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Billing/Common/IBillingTransactionRunner.cs",
-                      "nonBlankLines":  4,
+                      "nonBlankLines":  8,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.08
+                      "structuralRiskScore":  0.16
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Billing/Common/IBillingWebhookEventReadRepository.cs",
@@ -4752,11 +4752,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
-                      "nonBlankLines":  80,
-                      "decisionPoints":  9,
+                      "nonBlankLines":  90,
+                      "decisionPoints":  13,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  15.1
+                      "structuralRiskScore":  21.3
                   },
                   {
                       "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
@@ -5747,8 +5747,8 @@
                       "nonBlankLines":  12,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.24
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.24
                   },
                   {
                       "path":  "FoodDiary.Application/Admin/Queries/GetAdminBillingSubscriptions/GetAdminBillingSubscriptionsQuery.cs",
@@ -16408,19 +16408,19 @@
                   },
                   {
                       "path":  "FoodDiary.Infrastructure/Persistence/Billing/EfBillingTransactionRunner.cs",
-                      "nonBlankLines":  65,
-                      "decisionPoints":  6,
+                      "nonBlankLines":  94,
+                      "decisionPoints":  7,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.3
+                      "structuralRiskScore":  12.38
                   },
                   {
                       "path":  "FoodDiary.Infrastructure/Persistence/Billing/PostgresBillingCheckoutLock.cs",
-                      "nonBlankLines":  35,
+                      "nonBlankLines":  38,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.7
+                      "structuralRiskScore":  3.76
                   },
                   {
                       "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Admin/AdminImpersonationSessionConfiguration.cs",
@@ -18096,11 +18096,11 @@
                   },
                   {
                       "path":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-                      "nonBlankLines":  601,
+                      "nonBlankLines":  603,
                       "decisionPoints":  98,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  159.02
+                      "structuralRiskScore":  159.06
                   },
                   {
                       "path":  "FoodDiary.Integrations/Billing/PaddleNotificationRecoveryResult.cs",
@@ -18120,11 +18120,11 @@
                   },
                   {
                       "path":  "FoodDiary.Integrations/Billing/StripeBillingGateway.cs",
-                      "nonBlankLines":  202,
+                      "nonBlankLines":  203,
                       "decisionPoints":  27,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  44.54
+                      "structuralRiskScore":  44.56
                   },
                   {
                       "path":  "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
@@ -19760,19 +19760,19 @@
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs",
-                      "nonBlankLines":  20,
+                      "nonBlankLines":  22,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.4
+                      "structuralRiskScore":  2.44
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookHttpProcessor.cs",
-                      "nonBlankLines":  22,
-                      "decisionPoints":  1,
+                      "nonBlankLines":  53,
+                      "decisionPoints":  6,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.94
+                      "structuralRiskScore":  10.06
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Billing/Mappings/BillingHttpMappings.cs",
@@ -22624,11 +22624,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs",
-                      "nonBlankLines":  46,
-                      "decisionPoints":  5,
+                      "nonBlankLines":  55,
+                      "decisionPoints":  6,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.42
+                      "structuralRiskScore":  12.1
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiHostServiceCollectionExtensions.cs",
@@ -35249,9 +35249,9 @@
                                 "role":  "QueryHandler",
                                 "path":  "FoodDiary.Application/Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQueryHandler.cs",
                                 "line":  7,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
                                                    ]
                             },
                             {

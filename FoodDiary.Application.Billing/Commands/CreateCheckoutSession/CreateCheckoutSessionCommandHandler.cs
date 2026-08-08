@@ -116,7 +116,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
         return subscription.Status.Trim().ToLowerInvariant() switch {
             "trialing" => subscription.CurrentPeriodEndUtc.HasValue && subscription.CurrentPeriodEndUtc > nowUtc,
             "active" => true,
-            "past_due" => !subscription.CurrentPeriodEndUtc.HasValue || subscription.CurrentPeriodEndUtc > nowUtc,
+            "past_due" => subscription.CurrentPeriodEndUtc.HasValue && subscription.CurrentPeriodEndUtc > nowUtc,
             _ => false,
         };
     }

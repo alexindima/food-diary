@@ -1982,21 +1982,21 @@
                        "name":  "CustomerId",
                        "type":  "string",
                        "path":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-                       "line":  665
+                       "line":  667
                    },
                    {
                        "category":  "financial",
                        "name":  "Checkout",
                        "type":  "TransactionCheckoutRequest",
                        "path":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-                       "line":  668
+                       "line":  670
                    },
                    {
                        "category":  "financial",
                        "name":  "Checkout",
                        "type":  "TransactionCheckoutResponse?",
                        "path":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-                       "line":  679
+                       "line":  681
                    },
                    {
                        "category":  "financial",
@@ -7337,7 +7337,7 @@
                        "name":  "Email",
                        "type":  "string",
                        "path":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-                       "line":  655
+                       "line":  657
                    },
                    {
                        "category":  "identity",

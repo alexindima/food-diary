@@ -12,6 +12,17 @@ public sealed class ApiExceptionHandler(
         Exception exception,
         CancellationToken cancellationToken) {
         switch (exception) {
+            case BadHttpRequestException { StatusCode: StatusCodes.Status413PayloadTooLarge }: {
+                    httpContext.Response.StatusCode = StatusCodes.Status413PayloadTooLarge;
+
+                    var payloadTooLargeResponse = new ApiErrorHttpResponse(
+                        "Request.PayloadTooLarge",
+                        "The request payload is too large.",
+                        httpContext.TraceIdentifier);
+
+                    await httpContext.Response.WriteAsJsonAsync(payloadTooLargeResponse, cancellationToken).ConfigureAwait(false);
+                    return true;
+                }
             case CurrentUserUnavailableException: {
                     httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 

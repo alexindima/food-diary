@@ -19,16 +19,18 @@ public sealed class BillingWebhookEventProcessor(
         BillingWebhookEventModel webhookEvent,
         BillingWebhookEvent? inboxEvent,
         CancellationToken cancellationToken) {
-        Result<BillingWebhookProcessingContext?> contextResult = await billingWebhookContextResolver.ResolveAsync(
-            provider,
-            webhookEvent,
-            cancellationToken).ConfigureAwait(false);
-        if (contextResult.IsFailure) {
-            return Result.Failure(contextResult.Error);
-        }
-
+        var processingResult = Result.Success();
         try {
-            await billingTransactionRunner.ExecuteAsync(async ct => {
+            await billingTransactionRunner.ExecuteSerializedAsync(CreateSerializationKey(provider, webhookEvent), async ct => {
+                Result<BillingWebhookProcessingContext?> contextResult = await billingWebhookContextResolver.ResolveAsync(
+                    provider,
+                    webhookEvent,
+                    ct).ConfigureAwait(false);
+                if (contextResult.IsFailure) {
+                    processingResult = Result.Failure(contextResult.Error);
+                    return;
+                }
+
                 BillingWebhookEvent persistedEvent = inboxEvent ??
                     billingWebhookSubscriptionWriter.CreateProcessedEvent(provider, webhookEvent, payload);
                 if (inboxEvent is null) {
@@ -56,7 +58,16 @@ public sealed class BillingWebhookEventProcessor(
             return Result.Success();
         }
 
-        return Result.Success();
+        return processingResult;
+    }
+
+    private static string CreateSerializationKey(string provider, BillingWebhookEventModel webhookEvent) {
+        string externalObjectId = webhookEvent.ExternalPaymentMethodId
+            ?? webhookEvent.ExternalSubscriptionId
+            ?? webhookEvent.ExternalCustomerId
+            ?? webhookEvent.RelatedTransactionId
+            ?? webhookEvent.EventId;
+        return $"billing-webhook:{provider.Trim().ToLowerInvariant()}:{externalObjectId}";
     }
 
     private async Task ApplyBusinessEffectsAsync(

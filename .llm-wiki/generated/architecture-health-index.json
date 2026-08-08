@@ -10,7 +10,7 @@
                     "unconsumedBackendContracts":  0,
                     "selectorUnreferencedComponents":  132,
                     "componentsWithoutDirectSpecs":  116,
-                    "criticalSymbolsWithoutTestReferences":  28,
+                    "criticalSymbolsWithoutTestReferences":  27,
                     "explicitDebtMarkers":  2
                 },
     "projectDependencyViolations":  [
@@ -4832,16 +4832,6 @@
                                                      "role":  "Controller",
                                                      "path":  "FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs",
                                                      "line":  13,
-                                                     "testReferenceCount":  0,
-                                                     "testReferences":  [
-
-                                                                        ]
-                                                 },
-                                                 {
-                                                     "name":  "GetAdminBillingRevenueSummaryQueryHandler",
-                                                     "role":  "QueryHandler",
-                                                     "path":  "FoodDiary.Application/Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQueryHandler.cs",
-                                                     "line":  7,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
 

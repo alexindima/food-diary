@@ -6,12 +6,40 @@ using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Features.Billing;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BillingWebhookControllerTests {
+    [Fact]
+    public void HandleWebhook_HasPaymentSpecificRequestBodyLimit() {
+        MethodInfo method = typeof(BillingWebhookController).GetMethod(nameof(BillingWebhookController.HandleWebhook))!;
+
+        RequestSizeLimitAttribute attribute = Assert.Single(method.GetCustomAttributes<RequestSizeLimitAttribute>());
+
+        Assert.Equal(BillingWebhookHttpProcessor.MaxWebhookPayloadBytes, ((IRequestSizeLimitMetadata)attribute).MaxRequestBodySize);
+    }
+
+    [Fact]
+    public async Task HandleWebhook_WhenChunkedPayloadExceedsLimit_StopsBeforeDispatch() {
+        bool dispatched = false;
+        ISender sender = SubstituteSender.Create(Result.Success(), _ => dispatched = true);
+        BillingWebhookController controller = CreateController(
+            sender,
+            payload: new string('x', BillingWebhookHttpProcessor.MaxWebhookPayloadBytes + 1));
+        controller.Request.ContentLength = null;
+
+        BadHttpRequestException exception = await Assert.ThrowsAsync<BadHttpRequestException>(() =>
+            controller.HandleWebhook("Stripe"));
+
+        Assert.Equal(StatusCodes.Status413PayloadTooLarge, exception.StatusCode);
+        Assert.False(dispatched);
+        Assert.Equal(0, controller.Request.Body.Position);
+    }
+
     [Theory]
     [InlineData("Paddle", "Paddle-Signature", "paddle-signature")]
     [InlineData("Stripe", "Stripe-Signature", "stripe-signature")]

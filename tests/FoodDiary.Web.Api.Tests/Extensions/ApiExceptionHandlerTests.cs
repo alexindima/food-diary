@@ -57,6 +57,24 @@ public sealed class ApiExceptionHandlerTests {
         Assert.Equal("trace-id", response.TraceId);
     }
 
+    [Fact]
+    public async Task TryHandleAsync_ForPayloadTooLarge_ReturnsPayloadTooLargeApiError() {
+        DefaultHttpContext context = CreateHttpContext();
+        var handler = new ApiExceptionHandler(NullLogger<ApiExceptionHandler>.Instance);
+
+        bool handled = await handler.TryHandleAsync(
+            context,
+            new BadHttpRequestException("Sensitive parser detail", StatusCodes.Status413PayloadTooLarge),
+            CancellationToken.None);
+
+        ApiErrorHttpResponse response = await ReadResponseAsync(context);
+        Assert.True(handled);
+        Assert.Equal(StatusCodes.Status413PayloadTooLarge, context.Response.StatusCode);
+        Assert.Equal("Request.PayloadTooLarge", response.Error);
+        Assert.Equal("The request payload is too large.", response.Message);
+        Assert.Equal("trace-id", response.TraceId);
+    }
+
     private static DefaultHttpContext CreateHttpContext() {
         var context = new DefaultHttpContext {
             TraceIdentifier = "trace-id",

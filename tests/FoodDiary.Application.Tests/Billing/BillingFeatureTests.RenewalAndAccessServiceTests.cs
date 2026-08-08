@@ -375,7 +375,7 @@ public partial class BillingFeatureTests {
     [InlineData("trialing", 1, true)]
     [InlineData("trialing", -1, false)]
     [InlineData("active", null, true)]
-    [InlineData("past_due", null, true)]
+    [InlineData("past_due", null, false)]
     [InlineData("past_due", 1, true)]
     [InlineData("past_due", -1, false)]
     [InlineData("canceled", 1, false)]

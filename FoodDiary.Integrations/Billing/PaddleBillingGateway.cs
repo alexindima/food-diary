@@ -313,6 +313,8 @@ public sealed class PaddleBillingGateway(
         string customerId,
         string subscriptionId) {
         string? externalPriceId = GetFirstItemPriceId(data);
+        string plan = ResolvePlan(externalPriceId)
+            ?? throw new InvalidOperationException($"Paddle subscription price '{externalPriceId}' is not an approved Premium price.");
         JsonElement customData = data.TryGetProperty("custom_data", out JsonElement customDataElement) ? customDataElement : default;
         JsonElement currentBillingPeriod = data.TryGetProperty("current_billing_period", out JsonElement billingPeriodElement)
             ? billingPeriodElement
@@ -329,7 +331,7 @@ public sealed class PaddleBillingGateway(
             subscriptionId,
             ExternalPaymentMethodId: null,
             externalPriceId,
-            ResolvePlan(externalPriceId) ?? GetString(customData, "plan"),
+            plan,
             GetString(data, "status") ?? string.Empty,
             ParseDateTime(currentBillingPeriod, "starts_at"),
             ParseDateTime(currentBillingPeriod, "ends_at"),

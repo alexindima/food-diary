@@ -55,7 +55,7 @@ public sealed class BillingAccessService(
         return status.Trim().ToLowerInvariant() switch {
             "trialing" => currentPeriodEndUtc.HasValue && currentPeriodEndUtc > dateTimeProvider.GetUtcNow().UtcDateTime,
             "active" => true,
-            "past_due" => !currentPeriodEndUtc.HasValue || currentPeriodEndUtc > dateTimeProvider.GetUtcNow().UtcDateTime,
+            "past_due" => currentPeriodEndUtc.HasValue && currentPeriodEndUtc > dateTimeProvider.GetUtcNow().UtcDateTime,
             _ => false,
         };
     }

@@ -58,9 +58,11 @@ Source: `FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs
 - `tests/FoodDiary.Infrastructure.Tests/Integrations/BillingProviderGatewayAccessorTests.cs`
 - `tests/FoodDiary.Infrastructure.Tests/Integrations/BillingPublicConfigProviderTests.cs`
 - `tests/FoodDiary.Infrastructure.Tests/Services/BillingGatewayTests.cs`
+- `tests/FoodDiary.JobManager.Tests/BillingRecoveryJobsTests.cs`
 - `tests/FoodDiary.Presentation.Api.Tests/BillingControllerTests.cs`
 - `tests/FoodDiary.Presentation.Api.Tests/BillingHttpMappingsTests.cs`
 - `tests/FoodDiary.Presentation.Api.Tests/BillingWebhookControllerTests.cs`
+- `tests/FoodDiary.Web.Api.IntegrationTests/BillingSecurityIntegrationTests.cs`
 
 ## Working Rule
 

@@ -155,8 +155,9 @@ public sealed class StripeBillingGateway(
         IReadOnlyDictionary<string, string>? fallbackMetadata = null) {
         IReadOnlyDictionary<string, string>? metadata = subscription.Metadata?.Count > 0 ? subscription.Metadata : fallbackMetadata;
         SubscriptionItem? firstItem = subscription.Items.Data.FirstOrDefault();
-        string? plan = ResolvePlan(subscription.Items.Data.FirstOrDefault()?.Price?.Id)
-                   ?? ReadMetadata(metadata, "plan");
+        string? externalPriceId = firstItem?.Price?.Id;
+        string plan = ResolvePlan(externalPriceId)
+            ?? throw new InvalidOperationException($"Stripe subscription price '{externalPriceId}' is not an approved Premium price.");
 
         return new BillingWebhookEventModel(
             stripeEvent.Id,
@@ -164,7 +165,7 @@ public sealed class StripeBillingGateway(
             subscription.CustomerId,
             subscription.Id,
             ExternalPaymentMethodId: null,
-            firstItem?.Price?.Id,
+            externalPriceId,
             plan,
             subscription.Status,
             firstItem?.CurrentPeriodStart,
