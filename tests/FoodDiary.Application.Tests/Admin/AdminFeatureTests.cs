@@ -536,9 +536,9 @@ public partial class AdminFeatureTests {
 
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(_user.Id == id ? _user : null);
+        public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(_user.Id == userId ? _user : null);
 
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(_user.Id == id ? _user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(_user.Id == userId ? _user : null);
 
         async Task<AdminUserModel?> IAdminUserReadService.GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
             (await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false))?.ToAdminModel();
@@ -615,8 +615,8 @@ public partial class AdminFeatureTests {
     private sealed class MultipleUserRepository(IReadOnlyList<User> users) : IUserRepository, IAdminImpersonationUserService {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
-            Task.FromResult<User?>(users.FirstOrDefault(user => user.Id == id));
+        public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<User?>(users.FirstOrDefault(user => user.Id == userId));
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();

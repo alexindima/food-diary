@@ -593,13 +593,13 @@ public class WearablesFeatureTests {
         public int ExchangeCodeCallCount { get; private set; }
 
         public string GetAuthorizationUrl(string state) => $"https://auth.example.com?state={state}";
-        public Task<WearableTokenResult?> ExchangeCodeAsync(string code, CancellationToken ct = default) {
+        public Task<WearableTokenResult?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default) {
             ExchangeCodeCallCount++;
             return Task.FromResult(tokenResult);
         }
-        public Task<WearableTokenResult?> RefreshTokenAsync(string refreshToken, CancellationToken ct = default) =>
+        public Task<WearableTokenResult?> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default) =>
             Task.FromResult(RefreshTokenResult);
-        public Task<IReadOnlyList<WearableDataPoint>> FetchDailyDataAsync(string accessToken, DateTime date, CancellationToken ct = default) =>
+        public Task<IReadOnlyList<WearableDataPoint>> FetchDailyDataAsync(string accessToken, DateTime date, CancellationToken cancellationToken = default) =>
             Task.FromResult(DataPoints);
     }
 

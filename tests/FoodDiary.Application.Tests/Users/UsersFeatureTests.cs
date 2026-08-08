@@ -1198,8 +1198,8 @@ public partial class UsersFeatureTests {
             return Task.CompletedTask;
         }
 
-        public Task UpdateUserAsync(User userToUpdate, CancellationToken cancellationToken) =>
-            UpdateAsync(userToUpdate, cancellationToken);
+        public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
+            UpdateAsync(user, cancellationToken);
     }
 
     [ExcludeFromCodeCoverage]

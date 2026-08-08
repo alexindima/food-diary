@@ -131,8 +131,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
             Task.FromResult<User?>(_users.FirstOrDefault(candidate =>
                 string.Equals(candidate.GoogleIssuer, issuer, StringComparison.Ordinal) &&
                 string.Equals(candidate.GoogleSubject, subject, StringComparison.Ordinal)));
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
-            Task.FromResult<User?>(_users.FirstOrDefault(candidate => candidate is { IsActive: true, DeletedAt: null } && candidate.Id == id));
+        public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<User?>(_users.FirstOrDefault(candidate => candidate is { IsActive: true, DeletedAt: null } && candidate.Id == userId));
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
             Task.FromResult<User?>(_users.FirstOrDefault(candidate =>
@@ -150,13 +150,13 @@ public sealed partial class AuthenticationCommandHandlerTests {
         public Task<IReadOnlyList<Role>> EnsureRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) =>
             GetRolesByNamesAsync(names, cancellationToken);
 
-        public Task<User> AddAsync(User userToAdd, CancellationToken cancellationToken = default) {
+        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) {
             AddCallCount++;
-            _users.Add(userToAdd);
-            return Task.FromResult(userToAdd);
+            _users.Add(user);
+            return Task.FromResult(user);
         }
 
-        public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
         public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
             User? accessibleUser = _users.FirstOrDefault(candidate => candidate is { IsActive: true, DeletedAt: null } && candidate.Id == userId);
@@ -171,7 +171,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             return result.IsFailure ? result.Error : null;
         }
 
-        public Task UpdateUserAsync(User userToUpdate, CancellationToken cancellationToken) => UpdateAsync(userToUpdate, cancellationToken);
+        public Task UpdateUserAsync(User user, CancellationToken cancellationToken) => UpdateAsync(user, cancellationToken);
     }
 
     [ExcludeFromCodeCoverage]
@@ -180,15 +180,15 @@ public sealed partial class AuthenticationCommandHandlerTests {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByGoogleIdentityIncludingDeletedAsync(string issuer, string subject, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user?.Id == id ? user : null);
+        public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user?.Id == userId ? user : null);
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User userToAdd, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
     [ExcludeFromCodeCoverage]

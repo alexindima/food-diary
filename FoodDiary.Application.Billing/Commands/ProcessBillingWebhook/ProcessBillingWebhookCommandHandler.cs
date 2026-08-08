@@ -15,15 +15,15 @@ public sealed class ProcessBillingWebhookCommandHandler(
     BillingWebhookEventProcessor processor,
     TimeProvider timeProvider)
     : IRequestHandler<ProcessBillingWebhookCommand, Result> {
-    public async Task<Result> Handle(ProcessBillingWebhookCommand command, CancellationToken cancellationToken) {
-        IBillingProviderGateway? billingProvider = billingProviderGatewayAccessor.GetProviderOrDefault(command.Provider);
+    public async Task<Result> Handle(ProcessBillingWebhookCommand request, CancellationToken cancellationToken) {
+        IBillingProviderGateway? billingProvider = billingProviderGatewayAccessor.GetProviderOrDefault(request.Provider);
         if (billingProvider is null) {
-            return Result.Failure(Errors.Billing.InvalidProvider(command.Provider));
+            return Result.Failure(Errors.Billing.InvalidProvider(request.Provider));
         }
 
         Result<BillingWebhookEventModel?> webhookResult = await billingProvider.ParseWebhookEventAsync(
-            command.Payload,
-            command.SignatureHeader,
+            request.Payload,
+            request.SignatureHeader,
             cancellationToken).ConfigureAwait(false);
         if (webhookResult.IsFailure) {
             return Result.Failure(webhookResult.Error);
@@ -46,10 +46,10 @@ public sealed class ProcessBillingWebhookCommandHandler(
             return Result.Success();
         }
 
-        if (!command.QueueOnly) {
+        if (!request.QueueOnly) {
             return await processor.ProcessAsync(
                 billingProvider.Provider,
-                command.Payload,
+                request.Payload,
                 webhookEvent,
                 inboxEvent: null,
                 cancellationToken).ConfigureAwait(false);
@@ -61,7 +61,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
             webhookEvent.EventType,
             webhookEvent.ExternalPaymentId ?? webhookEvent.ExternalSubscriptionId ?? webhookEvent.ExternalPaymentMethodId,
             timeProvider.GetUtcNow().UtcDateTime,
-            command.Payload,
+            request.Payload,
             JsonSerializer.Serialize(webhookEvent));
         try {
             await billingTransactionRunner.ExecuteAsync(

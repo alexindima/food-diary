@@ -17,21 +17,21 @@ public sealed class RecordMarketingAttributionCommandHandler(
     private const int UtmValueMaxLength = 160;
     private const int BuildVersionMaxLength = 64;
 
-    public async Task<Result> Handle(RecordMarketingAttributionCommand command, CancellationToken cancellationToken) {
+    public async Task<Result> Handle(RecordMarketingAttributionCommand request, CancellationToken cancellationToken) {
         var record = new MarketingAttributionEventRecord(
-            NormalizeRequired(command.EventType, EventTypeMaxLength, "page_landing"),
-            ParseTimestampUtc(command.Timestamp),
-            command.UserId,
-            NormalizeRequired(command.AnonymousId, AnonymousIdMaxLength, "unknown"),
-            NormalizeRequired(command.SessionId, SessionIdMaxLength, "unknown"),
-            NormalizeRequired(command.LandingPath, LandingPathMaxLength, "/"),
-            NormalizeOptional(command.ReferrerHost, ReferrerHostMaxLength),
-            NormalizeOptional(command.UtmSource, UtmValueMaxLength),
-            NormalizeOptional(command.UtmMedium, UtmValueMaxLength),
-            NormalizeOptional(command.UtmCampaign, UtmValueMaxLength),
-            NormalizeOptional(command.UtmContent, UtmValueMaxLength),
-            NormalizeOptional(command.UtmTerm, UtmValueMaxLength),
-            NormalizeOptional(command.BuildVersion, BuildVersionMaxLength));
+            NormalizeRequired(request.EventType, EventTypeMaxLength, "page_landing"),
+            ParseTimestampUtc(request.Timestamp),
+            request.UserId,
+            NormalizeRequired(request.AnonymousId, AnonymousIdMaxLength, "unknown"),
+            NormalizeRequired(request.SessionId, SessionIdMaxLength, "unknown"),
+            NormalizeRequired(request.LandingPath, LandingPathMaxLength, "/"),
+            NormalizeOptional(request.ReferrerHost, ReferrerHostMaxLength),
+            NormalizeOptional(request.UtmSource, UtmValueMaxLength),
+            NormalizeOptional(request.UtmMedium, UtmValueMaxLength),
+            NormalizeOptional(request.UtmCampaign, UtmValueMaxLength),
+            NormalizeOptional(request.UtmContent, UtmValueMaxLength),
+            NormalizeOptional(request.UtmTerm, UtmValueMaxLength),
+            NormalizeOptional(request.BuildVersion, BuildVersionMaxLength));
 
         await repository.AddAsync(record, cancellationToken).ConfigureAwait(false);
         return Result.Success();

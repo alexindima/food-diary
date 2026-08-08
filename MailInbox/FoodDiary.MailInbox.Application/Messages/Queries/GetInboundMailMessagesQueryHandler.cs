@@ -8,9 +8,9 @@ namespace FoodDiary.MailInbox.Application.Messages.Queries;
 public sealed class GetInboundMailMessagesQueryHandler(IInboundMailStore store)
     : IRequestHandler<GetInboundMailMessagesQuery, Result<IReadOnlyList<InboundMailMessageSummary>>> {
     public async Task<Result<IReadOnlyList<InboundMailMessageSummary>>> Handle(
-        GetInboundMailMessagesQuery query,
+        GetInboundMailMessagesQuery request,
         CancellationToken cancellationToken) {
-        IReadOnlyList<InboundMailMessageSummary> messages = await store.GetMessagesAsync(query.Limit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<InboundMailMessageSummary> messages = await store.GetMessagesAsync(request.Limit, cancellationToken).ConfigureAwait(false);
         return Result<IReadOnlyList<InboundMailMessageSummary>>.Success(messages);
     }
 }

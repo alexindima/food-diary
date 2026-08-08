@@ -110,13 +110,13 @@ public class AuthenticationTokenServiceTests {
     private sealed class InMemoryUserRepository(User user) : IAuthenticationUserMutationService {
         public bool Updated { get; private set; }
 
-        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => Task.FromResult(addedUser);
+        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => Task.FromResult(user);
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
         public Task<User?> GetByGoogleIdentityIncludingDeletedAsync(string issuer, string subject, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == userId ? user : null);
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
 
-        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) {
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) {
             Updated = true;
             return Task.CompletedTask;
         }

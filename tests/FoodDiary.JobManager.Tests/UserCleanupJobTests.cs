@@ -86,7 +86,7 @@ public sealed class UserCleanupJobTests : IDisposable {
         public Guid? LastReassignUserId { get; private set; }
 
         public Task<int> CleanupDeletedUsersAsync(
-            DateTime olderThanUtc, int batchSize, Guid? reassignUserId, CancellationToken ct = default) {
+            DateTime olderThanUtc, int batchSize, Guid? reassignUserId, CancellationToken cancellationToken = default) {
             CallCount++;
             LastReassignUserId = reassignUserId;
             int remaining = totalAvailable - TotalDeleted;
@@ -99,7 +99,7 @@ public sealed class UserCleanupJobTests : IDisposable {
     [ExcludeFromCodeCoverage]
     private sealed class ThrowingUserCleanupService : IUserCleanupService {
         public Task<int> CleanupDeletedUsersAsync(
-            DateTime olderThanUtc, int batchSize, Guid? reassignUserId, CancellationToken ct = default) =>
+            DateTime olderThanUtc, int batchSize, Guid? reassignUserId, CancellationToken cancellationToken = default) =>
             throw new InvalidOperationException("DB error");
     }
 

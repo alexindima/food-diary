@@ -8,8 +8,8 @@ public sealed class ProcessQueuedBillingWebhookCommandHandler(
     IBillingWebhookInboxService billingWebhookInboxService)
     : IRequestHandler<ProcessQueuedBillingWebhookCommand, Result> {
     public async Task<Result> Handle(
-        ProcessQueuedBillingWebhookCommand command,
+        ProcessQueuedBillingWebhookCommand request,
         CancellationToken cancellationToken) {
-        return await billingWebhookInboxService.ProcessAsync(command.WebhookEventId, cancellationToken).ConfigureAwait(false);
+        return await billingWebhookInboxService.ProcessAsync(request.WebhookEventId, cancellationToken).ConfigureAwait(false);
     }
 }

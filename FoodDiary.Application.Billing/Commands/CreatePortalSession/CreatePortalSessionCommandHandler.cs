@@ -15,10 +15,10 @@ public sealed class CreatePortalSessionCommandHandler(
     IBillingProviderGatewayAccessor billingProviderGatewayAccessor)
     : IRequestHandler<CreatePortalSessionCommand, Result<BillingPortalSessionModel>> {
     public async Task<Result<BillingPortalSessionModel>> Handle(
-        CreatePortalSessionCommand command,
+        CreatePortalSessionCommand request,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await BillingCurrentUserAccessResolver.ResolveAsync(
-            command.UserId,
+            request.UserId,
             billingUserContextService,
             cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {

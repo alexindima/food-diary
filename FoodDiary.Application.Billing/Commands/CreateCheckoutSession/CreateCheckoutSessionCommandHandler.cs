@@ -23,9 +23,9 @@ public sealed class CreateCheckoutSessionCommandHandler(
     IUnitOfWork? unitOfWork = null)
     : IRequestHandler<CreateCheckoutSessionCommand, Result<BillingCheckoutSessionModel>> {
     public async Task<Result<BillingCheckoutSessionModel>> Handle(
-        CreateCheckoutSessionCommand command,
+        CreateCheckoutSessionCommand request,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = await ResolveUserIdAsync(command, cancellationToken).ConfigureAwait(false);
+        Result<UserId> userIdResult = await ResolveUserIdAsync(request, cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
             return BillingCurrentUserAccessResolver.ToFailure<BillingCheckoutSessionModel>(userIdResult);
         }
@@ -50,13 +50,13 @@ public sealed class CreateCheckoutSessionCommandHandler(
             return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.CheckoutAlreadyInProgress);
         }
 
-        IBillingProviderGateway? billingProvider = ResolveBillingProvider(command.Provider);
+        IBillingProviderGateway? billingProvider = ResolveBillingProvider(request.Provider);
         if (billingProvider is null) {
             return Result.Failure<BillingCheckoutSessionModel>(
-                Errors.Billing.ProviderNotConfigured(command.Provider ?? string.Empty));
+                Errors.Billing.ProviderNotConfigured(request.Provider ?? string.Empty));
         }
 
-        string plan = command.Plan.Trim().ToLowerInvariant();
+        string plan = request.Plan.Trim().ToLowerInvariant();
         Result<BillingCheckoutSessionModel> sessionResult = await billingProvider.CreateCheckoutSessionAsync(
             new BillingCheckoutSessionRequestModel(
                 userId.Value,

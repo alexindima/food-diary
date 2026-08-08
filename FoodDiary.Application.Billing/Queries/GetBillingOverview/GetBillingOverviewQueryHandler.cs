@@ -12,10 +12,10 @@ public sealed class GetBillingOverviewQueryHandler(
     ICurrentUserAccessService currentUserAccessService)
     : IRequestHandler<GetBillingOverviewQuery, Result<BillingOverviewModel>> {
     public async Task<Result<BillingOverviewModel>> Handle(
-        GetBillingOverviewQuery query,
+        GetBillingOverviewQuery request,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await BillingCurrentUserAccessResolver.ResolveAsync(
-            query.UserId,
+            request.UserId,
             currentUserAccessService,
             cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {

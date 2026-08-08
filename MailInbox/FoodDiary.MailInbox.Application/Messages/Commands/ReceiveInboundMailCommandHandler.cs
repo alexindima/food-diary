@@ -8,17 +8,17 @@ namespace FoodDiary.MailInbox.Application.Messages.Commands;
 
 public sealed class ReceiveInboundMailCommandHandler(IInboundMailStore store)
     : IRequestHandler<ReceiveInboundMailCommand, Result<Guid>> {
-    public async Task<Result<Guid>> Handle(ReceiveInboundMailCommand command, CancellationToken cancellationToken) {
-        ReceiveInboundMailRequest request = command.Request;
+    public async Task<Result<Guid>> Handle(ReceiveInboundMailCommand request, CancellationToken cancellationToken) {
+        ReceiveInboundMailRequest mailRequest = request.Request;
         var message = InboundMailMessage.Receive(
-            request.MessageId,
-            request.FromAddress,
-            request.ToRecipients,
-            request.Subject,
-            request.TextBody,
-            request.HtmlBody,
-            request.RawMime,
-            request.ReceivedAtUtc);
+            mailRequest.MessageId,
+            mailRequest.FromAddress,
+            mailRequest.ToRecipients,
+            mailRequest.Subject,
+            mailRequest.TextBody,
+            mailRequest.HtmlBody,
+            mailRequest.RawMime,
+            mailRequest.ReceivedAtUtc);
 
         Guid id = await store.SaveAsync(message, cancellationToken).ConfigureAwait(false);
         return Result.Success(id);

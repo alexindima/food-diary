@@ -62,7 +62,7 @@ public sealed class ImageCleanupJobTests : IDisposable {
         public int TotalDeleted { get; private set; }
         public int CallCount { get; private set; }
 
-        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken ct = default) {
+        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) {
             CallCount++;
             int remaining = totalAvailable - TotalDeleted;
             int toDelete = Math.Min(Math.Min(itemsPerBatch, batchSize), remaining);
@@ -71,17 +71,17 @@ public sealed class ImageCleanupJobTests : IDisposable {
         }
 
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(
-            Domain.ValueObjects.Ids.ImageAssetId assetId, CancellationToken ct = default) =>
+            Domain.ValueObjects.Ids.ImageAssetId assetId, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class ThrowingImageCleanupService : IImageAssetCleanupService {
-        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken ct = default) =>
+        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
             throw new InvalidOperationException("S3 error");
 
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(
-            Domain.ValueObjects.Ids.ImageAssetId assetId, CancellationToken ct = default) =>
+            Domain.ValueObjects.Ids.ImageAssetId assetId, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
     }
 

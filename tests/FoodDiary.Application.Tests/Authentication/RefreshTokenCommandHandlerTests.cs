@@ -274,7 +274,7 @@ public sealed class RefreshTokenCommandHandlerTests {
     private sealed class InMemoryUserRepository(User user) : IUserRepository, IAuthenticationUserLookupService {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == userId ? user : null);
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
@@ -284,28 +284,28 @@ public sealed class RefreshTokenCommandHandlerTests {
             throw new NotSupportedException();
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
-        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => Task.FromResult(addedUser);
-        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => Task.FromResult(user);
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class FakeJwtTokenGenerator(UserId userId, string email) : IJwtTokenGenerator {
         public Guid RefreshSessionId { get; } = Guid.Parse("f48a7411-0e37-4b0f-8094-c6b7c8bdb931");
 
-        public string GenerateAccessToken(UserId generatedUserId, string generatedEmail, IReadOnlyCollection<string> roles) => "unused-access-token";
+        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles) => "unused-access-token";
         public string GenerateAccessToken(
-            UserId generatedUserId,
-            string generatedEmail,
+            UserId userId,
+            string email,
             IReadOnlyCollection<string> roles,
             DateTime? expiresAtUtc) => "unused-access-token";
         public string GenerateAccessToken(
-            UserId generatedUserId,
-            string generatedEmail,
+            UserId userId,
+            string email,
             IReadOnlyCollection<string> roles,
             JwtImpersonationContext impersonation) => "unused-impersonation-access-token";
         public string GenerateRefreshToken(
-            UserId generatedUserId,
-            string generatedEmail,
+            UserId userId,
+            string email,
             IReadOnlyCollection<string> roles,
             bool rememberMe = false,
             Guid? refreshSessionId = null) => "unused-refresh-token";

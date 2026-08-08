@@ -21,10 +21,10 @@ public sealed class StartPremiumTrialCommandHandler(
     private static readonly TimeSpan TrialDuration = TimeSpan.FromDays(7);
 
     public async Task<Result<BillingOverviewModel>> Handle(
-        StartPremiumTrialCommand command,
+        StartPremiumTrialCommand request,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await BillingCurrentUserAccessResolver.ResolveAsync(
-            command.UserId,
+            request.UserId,
             billingUserContextService,
             cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {

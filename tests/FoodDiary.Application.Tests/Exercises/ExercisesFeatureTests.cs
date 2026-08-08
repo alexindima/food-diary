@@ -288,7 +288,7 @@ public class ExercisesFeatureTests {
                     entry.CaloriesBurned,
                     entry.Notes))]);
 
-        public Task<double> GetTotalCaloriesBurnedAsync(UserId userId, DateTime date, CancellationToken ct = default) => Task.FromResult(0.0);
+        public Task<double> GetTotalCaloriesBurnedAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) => Task.FromResult(0.0);
 
         async Task<IReadOnlyList<ExerciseEntryModel>> IExerciseEntryReadService.GetEntriesAsync(
             UserId userId,

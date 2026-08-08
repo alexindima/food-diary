@@ -149,7 +149,7 @@ public class AiConsentTests {
             return result.IsFailure ? result.Error : null;
         }
 
-        public Task UpdateUserAsync(User userToUpdate, CancellationToken cancellationToken) =>
+        public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
             Task.CompletedTask;
     }
 }

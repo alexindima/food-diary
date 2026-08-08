@@ -364,8 +364,8 @@ public partial class NotificationsFeatureTests {
         public Task<User> AddAsync(User userToAdd, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
-        public Task UpdateUserAsync(User userToUpdate, CancellationToken cancellationToken) =>
-            UpdateAsync(userToUpdate, cancellationToken);
+        public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
+            UpdateAsync(user, cancellationToken);
     }
 
     [ExcludeFromCodeCoverage]

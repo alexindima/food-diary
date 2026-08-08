@@ -906,7 +906,7 @@ public partial class DietologistFeatureTests {
     private sealed class FakeEmailSender : IDietologistEmailSender {
         public int SentCount { get; private set; }
 
-        public Task SendDietologistInvitationAsync(DietologistInvitationMessage message, CancellationToken ct = default) {
+        public Task SendDietologistInvitationAsync(DietologistInvitationMessage message, CancellationToken cancellationToken = default) {
             SentCount++;
             return Task.CompletedTask;
         }
@@ -914,7 +914,7 @@ public partial class DietologistFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class ThrowingEmailSender : IDietologistEmailSender {
-        public Task SendDietologistInvitationAsync(DietologistInvitationMessage message, CancellationToken ct = default) =>
+        public Task SendDietologistInvitationAsync(DietologistInvitationMessage message, CancellationToken cancellationToken = default) =>
             throw new InvalidOperationException("SMTP unavailable");
     }
 
@@ -927,12 +927,12 @@ public partial class DietologistFeatureTests {
     private sealed class FakeNotificationPusher : INotificationPusher {
         public bool PushCalled { get; private set; }
 
-        public Task PushUnreadCountAsync(Guid userId, int count, CancellationToken ct = default) {
+        public Task PushUnreadCountAsync(Guid userId, int count, CancellationToken cancellationToken = default) {
             PushCalled = true;
             return Task.CompletedTask;
         }
 
-        public Task PushNotificationsChangedAsync(Guid userId, CancellationToken ct = default) {
+        public Task PushNotificationsChangedAsync(Guid userId, CancellationToken cancellationToken = default) {
             PushCalled = true;
             return Task.CompletedTask;
         }

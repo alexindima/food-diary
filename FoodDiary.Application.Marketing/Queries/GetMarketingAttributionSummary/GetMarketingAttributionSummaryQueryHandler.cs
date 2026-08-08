@@ -8,8 +8,8 @@ namespace FoodDiary.Application.Marketing.Queries.GetMarketingAttributionSummary
 public sealed class GetMarketingAttributionSummaryQueryHandler(IMarketingAttributionSummaryReadService readService)
     : IRequestHandler<GetMarketingAttributionSummaryQuery, Result<MarketingAttributionSummaryModel>> {
     public async Task<Result<MarketingAttributionSummaryModel>> Handle(
-        GetMarketingAttributionSummaryQuery query,
+        GetMarketingAttributionSummaryQuery request,
         CancellationToken cancellationToken) {
-        return await readService.GetAsync(query.Hours, cancellationToken).ConfigureAwait(false);
+        return await readService.GetAsync(request.Hours, cancellationToken).ConfigureAwait(false);
     }
 }
