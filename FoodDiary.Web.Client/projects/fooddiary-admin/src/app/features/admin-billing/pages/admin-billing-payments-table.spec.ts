@@ -1,6 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import type { AdminBillingPaymentViewModel } from './admin-billing.types';
 import { AdminBillingPaymentsTableComponent } from './admin-billing-payments-table';
 
@@ -60,6 +61,7 @@ describe('AdminBillingPaymentsTableComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [AdminBillingPaymentsTableComponent],
+            providers: [provideTranslateTesting()],
         }).compileComponents();
     });
 

@@ -14,4 +14,9 @@ public interface IAdminBillingReadRepository {
     Task<(IReadOnlyList<AdminBillingWebhookEventReadModel> Items, int TotalItems)> GetWebhookEventsAsync(
         AdminBillingListFilter filter,
         CancellationToken cancellationToken = default);
+
+    Task<AdminBillingRevenueSummaryReadModel> GetRevenueSummaryAsync(
+        DateTime fromUtc,
+        DateTime toUtc,
+        CancellationToken cancellationToken = default);
 }

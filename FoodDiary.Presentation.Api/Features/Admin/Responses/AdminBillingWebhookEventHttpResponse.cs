@@ -7,8 +7,11 @@ public sealed record AdminBillingWebhookEventHttpResponse(
     string EventType,
     string? ExternalObjectId,
     string Status,
-    DateTime ProcessedAtUtc,
+    DateTime? ProcessedAtUtc,
     string? PayloadJson,
     string? ErrorMessage,
     DateTime CreatedOnUtc,
-    DateTime? ModifiedOnUtc);
+    DateTime? ModifiedOnUtc,
+    DateTime? ReceivedAtUtc = null,
+    int AttemptCount = 0,
+    DateTime? NextAttemptAtUtc = null);

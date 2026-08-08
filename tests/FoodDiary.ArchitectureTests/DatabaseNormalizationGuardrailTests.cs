@@ -10,6 +10,8 @@ public sealed class DatabaseNormalizationGuardrailTests {
         "BillingPayment.ProviderMetadataJson",
         "BillingSubscription.ProviderMetadataJson",
         "BillingWebhookEvent.PayloadJson",
+        // Durable inbox retries need the already signature-verified provider event; it is opaque transport evidence, not queryable business data.
+        "BillingWebhookEvent.ParsedEventJson",
         // User-entered symptom tags are small per-entry annotations, not shared facts or reporting dimensions.
         "CycleSymptomEntry.TagsJson",
         "Notification.PayloadJson",

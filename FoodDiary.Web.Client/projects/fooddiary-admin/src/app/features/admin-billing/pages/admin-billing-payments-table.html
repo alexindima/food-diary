@@ -7,6 +7,7 @@
             <th>Kind</th>
             <th>Status</th>
             <th>Amount</th>
+            <th>{{ 'ADMIN_BILLING.PAYMENT_BREAKDOWN.TITLE' | translate }}</th>
             <th>External ids</th>
             <th>Metadata</th>
         </tr>
@@ -26,6 +27,15 @@
                 </td>
                 <td>{{ payment.amountText }}</td>
                 <td>
+                    <span>{{ 'ADMIN_BILLING.PAYMENT_BREAKDOWN.TAX' | translate }}: {{ payment.tax ?? '—' }}</span>
+                    <span>{{ 'ADMIN_BILLING.PAYMENT_BREAKDOWN.FEE' | translate }}: {{ payment.fee ?? '—' }}</span>
+                    <span>{{ 'ADMIN_BILLING.PAYMENT_BREAKDOWN.EARNINGS' | translate }}: {{ payment.earnings ?? '—' }}</span>
+                    <span
+                        >{{ 'ADMIN_BILLING.PAYMENT_BREAKDOWN.PAYOUT' | translate }}: {{ payment.payoutEarnings ?? '—' }}
+                        {{ payment.payoutCurrency ?? '' }}</span
+                    >
+                </td>
+                <td>
                     <span>Payment: {{ payment.externalPaymentIdText }}</span>
                     <span>Customer: {{ payment.externalCustomerIdText }}</span>
                     <span>Webhook: {{ payment.webhookEventIdText }}</span>
@@ -44,7 +54,7 @@
             </tr>
         } @empty {
             <tr>
-                <td colspan="8">No payments found.</td>
+                <td colspan="9">No payments found.</td>
             </tr>
         }
     </tbody>

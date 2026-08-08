@@ -29,6 +29,11 @@ public static partial class Errors {
             "Premium subscription is already active for the current user.",
             Kind: ErrorKind.Conflict);
 
+        public static Error CheckoutAlreadyInProgress => new(
+            "Billing.CheckoutAlreadyInProgress",
+            "A billing checkout is already in progress for the current user.",
+            Kind: ErrorKind.Conflict);
+
         public static Error TrialAlreadyUsed => new(
             "Billing.TrialAlreadyUsed",
             "Premium trial has already been used for the current user.",

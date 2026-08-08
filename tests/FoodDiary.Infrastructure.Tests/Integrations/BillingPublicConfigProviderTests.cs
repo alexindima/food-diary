@@ -20,7 +20,7 @@ public sealed class BillingPublicConfigProviderTests {
 
         Assert.Equal(BillingProviderNames.Stripe, config.Provider);
         Assert.Equal([BillingProviderNames.Stripe, BillingProviderNames.Paddle, BillingProviderNames.YooKassa], config.AvailableProviders);
-        Assert.Equal("paddle-client-token", config.PaddleClientToken);
+        Assert.Equal("test_paddle-client-token", config.PaddleClientToken);
     }
 
     [Fact]
@@ -28,14 +28,14 @@ public sealed class BillingPublicConfigProviderTests {
         BillingPublicConfigProvider provider = CreateProvider(
             billing: new BillingOptions { Provider = " paddle " },
             stripe: new StripeOptions(),
-            paddle: ValidPaddleOptions(clientSideToken: " paddle-token "),
+            paddle: ValidPaddleOptions(clientSideToken: " test_paddle-token "),
             yooKassa: new YooKassaOptions());
 
         BillingPublicConfigModel config = provider.GetPublicConfig();
 
         Assert.Equal("paddle", config.Provider);
         Assert.Equal([BillingProviderNames.Paddle], config.AvailableProviders);
-        Assert.Equal("paddle-token", config.PaddleClientToken);
+        Assert.Equal("test_paddle-token", config.PaddleClientToken);
     }
 
     [Fact]
@@ -92,9 +92,11 @@ public sealed class BillingPublicConfigProviderTests {
         };
     }
 
-    private static PaddleOptions ValidPaddleOptions(string clientSideToken = "paddle-client-token") {
+    private static PaddleOptions ValidPaddleOptions(string clientSideToken = "test_paddle-client-token") {
         return new PaddleOptions {
+            Environment = PaddleOptions.SandboxEnvironment,
             ApiKey = "paddle-api-key",
+            ApiBaseUrl = "https://sandbox-api.paddle.com",
             ClientSideToken = clientSideToken,
             PremiumMonthlyPriceId = "pri_month",
             PremiumYearlyPriceId = "pri_year",

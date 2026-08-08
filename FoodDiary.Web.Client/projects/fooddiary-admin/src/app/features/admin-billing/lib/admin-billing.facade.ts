@@ -6,6 +6,7 @@ import { AdminBillingService } from '../api/admin-billing.service';
 import type {
     AdminBillingFilters,
     AdminBillingPayment,
+    AdminBillingRevenueSummary,
     AdminBillingSubscription,
     AdminBillingTab,
     AdminBillingWebhookEvent,
@@ -33,6 +34,7 @@ export class AdminBillingFacade {
     public readonly subscriptions = signal<AdminBillingSubscription[]>([]);
     public readonly payments = signal<AdminBillingPayment[]>([]);
     public readonly webhookEvents = signal<AdminBillingWebhookEvent[]>([]);
+    public readonly revenueSummary = signal<AdminBillingRevenueSummary | null>(null);
     public readonly subscriptionItems = computed<AdminBillingSubscriptionViewModel[]>(() =>
         this.subscriptions().map(subscription => ({
             ...subscription,
@@ -58,7 +60,7 @@ export class AdminBillingFacade {
     public readonly webhookEventItems = computed<AdminBillingWebhookEventViewModel[]>(() =>
         this.webhookEvents().map(event => ({
             ...event,
-            processedText: this.formatDateLabel(event.processedAtUtc),
+            processedText: this.formatDateLabel(event.processedAtUtc ?? event.receivedAtUtc ?? event.createdOnUtc),
             eventIdText: this.shortId(event.eventId),
             externalObjectIdText: this.shortId(event.externalObjectId),
         })),
@@ -119,6 +121,7 @@ export class AdminBillingFacade {
         this.isLoading.set(true);
         this.errorMessage.set(null);
         const filters = this.buildFilters();
+        this.loadRevenueSummary(filters);
 
         if (tab === 'subscriptions') {
             this.billingService
@@ -168,6 +171,20 @@ export class AdminBillingFacade {
             this.subscriptions.set(response.items);
             this.applyPageData(response);
         }
+    }
+
+    private loadRevenueSummary(filters: AdminBillingFilters): void {
+        this.billingService
+            .getRevenueSummary(filters)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: summary => {
+                    this.revenueSummary.set(summary);
+                },
+                error: () => {
+                    this.revenueSummary.set(null);
+                },
+            });
     }
 
     private applyPayments(response: PagedResponse<AdminBillingPayment>, requestId: number, tab: AdminBillingTab): void {

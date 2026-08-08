@@ -2,13 +2,196 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
+using FoodDiary.Application.Billing.Services;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
+using System.Text.Json;
 
 namespace FoodDiary.Application.Tests.Billing;
 
 public partial class BillingFeatureTests {
+    [Fact]
+    public async Task ProcessBillingWebhook_WhenQueueOnly_PersistsReceivedEventWithoutBusinessEffects() {
+        var user = User.Create("queued-webhook@example.com", "hash");
+        var userRepository = new FakeUserRepository(user);
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository();
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var webhookEventRepository = new RecordingBillingWebhookEventRepository();
+        BillingWebhookEventModel webhookModel = CreateWebhookPaymentEvent(user, "evt_queued", "sub_queued");
+        var gateway = new FakeBillingProviderGateway(BillingProviderNames.Paddle, webhookEvent: webhookModel);
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
+            gateway,
+            userRepository,
+            subscriptionRepository,
+            paymentRepository,
+            webhookEventRepository);
+
+        Result result = await handler.Handle(
+            new ProcessBillingWebhookCommand(
+                BillingProviderNames.Paddle,
+                "{\"event_id\":\"evt_queued\"}",
+                "signature",
+                QueueOnly: true),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        BillingWebhookEvent storedEvent = Assert.Single(webhookEventRepository.Events);
+        Assert.Multiple(
+            () => Assert.Equal(BillingWebhookEvent.ReceivedStatus, storedEvent.Status),
+            () => Assert.Null(storedEvent.ProcessedAtUtc),
+            () => Assert.NotNull(storedEvent.ParsedEventJson),
+            () => Assert.Empty(subscriptionRepository.Subscriptions),
+            () => Assert.Empty(paymentRepository.Payments));
+    }
+
+    [Fact]
+    public async Task ProcessQueuedBillingWebhook_AppliesEffectsAndMarksInboxEventProcessed() {
+        var user = User.Create("queued-processor@example.com", "hash");
+        var userRepository = new FakeUserRepository(user);
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository();
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var webhookEventRepository = new RecordingBillingWebhookEventRepository();
+        BillingWebhookEventModel webhookModel = CreateWebhookPaymentEvent(user, "evt_queued_process", "sub_queued_process");
+        var inboxEvent = BillingWebhookEvent.CreateReceived(
+            BillingProviderNames.YooKassa,
+            webhookModel.EventId,
+            webhookModel.EventType,
+            webhookModel.ExternalSubscriptionId,
+            Now,
+            "{}",
+            JsonSerializer.Serialize(webhookModel));
+        await webhookEventRepository.AddAsync(inboxEvent);
+
+        var dateTimeProvider = new FixedDateTimeProvider(Now);
+        var billingAccessService = new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider);
+        var processor = new BillingWebhookEventProcessor(
+            webhookEventRepository,
+            new NoOpBillingTransactionRunner(),
+            new BillingWebhookContextResolver(subscriptionRepository, userRepository, paymentRepository),
+            new BillingWebhookSubscriptionWriter(subscriptionRepository, dateTimeProvider),
+            new BillingWebhookPaymentRecorder(paymentRepository),
+            new BillingWebhookPremiumRoleSyncer(
+                subscriptionRepository,
+                userRepository,
+                billingAccessService,
+                new NoOpMarketingConversionRecorder(),
+                dateTimeProvider),
+            dateTimeProvider);
+        var inboxService = new BillingWebhookInboxService(
+            webhookEventRepository,
+            new NoOpBillingTransactionRunner(),
+            processor,
+            dateTimeProvider);
+        var handler = new ProcessQueuedBillingWebhookCommandHandler(inboxService);
+
+        Result result = await handler.Handle(
+            new ProcessQueuedBillingWebhookCommand(inboxEvent.Id),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(BillingWebhookEvent.ProcessedStatus, inboxEvent.Status),
+            () => Assert.Equal(Now, inboxEvent.ProcessedAtUtc),
+            () => Assert.Single(subscriptionRepository.Subscriptions),
+            () => Assert.Single(paymentRepository.Payments));
+    }
+
+    [Fact]
+    public async Task ProcessQueuedBillingWebhook_WhenStoredEventIsInvalid_SchedulesRetry() {
+        var webhookEventRepository = new RecordingBillingWebhookEventRepository();
+        var inboxEvent = BillingWebhookEvent.CreateReceived(
+            BillingProviderNames.Paddle,
+            "evt_invalid_queued",
+            "transaction.completed",
+            "txn_invalid_queued",
+            Now,
+            "{}",
+            "{invalid-json");
+        await webhookEventRepository.AddAsync(inboxEvent);
+        var dateTimeProvider = new FixedDateTimeProvider(Now);
+        var userRepository = new FakeUserRepository();
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository();
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var processor = new BillingWebhookEventProcessor(
+            webhookEventRepository,
+            new NoOpBillingTransactionRunner(),
+            new BillingWebhookContextResolver(subscriptionRepository, userRepository, paymentRepository),
+            new BillingWebhookSubscriptionWriter(subscriptionRepository, dateTimeProvider),
+            new BillingWebhookPaymentRecorder(paymentRepository),
+            new BillingWebhookPremiumRoleSyncer(
+                subscriptionRepository,
+                userRepository,
+                new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
+                new NoOpMarketingConversionRecorder(),
+                dateTimeProvider),
+            dateTimeProvider);
+        var inboxService = new BillingWebhookInboxService(
+            webhookEventRepository,
+            new NoOpBillingTransactionRunner(),
+            processor,
+            dateTimeProvider);
+        var handler = new ProcessQueuedBillingWebhookCommandHandler(inboxService);
+
+        Result result = await handler.Handle(
+            new ProcessQueuedBillingWebhookCommand(inboxEvent.Id),
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.True(result.IsFailure),
+            () => Assert.Equal(BillingWebhookEvent.FailedStatus, inboxEvent.Status),
+            () => Assert.Equal(1, inboxEvent.AttemptCount),
+            () => Assert.Equal(Now.AddMinutes(1), inboxEvent.NextAttemptAtUtc),
+            () => Assert.False(string.IsNullOrWhiteSpace(inboxEvent.ErrorMessage)));
+    }
+
+    [Fact]
+    public async Task ProcessBillingWebhook_ForPaddleSubscriptionQuantityAboveOne_FailsClosed() {
+        var user = User.Create("paddle-quantity@example.com", "hash");
+        var userRepository = new FakeUserRepository(user);
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository();
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var webhookEventRepository = new RecordingBillingWebhookEventRepository();
+        var gateway = new FakeBillingProviderGateway(
+            BillingProviderNames.Paddle,
+            webhookEvent: new BillingWebhookEventModel(
+                "evt_quantity_5",
+                "subscription.created",
+                "customer_quantity",
+                "sub_quantity",
+                ExternalPaymentMethodId: null,
+                "price_monthly",
+                "monthly",
+                "active",
+                Now,
+                Now.AddMonths(1),
+                CancelAtPeriodEnd: false,
+                CanceledAtUtc: null,
+                TrialStartUtc: null,
+                TrialEndUtc: null,
+                Amount: null,
+                Currency: null,
+                ProviderMetadataJson: null,
+                user.Id.Value,
+                OccurredAtUtc: Now,
+                Quantity: 5));
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
+            gateway,
+            userRepository,
+            subscriptionRepository,
+            paymentRepository,
+            webhookEventRepository);
+
+        Result result = await handler.Handle(
+            new ProcessBillingWebhookCommand(BillingProviderNames.Paddle, "{}", "signature"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Contains("quantity", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Empty(subscriptionRepository.Subscriptions);
+        Assert.Empty(webhookEventRepository.Events);
+    }
+
 
     [Fact]
     public async Task ProcessBillingWebhook_ForNewEvent_StoresSubscriptionPaymentWebhookAndAddsPremiumRole() {
@@ -231,7 +414,7 @@ public partial class BillingFeatureTests {
 
         ResultAssert.Success(result);
         Assert.Empty(paymentRepository.Payments);
-        Assert.Empty(webhookEventRepository.Events);
+        Assert.Equal(BillingWebhookEvent.ProcessedStatus, Assert.Single(webhookEventRepository.Events).Status);
         Assert.Equal(0, subscriptionRepository.UpdateCount);
     }
 

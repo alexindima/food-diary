@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Billing;
 
 [ApiController]
 [AllowAnonymous]
-[EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+[EnableRateLimiting(PresentationPolicyNames.WebhookRateLimitPolicyName)]
 [Route("api/v{version:apiVersion}/billing/webhooks/{provider}")]
 public sealed class BillingWebhookController(ISender mediator, BillingWebhookHttpProcessor processor) : BaseApiController(mediator) {
     [HttpPost]

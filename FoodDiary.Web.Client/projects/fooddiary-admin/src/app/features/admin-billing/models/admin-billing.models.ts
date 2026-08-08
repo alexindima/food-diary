@@ -46,6 +46,11 @@ export type AdminBillingPayment = {
     kind: string;
     amount?: number | null;
     currency?: string | null;
+    tax?: number | null;
+    fee?: number | null;
+    earnings?: number | null;
+    payoutCurrency?: string | null;
+    payoutEarnings?: number | null;
     currentPeriodStartUtc?: string | null;
     currentPeriodEndUtc?: string | null;
     webhookEventId?: string | null;
@@ -61,11 +66,34 @@ export type AdminBillingWebhookEvent = {
     eventType: string;
     externalObjectId?: string | null;
     status: string;
-    processedAtUtc: string;
+    processedAtUtc?: string | null;
+    receivedAtUtc?: string | null;
+    attemptCount?: number;
+    nextAttemptAtUtc?: string | null;
     payloadJson?: string | null;
     errorMessage?: string | null;
     createdOnUtc: string;
     modifiedOnUtc?: string | null;
+};
+
+export type AdminBillingRevenueCurrency = {
+    currency: string;
+    gross: number;
+    refunds: number;
+    chargebacks: number;
+    reversals: number;
+    net: number;
+    successfulPayments: number;
+    tax: number;
+    paddleFees: number;
+    paddleEarnings: number;
+    earningsTrackedPayments: number;
+};
+
+export type AdminBillingRevenueSummary = {
+    fromUtc: string;
+    toUtc: string;
+    currencies: AdminBillingRevenueCurrency[];
 };
 
 export type PagedResponse<T> = {

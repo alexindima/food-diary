@@ -6,6 +6,7 @@ import { environment } from '../../../../environments/environment';
 import type {
     AdminBillingFilters,
     AdminBillingPayment,
+    AdminBillingRevenueSummary,
     AdminBillingSubscription,
     AdminBillingTab,
     AdminBillingWebhookEvent,
@@ -37,6 +38,12 @@ export class AdminBillingService {
         return this.getPaged<AdminBillingPayment>('payments', page, limit, filters);
     }
 
+    public getRevenueSummary(filters: AdminBillingFilters): Observable<AdminBillingRevenueSummary> {
+        return this.http.get<AdminBillingRevenueSummary>(`${this.baseUrl}/revenue-summary`, {
+            params: this.buildFilterParams(filters),
+        });
+    }
+
     public getWebhookEvents(
         page: number,
         limit: number,
@@ -46,13 +53,7 @@ export class AdminBillingService {
     }
 
     private getPaged<T>(path: AdminBillingTab, page: number, limit: number, filters: AdminBillingFilters): Observable<PagedResponse<T>> {
-        let params = new HttpParams().set('page', page).set('limit', limit);
-
-        for (const [key, value] of Object.entries(filters)) {
-            if (typeof value === 'string' && value.trim().length > 0) {
-                params = params.set(key, value);
-            }
-        }
+        const params = this.buildFilterParams(filters).set('page', page).set('limit', limit);
 
         return this.http.get<ApiPagedResponse<T>>(`${this.baseUrl}/${path}`, { params }).pipe(
             map(response => ({
@@ -63,5 +64,17 @@ export class AdminBillingService {
                 totalItems: response.totalItems,
             })),
         );
+    }
+
+    private buildFilterParams(filters: AdminBillingFilters): HttpParams {
+        let params = new HttpParams();
+
+        for (const [key, value] of Object.entries(filters)) {
+            if (typeof value === 'string' && value.trim().length > 0) {
+                params = params.set(key, value);
+            }
+        }
+
+        return params;
     }
 }

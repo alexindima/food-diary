@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
 import type { AdminBillingWebhookEventViewModel } from './admin-billing.types';
 
 @Component({
     selector: 'fd-admin-billing-webhooks-table',
-    imports: [FdUiButtonComponent],
+    imports: [FdUiButtonComponent, TranslatePipe],
     templateUrl: './admin-billing-webhooks-table.html',
     styleUrl: './admin-billing.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

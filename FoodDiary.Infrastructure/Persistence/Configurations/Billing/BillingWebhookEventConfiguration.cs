@@ -30,11 +30,20 @@ internal sealed class BillingWebhookEventConfiguration : IEntityTypeConfiguratio
             .IsRequired()
             .HasMaxLength(32);
 
+        builder.Property(e => e.ReceivedAtUtc)
+            .HasColumnType("timestamp with time zone");
+
         builder.Property(e => e.ProcessedAtUtc)
             .HasColumnType("timestamp with time zone");
 
         builder.Property(e => e.PayloadJson)
             .HasColumnType("jsonb");
+
+        builder.Property(e => e.ParsedEventJson)
+            .HasColumnType("jsonb");
+
+        builder.Property(e => e.NextAttemptAtUtc)
+            .HasColumnType("timestamp with time zone");
 
         builder.Property(e => e.ErrorMessage)
             .HasMaxLength(1024);
@@ -43,5 +52,6 @@ internal sealed class BillingWebhookEventConfiguration : IEntityTypeConfiguratio
             .IsUnique();
 
         builder.HasIndex(e => e.ProcessedAtUtc);
+        builder.HasIndex(e => new { e.Status, e.NextAttemptAtUtc, e.ReceivedAtUtc });
     }
 }

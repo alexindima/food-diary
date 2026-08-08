@@ -76,11 +76,13 @@ public sealed class BillingPublicConfigProvider(
     }
 
     private static bool HasValidPaddleCheckoutConfiguration(PaddleOptions options) =>
+        options.CheckoutEnabled &&
         !string.IsNullOrWhiteSpace(options.ApiKey) &&
         !string.IsNullOrWhiteSpace(options.ClientSideToken) &&
         !string.IsNullOrWhiteSpace(options.PremiumMonthlyPriceId) &&
         !string.IsNullOrWhiteSpace(options.PremiumYearlyPriceId) &&
-        Uri.IsWellFormedUriString(options.CheckoutUrl, UriKind.Absolute);
+        Uri.IsWellFormedUriString(options.CheckoutUrl, UriKind.Absolute) &&
+        PaddleOptions.HasMatchingEnvironment(options);
 
     private static bool HasValidStripeCheckoutConfiguration(StripeOptions options) =>
         !string.IsNullOrWhiteSpace(options.SecretKey) &&

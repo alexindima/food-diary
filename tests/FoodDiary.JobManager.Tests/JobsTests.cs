@@ -1071,6 +1071,8 @@ public sealed class JobsTests {
             [
                 RecurringJobIds.ImageAssetsCleanup,
                 RecurringJobIds.BillingRenewal,
+                RecurringJobIds.BillingWebhookInbox,
+                RecurringJobIds.PaddleNotificationRecovery,
                 RecurringJobIds.FastingNotifications,
                 RecurringJobIds.ImageObjectDeletionOutbox,
                 RecurringJobIds.EmailOutbox,
@@ -1088,6 +1090,8 @@ public sealed class JobsTests {
                 RecurringJobIds.NotificationsCleanup,
                 RecurringJobIds.UsersCleanup,
                 RecurringJobIds.BillingRenewal,
+                RecurringJobIds.BillingWebhookInbox,
+                RecurringJobIds.PaddleNotificationRecovery,
                 RecurringJobIds.FastingNotifications,
                 RecurringJobIds.ImageObjectDeletionOutbox,
                 RecurringJobIds.EmailOutbox,
@@ -1622,6 +1626,9 @@ public sealed class JobsTests {
             Payments.Add(payment);
             return Task.FromResult(payment);
         }
+
+        public Task UpdateAsync(BillingPayment payment, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
     }
 
     [ExcludeFromCodeCoverage]

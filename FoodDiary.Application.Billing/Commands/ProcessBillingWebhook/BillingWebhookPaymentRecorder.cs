@@ -1,12 +1,14 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 
 public sealed class BillingWebhookPaymentRecorder(IBillingPaymentWriteRepository billingPaymentRepository) {
     public async Task AddIfPresentAsync(
-        BillingSubscription subscription,
+        BillingSubscription? subscription,
+        UserId userId,
         string provider,
         BillingWebhookEventModel webhookEvent,
         CancellationToken cancellationToken) {
@@ -14,7 +16,8 @@ public sealed class BillingWebhookPaymentRecorder(IBillingPaymentWriteRepository
             return;
         }
 
-        string externalPaymentId = webhookEvent.ExternalSubscriptionId ??
+        string externalPaymentId = webhookEvent.ExternalPaymentId ??
+            webhookEvent.ExternalSubscriptionId ??
             webhookEvent.ExternalPaymentMethodId ??
             webhookEvent.EventId;
         BillingPayment? existingPayment = await billingPaymentRepository.GetByExternalPaymentIdAsync(
@@ -22,12 +25,34 @@ public sealed class BillingWebhookPaymentRecorder(IBillingPaymentWriteRepository
             externalPaymentId,
             cancellationToken).ConfigureAwait(false);
         if (existingPayment is not null) {
+            existingPayment.ApplyProviderResult(
+                subscription?.Id,
+                webhookEvent.ExternalCustomerId,
+                webhookEvent.ExternalSubscriptionId,
+                webhookEvent.ExternalPaymentMethodId,
+                webhookEvent.ExternalPriceId,
+                webhookEvent.Plan,
+                webhookEvent.Status,
+                ResolvePaymentKind(webhookEvent),
+                webhookEvent.Amount,
+                webhookEvent.Currency,
+                webhookEvent.CurrentPeriodStartUtc,
+                webhookEvent.CurrentPeriodEndUtc,
+                webhookEvent.EventId,
+                webhookEvent.ProviderMetadataJson,
+                webhookEvent.Tax,
+                webhookEvent.Fee,
+                webhookEvent.Earnings,
+                webhookEvent.PayoutCurrency,
+                webhookEvent.PayoutEarnings,
+                webhookEvent.OccurredAtUtc);
+            await billingPaymentRepository.UpdateAsync(existingPayment, cancellationToken).ConfigureAwait(false);
             return;
         }
 
         var payment = BillingPayment.Create(
-            subscription.UserId,
-            subscription.Id,
+            userId,
+            subscription?.Id,
             provider,
             externalPaymentId,
             webhookEvent.ExternalCustomerId,
@@ -36,13 +61,36 @@ public sealed class BillingWebhookPaymentRecorder(IBillingPaymentWriteRepository
             webhookEvent.ExternalPriceId,
             webhookEvent.Plan,
             webhookEvent.Status,
-            BillingPaymentKinds.Webhook,
+            ResolvePaymentKind(webhookEvent),
             webhookEvent.Amount,
             webhookEvent.Currency,
             webhookEvent.CurrentPeriodStartUtc,
             webhookEvent.CurrentPeriodEndUtc,
             webhookEvent.EventId,
-            webhookEvent.ProviderMetadataJson);
+            webhookEvent.ProviderMetadataJson,
+            webhookEvent.Tax,
+            webhookEvent.Fee,
+            webhookEvent.Earnings,
+            webhookEvent.PayoutCurrency,
+            webhookEvent.PayoutEarnings,
+            webhookEvent.OccurredAtUtc);
         await billingPaymentRepository.AddAsync(payment, cancellationToken).ConfigureAwait(false);
+    }
+
+    private static string ResolvePaymentKind(BillingWebhookEventModel webhookEvent) {
+        if (webhookEvent.FinancialAction is not null) {
+            return webhookEvent.FinancialAction.Trim().ToLowerInvariant() switch {
+                BillingPaymentKinds.Refund => BillingPaymentKinds.Refund,
+                BillingPaymentKinds.Credit => BillingPaymentKinds.Credit,
+                BillingPaymentKinds.Chargeback => BillingPaymentKinds.Chargeback,
+                BillingPaymentKinds.ChargebackReverse => BillingPaymentKinds.ChargebackReverse,
+                BillingPaymentKinds.CreditReverse => BillingPaymentKinds.CreditReverse,
+                _ => BillingPaymentKinds.Adjustment,
+            };
+        }
+
+        return webhookEvent.ExternalPaymentId is not null
+            ? BillingPaymentKinds.Transaction
+            : BillingPaymentKinds.Webhook;
     }
 }

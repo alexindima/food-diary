@@ -23,6 +23,8 @@ public static class DependencyInjection {
         services.AddScoped<BillingWebhookPaymentRecorder>();
         services.AddScoped<BillingWebhookPremiumRoleSyncer>();
         services.AddScoped<BillingWebhookSubscriptionWriter>();
+        services.AddScoped<BillingWebhookEventProcessor>();
+        services.AddScoped<IBillingWebhookInboxService, BillingWebhookInboxService>();
         services.AddScoped<BillingRenewalService>();
         return services;
     }

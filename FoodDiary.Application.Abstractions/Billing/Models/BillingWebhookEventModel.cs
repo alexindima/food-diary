@@ -19,4 +19,14 @@ public sealed record BillingWebhookEventModel(
     string? Currency,
     string? ProviderMetadataJson,
     Guid? UserId,
-    DateTime? OccurredAtUtc = null);
+    DateTime? OccurredAtUtc = null,
+    string? ExternalPaymentId = null,
+    string? RelatedTransactionId = null,
+    string? FinancialAction = null,
+    int? Quantity = null,
+    bool UpdatesSubscription = true,
+    decimal? Tax = null,
+    decimal? Fee = null,
+    decimal? Earnings = null,
+    string? PayoutCurrency = null,
+    decimal? PayoutEarnings = null);

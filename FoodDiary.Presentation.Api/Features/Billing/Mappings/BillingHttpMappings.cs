@@ -18,5 +18,5 @@ public static class BillingHttpMappings {
     }
 
     public static ProcessBillingWebhookCommand ToWebhookCommand(this string provider, string payload, string signatureHeader) =>
-        new(provider, payload, signatureHeader);
+        new(provider, payload, signatureHeader, QueueOnly: true);
 }

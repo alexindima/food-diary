@@ -11,7 +11,8 @@ namespace FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 
 public sealed class BillingWebhookContextResolver(
     IBillingSubscriptionWriteRepository billingSubscriptionRepository,
-    IBillingUserContextService billingUserContextService) {
+    IBillingUserContextService billingUserContextService,
+    IBillingPaymentWriteRepository? billingPaymentRepository = null) {
     public async Task<Result<BillingWebhookProcessingContext?>> ResolveAsync(
         string provider,
         BillingWebhookEventModel webhookEvent,
@@ -20,18 +21,28 @@ public sealed class BillingWebhookContextResolver(
             provider,
             webhookEvent,
             cancellationToken).ConfigureAwait(false);
-        if (subscription is not null &&
+        if (webhookEvent.UpdatesSubscription &&
+            subscription is not null &&
             string.Equals(subscription.LastWebhookEventId, webhookEvent.EventId, StringComparison.Ordinal)) {
             return Result.Success<BillingWebhookProcessingContext?>(value: null);
         }
 
-        if (subscription?.LastWebhookOccurredAtUtc is DateTime lastOccurredAtUtc &&
+        if (webhookEvent.UpdatesSubscription &&
+            subscription?.LastWebhookOccurredAtUtc is DateTime lastOccurredAtUtc &&
             webhookEvent.OccurredAtUtc is DateTime occurredAtUtc &&
-            occurredAtUtc <= lastOccurredAtUtc) {
+            occurredAtUtc < lastOccurredAtUtc) {
             return Result.Success<BillingWebhookProcessingContext?>(value: null);
         }
 
-        User? user = await ResolveUserAsync(subscription, webhookEvent.UserId, cancellationToken).ConfigureAwait(false);
+        BillingPayment? relatedPayment = await ResolveRelatedPaymentAsync(
+            provider,
+            webhookEvent.RelatedTransactionId,
+            cancellationToken).ConfigureAwait(false);
+        User? user = await ResolveUserAsync(
+            subscription,
+            webhookEvent.UserId,
+            relatedPayment?.UserId,
+            cancellationToken).ConfigureAwait(false);
         return user is null
             ? Result.Failure<BillingWebhookProcessingContext?>(
                 Errors.Billing.WebhookValidationFailed("Webhook user could not be resolved."))
@@ -62,30 +73,42 @@ public sealed class BillingWebhookContextResolver(
             }
         }
 
-        return await billingSubscriptionRepository.GetByExternalCustomerIdAsync(
-            provider,
-            webhookEvent.ExternalCustomerId!,
-            cancellationToken).ConfigureAwait(false);
+        return string.IsNullOrWhiteSpace(webhookEvent.ExternalCustomerId)
+            ? null
+            : await billingSubscriptionRepository.GetByExternalCustomerIdAsync(
+                provider,
+                webhookEvent.ExternalCustomerId,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    private Task<BillingPayment?> ResolveRelatedPaymentAsync(
+        string provider,
+        string? relatedTransactionId,
+        CancellationToken cancellationToken) {
+        return billingPaymentRepository is null || string.IsNullOrWhiteSpace(relatedTransactionId)
+            ? Task.FromResult<BillingPayment?>(null)
+            : billingPaymentRepository.GetByExternalPaymentIdAsync(provider, relatedTransactionId, cancellationToken);
     }
 
     private async Task<User?> ResolveUserAsync(
         BillingSubscription? subscription,
         Guid? webhookUserId,
+        UserId? relatedPaymentUserId,
         CancellationToken cancellationToken) {
         if (subscription is not null) {
             return await billingUserContextService.GetUserIncludingDeletedAsync(subscription.UserId, cancellationToken).ConfigureAwait(false);
         }
 
-        if (!webhookUserId.HasValue) {
-            return null;
+        if (webhookUserId.HasValue && webhookUserId.Value != Guid.Empty) {
+            return await billingUserContextService.GetUserIncludingDeletedAsync(
+                new UserId(webhookUserId.Value),
+                cancellationToken).ConfigureAwait(false);
         }
 
-        if (webhookUserId.Value == Guid.Empty) {
-            return null;
-        }
-
-        return await billingUserContextService.GetUserIncludingDeletedAsync(
-            new UserId(webhookUserId.Value),
-            cancellationToken).ConfigureAwait(false);
+        return relatedPaymentUserId is null || relatedPaymentUserId == UserId.Empty
+            ? null
+            : await billingUserContextService.GetUserIncludingDeletedAsync(
+                relatedPaymentUserId.Value,
+                cancellationToken).ConfigureAwait(false);
     }
 }

@@ -552,6 +552,33 @@
         "EDIT_ARIA": "Open meal draft editor",
         "SAVE_ARIA": "Save meal draft"
     },
+    "ADMIN_BILLING": {
+        "REVENUE": {
+            "TITLE": "Revenue for selected period",
+            "EMPTY": "No completed payments in this period.",
+            "GROSS": "Collected from customers",
+            "REFUNDS": "Refunds and credits",
+            "CHARGEBACKS": "Chargebacks",
+            "REVERSALS": "Reversals",
+            "NET": "Collected after adjustments",
+            "TAX": "Tax collected",
+            "FEES": "Paddle fees",
+            "EARNINGS": "Paddle earnings",
+            "PAYMENTS": "Successful payments",
+            "COMPLETENESS": "Earnings data coverage"
+        },
+        "PAYMENT_BREAKDOWN": {
+            "TITLE": "Financial breakdown",
+            "TAX": "Tax",
+            "FEE": "Fee",
+            "EARNINGS": "Earnings",
+            "PAYOUT": "Payout earnings"
+        },
+        "WEBHOOK_INBOX": {
+            "ATTEMPTS": "Attempts",
+            "NEXT_RETRY": "Next retry"
+        }
+    },
     "HUNGER_BEFORE_SCALE": {
         "LEVEL_1": {
             "TITLE": "Very hungry",

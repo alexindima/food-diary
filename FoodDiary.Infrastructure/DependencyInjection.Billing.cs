@@ -17,6 +17,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IBillingWebhookEventReadRepository>(static provider => provider.GetRequiredService<IBillingWebhookEventRepository>());
         services.AddScoped<IBillingWebhookEventWriteRepository>(static provider => provider.GetRequiredService<IBillingWebhookEventRepository>());
         services.AddScoped<IBillingTransactionRunner, EfBillingTransactionRunner>();
+        services.AddScoped<IBillingCheckoutLock, PostgresBillingCheckoutLock>();
 
         return services;
     }

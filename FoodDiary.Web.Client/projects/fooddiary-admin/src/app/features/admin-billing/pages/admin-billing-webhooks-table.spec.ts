@@ -1,6 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import type { AdminBillingWebhookEventViewModel } from './admin-billing.types';
 import { AdminBillingWebhooksTableComponent } from './admin-billing-webhooks-table';
 
@@ -48,6 +49,7 @@ describe('AdminBillingWebhooksTableComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [AdminBillingWebhooksTableComponent],
+            providers: [provideTranslateTesting()],
         }).compileComponents();
     });
 

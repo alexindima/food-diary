@@ -1,0 +1,90 @@
+using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Results;
+using FoodDiary.Domain.Entities.Billing;
+
+namespace FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
+
+public sealed class BillingWebhookEventProcessor(
+    IBillingWebhookEventWriteRepository billingWebhookEventRepository,
+    IBillingTransactionRunner billingTransactionRunner,
+    BillingWebhookContextResolver billingWebhookContextResolver,
+    BillingWebhookSubscriptionWriter billingWebhookSubscriptionWriter,
+    BillingWebhookPaymentRecorder billingWebhookPaymentRecorder,
+    BillingWebhookPremiumRoleSyncer billingWebhookPremiumRoleSyncer,
+    TimeProvider timeProvider) {
+    public async Task<Result> ProcessAsync(
+        string provider,
+        string payload,
+        BillingWebhookEventModel webhookEvent,
+        BillingWebhookEvent? inboxEvent,
+        CancellationToken cancellationToken) {
+        Result<BillingWebhookProcessingContext?> contextResult = await billingWebhookContextResolver.ResolveAsync(
+            provider,
+            webhookEvent,
+            cancellationToken).ConfigureAwait(false);
+        if (contextResult.IsFailure) {
+            return Result.Failure(contextResult.Error);
+        }
+
+        try {
+            await billingTransactionRunner.ExecuteAsync(async ct => {
+                BillingWebhookEvent persistedEvent = inboxEvent ??
+                    billingWebhookSubscriptionWriter.CreateProcessedEvent(provider, webhookEvent, payload);
+                if (inboxEvent is null) {
+                    await billingWebhookEventRepository.AddAsync(persistedEvent, ct).ConfigureAwait(false);
+                }
+
+                BillingWebhookProcessingContext? context = contextResult.Value;
+                if (context is not null) {
+                    await ApplyBusinessEffectsAsync(provider, webhookEvent, context, ct).ConfigureAwait(false);
+                }
+
+                if (inboxEvent is not null) {
+                    inboxEvent.MarkProcessed(timeProvider.GetUtcNow().UtcDateTime);
+                    await billingWebhookEventRepository.UpdateAsync(inboxEvent, ct).ConfigureAwait(false);
+                }
+            }, cancellationToken).ConfigureAwait(false);
+        } catch (BillingWebhookEventAlreadyProcessedException) {
+            return Result.Success();
+        } catch (BillingPaymentAlreadyExistsException) {
+            if (inboxEvent is not null) {
+                inboxEvent.MarkProcessed(timeProvider.GetUtcNow().UtcDateTime);
+                await billingWebhookEventRepository.UpdateAsync(inboxEvent, cancellationToken).ConfigureAwait(false);
+            }
+
+            return Result.Success();
+        }
+
+        return Result.Success();
+    }
+
+    private async Task ApplyBusinessEffectsAsync(
+        string provider,
+        BillingWebhookEventModel webhookEvent,
+        BillingWebhookProcessingContext context,
+        CancellationToken cancellationToken) {
+        BillingSubscription? updatedSubscription = context.Subscription;
+        if (webhookEvent.UpdatesSubscription) {
+            updatedSubscription = await billingWebhookSubscriptionWriter.UpsertAsync(
+                provider,
+                webhookEvent,
+                context.Subscription,
+                context.User,
+                cancellationToken).ConfigureAwait(false);
+
+            await billingWebhookPremiumRoleSyncer.SyncAsync(
+                context.User,
+                updatedSubscription,
+                webhookEvent,
+                cancellationToken).ConfigureAwait(false);
+        }
+
+        await billingWebhookPaymentRecorder.AddIfPresentAsync(
+            updatedSubscription,
+            context.User.Id,
+            provider,
+            webhookEvent,
+            cancellationToken).ConfigureAwait(false);
+    }
+}

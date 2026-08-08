@@ -6,13 +6,13 @@
                       "externalTransfers":  "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
                   },
     "summary":  {
-                    "candidateFields":  1385,
+                    "candidateFields":  1394,
                     "credential":  147,
                     "identity":  141,
                     "health":  609,
-                    "financial":  191,
+                    "financial":  200,
                     "privateContent":  297,
-                    "boundaryFiles":  177,
+                    "boundaryFiles":  178,
                     "potentialLoggingLeads":  1,
                     "externalTransferLeads":  1
                 },
@@ -603,21 +603,21 @@
                        "name":  "ApiKey",
                        "type":  "string",
                        "path":  "FoodDiary.Integrations/Options/PaddleOptions.cs",
-                       "line":  6
+                       "line":  10
                    },
                    {
                        "category":  "credential",
                        "name":  "ClientSideToken",
                        "type":  "string",
                        "path":  "FoodDiary.Integrations/Options/PaddleOptions.cs",
-                       "line":  8
+                       "line":  12
                    },
                    {
                        "category":  "credential",
                        "name":  "WebhookSecretKey",
                        "type":  "string",
                        "path":  "FoodDiary.Integrations/Options/PaddleOptions.cs",
-                       "line":  9
+                       "line":  13
                    },
                    {
                        "category":  "credential",
@@ -1094,6 +1094,27 @@
                        "type":  "string?",
                        "path":  "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
                        "line":  18
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "Currency",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "SuccessfulPayments",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "EarningsTrackedPayments",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+                       "line":  14
                    },
                    {
                        "category":  "financial",
@@ -1713,10 +1734,17 @@
                    },
                    {
                        "category":  "financial",
+                       "name":  "PayoutCurrency",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
+                       "line":  23
+                   },
+                   {
+                       "category":  "financial",
                        "name":  "BillingPayment",
                        "type":  "new",
                        "path":  "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-                       "line":  50
+                       "line":  62
                    },
                    {
                        "category":  "financial",
@@ -1765,7 +1793,14 @@
                        "name":  "BillingWebhookEvent",
                        "type":  "new",
                        "path":  "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-                       "line":  25
+                       "line":  35
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "BillingWebhookEvent",
+                       "type":  "new",
+                       "path":  "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
+                       "line":  57
                    },
                    {
                        "category":  "financial",
@@ -1947,21 +1982,21 @@
                        "name":  "CustomerId",
                        "type":  "string",
                        "path":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-                       "line":  373
+                       "line":  665
                    },
                    {
                        "category":  "financial",
                        "name":  "Checkout",
                        "type":  "TransactionCheckoutRequest",
                        "path":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-                       "line":  376
+                       "line":  668
                    },
                    {
                        "category":  "financial",
                        "name":  "Checkout",
                        "type":  "TransactionCheckoutResponse?",
                        "path":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-                       "line":  387
+                       "line":  679
                    },
                    {
                        "category":  "financial",
@@ -2021,10 +2056,17 @@
                    },
                    {
                        "category":  "financial",
+                       "name":  "CheckoutEnabled",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Integrations/Options/PaddleOptions.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "financial",
                        "name":  "CheckoutUrl",
                        "type":  "string",
                        "path":  "FoodDiary.Integrations/Options/PaddleOptions.cs",
-                       "line":  12
+                       "line":  17
                    },
                    {
                        "category":  "financial",
@@ -2073,7 +2115,7 @@
                        "name":  "BillingRenewal",
                        "type":  "UsersCleanup,",
                        "path":  "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-                       "line":  19
+                       "line":  21
                    },
                    {
                        "category":  "financial",
@@ -2123,6 +2165,27 @@
                        "type":  "string?",
                        "path":  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
                        "line":  18
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "Currency",
+                       "type":  "string",
+                       "path":  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "SuccessfulPayments",
+                       "type":  "int",
+                       "path":  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "EarningsTrackedPayments",
+                       "type":  "int",
+                       "path":  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
+                       "line":  14
                    },
                    {
                        "category":  "financial",
@@ -7274,7 +7337,7 @@
                        "name":  "Email",
                        "type":  "string",
                        "path":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-                       "line":  364
+                       "line":  655
                    },
                    {
                        "category":  "identity",
@@ -9786,7 +9849,7 @@
                                                  "credential",
                                                  "financial"
                                              ],
-                              "fieldCount":  4
+                              "fieldCount":  5
                           },
                           {
                               "path":  "FoodDiary.Integrations/Options/S3Options.cs",
@@ -9917,6 +9980,13 @@
                                                  "identity"
                                              ],
                               "fieldCount":  8
+                          },
+                          {
+                              "path":  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
+                              "categories":  [
+                                                 "financial"
+                                             ],
+                              "fieldCount":  3
                           },
                           {
                               "path":  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingSubscriptionHttpResponse.cs",

@@ -77,6 +77,8 @@ public static class JobManagerServiceCollectionExtensions {
         services.AddScoped<INotificationPusher, NoOpNotificationPusher>();
         services.AddTransient<ImageCleanupJob>();
         services.AddTransient<BillingRenewalJob>();
+        services.AddTransient<BillingWebhookInboxJob>();
+        services.AddTransient<PaddleNotificationRecoveryJob>();
         services.AddTransient<FastingNotificationJob>();
         services.AddTransient<ImageObjectDeletionOutboxJob>();
         services.AddTransient<EmailOutboxJob>();

@@ -38,6 +38,7 @@ public sealed class RecurringJobsHostedService(
             RecurringJobIds.BillingRenewal,
             Job.FromExpression<BillingRenewalJob>(job => job.Execute(CancellationToken.None)),
             ResolveCron(billingRenewalSettings.Cron, "15 * * * *"));
+        RegisterBillingJobs();
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.FastingNotifications,
             Job.FromExpression<FastingNotificationJob>(job => job.Execute(CancellationToken.None)),
@@ -80,6 +81,17 @@ public sealed class RecurringJobsHostedService(
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    private void RegisterBillingJobs() {
+        recurringJobManager.AddOrUpdate(
+            RecurringJobIds.BillingWebhookInbox,
+            Job.FromExpression<BillingWebhookInboxJob>(job => job.Execute(CancellationToken.None)),
+            "* * * * *");
+        recurringJobManager.AddOrUpdate(
+            RecurringJobIds.PaddleNotificationRecovery,
+            Job.FromExpression<PaddleNotificationRecoveryJob>(job => job.Execute(CancellationToken.None)),
+            "17 * * * *");
+    }
 
     private static string ResolveCron(string? configuredCron, string fallbackCron) =>
         string.IsNullOrWhiteSpace(configuredCron) ? fallbackCron : configuredCron;

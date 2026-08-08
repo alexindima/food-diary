@@ -1761,14 +1761,14 @@
                         "role":  "Service",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/api/admin-billing.service.ts",
-                        "line":  24
+                        "line":  25
                     },
                     {
                         "name":  "AdminBillingFacade",
                         "role":  "Facade",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/lib/admin-billing.facade.ts",
-                        "line":  26
+                        "line":  27
                     },
                     {
                         "name":  "AdminBillingFiltersComponent",
@@ -1789,7 +1789,7 @@
                         "role":  "Component",
                         "selector":  "fd-admin-billing-payments-table",
                         "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-payments-table.ts",
-                        "line":  13
+                        "line":  14
                     },
                     {
                         "name":  "AdminBillingSubscriptionsTableComponent",
@@ -1803,14 +1803,14 @@
                         "role":  "Component",
                         "selector":  "fd-admin-billing-webhooks-table",
                         "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-webhooks-table.ts",
-                        "line":  13
+                        "line":  14
                     },
                     {
                         "name":  "AdminBillingComponent",
                         "role":  "Component",
                         "selector":  "fd-admin-billing",
                         "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.ts",
-                        "line":  29
+                        "line":  31
                     },
                     {
                         "name":  "AdminDashboardService",
@@ -5762,8 +5762,8 @@
                              "name":  "core.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  533,
-                             "russianProperties":  533,
+                             "englishProperties":  556,
+                             "russianProperties":  556,
                              "countsMatch":  true
                          },
                          {

@@ -21,6 +21,9 @@ public static partial class DependencyInjection {
         services.AddHttpClient<PaddleBillingGateway>(client => {
             client.Timeout = TimeSpan.FromSeconds(30);
         });
+        services.AddHttpClient<PaddleNotificationRecoveryService>(client => {
+            client.Timeout = TimeSpan.FromSeconds(30);
+        });
         services.AddScoped<IBillingProviderGateway>(sp => sp.GetRequiredService<PaddleBillingGateway>());
         services.AddHttpClient<YooKassaBillingGateway>(client => {
             client.Timeout = TimeSpan.FromSeconds(30);

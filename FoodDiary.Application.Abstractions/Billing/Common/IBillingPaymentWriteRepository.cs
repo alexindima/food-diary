@@ -9,4 +9,6 @@ public interface IBillingPaymentWriteRepository {
         CancellationToken cancellationToken = default);
 
     Task<BillingPayment> AddAsync(BillingPayment payment, CancellationToken cancellationToken = default);
+
+    Task UpdateAsync(BillingPayment payment, CancellationToken cancellationToken = default);
 }

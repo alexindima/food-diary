@@ -19,4 +19,9 @@ public sealed class BillingPaymentRepository(FoodDiaryDbContext context) : IBill
         context.BillingPayments.Add(payment);
         return Task.FromResult(payment);
     }
+
+    public Task UpdateAsync(BillingPayment payment, CancellationToken cancellationToken = default) {
+        context.BillingPayments.Update(payment);
+        return Task.CompletedTask;
+    }
 }

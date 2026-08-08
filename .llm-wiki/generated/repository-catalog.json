@@ -18,9 +18,9 @@
                     "applicationModules":  38,
                     "extractedApplicationModules":  2,
                     "controllers":  83,
-                    "endpoints":  264,
+                    "endpoints":  265,
                     "agentGuides":  42,
-                    "documentationPages":  42
+                    "documentationPages":  43
                 },
     "dotnet":  {
                    "projects":  [
@@ -2511,18 +2511,23 @@
                                          "endpoints":  [
                                                            {
                                                                "verb":  "GET",
-                                                               "route":  "/api/v{version:apiVersion}/admin/billing/subscriptions",
+                                                               "route":  "/api/v{version:apiVersion}/admin/billing/revenue-summary",
                                                                "line":  18
                                                            },
                                                            {
                                                                "verb":  "GET",
-                                                               "route":  "/api/v{version:apiVersion}/admin/billing/payments",
+                                                               "route":  "/api/v{version:apiVersion}/admin/billing/subscriptions",
                                                                "line":  24
                                                            },
                                                            {
                                                                "verb":  "GET",
-                                                               "route":  "/api/v{version:apiVersion}/admin/billing/webhook-events",
+                                                               "route":  "/api/v{version:apiVersion}/admin/billing/payments",
                                                                "line":  30
+                                                           },
+                                                           {
+                                                               "verb":  "GET",
+                                                               "route":  "/api/v{version:apiVersion}/admin/billing/webhook-events",
+                                                               "line":  36
                                                            }
                                                        ]
                                      },
@@ -4443,6 +4448,7 @@
                                                    "docs/backend/BACKEND_SECURITY_HARDENING.md",
                                                    "docs/backend/BACKEND_TIME_POLICY.md",
                                                    "docs/backend/MARKETING_ATTRIBUTION_RUNBOOK.md",
+                                                   "docs/backend/PADDLE_PRODUCTION_RUNBOOK.md",
                                                    "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
                                                    "docs/frontend/DESIGN_SYSTEM_REVIEW.md",
                                                    "docs/frontend/FRONTEND_ARCHITECTURE.md",

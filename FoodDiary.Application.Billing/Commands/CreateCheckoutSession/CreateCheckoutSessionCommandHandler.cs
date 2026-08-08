@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Billing.Common;
@@ -8,6 +9,7 @@ using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Users;
+using System.Runtime.CompilerServices;
 
 namespace FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
 
@@ -16,7 +18,9 @@ public sealed class CreateCheckoutSessionCommandHandler(
     IBillingSubscriptionWriteRepository billingSubscriptionRepository,
     IBillingPaymentWriteRepository billingPaymentRepository,
     IBillingProviderGatewayAccessor billingProviderGatewayAccessor,
-    TimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider,
+    IBillingCheckoutLock? billingCheckoutLock = null,
+    IUnitOfWork? unitOfWork = null)
     : IRequestHandler<CreateCheckoutSessionCommand, Result<BillingCheckoutSessionModel>> {
     public async Task<Result<BillingCheckoutSessionModel>> Handle(
         CreateCheckoutSessionCommand command,
@@ -27,6 +31,10 @@ public sealed class CreateCheckoutSessionCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
+        IAsyncDisposable lockHandle = billingCheckoutLock is null
+            ? NoopAsyncDisposable.Instance
+            : await billingCheckoutLock.AcquireAsync(userId.Value, cancellationToken).ConfigureAwait(false);
+        await using ConfiguredAsyncDisposable checkoutLock = lockHandle.ConfigureAwait(false);
         Result<User> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(userResult.Error);
@@ -36,6 +44,10 @@ public sealed class CreateCheckoutSessionCommandHandler(
         BillingSubscription? existingSubscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user.HasRole(RoleNames.Premium) || IsPaidPremiumActive(existingSubscription, dateTimeProvider.GetUtcNow().UtcDateTime)) {
             return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.SubscriptionAlreadyActive);
+        }
+
+        if (IsCheckoutInProgress(existingSubscription, dateTimeProvider.GetUtcNow().UtcDateTime)) {
+            return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.CheckoutAlreadyInProgress);
         }
 
         IBillingProviderGateway? billingProvider = ResolveBillingProvider(command.Provider);
@@ -77,6 +89,10 @@ public sealed class CreateCheckoutSessionCommandHandler(
             await AddCheckoutPaymentAsync(existingSubscription, billingProvider.Provider, session, cancellationToken).ConfigureAwait(false);
         }
 
+        if (unitOfWork?.HasPendingChanges == true) {
+            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        }
+
         return Result.Success(session);
     }
 
@@ -105,6 +121,16 @@ public sealed class CreateCheckoutSessionCommandHandler(
         };
     }
 
+    private static bool IsCheckoutInProgress(BillingSubscription? subscription, DateTime nowUtc) {
+        if (subscription is null ||
+            !string.Equals(subscription.Status, BillingSubscription.PendingCheckoutStatus, StringComparison.Ordinal)) {
+            return false;
+        }
+
+        DateTime lastChangedUtc = subscription.ModifiedOnUtc ?? subscription.CreatedOnUtc;
+        return lastChangedUtc > nowUtc.AddMinutes(-15);
+    }
+
     private async Task AddCheckoutPaymentAsync(
         BillingSubscription subscription,
         string provider,
@@ -129,5 +155,11 @@ public sealed class CreateCheckoutSessionCommandHandler(
             webhookEventId: null,
             providerMetadataJson: null);
         await billingPaymentRepository.AddAsync(payment, cancellationToken).ConfigureAwait(false);
+    }
+
+    private sealed class NoopAsyncDisposable : IAsyncDisposable {
+        public static readonly NoopAsyncDisposable Instance = new();
+
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 }

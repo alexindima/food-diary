@@ -62,6 +62,7 @@ public sealed class BillingSubscription : Entity<Guid> {
         ExternalCustomerId = NormalizeRequired(externalCustomerId, nameof(externalCustomerId));
         ExternalPriceId = NormalizeOptional(externalPriceId);
         Plan = NormalizeOptional(plan);
+        Status = PendingCheckoutStatus;
         SetModified();
     }
 

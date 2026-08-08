@@ -11,6 +11,7 @@ const PAGE = 2;
 const LIMIT = 20;
 const TOTAL_PAGES = 4;
 const TOTAL_ITEMS = 61;
+const NET_REVENUE = 95;
 const BASE_URL = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/billing`;
 
 let service: AdminBillingService;
@@ -30,6 +31,39 @@ afterEach(() => {
 });
 
 describe('AdminBillingFacade payments', () => {
+    it('should request revenue summary without pagination parameters', () => {
+        service.getRevenueSummary({ fromUtc: '2026-04-01T00:00:00.000Z', toUtc: '2026-05-01T00:00:00.000Z' }).subscribe(result => {
+            expect(result.currencies[0]?.net).toBe(NET_REVENUE);
+        });
+
+        const req = httpMock.expectOne(
+            request =>
+                request.url === `${BASE_URL}/revenue-summary` &&
+                request.params.get('fromUtc') === '2026-04-01T00:00:00.000Z' &&
+                request.params.get('toUtc') === '2026-05-01T00:00:00.000Z' &&
+                !request.params.has('page'),
+        );
+        req.flush({
+            fromUtc: '2026-04-01T00:00:00Z',
+            toUtc: '2026-05-01T00:00:00Z',
+            currencies: [
+                {
+                    currency: 'USD',
+                    gross: 100,
+                    refunds: 5,
+                    chargebacks: 0,
+                    reversals: 0,
+                    net: 95,
+                    successfulPayments: 4,
+                    tax: 16,
+                    paddleFees: 5.5,
+                    paddleEarnings: 78.5,
+                    earningsTrackedPayments: 4,
+                },
+            ],
+        });
+    });
+
     it('should request filtered payments and map paged response', () => {
         const response = createPaymentsResponse();
 

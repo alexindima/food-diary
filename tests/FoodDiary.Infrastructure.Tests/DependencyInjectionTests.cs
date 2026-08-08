@@ -175,6 +175,7 @@ public sealed class DependencyInjectionTests {
         IReadOnlyList<IBillingProviderGateway> gateways = scope.ServiceProvider.GetServices<IBillingProviderGateway>().ToList();
         Assert.Contains(gateways, gateway => gateway is StripeBillingGateway);
         Assert.Contains(gateways, gateway => gateway is PaddleBillingGateway);
+        Assert.NotNull(scope.ServiceProvider.GetRequiredService<PaddleNotificationRecoveryService>());
         Assert.Contains(gateways, gateway => gateway is YooKassaBillingGateway);
         Assert.IsType<YooKassaBillingGateway>(scope.ServiceProvider.GetRequiredService<IBillingRecurringProviderGateway>());
 
@@ -676,8 +677,10 @@ public sealed class DependencyInjectionTests {
             ["Stripe:CancelUrl"] = "https://example.com/cancel",
             ["Stripe:PortalReturnUrl"] = "https://example.com/portal",
             ["Paddle:ApiKey"] = "paddle-key",
-            ["Paddle:ClientSideToken"] = "paddle-client-token",
+            ["Paddle:ApiBaseUrl"] = "https://sandbox-api.paddle.com",
+            ["Paddle:ClientSideToken"] = "test_paddle-client-token",
             ["Paddle:WebhookSecretKey"] = "paddle-secret",
+            ["Paddle:NotificationSettingId"] = "ntfset_01abcdefghijklmnopqrstuvwx",
             ["Paddle:PremiumMonthlyPriceId"] = "paddle-monthly",
             ["Paddle:PremiumYearlyPriceId"] = "paddle-yearly",
             ["Paddle:CheckoutUrl"] = "https://example.com/checkout",

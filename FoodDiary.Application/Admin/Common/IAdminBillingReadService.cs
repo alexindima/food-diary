@@ -5,6 +5,11 @@ using FoodDiary.Application.Common.Models;
 namespace FoodDiary.Application.Admin.Common;
 
 public interface IAdminBillingReadService {
+    Task<Result<AdminBillingRevenueSummaryReadModel>> GetRevenueSummaryAsync(
+        DateTime? fromUtc,
+        DateTime? toUtc,
+        CancellationToken cancellationToken);
+
     Task<Result<PagedResponse<AdminBillingSubscriptionReadModel>>> GetSubscriptionsAsync(
         int page,
         int limit,

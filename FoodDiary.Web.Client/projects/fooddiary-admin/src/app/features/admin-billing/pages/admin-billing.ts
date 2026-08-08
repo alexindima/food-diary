@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 
@@ -14,6 +15,7 @@ import { AdminBillingWebhooksTableComponent } from './admin-billing-webhooks-tab
     selector: 'fd-admin-billing',
     imports: [
         CommonModule,
+        TranslatePipe,
         FdUiButtonComponent,
         FdUiPaginationComponent,
         AdminBillingFiltersComponent,

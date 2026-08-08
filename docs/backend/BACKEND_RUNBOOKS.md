@@ -1,5 +1,7 @@
 # Backend Runbooks
 
+- [Paddle production transition](PADDLE_PRODUCTION_RUNBOOK.md)
+
 Date: 2026-04-03
 Scope: backend incident handling, Docker deploy, and operational recovery
 

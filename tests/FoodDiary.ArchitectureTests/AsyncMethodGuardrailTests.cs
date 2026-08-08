@@ -116,6 +116,7 @@ public sealed class AsyncMethodGuardrailTests {
 
     private static bool IsCancellationTokenProvidedByFramework(MethodDeclaration method) =>
         IsControllerAction(method) ||
+        string.Equals(method.Name, "DisposeAsync", StringComparison.Ordinal) ||
         method.Path.Contains($"{Path.DirectorySeparatorChar}Filters{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) ||
         method.Path.Contains($"{Path.DirectorySeparatorChar}Middleware{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) ||
         IsFrameworkAsyncHook(method) ||

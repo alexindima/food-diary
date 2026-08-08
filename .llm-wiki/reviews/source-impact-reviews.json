@@ -68,13 +68,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "8ce7243090c76d20676fde4f1f23bf6d7e73a19db83296d0933bcbb54536067f"
+                                            "sha256":  "d1b345af7021d3621e0b1c53e10dcdd7946bb7ce5f65dd514c03e1fc2eea492b"
                                         }
                                     ],
-                        "reason":  "Reviewed after shared history range expansion; waist-specific guard preserves its narrower public range contract.",
+                        "reason":  "Reviewed after Paddle billing hardening; generated indexes and current workflow guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f9817ac548152a6bc52731ceaa6c3b1c6d964b6a",
-                        "reviewedAtUtc":  "2026-08-05T14:09:38.7417488Z"
+                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
+                        "reviewedAtUtc":  "2026-08-08T09:36:22.6137941Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -82,14 +82,14 @@
                         "pageSha256":  "fbde1e3b8cec7d59d3bd96a9e14b252a9c9d6b5c88ee02ac0035f573bb091c0e",
                         "sources":  [
                                         {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "4e2db42accf2a8d8d6769c90e66742c8796d9793b39c95a179b89ba8607f4571"
+                                            "path":  ".llm-wiki/generated/repository-catalog.json",
+                                            "sha256":  "7aa825d04019958dc308268d3756e98a2b27697362c4be71aa27518c4cae539d"
                                         }
                                     ],
-                        "reason":  "Reviewed the AGENTS.md facade addition; query-context authority and ranking semantics are unchanged.",
+                        "reason":  "Reviewed after Paddle billing hardening; generated indexes and current workflow guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
-                        "reviewedAtUtc":  "2026-07-31T13:05:30.0295423Z"
+                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
+                        "reviewedAtUtc":  "2026-08-08T09:36:25.0788576Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -141,19 +141,34 @@
                         "reviewedAtUtc":  "2026-08-01T00:05:36.8773450Z"
                     },
                     {
+                        "pageId":  "workflow-api-compatibility",
+                        "pagePath":  ".llm-wiki/workflows/api-compatibility.md",
+                        "pageSha256":  "037cc1091ca997ebc790af65de373c685931315349afb4750800c31f49bd7245",
+                        "sources":  [
+                                        {
+                                            "path":  "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+                                            "sha256":  "7f69422d464351afb8594c32fb52dc942789698a67bdaaa737c4335505827a8f"
+                                        }
+                                    ],
+                        "reason":  "Reviewed after Paddle billing hardening; generated indexes and current workflow guidance remain accurate.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
+                        "reviewedAtUtc":  "2026-08-08T09:36:18.8525553Z"
+                    },
+                    {
                         "pageId":  "workflow-architecture-health-review",
                         "pagePath":  ".llm-wiki/workflows/architecture-health-review.md",
                         "pageSha256":  "13c911643835938223822e5a1566c4d89542a3717b262390dafdd850323ee329",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "34c5fe15c97c048e612d7f8b1e6decbea110fd0e9f4c691b3ab6fd7f970800d0"
+                                            "sha256":  "5a94c531230116f41e4e7cf5eb607acbc7a1f7e9ff731af6af4e8cb3dcbcd339"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated architecture health after adding an optional line-chart input; no dependency or project-edge change.",
+                        "reason":  "Reviewed after Paddle billing hardening; generated indexes and current workflow guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "859b9d20a5566ce89801021f0799dded3a470075",
-                        "reviewedAtUtc":  "2026-08-05T08:00:19.9118932Z"
+                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
+                        "reviewedAtUtc":  "2026-08-08T09:36:19.5208857Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -162,13 +177,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "89a5efea73e6e1b489b713fa525fece0ea2d42d94ad4e416391d4dd248677637"
+                                            "sha256":  "a3c6fb77f0201c474a5c4d813d48fae63108326845237ece1caebdd1972e3156"
                                         }
                                     ],
-                        "reason":  "Текущий diff не содержит backend-кода или контрактов; изменения ограничены Angular shared widgets, fd-ui-select, локализацией и сгенерированными frontend Wiki-индексами.",
+                        "reason":  "Reviewed after Paddle billing hardening; generated indexes and current workflow guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "af8294bfddff8b8011ace01e7a50d06e569a9504",
-                        "reviewedAtUtc":  "2026-08-04T22:38:34.2782915Z"
+                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
+                        "reviewedAtUtc":  "2026-08-08T09:36:20.3720076Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -233,17 +248,17 @@
                     {
                         "pageId":  "workflow-dependency-rollout",
                         "pagePath":  ".llm-wiki/workflows/dependency-rollout.md",
-                        "pageSha256":  "df4209603b0f2b8bc530661b139629bcc37735664ff7e59754f78e7713d0d20b",
+                        "pageSha256":  "285b7d0005f1b054eda23538c5f17b3dd44d318411cb12f6e7e4146e9db95db9",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "335be12b113473ee2ebced8cd68ea807f1f2970718fd485647ee9c30cae0fd92"
+                                            "path":  ".llm-wiki/generated/configuration-index.json",
+                                            "sha256":  "04e0d9cde4d8ca8069e09f19a8b15950c52e2ac6c1cb50194ffeb01014570d83"
                                         }
                                     ],
-                        "reason":  "Reviewed: publication-gate wording does not change dependency or rollout analysis.",
+                        "reason":  "Re-reviewed final Paddle production-only NotificationSettingId validation, sandbox compatibility, typed client registration, and deployment runbook.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
-                        "reviewedAtUtc":  "2026-08-01T01:45:26.1176363Z"
+                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
+                        "reviewedAtUtc":  "2026-08-08T10:29:20.4872221Z"
                     },
                     {
                         "pageId":  "workflow-developer-experience",
@@ -283,6 +298,21 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
                         "reviewedAtUtc":  "2026-07-31T13:44:52.2746395Z"
+                    },
+                    {
+                        "pageId":  "workflow-domain-data-review",
+                        "pagePath":  ".llm-wiki/workflows/domain-data-review.md",
+                        "pageSha256":  "26d445347ec6f5700f2ecefdf9e0c538f459107cff68b65c4c18ac8d65dda5f0",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/generated/domain-data-index.json",
+                                            "sha256":  "d42953c4721b3d4c385c10db4564c7262ca2fd6330b6dd4fce492661c3e7c447"
+                                        }
+                                    ],
+                        "reason":  "Reviewed billing payment occurrence and webhook inbox persistence model, migrations, nullability, backfill, indexes, and integration coverage.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
+                        "reviewedAtUtc":  "2026-08-08T10:20:30.6277555Z"
                     },
                     {
                         "pageId":  "workflow-impact-simulation",
@@ -404,13 +434,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "985c6a6938839b2752a723fbc632823a0bf8e570ff8b3b36b5045a641290f035"
+                                            "sha256":  "2c3b325274fa17eefea0049c396ede70faddf2c7d128e121b89fe7499fe81762"
                                         }
                                     ],
-                        "reason":  "Reviewed after Telegram polling backoff change: sensitive-data index differences only shift line numbers for unchanged existing fields; no privacy lifecycle or logging behavior changed.",
+                        "reason":  "Reviewed Paddle payload retention, secret exclusion, admin authorization, logs, and provider data boundaries; no new user data is sent.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "170c09f0adac1cb9ef39b03ddb15034d886878c4",
-                        "reviewedAtUtc":  "2026-08-07T05:24:50.0353131Z"
+                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
+                        "reviewedAtUtc":  "2026-08-08T10:20:31.2597509Z"
                     },
                     {
                         "pageId":  "workflow-quality-risk",
@@ -419,13 +449,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "11752a686457061130e13a943428208bcc7707a9b70c3795388df61eb38d9357"
+                                            "sha256":  "42a05955133b49679ec2cdde857a09745ca81b871d3bd2d36ec6a0f094cc0e5c"
                                         }
                                     ],
-                        "reason":  "Reviewed after Telegram polling backoff change: quality index reflects one added nonblank line and a deterministic structural score adjustment; quality-risk guidance remains current.",
+                        "reason":  "Re-reviewed final recovery tests and complete API integration and architecture results.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "170c09f0adac1cb9ef39b03ddb15034d886878c4",
-                        "reviewedAtUtc":  "2026-08-07T05:24:50.6330981Z"
+                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
+                        "reviewedAtUtc":  "2026-08-08T10:29:21.1481849Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -463,14 +493,14 @@
                         "pageSha256":  "f76e9e0aeb3642ca5dbda529bb9b4b9598b30d636df9df042d6a0d0edd2e9233",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "335be12b113473ee2ebced8cd68ea807f1f2970718fd485647ee9c30cae0fd92"
+                                            "path":  ".llm-wiki/generated/runtime-topology.json",
+                                            "sha256":  "b26a4a2560f6063e93e6c5161f0603aa1683eeb9e65b8b68d59e8bdf82903c7e"
                                         }
                                     ],
-                        "reason":  "Reviewed: visual-only completion does not alter integration/runtime topology review.",
+                        "reason":  "Re-reviewed final recovery scheduling, bounded pagination, retries, idempotency, sandbox no-op, and production fail-fast behavior.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
-                        "reviewedAtUtc":  "2026-08-01T01:45:27.7759979Z"
+                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
+                        "reviewedAtUtc":  "2026-08-08T10:29:21.7926198Z"
                     },
                     {
                         "pageId":  "workflow-task-brief",
@@ -539,17 +569,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "8ce7243090c76d20676fde4f1f23bf6d7e73a19db83296d0933bcbb54536067f"
+                                            "sha256":  "d1b345af7021d3621e0b1c53e10dcdd7946bb7ce5f65dd514c03e1fc2eea492b"
                                         },
                                         {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "6f1c49eda1d0be67e22e06bd0ff397edc93b37d1b62ca4895aca2d8c3f4a3ab7"
+                                            "sha256":  "d242ebb707427ffbb5cc11375378ba895198fbcc77e2605f4fa192ab85a7e513"
                                         }
                                     ],
-                        "reason":  "Reviewed frontend navigation indexes; implementation paths remain current after the localized guard fix.",
+                        "reason":  "Reviewed after Paddle billing hardening; generated indexes and current workflow guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f9817ac548152a6bc52731ceaa6c3b1c6d964b6a",
-                        "reviewedAtUtc":  "2026-08-05T14:09:42.6333164Z"
+                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
+                        "reviewedAtUtc":  "2026-08-08T09:36:26.8298613Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

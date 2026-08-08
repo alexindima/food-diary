@@ -21,4 +21,9 @@ public sealed record AdminBillingPaymentReadModel(
     string? WebhookEventId,
     string? ProviderMetadataJson,
     DateTime CreatedOnUtc,
-    DateTime? ModifiedOnUtc);
+    DateTime? ModifiedOnUtc,
+    decimal? Tax = null,
+    decimal? Fee = null,
+    decimal? Earnings = null,
+    string? PayoutCurrency = null,
+    decimal? PayoutEarnings = null);

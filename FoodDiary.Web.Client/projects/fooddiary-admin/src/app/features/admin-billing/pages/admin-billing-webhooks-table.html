@@ -21,6 +21,12 @@
                 </td>
                 <td>
                     <span class="admin-billing__badge">{{ event.status }}</span>
+                    @if ((event.attemptCount ?? 0) > 0) {
+                        <span>{{ 'ADMIN_BILLING.WEBHOOK_INBOX.ATTEMPTS' | translate }}: {{ event.attemptCount }}</span>
+                    }
+                    @if (event.nextAttemptAtUtc) {
+                        <span>{{ 'ADMIN_BILLING.WEBHOOK_INBOX.NEXT_RETRY' | translate }}: {{ event.nextAttemptAtUtc }}</span>
+                    }
                 </td>
                 <td>{{ event.externalObjectIdText }}</td>
                 <td>{{ event.errorMessage || '-' }}</td>

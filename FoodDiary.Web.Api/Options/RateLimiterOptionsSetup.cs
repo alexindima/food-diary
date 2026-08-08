@@ -31,6 +31,8 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
             CreatePartition(settings.Auth, $"auth:{GetPartitionKey(context)}"));
         options.AddPolicy<string>(PresentationPolicyNames.AiRateLimitPolicyName, context =>
             CreatePartition(settings.Ai, $"ai:{GetPartitionKey(context)}"));
+        options.AddPolicy<string>(PresentationPolicyNames.WebhookRateLimitPolicyName, context =>
+            CreatePartition(settings.Webhook, $"webhook:{GetPartitionKey(context)}"));
     }
 
     private static RateLimitPartition<string> CreatePartition(

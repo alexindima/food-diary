@@ -52,6 +52,7 @@ Source: `FoodDiary.Presentation.Api/Features/Admin/AdminAiUsageController.cs`
 
 Source: `FoodDiary.Presentation.Api/Features/Admin/AdminBillingController.cs`
 
+- `GET /api/v{version:apiVersion}/admin/billing/revenue-summary`
 - `GET /api/v{version:apiVersion}/admin/billing/subscriptions`
 - `GET /api/v{version:apiVersion}/admin/billing/payments`
 - `GET /api/v{version:apiVersion}/admin/billing/webhook-events`

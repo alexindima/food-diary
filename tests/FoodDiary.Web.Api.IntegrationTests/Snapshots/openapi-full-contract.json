@@ -158,6 +158,76 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/billing/revenue-summary",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Kind",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Provider",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Status",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/billing/subscriptions",
       "Operations": [
         {

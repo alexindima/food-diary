@@ -126,7 +126,9 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
                 item.payment.WebhookEventId,
                 item.payment.ProviderMetadataJson,
                 item.payment.CreatedOnUtc,
-                item.payment.ModifiedOnUtc))
+                item.payment.ModifiedOnUtc,
+                item.payment.Tax, item.payment.Fee, item.payment.Earnings,
+                item.payment.PayoutCurrency, item.payment.PayoutEarnings))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
         return (items, total);
     }
@@ -145,11 +147,11 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
         }
 
         if (filter.FromUtc.HasValue) {
-            query = query.Where(webhookEvent => webhookEvent.ProcessedAtUtc >= filter.FromUtc.Value);
+            query = query.Where(webhookEvent => webhookEvent.ReceivedAtUtc >= filter.FromUtc.Value);
         }
 
         if (filter.ToUtc.HasValue) {
-            query = query.Where(webhookEvent => webhookEvent.ProcessedAtUtc <= filter.ToUtc.Value);
+            query = query.Where(webhookEvent => webhookEvent.ReceivedAtUtc <= filter.ToUtc.Value);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.Search)) {
@@ -162,7 +164,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
 
         int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         List<AdminBillingWebhookEventReadModel> items = await query
-            .OrderByDescending(webhookEvent => webhookEvent.ProcessedAtUtc)
+            .OrderByDescending(webhookEvent => webhookEvent.ReceivedAtUtc)
             .Skip(GetSkipCount(filter))
             .Take(filter.Limit)
             .Select(webhookEvent => new AdminBillingWebhookEventReadModel(
@@ -176,10 +178,77 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
                 webhookEvent.PayloadJson,
                 webhookEvent.ErrorMessage,
                 webhookEvent.CreatedOnUtc,
-                webhookEvent.ModifiedOnUtc))
+                webhookEvent.ModifiedOnUtc,
+                webhookEvent.ReceivedAtUtc,
+                webhookEvent.AttemptCount,
+                webhookEvent.NextAttemptAtUtc))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, total);
+    }
+
+    public async Task<AdminBillingRevenueSummaryReadModel> GetRevenueSummaryAsync(
+        DateTime fromUtc,
+        DateTime toUtc,
+        CancellationToken cancellationToken = default) {
+        var rows = await context.BillingPayments
+            .AsNoTracking()
+            .Where(payment =>
+                (payment.OccurredAtUtc ?? payment.CreatedOnUtc) >= fromUtc &&
+                (payment.OccurredAtUtc ?? payment.CreatedOnUtc) < toUtc &&
+                payment.Amount != null &&
+                payment.Currency != null &&
+                (payment.Kind == BillingPaymentKinds.Transaction ||
+                    payment.Kind == BillingPaymentKinds.Refund ||
+                    payment.Kind == BillingPaymentKinds.Credit ||
+                    payment.Kind == BillingPaymentKinds.Chargeback ||
+                    payment.Kind == BillingPaymentKinds.ChargebackReverse ||
+                    payment.Kind == BillingPaymentKinds.CreditReverse))
+            .GroupBy(payment => payment.Currency!)
+            .Select(group => new {
+                Currency = group.Key,
+                Gross = group.Where(payment =>
+                        payment.Kind == BillingPaymentKinds.Transaction && payment.Status == "completed")
+                    .Sum(payment => payment.Amount ?? 0m),
+                Refunds = -group.Where(payment =>
+                        payment.Kind == BillingPaymentKinds.Refund || payment.Kind == BillingPaymentKinds.Credit)
+                    .Sum(payment => payment.Amount ?? 0m),
+                Chargebacks = -group.Where(payment => payment.Kind == BillingPaymentKinds.Chargeback)
+                    .Sum(payment => payment.Amount ?? 0m),
+                Reversals = group.Where(payment =>
+                        payment.Kind == BillingPaymentKinds.ChargebackReverse || payment.Kind == BillingPaymentKinds.CreditReverse)
+                    .Sum(payment => payment.Amount ?? 0m),
+                SuccessfulPayments = group.Count(payment =>
+                    payment.Kind == BillingPaymentKinds.Transaction && payment.Status == "completed"),
+                Tax = group.Where(payment =>
+                        payment.Kind == BillingPaymentKinds.Transaction && payment.Status == "completed")
+                    .Sum(payment => payment.Tax ?? 0m),
+                PaddleFees = group.Sum(payment => payment.Fee ?? 0m),
+                PaddleEarnings = group.Sum(payment => payment.Earnings ?? 0m),
+                EarningsTrackedPayments = group.Count(payment =>
+                    payment.Kind == BillingPaymentKinds.Transaction &&
+                    payment.Status == "completed" &&
+                    payment.Earnings != null),
+            })
+            .OrderBy(row => row.Currency)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        return new AdminBillingRevenueSummaryReadModel(
+            fromUtc,
+            toUtc,
+            [.. rows.Select(row => new AdminBillingRevenueCurrencyReadModel(
+                row.Currency,
+                row.Gross,
+                row.Refunds,
+                row.Chargebacks,
+                row.Reversals,
+                row.Gross - row.Refunds - row.Chargebacks + row.Reversals,
+                row.SuccessfulPayments,
+                row.Tax,
+                row.PaddleFees,
+                row.PaddleEarnings,
+                row.EarningsTrackedPayments))]);
     }
 
     private static int GetSkipCount(AdminBillingListFilter filter) =>

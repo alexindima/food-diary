@@ -414,6 +414,44 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.Single((await adminBillingRepository.GetWebhookEventsAsync(filter with { Status = "processed", Search = webhookEvent.EventId })).Items);
     }
 
+    [RequiresDockerFact]
+    public async Task AdminBillingRepository_RevenueSummaryAggregatesCompletedPaddleFinancials() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var target = User.Create($"admin-revenue-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(target);
+        await context.SaveChangesAsync();
+        var occurredAtUtc = new DateTime(2026, 7, 15, 12, 0, 0, DateTimeKind.Utc);
+
+        context.BillingPayments.Add(BillingPayment.Create(
+            target.Id, billingSubscriptionId: null, BillingProviderNames.Paddle, "txn_revenue", "ctm_revenue",
+            externalSubscriptionId: null, externalPaymentMethodId: null, "pri_monthly", "monthly", "completed",
+            BillingPaymentKinds.Transaction, 100m, "USD", currentPeriodStartUtc: null, currentPeriodEndUtc: null,
+            "evt_transaction", providerMetadataJson: null, tax: 20m, fee: 5m, earnings: 95m,
+            payoutCurrency: "EUR", payoutEarnings: 88m, occurredAtUtc: occurredAtUtc));
+        context.BillingPayments.Add(BillingPayment.Create(
+            target.Id, billingSubscriptionId: null, BillingProviderNames.Paddle, "adj_refund", "ctm_revenue",
+            externalSubscriptionId: null, externalPaymentMethodId: null, externalPriceId: null, plan: null, "approved",
+            BillingPaymentKinds.Refund, -10m, "USD", currentPeriodStartUtc: null, currentPeriodEndUtc: null,
+            "evt_refund", providerMetadataJson: null, tax: -2m, fee: -0.5m, earnings: -9.5m,
+            payoutCurrency: "EUR", payoutEarnings: -8.8m, occurredAtUtc: occurredAtUtc));
+        await context.SaveChangesAsync();
+
+        var repository = new AdminBillingRepository(context);
+        AdminBillingRevenueSummaryReadModel summary = await repository.GetRevenueSummaryAsync(
+            occurredAtUtc.AddDays(-1),
+            occurredAtUtc.AddDays(1));
+
+        AdminBillingRevenueCurrencyReadModel usd = Assert.Single(summary.Currencies);
+        Assert.Multiple(
+            () => Assert.Equal(100m, usd.Gross),
+            () => Assert.Equal(10m, usd.Refunds),
+            () => Assert.Equal(90m, usd.Net),
+            () => Assert.Equal(20m, usd.Tax),
+            () => Assert.Equal(4.5m, usd.PaddleFees),
+            () => Assert.Equal(85.5m, usd.PaddleEarnings),
+            () => Assert.Equal(1, usd.EarningsTrackedPayments));
+    }
+
     private static BillingSubscription CreateActiveSubscription(User user) {
         var subscription = BillingSubscription.CreatePending(
             user.Id,

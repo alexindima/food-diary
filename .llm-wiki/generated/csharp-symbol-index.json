@@ -8,20 +8,20 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  2988,
-                    "symbols":  3028,
-                    "interfaceImplementationLinks":  222,
-                    "dependencyInjectionRegistrations":  220,
+                    "sourceFiles":  3006,
+                    "symbols":  3046,
+                    "interfaceImplementationLinks":  223,
+                    "dependencyInjectionRegistrations":  222,
                     "kinds":  {
-                                  "class":  1527,
+                                  "class":  1535,
                                   "enum":  45,
-                                  "interface":  397,
-                                  "record":  949,
+                                  "interface":  399,
+                                  "record":  957,
                                   "record struct":  110
                               },
                     "roles":  {
-                                  "Command":  149,
-                                  "CommandHandler":  145,
+                                  "Command":  150,
+                                  "CommandHandler":  146,
                                   "Configuration":  79,
                                   "Controller":  86,
                                   "Entity":  78,
@@ -32,15 +32,15 @@
                                   "Mapper":  8,
                                   "Mapping":  3,
                                   "Options":  55,
-                                  "Other":  1058,
-                                  "Query":  154,
-                                  "QueryHandler":  119,
+                                  "Other":  1067,
+                                  "Query":  155,
+                                  "QueryHandler":  120,
                                   "ReadModelRepository":  29,
                                   "ReadRepository":  50,
                                   "Repository":  103,
                                   "Request":  121,
-                                  "Response":  165,
-                                  "Service":  251,
+                                  "Response":  167,
+                                  "Service":  254,
                                   "Validator":  175,
                                   "ValueObject":  120,
                                   "WriteRepository":  47
@@ -150,6 +150,20 @@
                         "kind":  "record",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "AdminBillingRevenueCurrencyReadModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "AdminBillingRevenueSummaryReadModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingRevenueSummaryReadModel.cs",
                         "line":  2
                     },
                     {
@@ -626,6 +640,13 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Billing/Common/BillingWebhookEventAlreadyProcessedException.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "IBillingCheckoutLock",
+                        "kind":  "interface",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Billing/Common/IBillingCheckoutLock.cs",
                         "line":  2
                     },
                     {
@@ -3636,7 +3657,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application.Billing/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-                        "line":  13
+                        "line":  15
                     },
                     {
                         "name":  "CreateCheckoutSessionCommandValidator",
@@ -3667,6 +3688,13 @@
                         "line":  11
                     },
                     {
+                        "name":  "BillingWebhookEventProcessor",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
+                        "line":  7
+                    },
+                    {
                         "name":  "BillingWebhookEventValidator",
                         "kind":  "class",
                         "role":  "Validator",
@@ -3678,7 +3706,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
-                        "line":  6
+                        "line":  7
                     },
                     {
                         "name":  "BillingWebhookPremiumRoleSyncer",
@@ -3713,7 +3741,21 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
-                        "line":  9
+                        "line":  10
+                    },
+                    {
+                        "name":  "ProcessQueuedBillingWebhookCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "ProcessQueuedBillingWebhookCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
+                        "line":  6
                     },
                     {
                         "name":  "StartPremiumTrialCommand",
@@ -3765,6 +3807,13 @@
                         "line":  5
                     },
                     {
+                        "name":  "IBillingWebhookInboxService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Billing/Common/IBillingWebhookInboxService.cs",
+                        "line":  5
+                    },
+                    {
                         "name":  "DependencyInjection",
                         "kind":  "class",
                         "role":  "Other",
@@ -3790,6 +3839,13 @@
                         "kind":  "record",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Billing/Models/BillingUserProfileModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "BillingWebhookInboxRunResult",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Billing/Models/BillingWebhookInboxRunResult.cs",
                         "line":  2
                     },
                     {
@@ -3840,6 +3896,13 @@
                         "role":  "Service",
                         "path":  "FoodDiary.Application.Billing/Services/BillingUserLookupService.cs",
                         "line":  7
+                    },
+                    {
+                        "name":  "BillingWebhookInboxService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
+                        "line":  12
                     },
                     {
                         "name":  "RecordMarketingAttributionCommand",
@@ -4486,6 +4549,20 @@
                         "line":  8
                     },
                     {
+                        "name":  "GetAdminBillingRevenueSummaryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application/Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetAdminBillingRevenueSummaryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application/Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQueryHandler.cs",
+                        "line":  7
+                    },
+                    {
                         "name":  "GetAdminBillingSubscriptionsQuery",
                         "kind":  "record",
                         "role":  "Query",
@@ -4735,7 +4812,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Admin/Services/AdminBillingReadService.cs",
-                        "line":  8
+                        "line":  9
                     },
                     {
                         "name":  "AdminContentReadService",
@@ -13810,6 +13887,13 @@
                         "line":  8
                     },
                     {
+                        "name":  "PostgresBillingCheckoutLock",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Infrastructure/Persistence/Billing/PostgresBillingCheckoutLock.cs",
+                        "line":  7
+                    },
+                    {
                         "name":  "AdminImpersonationSessionConfiguration",
                         "kind":  "class",
                         "role":  "Configuration",
@@ -15357,6 +15441,20 @@
                         "line":  17
                     },
                     {
+                        "name":  "PaddleNotificationRecoveryResult",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Integrations/Billing/PaddleNotificationRecoveryResult.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "PaddleNotificationRecoveryService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Integrations/Billing/PaddleNotificationRecoveryService.cs",
+                        "line":  10
+                    },
+                    {
                         "name":  "StripeBillingGateway",
                         "kind":  "class",
                         "role":  "Other",
@@ -15658,6 +15756,13 @@
                         "line":  2
                     },
                     {
+                        "name":  "BillingWebhookInboxJob",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.JobManager/Services/BillingWebhookInboxJob.cs",
+                        "line":  7
+                    },
+                    {
                         "name":  "ClientTaskReminderJob",
                         "kind":  "class",
                         "role":  "Other",
@@ -15845,6 +15950,13 @@
                         "role":  "Options",
                         "path":  "FoodDiary.JobManager/Services/NotificationWebPushOutboxOptions.cs",
                         "line":  2
+                    },
+                    {
+                        "name":  "PaddleNotificationRecoveryJob",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.JobManager/Services/PaddleNotificationRecoveryJob.cs",
+                        "line":  6
                     },
                     {
                         "name":  "RecurringJobExecutionPolicy",
@@ -16110,7 +16222,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
-                        "line":  23
+                        "line":  24
                     },
                     {
                         "name":  "AdminHttpResponseMappings",
@@ -16362,6 +16474,20 @@
                         "kind":  "record",
                         "role":  "Response",
                         "path":  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "AdminBillingRevenueCurrencyHttpResponse",
+                        "kind":  "record",
+                        "role":  "Response",
+                        "path":  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "AdminBillingRevenueSummaryHttpResponse",
+                        "kind":  "record",
+                        "role":  "Response",
+                        "path":  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueSummaryHttpResponse.cs",
                         "line":  2
                     },
                     {
@@ -19393,7 +19519,7 @@
                         "kind":  "class",
                         "role":  "Options",
                         "path":  "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-                        "line":  19
+                        "line":  26
                     },
                     {
                         "name":  "CorsOptionsSetup",
@@ -21484,6 +21610,13 @@
                                          "confidence":  "naming-convention"
                                      },
                                      {
+                                         "interface":  "IBillingWebhookInboxService",
+                                         "interfacePath":  "FoodDiary.Application.Billing/Common/IBillingWebhookInboxService.cs",
+                                         "implementation":  "BillingWebhookInboxService",
+                                         "implementationPath":  "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
                                          "interface":  "IClientTaskRepository",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Dietologist/Common/IClientTaskRepository.cs",
                                          "implementation":  "ClientTaskRepository",
@@ -22830,6 +22963,13 @@
                                                  "line":  20
                                              },
                                              {
+                                                 "service":  "IBillingWebhookInboxService",
+                                                 "implementation":  "BillingWebhookInboxService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Billing/DependencyInjection.cs",
+                                                 "line":  27
+                                             },
+                                             {
                                                  "service":  "IMarketingAttributionCleanupService",
                                                  "implementation":  "MarketingAttributionCleanupService",
                                                  "lifetime":  "Scoped",
@@ -23635,6 +23775,13 @@
                                                  "line":  19
                                              },
                                              {
+                                                 "service":  "IBillingCheckoutLock",
+                                                 "implementation":  "PostgresBillingCheckoutLock",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Infrastructure/DependencyInjection.Billing.cs",
+                                                 "line":  20
+                                             },
+                                             {
                                                  "service":  "IDashboardReadService",
                                                  "implementation":  "DashboardReadService",
                                                  "lifetime":  "Scoped",
@@ -24150,7 +24297,7 @@
                                                  "implementation":  "ConfigurableBillingProviderGatewayAccessor",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Integrations/DependencyInjection.Billing.cs",
-                                                 "line":  30
+                                                 "line":  33
                                              },
                                              {
                                                  "service":  "IAdminMailInboxReader",
@@ -24213,7 +24360,7 @@
                                                  "implementation":  "JobExecutionStateTracker",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-                                                 "line":  95
+                                                 "line":  97
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",

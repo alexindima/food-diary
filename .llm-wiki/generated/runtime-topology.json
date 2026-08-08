@@ -4,8 +4,8 @@
                     "composeServices":  19,
                     "hostedServices":  9,
                     "httpClients":  10,
-                    "webhooks":  16,
-                    "recurringJobRegistrations":  11
+                    "webhooks":  20,
+                    "recurringJobRegistrations":  13
                 },
     "composeServices":  [
                             {
@@ -290,6 +290,10 @@
                          "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Billing/BillingWebhookEventConfiguration.cs"
                      },
                      {
+                         "name":  "BillingWebhookEventProcessor",
+                         "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs"
+                     },
+                     {
                          "name":  "BillingWebhookEventRepository",
                          "path":  "FoodDiary.Infrastructure/Persistence/Billing/BillingWebhookEventRepository.cs"
                      },
@@ -300,6 +304,14 @@
                      {
                          "name":  "BillingWebhookHttpProcessor",
                          "path":  "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookHttpProcessor.cs"
+                     },
+                     {
+                         "name":  "BillingWebhookInboxJob",
+                         "path":  "FoodDiary.JobManager/Services/BillingWebhookInboxJob.cs"
+                     },
+                     {
+                         "name":  "BillingWebhookInboxService",
+                         "path":  "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs"
                      },
                      {
                          "name":  "BillingWebhookPaymentRecorder",
@@ -326,6 +338,10 @@
                          "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs"
                      },
                      {
+                         "name":  "ProcessQueuedBillingWebhookCommandHandler",
+                         "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs"
+                     },
+                     {
                          "name":  "ProviderWebhookAuthorizer",
                          "path":  "MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs"
                      }
@@ -334,6 +350,11 @@
                                       {
                                           "api":  "recurringJobManager.AddOrUpdate",
                                           "detail":  "RecurringJobIds.BillingRenewal",
+                                          "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+                                      },
+                                      {
+                                          "api":  "recurringJobManager.AddOrUpdate",
+                                          "detail":  "RecurringJobIds.BillingWebhookInbox",
                                           "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
                                       },
                                       {
@@ -374,6 +395,11 @@
                                       {
                                           "api":  "recurringJobManager.AddOrUpdate",
                                           "detail":  "RecurringJobIds.NotificationsCleanup",
+                                          "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+                                      },
+                                      {
+                                          "api":  "recurringJobManager.AddOrUpdate",
+                                          "detail":  "RecurringJobIds.PaddleNotificationRecovery",
                                           "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
                                       },
                                       {

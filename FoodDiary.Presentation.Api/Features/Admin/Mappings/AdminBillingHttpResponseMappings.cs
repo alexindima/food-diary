@@ -6,6 +6,23 @@ using FoodDiary.Presentation.Api.Responses;
 namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
 
 public static class AdminBillingHttpResponseMappings {
+    public static AdminBillingRevenueSummaryHttpResponse ToHttpResponse(this AdminBillingRevenueSummaryReadModel model) =>
+        new(
+            model.FromUtc,
+            model.ToUtc,
+            [.. model.Currencies.Select(static currency => new AdminBillingRevenueCurrencyHttpResponse(
+                currency.Currency,
+                currency.Gross,
+                currency.Refunds,
+                currency.Chargebacks,
+                currency.Reversals,
+                currency.Net,
+                currency.SuccessfulPayments,
+                currency.Tax,
+                currency.PaddleFees,
+                currency.PaddleEarnings,
+                currency.EarningsTrackedPayments))]);
+
     public static AdminBillingSubscriptionHttpResponse ToHttpResponse(this AdminBillingSubscriptionReadModel model) {
         return new AdminBillingSubscriptionHttpResponse(
             model.Id,
@@ -50,7 +67,12 @@ public static class AdminBillingHttpResponseMappings {
             model.WebhookEventId,
             model.ProviderMetadataJson,
             model.CreatedOnUtc,
-            model.ModifiedOnUtc);
+            model.ModifiedOnUtc,
+            model.Tax,
+            model.Fee,
+            model.Earnings,
+            model.PayoutCurrency,
+            model.PayoutEarnings);
     }
 
     public static AdminBillingWebhookEventHttpResponse ToHttpResponse(this AdminBillingWebhookEventReadModel model) {
@@ -65,7 +87,10 @@ public static class AdminBillingHttpResponseMappings {
             model.PayloadJson,
             model.ErrorMessage,
             model.CreatedOnUtc,
-            model.ModifiedOnUtc);
+            model.ModifiedOnUtc,
+            model.ReceivedAtUtc,
+            model.AttemptCount,
+            model.NextAttemptAtUtc);
     }
 
     public static PagedHttpResponse<AdminBillingSubscriptionHttpResponse> ToBillingSubscriptionsHttpResponse(

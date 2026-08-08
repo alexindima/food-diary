@@ -111,19 +111,29 @@ public partial class BillingFeatureTests {
         IBillingMarketingConversionRecorder? marketingConversionRecorder = null) {
         var dateTimeProvider = new FixedDateTimeProvider(Now);
         var billingAccessService = new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider);
+        var contextResolver = new BillingWebhookContextResolver(subscriptionRepository, userRepository, paymentRepository);
+        var subscriptionWriter = new BillingWebhookSubscriptionWriter(subscriptionRepository, dateTimeProvider);
+        var paymentRecorder = new BillingWebhookPaymentRecorder(paymentRepository);
+        var premiumRoleSyncer = new BillingWebhookPremiumRoleSyncer(
+            subscriptionRepository,
+            userRepository,
+            billingAccessService,
+            marketingConversionRecorder ?? new NoOpMarketingConversionRecorder(),
+            dateTimeProvider);
+        var eventProcessor = new BillingWebhookEventProcessor(
+            webhookEventRepository,
+            new NoOpBillingTransactionRunner(),
+            contextResolver,
+            subscriptionWriter,
+            paymentRecorder,
+            premiumRoleSyncer,
+            dateTimeProvider);
         return new ProcessBillingWebhookCommandHandler(
             new FakeBillingProviderGatewayAccessor(gateway, gateway),
             webhookEventRepository,
             new NoOpBillingTransactionRunner(),
-            new BillingWebhookContextResolver(subscriptionRepository, userRepository),
-            new BillingWebhookSubscriptionWriter(subscriptionRepository, dateTimeProvider),
-            new BillingWebhookPaymentRecorder(paymentRepository),
-            new BillingWebhookPremiumRoleSyncer(
-                subscriptionRepository,
-                userRepository,
-                billingAccessService,
-                marketingConversionRecorder ?? new NoOpMarketingConversionRecorder(),
-                dateTimeProvider));
+            eventProcessor,
+            dateTimeProvider);
     }
 
     private static User CreatePremiumUser(string email) {
@@ -468,6 +478,9 @@ public partial class BillingFeatureTests {
             Payments.Add(payment);
             return Task.FromResult(payment);
         }
+
+        public Task UpdateAsync(BillingPayment payment, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
     }
 
     [ExcludeFromCodeCoverage]
@@ -490,6 +503,24 @@ public partial class BillingFeatureTests {
             Events.Add(webhookEvent);
             return Task.FromResult(webhookEvent);
         }
+
+        public Task<BillingWebhookEvent?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Events.SingleOrDefault(webhookEvent => webhookEvent.Id == id));
+
+        public Task<IReadOnlyList<BillingWebhookEvent>> GetPendingAsync(
+            int limit,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<BillingWebhookEvent>>([
+                .. Events.Where(webhookEvent =>
+                    (string.Equals(webhookEvent.Status, BillingWebhookEvent.ReceivedStatus, StringComparison.Ordinal) ||
+                     string.Equals(webhookEvent.Status, BillingWebhookEvent.FailedStatus, StringComparison.Ordinal)) &&
+                    webhookEvent.AttemptCount < 10 &&
+                    (webhookEvent.NextAttemptAtUtc is null || webhookEvent.NextAttemptAtUtc <= DateTime.UtcNow))
+                    .Take(limit),
+            ]);
+
+        public Task UpdateAsync(BillingWebhookEvent webhookEvent, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
     }
 
     [ExcludeFromCodeCoverage]

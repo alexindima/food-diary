@@ -13,9 +13,16 @@ public sealed class ApiRateLimitingOptions {
         WindowSeconds = 60,
     };
 
+    public FixedWindowPolicyOptions Webhook { get; init; } = new() {
+        PermitLimit = 300,
+        WindowSeconds = 60,
+    };
+
     public static bool HasValidAuth(ApiRateLimitingOptions options) => options.Auth.IsValid();
 
     public static bool HasValidAi(ApiRateLimitingOptions options) => options.Ai.IsValid();
+
+    public static bool HasValidWebhook(ApiRateLimitingOptions options) => options.Webhook.IsValid();
 
     public sealed class FixedWindowPolicyOptions {
         public int PermitLimit { get; init; }

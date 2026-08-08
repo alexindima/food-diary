@@ -17,10 +17,12 @@ namespace FoodDiary.Integrations.Billing;
 
 public sealed class PaddleBillingGateway(
     HttpClient httpClient,
-    IOptions<PaddleOptions> options)
+    IOptions<PaddleOptions> options,
+    TimeProvider? timeProvider = null)
     : IBillingProviderGateway {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private readonly PaddleOptions _options = options.Value;
+    private readonly TimeProvider _timeProvider = timeProvider ?? TimeProvider.System;
 
     public string Provider => BillingProviderNames.Paddle;
 
@@ -35,6 +37,9 @@ public sealed class PaddleBillingGateway(
 
         string? customerId = request.ExistingCustomerId;
         if (string.IsNullOrWhiteSpace(customerId)) {
+            customerId = await FindExistingCustomerIdAsync(request, cancellationToken).ConfigureAwait(false);
+        }
+        if (string.IsNullOrWhiteSpace(customerId)) {
             Result<string> customerResult = await CreateCustomerAsync(request, cancellationToken).ConfigureAwait(false);
             if (customerResult.IsFailure) {
                 return Result.Failure<BillingCheckoutSessionModel>(customerResult.Error);
@@ -44,20 +49,10 @@ public sealed class PaddleBillingGateway(
         }
 
         string priceId = ResolvePriceId(request.Plan);
-        Result<CreateTransactionResponse> transactionResponse = await SendAsync<CreateTransactionResponse>(
-            HttpMethod.Post,
-            "transactions",
-            new CreateTransactionRequest(
-                [
-                    new TransactionItemRequest(priceId, 1),
-                ],
-                customerId,
-                "automatic",
-                new Dictionary<string, string>(StringComparer.Ordinal) {
-                    ["user_id"] = request.UserId.ToString(),
-                    ["plan"] = request.Plan,
-                },
-                new TransactionCheckoutRequest(_options.CheckoutUrl)),
+        Result<CreateTransactionResponse> transactionResponse = await GetOrCreateTransactionAsync(
+            request,
+            customerId,
+            priceId,
             cancellationToken).ConfigureAwait(false);
         if (transactionResponse.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(transactionResponse.Error);
@@ -75,6 +70,54 @@ public sealed class PaddleBillingGateway(
             customerId,
             priceId,
             request.Plan));
+    }
+
+    private async Task<Result<CreateTransactionResponse>> GetOrCreateTransactionAsync(
+        BillingCheckoutSessionRequestModel request,
+        string customerId,
+        string priceId,
+        CancellationToken cancellationToken) {
+        string checkoutReference = CreateCheckoutReference(request);
+        CreateTransactionResponse? recoveredTransaction = await FindRecoverableTransactionAsync(
+            request,
+            customerId,
+            checkoutReference,
+            cancellationToken).ConfigureAwait(false);
+        Result<CreateTransactionResponse> transactionResponse;
+        if (recoveredTransaction is not null) {
+            transactionResponse = Result.Success(recoveredTransaction);
+        } else {
+            try {
+                transactionResponse = await SendAsync<CreateTransactionResponse>(
+                    HttpMethod.Post,
+                    "transactions",
+                    new CreateTransactionRequest(
+                        [
+                            new TransactionItemRequest(priceId, 1),
+                        ],
+                        customerId,
+                        "automatic",
+                        new Dictionary<string, string>(StringComparer.Ordinal) {
+                            ["user_id"] = request.UserId.ToString(),
+                            ["plan"] = request.Plan,
+                            ["checkout_reference"] = checkoutReference,
+                        },
+                        new TransactionCheckoutRequest(_options.CheckoutUrl)),
+                    cancellationToken).ConfigureAwait(false);
+            } catch (Exception ex) when (IsAmbiguousNetworkFailure(ex, cancellationToken)) {
+                recoveredTransaction = await FindRecoverableTransactionAsync(
+                    request,
+                    customerId,
+                    checkoutReference,
+                    cancellationToken).ConfigureAwait(false);
+                transactionResponse = recoveredTransaction is null
+                    ? Result.Failure<CreateTransactionResponse>(Errors.Billing.ProviderOperationFailed(
+                        Provider,
+                        "Paddle transaction creation result is unknown; retry checkout to recover it safely."))
+                    : Result.Success(recoveredTransaction);
+            }
+        }
+        return transactionResponse;
     }
 
     public async Task<Result<BillingPortalSessionModel>> CreatePortalSessionAsync(
@@ -129,12 +172,23 @@ public sealed class PaddleBillingGateway(
             using var document = JsonDocument.Parse(payload);
             JsonElement root = document.RootElement;
             string? eventType = root.GetProperty("event_type").GetString();
-            if (string.IsNullOrWhiteSpace(eventType) ||
-                !eventType.StartsWith("subscription.", StringComparison.OrdinalIgnoreCase)) {
+            if (string.IsNullOrWhiteSpace(eventType)) {
                 return Task.FromResult(Result.Success<BillingWebhookEventModel?>(value: null));
             }
 
             JsonElement data = root.GetProperty("data");
+            if (eventType.StartsWith("transaction.", StringComparison.OrdinalIgnoreCase)) {
+                return Task.FromResult(Result.Success<BillingWebhookEventModel?>(CreateTransactionWebhookEvent(root, data, eventType)));
+            }
+
+            if (eventType.StartsWith("adjustment.", StringComparison.OrdinalIgnoreCase)) {
+                return Task.FromResult(Result.Success<BillingWebhookEventModel?>(CreateAdjustmentWebhookEvent(root, data, eventType)));
+            }
+
+            if (!eventType.StartsWith("subscription.", StringComparison.OrdinalIgnoreCase)) {
+                return Task.FromResult(Result.Success<BillingWebhookEventModel?>(value: null));
+            }
+
             string? subscriptionId = GetString(data, "id");
             string? customerId = GetString(data, "customer_id");
             if (string.IsNullOrWhiteSpace(subscriptionId) || string.IsNullOrWhiteSpace(customerId)) {
@@ -146,6 +200,110 @@ public sealed class PaddleBillingGateway(
             return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(
                 Errors.Billing.WebhookValidationFailed(ex.Message)));
         }
+    }
+
+    private BillingWebhookEventModel? CreateTransactionWebhookEvent(JsonElement root, JsonElement data, string eventType) {
+        string? transactionId = GetString(data, "id");
+        string? customerId = GetString(data, "customer_id");
+        if (string.IsNullOrWhiteSpace(transactionId) || string.IsNullOrWhiteSpace(customerId)) {
+            return null;
+        }
+
+        JsonElement customData = data.TryGetProperty("custom_data", out JsonElement customDataElement) ? customDataElement : default;
+        JsonElement billingPeriod = data.TryGetProperty("billing_period", out JsonElement billingPeriodElement)
+            ? billingPeriodElement
+            : default;
+        string? currency = GetString(data, "currency_code");
+        string? externalPriceId = GetFirstItemPriceId(data);
+        JsonElement totals = GetTransactionTotals(data);
+        JsonElement payoutTotals = data.TryGetProperty("details", out JsonElement details) &&
+            details.TryGetProperty("payout_totals", out JsonElement payoutTotalsElement)
+                ? payoutTotalsElement
+                : default;
+        string? payoutCurrency = GetString(payoutTotals, "currency_code");
+
+        return new BillingWebhookEventModel(
+            GetString(root, "event_id") ?? string.Empty,
+            eventType,
+            customerId,
+            GetString(data, "subscription_id"),
+            ExternalPaymentMethodId: null,
+            externalPriceId,
+            ResolvePlan(externalPriceId) ?? GetString(customData, "plan"),
+            GetString(data, "status") ?? string.Empty,
+            ParseDateTime(billingPeriod, "starts_at"),
+            ParseDateTime(billingPeriod, "ends_at"),
+            CancelAtPeriodEnd: false,
+            CanceledAtUtc: null,
+            TrialStartUtc: null,
+            TrialEndUtc: null,
+            ParseMoney(data, currency),
+            currency,
+            ProviderMetadataJson: null,
+            ParseUserId(customData),
+            ParseDateTime(root, "occurred_at"),
+            ExternalPaymentId: transactionId,
+            RelatedTransactionId: transactionId,
+            FinancialAction: null,
+            Quantity: GetTotalQuantity(data),
+            UpdatesSubscription: false,
+            Tax: ParseMoneyProperty(totals, "tax", currency),
+            Fee: ParseMoneyProperty(totals, "fee", currency),
+            Earnings: ParseMoneyProperty(totals, "earnings", currency),
+            PayoutCurrency: payoutCurrency,
+            PayoutEarnings: ParseMoneyProperty(payoutTotals, "earnings", payoutCurrency));
+    }
+
+    private static BillingWebhookEventModel? CreateAdjustmentWebhookEvent(JsonElement root, JsonElement data, string eventType) {
+        string? adjustmentId = GetString(data, "id");
+        string? transactionId = GetString(data, "transaction_id");
+        string? customerId = GetString(data, "customer_id");
+        if (string.IsNullOrWhiteSpace(adjustmentId) || string.IsNullOrWhiteSpace(transactionId)) {
+            return null;
+        }
+
+        string? status = GetString(data, "status");
+        string? action = GetString(data, "action");
+        string? currency = GetString(data, "currency_code");
+        JsonElement totals = data.TryGetProperty("totals", out JsonElement totalsElement) ? totalsElement : default;
+        JsonElement payoutTotals = data.TryGetProperty("payout_totals", out JsonElement payoutTotalsElement)
+            ? payoutTotalsElement
+            : default;
+        string? payoutCurrency = GetString(payoutTotals, "currency_code");
+        decimal? amount = string.Equals(status, "approved", StringComparison.OrdinalIgnoreCase)
+            ? ApplyAdjustmentSign(ParseMoney(data, currency), action)
+            : null;
+
+        return new BillingWebhookEventModel(
+            GetString(root, "event_id") ?? string.Empty,
+            eventType,
+            customerId ?? string.Empty,
+            GetString(data, "subscription_id"),
+            ExternalPaymentMethodId: null,
+            ExternalPriceId: null,
+            Plan: null,
+            status ?? string.Empty,
+            CurrentPeriodStartUtc: null,
+            CurrentPeriodEndUtc: null,
+            CancelAtPeriodEnd: false,
+            CanceledAtUtc: null,
+            TrialStartUtc: null,
+            TrialEndUtc: null,
+            amount,
+            currency,
+            ProviderMetadataJson: null,
+            UserId: null,
+            ParseDateTime(root, "occurred_at"),
+            ExternalPaymentId: adjustmentId,
+            RelatedTransactionId: transactionId,
+            FinancialAction: action,
+            Quantity: null,
+            UpdatesSubscription: false,
+            Tax: ApplyAdjustmentSign(ParseMoneyProperty(totals, "tax", currency), action),
+            Fee: ApplyAdjustmentSign(ParseMoneyProperty(totals, "fee", currency), action),
+            Earnings: ApplyAdjustmentSign(ParseMoneyProperty(totals, "earnings", currency), action),
+            PayoutCurrency: payoutCurrency,
+            PayoutEarnings: ApplyAdjustmentSign(ParseMoneyProperty(payoutTotals, "earnings", payoutCurrency), action));
     }
 
     private BillingWebhookEventModel CreateWebhookEvent(
@@ -183,7 +341,8 @@ public sealed class PaddleBillingGateway(
             Currency: null,
             ProviderMetadataJson: null,
             ParseUserId(customData),
-            ParseDateTime(root, "occurred_at"));
+            ParseDateTime(root, "occurred_at"),
+            Quantity: GetTotalQuantity(data));
     }
 
     private async Task<Result<string>> CreateCustomerAsync(
@@ -201,6 +360,67 @@ public sealed class PaddleBillingGateway(
             cancellationToken).ConfigureAwait(false);
         return customerResponse.IsFailure ? Result.Failure<string>(customerResponse.Error) : Result.Success(customerResponse.Value.Id);
     }
+
+    private async Task<string?> FindExistingCustomerIdAsync(
+        BillingCheckoutSessionRequestModel request,
+        CancellationToken cancellationToken) {
+        try {
+            string path = $"customers?email={Uri.EscapeDataString(request.Email)}&per_page=30";
+            Result<IReadOnlyList<CreateCustomerResponse>> result = await SendAsync<IReadOnlyList<CreateCustomerResponse>>(
+                HttpMethod.Get,
+                path,
+                body: null,
+                cancellationToken).ConfigureAwait(false);
+            if (result.IsFailure) {
+                return null;
+            }
+
+            string userId = request.UserId.ToString();
+            return result.Value.FirstOrDefault(customer =>
+                customer.CustomData?.TryGetValue("user_id", out string? value) == true &&
+                string.Equals(value, userId, StringComparison.OrdinalIgnoreCase))?.Id;
+        } catch (Exception ex) when (IsAmbiguousNetworkFailure(ex, cancellationToken)) {
+            return null;
+        }
+    }
+
+    private async Task<CreateTransactionResponse?> FindRecoverableTransactionAsync(
+        BillingCheckoutSessionRequestModel request,
+        string customerId,
+        string checkoutReference,
+        CancellationToken cancellationToken) {
+        try {
+            string path = $"transactions?customer_id={Uri.EscapeDataString(customerId)}&origin=api&per_page=30";
+            Result<IReadOnlyList<CreateTransactionResponse>> result = await SendAsync<IReadOnlyList<CreateTransactionResponse>>(
+                HttpMethod.Get,
+                path,
+                body: null,
+                cancellationToken).ConfigureAwait(false);
+            if (result.IsFailure) {
+                return null;
+            }
+
+            string userId = request.UserId.ToString();
+            return result.Value.FirstOrDefault(transaction =>
+                transaction.Status is "draft" or "ready" &&
+                !string.IsNullOrWhiteSpace(transaction.Checkout?.Url) &&
+                transaction.CustomData?.TryGetValue("user_id", out string? storedUserId) == true &&
+                string.Equals(storedUserId, userId, StringComparison.OrdinalIgnoreCase) &&
+                transaction.CustomData.TryGetValue("plan", out string? storedPlan) &&
+                string.Equals(storedPlan, request.Plan, StringComparison.OrdinalIgnoreCase) &&
+                transaction.CustomData.TryGetValue("checkout_reference", out string? storedReference) &&
+                string.Equals(storedReference, checkoutReference, StringComparison.Ordinal));
+        } catch (Exception ex) when (IsAmbiguousNetworkFailure(ex, cancellationToken)) {
+            return null;
+        }
+    }
+
+    private static string CreateCheckoutReference(BillingCheckoutSessionRequestModel request) =>
+        string.Create(CultureInfo.InvariantCulture, $"{request.UserId:N}:{request.Plan.Trim().ToLowerInvariant()}");
+
+    private static bool IsAmbiguousNetworkFailure(Exception exception, CancellationToken cancellationToken) =>
+        exception is HttpRequestException ||
+        (exception is TaskCanceledException && !cancellationToken.IsCancellationRequested);
 
     private async Task<Result<TResponse>> SendAsync<TResponse>(
         HttpMethod method,
@@ -235,6 +455,8 @@ public sealed class PaddleBillingGateway(
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _options.ApiKey);
         httpClient.DefaultRequestHeaders.Accept.Clear();
         httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        httpClient.DefaultRequestHeaders.Remove("Paddle-Version");
+        httpClient.DefaultRequestHeaders.Add("Paddle-Version", "1");
     }
 
     private bool TryVerifySignature(string payload, string signatureHeader, out string error) {
@@ -252,6 +474,26 @@ public sealed class PaddleBillingGateway(
 
         if (string.IsNullOrWhiteSpace(timestamp) || signatures.Length == 0) {
             error = "Paddle-Signature header is malformed.";
+            return false;
+        }
+
+        if (!long.TryParse(timestamp, NumberStyles.None, CultureInfo.InvariantCulture, out long unixTimestamp)) {
+            error = "Paddle webhook timestamp is invalid.";
+            return false;
+        }
+
+        DateTimeOffset signedAt;
+        try {
+            signedAt = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
+        } catch (ArgumentOutOfRangeException) {
+            error = "Paddle webhook timestamp is invalid.";
+            return false;
+        }
+
+        TimeSpan age = _timeProvider.GetUtcNow() - signedAt;
+        var tolerance = TimeSpan.FromSeconds(_options.WebhookTimestampToleranceSeconds);
+        if (age.Duration() > tolerance) {
+            error = "Paddle webhook timestamp is outside the allowed tolerance.";
             return false;
         }
 
@@ -273,6 +515,7 @@ public sealed class PaddleBillingGateway(
     }
 
     private bool IsConfiguredForCheckout() =>
+        _options.CheckoutEnabled &&
         !string.IsNullOrWhiteSpace(_options.ApiKey) &&
         !string.IsNullOrWhiteSpace(_options.ApiBaseUrl) &&
         !string.IsNullOrWhiteSpace(_options.PremiumMonthlyPriceId) &&
@@ -357,6 +600,54 @@ public sealed class PaddleBillingGateway(
             : null;
     }
 
+    private static decimal? ParseMoney(JsonElement data, string? currency) {
+        JsonElement totals = GetTransactionTotals(data);
+        return ParseMoneyProperty(totals, "total", currency);
+    }
+
+    private static JsonElement GetTransactionTotals(JsonElement data) {
+        if (data.TryGetProperty("details", out JsonElement details) &&
+            details.TryGetProperty("totals", out JsonElement detailsTotals)) {
+            return detailsTotals;
+        }
+
+        return data.TryGetProperty("totals", out JsonElement directTotals) ? directTotals : default;
+    }
+
+    private static decimal? ParseMoneyProperty(JsonElement totals, string propertyName, string? currency) {
+        string? rawValue = GetString(totals, propertyName);
+        if (!long.TryParse(rawValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out long minorUnits)) {
+            return null;
+        }
+
+        int exponent = currency is "CLP" or "JPY" or "KRW" or "VND" ? 0 : 2;
+        return minorUnits / (decimal)Math.Pow(10, exponent);
+    }
+
+    private static decimal? ApplyAdjustmentSign(decimal? amount, string? action) {
+        if (!amount.HasValue) {
+            return null;
+        }
+
+        bool isReversal = action is BillingPaymentKinds.ChargebackReverse or BillingPaymentKinds.CreditReverse;
+        return isReversal ? Math.Abs(amount.Value) : -Math.Abs(amount.Value);
+    }
+
+    private static int? GetTotalQuantity(JsonElement data) {
+        if (!data.TryGetProperty("items", out JsonElement items) || items.ValueKind != JsonValueKind.Array) {
+            return null;
+        }
+
+        int quantity = 0;
+        foreach (JsonElement item in items.EnumerateArray()) {
+            if (item.TryGetProperty("quantity", out JsonElement value) && value.TryGetInt32(out int itemQuantity)) {
+                quantity += itemQuantity;
+            }
+        }
+
+        return quantity > 0 ? quantity : null;
+    }
+
     private sealed record PaddleEnvelope<T>(
         [property: JsonPropertyName("data")] T? Data);
 
@@ -366,7 +657,8 @@ public sealed class PaddleBillingGateway(
         [property: JsonPropertyName("custom_data")] IReadOnlyDictionary<string, string>? CustomData);
 
     private sealed record CreateCustomerResponse(
-        [property: JsonPropertyName("id")] string Id);
+        [property: JsonPropertyName("id")] string Id,
+        [property: JsonPropertyName("custom_data")] IReadOnlyDictionary<string, string>? CustomData = null);
 
     private sealed record CreateTransactionRequest(
         [property: JsonPropertyName("items")] IReadOnlyList<TransactionItemRequest> Items,
@@ -384,7 +676,9 @@ public sealed class PaddleBillingGateway(
 
     private sealed record CreateTransactionResponse(
         [property: JsonPropertyName("id")] string Id,
-        [property: JsonPropertyName("checkout")] TransactionCheckoutResponse? Checkout);
+        [property: JsonPropertyName("checkout")] TransactionCheckoutResponse? Checkout,
+        [property: JsonPropertyName("status")] string? Status = null,
+        [property: JsonPropertyName("custom_data")] IReadOnlyDictionary<string, string>? CustomData = null);
 
     private sealed record TransactionCheckoutResponse(
         [property: JsonPropertyName("url")] string? Url);

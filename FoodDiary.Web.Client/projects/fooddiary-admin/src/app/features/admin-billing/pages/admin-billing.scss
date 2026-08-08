@@ -55,6 +55,54 @@
     font-weight: var(--fd-text-section-title-weight);
 }
 
+.admin-billing__revenue {
+    h2,
+    h3,
+    p {
+        margin: 0;
+    }
+}
+
+.admin-billing__revenue-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--fd-space-sm);
+}
+
+.admin-billing__revenue-card {
+    padding: var(--fd-space-md);
+    border: var(--fd-border-default);
+    border-radius: var(--fd-radius-lg);
+    background: var(--fd-color-white);
+
+    dl {
+        display: grid;
+        gap: var(--fd-space-xs);
+        margin: var(--fd-space-sm) 0 0;
+    }
+
+    dl div {
+        display: flex;
+        justify-content: space-between;
+        gap: var(--fd-space-md);
+    }
+
+    dt {
+        color: var(--fd-color-text-muted);
+    }
+
+    dd {
+        margin: 0;
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+.admin-billing__revenue-net {
+    padding-top: var(--fd-space-xs);
+    border-top: var(--fd-border-default);
+    font-weight: var(--fd-text-section-title-weight);
+}
+
 .admin-billing__table {
     display: block;
     width: 100%;

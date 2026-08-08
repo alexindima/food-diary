@@ -31,6 +31,65 @@
         (filtersReset)="billing.resetFilters()"
     />
 
+    @if (billing.revenueSummary(); as summary) {
+        <section class="admin-billing__revenue fd-grid fd-gap-sm" aria-labelledby="billing-revenue-title">
+            <h2 id="billing-revenue-title">{{ 'ADMIN_BILLING.REVENUE.TITLE' | translate }}</h2>
+            @if (summary.currencies.length === 0) {
+                <p>{{ 'ADMIN_BILLING.REVENUE.EMPTY' | translate }}</p>
+            } @else {
+                <div class="admin-billing__revenue-grid">
+                    @for (item of summary.currencies; track item.currency) {
+                        <article class="admin-billing__revenue-card">
+                            <h3>{{ item.currency }}</h3>
+                            <dl>
+                                <div>
+                                    <dt>{{ 'ADMIN_BILLING.REVENUE.GROSS' | translate }}</dt>
+                                    <dd>{{ item.gross.toFixed(2) }}</dd>
+                                </div>
+                                <div>
+                                    <dt>{{ 'ADMIN_BILLING.REVENUE.REFUNDS' | translate }}</dt>
+                                    <dd>{{ item.refunds.toFixed(2) }}</dd>
+                                </div>
+                                <div>
+                                    <dt>{{ 'ADMIN_BILLING.REVENUE.CHARGEBACKS' | translate }}</dt>
+                                    <dd>{{ item.chargebacks.toFixed(2) }}</dd>
+                                </div>
+                                <div>
+                                    <dt>{{ 'ADMIN_BILLING.REVENUE.REVERSALS' | translate }}</dt>
+                                    <dd>{{ item.reversals.toFixed(2) }}</dd>
+                                </div>
+                                <div class="admin-billing__revenue-net">
+                                    <dt>{{ 'ADMIN_BILLING.REVENUE.NET' | translate }}</dt>
+                                    <dd>{{ item.net.toFixed(2) }}</dd>
+                                </div>
+                                <div>
+                                    <dt>{{ 'ADMIN_BILLING.REVENUE.TAX' | translate }}</dt>
+                                    <dd>{{ item.tax.toFixed(2) }}</dd>
+                                </div>
+                                <div>
+                                    <dt>{{ 'ADMIN_BILLING.REVENUE.FEES' | translate }}</dt>
+                                    <dd>{{ item.paddleFees.toFixed(2) }}</dd>
+                                </div>
+                                <div>
+                                    <dt>{{ 'ADMIN_BILLING.REVENUE.EARNINGS' | translate }}</dt>
+                                    <dd>{{ item.paddleEarnings.toFixed(2) }}</dd>
+                                </div>
+                                <div>
+                                    <dt>{{ 'ADMIN_BILLING.REVENUE.PAYMENTS' | translate }}</dt>
+                                    <dd>{{ item.successfulPayments }}</dd>
+                                </div>
+                                <div>
+                                    <dt>{{ 'ADMIN_BILLING.REVENUE.COMPLETENESS' | translate }}</dt>
+                                    <dd>{{ item.earningsTrackedPayments }}/{{ item.successfulPayments }}</dd>
+                                </div>
+                            </dl>
+                        </article>
+                    }
+                </div>
+            }
+        </section>
+    }
+
     @if (billing.isLoading()) {
         <p>Loading billing records...</p>
     } @else {

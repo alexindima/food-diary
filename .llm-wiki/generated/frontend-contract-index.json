@@ -5,9 +5,9 @@
                     "componentsWithoutDirectSpecs":  116,
                     "inputs":  1250,
                     "outputs":  410,
-                    "apiCalls":  214,
-                    "templatesWithTranslations":  248,
-                    "translationKeys":  1241,
+                    "apiCalls":  215,
+                    "templatesWithTranslations":  251,
+                    "translationKeys":  1260,
                     "consumerEdges":  919,
                     "consumedComponents":  275,
                     "unconsumedComponents":  132
@@ -13215,6 +13215,18 @@
                          "resolvedUrlExpression":  "`${this.authUrl}/admin-sso/exchange`"
                      },
                      {
+                         "feature":  "admin-billing",
+                         "method":  "GET",
+                         "responseType":  "AdminBillingRevenueSummary",
+                         "urlExpression":  "`${this.baseUrl}/revenue-summary`",
+                         "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/api/admin-billing.service.ts",
+                         "line":  42,
+                         "publicMethod":  "getRevenueSummary",
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  "`${environment.apiUrls.auth.replace(/\\/auth$/, \u0027\u0027)}/admin/billing`",
+                         "resolvedUrlExpression":  "`${this.baseUrl}/revenue-summary`"
+                     },
+                     {
                          "feature":  "admin-dashboard",
                          "method":  "GET",
                          "responseType":  "AdminDashboardSummary",
@@ -15736,6 +15748,43 @@
                      }
                  ],
     "translationUsage":  [
+                             {
+                                 "feature":  "admin-billing",
+                                 "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-payments-table.html",
+                                 "keys":  [
+                                              "ADMIN_BILLING.PAYMENT_BREAKDOWN.EARNINGS",
+                                              "ADMIN_BILLING.PAYMENT_BREAKDOWN.FEE",
+                                              "ADMIN_BILLING.PAYMENT_BREAKDOWN.PAYOUT",
+                                              "ADMIN_BILLING.PAYMENT_BREAKDOWN.TAX",
+                                              "ADMIN_BILLING.PAYMENT_BREAKDOWN.TITLE"
+                                          ]
+                             },
+                             {
+                                 "feature":  "admin-billing",
+                                 "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-webhooks-table.html",
+                                 "keys":  [
+                                              "ADMIN_BILLING.WEBHOOK_INBOX.ATTEMPTS",
+                                              "ADMIN_BILLING.WEBHOOK_INBOX.NEXT_RETRY"
+                                          ]
+                             },
+                             {
+                                 "feature":  "admin-billing",
+                                 "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.html",
+                                 "keys":  [
+                                              "ADMIN_BILLING.REVENUE.CHARGEBACKS",
+                                              "ADMIN_BILLING.REVENUE.COMPLETENESS",
+                                              "ADMIN_BILLING.REVENUE.EARNINGS",
+                                              "ADMIN_BILLING.REVENUE.EMPTY",
+                                              "ADMIN_BILLING.REVENUE.FEES",
+                                              "ADMIN_BILLING.REVENUE.GROSS",
+                                              "ADMIN_BILLING.REVENUE.NET",
+                                              "ADMIN_BILLING.REVENUE.PAYMENTS",
+                                              "ADMIN_BILLING.REVENUE.REFUNDS",
+                                              "ADMIN_BILLING.REVENUE.REVERSALS",
+                                              "ADMIN_BILLING.REVENUE.TAX",
+                                              "ADMIN_BILLING.REVENUE.TITLE"
+                                          ]
+                             },
                              {
                                  "feature":  "auth",
                                  "path":  "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-login-form/auth-login-form.html",

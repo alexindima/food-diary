@@ -4,5 +4,9 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 
-public sealed record ProcessBillingWebhookCommand(string Provider, string Payload, string SignatureHeader)
+public sealed record ProcessBillingWebhookCommand(
+    string Provider,
+    string Payload,
+    string SignatureHeader,
+    bool QueueOnly = false)
     : IRequest<Result>, ITransactionalCommand;

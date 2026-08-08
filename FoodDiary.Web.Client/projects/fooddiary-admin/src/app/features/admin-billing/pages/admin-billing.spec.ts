@@ -13,6 +13,7 @@ const TOTAL_PAGES = 2;
 const TOTAL_ITEMS = 21;
 
 type BillingApiMock = {
+    getRevenueSummary: ReturnType<typeof vi.fn>;
     getSubscriptions: ReturnType<typeof vi.fn>;
     getPayments: ReturnType<typeof vi.fn>;
     getWebhookEvents: ReturnType<typeof vi.fn>;
@@ -41,6 +42,13 @@ async function setupBillingAsync(billingApi: BillingApiMock = createBillingServi
 
 function createBillingServiceMock(): BillingApiMock {
     return {
+        getRevenueSummary: vi.fn().mockReturnValue(
+            of({
+                fromUtc: '2026-04-01T00:00:00Z',
+                toUtc: '2026-05-01T00:00:00Z',
+                currencies: [],
+            }),
+        ),
         getSubscriptions: vi.fn().mockReturnValue(of(subscriptionsPage)),
         getPayments: vi.fn().mockReturnValue(
             of({

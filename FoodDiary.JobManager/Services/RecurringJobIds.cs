@@ -5,6 +5,8 @@ public static class RecurringJobIds {
     public const string NotificationsCleanup = "notifications-cleanup";
     public const string UsersCleanup = "users-cleanup";
     public const string BillingRenewal = "billing-renewal";
+    public const string BillingWebhookInbox = "billing-webhook-inbox";
+    public const string PaddleNotificationRecovery = "paddle-notification-recovery";
     public const string FastingNotifications = "fasting-notifications";
     public const string ImageObjectDeletionOutbox = "image-object-deletion-outbox";
     public const string EmailOutbox = "email-outbox";
@@ -18,6 +20,8 @@ public static class RecurringJobIds {
         NotificationsCleanup,
         UsersCleanup,
         BillingRenewal,
+        BillingWebhookInbox,
+        PaddleNotificationRecovery,
         FastingNotifications,
         ImageObjectDeletionOutbox,
         EmailOutbox,

@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "contracts":  992,
+                    "contracts":  998,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  6903,
-                    "productionConsumerEdges":  4204,
-                    "testConsumerEdges":  2699,
-                    "consumedContracts":  992,
+                    "consumerEdges":  6932,
+                    "productionConsumerEdges":  4232,
+                    "testConsumerEdges":  2700,
+                    "consumedContracts":  998,
                     "unconsumedContracts":  0
                 },
     "contracts":  [
@@ -295,6 +295,38 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "AdminBillingRevenueCurrencyHttpResponse",
+                          "roles":  [
+                                        "Response"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "AdminBillingRevenueSummaryHttpResponse",
+                          "roles":  [
+                                        "Response"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueSummaryHttpResponse.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -3531,6 +3563,22 @@
                           "ambiguous":  false
                       },
                       {
+                          "name":  "GetAdminBillingRevenueSummaryQuery",
+                          "roles":  [
+                                        "Query"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application/Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQuery.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
                           "name":  "GetAdminBillingSubscriptionsQuery",
                           "roles":  [
                                         "Query"
@@ -6507,6 +6555,22 @@
                           "ambiguous":  false
                       },
                       {
+                          "name":  "IBillingCheckoutLock",
+                          "roles":  [
+                                        "Other"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Abstractions/Billing/Common/IBillingCheckoutLock.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
                           "name":  "IBillingMarketingConversionRecorder",
                           "roles":  [
                                         "Other"
@@ -6823,6 +6887,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Application.Abstractions/Billing/Common/IBillingWebhookEventWriteRepository.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "IBillingWebhookInboxService",
+                          "roles":  [
+                                        "Service"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Billing/Common/IBillingWebhookInboxService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -13232,6 +13312,22 @@
                           "ambiguous":  false
                       },
                       {
+                          "name":  "ProcessQueuedBillingWebhookCommand",
+                          "roles":  [
+                                        "Command"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
                           "name":  "ProductHttpResponse",
                           "roles":  [
                                         "Response"
@@ -16930,6 +17026,58 @@
                               "referenceCount":  1
                           },
                           {
+                              "contract":  "AdminBillingRevenueCurrencyHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminBillingHttpResponseMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "AdminBillingRevenueCurrencyHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueSummaryHttpResponse.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "AdminBillingRevenueSummaryHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueSummaryHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/AdminBillingController.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "AdminBillingRevenueSummaryHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueSummaryHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminBillingHttpResponseMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
                               "contract":  "AdminBillingSubscriptionHttpResponse",
                               "roles":  [
                                             "Response"
@@ -19514,6 +19662,19 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Abstractions/Billing/Common/IBillingWebhookEventWriteRepository.cs",
                               "isTest":  false,
+                              "referenceCount":  5
+                          },
+                          {
+                              "contract":  "BillingWebhookEvent",
+                              "roles":  [
+                                            "Event"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
+                              "isTest":  false,
                               "referenceCount":  2
                           },
                           {
@@ -19551,6 +19712,19 @@
                                                       "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
+                              "isTest":  false,
+                              "referenceCount":  4
+                          },
+                          {
+                              "contract":  "BillingWebhookEvent",
+                              "roles":  [
+                                            "Event"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Infrastructure/Persistence/Admin/AdminBillingRepository.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -19566,7 +19740,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Infrastructure/Persistence/Billing/BillingWebhookEventRepository.cs",
                               "isTest":  false,
-                              "referenceCount":  2
+                              "referenceCount":  7
                           },
                           {
                               "contract":  "BillingWebhookEvent",
@@ -19618,7 +19792,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.cs",
                               "isTest":  true,
-                              "referenceCount":  3
+                              "referenceCount":  9
                           },
                           {
                               "contract":  "BillingWebhookEvent",
@@ -19631,7 +19805,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs",
                               "isTest":  true,
-                              "referenceCount":  1
+                              "referenceCount":  8
                           },
                           {
                               "contract":  "BillingWebhookEvent",
@@ -19644,7 +19818,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.ArchitectureTests/DatabaseNormalizationGuardrailTests.cs",
                               "isTest":  true,
-                              "referenceCount":  2
+                              "referenceCount":  3
                           },
                           {
                               "contract":  "BillingWebhookEvent",
@@ -29667,7 +29841,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/AdminBillingController.cs",
                               "isTest":  false,
-                              "referenceCount":  3
+                              "referenceCount":  4
                           },
                           {
                               "contract":  "GetAdminBillingHttpQuery",
@@ -29680,7 +29854,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
                               "isTest":  false,
-                              "referenceCount":  3
+                              "referenceCount":  4
                           },
                           {
                               "contract":  "GetAdminBillingHttpQuery",
@@ -29771,6 +29945,32 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdminHttpMappingsTests.cs",
                               "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "GetAdminBillingRevenueSummaryQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "GetAdminBillingRevenueSummaryQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
+                              "isTest":  false,
                               "referenceCount":  1
                           },
                           {
@@ -39129,6 +39329,19 @@
                                                       "FoodDiary.Application/Admin/Common/IAdminBillingReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAdminBillingReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Common/IAdminBillingReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Queries/GetAdminBillingSubscriptions/GetAdminBillingSubscriptionsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -42241,6 +42454,45 @@
                               "referenceCount":  2
                           },
                           {
+                              "contract":  "IBillingCheckoutLock",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Billing/Common/IBillingCheckoutLock.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IBillingCheckoutLock",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Billing/Common/IBillingCheckoutLock.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/DependencyInjection.Billing.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IBillingCheckoutLock",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Billing/Common/IBillingCheckoutLock.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/Persistence/Billing/PostgresBillingCheckoutLock.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
                               "contract":  "IBillingMarketingConversionRecorder",
                               "roles":  [
                                             "Other"
@@ -42510,6 +42762,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Billing/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IBillingPaymentWriteRepository",
+                              "roles":  [
+                                            "WriteRepository"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Billing/Common/IBillingPaymentWriteRepository.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -43432,6 +43697,19 @@
                                                       "FoodDiary.Application.Abstractions/Billing/Common/IBillingTransactionRunner.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IBillingTransactionRunner",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Billing/Common/IBillingTransactionRunner.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -43446,6 +43724,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Billing/Services/BillingRenewalService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IBillingTransactionRunner",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Billing/Common/IBillingTransactionRunner.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -43926,7 +44217,33 @@
                                                       "FoodDiary.Application.Abstractions/Billing/Common/IBillingWebhookEventWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IBillingWebhookEventWriteRepository",
+                              "roles":  [
+                                            "WriteRepository"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Billing/Common/IBillingWebhookEventWriteRepository.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IBillingWebhookEventWriteRepository",
+                              "roles":  [
+                                            "WriteRepository"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Billing/Common/IBillingWebhookEventWriteRepository.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -43967,6 +44284,58 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
                               "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IBillingWebhookInboxService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Billing/Common/IBillingWebhookInboxService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IBillingWebhookInboxService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Billing/Common/IBillingWebhookInboxService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/DependencyInjection.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IBillingWebhookInboxService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Billing/Common/IBillingWebhookInboxService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IBillingWebhookInboxService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Billing/Common/IBillingWebhookInboxService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.JobManager/Services/BillingWebhookInboxJob.cs",
+                              "isTest":  false,
                               "referenceCount":  1
                           },
                           {
@@ -70770,6 +71139,19 @@
                                                       "FoodDiary.Application/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Queries/GetAdminBillingSubscriptions/GetAdminBillingSubscriptionsQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -72188,6 +72570,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Queries/GetAdminBillingPayments/GetAdminBillingPaymentsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -77101,6 +77496,19 @@
                                                       "Shared/FoodDiary.Mediator/IRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "Shared/FoodDiary.Mediator/IRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Billing/Commands/StartPremiumTrial/StartPremiumTrialCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -78207,6 +78615,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IRequestHandler",
+                              "roles":  [
+                                            "Handler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -81534,6 +81955,19 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ITransactionalCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ITransactionalCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ITransactionalCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Billing/Commands/StartPremiumTrial/StartPremiumTrialCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -81574,6 +82008,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Common/Behaviors/CommandTransactionBehavior.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUnitOfWork",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -94159,7 +94606,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs",
                               "isTest":  true,
-                              "referenceCount":  16
+                              "referenceCount":  18
                           },
                           {
                               "contract":  "ProcessBillingWebhookCommand",
@@ -94173,6 +94620,32 @@
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/BillingWebhookControllerTests.cs",
                               "isTest":  true,
                               "referenceCount":  4
+                          },
+                          {
+                              "contract":  "ProcessQueuedBillingWebhookCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "ProcessQueuedBillingWebhookCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "ProductHttpResponse",

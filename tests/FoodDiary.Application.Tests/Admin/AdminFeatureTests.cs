@@ -1026,5 +1026,11 @@ public partial class AdminFeatureTests {
             LastWebhookEventsFilter = filter;
             return Task.FromResult(WebhookEventsResponse);
         }
+
+        public Task<AdminBillingRevenueSummaryReadModel> GetRevenueSummaryAsync(
+            DateTime fromUtc,
+            DateTime toUtc,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(new AdminBillingRevenueSummaryReadModel(fromUtc, toUtc, []));
     }
 }

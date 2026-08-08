@@ -3,7 +3,7 @@
     "summary":  {
                     "optionTypes":  49,
                     "configurationFiles":  7,
-                    "configurationKeys":  178,
+                    "configurationKeys":  185,
                     "environmentVariables":  148
                 },
     "optionTypes":  [
@@ -72,6 +72,7 @@
                                                "FixedWindowPolicyOptions",
                                                "PermitLimit",
                                                "QueueLimit",
+                                               "Webhook",
                                                "WindowSeconds"
                                            ],
                             "path":  "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs"
@@ -424,11 +425,15 @@
                             "properties":  [
                                                "ApiBaseUrl",
                                                "ApiKey",
+                                               "CheckoutEnabled",
                                                "CheckoutUrl",
                                                "ClientSideToken",
+                                               "Environment",
+                                               "NotificationSettingId",
                                                "PremiumMonthlyPriceId",
                                                "PremiumYearlyPriceId",
-                                               "WebhookSecretKey"
+                                               "WebhookSecretKey",
+                                               "WebhookTimestampToleranceSeconds"
                                            ],
                             "path":  "FoodDiary.Integrations/Options/PaddleOptions.cs"
                         },
@@ -665,17 +670,24 @@
                                                 "OutputCache:UserScoped:ExpirationSeconds",
                                                 "Paddle:ApiBaseUrl",
                                                 "Paddle:ApiKey",
+                                                "Paddle:CheckoutEnabled",
                                                 "Paddle:CheckoutUrl",
                                                 "Paddle:ClientSideToken",
+                                                "Paddle:Environment",
+                                                "Paddle:NotificationSettingId",
                                                 "Paddle:PremiumMonthlyPriceId",
                                                 "Paddle:PremiumYearlyPriceId",
                                                 "Paddle:WebhookSecretKey",
+                                                "Paddle:WebhookTimestampToleranceSeconds",
                                                 "RateLimiting:Ai:PermitLimit",
                                                 "RateLimiting:Ai:QueueLimit",
                                                 "RateLimiting:Ai:WindowSeconds",
                                                 "RateLimiting:Auth:PermitLimit",
                                                 "RateLimiting:Auth:QueueLimit",
                                                 "RateLimiting:Auth:WindowSeconds",
+                                                "RateLimiting:Webhook:PermitLimit",
+                                                "RateLimiting:Webhook:QueueLimit",
+                                                "RateLimiting:Webhook:WindowSeconds",
                                                 "S3:AccessKeyId",
                                                 "S3:Bucket",
                                                 "S3:MaxUploadSizeBytes",

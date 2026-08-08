@@ -1,5 +1,6 @@
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
+using FoodDiary.Application.Admin.Queries.GetAdminBillingRevenueSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
 using FoodDiary.Application.Admin.Queries.GetAdminContentReports;
@@ -22,6 +23,9 @@ using FoodDiary.Presentation.Api.Features.Admin.Requests;
 namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
 
 public static class AdminHttpQueryMappings {
+    public static GetAdminBillingRevenueSummaryQuery ToRevenueSummaryQuery(this GetAdminBillingHttpQuery query) =>
+        new(query.FromUtc, query.ToUtc);
+
     public static GetAdminEmailTemplatesQuery ToEmailTemplatesQuery() => new();
     public static GetAdminAiPromptsQuery ToAiPromptsQuery() => new();
     public static GetAdminLessonsQuery ToLessonsQuery() => new();

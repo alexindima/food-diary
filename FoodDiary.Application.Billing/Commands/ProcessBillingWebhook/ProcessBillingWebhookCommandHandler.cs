@@ -1,9 +1,10 @@
+using System.Text.Json;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Billing;
-using FoodDiary.Application.Abstractions.Billing.Models;
 
 namespace FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 
@@ -11,10 +12,8 @@ public sealed class ProcessBillingWebhookCommandHandler(
     IBillingProviderGatewayAccessor billingProviderGatewayAccessor,
     IBillingWebhookEventWriteRepository billingWebhookEventRepository,
     IBillingTransactionRunner billingTransactionRunner,
-    BillingWebhookContextResolver billingWebhookContextResolver,
-    BillingWebhookSubscriptionWriter billingWebhookSubscriptionWriter,
-    BillingWebhookPaymentRecorder billingWebhookPaymentRecorder,
-    BillingWebhookPremiumRoleSyncer billingWebhookPremiumRoleSyncer)
+    BillingWebhookEventProcessor processor,
+    TimeProvider timeProvider)
     : IRequestHandler<ProcessBillingWebhookCommand, Result> {
     public async Task<Result> Handle(ProcessBillingWebhookCommand command, CancellationToken cancellationToken) {
         IBillingProviderGateway? billingProvider = billingProviderGatewayAccessor.GetProviderOrDefault(command.Provider);
@@ -35,64 +34,43 @@ public sealed class ProcessBillingWebhookCommandHandler(
             return Result.Success();
         }
 
-        Error? webhookEventValidationError = BillingWebhookEventValidator.Validate(webhookEvent);
-        if (webhookEventValidationError is not null) {
-            return Result.Failure(webhookEventValidationError);
+        Error? validationError = BillingWebhookEventValidator.Validate(billingProvider.Provider, webhookEvent);
+        if (validationError is not null) {
+            return Result.Failure(validationError);
         }
 
-        if (await billingWebhookEventRepository.ExistsAsync(billingProvider.Provider, webhookEvent.EventId, cancellationToken).ConfigureAwait(false)) {
-            return Result.Success();
-        }
-
-        Result<BillingWebhookProcessingContext?> contextResult = await billingWebhookContextResolver.ResolveAsync(
+        if (await billingWebhookEventRepository.ExistsAsync(
             billingProvider.Provider,
-            webhookEvent,
-            cancellationToken).ConfigureAwait(false);
-        if (contextResult.IsFailure) {
-            return Result.Failure(contextResult.Error);
-        }
-
-        BillingWebhookProcessingContext? context = contextResult.Value;
-        if (context is null) {
+            webhookEvent.EventId,
+            cancellationToken).ConfigureAwait(false)) {
             return Result.Success();
         }
 
-        try {
-            await ProcessWebhookEventAsync(
-                command.Payload,
+        if (!command.QueueOnly) {
+            return await processor.ProcessAsync(
                 billingProvider.Provider,
+                command.Payload,
                 webhookEvent,
-                context,
+                inboxEvent: null,
+                cancellationToken).ConfigureAwait(false);
+        }
+
+        var inboxEvent = BillingWebhookEvent.CreateReceived(
+            billingProvider.Provider,
+            webhookEvent.EventId,
+            webhookEvent.EventType,
+            webhookEvent.ExternalPaymentId ?? webhookEvent.ExternalSubscriptionId ?? webhookEvent.ExternalPaymentMethodId,
+            timeProvider.GetUtcNow().UtcDateTime,
+            command.Payload,
+            JsonSerializer.Serialize(webhookEvent));
+        try {
+            await billingTransactionRunner.ExecuteAsync(
+                ct => billingWebhookEventRepository.AddAsync(inboxEvent, ct),
                 cancellationToken).ConfigureAwait(false);
         } catch (BillingWebhookEventAlreadyProcessedException) {
-            return Result.Success();
-        } catch (BillingPaymentAlreadyExistsException) {
             return Result.Success();
         }
 
         return Result.Success();
-    }
-
-    private async Task ProcessWebhookEventAsync(
-        string payload,
-        string provider,
-        BillingWebhookEventModel webhookEvent,
-        BillingWebhookProcessingContext context,
-        CancellationToken cancellationToken) {
-        await billingTransactionRunner.ExecuteAsync(async ct => {
-            BillingWebhookEvent processedWebhookEvent = billingWebhookSubscriptionWriter.CreateProcessedEvent(provider, webhookEvent, payload);
-            await billingWebhookEventRepository.AddAsync(processedWebhookEvent, ct).ConfigureAwait(false);
-
-            BillingSubscription updatedSubscription = await billingWebhookSubscriptionWriter.UpsertAsync(
-                provider,
-                webhookEvent,
-                context.Subscription,
-                context.User,
-                ct).ConfigureAwait(false);
-
-            await billingWebhookPaymentRecorder.AddIfPresentAsync(updatedSubscription, provider, webhookEvent, ct).ConfigureAwait(false);
-
-            await billingWebhookPremiumRoleSyncer.SyncAsync(context.User, updatedSubscription, webhookEvent, ct).ConfigureAwait(false);
-        }, cancellationToken).ConfigureAwait(false);
     }
 }
