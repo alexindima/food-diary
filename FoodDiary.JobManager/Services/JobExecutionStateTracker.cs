@@ -4,60 +4,63 @@ using System.Diagnostics.Metrics;
 namespace FoodDiary.JobManager.Services;
 
 public sealed class JobExecutionStateTracker : IJobExecutionStateTracker, IDisposable {
-    private readonly ConcurrentDictionary<string, JobExecutionStateSnapshot> snapshots = new(StringComparer.Ordinal);
-    private readonly Meter meter = new(JobManagerTelemetry.MeterName);
+    private readonly ConcurrentDictionary<string, JobExecutionStateSnapshot> _snapshots = new(StringComparer.Ordinal);
+    private readonly Meter _meter = new(JobManagerTelemetry.MeterName);
 
     public JobExecutionStateTracker() {
-        meter.CreateObservableGauge(
+        _meter.CreateObservableGauge(
             "fooddiary.job.last_success_age",
             ObserveLastSuccessAge,
             unit: "s");
-        meter.CreateObservableGauge(
+        _meter.CreateObservableGauge(
             "fooddiary.job.failure_streak",
             ObserveFailureStreak);
     }
 
     public void RecordStarted(string jobName, DateTime utcNow) {
-        snapshots.AddOrUpdate(
+        _snapshots.AddOrUpdate(
             jobName,
-            _ => new JobExecutionStateSnapshot(utcNow, LastSucceededAtUtc: null, LastFailedAtUtc: null, 0),
-            (_, current) => current with { LastStartedAtUtc = utcNow });
+            static (_, timestamp) => new JobExecutionStateSnapshot(timestamp, LastSucceededAtUtc: null, LastFailedAtUtc: null, 0),
+            static (_, current, timestamp) => current with { LastStartedAtUtc = timestamp },
+            utcNow);
     }
 
     public void RecordSuccess(string jobName, DateTime utcNow) {
-        snapshots.AddOrUpdate(
+        _snapshots.AddOrUpdate(
             jobName,
-            _ => new JobExecutionStateSnapshot(utcNow, utcNow, LastFailedAtUtc: null, 0),
-            (_, current) => current with {
-                LastStartedAtUtc = current.LastStartedAtUtc ?? utcNow,
-                LastSucceededAtUtc = utcNow,
+            static (_, timestamp) => new JobExecutionStateSnapshot(timestamp, timestamp, LastFailedAtUtc: null, 0),
+            static (_, current, timestamp) => current with {
+                LastStartedAtUtc = current.LastStartedAtUtc ?? timestamp,
+                LastSucceededAtUtc = timestamp,
                 ConsecutiveFailures = 0,
-            });
+            },
+            utcNow);
     }
 
     public void RecordFailure(string jobName, DateTime utcNow) {
-        snapshots.AddOrUpdate(
+        _snapshots.AddOrUpdate(
             jobName,
-            _ => new JobExecutionStateSnapshot(utcNow, LastSucceededAtUtc: null, utcNow, 1),
-            (_, current) => current with {
-                LastStartedAtUtc = current.LastStartedAtUtc ?? utcNow,
-                LastFailedAtUtc = utcNow,
+            static (_, timestamp) => new JobExecutionStateSnapshot(timestamp, LastSucceededAtUtc: null, timestamp, 1),
+            static (_, current, timestamp) => current with {
+                LastStartedAtUtc = current.LastStartedAtUtc ?? timestamp,
+                LastFailedAtUtc = timestamp,
                 ConsecutiveFailures = current.ConsecutiveFailures + 1,
-            });
+            },
+            utcNow);
     }
 
     public JobExecutionStateSnapshot? GetSnapshot(string jobName) {
-        return snapshots.TryGetValue(jobName, out JobExecutionStateSnapshot snapshot) ? snapshot : null;
+        return _snapshots.TryGetValue(jobName, out JobExecutionStateSnapshot snapshot) ? snapshot : null;
     }
 
     public void Dispose() {
-        meter.Dispose();
+        _meter.Dispose();
     }
 
     private IEnumerable<Measurement<long>> ObserveLastSuccessAge() {
         DateTime now = TimeProvider.System.GetUtcNow().UtcDateTime;
 
-        foreach (KeyValuePair<string, JobExecutionStateSnapshot> entry in snapshots) {
+        foreach (KeyValuePair<string, JobExecutionStateSnapshot> entry in _snapshots) {
             if (entry.Value.LastSucceededAtUtc is not { } lastSucceededAtUtc) {
                 continue;
             }
@@ -71,7 +74,7 @@ public sealed class JobExecutionStateTracker : IJobExecutionStateTracker, IDispo
     }
 
     private IEnumerable<Measurement<int>> ObserveFailureStreak() {
-        foreach (KeyValuePair<string, JobExecutionStateSnapshot> entry in snapshots) {
+        foreach (KeyValuePair<string, JobExecutionStateSnapshot> entry in _snapshots) {
             yield return new Measurement<int>(
                 entry.Value.ConsecutiveFailures,
                 new KeyValuePair<string, object?>("fooddiary.job.name", entry.Key));

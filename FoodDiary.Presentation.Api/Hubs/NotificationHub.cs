@@ -4,5 +4,4 @@ using Microsoft.AspNetCore.SignalR;
 namespace FoodDiary.Presentation.Api.Hubs;
 
 [Authorize]
-public sealed class NotificationHub : Hub {
-}
+public sealed class NotificationHub : Hub;

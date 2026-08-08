@@ -261,7 +261,7 @@ public sealed class HttpResponseContractCoverageTests {
             () => Assert.Equal("Iron", daily.Name),
             () => Assert.Equal(18, daily.DailyValue),
             () => Assert.Equal("Vitamin C", micro.Name),
-            () => Assert.Equal(30, micro.AmountPer100g),
+            () => Assert.Equal(30, micro.AmountPer100G),
             () => Assert.Equal(3, portion.Id),
             () => Assert.Equal("cup", portion.MeasureUnitName),
             () => Assert.Equal(240, portion.GramWeight),

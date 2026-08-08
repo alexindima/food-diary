@@ -18,20 +18,30 @@ public readonly record struct HealthAreaScores(
             CalculateArea(AntioxidantNutrientIds, nutrientAmounts, dailyValues));
     }
 
-    // Heart: Potassium, Magnesium, + penalize excess Sodium
+    /// <summary>
+    /// Nutrient IDs used for heart health: potassium and magnesium. Excess sodium is applied separately as a penalty.
+    /// </summary>
     private static readonly int[] HeartNutrientIds = [1092, 1090];
     private const int SodiumPenaltyId = 1093;
 
-    // Bone: Calcium, Vitamin D, Vitamin K, Phosphorus, Magnesium
+    /// <summary>
+    /// Nutrient IDs used for bone health: calcium, vitamins D and K, phosphorus, and magnesium.
+    /// </summary>
     private static readonly int[] BoneNutrientIds = [1087, 1110, 1185, 1091, 1090];
 
-    // Immune: Vitamin C, Vitamin D, Zinc, Selenium, Vitamin E
+    /// <summary>
+    /// Nutrient IDs used for immune health: vitamins C, D, and E, zinc, and selenium.
+    /// </summary>
     private static readonly int[] ImmuneNutrientIds = [1162, 1110, 1095, 1103, 1109];
 
-    // Energy: Iron, B1, B2, B3, B5, B6, B12, Magnesium
+    /// <summary>
+    /// Nutrient IDs used for energy: iron, vitamins B1, B2, B3, B5, B6, and B12, and magnesium.
+    /// </summary>
     private static readonly int[] EnergyNutrientIds = [1089, 1165, 1166, 1167, 1170, 1175, 1178, 1090];
 
-    // Antioxidant: Vitamin C, Vitamin E, Selenium, Vitamin A
+    /// <summary>
+    /// Nutrient IDs used for antioxidant health: vitamins C, E, and A, and selenium.
+    /// </summary>
     private static readonly int[] AntioxidantNutrientIds = [1162, 1109, 1103, 1106];
 
     private static HealthAreaScore CalculateArea(

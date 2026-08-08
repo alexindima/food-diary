@@ -9,16 +9,16 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodDiary.Presentation.Api.Features.Users;
 
 [ApiController]
-[Route("api/v{version:apiVersion}/users")]
+[Route("api/v{version:apiVersion}/users/ai-consent")]
 public sealed class UserAiConsentController(ISender mediator) : AuthorizedController(mediator) {
-    [HttpPost("ai-consent")]
+    [HttpPost("")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [BlockImpersonatedAccess]
     public Task<IActionResult> AcceptAiConsent([FromCurrentUser] Guid userId) =>
         HandleNoContent(userId.ToAcceptAiConsentCommand());
 
-    [HttpDelete("ai-consent")]
+    [HttpDelete("")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [BlockImpersonatedAccess]

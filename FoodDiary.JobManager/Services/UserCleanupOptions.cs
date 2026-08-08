@@ -9,8 +9,7 @@ public sealed class UserCleanupOptions {
     public string? ReassignUserId { get; init; }
 
     public static bool HasValidConfiguration(UserCleanupOptions options) {
-        return options.RetentionDays > 0 &&
-               options.BatchSize > 0 &&
+        return options is { RetentionDays: > 0, BatchSize: > 0 } &&
                !string.IsNullOrWhiteSpace(options.Cron) &&
                (string.IsNullOrWhiteSpace(options.ReassignUserId) || Guid.TryParse(options.ReassignUserId, out _));
     }

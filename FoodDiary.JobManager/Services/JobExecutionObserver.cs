@@ -30,6 +30,10 @@ public sealed class JobExecutionObserver(
         executionStateTracker.RecordSuccess(jobName, UtcNow);
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "ReSharper",
+        "MemberCanBeMadeStatic.Global",
+        Justification = "Cancellation recording is part of the injected job execution observer API.")]
     public void RecordCanceled(string jobName) {
         RecordExecution(jobName, "canceled");
     }

@@ -56,6 +56,8 @@ dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
 dotnet_style_prefer_auto_properties = true:suggestion
+dotnet_style_prefer_inferred_anonymous_type_member_names = true:error
+dotnet_style_prefer_inferred_tuple_names = true:error
 dotnet_style_prefer_conditional_expression_over_assignment = false:none
 dotnet_style_prefer_conditional_expression_over_return = false:none
 
@@ -71,6 +73,7 @@ dotnet_diagnostic.MA0007.severity = error
 dotnet_diagnostic.MA0008.severity = warning
 dotnet_diagnostic.MA0089.severity = error
 dotnet_diagnostic.MA0009.severity = warning
+dotnet_diagnostic.MA0106.severity = error
 dotnet_diagnostic.MA0011.severity = warning
 dotnet_diagnostic.MA0015.severity = warning
 dotnet_diagnostic.MA0016.severity = warning
@@ -89,9 +92,11 @@ dotnet_diagnostic.MA0159.severity = warning
 dotnet_diagnostic.MA0166.severity = error
 dotnet_diagnostic.MA0188.severity = error
 dotnet_diagnostic.MA0193.severity = error
+dotnet_diagnostic.MA0206.severity = error
 dotnet_diagnostic.IDE0005.severity = warning
 dotnet_diagnostic.IDE0028.severity = error
 dotnet_diagnostic.IDE0032.severity = error
+dotnet_diagnostic.IDE0037.severity = error
 dotnet_diagnostic.IDE0042.severity = error
 dotnet_diagnostic.IDE0090.severity = error
 dotnet_diagnostic.IDE0290.severity = error
@@ -123,6 +128,7 @@ resharper_redundant_qualifier_highlighting = error
 resharper_using_statement_resource_initialization_highlighting = warning
 resharper_using_statement_resource_initialization_expression_highlighting = warning
 resharper_convert_to_extension_block_highlighting = hint
+resharper_replace_with_primary_constructor_parameter_highlighting = error
 resharper_arrange_trailing_comma_in_multiline_lists_highlighting = none
 resharper_arrange_trailing_comma_in_singleline_lists_highlighting = none
 
@@ -362,6 +368,10 @@ resharper_convert_to_extension_block_highlighting = error
 dotnet_diagnostic.FD0001.severity = error
 resharper_convert_to_extension_block_highlighting = error
 
+[FoodDiary.JobManager/**/*.cs]
+dotnet_diagnostic.FD0001.severity = error
+resharper_convert_to_extension_block_highlighting = error
+
 # ASP.NET Core JSON serialization reads response DTO members implicitly.
 [FoodDiary.Presentation.Api/Responses/*.cs]
 resharper_not_accessed_positional_property_global_highlighting = none
@@ -388,6 +398,15 @@ dotnet_diagnostic.ASP0027.severity = none
 [FoodDiary.Telegram.Bot/Program.cs]
 resharper_class_never_instantiated_global_highlighting = none
 
+# The explicit partial Program carries ExcludeFromCodeCoverage for dotCover.
+[FoodDiary.JobManager/Program.cs]
+dotnet_diagnostic.ASP0027.severity = none
+resharper_class_never_instantiated_global_highlighting = none
+
 # This sentinel exception has one fixed meaning and intentionally exposes only a parameterless constructor.
 [FoodDiary.Presentation.Api/Controllers/CurrentUserUnavailableException.cs]
 dotnet_diagnostic.RCS1194.severity = none
+
+# This file contains a ReSharper control comment, not member documentation.
+[Shared/FoodDiary.Domain.Primitives/Entity.cs]
+dotnet_diagnostic.RCS1181.severity = none

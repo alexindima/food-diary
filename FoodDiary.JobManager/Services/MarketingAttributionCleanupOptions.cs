@@ -10,7 +10,6 @@ public sealed class MarketingAttributionCleanupOptions {
 
     public static bool HasValidConfiguration(MarketingAttributionCleanupOptions options) =>
         !options.Enabled ||
-        (options.RetentionDays > 0 &&
-            options.BatchSize > 0 &&
-            !string.IsNullOrWhiteSpace(options.Cron));
+        (options is { RetentionDays: > 0, BatchSize: > 0 } &&
+         !string.IsNullOrWhiteSpace(options.Cron));
 }

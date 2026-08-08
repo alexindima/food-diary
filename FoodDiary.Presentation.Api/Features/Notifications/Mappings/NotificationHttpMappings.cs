@@ -44,7 +44,7 @@ public static class NotificationHttpMappings {
                 new(
                     userId,
                     request.Endpoint,
-                    request.Keys.P256dh,
+                    request.Keys.P256Dh,
                     request.Keys.Auth,
                     request.ExpirationTime,
                     request.Locale,

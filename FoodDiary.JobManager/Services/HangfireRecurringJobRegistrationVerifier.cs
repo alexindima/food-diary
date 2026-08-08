@@ -18,14 +18,13 @@ public sealed class HangfireRecurringJobRegistrationVerifier(
 
         string[] missingJobIds = [.. expectedJobIds.Where(expectedJobId => !registeredJobIds.Contains(expectedJobId))];
 
-        if (missingJobIds.Length == 0) {
-            logger.LogInformation(
-                "Verified Hangfire recurring job registration for {JobCount} jobs.",
-                expectedJobIds.Count);
-            return;
+        if (missingJobIds.Length != 0) {
+            throw new InvalidOperationException(
+                $"Recurring Hangfire jobs were not registered: {string.Join(", ", missingJobIds)}");
         }
 
-        throw new InvalidOperationException(
-            $"Recurring Hangfire jobs were not registered: {string.Join(", ", missingJobIds)}");
+        logger.LogInformation(
+            "Verified Hangfire recurring job registration for {JobCount} jobs.",
+            expectedJobIds.Count);
     }
 }

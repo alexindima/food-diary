@@ -249,6 +249,5 @@ public sealed class DatabaseCommandTelemetryInterceptorTests {
             commandSource);
 
     [ExcludeFromCodeCoverage]
-    private sealed class TestDbException : DbException {
-    }
+    private sealed class TestDbException : DbException;
 }

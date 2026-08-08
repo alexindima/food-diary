@@ -134,7 +134,7 @@ public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsy
     private static string ComputeRequestHash(ActionExecutingContext context) {
         var payload = new SortedDictionary<string, object?>(context.ActionArguments, StringComparer.Ordinal);
         string serialized = JsonSerializer.Serialize(new {
-            Method = context.HttpContext.Request.Method,
+            context.HttpContext.Request.Method,
             Path = context.HttpContext.Request.Path.Value ?? string.Empty,
             Query = context.HttpContext.Request.QueryString.Value ?? string.Empty,
             Arguments = payload,

@@ -14,11 +14,7 @@ public sealed class NotificationCleanupOptions {
     public static bool HasValidConfiguration(NotificationCleanupOptions options) {
         return options.TransientTypes.Count > 0 &&
                options.TransientTypes.All(type => !string.IsNullOrWhiteSpace(type)) &&
-               options.TransientReadRetentionDays > 0 &&
-               options.TransientUnreadRetentionDays > 0 &&
-               options.StandardReadRetentionDays > 0 &&
-               options.StandardUnreadRetentionDays > 0 &&
-               options.BatchSize > 0 &&
+               options is { TransientReadRetentionDays: > 0, TransientUnreadRetentionDays: > 0, StandardReadRetentionDays: > 0, StandardUnreadRetentionDays: > 0, BatchSize: > 0 } &&
                !string.IsNullOrWhiteSpace(options.Cron);
     }
 }

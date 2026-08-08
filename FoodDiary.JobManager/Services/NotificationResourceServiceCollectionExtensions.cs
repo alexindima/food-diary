@@ -4,9 +4,9 @@ using FoodDiary.Resources.Notifications;
 namespace FoodDiary.JobManager.Services;
 
 public static class NotificationResourceServiceCollectionExtensions {
-    public static IServiceCollection AddNotificationResources(this IServiceCollection services) {
-        services.AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>();
-
-        return services;
+    extension(IServiceCollection services) {
+        public void AddNotificationResources() {
+            services.AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>();
+        }
     }
 }

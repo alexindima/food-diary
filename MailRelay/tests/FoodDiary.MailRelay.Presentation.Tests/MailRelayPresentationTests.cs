@@ -964,8 +964,7 @@ public sealed class MailRelayPresentationTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class ControllerWithoutNamespace : ControllerBase {
-    }
+    private sealed class ControllerWithoutNamespace : ControllerBase;
 
     [ExcludeFromCodeCoverage]
     private sealed class ExposedMailRelayController(ISender sender) : MailRelayControllerBase(sender) {

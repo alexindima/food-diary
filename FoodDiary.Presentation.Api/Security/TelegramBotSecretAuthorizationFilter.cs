@@ -17,9 +17,9 @@ public sealed class TelegramBotSecretAuthorizationFilter(
     public const string SecretHeaderName = "X-Telegram-Bot-Secret";
 
     private readonly TelegramBotAuthOptions _telegramBotOptions = telegramBotOptions.Value;
-    private readonly ILogger<TelegramBotSecretAuthorizationFilter> _logger = logger;
 
     public Task OnAuthorizationAsync(AuthorizationFilterContext context) {
+        // ReSharper disable once ExplicitCallerInfoArgument
         using Activity? activity = PresentationApiTelemetry.ActivitySource.StartActivity("auth.telegram.bot-secret");
         activity?.SetTag("fooddiary.presentation.feature", "Auth");
         activity?.SetTag("fooddiary.presentation.controller", "AuthTelegramController");
@@ -42,7 +42,7 @@ public sealed class TelegramBotSecretAuthorizationFilter(
                 new KeyValuePair<string, object?>("fooddiary.presentation.controller", "AuthTelegramController"),
                 new KeyValuePair<string, object?>("fooddiary.presentation.operation", "auth.telegram.bot-secret"),
                 new KeyValuePair<string, object?>("fooddiary.presentation.outcome", "success"));
-            _logger.LogInformation("Telegram bot secret authorization succeeded");
+            logger.LogInformation("Telegram bot secret authorization succeeded");
             return Task.CompletedTask;
         }
 
@@ -79,6 +79,6 @@ public sealed class TelegramBotSecretAuthorizationFilter(
             new KeyValuePair<string, object?>("fooddiary.presentation.controller", "AuthTelegramController"),
             new KeyValuePair<string, object?>("fooddiary.presentation.operation", "auth.telegram.bot-secret"),
             new KeyValuePair<string, object?>("error.code", errorCode));
-        _logger.LogWarning("Telegram bot secret authorization failed with {ErrorCode}", errorCode);
+        logger.LogWarning("Telegram bot secret authorization failed with {ErrorCode}", errorCode);
     }
 }

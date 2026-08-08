@@ -1,8 +1,8 @@
 namespace FoodDiary.Presentation.Api.Filters;
 
 public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdempotencyStore {
-    private readonly Lock syncRoot = new();
-    private readonly Dictionary<string, Entry> entries = new(StringComparer.Ordinal);
+    private readonly Lock _syncRoot = new();
+    private readonly Dictionary<string, Entry> _entries = new(StringComparer.Ordinal);
 
     public Task<IdempotencyReservation> ReserveAsync(
         string key,
@@ -12,10 +12,10 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
         CancellationToken cancellationToken = default) {
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
 
-        lock (syncRoot) {
+        lock (_syncRoot) {
             RemoveExpiredEntries(nowUtc);
 
-            if (entries.TryGetValue(key, out Entry? entry)) {
+            if (_entries.TryGetValue(key, out Entry? entry)) {
                 if (!string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal)) {
                     return Task.FromResult(new IdempotencyReservation(IdempotencyReservationStatus.Conflict));
                 }
@@ -31,7 +31,7 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
             }
 
             string ownerToken = Guid.NewGuid().ToString("N");
-            entries[key] = Entry.InProgress(requestHash, ownerToken, nowUtc.Add(processingTtl));
+            _entries[key] = Entry.InProgress(requestHash, ownerToken, nowUtc.Add(processingTtl));
             return Task.FromResult(new IdempotencyReservation(
                 IdempotencyReservationStatus.Acquired,
                 OwnerToken: ownerToken));
@@ -48,12 +48,12 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
         CancellationToken cancellationToken = default) {
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
 
-        lock (syncRoot) {
-            if (entries.TryGetValue(key, out Entry? entry) &&
+        lock (_syncRoot) {
+            if (_entries.TryGetValue(key, out Entry? entry) &&
                 !entry.Completed &&
                 string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal) &&
                 string.Equals(entry.OwnerToken, ownerToken, StringComparison.Ordinal)) {
-                entries[key] = Entry.CompletedEntry(requestHash, statusCode, body, nowUtc.Add(responseTtl));
+                _entries[key] = Entry.CompletedEntry(requestHash, statusCode, body, nowUtc.Add(responseTtl));
             }
         }
 
@@ -61,12 +61,12 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
     }
 
     private void RemoveExpiredEntries(DateTime nowUtc) {
-        string[] expiredKeys = [.. entries
+        string[] expiredKeys = [.. _entries
             .Where(entry => entry.Value.ExpiresAtUtc <= nowUtc)
             .Select(static entry => entry.Key)];
 
         foreach (string key in expiredKeys) {
-            entries.Remove(key);
+            _entries.Remove(key);
         }
     }
 
