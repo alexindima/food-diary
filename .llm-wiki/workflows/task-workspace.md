@@ -38,6 +38,12 @@ sources:
   - .llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1
   - .llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1
   - .llm-wiki/tools/Manage-LlmWikiEvidence.ps1
+  - .llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1
+  - .llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1
+  - .llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1
+  - .llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1
+  - .llm-wiki/tools/Get-LlmWikiReviewReport.ps1
+  - .llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1
 ---
 
 # Start a Governed AI Task Workspace
@@ -306,6 +312,31 @@ Resolved evidence is retained only when its lineage still matches the content
 hash of the policy-rule paths it covers. A same-path source edit therefore
 invalidates stale evidence even when the rule and changed-path set are
 unchanged.
+
+Generated navigation output under `.llm-wiki/generated/` and the source-impact
+receipt registry are reported separately from the product delta. They never
+widen product scope, create unplanned-path drift, or invalidate implementation
+evidence merely because the Wiki refreshed its own derived state.
+
+Use `task-verification-plan` followed by `task-verification-run` for governed
+checks. The runner executes canonical policy commands, records exit code,
+duration, content lineage, and a hashed log, and applies configured supersedence
+so a broader successful command closes covered checks without duplicate work.
+Delivery status points to this executable path instead of asking the developer
+to manually restate results from commands the Wiki requested.
+
+`delivery-replan` previews invalidation, emits phase progress, refreshes the
+packet and evidence, and rebuilds the manifest from the task-contract boundary
+as one transaction. If any stage fails, every workspace artifact is restored.
+Delivery validation rejects packet paths that neither exist nor represent a
+current Git deletion, preventing removed intermediate migrations from surviving
+as apparently current audit evidence.
+
+Readiness exposes two independent conclusions: engineering readiness covers
+policy, architecture, API compatibility, and executed verification; governance
+completeness covers manifest, acceptance, reviews, privacy, and rollout records.
+The combined verdict remains available for strict publication, but incomplete
+bookkeeping no longer masquerades as a failed engineering result.
 
 Parallel workspaces are compiled into an executable dependency graph. Exact
 path overlap blocks merge; shared boundaries require coordination; module and

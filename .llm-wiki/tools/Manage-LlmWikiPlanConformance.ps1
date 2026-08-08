@@ -21,6 +21,7 @@ if ([IO.Path]::IsPathRooted($WorkspacePath) -or $normalizedWorkspace -notmatch '
 $workspaceAbsolute = Join-Path $repositoryRoot $normalizedWorkspace
 $manifestPath = Join-Path $workspaceAbsolute 'change-manifest.json'
 $packetPath = Join-Path $workspaceAbsolute 'change-packet.json'
+$taskContractPath = Join-Path $workspaceAbsolute 'task-contract.json'
 $receiptPath = Join-Path $workspaceAbsolute 'plan-conformance.json'
 $policyPath = Join-Path $wikiRoot 'policies/workspace-policies.json'
 foreach ($requiredPath in @($manifestPath, $packetPath, $policyPath)) {
@@ -42,6 +43,10 @@ function Test-PathMatch([string]$Value, [object[]]$Patterns) {
     }
     $false
 }
+function Test-GovernanceGeneratedPath([string]$Value) {
+    $Value -match '^\.llm-wiki/generated/' -or
+        $Value -eq '.llm-wiki/reviews/source-impact-reviews.json'
+}
 function Get-Payload([object]$Receipt) {
     [pscustomobject][ordered]@{
         schemaVersion = $Receipt.schemaVersion
@@ -60,8 +65,9 @@ function Get-Payload([object]$Receipt) {
 function Get-Assessment {
     $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
     $packet = Get-Content -LiteralPath $packetPath -Raw | ConvertFrom-Json
-    $actual = @($packet.diff.changedPaths | Sort-Object -Unique)
-    $planned = @($manifest.scope.plannedPaths | Sort-Object -Unique)
+    $actual = @($packet.diff.changedPaths | Where-Object { -not (Test-GovernanceGeneratedPath ([string]$_)) } | Sort-Object -Unique)
+    $governanceGenerated = @($packet.diff.changedPaths | Where-Object { Test-GovernanceGeneratedPath ([string]$_) } | Sort-Object -Unique)
+    $planned = @($manifest.scope.plannedPaths | Where-Object { -not (Test-GovernanceGeneratedPath ([string]$_)) } | Sort-Object -Unique)
     $outOfScope = @($actual | Where-Object {
         -not (Test-PathMatch $_ @($manifest.scope.allowedPathPatterns)) -or
         (Test-PathMatch $_ @($manifest.scope.excludedPathPatterns))
@@ -69,7 +75,7 @@ function Get-Assessment {
     $plannedChanged = @($actual | Where-Object { $_ -in $planned })
     $unplannedAllowed = @($actual | Where-Object { $_ -notin $planned -and $_ -notin $outOfScope })
     $missingPlanned = @($planned | Where-Object { $_ -notin $actual })
-    $phaseFiles = @($manifest.plan.phases.files | Where-Object { $_ } | Sort-Object -Unique)
+    $phaseFiles = @($manifest.plan.phases.files | Where-Object { $_ -and -not (Test-GovernanceGeneratedPath ([string]$_)) } | Sort-Object -Unique)
     $changedPhaseFiles = @($actual | Where-Object { $_ -in $phaseFiles })
     $findings = [Collections.Generic.List[object]]::new()
     if ([bool]$conformancePolicy.blockOutOfScope -and $outOfScope.Count -gt 0) {
@@ -108,6 +114,7 @@ function Get-Assessment {
             plannedPhaseFiles = $phaseFiles
             changedPhaseFiles = $changedPhaseFiles
             changedPathCount = $actual.Count
+            governanceGeneratedPaths = $governanceGenerated
             plannedCoveragePercent = $(if ($planned.Count -eq 0) { 100 } else { [Math]::Round(($plannedChanged.Count * 100.0) / $planned.Count, 2) })
         }
         findings = @($findings)
@@ -153,13 +160,15 @@ if ($Action -eq 'replan') {
     if ([string]::IsNullOrWhiteSpace($Reason)) { throw 'replan requires Reason.' }
     $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
     $packet = Get-Content -LiteralPath $packetPath -Raw | ConvertFrom-Json
+    if (-not (Test-Path -LiteralPath $taskContractPath -PathType Leaf)) { throw "Task contract is absent: $normalizedWorkspace/task-contract.json" }
+    $taskContract = Get-Content -LiteralPath $taskContractPath -Raw | ConvertFrom-Json
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeManifest.ps1') init `
         -Path "$normalizedWorkspace/change-manifest.json" `
         -Objective ([string]$manifest.objective) `
         -BaseRef ([string]$manifest.git.base) `
         -ChangedPath @($packet.diff.changedPaths) `
-        -AllowedPath @($manifest.scope.allowedPathPatterns) `
-        -ExcludedPath @($manifest.scope.excludedPathPatterns) | Out-Null
+        -AllowedPath @($taskContract.scope.allowedPathPatterns) `
+        -ExcludedPath @($taskContract.scope.excludedPathPatterns) | Out-Null
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskJournal.ps1') add `
         -WorkspacePath $normalizedWorkspace `
         -JournalType decision `

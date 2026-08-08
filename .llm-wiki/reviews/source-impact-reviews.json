@@ -216,6 +216,21 @@
                         "reviewedAtUtc":  "2026-08-07T18:52:47.3058182Z"
                     },
                     {
+                        "pageId":  "workflow-confidence-ledger",
+                        "pagePath":  ".llm-wiki/workflows/confidence-ledger.md",
+                        "pageSha256":  "d59b6b99ff0c566de2b31579a916ee8e62adbeedea3d928970b2200fa0b63eb6",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
+                                        }
+                                    ],
+                        "reason":  "Reviewed governed-delivery hardening. Existing domain semantics remain unchanged; only status separation, atomic refresh, generated-scope isolation, and focused regression coverage were added.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
+                        "reviewedAtUtc":  "2026-08-08T11:15:35.3294320Z"
+                    },
+                    {
                         "pageId":  "workflow-context-bundles",
                         "pagePath":  ".llm-wiki/workflows/context-bundles.md",
                         "pageSha256":  "0b135cd36bc0ddc7e081cff3196a5d6e7c26254db35a24b05f828d0941ac4ecd",
@@ -244,6 +259,21 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
                         "reviewedAtUtc":  "2026-07-31T13:40:45.3691026Z"
+                    },
+                    {
+                        "pageId":  "workflow-controlled-repair-loop",
+                        "pagePath":  ".llm-wiki/workflows/controlled-repair-loop.md",
+                        "pageSha256":  "1a4c6620169d6fbe556feae253e1e80b1f7a4f4d232962b8fe8b13635bfb608a",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
+                                        }
+                                    ],
+                        "reason":  "Reviewed governed-delivery hardening. Existing domain semantics remain unchanged; only status separation, atomic refresh, generated-scope isolation, and focused regression coverage were added.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
+                        "reviewedAtUtc":  "2026-08-08T11:15:36.0365045Z"
                     },
                     {
                         "pageId":  "workflow-dependency-rollout",
@@ -322,12 +352,16 @@
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
                                             "sha256":  "4b8b2ef2195bc52fadf588f50037af85a50290fab3dfe15e1e634c1a7382c9c5"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
                                         }
                                     ],
-                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
+                        "reason":  "Reviewed governed-delivery hardening. Existing domain semantics remain unchanged; only status separation, atomic refresh, generated-scope isolation, and focused regression coverage were added.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
-                        "reviewedAtUtc":  "2026-08-07T18:52:47.9374563Z"
+                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
+                        "reviewedAtUtc":  "2026-08-08T11:15:36.7495597Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -345,23 +379,38 @@
                         "reviewedAtUtc":  "2026-08-07T18:52:48.7393179Z"
                     },
                     {
+                        "pageId":  "workflow-independent-change-critique",
+                        "pagePath":  ".llm-wiki/workflows/independent-change-critique.md",
+                        "pageSha256":  "d4dbe25be0380f0e984ce6f741cbdec696a44986b7d31c75a4a8485e9f153535",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
+                                        }
+                                    ],
+                        "reason":  "Reviewed governed-delivery hardening. Existing domain semantics remain unchanged; only status separation, atomic refresh, generated-scope isolation, and focused regression coverage were added.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
+                        "reviewedAtUtc":  "2026-08-08T11:15:37.5398616Z"
+                    },
+                    {
                         "pageId":  "workflow-index-pipeline",
                         "pagePath":  ".llm-wiki/workflows/index-pipeline.md",
                         "pageSha256":  "f5f0a130869c7a7a4fee8d47462410c9bf8fad65d4865a2ca3b05a2d91af83ca",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "0db5a0c2cd1e84cb2c59388bdb25742f6d5f1646d997f0171a9d5df7d8d288ef"
+                                            "sha256":  "8403f9bda5d10de0bf82d75407d36a368acff4ad7d697a1452201eed449a13e5"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
-                                            "sha256":  "44f4af467cd26db4940f87bab24630dabe7d93a25cacd885307efe783115f275"
+                                            "sha256":  "f1057792976cb436e53610fea1db3b4e152c19e02cf1789404a83bbb5ea5d5d1"
                                         }
                                     ],
-                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
+                        "reason":  "Reviewed governed-delivery hardening. Existing domain semantics remain unchanged; only status separation, atomic refresh, generated-scope isolation, and focused regression coverage were added.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
-                        "reviewedAtUtc":  "2026-08-07T18:52:49.4348482Z"
+                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
+                        "reviewedAtUtc":  "2026-08-08T11:15:38.4777359Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -443,6 +492,36 @@
                         "reviewedAtUtc":  "2026-08-08T10:20:31.2597509Z"
                     },
                     {
+                        "pageId":  "workflow-product-journey-impact",
+                        "pagePath":  ".llm-wiki/workflows/product-journey-impact.md",
+                        "pageSha256":  "a9831185cd84a2852b0d427375c97e941a27016fe0769f11665bfb0f5fee8146",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
+                                            "sha256":  "46b93858f0b8b84225462a1eaab4b06817ab3f576eef006cb11bba21e5570e32"
+                                        }
+                                    ],
+                        "reason":  "Reviewed optimized atomic replan execution; journey discovery and matching behavior remain unchanged.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
+                        "reviewedAtUtc":  "2026-08-08T11:32:21.5634334Z"
+                    },
+                    {
+                        "pageId":  "workflow-proof-of-change",
+                        "pagePath":  ".llm-wiki/workflows/proof-of-change.md",
+                        "pageSha256":  "8b82837eee71015fa0bc4c18f084e4ece9b7aedd383f14fb07def75df7fbda78",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
+                                        }
+                                    ],
+                        "reason":  "Reviewed governed-delivery hardening. Existing domain semantics remain unchanged; only status separation, atomic refresh, generated-scope isolation, and focused regression coverage were added.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
+                        "reviewedAtUtc":  "2026-08-08T11:15:39.9022720Z"
+                    },
+                    {
                         "pageId":  "workflow-quality-risk",
                         "pagePath":  ".llm-wiki/workflows/quality-risk.md",
                         "pageSha256":  "6dbd01ffd9ba92e32c7d132ca80e70d883a1707164597cbecf5dac86e8bfb292",
@@ -471,6 +550,21 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
                         "reviewedAtUtc":  "2026-07-31T13:19:03.6954450Z"
+                    },
+                    {
+                        "pageId":  "workflow-requirement-intelligence",
+                        "pagePath":  ".llm-wiki/workflows/requirement-intelligence.md",
+                        "pageSha256":  "a363e4461094ca73ab61e8a9a90c0bbd73b47f41ad6d81cd554345296367e54f",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
+                                        }
+                                    ],
+                        "reason":  "Reviewed governed-delivery hardening. Existing domain semantics remain unchanged; only status separation, atomic refresh, generated-scope isolation, and focused regression coverage were added.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
+                        "reviewedAtUtc":  "2026-08-08T11:15:40.6696375Z"
                     },
                     {
                         "pageId":  "workflow-review-report",

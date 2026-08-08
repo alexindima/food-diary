@@ -3,7 +3,7 @@ id: workflow-release-readiness
 kind: workflow
 status: current
 title: Evaluate release readiness
-summary: Produce one non-compensating verdict across policy, architecture, compatibility, scope, acceptance, evidence, privacy, and rollout.
+summary: Separate engineering readiness from governance completeness while retaining a strict non-compensating publication verdict.
 tags:
   - workflow
   - release
@@ -36,7 +36,7 @@ The scorecard evaluates:
 - API compatibility;
 - manifest scope and obligation drift;
 - acceptance criteria coverage;
-- resolved check and review evidence;
+- resolved verification evidence and review evidence as separate dimensions;
 - hashed browser and visual artifacts attached to resolved review obligations;
 - privacy-sensitive impact;
 - specialized rollout readiness.
@@ -48,3 +48,10 @@ Verdicts are:
 - `blocked`: at least one hard gate failed.
 
 The numeric score is informational. A failed dimension always blocks release and cannot be compensated by points elsewhere. Synthetic `-ChangedPath` inputs cannot prove an OpenAPI diff, so API compatibility remains unassessed until run against a real Git diff.
+
+The result also exposes `engineeringReadiness` for policy, architecture, API
+compatibility, and executed checks, plus `governanceCompleteness` for scope,
+acceptance, review, privacy, and rollout records. This preserves the strict
+combined publication verdict while distinguishing failed code evidence from
+unfinished bookkeeping. Generated Wiki indexes and source-impact receipts do
+not participate in product scope drift.

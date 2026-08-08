@@ -83,6 +83,11 @@ $checks = @(
         arguments = ''
     }
     [pscustomobject]@{
+        name = 'governed delivery'
+        script = Join-Path $toolsRoot 'Test-LlmWikiGovernedDeliveryRegression.ps1'
+        arguments = ''
+    }
+    [pscustomobject]@{
         name = 'indexes'
         script = Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1'
         arguments = "-Check -MaxConcurrency $IndexConcurrency"

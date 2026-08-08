@@ -826,7 +826,10 @@ Assert-Wiki ($conditionalReadiness.verdict -eq 'conditional') 'Optional missing 
 Assert-Wiki (@($conditionalReadiness.blockingDimensions).Count -eq 0) 'Conditional readiness unexpectedly contained a blocking dimension.'
 Assert-Wiki (@($conditionalReadiness.unassessedDimensions) -contains 'scope-manifest') 'Readiness did not report an absent optional manifest as unassessed.'
 Assert-Wiki (@($conditionalReadiness.unassessedDimensions) -contains 'acceptance') 'Readiness did not report an absent optional acceptance matrix as unassessed.'
-Assert-Wiki (@($conditionalReadiness.unassessedDimensions) -contains 'evidence') 'Readiness did not report an absent optional evidence bundle as unassessed.'
+Assert-Wiki (@($conditionalReadiness.unassessedDimensions) -contains 'verification-evidence') 'Readiness did not report absent optional verification evidence as unassessed.'
+Assert-Wiki (@($conditionalReadiness.unassessedDimensions) -contains 'review-evidence') 'Readiness did not report absent optional review evidence as unassessed.'
+Assert-Wiki ($conditionalReadiness.engineeringReadiness.verdict -eq 'conditional') 'Engineering readiness did not remain distinct from optional governance completeness.'
+Assert-Wiki ($conditionalReadiness.governanceCompleteness.verdict -eq 'conditional') 'Governance completeness did not expose missing optional records.'
 Assert-Wiki (@($conditionalReadiness.dimensions | Where-Object { $_.id -eq 'policy' -and $_.status -eq 'pass' }).Count -eq 1) 'Readiness did not pass structural policy for the smoke change.'
 Assert-Wiki (@($conditionalReadiness.dimensions | Where-Object { $_.id -eq 'architecture' -and $_.status -eq 'pass' }).Count -eq 1) 'Readiness did not pass architecture health for the smoke change.'
 
@@ -837,7 +840,8 @@ $strictReadiness = & (Join-Path $toolsRoot 'Get-LlmWikiReleaseReadiness.ps1') @r
 Assert-Wiki ($strictReadiness.verdict -eq 'blocked') 'Required missing governance artifacts did not block release readiness.'
 Assert-Wiki (@($strictReadiness.blockingDimensions) -contains 'scope-manifest') 'Strict readiness did not block on a missing manifest.'
 Assert-Wiki (@($strictReadiness.blockingDimensions) -contains 'acceptance') 'Strict readiness did not block on a missing acceptance matrix.'
-Assert-Wiki (@($strictReadiness.blockingDimensions) -contains 'evidence') 'Strict readiness did not block on a missing evidence bundle.'
+Assert-Wiki (@($strictReadiness.blockingDimensions) -contains 'verification-evidence') 'Strict readiness did not block on missing verification evidence.'
+Assert-Wiki (@($strictReadiness.blockingDimensions) -contains 'review-evidence') 'Strict readiness did not block on missing review evidence.'
 
 $reviewReportArguments = @{
     PacketInput = $contractPacket
@@ -852,7 +856,9 @@ Assert-Wiki (($reviewMarkdown -join "`n") -match 'backend-contract-consumers') '
 $reviewJson = & (Join-Path $toolsRoot 'Get-LlmWikiReviewReport.ps1') @reviewReportArguments -Format Json | ConvertFrom-Json
 Assert-Wiki ($reviewJson.packetFingerprint -eq $contractPacket.fingerprint) 'Review report did not preserve the compiled packet fingerprint.'
 Assert-Wiki ($reviewJson.verdict -eq 'conditional') 'JSON review report did not preserve readiness.'
-Assert-Wiki (@($reviewJson.dimensions).Count -eq 8) 'Review report did not include every readiness dimension.'
+Assert-Wiki ($reviewJson.engineeringReadiness.verdict -eq 'conditional' -and $reviewJson.governanceCompleteness.verdict -eq 'conditional') 'Review report collapsed engineering readiness and governance completeness.'
+Assert-Wiki (@($reviewJson.dimensions).Count -eq 9) 'Review report did not include every readiness dimension.'
+Assert-Wiki (-not (@($reviewJson.modules) -contains ',')) 'Review report emitted a malformed module placeholder.'
 
 if ($Profile -eq 'Full') {
     Write-Host 'Starting governed task-workspace and orchestration smoke coverage.'

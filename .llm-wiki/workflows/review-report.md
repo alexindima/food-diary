@@ -31,6 +31,8 @@ Generate a Markdown summary for a pull request, task handoff, or CI job:
 Use `-Format Json` for automation. The report includes a stable packet
 fingerprint, change scope, risk, every readiness dimension, concrete findings,
 required checks, review obligations, and suggested test scenarios.
+Module values are normalized to stable names rather than serializing internal
+objects, so malformed placeholders cannot enter the generated report.
 
 CI deliberately produces the report without requiring local manifest,
 acceptance, or evidence files. Missing optional governance artifacts therefore

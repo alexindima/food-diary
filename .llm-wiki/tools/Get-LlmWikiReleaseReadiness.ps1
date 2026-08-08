@@ -29,6 +29,10 @@ function Test-PathMatch([string]$Value, [object[]]$Patterns) {
     }
     return $false
 }
+function Test-GovernanceGeneratedPath([string]$Value) {
+    $Value -match '^\.llm-wiki/generated/' -or
+        $Value -eq '.llm-wiki/reviews/source-impact-reviews.json'
+}
 
 $packetArguments = @{ BaseRef = $BaseRef; Objective = $Objective; Format = 'Json' }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $packetArguments.HeadRef = $HeadRef }
@@ -87,7 +91,7 @@ if (-not (Test-Path -LiteralPath $manifestAbsolute)) {
     Add-Dimension 'scope-manifest' 10 $(if ($RequireManifest) { 'fail' } else { 'not-assessed' }) 'Change manifest is absent.'
 } else {
     $manifest = Get-Content -LiteralPath $manifestAbsolute -Raw | ConvertFrom-Json
-    $outOfScope = @($packet.diff.changedPaths | Where-Object {
+    $outOfScope = @($packet.diff.changedPaths | Where-Object { -not (Test-GovernanceGeneratedPath ([string]$_)) } | Where-Object {
         -not (Test-PathMatch $_ @($manifest.scope.allowedPathPatterns)) -or
         (Test-PathMatch $_ @($manifest.scope.excludedPathPatterns))
     })
@@ -136,22 +140,31 @@ $evidence = if (Test-Path -LiteralPath $evidenceAbsolute) {
     Get-Content -LiteralPath $evidenceAbsolute -Raw | ConvertFrom-Json
 } else { $null }
 if ($null -eq $evidence) {
-    Add-Dimension 'evidence' 15 $(if ($RequireEvidence) { 'fail' } else { 'not-assessed' }) 'Evidence bundle is absent.'
+    $missingEvidenceStatus = $(if ($RequireEvidence) { 'fail' } else { 'not-assessed' })
+    Add-Dimension 'verification-evidence' 10 $missingEvidenceStatus 'Verification evidence bundle is absent.'
+    Add-Dimension 'review-evidence' 5 $missingEvidenceStatus 'Review evidence bundle is absent.'
 } else {
     $unresolvedChecks = @($evidence.checks | Where-Object { $_.status -notin @('passed', 'not-applicable') })
     $unresolvedReviews = @($evidence.reviews | Where-Object { $_.status -notin @('completed', 'not-applicable') })
     $missingChecks = @($packet.policy.requiredChecks.id | Where-Object { $_ -notin @($evidence.checks.id) })
     $missingReviews = @($packet.policy.reviewObligations.id | Where-Object { $_ -notin @($evidence.reviews.id) })
-    $evidenceIssues = @(
+    $verificationIssues = @(
         @($unresolvedChecks | ForEach-Object { "Check $($_.id): $($_.status)" }) +
+        @($missingChecks | ForEach-Object { "Missing check: $_" })
+    )
+    $reviewIssues = @(
         @($unresolvedReviews | ForEach-Object { "Review $($_.id): $($_.status)" }) +
-        @($missingChecks | ForEach-Object { "Missing check: $_" }) +
         @($missingReviews | ForEach-Object { "Missing review: $_" })
     )
-    if ($evidenceIssues.Count -gt 0) {
-        Add-Dimension 'evidence' 15 'fail' 'Required evidence is missing or unresolved.' $evidenceIssues
+    if ($verificationIssues.Count -gt 0) {
+        Add-Dimension 'verification-evidence' 10 'fail' 'Required verification evidence is missing or unresolved.' $verificationIssues
     } else {
-        Add-Dimension 'evidence' 15 'pass' 'All required checks and reviews have resolved evidence.'
+        Add-Dimension 'verification-evidence' 10 'pass' 'All required checks have resolved evidence.'
+    }
+    if ($reviewIssues.Count -gt 0) {
+        Add-Dimension 'review-evidence' 5 'fail' 'Required review evidence is missing or unresolved.' $reviewIssues
+    } else {
+        Add-Dimension 'review-evidence' 5 'pass' 'All required reviews have resolved evidence.'
     }
 }
 
@@ -194,6 +207,14 @@ foreach ($dimension in $dimensions) {
 $blocking = @($dimensions | Where-Object status -eq 'fail')
 $unassessed = @($dimensions | Where-Object status -eq 'not-assessed')
 $verdict = if ($blocking.Count -gt 0) { 'blocked' } elseif ($unassessed.Count -gt 0) { 'conditional' } else { 'ready' }
+$engineeringIds = @('policy', 'architecture', 'api-compatibility', 'verification-evidence')
+$engineeringDimensions = @($dimensions | Where-Object id -in $engineeringIds)
+$governanceDimensions = @($dimensions | Where-Object id -notin $engineeringIds)
+function Get-IndependentVerdict([object[]]$Items) {
+    if (@($Items | Where-Object status -eq 'fail').Count -gt 0) { return 'blocked' }
+    if (@($Items | Where-Object status -eq 'not-assessed').Count -gt 0) { return 'conditional' }
+    return 'ready'
+}
 $result = [pscustomobject][ordered]@{
     verdict = $verdict
     score = [Math]::Round($score, 1)
@@ -203,9 +224,20 @@ $result = [pscustomobject][ordered]@{
     dimensions = @($dimensions)
     blockingDimensions = @($blocking | ForEach-Object { $_.id })
     unassessedDimensions = @($unassessed | ForEach-Object { $_.id })
+    engineeringReadiness = [pscustomobject][ordered]@{
+        verdict = Get-IndependentVerdict $engineeringDimensions
+        dimensions = @($engineeringDimensions.id)
+        blockingDimensions = @($engineeringDimensions | Where-Object status -eq 'fail' | ForEach-Object id)
+    }
+    governanceCompleteness = [pscustomobject][ordered]@{
+        verdict = Get-IndependentVerdict $governanceDimensions
+        dimensions = @($governanceDimensions.id)
+        blockingDimensions = @($governanceDimensions | Where-Object status -eq 'fail' | ForEach-Object id)
+    }
 }
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 12 } else {
-    Write-Host "Release readiness: $verdict ($($result.score)/100), risk=$($result.risk.level)"
+    Write-Host "Engineering readiness: $($result.engineeringReadiness.verdict); governance completeness: $($result.governanceCompleteness.verdict)"
+    Write-Host "Combined release readiness: $verdict ($($result.score)/100), risk=$($result.risk.level)"
     foreach ($dimension in $dimensions) {
         Write-Host " - [$($dimension.status)] $($dimension.id) ($($dimension.weight)): $($dimension.summary)"
         foreach ($issue in @($dimension.issues)) { Write-Host "   - $issue" }

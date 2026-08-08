@@ -27,6 +27,26 @@ function Invoke-JsonTool([string]$Name, [hashtable]$Arguments) {
     $Arguments.Format = 'Json'
     & (Join-Path $PSScriptRoot $Name) @Arguments | ConvertFrom-Json
 }
+function Get-WorkspaceSnapshot {
+    $snapshot = @{}
+    foreach ($file in @(Get-ChildItem -LiteralPath $absoluteWorkspace -File -Recurse -Force)) {
+        $relative = $file.FullName.Substring($absoluteWorkspace.Length).TrimStart('\', '/').Replace('\', '/')
+        $snapshot[$relative] = [IO.File]::ReadAllBytes($file.FullName)
+    }
+    $snapshot
+}
+function Restore-WorkspaceSnapshot([hashtable]$Snapshot) {
+    foreach ($file in @(Get-ChildItem -LiteralPath $absoluteWorkspace -File -Recurse -Force)) {
+        $relative = $file.FullName.Substring($absoluteWorkspace.Length).TrimStart('\', '/').Replace('\', '/')
+        if (-not $Snapshot.ContainsKey($relative)) { [IO.File]::Delete($file.FullName) }
+    }
+    foreach ($entry in $Snapshot.GetEnumerator()) {
+        $target = Join-Path $absoluteWorkspace $entry.Key
+        $directory = Split-Path -Parent $target
+        if (-not (Test-Path -LiteralPath $directory)) { $null = New-Item -ItemType Directory -Path $directory -Force }
+        [IO.File]::WriteAllBytes($target, [byte[]]$entry.Value)
+    }
+}
 function Get-DeliveryAssessment {
     $requirements = Invoke-JsonTool 'Manage-LlmWikiRequirementModel.ps1' @{ Action = 'assess'; WorkspacePath = $workspace }
     $conformance = Invoke-JsonTool 'Manage-LlmWikiPlanConformance.ps1' @{ Action = 'assess'; WorkspacePath = $workspace }
@@ -38,6 +58,14 @@ function Get-DeliveryAssessment {
         RequireEvidence = $true
     }
     $packet = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'change-packet.json') -Raw | ConvertFrom-Json
+    $taskContract = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'task-contract.json') -Raw | ConvertFrom-Json
+    $stalePacketPaths = @($packet.diff.changedPaths | Where-Object {
+        $candidate = Join-Path $repositoryRoot ([string]$_)
+        if (Test-Path -LiteralPath $candidate) { return $false }
+        $nameStatus = @(& git -C $repositoryRoot diff --name-status ([string]$taskContract.git.base) -- ([string]$_))
+        if ($LASTEXITCODE -ne 0) { throw "Unable to validate packet path freshness for '$_'." }
+        return @($nameStatus | Where-Object { $_ -match '^D\s' }).Count -eq 0
+    })
     $journeys = Invoke-JsonTool 'Find-LlmWikiProductJourney.ps1' @{
         Query = [string]$packet.objective
         ChangedPath = @($packet.diff.changedPaths)
@@ -64,6 +92,7 @@ function Get-DeliveryAssessment {
         }
     }
     $coreGates = @(
+        [pscustomobject][ordered]@{ id = 'packet-freshness'; passed = $stalePacketPaths.Count -eq 0; summary = $(if ($stalePacketPaths.Count -eq 0) { 'all packet paths exist or are current Git deletions' } else { "$($stalePacketPaths.Count) stale packet path(s): $($stalePacketPaths -join ', ')" }) }
         [pscustomobject][ordered]@{ id = 'requirements'; passed = [bool]$requirements.valid; summary = "$($requirements.model.classification.criteriaCount) criteria, $(@($requirements.model.findings).Count) blocking finding(s)" }
         [pscustomobject][ordered]@{ id = 'acceptance'; passed = [bool]$acceptance.valid; summary = "$($acceptance.satisfiedCount)/$($acceptance.criteriaCount) satisfied, $(@($acceptance.unmapped).Count) unmapped, $(@($acceptance.unverified).Count) unverified" }
         [pscustomobject][ordered]@{ id = 'plan-conformance'; passed = [bool]$conformance.valid; summary = "$($conformance.conformance.classification.changedPathCount) changed, $(@($conformance.conformance.classification.unplannedAllowedPaths).Count) unplanned, $(@($conformance.conformance.classification.outOfScopePaths).Count) out of scope" }
@@ -83,6 +112,14 @@ function Get-DeliveryAssessment {
         workspace = $workspace
         objective = [string]$packet.objective
         valid = @($gates | Where-Object { -not $_.passed }).Count -eq 0
+        engineeringReadiness = [pscustomobject][ordered]@{
+            verdict = $(if (@($coreGates | Where-Object { $_.id -in @('packet-freshness', 'requirements', 'plan-conformance', 'proof-of-change') -and -not $_.passed }).Count -eq 0) { 'ready' } else { 'blocked' })
+            gates = @($coreGates | Where-Object id -in @('packet-freshness', 'requirements', 'plan-conformance', 'proof-of-change'))
+        }
+        governanceCompleteness = [pscustomobject][ordered]@{
+            verdict = $(if ([bool]$acceptance.valid -and $evidencePassed) { 'complete' } else { 'incomplete' })
+            gates = @($gates | Where-Object id -in @('acceptance', 'evidence'))
+        }
         gates = $gates
         requirementCoverage = @($coverage)
         journeyImpact = @($journeys.journeys)
@@ -99,12 +136,25 @@ function Get-DeliveryAssessment {
 
 if ($Action -eq 'replan') {
     if ([string]::IsNullOrWhiteSpace($Reason)) { throw 'delivery-replan requires Reason.' }
+    if ($Format -eq 'Text') { Write-Host '[1/4] Assessing current delivery state...' }
     $before = if ($null -ne $AssessmentInput) { $AssessmentInput } else { Get-DeliveryAssessment }
-    $preview = if ($null -ne $RefreshPreviewInput) { $RefreshPreviewInput } else { Invoke-JsonTool 'Manage-LlmWikiTaskWorkspace.ps1' @{ Action = 'refresh'; WorkspacePath = $workspace; DryRun = $true } }
-    if (-not $DryRun) {
-        Invoke-JsonTool 'Manage-LlmWikiTaskWorkspace.ps1' @{ Action = 'refresh'; WorkspacePath = $workspace } | Out-Null
-        Invoke-JsonTool 'Manage-LlmWikiPlanConformance.ps1' @{ Action = 'replan'; WorkspacePath = $workspace; Reason = $Reason } | Out-Null
+    $preview = $RefreshPreviewInput
+    if ($DryRun) {
+        if ($Format -eq 'Text') { Write-Host '[2/3] Previewing task refresh and evidence invalidation...' }
+        if ($null -eq $preview) { $preview = Invoke-JsonTool 'Manage-LlmWikiTaskWorkspace.ps1' @{ Action = 'refresh'; WorkspacePath = $workspace; DryRun = $true } }
+    } else {
+        $snapshot = Get-WorkspaceSnapshot
+        try {
+            if ($Format -eq 'Text') { Write-Host '[2/3] Atomically refreshing packet, evidence, report, and manifest...' }
+            $appliedRefresh = Invoke-JsonTool 'Manage-LlmWikiTaskWorkspace.ps1' @{ Action = 'refresh'; WorkspacePath = $workspace }
+            if ($null -eq $preview) { $preview = $appliedRefresh }
+            Invoke-JsonTool 'Manage-LlmWikiPlanConformance.ps1' @{ Action = 'replan'; WorkspacePath = $workspace; Reason = $Reason } | Out-Null
+        } catch {
+            Restore-WorkspaceSnapshot $snapshot
+            throw "Delivery replan failed and the workspace was restored atomically: $($_.Exception.Message)"
+        }
     }
+    if ($Format -eq 'Text') { Write-Host '[3/3] Reassessing synchronized delivery state...' }
     $after = if ($DryRun) { $before } else { Get-DeliveryAssessment }
     $result = [pscustomobject][ordered]@{
         schemaVersion = 1
@@ -115,7 +165,7 @@ if ($Action -eq 'replan') {
         invalidationPreview = $preview.invalidation
         before = [pscustomobject][ordered]@{ valid = $before.valid; gates = $before.gates }
         after = [pscustomobject][ordered]@{ valid = $after.valid; gates = $after.gates }
-        note = 'Replanning refreshes observed change evidence but does not widen the task contract allowed-path boundary.'
+        note = 'Replanning atomically refreshes observed evidence and rebuilds the manifest from the task-contract boundary; it does not widen that contract, and failures restore the complete workspace snapshot.'
     }
 } elseif ($Action -eq 'critique') {
     $assessment = if ($null -ne $AssessmentInput) { $AssessmentInput } else { Get-DeliveryAssessment }

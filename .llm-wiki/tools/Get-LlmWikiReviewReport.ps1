@@ -65,12 +65,14 @@ $report = [pscustomobject][ordered]@{
     packetFingerprint = $packet.fingerprint
     objective = $packet.objective
     verdict = $readiness.verdict
+    engineeringReadiness = $readiness.engineeringReadiness
+    governanceCompleteness = $readiness.governanceCompleteness
     score = $readiness.score
     maximumScore = $readiness.maximumScore
     risk = $packet.brief.risk
     changedPathCount = @($packet.diff.changedPaths).Count
     scopes = @($packet.diff.scopes)
-    modules = @($packet.diff.modules)
+    modules = @($packet.diff.modules | ForEach-Object { if ($_ -is [string]) { $_ } elseif ($null -ne $_.name) { [string]$_.name } else { [string]$_ } } | Where-Object { $_ } | Sort-Object -Unique)
     dimensions = @($readiness.dimensions)
     requiredChecks = @($packet.policy.requiredChecks)
     reviewObligations = @($packet.policy.reviewObligations)
@@ -93,6 +95,7 @@ if ($Format -eq 'Json') {
     $lines.Add('## LLM Wiki change review')
     $lines.Add('')
     $lines.Add("**READINESS: $($report.verdict.ToUpperInvariant())** | score $($report.score)/$($report.maximumScore) | risk $($report.risk.level)")
+    $lines.Add("Engineering: **$($report.engineeringReadiness.verdict.ToUpperInvariant())** | Governance: **$($report.governanceCompleteness.verdict.ToUpperInvariant())**")
     if (-not [string]::IsNullOrWhiteSpace([string]$report.objective)) {
         $lines.Add('')
         $lines.Add("Objective: $(ConvertTo-MarkdownCell $report.objective)")

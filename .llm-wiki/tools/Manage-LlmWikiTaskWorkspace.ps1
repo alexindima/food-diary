@@ -59,6 +59,10 @@ function Test-PathMatch([string]$Value, [object[]]$Patterns) {
     }
     return $false
 }
+function Test-GovernanceGeneratedPath([string]$Value) {
+    $Value -match '^\.llm-wiki/generated/' -or
+        $Value -eq '.llm-wiki/reviews/source-impact-reviews.json'
+}
 
 $packet = if ($null -ne $PacketInput) {
     $PacketInput
@@ -82,7 +86,9 @@ $readiness = & (Join-Path $PSScriptRoot 'Get-LlmWikiReleaseReadiness.ps1') `
     -RequireEvidence `
     -Format Json | ConvertFrom-Json
 
-$outOfScope = @($packet.diff.changedPaths | Where-Object {
+$productChangedPaths = @($packet.diff.changedPaths | Where-Object { -not (Test-GovernanceGeneratedPath ([string]$_)) })
+$governanceGeneratedPaths = @($packet.diff.changedPaths | Where-Object { Test-GovernanceGeneratedPath ([string]$_) })
+$outOfScope = @($productChangedPaths | Where-Object {
     -not (Test-PathMatch $_ @($taskContract.scope.allowedPathPatterns)) -or
     (Test-PathMatch $_ @($taskContract.scope.excludedPathPatterns))
 })
@@ -181,8 +187,10 @@ if (@($requirementModel.model.recommendations).Count -gt 0) {
 foreach ($finding in @($impactSimulation.simulation.findings)) {
     $nextActions.Add("Replan or review forecast drift '$($finding.id)' ($($finding.count) unexpected impact(s)).")
 }
+if ($unresolvedChecks.Count -gt 0) {
+    $nextActions.Add("./.llm-wiki/wiki.ps1 task-verification-plan -WorkspacePath $normalizedWorkspacePath; ./.llm-wiki/wiki.ps1 task-verification-run -WorkspacePath $normalizedWorkspacePath -FailOnFailure")
+}
 foreach ($check in $unresolvedChecks) {
-    $nextActions.Add("Record check '$($check.id)' as passed, failed, or not-applicable.")
     if ($check.status -eq 'failed') {
         $nextActions.Add("./.llm-wiki/wiki.ps1 task-repair-suggest -WorkspacePath $normalizedWorkspacePath -CheckId $($check.id)")
     }
@@ -240,6 +248,8 @@ $result = [pscustomobject][ordered]@{
     refreshRequired = $refreshRequired
     lastCompiledPacketFingerprint = $lastCompiledFingerprint
     changedPathCount = @($packet.diff.changedPaths).Count
+    productChangedPathCount = $productChangedPaths.Count
+    governanceGeneratedPaths = @($governanceGeneratedPaths)
     outOfScopePaths = @($outOfScope)
     planConformance = $planConformance
     proofOfChange = $proofOfChange
@@ -274,6 +284,8 @@ $result = [pscustomobject][ordered]@{
         $(if ($null -ne $contextSecurity -and -not $contextSecurity.valid) { @('context-security') } else { @() }) +
         $(if ($critiqueBlocks) { @('change-critique') } else { @() })
     unassessedDimensions = @($readiness.unassessedDimensions)
+    engineeringReadiness = $readiness.engineeringReadiness
+    governanceCompleteness = $readiness.governanceCompleteness
     journalEntryCount = $journalView.entryCount
     openJournalEntries = $journalView.openCount
     openJournalBlockers = $journalView.openBlockerCount
@@ -383,7 +395,7 @@ if ($Format -eq 'Json') {
     $result | ConvertTo-Json -Depth 10
 } else {
     Write-Host "Task workspace: $($result.workspace)"
-    Write-Host "Readiness: $($result.verdict) ($($result.score)/100), risk=$($result.risk.level)"
+    Write-Host "Engineering readiness: $($result.engineeringReadiness.verdict); governance completeness: $($result.governanceCompleteness.verdict); combined=$($result.verdict) ($($result.score)/100), risk=$($result.risk.level)"
     Write-Host "Change: $($result.changedPathCount) path(s), since start=$($result.fingerprintChanged), refresh required=$($result.refreshRequired)"
     Write-Host "Open: $(@($result.pendingCriteria).Count) acceptance, $(@($result.unresolvedChecks).Count) checks, $(@($result.unresolvedReviews).Count) reviews, $($result.openJournalBlockers) journal blockers, $(@($result.outOfScopePaths).Count) out of scope"
     if ($null -ne $result.invalidation) {

@@ -51,6 +51,10 @@ When the additional work is intentional, explicitly rebaseline it:
 Replanning preserves the task's allowed and excluded scope, rebuilds the
 manifest and implementation-plan snapshot from the live diff, invalidates any
 old conformance receipt, and records the rationale in the task journal.
+The task contract is the boundary authority: a stale manifest cannot retain a
+narrower or divergent copy of that boundary. Generated Wiki indexes and the
+source-impact receipt registry are reported separately and never count as
+planned, missing, unplanned, or out-of-scope product paths.
 
 Seal the current result when producing completion evidence:
 
