@@ -61,7 +61,8 @@ function Add-Finding(
     [string]$Severity,
     [string]$Summary,
     [string]$Recommendation,
-    [object[]]$Evidence = @()
+    [object[]]$Evidence = @(),
+    [string]$NextCommand = ''
 ) {
     $Findings.Add([pscustomobject][ordered]@{
         id = $Id
@@ -70,6 +71,7 @@ function Add-Finding(
         blocking = $Severity -in @($critiquePolicy.blockingSeverities)
         summary = $Summary
         recommendation = $Recommendation
+        nextCommand = $NextCommand
         evidence = @($Evidence | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
     })
 }
@@ -110,16 +112,16 @@ function New-Critique([string]$CreatedAtUtc) {
         Add-Finding $findings 'intent-requirements-invalid' 'intent' 'major' 'Requirements contain ambiguity or weak acceptance criteria.' 'Clarify, split, or explicitly resolve every requirement-model finding.' @($requirements.model.findings.id)
     }
     if (-not $conformance.valid) {
-        Add-Finding $findings 'scope-plan-drift' 'scope' 'major' 'Observed changes do not conform to the declared implementation plan.' 'Replan the task or bring the changed paths back into the approved scope.' @($conformance.conformance.policyFindings.id)
+        Add-Finding $findings 'scope-plan-drift' 'scope' 'major' 'Observed changes do not conform to the declared implementation plan.' 'Replan the task or bring the changed paths back into the approved scope.' @($conformance.conformance.policyFindings.id) "./.llm-wiki/wiki.ps1 delivery-replan -WorkspacePath $workspace -Reason '<observed scope evidence>'"
     }
     if ($proof.applicable -and -not $proof.valid) {
-        Add-Finding $findings 'proof-insufficient' 'proof' 'major' 'Satisfied criteria are not backed by current change and verification evidence.' 'Link each satisfied criterion to current changed paths and verified evidence.' @($proof.proof.findings.id)
+        Add-Finding $findings 'proof-insufficient' 'proof' 'major' 'Satisfied criteria are not backed by current change and verification evidence.' 'Link each satisfied criterion to current changed paths and verified evidence.' @($proof.proof.findings.id) "./.llm-wiki/wiki.ps1 acceptance-map -AcceptancePath $workspace/acceptance-matrix.json -CriterionId <AC-ID> -ChangedPath <path>"
     }
     $unresolvedChecks = @($evidence.checks | Where-Object status -notin @('passed', 'not-applicable'))
     $unresolvedReviews = @($evidence.reviews | Where-Object status -notin @('completed', 'not-applicable'))
     $unresolvedCriteria = @($acceptance.criteria | Where-Object status -notin @('satisfied', 'not-applicable'))
     if ($unresolvedChecks.Count + $unresolvedReviews.Count + $unresolvedCriteria.Count -gt 0) {
-        Add-Finding $findings 'verification-unresolved' 'verification' 'critical' 'Checks, reviews, or acceptance criteria remain unresolved.' 'Resolve every required check, review, and acceptance criterion before completion.' @(@($unresolvedChecks.id) + @($unresolvedReviews.id) + @($unresolvedCriteria.id))
+        Add-Finding $findings 'verification-unresolved' 'verification' 'critical' 'Checks, reviews, or acceptance criteria remain unresolved.' 'Resolve every required check, review, and acceptance criterion before completion.' @(@($unresolvedChecks.id) + @($unresolvedReviews.id) + @($unresolvedCriteria.id)) "./.llm-wiki/wiki.ps1 delivery-status -WorkspacePath $workspace"
     }
     if (-not $impact.valid) {
         Add-Finding $findings 'architecture-impact-drift' 'architecture' 'major' 'Observed architectural impact exceeds the forecast.' 'Review unexpected impact and replan or narrow the implementation.' @($impact.simulation.findings.id)
@@ -142,7 +144,7 @@ function New-Critique([string]$CreatedAtUtc) {
         }
     }
     if ($sensitiveContextRequired -and $null -eq $contextSecurity) {
-        Add-Finding $findings 'security-context-unassessed' 'security' 'warning' 'The selected AI context has no trust assessment.' 'Create and review context-security evidence before delegating or sealing sensitive work.'
+        Add-Finding $findings 'security-context-unassessed' 'security' 'warning' 'The selected AI context has no trust assessment.' 'Create and review context-security evidence before delegating or sealing sensitive work.' @() "./.llm-wiki/wiki.ps1 task-context-security-create -WorkspacePath $workspace"
     } elseif (-not $contextSecurity.valid) {
         Add-Finding $findings 'security-context-invalid' 'security' 'critical' 'AI context security evidence is invalid.' 'Regenerate the trust assessment and resolve integrity or quarantine issues.' @($contextSecurity.issues)
     } elseif ([int]$contextSecurity.assessment.summary.quarantineCount -gt 0) {
@@ -269,6 +271,7 @@ if ($Format -eq 'Json') {
         Write-Host "Score=$($critique.score)/100, verdict=$($critique.verdict), findings=$($critique.summary.findingCount), hash=$($critique.critiqueHash)"
         foreach ($finding in @($critique.findings)) {
             Write-Host " - [$($finding.severity)] $($finding.area)/$($finding.id): $($finding.summary)"
+            if (-not [string]::IsNullOrWhiteSpace([string]$finding.nextCommand)) { Write-Host "   Next: $($finding.nextCommand)" }
         }
     }
     foreach ($issue in @($issues)) { Write-Host " - $issue" }

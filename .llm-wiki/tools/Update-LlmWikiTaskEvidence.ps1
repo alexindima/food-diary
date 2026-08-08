@@ -41,7 +41,25 @@ $now = [DateTime]::UtcNow.ToString('o')
 
 function Get-RulePaths([object]$Packet, [string]$RuleId) {
     @($Packet.policy.matchedRules | Where-Object id -eq $RuleId | Select-Object -First 1).matchedPaths |
-        ForEach-Object { [string]$_ } | Sort-Object -Unique
+        ForEach-Object { [string]$_ } |
+        Where-Object { -not (Test-GovernanceArtifactPath $_) } |
+        Sort-Object -Unique
+}
+function Test-GovernanceArtifactPath([string]$Path) {
+    $normalized = $Path.Replace('\', '/')
+    return $normalized -match '^\.llm-wiki/(generated|reviews)/' -or
+        $normalized -match '^\.artifacts/llm-wiki/'
+}
+function Get-PathAffinity([string]$Left, [string]$Right) {
+    $leftParts = $Left.Replace('\', '/').Split('/')
+    $rightParts = $Right.Replace('\', '/').Split('/')
+    $limit = [Math]::Min($leftParts.Count, $rightParts.Count)
+    $score = 0
+    for ($index = 0; $index -lt $limit; $index++) {
+        if ($leftParts[$index] -cne $rightParts[$index]) { break }
+        $score++
+    }
+    return $score
 }
 function Test-SameSet([object[]]$Left, [object[]]$Right) {
     $leftValues = @($Left | ForEach-Object { [string]$_ } | Sort-Object -Unique)
@@ -161,8 +179,26 @@ $changedScenarioIds = @($oldScenarios.Keys + $newScenarios.Keys | Sort-Object -U
 $newTestPaths = @($newPacket.testPlan.focusedTestFiles)
 $invalidatedCriterionIds = [System.Collections.Generic.List[string]]::new()
 $retainedCriterionIds = [System.Collections.Generic.List[string]]::new()
+$autoLinkedPaths = @{}
+$newProductPaths = @($newPacket.diff.changedPaths | Where-Object {
+    $_ -notin @($oldPacket.diff.changedPaths) -and -not (Test-GovernanceArtifactPath $_)
+})
+foreach ($newPath in $newProductPaths) {
+    $ranked = foreach ($candidate in @($acceptance.criteria)) {
+        $scores = @($candidate.mapping.changedPaths | ForEach-Object { Get-PathAffinity $_ $newPath })
+        $best = if ($scores.Count -gt 0) { [int](($scores | Measure-Object -Maximum).Maximum) } else { 0 }
+        if ($best -ge 2) { [pscustomobject]@{ id = [string]$candidate.id; score = $best } }
+    }
+    $highest = [int](($ranked | Measure-Object -Property score -Maximum).Maximum)
+    $winners = @($ranked | Where-Object score -eq $highest)
+    if ($highest -ge 2 -and $winners.Count -eq 1) {
+        $autoLinkedPaths[$newPath] = [string]$winners[0].id
+    }
+}
 foreach ($criterion in @($acceptance.criteria)) {
     $mappedChangedPaths = if ($null -ne $criterion.mapping.PSObject.Properties['changedPaths']) { @($criterion.mapping.changedPaths) } else { @() }
+    $mappedChangedPaths += @($autoLinkedPaths.GetEnumerator() | Where-Object Value -eq $criterion.id | Select-Object -ExpandProperty Key)
+    $mappedChangedPaths = @($mappedChangedPaths | Sort-Object -Unique)
     $mappedChecks = @($criterion.mapping.checkIds)
     $mappedReviews = @($criterion.mapping.reviewIds)
     $mappedScenarios = @($criterion.mapping.scenarioIds)
@@ -236,6 +272,9 @@ $result = [pscustomobject][ordered]@{
     retainedCriteria = @($retainedCriterionIds | Sort-Object -Unique)
     retainedChecks = @($newChecks | Where-Object { $_.id -notin $invalidatedCheckIds } | Select-Object -ExpandProperty id)
     retainedReviews = @($newReviews | Where-Object { $_.id -notin $invalidatedReviewIds } | Select-Object -ExpandProperty id)
+    autoLinkedPaths = @($autoLinkedPaths.GetEnumerator() | Sort-Object Key | ForEach-Object {
+        [pscustomobject][ordered]@{ path = [string]$_.Key; criterionId = [string]$_.Value; reason = 'unique-path-affinity' }
+    })
     historyEntriesAdded = $history.Count
 }
 if ($Apply) {
@@ -255,4 +294,7 @@ if ($Format -eq 'Json') {
 } else {
     Write-Host "Evidence invalidation: applied=$($result.applied), checks=$(@($result.invalidatedChecks).Count), reviews=$(@($result.invalidatedReviews).Count), criteria=$(@($result.invalidatedCriteria).Count)"
     Write-Host "Retained: $(@($result.retainedChecks).Count) checks, $(@($result.retainedReviews).Count) reviews."
+    if (@($result.autoLinkedPaths).Count -gt 0) {
+        Write-Host "Auto-linked $(@($result.autoLinkedPaths).Count) new production path(s) to unambiguous acceptance criteria."
+    }
 }

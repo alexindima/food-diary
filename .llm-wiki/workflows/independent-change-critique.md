@@ -41,8 +41,9 @@ fields, privacy or security policy rules, external transfers, or provider
 integration. A presentation-only UI change does not receive
 `security-context-unassessed` solely because it renders inside an AI journey.
 
-Findings have stable IDs, severity, evidence, a concrete recommendation, and a
-blocking flag. Their penalties are applied to the current confidence score.
+Findings have stable IDs, severity, evidence, a concrete recommendation, an
+exact next command when the Wiki can close them mechanically, and a blocking
+flag. Their penalties are applied to the current confidence score.
 Critical findings produce `reject`; other blocking findings or insufficient
 score produce `request-changes`; non-blocking risks remain visible through
 `approve-with-notes`.

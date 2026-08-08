@@ -85,8 +85,8 @@ standalone command for diagnosis; publication CI still runs uncached strict
 verification.
 For an interrupted local strict or exhaustive run, use `verify
 -ResumePassedStages` or `verify-full -ResumePassedStages`; receipts are
-content-addressed by HEAD and working-tree file hashes, while CI omits the
-switch and therefore never trusts local cache.
+content-addressed independently from each stage's relevant inputs, while CI
+omits the switch and therefore never trusts local cache.
 
 The unified developer entrypoint is:
 

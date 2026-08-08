@@ -318,6 +318,12 @@ receipt registry are reported separately from the product delta. They never
 widen product scope, create unplanned-path drift, or invalidate implementation
 evidence merely because the Wiki refreshed its own derived state.
 
+When refresh discovers a new production file after acceptance was initialized,
+it automatically links that file only if one criterion has a unique path-prefix
+affinity with the existing mapping. Ambiguous files remain deliberately
+unmapped and require `acceptance-map`; the refresh report lists every automatic
+link and its reason.
+
 Use `task-verification-plan` followed by `task-verification-run` for governed
 checks. The runner executes canonical policy commands, records exit code,
 duration, content lineage, and a hashed log, and applies configured supersedence

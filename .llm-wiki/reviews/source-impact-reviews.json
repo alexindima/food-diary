@@ -381,17 +381,21 @@
                     {
                         "pageId":  "workflow-independent-change-critique",
                         "pagePath":  ".llm-wiki/workflows/independent-change-critique.md",
-                        "pageSha256":  "d4dbe25be0380f0e984ce6f741cbdec696a44986b7d31c75a4a8485e9f153535",
+                        "pageSha256":  "033f7616fa69222933f081cd5a872dadfb1266e95f95809f37fc2f619103b669",
                         "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeCritique.ps1",
+                                            "sha256":  "b262e192c70600dc74713dfeb4b887ee7b2b4066d25c75cf3b15e97f481016d3"
+                                        },
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
                                             "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
                                         }
                                     ],
-                        "reason":  "Reviewed governed-delivery hardening. Existing domain semantics remain unchanged; only status separation, atomic refresh, generated-scope isolation, and focused regression coverage were added.",
+                        "reason":  "Critique findings document exact next commands for mechanically closable findings.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
-                        "reviewedAtUtc":  "2026-08-08T11:15:37.5398616Z"
+                        "gitHead":  "18c115b2a072c332a3340f29c868f10899e3ea62",
+                        "reviewedAtUtc":  "2026-08-08T14:55:20.7104558Z"
                     },
                     {
                         "pageId":  "workflow-index-pipeline",
@@ -614,32 +618,56 @@
                     {
                         "pageId":  "workflow-task-dispatch-receipts",
                         "pagePath":  ".llm-wiki/workflows/task-dispatch-receipts.md",
-                        "pageSha256":  "070d29cda436beb2ad9a41b8d4cf73369245770fccc12fc6a998aaa79336f388",
+                        "pageSha256":  "d0a2b7fd2b51f7c02d228efb6e23130eff42e68885eb5349dc126e22e6d4f98d",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "d7a46b1ea5d373804056f9079081feabb6cd6c9c218dc4dc51ebbeb90dc4d54a"
+                                            "sha256":  "52ef30810cb9081a9cf2ed9dcd15257a4f918abb828c581ff725ab4505105d56"
                                         }
                                     ],
-                        "reason":  "Reviewed facade change: continue-ui and numbered verify progress do not alter governed task dispatch or receipt semantics.",
+                        "reason":  "Stage-specific verification receipts preserve dispatch and publication semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2f618662baacec028b5d50547a125c66ed6d15e0",
-                        "reviewedAtUtc":  "2026-08-05T22:53:07.2477418Z"
+                        "gitHead":  "18c115b2a072c332a3340f29c868f10899e3ea62",
+                        "reviewedAtUtc":  "2026-08-08T14:55:21.4881641Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",
                         "pagePath":  ".llm-wiki/workflows/task-workspace.md",
-                        "pageSha256":  "9b0e29adecbb86c5f6468e4b534fe50237ee212864cb61e0daba73c060d652f4",
+                        "pageSha256":  "9f54f7a45d80375cad7754e10e9a0c30fee0b3e3d38b018e40168f3e79485f62",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/LlmWikiJson.ps1",
-                                            "sha256":  "816cd5df6f9632f8611f05eaadb0acdf8ab7673f65bb4b43d288324a4c751090"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+                                            "sha256":  "2282fa973b99388db3bb3e83f1bf6ce3d244bd700801c2f94d1d37428882012b"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
+                                            "sha256":  "56a47c0debafd6c0a7e88e5076f77b38bab37713799f6d31f71f75a588eb3db8"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
+                                            "sha256":  "46b93858f0b8b84225462a1eaab4b06817ab3f576eef006cb11bba21e5570e32"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
+                                            "sha256":  "414b6c9394869ec5b2141990ddbfd65649e01141eed54ceef207a94540cc1244"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
+                                            "sha256":  "06654a1a1560ca90b3eeaeffb65dd123488799b169855694f0aad955a7bbf83c"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Update-LlmWikiTaskEvidence.ps1",
+                                            "sha256":  "43d747a157bfe30e951a69b981ad1a1f48d2eef41ebfadc3922e549c54d1c892"
                                         }
                                     ],
-                        "reason":  "Reviewed shared JSON fingerprint helper; it normalizes serializer-specific escaping while preserving deterministic SHA-256 behavior.",
+                        "reason":  "Evidence lineage excludes derived governance outputs and refresh auto-links only unambiguous production paths.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d5eb6dc6614140a568feb0ecea95841c174df82f",
-                        "reviewedAtUtc":  "2026-07-31T20:22:09.9878435Z"
+                        "gitHead":  "18c115b2a072c332a3340f29c868f10899e3ea62",
+                        "reviewedAtUtc":  "2026-08-08T14:55:22.2777696Z"
                     },
                     {
                         "pageId":  "workflow-test-plan",

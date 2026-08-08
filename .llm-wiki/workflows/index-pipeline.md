@@ -98,10 +98,11 @@ failure or worker timeout restores that snapshot before releasing the lock, so
 parallel sessions cannot publish overlapping or partially successful updates.
 
 Local strict and exhaustive verification can opt into
-`-ResumePassedStages`. Each passed stage receipt is keyed by HEAD plus hashes of
-all modified and untracked files. Unchanged reruns skip only completed stages;
-any source edit invalidates the receipt set. Hooks and CI omit this switch and
-therefore remain fully uncached.
+`-ResumePassedStages`. Each passed stage receipt is keyed by HEAD plus only the
+working-tree inputs relevant to that stage. Adding a source-impact receipt no
+longer invalidates already-passed indexes or adaptive evals, while a real input
+change still invalidates its dependent stage. The five newest receipts per stage
+are retained. Hooks and CI omit this switch and therefore remain fully uncached.
 
 `verify-strict-affected` is the final local gate for a grounded visual UI change.
 It is read-only and deliberately bypasses verification and index caches, stale

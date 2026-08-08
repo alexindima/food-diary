@@ -71,6 +71,9 @@ command fingerprints, dependency paths and their content hashes, change-policy
 fingerprint, runtime name/version, execution outcome or attestation reason,
 and a sealed compatibility fingerprint. Manual statuses and not-applicable
 reviews use the same provenance contract as executed checks.
+Derived navigation and review-registry files under `.llm-wiki/generated/` and
+`.llm-wiki/reviews/` are excluded from implementation dependency fingerprints,
+so refreshing Wiki bookkeeping cannot invalidate otherwise current proof.
 
 `task-lineage` and `evidence-validate` recompute the current policy,
 requirement definition, dependency path set, and file-content fingerprint.

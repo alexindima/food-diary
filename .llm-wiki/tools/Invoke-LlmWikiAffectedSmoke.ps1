@@ -48,11 +48,11 @@ foreach ($path in $paths) {
         Add-Group 'ui-continuation'
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiReviewReport|Test-LlmWikiReviewReport)\.ps1$') {
         Add-Group 'reporting'
-    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|Invoke-LlmWikiFullVerification)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|Get-LlmWikiVerificationStageFingerprint|Invoke-LlmWikiFullVerification)\.ps1$') {
         Add-Group 'verification-cache'
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiQueryCache|Test-LlmWikiQueryCache|Get-LlmWikiTaskBrief|Get-LlmWikiResearchPacket|Get-LlmWikiTestPlan)\.ps1$') {
         Add-Group 'query-cache'
-    } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiDeliveryWorkflow|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiGovernedDeliveryRegression)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiDeliveryWorkflow|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiTaskEvidence|Manage-LlmWikiChangeCritique|New-LlmWikiEvidenceLineage|Update-LlmWikiTaskEvidence|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiGovernedDeliveryRegression)\.ps1$') {
         Add-Group 'governed-delivery'
     } elseif ($path -match '^\.llm-wiki/tools/') {
         $hasUnknownToolChange = $true

@@ -311,31 +311,15 @@ function Invoke-ObservedWikiStage {
     $script:verifyStageOrdinal++
     $receiptPath = $null
     if ($ResumePassedStages) {
-        if (-not $script:verifyReceiptRoot) {
-            $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
-            $head = (& git -C $repositoryRoot rev-parse HEAD).Trim()
-            $material = [Text.StringBuilder]::new()
-            $null = $material.AppendLine($head)
-            foreach ($line in @(& git -C $repositoryRoot status --porcelain=v1 --untracked-files=all)) {
-                $null = $material.AppendLine([string]$line)
-                $path = ([string]$line).Substring(3).Trim('"').Replace('/', [IO.Path]::DirectorySeparatorChar)
-                if ($path -match ' -> ') { $path = ($path -split ' -> ')[-1] }
-                $absolutePath = Join-Path $repositoryRoot $path
-                if (Test-Path -LiteralPath $absolutePath -PathType Leaf) {
-                    $null = $material.AppendLine((Get-FileHash -LiteralPath $absolutePath -Algorithm SHA256).Hash)
-                }
-            }
-            $sha = [Security.Cryptography.SHA256]::Create()
-            try {
-                $fingerprint = ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($material.ToString()))) -replace '-', '').ToLowerInvariant()
-            } finally { $sha.Dispose() }
-            $gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
-            $script:verifyReceiptRoot = Join-Path $gitDirectory "llm-wiki/verification-stages/wiki-$fingerprint"
-            $null = New-Item -ItemType Directory -Path $script:verifyReceiptRoot -Force
-        }
-        $receiptPath = Join-Path $script:verifyReceiptRoot (($Name -replace '[^a-zA-Z0-9_.-]', '-') + '.passed')
+        $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
+        $fingerprint = & (Join-Path $toolsRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') -Stage $Name -Arguments $ToolArguments
+        $gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
+        $script:verifyReceiptRoot = Join-Path $gitDirectory 'llm-wiki/verification-stages/wiki'
+        $null = New-Item -ItemType Directory -Path $script:verifyReceiptRoot -Force
+        $receiptName = (($Name -replace '[^a-zA-Z0-9_.-]', '-') + '-' + $fingerprint + '.passed')
+        $receiptPath = Join-Path $script:verifyReceiptRoot $receiptName
         if (Test-Path -LiteralPath $receiptPath -PathType Leaf) {
-            Write-Host "[$script:verifyStageOrdinal/8] Resuming Wiki verify: $Name already passed for unchanged inputs."
+            Write-Host "[$script:verifyStageOrdinal/8] Resuming Wiki verify: $Name already passed for unchanged stage inputs."
             return
         }
     }
@@ -378,6 +362,11 @@ function Invoke-ObservedWikiStage {
     }
     if ($receiptPath) {
         [IO.File]::WriteAllText($receiptPath, ([DateTime]::UtcNow.ToString('o') + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        $stagePrefix = (($Name -replace '[^a-zA-Z0-9_.-]', '-') + '-')
+        Get-ChildItem -LiteralPath $script:verifyReceiptRoot -Filter "$stagePrefix*.passed" -File |
+            Sort-Object LastWriteTimeUtc -Descending |
+            Select-Object -Skip 5 |
+            Remove-Item -Force
     }
     Write-Host "[$script:verifyStageOrdinal/8] Wiki verify stage passed: $Name ($([Math]::Round($stopwatch.Elapsed.TotalSeconds, 2))s)"
 }

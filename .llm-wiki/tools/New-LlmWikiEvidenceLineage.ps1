@@ -31,10 +31,17 @@ $requirement = if ($Kind -eq 'review-attestation') {
     $policy.requiredChecks | Where-Object id -eq $Id | Select-Object -First 1
 }
 $sourceRule = if ($null -ne $requirement) { [string]$requirement.sourceRule } else { 'manual' }
+$isProductDependency = {
+    param([string]$Path)
+    $normalized = $Path.Replace('\', '/')
+    return $normalized -notmatch '^\.llm-wiki/(generated|reviews)/' -and
+        $normalized -notmatch '^\.artifacts/llm-wiki/'
+}
 $dependencyPaths = if ($sourceRule -eq 'manual') {
-    @($evidence.change.changedPaths)
+    @($evidence.change.changedPaths | Where-Object $isProductDependency)
 } else {
-    @($policy.matchedRules | Where-Object id -eq $sourceRule | Select-Object -First 1).matchedPaths
+    @($policy.matchedRules | Where-Object id -eq $sourceRule | Select-Object -First 1).matchedPaths |
+        Where-Object $isProductDependency
 }
 $content = & (Join-Path $PSScriptRoot 'Get-LlmWikiContentFingerprint.ps1') -Path @($dependencyPaths) -Format Json | ConvertFrom-Json
 $head = & git rev-parse HEAD
