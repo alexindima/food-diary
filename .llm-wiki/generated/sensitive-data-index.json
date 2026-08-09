@@ -6,10 +6,10 @@
                       "externalTransfers":  "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
                   },
     "summary":  {
-                    "candidateFields":  1390,
+                    "candidateFields":  1394,
                     "credential":  146,
                     "identity":  140,
-                    "health":  608,
+                    "health":  612,
                     "financial":  199,
                     "privateContent":  297,
                     "boundaryFiles":  178,
@@ -1975,21 +1975,21 @@
                        "name":  "CustomerId",
                        "type":  "string",
                        "path":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-                       "line":  667
+                       "line":  663
                    },
                    {
                        "category":  "financial",
                        "name":  "Checkout",
                        "type":  "TransactionCheckoutRequest",
                        "path":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-                       "line":  670
+                       "line":  666
                    },
                    {
                        "category":  "financial",
                        "name":  "Checkout",
                        "type":  "TransactionCheckoutResponse?",
                        "path":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-                       "line":  681
+                       "line":  677
                    },
                    {
                        "category":  "financial",
@@ -5545,7 +5545,7 @@
                        "name":  "TotalCalories",
                        "type":  "double",
                        "path":  "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
-                       "line":  107
+                       "line":  118
                    },
                    {
                        "category":  "health",
@@ -6330,6 +6330,34 @@
                        "type":  "double",
                        "path":  "FoodDiary.Presentation.Api/Features/Statistics/Responses/AggregatedStatisticsHttpResponse.cs",
                        "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "BreakfastCalories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Presentation.Api/Features/Statistics/Responses/AggregatedStatisticsHttpResponse.cs",
+                       "line":  15
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "LunchCalories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Presentation.Api/Features/Statistics/Responses/AggregatedStatisticsHttpResponse.cs",
+                       "line":  16
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DinnerCalories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Presentation.Api/Features/Statistics/Responses/AggregatedStatisticsHttpResponse.cs",
+                       "line":  17
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "SnackCalories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Presentation.Api/Features/Statistics/Responses/AggregatedStatisticsHttpResponse.cs",
+                       "line":  18
                    },
                    {
                        "category":  "health",
@@ -7316,7 +7344,7 @@
                        "name":  "Email",
                        "type":  "string",
                        "path":  "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-                       "line":  657
+                       "line":  653
                    },
                    {
                        "category":  "identity",
@@ -10655,7 +10683,7 @@
                               "categories":  [
                                                  "health"
                                              ],
-                              "fieldCount":  1
+                              "fieldCount":  5
                           },
                           {
                               "path":  "FoodDiary.Presentation.Api/Features/Tdee/Responses/TdeeInsightHttpResponse.cs",

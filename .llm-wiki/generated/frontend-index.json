@@ -8,14 +8,14 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1540,
-                    "symbols":  591,
+                    "typescriptFiles":  1544,
+                    "symbols":  593,
                     "routes":  84,
                     "features":  36,
-                    "specs":  553,
+                    "specs":  555,
                     "localeFiles":  5,
                     "roles":  {
-                                  "Component":  407,
+                                  "Component":  409,
                                   "Directive":  12,
                                   "Facade":  52,
                                   "Other":  17,
@@ -1064,7 +1064,9 @@
                          "symbols":  [
                                          "StatisticsBodyTrendCardComponent",
                                          "StatisticsComponent",
+                                         "StatisticsDietStabilityCardComponent",
                                          "StatisticsFacade",
+                                         "StatisticsMealStructureCardComponent",
                                          "StatisticsNutrientBalanceCardComponent",
                                          "StatisticsNutritionTrendCardComponent",
                                          "StatisticsOverviewCardComponent",
@@ -1076,6 +1078,8 @@
                          "tests":  [
                                        "FoodDiary.Web.Client/src/app/features/statistics/api/statistics.service.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-body-trend-card/statistics-body-trend-card.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-diet-stability-card/statistics-diet-stability-card.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-meal-structure-card/statistics-meal-structure-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-overview-card/statistics-overview-card.spec.ts",
@@ -4556,7 +4560,21 @@
                         "role":  "Component",
                         "selector":  "fd-statistics-body-trend-card",
                         "path":  "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-body-trend-card/statistics-body-trend-card.ts",
-                        "line":  19
+                        "line":  42
+                    },
+                    {
+                        "name":  "StatisticsDietStabilityCardComponent",
+                        "role":  "Component",
+                        "selector":  "fd-statistics-diet-stability-card",
+                        "path":  "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-diet-stability-card/statistics-diet-stability-card.ts",
+                        "line":  16
+                    },
+                    {
+                        "name":  "StatisticsMealStructureCardComponent",
+                        "role":  "Component",
+                        "selector":  "fd-statistics-meal-structure-card",
+                        "path":  "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-meal-structure-card/statistics-meal-structure-card.ts",
+                        "line":  15
                     },
                     {
                         "name":  "StatisticsNutrientBalanceCardComponent",
@@ -4591,7 +4609,7 @@
                         "role":  "Component",
                         "selector":  "fd-statistics",
                         "path":  "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.ts",
-                        "line":  56
+                        "line":  58
                     },
                     {
                         "name":  "UsdaService",
@@ -5791,8 +5809,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  3017,
-                             "russianProperties":  3017,
+                             "englishProperties":  3064,
+                             "russianProperties":  3064,
                              "countsMatch":  true
                          },
                          {

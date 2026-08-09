@@ -10,6 +10,12 @@ export type AggregatedStatistics = {
     totalFats: number;
     totalCarbs: number;
     totalFiber: number;
+    breakfastCalories?: number;
+    lunchCalories?: number;
+    dinnerCalories?: number;
+    snackCalories?: number;
+    mealCount?: number;
+    trackedDayCount?: number;
 };
 
 export type GetStatisticsDto = {
@@ -23,6 +29,16 @@ export type MappedStatistics = {
     calories: number[];
     nutrientsStatistic: NutrientsStatistics;
     aggregatedNutrients: AggregatedNutrients;
+    mealStructure?: MealStructureTotals;
+};
+
+export type MealStructureTotals = {
+    breakfastCalories: number;
+    lunchCalories: number;
+    dinnerCalories: number;
+    snackCalories: number;
+    mealCount: number;
+    trackedDayCount: number;
 };
 
 export type NutrientsStatistics = {

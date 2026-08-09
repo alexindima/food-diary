@@ -3574,12 +3574,63 @@
                 "GOAL": "Цель",
                 "COMPLETION": "Выполнение"
             },
+            "MEAL_STRUCTURE": {
+                "TITLE": "Структура среднего дня",
+                "SUBTITLE": "В среднем за заполненный день",
+                "DISTRIBUTION": "Распределение калорий по приёмам пищи",
+                "MEAL": "Приём пищи",
+                "SHARE": "Доля",
+                "AVERAGE": "В среднем",
+                "DOMINANT": "Основной приём",
+                "MEALS_PER_DAY": "В среднем приёмов в день",
+                "NO_DATA": "—",
+                "EMPTY": "Указывайте тип приёма пищи в дневнике, чтобы увидеть структуру среднего дня.",
+                "MEALS": {
+                    "BREAKFAST": "Завтрак",
+                    "LUNCH": "Обед",
+                    "DINNER": "Ужин",
+                    "SNACK": "Перекусы"
+                }
+            },
+            "STABILITY": {
+                "TITLE": "Стабильность рациона",
+                "SUBTITLE": "За выбранный период",
+                "STABLE_DAYS": "{{current}} из {{total}} дней",
+                "STABLE_INTERVALS": "{{current}} из {{total}} интервалов",
+                "WITHOUT_SHARP_DEVIATIONS": "без резких отклонений",
+                "AVERAGE_DEVIATION": "Среднее отклонение",
+                "LOGGING_STREAK": "Серия заполнения",
+                "STREAK_DAYS": "{{count}} дн.",
+                "STREAK_INTERVALS": "{{count}} интервалов",
+                "TIMELINE": "Динамика стабильности рациона",
+                "STATUS": {
+                    "STABLE": "В пределах",
+                    "DEVIATION": "Отклонение",
+                    "MISSING": "Нет данных"
+                },
+                "NO_GOAL_TITLE": "Задайте цель по калориям",
+                "NO_GOAL_HINT": "Для оценки стабильности рациона нужна дневная цель по калориям."
+            },
             "BODY": {
                 "TITLE": "Показатели тела",
+                "WEIGHT": "Вес",
+                "WAIST": "Талия",
                 "CURRENT_WEIGHT": "Текущий вес",
+                "CURRENT_WAIST": "Текущая талия",
+                "LATEST_MEASUREMENT": "Последний замер",
+                "INSIGHTS_TITLE": "Что изменилось",
+                "PERIOD_CHANGE": "Изменение за период",
                 "CHANGE": "Изменение за {{days}} дней",
-                "OPEN_HISTORY": "Открыть историю веса",
-                "EMPTY": "Добавьте измерения веса, чтобы сопоставить питание и изменения тела."
+                "TO_GOAL": "До цели",
+                "GOAL_VALUE": "Цель: {{value}}",
+                "CHART_GOAL": "Цель {{value}} {{unit}}",
+                "GOAL_EMPTY": "Цель не задана",
+                "DATA_COMPLETENESS": "Записано измерений",
+                "DATA_COMPLETENESS_HINT": "За выбранный период",
+                "OPEN_WEIGHT_HISTORY": "Открыть историю веса",
+                "OPEN_WAIST_HISTORY": "Открыть историю талии",
+                "EMPTY_WEIGHT": "Добавьте измерения веса, чтобы увидеть динамику.",
+                "EMPTY_WAIST": "Добавьте измерения талии, чтобы увидеть динамику."
             }
         },
         "RANGES": {

@@ -1,0 +1,77 @@
+<fd-ui-card class="statistics-diet-stability-card" [title]="'STATISTICS.DASHBOARD.STABILITY.TITLE' | translate">
+    <p class="statistics-diet-stability-card__subtitle fd-ui-body-sm fd-ui-text-muted">
+        {{ 'STATISTICS.DASHBOARD.STABILITY.SUBTITLE' | translate }}
+    </p>
+
+    @if (data().hasGoal) {
+        <div class="statistics-diet-stability-card__summary fd-stack fd-gap-xxs">
+            <strong class="fd-ui-metric-lg">
+                {{
+                    (data().usesDailyIntervals
+                        ? 'STATISTICS.DASHBOARD.STABILITY.STABLE_DAYS'
+                        : 'STATISTICS.DASHBOARD.STABILITY.STABLE_INTERVALS'
+                    ) | translate: { current: data().stableCount, total: data().totalCount }
+                }}
+            </strong>
+            <span class="fd-ui-body-sm fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.STABILITY.WITHOUT_SHARP_DEVIATIONS' | translate }}</span>
+        </div>
+
+        <div class="statistics-diet-stability-card__metrics">
+            <div class="fd-stack fd-gap-xxs">
+                <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.STABILITY.AVERAGE_DEVIATION' | translate }}</span>
+                <strong
+                    class="statistics-diet-stability-card__deviation fd-ui-metric-md"
+                    [class.statistics-diet-stability-card__deviation--warning]="hasHighDeviation()"
+                >
+                    @if (data().averageDeviationPercent !== null) {
+                        {{ data().averageDeviationPercent }}%
+                    } @else {
+                        —
+                    }
+                </strong>
+            </div>
+            <div class="fd-stack fd-gap-xxs">
+                <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.STABILITY.LOGGING_STREAK' | translate }}</span>
+                <strong class="fd-ui-metric-md">
+                    {{
+                        (data().usesDailyIntervals
+                            ? 'STATISTICS.DASHBOARD.STABILITY.STREAK_DAYS'
+                            : 'STATISTICS.DASHBOARD.STABILITY.STREAK_INTERVALS'
+                        ) | translate: { count: data().longestLoggingStreak }
+                    }}
+                </strong>
+            </div>
+        </div>
+
+        <div class="statistics-diet-stability-card__timeline" [attr.aria-label]="'STATISTICS.DASHBOARD.STABILITY.TIMELINE' | translate">
+            @for (day of data().days; track day.label) {
+                <div class="statistics-diet-stability-card__day">
+                    <span
+                        class="statistics-diet-stability-card__day-marker"
+                        [class.statistics-diet-stability-card__day-marker--stable]="day.status === 'stable'"
+                        [class.statistics-diet-stability-card__day-marker--deviation]="day.status === 'deviation'"
+                        [attr.aria-label]="'STATISTICS.DASHBOARD.STABILITY.STATUS.' + day.status.toUpperCase() | translate"
+                    ></span>
+                    <span class="fd-ui-caption fd-ui-text-muted">{{ day.label }}</span>
+                </div>
+            }
+        </div>
+
+        <div class="statistics-diet-stability-card__legend fd-row fd-wrap fd-gap-md fd-ui-caption fd-ui-text-muted">
+            <span class="statistics-diet-stability-card__legend-item statistics-diet-stability-card__legend-item--stable">
+                {{ 'STATISTICS.DASHBOARD.STABILITY.STATUS.STABLE' | translate }}
+            </span>
+            <span class="statistics-diet-stability-card__legend-item statistics-diet-stability-card__legend-item--deviation">
+                {{ 'STATISTICS.DASHBOARD.STABILITY.STATUS.DEVIATION' | translate }}
+            </span>
+            <span class="statistics-diet-stability-card__legend-item statistics-diet-stability-card__legend-item--missing">
+                {{ 'STATISTICS.DASHBOARD.STABILITY.STATUS.MISSING' | translate }}
+            </span>
+        </div>
+    } @else {
+        <div class="statistics-diet-stability-card__empty fd-stack fd-gap-sm">
+            <strong class="fd-ui-action-text">{{ 'STATISTICS.DASHBOARD.STABILITY.NO_GOAL_TITLE' | translate }}</strong>
+            <span class="fd-ui-body-sm fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.STABILITY.NO_GOAL_HINT' | translate }}</span>
+        </div>
+    }
+</fd-ui-card>

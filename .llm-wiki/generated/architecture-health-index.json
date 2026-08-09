@@ -8,7 +8,7 @@
                     "moduleCycleNodes":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
-                    "selectorUnreferencedComponents":  132,
+                    "selectorUnreferencedComponents":  133,
                     "componentsWithoutDirectSpecs":  116,
                     "criticalSymbolsWithoutTestReferences":  27,
                     "explicitDebtMarkers":  3
@@ -987,6 +987,14 @@
                                                "path":  "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
                                                "specPath":  "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.spec.ts"
+                                           },
+                                           {
+                                               "class":  "StatisticsNutrientBalanceCardComponent",
+                                               "selector":  "fd-statistics-nutrient-balance-card",
+                                               "feature":  "statistics",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.spec.ts"
                                            },
                                            {
                                                "class":  "DailyMicronutrientCardComponent",

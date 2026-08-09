@@ -244,12 +244,63 @@
                 "GOAL": "Goal",
                 "COMPLETION": "Completion"
             },
+            "MEAL_STRUCTURE": {
+                "TITLE": "Average day structure",
+                "SUBTITLE": "Average per logged day",
+                "DISTRIBUTION": "Calorie distribution by meal",
+                "MEAL": "Meal",
+                "SHARE": "Share",
+                "AVERAGE": "Average",
+                "DOMINANT": "Main meal",
+                "MEALS_PER_DAY": "Average meals per day",
+                "NO_DATA": "—",
+                "EMPTY": "Assign meal types to diary entries to see your average day structure.",
+                "MEALS": {
+                    "BREAKFAST": "Breakfast",
+                    "LUNCH": "Lunch",
+                    "DINNER": "Dinner",
+                    "SNACK": "Snacks"
+                }
+            },
+            "STABILITY": {
+                "TITLE": "Diet stability",
+                "SUBTITLE": "For the selected period",
+                "STABLE_DAYS": "{{current}} of {{total}} days",
+                "STABLE_INTERVALS": "{{current}} of {{total}} intervals",
+                "WITHOUT_SHARP_DEVIATIONS": "without sharp deviations",
+                "AVERAGE_DEVIATION": "Average deviation",
+                "LOGGING_STREAK": "Logging streak",
+                "STREAK_DAYS": "{{count}} days",
+                "STREAK_INTERVALS": "{{count}} intervals",
+                "TIMELINE": "Diet stability timeline",
+                "STATUS": {
+                    "STABLE": "Within range",
+                    "DEVIATION": "Deviation",
+                    "MISSING": "No data"
+                },
+                "NO_GOAL_TITLE": "Set a calorie goal",
+                "NO_GOAL_HINT": "A daily calorie goal is needed to evaluate diet stability."
+            },
             "BODY": {
                 "TITLE": "Body metrics",
+                "WEIGHT": "Weight",
+                "WAIST": "Waist",
                 "CURRENT_WEIGHT": "Current weight",
+                "CURRENT_WAIST": "Current waist",
+                "LATEST_MEASUREMENT": "Latest measurement",
+                "INSIGHTS_TITLE": "What changed",
+                "PERIOD_CHANGE": "Period change",
                 "CHANGE": "Change over {{days}} days",
-                "OPEN_HISTORY": "Open weight history",
-                "EMPTY": "Add weight measurements to see how nutrition and body trends relate."
+                "TO_GOAL": "To goal",
+                "GOAL_VALUE": "Goal: {{value}}",
+                "CHART_GOAL": "Goal {{value}} {{unit}}",
+                "GOAL_EMPTY": "Goal is not set",
+                "DATA_COMPLETENESS": "Measurements recorded",
+                "DATA_COMPLETENESS_HINT": "In the selected period",
+                "OPEN_WEIGHT_HISTORY": "Open weight history",
+                "OPEN_WAIST_HISTORY": "Open waist history",
+                "EMPTY_WEIGHT": "Add weight measurements to see the trend.",
+                "EMPTY_WAIST": "Add waist measurements to see the trend."
             }
         },
         "RANGES": {

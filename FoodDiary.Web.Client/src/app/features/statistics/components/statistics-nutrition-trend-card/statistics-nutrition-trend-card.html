@@ -107,6 +107,8 @@
                         >
                             {{ insight.value > 0 ? '+' : '' }}{{ insight.value | number: '1.0-1' }}{{ insight.unitKey | translate }}
                         </strong>
+                    } @else if (insight.key !== 'completeness') {
+                        <strong class="fd-ui-stat-value fd-ui-text-muted">—</strong>
                     }
                 </div>
             }

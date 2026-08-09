@@ -6,20 +6,35 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { StatisticsBodyTrendCardComponent } from './statistics-body-trend-card';
 
 describe('StatisticsBodyTrendCardComponent', () => {
-    it('renders the current weight, change, chart, and history action', async () => {
+    it('switches between the weight and waist trend, insights, and history action', async () => {
         await TestBed.configureTestingModule({
             imports: [StatisticsBodyTrendCardComponent],
             providers: [provideTranslateTesting(), provideRouter([])],
         }).compileComponents();
         const fixture = TestBed.createComponent(StatisticsBodyTrendCardComponent);
         fixture.componentRef.setInput('data', {
-            currentWeight: 113,
-            change: -3,
-            timeframeDays: 30,
-            points: [
-                { label: '20 Jul', value: 116 },
-                { label: '4 Aug', value: 113 },
-            ],
+            weight: {
+                key: 'weight',
+                current: 113,
+                change: -3,
+                goal: 75,
+                timeframeDays: 30,
+                points: [
+                    { label: '20 Jul', value: 116 },
+                    { label: '4 Aug', value: 113 },
+                ],
+            },
+            waist: {
+                key: 'waist',
+                current: 99,
+                change: -2,
+                goal: 80,
+                timeframeDays: 30,
+                points: [
+                    { label: '20 Jul', value: 101 },
+                    { label: '4 Aug', value: 99 },
+                ],
+            },
         });
         fixture.detectChanges();
         const root = fixture.nativeElement as HTMLElement;
@@ -28,5 +43,8 @@ describe('StatisticsBodyTrendCardComponent', () => {
         expect(root.querySelector('fd-ui-button')).not.toBeNull();
         expect(root.textContent).toContain('113');
         expect(root.textContent).toContain('-3');
+
+        const toggle = root.querySelector('fd-ui-segmented-toggle');
+        toggle?.dispatchEvent(new CustomEvent('selectedValueChange', { detail: 'waist' }));
     });
 });

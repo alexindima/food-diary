@@ -39,9 +39,50 @@ export type StatisticsTrendInsight = {
 
 export type StatisticsNutrientBalanceItem = StatisticsNutrientProgress;
 
-export type StatisticsBodyTrendData = {
-    currentWeight: number | null;
+export type StatisticsMealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';
+
+export type StatisticsMealStructureItem = {
+    key: StatisticsMealType;
+    calories: number;
+    percentage: number;
+};
+
+export type StatisticsMealStructureData = {
+    totalCalories: number;
+    averageMealsPerDay: number;
+    dominantMeal: StatisticsMealType | null;
+    items: readonly StatisticsMealStructureItem[];
+};
+
+export type StatisticsDietStabilityStatus = 'stable' | 'deviation' | 'missing';
+
+export type StatisticsDietStabilityDay = {
+    label: string;
+    status: StatisticsDietStabilityStatus;
+};
+
+export type StatisticsDietStabilityData = {
+    stableCount: number;
+    totalCount: number;
+    averageDeviationPercent: number | null;
+    longestLoggingStreak: number;
+    usesDailyIntervals: boolean;
+    hasGoal: boolean;
+    days: readonly StatisticsDietStabilityDay[];
+};
+
+export type StatisticsBodyMetricKey = 'weight' | 'waist';
+
+export type StatisticsBodyMetricData = {
+    key: StatisticsBodyMetricKey;
+    current: number | null;
     change: number | null;
+    goal: number | null;
     timeframeDays: number;
     points: readonly FdUiLineChartPoint[];
+};
+
+export type StatisticsBodyTrendData = {
+    weight: StatisticsBodyMetricData;
+    waist: StatisticsBodyMetricData;
 };

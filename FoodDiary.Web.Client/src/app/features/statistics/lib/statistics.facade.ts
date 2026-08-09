@@ -144,10 +144,19 @@ export class StatisticsFacade {
         buildStatisticsDashboardCardsView({
             statistics: this.chartStatisticsData(),
             user: this.userProfile(),
-            bodyPoints: buildBodyChartPoints(
+            weightPoints: buildBodyChartPoints(
                 this.weightSummaryPoints(),
                 point => point.averageWeight,
                 date => this.formatSummaryLabel(date),
+            ),
+            waistPoints: buildBodyChartPoints(
+                this.waistSummaryPoints(),
+                point => point.averageCircumference,
+                date => this.formatSummaryLabel(date),
+            ),
+            quantizationDays: getQuantizationDays(
+                normalizeStartOfDay(this.currentRange().start),
+                normalizeEndOfDay(this.currentRange().end),
             ),
             periodDays: getDateRangeDayCount(this.currentRange()),
             formatDate: date => this.formatDateLabel(date),

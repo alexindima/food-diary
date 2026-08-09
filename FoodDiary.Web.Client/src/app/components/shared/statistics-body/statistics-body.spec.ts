@@ -49,6 +49,19 @@ describe('StatisticsBodyComponent state', () => {
         fixture.detectChanges();
 
         expect(component['sectionState']()).toBe('empty');
+        expect(component['emptyStateIcon']()).toBe('monitor_weight');
+    });
+
+    it('uses metric-specific empty-state icons', async () => {
+        const { component, fixture } = await setupStatisticsBodyAsync({ hasBodyData: false });
+
+        fixture.componentRef.setInput('selectedTab', 'waist');
+        fixture.detectChanges();
+        expect(component['emptyStateIcon']()).toBe('straighten');
+
+        fixture.componentRef.setInput('selectedTab', 'bmi');
+        fixture.detectChanges();
+        expect(component['emptyStateIcon']()).toBe('accessibility_new');
     });
 });
 

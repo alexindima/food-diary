@@ -1,51 +1,131 @@
-<fd-ui-card class="statistics-body-trend-card" [title]="'STATISTICS.DASHBOARD.BODY.TITLE' | translate">
-    @if (hasData()) {
-        <div class="statistics-body-trend-card__metrics">
-            <div class="fd-stack fd-gap-xxs">
-                <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.BODY.CURRENT_WEIGHT' | translate }}</span>
-                <strong class="fd-ui-metric-lg">{{ data().currentWeight | number: '1.0-1' }} {{ 'GENERAL.UNITS.KG' | translate }}</strong>
-            </div>
-            @let change = data().change;
-            @if (change !== null) {
-                <div class="fd-stack fd-gap-xxs">
-                    <span class="fd-ui-caption fd-ui-text-muted">
-                        {{ 'STATISTICS.DASHBOARD.BODY.CHANGE' | translate: { days: data().timeframeDays } }}
-                    </span>
-                    <strong
-                        class="statistics-body-trend-card__change fd-ui-metric-md"
-                        [class.statistics-body-trend-card__change--positive]="change < 0"
-                        [class.statistics-body-trend-card__change--negative]="change > 0"
-                    >
-                        {{ change > 0 ? '+' : '' }}{{ change | number: '1.0-1' }} {{ 'GENERAL.UNITS.KG' | translate }}
-                    </strong>
+<fd-ui-card class="statistics-body-trend-card">
+    <div class="statistics-body-trend-card__layout">
+        <section class="statistics-body-trend-card__chart-section">
+            <h2 class="statistics-body-trend-card__title fd-ui-card-title">
+                {{ 'STATISTICS.DASHBOARD.BODY.TITLE' | translate }}
+            </h2>
+            <fd-ui-segmented-toggle
+                class="statistics-body-trend-card__metric-toggle"
+                appearance="soft"
+                size="sm"
+                [options]="metricTabs"
+                [selectedValue]="selectedMetric()"
+                [fullWidth]="true"
+                [stackOnNarrow]="false"
+                [wrapOnNarrow]="false"
+                (selectedValueChange)="selectMetric($event)"
+            />
+
+            @if (hasData()) {
+                <div class="statistics-body-trend-card__chart-shell">
+                    <fd-ui-line-chart
+                        class="statistics-body-trend-card__chart"
+                        lineColor="var(--fd-color-primary-500)"
+                        fillColor="var(--fd-color-chart-primary-fill)"
+                        xAxisLabelLayout="stacked"
+                        verticalEdgeInset="none"
+                        axisValueSuffix=""
+                        [axisUnit]="unitKey() | translate"
+                        [title]="'STATISTICS.DASHBOARD.BODY.TITLE' | translate"
+                        [points]="metric().points"
+                        [minValue]="bounds().minimum"
+                        [maxValue]="bounds().maximum"
+                        [defaultMaxValue]="bounds().maximum"
+                        [showArea]="true"
+                        [showPoints]="true"
+                        [showAxisLabels]="true"
+                        [showGrid]="true"
+                        [axisDecimalPlaces]="1"
+                        [referenceLines]="referenceLines()"
+                        [valueSuffix]="unitKey() | translate"
+                    />
+                </div>
+            } @else {
+                <div class="statistics-body-trend-card__empty fd-stack fd-gap-sm">
+                    <fd-ui-icon size="lg" [name]="metricIcon()" />
+                    <span class="fd-ui-body-sm fd-ui-text-muted">{{ emptyLabelKey() | translate }}</span>
                 </div>
             }
-        </div>
-        <div class="statistics-body-trend-card__chart">
-            <fd-ui-line-chart
-                lineColor="var(--fd-color-primary-500)"
-                fillColor="var(--fd-bg-brand-tint)"
-                [title]="'STATISTICS.DASHBOARD.BODY.TITLE' | translate"
-                [points]="data().points"
-                [minValue]="bounds().minimum"
-                [maxValue]="bounds().maximum"
-                [showArea]="true"
-                [showPoints]="true"
-                [valueSuffix]="'GENERAL.UNITS.KG' | translate"
-            />
-        </div>
-    } @else {
-        <p class="statistics-body-trend-card__empty fd-ui-body-sm fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.BODY.EMPTY' | translate }}</p>
-    }
-    <fd-ui-button
-        class="statistics-body-trend-card__action"
-        variant="secondary"
-        fill="ghost"
-        size="sm"
-        icon="arrow_forward"
-        iconPosition="end"
-        [routerLink]="historyRoute()"
-    >
-        {{ 'STATISTICS.DASHBOARD.BODY.OPEN_HISTORY' | translate }}
-    </fd-ui-button>
+        </section>
+
+        <aside class="statistics-body-trend-card__insights" [attr.aria-label]="'STATISTICS.DASHBOARD.BODY.INSIGHTS_TITLE' | translate">
+            <h3 class="statistics-body-trend-card__insights-title fd-ui-action-text">
+                {{ 'STATISTICS.DASHBOARD.BODY.INSIGHTS_TITLE' | translate }}
+            </h3>
+
+            <div class="statistics-body-trend-card__insight">
+                <fd-ui-icon [name]="metricIcon()" />
+                <div class="fd-stack fd-gap-xxs fd-min-w-0">
+                    <strong class="fd-ui-action-text">{{ currentLabelKey() | translate }}</strong>
+                    <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.BODY.LATEST_MEASUREMENT' | translate }}</span>
+                </div>
+                @if (metric().current !== null) {
+                    <strong class="fd-ui-stat-value">{{ metric().current | number: '1.0-1' }} {{ unitKey() | translate }}</strong>
+                } @else {
+                    <strong class="fd-ui-stat-value fd-ui-text-muted">—</strong>
+                }
+            </div>
+
+            <div class="statistics-body-trend-card__insight">
+                <fd-ui-icon name="trending_down" />
+                <div class="fd-stack fd-gap-xxs fd-min-w-0">
+                    <strong class="fd-ui-action-text">{{ 'STATISTICS.DASHBOARD.BODY.PERIOD_CHANGE' | translate }}</strong>
+                    <span class="fd-ui-caption fd-ui-text-muted">
+                        {{ 'STATISTICS.DASHBOARD.BODY.CHANGE' | translate: { days: metric().timeframeDays } }}
+                    </span>
+                </div>
+                @if (metric().change !== null) {
+                    <strong
+                        class="statistics-body-trend-card__change fd-ui-stat-value"
+                        [class.statistics-body-trend-card__change--positive]="hasPositiveChange()"
+                        [class.statistics-body-trend-card__change--negative]="hasNegativeChange()"
+                    >
+                        {{ changePrefix() }}{{ metric().change | number: '1.0-1' }} {{ unitKey() | translate }}
+                    </strong>
+                } @else {
+                    <strong class="fd-ui-stat-value fd-ui-text-muted">—</strong>
+                }
+            </div>
+
+            <div class="statistics-body-trend-card__insight">
+                <fd-ui-icon name="flag" />
+                <div class="fd-stack fd-gap-xxs fd-min-w-0">
+                    <strong class="fd-ui-action-text">{{ 'STATISTICS.DASHBOARD.BODY.TO_GOAL' | translate }}</strong>
+                    <span class="fd-ui-caption fd-ui-text-muted">
+                        @if (metric().goal !== null) {
+                            {{ 'STATISTICS.DASHBOARD.BODY.GOAL_VALUE' | translate: { value: (metric().goal | number: '1.0-1') } }}
+                        } @else {
+                            {{ 'STATISTICS.DASHBOARD.BODY.GOAL_EMPTY' | translate }}
+                        }
+                    </span>
+                </div>
+                @if (distanceToGoal() !== null) {
+                    <strong class="fd-ui-stat-value">{{ distanceToGoal() | number: '1.0-1' }} {{ unitKey() | translate }}</strong>
+                } @else {
+                    <strong class="fd-ui-stat-value fd-ui-text-muted">—</strong>
+                }
+            </div>
+
+            <div class="statistics-body-trend-card__insight">
+                <fd-ui-icon name="calendar_month" />
+                <div class="fd-stack fd-gap-xxs fd-min-w-0">
+                    <strong class="fd-ui-action-text">{{ 'STATISTICS.DASHBOARD.BODY.DATA_COMPLETENESS' | translate }}</strong>
+                    <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.BODY.DATA_COMPLETENESS_HINT' | translate }}</span>
+                </div>
+                <strong class="fd-ui-stat-value">{{ measurementCount() }}</strong>
+            </div>
+
+            <fd-ui-button
+                class="statistics-body-trend-card__action"
+                variant="secondary"
+                fill="ghost"
+                size="sm"
+                icon="arrow_forward"
+                iconPosition="end"
+                [routerLink]="historyRoute()"
+            >
+                {{ historyLabelKey() | translate }}
+            </fd-ui-button>
+        </aside>
+    </div>
 </fd-ui-card>

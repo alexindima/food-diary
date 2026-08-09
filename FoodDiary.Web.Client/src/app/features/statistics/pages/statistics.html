@@ -54,9 +54,10 @@
                     [insights]="newCards.insights"
                     (selectedTabChange)="changeNutritionTab($event)"
                 />
+                <fd-statistics-body-trend-card [data]="newCards.body" />
                 <div class="statistics__new-cards-bottom">
-                    <fd-statistics-nutrient-balance-card [items]="newCards.balance" />
-                    <fd-statistics-body-trend-card [data]="newCards.body" />
+                    <fd-statistics-meal-structure-card [data]="newCards.mealStructure" />
+                    <fd-statistics-diet-stability-card [data]="newCards.stability" />
                 </div>
             </section>
 

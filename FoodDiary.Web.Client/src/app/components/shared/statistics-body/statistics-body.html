@@ -9,7 +9,7 @@
 
     <fd-ui-section-state
         class="stats-body-card__state"
-        emptyIcon="monitoring"
+        [emptyIcon]="emptyStateIcon()"
         [state]="sectionState()"
         [loadingLabel]="'STATISTICS.LOADING' | translate"
         [emptyMessage]="noDataKey() | translate"

@@ -14668,7 +14668,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
-                        "line":  9
+                        "line":  10
                     },
                     {
                         "name":  "AttentionSignalMetricsReadService",

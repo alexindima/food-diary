@@ -3,6 +3,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Dashboard;
@@ -33,7 +34,8 @@ internal sealed class DashboardStatisticsReadService(FoodDiaryDbContext context)
                 meal.TotalProteins,
                 meal.TotalFats,
                 meal.TotalCarbs,
-                meal.TotalFiber))
+                meal.TotalFiber,
+                meal.MealType))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
@@ -67,8 +69,17 @@ internal sealed class DashboardStatisticsReadService(FoodDiaryDbContext context)
             Math.Round(totalProteins, 2, MidpointRounding.ToEven),
             Math.Round(totalFats, 2, MidpointRounding.ToEven),
             Math.Round(totalCarbs, 2, MidpointRounding.ToEven),
-            Math.Round(totalFiber, 2, MidpointRounding.ToEven));
+            Math.Round(totalFiber, 2, MidpointRounding.ToEven),
+            SumCalories(bucketMeals, MealType.Breakfast),
+            SumCalories(bucketMeals, MealType.Lunch),
+            SumCalories(bucketMeals, MealType.Dinner),
+            SumCalories(bucketMeals, MealType.Snack),
+            bucketMeals.Length,
+            bucketMeals.Select(meal => meal.Date.Date).Distinct().Count());
     }
+
+    private static double SumCalories(IEnumerable<MealNutritionProjection> meals, MealType mealType) =>
+        Math.Round(meals.Where(meal => meal.MealType == mealType).Sum(meal => meal.TotalCalories), 2, MidpointRounding.ToEven);
 
     private static List<(DateTime Start, DateTime End)> BuildBuckets(
         DateTime from,
@@ -108,5 +119,6 @@ internal sealed class DashboardStatisticsReadService(FoodDiaryDbContext context)
         double TotalProteins,
         double TotalFats,
         double TotalCarbs,
-        double TotalFiber);
+        double TotalFiber,
+        MealType? MealType);
 }

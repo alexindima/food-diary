@@ -21,6 +21,8 @@ const USER: User = {
     fatTarget: 70,
     carbTarget: 250,
     fiberTarget: 25,
+    desiredWeight: 75,
+    desiredWaist: 80,
 };
 
 describe('statistics dashboard card mapper', () => {
@@ -30,15 +32,28 @@ describe('statistics dashboard card mapper', () => {
             calories: [1900, 0],
             nutrientsStatistic: { proteins: [90, 0], fats: [60, 0], carbs: [220, 0], fiber: [20, 0] },
             aggregatedNutrients: { proteins: 90, fats: 60, carbs: 220, fiber: 20 },
+            mealStructure: {
+                breakfastCalories: 400,
+                lunchCalories: 800,
+                dinnerCalories: 600,
+                snackCalories: 200,
+                mealCount: 7,
+                trackedDayCount: 2,
+            },
         };
 
         const view = buildStatisticsDashboardCardsView({
             statistics,
             user: USER,
-            bodyPoints: [
+            weightPoints: [
                 { label: '2 Aug', value: 116 },
                 { label: '3 Aug', value: 113 },
             ],
+            waistPoints: [
+                { label: '2 Aug', value: 101 },
+                { label: '3 Aug', value: 99 },
+            ],
+            quantizationDays: 1,
             periodDays: 7,
             formatDate: date => date.toISOString().slice(0, 10),
         });
@@ -48,6 +63,25 @@ describe('statistics dashboard card mapper', () => {
         expect(view.overview.averageCalories).toBe(1900);
         expect(view.overview.nutrients[0]).toEqual({ key: 'protein', current: 90, goal: 100 });
         expect(view.days[1]?.calories).toBeNull();
-        expect(view.body).toMatchObject({ currentWeight: 113, change: -3, timeframeDays: 7 });
+        expect(view.body.weight).toMatchObject({ key: 'weight', current: 113, change: -3, goal: 75, timeframeDays: 7 });
+        expect(view.body.waist).toMatchObject({ key: 'waist', current: 99, change: -2, goal: 80, timeframeDays: 7 });
+        expect(view.stability).toMatchObject({
+            stableCount: 1,
+            totalCount: 2,
+            averageDeviationPercent: 5,
+            longestLoggingStreak: 1,
+            usesDailyIntervals: true,
+        });
+        expect(view.mealStructure).toMatchObject({
+            totalCalories: 1000,
+            averageMealsPerDay: 3.5,
+            dominantMeal: 'lunch',
+        });
+        expect(view.mealStructure.items).toEqual([
+            { key: 'breakfast', calories: 200, percentage: 20 },
+            { key: 'lunch', calories: 400, percentage: 40 },
+            { key: 'dinner', calories: 300, percentage: 30 },
+            { key: 'snack', calories: 100, percentage: 10 },
+        ]);
     });
 });

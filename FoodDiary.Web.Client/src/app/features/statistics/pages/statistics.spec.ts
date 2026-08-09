@@ -63,7 +63,20 @@ function createStatisticsFacadeMock(): StatisticsFacadeMock {
         days: [],
         insights: [],
         balance: [],
-        body: { currentWeight: null, change: null, timeframeDays: 7, points: [] },
+        mealStructure: { totalCalories: 0, averageMealsPerDay: 0, dominantMeal: null, items: [] },
+        stability: {
+            stableCount: 0,
+            totalCount: 0,
+            averageDeviationPercent: null,
+            longestLoggingStreak: 0,
+            usesDailyIntervals: true,
+            hasGoal: false,
+            days: [],
+        },
+        body: {
+            weight: { key: 'weight', current: null, change: null, goal: null, timeframeDays: 7, points: [] },
+            waist: { key: 'waist', current: null, change: null, goal: null, timeframeDays: 7, points: [] },
+        },
     };
 
     return {

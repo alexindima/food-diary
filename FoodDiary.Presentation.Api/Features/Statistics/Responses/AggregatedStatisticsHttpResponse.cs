@@ -11,4 +11,10 @@ public sealed record AggregatedStatisticsHttpResponse(
     double TotalProteins,
     double TotalFats,
     double TotalCarbs,
-    double TotalFiber);
+    double TotalFiber,
+    double BreakfastCalories,
+    double LunchCalories,
+    double DinnerCalories,
+    double SnackCalories,
+    int MealCount,
+    int TrackedDayCount);

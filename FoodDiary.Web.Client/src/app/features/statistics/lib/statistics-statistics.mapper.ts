@@ -11,6 +11,12 @@ export function mapStatistics(statistics: AggregatedStatistics[]): MappedStatist
     let totalFats = 0;
     let totalCarbs = 0;
     let totalFiber = 0;
+    let breakfastCalories = 0;
+    let lunchCalories = 0;
+    let dinnerCalories = 0;
+    let snackCalories = 0;
+    let mealCount = 0;
+    let trackedDayCount = 0;
 
     statistics.forEach(stat => {
         dates.push(new Date(stat.dateFrom));
@@ -24,6 +30,12 @@ export function mapStatistics(statistics: AggregatedStatistics[]): MappedStatist
         totalFats += stat.totalFats;
         totalCarbs += stat.totalCarbs;
         totalFiber += stat.totalFiber;
+        breakfastCalories += stat.breakfastCalories ?? 0;
+        lunchCalories += stat.lunchCalories ?? 0;
+        dinnerCalories += stat.dinnerCalories ?? 0;
+        snackCalories += stat.snackCalories ?? 0;
+        mealCount += stat.mealCount ?? 0;
+        trackedDayCount += stat.trackedDayCount ?? 0;
     });
 
     return {
@@ -40,6 +52,14 @@ export function mapStatistics(statistics: AggregatedStatistics[]): MappedStatist
             fats: totalFats,
             carbs: totalCarbs,
             fiber: totalFiber,
+        },
+        mealStructure: {
+            breakfastCalories,
+            lunchCalories,
+            dinnerCalories,
+            snackCalories,
+            mealCount,
+            trackedDayCount,
         },
     };
 }

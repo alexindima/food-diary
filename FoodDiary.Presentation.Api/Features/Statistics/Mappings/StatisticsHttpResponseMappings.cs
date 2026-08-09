@@ -17,7 +17,13 @@ public static class StatisticsHttpResponseMappings {
                 model.TotalProteins,
                 model.TotalFats,
                 model.TotalCarbs,
-                model.TotalFiber
+                model.TotalFiber,
+                model.BreakfastCalories,
+                model.LunchCalories,
+                model.DinnerCalories,
+                model.SnackCalories,
+                model.MealCount,
+                model.TrackedDayCount
             );
         }
     }

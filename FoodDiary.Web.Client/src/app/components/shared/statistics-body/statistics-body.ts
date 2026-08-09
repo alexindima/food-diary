@@ -53,6 +53,19 @@ export class StatisticsBodyComponent {
 
         return '';
     });
+    protected readonly emptyStateIcon = computed(() => {
+        const selectedTab = this.selectedTab();
+
+        if (selectedTab === 'weight') {
+            return 'monitor_weight';
+        }
+
+        if (selectedTab === 'waist' || selectedTab === 'whtr') {
+            return 'straighten';
+        }
+
+        return 'accessibility_new';
+    });
 
     protected onTabChange(value: string): void {
         this.selectedTabChange.emit(value);
