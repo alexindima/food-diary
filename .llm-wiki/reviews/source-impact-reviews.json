@@ -177,13 +177,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "ef0d7bea520f48b61c6e23adc6ba4c39f4ae8f59d5a6afdb3f20afb9b906e8d2"
+                                            "sha256":  "bb8fc78350726a21dde1427a1e17df00458e760040aed65b75e11f423e12dc68"
                                         }
                                     ],
-                        "reason":  "Reviewed IBillingTransactionRunner extension and all production/test implementations; full affected backend regression suite compiles and passes.",
+                        "reason":  "Reviewed the regenerated backend contract index: constructor injection and startup retry behavior stay inside JobManager and do not change application contracts or HTTP APIs.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "71bf2466ed53eccd7ef769c6a3e31a5ad354d145",
-                        "reviewedAtUtc":  "2026-08-08T14:06:39.0176095Z"
+                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
+                        "reviewedAtUtc":  "2026-08-09T05:16:39.8789051Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -532,13 +532,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "cdf936b4f48b947d93902e19548e32216ed68a9ec14fa17f39d8e4da88583afd"
+                                            "sha256":  "db30cb7d756af7cad873273053a84d797be62e0e360f94f655d7192dc5cff17e"
                                         }
                                     ],
-                        "reason":  "Reviewed payment authorization, concurrency, boundary, and error paths; focused regression tests plus real PostgreSQL and WebApplicationFactory coverage were added.",
+                        "reason":  "Reviewed the regenerated quality index: the focused regression test covers transient distributed-lock recovery; no additional structural hotspot or cross-module test gap was introduced.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "71bf2466ed53eccd7ef769c6a3e31a5ad354d145",
-                        "reviewedAtUtc":  "2026-08-08T14:06:43.4297987Z"
+                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
+                        "reviewedAtUtc":  "2026-08-09T05:16:40.5137608Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
