@@ -9,7 +9,7 @@
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
                     "selectorUnreferencedComponents":  133,
-                    "componentsWithoutDirectSpecs":  116,
+                    "componentsWithoutDirectSpecs":  121,
                     "criticalSymbolsWithoutTestReferences":  27,
                     "explicitDebtMarkers":  3
                 },
@@ -3992,6 +3992,215 @@
                                                                 "name":  "sections",
                                                                 "type":  "PlaybookSection[]",
                                                                 "required":  false
+                                                            }
+                                                        ],
+                                             "outputs":  [
+
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
+                                             "class":  "GoalsCyclingDayV2Component",
+                                             "selector":  "fd-goals-cycling-day-v2",
+                                             "feature":  "goals",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-day.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-day.html",
+                                             "inputs":  [
+                                                            {
+                                                                "name":  "dayKey",
+                                                                "type":  "DayCalorieKey",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "labelKey",
+                                                                "type":  "string",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "value",
+                                                                "type":  "number",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "barPercent",
+                                                                "type":  "number",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "weekend",
+                                                                "type":  "",
+                                                                "required":  false
+                                                            },
+                                                            {
+                                                                "name":  "weekendPosition",
+                                                                "type":  "\u0027start\u0027 | \u0027end\u0027 | null",
+                                                                "required":  false
+                                                            }
+                                                        ],
+                                             "outputs":  [
+                                                             {
+                                                                 "name":  "valueChange",
+                                                                 "type":  "{ key: DayCalorieKey; value: number }"
+                                                             }
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
+                                             "class":  "GoalsNutritionCardV2Component",
+                                             "selector":  "fd-goals-nutrition-card-v2",
+                                             "feature":  "goals",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-nutrition-card.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-nutrition-card.html",
+                                             "inputs":  [
+                                                            {
+                                                                "name":  "calories",
+                                                                "type":  "number",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "macros",
+                                                                "type":  "GoalsMacroDraft[]",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "preset",
+                                                                "type":  "MacroPresetKey",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "presetOptions",
+                                                                "type":  "Array\u003cFdUiSelectOption\u003cMacroPresetKey\u003e\u003e",
+                                                                "required":  true
+                                                            }
+                                                        ],
+                                             "outputs":  [
+                                                             {
+                                                                 "name":  "caloriesChange",
+                                                                 "type":  "number"
+                                                             },
+                                                             {
+                                                                 "name":  "macroChange",
+                                                                 "type":  "{ key: MacroKey; value: number }"
+                                                             },
+                                                             {
+                                                                 "name":  "presetChange",
+                                                                 "type":  "MacroPresetKey"
+                                                             }
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
+                                             "class":  "GoalsPageV2Component",
+                                             "selector":  "fd-goals-page-v2",
+                                             "feature":  "goals",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.html",
+                                             "inputs":  [
+                                                            {
+                                                                "name":  "calories",
+                                                                "type":  "number",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "macros",
+                                                                "type":  "GoalsMacroDraft[]",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "preset",
+                                                                "type":  "MacroPresetKey",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "presets",
+                                                                "type":  "MacroPreset[]",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "presetOptions",
+                                                                "type":  "Array\u003cFdUiSelectOption\u003cMacroPresetKey\u003e\u003e",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "water",
+                                                                "type":  "number",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "bodyTargets",
+                                                                "type":  "Record\u003cBodyTargetKey, number\u003e",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "cyclingEnabled",
+                                                                "type":  "boolean",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "dayCalories",
+                                                                "type":  "Record\u003cDayCalorieKey, number\u003e",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "saving",
+                                                                "type":  "",
+                                                                "required":  false
+                                                            }
+                                                        ],
+                                             "outputs":  [
+                                                             {
+                                                                 "name":  "save",
+                                                                 "type":  "UpdateGoalsRequest"
+                                                             }
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
+                                             "class":  "GoalsSideCardsV2Component",
+                                             "selector":  "fd-goals-side-cards-v2",
+                                             "feature":  "goals",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-side-cards.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-side-cards.html",
+                                             "inputs":  [
+                                                            {
+                                                                "name":  "water",
+                                                                "type":  "number",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "bodyTargets",
+                                                                "type":  "Record\u003cBodyTargetKey, number\u003e",
+                                                                "required":  true
+                                                            }
+                                                        ],
+                                             "outputs":  [
+                                                             {
+                                                                 "name":  "waterChange",
+                                                                 "type":  "number"
+                                                             },
+                                                             {
+                                                                 "name":  "bodyTargetChange",
+                                                                 "type":  "{ key: BodyTargetKey; value: number }"
+                                                             }
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
+                                             "class":  "GoalsSummaryCardV2Component",
+                                             "selector":  "fd-goals-summary-card-v2",
+                                             "feature":  "goals",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-summary-card.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-summary-card.html",
+                                             "inputs":  [
+                                                            {
+                                                                "name":  "calories",
+                                                                "type":  "number",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "macros",
+                                                                "type":  "GoalsMacroDraft[]",
+                                                                "required":  true
                                                             }
                                                         ],
                                              "outputs":  [

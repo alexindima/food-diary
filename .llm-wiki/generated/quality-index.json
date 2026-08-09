@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4005,
+                    "productionFiles":  4013,
                     "criticalSymbols":  526,
                     "criticalSymbolsWithTestReferences":  499,
                     "criticalSymbolsWithoutTestReferences":  27,
@@ -318,11 +318,11 @@
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/goals/lib/goals.facade.ts",
-                         "nonBlankLines":  526,
+                         "nonBlankLines":  535,
                          "decisionPoints":  36,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  64.52
+                         "structuralRiskScore":  64.7
                      },
                      {
                          "path":  "FoodDiary.Domain/Entities/Users/User.cs",
@@ -26792,11 +26792,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/goals/goals.routes.ts",
-                      "nonBlankLines":  9,
+                      "nonBlankLines":  11,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
+                      "structuralRiskScore":  0.22
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/goals/lib/calorie-goal.facade.ts",
@@ -26824,11 +26824,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/goals/lib/goals.facade.ts",
-                      "nonBlankLines":  526,
+                      "nonBlankLines":  535,
                       "decisionPoints":  36,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  64.52
+                      "structuralRiskScore":  64.7
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/goals/models/goals.data.ts",
@@ -26919,12 +26919,68 @@
                       "structuralRiskScore":  0.34
                   },
                   {
+                      "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-day.ts",
+                      "nonBlankLines":  25,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-row.ts",
+                      "nonBlankLines":  59,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.18
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-nutrition-card.ts",
+                      "nonBlankLines":  28,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.06
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.models.ts",
+                      "nonBlankLines":  69,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.38
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.ts",
+                      "nonBlankLines":  139,
+                      "decisionPoints":  6,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  11.78
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-side-cards.ts",
+                      "nonBlankLines":  39,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.78
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-summary-card.ts",
+                      "nonBlankLines":  24,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.48
+                  },
+                  {
                       "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.ts",
-                      "nonBlankLines":  253,
+                      "nonBlankLines":  282,
                       "decisionPoints":  18,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  32.06
+                      "structuralRiskScore":  32.64
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/hydration/api/hydration.service.ts",
@@ -30109,6 +30165,14 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  5.02
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/src/app/shared/i18n/localized-number.pipe.ts",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.86
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/shared/i18n/russian-plural.utils.ts",

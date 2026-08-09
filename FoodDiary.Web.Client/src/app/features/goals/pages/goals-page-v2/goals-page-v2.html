@@ -1,0 +1,44 @@
+@if (draft(); as model) {
+    <div class="goals-v2">
+        <fd-goals-summary-card-v2 [calories]="model.calories" [macros]="macroDrafts()" />
+        <div class="goals-v2__content">
+            <fd-goals-nutrition-card-v2
+                [calories]="model.calories"
+                [macros]="macroDrafts()"
+                [preset]="model.preset"
+                [presetOptions]="presetOptions()"
+                (caloriesChange)="updateCalories($event)"
+                (macroChange)="updateMacro($event)"
+                (presetChange)="updatePreset($event)"
+            />
+            <div class="goals-v2__side">
+                <fd-goals-side-cards-v2
+                    [water]="model.water"
+                    [bodyTargets]="model.bodyTargets"
+                    (waterChange)="updateWater($event)"
+                    (bodyTargetChange)="updateBodyTarget($event)"
+                />
+            </div>
+        </div>
+        <fd-goals-cycling-row-v2
+            [enabled]="model.cyclingEnabled"
+            [baseCalories]="model.calories"
+            [dayCalories]="model.dayCalories"
+            (enabledChange)="updateCycling($event)"
+            (dayCaloriesChange)="updateDayCalories($event)"
+        />
+        @if (dirty()) {
+            <div class="goals-v2__actions fd-fixed-action-bar" role="status">
+                <span>{{ 'GOALS_PAGE.V2.UNSAVED' | translate }}</span>
+                <div>
+                    <fd-ui-button variant="secondary" fill="outline" (click)="discard()">{{
+                        'GOALS_PAGE.V2.DISCARD' | translate
+                    }}</fd-ui-button>
+                    <fd-ui-button [loading]="saving()" (click)="persist()">{{
+                        (saving() ? 'GOALS_PAGE.STATUS_SAVING' : 'GOALS_PAGE.V2.SAVE') | translate
+                    }}</fd-ui-button>
+                </div>
+            </div>
+        }
+    </div>
+}

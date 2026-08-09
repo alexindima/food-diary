@@ -45,6 +45,22 @@
                 </div>
             </div>
         } @else {
+            <fd-goals-page-v2
+                [calories]="calorieTarget()"
+                [macros]="allMacroViewStates()"
+                [preset]="selectedPreset()"
+                [presets]="macroPresets"
+                [presetOptions]="macroPresetOptions"
+                [water]="waterState().value"
+                [bodyTargets]="bodyTargetDraftValues()"
+                [cyclingEnabled]="calorieCyclingEnabled()"
+                [dayCalories]="dayCalories()"
+                [saving]="isSavingGoals()"
+                (save)="saveGoalsManually($event)"
+            />
+            <div class="goals__legacy-divider">
+                <span>{{ 'GOALS_PAGE.V2.LEGACY_LABEL' | translate }}</span>
+            </div>
             <div class="goals__grid">
                 <div class="goals__column goals__column--main">
                     <div class="goals__main-grid">

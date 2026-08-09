@@ -8,18 +8,18 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1538,
-                    "symbols":  590,
+                    "typescriptFiles":  1549,
+                    "symbols":  597,
                     "routes":  84,
                     "features":  36,
-                    "specs":  552,
+                    "specs":  555,
                     "localeFiles":  5,
                     "roles":  {
-                                  "Component":  406,
+                                  "Component":  412,
                                   "Directive":  12,
                                   "Facade":  52,
                                   "Other":  17,
-                                  "Pipe":  1,
+                                  "Pipe":  2,
                                   "Service":  102
                               }
                 },
@@ -547,12 +547,18 @@
                                          "GoalsBodyTargetsComponent",
                                          "GoalsCalorieCardComponent",
                                          "GoalsCyclingCardComponent",
+                                         "GoalsCyclingDayV2Component",
+                                         "GoalsCyclingRowV2Component",
                                          "GoalsFacade",
                                          "GoalsFiberCardComponent",
                                          "GoalsMacroSliderComponent",
                                          "GoalsMacrosCardComponent",
+                                         "GoalsNutritionCardV2Component",
                                          "GoalsPageComponent",
+                                         "GoalsPageV2Component",
                                          "GoalsService",
+                                         "GoalsSideCardsV2Component",
+                                         "GoalsSummaryCardV2Component",
                                          "GoalsWaterCardComponent"
                                      ],
                          "routes":  [
@@ -571,6 +577,8 @@
                                        "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macro-slider/goals-macro-slider.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macros-card/goals-macros-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/water-card/goals-water-card.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-row.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.models.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.spec.ts"
                                    ]
                      },
@@ -3359,11 +3367,53 @@
                         "line":  15
                     },
                     {
+                        "name":  "GoalsCyclingDayV2Component",
+                        "role":  "Component",
+                        "selector":  "fd-goals-cycling-day-v2",
+                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-day.ts",
+                        "line":  13
+                    },
+                    {
+                        "name":  "GoalsCyclingRowV2Component",
+                        "role":  "Component",
+                        "selector":  "fd-goals-cycling-row-v2",
+                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-row.ts",
+                        "line":  25
+                    },
+                    {
+                        "name":  "GoalsNutritionCardV2Component",
+                        "role":  "Component",
+                        "selector":  "fd-goals-nutrition-card-v2",
+                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-nutrition-card.ts",
+                        "line":  17
+                    },
+                    {
+                        "name":  "GoalsPageV2Component",
+                        "role":  "Component",
+                        "selector":  "fd-goals-page-v2",
+                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.ts",
+                        "line":  29
+                    },
+                    {
+                        "name":  "GoalsSideCardsV2Component",
+                        "role":  "Component",
+                        "selector":  "fd-goals-side-cards-v2",
+                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-side-cards.ts",
+                        "line":  17
+                    },
+                    {
+                        "name":  "GoalsSummaryCardV2Component",
+                        "role":  "Component",
+                        "selector":  "fd-goals-summary-card-v2",
+                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-summary-card.ts",
+                        "line":  18
+                    },
+                    {
                         "name":  "GoalsPageComponent",
                         "role":  "Component",
                         "selector":  "fd-goals-page",
                         "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.ts",
-                        "line":  59
+                        "line":  63
                     },
                     {
                         "name":  "HydrationService",
@@ -5123,6 +5173,13 @@
                         "line":  11
                     },
                     {
+                        "name":  "LocalizedNumberPipe",
+                        "role":  "Pipe",
+                        "selector":  null,
+                        "path":  "FoodDiary.Web.Client/src/app/shared/i18n/localized-number.pipe.ts",
+                        "line":  8
+                    },
+                    {
                         "name":  "AiFoodFacade",
                         "role":  "Facade",
                         "selector":  null,
@@ -5660,7 +5717,7 @@
                    {
                        "path":  "",
                        "source":  "FoodDiary.Web.Client/src/app/features/goals/goals.routes.ts",
-                       "line":  7
+                       "line":  8
                    },
                    {
                        "path":  "",
@@ -5788,8 +5845,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  3038,
-                             "russianProperties":  3038,
+                             "englishProperties":  3075,
+                             "russianProperties":  3075,
                              "countsMatch":  true
                          },
                          {

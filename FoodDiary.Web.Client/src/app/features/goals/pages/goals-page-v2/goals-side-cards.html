@@ -1,0 +1,49 @@
+<div class="goals-v2-side-cards">
+    <section class="goals-v2-card goals-v2-side-card">
+        <h2 class="goals-v2-card__title">{{ 'GOALS_PAGE.V2.WATER_TITLE' | translate }}</h2>
+        <div class="goals-v2-water-target">
+            <label class="goals-v2-card__label" for="goals-v2-water">{{ 'GOALS_PAGE.V2.TARGET_VALUE' | translate }}</label>
+            <div class="goals-v2-input goals-v2-input--hero">
+                <input id="goals-v2-water" type="number" min="0" [value]="water()" (input)="updateWater($event)" />
+                <span>{{ 'GENERAL.UNITS.ML' | translate }}</span>
+            </div>
+        </div>
+        <span class="goals-v2-card__label goals-v2-water-quick-label">{{ 'GOALS_PAGE.V2.QUICK_SELECT' | translate }}</span>
+        <div class="goals-v2-quick-values">
+            @for (value of [2000, 2500, 3000]; track value) {
+                <button type="button" [class.goals-v2-quick-values__active]="water() === value" (click)="waterChange.emit(value)">
+                    {{ value | localizedNumber: language() }} {{ 'GENERAL.UNITS.ML' | translate }}
+                </button>
+            }
+        </div>
+    </section>
+
+    <section class="goals-v2-card goals-v2-side-card">
+        <h2 class="goals-v2-card__title">{{ 'GOALS_PAGE.V2.BODY_TITLE' | translate }}</h2>
+        <p class="goals-v2-card__hint">{{ 'GOALS_PAGE.V2.BODY_HINT' | translate }}</p>
+        <div class="goals-v2-body-row">
+            <label for="goals-v2-weight">{{ 'GOALS_PAGE.BODY_TARGET_WEIGHT' | translate }}</label>
+            <span class="goals-v2-input"
+                ><input
+                    id="goals-v2-weight"
+                    type="number"
+                    min="0"
+                    [value]="bodyTargets().weight"
+                    (input)="updateBodyTarget('weight', $event)"
+                /><span>{{ 'GENERAL.UNITS.KG' | translate }}</span></span
+            >
+        </div>
+        <div class="goals-v2-body-row">
+            <label for="goals-v2-waist">{{ 'GOALS_PAGE.BODY_TARGET_WAIST' | translate }}</label>
+            <span class="goals-v2-input"
+                ><input
+                    id="goals-v2-waist"
+                    type="number"
+                    min="0"
+                    [value]="bodyTargets().waist"
+                    (input)="updateBodyTarget('waist', $event)"
+                /><span>{{ 'GENERAL.UNITS.CM' | translate }}</span></span
+            >
+        </div>
+    </section>
+</div>

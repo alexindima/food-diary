@@ -14,6 +14,7 @@ import { GoalsCyclingCardComponent } from './goals-page-sections/cycling-card/go
 import { GoalsFiberCardComponent } from './goals-page-sections/fiber-card/goals-fiber-card';
 import { GoalsMacrosCardComponent } from './goals-page-sections/macros-card/goals-macros-card';
 import { GoalsWaterCardComponent } from './goals-page-sections/water-card/goals-water-card';
+import { GoalsPageV2Component } from './goals-page-v2/goals-page-v2';
 
 const CALORIE_TARGET = 2100;
 const NORMALIZED_CALORIES = 4000;
@@ -63,6 +64,7 @@ describe('GoalsPageComponent', () => {
         expect(getChild(fixture, GoalsBodyTargetsComponent).targets()[0]).toEqual(
             expect.objectContaining({ key: 'weight', value: BODY_TARGET }),
         );
+        expect(getChild(fixture, GoalsPageV2Component).calories()).toBe(CALORIE_TARGET);
     });
 
     it('renders load error and delegates retry', () => {
@@ -105,6 +107,10 @@ describe('GoalsPageComponent', () => {
         expect(waterInput.target.value).toBe(CLAMPED_WATER_TARGET.toString());
         expect(facade.updateBodyTarget).toHaveBeenCalledWith('weight', RAW_INPUT_VALUE, MAX_BODY_TARGET);
         expect(bodyInput.target.value).toBe(CLAMPED_BODY_TARGET.toString());
+
+        const manualRequest = { dailyCalorieTarget: CALORIE_TARGET };
+        getChild(fixture, GoalsPageV2Component).save.emit(manualRequest);
+        expect(facade.saveManually).toHaveBeenCalledWith(manualRequest);
     });
 });
 
@@ -152,6 +158,7 @@ type GoalsFacadeMock = {
     selectedPreset: WritableSignal<'custom' | 'classic'>;
     waterState: WritableSignal<SliderState>;
     coreMacroStates: WritableSignal<SliderState[]>;
+    macroStates: WritableSignal<SliderState[]>;
     fiberMacroState: WritableSignal<SliderState | undefined>;
     progressPercent: WritableSignal<number>;
     knobAngle: WritableSignal<number>;
@@ -169,6 +176,7 @@ type GoalsFacadeMock = {
     changeMacroPreset: ReturnType<typeof vi.fn>;
     updateMacroValue: ReturnType<typeof vi.fn>;
     updateWaterValue: ReturnType<typeof vi.fn>;
+    saveManually: ReturnType<typeof vi.fn>;
 };
 
 function createFacadeMock(): GoalsFacadeMock {
@@ -187,6 +195,10 @@ function createFacadeMock(): GoalsFacadeMock {
         selectedPreset: signal<'custom' | 'classic'>('custom'),
         waterState: signal(createSliderState({ labelKey: 'GOALS_PAGE.WATER_LABEL', unit: 'ml', value: WATER_TARGET })),
         coreMacroStates: signal([createSliderState({ key: 'protein', labelKey: 'GOALS_PAGE.MACROS.PROTEIN', value: PROTEIN_TARGET })]),
+        macroStates: signal([
+            createSliderState({ key: 'protein', labelKey: 'GOALS_PAGE.MACROS.PROTEIN', value: PROTEIN_TARGET }),
+            createSliderState({ key: 'fiber', labelKey: 'GOALS_PAGE.MACROS.FIBER', value: 30 }),
+        ]),
         fiberMacroState: signal(createSliderState({ key: 'fiber', labelKey: 'GOALS_PAGE.MACROS.FIBER', value: 30 })),
         progressPercent: signal(PROGRESS_PERCENT),
         knobAngle: signal(KNOB_ANGLE),
@@ -212,6 +224,7 @@ function createFacadeMock(): GoalsFacadeMock {
         changeMacroPreset: vi.fn(),
         updateMacroValue: vi.fn(() => CLAMPED_PROTEIN_TARGET),
         updateWaterValue: vi.fn(() => CLAMPED_WATER_TARGET),
+        saveManually: vi.fn(),
     };
 }
 

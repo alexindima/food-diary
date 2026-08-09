@@ -14,6 +14,25 @@
         margin-bottom: var(--fd-space-xxs);
     }
 
+    &__legacy-divider {
+        display: flex;
+        align-items: center;
+        gap: var(--fd-space-sm);
+        margin: var(--fd-space-xl) 0 var(--fd-space-md);
+        color: var(--fd-color-text-muted);
+        font-size: var(--fd-text-caption-size);
+        text-transform: uppercase;
+        letter-spacing: var(--fd-letter-spacing-wide);
+
+        &::before,
+        &::after {
+            content: '';
+            flex: 1;
+            height: var(--fd-border-width);
+            background: var(--fd-color-border);
+        }
+    }
+
     &__status {
         --fd-pill-min-height: var(--fd-size-control-md);
         --fd-pill-padding-inline: var(--fd-space-md);

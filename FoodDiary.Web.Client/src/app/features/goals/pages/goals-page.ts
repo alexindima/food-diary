@@ -10,10 +10,12 @@ import { ErrorStateComponent } from '../../../components/shared/error-state/erro
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card';
+import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { MAX_BODY_TARGET } from '../lib/goals.constants';
 import { type BodyTargetKey, GoalsFacade, type MacroKey, type MacroPresetKey } from '../lib/goals.facade';
+import type { UpdateGoalsRequest } from '../models/goals.data';
 import { type DayCalorieKey, DAYS_OF_WEEK } from '../models/goals.data';
 import type { BodyTargetInputChange, DayCaloriesInputChange, MacroInputChange } from './goals-page-lib/goals-page.models';
 import {
@@ -32,6 +34,7 @@ import { GoalsCyclingCardComponent } from './goals-page-sections/cycling-card/go
 import { GoalsFiberCardComponent } from './goals-page-sections/fiber-card/goals-fiber-card';
 import { GoalsMacrosCardComponent } from './goals-page-sections/macros-card/goals-macros-card';
 import { GoalsWaterCardComponent } from './goals-page-sections/water-card/goals-water-card';
+import { GoalsPageV2Component } from './goals-page-v2/goals-page-v2';
 
 @Component({
     selector: 'fd-goals-page',
@@ -51,6 +54,7 @@ import { GoalsWaterCardComponent } from './goals-page-sections/water-card/goals-
         GoalsMacrosCardComponent,
         GoalsFiberCardComponent,
         GoalsBodyTargetsComponent,
+        GoalsPageV2Component,
     ],
     templateUrl: './goals-page.html',
     styleUrls: ['./goals-page.scss'],
@@ -80,6 +84,7 @@ export class GoalsPageComponent {
     protected readonly accentColor = this.facade.accentColor;
     protected readonly calorieCyclingEnabled = this.facade.calorieCyclingEnabled;
     protected readonly dayCalories = this.facade.dayCalories;
+    protected readonly bodyTargetDraftValues = this.facade.bodyTargetValues;
     protected readonly daysOfWeek = DAYS_OF_WEEK;
     protected macroPresetOptions: Array<FdUiSelectOption<MacroPresetKey>> = [];
     private activeRingElement: HTMLElement | null = null;
@@ -114,6 +119,28 @@ export class GoalsPageComponent {
 
         return withMacroProgressStyles(fiber);
     });
+    protected readonly allMacroViewStates = computed(() =>
+        this.facade.macroStates().map(macro => {
+            const calorieFactors: Record<MacroKey, number> = { protein: 4, fats: 9, carbs: 4, fiber: 2 };
+            const accents: Record<MacroKey, string> = {
+                protein: 'var(--fd-color-primary-500)',
+                fats: 'var(--fd-color-orange-500)',
+                carbs: 'var(--fd-color-sky-500)',
+                fiber: 'var(--fd-color-rose-500)',
+            };
+            const icons: Record<MacroKey, string> = {
+                protein: 'fitness_center',
+                fats: 'water_drop',
+                carbs: 'grass',
+                fiber: 'spa',
+            };
+            const calorieTarget = this.calorieTarget();
+            const percent =
+                calorieTarget > 0 ? Math.round((macro.value * calorieFactors[macro.key] * PERCENT_MULTIPLIER) / calorieTarget) : 0;
+
+            return { ...withMacroProgressStyles(macro), accent: accents[macro.key], icon: icons[macro.key], percent };
+        }),
+    );
 
     protected toggleCalorieCycling(): void {
         this.facade.toggleCalorieCycling();
@@ -231,6 +258,10 @@ export class GoalsPageComponent {
         }
 
         this.facade.updateWaterValue(Number(target.value));
+    }
+
+    protected saveGoalsManually(request: UpdateGoalsRequest): void {
+        this.facade.saveManually(request);
     }
 
     protected onRingHover(event: PointerEvent): void {

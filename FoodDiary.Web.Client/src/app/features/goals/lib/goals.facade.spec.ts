@@ -41,7 +41,7 @@ let goalsService: {
     getGoalsStrict: ReturnType<typeof vi.fn>;
     updateGoals: ReturnType<typeof vi.fn>;
 };
-let toastService: { success: ReturnType<typeof vi.fn> };
+let toastService: { error: ReturnType<typeof vi.fn>; success: ReturnType<typeof vi.fn> };
 
 describe('GoalsFacade', () => {
     beforeEach(() => {
@@ -64,6 +64,7 @@ describe('GoalsFacade', () => {
             updateGoals: vi.fn().mockReturnValue(of({})),
         };
         toastService = {
+            error: vi.fn(),
             success: vi.fn(),
         };
 
@@ -278,7 +279,8 @@ function registerAutosaveTests(): void {
             await vi.advanceTimersByTimeAsync(AUTOSAVE_DELAY_MS);
 
             expect(facade.hasAutosaveError()).toBe(true);
-            expect(facade.saveStatusKey()).toBe('GOALS_PAGE.STATUS_ERROR');
+            expect(facade.saveStatusKey()).toBeNull();
+            expect(toastService.error).toHaveBeenCalledWith('GOALS_PAGE.STATUS_ERROR');
             expect(toastService.success).not.toHaveBeenCalled();
         });
     });

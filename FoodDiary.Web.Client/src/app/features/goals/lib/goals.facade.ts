@@ -289,7 +289,7 @@ export class GoalsFacade {
             return 'GOALS_PAGE.STATUS_SAVING';
         }
         if (this.hasAutosaveError()) {
-            return 'GOALS_PAGE.STATUS_ERROR';
+            return null;
         }
         if (this.hasPendingAutosave()) {
             return 'GOALS_PAGE.STATUS_PENDING';
@@ -303,6 +303,12 @@ export class GoalsFacade {
 
     public reload(): void {
         this.loadGoals();
+    }
+
+    public saveManually(request: UpdateGoalsRequest): void {
+        this.hasAutosaveError.set(false);
+        this.hasPendingAutosave.set(false);
+        this.persistGoals(request);
     }
 
     public updateCalories(rawValue: number): void {
@@ -498,7 +504,7 @@ export class GoalsFacade {
                             this.autosaveQueue.scheduleIfPending();
                         }
 
-                        this.hasAutosaveError.set(true);
+                        this.showSaveError();
                         this.hasPendingAutosave.set(this.autosaveQueue.hasPending());
                         return;
                     }
@@ -517,10 +523,15 @@ export class GoalsFacade {
                         this.autosaveQueue.scheduleIfPending();
                     }
 
-                    this.hasAutosaveError.set(true);
+                    this.showSaveError();
                     this.hasPendingAutosave.set(this.autosaveQueue.hasPending());
                 },
             });
+    }
+
+    private showSaveError(): void {
+        this.hasAutosaveError.set(true);
+        this.toastService.error(this.translateService.instant('GOALS_PAGE.STATUS_ERROR'));
     }
 
     private clampCalories(value: number): number {

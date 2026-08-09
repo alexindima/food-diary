@@ -1,0 +1,15 @@
+<div
+    class="goals-v2-cycling-day"
+    [class.goals-v2-cycling-day--weekend]="weekend()"
+    [class.goals-v2-cycling-day--weekend-start]="weekendPosition() === 'start'"
+    [class.goals-v2-cycling-day--weekend-end]="weekendPosition() === 'end'"
+>
+    <label [for]="'goals-v2-cycling-' + dayKey()">{{ labelKey() | translate }}</label>
+    <div class="goals-v2-input goals-v2-cycling-day__input">
+        <input type="number" min="0" [id]="'goals-v2-cycling-' + dayKey()" [value]="value()" (input)="updateValue($event)" />
+        <span>{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+    </div>
+    <div class="goals-v2-cycling-day__bar" aria-hidden="true">
+        <i [style.height.%]="barPercent()"></i>
+    </div>
+</div>
