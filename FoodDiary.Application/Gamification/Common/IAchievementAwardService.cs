@@ -6,8 +6,7 @@ namespace FoodDiary.Application.Gamification.Common;
 public interface IAchievementAwardService {
     Task<IReadOnlyList<BadgeModel>> EvaluateAndGrantAsync(
         UserId userId,
-        int longestStreak,
-        int totalMeals,
+        AchievementMetricSnapshot metrics,
         CancellationToken cancellationToken = default,
         DateTime? earnedAtUtc = null);
 }

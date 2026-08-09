@@ -47,13 +47,12 @@ public static class GamificationCalculator {
 
     public static IReadOnlyList<BadgeModel> CalculateBadges(
         IReadOnlyList<AchievementDefinition> definitions,
-        int longestStreak,
-        int totalMeals) {
+        AchievementMetricSnapshot metrics) {
         return definitions.Select(definition => new BadgeModel(
             definition.Key,
             definition.Category,
             definition.Threshold,
-            GetMetricValue(definition.Metric, longestStreak, totalMeals) >= definition.Threshold,
+            GetMetricValue(definition.Metric, metrics) >= definition.Threshold,
             definition.TitleRu,
             definition.TitleEn,
             definition.DescriptionRu,
@@ -61,9 +60,10 @@ public static class GamificationCalculator {
             definition.Icon)).ToList();
     }
 
-    public static int GetMetricValue(AchievementMetric metric, int longestStreak, int totalMeals) => metric switch {
-        AchievementMetric.LongestStreak => longestStreak,
-        AchievementMetric.TotalMeals => totalMeals,
+    public static int GetMetricValue(AchievementMetric metric, AchievementMetricSnapshot metrics) => metric switch {
+        AchievementMetric.LongestStreak => metrics.LongestStreak,
+        AchievementMetric.TotalMeals => metrics.TotalMeals,
+        AchievementMetric.TotalAcademyArticlesRead => metrics.TotalAcademyArticlesRead,
         _ => throw new ArgumentOutOfRangeException(nameof(metric)),
     };
 

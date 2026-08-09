@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Consumptions.Common;
+using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence.Achievements;

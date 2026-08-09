@@ -252,13 +252,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "0b8e51b596964ddd9e51036c2a343c111b522645719c180d6ce0686d0c268f3e"
+                                            "sha256":  "492f80435f23ad98cc21fb1e670da7540dfb4b5016244d2dbb6502fe480fa9ec"
                                         }
                                     ],
-                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "reason":  "Reviewed regenerated backend contract index after adding the internal achievement metric snapshot and achievement-owned abstractions; no HTTP or cross-service contract changed.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
-                        "reviewedAtUtc":  "2026-08-09T22:10:52.0811074Z"
+                        "gitHead":  "78f81b90e4a22ce4693aa8644a3e73126bc7817f",
+                        "reviewedAtUtc":  "2026-08-09T23:03:06.3539886Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -653,13 +653,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "169fca104d48ccbc713fb3cc77a73bdc01a16ca7d3117e25a1d7a378673d9e03"
+                                            "sha256":  "57e11f6f1917e432406df61ba42ab6c101f0ad4026426e3b7bf946f2a7709bdc"
                                         }
                                     ],
-                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "reason":  "Reviewed regenerated quality index; Academy metric, lesson enqueue idempotency, migration seeding, and PostgreSQL query behavior have focused unit and integration coverage.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
-                        "reviewedAtUtc":  "2026-08-09T22:10:58.8741058Z"
+                        "gitHead":  "78f81b90e4a22ce4693aa8644a3e73126bc7817f",
+                        "reviewedAtUtc":  "2026-08-09T23:03:07.1859983Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -823,18 +823,14 @@
                         "pageSha256":  "aa8a6cbad3f7ccd39d71249321bc2a2450bad77ed00f7de72a1935fc813d5981",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "e10422be6b3770c2d03567668e806554d9feac985ed6dc92b190ebadc01bb6c8"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "455c5ccf03474295a95a25bc05fdf5bfb93a52613d068af12ea2d47f1d673697"
+                                            "sha256":  "7db7be56a4b44bf8a00a0cc45bab8aea19251ef845f0cf043fa22cbd4ade81d7"
                                         }
                                     ],
-                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "reason":  "Reviewed regenerated frontend index; the only frontend change is an additional typed admin metric option with paired localization, with admin build and tests passing.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
-                        "reviewedAtUtc":  "2026-08-09T22:11:03.1871761Z"
+                        "gitHead":  "78f81b90e4a22ce4693aa8644a3e73126bc7817f",
+                        "reviewedAtUtc":  "2026-08-09T23:03:08.1967885Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

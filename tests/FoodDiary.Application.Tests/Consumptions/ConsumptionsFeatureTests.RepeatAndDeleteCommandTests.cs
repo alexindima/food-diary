@@ -1,7 +1,7 @@
+using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 using FoodDiary.Application.Consumptions.Commands.RepeatMeal;
-using FoodDiary.Application.Abstractions.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;

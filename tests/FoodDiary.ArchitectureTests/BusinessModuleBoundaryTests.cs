@@ -97,6 +97,7 @@ public sealed class BusinessModuleBoundaryTests {
     };
 
     private static readonly HashSet<string> ApprovedConsumptionsApplicationDependencies = new(StringComparer.Ordinal) {
+        "FoodDiary.Application.Abstractions.Achievements.Common",
         "FoodDiary.Application.Abstractions.Common",
         "FoodDiary.Application.Abstractions.Consumptions.Common",
         "FoodDiary.Application.Abstractions.FavoriteMeals",

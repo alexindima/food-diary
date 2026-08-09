@@ -9,6 +9,7 @@ using FoodDiary.Application.Lessons.Queries.GetLessonById;
 using FoodDiary.Application.Lessons.Queries.GetLessons;
 using FoodDiary.Application.Lessons.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -23,13 +24,16 @@ public class LessonsFeatureTests {
         var lesson = NutritionLesson.Create("Proteins", "Content", summary: null, "en",
             LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5);
         INutritionLessonRepository repo = CreateLessonRepository(lesson, hasProgress: false, out Func<bool> wasProgressAdded);
-        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider(), Substitute.For<ICurrentUserAccessService>());
+        IAchievementEvaluationOutbox outbox = Substitute.For<IAchievementEvaluationOutbox>();
+        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider(), Substitute.For<ICurrentUserAccessService>(), outbox);
+        var userId = Guid.NewGuid();
 
         Result result = await handler.Handle(
-            new MarkLessonReadCommand(Guid.NewGuid(), lesson.Id.Value), CancellationToken.None);
+            new MarkLessonReadCommand(userId, lesson.Id.Value), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.True(wasProgressAdded());
+        await outbox.Received(1).EnqueueAsync(new UserId(userId), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -37,19 +41,21 @@ public class LessonsFeatureTests {
         var lesson = NutritionLesson.Create("Proteins", "Content", summary: null, "en",
             LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5);
         INutritionLessonRepository repo = CreateLessonRepository(lesson, hasProgress: true, out Func<bool> wasProgressAdded);
-        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider(), Substitute.For<ICurrentUserAccessService>());
+        IAchievementEvaluationOutbox outbox = Substitute.For<IAchievementEvaluationOutbox>();
+        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider(), Substitute.For<ICurrentUserAccessService>(), outbox);
 
         Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), lesson.Id.Value), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.False(wasProgressAdded());
+        await outbox.DidNotReceive().EnqueueAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task MarkLessonRead_WhenLessonNotFound_ReturnsFailure() {
         INutritionLessonRepository repo = CreateLessonRepository(lesson: null, hasProgress: false);
-        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider(), Substitute.For<ICurrentUserAccessService>());
+        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider(), Substitute.For<ICurrentUserAccessService>(), Substitute.For<IAchievementEvaluationOutbox>());
 
         Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
@@ -61,7 +67,7 @@ public class LessonsFeatureTests {
     [Fact]
     public async Task MarkLessonRead_WithEmptyLessonId_ReturnsValidationFailure() {
         INutritionLessonRepository repo = CreateLessonRepository(lesson: null, hasProgress: false);
-        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider(), Substitute.For<ICurrentUserAccessService>());
+        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider(), Substitute.For<ICurrentUserAccessService>(), Substitute.For<IAchievementEvaluationOutbox>());
 
         Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
@@ -77,7 +83,8 @@ public class LessonsFeatureTests {
             CreateLessonRepository(lesson: null, hasProgress: false),
             CreateLessonRepository(lesson: null, hasProgress: false),
             new FixedDateTimeProvider(),
-            Substitute.For<ICurrentUserAccessService>());
+            Substitute.For<ICurrentUserAccessService>(),
+            Substitute.For<IAchievementEvaluationOutbox>());
 
         Result result = await handler.Handle(
             new MarkLessonReadCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);

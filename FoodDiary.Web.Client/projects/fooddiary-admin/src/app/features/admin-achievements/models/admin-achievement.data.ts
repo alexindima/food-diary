@@ -1,4 +1,4 @@
-export type AchievementMetric = 'LongestStreak' | 'TotalMeals';
+export type AchievementMetric = 'LongestStreak' | 'TotalMeals' | 'TotalAcademyArticlesRead';
 
 export type AdminAchievementDefinition = {
     id: string;

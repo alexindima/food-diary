@@ -11,6 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Tests.Gamification;
@@ -186,6 +187,7 @@ public class GamificationFeatureTests {
             new MealActivityReadService(mealRepository),
             statisticsReadService,
             userProfileService,
+            CreateAchievementMetricReader(),
             CreateAchievementAwardService(),
             new StubDateTimeProvider());
 
@@ -194,11 +196,16 @@ public class GamificationFeatureTests {
         service
             .EvaluateAndGrantAsync(
                 Arg.Any<UserId>(),
-                Arg.Any<int>(),
-                Arg.Any<int>(),
+                Arg.Any<AchievementMetricSnapshot>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IReadOnlyList<BadgeModel>>([]));
         return service;
+    }
+
+    private static IAchievementMetricReader CreateAchievementMetricReader() {
+        IAchievementMetricReader reader = Substitute.For<IAchievementMetricReader>();
+        reader.GetCompletedAcademyArticleCountAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>()).Returns(0);
+        return reader;
     }
 
     private static IDashboardStatisticsReadService CreateStatisticsReadService(

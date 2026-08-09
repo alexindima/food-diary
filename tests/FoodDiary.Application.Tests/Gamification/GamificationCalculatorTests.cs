@@ -89,7 +89,9 @@ public class GamificationCalculatorTests {
 
     [Fact]
     public void CalculateBadges_WithStreakAndMeals_ReturnCorrectEarnedStatus() {
-        IReadOnlyList<BadgeModel> badges = GamificationCalculator.CalculateBadges(CreateDefinitions(), longestStreak: 10, totalMeals: 75);
+        IReadOnlyList<BadgeModel> badges = GamificationCalculator.CalculateBadges(
+            CreateDefinitions(),
+            new AchievementMetricSnapshot(LongestStreak: 10, TotalMeals: 75, TotalAcademyArticlesRead: 0));
 
         BadgeModel streak3 = badges.First(b => string.Equals(b.Key, "streak_3", StringComparison.Ordinal));
         BadgeModel streak7 = badges.First(b => string.Equals(b.Key, "streak_7", StringComparison.Ordinal));
@@ -108,9 +110,24 @@ public class GamificationCalculatorTests {
 
     [Fact]
     public void CalculateBadges_ReturnsAllTenBadges() {
-        IReadOnlyList<BadgeModel> badges = GamificationCalculator.CalculateBadges(CreateDefinitions(), 0, 0);
+        IReadOnlyList<BadgeModel> badges = GamificationCalculator.CalculateBadges(
+            CreateDefinitions(),
+            new AchievementMetricSnapshot(0, 0, 0));
 
         Assert.Equal(10, badges.Count);
+    }
+
+    [Fact]
+    public void CalculateBadges_WithAcademyArticles_UsesAcademyMetric() {
+        var definition = AchievementDefinition.Create(
+            "academy_articles_5", "academy", AchievementMetric.TotalAcademyArticlesRead, 5,
+            "5 статей", "5 articles", "Описание", "Description", "school", 1);
+
+        BadgeModel badge = Assert.Single(GamificationCalculator.CalculateBadges(
+            [definition],
+            new AchievementMetricSnapshot(0, 0, 5)));
+
+        Assert.True(badge.IsEarned);
     }
 
     private static IReadOnlyList<AchievementDefinition> CreateDefinitions() {

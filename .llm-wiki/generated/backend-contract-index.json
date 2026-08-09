@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "contracts":  1013,
+                    "contracts":  1014,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  7039,
-                    "productionConsumerEdges":  4298,
-                    "testConsumerEdges":  2741,
-                    "consumedContracts":  1013,
+                    "consumerEdges":  7047,
+                    "productionConsumerEdges":  4303,
+                    "testConsumerEdges":  2744,
+                    "consumedContracts":  1014,
                     "unconsumedContracts":  0
                 },
     "contracts":  [
@@ -6022,7 +6022,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -6039,6 +6039,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "IAchievementMetricReader",
+                          "roles":  [
+                                        "Other"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -40008,7 +40024,7 @@
                                             "Other"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommandHandler.cs",
@@ -40021,7 +40037,7 @@
                                             "Other"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
@@ -40034,7 +40050,7 @@
                                             "Other"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Common/NullAchievementEvaluationOutbox.cs",
@@ -40047,7 +40063,20 @@
                                             "Other"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementEvaluationOutbox",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
@@ -40060,7 +40089,7 @@
                                             "Other"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutbox.cs",
@@ -40073,7 +40102,7 @@
                                             "Other"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.CreateCommandTests.cs",
@@ -40086,7 +40115,7 @@
                                             "Other"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.cs",
@@ -40099,12 +40128,25 @@
                                             "Other"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.RepeatAndDeleteCommandTests.cs",
                               "isTest":  true,
                               "referenceCount":  2
+                          },
+                          {
+                              "contract":  "IAchievementEvaluationOutbox",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Lessons/LessonsFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  7
                           },
                           {
                               "contract":  "IAchievementEvaluationOutboxProcessor",
@@ -40157,6 +40199,84 @@
                               "consumerPath":  "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
                               "isTest":  true,
                               "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementMetricReader",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Gamification/Services/AchievementReconciliationHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementMetricReader",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Gamification/Services/GamificationReadService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementMetricReader",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementMetricReader",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementMetricReader.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementMetricReader",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "IAchievementMetricReader",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  3
                           },
                           {
                               "contract":  "IAchievementReconciliationHandler",

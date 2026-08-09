@@ -19,8 +19,7 @@ public sealed class AchievementAwardServiceTests {
 
         IReadOnlyList<BadgeModel> badges = await service.EvaluateAndGrantAsync(
             UserId.New(),
-            longestStreak: 3,
-            totalMeals: 10,
+            new AchievementMetricSnapshot(LongestStreak: 3, TotalMeals: 10, TotalAcademyArticlesRead: 0),
             cancellationToken: CancellationToken.None);
 
         BadgeModel streak = badges.Single(badge => string.Equals(badge.Key, "streak_3", StringComparison.Ordinal));
@@ -39,8 +38,8 @@ public sealed class AchievementAwardServiceTests {
         AchievementAwardService service = CreateService(store);
         var userId = UserId.New();
 
-        await service.EvaluateAndGrantAsync(userId, longestStreak: 3, totalMeals: 10, cancellationToken: CancellationToken.None);
-        await service.EvaluateAndGrantAsync(userId, longestStreak: 3, totalMeals: 10, cancellationToken: CancellationToken.None);
+        await service.EvaluateAndGrantAsync(userId, new AchievementMetricSnapshot(3, 10, 0), CancellationToken.None);
+        await service.EvaluateAndGrantAsync(userId, new AchievementMetricSnapshot(3, 10, 0), CancellationToken.None);
 
         Assert.Equal(2, store.Achievements.Count);
     }
@@ -51,11 +50,10 @@ public sealed class AchievementAwardServiceTests {
         AchievementAwardService service = CreateService(store);
         var userId = UserId.New();
 
-        await service.EvaluateAndGrantAsync(userId, longestStreak: 3, totalMeals: 0, cancellationToken: CancellationToken.None);
+        await service.EvaluateAndGrantAsync(userId, new AchievementMetricSnapshot(3, 0, 0), CancellationToken.None);
         IReadOnlyList<BadgeModel> afterDrop = await service.EvaluateAndGrantAsync(
             userId,
-            longestStreak: 0,
-            totalMeals: 0,
+            new AchievementMetricSnapshot(0, 0, 0),
             cancellationToken: CancellationToken.None);
 
         Assert.True(afterDrop.Single(badge => string.Equals(badge.Key, "streak_3", StringComparison.Ordinal)).IsEarned);
@@ -67,14 +65,14 @@ public sealed class AchievementAwardServiceTests {
         var definitionStore = new InMemoryAchievementDefinitionStore();
         var service = new AchievementAwardService(store, definitionStore, new StubTimeProvider());
         var userId = UserId.New();
-        await service.EvaluateAndGrantAsync(userId, longestStreak: 3, totalMeals: 0, cancellationToken: CancellationToken.None);
+        await service.EvaluateAndGrantAsync(userId, new AchievementMetricSnapshot(3, 0, 0), CancellationToken.None);
         AchievementDefinition definition = definitionStore.Definitions.Single(
             item => string.Equals(item.Key, "streak_3", StringComparison.Ordinal));
         definition.Update(definition.Category, definition.Metric, definition.Threshold, definition.TitleRu, definition.TitleEn,
             definition.DescriptionRu, definition.DescriptionEn, definition.Icon, definition.SortOrder, isActive: false);
 
         IReadOnlyList<BadgeModel> badges = await service.EvaluateAndGrantAsync(
-            userId, longestStreak: 0, totalMeals: 0, cancellationToken: CancellationToken.None);
+            userId, new AchievementMetricSnapshot(0, 0, 0), CancellationToken.None);
 
         Assert.True(badges.Single(item => string.Equals(item.Key, "streak_3", StringComparison.Ordinal)).IsEarned);
     }

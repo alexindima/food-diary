@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Common.Validation;
@@ -14,7 +15,8 @@ public sealed class MarkLessonReadCommandHandler(
     INutritionLessonReadRepository readRepository,
     INutritionLessonWriteRepository writeRepository,
     TimeProvider dateTimeProvider,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    IAchievementEvaluationOutbox achievementEvaluationOutbox)
     : ICommandHandler<MarkLessonReadCommand, Result> {
     public async Task<Result> Handle(
         MarkLessonReadCommand command,
@@ -48,9 +50,10 @@ public sealed class MarkLessonReadCommandHandler(
             return Result.Success();
         }
 
-        var progress = UserLessonProgress.Create(
-            userIdResult.Value, lessonId, dateTimeProvider.GetUtcNow().UtcDateTime);
+        DateTime readAtUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
+        var progress = UserLessonProgress.Create(userIdResult.Value, lessonId, readAtUtc);
         await writeRepository.AddProgressAsync(progress, cancellationToken).ConfigureAwait(false);
+        await achievementEvaluationOutbox.EnqueueAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
 
         return Result.Success();
     }

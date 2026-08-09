@@ -8,15 +8,15 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3064,
-                    "symbols":  3104,
-                    "interfaceImplementationLinks":  230,
-                    "dependencyInjectionRegistrations":  229,
+                    "sourceFiles":  3067,
+                    "symbols":  3107,
+                    "interfaceImplementationLinks":  231,
+                    "dependencyInjectionRegistrations":  230,
                     "kinds":  {
-                                  "class":  1570,
+                                  "class":  1571,
                                   "enum":  46,
-                                  "interface":  406,
-                                  "record":  970,
+                                  "interface":  407,
+                                  "record":  971,
                                   "record struct":  112
                               },
                     "roles":  {
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  3,
                                   "Options":  56,
-                                  "Other":  1095,
+                                  "Other":  1098,
                                   "Query":  157,
                                   "QueryHandler":  122,
                                   "ReadModelRepository":  29,
@@ -111,11 +111,25 @@
                         "line":  5
                     },
                     {
+                        "name":  "IAchievementEvaluationOutbox",
+                        "kind":  "interface",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs",
+                        "line":  4
+                    },
+                    {
                         "name":  "IAchievementEvaluationOutboxProcessor",
                         "kind":  "interface",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs",
                         "line":  2
+                    },
+                    {
+                        "name":  "IAchievementMetricReader",
+                        "kind":  "interface",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs",
+                        "line":  4
                     },
                     {
                         "name":  "IAchievementReconciliationHandler",
@@ -1403,13 +1417,6 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Consumptions/Common/ConsumptionErrors.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "IAchievementEvaluationOutbox",
-                        "kind":  "interface",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs",
                         "line":  4
                     },
                     {
@@ -8707,6 +8714,13 @@
                         "line":  2
                     },
                     {
+                        "name":  "AchievementMetricSnapshot",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/Gamification/Models/AchievementMetricSnapshot.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "BadgeModel",
                         "kind":  "record",
                         "role":  "Other",
@@ -8753,7 +8767,7 @@
                         "kind":  "class",
                         "role":  "Handler",
                         "path":  "FoodDiary.Application/Gamification/Services/AchievementReconciliationHandler.cs",
-                        "line":  7
+                        "line":  8
                     },
                     {
                         "name":  "GamificationCalculator",
@@ -8767,7 +8781,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Gamification/Services/GamificationReadService.cs",
-                        "line":  10
+                        "line":  11
                     },
                     {
                         "name":  "GamificationUserProfileService",
@@ -9012,7 +9026,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
-                        "line":  12
+                        "line":  13
                     },
                     {
                         "name":  "ILessonAdministrationReadService",
@@ -13835,7 +13849,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
-                        "line":  7
+                        "line":  6
                     },
                     {
                         "name":  "DependencyInjection",
@@ -14095,6 +14109,13 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
                         "line":  6
+                    },
+                    {
+                        "name":  "AchievementMetricReader",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementMetricReader.cs",
+                        "line":  7
                     },
                     {
                         "name":  "UserAchievementStore",
@@ -21800,7 +21821,7 @@
                                      },
                                      {
                                          "interface":  "IAchievementEvaluationOutbox",
-                                         "interfacePath":  "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs",
                                          "implementation":  "AchievementEvaluationOutbox",
                                          "implementationPath":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutbox.cs",
                                          "confidence":  "naming-convention"
@@ -21810,6 +21831,13 @@
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs",
                                          "implementation":  "AchievementEvaluationOutboxProcessor",
                                          "implementationPath":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
+                                         "interface":  "IAchievementMetricReader",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs",
+                                         "implementation":  "AchievementMetricReader",
+                                         "implementationPath":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementMetricReader.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24157,18 +24185,25 @@
                                                  "implementation":  "AchievementDefinitionStore",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
-                                                 "line":  10
+                                                 "line":  9
                                              },
                                              {
                                                  "service":  "IUserAchievementStore",
                                                  "implementation":  "UserAchievementStore",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
-                                                 "line":  11
+                                                 "line":  10
                                              },
                                              {
                                                  "service":  "IAchievementEvaluationOutbox",
                                                  "implementation":  "AchievementEvaluationOutbox",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+                                                 "line":  11
+                                             },
+                                             {
+                                                 "service":  "IAchievementMetricReader",
+                                                 "implementation":  "AchievementMetricReader",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
                                                  "line":  12

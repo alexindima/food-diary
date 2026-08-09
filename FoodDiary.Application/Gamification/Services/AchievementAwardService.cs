@@ -13,8 +13,7 @@ public sealed class AchievementAwardService(
     TimeProvider timeProvider) : IAchievementAwardService {
     public async Task<IReadOnlyList<BadgeModel>> EvaluateAndGrantAsync(
         UserId userId,
-        int longestStreak,
-        int totalMeals,
+        AchievementMetricSnapshot metrics,
         CancellationToken cancellationToken = default,
         DateTime? earnedAtUtc = null) {
         IReadOnlyList<UserAchievement> existing = await achievementStore
@@ -27,7 +26,7 @@ public sealed class AchievementAwardService(
         IReadOnlyList<AchievementDefinition> visibleDefinitions = definitions
             .Where(definition => definition.IsActive || existingKeys.Contains(definition.Key))
             .ToList();
-        IReadOnlyList<BadgeModel> eligibility = GamificationCalculator.CalculateBadges(visibleDefinitions, longestStreak, totalMeals);
+        IReadOnlyList<BadgeModel> eligibility = GamificationCalculator.CalculateBadges(visibleDefinitions, metrics);
         DateTime normalizedEarnedAtUtc = earnedAtUtc ?? timeProvider.GetUtcNow().UtcDateTime;
         IReadOnlyDictionary<string, AchievementDefinition> definitionsByKey = visibleDefinitions
             .ToDictionary(definition => definition.Key, StringComparer.Ordinal);
@@ -36,7 +35,7 @@ public sealed class AchievementAwardService(
             .Where(badge => definitionsByKey[badge.Key].IsActive && badge.IsEarned && !existingKeys.Contains(badge.Key))
             .Select(badge => {
                 AchievementDefinition definition = definitionsByKey[badge.Key];
-                int earnedValue = GamificationCalculator.GetMetricValue(definition.Metric, longestStreak, totalMeals);
+                int earnedValue = GamificationCalculator.GetMetricValue(definition.Metric, metrics);
                 return new AchievementGrantModel(
                     badge.Key,
                     normalizedEarnedAtUtc,

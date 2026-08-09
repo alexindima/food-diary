@@ -48,6 +48,10 @@ export class AdminAchievementsComponent {
     protected readonly metricOptions: Array<FdUiSelectOption<AchievementMetric>> = [
         { value: 'LongestStreak', label: this.translateMetric('ADMIN_ACHIEVEMENTS.METRICS.LONGEST_STREAK') },
         { value: 'TotalMeals', label: this.translateMetric('ADMIN_ACHIEVEMENTS.METRICS.TOTAL_MEALS') },
+        {
+            value: 'TotalAcademyArticlesRead',
+            label: this.translateMetric('ADMIN_ACHIEVEMENTS.METRICS.TOTAL_ACADEMY_ARTICLES_READ'),
+        },
     ];
     protected readonly formModel = signal<CreateAdminAchievementDefinitionRequest>({ ...EMPTY_MODEL });
     protected readonly form = form(this.formModel, path => {

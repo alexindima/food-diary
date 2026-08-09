@@ -1,6 +1,8 @@
 using FoodDiary.Application.Abstractions.Achievements.Models;
 using FoodDiary.Domain.Entities.Achievements;
+using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Achievements;
 using Microsoft.EntityFrameworkCore;
@@ -98,9 +100,35 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
 
         IReadOnlyList<AchievementDefinition> active = await store.GetActiveAsync();
         Assert.Multiple(
-            () => Assert.Equal(10, seeded.Count),
+            () => Assert.Equal(14, seeded.Count),
+            () => Assert.Contains(seeded, item =>
+                string.Equals(item.Key, "academy_articles_25", StringComparison.Ordinal) &&
+                item.Metric == AchievementMetric.TotalAcademyArticlesRead),
             () => Assert.DoesNotContain(active, item => string.Equals(item.Key, "streak_3", StringComparison.Ordinal)),
             () => Assert.Equal(2, definition.Version));
+    }
+
+    [RequiresDockerFact]
+    public async Task AchievementMetricReader_CountsOnlyCompletedArticlesForRequestedUser() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"academy-reader-{Guid.NewGuid():N}@example.com", "hash");
+        var otherUser = User.Create($"academy-other-{Guid.NewGuid():N}@example.com", "hash");
+        var firstLesson = NutritionLesson.Create(
+            "First", "Content", summary: null, "en", LessonCategory.NutritionBasics, LessonDifficulty.Beginner, 3);
+        var secondLesson = NutritionLesson.Create(
+            "Second", "Content", summary: null, "en", LessonCategory.NutritionBasics, LessonDifficulty.Beginner, 3);
+        context.Users.AddRange(user, otherUser);
+        context.NutritionLessons.AddRange(firstLesson, secondLesson);
+        context.UserLessonProgress.AddRange(
+            UserLessonProgress.Create(user.Id, firstLesson.Id, DateTime.UtcNow),
+            UserLessonProgress.Create(user.Id, secondLesson.Id, DateTime.UtcNow),
+            UserLessonProgress.Create(otherUser.Id, firstLesson.Id, DateTime.UtcNow));
+        await context.SaveChangesAsync();
+        var reader = new AchievementMetricReader(context);
+
+        int completedArticles = await reader.GetCompletedAcademyArticleCountAsync(user.Id);
+
+        Assert.Equal(2, completedArticles);
     }
 
     [RequiresDockerFact]

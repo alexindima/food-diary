@@ -1,4 +1,5 @@
 using FoodDiary.Results;
+using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Consumptions.Common;
@@ -12,6 +13,7 @@ public sealed class GamificationReadService(
     IMealActivityReadService mealActivityReadService,
     IDashboardStatisticsReadService statisticsReadService,
     IGamificationUserProfileService userProfileService,
+    IAchievementMetricReader achievementMetricReader,
     IAchievementAwardService achievementAwardService,
     TimeProvider dateTimeProvider)
     : IGamificationReadService {
@@ -29,6 +31,9 @@ public sealed class GamificationReadService(
         (int currentStreak, int longestStreak) = GamificationCalculator.CalculateStreaks(mealDates, today);
 
         int totalMeals = await mealActivityReadService.GetTotalMealCountAsync(userId, cancellationToken).ConfigureAwait(false);
+        int totalAcademyArticlesRead = await achievementMetricReader
+            .GetCompletedAcademyArticleCountAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
 
         DateTime weekStart = today.AddDays(-6);
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> weeklyCaloriesResult = await statisticsReadService.GetStatisticsAsync(
@@ -46,7 +51,10 @@ public sealed class GamificationReadService(
             ToDailyCalories(weeklyCaloriesResult.Value), userProfile.GetCalorieTargetForDate, today);
 
         IReadOnlyList<BadgeModel> badges = await achievementAwardService
-            .EvaluateAndGrantAsync(userId, longestStreak, totalMeals, cancellationToken)
+            .EvaluateAndGrantAsync(
+                userId,
+                new AchievementMetricSnapshot(longestStreak, totalMeals, totalAcademyArticlesRead),
+                cancellationToken)
             .ConfigureAwait(false);
         int healthScore = GamificationCalculator.CalculateHealthScore(currentStreak, weeklyAdherence, totalMeals);
 

@@ -652,7 +652,8 @@
         },
         "METRICS": {
             "LONGEST_STREAK": "Longest streak",
-            "TOTAL_MEALS": "Total meals"
+            "TOTAL_MEALS": "Total meals",
+            "TOTAL_ACADEMY_ARTICLES_READ": "Academy articles read"
         },
         "ERRORS": {
             "LOAD": "Failed to load achievement definitions.",
