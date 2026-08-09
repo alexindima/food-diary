@@ -21,6 +21,8 @@ export type FdUiLineChartSeries = {
 };
 
 export type FdUiLineChartDensity = 'default' | 'sparkline';
+export type FdUiLineChartHorizontalEdgeInset = 'default' | 'none';
+export type FdUiLineChartVerticalEdgeInset = 'default' | 'none';
 
 type FdUiLineChartPointViewModel = {
     label: string;
@@ -165,17 +167,28 @@ export class FdUiLineChartComponent {
     public readonly referenceLines = input<readonly FdUiLineChartReferenceLine[]>([]);
     public readonly xAxisLabelLayout = input<FdUiLineChartXAxisLabelLayout>('angled');
     public readonly valueSuffix = input('');
+    public readonly axisValueSuffix = input<string | null>(null);
+    public readonly axisUnit = input('');
     public readonly axisDecimalPlaces = input(DEFAULT_AXIS_DECIMAL_PLACES);
+    public readonly axisValueFormatter = input<((value: number) => string) | null>(null);
     public readonly density = input<FdUiLineChartDensity>('default');
+    public readonly horizontalEdgeInset = input<FdUiLineChartHorizontalEdgeInset>('default');
+    public readonly verticalEdgeInset = input<FdUiLineChartVerticalEdgeInset>('default');
 
     protected readonly viewBox = `0 0 ${LINE_CHART_VIEWBOX_WIDTH} ${LINE_CHART_VIEWBOX_HEIGHT}`;
-    protected readonly chartLeft = computed(() => (this.density() === 'sparkline' ? LINE_CHART_SPARKLINE_LEFT_X : LINE_CHART_LEFT_X));
-    protected readonly chartRight = computed(() => (this.density() === 'sparkline' ? LINE_CHART_SPARKLINE_RIGHT_X : LINE_CHART_RIGHT_X));
-    protected readonly chartTop = computed(() => this.chartPadding());
+    protected readonly chartLeft = computed(() =>
+        this.density() === 'sparkline' || this.horizontalEdgeInset() === 'none' ? LINE_CHART_SPARKLINE_LEFT_X : LINE_CHART_LEFT_X,
+    );
+    protected readonly chartRight = computed(() =>
+        this.density() === 'sparkline' || this.horizontalEdgeInset() === 'none' ? LINE_CHART_SPARKLINE_RIGHT_X : LINE_CHART_RIGHT_X,
+    );
+    protected readonly chartTop = computed(() => (this.verticalEdgeInset() === 'none' ? 0 : this.chartPadding()));
     protected readonly chartBottom = computed(() =>
-        this.xAxisLabelLayout() === 'stacked'
-            ? LINE_CHART_VIEWBOX_HEIGHT - LINE_CHART_STACKED_AXIS_BOTTOM_PADDING
-            : LINE_CHART_VIEWBOX_HEIGHT - this.chartPadding(),
+        this.verticalEdgeInset() === 'none'
+            ? LINE_CHART_VIEWBOX_HEIGHT
+            : this.xAxisLabelLayout() === 'stacked'
+              ? LINE_CHART_VIEWBOX_HEIGHT - LINE_CHART_STACKED_AXIS_BOTTOM_PADDING
+              : LINE_CHART_VIEWBOX_HEIGHT - this.chartPadding(),
     );
     private readonly areaBaseline = computed(() =>
         this.density() === 'sparkline' ? this.chartBottom() + LINE_CHART_SPARKLINE_AREA_BASELINE_OFFSET : this.chartBottom(),
@@ -275,14 +288,13 @@ export class FdUiLineChartComponent {
     protected readonly gridLines = computed<readonly FdUiLineChartGridLine[]>(() => {
         const minValue = this.resolvedMinValue();
         const maxValue = this.resolvedMaxValue();
-        const padding = this.chartPadding();
         const availableHeight = this.chartBottom() - this.chartTop();
         const step = availableHeight / (LINE_CHART_GRID_LINE_COUNT - 1);
         const valueStep = (maxValue - minValue) / (LINE_CHART_GRID_LINE_COUNT - 1);
 
         return Array.from({ length: LINE_CHART_GRID_LINE_COUNT }, (_, index) => {
             const reversedIndex = LINE_CHART_GRID_LINE_COUNT - 1 - index;
-            const y = padding + step * index;
+            const y = this.chartTop() + step * index;
 
             return {
                 y,
@@ -506,7 +518,7 @@ export class FdUiLineChartComponent {
                 series.points.map(point => {
                     const seriesLabel = shouldPrefixSeriesLabel && series.label.trim().length > 0 ? `${series.label} ` : '';
 
-                    return `${seriesLabel}${point.label} ${this.formatAxisValue(point.value)}`;
+                    return `${seriesLabel}${point.label} ${this.formatDataValue(point.value)}`;
                 }),
             )
             .join(', ');
@@ -585,7 +597,7 @@ export class FdUiLineChartComponent {
                 xPercent: `${x}%`,
                 yPercent: `${(y / LINE_CHART_VIEWBOX_HEIGHT) * LINE_CHART_PERCENTAGE_SCALE}%`,
                 color: series.color,
-                tooltip: `${tooltipPrefix}${label}: ${this.formatAxisValue(value)}`,
+                tooltip: `${tooltipPrefix}${label}: ${this.formatDataValue(value)}`,
             });
         });
 
@@ -620,13 +632,30 @@ export class FdUiLineChartComponent {
     }
 
     private formatAxisValue(value: number): string {
+        const formatter = this.axisValueFormatter();
+        const formatted = formatter === null ? this.formatNumericValue(value) : formatter(value);
+        return this.withSuffix(formatted, this.axisValueSuffix() ?? this.valueSuffix());
+    }
+
+    private formatDataValue(value: number): string {
+        return this.formatValue(value, this.valueSuffix());
+    }
+
+    private formatValue(value: number, valueSuffix: string): string {
         if (!Number.isFinite(value)) {
             return '';
         }
 
+        return this.withSuffix(this.formatNumericValue(value), valueSuffix);
+    }
+
+    private formatNumericValue(value: number): string {
         const decimals = Math.max(0, this.axisDecimalPlaces());
-        const formatted = Number.isInteger(value) ? String(value) : value.toFixed(decimals).replace(/\.?0+$/, '');
-        const suffix = this.valueSuffix().trim();
+        return Number.isInteger(value) ? String(value) : value.toFixed(decimals).replace(/\.?0+$/, '');
+    }
+
+    private withSuffix(formatted: string, valueSuffix: string): string {
+        const suffix = valueSuffix.trim();
 
         return suffix.length > 0 ? `${formatted} ${suffix}` : formatted;
     }

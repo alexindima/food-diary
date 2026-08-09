@@ -1,0 +1,222 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+    min-width: 0;
+    container-type: inline-size;
+}
+
+.statistics-overview-card {
+    &__layout {
+        display: grid;
+        grid-template-columns: minmax(380px, 1.05fr) minmax(380px, 1.35fr) minmax(190px, 0.55fr);
+        gap: var(--fd-space-xl);
+        align-items: stretch;
+    }
+
+    &__summary,
+    &__nutrients {
+        padding-right: var(--fd-space-xl);
+        border-right: var(--fd-border-subtle);
+    }
+
+    &__title {
+        margin: 0;
+    }
+
+    &__calories {
+        margin-top: var(--fd-space-lg);
+        display: grid;
+        grid-template-columns: minmax(240px, 300px) auto;
+        align-items: center;
+    }
+
+    &__ring {
+        position: relative;
+        flex: 0 0 auto;
+        width: min(100%, 300px);
+        aspect-ratio: 1;
+        border-radius: 50%;
+    }
+
+    &__ring svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+    }
+
+    &__ring circle {
+        fill: none;
+        stroke-width: 18;
+        stroke-linecap: round;
+    }
+
+    &__ring-track {
+        stroke: var(--fd-color-border-summary-track);
+    }
+
+    &__ring-progress {
+        stroke: var(--fd-color-primary-500);
+        stroke-dashoffset: 0;
+        animation: statistics-overview-ring-reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    &__ring-center {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        gap: var(--fd-space-xxs);
+        text-align: center;
+    }
+
+    &__comparison--positive strong {
+        color: var(--fd-color-success);
+    }
+
+    &__nutrients {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: var(--fd-space-lg);
+    }
+
+    &__nutrient {
+        --statistics-nutrient-color: var(--fd-color-primary-600);
+        --statistics-nutrient-gradient: linear-gradient(90deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
+    }
+
+    &__nutrient--carbs {
+        --statistics-nutrient-color: var(--fd-color-sky-500);
+        --statistics-nutrient-gradient: linear-gradient(90deg, var(--fd-color-teal-500), var(--fd-color-sky-500));
+    }
+
+    &__nutrient--fat {
+        --statistics-nutrient-color: var(--fd-color-orange-500);
+        --statistics-nutrient-gradient: linear-gradient(90deg, var(--fd-color-amber-500), var(--fd-color-orange-500));
+    }
+
+    &__nutrient--fiber {
+        --statistics-nutrient-color: var(--fd-color-rose-500);
+        --statistics-nutrient-gradient: linear-gradient(90deg, var(--fd-color-rose-500), var(--fd-color-rose-500));
+    }
+
+    &__nutrient-label fd-ui-icon,
+    &__completeness-heading fd-ui-icon {
+        color: var(--statistics-nutrient-color, var(--fd-color-primary-500));
+    }
+
+    &__progress {
+        --fd-progress-height: var(--fd-size-progress-height-xl);
+        --fd-progress-radius: var(--fd-radius-pill);
+        --fd-progress-track-background: var(--fd-bg-progress-track-strong);
+        margin-top: var(--fd-space-xs);
+        overflow: hidden;
+    }
+
+    &__nutrient-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: baseline;
+        gap: var(--fd-space-md);
+    }
+
+    &__progress-value {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--statistics-nutrient-gradient);
+    }
+
+    &__completeness {
+        justify-content: center;
+    }
+
+    &__completeness p {
+        margin: 0;
+    }
+
+    @container (max-width: 1050px) {
+        &__layout {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        &__nutrients {
+            padding-right: 0;
+            border-right: 0;
+        }
+
+        &__completeness {
+            grid-column: 1 / -1;
+            padding-top: var(--fd-space-lg);
+            border-top: var(--fd-border-subtle);
+        }
+    }
+
+    @media #{variables.$media-tablet} {
+        &__layout {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        &__calories {
+            grid-template-columns: minmax(220px, 300px) auto;
+        }
+
+        &__nutrients {
+            padding-right: 0;
+            border-right: 0;
+        }
+
+        &__completeness {
+            grid-column: 1 / -1;
+            padding-top: var(--fd-space-lg);
+            border-top: var(--fd-border-subtle);
+        }
+    }
+
+    @media #{variables.$media-mobile} {
+        &__layout {
+            grid-template-columns: 1fr;
+        }
+
+        &__summary,
+        &__nutrients {
+            padding-right: 0;
+            padding-bottom: var(--fd-space-lg);
+            border-right: 0;
+            border-bottom: var(--fd-border-subtle);
+        }
+
+        &__calories {
+            grid-template-columns: 1fr;
+            justify-items: center;
+            gap: var(--fd-space-md);
+        }
+
+        &__ring {
+            width: min(100%, 260px);
+        }
+
+        &__completeness {
+            grid-column: auto;
+            padding-top: 0;
+            border-top: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__ring-progress {
+            animation: none;
+        }
+    }
+}
+
+@keyframes statistics-overview-ring-reveal {
+    from {
+        stroke-dashoffset: var(--statistics-overview-ring-length);
+    }
+}

@@ -1723,16 +1723,16 @@
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
-                           "message":  "throw new ArgumentOutOfRangeException(nameof(value), \"Reason must be between 10 and 500 characters.\")",
+                           "message":  "throw new ArgumentOutOfRangeException(nameof(value), \"Reason must be between 10 and 500 characters.\") : trimmed",
                            "path":  "FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs",
-                           "line":  54
+                           "line":  53
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
                            "path":  "FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs",
-                           "line":  70
+                           "line":  66
                        },
                        {
                            "area":  "FoodDiary",
@@ -2152,7 +2152,7 @@
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(nameof(value), \"Preferred portion amount must be a positive finite number.\")",
                            "path":  "FoodDiary.Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
-                           "line":  77
+                           "line":  81
                        },
                        {
                            "area":  "FoodDiary",
@@ -2999,49 +2999,49 @@
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(paramName, \"Value must be in range [0, 10].\") : value",
                            "path":  "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-                           "line":  235
+                           "line":  231
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(nameof(value), \"Average cycle length must be in range [18, 60].\")",
                            "path":  "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-                           "line":  240
+                           "line":  236
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(nameof(value), \"Average period length must be in range [1, 14].\")",
                            "path":  "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-                           "line":  247
+                           "line":  243
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(nameof(value), \"Luteal length must be in range [8, 18].\")",
                            "path":  "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-                           "line":  254
+                           "line":  250
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentException",
                            "message":  "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
                            "path":  "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-                           "line":  260
+                           "line":  256
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(paramName, \"Value must be one of the supported values.\")",
                            "path":  "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-                           "line":  267
+                           "line":  263
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentException",
                            "message":  "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
                            "path":  "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-                           "line":  274
+                           "line":  270
                        },
                        {
                            "area":  "FoodDiary",
@@ -3125,28 +3125,28 @@
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(nameof(values), $\"A maximum of {MaxSymptomsCount} symptoms is allowed.\")",
                            "path":  "FoodDiary.Domain/Entities/Tracking/Fasting/FastingCheckIn.cs",
-                           "line":  91
+                           "line":  90
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(nameof(values), $\"Symptoms must be at most {SymptomsMaxLength} characters in total.\")",
                            "path":  "FoodDiary.Domain/Entities/Tracking/Fasting/FastingCheckIn.cs",
-                           "line":  96
+                           "line":  94
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(nameof(value), $\"Notes must be at most {NotesMaxLength} characters.\")",
                            "path":  "FoodDiary.Domain/Entities/Tracking/Fasting/FastingCheckIn.cs",
-                           "line":  107
+                           "line":  106
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
-                           "message":  "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\")",
+                           "message":  "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
                            "path":  "FoodDiary.Domain/Entities/Tracking/Fasting/FastingCheckIn.cs",
-                           "line":  113
+                           "line":  111
                        },
                        {
                            "area":  "FoodDiary",
@@ -3410,37 +3410,37 @@
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
-                           "message":  "throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+                           "message":  "throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\")) : normalized",
                            "path":  "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs",
-                           "line":  96
+                           "line":  95
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
-                           "message":  "throw new ArgumentOutOfRangeException(paramName, \"Value must be between 1 and 168.\")",
+                           "message":  "throw new ArgumentOutOfRangeException(paramName, \"Value must be between 1 and 168.\"),",
                            "path":  "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs",
-                           "line":  108
+                           "line":  101
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
-                           "message":  "throw new ArgumentOutOfRangeException(paramName, \"Value must be between 1 and 5.\")",
+                           "message":  "throw new ArgumentOutOfRangeException(paramName, \"Value must be between 1 and 5.\"),",
                            "path":  "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs",
-                           "line":  120
+                           "line":  109
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(paramName, \"Value must be non-negative.\"),",
                            "path":  "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs",
-                           "line":  129
+                           "line":  117
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
                            "path":  "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs",
-                           "line":  135
+                           "line":  123
                        },
                        {
                            "area":  "FoodDiary",
@@ -3480,16 +3480,16 @@
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
-                           "message":  "throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+                           "message":  "throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\")) : normalized",
                            "path":  "FoodDiary.Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-                           "line":  80
+                           "line":  79
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
                            "path":  "FoodDiary.Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-                           "line":  87
+                           "line":  83
                        },
                        {
                            "area":  "FoodDiary",

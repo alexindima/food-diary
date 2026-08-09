@@ -2,6 +2,7 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiIconComponent } from 'fd-ui-kit';
 import { merge, startWith } from 'rxjs';
 
 import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboard-widget-frame';
@@ -27,7 +28,7 @@ type DayNutritionSummaryData = {
 
 @Component({
     selector: 'fd-day-nutrition-summary',
-    imports: [DecimalPipe, TranslatePipe, DashboardWidgetFrameComponent],
+    imports: [DecimalPipe, TranslatePipe, DashboardWidgetFrameComponent, FdUiIconComponent],
     templateUrl: './day-nutrition-summary.html',
     styleUrl: './day-nutrition-summary.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,6 +76,10 @@ export class DayNutritionSummaryComponent {
             };
         });
     });
+
+    protected getNutrientIcon(id: string): string {
+        return id === 'protein' ? 'fitness_center' : id === 'carbs' ? 'grass' : id === 'fats' ? 'water_drop' : 'spa';
+    }
 
     private buildComparisonText(current: number, target: number, unit: string): string {
         const difference = Math.round(Math.abs(target - current));

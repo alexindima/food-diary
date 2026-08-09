@@ -8,6 +8,7 @@ import { provideTranslateTesting } from '../../../../testing/translate-testing.m
 import type { SummaryMetrics } from '../../../components/shared/statistics-summary/statistics-summary';
 import type { ExportFormat } from '../../../shared/models/export.models';
 import { StatisticsFacade } from '../lib/statistics.facade';
+import type { StatisticsDashboardCardsView } from '../lib/statistics-dashboard-card.mapper';
 import type { BodyChartTab, DateRange, NutritionChartTab, StatisticsRange } from '../lib/statistics-data-mapper';
 import { StatisticsComponent } from './statistics';
 
@@ -23,6 +24,7 @@ type StatisticsFacadeMock = {
     changeNutritionTab: ReturnType<typeof vi.fn>;
     changeRange: ReturnType<typeof vi.fn>;
     currentRange: ReturnType<typeof signal<DateRange>>;
+    dashboardCardsView: ReturnType<typeof signal<StatisticsDashboardCardsView>>;
     customRangeForm: FieldTree<{ range: { start: Date | null; end: Date | null } | null }>;
     exportDiary: ReturnType<typeof vi.fn>;
     exportingFormat: ReturnType<typeof signal<ExportFormat | null>>;
@@ -48,6 +50,21 @@ type StatisticsFacadeMock = {
 function createStatisticsFacadeMock(): StatisticsFacadeMock {
     const customRangeModel = signal<{ range: { start: Date | null; end: Date | null } | null }>({ range: null });
     const customRangeForm = form(customRangeModel);
+    const dashboardCardsView: StatisticsDashboardCardsView = {
+        overview: {
+            daysWithinGoal: 0,
+            trackedDays: 0,
+            periodDays: 7,
+            averageCalories: 0,
+            calorieGoal: 0,
+            calorieChangePercent: null,
+            nutrients: [],
+        },
+        days: [],
+        insights: [],
+        balance: [],
+        body: { currentWeight: null, change: null, timeframeDays: 7, points: [] },
+    };
 
     return {
         selectedRange: signal('week'),
@@ -55,6 +72,7 @@ function createStatisticsFacadeMock(): StatisticsFacadeMock {
         selectedBodyTab: signal('weight'),
         customRangeForm,
         currentRange: signal(RANGE),
+        dashboardCardsView: signal(dashboardCardsView),
         isLoading: signal(false),
         isBodyLoading: signal(false),
         hasLoadError: signal(false),

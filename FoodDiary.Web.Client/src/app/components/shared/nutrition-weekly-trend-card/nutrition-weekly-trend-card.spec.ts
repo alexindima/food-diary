@@ -22,13 +22,12 @@ describe('NutritionWeeklyTrendCardComponent', () => {
         const fixture = await setupAsync();
         const element = fixture.nativeElement as HTMLElement;
 
-        expect(element.querySelectorAll('.nutrition-trend__bar')).toHaveLength(TREND_DAYS);
-        expect(element.querySelectorAll('.nutrition-trend__bar[tabindex="0"]')).toHaveLength(TREND_DAYS);
-        expect(element.querySelectorAll('.nutrition-trend__segment')).toHaveLength(EXPECTED_SEGMENT_COUNT);
+        expect(element.querySelectorAll('.fd-ui-bar-chart__categorical-bar')).toHaveLength(TREND_DAYS);
+        expect(element.querySelectorAll('.fd-ui-bar-chart__categorical-bar[tabindex="0"]')).toHaveLength(TREND_DAYS);
+        expect(element.querySelectorAll('.fd-ui-bar-chart__categorical-segment')).toHaveLength(EXPECTED_SEGMENT_COUNT);
         expect(element.querySelector('.nutrition-trend__insight')?.textContent).toContain('NUTRITION_TREND.INSIGHT.CARB_EXCESS_TITLE');
-        expect(element.querySelector('.nutrition-trend__goal strong')?.textContent).toContain('2,258');
-        expect(element.querySelectorAll('.nutrition-trend__date')).toHaveLength(TREND_DAYS);
-        expect(element.querySelector('.nutrition-trend__date')?.children).toHaveLength(2);
+        expect(element.querySelector('.fd-ui-bar-chart__reference-line')?.textContent).toContain('2,258');
+        expect(element.querySelectorAll('.fd-ui-bar-chart__categorical-labels span')).toHaveLength(TREND_DAYS);
         expect(element.querySelector('.nutrition-trend__legend')?.textContent).not.toContain('NUTRITION_TREND.GOAL');
     });
 
@@ -70,13 +69,12 @@ describe('NutritionWeeklyTrendCardComponent', () => {
 
         expect(range?.textContent).toContain('NUTRITION_TREND.SEVEN_DAYS');
         expect(range?.getAttribute('aria-label')).toBe('NUTRITION_TREND.RANGE_LABEL');
-        expect(element.querySelectorAll('.nutrition-trend__bar')).toHaveLength(TREND_DAYS);
+        expect(element.querySelectorAll('.fd-ui-bar-chart__categorical-bar')).toHaveLength(TREND_DAYS);
 
         fixture.componentInstance['changeVisibleDays'](SHORT_TREND_DAYS);
         fixture.detectChanges();
 
-        expect(element.querySelectorAll('.nutrition-trend__bar')).toHaveLength(SHORT_TREND_DAYS);
-        expect(element.querySelector('.nutrition-trend__bars--three-days')).not.toBeNull();
+        expect(element.querySelectorAll('.fd-ui-bar-chart__categorical-bar')).toHaveLength(SHORT_TREND_DAYS);
     });
 });
 

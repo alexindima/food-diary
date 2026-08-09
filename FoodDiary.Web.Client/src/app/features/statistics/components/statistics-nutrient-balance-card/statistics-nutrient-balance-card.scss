@@ -1,0 +1,94 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+    min-width: 0;
+}
+
+.statistics-nutrient-balance-card {
+    &__subtitle {
+        margin: 0 0 var(--fd-space-md);
+    }
+
+    &__table {
+        min-width: 0;
+    }
+
+    &__row {
+        --statistics-nutrient-color: var(--fd-color-blue-500);
+        display: grid;
+        grid-template-columns: minmax(130px, 1.1fr) minmax(90px, 0.65fr) minmax(90px, 0.65fr) minmax(180px, 1.45fr);
+        gap: var(--fd-space-md);
+        align-items: center;
+        min-height: var(--fd-size-control-lg);
+        border-bottom: var(--fd-border-subtle);
+    }
+
+    &__row:last-child {
+        border-bottom: 0;
+    }
+
+    &__row--header {
+        min-height: var(--fd-size-control-md);
+    }
+
+    &__row--fat {
+        --statistics-nutrient-color: var(--fd-color-yellow-300);
+    }
+
+    &__row--carbs {
+        --statistics-nutrient-color: var(--fd-color-green-500);
+    }
+
+    &__row--fiber {
+        --statistics-nutrient-color: var(--fd-color-purple-500);
+    }
+
+    &__label {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fd-space-sm);
+    }
+
+    &__label i {
+        width: var(--fd-space-sm);
+        height: var(--fd-space-sm);
+        border-radius: var(--fd-radius-pill);
+        background: var(--statistics-nutrient-color);
+    }
+
+    &__completion {
+        display: grid;
+        grid-template-columns: minmax(80px, 1fr) auto;
+        gap: var(--fd-space-sm);
+        align-items: center;
+    }
+
+    &__progress {
+        height: var(--fd-size-progress-height-md);
+        overflow: hidden;
+    }
+
+    &__progress > span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--statistics-nutrient-color);
+    }
+
+    @media #{variables.$media-mobile} {
+        &__row--header {
+            display: none;
+        }
+
+        &__row {
+            grid-template-columns: minmax(110px, 1fr) auto auto;
+            gap: var(--fd-space-sm);
+            padding: var(--fd-space-sm) 0;
+        }
+
+        &__completion {
+            grid-column: 1 / -1;
+        }
+    }
+}

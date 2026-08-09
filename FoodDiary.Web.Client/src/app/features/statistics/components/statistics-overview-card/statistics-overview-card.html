@@ -1,0 +1,107 @@
+<fd-ui-card class="statistics-overview-card">
+    <div class="statistics-overview-card__layout">
+        <section class="statistics-overview-card__summary" [attr.aria-label]="'STATISTICS.DASHBOARD.OVERVIEW.TITLE' | translate">
+            <div class="fd-stack fd-gap-xs">
+                <h2 class="statistics-overview-card__title fd-ui-card-title">{{ 'STATISTICS.DASHBOARD.OVERVIEW.TITLE' | translate }}</h2>
+                <strong class="statistics-overview-card__headline fd-ui-section-title">
+                    {{
+                        'STATISTICS.DASHBOARD.OVERVIEW.DAYS_WITHIN_GOAL'
+                            | translate: { current: data().daysWithinGoal, total: data().periodDays }
+                    }}
+                </strong>
+            </div>
+
+            <div class="statistics-overview-card__calories fd-row fd-align-center fd-gap-lg">
+                <div
+                    class="statistics-overview-card__ring"
+                    role="progressbar"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    [attr.aria-label]="'STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_CALORIES' | translate"
+                    [attr.aria-valuenow]="calorieProgress()"
+                >
+                    <svg
+                        viewBox="0 0 240 240"
+                        aria-hidden="true"
+                        focusable="false"
+                        [style.--statistics-overview-ring-length]="ringCircumference"
+                    >
+                        <circle class="statistics-overview-card__ring-track" cx="120" cy="120" r="104" />
+                        <circle
+                            class="statistics-overview-card__ring-progress"
+                            cx="120"
+                            cy="120"
+                            r="104"
+                            [attr.stroke-dasharray]="ringDasharray()"
+                        />
+                    </svg>
+                    <div class="statistics-overview-card__ring-center fd-place-center">
+                        <strong class="fd-ui-metric-lg">{{ data().averageCalories | number: '1.0-0' }}</strong>
+                        <span class="fd-ui-body-sm"
+                            >/ {{ data().calorieGoal | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span
+                        >
+                        <span class="fd-ui-caption fd-ui-text-muted">{{
+                            'STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_PER_DAY' | translate
+                        }}</span>
+                    </div>
+                </div>
+
+                @let calorieChangePercent = data().calorieChangePercent;
+                @if (calorieChangePercent !== null) {
+                    <div
+                        class="statistics-overview-card__comparison fd-stack fd-gap-xxs"
+                        [class.statistics-overview-card__comparison--positive]="calorieChangePercent < 0"
+                    >
+                        <strong class="fd-ui-metric-md">
+                            {{ calorieChangePercent > 0 ? '+' : '' }}{{ calorieChangePercent | number: '1.0-0' }}%
+                        </strong>
+                        <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.OVERVIEW.VS_GOAL' | translate }}</span>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <section class="statistics-overview-card__nutrients" [attr.aria-label]="'STATISTICS.DASHBOARD.OVERVIEW.NUTRIENTS' | translate">
+            @for (nutrient of data().nutrients; track nutrient.key) {
+                <div
+                    class="statistics-overview-card__nutrient"
+                    [class.statistics-overview-card__nutrient--protein]="nutrient.key === 'protein'"
+                    [class.statistics-overview-card__nutrient--fat]="nutrient.key === 'fat'"
+                    [class.statistics-overview-card__nutrient--carbs]="nutrient.key === 'carbs'"
+                    [class.statistics-overview-card__nutrient--fiber]="nutrient.key === 'fiber'"
+                >
+                    <div class="statistics-overview-card__nutrient-header">
+                        <span class="statistics-overview-card__nutrient-label fd-row fd-align-center fd-gap-sm fd-ui-action-text">
+                            <fd-ui-icon [name]="getNutrientIcon(nutrient.key)" />
+                            {{ getNutrientLabelKey(nutrient.key) | translate }}
+                        </span>
+                        <span class="fd-ui-body-sm">
+                            {{ nutrient.current | number: '1.0-1' }} / {{ nutrient.goal | number: '1.0-1' }}
+                            {{ 'GENERAL.UNITS.G' | translate }}
+                        </span>
+                    </div>
+                    <div
+                        class="statistics-overview-card__progress fd-ui-progress-track"
+                        role="progressbar"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        [attr.aria-label]="getNutrientLabelKey(nutrient.key) | translate"
+                        [attr.aria-valuenow]="getNutrientProgress(nutrient)"
+                    >
+                        <span class="statistics-overview-card__progress-value" [style.width.%]="getNutrientProgress(nutrient)"></span>
+                    </div>
+                </div>
+            }
+        </section>
+
+        <aside class="statistics-overview-card__completeness fd-stack fd-gap-sm">
+            <div class="statistics-overview-card__completeness-heading fd-row fd-align-center fd-gap-sm">
+                <fd-ui-icon name="calendar_month" />
+                <span class="fd-ui-action-text">{{ 'STATISTICS.DASHBOARD.OVERVIEW.DIARY_COMPLETENESS' | translate }}</span>
+            </div>
+            <strong class="fd-ui-metric-lg">{{ data().trackedDays }} / {{ data().periodDays }}</strong>
+            <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.OVERVIEW.DAYS' | translate }}</span>
+            <p class="fd-ui-body-sm fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.OVERVIEW.COMPLETENESS_HINT' | translate }}</p>
+        </aside>
+    </div>
+</fd-ui-card>

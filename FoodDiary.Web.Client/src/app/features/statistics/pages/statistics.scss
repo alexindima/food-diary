@@ -46,6 +46,18 @@
         }
     }
 
+    &__new-cards {
+        display: flex;
+        flex-direction: column;
+        gap: var(--fd-page-body-gap);
+    }
+
+    &__new-cards-bottom {
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.85fr);
+        gap: var(--fd-page-body-gap);
+    }
+
     &__skeleton-grid {
         display: grid;
         gap: var(--fd-space-card-content-gap);
@@ -64,6 +76,10 @@
     }
 
     @media #{variables.$media-mobile} {
+        &__new-cards-bottom {
+            grid-template-columns: 1fr;
+        }
+
         &__header {
             align-items: flex-start;
         }

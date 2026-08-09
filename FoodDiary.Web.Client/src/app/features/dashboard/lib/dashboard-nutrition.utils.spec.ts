@@ -138,8 +138,8 @@ function registerNutrientSignalTests(): void {
             expect(result[0].id).toBe('protein');
             expect(result[0].current).toBe(PROTEIN);
             expect(result[0].target).toBe(PROTEIN_GOAL);
-            expect(result[1].id).toBe('carbs');
-            expect(result[2].id).toBe('fats');
+            expect(result[1].id).toBe('fats');
+            expect(result[2].id).toBe('carbs');
             expect(result[3].id).toBe('fiber');
         });
     });

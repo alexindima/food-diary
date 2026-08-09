@@ -8,6 +8,7 @@ const CHART_LEFT_X = 2;
 const CHART_RIGHT_X = 98;
 const SPARKLINE_CHART_LEFT_X = 0;
 const SPARKLINE_CHART_RIGHT_X = 100;
+const EDGE_CHART_BOTTOM_Y = 64;
 const CHART_TOP_Y = 6;
 const CHART_BOTTOM_Y = 58;
 const SPARKLINE_AREA_BASELINE_Y = 63.2;
@@ -257,6 +258,32 @@ describe('FdUiLineChartComponent', () => {
         expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('80 kg');
     });
 
+    it('can plot against both vertical edges without an internal inset', () => {
+        fixture.componentRef.setInput('points', [
+            { label: 'Mon', value: 0 },
+            { label: 'Tue', value: EXPLICIT_MAX_VALUE },
+        ]);
+        fixture.componentRef.setInput('minValue', 0);
+        fixture.componentRef.setInput('maxValue', EXPLICIT_MAX_VALUE);
+        fixture.componentRef.setInput('verticalEdgeInset', 'none');
+        fixture.detectChanges();
+
+        expect(component['chartTop']()).toBe(0);
+        expect(component['chartBottom']()).toBe(EDGE_CHART_BOTTOM_Y);
+    });
+
+    it('can plot against both horizontal edges without an internal inset', () => {
+        fixture.componentRef.setInput('points', [
+            { label: 'Mon', value: 0 },
+            { label: 'Tue', value: EXPLICIT_MAX_VALUE },
+        ]);
+        fixture.componentRef.setInput('horizontalEdgeInset', 'none');
+        fixture.detectChanges();
+
+        expect(component['chartLeft']()).toBe(0);
+        expect(component['chartRight']()).toBe(SPARKLINE_CHART_RIGHT_X);
+    });
+
     it('supports stacked x-axis labels', () => {
         fixture.componentRef.setInput('points', [
             { label: '05\nJul', value: 80 },
@@ -337,6 +364,45 @@ describe('FdUiLineChartComponent', () => {
 
         expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('8000 kcal');
         expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).not.toContain('7901 kcal');
+    });
+
+    it('can hide the suffix on the y-axis without removing it from point tooltips', () => {
+        fixture.componentRef.setInput('points', [
+            { label: 'May', value: 0 },
+            { label: 'June', value: HIGH_CALORIE_VALUE },
+        ]);
+        fixture.componentRef.setInput('showAxisLabels', true);
+        fixture.componentRef.setInput('valueSuffix', 'kcal');
+        fixture.componentRef.setInput('axisValueSuffix', '');
+        fixture.detectChanges();
+
+        expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).not.toContain('kcal');
+        expect(host().querySelector('.fd-ui-line-chart__point')?.getAttribute('title')).toContain('kcal');
+    });
+
+    it('supports custom y-axis number formatting without changing point tooltips', () => {
+        fixture.componentRef.setInput('points', [
+            { label: 'May', value: 1000 },
+            { label: 'June', value: 2000 },
+        ]);
+        fixture.componentRef.setInput('showAxisLabels', true);
+        fixture.componentRef.setInput('axisValueFormatter', (value: number) => new Intl.NumberFormat('ru-RU').format(value));
+        fixture.detectChanges();
+
+        expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('2 000');
+        expect(host().querySelector('.fd-ui-line-chart__point')?.getAttribute('title')).toContain('1000');
+    });
+
+    it('renders a unit above the y-axis values', () => {
+        fixture.componentRef.setInput('points', [
+            { label: 'May', value: 0 },
+            { label: 'June', value: HIGH_CALORIE_VALUE },
+        ]);
+        fixture.componentRef.setInput('showAxisLabels', true);
+        fixture.componentRef.setInput('axisUnit', 'kcal');
+        fixture.detectChanges();
+
+        expect(host().querySelector('.fd-ui-line-chart__y-axis-unit')?.textContent).toContain('kcal');
     });
 
     it('uses a proportionate nice y-axis maximum for small values', () => {

@@ -1,5 +1,10 @@
 :host {
     --fd-line-chart-angled-axis-height: 40px;
+    --fd-line-chart-stacked-axis-height: calc(1lh + var(--fd-line-chart-x-axis-label-offset));
+    --fd-line-chart-x-axis-label-offset: var(--fd-space-sm);
+    --fd-line-chart-y-axis-gap: 0;
+    --fd-line-chart-y-axis-label-right: calc(var(--fd-space-sm) * -1);
+    --fd-line-chart-y-axis-width: fit-content(112px);
     --fd-line-chart-height: 180px;
     container-type: inline-size;
     display: block;
@@ -18,12 +23,12 @@
 }
 
 .fd-ui-line-chart__plot--with-axis-labels {
-    grid-template-columns: fit-content(112px) minmax(0, 1fr);
+    grid-template-columns: var(--fd-line-chart-y-axis-width) minmax(0, 1fr);
     grid-template-areas:
         'y-axis chart'
         '. x-axis'
         '. legend';
-    column-gap: 0;
+    column-gap: var(--fd-line-chart-y-axis-gap);
     row-gap: 0;
 }
 

@@ -1,7 +1,7 @@
 <div class="fd-ui-line-chart" role="img" [attr.aria-label]="ariaLabel()">
     @if (pointViews().length) {
         <div class="fd-ui-line-chart__plot" [class.fd-ui-line-chart__plot--with-axis-labels]="showAxisLabels()">
-            <fd-ui-line-chart-y-axis [show]="showAxisLabels()" [gridLines]="gridLines()" />
+            <fd-ui-line-chart-y-axis [show]="showAxisLabels()" [gridLines]="gridLines()" [unit]="axisUnit()" />
 
             <div class="fd-ui-line-chart__surface">
                 <svg class="fd-ui-line-chart__svg" aria-hidden="true" focusable="false" preserveAspectRatio="none" [attr.viewBox]="viewBox">

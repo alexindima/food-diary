@@ -3,9 +3,9 @@
     "summary":  {
                     "contracts":  998,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  6940,
+                    "consumerEdges":  6942,
                     "productionConsumerEdges":  4232,
-                    "testConsumerEdges":  2708,
+                    "testConsumerEdges":  2710,
                     "consumedContracts":  998,
                     "unconsumedContracts":  0
                 },
@@ -16818,6 +16818,19 @@
                               "referenceCount":  2
                           },
                           {
+                              "contract":  "AdminAiUsageBreakdownHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminAiUsageBreakdownHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdminHttpMappingsTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
+                          },
+                          {
                               "contract":  "AdminAiUsageDailyHttpResponse",
                               "roles":  [
                                             "Response"
@@ -16841,6 +16854,19 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminAiUsageSummaryHttpResponse.cs",
                               "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "AdminAiUsageDailyHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminAiUsageDailyHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdminHttpMappingsTests.cs",
+                              "isTest":  true,
                               "referenceCount":  1
                           },
                           {
@@ -19610,7 +19636,7 @@
                               "consumerArea":  "MailRelay",
                               "consumerPath":  "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
                               "isTest":  true,
-                              "referenceCount":  10
+                              "referenceCount":  13
                           },
                           {
                               "contract":  "BadgeHttpResponse",

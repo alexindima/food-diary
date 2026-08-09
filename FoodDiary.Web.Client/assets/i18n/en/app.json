@@ -203,9 +203,60 @@
             "WHTR": "WHtR"
         },
         "BODY_NO_DATA": "Not enough measurements for this chart yet.",
+        "DASHBOARD": {
+            "PREVIEW_TITLE": "New statistics cards",
+            "NUTRIENTS": {
+                "PROTEIN": "Protein",
+                "FAT": "Fat",
+                "CARBS": "Carbs",
+                "FIBER": "Fiber"
+            },
+            "OVERVIEW": {
+                "TITLE": "This period",
+                "DAYS_WITHIN_GOAL": "{{current}} of {{total}} days within goal",
+                "AVERAGE_CALORIES": "Average calorie goal completion",
+                "AVERAGE_PER_DAY": "Average per day",
+                "VS_GOAL": "compared with your goal",
+                "NUTRIENTS": "Average nutrient progress",
+                "DIARY_COMPLETENESS": "Diary completed",
+                "DAYS": "days",
+                "COMPLETENESS_HINT": "Complete the diary daily for a more accurate progress assessment."
+            },
+            "TREND": {
+                "TITLE": "Nutrition trend",
+                "CHART_TYPE_LABEL": "Chart type",
+                "CHART_BARS": "Bars",
+                "CHART_LINE": "Line",
+                "GOAL": "Goal {{value}}",
+                "NO_ENTRY": "No diary entry",
+                "INSIGHTS_TITLE": "What changed",
+                "PERCENT_UNIT": "%",
+                "GRAM_UNIT": " g",
+                "VS_GOAL": "Compared with your goal",
+                "INCOMPLETE_DATA": "Data is incomplete",
+                "INCOMPLETE_DATA_HINT": "Missing days may affect the period averages"
+            },
+            "BALANCE": {
+                "TITLE": "Nutrient balance",
+                "SUBTITLE": "Daily average",
+                "NUTRIENT": "Nutrient",
+                "AVERAGE": "Average",
+                "GOAL": "Goal",
+                "COMPLETION": "Completion"
+            },
+            "BODY": {
+                "TITLE": "Body metrics",
+                "CURRENT_WEIGHT": "Current weight",
+                "CHANGE": "Change over {{days}} days",
+                "OPEN_HISTORY": "Open weight history",
+                "EMPTY": "Add weight measurements to see how nutrition and body trends relate."
+            }
+        },
         "RANGES": {
             "WEEK": "Week",
             "MONTH": "Month",
+            "QUARTER": "3 months",
+            "HALF_YEAR": "6 months",
             "YEAR": "Year",
             "CUSTOM": "Custom"
         },

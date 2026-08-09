@@ -18,6 +18,8 @@ import {
 const TEST_YEAR = 2026;
 const MAY_INDEX = 4;
 const APRIL_INDEX = 3;
+const FEBRUARY_INDEX = 1;
+const NOVEMBER_INDEX = 10;
 const CURRENT_DAY = 6;
 const NOON_HOUR = 12;
 const THIRD_DAY = 3;
@@ -81,6 +83,26 @@ describe('statistics-data-mapper', () => {
 
             expect(range.start).toBe(end);
             expect(range.end).toBe(start);
+        });
+
+        it('should return three months for quarter range', () => {
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date(TEST_YEAR, MAY_INDEX, CURRENT_DAY, NOON_HOUR, 0, 0, 0));
+
+            const range = getCurrentDateRange('quarter', null);
+
+            expect(range.start).toEqual(new Date(TEST_YEAR, FEBRUARY_INDEX, CURRENT_DAY, NOON_HOUR, 0, 0, 0));
+            expect(range.end).toEqual(new Date(TEST_YEAR, MAY_INDEX, CURRENT_DAY, NOON_HOUR, 0, 0, 0));
+        });
+
+        it('should return six months for half-year range', () => {
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date(TEST_YEAR, MAY_INDEX, CURRENT_DAY, NOON_HOUR, 0, 0, 0));
+
+            const range = getCurrentDateRange('halfYear', null);
+
+            expect(range.start).toEqual(new Date(TEST_YEAR - 1, NOVEMBER_INDEX, CURRENT_DAY, NOON_HOUR, 0, 0, 0));
+            expect(range.end).toEqual(new Date(TEST_YEAR, MAY_INDEX, CURRENT_DAY, NOON_HOUR, 0, 0, 0));
         });
     });
 

@@ -1,5 +1,9 @@
 @if (show()) {
     <div class="fd-ui-line-chart__y-axis" aria-hidden="true">
+        @if (unit() && gridLines().length) {
+            <span class="fd-ui-line-chart__y-axis-unit" [style.top]="gridLines()[0].yPercent">{{ unit() }}</span>
+        }
+
         <div class="fd-ui-line-chart__y-axis-sizer">
             @for (gridLine of gridLines(); track $index) {
                 <span>{{ gridLine.label }}</span>

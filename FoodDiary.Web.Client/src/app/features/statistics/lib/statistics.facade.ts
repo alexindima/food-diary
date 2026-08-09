@@ -12,12 +12,14 @@ import { formatDateInputValue, parseLocalDateInputValue } from '../../../shared/
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { RequestStateController } from '../../../shared/lib/request-state';
 import type { ExportFormat } from '../../../shared/models/export.models';
+import type { User } from '../../../shared/models/user.data';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
 import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
 import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
 import type { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
 import { StatisticsService } from '../api/statistics.service';
 import type { MappedStatistics } from '../models/statistics.data';
+import { buildStatisticsDashboardCardsView } from './statistics-dashboard-card.mapper';
 import {
     type BodyChartTab,
     buildBodyChartPoints,
@@ -75,6 +77,7 @@ export class StatisticsFacade {
     public readonly weightSummaryPoints = computed(() => this.bodyRequest.data()?.weight ?? []);
     public readonly waistSummaryPoints = computed(() => this.bodyRequest.data()?.waist ?? []);
     public readonly userHeightCm = signal<number | null>(null);
+    public readonly userProfile = signal<User | null>(null);
 
     public readonly currentRange = computed<DateRange>(() => {
         const selectedRange = this.selectedRange();
@@ -137,6 +140,19 @@ export class StatisticsFacade {
     public readonly hasBodyData = computed(() => {
         return this.bodyChartPoints().some(point => point.value !== null);
     });
+    public readonly dashboardCardsView = computed(() =>
+        buildStatisticsDashboardCardsView({
+            statistics: this.chartStatisticsData(),
+            user: this.userProfile(),
+            bodyPoints: buildBodyChartPoints(
+                this.weightSummaryPoints(),
+                point => point.averageWeight,
+                date => this.formatSummaryLabel(date),
+            ),
+            periodDays: getDateRangeDayCount(this.currentRange()),
+            formatDate: date => this.formatDateLabel(date),
+        }),
+    );
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -300,6 +316,7 @@ export class StatisticsFacade {
             .getInfo()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(user => {
+                this.userProfile.set(user);
                 this.userHeightCm.set(user?.height ?? null);
             });
     }

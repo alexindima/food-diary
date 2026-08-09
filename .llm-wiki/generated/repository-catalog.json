@@ -4017,7 +4017,7 @@
                                      {
                                          "name":  "UserAiConsentController",
                                          "path":  "FoodDiary.Presentation.Api/Features/Users/UserAiConsentController.cs",
-                                         "routePrefix":  "api/v{version:apiVersion}/users",
+                                         "routePrefix":  "api/v{version:apiVersion}/users/ai-consent",
                                          "endpoints":  [
                                                            {
                                                                "verb":  "POST",

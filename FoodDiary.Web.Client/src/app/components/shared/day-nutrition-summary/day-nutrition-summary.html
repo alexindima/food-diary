@@ -51,7 +51,10 @@
                         [style.--day-summary-index]="$index"
                     >
                         <div class="day-summary__nutrient-header">
-                            <span class="day-summary__nutrient-label fd-ui-body-sm">{{ bar.labelText }}</span>
+                            <span class="day-summary__nutrient-label fd-ui-body-sm">
+                                <fd-ui-icon [name]="getNutrientIcon(bar.id)" [style.color]="bar.colorEnd" />
+                                {{ bar.labelText }}
+                            </span>
                             <span class="day-summary__nutrient-value fd-ui-meta-text">
                                 {{ bar.current | number: '1.0-0' }} / {{ bar.target | number: '1.0-0' }} {{ bar.unitText }}
                             </span>

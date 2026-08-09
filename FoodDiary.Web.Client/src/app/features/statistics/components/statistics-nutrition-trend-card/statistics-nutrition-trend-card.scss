@@ -1,0 +1,166 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+    min-width: 0;
+}
+
+.statistics-nutrition-trend-card {
+    --statistics-trend-axis-width: calc(var(--fd-space-xl) + var(--fd-space-sm));
+    --statistics-trend-chart-gap: var(--fd-space-sm);
+    --statistics-trend-chart-left-inset: var(--fd-space-sm);
+    --statistics-trend-date-height: calc(var(--fd-space-xl) + var(--fd-space-xs));
+
+    &__layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(230px, 280px);
+        gap: var(--fd-space-lg);
+    }
+
+    &__chart {
+        min-width: 0;
+    }
+
+    &__chart-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--fd-space-md);
+        margin-bottom: var(--fd-space-sm);
+    }
+
+    &__title {
+        margin: 0;
+    }
+
+    &__chart-mode {
+        min-width: 130px;
+    }
+
+    &__bar-chart {
+        --fd-bar-chart-height: 300px;
+        --fd-bar-chart-axis-width: var(--statistics-trend-axis-width);
+        --fd-bar-chart-label-height: var(--statistics-trend-date-height);
+        margin-top: calc(var(--fd-space-lg) + var(--statistics-trend-chart-gap));
+        margin-left: var(--statistics-trend-chart-left-inset);
+    }
+
+    &__legend-item--protein::before {
+        background: var(--fd-color-primary-500);
+    }
+
+    &__legend-item--fat::before {
+        background: var(--fd-color-orange-500);
+    }
+
+    &__legend-item--carbs::before {
+        background: var(--fd-color-sky-500);
+    }
+
+    &__legend-item--fiber::before {
+        background: var(--fd-color-rose-500);
+    }
+
+    &__legend {
+        padding-left: var(--statistics-trend-axis-width);
+    }
+
+    &__legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fd-space-xs);
+    }
+
+    &__legend-item::before {
+        width: var(--fd-space-md);
+        height: var(--fd-space-xs);
+        border-radius: var(--fd-radius-xs);
+        content: '';
+    }
+
+    &__line-chart-shell {
+        position: relative;
+        margin-top: calc(var(--fd-space-lg) + var(--statistics-trend-chart-gap));
+        margin-left: var(--statistics-trend-chart-left-inset);
+    }
+
+    &__line-chart {
+        --fd-line-chart-height: calc(300px - var(--statistics-trend-date-height));
+        --fd-line-chart-stacked-axis-height: var(--statistics-trend-date-height);
+        --fd-line-chart-x-axis-label-offset: var(--fd-space-xs);
+        --fd-line-chart-y-axis-gap: 0;
+        --fd-line-chart-y-axis-label-right: var(--fd-space-sm);
+        --fd-line-chart-y-axis-width: var(--statistics-trend-axis-width);
+        display: block;
+    }
+
+    &__insights {
+        padding-top: var(--fd-space-sm);
+        padding-left: var(--fd-space-lg);
+        border-left: var(--fd-border-subtle);
+    }
+
+    &__insights-title {
+        margin: 0 0 var(--fd-space-sm);
+    }
+
+    &__insight {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: var(--fd-space-sm);
+        align-items: center;
+        padding: var(--fd-space-md) 0;
+        border-bottom: var(--fd-border-subtle);
+    }
+
+    &__insight:last-child {
+        border-bottom: 0;
+    }
+
+    &__insight fd-ui-icon {
+        align-self: start;
+        margin-top: var(--fd-space-xxs);
+        color: var(--fd-color-text-muted);
+    }
+
+    &__insight-value--positive {
+        color: var(--fd-color-success);
+    }
+
+    &__insight-value--negative {
+        color: var(--fd-color-warning);
+    }
+
+    @media #{variables.$media-tablet} {
+        &__layout {
+            grid-template-columns: 1fr;
+        }
+
+        &__insights {
+            padding-top: var(--fd-space-lg);
+            padding-left: 0;
+            border-top: var(--fd-border-subtle);
+            border-left: 0;
+        }
+    }
+
+    @media #{variables.$media-mobile} {
+        &__chart-header {
+            align-items: flex-start;
+        }
+
+        &__bar-chart {
+            --fd-bar-chart-height: 240px;
+            --fd-bar-chart-bar-width: min(32px, 78%);
+        }
+
+        &__line-chart {
+            --fd-line-chart-height: calc(240px - var(--statistics-trend-date-height));
+        }
+
+        &__legend {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+}

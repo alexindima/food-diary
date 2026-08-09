@@ -101,6 +101,15 @@
         color: var(--fd-color-text-muted);
         white-space: nowrap;
     }
+    &__nutrient-label {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fd-space-sm);
+        min-width: 0;
+    }
+    &__nutrient-label fd-ui-icon {
+        flex: 0 0 auto;
+    }
     &__nutrient-percent {
         color: var(--fd-color-text-muted);
         text-align: right;

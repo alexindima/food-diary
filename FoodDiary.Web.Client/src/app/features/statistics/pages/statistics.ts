@@ -17,6 +17,10 @@ import { StatisticsSummaryComponent } from '../../../components/shared/statistic
 import type { ExportFormat } from '../../../shared/models/export.models';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
+import { StatisticsBodyTrendCardComponent } from '../components/statistics-body-trend-card/statistics-body-trend-card';
+import { StatisticsNutrientBalanceCardComponent } from '../components/statistics-nutrient-balance-card/statistics-nutrient-balance-card';
+import { StatisticsNutritionTrendCardComponent } from '../components/statistics-nutrition-trend-card/statistics-nutrition-trend-card';
+import { StatisticsOverviewCardComponent } from '../components/statistics-overview-card/statistics-overview-card';
 import { StatisticsFacade } from '../lib/statistics.facade';
 import { isBodyTab, isNutritionTab, isStatisticsRange } from '../lib/statistics-data-mapper';
 import { STATISTICS_BODY_TABS, STATISTICS_NUTRITION_TABS, STATISTICS_RANGE_TABS } from '../lib/statistics-tabs.config';
@@ -40,6 +44,10 @@ import { STATISTICS_TOUR } from './statistics-tour';
         StatisticsSummaryComponent,
         StatisticsNutritionComponent,
         StatisticsBodyComponent,
+        StatisticsOverviewCardComponent,
+        StatisticsNutritionTrendCardComponent,
+        StatisticsNutrientBalanceCardComponent,
+        StatisticsBodyTrendCardComponent,
     ],
     templateUrl: './statistics.html',
     styleUrls: ['./statistics.scss'],
@@ -78,6 +86,7 @@ export class StatisticsComponent {
     protected readonly bodyChartPoints = this.facade.bodyChartPoints;
     protected readonly hasBodyData = this.facade.hasBodyData;
     protected readonly exportingFormat = this.facade.exportingFormat;
+    protected readonly dashboardCardsView = this.facade.dashboardCardsView;
 
     protected changeRange(value: unknown): void {
         if (isStatisticsRange(value)) {

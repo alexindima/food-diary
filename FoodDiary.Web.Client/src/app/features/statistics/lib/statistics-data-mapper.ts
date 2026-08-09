@@ -8,7 +8,7 @@ import { normalizeEndOfLocalDay, normalizeStartOfLocalDay } from '../../../share
 import { MS_PER_DAY } from '../../../shared/lib/time.constants';
 import type { MappedStatistics } from '../models/statistics.data';
 
-export type StatisticsRange = 'week' | 'month' | 'year' | 'custom';
+export type StatisticsRange = 'week' | 'month' | 'quarter' | 'halfYear' | 'year' | 'custom';
 export type NutritionChartTab = 'calories' | 'macros' | 'distribution';
 export type BodyChartTab = 'weight' | 'bmi' | 'waist' | 'whtr';
 export type MacroKey = 'proteins' | 'fats' | 'carbs' | 'fiber';
@@ -19,7 +19,7 @@ export type DateRange = {
 };
 
 export function isStatisticsRange(value: unknown): value is StatisticsRange {
-    return value === 'week' || value === 'month' || value === 'year' || value === 'custom';
+    return value === 'week' || value === 'month' || value === 'quarter' || value === 'halfYear' || value === 'year' || value === 'custom';
 }
 
 export function isNutritionTab(value: unknown): value is NutritionChartTab {
@@ -43,6 +43,8 @@ const MONTH_QUANTIZATION_DAYS = 3;
 const TWO_WEEK_DAYS = 14;
 const TWO_WEEK_QUANTIZATION_DAYS = 2;
 const WEEK_DAY_OFFSET = 6;
+const QUARTER_MONTH_OFFSET = 3;
+const HALF_YEAR_MONTH_OFFSET = 6;
 const MINIMUM_DAY_COUNT = 1;
 
 function buildChartPoints(labels: readonly string[], series: ReadonlyArray<number | null> | undefined): FdUiLineChartPoint[] {
@@ -104,6 +106,7 @@ export function getDateRangeDayCount(range: DateRange): number {
     return Math.max(MINIMUM_DAY_COUNT, Math.round((end.getTime() - start.getTime()) / MS_PER_DAY));
 }
 
+// eslint-disable-next-line complexity -- Each supported period has one explicit, calendar-aware adjustment.
 export function getCurrentDateRange(
     range: StatisticsRange,
     customValue: { start: Date | null; end: Date | null } | null | undefined,
@@ -118,6 +121,16 @@ export function getCurrentDateRange(
 
     if (range === 'month') {
         start.setMonth(end.getMonth() - 1);
+        return { start, end };
+    }
+
+    if (range === 'quarter') {
+        start.setMonth(end.getMonth() - QUARTER_MONTH_OFFSET);
+        return { start, end };
+    }
+
+    if (range === 'halfYear') {
+        start.setMonth(end.getMonth() - HALF_YEAR_MONTH_OFFSET);
         return { start, end };
     }
 

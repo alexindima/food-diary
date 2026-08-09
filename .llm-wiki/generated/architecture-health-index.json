@@ -11,7 +11,7 @@
                     "selectorUnreferencedComponents":  132,
                     "componentsWithoutDirectSpecs":  116,
                     "criticalSymbolsWithoutTestReferences":  27,
-                    "explicitDebtMarkers":  2
+                    "explicitDebtMarkers":  3
                 },
     "projectDependencyViolations":  [
 
@@ -3592,6 +3592,11 @@
                                                                 "name":  "gridLines",
                                                                 "type":  "readonly FdUiLineChartYAxisGridLine[]",
                                                                 "required":  false
+                                                            },
+                                                            {
+                                                                "name":  "unit",
+                                                                "type":  "",
+                                                                "required":  false
                                                             }
                                                         ],
                                              "outputs":  [
@@ -5018,6 +5023,11 @@
                                     "path":  "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
                                     "line":  117,
                                     "marker":  "#pragma warning disable"
+                                },
+                                {
+                                    "path":  "FoodDiary.JobManager/Services/JobExecutionObserver.cs",
+                                    "line":  33,
+                                    "marker":  "SuppressMessage"
                                 }
                             ]
 }

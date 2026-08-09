@@ -1,0 +1,51 @@
+<fd-ui-card class="statistics-body-trend-card" [title]="'STATISTICS.DASHBOARD.BODY.TITLE' | translate">
+    @if (hasData()) {
+        <div class="statistics-body-trend-card__metrics">
+            <div class="fd-stack fd-gap-xxs">
+                <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.BODY.CURRENT_WEIGHT' | translate }}</span>
+                <strong class="fd-ui-metric-lg">{{ data().currentWeight | number: '1.0-1' }} {{ 'GENERAL.UNITS.KG' | translate }}</strong>
+            </div>
+            @let change = data().change;
+            @if (change !== null) {
+                <div class="fd-stack fd-gap-xxs">
+                    <span class="fd-ui-caption fd-ui-text-muted">
+                        {{ 'STATISTICS.DASHBOARD.BODY.CHANGE' | translate: { days: data().timeframeDays } }}
+                    </span>
+                    <strong
+                        class="statistics-body-trend-card__change fd-ui-metric-md"
+                        [class.statistics-body-trend-card__change--positive]="change < 0"
+                        [class.statistics-body-trend-card__change--negative]="change > 0"
+                    >
+                        {{ change > 0 ? '+' : '' }}{{ change | number: '1.0-1' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                    </strong>
+                </div>
+            }
+        </div>
+        <div class="statistics-body-trend-card__chart">
+            <fd-ui-line-chart
+                lineColor="var(--fd-color-primary-500)"
+                fillColor="var(--fd-bg-brand-tint)"
+                [title]="'STATISTICS.DASHBOARD.BODY.TITLE' | translate"
+                [points]="data().points"
+                [minValue]="bounds().minimum"
+                [maxValue]="bounds().maximum"
+                [showArea]="true"
+                [showPoints]="true"
+                [valueSuffix]="'GENERAL.UNITS.KG' | translate"
+            />
+        </div>
+    } @else {
+        <p class="statistics-body-trend-card__empty fd-ui-body-sm fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.BODY.EMPTY' | translate }}</p>
+    }
+    <fd-ui-button
+        class="statistics-body-trend-card__action"
+        variant="secondary"
+        fill="ghost"
+        size="sm"
+        icon="arrow_forward"
+        iconPosition="end"
+        [routerLink]="historyRoute()"
+    >
+        {{ 'STATISTICS.DASHBOARD.BODY.OPEN_HISTORY' | translate }}
+    </fd-ui-button>
+</fd-ui-card>

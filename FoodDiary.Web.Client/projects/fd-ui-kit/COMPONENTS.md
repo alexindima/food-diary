@@ -60,7 +60,7 @@ Circular distribution chart.
 
 #### `fd-ui-bar-chart`
 
-Responsive bar chart for simple category or short time-range comparisons.
+Responsive bar chart for simple comparisons and scaled categorical time series. Categorical mode supports single, grouped, and stacked bars, missing categories, Y-axis labels, units, highlighted labels, and reference lines.
 
 **Inputs**
 
@@ -68,10 +68,22 @@ Responsive bar chart for simple category or short time-range comparisons.
 - `items?: FdUiBarChartItem[]`
 - `emptyLabel?: string`
 - `showLabels?: boolean`
+- `categories?: FdUiBarChartCategory[]`
+- `layout?: 'single' | 'grouped' | 'stacked'`
+- `axisUnit?: string`
+- `axisTicks?: number[]`
+- `axisValueFormatter?: (value: number) => string`
+- `scaleMaximum?: number`
+- `referenceLines?: FdUiBarChartReferenceLine[]`
 
 **CSS variables**
 
 - `--fd-bar-chart-height`
+- `--fd-bar-chart-axis-width`
+- `--fd-bar-chart-label-height`
+- `--fd-bar-chart-reference-label-space`
+- `--fd-bar-chart-bar-width`
+- `--fd-bar-chart-group-width`
 
 #### `fd-ui-line-chart`
 
@@ -88,6 +100,11 @@ Responsive line chart for compact trends and sparklines.
 - `showArea?: boolean`
 - `showPoints?: boolean`
 - `valueSuffix?: string` (used in axes, tooltips, and accessible summaries)
+- `axisValueSuffix?: string | null` (overrides the Y-axis suffix while preserving `valueSuffix` elsewhere)
+- `axisUnit?: string` (renders a compact unit label directly above the highest Y-axis value)
+- `verticalEdgeInset?: 'default' | 'none'` (controls whether the plotted values reserve space at the top and bottom edges)
+- `horizontalEdgeInset?: 'none' | 'default'` (defaults to `none`, aligning the first and last categories with the plot edges; use `default` to center them in their edge cells)
+- `axisValueFormatter?: ((value: number) => string) | null` (formats Y-axis numbers without changing tooltip values)
 
 **CSS variables**
 

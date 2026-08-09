@@ -15,4 +15,5 @@ export type FdUiLineChartYAxisGridLine = {
 export class FdUiLineChartYAxisComponent {
     public readonly show = input(false);
     public readonly gridLines = input<readonly FdUiLineChartYAxisGridLine[]>([]);
+    public readonly unit = input('');
 }

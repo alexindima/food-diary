@@ -6,6 +6,29 @@ export type FdUiBarChartItem = {
     color?: string;
 };
 
+export type FdUiBarChartValue = {
+    label: string;
+    value: number | null;
+    color?: string;
+};
+
+export type FdUiBarChartCategory = {
+    label: string;
+    ariaLabel?: string;
+    highlighted?: boolean;
+    values: readonly FdUiBarChartValue[];
+};
+
+export type FdUiBarChartReferenceLine = {
+    value: number;
+    label?: string;
+    color?: string;
+    labelPlacement?: 'inside' | 'outside';
+};
+
+export type FdUiBarChartLayout = 'single' | 'grouped' | 'stacked';
+export type FdUiBarChartHorizontalEdgeInset = 'default' | 'none';
+
 type FdUiBarChartItemViewModel = {
     label: string;
     value: number;
@@ -21,13 +44,25 @@ type FdUiBarChartGridLine = {
     y: number;
 };
 
+type FdUiBarChartCategoryView = FdUiBarChartCategory & {
+    ariaLabel: string;
+    values: ReadonlyArray<FdUiBarChartValue & { height: number; color: string }>;
+};
+
+type FdUiBarChartReferenceLineView = FdUiBarChartReferenceLine & {
+    color: string;
+    top: number;
+};
+
 const BAR_CHART_VIEWBOX_WIDTH = 100;
 const BAR_CHART_VIEWBOX_HEIGHT = 64;
 const BAR_CHART_PADDING_TOP = 6;
 const BAR_CHART_PADDING_BOTTOM = 8;
 const BAR_CHART_GAP = 4;
 const BAR_CHART_GRID_LINE_COUNT = 5;
+const PERCENTAGE_SCALE = 100;
 const DEFAULT_BAR_COLOR = 'var(--fd-color-primary-500)';
+const DEFAULT_REFERENCE_LINE_COLOR = 'var(--fd-color-text-subtle)';
 
 @Component({
     selector: 'fd-ui-bar-chart',
@@ -41,6 +76,14 @@ export class FdUiBarChartComponent {
     public readonly items = input<readonly FdUiBarChartItem[]>([]);
     public readonly emptyLabel = input('No data');
     public readonly showLabels = input(true);
+    public readonly categories = input<readonly FdUiBarChartCategory[]>([]);
+    public readonly layout = input<FdUiBarChartLayout>('single');
+    public readonly horizontalEdgeInset = input<FdUiBarChartHorizontalEdgeInset>('none');
+    public readonly axisUnit = input('');
+    public readonly axisTicks = input<readonly number[]>([]);
+    public readonly scaleMaximum = input<number>();
+    public readonly referenceLines = input<readonly FdUiBarChartReferenceLine[]>([]);
+    public readonly axisValueFormatter = input<(value: number) => string>(value => String(value));
 
     protected readonly viewBox = `0 0 ${BAR_CHART_VIEWBOX_WIDTH} ${BAR_CHART_VIEWBOX_HEIGHT}`;
     protected readonly chartBottom = BAR_CHART_VIEWBOX_HEIGHT - BAR_CHART_PADDING_BOTTOM;
@@ -97,6 +140,74 @@ export class FdUiBarChartComponent {
             .join(', ');
         return hasTitle ? `${title}: ${details}` : details;
     });
+
+    protected readonly usesCategoricalLayout = computed(() => this.categories().length > 0);
+    protected readonly categoricalMaximum = computed(() => {
+        const configuredMaximum = this.scaleMaximum();
+        if (configuredMaximum !== undefined && Number.isFinite(configuredMaximum) && configuredMaximum > 0) {
+            return configuredMaximum;
+        }
+
+        const values = this.categories().map(category => {
+            const finiteValues = category.values
+                .filter(item => item.value !== null && Number.isFinite(item.value))
+                .map(item => item.value ?? 0);
+            return this.layout() === 'stacked'
+                ? finiteValues.reduce((sum, value) => sum + Math.max(0, value), 0)
+                : Math.max(0, ...finiteValues);
+        });
+        return Math.max(1, ...values);
+    });
+    protected readonly categoricalTicks = computed(() => {
+        const configuredTicks = this.axisTicks().filter(Number.isFinite);
+        if (configuredTicks.length > 0) {
+            return configuredTicks;
+        }
+
+        return Array.from({ length: BAR_CHART_GRID_LINE_COUNT }, (_, index) =>
+            Math.round(this.categoricalMaximum() * ((BAR_CHART_GRID_LINE_COUNT - index - 1) / (BAR_CHART_GRID_LINE_COUNT - 1))),
+        );
+    });
+    protected readonly categoryViews = computed<readonly FdUiBarChartCategoryView[]>(() => {
+        const maximum = this.categoricalMaximum();
+        return this.categories().map(category => ({
+            ...category,
+            ariaLabel:
+                category.ariaLabel ??
+                `${category.label}: ${category.values
+                    .filter(item => item.value !== null)
+                    .map(item => `${item.label} ${item.value}`)
+                    .join(', ')}`,
+            values: category.values
+                .filter(item => item.value !== null && Number.isFinite(item.value))
+                .map(item => ({
+                    ...item,
+                    value: Math.max(0, item.value ?? 0),
+                    height: (Math.max(0, item.value ?? 0) / maximum) * PERCENTAGE_SCALE,
+                    color: item.color ?? DEFAULT_BAR_COLOR,
+                })),
+        }));
+    });
+    protected readonly referenceLineViews = computed<readonly FdUiBarChartReferenceLineView[]>(() =>
+        this.referenceLines()
+            .filter(line => Number.isFinite(line.value) && line.value >= 0 && line.value <= this.categoricalMaximum())
+            .map(line => ({
+                ...line,
+                color: line.color ?? DEFAULT_REFERENCE_LINE_COLOR,
+                top: PERCENTAGE_SCALE - (line.value / this.categoricalMaximum()) * PERCENTAGE_SCALE,
+            })),
+    );
+    protected readonly categoricalAriaLabel = computed(() => {
+        const title = this.title()?.trim();
+        const details = this.categoryViews()
+            .map(category => category.ariaLabel)
+            .join(', ');
+        return title === undefined || title.length === 0 ? details : `${title}: ${details}`;
+    });
+
+    protected categoryGridTemplate(valueCount: number): string | null {
+        return this.layout() === 'grouped' ? `repeat(${valueCount}, minmax(0, 1fr))` : null;
+    }
 
     private readonly normalizedItems = computed(() =>
         this.items()

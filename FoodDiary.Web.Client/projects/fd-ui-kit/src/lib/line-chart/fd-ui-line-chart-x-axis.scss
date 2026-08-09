@@ -54,24 +54,35 @@
 }
 
 .fd-ui-line-chart__x-axis--stacked {
-    min-height: calc(1lh + var(--fd-space-sm));
+    min-height: var(--fd-line-chart-stacked-axis-height);
 }
 
 .fd-ui-line-chart__x-axis--stacked-two-lines {
-    min-height: calc(2lh + var(--fd-space-sm));
+    min-height: calc(2lh + var(--fd-line-chart-x-axis-label-offset));
 }
 
 .fd-ui-line-chart__x-axis--stacked-three-lines {
-    min-height: calc(3lh + var(--fd-space-sm));
+    min-height: calc(3lh + var(--fd-line-chart-x-axis-label-offset));
 }
 
 .fd-ui-line-chart__x-axis--stacked span {
     --fd-line-chart-stacked-label-max-width: 64px;
-    top: var(--fd-space-sm);
+    top: var(--fd-line-chart-x-axis-label-offset);
+    width: max-content;
     max-width: var(--fd-line-chart-stacked-label-max-width);
     white-space: pre-line;
     text-overflow: clip;
     transform: translateX(-50%);
+}
+
+.fd-ui-line-chart__x-axis--stacked .fd-ui-line-chart__x-axis-label--start {
+    text-align: left;
+    transform: translateX(0);
+}
+
+.fd-ui-line-chart__x-axis--stacked .fd-ui-line-chart__x-axis-label--end {
+    text-align: right;
+    transform: translateX(-100%);
 }
 
 @container (max-width: 560px) {

@@ -6,10 +6,10 @@
                       "externalTransfers":  "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
                   },
     "summary":  {
-                    "candidateFields":  1391,
+                    "candidateFields":  1390,
                     "credential":  146,
                     "identity":  140,
-                    "health":  609,
+                    "health":  608,
                     "financial":  199,
                     "privateContent":  297,
                     "boundaryFiles":  178,
@@ -554,7 +554,7 @@
                        "name":  "CancellationToken",
                        "type":  "Func\u003cstring,",
                        "path":  "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
-                       "line":  8
+                       "line":  9
                    },
                    {
                        "category":  "credential",
@@ -2413,7 +2413,7 @@
                    },
                    {
                        "category":  "financial",
-                       "name":  "AmountPer100g",
+                       "name":  "AmountPer100G",
                        "type":  "double",
                        "path":  "FoodDiary.Presentation.Api/Features/Usda/Responses/MicronutrientHttpResponse.cs",
                        "line":  7
@@ -3936,13 +3936,6 @@
                        "type":  "double",
                        "path":  "FoodDiary.Application/Recipes/Services/RecipeNutritionApplier.cs",
                        "line":  21
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Calories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Recipes/Services/RecipeNutritionApplier.cs",
-                       "line":  32
                    },
                    {
                        "category":  "health",
@@ -9227,14 +9220,14 @@
                        "name":  "ImageUrl",
                        "type":  "string?",
                        "path":  "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-                       "line":  216
+                       "line":  217
                    },
                    {
                        "category":  "privateContent",
                        "name":  "ImageUrl",
                        "type":  "string?",
                        "path":  "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-                       "line":  233
+                       "line":  234
                    },
                    {
                        "category":  "privateContent",

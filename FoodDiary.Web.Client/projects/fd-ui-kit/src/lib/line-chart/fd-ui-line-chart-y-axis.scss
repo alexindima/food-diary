@@ -24,9 +24,17 @@
 
 .fd-ui-line-chart__y-axis-label {
     position: absolute;
-    right: calc(-1 * var(--fd-space-sm));
+    right: var(--fd-line-chart-y-axis-label-right);
     max-width: 112px;
     transform: translateY(-50%);
+}
+
+.fd-ui-line-chart__y-axis-unit {
+    position: absolute;
+    right: var(--fd-line-chart-y-axis-label-right);
+    font-style: italic;
+    font-weight: var(--fd-text-caption-weight);
+    transform: translateY(-150%);
 }
 
 .fd-ui-line-chart__y-axis-sizer {

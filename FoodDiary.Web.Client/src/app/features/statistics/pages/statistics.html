@@ -23,6 +23,8 @@
                 [selectedValue]="selectedRange()"
                 [rangeField]="customRangeForm.range"
                 [displayRange]="currentRange()"
+                [hideInactiveRange]="true"
+                [useSegmentedToggle]="true"
                 [startLabel]="'STATISTICS.CUSTOM_RANGE_FROM_LABEL' | translate"
                 [endLabel]="'STATISTICS.CUSTOM_RANGE_TO_LABEL' | translate"
                 [startPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
@@ -40,6 +42,23 @@
             @if (!hasStatisticsData() && !hasBodyData() && !isBodyLoading() && !hasBodyLoadError()) {
                 <fd-ui-empty-state icon="monitoring" [message]="'STATISTICS.NO_DATA' | translate" />
             }
+
+            @let newCards = dashboardCardsView();
+            <section class="statistics__new-cards" [attr.aria-label]="'STATISTICS.DASHBOARD.PREVIEW_TITLE' | translate">
+                <fd-statistics-overview-card [data]="newCards.overview" />
+                <fd-statistics-nutrition-trend-card
+                    [tabs]="nutritionTabs"
+                    [selectedTab]="selectedNutritionTab()"
+                    [days]="newCards.days"
+                    [calorieGoal]="newCards.overview.calorieGoal"
+                    [insights]="newCards.insights"
+                    (selectedTabChange)="changeNutritionTab($event)"
+                />
+                <div class="statistics__new-cards-bottom">
+                    <fd-statistics-nutrient-balance-card [items]="newCards.balance" />
+                    <fd-statistics-body-trend-card [data]="newCards.body" />
+                </div>
+            </section>
 
             <fd-statistics-summary
                 data-tour-id="statistics-summary"

@@ -1,5 +1,11 @@
 :host {
     --fd-bar-chart-height: 180px;
+    --fd-bar-chart-axis-width: calc(var(--fd-space-xl) + var(--fd-space-sm));
+    --fd-bar-chart-label-height: calc(var(--fd-space-xl) + var(--fd-space-xs));
+    --fd-bar-chart-reference-label-space: 0;
+    --fd-bar-chart-bar-width: min(48px, 72%);
+    --fd-bar-chart-group-width: min(76px, 92%);
+    --fd-bar-chart-edge-category-width: 48px;
     display: block;
     min-width: 0;
 }
@@ -71,4 +77,198 @@
     place-items: center;
     color: var(--fd-color-text-muted);
     font-size: var(--fd-text-body-sm-size);
+}
+
+.fd-ui-bar-chart--categorical {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--fd-bar-chart-axis-width) minmax(0, 1fr) var(--fd-bar-chart-reference-label-space);
+    grid-template-rows: minmax(0, 1fr) var(--fd-bar-chart-label-height);
+    height: var(--fd-bar-chart-height);
+}
+
+.fd-ui-bar-chart__categorical-axis {
+    position: relative;
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-caption-size);
+    line-height: var(--fd-text-caption-line-height);
+}
+
+.fd-ui-bar-chart__axis-unit,
+.fd-ui-bar-chart__axis-label {
+    position: absolute;
+    right: var(--fd-space-sm);
+    width: max-content;
+    max-width: 112px;
+    white-space: nowrap;
+}
+
+.fd-ui-bar-chart__axis-unit {
+    top: 0;
+    font-style: italic;
+    font-weight: var(--fd-text-caption-weight);
+    transform: translateY(-150%);
+}
+
+.fd-ui-bar-chart__axis-label {
+    overflow: hidden;
+    text-align: right;
+    text-overflow: ellipsis;
+    transform: translateY(-50%);
+}
+
+.fd-ui-bar-chart__categorical-surface {
+    position: relative;
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+}
+
+.fd-ui-bar-chart__categorical-grid,
+.fd-ui-bar-chart__categories {
+    position: absolute;
+    inset: 0;
+}
+
+.fd-ui-bar-chart__categorical-grid {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.fd-ui-bar-chart__categorical-grid span {
+    border-top: var(--fd-border-subtle);
+}
+
+.fd-ui-bar-chart__categories {
+    z-index: 1;
+    display: grid;
+    gap: var(--fd-space-sm);
+    align-items: end;
+}
+
+.fd-ui-bar-chart__category {
+    display: grid;
+    justify-items: center;
+    height: 100%;
+    min-width: 0;
+}
+
+.fd-ui-bar-chart__categorical-bar {
+    display: flex;
+    flex-direction: column-reverse;
+    align-self: end;
+    width: var(--fd-bar-chart-bar-width);
+    height: 100%;
+    overflow: hidden;
+    border-radius: var(--fd-radius-sm) var(--fd-radius-sm) 0 0;
+    outline: none;
+}
+
+.fd-ui-bar-chart__categorical-bar--grouped {
+    display: grid;
+    gap: var(--fd-space-xxs);
+    align-items: end;
+    width: var(--fd-bar-chart-group-width);
+    overflow: visible;
+}
+
+.fd-ui-bar-chart__categorical-bar:focus-visible {
+    box-shadow: var(--fd-shadow-focus);
+}
+
+.fd-ui-bar-chart__categorical-segment {
+    display: block;
+    flex: 0 0 auto;
+    min-height: 0;
+}
+
+.fd-ui-bar-chart__categorical-bar--grouped .fd-ui-bar-chart__categorical-segment {
+    align-self: end;
+    width: 100%;
+}
+
+.fd-ui-bar-chart__categorical-labels {
+    display: grid;
+    grid-column: 2;
+    grid-row: 2;
+    gap: var(--fd-space-sm);
+    min-width: 0;
+}
+
+.fd-ui-bar-chart__categorical-labels span {
+    min-width: 0;
+    overflow: hidden;
+    padding-top: var(--fd-space-xs);
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-caption-size);
+    line-height: 1.15;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: pre-line;
+}
+
+.fd-ui-bar-chart__categorical-labels .fd-ui-bar-chart__categorical-label--highlighted {
+    color: var(--fd-color-primary-600);
+    font-weight: var(--fd-font-weight-bold);
+}
+
+.fd-ui-bar-chart__reference-line {
+    position: absolute;
+    right: 0;
+    left: 0;
+    z-index: 2;
+    height: var(--fd-border-width);
+    background: repeating-linear-gradient(to right, var(--fd-bar-chart-reference-color) 0 4px, transparent 4px 7px);
+    pointer-events: none;
+}
+
+.fd-ui-bar-chart__reference-line span {
+    position: absolute;
+    right: var(--fd-space-xs);
+    bottom: var(--fd-space-xxs);
+    max-width: 60%;
+    overflow: hidden;
+    color: var(--fd-color-text);
+    font-size: var(--fd-text-caption-size);
+    line-height: var(--fd-text-caption-line-height);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fd-ui-bar-chart__reference-line--outside span {
+    right: auto;
+    bottom: auto;
+    left: calc(100% + var(--fd-space-xs));
+    max-width: var(--fd-bar-chart-reference-label-space);
+    white-space: pre-line;
+    transform: translateY(-50%);
+}
+
+.fd-ui-bar-chart--categorical-grouped {
+    --fd-bar-chart-edge-category-width: 76px;
+}
+
+.fd-ui-bar-chart--edge-inset-none .fd-ui-bar-chart__category:first-child {
+    justify-items: start;
+}
+
+.fd-ui-bar-chart--edge-inset-none .fd-ui-bar-chart__category:last-child {
+    justify-items: end;
+}
+
+.fd-ui-bar-chart--edge-inset-none :where(.fd-ui-bar-chart__categorical-labels span:first-child, span:last-child) {
+    width: var(--fd-bar-chart-edge-category-width);
+}
+
+.fd-ui-bar-chart--edge-inset-none :where(.fd-ui-bar-chart__categorical-labels span:first-child) {
+    justify-self: start;
+}
+
+.fd-ui-bar-chart--edge-inset-none :where(.fd-ui-bar-chart__categorical-labels span:last-child) {
+    justify-self: end;
 }

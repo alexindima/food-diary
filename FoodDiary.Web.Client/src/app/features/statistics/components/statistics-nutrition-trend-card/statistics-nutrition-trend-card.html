@@ -1,0 +1,115 @@
+<fd-ui-card class="statistics-nutrition-trend-card">
+    <div class="statistics-nutrition-trend-card__layout">
+        <section class="statistics-nutrition-trend-card__chart">
+            <div class="statistics-nutrition-trend-card__chart-header">
+                <h2 class="statistics-nutrition-trend-card__title fd-ui-card-title">
+                    {{ 'STATISTICS.DASHBOARD.TREND.TITLE' | translate }}
+                </h2>
+                <fd-ui-select
+                    class="statistics-nutrition-trend-card__chart-mode"
+                    id="statistics-trend-chart-mode"
+                    size="sm"
+                    [ariaLabel]="'STATISTICS.DASHBOARD.TREND.CHART_TYPE_LABEL' | translate"
+                    [options]="chartModeOptions()"
+                    [value]="chartMode()"
+                    (valueChange)="changeChartMode($event)"
+                />
+            </div>
+            <fd-ui-segmented-toggle
+                class="statistics-nutrition-trend-card__data-toggle"
+                appearance="soft"
+                size="sm"
+                [options]="tabs()"
+                [selectedValue]="selectedTab()"
+                [fullWidth]="true"
+                [stackOnNarrow]="false"
+                [wrapOnNarrow]="false"
+                (selectedValueChange)="onTabChange($event)"
+            />
+
+            @if (chartMode() === 'bars') {
+                <fd-ui-bar-chart
+                    class="statistics-nutrition-trend-card__bar-chart"
+                    [title]="'STATISTICS.DASHBOARD.TREND.TITLE' | translate"
+                    [categories]="barChartCategories()"
+                    [layout]="barChartLayout()"
+                    [axisUnit]="chartUnitKey() | translate"
+                    [axisTicks]="ticks()"
+                    [axisValueFormatter]="formatChartNumber"
+                    [scaleMaximum]="chartMaximum()"
+                    [referenceLines]="barChartReferenceLines()"
+                />
+
+                @if (selectedTab() !== 'calories') {
+                    <div class="statistics-nutrition-trend-card__legend fd-row fd-wrap fd-gap-md fd-ui-caption fd-ui-text-muted">
+                        <span class="statistics-nutrition-trend-card__legend-item statistics-nutrition-trend-card__legend-item--protein">{{
+                            'STATISTICS.DASHBOARD.NUTRIENTS.PROTEIN' | translate
+                        }}</span>
+                        <span class="statistics-nutrition-trend-card__legend-item statistics-nutrition-trend-card__legend-item--fat">{{
+                            'STATISTICS.DASHBOARD.NUTRIENTS.FAT' | translate
+                        }}</span>
+                        <span class="statistics-nutrition-trend-card__legend-item statistics-nutrition-trend-card__legend-item--carbs">{{
+                            'STATISTICS.DASHBOARD.NUTRIENTS.CARBS' | translate
+                        }}</span>
+                        <span class="statistics-nutrition-trend-card__legend-item statistics-nutrition-trend-card__legend-item--fiber">{{
+                            'STATISTICS.DASHBOARD.NUTRIENTS.FIBER' | translate
+                        }}</span>
+                    </div>
+                }
+            } @else {
+                <div class="statistics-nutrition-trend-card__line-chart-shell">
+                    <fd-ui-line-chart
+                        class="statistics-nutrition-trend-card__line-chart"
+                        lineColor="var(--fd-color-primary-600)"
+                        fillColor="var(--fd-color-chart-primary-fill)"
+                        xAxisLabelLayout="stacked"
+                        verticalEdgeInset="none"
+                        axisValueSuffix=""
+                        [axisUnit]="chartUnitKey() | translate"
+                        [axisValueFormatter]="formatChartNumber"
+                        [title]="'STATISTICS.DASHBOARD.TREND.TITLE' | translate"
+                        [points]="selectedTab() === 'calories' ? calorieLinePoints() : []"
+                        [series]="selectedLineSeries()"
+                        [showArea]="selectedTab() === 'calories'"
+                        [showPoints]="true"
+                        [minValue]="0"
+                        [showAxisLabels]="true"
+                        [showGrid]="true"
+                        [axisDecimalPlaces]="0"
+                        [maxValue]="chartMaximum()"
+                        [defaultMaxValue]="chartMaximum()"
+                        [referenceLines]="calorieReferenceLines()"
+                        [valueSuffix]="chartUnitKey() | translate"
+                    />
+                </div>
+            }
+        </section>
+
+        <aside
+            class="statistics-nutrition-trend-card__insights"
+            [attr.aria-label]="'STATISTICS.DASHBOARD.TREND.INSIGHTS_TITLE' | translate"
+        >
+            <h3 class="statistics-nutrition-trend-card__insights-title fd-ui-action-text">
+                {{ 'STATISTICS.DASHBOARD.TREND.INSIGHTS_TITLE' | translate }}
+            </h3>
+            @for (insight of insights(); track insight.key) {
+                <div class="statistics-nutrition-trend-card__insight">
+                    <fd-ui-icon [name]="getInsightIcon(insight)" />
+                    <div class="fd-stack fd-gap-xxs fd-min-w-0">
+                        <strong class="fd-ui-action-text">{{ insight.labelKey | translate }}</strong>
+                        <span class="fd-ui-caption fd-ui-text-muted">{{ insight.detailKey | translate }}</span>
+                    </div>
+                    @if (insight.value !== null) {
+                        <strong
+                            class="statistics-nutrition-trend-card__insight-value fd-ui-stat-value"
+                            [class.statistics-nutrition-trend-card__insight-value--positive]="insight.tone === 'positive'"
+                            [class.statistics-nutrition-trend-card__insight-value--negative]="insight.tone === 'negative'"
+                        >
+                            {{ insight.value > 0 ? '+' : '' }}{{ insight.value | number: '1.0-1' }}{{ insight.unitKey | translate }}
+                        </strong>
+                    }
+                </div>
+            }
+        </aside>
+    </div>
+</fd-ui-card>

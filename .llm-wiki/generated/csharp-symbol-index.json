@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3008,
-                    "symbols":  3048,
+                    "sourceFiles":  3011,
+                    "symbols":  3051,
                     "interfaceImplementationLinks":  223,
                     "dependencyInjectionRegistrations":  222,
                     "kinds":  {
-                                  "class":  1537,
+                                  "class":  1540,
                                   "enum":  45,
                                   "interface":  399,
                                   "record":  957,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  3,
                                   "Options":  55,
-                                  "Other":  1069,
+                                  "Other":  1072,
                                   "Query":  155,
                                   "QueryHandler":  120,
                                   "ReadModelRepository":  29,
@@ -48,11 +48,32 @@
                 },
     "symbols":  [
                     {
+                        "name":  "ExpressionTreeSpanOverloadAnalyzer",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "PrimaryConstructorBackingFieldAnalyzer",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Analyzers/PrimaryConstructorBackingFieldAnalyzer.cs",
+                        "line":  11
+                    },
+                    {
                         "name":  "ProjectConventionAnalyzer",
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Analyzers/ProjectConventionAnalyzer.cs",
                         "line":  13
+                    },
+                    {
+                        "name":  "RedundantEmptyRecordParameterListAnalyzer",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Analyzers/RedundantEmptyRecordParameterListAnalyzer.cs",
+                        "line":  10
                     },
                     {
                         "name":  "UseExtensionBlockAnalyzer",
@@ -14206,7 +14227,7 @@
                         "kind":  "class",
                         "role":  "Configuration",
                         "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Meals/MealAiItemConfiguration.cs",
-                        "line":  7
+                        "line":  8
                     },
                     {
                         "name":  "MealAiSessionConfiguration",
@@ -15396,7 +15417,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  332
+                        "line":  330
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -21045,7 +21066,7 @@
                         "kind":  "record",
                         "role":  "Request",
                         "path":  "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesSnsWebhookHttpRequest.cs",
-                        "line":  2
+                        "line":  4
                     },
                     {
                         "name":  "CreateMailRelaySuppressionHttpRequest",
@@ -24311,7 +24332,7 @@
                                                  "implementation":  "ConfigurableBillingProviderGatewayAccessor",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Integrations/DependencyInjection.Billing.cs",
-                                                 "line":  33
+                                                 "line":  27
                                              },
                                              {
                                                  "service":  "IAdminMailInboxReader",
@@ -24367,21 +24388,21 @@
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-                                                 "line":  77
+                                                 "line":  75
                                              },
                                              {
                                                  "service":  "IJobExecutionStateTracker",
                                                  "implementation":  "JobExecutionStateTracker",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-                                                 "line":  97
+                                                 "line":  94
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Services/NotificationResourceServiceCollectionExtensions.cs",
-                                                 "line":  8
+                                                 "line":  9
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",

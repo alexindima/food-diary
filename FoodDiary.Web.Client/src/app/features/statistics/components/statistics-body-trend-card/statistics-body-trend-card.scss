@@ -1,0 +1,39 @@
+:host {
+    display: block;
+    min-width: 0;
+}
+
+.statistics-body-trend-card {
+    &__metrics {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--fd-space-lg);
+    }
+
+    &__change--positive {
+        color: var(--fd-color-success);
+    }
+
+    &__change--negative {
+        color: var(--fd-color-warning);
+    }
+
+    &__chart {
+        height: calc(var(--fd-size-control-xl) * 2);
+        margin-top: var(--fd-space-md);
+    }
+
+    &__chart fd-ui-line-chart {
+        --fd-line-chart-height: calc(var(--fd-size-control-xl) * 2);
+    }
+
+    &__empty {
+        min-height: calc(var(--fd-size-control-xl) * 2);
+        margin: 0;
+    }
+
+    &__action {
+        margin-top: var(--fd-space-sm);
+        margin-left: auto;
+    }
+}
