@@ -135,10 +135,10 @@ public sealed class ProjectConventionAnalyzer : DiagnosticAnalyzer {
     private static void AnalyzeImplicitObjectCreation(SyntaxNodeAnalysisContext context) {
         var creation = (ImplicitObjectCreationExpressionSyntax)context.Node;
         if (creation.Parent is ArgumentSyntax {
-                Parent: ArgumentListSyntax {
-                    Parent: InvocationExpressionSyntax,
-                },
-            }) {
+            Parent: ArgumentListSyntax {
+                Parent: InvocationExpressionSyntax,
+            },
+        }) {
             context.ReportDiagnostic(Diagnostic.Create(ExplicitInvocationArgumentTypeRule, creation.NewKeyword.GetLocation()));
         }
     }

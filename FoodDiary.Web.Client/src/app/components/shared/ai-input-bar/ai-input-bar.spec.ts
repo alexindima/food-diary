@@ -128,6 +128,15 @@ async function setupAiInputBarAsync(
 }
 
 describe('AiInputBarComponent text recognition', () => {
+    it('provides an accessible name for the text input', async () => {
+        const { fixture } = await setupAiInputBarAsync();
+        fixture.detectChanges();
+
+        const input = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.ai-input-bar__input');
+
+        expect(input?.getAttribute('aria-label')).toBeTruthy();
+    });
+
     it('runs text recognition and nutrition calculation', async () => {
         const { aiFoodService, component, fixture } = await setupAiInputBarAsync();
         component['voiceText'].set(' eggs ');

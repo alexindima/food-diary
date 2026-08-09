@@ -16,6 +16,7 @@
             variant="secondary"
             fill="text"
             [icon]="manualActionIcon()"
+            [ariaLabel]="manualActionLabelKey() | translate"
             (click)="manualAction.emit()"
         >
             {{ manualActionLabelKey() | translate }}

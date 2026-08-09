@@ -53,9 +53,9 @@ public sealed class ExpressionTreeSpanOverloadAnalyzer : DiagnosticAnalyzer {
         foreach (AnonymousFunctionExpressionSyntax lambda in invocation.Ancestors().OfType<AnonymousFunctionExpressionSyntax>()) {
             ITypeSymbol? convertedType = semanticModel.GetTypeInfo(lambda, cancellationToken).ConvertedType;
             if (convertedType is INamedTypeSymbol {
-                    OriginalDefinition.Name: "Expression",
-                    OriginalDefinition.ContainingNamespace: { } containingNamespace,
-                } &&
+                OriginalDefinition.Name: "Expression",
+                OriginalDefinition.ContainingNamespace: { } containingNamespace,
+            } &&
                 string.Equals(containingNamespace.ToDisplayString(), "System.Linq.Expressions", StringComparison.Ordinal)) {
                 return true;
             }
