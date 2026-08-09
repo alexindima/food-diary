@@ -20,7 +20,7 @@ public class FastingValidatorTests {
 
     [Fact]
     public async Task StartFasting_WithNullUserId_HasError() {
-        var command = new StartFastingCommand(UserId: null, "F16_8", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null);
+        var command = new StartFastingCommand(UserId: null, "Fast16Eat8", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null);
         TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
@@ -28,7 +28,7 @@ public class FastingValidatorTests {
 
     [Fact]
     public async Task StartFasting_WithEmptyUserId_HasError() {
-        var command = new StartFastingCommand(Guid.Empty, "F16_8", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null);
+        var command = new StartFastingCommand(Guid.Empty, "Fast16Eat8", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null);
         TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
@@ -44,7 +44,7 @@ public class FastingValidatorTests {
 
     [Fact]
     public async Task StartFasting_WithValidCommand_NoErrors() {
-        var command = new StartFastingCommand(Guid.NewGuid(), "F16_8", PlanType: null, 16, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null);
+        var command = new StartFastingCommand(Guid.NewGuid(), "Fast16Eat8", PlanType: null, 16, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null);
         TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
 
         result.ShouldNotHaveAnyValidationErrors();

@@ -151,7 +151,7 @@ public sealed class DomainCoverageCompletionTests {
                 ShareFasting: true));
         var fastingSession = FastingSession.Create(
             UserId.New(),
-            FastingProtocol.F16_8,
+            FastingProtocol.Fast16Eat8,
             plannedDurationHours: 16,
             startedAtUtc: DateTime.UtcNow);
         var webhookEvent = BillingWebhookEvent.CreateProcessed(

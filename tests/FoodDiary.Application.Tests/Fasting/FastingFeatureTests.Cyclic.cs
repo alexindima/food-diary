@@ -129,7 +129,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task SkipCyclicDay_WithIntermittentPlan_ReturnsInvalidCyclicAction() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow);
+        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.Fast16Eat8, 16, 8, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow, 1, 16);
         var handler = new SkipCyclicDayCommandHandler(
             new InMemoryFastingPlanRepository(active: plan),
@@ -327,7 +327,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task PostponeCyclicDay_WithIntermittentPlan_ReturnsInvalidCyclicAction() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow);
+        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.Fast16Eat8, 16, 8, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow, 1, 16);
         var handler = new PostponeCyclicDayCommandHandler(
             new InMemoryFastingPlanRepository(active: plan),

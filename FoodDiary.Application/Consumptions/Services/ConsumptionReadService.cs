@@ -17,7 +17,7 @@ public sealed class ConsumptionReadService(
         int limit,
         MealQueryFilters filters,
         CancellationToken cancellationToken) {
-        (IReadOnlyList<MealConsumptionReadModel> Items, int TotalItems) = await mealRepository.GetPagedConsumptionReadModelsAsync(
+        (IReadOnlyList<MealConsumptionReadModel> items, int totalItems) = await mealRepository.GetPagedConsumptionReadModelsAsync(
             userId,
             page,
             limit,
@@ -26,10 +26,10 @@ public sealed class ConsumptionReadService(
 
         IReadOnlyDictionary<MealId, FavoriteMealId> favoritesByMealId = await GetFavoritesByMealIdAsync(
             userId,
-            Items,
+            items,
             cancellationToken).ConfigureAwait(false);
 
-        return ToPagedResponse(Items, favoritesByMealId, page, limit, TotalItems);
+        return ToPagedResponse(items, favoritesByMealId, page, limit, totalItems);
     }
 
     public async Task<ConsumptionOverviewModel> GetOverviewAsync(
@@ -39,7 +39,7 @@ public sealed class ConsumptionReadService(
         int favoriteLimit,
         MealQueryFilters filters,
         CancellationToken cancellationToken) {
-        (IReadOnlyList<MealConsumptionReadModel> Items, int TotalItems) = await mealRepository.GetPagedConsumptionReadModelsAsync(
+        (IReadOnlyList<MealConsumptionReadModel> items, int totalItems) = await mealRepository.GetPagedConsumptionReadModelsAsync(
             userId,
             page,
             limit,
@@ -50,10 +50,10 @@ public sealed class ConsumptionReadService(
             await favoriteReadService.GetOverviewAsync(userId, favoriteLimit, cancellationToken).ConfigureAwait(false);
         IReadOnlyDictionary<MealId, FavoriteMealId> favoritesByMealId = await GetFavoritesByMealIdAsync(
             userId,
-            Items,
+            items,
             cancellationToken).ConfigureAwait(false);
 
-        PagedResponse<ConsumptionModel> allConsumptions = ToPagedResponse(Items, favoritesByMealId, page, limit, TotalItems);
+        PagedResponse<ConsumptionModel> allConsumptions = ToPagedResponse(items, favoritesByMealId, page, limit, totalItems);
 
         return new ConsumptionOverviewModel(allConsumptions, favoriteItems, favoriteCount);
     }

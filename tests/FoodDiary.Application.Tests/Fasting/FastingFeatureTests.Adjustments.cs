@@ -14,7 +14,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ExtendActiveFasting_WhenSessionIsActive_Succeeds() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.Fast72, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
         var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
@@ -46,7 +46,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ExtendActiveFasting_WithInvalidAdditionalHours_ReturnsValidationFailure() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.Fast72, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
         var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
@@ -90,7 +90,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ExtendActiveFasting_WhenCurrentOccurrenceCannotBeExtended_ReturnsNoActiveSession() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.Fast72, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
         occurrence.Complete(FixedNow.AddHours(1));
         var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
@@ -107,7 +107,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ExtendActiveFasting_WhenOccurrenceHasNoTarget_ReturnsNoActiveSession() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.Fast72, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, targetHours: null);
         var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
@@ -124,7 +124,7 @@ public partial class FastingFeatureTests {
     public async Task ExtendActiveFasting_WithDeletedUser_ReturnsAccountDeleted() {
         User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F72_0, 72, FixedNow);
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast72, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
         var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
@@ -141,7 +141,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ExtendActiveFasting_WithIntermittentPlan_ReturnsValidationFailure() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow);
+        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.Fast16Eat8, 16, 8, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow, 1, 16);
         var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
@@ -159,7 +159,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ReduceActiveFastingTarget_WhenSessionIsActive_Succeeds() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.Fast72, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
         var handler = new ReduceActiveFastingTargetCommandHandler(
             new InMemoryFastingPlanRepository(active: plan),
@@ -181,7 +181,7 @@ public partial class FastingFeatureTests {
     public async Task ReduceActiveFastingTarget_WhenNewTargetAlreadyReached_CompletesSession() {
         var userId = UserId.New();
         DateTime now = FixedNow;
-        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F36_0, 36, now.AddHours(-30));
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.Fast36, 36, now.AddHours(-30));
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, now.AddHours(-30), 1, 36);
         var handler = new ReduceActiveFastingTargetCommandHandler(
             new InMemoryFastingPlanRepository(active: plan),
@@ -202,7 +202,7 @@ public partial class FastingFeatureTests {
     public async Task ReduceActiveFastingTarget_WithDeletedUser_ReturnsAccountDeleted() {
         User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F72_0, 72, FixedNow);
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast72, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
         var handler = new ReduceActiveFastingTargetCommandHandler(
             new InMemoryFastingPlanRepository(active: plan),
@@ -221,7 +221,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ReduceActiveFastingTarget_WhenNoCurrentOccurrence_ReturnsNoActiveSession() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.Fast72, 72, FixedNow);
         var handler = new ReduceActiveFastingTargetCommandHandler(
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(),
@@ -237,7 +237,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ReduceActiveFastingTarget_WithIntermittentPlan_ReturnsValidationFailure() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow);
+        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.Fast16Eat8, 16, 8, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow, 1, 16);
         var handler = new ReduceActiveFastingTargetCommandHandler(
             new InMemoryFastingPlanRepository(active: plan),
@@ -289,7 +289,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ReduceActiveFastingTarget_WithInvalidReducedHours_ReturnsValidationFailure() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.Fast72, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
         var handler = new ReduceActiveFastingTargetCommandHandler(
             new InMemoryFastingPlanRepository(active: plan),
@@ -308,7 +308,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ReduceActiveFastingTarget_WhenOccurrenceHasNoTarget_ReturnsNoActiveSession() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.Fast72, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, targetHours: null);
         var handler = new ReduceActiveFastingTargetCommandHandler(
             new InMemoryFastingPlanRepository(active: plan),
@@ -327,7 +327,7 @@ public partial class FastingFeatureTests {
     public async Task UpdateCurrentFastingCheckIn_WithDeletedUser_ReturnsAccountDeleted() {
         User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F72_0, 72, FixedNow);
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast72, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
         var checkInRepo = new InMemoryFastingCheckInRepository();
         var handler = new UpdateCurrentFastingCheckInCommandHandler(
@@ -384,7 +384,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task UpdateCurrentFastingCheckIn_WithInvalidLevels_ReturnsValidationFailure() {
         User user = CreateUser(UserId.New());
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddHours(-1));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddHours(-1));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-1), 1, 36);
         var checkInRepo = new InMemoryFastingCheckInRepository();
         var handler = new UpdateCurrentFastingCheckInCommandHandler(
@@ -406,7 +406,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task UpdateCurrentFastingCheckIn_WithActiveSession_AddsCheckInAndUpdatesSession() {
         User user = CreateUser(UserId.New());
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddHours(-1));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddHours(-1));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-1), 1, 36);
         AttachNavigation(occurrence, plan, user);
         var checkInRepo = new InMemoryFastingCheckInRepository();

@@ -44,7 +44,7 @@ public class FastingPlanInvariantTests {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             FastingPlan.CreateExtended(
                 UserId.New(),
-                FastingProtocol.F16_8,
+                FastingProtocol.Fast16Eat8,
                 targetHours: 48,
                 startedAtUtc: DateTime.UtcNow));
     }
@@ -76,7 +76,7 @@ public class FastingPlanInvariantTests {
     public void Stop_SetsStoppedState() {
         var plan = FastingPlan.CreateExtended(
             UserId.New(),
-            FastingProtocol.F72_0,
+            FastingProtocol.Fast72,
             targetHours: 72,
             startedAtUtc: DateTime.UtcNow);
         DateTime stoppedAtUtc = DateTime.UtcNow.AddHours(4);
@@ -90,7 +90,7 @@ public class FastingPlanInvariantTests {
     [Fact]
     public void CreateIntermittent_WithEmptyUserId_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            FastingPlan.CreateIntermittent(UserId.Empty, FastingProtocol.F16_8, 16, 8, DateTime.UtcNow));
+            FastingPlan.CreateIntermittent(UserId.Empty, FastingProtocol.Fast16Eat8, 16, 8, DateTime.UtcNow));
     }
 
     [Fact]
@@ -108,7 +108,7 @@ public class FastingPlanInvariantTests {
     [Fact]
     public void CreateIntermittent_WithExtendedProtocol_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            FastingPlan.CreateIntermittent(UserId.New(), FastingProtocol.F72_0, 16, 8, DateTime.UtcNow));
+            FastingPlan.CreateIntermittent(UserId.New(), FastingProtocol.Fast72, 16, 8, DateTime.UtcNow));
     }
 
     [Theory]

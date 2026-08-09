@@ -4,6 +4,7 @@ using System.Reflection.Emit;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json;
 using FoodDiary.MailRelay.Client.Models;
 using FoodDiary.Results;
 using FoodDiary.MailRelay.Application.Emails.Commands;
@@ -235,6 +236,27 @@ public sealed class MailRelayPresentationTests {
     }
 
     [Fact]
+    public void AwsSesSnsWebhookHttpRequest_DeserializesAwsUrlFields() {
+        const string json = """
+            {
+              "Type": "SubscriptionConfirmation",
+              "Message": "message",
+              "SigningCertURL": "https://sns.us-east-1.amazonaws.com/certificate.pem",
+              "SubscribeURL": "https://sns.us-east-1.amazonaws.com/subscribe",
+              "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/unsubscribe"
+            }
+            """;
+
+        AwsSesSnsWebhookHttpRequest request = Assert.IsType<AwsSesSnsWebhookHttpRequest>(
+            JsonSerializer.Deserialize<AwsSesSnsWebhookHttpRequest>(json));
+
+        Assert.Multiple(
+            () => Assert.Equal("https://sns.us-east-1.amazonaws.com/certificate.pem", request.SigningCertUrl),
+            () => Assert.Equal("https://sns.us-east-1.amazonaws.com/subscribe", request.SubscribeUrl),
+            () => Assert.Equal("https://sns.us-east-1.amazonaws.com/unsubscribe", request.UnsubscribeUrl));
+    }
+
+    [Fact]
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsCertHostIsNotTrusted_RejectsBeforeDownloadingCertificate() {
         var handler = new RecordingHttpMessageHandler();
         var authorizer = new ProviderWebhookAuthorizer(
@@ -249,7 +271,7 @@ public sealed class MailRelayPresentationTests {
             Timestamp: DateTimeOffset.UtcNow.ToString("O", CultureInfo.InvariantCulture),
             SignatureVersion: "2",
             Signature: Convert.ToBase64String(Encoding.UTF8.GetBytes("invalid")),
-            SigningCertURL: "https://sns.extra.amazonaws.com/SimpleNotificationService-test.pem");
+            SigningCertUrl: "https://sns.extra.amazonaws.com/SimpleNotificationService-test.pem");
 
         Assert.False(await authorizer.IsAwsSesSnsAuthorizedAsync(request, CancellationToken.None));
         Assert.False(handler.WasCalled);
@@ -845,8 +867,8 @@ public sealed class MailRelayPresentationTests {
             Timestamp: DateTimeOffset.UtcNow.ToString("O", CultureInfo.InvariantCulture),
             SignatureVersion: "2",
             Signature: signature,
-            SigningCertURL: signingCertUrl,
-            SubscribeURL: "https://sns.us-east-1.amazonaws.com/?Action=ConfirmSubscription",
+            SigningCertUrl: signingCertUrl,
+            SubscribeUrl: "https://sns.us-east-1.amazonaws.com/?Action=ConfirmSubscription",
             Token: "token");
 
     private static string InvokeSnsCanonicalString(AwsSesSnsWebhookHttpRequest request) {

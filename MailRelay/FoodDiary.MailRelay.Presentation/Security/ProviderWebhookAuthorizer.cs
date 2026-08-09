@@ -46,7 +46,7 @@ public sealed class ProviderWebhookAuthorizer(
         }
 
         if (!HasRequiredSnsSignatureFields(request) ||
-            !TryCreateValidatedSnsCertificateUri(request.SigningCertURL, out Uri? certificateUri)) {
+            !TryCreateValidatedSnsCertificateUri(request.SigningCertUrl, out Uri? certificateUri)) {
             return false;
         }
 
@@ -101,7 +101,7 @@ public sealed class ProviderWebhookAuthorizer(
         !string.IsNullOrWhiteSpace(request.Timestamp) &&
         request.SignatureVersion is "1" or "2" &&
         !string.IsNullOrWhiteSpace(request.Signature) &&
-        !string.IsNullOrWhiteSpace(request.SigningCertURL);
+        !string.IsNullOrWhiteSpace(request.SigningCertUrl);
 
     private static bool TryCreateValidatedSnsCertificateUri(string? value, out Uri? certificateUri) {
         certificateUri = null;
@@ -174,7 +174,7 @@ public sealed class ProviderWebhookAuthorizer(
         if (string.Equals(request.Type, "SubscriptionConfirmation", StringComparison.OrdinalIgnoreCase) ||
             string.Equals(request.Type, "UnsubscribeConfirmation", StringComparison.OrdinalIgnoreCase)) {
             builder
-                .AppendNameValue("SubscribeURL", request.SubscribeURL)
+                .AppendNameValue("SubscribeURL", request.SubscribeUrl)
                 .AppendNameValue("Timestamp", request.Timestamp)
                 .AppendNameValue("Token", request.Token)
                 .AppendNameValue("TopicArn", request.TopicArn)

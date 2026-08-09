@@ -83,18 +83,17 @@ public sealed class FastingCheckIn : Entity<FastingCheckInId> {
             .Select(static value => value.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase)];
 
-        if (normalized.Length == 0) {
-            return null;
+        switch (normalized.Length) {
+            case 0:
+                return null;
+            case > MaxSymptomsCount:
+                throw new ArgumentOutOfRangeException(nameof(values), $"A maximum of {MaxSymptomsCount} symptoms is allowed.");
+            default:
+                string csv = string.Join(',', normalized);
+                return csv.Length > SymptomsMaxLength
+                    ? throw new ArgumentOutOfRangeException(nameof(values), $"Symptoms must be at most {SymptomsMaxLength} characters in total.")
+                    : csv;
         }
-
-        if (normalized.Length > MaxSymptomsCount) {
-            throw new ArgumentOutOfRangeException(nameof(values), $"A maximum of {MaxSymptomsCount} symptoms is allowed.");
-        }
-
-        string csv = string.Join(',', normalized);
-        return csv.Length > SymptomsMaxLength
-            ? throw new ArgumentOutOfRangeException(nameof(values), $"Symptoms must be at most {SymptomsMaxLength} characters in total.")
-            : csv;
     }
 
     private static string? NormalizeNotes(string? value) {
@@ -109,10 +108,6 @@ public sealed class FastingCheckIn : Entity<FastingCheckInId> {
     }
 
     private static DateTime NormalizeUtc(DateTime value, string paramName) {
-        if (value.Kind == DateTimeKind.Unspecified) {
-            throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.");
-        }
-
-        return value.ToUniversalTime();
+        return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.") : value.ToUniversalTime();
     }
 }

@@ -47,7 +47,7 @@ public sealed class MarketingAttributionEvent : Entity<MarketingAttributionEvent
         var entity = new MarketingAttributionEvent {
             Id = MarketingAttributionEventId.New(),
             OccurredAtUtc = NormalizeUtc(occurredAtUtc, nameof(occurredAtUtc)),
-            UserId = userId is Guid value && value != Guid.Empty ? value : null,
+            UserId = userId is { } value && value != Guid.Empty ? value : null,
             EventType = NormalizeRequired(eventType, EventTypeMaxLength, nameof(eventType)),
             AnonymousId = NormalizeRequired(anonymousId, AnonymousIdMaxLength, nameof(anonymousId)),
             SessionId = NormalizeRequired(sessionId, SessionIdMaxLength, nameof(sessionId)),
@@ -76,11 +76,7 @@ public sealed class MarketingAttributionEvent : Entity<MarketingAttributionEvent
         }
 
         string normalized = value.Trim();
-        if (normalized.Length > maxLength) {
-            throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."));
-        }
-
-        return normalized;
+        return normalized.Length > maxLength ? throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters.")) : normalized;
     }
 
     private static DateTime NormalizeUtc(DateTime value, string paramName) {

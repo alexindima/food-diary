@@ -201,13 +201,13 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
     }
 
     private static void EnsureIntermittentProtocol(FastingProtocol protocol) {
-        if (protocol is not (FastingProtocol.F16_8 or FastingProtocol.F18_6 or FastingProtocol.F20_4 or FastingProtocol.CustomIntermittent)) {
+        if (protocol is not (FastingProtocol.Fast16Eat8 or FastingProtocol.Fast18Eat6 or FastingProtocol.Fast20Eat4 or FastingProtocol.CustomIntermittent)) {
             throw new ArgumentOutOfRangeException(nameof(protocol), "Protocol is not valid for intermittent fasting.");
         }
     }
 
     private static void EnsureExtendedProtocol(FastingProtocol protocol) {
-        if (protocol is not (FastingProtocol.F24_0 or FastingProtocol.F36_0 or FastingProtocol.F72_0 or FastingProtocol.Custom)) {
+        if (protocol is not (FastingProtocol.Fast24 or FastingProtocol.Fast36 or FastingProtocol.Fast72 or FastingProtocol.Custom)) {
             throw new ArgumentOutOfRangeException(nameof(protocol), "Protocol is not valid for extended fasting.");
         }
     }

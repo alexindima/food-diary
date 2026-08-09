@@ -40,7 +40,7 @@ internal static class FastingStartFactory {
         }
 
         FastingPlanType planType = protocol.Value switch {
-            FastingProtocol.F16_8 or FastingProtocol.F18_6 or FastingProtocol.F20_4 or FastingProtocol.CustomIntermittent => FastingPlanType.Intermittent,
+            FastingProtocol.Fast16Eat8 or FastingProtocol.Fast18Eat6 or FastingProtocol.Fast20Eat4 or FastingProtocol.CustomIntermittent => FastingPlanType.Intermittent,
             _ => FastingPlanType.Extended,
         };
 

@@ -260,16 +260,16 @@ public sealed class EmailSender(
             string link = buildLink();
             EmailTemplateContent? template = await templateProvider.GetActiveTemplateAsync(templateKey, locale, cancellationToken).ConfigureAwait(false);
             string brand = string.IsNullOrWhiteSpace(options.FromName) ? "FoodDiary" : options.FromName;
-            (string Subject, string Html, string Text) = createFallbackContent(link);
+            (string fallbackSubject, string fallbackHtml, string fallbackText) = createFallbackContent(link);
 
             string subject = template is null
-                ? Subject
+                ? fallbackSubject
                 : ApplyTemplateTokens(template.Subject, link, brand);
             string htmlBody = template is null || string.IsNullOrWhiteSpace(template.HtmlBody)
-                ? Html
+                ? fallbackHtml
                 : ApplyTemplateTokens(template.HtmlBody, link, brand);
             string textBody = template is null || string.IsNullOrWhiteSpace(template.TextBody)
-                ? Text
+                ? fallbackText
                 : ApplyTemplateTokens(template.TextBody, link, brand);
 
             await DispatchAsync(toEmail, subject, htmlBody, textBody, cancellationToken).ConfigureAwait(false);

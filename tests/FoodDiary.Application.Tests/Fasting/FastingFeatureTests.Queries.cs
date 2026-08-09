@@ -20,7 +20,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task GetFastingInsights_WithCurrentAndHistory_ReturnsInsightsAndPrompt() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-5));
+        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.Fast16Eat8, 16, 8, FixedNow.AddDays(-5));
         var current = FastingOccurrence.Create(
             plan.Id,
             userId,
@@ -239,7 +239,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task GetCurrentFasting_WithActiveSession_ReturnsSessionWithCheckIns() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-1));
+        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.Fast16Eat8, 16, 8, FixedNow.AddDays(-1));
         var current = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow.AddHours(-4), 1, 16);
         var checkIn = FastingCheckIn.Create(current.Id, userId, 2, 4, 4, ["weakness"], "steady", FixedNow.AddHours(-1));
         GetCurrentFastingQueryHandler handler = CreateCurrentFastingHandler(
@@ -301,7 +301,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task GetFastingHistory_ReturnsPagedSessionsWithCheckIns() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-10));
+        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.Fast16Eat8, 16, 8, FixedNow.AddDays(-10));
         var latest = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow.AddDays(-1), 1, 16);
         latest.Complete(FixedNow.AddDays(-1).AddHours(16));
         var earlier = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow.AddDays(-2), 1, 16);
@@ -496,7 +496,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task GetFastingOverview_ReturnsCurrentStatsInsightsAndHistory() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-5));
+        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.Fast16Eat8, 16, 8, FixedNow.AddDays(-5));
         var current = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow.AddHours(-13), 1, 16);
         current.UpdateCheckIn(2, 2, 2, ["weakness"], "current", FixedNow.AddHours(-1));
         var currentCheckIn = FastingCheckIn.Create(current.Id, userId, 2, 2, 2, ["weakness"], "current", FixedNow.AddHours(-1));

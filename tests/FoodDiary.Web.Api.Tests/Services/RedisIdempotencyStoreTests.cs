@@ -184,7 +184,8 @@ public sealed class RedisIdempotencyStoreTests {
 
         await database.Received(1).ScriptEvaluateAsync(
             Arg.Any<string>(),
-            Arg.Is<RedisKey[]>(keys => keys.SequenceEqual(new[] { LockKey("request-7"), ResponseKey("request-7") })),
+            Arg.Is<RedisKey[]>(keys => keys != null &&
+                Enumerable.SequenceEqual(keys, new[] { LockKey("request-7"), ResponseKey("request-7") })),
             Arg.Is<RedisValue[]>(values => values != null &&
                 values[0] == "hash-7:owner-7" &&
                 values[1].ToString().Contains("\"requestHash\":\"hash-7\"", StringComparison.Ordinal) &&

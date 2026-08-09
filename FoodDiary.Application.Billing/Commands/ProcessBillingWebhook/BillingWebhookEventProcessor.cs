@@ -50,10 +50,12 @@ public sealed class BillingWebhookEventProcessor(
         } catch (BillingWebhookEventAlreadyProcessedException) {
             return Result.Success();
         } catch (BillingPaymentAlreadyExistsException) {
-            if (inboxEvent is not null) {
-                inboxEvent.MarkProcessed(timeProvider.GetUtcNow().UtcDateTime);
-                await billingWebhookEventRepository.UpdateAsync(inboxEvent, cancellationToken).ConfigureAwait(false);
+            if (inboxEvent is null) {
+                return Result.Success();
             }
+
+            inboxEvent.MarkProcessed(timeProvider.GetUtcNow().UtcDateTime);
+            await billingWebhookEventRepository.UpdateAsync(inboxEvent, cancellationToken).ConfigureAwait(false);
 
             return Result.Success();
         }

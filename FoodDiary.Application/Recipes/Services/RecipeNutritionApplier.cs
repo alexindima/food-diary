@@ -29,14 +29,14 @@ internal static class RecipeNutritionApplier {
             return manualNutritionResult;
         }
 
-        (double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol) = manualNutritionResult.Value;
+        (double calories, double proteins, double fats, double carbs, double fiber, double alcohol) = manualNutritionResult.Value;
         recipe.SetManualNutrition(
-            Calories,
-            Proteins,
-            Fats,
-            Carbs,
-            Fiber,
-            Alcohol);
+            calories,
+            proteins,
+            fats,
+            carbs,
+            fiber,
+            alcohol);
         return Result.Success();
     }
 }

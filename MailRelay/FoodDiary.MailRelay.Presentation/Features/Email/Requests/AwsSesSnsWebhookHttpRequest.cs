@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace FoodDiary.MailRelay.Presentation.Features.Email.Requests;
 
 public sealed record AwsSesSnsWebhookHttpRequest(
@@ -9,7 +11,7 @@ public sealed record AwsSesSnsWebhookHttpRequest(
     string? Timestamp = null,
     string? SignatureVersion = null,
     string? Signature = null,
-    string? SigningCertURL = null,
-    string? SubscribeURL = null,
+    [property: JsonPropertyName("SigningCertURL")] string? SigningCertUrl = null,
+    [property: JsonPropertyName("SubscribeURL")] string? SubscribeUrl = null,
     string? Token = null,
-    string? UnsubscribeURL = null);
+    [property: JsonPropertyName("UnsubscribeURL")] string? UnsubscribeUrl = null);

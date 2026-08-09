@@ -1,12 +1,12 @@
 namespace FoodDiary.Domain.Enums;
 
 public enum FastingProtocol {
-    F16_8 = 0,
-    F18_6 = 1,
-    F20_4 = 2,
-    F24_0 = 3,
-    F36_0 = 4,
-    F72_0 = 5,
+    Fast16Eat8 = 0,
+    Fast18Eat6 = 1,
+    Fast20Eat4 = 2,
+    Fast24 = 3,
+    Fast36 = 4,
+    Fast72 = 5,
     Custom = 6,
     CustomIntermittent = 7,
 }

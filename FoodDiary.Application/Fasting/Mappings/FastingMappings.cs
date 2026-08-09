@@ -75,7 +75,7 @@ public static class FastingMappings {
         bool isCompleted = occurrence.Status != FastingOccurrenceStatus.Active &&
             occurrence.Status != FastingOccurrenceStatus.Scheduled &&
             occurrence.Status != FastingOccurrenceStatus.Postponed;
-        (int? DayNumber, int? DayTotal) = ResolveCyclicPhaseProgress(occurrence, plan);
+        (int? dayNumber, int? dayTotal) = ResolveCyclicPhaseProgress(occurrence, plan);
         var sortedCheckIns = (checkIns ?? [])
             .OrderByDescending(static checkIn => checkIn.CheckedInAtUtc)
             .ToList();
@@ -95,8 +95,8 @@ public static class FastingMappings {
             plan?.CyclicEatDays,
             plan?.CyclicEatDayFastHours,
             plan?.CyclicEatDayEatingWindowHours,
-            DayNumber,
-            DayTotal,
+            dayNumber,
+            dayTotal,
             isCompleted,
             occurrence.Status.ToString(),
             occurrence.Notes,
@@ -120,7 +120,7 @@ public static class FastingMappings {
         bool isCompleted = occurrence.Status != FastingOccurrenceStatus.Active &&
             occurrence.Status != FastingOccurrenceStatus.Scheduled &&
             occurrence.Status != FastingOccurrenceStatus.Postponed;
-        (int? DayNumber, int? DayTotal) = ResolveCyclicPhaseProgress(occurrence, plan);
+        (int? dayNumber, int? dayTotal) = ResolveCyclicPhaseProgress(occurrence, plan);
         var sortedCheckIns = (checkIns ?? [])
             .OrderByDescending(static checkIn => checkIn.CheckedInAtUtc)
             .ToList();
@@ -140,8 +140,8 @@ public static class FastingMappings {
             plan?.CyclicEatDays,
             plan?.CyclicEatDayFastHours,
             plan?.CyclicEatDayEatingWindowHours,
-            DayNumber,
-            DayTotal,
+            dayNumber,
+            dayTotal,
             isCompleted,
             occurrence.Status.ToString(),
             occurrence.Notes,
@@ -186,9 +186,9 @@ public static class FastingMappings {
     }
 
     private static FastingPlanType ResolvePlanType(FastingProtocol protocol) => protocol switch {
-        FastingProtocol.F16_8 => FastingPlanType.Intermittent,
-        FastingProtocol.F18_6 => FastingPlanType.Intermittent,
-        FastingProtocol.F20_4 => FastingPlanType.Intermittent,
+        FastingProtocol.Fast16Eat8 => FastingPlanType.Intermittent,
+        FastingProtocol.Fast18Eat6 => FastingPlanType.Intermittent,
+        FastingProtocol.Fast20Eat4 => FastingPlanType.Intermittent,
         FastingProtocol.CustomIntermittent => FastingPlanType.Intermittent,
         _ => FastingPlanType.Extended,
     };

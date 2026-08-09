@@ -92,35 +92,23 @@ public sealed class FastingTelemetryEvent : Entity<FastingTelemetryEventId> {
         }
 
         string normalized = value.Trim();
-        if (normalized.Length > maxLength) {
-            throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."));
-        }
-
-        return normalized;
+        return normalized.Length > maxLength ? throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters.")) : normalized;
     }
 
     private static int? NormalizeHours(int? value, string paramName) {
-        switch (value) {
-            case null:
-                return null;
-            case < 1:
-            case > 168:
-                throw new ArgumentOutOfRangeException(paramName, "Value must be between 1 and 168.");
-            default:
-                return value.Value;
-        }
+        return value switch {
+            null => null,
+            < 1 or > 168 => throw new ArgumentOutOfRangeException(paramName, "Value must be between 1 and 168."),
+            _ => value.Value,
+        };
     }
 
     private static int? NormalizeScale(int? value, string paramName) {
-        switch (value) {
-            case null:
-                return null;
-            case < 1:
-            case > 5:
-                throw new ArgumentOutOfRangeException(paramName, "Value must be between 1 and 5.");
-            default:
-                return value.Value;
-        }
+        return value switch {
+            null => null,
+            < 1 or > 5 => throw new ArgumentOutOfRangeException(paramName, "Value must be between 1 and 5."),
+            _ => value.Value,
+        };
     }
 
     private static int? NormalizeNonNegative(int? value, string paramName) {

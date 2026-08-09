@@ -277,12 +277,13 @@ public sealed partial class User {
                 "Follow-up reminder hour must be greater than the first reminder hour.");
         }
 
-        if (nextState != state) {
-            ApplyPreferenceState(nextState);
-            return true;
+        if (nextState == state) {
+            return false;
         }
 
-        return false;
+        ApplyPreferenceState(nextState);
+        return true;
+
     }
 
     private static UserPreferenceState ApplyPreferenceTextChanges(
@@ -336,12 +337,11 @@ public sealed partial class User {
     }
 
     private static void EnsureReminderHours(int? value, string paramName) {
-        if (!value.HasValue) {
-            return;
-        }
-
-        if (value.Value is < 1 or > 168) {
-            throw new ArgumentOutOfRangeException(paramName, "Reminder hour must be between 1 and 168.");
+        switch (value) {
+            case null:
+                return;
+            case < 1 or > 168:
+                throw new ArgumentOutOfRangeException(paramName, "Reminder hour must be between 1 and 168.");
         }
     }
 }

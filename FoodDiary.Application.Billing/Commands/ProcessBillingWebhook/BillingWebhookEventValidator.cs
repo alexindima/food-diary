@@ -25,7 +25,7 @@ internal static class BillingWebhookEventValidator {
 
         if (webhookEvent.UpdatesSubscription &&
             string.Equals(provider, "paddle", StringComparison.OrdinalIgnoreCase) &&
-            webhookEvent.Quantity is int quantity &&
+            webhookEvent.Quantity is { } quantity &&
             quantity != 1) {
             return Errors.Billing.WebhookValidationFailed(
                 "Paddle subscription quantity must be exactly 1. Use a dedicated price for access duration instead of quantity.");

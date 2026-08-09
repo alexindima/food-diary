@@ -12,7 +12,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task EndFasting_WhenActiveSession_Succeeds() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow);
+        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.Fast16Eat8, 16, 8, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow, 1, 16);
         var handler = new EndFastingCommandHandler(
             new InMemoryFastingPlanRepository(active: plan),
@@ -79,7 +79,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task EndExtendedFasting_BeforeTarget_ReturnsInterruptedStatus() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.Fast72, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
         var handler = new EndFastingCommandHandler(
             new InMemoryFastingPlanRepository(active: plan),
@@ -145,7 +145,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task EndExtendedFasting_AfterTarget_ReturnsCompletedStatus() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F36_0, 36, FixedNow.AddHours(-40));
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.Fast36, 36, FixedNow.AddHours(-40));
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-40), 1, 36);
         var handler = new EndFastingCommandHandler(
             new InMemoryFastingPlanRepository(active: plan),
@@ -164,7 +164,7 @@ public partial class FastingFeatureTests {
     public async Task EndFasting_WithDeletedUser_ReturnsAccountDeleted() {
         User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
-        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, FixedNow);
+        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastingWindow, FixedNow, 1, 16);
         var handler = new EndFastingCommandHandler(
             new InMemoryFastingPlanRepository(active: plan),

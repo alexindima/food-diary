@@ -73,7 +73,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ProcessDueNotificationsAsync_WhenPlanIsPaused_SkipsOccurrence() {
         var user = User.Create("fasting-paused-plan@example.com", "hash");
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddDays(-1));
         plan.Pause();
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-40), 1, 36);
         AttachNavigation(occurrence, plan, user);
@@ -129,7 +129,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ProcessDueNotificationsAsync_WhenOccurrenceHasRealCheckIn_SuppressesCheckInReminder() {
         var user = User.Create("fasting-notifications@example.com", "hash");
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddDays(-1));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-13), 1, 36);
         AttachNavigation(occurrence, plan, user);
 
@@ -161,7 +161,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ProcessDueNotificationsAsync_WhenOccurrenceStartsInFuture_SkipsReminder() {
         var user = User.Create("fasting-future-reminder@example.com", "hash");
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddHours(1));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddHours(1));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(1), 1, 36);
         AttachNavigation(occurrence, plan, user);
         var notificationRepo = new InMemorySchedulerNotificationRepository();
@@ -189,7 +189,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ProcessDueNotificationsAsync_WhenOnlyLegacySummaryCheckInExists_SuppressesCheckInReminder() {
         var user = User.Create("fasting-summary@example.com", "hash");
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddDays(-1));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-13), 1, 36);
         occurrence.UpdateCheckIn(2, 4, 4, ["weakness"], "legacy", FixedNow.AddHours(-2));
         AttachNavigation(occurrence, plan, user);
@@ -219,7 +219,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ProcessDueNotificationsAsync_WhenNoCheckInExists_CreatesReminderAndPushesUnreadCount() {
         var user = User.Create("fasting-reminder@example.com", "hash");
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddDays(-1));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-13), 1, 36);
         AttachNavigation(occurrence, plan, user);
 
@@ -253,7 +253,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ProcessDueNotificationsAsync_WhenPastFollowUpThreshold_CreatesTwoRemindersOnceAndDeduplicatesLaterRuns() {
         var user = User.Create("fasting-reminder-thresholds@example.com", "hash");
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddDays(-1));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-21), 1, 36);
         AttachNavigation(occurrence, plan, user);
 
@@ -285,7 +285,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ProcessDueNotificationsAsync_WhenExtendedTargetElapsed_CreatesCompletionNotification() {
         var user = User.Create("fasting-completion@example.com", "hash");
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-2));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddDays(-2));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-37), 1, 36);
         occurrence.UpdateCheckIn(2, 4, 4, ["ok"], "checked", FixedNow.AddHours(-1));
         AttachNavigation(occurrence, plan, user);
@@ -316,7 +316,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ProcessDueNotificationsAsync_WhenExtendedTargetMissing_SkipsCompletionNotification() {
         var user = User.Create("fasting-no-target@example.com", "hash");
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-2));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddDays(-2));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-37), 1, targetHours: null);
         occurrence.UpdateCheckIn(2, 4, 4, ["ok"], "checked", FixedNow.AddHours(-1));
         AttachNavigation(occurrence, plan, user);
@@ -345,7 +345,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ProcessDueNotificationsAsync_WhenCompletionNotificationAlreadyExists_SkipsDuplicate() {
         var user = User.Create("fasting-completion-duplicate@example.com", "hash");
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-2));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddDays(-2));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-37), 1, 36);
         occurrence.UpdateCheckIn(2, 4, 4, ["ok"], "checked", FixedNow.AddHours(-1));
         AttachNavigation(occurrence, plan, user);
@@ -379,7 +379,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ProcessDueNotificationsAsync_WhenIntermittentWindowsAreDue_CreatesWindowNotifications() {
         var user = User.Create("fasting-intermittent@example.com", "hash");
-        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-2));
+        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, FixedNow.AddDays(-2));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-25), 1, 16);
         occurrence.UpdateCheckIn(2, 4, 4, ["ok"], "checked", FixedNow.AddHours(-1));
         AttachNavigation(occurrence, plan, user);
@@ -413,7 +413,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ProcessDueNotificationsAsync_WhenIntermittentWindowConfigMissing_SkipsWindowNotifications() {
         var user = User.Create("fasting-intermittent-missing-window@example.com", "hash");
-        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-2));
+        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, FixedNow.AddDays(-2));
         SetPrivateProperty<FastingPlan, int?>(plan, nameof(FastingPlan.IntermittentEatingWindowHours), value: null);
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-25), 1, 16);
         occurrence.UpdateCheckIn(2, 4, 4, ["ok"], "checked", FixedNow.AddHours(-1));
@@ -443,7 +443,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ProcessDueNotificationsAsync_WhenIntermittentOccurrenceStartsInFuture_SkipsWindowNotifications() {
         var user = User.Create("fasting-intermittent-future@example.com", "hash");
-        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, FixedNow.AddHours(1));
+        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, FixedNow.AddHours(1));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(1), 1, 16);
         occurrence.UpdateCheckIn(2, 4, 4, ["ok"], "checked", FixedNow);
         AttachNavigation(occurrence, plan, user);
@@ -472,7 +472,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task ProcessDueNotificationsAsync_WhenIntermittentWindowNotificationAlreadyExists_SkipsDuplicate() {
         var user = User.Create("fasting-intermittent-duplicate@example.com", "hash");
-        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-1));
+        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, FixedNow.AddDays(-1));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-17), 1, 16);
         occurrence.UpdateCheckIn(2, 4, 4, ["ok"], "checked", FixedNow.AddHours(-1));
         AttachNavigation(occurrence, plan, user);

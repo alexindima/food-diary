@@ -99,7 +99,7 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
         };
         adopted.SetCreated();
 
-        foreach (MealPlanDay? sourceDay in _days.OrderBy(d => d.DayNumber)) {
+        foreach (MealPlanDay sourceDay in _days.OrderBy(d => d.DayNumber)) {
             MealPlanDay newDay = adopted.AddDay(sourceDay.DayNumber);
             foreach (MealPlanMeal sourceMeal in sourceDay.Meals) {
                 newDay.AddMeal(sourceMeal.MealType, sourceMeal.RecipeId, sourceMeal.Servings);

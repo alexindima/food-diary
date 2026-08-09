@@ -13,14 +13,14 @@ public partial class FastingFeatureTests {
     public void FastingMappings_ToModel_WithSession_MapsProtocolPlanTypeAndOccurrenceKind() {
         var session = FastingSession.Create(
             UserId.New(),
-            FastingProtocol.F16_8,
+            FastingProtocol.Fast16Eat8,
             plannedDurationHours: 16,
             FixedNow,
             notes: "morning fast");
 
         FastingSessionModel model = session.ToModel();
 
-        Assert.Equal("F16_8", model.Protocol);
+        Assert.Equal("Fast16Eat8", model.Protocol);
         Assert.Equal("Intermittent", model.PlanType);
         Assert.Equal("FastingWindow", model.OccurrenceKind);
         Assert.Equal("Active", model.Status);
@@ -113,7 +113,7 @@ public partial class FastingFeatureTests {
     public void FastingMappings_ToModel_WithCompletedExtendedSession_MapsFastDayAndCompletion() {
         var session = FastingSession.Create(
             UserId.New(),
-            FastingProtocol.F36_0,
+            FastingProtocol.Fast36,
             plannedDurationHours: 36,
             FixedNow.AddHours(-40),
             notes: null);
@@ -129,8 +129,8 @@ public partial class FastingFeatureTests {
     }
 
     [Theory]
-    [InlineData(FastingProtocol.F18_6)]
-    [InlineData(FastingProtocol.F20_4)]
+    [InlineData(FastingProtocol.Fast18Eat6)]
+    [InlineData(FastingProtocol.Fast20Eat4)]
     [InlineData(FastingProtocol.CustomIntermittent)]
     public void FastingMappings_ToModel_WithIntermittentSessionProtocols_MapsIntermittentWindow(FastingProtocol protocol) {
         var session = FastingSession.Create(
@@ -197,7 +197,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public void FastingMappings_ToModel_WithOccurrence_UsesLatestCheckInAndDistinctSymptoms() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F36_0, 36, FixedNow.AddHours(-1));
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.Fast36, 36, FixedNow.AddHours(-1));
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-1), 1, 36);
         occurrence.UpdateCheckIn(2, 3, 4, ["tired"], "old check-in", FixedNow.AddMinutes(-30));
         var olderCheckIn = FastingCheckIn.Create(

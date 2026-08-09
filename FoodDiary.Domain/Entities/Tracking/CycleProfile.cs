@@ -218,14 +218,10 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
     }
 
     private bool HasActiveHormonalFactor() =>
-        _factors.Any(factor => factor.Type == CycleFactorType.HormonalContraception && factor.EndDate is null);
+        _factors.Exists(factor => factor is { Type: CycleFactorType.HormonalContraception, EndDate: null });
 
     public static DateTime NormalizeDate(DateTime value) {
-        if (value.Kind == DateTimeKind.Unspecified) {
-            return DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
-        }
-
-        return DateTime.SpecifyKind(value.ToUniversalTime().Date, DateTimeKind.Utc);
+        return DateTime.SpecifyKind(value.Kind == DateTimeKind.Unspecified ? value.Date : value.ToUniversalTime().Date, DateTimeKind.Utc);
     }
 
     internal static string? NormalizeNotes(string? value) =>

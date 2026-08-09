@@ -331,11 +331,48 @@ dotnet_diagnostic.MA0051.severity = warning
 [**/*.cs]
 dotnet_diagnostic.FD0005.severity = error
 dotnet_diagnostic.FD0010.severity = error
+dotnet_diagnostic.FD0011.severity = error
+
+dotnet_naming_rule.local_variables_use_camel_case.symbols = local_variables
+dotnet_naming_rule.local_variables_use_camel_case.style = camel_case
+dotnet_naming_rule.local_variables_use_camel_case.severity = error
+
+dotnet_naming_symbols.local_variables.applicable_kinds = local
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+dotnet_naming_symbols.private_static_fields.applicable_kinds = field
+dotnet_naming_symbols.private_static_fields.applicable_accessibilities = private
+dotnet_naming_symbols.private_static_fields.required_modifiers = static
+
+dotnet_naming_symbols.private_constants.applicable_kinds = field
+dotnet_naming_symbols.private_constants.applicable_accessibilities = private
+dotnet_naming_symbols.private_constants.required_modifiers = const
+
+dotnet_naming_style.camel_case.capitalization = camel_case
+
+dotnet_naming_style.underscore_camel_case.required_prefix = _
+dotnet_naming_style.underscore_camel_case.capitalization = camel_case
+
+dotnet_naming_style.pascal_case.capitalization = pascal_case
 
 [FoodDiary.{Application,Application.Abstractions,Domain,Infrastructure,Integrations,JobManager,Presentation.Api,Telegram.Bot,Web.Api}/**/*.cs]
 dotnet_diagnostic.FD0002.severity = error
 dotnet_diagnostic.FD0003.severity = error
 dotnet_diagnostic.FD0004.severity = error
+
+[FoodDiary.Application/**/*.cs]
+dotnet_diagnostic.FD0012.severity = error
+dotnet_naming_rule.private_instance_fields_use_underscore.symbols = private_fields
+dotnet_naming_rule.private_instance_fields_use_underscore.style = underscore_camel_case
+dotnet_naming_rule.private_instance_fields_use_underscore.severity = error
+dotnet_naming_rule.private_static_fields_use_pascal_case.symbols = private_static_fields
+dotnet_naming_rule.private_static_fields_use_pascal_case.style = pascal_case
+dotnet_naming_rule.private_static_fields_use_pascal_case.severity = error
+dotnet_naming_rule.private_constants_use_pascal_case.symbols = private_constants
+dotnet_naming_rule.private_constants_use_pascal_case.style = pascal_case
+dotnet_naming_rule.private_constants_use_pascal_case.severity = error
 
 [MailInbox/FoodDiary.MailInbox.{Application,Client,Domain,Infrastructure,Presentation,WebApi}/**/*.cs]
 dotnet_diagnostic.FD0002.severity = error

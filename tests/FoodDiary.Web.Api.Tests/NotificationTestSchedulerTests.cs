@@ -30,7 +30,7 @@ public sealed class NotificationTestSchedulerTests {
         var userId = Guid.NewGuid();
 
         ScheduledNotificationData scheduled = await scheduler.ScheduleAsync(userId, 0, type, CancellationToken.None);
-        (Guid CommandUserId, string CommandType) = await dispatched.Task.WaitAsync(
+        (Guid commandUserId, string commandType) = await dispatched.Task.WaitAsync(
             TimeSpan.FromSeconds(3),
             TimeProvider.System);
 
@@ -38,8 +38,8 @@ public sealed class NotificationTestSchedulerTests {
             () => Assert.Equal(expectedType, scheduled.Type),
             () => Assert.Equal(1, scheduled.DelaySeconds),
             () => Assert.Equal(FixedUtcNow.AddSeconds(1), scheduled.ScheduledAtUtc),
-            () => Assert.Equal(userId, CommandUserId),
-            () => Assert.Equal(expectedType, CommandType));
+            () => Assert.Equal(userId, commandUserId),
+            () => Assert.Equal(expectedType, commandType));
     }
 
     [Fact]

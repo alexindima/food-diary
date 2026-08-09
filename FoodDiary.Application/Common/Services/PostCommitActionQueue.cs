@@ -5,10 +5,10 @@ namespace FoodDiary.Application.Common.Services;
 
 internal sealed class PostCommitActionQueue : IPostCommitActionQueue {
     private static readonly TimeSpan DefaultActionTimeout = TimeSpan.FromSeconds(5);
-    private readonly Queue<PostCommitAction> actions = [];
-    private readonly ILogger<PostCommitActionQueue> logger;
-    private readonly TimeProvider timeProvider;
-    private readonly TimeSpan actionTimeout;
+    private readonly Queue<PostCommitAction> _actions = [];
+    private readonly ILogger<PostCommitActionQueue> _logger;
+    private readonly TimeProvider _timeProvider;
+    private readonly TimeSpan _actionTimeout;
 
     public PostCommitActionQueue(
         ILogger<PostCommitActionQueue> logger,
@@ -21,22 +21,22 @@ internal sealed class PostCommitActionQueue : IPostCommitActionQueue {
         TimeProvider timeProvider,
         TimeSpan actionTimeout) {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(actionTimeout, TimeSpan.Zero);
-        this.logger = logger;
-        this.timeProvider = timeProvider;
-        this.actionTimeout = actionTimeout;
+        _logger = logger;
+        _timeProvider = timeProvider;
+        _actionTimeout = actionTimeout;
     }
 
-    public bool HasActions => actions.Count > 0;
+    public bool HasActions => _actions.Count > 0;
 
     public void Enqueue(string actionName, Func<CancellationToken, Task> action) {
         ArgumentException.ThrowIfNullOrWhiteSpace(actionName);
         ArgumentNullException.ThrowIfNull(action);
-        actions.Enqueue(new PostCommitAction(actionName, action));
+        _actions.Enqueue(new PostCommitAction(actionName, action));
     }
 
     public async Task FlushAsync(CancellationToken cancellationToken = default) {
-        while (actions.TryDequeue(out PostCommitAction? action)) {
-            using var timeoutSource = new CancellationTokenSource(actionTimeout, timeProvider);
+        while (_actions.TryDequeue(out PostCommitAction? action)) {
+            using var timeoutSource = new CancellationTokenSource(_actionTimeout, _timeProvider);
             using var actionSource = CancellationTokenSource.CreateLinkedTokenSource(
                 cancellationToken,
                 timeoutSource.Token);
@@ -45,12 +45,12 @@ internal sealed class PostCommitActionQueue : IPostCommitActionQueue {
             } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
                 throw;
             } catch (OperationCanceledException) when (timeoutSource.IsCancellationRequested) {
-                logger.LogWarning(
+                _logger.LogWarning(
                     "Best-effort post-commit action {PostCommitActionName} exceeded timeout {PostCommitActionTimeout}.",
                     action.Name,
-                    actionTimeout);
+                    _actionTimeout);
             } catch (Exception ex) {
-                logger.LogWarning(
+                _logger.LogWarning(
                     ex,
                     "Best-effort post-commit action {PostCommitActionName} failed.",
                     action.Name);

@@ -102,19 +102,19 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
     }
 
     public static int GetDefaultDuration(FastingProtocol protocol) => protocol switch {
-        FastingProtocol.F16_8 => 16,
-        FastingProtocol.F18_6 => 18,
-        FastingProtocol.F20_4 => 20,
-        FastingProtocol.F24_0 => 24,
-        FastingProtocol.F36_0 => 36,
-        FastingProtocol.F72_0 => 72,
+        FastingProtocol.Fast16Eat8 => 16,
+        FastingProtocol.Fast18Eat6 => 18,
+        FastingProtocol.Fast20Eat4 => 20,
+        FastingProtocol.Fast24 => 24,
+        FastingProtocol.Fast36 => 36,
+        FastingProtocol.Fast72 => 72,
         _ => 16,
     };
 
     private static bool IsIntermittentProtocol(FastingProtocol protocol) => protocol switch {
-        FastingProtocol.F16_8 => true,
-        FastingProtocol.F18_6 => true,
-        FastingProtocol.F20_4 => true,
+        FastingProtocol.Fast16Eat8 => true,
+        FastingProtocol.Fast18Eat6 => true,
+        FastingProtocol.Fast20Eat4 => true,
         FastingProtocol.CustomIntermittent => true,
         _ => false,
     };
@@ -137,7 +137,7 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
     }
 
     private static void EnsureDuration(int hours) {
-        if (hours < MinDurationHours || hours > MaxDurationHours) {
+        if (hours is < MinDurationHours or > MaxDurationHours) {
             throw new ArgumentOutOfRangeException(nameof(hours), $"Duration must be between {MinDurationHours} and {MaxDurationHours} hours.");
         }
     }

@@ -14,3 +14,5 @@ FD0007 | Style | Disabled | Require coverage exclusion on test types
 FD0008 | Style | Disabled | Require concrete classes to be closed for inheritance in governed scopes
 FD0009 | Reliability | Disabled | Reject direct test connections to literal external hosts
 FD0010 | Reliability | Disabled | Reject span overloads inside expression trees
+FD0011 | Style | Disabled | Reject redundant empty record parameter lists
+FD0012 | Style | Disabled | Reject private readonly fields that only store primary constructor parameters

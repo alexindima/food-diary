@@ -311,7 +311,7 @@ public sealed class AdditionalFeatureControllerTests {
 
         CapturedSender startSender = SubstituteSender.Capture(Result.Success(session));
         FastingController startController = CreateController(new FastingController(startSender));
-        Assert.IsType<FastingSessionHttpResponse>(Assert.IsType<OkObjectResult>(await startController.Start(userId, new StartFastingHttpRequest("F16_8"))).Value);
+        Assert.IsType<FastingSessionHttpResponse>(Assert.IsType<OkObjectResult>(await startController.Start(userId, new StartFastingHttpRequest("Fast16Eat8"))).Value);
         Assert.IsType<StartFastingCommand>(startSender.Request);
 
         CapturedSender endSender = SubstituteSender.Capture(Result.Success(session));
@@ -392,7 +392,7 @@ public sealed class AdditionalFeatureControllerTests {
             InitialPlannedDurationHours: 16,
             AddedDurationHours: 0,
             PlannedDurationHours: 16,
-            Protocol: "F16_8",
+            Protocol: "Fast16Eat8",
             PlanType: "Intermittent",
             OccurrenceKind: "FastingWindow",
             CyclicFastDays: null,

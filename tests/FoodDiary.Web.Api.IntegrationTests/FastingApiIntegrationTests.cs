@@ -16,7 +16,7 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
     [Fact]
     public async Task GetOverview_WithActiveSession_ReturnsCurrentStatsAlertsAndHistory() {
         User user = await SeedUserAsync();
-        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, DateTime.UtcNow.AddDays(-5));
+        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, DateTime.UtcNow.AddDays(-5));
         var completed = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastingWindow, DateTime.UtcNow.AddDays(-2), 1, 16);
         completed.UpdateCheckIn(4, 4, 4, ["headache"], "completed", DateTime.UtcNow.AddDays(-2).AddHours(8));
         completed.Complete(DateTime.UtcNow.AddDays(-2).AddHours(16));
@@ -40,7 +40,7 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
     [Fact]
     public async Task UpdateCheckIn_PersistsCheckIn_AndCurrentReturnsIt() {
         User user = await SeedUserAsync();
-        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, DateTime.UtcNow.AddHours(-6));
+        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, DateTime.UtcNow.AddHours(-6));
         var current = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastingWindow, DateTime.UtcNow.AddHours(-6), 1, 16);
         await SeedFastingDataAsync(plan, current);
 
@@ -72,7 +72,7 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
     [Fact]
     public async Task GetHistory_ReturnsPagedSessionsWithCheckIns() {
         User user = await SeedUserAsync();
-        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, DateTime.UtcNow.AddDays(-10));
+        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, DateTime.UtcNow.AddDays(-10));
 
         var latest = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastingWindow, DateTime.UtcNow.AddDays(-1), 1, 16);
         latest.UpdateCheckIn(3, 4, 5, ["good"], "latest", DateTime.UtcNow.AddDays(-1).AddHours(8));
@@ -105,7 +105,7 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
     public async Task ReduceDuration_WhenAdjustedTargetAlreadyReached_CompletesSession() {
         User user = await SeedUserAsync();
         DateTime startedAtUtc = DateTime.UtcNow.AddHours(-30);
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, startedAtUtc);
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, startedAtUtc);
         var current = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, startedAtUtc, 1, 36);
         await SeedFastingDataAsync(plan, current);
 

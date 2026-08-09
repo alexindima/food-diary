@@ -43,18 +43,22 @@ public sealed class FavoriteProduct : Entity<FavoriteProductId> {
 
     public void UpdateName(string? name) {
         string? normalized = NormalizeOptionalText(name);
-        if (!string.Equals(Name, normalized, StringComparison.Ordinal)) {
-            Name = normalized;
-            SetModified();
+        if (string.Equals(Name, normalized, StringComparison.Ordinal)) {
+            return;
         }
+
+        Name = normalized;
+        SetModified();
     }
 
     public void UpdatePreferredPortionAmount(double? preferredPortionAmount) {
         double? normalized = NormalizePreferredPortionAmount(preferredPortionAmount);
-        if (PreferredPortionAmount != normalized) {
-            PreferredPortionAmount = normalized;
-            SetModified();
+        if (Nullable.Equals(PreferredPortionAmount, normalized)) {
+            return;
         }
+
+        PreferredPortionAmount = normalized;
+        SetModified();
     }
 
     private static string? NormalizeOptionalText(string? value) {

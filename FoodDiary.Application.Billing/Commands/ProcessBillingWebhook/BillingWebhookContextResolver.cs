@@ -28,8 +28,8 @@ public sealed class BillingWebhookContextResolver(
         }
 
         if (webhookEvent.UpdatesSubscription &&
-            subscription?.LastWebhookOccurredAtUtc is DateTime lastOccurredAtUtc &&
-            webhookEvent.OccurredAtUtc is DateTime occurredAtUtc &&
+            subscription?.LastWebhookOccurredAtUtc is { } lastOccurredAtUtc &&
+            webhookEvent.OccurredAtUtc is { } occurredAtUtc &&
             occurredAtUtc < lastOccurredAtUtc) {
             return Result.Success<BillingWebhookProcessingContext?>(value: null);
         }
@@ -63,22 +63,25 @@ public sealed class BillingWebhookContextResolver(
             }
         }
 
-        if (!string.IsNullOrWhiteSpace(webhookEvent.ExternalPaymentMethodId)) {
-            BillingSubscription? byPaymentMethod = await billingSubscriptionRepository.GetByExternalPaymentMethodIdAsync(
-                provider,
-                webhookEvent.ExternalPaymentMethodId,
-                cancellationToken).ConfigureAwait(false);
-            if (byPaymentMethod is not null) {
-                return byPaymentMethod;
-            }
+        if (string.IsNullOrWhiteSpace(webhookEvent.ExternalPaymentMethodId)) {
+            return string.IsNullOrWhiteSpace(webhookEvent.ExternalCustomerId)
+                ? null
+                : await billingSubscriptionRepository.GetByExternalCustomerIdAsync(
+                    provider,
+                    webhookEvent.ExternalCustomerId,
+                    cancellationToken).ConfigureAwait(false);
         }
 
-        return string.IsNullOrWhiteSpace(webhookEvent.ExternalCustomerId)
+        BillingSubscription? byPaymentMethod = await billingSubscriptionRepository.GetByExternalPaymentMethodIdAsync(
+            provider,
+            webhookEvent.ExternalPaymentMethodId,
+            cancellationToken).ConfigureAwait(false);
+        return byPaymentMethod ?? (string.IsNullOrWhiteSpace(webhookEvent.ExternalCustomerId)
             ? null
             : await billingSubscriptionRepository.GetByExternalCustomerIdAsync(
                 provider,
                 webhookEvent.ExternalCustomerId,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken).ConfigureAwait(false));
     }
 
     private Task<BillingPayment?> ResolveRelatedPaymentAsync(

@@ -10,20 +10,18 @@ namespace FoodDiary.Application.Common.Behaviors;
 public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     where TResponse : Result {
-    private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
-
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken) {
-        if (!_validators.Any()) {
+        if (!validators.Any()) {
             return await next(cancellationToken).ConfigureAwait(false);
         }
 
         var context = new ValidationContext<TRequest>(request);
 
         ValidationResult[] validationResults = await Task.WhenAll(
-            _validators.Select(v => v.ValidateAsync(context, cancellationToken))).ConfigureAwait(false);
+            validators.Select(v => v.ValidateAsync(context, cancellationToken))).ConfigureAwait(false);
 
         ValidationFailure[] errors = [.. validationResults
             .Where(r => !r.IsValid)

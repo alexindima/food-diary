@@ -4,4 +4,4 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminLessons;
 
-public sealed record GetAdminLessonsQuery() : IQuery<Result<IReadOnlyList<AdminLessonModel>>>;
+public sealed record GetAdminLessonsQuery : IQuery<Result<IReadOnlyList<AdminLessonModel>>>;

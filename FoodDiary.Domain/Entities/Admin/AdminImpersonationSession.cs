@@ -50,11 +50,7 @@ public sealed class AdminImpersonationSession : Entity<Guid> {
         }
 
         string trimmed = value.Trim();
-        if (trimmed.Length is < 10 or > 500) {
-            throw new ArgumentOutOfRangeException(nameof(value), "Reason must be between 10 and 500 characters.");
-        }
-
-        return trimmed;
+        return trimmed.Length is < 10 or > 500 ? throw new ArgumentOutOfRangeException(nameof(value), "Reason must be between 10 and 500 characters.") : trimmed;
     }
 
     private static string? NormalizeOptionalText(string? value, int maxLength) {

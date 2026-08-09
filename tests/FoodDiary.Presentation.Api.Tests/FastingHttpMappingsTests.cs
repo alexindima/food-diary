@@ -19,13 +19,13 @@ public sealed class FastingHttpMappingsTests {
     [Fact]
     public void StartFastingRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
-        var request = new StartFastingHttpRequest("F16_8", "Intermittent", 16, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, "Feeling good");
+        var request = new StartFastingHttpRequest("Fast16Eat8", "Intermittent", 16, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, "Feeling good");
 
         StartFastingCommand command = request.ToCommand(userId);
 
         Assert.Multiple(
             () => Assert.Equal(userId, command.UserId),
-            () => Assert.Equal("F16_8", command.Protocol),
+            () => Assert.Equal("Fast16Eat8", command.Protocol),
             () => Assert.Equal("Intermittent", command.PlanType),
             () => Assert.Equal(16, command.PlannedDurationHours),
             () => Assert.Equal("Feeling good", command.Notes));
@@ -34,7 +34,7 @@ public sealed class FastingHttpMappingsTests {
     [Fact]
     public void StartFastingRequest_WithDefaults_MapsNullOptionals() {
         var userId = Guid.NewGuid();
-        var request = new StartFastingHttpRequest("F18_6");
+        var request = new StartFastingHttpRequest("Fast18Eat6");
 
         StartFastingCommand command = request.ToCommand(userId);
 
@@ -144,7 +144,7 @@ public sealed class FastingHttpMappingsTests {
             16,
             8,
             24,
-            "F16_8",
+            "Fast16Eat8",
             "Intermittent",
             "FastingWindow",
             CyclicFastDays: null,
@@ -204,7 +204,7 @@ public sealed class FastingHttpMappingsTests {
                 16,
                 0,
                 16,
-                "F16_8",
+                "Fast16Eat8",
                 "Intermittent",
                 "FastingWindow",
                 CyclicFastDays: null,

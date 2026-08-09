@@ -14,7 +14,7 @@ public sealed class FastingInsightBuilderTests {
     [Fact]
     public void BuildAlerts_WithLateCurrentAndNoCheckIn_ReturnsLatePrompt() {
         var user = User.Create("insight-late@example.com", "hash");
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddDays(-1));
         var occurrence = FastingOccurrence.Create(
             plan.Id,
             user.Id,
@@ -36,7 +36,7 @@ public sealed class FastingInsightBuilderTests {
     [Fact]
     public void BuildAlerts_WithRiskyCurrentCheckIn_ReturnsCurrentWarningAndRiskyPrompt() {
         var user = User.Create("insight-risky@example.com", "hash");
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddDays(-1));
         var occurrence = FastingOccurrence.Create(
             plan.Id,
             user.Id,
@@ -108,7 +108,7 @@ public sealed class FastingInsightBuilderTests {
         int mood,
         IReadOnlyList<string> symptoms) {
         var user = User.Create($"insight-{Guid.NewGuid():N}@example.com", "hash");
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, targetHours, FixedNow.AddDays(-1));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, targetHours, FixedNow.AddDays(-1));
         var occurrence = FastingOccurrence.Create(
             plan.Id,
             user.Id,

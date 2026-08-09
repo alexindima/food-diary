@@ -4,5 +4,5 @@ using FoodDiary.Application.Admin.Models;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
 
-public sealed record GetAdminEmailTemplatesQuery()
+public sealed record GetAdminEmailTemplatesQuery
     : IQuery<Result<IReadOnlyList<AdminEmailTemplateModel>>>;

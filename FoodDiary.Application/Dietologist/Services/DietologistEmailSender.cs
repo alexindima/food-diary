@@ -10,8 +10,6 @@ public sealed class DietologistEmailSender(
     IEmailOutbox emailOutbox) : IDietologistEmailSender {
     private const string TemplateKey = "dietologist_invitation";
 
-    private readonly EmailOptions _options = options;
-
     public async Task SendDietologistInvitationAsync(
         DietologistInvitationMessage message,
         CancellationToken cancellationToken = default) {
@@ -19,29 +17,29 @@ public sealed class DietologistEmailSender(
         string locale = NormalizeLanguage(message.Language);
         bool isRu = string.Equals(locale, "ru", StringComparison.Ordinal);
         string clientName = BuildClientName(message.ClientFirstName, message.ClientLastName);
-        string brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
+        string brand = string.IsNullOrWhiteSpace(options.FromName) ? "FoodDiary" : options.FromName;
         EmailTemplateContent? template = await templateProvider.GetActiveTemplateAsync(TemplateKey, locale, cancellationToken).ConfigureAwait(false);
-        (string Subject, string Html, string Text) = CreateFallbackContent(isRu, clientName, link, brand);
+        (string fallbackSubject, string fallbackHtml, string fallbackText) = CreateFallbackContent(isRu, clientName, link, brand);
 
         string subject = template is null
-            ? Subject
+            ? fallbackSubject
             : ApplyTemplateTokens(template.Subject, link, brand, clientName);
         string htmlBody = template is null || string.IsNullOrWhiteSpace(template.HtmlBody)
-            ? Html
+            ? fallbackHtml
             : ApplyTemplateTokens(template.HtmlBody, link, brand, clientName);
         string textBody = template is null || string.IsNullOrWhiteSpace(template.TextBody)
-            ? Text
+            ? fallbackText
             : ApplyTemplateTokens(template.TextBody, link, brand, clientName);
 
         await DispatchAsync(message.ToEmail, subject, htmlBody, textBody, cancellationToken).ConfigureAwait(false);
     }
 
     private string BuildInvitationLink(Guid invitationId) {
-        if (string.IsNullOrWhiteSpace(_options.FrontendBaseUrl)) {
+        if (string.IsNullOrWhiteSpace(options.FrontendBaseUrl)) {
             throw new InvalidOperationException("Email FrontendBaseUrl is not configured.");
         }
 
-        string baseUrl = _options.FrontendBaseUrl.TrimEnd('/');
+        string baseUrl = options.FrontendBaseUrl.TrimEnd('/');
         return $"{baseUrl}/dietologist-invitations/{Uri.EscapeDataString(invitationId.ToString())}";
     }
 
@@ -141,8 +139,8 @@ public sealed class DietologistEmailSender(
 
     private async Task DispatchAsync(string toEmail, string subject, string htmlBody, string textBody, CancellationToken cancellationToken) {
         var message = new EmailMessage(
-            _options.FromAddress,
-            _options.FromName,
+            options.FromAddress,
+            options.FromName,
             [toEmail],
             subject,
             htmlBody,

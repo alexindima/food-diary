@@ -24,30 +24,30 @@ internal sealed class AdminUserReadService(
         int limit,
         UserAccountStatusFilter status,
         CancellationToken cancellationToken = default) {
-        (IReadOnlyList<UserAdminReadModel> Items, int TotalItems) = await userAdministrationReadService.GetPagedAsync(
+        (IReadOnlyList<UserAdminReadModel> items, int totalItems) = await userAdministrationReadService.GetPagedAsync(
             search,
             page,
             limit,
             status,
             cancellationToken).ConfigureAwait(false);
 
-        return ([.. Items.Select(AdminUserMappings.ToAdminModel)], TotalItems);
+        return ([.. items.Select(AdminUserMappings.ToAdminModel)], totalItems);
     }
 
     public async Task<AdminDashboardSummaryModel> GetDashboardSummaryAsync(
         int recentLimit,
         int pendingReportsCount,
         CancellationToken cancellationToken = default) {
-        (int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<UserAdminReadModel> RecentUsers) =
+        (int totalUsers, int activeUsers, int premiumUsers, int deletedUsers, IReadOnlyList<UserAdminReadModel> recentUsers) =
             await userAdministrationReadService.GetDashboardSummaryAsync(recentLimit, cancellationToken).ConfigureAwait(false);
 
         return new AdminDashboardSummaryModel(
-            TotalUsers,
-            ActiveUsers,
-            PremiumUsers,
-            DeletedUsers,
+            totalUsers,
+            activeUsers,
+            premiumUsers,
+            deletedUsers,
             pendingReportsCount,
-            [.. RecentUsers.Select(AdminUserMappings.ToAdminModel)]);
+            [.. recentUsers.Select(AdminUserMappings.ToAdminModel)]);
     }
 
     public async Task<bool> ExistsIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) =>

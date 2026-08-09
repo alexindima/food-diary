@@ -23,10 +23,6 @@ public sealed class CreateCheckoutSessionCommandValidator : AbstractValidator<Cr
     }
 
     private static bool IsSupportedProvider(string? provider) {
-        if (string.IsNullOrWhiteSpace(provider)) {
-            return true;
-        }
-
-        return BillingProviderNames.IsSupported(provider.Trim());
+        return string.IsNullOrWhiteSpace(provider) || BillingProviderNames.IsSupported(provider.Trim());
     }
 }

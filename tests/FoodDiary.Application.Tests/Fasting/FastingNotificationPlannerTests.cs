@@ -14,7 +14,7 @@ public sealed class FastingNotificationPlannerTests {
     [Fact]
     public void CheckInReminderPlanner_WhenNoCheckInAndThresholdElapsed_ReturnsDueReferenceIds() {
         var user = User.Create("planner-reminders@example.com", "hash");
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddDays(-1));
         var occurrence = FastingOccurrence.Create(
             plan.Id,
             user.Id,
@@ -40,7 +40,7 @@ public sealed class FastingNotificationPlannerTests {
     [Fact]
     public void CheckInReminderPlanner_WhenOccurrenceHasCheckIn_ReturnsNoReferenceIds() {
         var user = User.Create("planner-existing-check-in@example.com", "hash");
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddDays(-1));
         var occurrence = FastingOccurrence.Create(
             plan.Id,
             user.Id,
@@ -62,7 +62,7 @@ public sealed class FastingNotificationPlannerTests {
     [Fact]
     public void CheckInReminderPlanner_WhenOccurrenceStartsInFuture_ReturnsNoReferenceIds() {
         var user = User.Create("planner-future-reminder@example.com", "hash");
-        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddHours(1));
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddHours(1));
         var occurrence = FastingOccurrence.Create(
             plan.Id,
             user.Id,
@@ -83,7 +83,7 @@ public sealed class FastingNotificationPlannerTests {
     [Fact]
     public void IntermittentNotificationPlanner_WhenWindowsAreDue_ReturnsEatingAndFastingWindowPlans() {
         var user = User.Create("planner-intermittent@example.com", "hash");
-        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-2));
+        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, FixedNow.AddDays(-2));
         var occurrence = FastingOccurrence.Create(
             plan.Id,
             user.Id,
@@ -111,7 +111,7 @@ public sealed class FastingNotificationPlannerTests {
     [Fact]
     public void IntermittentNotificationPlanner_WhenWindowConfigMissing_ReturnsNoPlans() {
         var user = User.Create("planner-missing-window@example.com", "hash");
-        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-2));
+        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, FixedNow.AddDays(-2));
         SetPrivateProperty<FastingPlan, int?>(plan, nameof(FastingPlan.IntermittentEatingWindowHours), value: null);
         var occurrence = FastingOccurrence.Create(
             plan.Id,
@@ -131,7 +131,7 @@ public sealed class FastingNotificationPlannerTests {
     [Fact]
     public void IntermittentNotificationPlanner_WhenOccurrenceStartsInFuture_ReturnsNoPlans() {
         var user = User.Create("planner-future-window@example.com", "hash");
-        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, FixedNow.AddHours(1));
+        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, FixedNow.AddHours(1));
         var occurrence = FastingOccurrence.Create(
             plan.Id,
             user.Id,

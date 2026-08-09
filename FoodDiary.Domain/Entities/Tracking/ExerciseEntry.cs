@@ -142,7 +142,7 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
             throw new ArgumentOutOfRangeException(nameof(calories), "Calories must be a finite number.");
         }
 
-        if (calories < 0 || calories > MaxCalories) {
+        if (calories is < 0 or > MaxCalories) {
             throw new ArgumentOutOfRangeException(nameof(calories), string.Create(CultureInfo.InvariantCulture, $"Calories must be between 0 and {MaxCalories}."));
         }
     }
