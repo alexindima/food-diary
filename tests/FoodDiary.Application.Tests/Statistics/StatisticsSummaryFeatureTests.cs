@@ -1,4 +1,5 @@
 using FluentValidation.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -60,6 +61,68 @@ public sealed class StatisticsSummaryFeatureTests {
             () => Assert.Equal(1800, Assert.Single(result.Value.Nutrition).TotalCalories),
             () => Assert.Equal(75.3, Assert.Single(result.Value.Weight).AverageWeight),
             () => Assert.Equal(82.1, Assert.Single(result.Value.Waist).AverageCircumference));
+    }
+
+    [Fact]
+    public async Task GetStatisticsSummaryQueryHandler_WhenCurrentUserAccessFails_ReturnsFailureWithoutReadingStatistics() {
+        IDashboardStatisticsReadService statisticsReadService = Substitute.For<IDashboardStatisticsReadService>();
+        IWeightEntryReadService weightReadService = Substitute.For<IWeightEntryReadService>();
+        IWaistEntryReadService waistReadService = Substitute.For<IWaistEntryReadService>();
+        ICurrentUserAccessService accessService = Substitute.For<ICurrentUserAccessService>();
+        Error accessError = Errors.Validation.Invalid("UserId", "Access denied.");
+        accessService
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Error?>(accessError));
+        var handler = new GetStatisticsSummaryQueryHandler(
+            statisticsReadService,
+            weightReadService,
+            waistReadService,
+            accessService);
+
+        Result<StatisticsSummaryModel> result = await handler.Handle(
+            new GetStatisticsSummaryQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 1),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, accessError.Code);
+        await statisticsReadService.DidNotReceiveWithAnyArgs().GetStatisticsAsync(
+            default,
+            default,
+            default,
+            default,
+            default);
+    }
+
+    [Fact]
+    public async Task GetStatisticsSummaryQueryHandler_WhenDateRangeIsInverted_ReturnsValidationFailure() {
+        var handler = new GetStatisticsSummaryQueryHandler(
+            Substitute.For<IDashboardStatisticsReadService>(),
+            Substitute.For<IWeightEntryReadService>(),
+            Substitute.For<IWaistEntryReadService>(),
+            CreateCurrentUserAccessService());
+        DateTime date = DateTime.UtcNow;
+
+        Result<StatisticsSummaryModel> result = await handler.Handle(
+            new GetStatisticsSummaryQuery(Guid.NewGuid(), date, date.AddDays(-1), 1),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains(nameof(GetStatisticsSummaryQuery.DateFrom), result.Error.Details!.Keys, StringComparer.Ordinal);
+    }
+
+    [Fact]
+    public async Task GetStatisticsSummaryQueryHandler_WhenQuantizationIsNonPositive_ReturnsValidationFailure() {
+        var handler = new GetStatisticsSummaryQueryHandler(
+            Substitute.For<IDashboardStatisticsReadService>(),
+            Substitute.For<IWeightEntryReadService>(),
+            Substitute.For<IWaistEntryReadService>(),
+            CreateCurrentUserAccessService());
+
+        Result<StatisticsSummaryModel> result = await handler.Handle(
+            new GetStatisticsSummaryQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 0),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains(nameof(GetStatisticsSummaryQuery.QuantizationDays), result.Error.Details!.Keys, StringComparer.Ordinal);
     }
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService() {

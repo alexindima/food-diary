@@ -58,6 +58,24 @@ public sealed class BillingWebhookControllerTests {
         Assert.Equal("{}", command.Payload);
     }
 
+    [Fact]
+    public async Task HandleWebhook_WhenSeekableBodyReadFails_RestoresBodyPositionAndDoesNotDispatch() {
+        bool dispatched = false;
+        ISender sender = SubstituteSender.Create(Result.Success(), _ => dispatched = true);
+        var httpContext = new DefaultHttpContext();
+        var body = new ThrowingSeekableReadStream();
+        httpContext.Request.Body = body;
+        httpContext.Request.ContentLength = 2;
+        var controller = new BillingWebhookController(sender, new BillingWebhookHttpProcessor()) {
+            ControllerContext = new ControllerContext { HttpContext = httpContext },
+        };
+
+        await Assert.ThrowsAsync<IOException>(() => controller.HandleWebhook("Stripe"));
+
+        Assert.False(dispatched);
+        Assert.Equal(0, body.Position);
+    }
+
     [Theory]
     [InlineData("Paddle", "Paddle-Signature", "paddle-signature")]
     [InlineData("Stripe", "Stripe-Signature", "stripe-signature")]
@@ -127,6 +145,14 @@ public sealed class BillingWebhookControllerTests {
         public override long Position {
             get => base.Position;
             set => throw new NotSupportedException();
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingSeekableReadStream : MemoryStream {
+        public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) {
+            Position = 1;
+            throw new IOException("Simulated request body read failure.");
         }
     }
 

@@ -7,8 +7,8 @@
     "summary":  {
                     "productionFiles":  4004,
                     "criticalSymbols":  526,
-                    "criticalSymbolsWithTestReferences":  499,
-                    "criticalSymbolsWithoutTestReferences":  27,
+                    "criticalSymbolsWithTestReferences":  500,
+                    "criticalSymbolsWithoutTestReferences":  26,
                     "debtMarkers":  3
                 },
     "hotspots":  [
@@ -21811,8 +21811,8 @@
                       "nonBlankLines":  27,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.54
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.54
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Tdee/Mappings/TdeeHttpMappings.cs",
@@ -35134,9 +35134,9 @@
                                 "role":  "Controller",
                                 "path":  "FoodDiary.Presentation.Api/Features/Statistics/StatisticsController.cs",
                                 "line":  16,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Presentation.Api.Tests/StatisticsControllerTests.cs"
                                                    ]
                             },
                             {

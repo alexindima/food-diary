@@ -222,13 +222,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "ce1e10a9a977856762f8a7e3097c3d70e212d7f85891f97cf9e548c4ad5d5b6b"
+                                            "sha256":  "924134fe81a3ecc466aa077fb3f965f494d8473c758bd3ee5d5912547a02765f"
                                         }
                                     ],
-                        "reason":  "Goals editor frontend-only rename and save-state fix does not change project edges or architecture boundaries.",
+                        "reason":  "Test-only coverage expansion; architecture boundaries and production structure are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "14ce7a7fb2fec0f21282d7df832ae5a6992ea6bd",
-                        "reviewedAtUtc":  "2026-08-09T14:14:52.2523392Z"
+                        "gitHead":  "8259527f5498dee340f334382c0befd72be706b1",
+                        "reviewedAtUtc":  "2026-08-09T15:00:14.8906851Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -237,13 +237,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "95ab0dc1570d2dd3a3b80a3c87a5f44b2ed1d9a634ae269c9269900484eb8252"
+                                            "sha256":  "83fbeec42c6b1d2c8ec158f1db6435fd2c7a6520f4b2dac90657837c59d3a455"
                                         }
                                     ],
-                        "reason":  "Regenerated compiled indexes after analyzer, statistics, and frontend accessibility changes; documented workflow semantics remain unchanged.",
+                        "reason":  "Test-only coverage expansion; backend HTTP and application contracts are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cee7bfa42c63a0a563683cde3ef60f12413fedd7",
-                        "reviewedAtUtc":  "2026-08-09T12:14:54.8544060Z"
+                        "gitHead":  "8259527f5498dee340f334382c0befd72be706b1",
+                        "reviewedAtUtc":  "2026-08-09T15:00:15.5366967Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -588,13 +588,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "04ef82fae7684d3be5b8c7a7a3d7a27fec3cb349fbd2791315c7f26f271fba59"
+                                            "sha256":  "a9f8c3b6b40f53079d717ae95ec15db519566a1db69edbf1ba6b83af1b328275"
                                         }
                                     ],
-                        "reason":  "Deleted tests only for deleted legacy components; goals page, editor, facade, cycling, save, lint, i18n, and build checks pass.",
+                        "reason":  "Quality index refreshed for new focused statistics and billing coverage tests.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "14ce7a7fb2fec0f21282d7df832ae5a6992ea6bd",
-                        "reviewedAtUtc":  "2026-08-09T14:28:38.4419385Z"
+                        "gitHead":  "8259527f5498dee340f334382c0befd72be706b1",
+                        "reviewedAtUtc":  "2026-08-09T15:00:16.1531156Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

@@ -10,7 +10,7 @@
                     "unconsumedBackendContracts":  0,
                     "selectorUnreferencedComponents":  133,
                     "componentsWithoutDirectSpecs":  121,
-                    "criticalSymbolsWithoutTestReferences":  27,
+                    "criticalSymbolsWithoutTestReferences":  26,
                     "explicitDebtMarkers":  3
                 },
     "projectDependencyViolations":  [
@@ -5014,16 +5014,6 @@
                                                      "role":  "Controller",
                                                      "path":  "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayMessagesController.cs",
                                                      "line":  11,
-                                                     "testReferenceCount":  0,
-                                                     "testReferences":  [
-
-                                                                        ]
-                                                 },
-                                                 {
-                                                     "name":  "StatisticsController",
-                                                     "role":  "Controller",
-                                                     "path":  "FoodDiary.Presentation.Api/Features/Statistics/StatisticsController.cs",
-                                                     "line":  16,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
 

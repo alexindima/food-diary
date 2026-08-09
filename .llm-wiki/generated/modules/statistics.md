@@ -37,6 +37,7 @@ Source: `FoodDiary.Presentation.Api/Features/Statistics/StatisticsController.cs`
 
 - `tests/FoodDiary.Application.Tests/Statistics/StatisticsFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs`
+- `tests/FoodDiary.Presentation.Api.Tests/StatisticsControllerTests.cs`
 - `tests/FoodDiary.Presentation.Api.Tests/StatisticsHttpMappingsTests.cs`
 
 ## Working Rule
