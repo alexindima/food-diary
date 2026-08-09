@@ -128,13 +128,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "e8d74464e1fcb260af1874866fbdf71278be4d227af57560600e0be921818ef0"
+                                            "sha256":  "c11a466034ce10ddd750a3264aab58dbaca1246ea2de92a89ae09aede1f7ad72"
                                         }
                                     ],
-                        "reason":  "Reviewed frontend component contracts; new statistics cards are feature-local and existing shared chart consumers remain compatible.",
+                        "reason":  "Regenerated compiled indexes after analyzer, statistics, and frontend accessibility changes; documented workflow semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
-                        "reviewedAtUtc":  "2026-08-09T09:52:52.5574510Z"
+                        "gitHead":  "cee7bfa42c63a0a563683cde3ef60f12413fedd7",
+                        "reviewedAtUtc":  "2026-08-09T12:14:55.6804539Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -143,17 +143,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "8954cf07890731a44ca84b4f5102d1b27c0b375f95b2f6825df10112595c7f9a"
-                                        },
-                                        {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "6096f9cb6ed9a05dbb604f83f46b51d774c43034c5703da05f96ec1a6892246c"
+                                            "sha256":  "508bc0f38521a0281845e92b7be0ee0d87cb79616a56af6e1424fc25203beec7"
                                         }
                                     ],
-                        "reason":  "Reviewed repository catalog and query context; module ownership and data-access routing remain accurate after the merge.",
+                        "reason":  "Regenerated compiled indexes after analyzer, statistics, and frontend accessibility changes; documented workflow semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
-                        "reviewedAtUtc":  "2026-08-09T09:52:55.5380078Z"
+                        "gitHead":  "cee7bfa42c63a0a563683cde3ef60f12413fedd7",
+                        "reviewedAtUtc":  "2026-08-09T12:14:57.8945223Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -241,13 +237,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "4ccbbe303dbc1ef1f8d18d880ac168225581b163aca086f0e86399b9429be6f6"
+                                            "sha256":  "95ab0dc1570d2dd3a3b80a3c87a5f44b2ed1d9a634ae269c9269900484eb8252"
                                         }
                                     ],
-                        "reason":  "Reviewed the merged backend contracts; statistics response fields are additive and JobManager retry behavior remains internal without HTTP contract changes.",
+                        "reason":  "Regenerated compiled indexes after analyzer, statistics, and frontend accessibility changes; documented workflow semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
-                        "reviewedAtUtc":  "2026-08-09T09:52:50.3457986Z"
+                        "gitHead":  "cee7bfa42c63a0a563683cde3ef60f12413fedd7",
+                        "reviewedAtUtc":  "2026-08-09T12:14:54.8544060Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -547,13 +543,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "fba6fb215cacde14a533193987680f12e635b63eae1e77cb234eaabde3c9cd07"
+                                            "sha256":  "227840e8bbf55d7e7d138231351f451f7f967f4327209ab211b29abadcfed6e1"
                                         }
                                     ],
-                        "reason":  "Reviewed sensitive-data impact; the merged changes use existing user-scoped nutrition and body measurements without new storage, logging, or provider sharing.",
+                        "reason":  "Regenerated compiled indexes after analyzer, statistics, and frontend accessibility changes; documented workflow semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
-                        "reviewedAtUtc":  "2026-08-09T09:52:53.3472356Z"
+                        "gitHead":  "cee7bfa42c63a0a563683cde3ef60f12413fedd7",
+                        "reviewedAtUtc":  "2026-08-09T12:14:56.4220919Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -592,13 +588,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "907e617573e5a9a4e9fbe9bbd971e08ced0bd8763cc66a8b53ccf1369ddb4f2c"
+                                            "sha256":  "71051489a205fc02165229c5869989a68cf158c531720bd81c4a916a2884d7ec"
                                         }
                                     ],
-                        "reason":  "Reviewed quality evidence; statistics component coverage and focused JobManager retry tests cover the new behavior without creating an ownership gap.",
+                        "reason":  "Regenerated compiled indexes after analyzer, statistics, and frontend accessibility changes; documented workflow semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
-                        "reviewedAtUtc":  "2026-08-09T09:52:54.1552726Z"
+                        "gitHead":  "cee7bfa42c63a0a563683cde3ef60f12413fedd7",
+                        "reviewedAtUtc":  "2026-08-09T12:14:57.1559885Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -751,17 +747,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "e8d74464e1fcb260af1874866fbdf71278be4d227af57560600e0be921818ef0"
+                                            "sha256":  "c11a466034ce10ddd750a3264aab58dbaca1246ea2de92a89ae09aede1f7ad72"
                                         },
                                         {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "029f0c211288f6facb7ad6509c43899636e034666c5a049b8f318f0b1bd7c373"
+                                            "sha256":  "1c055476274ae3018de8e87b517bf776925e479758a3d7b43db1ddb353d8c669"
                                         }
                                     ],
-                        "reason":  "Reviewed frontend indexes for the statistics flow; routes, feature ownership, API mapping, and component trace remain accurate.",
+                        "reason":  "Regenerated compiled indexes after analyzer, statistics, and frontend accessibility changes; documented workflow semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
-                        "reviewedAtUtc":  "2026-08-09T09:52:57.3431180Z"
+                        "gitHead":  "cee7bfa42c63a0a563683cde3ef60f12413fedd7",
+                        "reviewedAtUtc":  "2026-08-09T12:14:58.6990507Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

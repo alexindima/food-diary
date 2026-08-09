@@ -8,14 +8,14 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1544,
-                    "symbols":  593,
+                    "typescriptFiles":  1538,
+                    "symbols":  590,
                     "routes":  84,
                     "features":  36,
-                    "specs":  555,
+                    "specs":  552,
                     "localeFiles":  5,
                     "roles":  {
-                                  "Component":  409,
+                                  "Component":  406,
                                   "Directive":  12,
                                   "Facade":  52,
                                   "Other":  17,
@@ -2449,27 +2449,6 @@
                         "line":  11
                     },
                     {
-                        "name":  "StatisticsBodyComponent",
-                        "role":  "Component",
-                        "selector":  "fd-statistics-body",
-                        "path":  "FoodDiary.Web.Client/src/app/components/shared/statistics-body/statistics-body.ts",
-                        "line":  20
-                    },
-                    {
-                        "name":  "StatisticsNutritionComponent",
-                        "role":  "Component",
-                        "selector":  "fd-statistics-nutrition",
-                        "path":  "FoodDiary.Web.Client/src/app/components/shared/statistics-nutrition/statistics-nutrition.ts",
-                        "line":  37
-                    },
-                    {
-                        "name":  "StatisticsSummaryComponent",
-                        "role":  "Component",
-                        "selector":  "fd-statistics-summary",
-                        "path":  "FoodDiary.Web.Client/src/app/components/shared/statistics-summary/statistics-summary.ts",
-                        "line":  61
-                    },
-                    {
                         "name":  "UnsavedChangesDialogComponent",
                         "role":  "Component",
                         "selector":  "fd-unsaved-changes-dialog",
@@ -2915,7 +2894,7 @@
                         "role":  "Component",
                         "selector":  "fd-dashboard",
                         "path":  "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts",
-                        "line":  92
+                        "line":  94
                     },
                     {
                         "name":  "DietologistService",
@@ -4602,14 +4581,14 @@
                         "role":  "Facade",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/features/statistics/lib/statistics.facade.ts",
-                        "line":  46
+                        "line":  34
                     },
                     {
                         "name":  "StatisticsComponent",
                         "role":  "Component",
                         "selector":  "fd-statistics",
                         "path":  "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.ts",
-                        "line":  58
+                        "line":  56
                     },
                     {
                         "name":  "UsdaService",
@@ -5809,8 +5788,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  3064,
-                             "russianProperties":  3064,
+                             "englishProperties":  3038,
+                             "russianProperties":  3038,
                              "countsMatch":  true
                          },
                          {

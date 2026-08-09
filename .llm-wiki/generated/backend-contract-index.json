@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "contracts":  998,
+                    "contracts":  1000,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  6942,
-                    "productionConsumerEdges":  4232,
-                    "testConsumerEdges":  2710,
-                    "consumedContracts":  998,
+                    "consumerEdges":  6964,
+                    "productionConsumerEdges":  4247,
+                    "testConsumerEdges":  2717,
+                    "consumedContracts":  1000,
                     "unconsumedContracts":  0
                 },
     "contracts":  [
@@ -5367,6 +5367,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Application/Statistics/Queries/GetStatistics/GetStatisticsQuery.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "GetStatisticsSummaryQuery",
+                          "roles":  [
+                                        "Query"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -14544,6 +14560,22 @@
                           "ambiguous":  false
                       },
                       {
+                          "name":  "StatisticsSummaryHttpResponse",
+                          "roles":  [
+                                        "Response"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Presentation.Api/Features/Statistics/Responses/StatisticsSummaryHttpResponse.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
                           "name":  "SyncWearableDataCommand",
                           "roles":  [
                                         "Command"
@@ -18909,6 +18941,19 @@
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Statistics/Mappings/StatisticsHttpResponseMappings.cs",
                               "isTest":  false,
                               "referenceCount":  2
+                          },
+                          {
+                              "contract":  "AggregatedStatisticsHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Statistics/Responses/AggregatedStatisticsHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Statistics/Responses/StatisticsSummaryHttpResponse.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
                           },
                           {
                               "contract":  "AggregatedStatisticsHttpResponse",
@@ -37095,7 +37140,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Statistics/StatisticsController.cs",
                               "isTest":  false,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "GetStatisticsHttpQuery",
@@ -37108,7 +37153,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/StatisticsHttpMappingsTests.cs",
                               "isTest":  true,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "GetStatisticsQuery",
@@ -37208,6 +37253,71 @@
                                         ],
                               "definitionPaths":  [
                                                       "FoodDiary.Application/Statistics/Queries/GetStatistics/GetStatisticsQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/StatisticsHttpMappingsTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "GetStatisticsSummaryQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "GetStatisticsSummaryQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryValidator.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "GetStatisticsSummaryQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Statistics/Mappings/StatisticsHttpQueryMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "GetStatisticsSummaryQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "GetStatisticsSummaryQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/StatisticsHttpMappingsTests.cs",
@@ -50561,6 +50671,19 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -51381,6 +51504,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Statistics/StatisticsFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  3
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs",
                               "isTest":  true,
                               "referenceCount":  3
                           },
@@ -52667,6 +52803,19 @@
                                                       "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IDashboardStatisticsReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -52774,6 +52923,19 @@
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Statistics/StatisticsFeatureTests.cs",
                               "isTest":  true,
                               "referenceCount":  3
+                          },
+                          {
+                              "contract":  "IDashboardStatisticsReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IDashboardStatisticsReadService",
@@ -72348,6 +72510,19 @@
                                                       "FoodDiary.Application/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Tdee/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -73766,6 +73941,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Statistics/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -87116,6 +87304,19 @@
                                                       "FoodDiary.Application/Common/Abstractions/Messaging/IUserRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Tdee/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -88195,6 +88396,19 @@
                                                       "FoodDiary.Application/WaistEntries/Common/IWaistEntryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IWaistEntryReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/WaistEntries/Common/IWaistEntryReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -88263,6 +88477,19 @@
                               "consumerPath":  "FoodDiary.Application/WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IWaistEntryReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/WaistEntries/Common/IWaistEntryReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IWaistEntryReadService",
@@ -90314,6 +90541,19 @@
                                                       "FoodDiary.Application/WeightEntries/Common/IWeightEntryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IWeightEntryReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/WeightEntries/Common/IWeightEntryReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -90395,6 +90635,19 @@
                               "consumerPath":  "FoodDiary.Application/WeightEntries/Services/WeightEntryReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IWeightEntryReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/WeightEntries/Common/IWeightEntryReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IWeightEntryReadService",
@@ -99952,6 +100205,45 @@
                               "referenceCount":  2
                           },
                           {
+                              "contract":  "StatisticsSummaryHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Statistics/Responses/StatisticsSummaryHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Statistics/Mappings/StatisticsHttpResponseMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "StatisticsSummaryHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Statistics/Responses/StatisticsSummaryHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Statistics/StatisticsController.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "StatisticsSummaryHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Statistics/Responses/StatisticsSummaryHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/StatisticsHttpMappingsTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
                               "contract":  "SyncWearableDataCommand",
                               "roles":  [
                                             "Command"
@@ -105407,6 +105699,19 @@
                                                       "FoodDiary.Presentation.Api/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Statistics/Responses/StatisticsSummaryHttpResponse.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "WaistEntrySummaryHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/WaistEntries/Mappings/WaistEntryHttpResponseMappings.cs",
                               "isTest":  false,
                               "referenceCount":  2
@@ -106045,6 +106350,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "WeightEntrySummaryHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Statistics/Responses/StatisticsSummaryHttpResponse.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },

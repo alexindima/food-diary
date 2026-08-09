@@ -6,13 +6,13 @@
                       "externalTransfers":  "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
                   },
     "summary":  {
-                    "candidateFields":  1394,
+                    "candidateFields":  1400,
                     "credential":  146,
                     "identity":  140,
-                    "health":  612,
+                    "health":  618,
                     "financial":  199,
                     "privateContent":  297,
-                    "boundaryFiles":  178,
+                    "boundaryFiles":  179,
                     "potentialLoggingLeads":  1,
                     "externalTransferLeads":  1
                 },
@@ -3953,6 +3953,27 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "Nutrition",
+                       "type":  "IReadOnlyList\u003cAggregatedStatisticsModel\u003e",
+                       "path":  "FoodDiary.Application/Statistics/Models/StatisticsSummaryModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Weight",
+                       "type":  "IReadOnlyList\u003cWeightEntrySummaryModel\u003e",
+                       "path":  "FoodDiary.Application/Statistics/Models/StatisticsSummaryModel.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Waist",
+                       "type":  "IReadOnlyList\u003cWaistEntrySummaryModel\u003e",
+                       "path":  "FoodDiary.Application/Statistics/Models/StatisticsSummaryModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
                        "name":  "EstimatedTdee",
                        "type":  "double?",
                        "path":  "FoodDiary.Application/Tdee/Common/TdeeUserProfile.cs",
@@ -6358,6 +6379,27 @@
                        "type":  "double",
                        "path":  "FoodDiary.Presentation.Api/Features/Statistics/Responses/AggregatedStatisticsHttpResponse.cs",
                        "line":  18
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Nutrition",
+                       "type":  "IReadOnlyList\u003cAggregatedStatisticsHttpResponse\u003e",
+                       "path":  "FoodDiary.Presentation.Api/Features/Statistics/Responses/StatisticsSummaryHttpResponse.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Weight",
+                       "type":  "IReadOnlyList\u003cWeightEntrySummaryHttpResponse\u003e",
+                       "path":  "FoodDiary.Presentation.Api/Features/Statistics/Responses/StatisticsSummaryHttpResponse.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Waist",
+                       "type":  "IReadOnlyList\u003cWaistEntrySummaryHttpResponse\u003e",
+                       "path":  "FoodDiary.Presentation.Api/Features/Statistics/Responses/StatisticsSummaryHttpResponse.cs",
+                       "line":  9
                    },
                    {
                        "category":  "health",
@@ -10684,6 +10726,13 @@
                                                  "health"
                                              ],
                               "fieldCount":  5
+                          },
+                          {
+                              "path":  "FoodDiary.Presentation.Api/Features/Statistics/Responses/StatisticsSummaryHttpResponse.cs",
+                              "categories":  [
+                                                 "health"
+                                             ],
+                              "fieldCount":  3
                           },
                           {
                               "path":  "FoodDiary.Presentation.Api/Features/Tdee/Responses/TdeeInsightHttpResponse.cs",

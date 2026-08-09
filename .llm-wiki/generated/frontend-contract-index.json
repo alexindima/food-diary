@@ -1,15 +1,15 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "components":  414,
+                    "components":  411,
                     "componentsWithoutDirectSpecs":  116,
-                    "inputs":  1274,
-                    "outputs":  411,
-                    "apiCalls":  215,
-                    "templatesWithTranslations":  257,
-                    "translationKeys":  1312,
-                    "consumerEdges":  942,
-                    "consumedComponents":  280,
+                    "inputs":  1254,
+                    "outputs":  407,
+                    "apiCalls":  216,
+                    "templatesWithTranslations":  254,
+                    "translationKeys":  1299,
+                    "consumerEdges":  926,
+                    "consumedComponents":  277,
                     "unconsumedComponents":  133
                 },
     "components":  [
@@ -11834,158 +11834,6 @@
                            "specPath":  "FoodDiary.Web.Client/src/app/components/shared/skeleton/skeleton.spec.ts"
                        },
                        {
-                           "class":  "StatisticsBodyComponent",
-                           "selector":  "fd-statistics-body",
-                           "feature":  "shared",
-                           "path":  "FoodDiary.Web.Client/src/app/components/shared/statistics-body/statistics-body.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-body/statistics-body.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "tabs",
-                                              "type":  "FdUiTab[]",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "selectedTab",
-                                              "type":  "string",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "isLoading",
-                                              "type":  "boolean",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "hasLoadError",
-                                              "type":  "boolean",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "bodyChartPoints",
-                                              "type":  "readonly StatisticsBodyChartPoint[]",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "hasBodyData",
-                                              "type":  "boolean",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "noDataKey",
-                                              "type":  "string",
-                                              "required":  false
-                                          },
-                                          {
-                                              "name":  "loadErrorKey",
-                                              "type":  "string",
-                                              "required":  false
-                                          }
-                                      ],
-                           "outputs":  [
-                                           {
-                                               "name":  "selectedTabChange",
-                                               "type":  "string"
-                                           },
-                                           {
-                                               "name":  "retry",
-                                               "type":  ""
-                                           }
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-body/statistics-body.spec.ts"
-                       },
-                       {
-                           "class":  "StatisticsNutritionComponent",
-                           "selector":  "fd-statistics-nutrition",
-                           "feature":  "shared",
-                           "path":  "FoodDiary.Web.Client/src/app/components/shared/statistics-nutrition/statistics-nutrition.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-nutrition/statistics-nutrition.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "tabs",
-                                              "type":  "FdUiTab[]",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "selectedTab",
-                                              "type":  "string",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "hasData",
-                                              "type":  "boolean",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "caloriesTrendPoints",
-                                              "type":  "readonly FdUiLineChartPoint[]",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "nutrientTrendGroups",
-                                              "type":  "readonly NutritionTrendGroup[]",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "nutrientPieSegments",
-                                              "type":  "readonly FdUiPieChartSegment[]",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "nutrientBarItems",
-                                              "type":  "readonly FdUiBarChartItem[]",
-                                              "required":  true
-                                          }
-                                      ],
-                           "outputs":  [
-                                           {
-                                               "name":  "selectedTabChange",
-                                               "type":  "string"
-                                           }
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-nutrition/statistics-nutrition.spec.ts"
-                       },
-                       {
-                           "class":  "StatisticsSummaryComponent",
-                           "selector":  "fd-statistics-summary",
-                           "feature":  "shared",
-                           "path":  "FoodDiary.Web.Client/src/app/components/shared/statistics-summary/statistics-summary.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-summary/statistics-summary.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "summary",
-                                              "type":  "SummaryMetrics | null",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "summarySparklinePoints",
-                                              "type":  "readonly SummarySparklinePoint[]",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "macroSparklinePoints",
-                                              "type":  "Record\u003cstring, readonly SummarySparklinePoint[]\u003e | null",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "emptyKey",
-                                              "type":  "string",
-                                              "required":  false
-                                          },
-                                          {
-                                              "name":  "exportingFormat",
-                                              "type":  "StatisticsSummaryExportFormat | null",
-                                              "required":  true
-                                          }
-                                      ],
-                           "outputs":  [
-                                           {
-                                               "name":  "exportRequested",
-                                               "type":  "StatisticsSummaryExportFormat"
-                                           }
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-summary/statistics-summary.spec.ts"
-                       },
-                       {
                            "class":  "UnsavedChangesDialogComponent",
                            "selector":  "fd-unsaved-changes-dialog",
                            "feature":  "shared",
@@ -15672,6 +15520,18 @@
                          "resolvedUrlExpression":  "environment.apiUrls.statistics/\u0027\u0027"
                      },
                      {
+                         "feature":  "statistics",
+                         "method":  "GET",
+                         "responseType":  "StatisticsSummary",
+                         "urlExpression":  "\u0027summary\u0027",
+                         "path":  "FoodDiary.Web.Client/src/app/features/statistics/api/statistics.service.ts",
+                         "line":  29,
+                         "publicMethod":  "getSummary",
+                         "transport":  "InheritedApiService",
+                         "baseUrlExpression":  "environment.apiUrls.statistics",
+                         "resolvedUrlExpression":  "environment.apiUrls.statistics/summary"
+                     },
+                     {
                          "feature":  "usda",
                          "method":  "GET",
                          "responseType":  "UsdaFood[]",
@@ -18377,48 +18237,6 @@
                              },
                              {
                                  "feature":  "shared",
-                                 "path":  "FoodDiary.Web.Client/src/app/components/shared/statistics-body/statistics-body.html",
-                                 "keys":  [
-                                              "ERRORS.LOAD_FAILED_TITLE",
-                                              "ERRORS.RETRY",
-                                              "STATISTICS.BODY_CHARTS_TITLE",
-                                              "STATISTICS.LOADING"
-                                          ]
-                             },
-                             {
-                                 "feature":  "shared",
-                                 "path":  "FoodDiary.Web.Client/src/app/components/shared/statistics-nutrition/statistics-nutrition.html",
-                                 "keys":  [
-                                              "GENERAL.UNITS.G",
-                                              "GENERAL.UNITS.KCAL",
-                                              "STATISTICS.NO_DATA",
-                                              "STATISTICS.NUTRITION_CHARTS_TITLE",
-                                              "STATISTICS.NUTRITION_DISTRIBUTION.BAR",
-                                              "STATISTICS.NUTRITION_DISTRIBUTION.PIE",
-                                              "STATISTICS.NUTRITION_TABS.MACROS",
-                                              "STATISTICS.TOTAL_CALORIES"
-                                          ]
-                             },
-                             {
-                                 "feature":  "shared",
-                                 "path":  "FoodDiary.Web.Client/src/app/components/shared/statistics-summary/statistics-summary.html",
-                                 "keys":  [
-                                              "DISABLED_HINTS.OPERATION_BUSY",
-                                              "GENERAL.UNITS.G",
-                                              "GENERAL.UNITS.KCAL",
-                                              "STATISTICS.AVERAGE_CALORIES",
-                                              "STATISTICS.AVERAGE_CARD.BURNED",
-                                              "STATISTICS.AVERAGE_CARD.CONSUMPTION",
-                                              "STATISTICS.AVERAGE_CARD.STEPS",
-                                              "STATISTICS.EXPORT_CSV",
-                                              "STATISTICS.EXPORT_MENU_LABEL",
-                                              "STATISTICS.EXPORT_PDF",
-                                              "STATISTICS.SUMMARY_TITLE",
-                                              "STATISTICS.TOTAL_CALORIES"
-                                          ]
-                             },
-                             {
-                                 "feature":  "shared",
                                  "path":  "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-dialog/unsaved-changes-dialog.html",
                                  "keys":  [
                                               "UNSAVED_CHANGES.DISCARD",
@@ -18647,10 +18465,15 @@
                                  "feature":  "statistics",
                                  "path":  "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
                                  "keys":  [
+                                              "DISABLED_HINTS.OPERATION_BUSY",
                                               "STATISTICS.CUSTOM_RANGE_FROM_LABEL",
                                               "STATISTICS.CUSTOM_RANGE_PLACEHOLDER",
                                               "STATISTICS.CUSTOM_RANGE_TO_LABEL",
                                               "STATISTICS.DASHBOARD.PREVIEW_TITLE",
+                                              "STATISTICS.EXPORT_CSV",
+                                              "STATISTICS.EXPORT_MENU_LABEL",
+                                              "STATISTICS.EXPORT_PDF",
+                                              "STATISTICS.LOADING",
                                               "STATISTICS.NO_DATA",
                                               "STATISTICS.SUBTITLE",
                                               "STATISTICS.TITLE",
@@ -21086,21 +20909,6 @@
                               "component":  "FdUiBarChartComponent",
                               "selector":  "fd-ui-bar-chart",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/bar-chart/fd-ui-bar-chart.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-nutrition/statistics-nutrition.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "items",
-                                                 "title"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiBarChartComponent",
-                              "selector":  "fd-ui-bar-chart",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/bar-chart/fd-ui-bar-chart.ts",
                               "consumerFeature":  "statistics",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.html",
                               "occurrences":  1,
@@ -21538,6 +21346,7 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-action-bar.html",
                               "occurrences":  1,
                               "inputsUsed":  [
+                                                 "ariaLabel",
                                                  "fill",
                                                  "icon",
                                                  "type",
@@ -21872,25 +21681,6 @@
                               "inputsUsed":  [
                                                  "fill",
                                                  "type",
-                                                 "variant"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiButtonComponent",
-                              "selector":  "fd-ui-button",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-summary/statistics-summary.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "ariaLabel",
-                                                 "fill",
-                                                 "icon",
-                                                 "loading",
-                                                 "size",
                                                  "variant"
                                              ],
                               "outputsHandled":  [
@@ -23900,12 +23690,13 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "statistics",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
-                              "occurrences":  1,
+                              "occurrences":  2,
                               "inputsUsed":  [
                                                  "appearance",
                                                  "ariaLabel",
                                                  "fill",
                                                  "icon",
+                                                 "loading",
                                                  "variant"
                                              ],
                               "outputsHandled":  [
@@ -24286,48 +24077,6 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
                               "consumerFeature":  "shared",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/daily-progress-card/daily-progress-card.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "title"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiCardComponent",
-                              "selector":  "fd-ui-card",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-body/statistics-body.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "title"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiCardComponent",
-                              "selector":  "fd-ui-card",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-nutrition/statistics-nutrition.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "title"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiCardComponent",
-                              "selector":  "fd-ui-card",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-summary/statistics-summary.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "title"
@@ -27096,20 +26845,6 @@
                               "component":  "FdUiIconComponent",
                               "selector":  "fd-ui-icon",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-summary/statistics-summary.html",
-                              "occurrences":  2,
-                              "inputsUsed":  [
-                                                 "name"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiIconComponent",
-                              "selector":  "fd-ui-icon",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "auth",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/auth/dialogs/auth-dialog/auth-dialog.html",
                               "occurrences":  1,
@@ -27576,6 +27311,20 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "statistics",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-overview-card/statistics-overview-card.html",
+                              "occurrences":  2,
+                              "inputsUsed":  [
+                                                 "name"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "statistics",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
                               "occurrences":  2,
                               "inputsUsed":  [
                                                  "name"
@@ -28563,71 +28312,6 @@
                               "component":  "FdUiLineChartComponent",
                               "selector":  "fd-ui-line-chart",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-body/statistics-body.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "lineColor",
-                                                 "points",
-                                                 "showArea",
-                                                 "showAxisLabels",
-                                                 "showGrid",
-                                                 "title",
-                                                 "valueSuffix"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiLineChartComponent",
-                              "selector":  "fd-ui-line-chart",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-nutrition/statistics-nutrition.html",
-                              "occurrences":  2,
-                              "inputsUsed":  [
-                                                 "axisDecimalPlaces",
-                                                 "defaultMaxValue",
-                                                 "fillColor",
-                                                 "lineColor",
-                                                 "minValue",
-                                                 "points",
-                                                 "series",
-                                                 "showArea",
-                                                 "showAxisLabels",
-                                                 "showGrid",
-                                                 "title",
-                                                 "valueSuffix"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiLineChartComponent",
-                              "selector":  "fd-ui-line-chart",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-summary/statistics-summary.html",
-                              "occurrences":  2,
-                              "inputsUsed":  [
-                                                 "density",
-                                                 "fillColor",
-                                                 "lineColor",
-                                                 "points",
-                                                 "showArea",
-                                                 "showPoints",
-                                                 "title"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiLineChartComponent",
-                              "selector":  "fd-ui-line-chart",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
                               "consumerFeature":  "dashboard",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.html",
                               "occurrences":  1,
@@ -28940,6 +28624,20 @@
                               "component":  "FdUiLoaderComponent",
                               "selector":  "fd-ui-loader",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/loader/fd-ui-loader.ts",
+                              "consumerFeature":  "dashboard",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiLoaderComponent",
+                              "selector":  "fd-ui-loader",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/loader/fd-ui-loader.ts",
                               "consumerFeature":  "explore",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments-list/recipe-comments-list.html",
                               "occurrences":  1,
@@ -29080,8 +28778,8 @@
                               "component":  "FdUiMenuComponent",
                               "selector":  "fd-ui-menu",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-summary/statistics-summary.html",
+                              "consumerFeature":  "shopping-lists",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html",
                               "occurrences":  1,
                               "inputsUsed":  [
 
@@ -29094,8 +28792,8 @@
                               "component":  "FdUiMenuComponent",
                               "selector":  "fd-ui-menu",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.ts",
-                              "consumerFeature":  "shopping-lists",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html",
+                              "consumerFeature":  "statistics",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
                               "occurrences":  1,
                               "inputsUsed":  [
 
@@ -29137,9 +28835,9 @@
                               "component":  "FdUiMenuItemComponent",
                               "selector":  "fd-ui-menu-item",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu-item.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-summary/statistics-summary.html",
-                              "occurrences":  2,
+                              "consumerFeature":  "shopping-lists",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html",
+                              "occurrences":  4,
                               "inputsUsed":  [
                                                  "disabled",
                                                  "disabledReason"
@@ -29152,9 +28850,9 @@
                               "component":  "FdUiMenuItemComponent",
                               "selector":  "fd-ui-menu-item",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu-item.ts",
-                              "consumerFeature":  "shopping-lists",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html",
-                              "occurrences":  4,
+                              "consumerFeature":  "statistics",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
+                              "occurrences":  2,
                               "inputsUsed":  [
                                                  "disabled",
                                                  "disabledReason"
@@ -29383,22 +29081,6 @@
                                                  ]
                           },
                           {
-                              "component":  "FdUiPieChartComponent",
-                              "selector":  "fd-ui-pie-chart",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pie-chart/fd-ui-pie-chart.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-nutrition/statistics-nutrition.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "segments",
-                                                 "title",
-                                                 "variant"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
                               "component":  "FdUiRadioOptionsComponent",
                               "selector":  "fd-ui-radio-options",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/radio/fd-ui-radio-options.ts",
@@ -29457,60 +29139,6 @@
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "loadingLabel"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiSectionStateComponent",
-                              "selector":  "fd-ui-section-state",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/section-state/fd-ui-section-state.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-body/statistics-body.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "emptyIcon",
-                                                 "emptyMessage",
-                                                 "errorMessage",
-                                                 "errorTitle",
-                                                 "loadingLabel",
-                                                 "retryLabel",
-                                                 "state"
-                                             ],
-                              "outputsHandled":  [
-                                                     "retry"
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiSectionStateComponent",
-                              "selector":  "fd-ui-section-state",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/section-state/fd-ui-section-state.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-nutrition/statistics-nutrition.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "appearance",
-                                                 "emptyIcon",
-                                                 "emptyMessage",
-                                                 "state"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiSectionStateComponent",
-                              "selector":  "fd-ui-section-state",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/section-state/fd-ui-section-state.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-summary/statistics-summary.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "appearance",
-                                                 "emptyIcon",
-                                                 "emptyMessage",
-                                                 "state"
                                              ],
                               "outputsHandled":  [
 
@@ -30162,36 +29790,6 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/period-filter/period-filter.html",
                               "occurrences":  1,
                               "inputsUsed":  [
-                                                 "tabs"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiTabsComponent",
-                              "selector":  "fd-ui-tabs",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/tabs/fd-ui-tabs.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-body/statistics-body.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "appearance",
-                                                 "tabs"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiTabsComponent",
-                              "selector":  "fd-ui-tabs",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/tabs/fd-ui-tabs.ts",
-                              "consumerFeature":  "shared",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-nutrition/statistics-nutrition.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "appearance",
                                                  "tabs"
                                              ],
                               "outputsHandled":  [
@@ -33888,26 +33486,6 @@
                                                  ]
                           },
                           {
-                              "component":  "StatisticsBodyComponent",
-                              "selector":  "fd-statistics-body",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-body/statistics-body.ts",
-                              "consumerFeature":  "statistics",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "bodyChartPoints",
-                                                 "hasBodyData",
-                                                 "hasLoadError",
-                                                 "isLoading",
-                                                 "selectedTab",
-                                                 "tabs"
-                                             ],
-                              "outputsHandled":  [
-                                                     "retry",
-                                                     "selectedTabChange"
-                                                 ]
-                          },
-                          {
                               "component":  "StatisticsBodyTrendCardComponent",
                               "selector":  "fd-statistics-body-trend-card",
                               "componentPath":  "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-body-trend-card/statistics-body-trend-card.ts",
@@ -33950,26 +33528,6 @@
                                                  ]
                           },
                           {
-                              "component":  "StatisticsNutritionComponent",
-                              "selector":  "fd-statistics-nutrition",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-nutrition/statistics-nutrition.ts",
-                              "consumerFeature":  "statistics",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "caloriesTrendPoints",
-                                                 "hasData",
-                                                 "nutrientBarItems",
-                                                 "nutrientPieSegments",
-                                                 "nutrientTrendGroups",
-                                                 "selectedTab",
-                                                 "tabs"
-                                             ],
-                              "outputsHandled":  [
-                                                     "selectedTabChange"
-                                                 ]
-                          },
-                          {
                               "component":  "StatisticsNutritionTrendCardComponent",
                               "selector":  "fd-statistics-nutrition-trend-card",
                               "componentPath":  "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.ts",
@@ -33999,23 +33557,6 @@
                                              ],
                               "outputsHandled":  [
 
-                                                 ]
-                          },
-                          {
-                              "component":  "StatisticsSummaryComponent",
-                              "selector":  "fd-statistics-summary",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/statistics-summary/statistics-summary.ts",
-                              "consumerFeature":  "statistics",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "exportingFormat",
-                                                 "macroSparklinePoints",
-                                                 "summary",
-                                                 "summarySparklinePoints"
-                                             ],
-                              "outputsHandled":  [
-                                                     "exportRequested"
                                                  ]
                           },
                           {

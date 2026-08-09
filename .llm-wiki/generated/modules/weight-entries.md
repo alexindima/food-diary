@@ -15,7 +15,7 @@ sources:
 
 - Origin: module-graph
 - Dependencies: Users
-- Consumers: Dashboard, Tdee, WeeklyCheckIn
+- Consumers: Dashboard, Statistics, Tdee, WeeklyCheckIn
 
 ## Source Areas
 

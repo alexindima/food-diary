@@ -18,7 +18,7 @@
                     "applicationModules":  38,
                     "extractedApplicationModules":  2,
                     "controllers":  83,
-                    "endpoints":  265,
+                    "endpoints":  266,
                     "agentGuides":  43,
                     "documentationPages":  43
                 },
@@ -2450,7 +2450,9 @@
                                {
                                    "name":  "Statistics",
                                    "dependencies":  [
-                                                        "Users"
+                                                        "Users",
+                                                        "WaistEntries",
+                                                        "WeightEntries"
                                                     ]
                                },
                                {
@@ -3967,6 +3969,11 @@
                                                                "verb":  "GET",
                                                                "route":  "/api/v{version:apiVersion}/statistics",
                                                                "line":  17
+                                                           },
+                                                           {
+                                                               "verb":  "GET",
+                                                               "route":  "/api/v{version:apiVersion}/statistics/summary",
+                                                               "line":  24
                                                            }
                                                        ]
                                      },

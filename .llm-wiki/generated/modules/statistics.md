@@ -14,7 +14,7 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Users
+- Dependencies: Users, WaistEntries, WeightEntries
 - Consumers: Dashboard
 
 ## Source Areas
@@ -31,10 +31,12 @@ sources:
 Source: `FoodDiary.Presentation.Api/Features/Statistics/StatisticsController.cs`
 
 - `GET /api/v{version:apiVersion}/statistics`
+- `GET /api/v{version:apiVersion}/statistics/summary`
 
 ## Focused Tests
 
 - `tests/FoodDiary.Application.Tests/Statistics/StatisticsFeatureTests.cs`
+- `tests/FoodDiary.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs`
 - `tests/FoodDiary.Presentation.Api.Tests/StatisticsHttpMappingsTests.cs`
 
 ## Working Rule

@@ -8,15 +8,15 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3013,
-                    "symbols":  3053,
+                    "sourceFiles":  3018,
+                    "symbols":  3058,
                     "interfaceImplementationLinks":  223,
                     "dependencyInjectionRegistrations":  222,
                     "kinds":  {
-                                  "class":  1542,
+                                  "class":  1544,
                                   "enum":  45,
                                   "interface":  399,
-                                  "record":  957,
+                                  "record":  960,
                                   "record struct":  110
                               },
                     "roles":  {
@@ -32,16 +32,16 @@
                                   "Mapper":  8,
                                   "Mapping":  3,
                                   "Options":  55,
-                                  "Other":  1074,
-                                  "Query":  155,
-                                  "QueryHandler":  120,
+                                  "Other":  1075,
+                                  "Query":  156,
+                                  "QueryHandler":  121,
                                   "ReadModelRepository":  29,
                                   "ReadRepository":  50,
                                   "Repository":  103,
                                   "Request":  121,
-                                  "Response":  167,
+                                  "Response":  168,
                                   "Service":  254,
-                                  "Validator":  175,
+                                  "Validator":  176,
                                   "ValueObject":  120,
                                   "WriteRepository":  47
                               }
@@ -10604,6 +10604,13 @@
                         "line":  2
                     },
                     {
+                        "name":  "StatisticsSummaryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/Statistics/Models/StatisticsSummaryModel.cs",
+                        "line":  5
+                    },
+                    {
                         "name":  "GetStatisticsQuery",
                         "kind":  "record",
                         "role":  "Query",
@@ -10622,6 +10629,27 @@
                         "kind":  "class",
                         "role":  "Validator",
                         "path":  "FoodDiary.Application/Statistics/Queries/GetStatistics/GetStatisticsQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetStatisticsSummaryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetStatisticsSummaryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
+                        "line":  17
+                    },
+                    {
+                        "name":  "GetStatisticsSummaryQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryValidator.cs",
                         "line":  4
                     },
                     {
@@ -18609,14 +18637,14 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Presentation.Api/Features/Statistics/Mappings/StatisticsHttpQueryMappings.cs",
-                        "line":  5
+                        "line":  6
                     },
                     {
                         "name":  "StatisticsHttpResponseMappings",
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Presentation.Api/Features/Statistics/Mappings/StatisticsHttpResponseMappings.cs",
-                        "line":  5
+                        "line":  7
                     },
                     {
                         "name":  "GetStatisticsHttpQuery",
@@ -18631,6 +18659,13 @@
                         "role":  "Response",
                         "path":  "FoodDiary.Presentation.Api/Features/Statistics/Responses/AggregatedStatisticsHttpResponse.cs",
                         "line":  2
+                    },
+                    {
+                        "name":  "StatisticsSummaryHttpResponse",
+                        "kind":  "record",
+                        "role":  "Response",
+                        "path":  "FoodDiary.Presentation.Api/Features/Statistics/Responses/StatisticsSummaryHttpResponse.cs",
+                        "line":  5
                     },
                     {
                         "name":  "StatisticsController",

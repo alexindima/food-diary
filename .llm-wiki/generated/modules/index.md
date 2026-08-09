@@ -48,11 +48,11 @@ repository catalog. Regenerate it instead of editing it manually.
 | [RecipeLikes](recipe-likes.md) | 1 | 0 | 1 |
 | [Recipes](recipes.md) | 5 | 0 | 2 |
 | [ShoppingLists](shopping-lists.md) | 1 | 1 | 1 |
-| [Statistics](statistics.md) | 1 | 1 | 1 |
+| [Statistics](statistics.md) | 3 | 1 | 1 |
 | [Tdee](tdee.md) | 3 | 1 | 1 |
 | [Usda](usda.md) | 2 | 1 | 1 |
 | [Users](users.md) | 1 | 32 | 6 |
-| [WaistEntries](waist-entries.md) | 1 | 2 | 1 |
+| [WaistEntries](waist-entries.md) | 1 | 3 | 1 |
 | [Wearables](wearables.md) | 1 | 0 | 1 |
 | [WeeklyCheckIn](weekly-check-in.md) | 5 | 0 | 1 |
-| [WeightEntries](weight-entries.md) | 1 | 3 | 1 |
+| [WeightEntries](weight-entries.md) | 1 | 4 | 1 |
