@@ -74,11 +74,21 @@ switch ($Action) {
             try { $null = [regex]::new($pattern) } catch { throw "Invalid path regex: $pattern" }
         }
         $inputs = Get-ChangeInputs $BaseRef
-        $plannedPaths = @($inputs.brief.change.paths)
+        $plannedPaths = @($inputs.brief.change.paths | Where-Object {
+            $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' -and
+            $_ -notmatch '^\.artifacts/llm-wiki/'
+        })
         $allowedPatterns = if ($AllowedPath.Count -gt 0) {
             @($AllowedPath)
         } else {
             @($plannedPaths | ForEach-Object { '^' + [regex]::Escape($_) + '$' })
+        }
+        if ($AllowedPath.Count -gt 0) {
+            $plannedPaths = @($plannedPaths | Where-Object {
+                $candidate = [string]$_
+                @($AllowedPath | Where-Object { $candidate -match [string]$_ }).Count -gt 0 -and
+                @($ExcludedPath | Where-Object { $candidate -match [string]$_ }).Count -eq 0
+            })
         }
         if ($allowedPatterns.Count -eq 0) { throw 'manifest init requires changed paths or at least one -AllowedPath regex.' }
         $head = git rev-parse HEAD

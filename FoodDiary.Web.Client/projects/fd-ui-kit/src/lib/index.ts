@@ -43,6 +43,7 @@ export * from './menu/fd-ui-menu-trigger.directive';
 export * from './nutrient-input/fd-ui-nutrient-input';
 export * from './pagination/fd-ui-pagination';
 export * from './pie-chart/fd-ui-pie-chart';
+export * from './progress-ring/fd-ui-progress-ring';
 export * from './radio/fd-ui-radio-group';
 export * from './satiety-scale/fd-ui-satiety-scale';
 export * from './section-state/fd-ui-section-state';

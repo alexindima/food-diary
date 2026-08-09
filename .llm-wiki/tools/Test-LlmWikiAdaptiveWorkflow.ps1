@@ -199,6 +199,18 @@ Assert-Adaptive (-not $criticalCoverageOnly.requiresDecisionCheckpoint -and -not
 Assert-Adaptive ((@($criticalCoverageOnly.stages | Where-Object required).id -join ',') -eq 'coverage-brief,test-implementation,focused-verification,completion') 'Test-only coverage did not use the four-stage focused route.'
 Assert-Adaptive (@($criticalCoverageOnly.stages.command | Where-Object { $_ -match 'journeys|design|privacy|rollout|wiki\.ps1 verify$' }).Count -eq 0) 'Test-only coverage retained unrelated product or critical workflow commands.'
 
+$testOnlyWithWikiBookkeeping = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Add billing and statistics coverage without changing production code.' `
+    -ProposedPath @(
+        'tests/FoodDiary.Application.Tests/Statistics/StatisticsTests.cs',
+        'tests/FoodDiary.Infrastructure.Tests/Billing/BillingTests.cs',
+        '.llm-wiki/generated/quality-index.json',
+        '.llm-wiki/reviews/source-impact-reviews.json'
+    ) `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($testOnlyWithWikiBookkeeping.profile -eq 'test-only') 'Derived Wiki bookkeeping prevented test-only routing.'
+Assert-Adaptive (-not $testOnlyWithWikiBookkeeping.requiresWorkspace) 'Test-only work with derived Wiki files retained a governed workspace.'
+
 $testInfrastructureChange = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Update the infrastructure test project dependencies.' `
     -ProposedPath 'tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj' `

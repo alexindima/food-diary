@@ -77,6 +77,9 @@ file in their key. Any workspace edit therefore invalidates the result instead
 of returning stale navigation. Injected test inputs bypass the cache, and the
 cache stores only derived JSON; authoritative sources and generated Wiki pages
 remain unchanged.
+Writes use unique temporary files and atomic replacement. Cleanup is
+idempotent, so concurrent sessions may prune the same stale entry without
+turning an already-successful query into a failure.
 
 The `ui-discovery` budget prevents intent-only UI wording from selecting a
 governed route. It allows only runtime-owner research and grounded

@@ -15,6 +15,7 @@ try {
     $first = Get-LlmWikiQueryCacheEntry -RepositoryRoot $tempRoot -Namespace test -Arguments $arguments
     if (Read-LlmWikiQueryCache -Entry $first) { throw 'A cache miss returned content.' }
     Write-LlmWikiQueryCache -Entry $first -Content '{"value":1}'
+    Write-LlmWikiQueryCache -Entry $first -Content '{"value":1}'
     if ((Read-LlmWikiQueryCache -Entry $first) -cne '{"value":1}') { throw 'Recorded query cache content was not reused.' }
 
     [IO.File]::WriteAllText((Join-Path $tempRoot 'source.txt'), 'two', [Text.UTF8Encoding]::new($false))

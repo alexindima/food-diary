@@ -58,6 +58,26 @@ Circular distribution chart.
 - `showLegend?: boolean`
 - `variant?: 'donut' | 'pie'`
 
+#### `fd-ui-progress-ring`
+
+Accessible circular progress indicator with a shared rounded SVG treatment, reveal animation, and projected center content.
+
+**Inputs**
+
+- `value: number`
+- `max?: number` (defaults to `100`)
+- `ariaLabel: string`
+- `ariaDescribedBy?: string`
+- `focusable?: boolean`
+
+**CSS variables**
+
+- `--fd-progress-ring-size`
+- `--fd-progress-ring-stroke-width`
+- `--fd-progress-ring-color`
+- `--fd-progress-ring-track-color`
+- `--fd-progress-ring-duration`
+
 #### `fd-ui-bar-chart`
 
 Responsive bar chart for simple comparisons and scaled categorical time series. Categorical mode supports single, grouped, and stacked bars, missing categories, Y-axis labels, units, highlighted labels, and reference lines.

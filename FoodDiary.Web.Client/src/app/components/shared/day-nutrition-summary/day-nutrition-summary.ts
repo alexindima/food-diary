@@ -2,7 +2,7 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiIconComponent } from 'fd-ui-kit';
+import { FdUiIconComponent, FdUiProgressRingComponent } from 'fd-ui-kit';
 import { merge, startWith } from 'rxjs';
 
 import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboard-widget-frame';
@@ -14,8 +14,6 @@ import {
     resolveDaySummaryScaleMax,
 } from './day-nutrition-summary.utils';
 
-const RING_RADIUS = 104;
-const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 const PERCENT = 100;
 
 type DayNutritionSummaryData = {
@@ -28,7 +26,7 @@ type DayNutritionSummaryData = {
 
 @Component({
     selector: 'fd-day-nutrition-summary',
-    imports: [DecimalPipe, TranslatePipe, DashboardWidgetFrameComponent, FdUiIconComponent],
+    imports: [DecimalPipe, TranslatePipe, DashboardWidgetFrameComponent, FdUiIconComponent, FdUiProgressRingComponent],
     templateUrl: './day-nutrition-summary.html',
     styleUrl: './day-nutrition-summary.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,13 +39,8 @@ export class DayNutritionSummaryComponent {
     );
 
     public readonly data = input.required<DayNutritionSummaryData>();
-    protected readonly ringCircumference = RING_CIRCUMFERENCE;
     protected readonly dailyPercent = computed(() => calculateDaySummaryPercent(this.data().dailyConsumed, this.data().dailyGoal));
     protected readonly dailyProgressValue = computed(() => Math.min(PERCENT, this.dailyPercent()));
-    protected readonly ringDasharray = computed(() => {
-        const progress = (Math.min(PERCENT, this.dailyPercent()) / PERCENT) * RING_CIRCUMFERENCE;
-        return `${progress} ${RING_CIRCUMFERENCE}`;
-    });
     protected readonly weeklyPercent = computed(() => calculateDaySummaryPercent(this.data().weeklyConsumed, this.data().weeklyGoal ?? 0));
     protected readonly calorieComparisonText = computed(() => {
         this.translationChange();

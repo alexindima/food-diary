@@ -27,41 +27,16 @@
     }
 
     &__ring {
-        position: relative;
+        --fd-progress-ring-size: min(100%, 300px);
+        --fd-progress-ring-stroke-width: 7.5;
         width: min(100%, 300px);
-        aspect-ratio: 1;
-        border-radius: 50%;
-        outline: none;
     }
-    &__ring svg {
-        width: 100%;
-        height: 100%;
-        transform: rotate(-90deg);
-    }
-    &__ring circle {
-        fill: none;
-        stroke-width: 18;
-        stroke-linecap: round;
-    }
-    &__ring-track {
-        stroke: var(--fd-color-border-summary-track);
-    }
-    &__ring-progress {
-        stroke: var(--fd-color-primary-500);
-        stroke-dashoffset: 0;
-        animation: day-summary-ring-reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-        transition: stroke-dasharray 0.4s ease;
-    }
-    &__ring-progress--excess {
-        stroke: var(--fd-color-warning);
-    }
-    &__ring-progress--zero {
-        animation: day-summary-ring-zero-reveal 0.25s ease-out both;
+
+    &__ring--excess {
+        --fd-progress-ring-color: var(--fd-color-warning);
     }
 
     &__ring-content {
-        position: absolute;
-        inset: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -140,17 +115,11 @@
         transform-origin: left center;
     }
 
-    &__ring:where(:hover, :focus-visible) &__ring-progress {
-        filter: brightness(1.08) saturate(1.08);
-        stroke-width: 20;
-    }
-
     &__nutrient:where(:hover, :focus-visible) &__fill {
         filter: brightness(1.08) saturate(1.08);
         transform: scaleY(1.16);
     }
 
-    &__ring:focus-visible,
     &__nutrient:focus-visible {
         box-shadow: var(--fd-shadow-focus);
     }
@@ -186,14 +155,14 @@
         transform: translate(50%, var(--fd-space-xs));
     }
 
-    &__ring:where(:hover, :focus-visible) &__tooltip,
+    &__ring:where(:hover, :focus-within) &__tooltip,
     &__nutrient:where(:hover, :focus-visible) &__tooltip {
         opacity: 1;
         transform: translateY(0);
         visibility: visible;
     }
 
-    &__ring:where(:hover, :focus-visible) &__tooltip {
+    &__ring:where(:hover, :focus-within) &__tooltip {
         transform: translate(50%, 0);
     }
 
@@ -234,28 +203,14 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-        &__ring-progress,
         &__fill {
             animation: none;
         }
 
-        &__ring-progress,
         &__fill,
         &__tooltip {
             transition: none;
         }
-    }
-}
-
-@keyframes day-summary-ring-reveal {
-    from {
-        stroke-dashoffset: var(--day-summary-ring-length);
-    }
-}
-
-@keyframes day-summary-ring-zero-reveal {
-    from {
-        opacity: 0;
     }
 }
 

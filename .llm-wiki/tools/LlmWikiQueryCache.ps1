@@ -75,8 +75,10 @@ function Write-LlmWikiQueryCache {
         [IO.File]::WriteAllText($temporaryPath, $Content, [Text.UTF8Encoding]::new($false))
         Move-Item -LiteralPath $temporaryPath -Destination $Entry.path -Force
     } finally {
-        if (Test-Path -LiteralPath $temporaryPath) { Remove-Item -LiteralPath $temporaryPath -Force }
+        Remove-Item -LiteralPath $temporaryPath -Force -ErrorAction SilentlyContinue
     }
     $staleEntries = @(Get-ChildItem -LiteralPath $directory -Filter '*.json' -File | Sort-Object LastWriteTimeUtc -Descending | Select-Object -Skip $Retain)
-    foreach ($staleEntry in $staleEntries) { Remove-Item -LiteralPath $staleEntry.FullName -Force }
+    foreach ($staleEntry in $staleEntries) {
+        Remove-Item -LiteralPath $staleEntry.FullName -Force -ErrorAction SilentlyContinue
+    }
 }

@@ -10,6 +10,7 @@ import { LocalizedTourDefinitionService } from '../../../../shared/tours/localiz
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { GamificationFacade } from '../../lib/gamification.facade';
 import { GamificationBadgesCardComponent } from '../gamification-page-sections/badges-card/gamification-badges-card';
+import { GamificationHabitPathComponent } from '../gamification-page-sections/habit-path/gamification-habit-path';
 import { GamificationHealthScoreCardComponent } from '../gamification-page-sections/health-score-card/gamification-health-score-card';
 import { GamificationStatsGridComponent } from '../gamification-page-sections/stats-grid/gamification-stats-grid';
 import { GAMIFICATION_TOUR } from './gamification-tour';
@@ -26,6 +27,7 @@ import { GAMIFICATION_TOUR } from './gamification-tour';
         GamificationStatsGridComponent,
         GamificationHealthScoreCardComponent,
         GamificationBadgesCardComponent,
+        GamificationHabitPathComponent,
     ],
     templateUrl: './gamification-page.html',
     styleUrl: './gamification-page.scss',

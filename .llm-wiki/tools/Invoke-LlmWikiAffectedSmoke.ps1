@@ -52,6 +52,8 @@ foreach ($path in $paths) {
         Add-Group 'verification-cache'
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiQueryCache|Test-LlmWikiQueryCache|Get-LlmWikiTaskBrief|Get-LlmWikiResearchPacket|Get-LlmWikiTestPlan)\.ps1$') {
         Add-Group 'query-cache'
+    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiChangeManifest|Manage-LlmWikiAcceptanceMatrix|Test-LlmWikiTestOnlyGovernance)\.ps1$') {
+        Add-Group 'test-only-governance'
     } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiDeliveryWorkflow|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiTaskEvidence|Manage-LlmWikiChangeCritique|New-LlmWikiEvidenceLineage|Update-LlmWikiTaskEvidence|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiGovernedDeliveryRegression)\.ps1$') {
         Add-Group 'governed-delivery'
     } elseif ($path -match '^\.llm-wiki/tools/') {
@@ -120,6 +122,10 @@ foreach ($group in $groups) {
         }
         'query-cache' {
             & (Join-Path $toolsRoot 'Test-LlmWikiQueryCache.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'test-only-governance' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiTestOnlyGovernance.ps1')
             if (-not $?) { exit 1 }
         }
         'governed-delivery' {

@@ -35,6 +35,11 @@ Map each criterion to one or more discovered verification targets:
   -CheckId architecture-tests
 ```
 
+For a packet containing only test sources, initialization automatically maps
+each criterion to the changed test bundle, focused test paths, and required
+checks. This removes repetitive bookkeeping but does not resolve a criterion:
+current execution evidence or an explicit evidence note is still required.
+
 Resolve only after observing evidence:
 
 ```powershell

@@ -464,13 +464,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "06eb2b03d1d031c81a19c8e266c1a0f1670ed1969539f3c061200289ad98eaf1"
+                                            "sha256":  "6e5ad74cb7aa67e838546829fa92f56516bed4a41cd98fee55b31fb7dea4a108"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
+                                            "sha256":  "f1057792976cb436e53610fea1db3b4e152c19e02cf1789404a83bbb5ea5d5d1"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/wiki.ps1",
+                                            "sha256":  "52ef30810cb9081a9cf2ed9dcd15257a4f918abb828c581ff725ab4505105d56"
                                         }
                                     ],
-                        "reason":  "Reviewed index-pipeline page after making generators tolerate deleted working-tree files; transactional update behavior remains unchanged.",
+                        "reason":  "Affected smoke now routes test-only governance regressions without changing index semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
-                        "reviewedAtUtc":  "2026-08-08T15:21:52.2773583Z"
+                        "gitHead":  "e78bd7010ebd983422800b082d86c754a12ad794",
+                        "reviewedAtUtc":  "2026-08-09T15:40:41.6283775Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -537,6 +545,29 @@
                         "reviewedAtUtc":  "2026-08-01T01:45:27.1867588Z"
                     },
                     {
+                        "pageId":  "workflow-plan-diff-conformance",
+                        "pagePath":  ".llm-wiki/workflows/plan-diff-conformance.md",
+                        "pageSha256":  "cc412c14328fb572376872cca0476a09251ab524bf64dd86398365cfae4a2bf6",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+                                            "sha256":  "f4d6aedbe559131d122d5ee9ed5b8964533ff5c1e0e87c14c4671e4e75e2109d"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
+                                            "sha256":  "414b6c9394869ec5b2141990ddbfd65649e01141eed54ceef207a94540cc1244"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
+                                        }
+                                    ],
+                        "reason":  "Manifest planning now separates allowed product delta from derived Wiki bookkeeping; conformance boundaries remain strict.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "e78bd7010ebd983422800b082d86c754a12ad794",
+                        "reviewedAtUtc":  "2026-08-09T15:40:42.3442798Z"
+                    },
+                    {
                         "pageId":  "workflow-privacy-review",
                         "pagePath":  ".llm-wiki/workflows/privacy-review.md",
                         "pageSha256":  "ccc7ce4a406748d705aeca097cf3312ad16c1eea5f2bbabd1e362e7b4ac14d76",
@@ -572,14 +603,18 @@
                         "pageSha256":  "8b82837eee71015fa0bc4c18f084e4ece9b7aedd383f14fb07def75df7fbda78",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+                                            "sha256":  "9a08021f6f3e902b6ae5a71c133e24cb0b8e1c26d97bf23d7dfbca0eb7e63af8"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
                                             "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
                                         }
                                     ],
-                        "reason":  "Reviewed governed-delivery hardening. Existing domain semantics remain unchanged; only status separation, atomic refresh, generated-scope isolation, and focused regression coverage were added.",
+                        "reason":  "Automatic test-only mapping supplies links but still requires resolution and current verification evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
-                        "reviewedAtUtc":  "2026-08-08T11:15:39.9022720Z"
+                        "gitHead":  "e78bd7010ebd983422800b082d86c754a12ad794",
+                        "reviewedAtUtc":  "2026-08-09T15:40:43.1886392Z"
                     },
                     {
                         "pageId":  "workflow-quality-risk",
@@ -599,17 +634,25 @@
                     {
                         "pageId":  "workflow-release-readiness",
                         "pagePath":  ".llm-wiki/workflows/release-readiness.md",
-                        "pageSha256":  "bf8b5d182a3b112509e21a3d88297d8015bcda1eba3430160651c0df603f0c7e",
+                        "pageSha256":  "8d205fad5d3e0217b2cf58036b664e0a41bdc0aa8060576198e13be9c07bd919",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-                                            "sha256":  "591bfdd4d941d5fc22cd5e26e90b3bcb930b3ce4535bf4bcb636506bbf09931b"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+                                            "sha256":  "2282fa973b99388db3bb3e83f1bf6ce3d244bd700801c2f94d1d37428882012b"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+                                            "sha256":  "9a08021f6f3e902b6ae5a71c133e24cb0b8e1c26d97bf23d7dfbca0eb7e63af8"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+                                            "sha256":  "f4d6aedbe559131d122d5ee9ed5b8964533ff5c1e0e87c14c4671e4e75e2109d"
                                         }
                                     ],
-                        "reason":  "Reviewed the Windows host-executable fix for canonical Wiki evidence checks; readiness dimensions and non-compensating verdicts are unchanged.",
+                        "reason":  "Automatic test-only mapping and product-only manifest scope preserve readiness requirements.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
-                        "reviewedAtUtc":  "2026-07-31T13:19:03.6954450Z"
+                        "gitHead":  "e78bd7010ebd983422800b082d86c754a12ad794",
+                        "reviewedAtUtc":  "2026-08-09T15:40:44.0800239Z"
                     },
                     {
                         "pageId":  "workflow-requirement-intelligence",
@@ -617,14 +660,18 @@
                         "pageSha256":  "a363e4461094ca73ab61e8a9a90c0bbd73b47f41ad6d81cd554345296367e54f",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+                                            "sha256":  "9a08021f6f3e902b6ae5a71c133e24cb0b8e1c26d97bf23d7dfbca0eb7e63af8"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
                                             "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
                                         }
                                     ],
-                        "reason":  "Reviewed governed-delivery hardening. Existing domain semantics remain unchanged; only status separation, atomic refresh, generated-scope isolation, and focused regression coverage were added.",
+                        "reason":  "Test-only automatic mapping does not alter criterion parsing or resolution semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
-                        "reviewedAtUtc":  "2026-08-08T11:15:40.6696375Z"
+                        "gitHead":  "e78bd7010ebd983422800b082d86c754a12ad794",
+                        "reviewedAtUtc":  "2026-08-09T15:40:44.9408304Z"
                     },
                     {
                         "pageId":  "workflow-review-report",

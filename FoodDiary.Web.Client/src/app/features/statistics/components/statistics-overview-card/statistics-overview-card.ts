@@ -1,30 +1,22 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiCardComponent, FdUiIconComponent } from 'fd-ui-kit';
+import { FdUiCardComponent, FdUiIconComponent, FdUiProgressRingComponent } from 'fd-ui-kit';
 
 import type { StatisticsNutrientProgress, StatisticsOverviewData } from '../../models/statistics-dashboard-card.models';
 
 const PERCENT_MAX = 100;
-const RING_RADIUS = 104;
-const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 
 @Component({
     selector: 'fd-statistics-overview-card',
-    imports: [DecimalPipe, TranslatePipe, FdUiCardComponent, FdUiIconComponent],
+    imports: [DecimalPipe, TranslatePipe, FdUiCardComponent, FdUiIconComponent, FdUiProgressRingComponent],
     templateUrl: './statistics-overview-card.html',
     styleUrl: './statistics-overview-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatisticsOverviewCardComponent {
     public readonly data = input.required<StatisticsOverviewData>();
-    protected readonly ringCircumference = RING_CIRCUMFERENCE;
-
     protected readonly calorieProgress = computed(() => this.getProgress(this.data().averageCalories, this.data().calorieGoal));
-    protected readonly ringDasharray = computed(() => {
-        const progress = (this.calorieProgress() / PERCENT_MAX) * RING_CIRCUMFERENCE;
-        return `${progress} ${RING_CIRCUMFERENCE}`;
-    });
 
     protected getNutrientProgress(nutrient: StatisticsNutrientProgress): number {
         return this.getProgress(nutrient.current, nutrient.goal);

@@ -18,12 +18,11 @@ describe('GamificationHealthScoreCardComponent', () => {
     it('renders health score and ring progress', () => {
         const fixture = createComponent();
         const element = getElement(fixture);
-        const progress = element.querySelector<SVGCircleElement>('.gamification__score-progress');
+        const progress = element.querySelector<SVGCircleElement>('.fd-ui-progress-ring__value');
 
         expect(element.textContent).toContain(HEALTH_SCORE.toString());
         expect(element.textContent).toContain('GAMIFICATION.HEALTH_SCORE_HINT');
-        expect(progress?.style.strokeDasharray).not.toBe('');
-        expect(progress?.style.strokeDashoffset).not.toBe('');
+        expect(progress?.getAttribute('stroke-dasharray')).toBe(`${HEALTH_SCORE} 100`);
     });
 });
 

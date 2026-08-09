@@ -5,11 +5,6 @@ export type BadgeDisplay = {
     nameKey: string;
 } & Badge;
 
-export type HealthScoreRing = {
-    strokeDasharray: number;
-    strokeDashoffset: number;
-};
-
 export type GamificationStatTile = {
     key: string;
     value: string;

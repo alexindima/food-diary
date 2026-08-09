@@ -2,28 +2,14 @@
     <fd-dashboard-widget-frame [title]="'DASHBOARD.DAY_SUMMARY.TITLE' | translate">
         <div class="day-summary__layout">
             <div class="day-summary__calories">
-                <div
+                <fd-ui-progress-ring
                     class="day-summary__ring"
-                    role="progressbar"
-                    tabindex="0"
-                    aria-describedby="day-summary-calorie-tooltip"
-                    [attr.aria-label]="'DASHBOARD.DAY_SUMMARY.CALORIE_PROGRESS' | translate"
-                    [attr.aria-valuemin]="0"
-                    [attr.aria-valuemax]="100"
-                    [attr.aria-valuenow]="dailyProgressValue()"
+                    ariaDescribedBy="day-summary-calorie-tooltip"
+                    [value]="dailyProgressValue()"
+                    [focusable]="true"
+                    [class.day-summary__ring--excess]="dailyPercent() > 100"
+                    [ariaLabel]="'DASHBOARD.DAY_SUMMARY.CALORIE_PROGRESS' | translate"
                 >
-                    <svg viewBox="0 0 240 240" aria-hidden="true" focusable="false" [style.--day-summary-ring-length]="ringCircumference">
-                        <circle class="day-summary__ring-track" cx="120" cy="120" r="104" />
-                        <circle
-                            class="day-summary__ring-progress"
-                            cx="120"
-                            cy="120"
-                            r="104"
-                            [class.day-summary__ring-progress--excess]="dailyPercent() > 100"
-                            [class.day-summary__ring-progress--zero]="dailyProgressValue() === 0"
-                            [attr.stroke-dasharray]="ringDasharray()"
-                        />
-                    </svg>
                     <div class="day-summary__ring-content">
                         <div class="day-summary__percent fd-ui-metric-hero">
                             {{ dailyPercent() }}<span class="fd-ui-metric-unit">%</span>
@@ -39,7 +25,7 @@
                     <span id="day-summary-calorie-tooltip" class="day-summary__tooltip" role="tooltip">
                         {{ calorieComparisonText() }}
                     </span>
-                </div>
+                </fd-ui-progress-ring>
             </div>
             <div class="day-summary__nutrients">
                 @for (bar of bars(); track bar.id) {

@@ -12,29 +12,11 @@
             </div>
 
             <div class="statistics-overview-card__calories fd-row fd-align-center fd-gap-lg">
-                <div
+                <fd-ui-progress-ring
                     class="statistics-overview-card__ring"
-                    role="progressbar"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                    [attr.aria-label]="'STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_CALORIES' | translate"
-                    [attr.aria-valuenow]="calorieProgress()"
+                    [value]="calorieProgress()"
+                    [ariaLabel]="'STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_CALORIES' | translate"
                 >
-                    <svg
-                        viewBox="0 0 240 240"
-                        aria-hidden="true"
-                        focusable="false"
-                        [style.--statistics-overview-ring-length]="ringCircumference"
-                    >
-                        <circle class="statistics-overview-card__ring-track" cx="120" cy="120" r="104" />
-                        <circle
-                            class="statistics-overview-card__ring-progress"
-                            cx="120"
-                            cy="120"
-                            r="104"
-                            [attr.stroke-dasharray]="ringDasharray()"
-                        />
-                    </svg>
                     <div class="statistics-overview-card__ring-center fd-place-center">
                         <strong class="fd-ui-metric-lg">{{ data().averageCalories | number: '1.0-0' }}</strong>
                         <span class="fd-ui-body-sm"
@@ -44,7 +26,7 @@
                             'STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_PER_DAY' | translate
                         }}</span>
                     </div>
-                </div>
+                </fd-ui-progress-ring>
 
                 @let calorieChangePercent = data().calorieChangePercent;
                 @if (calorieChangePercent !== null) {

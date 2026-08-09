@@ -28,6 +28,10 @@ $brief = & (Join-Path $PSScriptRoot 'Get-LlmWikiTaskBrief.ps1') @briefArguments 
 
 $normalized = $Objective.ToLowerInvariant()
 $paths = @($brief.change.paths | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
+$routingPaths = @($paths | Where-Object {
+    $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' -and
+    $_ -notmatch '^\.artifacts/llm-wiki/'
+})
 $scopes = @($brief.change.scopes)
 $flags = $brief.rolloutFlags
 $privacyCount = @($brief.privacyImpact.fields).Count + @($brief.privacyImpact.boundaries).Count + @($brief.privacyImpact.externalTransfers).Count
@@ -55,17 +59,17 @@ if ($boundaryNegated -and $visualVocabulary) {
 $presentationOnly = [string]$brief.risk.profile -eq 'frontend-presentation-only'
 $scopeKnown = $paths.Count -gt 0 -and $scopes.Count -gt 0 -and [string]$brief.analysis.mode -ne 'intent-inferred'
 $productionScopes = @($scopes | Where-Object { $_ -notin @('Tests', 'Documentation', 'Localization') })
-$testSourcePaths = @($paths | Where-Object {
+$testSourcePaths = @($routingPaths | Where-Object {
     $_ -match '(?i)(^|/)(tests?|__tests__)/' -or
     $_ -match '(?i)\.Tests?/' -or
     $_ -match '(?i)(?:^|/)[^/]*(?:Tests?|Specs?)\.cs$' -or
     $_ -match '(?i)\.(?:spec|test)\.ts$' -or
     $_ -match '^\.llm-wiki/tools/Test-LlmWiki[^/]*\.ps1$'
 })
-$testInfrastructurePaths = @($paths | Where-Object {
+$testInfrastructurePaths = @($routingPaths | Where-Object {
     $_ -match '(?i)(?:\.csproj|\.fsproj|\.props|\.targets|\.runsettings|package(?:-lock)?\.json|playwright\.config|vitest\.config|jest\.config|Directory\.Build)'
 })
-$testOnlyChange = $scopeKnown -and $paths.Count -gt 0 -and $testSourcePaths.Count -eq $paths.Count -and $testInfrastructurePaths.Count -eq 0
+$testOnlyChange = $scopeKnown -and $routingPaths.Count -gt 0 -and $testSourcePaths.Count -eq $routingPaths.Count -and $testInfrastructurePaths.Count -eq 0
 $visualIntent = $visualVocabulary -or $localUiInteractionVocabulary
 $boundaryChangeIntent = $normalized -match '\b(change|modify|add|remove|replace|migrate|integrate|send|store|persist|log|expose)\w*\s+(api|contract|provider|privacy|security|auth|token|credential|database|migration|webhook|payload|data)\b'
 $criticalUiSurfaceReference = $normalized -match '\b(auth|authentication|login|oauth|payment|billing|privacy|security)\s+(dialog|modal|page|form|button|panel|screen)\b'

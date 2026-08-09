@@ -1,18 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import type { Badge } from '../../models/gamification.data';
-import {
-    buildBadgeDisplays,
-    buildGamificationStats,
-    calculateHealthScoreRing,
-    filterEarnedBadges,
-    filterLockedBadges,
-} from './gamification-page-view.mapper';
+import { buildBadgeDisplays, buildGamificationStats, filterEarnedBadges, filterLockedBadges } from './gamification-page-view.mapper';
 
-const HALF_SCORE = 50;
-const FULL_SCORE = 100;
-const OVER_MAX_SCORE = 150;
-const NEGATIVE_SCORE = -10;
 const CURRENT_STREAK = 3;
 const LONGEST_STREAK = 12;
 const TOTAL_MEALS_LOGGED = 48;
@@ -23,16 +13,6 @@ const BADGES: Badge[] = [
 ];
 
 describe('gamification page view mapper', () => {
-    it('calculates score ring values and clamps score to the valid range', () => {
-        const halfRing = calculateHealthScoreRing(HALF_SCORE);
-        const emptyRing = calculateHealthScoreRing(NEGATIVE_SCORE);
-        const fullRing = calculateHealthScoreRing(OVER_MAX_SCORE);
-
-        expect(halfRing.strokeDashoffset).toBeCloseTo(halfRing.strokeDasharray / 2);
-        expect(emptyRing.strokeDashoffset).toBeCloseTo(emptyRing.strokeDasharray);
-        expect(fullRing.strokeDashoffset).toBeCloseTo(calculateHealthScoreRing(FULL_SCORE).strokeDashoffset);
-    });
-
     it('builds dashboard stat tiles', () => {
         const stats = buildGamificationStats(CURRENT_STREAK, LONGEST_STREAK, TOTAL_MEALS_LOGGED, WEEKLY_ADHERENCE);
 

@@ -32,43 +32,16 @@
     }
 
     &__ring {
-        position: relative;
+        --fd-progress-ring-size: min(100%, 300px);
+        --fd-progress-ring-stroke-width: 7.5;
         flex: 0 0 auto;
         width: min(100%, 300px);
-        aspect-ratio: 1;
-        border-radius: 50%;
-    }
-
-    &__ring svg {
-        width: 100%;
-        height: 100%;
-        transform: rotate(-90deg);
-    }
-
-    &__ring circle {
-        fill: none;
-        stroke-width: 18;
-        stroke-linecap: round;
-    }
-
-    &__ring-track {
-        stroke: var(--fd-color-border-summary-track);
-    }
-
-    &__ring-progress {
-        stroke: var(--fd-color-primary-500);
-        stroke-dashoffset: 0;
-        animation: statistics-overview-ring-reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
 
     &__ring-center {
-        position: absolute;
-        inset: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 100%;
-        height: 100%;
         flex-direction: column;
         gap: var(--fd-space-xxs);
         text-align: center;
@@ -206,17 +179,5 @@
             padding-top: 0;
             border-top: 0;
         }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        &__ring-progress {
-            animation: none;
-        }
-    }
-}
-
-@keyframes statistics-overview-ring-reveal {
-    from {
-        stroke-dashoffset: var(--statistics-overview-ring-length);
     }
 }

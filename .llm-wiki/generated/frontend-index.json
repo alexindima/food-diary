@@ -8,14 +8,14 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1532,
-                    "symbols":  590,
+                    "typescriptFiles":  1537,
+                    "symbols":  592,
                     "routes":  84,
                     "features":  36,
-                    "specs":  547,
+                    "specs":  549,
                     "localeFiles":  5,
                     "roles":  {
-                                  "Component":  405,
+                                  "Component":  407,
                                   "Directive":  12,
                                   "Facade":  52,
                                   "Other":  17,
@@ -519,6 +519,7 @@
                          "symbols":  [
                                          "GamificationBadgesCardComponent",
                                          "GamificationFacade",
+                                         "GamificationHabitPathComponent",
                                          "GamificationHealthScoreCardComponent",
                                          "GamificationPageComponent",
                                          "GamificationService",
@@ -532,6 +533,7 @@
                                        "FoodDiary.Web.Client/src/app/features/gamification/lib/gamification.facade.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-lib/gamification-page-view.mapper.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/stats-grid/gamification-stats-grid.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.spec.ts"
@@ -1567,6 +1569,13 @@
                         "line":  40
                     },
                     {
+                        "name":  "FdUiProgressRingComponent",
+                        "role":  "Component",
+                        "selector":  "fd-ui-progress-ring",
+                        "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/progress-ring/fd-ui-progress-ring.ts",
+                        "line":  11
+                    },
+                    {
                         "name":  "FdUiRadioGroupComponent",
                         "role":  "Component",
                         "selector":  "fd-ui-radio-group",
@@ -2208,7 +2217,7 @@
                         "role":  "Component",
                         "selector":  "fd-day-nutrition-summary",
                         "path":  "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.ts",
-                        "line":  36
+                        "line":  34
                     },
                     {
                         "name":  "DynamicProgressBarComponent",
@@ -3254,11 +3263,18 @@
                         "line":  17
                     },
                     {
+                        "name":  "GamificationHabitPathComponent",
+                        "role":  "Component",
+                        "selector":  "fd-gamification-habit-path",
+                        "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.ts",
+                        "line":  30
+                    },
+                    {
                         "name":  "GamificationHealthScoreCardComponent",
                         "role":  "Component",
                         "selector":  "fd-gamification-health-score-card",
                         "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.ts",
-                        "line":  15
+                        "line":  12
                     },
                     {
                         "name":  "GamificationStatsGridComponent",
@@ -3272,7 +3288,7 @@
                         "role":  "Component",
                         "selector":  "fd-gamification-page",
                         "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.ts",
-                        "line":  35
+                        "line":  37
                     },
                     {
                         "name":  "GoalsService",
@@ -4560,7 +4576,7 @@
                         "role":  "Component",
                         "selector":  "fd-statistics-overview-card",
                         "path":  "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-overview-card/statistics-overview-card.ts",
-                        "line":  19
+                        "line":  17
                     },
                     {
                         "name":  "StatisticsFacade",
@@ -5781,8 +5797,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  3074,
-                             "russianProperties":  3074,
+                             "englishProperties":  3098,
+                             "russianProperties":  3098,
                              "countsMatch":  true
                          },
                          {

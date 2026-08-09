@@ -133,6 +133,9 @@ When every grounded path is a test source or fixture, the router uses
 privacy describe the production behavior being covered; they do not imply that
 those production boundaries changed. The route still requires the test to prove
 an explicit branch or invariant and calls out removed or relaxed assertions.
+Derived Wiki indexes and source-review receipts are removed before this routing
+decision, so bookkeeping created by a previous verification pass cannot promote
+an otherwise test-only change to `critical`.
 Project files, dependency manifests, runner configuration, production sources,
 migrations, and API snapshots are excluded and route normally.
 

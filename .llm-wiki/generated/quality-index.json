@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4004,
+                    "productionFiles":  4007,
                     "criticalSymbols":  526,
                     "criticalSymbolsWithTestReferences":  500,
                     "criticalSymbolsWithoutTestReferences":  26,
@@ -23464,11 +23464,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/index.ts",
-                      "nonBlankLines":  61,
+                      "nonBlankLines":  62,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.22
+                      "structuralRiskScore":  4.24
                   },
                   {
                       "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert-actions.ts",
@@ -23669,6 +23669,22 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  9.2
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/progress-ring/fd-ui-progress-ring.stories.ts",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.28
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/progress-ring/fd-ui-progress-ring.ts",
+                      "nonBlankLines":  31,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  6.62
                   },
                   {
                       "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/radio/fd-ui-radio-group.stories.ts",
@@ -24840,11 +24856,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.ts",
-                      "nonBlankLines":  82,
+                      "nonBlankLines":  75,
                       "decisionPoints":  6,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.64
+                      "structuralRiskScore":  10.5
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.utils.ts",
@@ -26696,11 +26712,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/lib/gamification.constants.ts",
-                      "nonBlankLines":  12,
+                      "nonBlankLines":  11,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.24
+                      "structuralRiskScore":  0.22
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/lib/gamification.facade.ts",
@@ -26720,19 +26736,19 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-lib/gamification-page-view.mapper.ts",
-                      "nonBlankLines":  75,
+                      "nonBlankLines":  60,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.5
+                      "structuralRiskScore":  1.2
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-lib/gamification-page.models.ts",
-                      "nonBlankLines":  17,
+                      "nonBlankLines":  13,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.34
+                      "structuralRiskScore":  0.26
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.ts",
@@ -26743,12 +26759,20 @@
                       "structuralRiskScore":  0.4
                   },
                   {
+                      "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.ts",
+                      "nonBlankLines":  97,
+                      "decisionPoints":  6,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  10.94
+                  },
+                  {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.ts",
-                      "nonBlankLines":  16,
+                      "nonBlankLines":  13,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.32
+                      "structuralRiskScore":  0.26
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/stats-grid/gamification-stats-grid.ts",
@@ -26760,11 +26784,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.ts",
-                      "nonBlankLines":  50,
+                      "nonBlankLines":  52,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1
+                      "structuralRiskScore":  1.04
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-tour.ts",
@@ -29104,11 +29128,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-overview-card/statistics-overview-card.ts",
-                      "nonBlankLines":  36,
+                      "nonBlankLines":  29,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.72
+                      "structuralRiskScore":  0.58
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/statistics/lib/statistics-dashboard-card.mapper.ts",

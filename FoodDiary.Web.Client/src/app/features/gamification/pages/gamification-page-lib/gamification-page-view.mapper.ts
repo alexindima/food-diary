@@ -1,21 +1,7 @@
-import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
-import { HEALTH_SCORE_RING_RADIUS } from '../../lib/gamification.constants';
 import type { Badge } from '../../models/gamification.data';
-import type { BadgeDisplay, GamificationStatTile, HealthScoreRing } from './gamification-page.models';
+import type { BadgeDisplay, GamificationStatTile } from './gamification-page.models';
 
-const MIN_PERCENT = 0;
-const MAX_PERCENT = 100;
 const BADGE_STREAK_CATEGORY = 'streak';
-
-export function calculateHealthScoreRing(score: number): HealthScoreRing {
-    const circumference = 2 * Math.PI * HEALTH_SCORE_RING_RADIUS;
-    const clampedScore = clamp(score, MIN_PERCENT, MAX_PERCENT);
-
-    return {
-        strokeDasharray: circumference,
-        strokeDashoffset: circumference * (1 - clampedScore / PERCENT_MULTIPLIER),
-    };
-}
 
 export function buildGamificationStats(
     currentStreak: number,
@@ -77,8 +63,4 @@ export function filterLockedBadges(badges: BadgeDisplay[]): BadgeDisplay[] {
 
 function getBadgeIcon(badge: Badge): string {
     return badge.category === BADGE_STREAK_CATEGORY ? 'local_fire_department' : 'restaurant';
-}
-
-function clamp(value: number, min: number, max: number): number {
-    return Math.min(Math.max(value, min), max);
 }

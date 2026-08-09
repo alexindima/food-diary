@@ -35,6 +35,9 @@ The manifest snapshots risk, modules, implementation phases, required checks, re
 Manifest initialization compiles the task brief once and passes that exact
 snapshot into implementation planning, keeping its fingerprint and obligations
 internally consistent.
+When explicit allowed/excluded patterns are supplied, planned paths are limited
+to the current product delta accepted by that boundary. Generated Wiki indexes,
+review receipts, and out-of-scope dirty files do not become planned work.
 For lightweight planning before manifest initialization, `brief -ProposedPath`
 offers the same path-based classification without creating manifest state.
 

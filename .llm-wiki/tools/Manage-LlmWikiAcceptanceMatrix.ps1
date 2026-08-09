@@ -53,6 +53,21 @@ function Merge-Unique([object[]]$Existing, [object[]]$Additional) {
     @($Existing + $Additional | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
 }
 
+function Test-TestOnlyPacket([object]$Packet) {
+    $productPaths = @($Packet.diff.changedPaths | Where-Object {
+        $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' -and
+        $_ -notmatch '^\.artifacts/llm-wiki/'
+    })
+    if ($productPaths.Count -eq 0) { return $false }
+    $testPaths = @($productPaths | Where-Object {
+        $_ -match '(?i)(^|/)(tests?|__tests__)/' -or
+        $_ -match '(?i)\.Tests?/' -or
+        $_ -match '(?i)(?:^|/)[^/]*(?:Tests?|Specs?)\.cs$' -or
+        $_ -match '(?i)\.(?:spec|test)\.ts$'
+    })
+    return $testPaths.Count -eq $productPaths.Count
+}
+
 switch ($Action) {
     'init' {
         if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'acceptance init requires -Objective.' }
@@ -64,17 +79,23 @@ switch ($Action) {
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $packetArguments.ChangedPath = $ChangedPath }
         $packet = & (Join-Path $PSScriptRoot 'Get-LlmWikiChangePacket.ps1') @packetArguments | ConvertFrom-Json
         $criteria = [System.Collections.Generic.List[object]]::new()
+        $testOnlyPacket = Test-TestOnlyPacket $packet
+        $automaticChangedPaths = if ($testOnlyPacket) {
+            @($packet.diff.changedPaths | Where-Object { $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' })
+        } else { @() }
+        $automaticCheckIds = if ($testOnlyPacket) { @($packet.policy.requiredChecks.id) } else { @() }
+        $automaticTestPaths = if ($testOnlyPacket) { @($packet.testPlan.focusedTestFiles) } else { @() }
         for ($index = 0; $index -lt $criteriaText.Count; $index++) {
             $criteria.Add([pscustomobject][ordered]@{
                 id = 'AC-{0:d3}' -f ($index + 1)
                 text = $criteriaText[$index]
                 status = 'pending'
                 mapping = [pscustomobject][ordered]@{
-                    changedPaths = @()
+                    changedPaths = @($automaticChangedPaths)
                     scenarioIds = @()
-                    checkIds = @()
+                    checkIds = @($automaticCheckIds)
                     reviewIds = @()
-                    testPaths = @()
+                    testPaths = @($automaticTestPaths)
                 }
                 resolution = [pscustomobject][ordered]@{
                     reason = $null
@@ -97,6 +118,10 @@ switch ($Action) {
             }
             criteria = @($criteria)
             evidencePath = $EvidencePath
+            automaticMapping = [ordered]@{
+                applied = $testOnlyPacket
+                mode = $(if ($testOnlyPacket) { 'test-only-bundle' } else { 'none' })
+            }
         }
         Write-Matrix $matrix
         Write-Host "Initialized acceptance matrix: $Path"

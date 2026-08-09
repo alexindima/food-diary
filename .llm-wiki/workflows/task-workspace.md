@@ -76,6 +76,13 @@ only after every artifact succeeds. Existing workspaces are never overwritten.
 When no changed paths exist yet, provide one or more `-AllowedPath` regular
 expressions to define the intended scope.
 
+Manifest initialization records only current product paths accepted by the
+allowed/excluded boundary; derived Wiki output never becomes planned product
+scope. For a purely test-source packet, acceptance initialization links every
+criterion to the test bundle, focused test paths, and required checks. Resolution
+still requires current execution evidence, but repetitive manual mapping is not
+needed.
+
 Inspect actionable progress at any time:
 
 ```powershell
