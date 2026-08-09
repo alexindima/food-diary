@@ -8,17 +8,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "31a289928b511838b4774d2e16a426084067b7c0829cc45ae97554579bc816bd"
-                                        },
-                                        {
-                                            "path":  "docs/ARCHITECTURE.md",
-                                            "sha256":  "677af26b197c8be76be1c8734750e2a17be36bd57f1c477e2266f46dd7b17878"
+                                            "sha256":  "6096f9cb6ed9a05dbb604f83f46b51d774c43034c5703da05f96ec1a6892246c"
                                         }
                                     ],
-                        "reason":  "Reviewed analyzer project guidance and architecture documentation; navigation remains accurate after generated catalog refresh.",
+                        "reason":  "Reviewed after merging the statistics dashboard redesign with the JobManager lock retry fix; repository navigation and documented project boundaries remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
-                        "reviewedAtUtc":  "2026-08-08T15:21:52.8837689Z"
+                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
+                        "reviewedAtUtc":  "2026-08-09T09:52:48.3163395Z"
                     },
                     {
                         "pageId":  "module.mail-services",
@@ -72,13 +68,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "31a289928b511838b4774d2e16a426084067b7c0829cc45ae97554579bc816bd"
+                                            "sha256":  "6096f9cb6ed9a05dbb604f83f46b51d774c43034c5703da05f96ec1a6892246c"
                                         }
                                     ],
-                        "reason":  "Reviewed guidance impact; adding a scoped analyzer AGENTS guide preserves the documented authority model.",
+                        "reason":  "Reviewed the merged generated indexes and source mappings; the knowledge model and authority hierarchy remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
-                        "reviewedAtUtc":  "2026-08-08T15:21:55.7971900Z"
+                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
+                        "reviewedAtUtc":  "2026-08-09T09:52:48.9511400Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -87,13 +83,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "31a289928b511838b4774d2e16a426084067b7c0829cc45ae97554579bc816bd"
+                                            "sha256":  "6096f9cb6ed9a05dbb604f83f46b51d774c43034c5703da05f96ec1a6892246c"
                                         }
                                     ],
-                        "reason":  "Reviewed change-policy page; analyzer and Wiki generator changes trigger existing policies without changing their semantics.",
+                        "reason":  "Reviewed the applicable change policies for the merged statistics and JobManager changes; existing policy routing remains sufficient.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
-                        "reviewedAtUtc":  "2026-08-08T15:21:53.6478467Z"
+                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
+                        "reviewedAtUtc":  "2026-08-09T09:52:51.0829600Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -132,13 +128,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "d1b345af7021d3621e0b1c53e10dcdd7946bb7ce5f65dd514c03e1fc2eea492b"
+                                            "sha256":  "e8d74464e1fcb260af1874866fbdf71278be4d227af57560600e0be921818ef0"
                                         }
                                     ],
-                        "reason":  "Reviewed after Paddle billing hardening; generated indexes and current workflow guidance remain accurate.",
+                        "reason":  "Reviewed frontend component contracts; new statistics cards are feature-local and existing shared chart consumers remain compatible.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
-                        "reviewedAtUtc":  "2026-08-08T09:36:22.6137941Z"
+                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
+                        "reviewedAtUtc":  "2026-08-09T09:52:52.5574510Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -147,17 +143,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "565df85b90283b3586726acb38c851fed4093b45492d580be6af3b6ef73f5b91"
+                                            "sha256":  "8954cf07890731a44ca84b4f5102d1b27c0b375f95b2f6825df10112595c7f9a"
                                         },
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "31a289928b511838b4774d2e16a426084067b7c0829cc45ae97554579bc816bd"
+                                            "sha256":  "6096f9cb6ed9a05dbb604f83f46b51d774c43034c5703da05f96ec1a6892246c"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated repository catalog; the new analyzer and test projects are correctly represented as build tooling.",
+                        "reason":  "Reviewed repository catalog and query context; module ownership and data-access routing remain accurate after the merge.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
-                        "reviewedAtUtc":  "2026-08-08T15:21:50.6115188Z"
+                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
+                        "reviewedAtUtc":  "2026-08-09T09:52:55.5380078Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -166,13 +162,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "31a289928b511838b4774d2e16a426084067b7c0829cc45ae97554579bc816bd"
+                                            "sha256":  "6096f9cb6ed9a05dbb604f83f46b51d774c43034c5703da05f96ec1a6892246c"
                                         }
                                     ],
-                        "reason":  "Reviewed guide impact; scoped AGENTS addition does not change the documented review workflow.",
+                        "reason":  "Reviewed the merged diff workflow obligations; both the statistics feature and runtime resilience fix retain their required verification paths.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
-                        "reviewedAtUtc":  "2026-08-08T15:21:51.3885100Z"
+                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
+                        "reviewedAtUtc":  "2026-08-09T09:52:56.4306949Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -230,13 +226,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "8b95a48e1ed1156cc8fb24142231b7276da9143abc4c221627921791c89836d5"
+                                            "sha256":  "34feeec7c9962b71600d44e6dea8bb4fcdee925e32a04f57ec10f51914c80079"
                                         }
                                     ],
-                        "reason":  "Reviewed interface extension and composition boundaries; architecture suite passed 544 tests and enforced dependency graph is unchanged.",
+                        "reason":  "Reviewed the merged architecture health index; statistics contract additions and internal JobManager retry behavior introduce no enforced dependency drift.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "71bf2466ed53eccd7ef769c6a3e31a5ad354d145",
-                        "reviewedAtUtc":  "2026-08-08T14:06:36.8421041Z"
+                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
+                        "reviewedAtUtc":  "2026-08-09T09:52:49.5717011Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -245,13 +241,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "400c090a39b0a1849c93ca3951759f97207f1ff7d2c376a0c00e12d2290ea82e"
+                                            "sha256":  "4ccbbe303dbc1ef1f8d18d880ac168225581b163aca086f0e86399b9429be6f6"
                                         }
                                     ],
-                        "reason":  "Reviewed after syntax-only migration of Presentation API extension methods to C# 14 extension blocks; HTTP contracts, privacy behavior, telemetry semantics, and test ownership are unchanged.",
+                        "reason":  "Reviewed the merged backend contracts; statistics response fields are additive and JobManager retry behavior remains internal without HTTP contract changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9f0090ce7f69b9d937b9298d634abd988c538f4d",
-                        "reviewedAtUtc":  "2026-08-08T16:55:09.3491287Z"
+                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
+                        "reviewedAtUtc":  "2026-08-09T09:52:50.3457986Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -404,13 +400,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/domain-data-index.json",
-                                            "sha256":  "d42953c4721b3d4c385c10db4564c7262ca2fd6330b6dd4fce492661c3e7c447"
+                                            "sha256":  "ec5cf6b46100be74370772b8e4db9b0da7f6834bf08a96d9cecce4cd2051f898"
                                         }
                                     ],
-                        "reason":  "Reviewed billing payment occurrence and webhook inbox persistence model, migrations, nullability, backfill, indexes, and integration coverage.",
+                        "reason":  "Reviewed domain and data mappings; meal aggregation fields are read-model additions and do not change domain invariants or persistence ownership.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
-                        "reviewedAtUtc":  "2026-08-08T10:20:30.6277555Z"
+                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
+                        "reviewedAtUtc":  "2026-08-09T09:52:51.8219726Z"
                     },
                     {
                         "pageId":  "workflow-impact-simulation",
@@ -551,13 +547,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "cb75fabbb3e1eb79a46230fb741cf37eb0847c75c30edf7a4cdf340398c19ce9"
+                                            "sha256":  "fba6fb215cacde14a533193987680f12e635b63eae1e77cb234eaabde3c9cd07"
                                         }
                                     ],
-                        "reason":  "Reviewed after syntax-only migration of Presentation API extension methods to C# 14 extension blocks; HTTP contracts, privacy behavior, telemetry semantics, and test ownership are unchanged.",
+                        "reason":  "Reviewed sensitive-data impact; the merged changes use existing user-scoped nutrition and body measurements without new storage, logging, or provider sharing.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9f0090ce7f69b9d937b9298d634abd988c538f4d",
-                        "reviewedAtUtc":  "2026-08-08T16:55:11.1625200Z"
+                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
+                        "reviewedAtUtc":  "2026-08-09T09:52:53.3472356Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -596,13 +592,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "2c71db2dc54e7bf1598c4d7b0ebc60a22d47625d354efa776c61e34f5a7b81bc"
+                                            "sha256":  "907e617573e5a9a4e9fbe9bbd971e08ced0bd8763cc66a8b53ccf1369ddb4f2c"
                                         }
                                     ],
-                        "reason":  "Reviewed after syntax-only migration of Presentation API extension methods to C# 14 extension blocks; HTTP contracts, privacy behavior, telemetry semantics, and test ownership are unchanged.",
+                        "reason":  "Reviewed quality evidence; statistics component coverage and focused JobManager retry tests cover the new behavior without creating an ownership gap.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9f0090ce7f69b9d937b9298d634abd988c538f4d",
-                        "reviewedAtUtc":  "2026-08-08T16:55:13.0016245Z"
+                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
+                        "reviewedAtUtc":  "2026-08-09T09:52:54.1552726Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -755,17 +751,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "d1b345af7021d3621e0b1c53e10dcdd7946bb7ce5f65dd514c03e1fc2eea492b"
+                                            "sha256":  "e8d74464e1fcb260af1874866fbdf71278be4d227af57560600e0be921818ef0"
                                         },
                                         {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "d242ebb707427ffbb5cc11375378ba895198fbcc77e2605f4fa192ab85a7e513"
+                                            "sha256":  "029f0c211288f6facb7ad6509c43899636e034666c5a049b8f318f0b1bd7c373"
                                         }
                                     ],
-                        "reason":  "Reviewed after Paddle billing hardening; generated indexes and current workflow guidance remain accurate.",
+                        "reason":  "Reviewed frontend indexes for the statistics flow; routes, feature ownership, API mapping, and component trace remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
-                        "reviewedAtUtc":  "2026-08-08T09:36:26.8298613Z"
+                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
+                        "reviewedAtUtc":  "2026-08-09T09:52:57.3431180Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

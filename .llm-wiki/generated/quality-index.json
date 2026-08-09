@@ -18776,11 +18776,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
-                      "nonBlankLines":  92,
-                      "decisionPoints":  0,
+                      "nonBlankLines":  118,
+                      "decisionPoints":  4,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.84
+                      "structuralRiskScore":  8.36
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/UserCleanupJob.cs",

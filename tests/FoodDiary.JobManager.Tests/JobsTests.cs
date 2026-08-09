@@ -16,6 +16,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.JobManager.Services;
 using Hangfire;
 using Hangfire.Common;
+using Hangfire.Storage;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.Metrics;
@@ -1047,23 +1048,7 @@ public sealed class JobsTests {
     public async Task RecurringJobsHostedService_StartAsync_RegistersExpectedJobs_AndVerifiesThem() {
         var recurringJobManager = new RecordingRecurringJobManager();
         var verifier = new RecordingRecurringJobRegistrationVerifier();
-        var service = new RecurringJobsHostedService(
-            recurringJobManager,
-            verifier,
-            Options.Create(new ImageCleanupOptions { Cron = "0 * * * *" }),
-            Options.Create(new BillingRenewalOptions { Enabled = false, Cron = "15 * * * *" }),
-            Options.Create(new FastingNotificationOptions { Cron = "* * * * *" }),
-            Options.Create(new ImageObjectDeletionOutboxOptions { Cron = "* * * * *" }),
-            Options.Create(new EmailOutboxOptions { Cron = "* * * * *" }),
-            Options.Create(new NotificationWebPushOutboxOptions { Cron = "* * * * *" }),
-            Options.Create(new NotificationCleanupOptions {
-                TransientTypes = ["Test"],
-                Cron = "15 4 * * *",
-            }),
-            Options.Create(new UserLoginEventCleanupOptions { Cron = "0 3 * * *" }),
-            Options.Create(new MarketingAttributionCleanupOptions { Cron = "30 3 * * *" }),
-            Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }),
-            Options.Create(new ClientTaskReminderOptions { Cron = "0 * * * *" }));
+        RecurringJobsHostedService service = CreateRecurringJobsHostedService(recurringJobManager, verifier);
 
         await service.StartAsync(CancellationToken.None);
 
@@ -1104,26 +1089,23 @@ public sealed class JobsTests {
     }
 
     [Fact]
+    public async Task RecurringJobsHostedService_StartAsync_WhenRegistrationLockTimesOut_RetriesWithoutRestarting() {
+        var recurringJobManager = new RecordingRecurringJobManager(RecurringJobIds.ImageObjectDeletionOutbox);
+        var verifier = new RecordingRecurringJobRegistrationVerifier();
+        RecurringJobsHostedService service = CreateRecurringJobsHostedService(recurringJobManager, verifier);
+
+        await service.StartAsync(CancellationToken.None);
+
+        Assert.Equal(2, recurringJobManager.RegistrationAttempts[RecurringJobIds.ImageObjectDeletionOutbox]);
+        Assert.Empty(RecurringJobIds.All.Except(recurringJobManager.JobIds, StringComparer.Ordinal));
+        Assert.Equal(RecurringJobIds.All, verifier.ExpectedJobIds, StringComparer.Ordinal);
+    }
+
+    [Fact]
     public async Task RecurringJobsHostedService_StartAsync_WhenVerificationFails_Throws() {
         var recurringJobManager = new RecordingRecurringJobManager();
         var verifier = new ThrowingRecurringJobRegistrationVerifier();
-        var service = new RecurringJobsHostedService(
-            recurringJobManager,
-            verifier,
-            Options.Create(new ImageCleanupOptions { Cron = "0 * * * *" }),
-            Options.Create(new BillingRenewalOptions { Enabled = false, Cron = "15 * * * *" }),
-            Options.Create(new FastingNotificationOptions { Cron = "* * * * *" }),
-            Options.Create(new ImageObjectDeletionOutboxOptions { Cron = "* * * * *" }),
-            Options.Create(new EmailOutboxOptions { Cron = "* * * * *" }),
-            Options.Create(new NotificationWebPushOutboxOptions { Cron = "* * * * *" }),
-            Options.Create(new NotificationCleanupOptions {
-                TransientTypes = ["Test"],
-                Cron = "15 4 * * *",
-            }),
-            Options.Create(new UserLoginEventCleanupOptions { Cron = "0 3 * * *" }),
-            Options.Create(new MarketingAttributionCleanupOptions { Cron = "30 3 * * *" }),
-            Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }),
-            Options.Create(new ClientTaskReminderOptions { Cron = "0 * * * *" }));
+        RecurringJobsHostedService service = CreateRecurringJobsHostedService(recurringJobManager, verifier);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.StartAsync(CancellationToken.None));
     }
@@ -1131,6 +1113,7 @@ public sealed class JobsTests {
     [Fact]
     public async Task RecurringJobsHostedService_StopAsync_CompletesWithoutWork() {
         var service = new RecurringJobsHostedService(
+            null!,
             null!,
             null!,
             null!,
@@ -1673,10 +1656,43 @@ public sealed class JobsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingRecurringJobManager : IRecurringJobManager {
+    private static RecurringJobsHostedService CreateRecurringJobsHostedService(
+        IRecurringJobManager recurringJobManager,
+        IRecurringJobRegistrationVerifier verifier) =>
+        new(
+            recurringJobManager,
+            verifier,
+            Options.Create(new ImageCleanupOptions { Cron = "0 * * * *" }),
+            Options.Create(new BillingRenewalOptions { Enabled = false, Cron = "15 * * * *" }),
+            Options.Create(new FastingNotificationOptions { Cron = "* * * * *" }),
+            Options.Create(new ImageObjectDeletionOutboxOptions { Cron = "* * * * *" }),
+            Options.Create(new EmailOutboxOptions { Cron = "* * * * *" }),
+            Options.Create(new NotificationWebPushOutboxOptions { Cron = "* * * * *" }),
+            Options.Create(new NotificationCleanupOptions {
+                TransientTypes = ["Test"],
+                Cron = "15 4 * * *",
+            }),
+            Options.Create(new UserLoginEventCleanupOptions { Cron = "0 3 * * *" }),
+            Options.Create(new MarketingAttributionCleanupOptions { Cron = "30 3 * * *" }),
+            Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }),
+            Options.Create(new ClientTaskReminderOptions { Cron = "0 * * * *" }),
+            NullLogger<RecurringJobsHostedService>.Instance);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingRecurringJobManager(string? transientLockJobId = null) : IRecurringJobManager {
+        private bool _shouldTimeout = transientLockJobId is not null;
+
         public List<string> JobIds { get; } = [];
+        public Dictionary<string, int> RegistrationAttempts { get; } = [];
 
         public void AddOrUpdate(string recurringJobId, Job job, string cronExpression, RecurringJobOptions options) {
+            RegistrationAttempts[recurringJobId] = RegistrationAttempts.GetValueOrDefault(recurringJobId) + 1;
+
+            if (_shouldTimeout && string.Equals(recurringJobId, transientLockJobId, StringComparison.Ordinal)) {
+                _shouldTimeout = false;
+                throw new DistributedLockTimeoutException(recurringJobId);
+            }
+
             JobIds.Add(recurringJobId);
         }
 

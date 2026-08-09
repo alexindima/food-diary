@@ -1,5 +1,6 @@
 using Hangfire;
 using Hangfire.Common;
+using Hangfire.Storage;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;
@@ -17,8 +18,44 @@ public sealed class RecurringJobsHostedService(
     IOptions<UserLoginEventCleanupOptions> userLoginEventCleanupOptions,
     IOptions<MarketingAttributionCleanupOptions> marketingAttributionCleanupOptions,
     IOptions<UserCleanupOptions> userCleanupOptions,
-    IOptions<ClientTaskReminderOptions> clientTaskReminderOptions) : IHostedService {
-    public Task StartAsync(CancellationToken cancellationToken) {
+    IOptions<ClientTaskReminderOptions> clientTaskReminderOptions,
+    ILogger<RecurringJobsHostedService> logger) : IHostedService {
+    private static readonly TimeSpan RegistrationRetryDelay = TimeSpan.FromSeconds(1);
+
+    public async Task StartAsync(CancellationToken cancellationToken) {
+        int retryCount = 0;
+
+        while (true) {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            try {
+                RegisterJobs();
+
+                if (retryCount > 0) {
+                    logger.LogInformation(
+                        "Recurring job registration recovered after {RetryCount} distributed lock retries.",
+                        retryCount);
+                }
+
+                return;
+            } catch (DistributedLockTimeoutException) {
+                cancellationToken.ThrowIfCancellationRequested();
+                retryCount++;
+
+                if (retryCount == 1) {
+                    logger.LogWarning(
+                        "Recurring job registration could not acquire a distributed lock. " +
+                        "The JobManager will retry without restarting the host.");
+                }
+
+                await Task.Delay(RegistrationRetryDelay, cancellationToken).ConfigureAwait(false);
+            }
+        }
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    private void RegisterJobs() {
         ImageCleanupOptions settings = options.Value;
         BillingRenewalOptions billingRenewalSettings = billingRenewalOptions.Value;
         FastingNotificationOptions fastingNotificationSettings = fastingNotificationOptions.Value;
@@ -76,11 +113,7 @@ public sealed class RecurringJobsHostedService(
             Job.FromExpression<ClientTaskReminderJob>(job => job.Execute(CancellationToken.None)),
             ResolveCron(clientTaskReminderSettings.Cron, "0 * * * *"));
         recurringJobRegistrationVerifier.EnsureRegistered(RecurringJobIds.All);
-
-        return Task.CompletedTask;
     }
-
-    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
     private void RegisterBillingJobs() {
         recurringJobManager.AddOrUpdate(

@@ -16026,7 +16026,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
-                        "line":  6
+                        "line":  7
                     },
                     {
                         "name":  "UserCleanupJob",
