@@ -5,8 +5,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { DayCalorieKey } from '../../models/goals.data';
-import { GoalsCyclingDayV2Component } from './goals-cycling-day';
-import { GoalsCyclingRowV2Component } from './goals-cycling-row';
+import { GoalsCyclingDayComponent } from './goals-cycling-day';
+import { GoalsCyclingRowComponent } from './goals-cycling-row';
 
 const BASE_CALORIES = 2200;
 const CHANGED_WEDNESDAY_CALORIES = 2600;
@@ -15,10 +15,10 @@ const EXPECTED_AVERAGE = 2257;
 const DAYS_PER_WEEK = 7;
 const AVERAGE_LINE_PERCENT = 50;
 
-describe('GoalsCyclingRowV2Component', () => {
+describe('GoalsCyclingRowComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [GoalsCyclingRowV2Component],
+            imports: [GoalsCyclingRowComponent],
             providers: [provideTranslateTesting()],
         }).compileComponents();
     });
@@ -27,7 +27,7 @@ describe('GoalsCyclingRowV2Component', () => {
         const fixture = createComponent(createDayCalories(CHANGED_WEDNESDAY_CALORIES));
         const compactText = (fixture.nativeElement as HTMLElement).textContent.replaceAll(/[,\s]/g, '');
 
-        expect(fixture.debugElement.queryAll(By.directive(GoalsCyclingDayV2Component))).toHaveLength(DAYS_PER_WEEK);
+        expect(fixture.debugElement.queryAll(By.directive(GoalsCyclingDayComponent))).toHaveLength(DAYS_PER_WEEK);
         expect(compactText).toContain(EXPECTED_TOTAL.toString());
         expect(compactText).toContain(EXPECTED_AVERAGE.toString());
     });
@@ -46,15 +46,15 @@ describe('GoalsCyclingRowV2Component', () => {
     it('fills every bar halfway when all days equal the weekly average', () => {
         const fixture = createComponent(createDayCalories(BASE_CALORIES));
         const days = fixture.debugElement
-            .queryAll(By.directive(GoalsCyclingDayV2Component))
-            .map(debugElement => debugElement.componentInstance as GoalsCyclingDayV2Component);
+            .queryAll(By.directive(GoalsCyclingDayComponent))
+            .map(debugElement => debugElement.componentInstance as GoalsCyclingDayComponent);
 
         expect(days.every(day => day.barPercent() === AVERAGE_LINE_PERCENT)).toBe(true);
     });
 });
 
-function createComponent(dayCalories: Record<DayCalorieKey, number>): ComponentFixture<GoalsCyclingRowV2Component> {
-    const fixture = TestBed.createComponent(GoalsCyclingRowV2Component);
+function createComponent(dayCalories: Record<DayCalorieKey, number>): ComponentFixture<GoalsCyclingRowComponent> {
+    const fixture = TestBed.createComponent(GoalsCyclingRowComponent);
     fixture.componentRef.setInput('enabled', true);
     fixture.componentRef.setInput('baseCalories', BASE_CALORIES);
     fixture.componentRef.setInput('dayCalories', dayCalories);

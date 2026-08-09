@@ -4000,11 +4000,11 @@
                                              "specPath":  null
                                          },
                                          {
-                                             "class":  "GoalsCyclingDayV2Component",
-                                             "selector":  "fd-goals-cycling-day-v2",
+                                             "class":  "GoalsCyclingDayComponent",
+                                             "selector":  "fd-goals-cycling-day",
                                              "feature":  "goals",
-                                             "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-day.ts",
-                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-day.html",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-day.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-day.html",
                                              "inputs":  [
                                                             {
                                                                 "name":  "dayKey",
@@ -4046,55 +4046,11 @@
                                              "specPath":  null
                                          },
                                          {
-                                             "class":  "GoalsNutritionCardV2Component",
-                                             "selector":  "fd-goals-nutrition-card-v2",
+                                             "class":  "GoalsEditorComponent",
+                                             "selector":  "fd-goals-editor",
                                              "feature":  "goals",
-                                             "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-nutrition-card.ts",
-                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-nutrition-card.html",
-                                             "inputs":  [
-                                                            {
-                                                                "name":  "calories",
-                                                                "type":  "number",
-                                                                "required":  true
-                                                            },
-                                                            {
-                                                                "name":  "macros",
-                                                                "type":  "GoalsMacroDraft[]",
-                                                                "required":  true
-                                                            },
-                                                            {
-                                                                "name":  "preset",
-                                                                "type":  "MacroPresetKey",
-                                                                "required":  true
-                                                            },
-                                                            {
-                                                                "name":  "presetOptions",
-                                                                "type":  "Array\u003cFdUiSelectOption\u003cMacroPresetKey\u003e\u003e",
-                                                                "required":  true
-                                                            }
-                                                        ],
-                                             "outputs":  [
-                                                             {
-                                                                 "name":  "caloriesChange",
-                                                                 "type":  "number"
-                                                             },
-                                                             {
-                                                                 "name":  "macroChange",
-                                                                 "type":  "{ key: MacroKey; value: number }"
-                                                             },
-                                                             {
-                                                                 "name":  "presetChange",
-                                                                 "type":  "MacroPresetKey"
-                                                             }
-                                                         ],
-                                             "specPath":  null
-                                         },
-                                         {
-                                             "class":  "GoalsPageV2Component",
-                                             "selector":  "fd-goals-page-v2",
-                                             "feature":  "goals",
-                                             "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.ts",
-                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.html",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.html",
                                              "inputs":  [
                                                             {
                                                                 "name":  "calories",
@@ -4156,11 +4112,55 @@
                                              "specPath":  null
                                          },
                                          {
-                                             "class":  "GoalsSideCardsV2Component",
-                                             "selector":  "fd-goals-side-cards-v2",
+                                             "class":  "GoalsNutritionCardComponent",
+                                             "selector":  "fd-goals-nutrition-card",
                                              "feature":  "goals",
-                                             "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-side-cards.ts",
-                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-side-cards.html",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.html",
+                                             "inputs":  [
+                                                            {
+                                                                "name":  "calories",
+                                                                "type":  "number",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "macros",
+                                                                "type":  "GoalsMacroDraft[]",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "preset",
+                                                                "type":  "MacroPresetKey",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "presetOptions",
+                                                                "type":  "Array\u003cFdUiSelectOption\u003cMacroPresetKey\u003e\u003e",
+                                                                "required":  true
+                                                            }
+                                                        ],
+                                             "outputs":  [
+                                                             {
+                                                                 "name":  "caloriesChange",
+                                                                 "type":  "number"
+                                                             },
+                                                             {
+                                                                 "name":  "macroChange",
+                                                                 "type":  "{ key: MacroKey; value: number }"
+                                                             },
+                                                             {
+                                                                 "name":  "presetChange",
+                                                                 "type":  "MacroPresetKey"
+                                                             }
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
+                                             "class":  "GoalsSideCardsComponent",
+                                             "selector":  "fd-goals-side-cards",
+                                             "feature":  "goals",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-side-cards.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-side-cards.html",
                                              "inputs":  [
                                                             {
                                                                 "name":  "water",
@@ -4186,11 +4186,11 @@
                                              "specPath":  null
                                          },
                                          {
-                                             "class":  "GoalsSummaryCardV2Component",
-                                             "selector":  "fd-goals-summary-card-v2",
+                                             "class":  "GoalsSummaryCardComponent",
+                                             "selector":  "fd-goals-summary-card",
                                              "feature":  "goals",
-                                             "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-summary-card.ts",
-                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-summary-card.html",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-summary-card.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-summary-card.html",
                                              "inputs":  [
                                                             {
                                                                 "name":  "calories",

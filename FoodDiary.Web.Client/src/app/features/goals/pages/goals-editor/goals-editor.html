@@ -1,8 +1,9 @@
 @if (draft(); as model) {
-    <div class="goals-v2">
-        <fd-goals-summary-card-v2 [calories]="model.calories" [macros]="macroDrafts()" />
-        <div class="goals-v2__content">
-            <fd-goals-nutrition-card-v2
+    <div class="goals-editor">
+        <fd-goals-summary-card data-tour-id="goals-calories" [calories]="model.calories" [macros]="macroDrafts()" />
+        <div class="goals-editor__content">
+            <fd-goals-nutrition-card
+                data-tour-id="goals-macros"
                 [calories]="model.calories"
                 [macros]="macroDrafts()"
                 [preset]="model.preset"
@@ -11,8 +12,8 @@
                 (macroChange)="updateMacro($event)"
                 (presetChange)="updatePreset($event)"
             />
-            <div class="goals-v2__side">
-                <fd-goals-side-cards-v2
+            <div class="goals-editor__side">
+                <fd-goals-side-cards
                     [water]="model.water"
                     [bodyTargets]="model.bodyTargets"
                     (waterChange)="updateWater($event)"
@@ -20,7 +21,8 @@
                 />
             </div>
         </div>
-        <fd-goals-cycling-row-v2
+        <fd-goals-cycling-row
+            data-tour-id="goals-cycling"
             [enabled]="model.cyclingEnabled"
             [baseCalories]="model.calories"
             [dayCalories]="model.dayCalories"
@@ -28,14 +30,14 @@
             (dayCaloriesChange)="updateDayCalories($event)"
         />
         @if (dirty()) {
-            <div class="goals-v2__actions fd-fixed-action-bar" role="status">
-                <span>{{ 'GOALS_PAGE.V2.UNSAVED' | translate }}</span>
+            <div class="goals-editor__actions fd-fixed-action-bar" role="status">
+                <span>{{ 'GOALS_PAGE.EDITOR.UNSAVED' | translate }}</span>
                 <div>
                     <fd-ui-button variant="secondary" fill="outline" (click)="discard()">{{
-                        'GOALS_PAGE.V2.DISCARD' | translate
+                        'GOALS_PAGE.EDITOR.DISCARD' | translate
                     }}</fd-ui-button>
                     <fd-ui-button [loading]="saving()" (click)="persist()">{{
-                        (saving() ? 'GOALS_PAGE.STATUS_SAVING' : 'GOALS_PAGE.V2.SAVE') | translate
+                        (saving() ? 'GOALS_PAGE.STATUS_SAVING' : 'GOALS_PAGE.EDITOR.SAVE') | translate
                     }}</fd-ui-button>
                 </div>
             </div>

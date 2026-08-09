@@ -5,16 +5,16 @@ import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 
 import type { MacroKey, MacroPresetKey } from '../../lib/goals.facade';
-import type { GoalsMacroDraft } from './goals-page-v2.models';
+import type { GoalsMacroDraft } from './goals-editor.models';
 
 @Component({
-    selector: 'fd-goals-nutrition-card-v2',
+    selector: 'fd-goals-nutrition-card',
     imports: [TranslatePipe, FdUiSelectComponent, FdUiIconComponent],
     templateUrl: './goals-nutrition-card.html',
-    styleUrl: './goals-page-v2.scss',
+    styleUrl: './goals-editor.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GoalsNutritionCardV2Component {
+export class GoalsNutritionCardComponent {
     public readonly calories = input.required<number>();
     public readonly macros = input.required<GoalsMacroDraft[]>();
     public readonly preset = input.required<MacroPresetKey>();

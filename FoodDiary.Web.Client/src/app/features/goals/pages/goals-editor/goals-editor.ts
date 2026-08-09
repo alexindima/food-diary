@@ -6,27 +6,27 @@ import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../../services/unsaved-changes.service';
 import type { BodyTargetKey, MacroKey, MacroPreset, MacroPresetKey } from '../../lib/goals.facade';
 import type { DayCalorieKey, UpdateGoalsRequest } from '../../models/goals.data';
-import { GoalsCyclingRowV2Component } from './goals-cycling-row';
-import { GoalsNutritionCardV2Component } from './goals-nutrition-card';
-import { applyMacroPreset, buildDraftRequest, calculateMacroPercent, type GoalsDraft, type GoalsMacroDraft } from './goals-page-v2.models';
-import { GoalsSideCardsV2Component } from './goals-side-cards';
-import { GoalsSummaryCardV2Component } from './goals-summary-card';
+import { GoalsCyclingRowComponent } from './goals-cycling-row';
+import { applyMacroPreset, buildDraftRequest, calculateMacroPercent, type GoalsDraft, type GoalsMacroDraft } from './goals-editor.models';
+import { GoalsNutritionCardComponent } from './goals-nutrition-card';
+import { GoalsSideCardsComponent } from './goals-side-cards';
+import { GoalsSummaryCardComponent } from './goals-summary-card';
 
 @Component({
-    selector: 'fd-goals-page-v2',
+    selector: 'fd-goals-editor',
     imports: [
         TranslatePipe,
         FdUiButtonComponent,
-        GoalsSummaryCardV2Component,
-        GoalsNutritionCardV2Component,
-        GoalsSideCardsV2Component,
-        GoalsCyclingRowV2Component,
+        GoalsSummaryCardComponent,
+        GoalsNutritionCardComponent,
+        GoalsSideCardsComponent,
+        GoalsCyclingRowComponent,
     ],
-    templateUrl: './goals-page-v2.html',
-    styleUrl: './goals-page-v2.scss',
+    templateUrl: './goals-editor.html',
+    styleUrl: './goals-editor.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GoalsPageV2Component {
+export class GoalsEditorComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     public readonly calories = input.required<number>();

@@ -509,6 +509,11 @@ export class GoalsFacade {
                         return;
                     }
 
+                    const hasQueuedUpdate = this.autosaveQueue.hasPending();
+                    if (!hasQueuedUpdate) {
+                        this.applyLoadedGoals(goals);
+                    }
+
                     this.hasAutosaveError.set(false);
                     this.invalidation.reportGoalMutation();
                     this.toastService.success(this.translateService.instant('GOALS_PAGE.SAVED_TOAST'));

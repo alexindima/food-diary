@@ -8,14 +8,14 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1549,
-                    "symbols":  597,
+                    "typescriptFiles":  1532,
+                    "symbols":  590,
                     "routes":  84,
                     "features":  36,
-                    "specs":  555,
+                    "specs":  547,
                     "localeFiles":  5,
                     "roles":  {
-                                  "Component":  412,
+                                  "Component":  405,
                                   "Directive":  12,
                                   "Facade":  52,
                                   "Other":  17,
@@ -544,22 +544,15 @@
                          "symbols":  [
                                          "CalorieGoalDialogComponent",
                                          "CalorieGoalFacade",
-                                         "GoalsBodyTargetsComponent",
-                                         "GoalsCalorieCardComponent",
-                                         "GoalsCyclingCardComponent",
-                                         "GoalsCyclingDayV2Component",
-                                         "GoalsCyclingRowV2Component",
+                                         "GoalsCyclingDayComponent",
+                                         "GoalsCyclingRowComponent",
+                                         "GoalsEditorComponent",
                                          "GoalsFacade",
-                                         "GoalsFiberCardComponent",
-                                         "GoalsMacroSliderComponent",
-                                         "GoalsMacrosCardComponent",
-                                         "GoalsNutritionCardV2Component",
+                                         "GoalsNutritionCardComponent",
                                          "GoalsPageComponent",
-                                         "GoalsPageV2Component",
                                          "GoalsService",
-                                         "GoalsSideCardsV2Component",
-                                         "GoalsSummaryCardV2Component",
-                                         "GoalsWaterCardComponent"
+                                         "GoalsSideCardsComponent",
+                                         "GoalsSummaryCardComponent"
                                      ],
                          "routes":  [
                                         ""
@@ -569,16 +562,8 @@
                                        "FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/goals/lib/goals-state.mapper.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/goals/lib/goals.facade.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-lib/goals-page-view.mapper.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/body-targets/goals-body-targets.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/calorie-card/goals-calorie-card.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/cycling-card/goals-cycling-card.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/fiber-card/goals-fiber-card.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macro-slider/goals-macro-slider.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macros-card/goals-macros-card.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/water-card/goals-water-card.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-row.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.models.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.models.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.spec.ts"
                                    ]
                      },
@@ -3318,94 +3303,45 @@
                         "line":  79
                     },
                     {
-                        "name":  "GoalsBodyTargetsComponent",
+                        "name":  "GoalsCyclingDayComponent",
                         "role":  "Component",
-                        "selector":  "fd-goals-body-targets",
-                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/body-targets/goals-body-targets.ts",
-                        "line":  14
-                    },
-                    {
-                        "name":  "GoalsCalorieCardComponent",
-                        "role":  "Component",
-                        "selector":  "fd-goals-calorie-card",
-                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/calorie-card/goals-calorie-card.ts",
-                        "line":  12
-                    },
-                    {
-                        "name":  "GoalsCyclingCardComponent",
-                        "role":  "Component",
-                        "selector":  "fd-goals-cycling-card",
-                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/cycling-card/goals-cycling-card.ts",
-                        "line":  15
-                    },
-                    {
-                        "name":  "GoalsFiberCardComponent",
-                        "role":  "Component",
-                        "selector":  "fd-goals-fiber-card",
-                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/fiber-card/goals-fiber-card.ts",
-                        "line":  15
-                    },
-                    {
-                        "name":  "GoalsMacroSliderComponent",
-                        "role":  "Component",
-                        "selector":  "fd-goals-macro-slider",
-                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macro-slider/goals-macro-slider.ts",
+                        "selector":  "fd-goals-cycling-day",
+                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-day.ts",
                         "line":  13
                     },
                     {
-                        "name":  "GoalsMacrosCardComponent",
+                        "name":  "GoalsCyclingRowComponent",
                         "role":  "Component",
-                        "selector":  "fd-goals-macros-card",
-                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macros-card/goals-macros-card.ts",
-                        "line":  17
-                    },
-                    {
-                        "name":  "GoalsWaterCardComponent",
-                        "role":  "Component",
-                        "selector":  "fd-goals-water-card",
-                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/water-card/goals-water-card.ts",
-                        "line":  15
-                    },
-                    {
-                        "name":  "GoalsCyclingDayV2Component",
-                        "role":  "Component",
-                        "selector":  "fd-goals-cycling-day-v2",
-                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-day.ts",
-                        "line":  13
-                    },
-                    {
-                        "name":  "GoalsCyclingRowV2Component",
-                        "role":  "Component",
-                        "selector":  "fd-goals-cycling-row-v2",
-                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-row.ts",
+                        "selector":  "fd-goals-cycling-row",
+                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.ts",
                         "line":  25
                     },
                     {
-                        "name":  "GoalsNutritionCardV2Component",
+                        "name":  "GoalsEditorComponent",
                         "role":  "Component",
-                        "selector":  "fd-goals-nutrition-card-v2",
-                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-nutrition-card.ts",
-                        "line":  17
-                    },
-                    {
-                        "name":  "GoalsPageV2Component",
-                        "role":  "Component",
-                        "selector":  "fd-goals-page-v2",
-                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.ts",
+                        "selector":  "fd-goals-editor",
+                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.ts",
                         "line":  29
                     },
                     {
-                        "name":  "GoalsSideCardsV2Component",
+                        "name":  "GoalsNutritionCardComponent",
                         "role":  "Component",
-                        "selector":  "fd-goals-side-cards-v2",
-                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-side-cards.ts",
+                        "selector":  "fd-goals-nutrition-card",
+                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.ts",
                         "line":  17
                     },
                     {
-                        "name":  "GoalsSummaryCardV2Component",
+                        "name":  "GoalsSideCardsComponent",
                         "role":  "Component",
-                        "selector":  "fd-goals-summary-card-v2",
-                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-summary-card.ts",
+                        "selector":  "fd-goals-side-cards",
+                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-side-cards.ts",
+                        "line":  17
+                    },
+                    {
+                        "name":  "GoalsSummaryCardComponent",
+                        "role":  "Component",
+                        "selector":  "fd-goals-summary-card",
+                        "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-summary-card.ts",
                         "line":  18
                     },
                     {
@@ -3413,7 +3349,7 @@
                         "role":  "Component",
                         "selector":  "fd-goals-page",
                         "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.ts",
-                        "line":  63
+                        "line":  39
                     },
                     {
                         "name":  "HydrationService",
@@ -5845,8 +5781,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  3075,
-                             "russianProperties":  3075,
+                             "englishProperties":  3074,
+                             "russianProperties":  3074,
                              "countsMatch":  true
                          },
                          {

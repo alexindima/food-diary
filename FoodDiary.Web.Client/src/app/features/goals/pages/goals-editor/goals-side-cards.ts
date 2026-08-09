@@ -8,13 +8,13 @@ import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-lang
 import type { BodyTargetKey } from '../../lib/goals.facade';
 
 @Component({
-    selector: 'fd-goals-side-cards-v2',
+    selector: 'fd-goals-side-cards',
     imports: [TranslatePipe, LocalizedNumberPipe],
     templateUrl: './goals-side-cards.html',
-    styleUrl: './goals-page-v2.scss',
+    styleUrl: './goals-editor.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GoalsSideCardsV2Component {
+export class GoalsSideCardsComponent {
     private readonly translateService = inject(TranslateService);
     public readonly water = input.required<number>();
     public readonly bodyTargets = input.required<Record<BodyTargetKey, number>>();

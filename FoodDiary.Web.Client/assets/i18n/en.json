@@ -5357,7 +5357,7 @@
         "MACRO_PRESET_LOW_CARB": "50/30/20 · low carb",
         "MACRO_PRESET_HIGH_CARB": "25/25/50 · high carb",
         "MACRO_PRESET_ENDURANCE": "20/30/50 · endurance",
-        "V2": {
+        "EDITOR": {
             "PREVIEW_LABEL": "New design preview",
             "PREVIEW_TITLE": "Goals editor",
             "PREVIEW_HINT": "The current version remains below for comparison while we refine this design.",
@@ -5393,8 +5393,7 @@
             "DISABLED": "Disabled",
             "UNSAVED": "You have unsaved changes",
             "DISCARD": "Discard changes",
-            "SAVE": "Save changes",
-            "LEGACY_LABEL": "Current design for comparison"
+            "SAVE": "Save changes"
         },
         "TOUR": {
             "START_TOUR": "Show goals tour",

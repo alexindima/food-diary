@@ -6,16 +6,16 @@ import { map } from 'rxjs';
 
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
-import type { GoalsMacroDraft } from './goals-page-v2.models';
+import type { GoalsMacroDraft } from './goals-editor.models';
 
 @Component({
-    selector: 'fd-goals-summary-card-v2',
+    selector: 'fd-goals-summary-card',
     imports: [TranslatePipe, LocalizedNumberPipe, FdUiIconComponent],
     templateUrl: './goals-summary-card.html',
-    styleUrl: './goals-page-v2.scss',
+    styleUrl: './goals-editor.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GoalsSummaryCardV2Component {
+export class GoalsSummaryCardComponent {
     private readonly translateService = inject(TranslateService);
     public readonly calories = input.required<number>();
     public readonly macros = input.required<GoalsMacroDraft[]>();

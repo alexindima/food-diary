@@ -1,0 +1,15 @@
+<div
+    class="goals-editor-cycling-day"
+    [class.goals-editor-cycling-day--weekend]="weekend()"
+    [class.goals-editor-cycling-day--weekend-start]="weekendPosition() === 'start'"
+    [class.goals-editor-cycling-day--weekend-end]="weekendPosition() === 'end'"
+>
+    <label [for]="'goals-editor-cycling-' + dayKey()">{{ labelKey() | translate }}</label>
+    <div class="goals-editor-input goals-editor-cycling-day__input">
+        <input type="number" min="0" [id]="'goals-editor-cycling-' + dayKey()" [value]="value()" (input)="updateValue($event)" />
+        <span>{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+    </div>
+    <div class="goals-editor-cycling-day__bar" aria-hidden="true">
+        <i [style.height.%]="barPercent()"></i>
+    </div>
+</div>

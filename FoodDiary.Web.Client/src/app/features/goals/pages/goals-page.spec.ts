@@ -1,4 +1,4 @@
-import { computed, type Signal, signal, type Type, type WritableSignal } from '@angular/core';
+import { computed, type Signal, signal, type WritableSignal } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -7,28 +7,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { GoalsFacade, type MacroPreset } from '../lib/goals.facade';
 import type { DayCalorieKey } from '../models/goals.data';
+import { GoalsEditorComponent } from './goals-editor/goals-editor';
 import { GoalsPageComponent } from './goals-page';
-import { GoalsBodyTargetsComponent } from './goals-page-sections/body-targets/goals-body-targets';
-import { GoalsCalorieCardComponent } from './goals-page-sections/calorie-card/goals-calorie-card';
-import { GoalsCyclingCardComponent } from './goals-page-sections/cycling-card/goals-cycling-card';
-import { GoalsFiberCardComponent } from './goals-page-sections/fiber-card/goals-fiber-card';
-import { GoalsMacrosCardComponent } from './goals-page-sections/macros-card/goals-macros-card';
-import { GoalsWaterCardComponent } from './goals-page-sections/water-card/goals-water-card';
-import { GoalsPageV2Component } from './goals-page-v2/goals-page-v2';
 
 const CALORIE_TARGET = 2100;
-const NORMALIZED_CALORIES = 4000;
-const BODY_TARGET = 72;
-const CLAMPED_BODY_TARGET = 300;
-const PROTEIN_TARGET = 150;
-const CLAMPED_PROTEIN_TARGET = 220;
 const WATER_TARGET = 2200;
-const CLAMPED_WATER_TARGET = 4000;
-const RAW_INPUT_VALUE = 9999;
-const DAY_CALORIES_INPUT_VALUE = 2300;
-const MAX_BODY_TARGET = 400;
-const PROGRESS_PERCENT = 53;
-const KNOB_ANGLE = 191;
+const BODY_WEIGHT = 72;
+const FIBER_TARGET = 30;
+const PROTEIN_TARGET = 150;
 
 let facade: GoalsFacadeMock;
 
@@ -41,30 +27,19 @@ describe('GoalsPageComponent', () => {
             providers: [provideTranslateTesting()],
         })
             .overrideComponent(GoalsPageComponent, {
-                set: {
-                    providers: [{ provide: GoalsFacade, useValue: facade }],
-                },
+                set: { providers: [{ provide: GoalsFacade, useValue: facade }] },
             })
             .compileComponents();
     });
 
-    it('initializes goals and passes facade state to sections', () => {
+    it('initializes goals and renders the editor as the only goals form', () => {
         const fixture = createComponent();
 
         expect(facade.initialize).toHaveBeenCalledTimes(1);
-        expect(getChild(fixture, GoalsCalorieCardComponent).calorieTarget()).toBe(CALORIE_TARGET);
-        expect(getChild(fixture, GoalsCalorieCardComponent).ringProgressOffset()).toBe(`${PROGRESS_PERCENT}%`);
-        expect(getChild(fixture, GoalsCalorieCardComponent).ringKnobAngle()).toBe(`${KNOB_ANGLE}deg`);
-        expect(getChild(fixture, GoalsCyclingCardComponent).dayControls()[0]).toEqual(
-            expect.objectContaining({ key: 'mondayCalories', inputId: 'cycling-day-mondayCalories' }),
-        );
-        expect(getChild(fixture, GoalsWaterCardComponent).water().value).toBe(WATER_TARGET);
-        expect(getChild(fixture, GoalsMacrosCardComponent).macros()[0].value).toBe(PROTEIN_TARGET);
-        expect(getChild(fixture, GoalsFiberCardComponent).fiber()?.key).toBe('fiber');
-        expect(getChild(fixture, GoalsBodyTargetsComponent).targets()[0]).toEqual(
-            expect.objectContaining({ key: 'weight', value: BODY_TARGET }),
-        );
-        expect(getChild(fixture, GoalsPageV2Component).calories()).toBe(CALORIE_TARGET);
+        expect(getEditor(fixture).calories()).toBe(CALORIE_TARGET);
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelector('fd-goals-calorie-card')).toBeNull();
+        expect(element.querySelector('fd-goals-macros-card')).toBeNull();
     });
 
     it('renders load error and delegates retry', () => {
@@ -76,67 +51,28 @@ describe('GoalsPageComponent', () => {
         expect(facade.reload).toHaveBeenCalledTimes(1);
     });
 
-    it('delegates section events to facade methods and writes clamped values back to inputs', () => {
+    it('delegates editor save to the facade', () => {
         const fixture = createComponent();
-        const caloriesInput = createInputEvent(RAW_INPUT_VALUE.toString());
-        const bodyInput = createInputEvent(RAW_INPUT_VALUE.toString());
-        const macroInput = createInputEvent(RAW_INPUT_VALUE.toString());
-        const waterInput = createInputEvent(RAW_INPUT_VALUE.toString());
+        const request = { dailyCalorieTarget: CALORIE_TARGET };
 
-        getChild(fixture, GoalsCalorieCardComponent).caloriesInput.emit(caloriesInput.event);
-        getChild(fixture, GoalsCalorieCardComponent).caloriesBlur.emit(caloriesInput.event);
-        getChild(fixture, GoalsCyclingCardComponent).enabledToggle.emit();
-        getChild(fixture, GoalsCyclingCardComponent).dayCaloriesInput.emit({
-            key: 'mondayCalories',
-            event: createInputEvent(DAY_CALORIES_INPUT_VALUE.toString()).event,
-        });
-        getChild(fixture, GoalsMacrosCardComponent).presetChange.emit('classic');
-        getChild(fixture, GoalsMacrosCardComponent).macroInput.emit({ key: 'protein', event: macroInput.event });
-        getChild(fixture, GoalsWaterCardComponent).waterInput.emit(waterInput.event);
-        getChild(fixture, GoalsBodyTargetsComponent).targetInput.emit({ key: 'weight', event: bodyInput.event });
+        getEditor(fixture).save.emit(request);
 
-        expect(facade.updateCalories).toHaveBeenCalledWith(RAW_INPUT_VALUE);
-        expect(facade.normalizeCaloriesInput).toHaveBeenCalledWith(RAW_INPUT_VALUE);
-        expect(caloriesInput.target.value).toBe(NORMALIZED_CALORIES.toString());
-        expect(facade.toggleCalorieCycling).toHaveBeenCalledTimes(1);
-        expect(facade.updateDayCalories).toHaveBeenCalledWith('mondayCalories', DAY_CALORIES_INPUT_VALUE);
-        expect(facade.changeMacroPreset).toHaveBeenCalledWith('classic');
-        expect(facade.updateMacroValue).toHaveBeenCalledWith('protein', RAW_INPUT_VALUE);
-        expect(macroInput.target.value).toBe(CLAMPED_PROTEIN_TARGET.toString());
-        expect(facade.updateWaterValue).toHaveBeenCalledWith(RAW_INPUT_VALUE);
-        expect(waterInput.target.value).toBe(CLAMPED_WATER_TARGET.toString());
-        expect(facade.updateBodyTarget).toHaveBeenCalledWith('weight', RAW_INPUT_VALUE, MAX_BODY_TARGET);
-        expect(bodyInput.target.value).toBe(CLAMPED_BODY_TARGET.toString());
-
-        const manualRequest = { dailyCalorieTarget: CALORIE_TARGET };
-        getChild(fixture, GoalsPageV2Component).save.emit(manualRequest);
-        expect(facade.saveManually).toHaveBeenCalledWith(manualRequest);
+        expect(facade.saveManually).toHaveBeenCalledWith(request);
     });
 });
 
 function createComponent(): ComponentFixture<GoalsPageComponent> {
     const fixture = TestBed.createComponent(GoalsPageComponent);
     fixture.detectChanges();
-
     return fixture;
 }
 
-function getChild<T>(fixture: ComponentFixture<GoalsPageComponent>, type: Type<T>): T {
-    const child = fixture.debugElement.query(By.directive(type));
-    return child.componentInstance as T;
+function getEditor(fixture: ComponentFixture<GoalsPageComponent>): GoalsEditorComponent {
+    return fixture.debugElement.query(By.directive(GoalsEditorComponent)).componentInstance as GoalsEditorComponent;
 }
 
-function createInputEvent(value: string): { event: Event; target: HTMLInputElement } {
-    const target = document.createElement('input');
-    target.value = value;
-    const event = new Event('input');
-    Object.defineProperty(event, 'target', { value: target });
-
-    return { event, target };
-}
-
-type SliderState = {
-    key?: 'protein' | 'fats' | 'carbs' | 'fiber';
+type MacroState = {
+    key: 'protein' | 'fats' | 'carbs' | 'fiber';
     labelKey: string;
     unit: string;
     max: number;
@@ -147,96 +83,62 @@ type SliderState = {
 };
 
 type GoalsFacadeMock = {
-    minCalories: number;
-    maxCalories: number;
     calorieTarget: WritableSignal<number>;
     isLoadingGoals: WritableSignal<boolean>;
     isSavingGoals: WritableSignal<boolean>;
     hasLoadError: WritableSignal<boolean>;
     saveStatusKey: Signal<string | null>;
     macroPresets: MacroPreset[];
-    selectedPreset: WritableSignal<'custom' | 'classic'>;
-    waterState: WritableSignal<SliderState>;
-    coreMacroStates: WritableSignal<SliderState[]>;
-    macroStates: WritableSignal<SliderState[]>;
-    fiberMacroState: WritableSignal<SliderState | undefined>;
-    progressPercent: WritableSignal<number>;
-    knobAngle: WritableSignal<number>;
-    accentColor: WritableSignal<string>;
+    selectedPreset: WritableSignal<'custom'>;
+    waterState: WritableSignal<{ value: number }>;
+    macroStates: WritableSignal<MacroState[]>;
     calorieCyclingEnabled: WritableSignal<boolean>;
     dayCalories: WritableSignal<Record<DayCalorieKey, number>>;
     bodyTargetValues: WritableSignal<{ weight: number; waist: number }>;
     initialize: ReturnType<typeof vi.fn>;
     reload: ReturnType<typeof vi.fn>;
-    toggleCalorieCycling: ReturnType<typeof vi.fn>;
-    updateDayCalories: ReturnType<typeof vi.fn>;
-    updateBodyTarget: ReturnType<typeof vi.fn>;
-    normalizeCaloriesInput: ReturnType<typeof vi.fn>;
-    updateCalories: ReturnType<typeof vi.fn>;
-    changeMacroPreset: ReturnType<typeof vi.fn>;
-    updateMacroValue: ReturnType<typeof vi.fn>;
-    updateWaterValue: ReturnType<typeof vi.fn>;
     saveManually: ReturnType<typeof vi.fn>;
 };
 
 function createFacadeMock(): GoalsFacadeMock {
+    const days = {
+        mondayCalories: CALORIE_TARGET,
+        tuesdayCalories: CALORIE_TARGET,
+        wednesdayCalories: CALORIE_TARGET,
+        thursdayCalories: CALORIE_TARGET,
+        fridayCalories: CALORIE_TARGET,
+        saturdayCalories: CALORIE_TARGET,
+        sundayCalories: CALORIE_TARGET,
+    };
+
     return {
-        minCalories: 0,
-        maxCalories: NORMALIZED_CALORIES,
         calorieTarget: signal(CALORIE_TARGET),
         isLoadingGoals: signal(false),
         isSavingGoals: signal(false),
         hasLoadError: signal(false),
         saveStatusKey: computed(() => null),
-        macroPresets: [
-            { key: 'custom', labelKey: 'GOALS_PAGE.MACRO_PRESET_CUSTOM' },
-            { key: 'classic', labelKey: 'GOALS_PAGE.MACRO_PRESET_CLASSIC', percent: { protein: 0.3, fats: 0.3, carbs: 0.4 } },
-        ],
-        selectedPreset: signal<'custom' | 'classic'>('custom'),
-        waterState: signal(createSliderState({ labelKey: 'GOALS_PAGE.WATER_LABEL', unit: 'ml', value: WATER_TARGET })),
-        coreMacroStates: signal([createSliderState({ key: 'protein', labelKey: 'GOALS_PAGE.MACROS.PROTEIN', value: PROTEIN_TARGET })]),
-        macroStates: signal([
-            createSliderState({ key: 'protein', labelKey: 'GOALS_PAGE.MACROS.PROTEIN', value: PROTEIN_TARGET }),
-            createSliderState({ key: 'fiber', labelKey: 'GOALS_PAGE.MACROS.FIBER', value: 30 }),
-        ]),
-        fiberMacroState: signal(createSliderState({ key: 'fiber', labelKey: 'GOALS_PAGE.MACROS.FIBER', value: 30 })),
-        progressPercent: signal(PROGRESS_PERCENT),
-        knobAngle: signal(KNOB_ANGLE),
-        accentColor: signal('var(--fd-color-green-500)'),
-        calorieCyclingEnabled: signal(true),
-        dayCalories: signal({
-            mondayCalories: CALORIE_TARGET,
-            tuesdayCalories: CALORIE_TARGET,
-            wednesdayCalories: CALORIE_TARGET,
-            thursdayCalories: CALORIE_TARGET,
-            fridayCalories: CALORIE_TARGET,
-            saturdayCalories: CALORIE_TARGET,
-            sundayCalories: CALORIE_TARGET,
-        }),
-        bodyTargetValues: signal({ weight: BODY_TARGET, waist: 80 }),
+        macroPresets: [{ key: 'custom', labelKey: 'GOALS_PAGE.MACRO_PRESET_CUSTOM' }],
+        selectedPreset: signal<'custom'>('custom'),
+        waterState: signal({ value: WATER_TARGET }),
+        macroStates: signal([createMacroState('protein'), createMacroState('fiber')]),
+        calorieCyclingEnabled: signal(false),
+        dayCalories: signal(days),
+        bodyTargetValues: signal({ weight: BODY_WEIGHT, waist: 0 }),
         initialize: vi.fn(),
         reload: vi.fn(),
-        toggleCalorieCycling: vi.fn(),
-        updateDayCalories: vi.fn(),
-        updateBodyTarget: vi.fn(() => CLAMPED_BODY_TARGET),
-        normalizeCaloriesInput: vi.fn(() => NORMALIZED_CALORIES),
-        updateCalories: vi.fn(),
-        changeMacroPreset: vi.fn(),
-        updateMacroValue: vi.fn(() => CLAMPED_PROTEIN_TARGET),
-        updateWaterValue: vi.fn(() => CLAMPED_WATER_TARGET),
         saveManually: vi.fn(),
     };
 }
 
-function createSliderState(overrides: Partial<SliderState>): SliderState {
+function createMacroState(key: MacroState['key']): MacroState {
     return {
-        labelKey: 'GOALS_PAGE.MACROS.PROTEIN',
+        key,
+        labelKey: `GOALS_PAGE.MACROS.${key.toUpperCase()}`,
         unit: 'g',
         max: 220,
-        value: 0,
+        value: key === 'fiber' ? FIBER_TARGET : PROTEIN_TARGET,
         percent: 50,
         accent: 'var(--fd-color-green-500)',
         gradient: 'linear-gradient(90deg, green, red)',
-        ...overrides,
     };
 }

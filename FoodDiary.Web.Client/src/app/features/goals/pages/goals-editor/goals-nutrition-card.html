@@ -1,0 +1,59 @@
+<section class="goals-editor-card goals-editor-nutrition">
+    <header class="goals-editor-card__header">
+        <div>
+            <h2 class="goals-editor-card__title">{{ 'GOALS_PAGE.EDITOR.NUTRITION_TITLE' | translate }}</h2>
+            <p class="goals-editor-card__hint">{{ 'GOALS_PAGE.EDITOR.NUTRITION_HINT' | translate }}</p>
+        </div>
+        <fd-ui-select
+            class="goals-editor-nutrition__preset"
+            [label]="'GOALS_PAGE.MACRO_PRESET_LABEL' | translate"
+            [options]="presetOptions()"
+            [value]="preset()"
+            (valueChange)="$event && presetChange.emit($event)"
+        />
+    </header>
+    <div class="goals-editor-form-row">
+        <div class="goals-editor-form-row__copy">
+            <fd-ui-icon class="goals-editor-form-row__icon goals-editor-form-row__icon--calories" name="local_fire_department" size="sm" />
+            <label for="goals-editor-calories">
+                <strong>{{ 'GOALS_PAGE.EDITOR.CALORIES' | translate }}</strong
+                ><small>{{ 'GOALS_PAGE.EDITOR.CALORIES_HINT' | translate }}</small>
+            </label>
+        </div>
+        <div class="goals-editor-input">
+            <input
+                id="goals-editor-calories"
+                type="number"
+                min="0"
+                [value]="calories()"
+                (input)="emitNumber($event, caloriesChange.emit.bind(caloriesChange))"
+            /><span>{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+        </div>
+    </div>
+    @for (macro of macros(); track macro.key) {
+        <div class="goals-editor-form-row">
+            <div class="goals-editor-form-row__copy">
+                <fd-ui-icon class="goals-editor-form-row__icon" size="sm" [name]="macro.icon" [style.color]="macro.accent" />
+                <label [for]="'goals-editor-' + macro.key">
+                    <strong>{{ macro.labelKey | translate }}</strong
+                    ><small>{{ 'GOALS_PAGE.EDITOR.MACRO_HINTS.' + macro.key.toUpperCase() | translate }}</small>
+                </label>
+            </div>
+            <div class="goals-editor-input">
+                <input
+                    type="number"
+                    min="0"
+                    [id]="'goals-editor-' + macro.key"
+                    [value]="macro.value"
+                    (input)="emitNumber($event, value => macroChange.emit({ key: macro.key, value }))"
+                /><span>{{ 'GENERAL.UNITS.G' | translate }}</span>
+            </div>
+            @if (macro.key !== 'fiber') {
+                <span class="goals-editor-form-row__percent"
+                    >{{ macro.percent }}%<small>{{ 'GOALS_PAGE.EDITOR.OF_CALORIES' | translate }}</small></span
+                >
+            }
+        </div>
+    }
+    <p class="goals-editor-card__note">ⓘ {{ 'GOALS_PAGE.EDITOR.MACRO_NOTE' | translate }}</p>
+</section>

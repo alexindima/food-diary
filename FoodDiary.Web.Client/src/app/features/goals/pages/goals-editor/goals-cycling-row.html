@@ -1,0 +1,60 @@
+<section class="goals-editor-card goals-editor-cycling" [class.goals-editor-cycling--enabled]="enabled()">
+    <header class="goals-editor-cycling__header">
+        <div>
+            <h2 class="goals-editor-card__title">{{ 'GOALS_PAGE.CYCLING_TITLE' | translate }}</h2>
+            <p class="goals-editor-card__hint">
+                {{ (enabled() ? 'GOALS_PAGE.EDITOR.CYCLING_ENABLED_HINT' : 'GOALS_PAGE.EDITOR.CYCLING_HINT') | translate }}
+            </p>
+        </div>
+        <div class="goals-editor-toggle">
+            <label for="goals-editor-cycling-enabled">{{
+                (enabled() ? 'GOALS_PAGE.EDITOR.ENABLED' : 'GOALS_PAGE.EDITOR.DISABLED') | translate
+            }}</label>
+            <input
+                id="goals-editor-cycling-enabled"
+                class="goals-editor-toggle__input"
+                type="checkbox"
+                [checked]="enabled()"
+                (change)="enabledChange.emit(!enabled())"
+            />
+            <label class="goals-editor-toggle__control" for="goals-editor-cycling-enabled"><i aria-hidden="true"></i></label>
+        </div>
+    </header>
+    @if (enabled()) {
+        <div class="goals-editor-cycling__summary">
+            <div>
+                <span>{{ 'GOALS_PAGE.EDITOR.WEEKLY_AVERAGE' | translate }}</span>
+                <strong>{{ average() | localizedNumber: language() }} {{ 'GENERAL.UNITS.KCAL' | translate }}</strong>
+            </div>
+            <div>
+                <span>{{ 'GOALS_PAGE.EDITOR.WEEKLY_TOTAL' | translate }}</span>
+                <strong>{{ total() | localizedNumber: language() }} {{ 'GENERAL.UNITS.KCAL' | translate }}</strong>
+            </div>
+            <div class="goals-editor-cycling__actions">
+                <fd-ui-button variant="secondary" fill="ghost" icon="repeat" (click)="repeatWeekdays()">{{
+                    'GOALS_PAGE.EDITOR.REPEAT_WEEKDAYS' | translate
+                }}</fd-ui-button>
+                <fd-ui-button variant="secondary" fill="ghost" icon="restart_alt" (click)="resetDays()">{{
+                    'GOALS_PAGE.EDITOR.RESET_DAYS' | translate
+                }}</fd-ui-button>
+            </div>
+        </div>
+        <div class="goals-editor-cycling__days-scroll">
+            <div class="goals-editor-cycling__days">
+                <span class="goals-editor-cycling__average-line" aria-hidden="true"></span>
+                @for (day of days(); track day.key) {
+                    <fd-goals-cycling-day
+                        [dayKey]="day.key"
+                        [labelKey]="day.labelKey"
+                        [value]="day.value"
+                        [barPercent]="day.barPercent"
+                        [weekend]="day.weekend"
+                        [weekendPosition]="day.weekendPosition"
+                        (valueChange)="dayCaloriesChange.emit($event)"
+                    />
+                }
+            </div>
+        </div>
+        <p class="goals-editor-card__note">ⓘ {{ 'GOALS_PAGE.EDITOR.CYCLING_NOTE' | translate }}</p>
+    }
+</section>

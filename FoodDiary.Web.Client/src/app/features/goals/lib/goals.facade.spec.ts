@@ -91,6 +91,7 @@ describe('GoalsFacade', () => {
 
     registerLoadTests();
     registerMacroTests();
+    registerManualSaveTests();
     registerAutosaveTests();
 });
 
@@ -189,6 +190,38 @@ function registerMacroTests(): void {
             expect(clamped).toBe(CUSTOM_PROTEIN);
             expect(facade.selectedPreset()).toBe('custom');
             expect(facade.macroValues().protein).toBe(CUSTOM_PROTEIN);
+        });
+    });
+}
+
+function registerManualSaveTests(): void {
+    describe('manual save', () => {
+        it('applies the saved response when a manual save succeeds', () => {
+            goalsService.updateGoals.mockReturnValueOnce(
+                of({
+                    dailyCalorieTarget: AUTOSAVE_CALORIES,
+                    proteinTarget: AUTOSAVE_PROTEIN,
+                    fatTarget: AUTOSAVE_FATS,
+                    carbTarget: AUTOSAVE_CARBS,
+                    fiberTarget: AUTOSAVE_FIBER,
+                    waterGoal: AUTOSAVE_WATER,
+                    desiredWeight: AUTOSAVE_WEIGHT,
+                    desiredWaist: null,
+                    calorieCyclingEnabled: false,
+                }),
+            );
+
+            facade.saveManually({ dailyCalorieTarget: AUTOSAVE_CALORIES });
+
+            expect(facade.calorieTarget()).toBe(AUTOSAVE_CALORIES);
+            expect(facade.macroValues()).toEqual({
+                protein: AUTOSAVE_PROTEIN,
+                fats: AUTOSAVE_FATS,
+                carbs: AUTOSAVE_CARBS,
+                fiber: AUTOSAVE_FIBER,
+            });
+            expect(facade.bodyTargetValues()).toEqual({ weight: AUTOSAVE_WEIGHT, waist: 0 });
+            expect(toastService.success).toHaveBeenCalledWith('GOALS_PAGE.SAVED_TOAST');
         });
     });
 }

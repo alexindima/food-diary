@@ -4,7 +4,7 @@
     display: block;
 }
 
-.goals-v2 {
+.goals-editor {
     display: grid;
     gap: var(--fd-space-md);
     padding-bottom: var(--fd-space-xl);
@@ -41,7 +41,7 @@
     }
 }
 
-.goals-v2-card {
+.goals-editor-card {
     padding: var(--fd-space-lg);
     background: var(--fd-bg-surface-elevated);
     border: var(--fd-border-muted);
@@ -76,7 +76,7 @@
     }
 }
 
-.goals-v2-summary {
+.goals-editor-summary {
     display: grid;
     grid-template-columns: minmax(220px, 0.65fr) minmax(0, 2fr);
     gap: var(--fd-space-xl);
@@ -137,15 +137,15 @@
     }
 }
 
-.goals-v2-nutrition__preset {
+.goals-editor-nutrition__preset {
     width: min(260px, 100%);
 }
 
-.goals-v2-nutrition {
+.goals-editor-nutrition {
     height: 100%;
 }
 
-.goals-v2-form-row {
+.goals-editor-form-row {
     display: grid;
     grid-template-columns: minmax(210px, 1fr) minmax(150px, 0.7fr) 76px;
     align-items: center;
@@ -185,7 +185,7 @@
     }
 }
 
-.goals-v2-input {
+.goals-editor-input {
     display: flex;
     align-items: center;
     gap: var(--fd-space-xs);
@@ -219,25 +219,25 @@
     }
 }
 
-.goals-v2-side-card {
+.goals-editor-side-card {
     display: flex;
     flex-direction: column;
     gap: var(--fd-space-xs);
 }
 
-.goals-v2-side-cards {
+.goals-editor-side-cards {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
     gap: var(--fd-space-md);
     height: 100%;
 }
 
-.goals-v2__side > fd-goals-side-cards-v2 {
+.goals-editor__side > fd-goals-side-cards {
     display: block;
     height: 100%;
 }
 
-.goals-v2-water-target {
+.goals-editor-water-target {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -245,21 +245,21 @@
     margin: var(--fd-space-xs) 0 var(--fd-space-md);
 }
 
-.goals-v2-water-target .goals-v2-input--hero {
+.goals-editor-water-target .goals-editor-input--hero {
     margin: 0;
 }
 
-.goals-v2-water-quick-label {
+.goals-editor-water-quick-label {
     margin-top: var(--fd-space-sm);
     padding-top: var(--fd-space-md);
     border-top: var(--fd-border-muted);
 }
-.goals-v2-quick-values {
+.goals-editor-quick-values {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--fd-space-xs);
 }
-.goals-v2-quick-values button {
+.goals-editor-quick-values button {
     padding: var(--fd-space-xs);
     color: var(--fd-color-text);
     background: transparent;
@@ -267,35 +267,35 @@
     border-radius: var(--fd-radius-md);
     cursor: pointer;
 }
-.goals-v2-quick-values button:hover,
-.goals-v2-quick-values button.goals-v2-quick-values__active {
+.goals-editor-quick-values button:hover,
+.goals-editor-quick-values button.goals-editor-quick-values__active {
     color: var(--fd-color-primary-600);
     border-color: var(--fd-color-primary-600);
     background: var(--fd-bg-brand-tint);
 }
-.goals-v2-body-row {
+.goals-editor-body-row {
     display: grid;
     grid-template-columns: 1fr minmax(120px, 0.8fr);
     align-items: center;
     gap: var(--fd-space-md);
     padding-top: var(--fd-space-sm);
 }
-.goals-v2-body-row label {
+.goals-editor-body-row label {
     color: var(--fd-color-text);
 }
 
-.goals-v2-cycling {
-    --goals-v2-cycling-bar-width: 32px;
-    --goals-v2-cycling-chart-midpoint: 56px;
+.goals-editor-cycling {
+    --goals-editor-cycling-bar-width: 32px;
+    --goals-editor-cycling-chart-midpoint: 56px;
     display: block;
 }
-.goals-v2-cycling__header {
+.goals-editor-cycling__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--fd-space-md);
 }
-.goals-v2-cycling__summary {
+.goals-editor-cycling__summary {
     display: grid;
     grid-template-columns: repeat(2, minmax(150px, auto)) 1fr;
     align-items: center;
@@ -305,44 +305,44 @@
     border-top: var(--fd-border-muted);
     border-bottom: var(--fd-border-muted);
 }
-.goals-v2-cycling__summary > div:not(.goals-v2-cycling__actions) {
+.goals-editor-cycling__summary > div:not(.goals-editor-cycling__actions) {
     display: flex;
     flex-direction: column;
     gap: var(--fd-space-xxs);
 }
-.goals-v2-cycling__summary span {
+.goals-editor-cycling__summary span {
     color: var(--fd-color-text-muted);
 }
-.goals-v2-cycling__summary strong {
+.goals-editor-cycling__summary strong {
     color: var(--fd-color-text-strong);
     font-size: var(--fd-text-stat-value-size);
 }
-.goals-v2-cycling__actions {
+.goals-editor-cycling__actions {
     display: flex;
     justify-content: flex-end;
     gap: var(--fd-space-xs);
 }
-.goals-v2-cycling__days-scroll {
+.goals-editor-cycling__days-scroll {
     overflow-x: auto;
     scrollbar-width: thin;
 }
-.goals-v2-cycling__days {
+.goals-editor-cycling__days {
     position: relative;
     display: grid;
     grid-template-columns: repeat(7, minmax(120px, 1fr));
     min-width: 900px;
     margin-top: var(--fd-space-md);
 }
-.goals-v2-cycling__average-line {
+.goals-editor-cycling__average-line {
     position: absolute;
     z-index: 2;
     right: var(--fd-space-md);
-    bottom: calc(var(--fd-space-xs) + var(--goals-v2-cycling-chart-midpoint));
+    bottom: calc(var(--fd-space-xs) + var(--goals-editor-cycling-chart-midpoint));
     left: var(--fd-space-md);
     border-top: var(--fd-border-width) dashed var(--fd-color-primary-500);
     pointer-events: none;
 }
-.goals-v2-cycling-day {
+.goals-editor-cycling-day {
     display: grid;
     grid-template-rows: auto auto 112px;
     gap: var(--fd-space-sm);
@@ -350,77 +350,77 @@
     padding: var(--fd-space-sm) var(--fd-space-md) var(--fd-space-xs);
     border-left: var(--fd-border-muted);
 }
-.goals-v2-cycling-day:first-child {
+.goals-editor-cycling-day:first-child {
     border-left: 0;
 }
-.goals-v2-cycling-day--weekend {
+.goals-editor-cycling-day--weekend {
     background: color-mix(in srgb, var(--fd-color-primary-500) 5%, transparent);
 }
-.goals-v2-cycling-day--weekend-start {
+.goals-editor-cycling-day--weekend-start {
     border-radius: var(--fd-radius-md) 0 0 var(--fd-radius-md);
 }
-.goals-v2-cycling-day--weekend-end {
+.goals-editor-cycling-day--weekend-end {
     border-radius: 0 var(--fd-radius-md) var(--fd-radius-md) 0;
 }
-.goals-v2-cycling-day > label {
+.goals-editor-cycling-day > label {
     color: var(--fd-color-text-muted);
 }
-.goals-v2-cycling-day__input {
+.goals-editor-cycling-day__input {
     width: 100%;
     padding-right: var(--fd-space-xs);
     padding-left: var(--fd-space-xs);
 }
-.goals-v2-cycling-day__bar {
+.goals-editor-cycling-day__bar {
     position: relative;
     align-self: stretch;
-    width: var(--goals-v2-cycling-bar-width);
+    width: var(--goals-editor-cycling-bar-width);
     overflow: hidden;
     border-radius: var(--fd-radius-sm);
     background: var(--fd-bg-surface-raised);
 }
-.goals-v2-cycling-day__bar i {
+.goals-editor-cycling-day__bar i {
     position: absolute;
     right: 0;
     bottom: 0;
     left: 0;
     background: var(--fd-color-primary-500);
 }
-.goals-v2-cycling .goals-v2-card__note {
+.goals-editor-cycling .goals-editor-card__note {
     margin-top: var(--fd-space-md);
     padding-top: var(--fd-space-md);
     border-top: var(--fd-border-muted);
 }
-.goals-v2-toggle {
+.goals-editor-toggle {
     display: flex;
     align-items: center;
     gap: var(--fd-space-sm);
     color: var(--fd-color-text-muted);
     cursor: pointer;
 }
-.goals-v2-toggle input {
+.goals-editor-toggle input {
     position: absolute;
     opacity: 0;
 }
-.goals-v2-toggle__control {
-    --goals-v2-toggle-background: var(--fd-bg-surface-inset);
-    --goals-v2-toggle-border: var(--fd-border-muted);
-    --goals-v2-toggle-knob: var(--fd-color-text-muted);
-    --goals-v2-toggle-offset: 0;
+.goals-editor-toggle__control {
+    --goals-editor-toggle-background: var(--fd-bg-surface-inset);
+    --goals-editor-toggle-border: var(--fd-border-muted);
+    --goals-editor-toggle-knob: var(--fd-color-text-muted);
+    --goals-editor-toggle-offset: 0;
     display: flex;
     cursor: pointer;
 }
-.goals-v2-toggle i {
-    --goals-v2-toggle-width: 44px;
-    --goals-v2-toggle-height: 24px;
+.goals-editor-toggle i {
+    --goals-editor-toggle-width: 44px;
+    --goals-editor-toggle-height: 24px;
     position: relative;
     display: block;
-    width: var(--goals-v2-toggle-width);
-    height: var(--goals-v2-toggle-height);
+    width: var(--goals-editor-toggle-width);
+    height: var(--goals-editor-toggle-height);
     border-radius: var(--fd-radius-pill);
-    background: var(--goals-v2-toggle-background);
-    border: var(--goals-v2-toggle-border);
+    background: var(--goals-editor-toggle-background);
+    border: var(--goals-editor-toggle-border);
 }
-.goals-v2-toggle i::after {
+.goals-editor-toggle i::after {
     content: '';
     position: absolute;
     top: 3px;
@@ -428,31 +428,31 @@
     width: 16px;
     height: 16px;
     border-radius: var(--fd-radius-pill);
-    background: var(--goals-v2-toggle-knob);
-    transform: translateX(var(--goals-v2-toggle-offset));
+    background: var(--goals-editor-toggle-knob);
+    transform: translateX(var(--goals-editor-toggle-offset));
     transition:
         transform 160ms ease,
         background 160ms ease;
 }
-.goals-v2-toggle__input:checked + .goals-v2-toggle__control {
-    --goals-v2-toggle-background: var(--fd-bg-brand-tint);
-    --goals-v2-toggle-border: 1px solid var(--fd-color-primary-600);
-    --goals-v2-toggle-knob: var(--fd-color-primary-600);
-    --goals-v2-toggle-offset: 20px;
+.goals-editor-toggle__input:checked + .goals-editor-toggle__control {
+    --goals-editor-toggle-background: var(--fd-bg-brand-tint);
+    --goals-editor-toggle-border: 1px solid var(--fd-color-primary-600);
+    --goals-editor-toggle-knob: var(--fd-color-primary-600);
+    --goals-editor-toggle-offset: 20px;
 }
-.goals-v2-toggle__input:focus-visible + .goals-v2-toggle__control {
+.goals-editor-toggle__input:focus-visible + .goals-editor-toggle__control {
     outline: var(--fd-outline-focus);
     outline-offset: var(--fd-outline-offset);
 }
 
 @media #{variables.$media-desktop} {
-    .goals-v2__content {
+    .goals-editor__content {
         grid-template-columns: 1fr;
     }
-    .goals-v2-summary {
+    .goals-editor-summary {
         grid-template-columns: 1fr;
     }
-    .goals-v2-summary__calories {
+    .goals-editor-summary__calories {
         padding-right: 0;
         padding-bottom: var(--fd-space-md);
         border-right: 0;
@@ -461,42 +461,42 @@
 }
 
 @media #{variables.$media-tablet} {
-    .goals-v2-card {
+    .goals-editor-card {
         padding: var(--fd-space-md);
     }
-    .goals-v2-summary__macros {
+    .goals-editor-summary__macros {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: var(--fd-space-md) 0;
     }
-    .goals-v2-form-row {
+    .goals-editor-form-row {
         grid-template-columns: 1fr minmax(120px, 0.7fr);
     }
-    .goals-v2-form-row__percent {
+    .goals-editor-form-row__percent {
         display: none;
     }
-    .goals-v2-card__header,
-    .goals-v2-cycling__header,
-    .goals-v2__actions {
+    .goals-editor-card__header,
+    .goals-editor-cycling__header,
+    .goals-editor__actions {
         align-items: stretch;
         flex-direction: column;
     }
-    .goals-v2-nutrition__preset {
+    .goals-editor-nutrition__preset {
         width: 100%;
     }
-    .goals-v2__actions > div {
+    .goals-editor__actions > div {
         width: 100%;
         justify-content: flex-end;
     }
-    .goals-v2-cycling__summary {
+    .goals-editor-cycling__summary {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: var(--fd-space-md);
     }
-    .goals-v2-cycling__actions {
+    .goals-editor-cycling__actions {
         grid-column: 1 / -1;
         justify-content: flex-start;
     }
 
-    .goals-v2__actions {
+    .goals-editor__actions {
         left: var(--fd-space-sm);
         right: var(--fd-space-sm);
         bottom: calc(var(--fd-layout-shell-current-mobile-viewport-bottom-padding) + var(--fd-space-xs));

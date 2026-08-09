@@ -1,0 +1,29 @@
+<section class="goals-editor-card goals-editor-summary" [attr.aria-label]="'GOALS_PAGE.EDITOR.SUMMARY_TITLE' | translate">
+    <div class="goals-editor-summary__calories">
+        <h2 class="goals-editor-card__title">{{ 'GOALS_PAGE.EDITOR.SUMMARY_TITLE' | translate }}</h2>
+        <span class="goals-editor-card__label">{{ 'GOALS_PAGE.EDITOR.CALORIES' | translate }}</span>
+        <strong class="goals-editor-summary__value"
+            >{{ calories() | localizedNumber: language() }} <small>{{ 'GENERAL.UNITS.KCAL' | translate }}</small></strong
+        >
+        <span class="goals-editor-card__hint">{{ 'GOALS_PAGE.EDITOR.RECOMMENDED_TARGET' | translate }}</span>
+    </div>
+    <div class="goals-editor-summary__composition">
+        <span class="goals-editor-card__label">{{ 'GOALS_PAGE.EDITOR.MACRO_RATIO' | translate }}</span>
+        <div class="goals-editor-summary__bar" aria-hidden="true">
+            @for (macro of calorieMacros(); track macro.key) {
+                <span [style.background]="macro.accent" [style.flex-grow]="macro.percent"></span>
+            }
+        </div>
+        <div class="goals-editor-summary__macros">
+            @for (macro of calorieMacros(); track macro.key) {
+                <div class="goals-editor-summary__macro">
+                    <span class="goals-editor-summary__macro-label"
+                        ><fd-ui-icon size="sm" [name]="macro.icon" [style.color]="macro.accent" />{{ macro.labelKey | translate }}</span
+                    >
+                    <strong>{{ macro.value | localizedNumber: language() }} {{ 'GENERAL.UNITS.G' | translate }}</strong>
+                    <small>{{ macro.percent }}%</small>
+                </div>
+            }
+        </div>
+    </div>
+</section>

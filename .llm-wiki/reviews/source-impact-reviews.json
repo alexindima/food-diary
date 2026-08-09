@@ -128,13 +128,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "c11a466034ce10ddd750a3264aab58dbaca1246ea2de92a89ae09aede1f7ad72"
+                                            "sha256":  "8760126d6e9195c979c11319afd3d3aeae16414073e8b8d579a76e3293a62014"
                                         }
                                     ],
-                        "reason":  "Regenerated compiled indexes after analyzer, statistics, and frontend accessibility changes; documented workflow semantics remain unchanged.",
+                        "reason":  "Removed obsolete private goals card components after replacing all page consumers with the goals editor; retained and retargeted the public page tour contract.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cee7bfa42c63a0a563683cde3ef60f12413fedd7",
-                        "reviewedAtUtc":  "2026-08-09T12:14:55.6804539Z"
+                        "gitHead":  "14ce7a7fb2fec0f21282d7df832ae5a6992ea6bd",
+                        "reviewedAtUtc":  "2026-08-09T14:28:37.5862158Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -222,13 +222,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "34feeec7c9962b71600d44e6dea8bb4fcdee925e32a04f57ec10f51914c80079"
+                                            "sha256":  "ce1e10a9a977856762f8a7e3097c3d70e212d7f85891f97cf9e548c4ad5d5b6b"
                                         }
                                     ],
-                        "reason":  "Reviewed the merged architecture health index; statistics contract additions and internal JobManager retry behavior introduce no enforced dependency drift.",
+                        "reason":  "Goals editor frontend-only rename and save-state fix does not change project edges or architecture boundaries.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
-                        "reviewedAtUtc":  "2026-08-09T09:52:49.5717011Z"
+                        "gitHead":  "14ce7a7fb2fec0f21282d7df832ae5a6992ea6bd",
+                        "reviewedAtUtc":  "2026-08-09T14:14:52.2523392Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -588,13 +588,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "71051489a205fc02165229c5869989a68cf158c531720bd81c4a916a2884d7ec"
+                                            "sha256":  "04ef82fae7684d3be5b8c7a7a3d7a27fec3cb349fbd2791315c7f26f271fba59"
                                         }
                                     ],
-                        "reason":  "Regenerated compiled indexes after analyzer, statistics, and frontend accessibility changes; documented workflow semantics remain unchanged.",
+                        "reason":  "Deleted tests only for deleted legacy components; goals page, editor, facade, cycling, save, lint, i18n, and build checks pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cee7bfa42c63a0a563683cde3ef60f12413fedd7",
-                        "reviewedAtUtc":  "2026-08-09T12:14:57.1559885Z"
+                        "gitHead":  "14ce7a7fb2fec0f21282d7df832ae5a6992ea6bd",
+                        "reviewedAtUtc":  "2026-08-09T14:28:38.4419385Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -747,17 +747,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "c11a466034ce10ddd750a3264aab58dbaca1246ea2de92a89ae09aede1f7ad72"
+                                            "sha256":  "8760126d6e9195c979c11319afd3d3aeae16414073e8b8d579a76e3293a62014"
                                         },
                                         {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "1c055476274ae3018de8e87b517bf776925e479758a3d7b43db1ddb353d8c669"
+                                            "sha256":  "0a86f6ee7716a94d4be717007e0b6ffd981276d007e80fd09032615781ebf309"
                                         }
                                     ],
-                        "reason":  "Regenerated compiled indexes after analyzer, statistics, and frontend accessibility changes; documented workflow semantics remain unchanged.",
+                        "reason":  "Goals page now renders only GoalsEditorComponent while preserving the existing route, facade, API, save flow, and tour targets.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cee7bfa42c63a0a563683cde3ef60f12413fedd7",
-                        "reviewedAtUtc":  "2026-08-09T12:14:58.6990507Z"
+                        "gitHead":  "14ce7a7fb2fec0f21282d7df832ae5a6992ea6bd",
+                        "reviewedAtUtc":  "2026-08-09T14:28:39.3514184Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

@@ -8,7 +8,7 @@ import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pi
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
 import { type DayCalorieKey, DAYS_OF_WEEK } from '../../models/goals.data';
-import { GoalsCyclingDayV2Component } from './goals-cycling-day';
+import { GoalsCyclingDayComponent } from './goals-cycling-day';
 
 const DAYS_PER_WEEK = 7;
 const WEEKDAY_COUNT = 5;
@@ -16,13 +16,13 @@ const MINIMUM_BAR_PERCENT = 12;
 const AVERAGE_SCALE_MULTIPLIER = 2;
 
 @Component({
-    selector: 'fd-goals-cycling-row-v2',
-    imports: [TranslatePipe, LocalizedNumberPipe, FdUiButtonComponent, GoalsCyclingDayV2Component],
+    selector: 'fd-goals-cycling-row',
+    imports: [TranslatePipe, LocalizedNumberPipe, FdUiButtonComponent, GoalsCyclingDayComponent],
     templateUrl: './goals-cycling-row.html',
-    styleUrl: './goals-page-v2.scss',
+    styleUrl: './goals-editor.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GoalsCyclingRowV2Component {
+export class GoalsCyclingRowComponent {
     private readonly translateService = inject(TranslateService);
     public readonly enabled = input.required<boolean>();
     public readonly baseCalories = input.required<number>();

@@ -25,27 +25,13 @@
         @if (hasLoadError()) {
             <fd-error-state (retry)="reload()" />
         } @else if (isLoadingGoals()) {
-            <div class="goals__grid">
-                <div class="goals__column goals__column--main">
-                    <div class="goals__main-grid">
-                        <div class="goals__calorie-stack">
-                            <fd-skeleton-card />
-                            <fd-skeleton-card />
-                            <fd-skeleton-card />
-                        </div>
-                        <div class="goals__macro-stack">
-                            <fd-skeleton-card />
-                            <fd-skeleton-card />
-                            <div class="goals__body-targets-row">
-                                <fd-skeleton-card />
-                                <fd-skeleton-card />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="goals__skeleton">
+                <fd-skeleton-card />
+                <fd-skeleton-card />
+                <fd-skeleton-card />
             </div>
         } @else {
-            <fd-goals-page-v2
+            <fd-goals-editor
                 [calories]="calorieTarget()"
                 [macros]="allMacroViewStates()"
                 [preset]="selectedPreset()"
@@ -58,75 +44,6 @@
                 [saving]="isSavingGoals()"
                 (save)="saveGoalsManually($event)"
             />
-            <div class="goals__legacy-divider">
-                <span>{{ 'GOALS_PAGE.V2.LEGACY_LABEL' | translate }}</span>
-            </div>
-            <div class="goals__grid">
-                <div class="goals__column goals__column--main">
-                    <div class="goals__main-grid">
-                        <div class="goals__calorie-stack">
-                            <fd-goals-calorie-card
-                                data-tour-id="goals-calories"
-                                [minCalories]="minCalories"
-                                [maxCalories]="maxCalories"
-                                [calorieTarget]="calorieTarget()"
-                                [ringProgressOffset]="ringProgressOffset()"
-                                [accentColor]="accentColor()"
-                                [ringKnobAngle]="ringKnobAngle()"
-                                (ringPointerDown)="startRingDrag($event)"
-                                (ringPointerMove)="onRingHover($event)"
-                                (ringPointerLeave)="onRingLeave($event)"
-                                (caloriesInput)="onCaloriesInput($event)"
-                                (caloriesBlur)="onCaloriesBlur($event)"
-                                (sliderInput)="onSliderInput($event)"
-                            />
-
-                            <fd-goals-cycling-card
-                                data-tour-id="goals-cycling"
-                                [enabled]="calorieCyclingEnabled()"
-                                [dayControls]="cyclingDayControls()"
-                                [dayCalories]="dayCalories()"
-                                [maxCalories]="maxCalories"
-                                (enabledToggle)="toggleCalorieCycling()"
-                                (dayCaloriesInput)="onDayCaloriesInputChange($event)"
-                            />
-
-                            @if (waterViewState(); as water) {
-                                <fd-goals-water-card
-                                    data-tour-id="goals-water"
-                                    [water]="water"
-                                    (waterInput)="onWaterInputChange($event)"
-                                    (waterSlider)="onWaterSliderChange($event)"
-                                />
-                            }
-                        </div>
-
-                        <div class="goals__macro-stack">
-                            <fd-goals-macros-card
-                                data-tour-id="goals-macros"
-                                [macroPresetOptions]="macroPresetOptions"
-                                [selectedPreset]="selectedPreset()"
-                                [macros]="coreMacroViewStates()"
-                                (presetChange)="onMacroPresetModelChange($event)"
-                                (macroInput)="onMacroValueInput($event)"
-                                (macroSlider)="onMacroSliderInput($event)"
-                            />
-
-                            <fd-goals-fiber-card
-                                [fiber]="fiberMacroViewState()"
-                                (macroInput)="onMacroValueInput($event)"
-                                (macroSlider)="onMacroSliderInput($event)"
-                            />
-
-                            <fd-goals-body-targets
-                                data-tour-id="goals-body"
-                                [targets]="currentBodyTargets()"
-                                (targetInput)="onBodyTargetInput($event)"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
         }
     </fd-page-body>
 </div>

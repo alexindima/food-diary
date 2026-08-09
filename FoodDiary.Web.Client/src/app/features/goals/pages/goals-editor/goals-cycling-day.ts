@@ -4,13 +4,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 import type { DayCalorieKey } from '../../models/goals.data';
 
 @Component({
-    selector: 'fd-goals-cycling-day-v2',
+    selector: 'fd-goals-cycling-day',
     imports: [TranslatePipe],
     templateUrl: './goals-cycling-day.html',
-    styleUrl: './goals-page-v2.scss',
+    styleUrl: './goals-editor.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GoalsCyclingDayV2Component {
+export class GoalsCyclingDayComponent {
     public readonly dayKey = input.required<DayCalorieKey>();
     public readonly labelKey = input.required<string>();
     public readonly value = input.required<number>();

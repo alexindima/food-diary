@@ -71,9 +71,13 @@ export function buildDraftRequest(draft: GoalsDraft): UpdateGoalsRequest {
         carbTarget: draft.macros.carbs,
         fiberTarget: draft.macros.fiber,
         waterGoal: draft.water,
-        desiredWeight: draft.bodyTargets.weight,
-        desiredWaist: draft.bodyTargets.waist,
+        desiredWeight: normalizeDesiredBodyTarget(draft.bodyTargets.weight),
+        desiredWaist: normalizeDesiredBodyTarget(draft.bodyTargets.waist),
         calorieCyclingEnabled: draft.cyclingEnabled,
         ...draft.dayCalories,
     };
+}
+
+function normalizeDesiredBodyTarget(value: number): number | null {
+    return value > 0 ? value : null;
 }

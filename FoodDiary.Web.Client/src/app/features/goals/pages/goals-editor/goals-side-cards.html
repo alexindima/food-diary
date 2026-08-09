@@ -1,0 +1,49 @@
+<div class="goals-editor-side-cards">
+    <section class="goals-editor-card goals-editor-side-card" data-tour-id="goals-water">
+        <h2 class="goals-editor-card__title">{{ 'GOALS_PAGE.EDITOR.WATER_TITLE' | translate }}</h2>
+        <div class="goals-editor-water-target">
+            <label class="goals-editor-card__label" for="goals-editor-water">{{ 'GOALS_PAGE.EDITOR.TARGET_VALUE' | translate }}</label>
+            <div class="goals-editor-input goals-editor-input--hero">
+                <input id="goals-editor-water" type="number" min="0" [value]="water()" (input)="updateWater($event)" />
+                <span>{{ 'GENERAL.UNITS.ML' | translate }}</span>
+            </div>
+        </div>
+        <span class="goals-editor-card__label goals-editor-water-quick-label">{{ 'GOALS_PAGE.EDITOR.QUICK_SELECT' | translate }}</span>
+        <div class="goals-editor-quick-values">
+            @for (value of [2000, 2500, 3000]; track value) {
+                <button type="button" [class.goals-editor-quick-values__active]="water() === value" (click)="waterChange.emit(value)">
+                    {{ value | localizedNumber: language() }} {{ 'GENERAL.UNITS.ML' | translate }}
+                </button>
+            }
+        </div>
+    </section>
+
+    <section class="goals-editor-card goals-editor-side-card" data-tour-id="goals-body">
+        <h2 class="goals-editor-card__title">{{ 'GOALS_PAGE.EDITOR.BODY_TITLE' | translate }}</h2>
+        <p class="goals-editor-card__hint">{{ 'GOALS_PAGE.EDITOR.BODY_HINT' | translate }}</p>
+        <div class="goals-editor-body-row">
+            <label for="goals-editor-weight">{{ 'GOALS_PAGE.BODY_TARGET_WEIGHT' | translate }}</label>
+            <span class="goals-editor-input"
+                ><input
+                    id="goals-editor-weight"
+                    type="number"
+                    min="0"
+                    [value]="bodyTargets().weight"
+                    (input)="updateBodyTarget('weight', $event)"
+                /><span>{{ 'GENERAL.UNITS.KG' | translate }}</span></span
+            >
+        </div>
+        <div class="goals-editor-body-row">
+            <label for="goals-editor-waist">{{ 'GOALS_PAGE.BODY_TARGET_WAIST' | translate }}</label>
+            <span class="goals-editor-input"
+                ><input
+                    id="goals-editor-waist"
+                    type="number"
+                    min="0"
+                    [value]="bodyTargets().waist"
+                    (input)="updateBodyTarget('waist', $event)"
+                /><span>{{ 'GENERAL.UNITS.CM' | translate }}</span></span
+            >
+        </div>
+    </section>
+</div>

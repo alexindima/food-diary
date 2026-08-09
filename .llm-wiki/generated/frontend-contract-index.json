@@ -1,15 +1,15 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "components":  417,
+                    "components":  410,
                     "componentsWithoutDirectSpecs":  121,
-                    "inputs":  1281,
-                    "outputs":  416,
+                    "inputs":  1264,
+                    "outputs":  398,
                     "apiCalls":  216,
-                    "templatesWithTranslations":  260,
-                    "translationKeys":  1323,
-                    "consumerEdges":  937,
-                    "consumedComponents":  283,
+                    "templatesWithTranslations":  254,
+                    "translationKeys":  1314,
+                    "consumerEdges":  921,
+                    "consumedComponents":  276,
                     "unconsumedComponents":  133
                 },
     "components":  [
@@ -6139,138 +6139,11 @@
                            "specPath":  "FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.spec.ts"
                        },
                        {
-                           "class":  "GoalsBodyTargetsComponent",
-                           "selector":  "fd-goals-body-targets",
+                           "class":  "GoalsCyclingDayComponent",
+                           "selector":  "fd-goals-cycling-day",
                            "feature":  "goals",
-                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/body-targets/goals-body-targets.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/body-targets/goals-body-targets.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "targets",
-                                              "type":  "BodyTarget[]",
-                                              "required":  true
-                                          }
-                                      ],
-                           "outputs":  [
-                                           {
-                                               "name":  "targetInput",
-                                               "type":  "BodyTargetInputChange"
-                                           }
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/body-targets/goals-body-targets.spec.ts"
-                       },
-                       {
-                           "class":  "GoalsCalorieCardComponent",
-                           "selector":  "fd-goals-calorie-card",
-                           "feature":  "goals",
-                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/calorie-card/goals-calorie-card.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/calorie-card/goals-calorie-card.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "minCalories",
-                                              "type":  "number",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "maxCalories",
-                                              "type":  "number",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "calorieTarget",
-                                              "type":  "number",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "ringProgressOffset",
-                                              "type":  "string",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "accentColor",
-                                              "type":  "string",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "ringKnobAngle",
-                                              "type":  "string",
-                                              "required":  true
-                                          }
-                                      ],
-                           "outputs":  [
-                                           {
-                                               "name":  "ringPointerDown",
-                                               "type":  "PointerEvent"
-                                           },
-                                           {
-                                               "name":  "ringPointerMove",
-                                               "type":  "PointerEvent"
-                                           },
-                                           {
-                                               "name":  "ringPointerLeave",
-                                               "type":  "PointerEvent"
-                                           },
-                                           {
-                                               "name":  "caloriesInput",
-                                               "type":  "Event"
-                                           },
-                                           {
-                                               "name":  "caloriesBlur",
-                                               "type":  "Event"
-                                           },
-                                           {
-                                               "name":  "sliderInput",
-                                               "type":  "Event"
-                                           }
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/calorie-card/goals-calorie-card.spec.ts"
-                       },
-                       {
-                           "class":  "GoalsCyclingCardComponent",
-                           "selector":  "fd-goals-cycling-card",
-                           "feature":  "goals",
-                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/cycling-card/goals-cycling-card.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/cycling-card/goals-cycling-card.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "enabled",
-                                              "type":  "boolean",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "dayControls",
-                                              "type":  "CyclingDayControl[]",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "dayCalories",
-                                              "type":  "Record\u003cDayCalorieKey, number\u003e",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "maxCalories",
-                                              "type":  "number",
-                                              "required":  true
-                                          }
-                                      ],
-                           "outputs":  [
-                                           {
-                                               "name":  "enabledToggle",
-                                               "type":  ""
-                                           },
-                                           {
-                                               "name":  "dayCaloriesInput",
-                                               "type":  "DayCaloriesInputChange"
-                                           }
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/cycling-card/goals-cycling-card.spec.ts"
-                       },
-                       {
-                           "class":  "GoalsCyclingDayV2Component",
-                           "selector":  "fd-goals-cycling-day-v2",
-                           "feature":  "goals",
-                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-day.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-day.html",
+                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-day.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-day.html",
                            "inputs":  [
                                           {
                                               "name":  "dayKey",
@@ -6312,11 +6185,11 @@
                            "specPath":  null
                        },
                        {
-                           "class":  "GoalsCyclingRowV2Component",
-                           "selector":  "fd-goals-cycling-row-v2",
+                           "class":  "GoalsCyclingRowComponent",
+                           "selector":  "fd-goals-cycling-row",
                            "feature":  "goals",
-                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-row.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-row.html",
+                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.html",
                            "inputs":  [
                                           {
                                               "name":  "enabled",
@@ -6344,161 +6217,14 @@
                                                "type":  "{ key: DayCalorieKey; value: number }"
                                            }
                                        ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-row.spec.ts"
+                           "specPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.spec.ts"
                        },
                        {
-                           "class":  "GoalsFiberCardComponent",
-                           "selector":  "fd-goals-fiber-card",
+                           "class":  "GoalsEditorComponent",
+                           "selector":  "fd-goals-editor",
                            "feature":  "goals",
-                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/fiber-card/goals-fiber-card.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/fiber-card/goals-fiber-card.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "fiber",
-                                              "type":  "MacroSliderView | null",
-                                              "required":  false
-                                          }
-                                      ],
-                           "outputs":  [
-                                           {
-                                               "name":  "macroInput",
-                                               "type":  "MacroInputChange"
-                                           },
-                                           {
-                                               "name":  "macroSlider",
-                                               "type":  "MacroInputChange"
-                                           }
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/fiber-card/goals-fiber-card.spec.ts"
-                       },
-                       {
-                           "class":  "GoalsMacroSliderComponent",
-                           "selector":  "fd-goals-macro-slider",
-                           "feature":  "goals",
-                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macro-slider/goals-macro-slider.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macro-slider/goals-macro-slider.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "macro",
-                                              "type":  "MacroSliderView",
-                                              "required":  true
-                                          }
-                                      ],
-                           "outputs":  [
-                                           {
-                                               "name":  "valueInput",
-                                               "type":  "Event"
-                                           },
-                                           {
-                                               "name":  "sliderInput",
-                                               "type":  "Event"
-                                           }
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macro-slider/goals-macro-slider.spec.ts"
-                       },
-                       {
-                           "class":  "GoalsMacrosCardComponent",
-                           "selector":  "fd-goals-macros-card",
-                           "feature":  "goals",
-                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macros-card/goals-macros-card.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macros-card/goals-macros-card.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "macroPresetOptions",
-                                              "type":  "Array\u003cFdUiSelectOption\u003cMacroPresetKey\u003e\u003e",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "selectedPreset",
-                                              "type":  "MacroPresetKey",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "macros",
-                                              "type":  "MacroSliderView[]",
-                                              "required":  true
-                                          }
-                                      ],
-                           "outputs":  [
-                                           {
-                                               "name":  "presetChange",
-                                               "type":  "MacroPresetKey | null"
-                                           },
-                                           {
-                                               "name":  "macroInput",
-                                               "type":  "MacroInputChange"
-                                           },
-                                           {
-                                               "name":  "macroSlider",
-                                               "type":  "MacroInputChange"
-                                           }
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macros-card/goals-macros-card.spec.ts"
-                       },
-                       {
-                           "class":  "GoalsNutritionCardV2Component",
-                           "selector":  "fd-goals-nutrition-card-v2",
-                           "feature":  "goals",
-                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-nutrition-card.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-nutrition-card.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "calories",
-                                              "type":  "number",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "macros",
-                                              "type":  "GoalsMacroDraft[]",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "preset",
-                                              "type":  "MacroPresetKey",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "presetOptions",
-                                              "type":  "Array\u003cFdUiSelectOption\u003cMacroPresetKey\u003e\u003e",
-                                              "required":  true
-                                          }
-                                      ],
-                           "outputs":  [
-                                           {
-                                               "name":  "caloriesChange",
-                                               "type":  "number"
-                                           },
-                                           {
-                                               "name":  "macroChange",
-                                               "type":  "{ key: MacroKey; value: number }"
-                                           },
-                                           {
-                                               "name":  "presetChange",
-                                               "type":  "MacroPresetKey"
-                                           }
-                                       ],
-                           "specPath":  null
-                       },
-                       {
-                           "class":  "GoalsPageComponent",
-                           "selector":  "fd-goals-page",
-                           "feature":  "goals",
-                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.html",
-                           "inputs":  [
-
-                                      ],
-                           "outputs":  [
-
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.spec.ts"
-                       },
-                       {
-                           "class":  "GoalsPageV2Component",
-                           "selector":  "fd-goals-page-v2",
-                           "feature":  "goals",
-                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.html",
+                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.html",
                            "inputs":  [
                                           {
                                               "name":  "calories",
@@ -6560,11 +6286,69 @@
                            "specPath":  null
                        },
                        {
-                           "class":  "GoalsSideCardsV2Component",
-                           "selector":  "fd-goals-side-cards-v2",
+                           "class":  "GoalsNutritionCardComponent",
+                           "selector":  "fd-goals-nutrition-card",
                            "feature":  "goals",
-                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-side-cards.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-side-cards.html",
+                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.html",
+                           "inputs":  [
+                                          {
+                                              "name":  "calories",
+                                              "type":  "number",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "macros",
+                                              "type":  "GoalsMacroDraft[]",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "preset",
+                                              "type":  "MacroPresetKey",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "presetOptions",
+                                              "type":  "Array\u003cFdUiSelectOption\u003cMacroPresetKey\u003e\u003e",
+                                              "required":  true
+                                          }
+                                      ],
+                           "outputs":  [
+                                           {
+                                               "name":  "caloriesChange",
+                                               "type":  "number"
+                                           },
+                                           {
+                                               "name":  "macroChange",
+                                               "type":  "{ key: MacroKey; value: number }"
+                                           },
+                                           {
+                                               "name":  "presetChange",
+                                               "type":  "MacroPresetKey"
+                                           }
+                                       ],
+                           "specPath":  null
+                       },
+                       {
+                           "class":  "GoalsPageComponent",
+                           "selector":  "fd-goals-page",
+                           "feature":  "goals",
+                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.html",
+                           "inputs":  [
+
+                                      ],
+                           "outputs":  [
+
+                                       ],
+                           "specPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.spec.ts"
+                       },
+                       {
+                           "class":  "GoalsSideCardsComponent",
+                           "selector":  "fd-goals-side-cards",
+                           "feature":  "goals",
+                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-side-cards.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-side-cards.html",
                            "inputs":  [
                                           {
                                               "name":  "water",
@@ -6590,11 +6374,11 @@
                            "specPath":  null
                        },
                        {
-                           "class":  "GoalsSummaryCardV2Component",
-                           "selector":  "fd-goals-summary-card-v2",
+                           "class":  "GoalsSummaryCardComponent",
+                           "selector":  "fd-goals-summary-card",
                            "feature":  "goals",
-                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-summary-card.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-summary-card.html",
+                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-summary-card.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-summary-card.html",
                            "inputs":  [
                                           {
                                               "name":  "calories",
@@ -6611,31 +6395,6 @@
 
                                        ],
                            "specPath":  null
-                       },
-                       {
-                           "class":  "GoalsWaterCardComponent",
-                           "selector":  "fd-goals-water-card",
-                           "feature":  "goals",
-                           "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/water-card/goals-water-card.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/water-card/goals-water-card.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "water",
-                                              "type":  "MacroSliderView",
-                                              "required":  true
-                                          }
-                                      ],
-                           "outputs":  [
-                                           {
-                                               "name":  "waterInput",
-                                               "type":  "Event"
-                                           },
-                                           {
-                                               "name":  "waterSlider",
-                                               "type":  "Event"
-                                           }
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/water-card/goals-water-card.spec.ts"
                        },
                        {
                            "class":  "LessonDetailContentComponent",
@@ -16954,119 +16713,73 @@
                              },
                              {
                                  "feature":  "goals",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/body-targets/goals-body-targets.html",
-                                 "keys":  [
-                                              "GOALS_PAGE.CURRENT_LABEL",
-                                              "GOALS_PAGE.TO_GO"
-                                          ]
-                             },
-                             {
-                                 "feature":  "goals",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/calorie-card/goals-calorie-card.html",
-                                 "keys":  [
-                                              "GOALS_PAGE.DAILY_TARGET",
-                                              "GOALS_PAGE.NUTRITION_TITLE"
-                                          ]
-                             },
-                             {
-                                 "feature":  "goals",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/cycling-card/goals-cycling-card.html",
-                                 "keys":  [
-                                              "GOALS_PAGE.CYCLING_ENABLE",
-                                              "GOALS_PAGE.CYCLING_TITLE"
-                                          ]
-                             },
-                             {
-                                 "feature":  "goals",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/fiber-card/goals-fiber-card.html",
-                                 "keys":  [
-                                              "GOALS_PAGE.FIBER_GROUP"
-                                          ]
-                             },
-                             {
-                                 "feature":  "goals",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macros-card/goals-macros-card.html",
-                                 "keys":  [
-                                              "GOALS_PAGE.CORE_MACROS",
-                                              "GOALS_PAGE.MACRO_PRESET_LABEL"
-                                          ]
-                             },
-                             {
-                                 "feature":  "goals",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/water-card/goals-water-card.html",
-                                 "keys":  [
-                                              "GOALS_PAGE.WATER_TITLE"
-                                          ]
-                             },
-                             {
-                                 "feature":  "goals",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-day.html",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-day.html",
                                  "keys":  [
                                               "GENERAL.UNITS.KCAL"
                                           ]
                              },
                              {
                                  "feature":  "goals",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-row.html",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.html",
                                  "keys":  [
                                               "GENERAL.UNITS.KCAL",
                                               "GOALS_PAGE.CYCLING_TITLE",
-                                              "GOALS_PAGE.V2.CYCLING_NOTE",
-                                              "GOALS_PAGE.V2.REPEAT_WEEKDAYS",
-                                              "GOALS_PAGE.V2.RESET_DAYS",
-                                              "GOALS_PAGE.V2.WEEKLY_AVERAGE",
-                                              "GOALS_PAGE.V2.WEEKLY_TOTAL"
+                                              "GOALS_PAGE.EDITOR.CYCLING_NOTE",
+                                              "GOALS_PAGE.EDITOR.REPEAT_WEEKDAYS",
+                                              "GOALS_PAGE.EDITOR.RESET_DAYS",
+                                              "GOALS_PAGE.EDITOR.WEEKLY_AVERAGE",
+                                              "GOALS_PAGE.EDITOR.WEEKLY_TOTAL"
                                           ]
                              },
                              {
                                  "feature":  "goals",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-nutrition-card.html",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.html",
+                                 "keys":  [
+                                              "GOALS_PAGE.EDITOR.DISCARD",
+                                              "GOALS_PAGE.EDITOR.UNSAVED"
+                                          ]
+                             },
+                             {
+                                 "feature":  "goals",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.html",
                                  "keys":  [
                                               "GENERAL.UNITS.G",
                                               "GENERAL.UNITS.KCAL",
-                                              "GOALS_PAGE.MACRO_PRESET_LABEL",
-                                              "GOALS_PAGE.V2.CALORIES",
-                                              "GOALS_PAGE.V2.CALORIES_HINT",
-                                              "GOALS_PAGE.V2.MACRO_NOTE",
-                                              "GOALS_PAGE.V2.NUTRITION_HINT",
-                                              "GOALS_PAGE.V2.NUTRITION_TITLE",
-                                              "GOALS_PAGE.V2.OF_CALORIES"
+                                              "GOALS_PAGE.EDITOR.CALORIES",
+                                              "GOALS_PAGE.EDITOR.CALORIES_HINT",
+                                              "GOALS_PAGE.EDITOR.MACRO_NOTE",
+                                              "GOALS_PAGE.EDITOR.NUTRITION_HINT",
+                                              "GOALS_PAGE.EDITOR.NUTRITION_TITLE",
+                                              "GOALS_PAGE.EDITOR.OF_CALORIES",
+                                              "GOALS_PAGE.MACRO_PRESET_LABEL"
                                           ]
                              },
                              {
                                  "feature":  "goals",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.html",
-                                 "keys":  [
-                                              "GOALS_PAGE.V2.DISCARD",
-                                              "GOALS_PAGE.V2.UNSAVED"
-                                          ]
-                             },
-                             {
-                                 "feature":  "goals",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-side-cards.html",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-side-cards.html",
                                  "keys":  [
                                               "GENERAL.UNITS.CM",
                                               "GENERAL.UNITS.KG",
                                               "GENERAL.UNITS.ML",
                                               "GOALS_PAGE.BODY_TARGET_WAIST",
                                               "GOALS_PAGE.BODY_TARGET_WEIGHT",
-                                              "GOALS_PAGE.V2.BODY_HINT",
-                                              "GOALS_PAGE.V2.BODY_TITLE",
-                                              "GOALS_PAGE.V2.QUICK_SELECT",
-                                              "GOALS_PAGE.V2.TARGET_VALUE",
-                                              "GOALS_PAGE.V2.WATER_TITLE"
+                                              "GOALS_PAGE.EDITOR.BODY_HINT",
+                                              "GOALS_PAGE.EDITOR.BODY_TITLE",
+                                              "GOALS_PAGE.EDITOR.QUICK_SELECT",
+                                              "GOALS_PAGE.EDITOR.TARGET_VALUE",
+                                              "GOALS_PAGE.EDITOR.WATER_TITLE"
                                           ]
                              },
                              {
                                  "feature":  "goals",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-summary-card.html",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-summary-card.html",
                                  "keys":  [
                                               "GENERAL.UNITS.G",
                                               "GENERAL.UNITS.KCAL",
-                                              "GOALS_PAGE.V2.CALORIES",
-                                              "GOALS_PAGE.V2.MACRO_RATIO",
-                                              "GOALS_PAGE.V2.RECOMMENDED_TARGET",
-                                              "GOALS_PAGE.V2.SUMMARY_TITLE"
+                                              "GOALS_PAGE.EDITOR.CALORIES",
+                                              "GOALS_PAGE.EDITOR.MACRO_RATIO",
+                                              "GOALS_PAGE.EDITOR.RECOMMENDED_TARGET",
+                                              "GOALS_PAGE.EDITOR.SUMMARY_TITLE"
                                           ]
                              },
                              {
@@ -17075,8 +16788,7 @@
                                  "keys":  [
                                               "GOALS_PAGE.SUBTITLE",
                                               "GOALS_PAGE.TITLE",
-                                              "GOALS_PAGE.TOUR.START_TOUR",
-                                              "GOALS_PAGE.V2.LEGACY_LABEL"
+                                              "GOALS_PAGE.TOUR.START_TOUR"
                                           ]
                              },
                              {
@@ -22707,7 +22419,7 @@
                               "selector":  "fd-ui-button",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-row.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.html",
                               "occurrences":  2,
                               "inputsUsed":  [
                                                  "fill",
@@ -22723,7 +22435,7 @@
                               "selector":  "fd-ui-button",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.html",
                               "occurrences":  2,
                               "inputsUsed":  [
                                                  "fill",
@@ -24783,90 +24495,6 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
                               "consumerFeature":  "gamification",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "title"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiCardComponent",
-                              "selector":  "fd-ui-card",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/body-targets/goals-body-targets.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "title"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiCardComponent",
-                              "selector":  "fd-ui-card",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/calorie-card/goals-calorie-card.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "title"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiCardComponent",
-                              "selector":  "fd-ui-card",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/cycling-card/goals-cycling-card.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "title"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiCardComponent",
-                              "selector":  "fd-ui-card",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/fiber-card/goals-fiber-card.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "title"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiCardComponent",
-                              "selector":  "fd-ui-card",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macros-card/goals-macros-card.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "title"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiCardComponent",
-                              "selector":  "fd-ui-card",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/water-card/goals-water-card.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "title"
@@ -27335,7 +26963,7 @@
                               "selector":  "fd-ui-icon",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-nutrition-card.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.html",
                               "occurrences":  2,
                               "inputsUsed":  [
                                                  "name",
@@ -27350,7 +26978,7 @@
                               "selector":  "fd-ui-icon",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-summary-card.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-summary-card.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "name",
@@ -29855,22 +29483,7 @@
                               "selector":  "fd-ui-select",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
                               "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macros-card/goals-macros-card.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "label",
-                                                 "options"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiSelectComponent",
-                              "selector":  "fd-ui-select",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-nutrition-card.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "label",
@@ -30620,67 +30233,11 @@
                                                  ]
                           },
                           {
-                              "component":  "GoalsBodyTargetsComponent",
-                              "selector":  "fd-goals-body-targets",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/body-targets/goals-body-targets.ts",
+                              "component":  "GoalsCyclingDayComponent",
+                              "selector":  "fd-goals-cycling-day",
+                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-day.ts",
                               "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "targets"
-                                             ],
-                              "outputsHandled":  [
-                                                     "targetInput"
-                                                 ]
-                          },
-                          {
-                              "component":  "GoalsCalorieCardComponent",
-                              "selector":  "fd-goals-calorie-card",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/calorie-card/goals-calorie-card.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "accentColor",
-                                                 "calorieTarget",
-                                                 "maxCalories",
-                                                 "minCalories",
-                                                 "ringKnobAngle",
-                                                 "ringProgressOffset"
-                                             ],
-                              "outputsHandled":  [
-                                                     "caloriesBlur",
-                                                     "caloriesInput",
-                                                     "ringPointerDown",
-                                                     "ringPointerLeave",
-                                                     "ringPointerMove",
-                                                     "sliderInput"
-                                                 ]
-                          },
-                          {
-                              "component":  "GoalsCyclingCardComponent",
-                              "selector":  "fd-goals-cycling-card",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/cycling-card/goals-cycling-card.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "dayCalories",
-                                                 "dayControls",
-                                                 "enabled",
-                                                 "maxCalories"
-                                             ],
-                              "outputsHandled":  [
-                                                     "dayCaloriesInput",
-                                                     "enabledToggle"
-                                                 ]
-                          },
-                          {
-                              "component":  "GoalsCyclingDayV2Component",
-                              "selector":  "fd-goals-cycling-day-v2",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-day.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-row.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "barPercent",
@@ -30695,11 +30252,11 @@
                                                  ]
                           },
                           {
-                              "component":  "GoalsCyclingRowV2Component",
-                              "selector":  "fd-goals-cycling-row-v2",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-cycling-row.ts",
+                              "component":  "GoalsCyclingRowComponent",
+                              "selector":  "fd-goals-cycling-row",
+                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.ts",
                               "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "baseCalories",
@@ -30712,106 +30269,9 @@
                                                  ]
                           },
                           {
-                              "component":  "GoalsFiberCardComponent",
-                              "selector":  "fd-goals-fiber-card",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/fiber-card/goals-fiber-card.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "fiber"
-                                             ],
-                              "outputsHandled":  [
-                                                     "macroInput",
-                                                     "macroSlider"
-                                                 ]
-                          },
-                          {
-                              "component":  "GoalsMacroSliderComponent",
-                              "selector":  "fd-goals-macro-slider",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macro-slider/goals-macro-slider.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/fiber-card/goals-fiber-card.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "macro"
-                                             ],
-                              "outputsHandled":  [
-                                                     "sliderInput",
-                                                     "valueInput"
-                                                 ]
-                          },
-                          {
-                              "component":  "GoalsMacroSliderComponent",
-                              "selector":  "fd-goals-macro-slider",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macro-slider/goals-macro-slider.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macros-card/goals-macros-card.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "macro"
-                                             ],
-                              "outputsHandled":  [
-                                                     "sliderInput",
-                                                     "valueInput"
-                                                 ]
-                          },
-                          {
-                              "component":  "GoalsMacroSliderComponent",
-                              "selector":  "fd-goals-macro-slider",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macro-slider/goals-macro-slider.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/water-card/goals-water-card.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "macro"
-                                             ],
-                              "outputsHandled":  [
-                                                     "sliderInput",
-                                                     "valueInput"
-                                                 ]
-                          },
-                          {
-                              "component":  "GoalsMacrosCardComponent",
-                              "selector":  "fd-goals-macros-card",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/macros-card/goals-macros-card.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "macroPresetOptions",
-                                                 "macros",
-                                                 "selectedPreset"
-                                             ],
-                              "outputsHandled":  [
-                                                     "macroInput",
-                                                     "macroSlider",
-                                                     "presetChange"
-                                                 ]
-                          },
-                          {
-                              "component":  "GoalsNutritionCardV2Component",
-                              "selector":  "fd-goals-nutrition-card-v2",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-nutrition-card.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "calories",
-                                                 "macros",
-                                                 "preset",
-                                                 "presetOptions"
-                                             ],
-                              "outputsHandled":  [
-                                                     "caloriesChange",
-                                                     "macroChange",
-                                                     "presetChange"
-                                                 ]
-                          },
-                          {
-                              "component":  "GoalsPageV2Component",
-                              "selector":  "fd-goals-page-v2",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.ts",
+                              "component":  "GoalsEditorComponent",
+                              "selector":  "fd-goals-editor",
+                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.ts",
                               "consumerFeature":  "goals",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.html",
                               "occurrences":  1,
@@ -30832,11 +30292,30 @@
                                                  ]
                           },
                           {
-                              "component":  "GoalsSideCardsV2Component",
-                              "selector":  "fd-goals-side-cards-v2",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-side-cards.ts",
+                              "component":  "GoalsNutritionCardComponent",
+                              "selector":  "fd-goals-nutrition-card",
+                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.ts",
                               "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "calories",
+                                                 "macros",
+                                                 "preset",
+                                                 "presetOptions"
+                                             ],
+                              "outputsHandled":  [
+                                                     "caloriesChange",
+                                                     "macroChange",
+                                                     "presetChange"
+                                                 ]
+                          },
+                          {
+                              "component":  "GoalsSideCardsComponent",
+                              "selector":  "fd-goals-side-cards",
+                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-side-cards.ts",
+                              "consumerFeature":  "goals",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "bodyTargets",
@@ -30848,11 +30327,11 @@
                                                  ]
                           },
                           {
-                              "component":  "GoalsSummaryCardV2Component",
-                              "selector":  "fd-goals-summary-card-v2",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-summary-card.ts",
+                              "component":  "GoalsSummaryCardComponent",
+                              "selector":  "fd-goals-summary-card",
+                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-summary-card.ts",
                               "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-v2/goals-page-v2.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "calories",
@@ -30860,21 +30339,6 @@
                                              ],
                               "outputsHandled":  [
 
-                                                 ]
-                          },
-                          {
-                              "component":  "GoalsWaterCardComponent",
-                              "selector":  "fd-goals-water-card",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page-sections/water-card/goals-water-card.ts",
-                              "consumerFeature":  "goals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "water"
-                                             ],
-                              "outputsHandled":  [
-                                                     "waterInput",
-                                                     "waterSlider"
                                                  ]
                           },
                           {
@@ -33893,7 +33357,7 @@
                               "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/skeleton-card/skeleton-card.ts",
                               "consumerFeature":  "goals",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.html",
-                              "occurrences":  7,
+                              "occurrences":  3,
                               "inputsUsed":  [
 
                                              ],
