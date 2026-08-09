@@ -143,13 +143,19 @@
       "averageFats",
       "averageFiber",
       "averageProteins",
+      "breakfastCalories",
       "dateFrom",
       "dateTo",
+      "dinnerCalories",
+      "lunchCalories",
+      "mealCount",
+      "snackCalories",
       "totalCalories",
       "totalCarbs",
       "totalFats",
       "totalFiber",
-      "totalProteins"
+      "totalProteins",
+      "trackedDayCount"
     ]
   },
   "shopping-list-current": {
