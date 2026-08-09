@@ -28,6 +28,8 @@ const GAP_SEGMENT_COUNT = 2;
 const QUARTER_POSITION_X = 26;
 const REFERENCE_LINE_VALUE = 75;
 const REFERENCE_SERIES_MAX_VALUE = 118;
+const CALORIE_CHART_MAX = 2500;
+const CALORIE_GOAL_NEAR_TOP = 2400;
 
 // eslint-disable-next-line max-lines-per-function -- Line chart primitive behaviors are easier to scan in one component suite.
 describe('FdUiLineChartComponent', () => {
@@ -106,6 +108,20 @@ describe('FdUiLineChartComponent', () => {
         fixture.detectChanges();
 
         expect(host().querySelector('.fd-ui-line-chart__reference-line')).toBeNull();
+    });
+
+    it('places a reference label below a line near the top edge', () => {
+        fixture.componentRef.setInput('points', [
+            { label: 'One', value: 2000 },
+            { label: 'Two', value: 500 },
+        ]);
+        fixture.componentRef.setInput('minValue', 0);
+        fixture.componentRef.setInput('maxValue', CALORIE_CHART_MAX);
+        fixture.componentRef.setInput('verticalEdgeInset', 'none');
+        fixture.componentRef.setInput('referenceLines', [{ value: CALORIE_GOAL_NEAR_TOP, label: 'Goal 2,400' }]);
+        fixture.detectChanges();
+
+        expect(host().querySelector('.fd-ui-line-chart__reference-label--top')).not.toBeNull();
     });
 
     it('uses full horizontal range for sparklines', () => {

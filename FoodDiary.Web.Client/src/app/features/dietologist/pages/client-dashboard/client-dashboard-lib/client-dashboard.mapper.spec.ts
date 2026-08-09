@@ -90,7 +90,7 @@ describe('client dashboard detail mapper', () => {
         expect(buildFastingView(snapshot as never)).toEqual(
             expect.objectContaining({
                 status: 'Active',
-                protocol: 'F16_8',
+                protocol: 'Fast16Eat8',
                 plannedDuration: '16 h',
             }),
         );
@@ -161,7 +161,7 @@ function createDashboardSnapshot(): unknown {
             initialPlannedDurationHours: 16,
             addedDurationHours: 0,
             plannedDurationHours: 16,
-            protocol: 'F16_8',
+            protocol: 'Fast16Eat8',
             planType: 'Intermittent',
             occurrenceKind: 'FastingWindow',
             cyclicFastDays: null,

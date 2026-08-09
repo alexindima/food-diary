@@ -27,11 +27,12 @@
                 <div
                     class="fd-ui-bar-chart__reference-line"
                     [class.fd-ui-bar-chart__reference-line--outside]="line.labelPlacement === 'outside'"
+                    [class.fd-ui-bar-chart__reference-line--label-at-top]="line.labelAtTop"
                     [style.--fd-bar-chart-reference-color]="line.color"
                     [style.top.%]="line.top"
                 >
                     @if (line.label) {
-                        <span>{{ line.label }}</span>
+                        <span class="fd-ui-caption">{{ line.label }}</span>
                     }
                 </div>
             }

@@ -52,12 +52,14 @@ type FdUiBarChartCategoryView = FdUiBarChartCategory & {
 type FdUiBarChartReferenceLineView = FdUiBarChartReferenceLine & {
     color: string;
     top: number;
+    labelAtTop: boolean;
 };
 
 const BAR_CHART_VIEWBOX_WIDTH = 100;
 const BAR_CHART_VIEWBOX_HEIGHT = 64;
 const BAR_CHART_PADDING_TOP = 6;
 const BAR_CHART_PADDING_BOTTOM = 8;
+const REFERENCE_LABEL_TOP_THRESHOLD_PERCENT = 8;
 const BAR_CHART_GAP = 4;
 const BAR_CHART_GRID_LINE_COUNT = 5;
 const PERCENTAGE_SCALE = 100;
@@ -195,6 +197,8 @@ export class FdUiBarChartComponent {
                 ...line,
                 color: line.color ?? DEFAULT_REFERENCE_LINE_COLOR,
                 top: PERCENTAGE_SCALE - (line.value / this.categoricalMaximum()) * PERCENTAGE_SCALE,
+                labelAtTop:
+                    PERCENTAGE_SCALE - (line.value / this.categoricalMaximum()) * PERCENTAGE_SCALE <= REFERENCE_LABEL_TOP_THRESHOLD_PERCENT,
             })),
     );
     protected readonly categoricalAriaLabel = computed(() => {

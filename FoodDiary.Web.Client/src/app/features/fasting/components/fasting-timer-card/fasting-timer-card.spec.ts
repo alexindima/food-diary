@@ -138,7 +138,7 @@ function registerContentTests(): void {
             const fixture = await createHostFixtureAsync();
 
             fixture.componentInstance['layout'].set(layout);
-            setSession(fixture, createSession({ protocol: 'F16_8' }));
+            setSession(fixture, createSession({ protocol: 'Fast16Eat8' }));
             fixture.detectChanges();
 
             const separator = requireElement(fixture, '.fasting-timer-card__summary-protocol-separator');
@@ -388,10 +388,10 @@ function createFastingFacadeStub(): FastingFacadeStub {
         isActive: computed(() => currentSession() !== null && currentSession()?.endedAtUtc === null),
         currentSession,
         selectedMode: signal('intermittent'),
-        selectedProtocol: signal('F16_8'),
+        selectedProtocol: signal('Fast16Eat8'),
         customHours: signal(DEFAULT_FASTING_HOURS),
         customIntermittentFastHours: signal(DEFAULT_FASTING_HOURS),
-        cyclicEatDayProtocol: signal('F16_8'),
+        cyclicEatDayProtocol: signal('Fast16Eat8'),
         cyclicFastDays: signal(1),
         cyclicEatDays: signal(1),
         cyclicUsesCustomPreset: signal(false),
@@ -473,7 +473,7 @@ function setSession(fixture: ComponentFixture<FastingTimerCardHostComponent>, se
 function createExtendedSession(overrides: Partial<FastingSession> = {}): FastingSession {
     return createSession({
         planType: 'Extended',
-        protocol: 'F24_0',
+        protocol: 'Fast24',
         initialPlannedDurationHours: DEFAULT_EXTENDED_HOURS,
         plannedDurationHours: DEFAULT_EXTENDED_HOURS,
         ...overrides,
@@ -492,7 +492,7 @@ function createSession(overrides: Partial<FastingSession> = {}): FastingSession 
         initialPlannedDurationHours: DEFAULT_FASTING_HOURS,
         addedDurationHours: 0,
         plannedDurationHours: DEFAULT_FASTING_HOURS,
-        protocol: 'F16_8',
+        protocol: 'Fast16Eat8',
         planType: 'Intermittent',
         occurrenceKind: 'FastingWindow',
         cyclicFastDays: null,

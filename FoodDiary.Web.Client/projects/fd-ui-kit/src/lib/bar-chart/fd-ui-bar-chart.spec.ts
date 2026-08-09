@@ -93,6 +93,7 @@ describe('FdUiBarChartComponent', () => {
         expect(getText('.fd-ui-bar-chart__axis-unit')).toBe('kcal');
         expect(getText('.fd-ui-bar-chart__axis-label')).toBe('2500');
         expect(getText('.fd-ui-bar-chart__reference-line')).toBe('Goal 2,258');
+        expect(host().querySelector('.fd-ui-bar-chart__reference-line--label-at-top')).toBeNull();
         expect(host().querySelector('.fd-ui-bar-chart--edge-inset-none')).not.toBeNull();
         expect(component['referenceLineViews']()[0]?.top).toBeCloseTo(REFERENCE_LINE_TOP_PERCENT);
     });

@@ -118,6 +118,8 @@ const LINE_CHART_SPARKLINE_RIGHT_X = LINE_CHART_VIEWBOX_WIDTH;
 const LINE_CHART_GRID_LINE_COUNT = 5;
 const LINE_CHART_X_AXIS_LABEL_COUNT = 14;
 const LINE_CHART_PERCENTAGE_SCALE = 100;
+const REFERENCE_LABEL_TOP_THRESHOLD_PERCENT = 8;
+const REFERENCE_LABEL_TOP_THRESHOLD_Y = (LINE_CHART_VIEWBOX_HEIGHT * REFERENCE_LABEL_TOP_THRESHOLD_PERCENT) / LINE_CHART_PERCENTAGE_SCALE;
 const LINE_CHART_CURVE_CONTROL_DIVISOR = 6;
 const NICE_STEP_ONE = 1;
 const NICE_STEP_ONE_AND_QUARTER = 1.25;
@@ -458,7 +460,7 @@ export class FdUiLineChartComponent {
             lineStyle: referenceLine.lineStyle ?? 'dashed',
             y,
             yPercent: `${(y / LINE_CHART_VIEWBOX_HEIGHT) * LINE_CHART_PERCENTAGE_SCALE}%`,
-            edge: aboveRange ? 'top' : belowRange ? 'bottom' : 'inside',
+            edge: aboveRange || y <= REFERENCE_LABEL_TOP_THRESHOLD_Y ? 'top' : belowRange ? 'bottom' : 'inside',
         };
     }
 

@@ -222,7 +222,7 @@ describe('FastingFacade session completion', () => {
     it('ends fasting and resets draft state when overview returns idle state', () => {
         facade.currentSession.set(activeSession);
         facade.selectMode('cyclic');
-        facade.selectProtocol('F20_4');
+        facade.selectProtocol('Fast20Eat4');
         facade.setCustomHours(CUSTOM_EXTENDED_HOURS);
         fastingService.end.mockReturnValueOnce(
             of({
@@ -240,7 +240,7 @@ describe('FastingFacade session completion', () => {
         expect(fastingService.getOverviewStrict).toHaveBeenCalledTimes(1);
         expect(facade.currentSession()).toBeNull();
         expect(facade.selectedMode()).toBe('intermittent');
-        expect(facade.selectedProtocol()).toBe('F16_8');
+        expect(facade.selectedProtocol()).toBe('Fast16Eat8');
         expect(facade.extendHours()).toBe(DEFAULT_EXTEND_HOURS);
     });
 
@@ -305,20 +305,20 @@ describe('FastingFacade setup modes and target changes', () => {
     afterEach(teardownFacade);
 
     it('keeps selected protocol valid when switching between setup modes', () => {
-        facade.selectProtocol('F20_4');
+        facade.selectProtocol('Fast20Eat4');
         facade.selectMode('extended');
 
-        expect(facade.selectedProtocol()).toBe('F24_0');
+        expect(facade.selectedProtocol()).toBe('Fast24');
 
         facade.selectMode('intermittent');
 
-        expect(facade.selectedProtocol()).toBe('F16_8');
+        expect(facade.selectedProtocol()).toBe('Fast16Eat8');
 
-        facade.selectProtocol('F18_6');
+        facade.selectProtocol('Fast18Eat6');
         facade.selectMode('cyclic');
         facade.selectMode('intermittent');
 
-        expect(facade.selectedProtocol()).toBe('F18_6');
+        expect(facade.selectedProtocol()).toBe('Fast18Eat6');
     });
 
     it('restores an intermittent protocol after switching from custom extended setup', () => {
@@ -328,14 +328,14 @@ describe('FastingFacade setup modes and target changes', () => {
 
         facade.selectMode('intermittent');
 
-        expect(facade.selectedProtocol()).toBe('F16_8');
+        expect(facade.selectedProtocol()).toBe('Fast16Eat8');
         expect(facade.plannedDurationHours()).toBe(DEFAULT_FASTING_HOURS);
     });
 
     it('reduces target locally without overview refresh', () => {
         facade.currentSession.set({
             ...activeSession,
-            protocol: 'F36_0',
+            protocol: 'Fast36',
             planType: 'Extended',
             occurrenceKind: 'FastDay',
             initialPlannedDurationHours: EXTENDED_PROTOCOL_HOURS,
@@ -344,7 +344,7 @@ describe('FastingFacade setup modes and target changes', () => {
         fastingService.reduceTarget.mockReturnValueOnce(
             of({
                 ...activeSession,
-                protocol: 'F36_0',
+                protocol: 'Fast36',
                 planType: 'Extended',
                 occurrenceKind: 'FastDay',
                 initialPlannedDurationHours: EXTENDED_PROTOCOL_HOURS,
@@ -452,7 +452,7 @@ function createActiveSession(): FastingSession {
         initialPlannedDurationHours: DEFAULT_FASTING_HOURS,
         addedDurationHours: 0,
         plannedDurationHours: DEFAULT_FASTING_HOURS,
-        protocol: 'F16_8',
+        protocol: 'Fast16Eat8',
         planType: 'Intermittent',
         occurrenceKind: 'FastingWindow',
         cyclicFastDays: null,

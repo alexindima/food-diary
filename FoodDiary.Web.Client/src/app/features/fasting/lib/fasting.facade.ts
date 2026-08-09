@@ -76,10 +76,10 @@ export class FastingFacade {
     public readonly insightsData = signal<FastingInsights>({ alerts: [], insights: [] });
     public readonly checkInSavedVersion = signal(0);
     public readonly selectedMode = signal<FastingMode>('intermittent');
-    public readonly selectedProtocol = signal<FastingProtocol>('F16_8');
+    public readonly selectedProtocol = signal<FastingProtocol>('Fast16Eat8');
     public readonly customHours = signal(DEFAULT_INTERMITTENT_FAST_HOURS);
     public readonly customIntermittentFastHours = signal(DEFAULT_INTERMITTENT_FAST_HOURS);
-    public readonly cyclicEatDayProtocol = signal<FastingProtocol>('F16_8');
+    public readonly cyclicEatDayProtocol = signal<FastingProtocol>('Fast16Eat8');
     public readonly cyclicFastDays = signal(1);
     public readonly cyclicEatDays = signal(1);
     public readonly cyclicUsesCustomPreset = signal(false);
@@ -219,12 +219,12 @@ export class FastingFacade {
         this.selectedMode.set(mode);
 
         if (mode === 'intermittent' && !this.isSelectedProtocolInCategory('intermittent')) {
-            this.selectedProtocol.set('F16_8');
+            this.selectedProtocol.set('Fast16Eat8');
             return;
         }
 
         if (mode === 'extended' && !this.isSelectedProtocolInCategory('extended')) {
-            this.selectedProtocol.set('F24_0');
+            this.selectedProtocol.set('Fast24');
         }
     }
 
@@ -581,10 +581,10 @@ export class FastingFacade {
 
     private resetDraftState(): void {
         this.selectedMode.set('intermittent');
-        this.selectedProtocol.set('F16_8');
+        this.selectedProtocol.set('Fast16Eat8');
         this.customHours.set(DEFAULT_INTERMITTENT_FAST_HOURS);
         this.customIntermittentFastHours.set(DEFAULT_INTERMITTENT_FAST_HOURS);
-        this.cyclicEatDayProtocol.set('F16_8');
+        this.cyclicEatDayProtocol.set('Fast16Eat8');
         this.cyclicFastDays.set(1);
         this.cyclicEatDays.set(1);
         this.cyclicUsesCustomPreset.set(false);

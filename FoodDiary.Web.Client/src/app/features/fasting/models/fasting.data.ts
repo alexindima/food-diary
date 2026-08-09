@@ -1,6 +1,6 @@
 import type { PageOf } from '../../../shared/models/page-of.data';
 
-export type FastingProtocol = 'F16_8' | 'F18_6' | 'F20_4' | 'F24_0' | 'F36_0' | 'F72_0' | 'Custom' | 'CustomIntermittent';
+export type FastingProtocol = 'Fast16Eat8' | 'Fast18Eat6' | 'Fast20Eat4' | 'Fast24' | 'Fast36' | 'Fast72' | 'Custom' | 'CustomIntermittent';
 export type FastingSessionStatus = 'Active' | 'Completed' | 'Interrupted' | 'Skipped' | 'Postponed';
 export type FastingPlanType = 'Intermittent' | 'Extended' | 'Cyclic';
 export type FastingOccurrenceKind = 'FastingWindow' | 'EatingWindow' | 'FastDay' | 'EatDay';
@@ -117,13 +117,13 @@ export type FastingHistoryQuery = {
 };
 
 export const FASTING_PROTOCOLS: FastingProtocolOption[] = [
-    { value: 'F16_8', labelKey: 'FASTING.PROTOCOL_16_8', hours: 16, category: 'intermittent' },
-    { value: 'F18_6', labelKey: 'FASTING.PROTOCOL_18_6', hours: 18, category: 'intermittent' },
-    { value: 'F20_4', labelKey: 'FASTING.PROTOCOL_20_4', hours: 20, category: 'intermittent' },
+    { value: 'Fast16Eat8', labelKey: 'FASTING.PROTOCOL_16_8', hours: 16, category: 'intermittent' },
+    { value: 'Fast18Eat6', labelKey: 'FASTING.PROTOCOL_18_6', hours: 18, category: 'intermittent' },
+    { value: 'Fast20Eat4', labelKey: 'FASTING.PROTOCOL_20_4', hours: 20, category: 'intermittent' },
     { value: 'CustomIntermittent', labelKey: 'FASTING.PROTOCOL_CUSTOM_INTERMITTENT', hours: 16, category: 'intermittent' },
-    { value: 'F24_0', labelKey: 'FASTING.PROTOCOL_24_0', hours: 24, category: 'extended' },
-    { value: 'F36_0', labelKey: 'FASTING.PROTOCOL_36_0', hours: 36, category: 'extended' },
-    { value: 'F72_0', labelKey: 'FASTING.PROTOCOL_72_0', hours: 72, category: 'extended' },
+    { value: 'Fast24', labelKey: 'FASTING.PROTOCOL_24_0', hours: 24, category: 'extended' },
+    { value: 'Fast36', labelKey: 'FASTING.PROTOCOL_36_0', hours: 36, category: 'extended' },
+    { value: 'Fast72', labelKey: 'FASTING.PROTOCOL_72_0', hours: 72, category: 'extended' },
     { value: 'Custom', labelKey: 'FASTING.PROTOCOL_CUSTOM', hours: 16, category: 'extended' },
 ];
 

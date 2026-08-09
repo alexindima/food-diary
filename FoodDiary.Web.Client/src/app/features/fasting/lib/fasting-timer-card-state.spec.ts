@@ -71,7 +71,7 @@ function registerIntermittentWindowTests(): void {
     describe('intermittent window sessions', () => {
         it('builds intermittent fasting-window state from cycle elapsed time', () => {
             const state = buildFastingTimerCardComputedState({
-                session: createSession({ planType: 'Intermittent', protocol: 'F16_8', initialPlannedDurationHours: HOURS_16 }),
+                session: createSession({ planType: 'Intermittent', protocol: 'Fast16Eat8', initialPlannedDurationHours: HOURS_16 }),
                 elapsedMs: hours(2),
                 translate,
             });
@@ -92,7 +92,7 @@ function registerIntermittentWindowTests(): void {
 
         it('builds intermittent eating-window state without fasting stage progress', () => {
             const state = buildFastingTimerCardComputedState({
-                session: createSession({ planType: 'Intermittent', protocol: 'F16_8', initialPlannedDurationHours: HOURS_16 }),
+                session: createSession({ planType: 'Intermittent', protocol: 'Fast16Eat8', initialPlannedDurationHours: HOURS_16 }),
                 elapsedMs: hours(HOURS_18),
                 translate,
             });
@@ -119,7 +119,7 @@ function registerIntermittentWindowTests(): void {
 
         it('wraps intermittent sessions into the next cycle day', () => {
             const state = buildFastingTimerCardComputedState({
-                session: createSession({ planType: 'Intermittent', protocol: 'F18_6', initialPlannedDurationHours: HOURS_18 }),
+                session: createSession({ planType: 'Intermittent', protocol: 'Fast18Eat6', initialPlannedDurationHours: HOURS_18 }),
                 elapsedMs: hours(HOURS_25),
                 translate,
             });
@@ -179,7 +179,7 @@ function registerExtendedTests(): void {
             const state = buildFastingTimerCardComputedState({
                 session: createSession({
                     planType: 'Extended',
-                    protocol: 'F24_0',
+                    protocol: 'Fast24',
                     initialPlannedDurationHours: 24,
                     plannedDurationHours: 24,
                     occurrenceKind: 'FastDay',
@@ -358,7 +358,7 @@ function createSession(overrides: Partial<FastingSession> = {}): FastingSession 
         initialPlannedDurationHours: HOURS_16,
         addedDurationHours: 0,
         plannedDurationHours: HOURS_16,
-        protocol: 'F16_8',
+        protocol: 'Fast16Eat8',
         planType: 'Intermittent',
         occurrenceKind: 'FastingWindow',
         cyclicFastDays: null,

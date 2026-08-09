@@ -78,11 +78,11 @@ describe('FastingControlsComponent setup controls', () => {
 
     it('delegates mode and protocol changes to the shared facade', () => {
         component['onModeChange']('extended');
-        component['onProtocolChange']('F36_0');
+        component['onProtocolChange']('Fast36');
         component['onCyclicPresetChange']('2:1');
 
         expect(facade.selectMode).toHaveBeenCalledWith('extended');
-        expect(facade.selectProtocol).toHaveBeenCalledWith('F36_0');
+        expect(facade.selectProtocol).toHaveBeenCalledWith('Fast36');
         expect(facade.setCyclicPreset).toHaveBeenCalledWith(2, 1);
     });
 
@@ -371,10 +371,10 @@ function createFacadeSignals(): Omit<FastingFacadeMock, keyof ReturnType<typeof 
         isActive: signal(false),
         currentSession: signal<FastingSession | null>(null),
         selectedMode: signal<'intermittent' | 'extended' | 'cyclic'>('intermittent'),
-        selectedProtocol: signal<FastingProtocol>('F16_8'),
+        selectedProtocol: signal<FastingProtocol>('Fast16Eat8'),
         customHours: signal(INTERMITTENT_FAST_HOURS),
         customIntermittentFastHours: signal(INTERMITTENT_FAST_HOURS),
-        cyclicEatDayProtocol: signal<FastingProtocol>('F16_8'),
+        cyclicEatDayProtocol: signal<FastingProtocol>('Fast16Eat8'),
         cyclicFastDays: signal(1),
         cyclicEatDays: signal(1),
         cyclicUsesCustomPreset: signal(false),

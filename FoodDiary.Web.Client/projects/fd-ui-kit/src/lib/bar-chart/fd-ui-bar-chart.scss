@@ -229,20 +229,24 @@
 
 .fd-ui-bar-chart__reference-line span {
     position: absolute;
+    top: 0;
     right: var(--fd-space-xs);
-    bottom: var(--fd-space-xxs);
-    max-width: 60%;
+    width: max-content;
+    max-width: calc(100% - var(--fd-space-lg));
     overflow: hidden;
-    color: var(--fd-color-text);
-    font-size: var(--fd-text-caption-size);
-    line-height: var(--fd-text-caption-line-height);
+    color: var(--fd-bar-chart-reference-color);
+    font-style: italic;
     text-overflow: ellipsis;
+    transform: translateY(calc(-100% - (var(--fd-space-xxs) / 2)));
     white-space: nowrap;
+}
+
+.fd-ui-bar-chart__reference-line--label-at-top span {
+    transform: translateY(calc(var(--fd-space-xxs) / 2));
 }
 
 .fd-ui-bar-chart__reference-line--outside span {
     right: auto;
-    bottom: auto;
     left: calc(100% + var(--fd-space-xs));
     max-width: var(--fd-bar-chart-reference-label-space);
     white-space: pre-line;

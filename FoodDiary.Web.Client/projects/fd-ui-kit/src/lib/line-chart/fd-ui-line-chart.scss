@@ -77,12 +77,16 @@
 
 .fd-ui-line-chart__reference-label {
     position: absolute;
-    right: 0;
+    right: var(--fd-space-xs);
     z-index: 2;
-    max-width: 50%;
+    width: max-content;
+    max-width: calc(100% - var(--fd-space-lg));
+    overflow: hidden;
     color: var(--fd-line-chart-reference-color);
+    font-style: italic;
     line-height: 1.4;
     pointer-events: none;
+    text-overflow: ellipsis;
     transform: translateY(calc(-100% - (var(--fd-space-xxs) / 2)));
     white-space: nowrap;
 
