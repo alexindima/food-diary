@@ -79,7 +79,8 @@ function buildMealStructure(statistics: MappedStatistics | null): StatisticsMeal
     ];
     const periodCalories = source.reduce((sum, item) => sum + item.calories, 0);
     const trackedDayCount = totals.trackedDayCount;
-    const items = source.map(item => buildMealStructureItem(item, trackedDayCount, periodCalories));
+    const percentages = allocatePercentages(source.map(item => item.calories));
+    const items = source.map((item, index) => buildMealStructureItem(item, trackedDayCount, percentages[index] ?? 0));
     const dominant = getDominantMeal(items);
 
     return {
@@ -107,13 +108,37 @@ function buildEmptyMealStructure(): StatisticsMealStructureData {
 function buildMealStructureItem(
     item: { key: StatisticsMealStructureData['items'][number]['key']; calories: number },
     trackedDayCount: number,
-    periodCalories: number,
+    percentage: number,
 ): StatisticsMealStructureData['items'][number] {
     return {
         ...item,
         calories: trackedDayCount <= 0 ? 0 : item.calories / trackedDayCount,
-        percentage: periodCalories <= 0 ? 0 : Math.round((item.calories / periodCalories) * PERCENT),
+        percentage,
     };
+}
+
+function allocatePercentages(values: readonly number[]): number[] {
+    const total = values.reduce((sum, value) => sum + value, 0);
+    if (total <= 0) {
+        return values.map(() => 0);
+    }
+
+    const exact = values.map(value => (value / total) * PERCENT);
+    const result = exact.map(Math.floor);
+    const remainder = PERCENT - result.reduce((sum, value) => sum + value, 0);
+    const indexesByRemainder = exact
+        .map((value, index) => ({ index, remainder: value - Math.floor(value) }))
+        .sort((left, right) => {
+            const difference = right.remainder - left.remainder;
+            return difference !== 0 ? difference : left.index - right.index;
+        });
+
+    for (let index = 0; index < remainder; index += 1) {
+        const target = indexesByRemainder[index].index;
+        result[target] = result[target] + 1;
+    }
+
+    return result;
 }
 
 function getDominantMeal(items: StatisticsMealStructureData['items']): StatisticsMealStructureData['items'][number] | null {

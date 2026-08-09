@@ -90,6 +90,7 @@ describe('FdUiBarChartComponent', () => {
         expect(host().querySelectorAll('.fd-ui-bar-chart__categorical-labels span')).toHaveLength(2);
         expect(host().querySelectorAll('.fd-ui-bar-chart__categorical-bar')).toHaveLength(1);
         expect(host().querySelectorAll('.fd-ui-bar-chart__categorical-segment')).toHaveLength(2);
+        expect(host().querySelector('.fd-ui-bar-chart__categorical-baseline')).not.toBeNull();
         expect(getText('.fd-ui-bar-chart__axis-unit')).toBe('kcal');
         expect(getText('.fd-ui-bar-chart__axis-label')).toBe('2500');
         expect(getText('.fd-ui-bar-chart__reference-line')).toBe('Goal 2,258');

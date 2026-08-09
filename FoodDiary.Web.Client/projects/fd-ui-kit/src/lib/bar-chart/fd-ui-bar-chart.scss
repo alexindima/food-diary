@@ -144,6 +144,16 @@
     border-top: var(--fd-border-subtle);
 }
 
+.fd-ui-bar-chart__categorical-baseline {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    border-top: var(--fd-border-default);
+    pointer-events: none;
+}
+
 .fd-ui-bar-chart__categories {
     z-index: 1;
     display: grid;

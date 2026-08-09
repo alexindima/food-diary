@@ -85,3 +85,36 @@ describe('statistics dashboard card mapper', () => {
         ]);
     });
 });
+
+describe('statistics meal structure mapper', () => {
+    it('allocates rounded meal shares to exactly one hundred percent', () => {
+        const statistics: MappedStatistics = {
+            date: [new Date('2026-08-09T00:00:00Z')],
+            calories: [792],
+            nutrientsStatistic: { proteins: [0], fats: [0], carbs: [0], fiber: [0] },
+            aggregatedNutrients: { proteins: 0, fats: 0, carbs: 0, fiber: 0 },
+            mealStructure: {
+                breakfastCalories: 58,
+                lunchCalories: 149,
+                dinnerCalories: 312,
+                snackCalories: 273,
+                mealCount: 4,
+                trackedDayCount: 1,
+            },
+        };
+
+        const view = buildStatisticsDashboardCardsView({
+            statistics,
+            user: USER,
+            weightPoints: [],
+            waistPoints: [],
+            quantizationDays: 1,
+            periodDays: 1,
+            formatDate: date => date.toISOString().slice(0, 10),
+        });
+
+        const percentages = view.mealStructure.items.map(item => item.percentage);
+        expect(percentages).toEqual([7, 19, 39, 35]);
+        expect(percentages.reduce((sum, value) => sum + value, 0)).toBe(100);
+    });
+});

@@ -38,6 +38,11 @@
         color: var(--fd-color-warning);
     }
 
+    &__streak-value {
+        font-size: var(--fd-text-title-md-size);
+        white-space: nowrap;
+    }
+
     &__timeline {
         display: grid;
         grid-auto-columns: minmax(var(--fd-space-xl), 1fr);
