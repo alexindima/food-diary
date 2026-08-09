@@ -5,7 +5,7 @@
                     "hostedServices":  9,
                     "httpClients":  10,
                     "webhooks":  20,
-                    "recurringJobRegistrations":  13
+                    "recurringJobRegistrations":  14
                 },
     "composeServices":  [
                             {
@@ -347,6 +347,11 @@
                      }
                  ],
     "recurringJobRegistrations":  [
+                                      {
+                                          "api":  "recurringJobManager.AddOrUpdate",
+                                          "detail":  "RecurringJobIds.AchievementEvaluationOutbox",
+                                          "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+                                      },
                                       {
                                           "api":  "recurringJobManager.AddOrUpdate",
                                           "detail":  "RecurringJobIds.BillingRenewal",

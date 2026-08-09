@@ -11,6 +11,7 @@ public static class RecurringJobIds {
     public const string ImageObjectDeletionOutbox = "image-object-deletion-outbox";
     public const string EmailOutbox = "email-outbox";
     public const string NotificationWebPushOutbox = "notification-web-push-outbox";
+    public const string AchievementEvaluationOutbox = "achievement-evaluation-outbox";
     public const string UserLoginEventsCleanup = "user-login-events-cleanup";
     public const string MarketingAttributionCleanup = "marketing-attribution-cleanup";
     public const string ClientTaskReminders = "client-task-reminders";
@@ -26,6 +27,7 @@ public static class RecurringJobIds {
         ImageObjectDeletionOutbox,
         EmailOutbox,
         NotificationWebPushOutbox,
+        AchievementEvaluationOutbox,
         UserLoginEventsCleanup,
         MarketingAttributionCleanup,
         ClientTaskReminders,

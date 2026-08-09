@@ -22,6 +22,7 @@ const ADMIN_PAGE_HEADERS: Readonly<Record<string, AdminPageHeader>> = {
     '/email-templates': { title: 'Email templates', subtitle: 'Create and maintain transactional email content.' },
     '/mail-inbox': { title: 'Mail inbox', subtitle: 'Inspect inbound messages and DMARC reports.' },
     '/lessons': { title: 'Lessons', subtitle: 'Publish and maintain nutrition academy content.' },
+    '/achievements': { title: 'Achievements', subtitle: 'Create rewards and manage safe progress conditions.' },
     '/moderation': { title: 'Moderation', subtitle: 'Review reports and resolve content issues.' },
 };
 
@@ -70,6 +71,7 @@ export class AppComponent {
                 { id: 'email-templates', icon: 'mail', label: 'Email templates', route: '/email-templates' },
                 { id: 'mail-inbox', icon: 'inbox', label: 'Mail inbox', route: '/mail-inbox' },
                 { id: 'lessons', icon: 'school', label: 'Lessons', route: '/lessons' },
+                { id: 'achievements', icon: 'emoji_events', label: 'Achievements', route: '/achievements' },
                 { id: 'moderation', icon: 'gavel', label: 'Moderation', route: '/moderation' },
             ],
         },

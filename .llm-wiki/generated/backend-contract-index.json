@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "contracts":  1000,
+                    "contracts":  1013,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  6969,
-                    "productionConsumerEdges":  4247,
-                    "testConsumerEdges":  2722,
-                    "consumedContracts":  1000,
+                    "consumerEdges":  7039,
+                    "productionConsumerEdges":  4298,
+                    "testConsumerEdges":  2741,
+                    "consumedContracts":  1013,
                     "unconsumedContracts":  0
                 },
     "contracts":  [
@@ -167,6 +167,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Presentation.Api/Features/FavoriteRecipes/Requests/AddFavoriteRecipeHttpRequest.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "AdminAchievementDefinitionHttpResponse",
+                          "roles":  [
+                                        "Response"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminAchievementDefinitionHttpResponse.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -1623,6 +1639,38 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Presentation.Api/Features/ContentReports/Responses/ContentReportHttpResponse.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "CreateAdminAchievementDefinitionCommand",
+                          "roles":  [
+                                        "Command"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "CreateAdminAchievementDefinitionHttpRequest",
+                          "roles":  [
+                                        "Request"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Presentation.Api/Features/Admin/Requests/CreateAdminAchievementDefinitionHttpRequest.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -3479,6 +3527,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "GetAdminAchievementDefinitionsQuery",
+                          "roles":  [
+                                        "Query"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -5895,6 +5959,102 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Presentation.Api/Features/Hydration/Responses/HydrationEntryHttpResponse.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "IAchievementAwardService",
+                          "roles":  [
+                                        "Service"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application/Gamification/Common/IAchievementAwardService.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "IAchievementDefinitionAdministrationService",
+                          "roles":  [
+                                        "Service"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application/Gamification/Common/IAchievementDefinitionAdministrationService.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "IAchievementDefinitionStore",
+                          "roles":  [
+                                        "Other"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "IAchievementEvaluationOutbox",
+                          "roles":  [
+                                        "Other"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "IAchievementEvaluationOutboxProcessor",
+                          "roles":  [
+                                        "Other"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "IAchievementReconciliationHandler",
+                          "roles":  [
+                                        "Handler"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -11695,6 +11855,22 @@
                           "ambiguous":  false
                       },
                       {
+                          "name":  "IUserAchievementStore",
+                          "roles":  [
+                                        "Other"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Abstractions/Achievements/Common/IUserAchievementStore.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
                           "name":  "IUserAdministrationReadService",
                           "roles":  [
                                         "Service"
@@ -14752,6 +14928,38 @@
                           "ambiguous":  false
                       },
                       {
+                          "name":  "UpdateAdminAchievementDefinitionCommand",
+                          "roles":  [
+                                        "Command"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "UpdateAdminAchievementDefinitionHttpRequest",
+                          "roles":  [
+                                        "Request"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Presentation.Api/Features/Admin/Requests/UpdateAdminAchievementDefinitionHttpRequest.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
                           "name":  "UpdateAdminLessonCommand",
                           "roles":  [
                                         "Command"
@@ -16718,6 +16926,45 @@
                               "consumerPath":  "tests/FoodDiary.Web.Api.IntegrationTests/AuthAndRecipesFlowTests.cs",
                               "isTest":  true,
                               "referenceCount":  1
+                          },
+                          {
+                              "contract":  "AdminAchievementDefinitionHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminAchievementDefinitionHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/AdminAchievementDefinitionsController.cs",
+                              "isTest":  false,
+                              "referenceCount":  3
+                          },
+                          {
+                              "contract":  "AdminAchievementDefinitionHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminAchievementDefinitionHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminAchievementDefinitionsHttpMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "AdminAchievementDefinitionHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminAchievementDefinitionHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdminAchievementDefinitionsControllerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "AdminAiPromptHttpResponse",
@@ -21825,6 +22072,110 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ContentReportRecipeLikeControllerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "CreateAdminAchievementDefinitionCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "CreateAdminAchievementDefinitionCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandValidator.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "CreateAdminAchievementDefinitionCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminAchievementDefinitionsHttpMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "CreateAdminAchievementDefinitionCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "CreateAdminAchievementDefinitionCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdminAchievementDefinitionsControllerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "CreateAdminAchievementDefinitionHttpRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Requests/CreateAdminAchievementDefinitionHttpRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/AdminAchievementDefinitionsController.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "CreateAdminAchievementDefinitionHttpRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Requests/CreateAdminAchievementDefinitionHttpRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminAchievementDefinitionsHttpMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "CreateAdminAchievementDefinitionHttpRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Requests/CreateAdminAchievementDefinitionHttpRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdminAchievementDefinitionsControllerTests.cs",
                               "isTest":  true,
                               "referenceCount":  1
                           },
@@ -29742,6 +30093,45 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "GetAdminAchievementDefinitionsQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "GetAdminAchievementDefinitionsQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminAchievementDefinitionsHttpMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "GetAdminAchievementDefinitionsQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdminAchievementDefinitionsControllerTests.cs",
                               "isTest":  true,
                               "referenceCount":  1
                           },
@@ -39392,6 +39782,435 @@
                               "referenceCount":  3
                           },
                           {
+                              "contract":  "IAchievementAwardService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Gamification/Common/IAchievementAwardService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementAwardService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Gamification/Common/IAchievementAwardService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Gamification/Services/AchievementAwardService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementAwardService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Gamification/Common/IAchievementAwardService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Gamification/Services/AchievementReconciliationHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementAwardService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Gamification/Common/IAchievementAwardService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Gamification/Services/GamificationReadService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementAwardService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Gamification/Common/IAchievementAwardService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "IAchievementAwardService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Gamification/Common/IAchievementAwardService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  3
+                          },
+                          {
+                              "contract":  "IAchievementDefinitionAdministrationService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Gamification/Common/IAchievementDefinitionAdministrationService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementDefinitionAdministrationService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Gamification/Common/IAchievementDefinitionAdministrationService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementDefinitionAdministrationService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Gamification/Common/IAchievementDefinitionAdministrationService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementDefinitionAdministrationService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Gamification/Common/IAchievementDefinitionAdministrationService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementDefinitionAdministrationService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Gamification/Common/IAchievementDefinitionAdministrationService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Gamification/Services/AchievementDefinitionAdministrationService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementDefinitionStore",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Gamification/Services/AchievementAwardService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementDefinitionStore",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Gamification/Services/AchievementDefinitionAdministrationService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementDefinitionStore",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementDefinitionStore",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementDefinitionStore.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementDefinitionStore",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Gamification/AchievementAwardServiceTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementDefinitionStore",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  6
+                          },
+                          {
+                              "contract":  "IAchievementEvaluationOutbox",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementEvaluationOutbox",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Consumptions/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementEvaluationOutbox",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Consumptions/Common/NullAchievementEvaluationOutbox.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementEvaluationOutbox",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementEvaluationOutbox",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutbox.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementEvaluationOutbox",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.CreateCommandTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "IAchievementEvaluationOutbox",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "IAchievementEvaluationOutbox",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.RepeatAndDeleteCommandTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "IAchievementEvaluationOutboxProcessor",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementEvaluationOutboxProcessor",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementEvaluationOutboxProcessor",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementEvaluationOutboxProcessor",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementReconciliationHandler",
+                              "roles":  [
+                                            "Handler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementReconciliationHandler",
+                              "roles":  [
+                                            "Handler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Gamification/Services/AchievementReconciliationHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementReconciliationHandler",
+                              "roles":  [
+                                            "Handler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAchievementReconciliationHandler",
+                              "roles":  [
+                                            "Handler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserAchievementStoreIntegrationTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
+                          },
+                          {
                               "contract":  "IAdminAiUsageReadService",
                               "roles":  [
                                             "Service"
@@ -44847,6 +45666,19 @@
                                                       "FoodDiary.Application/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Commands/CreateAdminLesson/CreateAdminLessonCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -44965,6 +45797,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -46602,6 +47447,19 @@
                                                       "FoodDiary.Application/Common/Abstractions/Messaging/ICommandHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Commands/CreateAdminLesson/CreateAdminLessonCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -46720,6 +47578,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -49048,7 +49919,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommandHandler.cs",
                               "isTest":  false,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "ICurrentUserAccessService",
@@ -49087,7 +49958,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
                               "isTest":  false,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "ICurrentUserAccessService",
@@ -56690,6 +57561,19 @@
                                                       "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Domain/ValueObjects/Ids/UserAchievementId.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IEntityId",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Domain/ValueObjects/Ids/UserId.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -60969,7 +61853,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommandHandler.cs",
                               "isTest":  false,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IImageAssetAccessService",
@@ -64087,6 +64971,19 @@
                                                       "FoodDiary.Application/Consumptions/Common/IMealActivityReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Gamification/Services/AchievementReconciliationHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IMealActivityReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Consumptions/Common/IMealActivityReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Gamification/Services/GamificationReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -64103,6 +65000,19 @@
                               "consumerPath":  "FoodDiary.Application/WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IMealActivityReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Consumptions/Common/IMealActivityReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IMealConsumptionReadRepository",
@@ -64219,7 +65129,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommandHandler.cs",
                               "isTest":  false,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IMealNutritionService",
@@ -64232,7 +65142,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
                               "isTest":  false,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IMealNutritionService",
@@ -64843,7 +65753,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
                               "isTest":  false,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IMealReadRepository",
@@ -65077,7 +65987,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommandHandler.cs",
                               "isTest":  false,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IMealWriteRepository",
@@ -65103,7 +66013,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
                               "isTest":  false,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IMealWriteRepository",
@@ -69494,6 +70404,19 @@
                                                       "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxMessage.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxMessage.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IOutboxMessage",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxMessage.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxMessage.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -71405,6 +72328,19 @@
                                                       "FoodDiary.Application/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Queries/GetAdminAiPrompts/GetAdminAiPromptsQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -72850,6 +73786,19 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Behaviors/BehaviorTests.cs",
                               "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
+                              "isTest":  false,
                               "referenceCount":  1
                           },
                           {
@@ -74540,7 +75489,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommandHandler.cs",
                               "isTest":  false,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IRecentItemUsageRecorder",
@@ -79387,6 +80336,19 @@
                                                       "Shared/FoodDiary.Mediator/ISender.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/AdminAchievementDefinitionsController.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ISender",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "Shared/FoodDiary.Mediator/ISender.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/AdminAcquisitionController.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -83420,6 +84382,58 @@
                               "consumerPath":  "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
                               "isTest":  true,
                               "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserAchievementStore",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IUserAchievementStore.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Gamification/Services/AchievementAwardService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserAchievementStore",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IUserAchievementStore.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserAchievementStore",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IUserAchievementStore.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/Persistence/Achievements/UserAchievementStore.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserAchievementStore",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Achievements/Common/IUserAchievementStore.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Gamification/AchievementAwardServiceTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IUserAdministrationReadService",
@@ -101035,6 +102049,110 @@
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/NotificationsControllerTests.cs",
                               "isTest":  true,
                               "referenceCount":  2
+                          },
+                          {
+                              "contract":  "UpdateAdminAchievementDefinitionCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "UpdateAdminAchievementDefinitionCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandValidator.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "UpdateAdminAchievementDefinitionCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminAchievementDefinitionsHttpMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "UpdateAdminAchievementDefinitionCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "UpdateAdminAchievementDefinitionCommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdminAchievementDefinitionsControllerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "UpdateAdminAchievementDefinitionHttpRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Requests/UpdateAdminAchievementDefinitionHttpRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/AdminAchievementDefinitionsController.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "UpdateAdminAchievementDefinitionHttpRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Requests/UpdateAdminAchievementDefinitionHttpRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminAchievementDefinitionsHttpMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "UpdateAdminAchievementDefinitionHttpRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Admin/Requests/UpdateAdminAchievementDefinitionHttpRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdminAchievementDefinitionsControllerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
                           },
                           {
                               "contract":  "UpdateAdminLessonCommand",

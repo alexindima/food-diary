@@ -154,6 +154,51 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task AdminAchievementDefinitions_EnforcesAuthenticationAndAdminRole() {
+        HttpClient anonymousClient = testAuthFactory.CreateClient();
+        HttpResponseMessage anonymous = await anonymousClient.GetAsync("/api/v1/admin/achievement-definitions");
+
+        HttpClient userClient = testAuthFactory.CreateClient();
+        userClient.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        userClient.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+        HttpResponseMessage forbidden = await userClient.GetAsync("/api/v1/admin/achievement-definitions");
+
+        Assert.Multiple(
+            () => Assert.Equal(HttpStatusCode.Unauthorized, anonymous.StatusCode),
+            () => Assert.Equal(HttpStatusCode.Forbidden, forbidden.StatusCode));
+    }
+
+    [Fact]
+    public async Task AdminAchievementDefinitions_WithNullKey_ReturnsValidationContract() {
+        HttpClient client = testAuthFactory.CreateClient();
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.RoleHeader, PresentationRoleNames.Admin);
+
+        HttpResponseMessage response = await client.PostAsJsonAsync(
+            "/api/v1/admin/achievement-definitions",
+            new {
+                key = (string?)null,
+                category = "habits",
+                metric = "TotalMeals",
+                threshold = 10,
+                titleRu = "Название",
+                titleEn = "Title",
+                descriptionRu = "Описание",
+                descriptionEn = "Description",
+                icon = "trophy",
+                sortOrder = 10,
+                isActive = true,
+            });
+        ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Multiple(
+            () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
+            () => Assert.NotNull(payload),
+            () => Assert.Equal("Validation.Invalid", payload?.Error));
+    }
+
+    [Fact]
     public async Task AdminUserSetPassword_WithAdminRole_ReplacesUserPassword() {
         HttpClient client = testAuthFactory.CreateClient();
         string email = $"admin-password-{Guid.NewGuid():N}@example.com";

@@ -6,14 +6,14 @@
             @for (badge of earnedBadges(); track badge.key) {
                 <div class="gamification__badge gamification__badge--earned fd-stack fd-align-center fd-gap-card-header">
                     <fd-ui-icon class="gamification__badge-icon" [name]="badge.icon" />
-                    <span class="gamification__badge-label fd-ui-overline">{{ badge.nameKey | translate }}</span>
+                    <span class="gamification__badge-label fd-ui-overline">{{ badge.name || (badge.nameKey | translate) }}</span>
                     <span class="gamification__badge-threshold fd-ui-meta-text">{{ badge.threshold }}</span>
                 </div>
             }
             @for (badge of lockedBadges(); track badge.key) {
                 <div class="gamification__badge gamification__badge--locked fd-stack fd-align-center fd-gap-card-header">
                     <fd-ui-icon class="gamification__badge-icon" [name]="badge.icon" />
-                    <span class="gamification__badge-label fd-ui-overline">{{ badge.nameKey | translate }}</span>
+                    <span class="gamification__badge-label fd-ui-overline">{{ badge.name || (badge.nameKey | translate) }}</span>
                     <span class="gamification__badge-threshold fd-ui-meta-text">{{ badge.threshold }}</span>
                 </div>
             }

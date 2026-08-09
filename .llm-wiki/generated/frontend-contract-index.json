@@ -1,18 +1,32 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "components":  412,
+                    "components":  413,
                     "componentsWithoutDirectSpecs":  121,
                     "inputs":  1274,
                     "outputs":  398,
-                    "apiCalls":  216,
-                    "templatesWithTranslations":  255,
-                    "translationKeys":  1332,
-                    "consumerEdges":  927,
+                    "apiCalls":  219,
+                    "templatesWithTranslations":  256,
+                    "translationKeys":  1351,
+                    "consumerEdges":  931,
                     "consumedComponents":  278,
-                    "unconsumedComponents":  133
+                    "unconsumedComponents":  134
                 },
     "components":  [
+                       {
+                           "class":  "AdminAchievementsComponent",
+                           "selector":  "fd-admin-achievements",
+                           "feature":  "admin-achievements",
+                           "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.ts",
+                           "templatePath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.html",
+                           "inputs":  [
+
+                                      ],
+                           "outputs":  [
+
+                                       ],
+                           "specPath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.spec.ts"
+                       },
                        {
                            "class":  "AdminAcquisitionComponent",
                            "selector":  "fd-admin-acquisition",
@@ -13295,6 +13309,42 @@
                    ],
     "apiCalls":  [
                      {
+                         "feature":  "admin-achievements",
+                         "method":  "GET",
+                         "responseType":  "AdminAchievementDefinition[]",
+                         "urlExpression":  "this.baseUrl",
+                         "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/api/admin-achievements.service.ts",
+                         "line":  18,
+                         "publicMethod":  "getAll",
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  "`${environment.apiUrls.auth.replace(/\\/auth$/, \u0027\u0027)}/admin/achievement-definitions`",
+                         "resolvedUrlExpression":  "this.baseUrl"
+                     },
+                     {
+                         "feature":  "admin-achievements",
+                         "method":  "POST",
+                         "responseType":  "AdminAchievementDefinition",
+                         "urlExpression":  "this.baseUrl",
+                         "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/api/admin-achievements.service.ts",
+                         "line":  22,
+                         "publicMethod":  "create",
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  "`${environment.apiUrls.auth.replace(/\\/auth$/, \u0027\u0027)}/admin/achievement-definitions`",
+                         "resolvedUrlExpression":  "this.baseUrl"
+                     },
+                     {
+                         "feature":  "admin-achievements",
+                         "method":  "PUT",
+                         "responseType":  "AdminAchievementDefinition",
+                         "urlExpression":  "`${this.baseUrl}/${id}`",
+                         "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/api/admin-achievements.service.ts",
+                         "line":  26,
+                         "publicMethod":  "update",
+                         "transport":  "HttpClient",
+                         "baseUrlExpression":  "`${environment.apiUrls.auth.replace(/\\/auth$/, \u0027\u0027)}/admin/achievement-definitions`",
+                         "resolvedUrlExpression":  "`${this.baseUrl}/${id}`"
+                     },
+                     {
                          "feature":  "admin-acquisition",
                          "method":  "GET",
                          "responseType":  "CompatibleMarketingAttributionSummary",
@@ -15888,6 +15938,31 @@
                      }
                  ],
     "translationUsage":  [
+                             {
+                                 "feature":  "admin-achievements",
+                                 "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.html",
+                                 "keys":  [
+                                              "ADMIN_ACHIEVEMENTS.COMPLETE_FIELDS",
+                                              "ADMIN_ACHIEVEMENTS.DEFINITIONS",
+                                              "ADMIN_ACHIEVEMENTS.EMPTY",
+                                              "ADMIN_ACHIEVEMENTS.ENABLED",
+                                              "ADMIN_ACHIEVEMENTS.FIELDS.CATEGORY",
+                                              "ADMIN_ACHIEVEMENTS.FIELDS.DESCRIPTION_EN",
+                                              "ADMIN_ACHIEVEMENTS.FIELDS.DESCRIPTION_RU",
+                                              "ADMIN_ACHIEVEMENTS.FIELDS.ICON",
+                                              "ADMIN_ACHIEVEMENTS.FIELDS.KEY",
+                                              "ADMIN_ACHIEVEMENTS.FIELDS.METRIC",
+                                              "ADMIN_ACHIEVEMENTS.FIELDS.SORT_ORDER",
+                                              "ADMIN_ACHIEVEMENTS.FIELDS.THRESHOLD",
+                                              "ADMIN_ACHIEVEMENTS.FIELDS.TITLE_EN",
+                                              "ADMIN_ACHIEVEMENTS.FIELDS.TITLE_RU",
+                                              "ADMIN_ACHIEVEMENTS.HELP",
+                                              "ADMIN_ACHIEVEMENTS.LOADING",
+                                              "ADMIN_ACHIEVEMENTS.NEW",
+                                              "ADMIN_ACHIEVEMENTS.RESET",
+                                              "ADMIN_ACHIEVEMENTS.SAVE"
+                                          ]
+                             },
                              {
                                  "feature":  "admin-billing",
                                  "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-payments-table.html",
@@ -21133,6 +21208,24 @@
                                                  "ariaLabel",
                                                  "fill",
                                                  "icon",
+                                                 "variant"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiButtonComponent",
+                              "selector":  "fd-ui-button",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+                              "consumerFeature":  "admin-achievements",
+                              "consumerPath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.html",
+                              "occurrences":  3,
+                              "inputsUsed":  [
+                                                 "disabled",
+                                                 "disabledReason",
+                                                 "loading",
+                                                 "type",
                                                  "variant"
                                              ],
                               "outputsHandled":  [
@@ -27671,6 +27764,21 @@
                               "component":  "FdUiInputComponent",
                               "selector":  "fd-ui-input",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
+                              "consumerFeature":  "admin-achievements",
+                              "consumerPath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.html",
+                              "occurrences":  7,
+                              "inputsUsed":  [
+                                                 "label",
+                                                 "type"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiInputComponent",
+                              "selector":  "fd-ui-input",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
                               "consumerFeature":  "admin-billing",
                               "consumerPath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-filters.html",
                               "occurrences":  4,
@@ -29596,6 +29704,21 @@
                               "component":  "FdUiSelectComponent",
                               "selector":  "fd-ui-select",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+                              "consumerFeature":  "admin-achievements",
+                              "consumerPath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "label",
+                                                 "options"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiSelectComponent",
+                              "selector":  "fd-ui-select",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
                               "consumerFeature":  "admin-lessons",
                               "consumerPath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.html",
                               "occurrences":  3,
@@ -30043,6 +30166,20 @@
                               "occurrences":  2,
                               "inputsUsed":  [
                                                  "tabs"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiTextareaComponent",
+                              "selector":  "fd-ui-textarea",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
+                              "consumerFeature":  "admin-achievements",
+                              "consumerPath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.html",
+                              "occurrences":  2,
+                              "inputsUsed":  [
+                                                 "label"
                                              ],
                               "outputsHandled":  [
 

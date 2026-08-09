@@ -1,13 +1,13 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "domainTypes":  241,
-                    "entities":  72,
-                    "valueObjects":  106,
-                    "invariants":  363,
-                    "persistenceMappings":  77,
-                    "indexes":  138,
-                    "relationships":  93
+                    "domainTypes":  246,
+                    "entities":  74,
+                    "valueObjects":  108,
+                    "invariants":  373,
+                    "persistenceMappings":  80,
+                    "indexes":  144,
+                    "relationships":  94
                 },
     "domainTypes":  [
                         {
@@ -100,6 +100,13 @@
                             "role":  "domain-type",
                             "path":  "FoodDiary.Domain/Events/UserRestoredDomainEvent.cs",
                             "line":  5
+                        },
+                        {
+                            "area":  "FoodDiary",
+                            "name":  "AchievementDefinition",
+                            "role":  "entity",
+                            "path":  "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
+                            "line":  6
                         },
                         {
                             "area":  "FoodDiary",
@@ -523,6 +530,13 @@
                         },
                         {
                             "area":  "FoodDiary",
+                            "name":  "UserAchievement",
+                            "role":  "entity",
+                            "path":  "FoodDiary.Domain/Entities/Achievements/UserAchievement.cs",
+                            "line":  6
+                        },
+                        {
+                            "area":  "FoodDiary",
                             "name":  "UserLessonProgress",
                             "role":  "entity",
                             "path":  "FoodDiary.Domain/Entities/Content/UserLessonProgress.cs",
@@ -604,6 +618,13 @@
                             "role":  "entity",
                             "path":  "FoodDiary.Domain/Entities/Tracking/WeightGoal.cs",
                             "line":  7
+                        },
+                        {
+                            "area":  "FoodDiary",
+                            "name":  "AchievementMetric",
+                            "role":  "enum",
+                            "path":  "FoodDiary.Domain/Enums/AchievementMetric.cs",
+                            "line":  2
                         },
                         {
                             "area":  "FoodDiary",
@@ -862,6 +883,13 @@
                             "name":  "WeightGoalStatus",
                             "role":  "enum",
                             "path":  "FoodDiary.Domain/Enums/WeightGoalStatus.cs",
+                            "line":  2
+                        },
+                        {
+                            "area":  "FoodDiary",
+                            "name":  "AchievementDefinitionId",
+                            "role":  "value-object",
+                            "path":  "FoodDiary.Domain/ValueObjects/Ids/AchievementDefinitionId.cs",
                             "line":  2
                         },
                         {
@@ -1398,6 +1426,13 @@
                         },
                         {
                             "area":  "FoodDiary",
+                            "name":  "UserAchievementId",
+                            "role":  "value-object",
+                            "path":  "FoodDiary.Domain/ValueObjects/Ids/UserAchievementId.cs",
+                            "line":  4
+                        },
+                        {
+                            "area":  "FoodDiary",
                             "name":  "UserActivityGoals",
                             "role":  "value-object",
                             "path":  "FoodDiary.Domain/ValueObjects/UserActivityGoals.cs",
@@ -1699,6 +1734,76 @@
                         }
                     ],
     "invariants":  [
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentOutOfRangeException",
+                           "message":  "throw new ArgumentOutOfRangeException(nameof(metric))",
+                           "path":  "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
+                           "line":  80
+                       },
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentOutOfRangeException",
+                           "message":  "throw new ArgumentOutOfRangeException(nameof(threshold))",
+                           "path":  "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
+                           "line":  84
+                       },
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentOutOfRangeException",
+                           "message":  "throw new ArgumentOutOfRangeException(nameof(sortOrder))",
+                           "path":  "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
+                           "line":  88
+                       },
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentException",
+                           "message":  "throw new ArgumentException(\"Only ASCII letters, digits, underscores and hyphens are allowed.\", paramName)",
+                           "path":  "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
+                           "line":  107
+                       },
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentException",
+                           "message":  "throw new ArgumentException(\"Value is required.\", paramName)",
+                           "path":  "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
+                           "line":  112
+                       },
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentOutOfRangeException",
+                           "message":  "throw new ArgumentOutOfRangeException(paramName)",
+                           "path":  "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
+                           "line":  118
+                       },
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentException",
+                           "message":  "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
+                           "path":  "FoodDiary.Domain/Entities/Achievements/UserAchievement.cs",
+                           "line":  28
+                       },
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentOutOfRangeException",
+                           "message":  "throw new ArgumentOutOfRangeException(nameof(achievementKey), $\"Achievement key must contain between 1 and {AchievementKeyMaxLength} characters.\")",
+                           "path":  "FoodDiary.Domain/Entities/Achievements/UserAchievement.cs",
+                           "line":  33
+                       },
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentOutOfRangeException",
+                           "message":  "throw new ArgumentOutOfRangeException(nameof(earnedValue), \"Earned value cannot be negative.\")",
+                           "path":  "FoodDiary.Domain/Entities/Achievements/UserAchievement.cs",
+                           "line":  37
+                       },
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentOutOfRangeException",
+                           "message":  "throw new ArgumentOutOfRangeException(nameof(definitionVersion), \"Definition version must be positive.\")",
+                           "path":  "FoodDiary.Domain/Entities/Achievements/UserAchievement.cs",
+                           "line":  41
+                       },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentException",
@@ -4244,6 +4349,32 @@
     "persistenceMappings":  [
                                 {
                                     "area":  "FoodDiary",
+                                    "entity":  "AchievementDefinition",
+                                    "table":  "AchievementDefinitions",
+                                    "indexes":  [
+                                                    "item =\u003e item.Key).IsUnique()",
+                                                    "item =\u003e new { item.IsActive, item.SortOrder })"
+                                                ],
+                                    "relationships":  [
+
+                                                      ],
+                                    "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/AchievementDefinitionConfiguration.cs"
+                                },
+                                {
+                                    "area":  "FoodDiary",
+                                    "entity":  "AchievementEvaluationOutboxMessage",
+                                    "table":  "AchievementEvaluationOutbox",
+                                    "indexes":  [
+                                                    "message =\u003e message.UserId)",
+                                                    "message =\u003e new { message.ProcessedOnUtc, message.DeadLetteredOnUtc, message.NextAttemptOnUtc, message.LockedUntilUtc })"
+                                                ],
+                                    "relationships":  [
+
+                                                      ],
+                                    "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/AchievementEvaluationOutboxMessageConfiguration.cs"
+                                },
+                                {
+                                    "area":  "FoodDiary",
                                     "entity":  "AdminImpersonationSession",
                                     "table":  null,
                                     "indexes":  [
@@ -5437,6 +5568,23 @@
                                                           }
                                                       ],
                                     "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Users/UserConfiguration.cs"
+                                },
+                                {
+                                    "area":  "FoodDiary",
+                                    "entity":  "UserAchievement",
+                                    "table":  "UserAchievements",
+                                    "indexes":  [
+                                                    "achievement =\u003e new { achievement.UserId, achievement.AchievementKey })",
+                                                    "achievement =\u003e new { achievement.UserId, achievement.EarnedAtUtc })"
+                                                ],
+                                    "relationships":  [
+                                                          {
+                                                              "kind":  "HasOne",
+                                                              "target":  "",
+                                                              "expression":  "achievement =\u003e achievement.User)"
+                                                          }
+                                                      ],
+                                    "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/UserAchievementConfiguration.cs"
                                 },
                                 {
                                     "area":  "FoodDiary",

@@ -1,6 +1,7 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 using FoodDiary.Application.Consumptions.Commands.RepeatMeal;
+using FoodDiary.Application.Abstractions.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
@@ -61,10 +62,12 @@ public partial class ConsumptionsFeatureTests {
         sourceMeal.AddRecipe(RecipeId.New(), 1);
 
         var repository = new SingleMealRepository(sourceMeal);
+        IAchievementEvaluationOutbox achievementOutbox = Substitute.For<IAchievementEvaluationOutbox>();
         RepeatMealCommandHandler handler = RepeatMealHandler(
             repository,
             new FixedMealNutritionService(new MealNutritionSummary(510, 33, 18, 47, 5, 0)),
-            CreateCurrentUserAccessService(user));
+            CreateCurrentUserAccessService(user),
+            achievementOutbox);
 
         Result<ConsumptionModel> result = await handler.Handle(
             new RepeatMealCommand(user.Id.Value, sourceMeal.Id.Value, new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), MealType.Dinner.ToString()),
@@ -76,6 +79,7 @@ public partial class ConsumptionsFeatureTests {
         Assert.Equal(MealType.Dinner, repository.LastAddedMeal.MealType);
         Assert.Equal(2, repository.LastAddedMeal.Items.Count);
         Assert.Equal(510, repository.LastAddedMeal.TotalCalories);
+        await achievementOutbox.Received(1).EnqueueAsync(user.Id, Arg.Any<CancellationToken>());
     }
 
     [Fact]

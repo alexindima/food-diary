@@ -84,7 +84,7 @@ export class GamificationHabitPathComponent {
     }
 
     protected badgeIcon(badge: Badge): string {
-        return badge.category === 'streak' ? 'local_fire_department' : 'restaurant';
+        return badge.icon ?? (badge.category === 'streak' ? 'local_fire_department' : 'restaurant');
     }
 
     protected badgeNameKey(badge: Badge): string {

@@ -12,4 +12,8 @@ export type Badge = {
     category: string;
     threshold: number;
     isEarned: boolean;
+    title?: string;
+    description?: string;
+    icon?: string;
+    earnedAtUtc?: string | null;
 };

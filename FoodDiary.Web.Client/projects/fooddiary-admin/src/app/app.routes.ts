@@ -35,6 +35,10 @@ export const routes: Routes = [
         loadChildren: async () => import('./features/admin-lessons/admin-lessons.routes').then(m => m.adminLessonsRoutes),
     },
     {
+        path: 'achievements',
+        loadChildren: async () => import('./features/admin-achievements/admin-achievements.routes').then(m => m.adminAchievementsRoutes),
+    },
+    {
         path: 'moderation',
         loadChildren: async () => import('./features/admin-moderation/admin-moderation.routes').then(m => m.adminModerationRoutes),
     },

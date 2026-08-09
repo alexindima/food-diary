@@ -16,7 +16,7 @@ repository catalog. Regenerate it instead of editing it manually.
 
 | Module | Dependencies | Consumers | Controllers |
 | --- | ---: | ---: | ---: |
-| [Admin](admin.md) | 6 | 0 | 15 |
+| [Admin](admin.md) | 7 | 0 | 16 |
 | [Ai](ai.md) | 1 | 1 | 2 |
 | [Authentication](authentication.md) | 3 | 2 | 0 |
 | [Billing](billing.md) | 0 | 0 | 2 |
@@ -33,7 +33,7 @@ repository catalog. Regenerate it instead of editing it manually.
 | [FavoriteMeals](favorite-meals.md) | 2 | 0 | 1 |
 | [FavoriteProducts](favorite-products.md) | 1 | 1 | 1 |
 | [FavoriteRecipes](favorite-recipes.md) | 1 | 1 | 1 |
-| [Gamification](gamification.md) | 2 | 0 | 1 |
+| [Gamification](gamification.md) | 2 | 1 | 1 |
 | [Hydration](hydration.md) | 1 | 2 | 1 |
 | [Images](images.md) | 0 | 4 | 1 |
 | [Lessons](lessons.md) | 1 | 1 | 1 |

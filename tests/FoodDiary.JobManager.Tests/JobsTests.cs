@@ -6,6 +6,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Models;
 using FoodDiary.Application.Billing.Services;
@@ -443,6 +444,23 @@ public sealed class JobsTests {
             () => Assert.NotNull(duration),
             () => Assert.Equal(0, tracker.GetSnapshot("notifications.web_push_outbox")?.ConsecutiveFailures),
             () => Assert.Equal(now, tracker.GetSnapshot("notifications.web_push_outbox")?.LastSucceededAtUtc));
+    }
+
+    [Fact]
+    public async Task AchievementEvaluationOutboxJob_WhenEnabled_ProcessesDueMessages() {
+        var processor = new RecordingAchievementEvaluationOutboxProcessor(processed: 3);
+        var tracker = new JobExecutionStateTracker();
+        var job = new AchievementEvaluationOutboxJob(
+            processor,
+            Options.Create(new AchievementEvaluationOutboxOptions { Enabled = true, BatchSize = 7 }),
+            new JobExecutionObserver(TimeProvider.System, tracker),
+            NullLogger<AchievementEvaluationOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(7, processor.BatchSize),
+            () => Assert.Equal(0, tracker.GetSnapshot("achievements.evaluation_outbox")?.ConsecutiveFailures));
     }
 
     [Fact]
@@ -1062,6 +1080,7 @@ public sealed class JobsTests {
                 RecurringJobIds.ImageObjectDeletionOutbox,
                 RecurringJobIds.EmailOutbox,
                 RecurringJobIds.NotificationWebPushOutbox,
+                RecurringJobIds.AchievementEvaluationOutbox,
                 RecurringJobIds.NotificationsCleanup,
                 RecurringJobIds.UsersCleanup,
                 RecurringJobIds.UserLoginEventsCleanup,
@@ -1081,6 +1100,7 @@ public sealed class JobsTests {
                 RecurringJobIds.ImageObjectDeletionOutbox,
                 RecurringJobIds.EmailOutbox,
                 RecurringJobIds.NotificationWebPushOutbox,
+                RecurringJobIds.AchievementEvaluationOutbox,
                 RecurringJobIds.UserLoginEventsCleanup,
                 RecurringJobIds.MarketingAttributionCleanup,
                 RecurringJobIds.ClientTaskReminders,
@@ -1356,6 +1376,16 @@ public sealed class JobsTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingNotificationWebPushOutboxProcessor(int processed) : INotificationWebPushOutboxProcessor {
+        public int? BatchSize { get; private set; }
+
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) {
+            BatchSize = batchSize;
+            return Task.FromResult(processed);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingAchievementEvaluationOutboxProcessor(int processed) : IAchievementEvaluationOutboxProcessor {
         public int? BatchSize { get; private set; }
 
         public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) {

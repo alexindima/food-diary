@@ -8,22 +8,39 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1537,
-                    "symbols":  592,
-                    "routes":  84,
-                    "features":  36,
-                    "specs":  549,
+                    "typescriptFiles":  1544,
+                    "symbols":  595,
+                    "routes":  86,
+                    "features":  37,
+                    "specs":  551,
                     "localeFiles":  5,
                     "roles":  {
-                                  "Component":  407,
+                                  "Component":  408,
                                   "Directive":  12,
-                                  "Facade":  52,
+                                  "Facade":  53,
                                   "Other":  17,
                                   "Pipe":  2,
-                                  "Service":  102
+                                  "Service":  103
                               }
                 },
     "features":  [
+                     {
+                         "area":  "admin",
+                         "name":  "admin-achievements",
+                         "root":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements",
+                         "symbols":  [
+                                         "AdminAchievementsComponent",
+                                         "AdminAchievementsFacade",
+                                         "AdminAchievementsService"
+                                     ],
+                         "routes":  [
+                                        ""
+                                    ],
+                         "tests":  [
+                                       "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/api/admin-achievements.service.spec.ts",
+                                       "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.spec.ts"
+                                   ]
+                     },
                      {
                          "area":  "admin",
                          "name":  "admin-acquisition",
@@ -1720,7 +1737,28 @@
                         "role":  "Component",
                         "selector":  "app-root",
                         "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.ts",
-                        "line":  35
+                        "line":  36
+                    },
+                    {
+                        "name":  "AdminAchievementsService",
+                        "role":  "Service",
+                        "selector":  null,
+                        "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/api/admin-achievements.service.ts",
+                        "line":  13
+                    },
+                    {
+                        "name":  "AdminAchievementsFacade",
+                        "role":  "Facade",
+                        "selector":  null,
+                        "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/lib/admin-achievements.facade.ts",
+                        "line":  12
+                    },
+                    {
+                        "name":  "AdminAchievementsComponent",
+                        "role":  "Component",
+                        "selector":  "fd-admin-achievements",
+                        "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.ts",
+                        "line":  38
                     },
                     {
                         "name":  "AdminAcquisitionService",
@@ -5412,19 +5450,29 @@
                        "line":  34
                    },
                    {
-                       "path":  "moderation",
+                       "path":  "achievements",
                        "source":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
                        "line":  38
                    },
                    {
-                       "path":  "unauthorized",
+                       "path":  "moderation",
                        "source":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
                        "line":  42
                    },
                    {
-                       "path":  "**",
+                       "path":  "unauthorized",
                        "source":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
                        "line":  46
+                   },
+                   {
+                       "path":  "**",
+                       "source":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
+                       "line":  50
+                   },
+                   {
+                       "path":  "",
+                       "source":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/admin-achievements.routes.ts",
+                       "line":  7
                    },
                    {
                        "path":  "",
@@ -5805,8 +5853,8 @@
                              "name":  "core.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  556,
-                             "russianProperties":  556,
+                             "englishProperties":  588,
+                             "russianProperties":  588,
                              "countsMatch":  true
                          },
                          {

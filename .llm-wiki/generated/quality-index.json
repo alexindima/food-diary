@@ -5,10 +5,10 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4007,
-                    "criticalSymbols":  526,
-                    "criticalSymbolsWithTestReferences":  500,
-                    "criticalSymbolsWithoutTestReferences":  26,
+                    "productionFiles":  4058,
+                    "criticalSymbols":  533,
+                    "criticalSymbolsWithTestReferences":  504,
+                    "criticalSymbolsWithoutTestReferences":  29,
                     "debtMarkers":  3
                 },
     "hotspots":  [
@@ -869,6 +869,54 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  2.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Achievements/Common/AchievementDefinitionErrors.cs",
+                      "nonBlankLines":  16,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.32
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Achievements/Common/IUserAchievementStore.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.26
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Achievements/Models/AchievementGrantModel.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Admin/Common/AdminMailInboxErrors.cs",
@@ -2085,6 +2133,14 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/ContentReports/Common/ContentReportErrors.cs",
@@ -5167,6 +5223,30 @@
                       "structuralRiskScore":  5.22
                   },
                   {
+                      "path":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  1,
+                      "structuralRiskScore":  7.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandValidator.cs",
+                      "nonBlankLines":  26,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.52
+                  },
+                  {
                       "path":  "FoodDiary.Application/Admin/Commands/CreateAdminLesson/CreateAdminLessonCommand.cs",
                       "nonBlankLines":  13,
                       "decisionPoints":  0,
@@ -5389,6 +5469,30 @@
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  2.26
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  1,
+                      "structuralRiskScore":  7.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandValidator.cs",
+                      "nonBlankLines":  26,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.52
                   },
                   {
                       "path":  "FoodDiary.Application/Admin/Commands/UpdateAdminLesson/UpdateAdminLessonCommand.cs",
@@ -5733,6 +5837,22 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  1.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQuery.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  1,
+                      "structuralRiskScore":  7.24
                   },
                   {
                       "path":  "FoodDiary.Application/Admin/Queries/GetAdminAiPrompts/GetAdminAiPromptsQuery.cs",
@@ -7064,11 +7184,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommandHandler.cs",
-                      "nonBlankLines":  85,
+                      "nonBlankLines":  99,
                       "decisionPoints":  5,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  11.2
+                      "structuralRiskScore":  11.48
                   },
                   {
                       "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommandValidator.cs",
@@ -7120,11 +7240,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Consumptions/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
-                      "nonBlankLines":  158,
+                      "nonBlankLines":  170,
                       "decisionPoints":  11,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  21.66
+                      "structuralRiskScore":  21.9
                   },
                   {
                       "path":  "FoodDiary.Application/Consumptions/Commands/RepeatMeal/RepeatMealCommandValidator.cs",
@@ -7261,6 +7381,14 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Consumptions/Common/NullAchievementEvaluationOutbox.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
                   },
                   {
                       "path":  "FoodDiary.Application/Consumptions/Common/Validators/ConsumptionAiItemInputValidator.cs",
@@ -8176,11 +8304,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                      "nonBlankLines":  57,
+                      "nonBlankLines":  61,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.14
+                      "structuralRiskScore":  1.22
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.cs",
@@ -10303,6 +10431,22 @@
                       "structuralRiskScore":  0.44
                   },
                   {
+                      "path":  "FoodDiary.Application/Gamification/Common/IAchievementAwardService.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Gamification/Common/IAchievementDefinitionAdministrationService.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
                       "path":  "FoodDiary.Application/Gamification/Common/IGamificationReadService.cs",
                       "nonBlankLines":  7,
                       "decisionPoints":  0,
@@ -10327,12 +10471,36 @@
                       "structuralRiskScore":  0.12
                   },
                   {
-                      "path":  "FoodDiary.Application/Gamification/Models/BadgeModel.cs",
-                      "nonBlankLines":  6,
+                      "path":  "FoodDiary.Application/Gamification/Models/AchievementDefinitionAdminModel.cs",
+                      "nonBlankLines":  15,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
+                      "structuralRiskScore":  0.3
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Gamification/Models/AchievementDefinitionCreateInput.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.26
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Gamification/Models/AchievementDefinitionUpdateInput.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.26
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Gamification/Models/BadgeModel.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.24
                   },
                   {
                       "path":  "FoodDiary.Application/Gamification/Models/GamificationModel.cs",
@@ -10359,20 +10527,44 @@
                       "structuralRiskScore":  4.02
                   },
                   {
-                      "path":  "FoodDiary.Application/Gamification/Services/GamificationCalculator.cs",
-                      "nonBlankLines":  94,
-                      "decisionPoints":  13,
+                      "path":  "FoodDiary.Application/Gamification/Services/AchievementAwardService.cs",
+                      "nonBlankLines":  57,
+                      "decisionPoints":  4,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  21.38
+                      "structuralRiskScore":  7.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Gamification/Services/AchievementDefinitionAdministrationService.cs",
+                      "nonBlankLines":  67,
+                      "decisionPoints":  7,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  11.84
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Gamification/Services/AchievementReconciliationHandler.cs",
+                      "nonBlankLines":  19,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.38
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Gamification/Services/GamificationCalculator.cs",
+                      "nonBlankLines":  96,
+                      "decisionPoints":  14,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  22.92
                   },
                   {
                       "path":  "FoodDiary.Application/Gamification/Services/GamificationReadService.cs",
-                      "nonBlankLines":  53,
+                      "nonBlankLines":  56,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.06
+                      "structuralRiskScore":  4.12
                   },
                   {
                       "path":  "FoodDiary.Application/Gamification/Services/GamificationUserProfileService.cs",
@@ -14207,6 +14399,22 @@
                       "structuralRiskScore":  0.1
                   },
                   {
+                      "path":  "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
+                      "nonBlankLines":  107,
+                      "decisionPoints":  5,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  9.64
+                  },
+                  {
+                      "path":  "FoodDiary.Domain/Entities/Achievements/UserAchievement.cs",
+                      "nonBlankLines":  48,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  6.96
+                  },
+                  {
                       "path":  "FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs",
                       "nonBlankLines":  56,
                       "decisionPoints":  4,
@@ -14855,6 +15063,14 @@
                       "structuralRiskScore":  3.9
                   },
                   {
+                      "path":  "FoodDiary.Domain/Enums/AchievementMetric.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
                       "path":  "FoodDiary.Domain/Enums/ActivityLevel.cs",
                       "nonBlankLines":  8,
                       "decisionPoints":  0,
@@ -15327,6 +15543,14 @@
                       "structuralRiskScore":  25.54
                   },
                   {
+                      "path":  "FoodDiary.Domain/ValueObjects/Ids/AchievementDefinitionId.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
                       "path":  "FoodDiary.Domain/ValueObjects/Ids/AiPromptTemplateId.cs",
                       "nonBlankLines":  9,
                       "decisionPoints":  0,
@@ -15704,6 +15928,14 @@
                   },
                   {
                       "path":  "FoodDiary.Domain/ValueObjects/Ids/ShoppingListItemSourceId.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Domain/ValueObjects/Ids/UserAchievementId.cs",
                       "nonBlankLines":  9,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
@@ -16119,6 +16351,14 @@
                       "structuralRiskScore":  24.18
                   },
                   {
+                      "path":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.26
+                  },
+                  {
                       "path":  "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
                       "nonBlankLines":  15,
                       "decisionPoints":  0,
@@ -16296,11 +16536,11 @@
                   },
                   {
                       "path":  "FoodDiary.Infrastructure/DependencyInjection.Repositories.cs",
-                      "nonBlankLines":  23,
+                      "nonBlankLines":  24,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.46
+                      "structuralRiskScore":  0.48
                   },
                   {
                       "path":  "FoodDiary.Infrastructure/DependencyInjection.ShoppingLists.cs",
@@ -16381,6 +16621,46 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  5.12
+                  },
+                  {
+                      "path":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementDefinitionStore.cs",
+                      "nonBlankLines":  33,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.66
+                  },
+                  {
+                      "path":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutbox.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxMessage.cs",
+                      "nonBlankLines":  70,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.4
+                  },
+                  {
+                      "path":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
+                      "nonBlankLines":  22,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.44
+                  },
+                  {
+                      "path":  "FoodDiary.Infrastructure/Persistence/Achievements/UserAchievementStore.cs",
+                      "nonBlankLines":  39,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.28
                   },
                   {
                       "path":  "FoodDiary.Infrastructure/Persistence/Admin/AdminBillingRepository.cs",
@@ -16509,6 +16789,30 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  3.76
+                  },
+                  {
+                      "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/AchievementDefinitionConfiguration.cs",
+                      "nonBlankLines":  23,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.46
+                  },
+                  {
+                      "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/AchievementEvaluationOutboxMessageConfiguration.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.34
+                  },
+                  {
+                      "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/UserAchievementConfiguration.cs",
+                      "nonBlankLines":  31,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.62
                   },
                   {
                       "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Admin/AdminImpersonationSessionConfiguration.cs",
@@ -17319,6 +17623,14 @@
                       "structuralRiskScore":  12.52
                   },
                   {
+                      "path":  "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Achievements.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
                       "path":  "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Ai.cs",
                       "nonBlankLines":  7,
                       "decisionPoints":  0,
@@ -17552,19 +17864,19 @@
                   },
                   {
                       "path":  "FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
-                      "nonBlankLines":  281,
-                      "decisionPoints":  20,
+                      "nonBlankLines":  321,
+                      "decisionPoints":  22,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  35.62
+                      "structuralRiskScore":  39.42
                   },
                   {
                       "path":  "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-                      "nonBlankLines":  159,
+                      "nonBlankLines":  160,
                       "decisionPoints":  10,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  18.18
+                      "structuralRiskScore":  18.2
                   },
                   {
                       "path":  "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
@@ -18543,6 +18855,22 @@
                       "structuralRiskScore":  2.16
                   },
                   {
+                      "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
+                      "nonBlankLines":  39,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  6.78
+                  },
+                  {
+                      "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxOptions.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.18
+                  },
+                  {
                       "path":  "FoodDiary.JobManager/Services/BillingRenewalJob.cs",
                       "nonBlankLines":  49,
                       "decisionPoints":  5,
@@ -18696,11 +19024,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-                      "nonBlankLines":  91,
+                      "nonBlankLines":  100,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.82
+                      "structuralRiskScore":  2
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/JobManagerTelemetry.cs",
@@ -18800,19 +19128,19 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-                      "nonBlankLines":  31,
+                      "nonBlankLines":  33,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.62
+                      "structuralRiskScore":  0.66
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
-                      "nonBlankLines":  118,
-                      "decisionPoints":  4,
+                      "nonBlankLines":  126,
+                      "decisionPoints":  5,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  8.36
+                      "structuralRiskScore":  10.02
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/UserCleanupJob.cs",
@@ -18943,6 +19271,14 @@
                       "structuralRiskScore":  3.4
                   },
                   {
+                      "path":  "FoodDiary.Presentation.Api/Features/Admin/AdminAchievementDefinitionsController.cs",
+                      "nonBlankLines":  34,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.68
+                  },
+                  {
                       "path":  "FoodDiary.Presentation.Api/Features/Admin/AdminAcquisitionController.cs",
                       "nonBlankLines":  19,
                       "decisionPoints":  0,
@@ -19053,6 +19389,14 @@
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  3.44
+                  },
+                  {
+                      "path":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminAchievementDefinitionsHttpMappings.cs",
+                      "nonBlankLines":  28,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.56
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminAiHttpResponseMappings.cs",
@@ -19231,6 +19575,14 @@
                       "structuralRiskScore":  0.18
                   },
                   {
+                      "path":  "FoodDiary.Presentation.Api/Features/Admin/Requests/CreateAdminAchievementDefinitionHttpRequest.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.26
+                  },
+                  {
                       "path":  "FoodDiary.Presentation.Api/Features/Admin/Requests/GetAdminAiUsageSummaryHttpQuery.cs",
                       "nonBlankLines":  4,
                       "decisionPoints":  0,
@@ -19333,6 +19685,22 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.06
+                  },
+                  {
+                      "path":  "FoodDiary.Presentation.Api/Features/Admin/Requests/UpdateAdminAchievementDefinitionHttpRequest.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.26
+                  },
+                  {
+                      "path":  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminAchievementDefinitionHttpResponse.cs",
+                      "nonBlankLines":  15,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.3
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminAiPromptHttpResponse.cs",
@@ -20936,19 +21304,19 @@
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Gamification/Mappings/GamificationHttpMappings.cs",
-                      "nonBlankLines":  20,
+                      "nonBlankLines":  31,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.4
+                      "structuralRiskScore":  0.62
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Gamification/Responses/BadgeHttpResponse.cs",
-                      "nonBlankLines":  6,
+                      "nonBlankLines":  10,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
+                      "structuralRiskScore":  0.2
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Gamification/Responses/GamificationHttpResponse.cs",
@@ -23992,19 +24360,59 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
-                      "nonBlankLines":  48,
+                      "nonBlankLines":  52,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.96
+                      "structuralRiskScore":  1.04
                   },
                   {
                       "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.ts",
-                      "nonBlankLines":  101,
+                      "nonBlankLines":  103,
                       "decisionPoints":  10,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  17.02
+                      "structuralRiskScore":  17.06
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/admin-achievements.routes.ts",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/api/admin-achievements.service.ts",
+                      "nonBlankLines":  23,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.46
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/lib/admin-achievements.facade.ts",
+                      "nonBlankLines":  21,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.42
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/models/admin-achievement.data.ts",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.36
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.ts",
+                      "nonBlankLines":  146,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.42
                   },
                   {
                       "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/admin-acquisition.routes.ts",
@@ -26728,27 +27136,27 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/models/gamification.data.ts",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.36
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-lib/gamification-page-view.mapper.ts",
+                      "nonBlankLines":  61,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.22
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-lib/gamification-page.models.ts",
                       "nonBlankLines":  14,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.28
-                  },
-                  {
-                      "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-lib/gamification-page-view.mapper.ts",
-                      "nonBlankLines":  60,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.2
-                  },
-                  {
-                      "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-lib/gamification-page.models.ts",
-                      "nonBlankLines":  13,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.26
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.ts",
@@ -26761,10 +27169,10 @@
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.ts",
                       "nonBlankLines":  97,
-                      "decisionPoints":  6,
+                      "decisionPoints":  7,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.94
+                      "structuralRiskScore":  12.44
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.ts",
@@ -33083,6 +33491,16 @@
                                                    ]
                             },
                             {
+                                "name":  "CreateAdminAchievementDefinitionCommandHandler",
+                                "role":  "CommandHandler",
+                                "path":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
+                                "line":  7,
+                                "testReferenceCount":  0,
+                                "testReferences":  [
+
+                                                   ]
+                            },
+                            {
                                 "name":  "CreateAdminLessonCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Admin/Commands/CreateAdminLesson/CreateAdminLessonCommandHandler.cs",
@@ -33126,7 +33544,7 @@
                                 "name":  "CreateConsumptionCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommandHandler.cs",
-                                "line":  14,
+                                "line":  16,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.CreateCommandTests.cs"
@@ -33877,7 +34295,7 @@
                                 "name":  "RepeatMealCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Consumptions/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
-                                "line":  17,
+                                "line":  19,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.RepeatAndDeleteCommandTests.cs",
@@ -34111,6 +34529,16 @@
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Usda/UsdaFeatureTests.cs",
                                                        "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
+                                                   ]
+                            },
+                            {
+                                "name":  "UpdateAdminAchievementDefinitionCommandHandler",
+                                "role":  "CommandHandler",
+                                "path":  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
+                                "line":  7,
+                                "testReferenceCount":  0,
+                                "testReferences":  [
+
                                                    ]
                             },
                             {
@@ -34403,6 +34831,16 @@
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.EmailVerification.cs",
                                                        "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
+                                                   ]
+                            },
+                            {
+                                "name":  "AdminAchievementDefinitionsController",
+                                "role":  "Controller",
+                                "path":  "FoodDiary.Presentation.Api/Features/Admin/AdminAchievementDefinitionsController.cs",
+                                "line":  17,
+                                "testReferenceCount":  1,
+                                "testReferences":  [
+                                                       "tests/FoodDiary.Presentation.Api.Tests/AdminAchievementDefinitionsControllerTests.cs"
                                                    ]
                             },
                             {
@@ -35295,6 +35733,17 @@
                                                    ]
                             },
                             {
+                                "name":  "AchievementReconciliationHandler",
+                                "role":  "Handler",
+                                "path":  "FoodDiary.Application/Gamification/Services/AchievementReconciliationHandler.cs",
+                                "line":  7,
+                                "testReferenceCount":  2,
+                                "testReferences":  [
+                                                       "tests/FoodDiary.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
+                                                       "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserAchievementStoreIntegrationTests.cs"
+                                                   ]
+                            },
+                            {
                                 "name":  "ApiExceptionHandler",
                                 "role":  "Handler",
                                 "path":  "FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs",
@@ -35364,6 +35813,16 @@
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs"
+                                                   ]
+                            },
+                            {
+                                "name":  "GetAdminAchievementDefinitionsQueryHandler",
+                                "role":  "QueryHandler",
+                                "path":  "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
+                                "line":  7,
+                                "testReferenceCount":  0,
+                                "testReferences":  [
+
                                                    ]
                             },
                             {
@@ -36772,6 +37231,16 @@
                                                    ]
                             },
                             {
+                                "name":  "CreateAdminAchievementDefinitionCommandValidator",
+                                "role":  "Validator",
+                                "path":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandValidator.cs",
+                                "line":  7,
+                                "testReferenceCount":  1,
+                                "testReferences":  [
+                                                       "tests/FoodDiary.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs"
+                                                   ]
+                            },
+                            {
                                 "name":  "CreateAdminLessonCommandValidator",
                                 "role":  "Validator",
                                 "path":  "FoodDiary.Application/Admin/Commands/CreateAdminLesson/CreateAdminLessonCommandValidator.cs",
@@ -38126,6 +38595,16 @@
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Authentication/AuthenticationAdditionalValidatorTests.cs"
+                                                   ]
+                            },
+                            {
+                                "name":  "UpdateAdminAchievementDefinitionCommandValidator",
+                                "role":  "Validator",
+                                "path":  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandValidator.cs",
+                                "line":  7,
+                                "testReferenceCount":  1,
+                                "testReferences":  [
+                                                       "tests/FoodDiary.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs"
                                                    ]
                             },
                             {

@@ -48,8 +48,9 @@ export function buildGamificationStats(
 export function buildBadgeDisplays(badges: Badge[]): BadgeDisplay[] {
     return badges.map(badge => ({
         ...badge,
-        icon: getBadgeIcon(badge),
+        icon: badge.icon ?? getBadgeIcon(badge),
         nameKey: `GAMIFICATION.BADGE_${badge.key.toUpperCase()}`,
+        name: badge.title ?? '',
     }));
 }
 

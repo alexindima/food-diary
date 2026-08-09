@@ -2,6 +2,51 @@
   "OpenApi": "3.0.4",
   "Endpoints": [
     {
+      "Path": "/api/v{version}/admin/achievement-definitions",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "403",
+            "500"
+          ]
+        },
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "201",
+            "400",
+            "401",
+            "403",
+            "409",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/admin/achievement-definitions/{id}",
+      "Operations": [
+        {
+          "Method": "put",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "404",
+            "409",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/acquisition/summary",
       "Operations": [
         {

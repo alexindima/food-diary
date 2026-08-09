@@ -978,6 +978,42 @@
             "DESCRIPTION": "Too much food, with heaviness or discomfort."
         }
     },
+    "ADMIN_ACHIEVEMENTS": {
+        "TITLE": "Achievements",
+        "SUBTITLE": "Create rewards and manage safe progress conditions.",
+        "NEW": "New achievement",
+        "SAVE": "Save achievement",
+        "EDIT": "Edit achievement",
+        "DEFINITIONS": "Achievement definitions",
+        "LOADING": "Loading achievements...",
+        "EMPTY": "No achievement definitions found.",
+        "ACTIVE": "Active",
+        "DISABLED": "Disabled",
+        "ENABLED": "Enabled",
+        "RESET": "Reset",
+        "HELP": "Conditions are type-safe and evaluated by the achievement engine.",
+        "COMPLETE_FIELDS": "Complete the required fields first.",
+        "FIELDS": {
+            "KEY": "Key",
+            "CATEGORY": "Category",
+            "METRIC": "Metric",
+            "THRESHOLD": "Threshold",
+            "TITLE_RU": "Title (RU)",
+            "TITLE_EN": "Title (EN)",
+            "DESCRIPTION_RU": "Description (RU)",
+            "DESCRIPTION_EN": "Description (EN)",
+            "ICON": "Material icon",
+            "SORT_ORDER": "Sort order"
+        },
+        "METRICS": {
+            "LONGEST_STREAK": "Longest streak",
+            "TOTAL_MEALS": "Total meals"
+        },
+        "ERRORS": {
+            "LOAD": "Failed to load achievement definitions.",
+            "SAVE": "Check the fields and ensure the key is unique, then try again."
+        }
+    },
     "LANDING_HERO": {
         "OVERLINE": "Food diary and calorie counter",
         "HEADLINE": "Nutrition and progress — without spreadsheets or chaos",

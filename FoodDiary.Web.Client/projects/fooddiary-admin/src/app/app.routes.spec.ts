@@ -2,6 +2,7 @@ import type { Route, Routes } from '@angular/router';
 import { describe, expect, it } from 'vitest';
 
 import { routes } from './app.routes';
+import { adminAchievementsRoutes } from './features/admin-achievements/admin-achievements.routes';
 import { adminAcquisitionRoutes } from './features/admin-acquisition/admin-acquisition.routes';
 import { adminAiUsageRoutes } from './features/admin-ai-usage/admin-ai-usage.routes';
 import { adminBillingRoutes } from './features/admin-billing/admin-billing.routes';
@@ -21,6 +22,7 @@ const protectedFeatureRoutes: Routes[] = [
     adminEmailTemplatesRoutes,
     adminMailInboxRoutes,
     adminLessonsRoutes,
+    adminAchievementsRoutes,
     adminModerationRoutes,
 ];
 

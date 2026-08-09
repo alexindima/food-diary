@@ -12,6 +12,7 @@ public static class JobManagerServiceCollectionExtensions {
         }
 
         private void AddJobManagerOptions(IConfiguration configuration) {
+            services.AddAchievementOutboxOptions(configuration);
             services.AddOptions<ImageCleanupOptions>()
                 .Bind(configuration.GetSection(ImageCleanupOptions.SectionName))
                 .Validate(ImageCleanupOptions.HasValidConfiguration,
@@ -71,6 +72,14 @@ public static class JobManagerServiceCollectionExtensions {
 
         }
 
+        private void AddAchievementOutboxOptions(IConfiguration configuration) {
+            services.AddOptions<AchievementEvaluationOutboxOptions>()
+                .Bind(configuration.GetSection(AchievementEvaluationOutboxOptions.SectionName))
+                .Validate(AchievementEvaluationOutboxOptions.HasValidConfiguration,
+                    "AchievementEvaluationOutbox configuration requires a positive batch size and a non-empty cron when enabled.")
+                .ValidateOnStart();
+        }
+
         private void AddJobManagerJobs() {
             services.AddScoped<INotificationPusher, NoOpNotificationPusher>();
             services.AddTransient<ImageCleanupJob>();
@@ -81,6 +90,7 @@ public static class JobManagerServiceCollectionExtensions {
             services.AddTransient<ImageObjectDeletionOutboxJob>();
             services.AddTransient<EmailOutboxJob>();
             services.AddTransient<NotificationWebPushOutboxJob>();
+            services.AddTransient<AchievementEvaluationOutboxJob>();
             services.AddTransient<NotificationCleanupJob>();
             services.AddTransient<UserCleanupJob>();
             services.AddTransient<UserLoginEventCleanupJob>();

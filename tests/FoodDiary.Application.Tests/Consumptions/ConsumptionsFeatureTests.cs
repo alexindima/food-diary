@@ -24,6 +24,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Consumptions.Common;
 
 namespace FoodDiary.Application.Tests.Consumptions;
 
@@ -53,8 +54,10 @@ public partial class ConsumptionsFeatureTests {
     private static RepeatMealCommandHandler RepeatMealHandler(
         IMealRepository repository,
         IMealNutritionService mealNutritionService,
-        ICurrentUserAccessService currentUserAccessService) =>
-        new(repository, repository, mealNutritionService, currentUserAccessService);
+        ICurrentUserAccessService currentUserAccessService,
+        IAchievementEvaluationOutbox? achievementOutbox = null) =>
+        new(repository, repository, mealNutritionService, currentUserAccessService,
+            achievementOutbox ?? Substitute.For<IAchievementEvaluationOutbox>());
 
     private static MealConsumptionReadModel CreateReadModelWithAiItem(Guid mealId, Guid sessionId, Guid aiItemId) =>
         new(

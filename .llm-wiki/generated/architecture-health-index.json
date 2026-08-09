@@ -8,9 +8,9 @@
                     "moduleCycleNodes":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
-                    "selectorUnreferencedComponents":  133,
+                    "selectorUnreferencedComponents":  134,
                     "componentsWithoutDirectSpecs":  121,
-                    "criticalSymbolsWithoutTestReferences":  26,
+                    "criticalSymbolsWithoutTestReferences":  29,
                     "explicitDebtMarkers":  3
                 },
     "projectDependencyViolations":  [
@@ -84,6 +84,14 @@
 
                                    ],
     "selectorUnreferencedComponents":  [
+                                           {
+                                               "class":  "AdminAchievementsComponent",
+                                               "selector":  "fd-admin-achievements",
+                                               "feature":  "admin-achievements",
+                                               "path":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.html",
+                                               "specPath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.spec.ts"
+                                           },
                                            {
                                                "class":  "AdminAcquisitionComponent",
                                                "selector":  "fd-admin-acquisition",
@@ -4960,6 +4968,16 @@
                                      ],
     "criticalSymbolsWithoutTestReferences":  [
                                                  {
+                                                     "name":  "CreateAdminAchievementDefinitionCommandHandler",
+                                                     "role":  "CommandHandler",
+                                                     "path":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
+                                                     "line":  7,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
                                                      "name":  "IngestMailRelayDeliveryEventCommandHandler",
                                                      "role":  "CommandHandler",
                                                      "path":  "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommandHandler.cs",
@@ -4974,6 +4992,16 @@
                                                      "role":  "CommandHandler",
                                                      "path":  "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommandHandler.cs",
                                                      "line":  4,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
+                                                     "name":  "UpdateAdminAchievementDefinitionCommandHandler",
+                                                     "role":  "CommandHandler",
+                                                     "path":  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
+                                                     "line":  7,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
 
@@ -5044,6 +5072,16 @@
                                                      "role":  "Controller",
                                                      "path":  "FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs",
                                                      "line":  13,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
+                                                     "name":  "GetAdminAchievementDefinitionsQueryHandler",
+                                                     "role":  "QueryHandler",
+                                                     "path":  "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
+                                                     "line":  7,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
 

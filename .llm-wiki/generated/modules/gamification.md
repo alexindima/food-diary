@@ -15,7 +15,7 @@ sources:
 
 - Origin: module-graph
 - Dependencies: Consumptions, Users
-- Consumers: none
+- Consumers: Admin
 
 ## Source Areas
 
@@ -34,6 +34,9 @@ Source: `FoodDiary.Presentation.Api/Features/Gamification/GamificationController
 
 ## Focused Tests
 
+- `tests/FoodDiary.Application.Tests/Gamification/AchievementAwardServiceTests.cs`
+- `tests/FoodDiary.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs`
+- `tests/FoodDiary.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs`
 - `tests/FoodDiary.Application.Tests/Gamification/GamificationCalculatorTests.cs`
 - `tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs`
 - `tests/FoodDiary.Presentation.Api.Tests/GamificationHttpMappingsTests.cs`

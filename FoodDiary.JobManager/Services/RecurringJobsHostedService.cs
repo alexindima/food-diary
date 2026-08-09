@@ -19,7 +19,8 @@ public sealed class RecurringJobsHostedService(
     IOptions<MarketingAttributionCleanupOptions> marketingAttributionCleanupOptions,
     IOptions<UserCleanupOptions> userCleanupOptions,
     IOptions<ClientTaskReminderOptions> clientTaskReminderOptions,
-    ILogger<RecurringJobsHostedService> logger) : IHostedService {
+    ILogger<RecurringJobsHostedService> logger,
+    IOptions<AchievementEvaluationOutboxOptions>? achievementEvaluationOutboxOptions = null) : IHostedService {
     private static readonly TimeSpan RegistrationRetryDelay = TimeSpan.FromSeconds(1);
 
     public async Task StartAsync(CancellationToken cancellationToken) {
@@ -62,6 +63,7 @@ public sealed class RecurringJobsHostedService(
         ImageObjectDeletionOutboxOptions imageOutboxSettings = imageObjectDeletionOutboxOptions.Value;
         EmailOutboxOptions emailOutboxSettings = emailOutboxOptions.Value;
         NotificationWebPushOutboxOptions notificationOutboxSettings = notificationWebPushOutboxOptions.Value;
+        AchievementEvaluationOutboxOptions achievementOutboxSettings = achievementEvaluationOutboxOptions?.Value ?? new();
         NotificationCleanupOptions notificationSettings = notificationCleanupOptions.Value;
         UserLoginEventCleanupOptions userLoginEventSettings = userLoginEventCleanupOptions.Value;
         MarketingAttributionCleanupOptions marketingAttributionSettings = marketingAttributionCleanupOptions.Value;
@@ -92,6 +94,7 @@ public sealed class RecurringJobsHostedService(
             RecurringJobIds.NotificationWebPushOutbox,
             Job.FromExpression<NotificationWebPushOutboxJob>(job => job.Execute(CancellationToken.None)),
             ResolveCron(notificationOutboxSettings.Cron, "* * * * *"));
+        RegisterAchievementOutboxJob(achievementOutboxSettings);
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.NotificationsCleanup,
             Job.FromExpression<NotificationCleanupJob>(job => job.Execute(CancellationToken.None)),
@@ -125,6 +128,12 @@ public sealed class RecurringJobsHostedService(
             Job.FromExpression<PaddleNotificationRecoveryJob>(job => job.Execute(CancellationToken.None)),
             "17 * * * *");
     }
+
+    private void RegisterAchievementOutboxJob(AchievementEvaluationOutboxOptions settings) =>
+        recurringJobManager.AddOrUpdate(
+            RecurringJobIds.AchievementEvaluationOutbox,
+            Job.FromExpression<AchievementEvaluationOutboxJob>(job => job.Execute(CancellationToken.None)),
+            ResolveCron(settings.Cron, "* * * * *"));
 
     private static string ResolveCron(string? configuredCron, string fallbackCron) =>
         string.IsNullOrWhiteSpace(configuredCron) ? fallbackCron : configuredCron;

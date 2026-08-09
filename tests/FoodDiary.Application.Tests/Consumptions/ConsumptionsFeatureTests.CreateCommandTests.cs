@@ -8,6 +8,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Consumptions.Models;
+using FoodDiary.Application.Abstractions.Consumptions.Common;
 
 namespace FoodDiary.Application.Tests.Consumptions;
 
@@ -56,13 +57,15 @@ public partial class ConsumptionsFeatureTests {
         var user = User.Create("create-consumption@example.com", "hash");
         var repository = new CreatingMealRepository();
         var recentItems = new RecordingRecentItemRepository();
+        IAchievementEvaluationOutbox achievementOutbox = Substitute.For<IAchievementEvaluationOutbox>();
         var handler = new CreateConsumptionCommandHandler(
             repository,
             new FixedMealNutritionService(new MealNutritionSummary(420, 28, 16, 38, 6, 0)),
             recentItems,
             CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
-            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            achievementOutbox);
 
         Guid productId = ProductId.New().Value;
         Guid recipeId = RecipeId.New().Value;
@@ -97,6 +100,7 @@ public partial class ConsumptionsFeatureTests {
         Assert.True(result.Value.IsNutritionAutoCalculated);
         Assert.Equal(productId, recentItems.LastProductIds.Single().Value);
         Assert.Equal(recipeId, recentItems.LastRecipeIds.Single().Value);
+        await achievementOutbox.Received(1).EnqueueAsync(user.Id, Arg.Any<CancellationToken>());
     }
 
     [Fact]

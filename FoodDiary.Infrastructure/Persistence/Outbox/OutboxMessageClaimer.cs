@@ -141,6 +141,7 @@ internal static class OutboxMessageClaimer {
             "\"EmailOutbox\"" => tableName,
             "\"ImageObjectDeletionOutbox\"" => tableName,
             "\"NotificationWebPushOutbox\"" => tableName,
+            "\"AchievementEvaluationOutbox\"" => tableName,
             _ => throw new ArgumentOutOfRangeException(nameof(tableName), tableName, "Unsupported outbox table."),
         };
 

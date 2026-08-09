@@ -182,7 +182,24 @@ public class GamificationFeatureTests {
         IMealActivityReadRepository mealRepository,
         IDashboardStatisticsReadService statisticsReadService,
         IGamificationUserProfileService userProfileService) =>
-        new GamificationReadService(new MealActivityReadService(mealRepository), statisticsReadService, userProfileService, new StubDateTimeProvider());
+        new GamificationReadService(
+            new MealActivityReadService(mealRepository),
+            statisticsReadService,
+            userProfileService,
+            CreateAchievementAwardService(),
+            new StubDateTimeProvider());
+
+    private static IAchievementAwardService CreateAchievementAwardService() {
+        IAchievementAwardService service = Substitute.For<IAchievementAwardService>();
+        service
+            .EvaluateAndGrantAsync(
+                Arg.Any<UserId>(),
+                Arg.Any<int>(),
+                Arg.Any<int>(),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<BadgeModel>>([]));
+        return service;
+    }
 
     private static IDashboardStatisticsReadService CreateStatisticsReadService(
         IReadOnlyList<DashboardStatisticsBucketReadModel>? buckets = null) {

@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Images;
 using FoodDiary.Infrastructure.Persistence.Notifications;
+using FoodDiary.Infrastructure.Persistence.Achievements;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -29,6 +30,9 @@ internal sealed class OutboxDeadLetterReplayService(
         }
         if (normalizedName is null or "notification_web_push") {
             result.AddRange(await ListWebPushAsync(boundedLimit, cancellationToken).ConfigureAwait(false));
+        }
+        if (normalizedName is null or "achievement_evaluation") {
+            result.AddRange(await ListAchievementEvaluationAsync(boundedLimit, cancellationToken).ConfigureAwait(false));
         }
 
         return [.. result
@@ -148,6 +152,7 @@ internal sealed class OutboxDeadLetterReplayService(
             "email" => await FindEmailAsync(messageId, forUpdate, cancellationToken).ConfigureAwait(false),
             "image_object_deletion" => await FindImageDeletionAsync(messageId, forUpdate, cancellationToken).ConfigureAwait(false),
             "notification_web_push" => await FindWebPushAsync(messageId, forUpdate, cancellationToken).ConfigureAwait(false),
+            "achievement_evaluation" => await FindAchievementEvaluationAsync(messageId, forUpdate, cancellationToken).ConfigureAwait(false),
             _ => throw new ArgumentOutOfRangeException(nameof(outboxName), "Unsupported outbox name."),
         };
 
@@ -173,6 +178,15 @@ internal sealed class OutboxDeadLetterReplayService(
         (forUpdate
             ? context.NotificationWebPushOutbox.FromSqlInterpolated($"SELECT * FROM \"NotificationWebPushOutbox\" WHERE \"Id\" = {messageId} FOR UPDATE")
             : context.NotificationWebPushOutbox)
+        .SingleOrDefaultAsync(cancellationToken);
+
+    private Task<AchievementEvaluationOutboxMessage?> FindAchievementEvaluationAsync(
+        Guid messageId,
+        bool forUpdate,
+        CancellationToken cancellationToken) =>
+        (forUpdate
+            ? context.AchievementEvaluationOutbox.FromSqlInterpolated($"SELECT * FROM \"AchievementEvaluationOutbox\" WHERE \"Id\" = {messageId} FOR UPDATE")
+            : context.AchievementEvaluationOutbox)
         .SingleOrDefaultAsync(cancellationToken);
 
     private async Task<IReadOnlyList<OutboxDeadLetterMessageModel>> ListEmailAsync(
@@ -232,6 +246,25 @@ internal sealed class OutboxDeadLetterReplayService(
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
 
+    private async Task<IReadOnlyList<OutboxDeadLetterMessageModel>> ListAchievementEvaluationAsync(
+        int limit,
+        CancellationToken cancellationToken) =>
+        await context.AchievementEvaluationOutbox
+            .AsNoTracking()
+            .Where(message => message.DeadLetteredOnUtc != null && message.ProcessedOnUtc == null)
+            .OrderByDescending(message => message.DeadLetteredOnUtc)
+            .Take(limit)
+            .Select(message => new OutboxDeadLetterMessageModel(
+                "achievement_evaluation",
+                message.Id,
+                message.CreatedOnUtc,
+                message.DeadLetteredOnUtc!.Value,
+                message.AttemptCount,
+                message.LastError,
+                message.UserId.Value.ToString()))
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
     private static OutboxDeadLetterMessageModel ToModel(string outboxName, IOutboxMessage message) =>
         message switch {
             EmailOutboxMessage email => new(
@@ -258,6 +291,14 @@ internal sealed class OutboxDeadLetterReplayService(
                 notification.AttemptCount,
                 notification.LastError,
                 notification.NotificationId.Value.ToString()),
+            AchievementEvaluationOutboxMessage achievement => new(
+                outboxName,
+                achievement.Id,
+                achievement.CreatedOnUtc,
+                achievement.DeadLetteredOnUtc!.Value,
+                achievement.AttemptCount,
+                achievement.LastError,
+                achievement.UserId.Value.ToString()),
             _ => throw new ArgumentOutOfRangeException(nameof(message)),
         };
 
@@ -292,7 +333,7 @@ internal sealed class OutboxDeadLetterReplayService(
     private static string NormalizeOutboxName(string outboxName) {
         ArgumentException.ThrowIfNullOrWhiteSpace(outboxName);
         string normalized = outboxName.Trim().ToLowerInvariant();
-        return normalized is "email" or "image_object_deletion" or "notification_web_push"
+        return normalized is "email" or "image_object_deletion" or "notification_web_push" or "achievement_evaluation"
             ? normalized
             : throw new ArgumentOutOfRangeException(nameof(outboxName), "Unsupported outbox name.");
     }
@@ -302,6 +343,7 @@ internal sealed class OutboxDeadLetterReplayService(
             EmailOutboxMessage email => email.LastError,
             ImageObjectDeletionOutboxMessage image => image.LastError,
             NotificationWebPushOutboxMessage notification => notification.LastError,
+            AchievementEvaluationOutboxMessage achievement => achievement.LastError,
             _ => null,
         };
 }

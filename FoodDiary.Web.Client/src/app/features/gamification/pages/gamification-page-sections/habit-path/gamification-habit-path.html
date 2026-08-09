@@ -99,7 +99,7 @@
                             ><fd-ui-icon [name]="badgeIcon(badge)" /><strong>{{ badge.threshold }}</strong></span
                         >
                         <div>
-                            <strong>{{ badgeNameKey(badge) | translate }}</strong
+                            <strong>{{ badge.title || (badgeNameKey(badge) | translate) }}</strong
                             ><small>{{ 'GAMIFICATION.HABIT_PATH.RECEIVED_HINT' | translate }}</small>
                         </div>
                         <span class="habit-path__received">{{ 'GAMIFICATION.HABIT_PATH.RECEIVED' | translate }}</span>
@@ -136,7 +136,7 @@
                             <fd-ui-icon class="habit-path__lock" name="lock" />
                         }
                     </span>
-                    <span>{{ badgeNameKey(badge) | translate }}</span>
+                    <span>{{ badge.title || (badgeNameKey(badge) | translate) }}</span>
                 </article>
             }
         </div>

@@ -1,12 +1,22 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "optionTypes":  49,
+                    "optionTypes":  50,
                     "configurationFiles":  7,
                     "configurationKeys":  185,
                     "environmentVariables":  148
                 },
     "optionTypes":  [
+                        {
+                            "type":  "AchievementEvaluationOutboxOptions",
+                            "section":  "AchievementEvaluationOutbox",
+                            "properties":  [
+                                               "BatchSize",
+                                               "Cron",
+                                               "Enabled"
+                                           ],
+                            "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxOptions.cs"
+                        },
                         {
                             "type":  "ApiBuildInfoOptions",
                             "section":  "BuildInfo",

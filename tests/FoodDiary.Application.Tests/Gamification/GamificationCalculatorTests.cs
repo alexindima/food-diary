@@ -1,5 +1,8 @@
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Application.Gamification.Services;
+using FoodDiary.Domain.Entities.Achievements;
+using FoodDiary.Domain.Enums;
+using System.Globalization;
 
 namespace FoodDiary.Application.Tests.Gamification;
 
@@ -86,7 +89,7 @@ public class GamificationCalculatorTests {
 
     [Fact]
     public void CalculateBadges_WithStreakAndMeals_ReturnCorrectEarnedStatus() {
-        IReadOnlyList<BadgeModel> badges = GamificationCalculator.CalculateBadges(longestStreak: 10, totalMeals: 75);
+        IReadOnlyList<BadgeModel> badges = GamificationCalculator.CalculateBadges(CreateDefinitions(), longestStreak: 10, totalMeals: 75);
 
         BadgeModel streak3 = badges.First(b => string.Equals(b.Key, "streak_3", StringComparison.Ordinal));
         BadgeModel streak7 = badges.First(b => string.Equals(b.Key, "streak_7", StringComparison.Ordinal));
@@ -105,9 +108,23 @@ public class GamificationCalculatorTests {
 
     [Fact]
     public void CalculateBadges_ReturnsAllTenBadges() {
-        IReadOnlyList<BadgeModel> badges = GamificationCalculator.CalculateBadges(0, 0);
+        IReadOnlyList<BadgeModel> badges = GamificationCalculator.CalculateBadges(CreateDefinitions(), 0, 0);
 
         Assert.Equal(10, badges.Count);
+    }
+
+    private static IReadOnlyList<AchievementDefinition> CreateDefinitions() {
+        var definitions = new List<AchievementDefinition>();
+        int sortOrder = 0;
+        foreach (int threshold in new[] { 3, 7, 14, 30, 60, 100 }) {
+            definitions.Add(AchievementDefinition.Create($"streak_{threshold.ToString(CultureInfo.InvariantCulture)}", "streak", AchievementMetric.LongestStreak, threshold, "Title RU", "Title", "Description RU", "Description", "fire", sortOrder++));
+        }
+
+        foreach (int threshold in new[] { 10, 50, 100, 500 }) {
+            definitions.Add(AchievementDefinition.Create($"meals_{threshold.ToString(CultureInfo.InvariantCulture)}", "meals", AchievementMetric.TotalMeals, threshold, "Title RU", "Title", "Description RU", "Description", "restaurant", sortOrder++));
+        }
+
+        return definitions;
     }
 
     [Fact]

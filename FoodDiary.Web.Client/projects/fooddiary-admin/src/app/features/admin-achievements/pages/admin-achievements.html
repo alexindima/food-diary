@@ -1,0 +1,65 @@
+<div class="achievements-layout">
+    <section class="definition-list fd-grid fd-gap-sm" [attr.aria-label]="'ADMIN_ACHIEVEMENTS.DEFINITIONS' | translate">
+        <div class="fd-row fd-justify-between fd-align-center">
+            <h2>{{ 'ADMIN_ACHIEVEMENTS.DEFINITIONS' | translate }}</h2>
+            <fd-ui-button type="button" (click)="createNew()">{{ 'ADMIN_ACHIEVEMENTS.NEW' | translate }}</fd-ui-button>
+        </div>
+        @if (isLoading()) {
+            <p>{{ 'ADMIN_ACHIEVEMENTS.LOADING' | translate }}</p>
+        } @else {
+            @for (definition of definitions(); track definition.id) {
+                <button class="definition-card" type="button" (click)="edit(definition)">
+                    <span class="definition-icon" aria-hidden="true">{{ definition.icon }}</span>
+                    <span
+                        ><strong>{{ definition.titleEn }}</strong
+                        ><small>{{ definition.key }} · {{ definition.metric }} ≥ {{ definition.threshold }}</small></span
+                    >
+                    <span class="status" [class.status--active]="definition.isActive">{{
+                        (definition.isActive ? 'ADMIN_ACHIEVEMENTS.ACTIVE' : 'ADMIN_ACHIEVEMENTS.DISABLED') | translate
+                    }}</span>
+                </button>
+            } @empty {
+                <p>{{ 'ADMIN_ACHIEVEMENTS.EMPTY' | translate }}</p>
+            }
+        }
+    </section>
+
+    <form class="editor fd-grid fd-gap-md" [formRoot]="form" (submit)="save()">
+        <div>
+            <h2>{{ (editingId() === null ? 'ADMIN_ACHIEVEMENTS.NEW' : 'ADMIN_ACHIEVEMENTS.EDIT') | translate }}</h2>
+            <p>{{ 'ADMIN_ACHIEVEMENTS.HELP' | translate }}</p>
+        </div>
+        <div class="form-grid">
+            <fd-ui-input [label]="'ADMIN_ACHIEVEMENTS.FIELDS.KEY' | translate" [formField]="form.key" />
+            <fd-ui-input [label]="'ADMIN_ACHIEVEMENTS.FIELDS.CATEGORY' | translate" [formField]="form.category" />
+            <fd-ui-select [label]="'ADMIN_ACHIEVEMENTS.FIELDS.METRIC' | translate" [formField]="form.metric" [options]="metricOptions" />
+            <fd-ui-input type="number" [label]="'ADMIN_ACHIEVEMENTS.FIELDS.THRESHOLD' | translate" [formField]="form.threshold" />
+            <fd-ui-input [label]="'ADMIN_ACHIEVEMENTS.FIELDS.TITLE_RU' | translate" [formField]="form.titleRu" />
+            <fd-ui-input [label]="'ADMIN_ACHIEVEMENTS.FIELDS.TITLE_EN' | translate" [formField]="form.titleEn" />
+            <fd-ui-textarea [label]="'ADMIN_ACHIEVEMENTS.FIELDS.DESCRIPTION_RU' | translate" [formField]="form.descriptionRu" />
+            <fd-ui-textarea [label]="'ADMIN_ACHIEVEMENTS.FIELDS.DESCRIPTION_EN' | translate" [formField]="form.descriptionEn" />
+            <fd-ui-input [label]="'ADMIN_ACHIEVEMENTS.FIELDS.ICON' | translate" [formField]="form.icon" />
+            <fd-ui-input type="number" [label]="'ADMIN_ACHIEVEMENTS.FIELDS.SORT_ORDER' | translate" [formField]="form.sortOrder" />
+            <div class="active-field">
+                <input id="achievement-active" type="checkbox" [formField]="form.isActive" /><label for="achievement-active">{{
+                    'ADMIN_ACHIEVEMENTS.ENABLED' | translate
+                }}</label>
+            </div>
+        </div>
+        @if (error(); as message) {
+            <p class="error" role="alert">{{ message | translate }}</p>
+        }
+        <div class="fd-row fd-gap-sm fd-justify-end">
+            <fd-ui-button type="button" variant="secondary" (click)="createNew()">{{
+                'ADMIN_ACHIEVEMENTS.RESET' | translate
+            }}</fd-ui-button>
+            <fd-ui-button
+                type="submit"
+                [disabledReason]="'ADMIN_ACHIEVEMENTS.COMPLETE_FIELDS' | translate"
+                [disabled]="form().invalid()"
+                [loading]="isSaving()"
+                >{{ 'ADMIN_ACHIEVEMENTS.SAVE' | translate }}</fd-ui-button
+            >
+        </div>
+    </form>
+</div>

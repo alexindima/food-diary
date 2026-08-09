@@ -8,41 +8,41 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3018,
-                    "symbols":  3058,
-                    "interfaceImplementationLinks":  223,
-                    "dependencyInjectionRegistrations":  222,
+                    "sourceFiles":  3064,
+                    "symbols":  3104,
+                    "interfaceImplementationLinks":  230,
+                    "dependencyInjectionRegistrations":  229,
                     "kinds":  {
-                                  "class":  1544,
-                                  "enum":  45,
-                                  "interface":  399,
-                                  "record":  960,
-                                  "record struct":  110
+                                  "class":  1570,
+                                  "enum":  46,
+                                  "interface":  406,
+                                  "record":  970,
+                                  "record struct":  112
                               },
                     "roles":  {
-                                  "Command":  150,
-                                  "CommandHandler":  146,
-                                  "Configuration":  79,
-                                  "Controller":  86,
-                                  "Entity":  78,
+                                  "Command":  152,
+                                  "CommandHandler":  148,
+                                  "Configuration":  82,
+                                  "Controller":  87,
+                                  "Entity":  80,
                                   "Event":  19,
                                   "Factory":  7,
-                                  "Handler":  4,
+                                  "Handler":  6,
                                   "LookupRepository":  3,
                                   "Mapper":  8,
                                   "Mapping":  3,
-                                  "Options":  55,
-                                  "Other":  1075,
-                                  "Query":  156,
-                                  "QueryHandler":  121,
+                                  "Options":  56,
+                                  "Other":  1095,
+                                  "Query":  157,
+                                  "QueryHandler":  122,
                                   "ReadModelRepository":  29,
                                   "ReadRepository":  50,
                                   "Repository":  103,
-                                  "Request":  121,
-                                  "Response":  168,
-                                  "Service":  254,
-                                  "Validator":  176,
-                                  "ValueObject":  120,
+                                  "Request":  123,
+                                  "Response":  169,
+                                  "Service":  258,
+                                  "Validator":  178,
+                                  "ValueObject":  122,
                                   "WriteRepository":  47
                               }
                 },
@@ -95,6 +95,48 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Analyzers/UseExtensionBlockAnalyzer.cs",
                         "line":  10
+                    },
+                    {
+                        "name":  "AchievementDefinitionErrors",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Achievements/Common/AchievementDefinitionErrors.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "IAchievementDefinitionStore",
+                        "kind":  "interface",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IAchievementEvaluationOutboxProcessor",
+                        "kind":  "interface",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "IAchievementReconciliationHandler",
+                        "kind":  "interface",
+                        "role":  "Handler",
+                        "path":  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "IUserAchievementStore",
+                        "kind":  "interface",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Achievements/Common/IUserAchievementStore.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "AchievementGrantModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Achievements/Models/AchievementGrantModel.cs",
+                        "line":  2
                     },
                     {
                         "name":  "AdminMailInboxErrors",
@@ -1361,6 +1403,13 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Consumptions/Common/ConsumptionErrors.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "IAchievementEvaluationOutbox",
+                        "kind":  "interface",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs",
                         "line":  4
                     },
                     {
@@ -4052,6 +4101,27 @@
                         "line":  6
                     },
                     {
+                        "name":  "CreateAdminAchievementDefinitionCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "CreateAdminAchievementDefinitionCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "CreateAdminAchievementDefinitionCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandValidator.cs",
+                        "line":  7
+                    },
+                    {
                         "name":  "CreateAdminLessonCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -4246,6 +4316,27 @@
                         "role":  "Validator",
                         "path":  "FoodDiary.Application/Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommandValidator.cs",
                         "line":  4
+                    },
+                    {
+                        "name":  "UpdateAdminAchievementDefinitionCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateAdminAchievementDefinitionCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "UpdateAdminAchievementDefinitionCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandValidator.cs",
+                        "line":  7
                     },
                     {
                         "name":  "UpdateAdminLessonCommand",
@@ -4547,6 +4638,20 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
                         "line":  6
+                    },
+                    {
+                        "name":  "GetAdminAchievementDefinitionsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetAdminAchievementDefinitionsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
+                        "line":  7
                     },
                     {
                         "name":  "GetAdminAiPromptsQuery",
@@ -5708,7 +5813,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommandHandler.cs",
-                        "line":  14
+                        "line":  16
                     },
                     {
                         "name":  "CreateConsumptionCommandValidator",
@@ -5757,7 +5862,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Consumptions/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
-                        "line":  17
+                        "line":  19
                     },
                     {
                         "name":  "RepeatMealCommandValidator",
@@ -5877,6 +5982,13 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Consumptions/Common/ManualNutritionInput.cs",
                         "line":  2
+                    },
+                    {
+                        "name":  "NullAchievementEvaluationOutbox",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/Consumptions/Common/NullAchievementEvaluationOutbox.cs",
+                        "line":  5
                     },
                     {
                         "name":  "ConsumptionAiItemInputValidator",
@@ -6688,7 +6800,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                        "line":  29
+                        "line":  30
                     },
                     {
                         "name":  "AcceptInvitationCommand",
@@ -8539,6 +8651,20 @@
                         "line":  9
                     },
                     {
+                        "name":  "IAchievementAwardService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application/Gamification/Common/IAchievementAwardService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IAchievementDefinitionAdministrationService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application/Gamification/Common/IAchievementDefinitionAdministrationService.cs",
+                        "line":  5
+                    },
+                    {
                         "name":  "IGamificationReadService",
                         "kind":  "interface",
                         "role":  "Service",
@@ -8558,6 +8684,27 @@
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Gamification/Common/IGamificationUserProfileService.cs",
                         "line":  5
+                    },
+                    {
+                        "name":  "AchievementDefinitionAdminModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/Gamification/Models/AchievementDefinitionAdminModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "AchievementDefinitionCreateInput",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/Gamification/Models/AchievementDefinitionCreateInput.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "AchievementDefinitionUpdateInput",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/Gamification/Models/AchievementDefinitionUpdateInput.cs",
+                        "line":  2
                     },
                     {
                         "name":  "BadgeModel",
@@ -8588,11 +8735,32 @@
                         "line":  10
                     },
                     {
+                        "name":  "AchievementAwardService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application/Gamification/Services/AchievementAwardService.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "AchievementDefinitionAdministrationService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application/Gamification/Services/AchievementDefinitionAdministrationService.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "AchievementReconciliationHandler",
+                        "kind":  "class",
+                        "role":  "Handler",
+                        "path":  "FoodDiary.Application/Gamification/Services/AchievementReconciliationHandler.cs",
+                        "line":  7
+                    },
+                    {
                         "name":  "GamificationCalculator",
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Gamification/Services/GamificationCalculator.cs",
-                        "line":  4
+                        "line":  6
                     },
                     {
                         "name":  "GamificationReadService",
@@ -11955,6 +12123,20 @@
                         "line":  2
                     },
                     {
+                        "name":  "AchievementDefinition",
+                        "kind":  "class",
+                        "role":  "Entity",
+                        "path":  "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UserAchievement",
+                        "kind":  "class",
+                        "role":  "Entity",
+                        "path":  "FoodDiary.Domain/Entities/Achievements/UserAchievement.cs",
+                        "line":  6
+                    },
+                    {
                         "name":  "AdminImpersonationSession",
                         "kind":  "class",
                         "role":  "Entity",
@@ -12522,6 +12704,13 @@
                         "line":  7
                     },
                     {
+                        "name":  "AchievementMetric",
+                        "kind":  "enum",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Domain/Enums/AchievementMetric.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "ActivityLevel",
                         "kind":  "enum",
                         "role":  "Other",
@@ -12935,6 +13124,13 @@
                         "line":  2
                     },
                     {
+                        "name":  "AchievementDefinitionId",
+                        "kind":  "record struct",
+                        "role":  "ValueObject",
+                        "path":  "FoodDiary.Domain/ValueObjects/Ids/AchievementDefinitionId.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "AiPromptTemplateId",
                         "kind":  "record struct",
                         "role":  "ValueObject",
@@ -13268,6 +13464,13 @@
                         "kind":  "record struct",
                         "role":  "ValueObject",
                         "path":  "FoodDiary.Domain/ValueObjects/Ids/ShoppingListItemSourceId.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "UserAchievementId",
+                        "kind":  "record struct",
+                        "role":  "ValueObject",
+                        "path":  "FoodDiary.Domain/ValueObjects/Ids/UserAchievementId.cs",
                         "line":  4
                     },
                     {
@@ -13631,6 +13834,13 @@
                         "name":  "DependencyInjection",
                         "kind":  "class",
                         "role":  "Other",
+                        "path":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
                         "path":  "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
                         "line":  6
                     },
@@ -13859,6 +14069,41 @@
                         "line":  4
                     },
                     {
+                        "name":  "AchievementDefinitionStore",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementDefinitionStore.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "AchievementEvaluationOutbox",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutbox.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "AchievementEvaluationOutboxMessage",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxMessage.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "AchievementEvaluationOutboxProcessor",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UserAchievementStore",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Infrastructure/Persistence/Achievements/UserAchievementStore.cs",
+                        "line":  8
+                    },
+                    {
                         "name":  "AdminBillingRepository",
                         "kind":  "class",
                         "role":  "Repository",
@@ -13968,6 +14213,27 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Infrastructure/Persistence/Billing/PostgresBillingCheckoutLock.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "AchievementDefinitionConfiguration",
+                        "kind":  "class",
+                        "role":  "Configuration",
+                        "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/AchievementDefinitionConfiguration.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "AchievementEvaluationOutboxMessageConfiguration",
+                        "kind":  "class",
+                        "role":  "Configuration",
+                        "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/AchievementEvaluationOutboxMessageConfiguration.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "UserAchievementConfiguration",
+                        "kind":  "class",
+                        "role":  "Configuration",
+                        "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/UserAchievementConfiguration.cs",
                         "line":  7
                     },
                     {
@@ -14772,6 +15038,13 @@
                         "name":  "FoodDiaryDbContext",
                         "kind":  "class",
                         "role":  "Other",
+                        "path":  "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Achievements.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "FoodDiaryDbContext",
+                        "kind":  "class",
+                        "role":  "Other",
                         "path":  "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Ai.cs",
                         "line":  5
                     },
@@ -14976,7 +15249,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
-                        "line":  10
+                        "line":  11
                     },
                     {
                         "name":  "OutboxMessageClaimer",
@@ -15819,6 +16092,20 @@
                         "line":  40
                     },
                     {
+                        "name":  "AchievementEvaluationOutboxJob",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "AchievementEvaluationOutboxOptions",
+                        "kind":  "class",
+                        "role":  "Options",
+                        "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxOptions.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "BillingRenewalJob",
                         "kind":  "class",
                         "role":  "Other",
@@ -16162,6 +16449,13 @@
                         "line":  4
                     },
                     {
+                        "name":  "AdminAchievementDefinitionsController",
+                        "kind":  "class",
+                        "role":  "Controller",
+                        "path":  "FoodDiary.Presentation.Api/Features/Admin/AdminAchievementDefinitionsController.cs",
+                        "line":  17
+                    },
+                    {
                         "name":  "AdminAcquisitionController",
                         "kind":  "class",
                         "role":  "Controller",
@@ -16258,6 +16552,13 @@
                         "role":  "Controller",
                         "path":  "FoodDiary.Presentation.Api/Features/Admin/AdminUsersController.cs",
                         "line":  17
+                    },
+                    {
+                        "name":  "AdminAchievementDefinitionsHttpMappings",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminAchievementDefinitionsHttpMappings.cs",
+                        "line":  9
                     },
                     {
                         "name":  "AdminAiHttpResponseMappings",
@@ -16414,6 +16715,13 @@
                         "line":  2
                     },
                     {
+                        "name":  "CreateAdminAchievementDefinitionHttpRequest",
+                        "kind":  "record",
+                        "role":  "Request",
+                        "path":  "FoodDiary.Presentation.Api/Features/Admin/Requests/CreateAdminAchievementDefinitionHttpRequest.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "GetAdminAiUsageSummaryHttpQuery",
                         "kind":  "record",
                         "role":  "Query",
@@ -16502,6 +16810,20 @@
                         "kind":  "record",
                         "role":  "Query",
                         "path":  "FoodDiary.Presentation.Api/Features/Admin/Requests/GetMarketingAttributionSummaryHttpQuery.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "UpdateAdminAchievementDefinitionHttpRequest",
+                        "kind":  "record",
+                        "role":  "Request",
+                        "path":  "FoodDiary.Presentation.Api/Features/Admin/Requests/UpdateAdminAchievementDefinitionHttpRequest.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "AdminAchievementDefinitionHttpResponse",
+                        "kind":  "record",
+                        "role":  "Response",
+                        "path":  "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminAchievementDefinitionHttpResponse.cs",
                         "line":  2
                     },
                     {
@@ -17909,7 +18231,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Presentation.Api/Features/Gamification/Mappings/GamificationHttpMappings.cs",
-                        "line":  6
+                        "line":  7
                     },
                     {
                         "name":  "BadgeHttpResponse",
@@ -21456,6 +21778,48 @@
                 ],
     "interfaceImplementations":  [
                                      {
+                                         "interface":  "IAchievementAwardService",
+                                         "interfacePath":  "FoodDiary.Application/Gamification/Common/IAchievementAwardService.cs",
+                                         "implementation":  "AchievementAwardService",
+                                         "implementationPath":  "FoodDiary.Application/Gamification/Services/AchievementAwardService.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
+                                         "interface":  "IAchievementDefinitionAdministrationService",
+                                         "interfacePath":  "FoodDiary.Application/Gamification/Common/IAchievementDefinitionAdministrationService.cs",
+                                         "implementation":  "AchievementDefinitionAdministrationService",
+                                         "implementationPath":  "FoodDiary.Application/Gamification/Services/AchievementDefinitionAdministrationService.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
+                                         "interface":  "IAchievementDefinitionStore",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs",
+                                         "implementation":  "AchievementDefinitionStore",
+                                         "implementationPath":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementDefinitionStore.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
+                                         "interface":  "IAchievementEvaluationOutbox",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Consumptions/Common/IAchievementEvaluationOutbox.cs",
+                                         "implementation":  "AchievementEvaluationOutbox",
+                                         "implementationPath":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutbox.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
+                                         "interface":  "IAchievementEvaluationOutboxProcessor",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs",
+                                         "implementation":  "AchievementEvaluationOutboxProcessor",
+                                         "implementationPath":  "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
+                                         "interface":  "IAchievementReconciliationHandler",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs",
+                                         "implementation":  "AchievementReconciliationHandler",
+                                         "implementationPath":  "FoodDiary.Application/Gamification/Services/AchievementReconciliationHandler.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
                                          "interface":  "IAdminAiUsageReadService",
                                          "interfacePath":  "FoodDiary.Application/Admin/Common/IAdminAiUsageReadService.cs",
                                          "implementation":  "AdminAiUsageReadService",
@@ -22821,6 +23185,13 @@
                                          "confidence":  "naming-convention"
                                      },
                                      {
+                                         "interface":  "IUserAchievementStore",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Achievements/Common/IUserAchievementStore.cs",
+                                         "implementation":  "UserAchievementStore",
+                                         "implementationPath":  "FoodDiary.Infrastructure/Persistence/Achievements/UserAchievementStore.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
                                          "interface":  "IUserAdministrationReadService",
                                          "interfacePath":  "FoodDiary.Application/Users/Common/IUserAdministrationReadService.cs",
                                          "implementation":  "UserAdministrationReadService",
@@ -23611,154 +23982,203 @@
                                                  "implementation":  "CycleReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  32
+                                                 "line":  33
                                              },
                                              {
                                                  "service":  "IDashboardStatisticsReadService",
                                                  "implementation":  "MediatorDashboardStatisticsReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  33
+                                                 "line":  34
                                              },
                                              {
                                                  "service":  "IDashboardBodyReadService",
                                                  "implementation":  "RepositoryDashboardBodyReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  34
+                                                 "line":  35
                                              },
                                              {
                                                  "service":  "IDashboardMealsReadService",
                                                  "implementation":  "MediatorDashboardMealsReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  35
+                                                 "line":  36
                                              },
                                              {
                                                  "service":  "IDashboardReadService",
                                                  "implementation":  "ComposedDashboardReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  36
+                                                 "line":  37
                                              },
                                              {
                                                  "service":  "IDashboardUserContextService",
                                                  "implementation":  "DashboardUserContextService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  37
+                                                 "line":  38
                                              },
                                              {
                                                  "service":  "IDashboardSectionDataLoader",
                                                  "implementation":  "DashboardSectionDataLoader",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  38
+                                                 "line":  39
                                              },
                                              {
                                                  "service":  "IFastingAnalyticsService",
                                                  "implementation":  "FastingAnalyticsService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  43
+                                                 "line":  44
                                              },
                                              {
                                                  "service":  "IFastingReadService",
                                                  "implementation":  "FastingReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  44
+                                                 "line":  45
                                              },
                                              {
                                                  "service":  "IFastingTelemetrySummaryReadService",
                                                  "implementation":  "FastingTelemetrySummaryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  45
+                                                 "line":  46
                                              },
                                              {
                                                  "service":  "IFastingNotificationScheduler",
                                                  "implementation":  "FastingNotificationScheduler",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  46
+                                                 "line":  47
                                              },
                                              {
                                                  "service":  "IHydrationEntryReadService",
                                                  "implementation":  "HydrationEntryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  47
+                                                 "line":  48
                                              },
                                              {
                                                  "service":  "IHydrationGoalService",
                                                  "implementation":  "HydrationGoalService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  48
+                                                 "line":  49
                                              },
                                              {
                                                  "service":  "IGamificationReadService",
                                                  "implementation":  "GamificationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  49
+                                                 "line":  50
                                              },
                                              {
                                                  "service":  "IGamificationUserProfileService",
                                                  "implementation":  "GamificationUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  50
+                                                 "line":  51
+                                             },
+                                             {
+                                                 "service":  "IAchievementAwardService",
+                                                 "implementation":  "AchievementAwardService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
+                                                 "line":  52
+                                             },
+                                             {
+                                                 "service":  "IAchievementReconciliationHandler",
+                                                 "implementation":  "AchievementReconciliationHandler",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
+                                                 "line":  53
+                                             },
+                                             {
+                                                 "service":  "IAchievementDefinitionAdministrationService",
+                                                 "implementation":  "AchievementDefinitionAdministrationService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
+                                                 "line":  54
                                              },
                                              {
                                                  "service":  "IExerciseEntryReadService",
                                                  "implementation":  "ExerciseEntryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  51
+                                                 "line":  55
                                              },
                                              {
                                                  "service":  "IWaistEntryReadService",
                                                  "implementation":  "WaistEntryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  52
+                                                 "line":  56
                                              },
                                              {
                                                  "service":  "IWearableReadService",
                                                  "implementation":  "WearableReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  53
+                                                 "line":  57
                                              },
                                              {
                                                  "service":  "IWeightEntryReadService",
                                                  "implementation":  "WeightEntryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  54
+                                                 "line":  58
                                              },
                                              {
                                                  "service":  "ITdeeUserProfileService",
                                                  "implementation":  "TdeeUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  55
+                                                 "line":  59
                                              },
                                              {
                                                  "service":  "IWeeklyCheckInUserProfileService",
                                                  "implementation":  "WeeklyCheckInUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  56
+                                                 "line":  60
                                              },
                                              {
                                                  "service":  "IWeeklyCheckInReadService",
                                                  "implementation":  "WeeklyCheckInReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  57
+                                                 "line":  61
+                                             },
+                                             {
+                                                 "service":  "IAchievementDefinitionStore",
+                                                 "implementation":  "AchievementDefinitionStore",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+                                                 "line":  10
+                                             },
+                                             {
+                                                 "service":  "IUserAchievementStore",
+                                                 "implementation":  "UserAchievementStore",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+                                                 "line":  11
+                                             },
+                                             {
+                                                 "service":  "IAchievementEvaluationOutbox",
+                                                 "implementation":  "AchievementEvaluationOutbox",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+                                                 "line":  12
+                                             },
+                                             {
+                                                 "service":  "IAchievementEvaluationOutboxProcessor",
+                                                 "implementation":  "AchievementEvaluationOutboxProcessor",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+                                                 "line":  13
                                              },
                                              {
                                                  "service":  "IAiUsageRepository",
@@ -24437,14 +24857,14 @@
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-                                                 "line":  75
+                                                 "line":  84
                                              },
                                              {
                                                  "service":  "IJobExecutionStateTracker",
                                                  "implementation":  "JobExecutionStateTracker",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-                                                 "line":  94
+                                                 "line":  104
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",

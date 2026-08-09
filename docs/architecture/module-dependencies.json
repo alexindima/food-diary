@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "description": "Executable Application module dependency graph. Edges are direct in-process Module API dependencies; Abstractions DTO references are excluded.",
   "modules": {
-    "Admin": ["Ai", "Authentication", "ContentReports", "Email", "Lessons", "Users"],
+    "Admin": ["Ai", "Authentication", "ContentReports", "Email", "Gamification", "Lessons", "Users"],
     "Ai": ["Users"],
     "Authentication": ["Email", "Notifications", "Users"],
     "Consumptions": ["Images", "Nutrition", "Users"],

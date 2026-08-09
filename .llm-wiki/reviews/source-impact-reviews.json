@@ -52,14 +52,14 @@
                         "pageSha256":  "db8ec229f2fd9d661b5737dbd6112c28b9d356334ebb19c26e801907f4a22afc",
                         "sources":  [
                                         {
-                                            "path":  "docs/ARCHITECTURE.md",
-                                            "sha256":  "677af26b197c8be76be1c8734750e2a17be36bd57f1c477e2266f46dd7b17878"
+                                            "path":  "docs/architecture/module-dependencies.json",
+                                            "sha256":  "8856ac3582eb96da5c65def02fdf35bdf1287dc8d6890c52cb3a836fee211044"
                                         }
                                     ],
-                        "reason":  "Reviewed architecture page; FoodDiary.Analyzers is compiler tooling and does not alter runtime layer direction.",
+                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
-                        "reviewedAtUtc":  "2026-08-08T15:21:54.3256364Z"
+                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
+                        "reviewedAtUtc":  "2026-08-09T22:10:48.6733071Z"
                     },
                     {
                         "pageId":  "system.knowledge-model",
@@ -75,6 +75,21 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
                         "reviewedAtUtc":  "2026-08-09T09:52:48.9511400Z"
+                    },
+                    {
+                        "pageId":  "system.repository-catalog",
+                        "pagePath":  ".llm-wiki/system/repository-catalog.md",
+                        "pageSha256":  "a97b8a5d6e04018699449d6024d8fb3ec6db81d895ad34ff276835ec4d3db159",
+                        "sources":  [
+                                        {
+                                            "path":  "docs/architecture/module-dependencies.json",
+                                            "sha256":  "8856ac3582eb96da5c65def02fdf35bdf1287dc8d6890c52cb3a836fee211044"
+                                        }
+                                    ],
+                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
+                        "reviewedAtUtc":  "2026-08-09T22:10:49.4326646Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -128,13 +143,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "8760126d6e9195c979c11319afd3d3aeae16414073e8b8d579a76e3293a62014"
+                                            "sha256":  "e10422be6b3770c2d03567668e806554d9feac985ed6dc92b190ebadc01bb6c8"
                                         }
                                     ],
-                        "reason":  "Removed obsolete private goals card components after replacing all page consumers with the goals editor; retained and retargeted the public page tour contract.",
+                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "14ce7a7fb2fec0f21282d7df832ae5a6992ea6bd",
-                        "reviewedAtUtc":  "2026-08-09T14:28:37.5862158Z"
+                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
+                        "reviewedAtUtc":  "2026-08-09T22:10:55.1654238Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -143,13 +158,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "508bc0f38521a0281845e92b7be0ee0d87cb79616a56af6e1424fc25203beec7"
+                                            "sha256":  "e6d554c89dbc59483d22038beeddeed3d499f860f30b955dee66a3eae6f9dd05"
                                         }
                                     ],
-                        "reason":  "Regenerated compiled indexes after analyzer, statistics, and frontend accessibility changes; documented workflow semantics remain unchanged.",
+                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cee7bfa42c63a0a563683cde3ef60f12413fedd7",
-                        "reviewedAtUtc":  "2026-08-09T12:14:57.8945223Z"
+                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
+                        "reviewedAtUtc":  "2026-08-09T22:10:59.9101150Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -207,13 +222,13 @@
                         "sources":  [
                                         {
                                             "path":  "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-                                            "sha256":  "1047d755dbc6f1d1b32abf95c135c5cf5d9a8ec5ff4157de3ebe79c50823e47a"
+                                            "sha256":  "902650514121cb63d5c0a869a373759349755c262d3cb2c3ed516c4890c8a7e5"
                                         }
                                     ],
-                        "reason":  "Reviewed additive documented 413 response and refreshed focused/full OpenAPI snapshots; no breaking contract change.",
+                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "71bf2466ed53eccd7ef769c6a3e31a5ad354d145",
-                        "reviewedAtUtc":  "2026-08-08T14:06:34.4760560Z"
+                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
+                        "reviewedAtUtc":  "2026-08-09T22:10:50.3887865Z"
                     },
                     {
                         "pageId":  "workflow-architecture-health-review",
@@ -222,13 +237,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "924134fe81a3ecc466aa077fb3f965f494d8473c758bd3ee5d5912547a02765f"
+                                            "sha256":  "2f183946b43991aecdb481efb985ee8da3a3945536f88f2bec35b1b75a5c5afd"
                                         }
                                     ],
-                        "reason":  "Test-only coverage expansion; architecture boundaries and production structure are unchanged.",
+                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8259527f5498dee340f334382c0befd72be706b1",
-                        "reviewedAtUtc":  "2026-08-09T15:00:14.8906851Z"
+                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
+                        "reviewedAtUtc":  "2026-08-09T22:10:51.2149221Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -237,13 +252,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "83fbeec42c6b1d2c8ec158f1db6435fd2c7a6520f4b2dac90657837c59d3a455"
+                                            "sha256":  "0b8e51b596964ddd9e51036c2a343c111b522645719c180d6ce0686d0c268f3e"
                                         }
                                     ],
-                        "reason":  "Test-only coverage expansion; backend HTTP and application contracts are unchanged.",
+                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8259527f5498dee340f334382c0befd72be706b1",
-                        "reviewedAtUtc":  "2026-08-09T15:00:15.5366967Z"
+                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
+                        "reviewedAtUtc":  "2026-08-09T22:10:52.0811074Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -342,13 +357,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/configuration-index.json",
-                                            "sha256":  "04e0d9cde4d8ca8069e09f19a8b15950c52e2ac6c1cb50194ffeb01014570d83"
+                                            "sha256":  "e6f20b1834331289ce87046a8338bdddd92af22d7e8c95923330830ff8f50812"
                                         }
                                     ],
-                        "reason":  "Re-reviewed final Paddle production-only NotificationSettingId validation, sandbox compatibility, typed client registration, and deployment runbook.",
+                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
-                        "reviewedAtUtc":  "2026-08-08T10:29:20.4872221Z"
+                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
+                        "reviewedAtUtc":  "2026-08-09T22:10:52.9219754Z"
                     },
                     {
                         "pageId":  "workflow-developer-experience",
@@ -396,13 +411,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/domain-data-index.json",
-                                            "sha256":  "ec5cf6b46100be74370772b8e4db9b0da7f6834bf08a96d9cecce4cd2051f898"
+                                            "sha256":  "63952420b12ab0eaf314be5ac9884d7d6b90a55591b0d31e5956464a48da56b4"
                                         }
                                     ],
-                        "reason":  "Reviewed domain and data mappings; meal aggregation fields are read-model additions and do not change domain invariants or persistence ownership.",
+                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
-                        "reviewedAtUtc":  "2026-08-09T09:52:51.8219726Z"
+                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
+                        "reviewedAtUtc":  "2026-08-09T22:10:54.0868838Z"
                     },
                     {
                         "pageId":  "workflow-impact-simulation",
@@ -530,6 +545,21 @@
                         "reviewedAtUtc":  "2026-08-01T00:08:41.9187692Z"
                     },
                     {
+                        "pageId":  "workflow-ownership-impact",
+                        "pagePath":  ".llm-wiki/workflows/ownership-impact.md",
+                        "pageSha256":  "d3d432c73abbc3e5880b10862b4b343ec755f82c7fd5a62a2286093f5f20676d",
+                        "sources":  [
+                                        {
+                                            "path":  "docs/architecture/module-dependencies.json",
+                                            "sha256":  "8856ac3582eb96da5c65def02fdf35bdf1287dc8d6890c52cb3a836fee211044"
+                                        }
+                                    ],
+                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
+                        "reviewedAtUtc":  "2026-08-09T22:10:56.2229792Z"
+                    },
+                    {
                         "pageId":  "workflow-performance-observability-review",
                         "pagePath":  ".llm-wiki/workflows/performance-observability-review.md",
                         "pageSha256":  "0d3f137f64fa7b1f3299dc26881c5bfc9dfd9ab2ed9f11a0d1507cbf324ff541",
@@ -574,13 +604,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "227840e8bbf55d7e7d138231351f451f7f967f4327209ab211b29abadcfed6e1"
+                                            "sha256":  "d67f6805b6607ee52f2d8f51a422afa06ba971efb3f1d5a95f6a0bd4beeea739"
                                         }
                                     ],
-                        "reason":  "Regenerated compiled indexes after analyzer, statistics, and frontend accessibility changes; documented workflow semantics remain unchanged.",
+                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cee7bfa42c63a0a563683cde3ef60f12413fedd7",
-                        "reviewedAtUtc":  "2026-08-09T12:14:56.4220919Z"
+                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
+                        "reviewedAtUtc":  "2026-08-09T22:10:57.4959948Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -623,13 +653,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "a9f8c3b6b40f53079d717ae95ec15db519566a1db69edbf1ba6b83af1b328275"
+                                            "sha256":  "169fca104d48ccbc713fb3cc77a73bdc01a16ca7d3117e25a1d7a378673d9e03"
                                         }
                                     ],
-                        "reason":  "Quality index refreshed for new focused statistics and billing coverage tests.",
+                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8259527f5498dee340f334382c0befd72be706b1",
-                        "reviewedAtUtc":  "2026-08-09T15:00:16.1531156Z"
+                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
+                        "reviewedAtUtc":  "2026-08-09T22:10:58.8741058Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -695,13 +725,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/runtime-topology.json",
-                                            "sha256":  "b26a4a2560f6063e93e6c5161f0603aa1683eeb9e65b8b68d59e8bdf82903c7e"
+                                            "sha256":  "a20c1051a95334eedff59a9bb2b675efdaf3d4db87903c64c0abf49b571b5f9b"
                                         }
                                     ],
-                        "reason":  "Re-reviewed final recovery scheduling, bounded pagination, retries, idempotency, sandbox no-op, and production fail-fast behavior.",
+                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d8fa15a420a587fa15bc62016ccbb065819684c6",
-                        "reviewedAtUtc":  "2026-08-08T10:29:21.7926198Z"
+                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
+                        "reviewedAtUtc":  "2026-08-09T22:11:02.0391314Z"
                     },
                     {
                         "pageId":  "workflow-task-brief",
@@ -794,17 +824,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "8760126d6e9195c979c11319afd3d3aeae16414073e8b8d579a76e3293a62014"
+                                            "sha256":  "e10422be6b3770c2d03567668e806554d9feac985ed6dc92b190ebadc01bb6c8"
                                         },
                                         {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "0a86f6ee7716a94d4be717007e0b6ffd981276d007e80fd09032615781ebf309"
+                                            "sha256":  "455c5ccf03474295a95a25bc05fdf5bfb93a52613d068af12ea2d47f1d673697"
                                         }
                                     ],
-                        "reason":  "Goals page now renders only GoalsEditorComponent while preserving the existing route, facade, API, save flow, and tour targets.",
+                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "14ce7a7fb2fec0f21282d7df832ae5a6992ea6bd",
-                        "reviewedAtUtc":  "2026-08-09T14:28:39.3514184Z"
+                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
+                        "reviewedAtUtc":  "2026-08-09T22:11:03.1871761Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

@@ -21,6 +21,7 @@ public static partial class DependencyInjection {
         services.AddRecipeInteractionPersistence();
         services.AddModerationPersistence();
         services.AddUsdaPersistence();
+        services.AddAchievementPersistence();
 
     }
 }

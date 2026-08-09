@@ -1,21 +1,10 @@
 using FoodDiary.Application.Gamification.Models;
+using FoodDiary.Domain.Entities.Achievements;
+using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Gamification.Services;
 
 public static class GamificationCalculator {
-    private static readonly (string Key, string Category, int Threshold)[] BadgeDefinitions = [
-        ("streak_3", "streak", 3),
-        ("streak_7", "streak", 7),
-        ("streak_14", "streak", 14),
-        ("streak_30", "streak", 30),
-        ("streak_60", "streak", 60),
-        ("streak_100", "streak", 100),
-        ("meals_10", "meals", 10),
-        ("meals_50", "meals", 50),
-        ("meals_100", "meals", 100),
-        ("meals_500", "meals", 500),
-    ];
-
     public static (int CurrentStreak, int LongestStreak) CalculateStreaks(IReadOnlyList<DateTime> sortedDatesDesc, DateTime today) {
         if (sortedDatesDesc.Count == 0) {
             return (0, 0);
@@ -56,14 +45,27 @@ public static class GamificationCalculator {
         return (currentStreak, longestStreak);
     }
 
-    public static IReadOnlyList<BadgeModel> CalculateBadges(int longestStreak, int totalMeals) {
-        return BadgeDefinitions.Select(b => new BadgeModel(
-            b.Key,
-            b.Category,
-            b.Threshold,
-string.Equals(b.Category, "streak", StringComparison.Ordinal) ? longestStreak >= b.Threshold : totalMeals >= b.Threshold
-        )).ToList();
+    public static IReadOnlyList<BadgeModel> CalculateBadges(
+        IReadOnlyList<AchievementDefinition> definitions,
+        int longestStreak,
+        int totalMeals) {
+        return definitions.Select(definition => new BadgeModel(
+            definition.Key,
+            definition.Category,
+            definition.Threshold,
+            GetMetricValue(definition.Metric, longestStreak, totalMeals) >= definition.Threshold,
+            definition.TitleRu,
+            definition.TitleEn,
+            definition.DescriptionRu,
+            definition.DescriptionEn,
+            definition.Icon)).ToList();
     }
+
+    public static int GetMetricValue(AchievementMetric metric, int longestStreak, int totalMeals) => metric switch {
+        AchievementMetric.LongestStreak => longestStreak,
+        AchievementMetric.TotalMeals => totalMeals,
+        _ => throw new ArgumentOutOfRangeException(nameof(metric)),
+    };
 
     public static int CalculateHealthScore(
         int currentStreak,

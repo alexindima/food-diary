@@ -6,12 +6,14 @@ using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Consumptions.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Consumptions.Common;
 
 namespace FoodDiary.Application.Consumptions.Commands.RepeatMeal;
 
@@ -19,8 +21,18 @@ public sealed class RepeatMealCommandHandler(
     IMealReadRepository mealReadRepository,
     IMealWriteRepository mealWriteRepository,
     IMealNutritionService mealNutritionService,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    IAchievementEvaluationOutbox achievementEvaluationOutbox)
     : ICommandHandler<RepeatMealCommand, Result<ConsumptionModel>> {
+    public RepeatMealCommandHandler(
+        IMealReadRepository mealReadRepository,
+        IMealWriteRepository mealWriteRepository,
+        IMealNutritionService mealNutritionService,
+        ICurrentUserAccessService currentUserAccessService)
+        : this(mealReadRepository, mealWriteRepository, mealNutritionService, currentUserAccessService,
+            NullAchievementEvaluationOutbox.Instance) {
+    }
+
     private sealed record RepeatMealValues(
         UserId UserId,
         Meal SourceMeal,
@@ -41,6 +53,7 @@ public sealed class RepeatMealCommandHandler(
         await ApplyNutritionAsync(values.SourceMeal, newMeal, values.UserId, cancellationToken).ConfigureAwait(false);
 
         await mealWriteRepository.AddAsync(newMeal, cancellationToken).ConfigureAwait(false);
+        await achievementEvaluationOutbox.EnqueueAsync(values.UserId, cancellationToken).ConfigureAwait(false);
         return Result.Success(newMeal.ToModel());
     }
 

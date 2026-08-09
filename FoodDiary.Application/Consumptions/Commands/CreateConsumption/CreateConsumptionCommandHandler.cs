@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Consumptions.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Consumptions.Mappings;
@@ -9,6 +10,7 @@ using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Consumptions.Common;
 
 namespace FoodDiary.Application.Consumptions.Commands.CreateConsumption;
 
@@ -18,8 +20,20 @@ public sealed class CreateConsumptionCommandHandler(
     IRecentItemUsageRecorder recentItemUsageRecorder,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider,
-    IImageAssetAccessService imageAssetAccessService)
+    IImageAssetAccessService imageAssetAccessService,
+    IAchievementEvaluationOutbox achievementEvaluationOutbox)
     : ICommandHandler<CreateConsumptionCommand, Result<ConsumptionModel>> {
+    public CreateConsumptionCommandHandler(
+        IMealWriteRepository mealRepository,
+        IMealNutritionService mealNutritionService,
+        IRecentItemUsageRecorder recentItemUsageRecorder,
+        ICurrentUserAccessService currentUserAccessService,
+        TimeProvider dateTimeProvider,
+        IImageAssetAccessService imageAssetAccessService)
+        : this(mealRepository, mealNutritionService, recentItemUsageRecorder, currentUserAccessService,
+            dateTimeProvider, imageAssetAccessService, NullAchievementEvaluationOutbox.Instance) {
+    }
+
     public async Task<Result<ConsumptionModel>> Handle(CreateConsumptionCommand command, CancellationToken cancellationToken) {
         Result<CreateConsumptionValues> valuesResult = await CreateConsumptionValuePreparer.PrepareAsync(
             command,
@@ -84,6 +98,7 @@ public sealed class CreateConsumptionCommandHandler(
         UserId userId,
         CancellationToken cancellationToken) {
         await mealRepository.AddAsync(meal, cancellationToken).ConfigureAwait(false);
+        await achievementEvaluationOutbox.EnqueueAsync(userId, cancellationToken).ConfigureAwait(false);
         await recentItemUsageRecorder.RegisterUsageAsync(
             userId,
             meal.Items.Where(x => x.ProductId.HasValue).Select(x => x.ProductId!.Value).ToList(),

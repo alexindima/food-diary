@@ -12,6 +12,7 @@ public sealed class GamificationReadService(
     IMealActivityReadService mealActivityReadService,
     IDashboardStatisticsReadService statisticsReadService,
     IGamificationUserProfileService userProfileService,
+    IAchievementAwardService achievementAwardService,
     TimeProvider dateTimeProvider)
     : IGamificationReadService {
     public async Task<Result<GamificationModel>> GetAsync(UserId userId, CancellationToken cancellationToken) {
@@ -22,7 +23,7 @@ public sealed class GamificationReadService(
         }
 
         DateTime today = dateTimeProvider.GetUtcNow().UtcDateTime.Date;
-        DateTime streakFrom = today.AddDays(-365);
+        DateTime streakFrom = DateTime.UnixEpoch;
 
         IReadOnlyList<DateTime> mealDates = await mealActivityReadService.GetDistinctMealDatesAsync(userId, streakFrom, today, cancellationToken).ConfigureAwait(false);
         (int currentStreak, int longestStreak) = GamificationCalculator.CalculateStreaks(mealDates, today);
@@ -44,7 +45,9 @@ public sealed class GamificationReadService(
         double weeklyAdherence = GamificationCalculator.CalculateWeeklyAdherence(
             ToDailyCalories(weeklyCaloriesResult.Value), userProfile.GetCalorieTargetForDate, today);
 
-        IReadOnlyList<BadgeModel> badges = GamificationCalculator.CalculateBadges(longestStreak, totalMeals);
+        IReadOnlyList<BadgeModel> badges = await achievementAwardService
+            .EvaluateAndGrantAsync(userId, longestStreak, totalMeals, cancellationToken)
+            .ConfigureAwait(false);
         int healthScore = GamificationCalculator.CalculateHealthScore(currentStreak, weeklyAdherence, totalMeals);
 
         return Result.Success(new GamificationModel(

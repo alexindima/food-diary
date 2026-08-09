@@ -14,7 +14,7 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Ai, Authentication, ContentReports, Email, Lessons, Users
+- Dependencies: Ai, Authentication, ContentReports, Email, Gamification, Lessons, Users
 - Consumers: none
 
 ## Source Areas
@@ -28,6 +28,14 @@ sources:
 - `tests/FoodDiary.Application.Tests/Admin`
 
 ## HTTP Surface
+
+### AdminAchievementDefinitionsController
+
+Source: `FoodDiary.Presentation.Api/Features/Admin/AdminAchievementDefinitionsController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/achievement-definitions`
+- `POST /api/v{version:apiVersion}/admin/achievement-definitions`
+- `PUT /api/v{version:apiVersion}/admin/achievement-definitions/{id:guid}`
 
 ### AdminAcquisitionController
 
@@ -156,6 +164,7 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 - `tests/FoodDiary.Application.Tests/Admin/UserLoginActivityFeatureTests.cs`
 - `tests/FoodDiary.Domain.Tests/Domain/AdminInvariantTests.cs`
 - `tests/FoodDiary.Infrastructure.Tests/Authentication/AdminSsoServiceTests.cs`
+- `tests/FoodDiary.Presentation.Api.Tests/AdminAchievementDefinitionsControllerTests.cs`
 - `tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs`
 - `tests/FoodDiary.Presentation.Api.Tests/AdminHttpMappingsTests.cs`
 - `tests/FoodDiary.Presentation.Api.Tests/AdminSsoControllerTests.cs`

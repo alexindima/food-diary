@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Dashboard.Common;
+using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Cycles.Common;
 using FoodDiary.Application.Cycles.Services;
@@ -48,6 +49,9 @@ public static partial class DependencyInjection {
         services.AddScoped<IHydrationGoalService, HydrationGoalService>();
         services.AddScoped<IGamificationReadService, GamificationReadService>();
         services.AddScoped<IGamificationUserProfileService, GamificationUserProfileService>();
+        services.AddScoped<IAchievementAwardService, AchievementAwardService>();
+        services.AddScoped<IAchievementReconciliationHandler, AchievementReconciliationHandler>();
+        services.AddScoped<IAchievementDefinitionAdministrationService, AchievementDefinitionAdministrationService>();
         services.AddScoped<IExerciseEntryReadService, ExerciseEntryReadService>();
         services.AddScoped<IWaistEntryReadService, WaistEntryReadService>();
         services.AddScoped<IWearableReadService, WearableReadService>();

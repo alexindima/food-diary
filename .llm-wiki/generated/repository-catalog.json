@@ -17,8 +17,8 @@
                     "frontendProjects":  4,
                     "applicationModules":  38,
                     "extractedApplicationModules":  2,
-                    "controllers":  83,
-                    "endpoints":  266,
+                    "controllers":  84,
+                    "endpoints":  269,
                     "agentGuides":  43,
                     "documentationPages":  43
                 },
@@ -2236,6 +2236,7 @@
                                                         "Authentication",
                                                         "ContentReports",
                                                         "Email",
+                                                        "Gamification",
                                                         "Lessons",
                                                         "Users"
                                                     ]
@@ -2518,6 +2519,28 @@
     "http":  {
                  "extraction":  "Literal ASP.NET Core Http* and controller Route attributes",
                  "controllers":  [
+                                     {
+                                         "name":  "AdminAchievementDefinitionsController",
+                                         "path":  "FoodDiary.Presentation.Api/Features/Admin/AdminAchievementDefinitionsController.cs",
+                                         "routePrefix":  "api/v{version:apiVersion}/admin/achievement-definitions",
+                                         "endpoints":  [
+                                                           {
+                                                               "verb":  "GET",
+                                                               "route":  "/api/v{version:apiVersion}/admin/achievement-definitions",
+                                                               "line":  18
+                                                           },
+                                                           {
+                                                               "verb":  "POST",
+                                                               "route":  "/api/v{version:apiVersion}/admin/achievement-definitions",
+                                                               "line":  24
+                                                           },
+                                                           {
+                                                               "verb":  "PUT",
+                                                               "route":  "/api/v{version:apiVersion}/admin/achievement-definitions/{id:guid}",
+                                                               "line":  31
+                                                           }
+                                                       ]
+                                     },
                                      {
                                          "name":  "AdminAcquisitionController",
                                          "path":  "FoodDiary.Presentation.Api/Features/Admin/AdminAcquisitionController.cs",
