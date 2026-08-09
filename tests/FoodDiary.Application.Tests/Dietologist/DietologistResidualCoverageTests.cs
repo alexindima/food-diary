@@ -16,7 +16,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-#pragma warning disable IDE0007, IDE0008, MA0003
+#pragma warning disable MA0003
 
 namespace FoodDiary.Application.Tests.Dietologist;
 
@@ -73,13 +73,13 @@ public sealed class DietologistResidualCoverageTests {
     [Fact]
     public void CreateRecommendationCommentValidator_ValidatesAllFields() {
         var validator = new CreateRecommendationCommentCommandValidator();
-        var missing = validator.TestValidate(
+        TestValidationResult<CreateRecommendationCommentCommand> missing = validator.TestValidate(
             new CreateRecommendationCommentCommand(null, Guid.Empty, ""));
-        var emptyUser = validator.TestValidate(
+        TestValidationResult<CreateRecommendationCommentCommand> emptyUser = validator.TestValidate(
             new CreateRecommendationCommentCommand(Guid.Empty, Guid.NewGuid(), "Text"));
-        var tooLong = validator.TestValidate(
+        TestValidationResult<CreateRecommendationCommentCommand> tooLong = validator.TestValidate(
             new CreateRecommendationCommentCommand(Guid.NewGuid(), Guid.NewGuid(), new string('x', 2001)));
-        var valid = validator.TestValidate(
+        TestValidationResult<CreateRecommendationCommentCommand> valid = validator.TestValidate(
             new CreateRecommendationCommentCommand(Guid.NewGuid(), Guid.NewGuid(), new string('x', 2000)));
 
         Assert.Multiple(
@@ -94,22 +94,22 @@ public sealed class DietologistResidualCoverageTests {
     [Fact]
     public void BulkCreateRecommendationsValidator_ValidatesRecipientsAndContent() {
         var validator = new BulkCreateRecommendationsCommandValidator();
-        Guid duplicate = Guid.NewGuid();
-        var empty = validator.TestValidate(
+        var duplicate = Guid.NewGuid();
+        TestValidationResult<BulkCreateRecommendationsCommand> empty = validator.TestValidate(
             new BulkCreateRecommendationsCommand(null, [], "", ""));
-        var invalidRecipients = validator.TestValidate(
+        TestValidationResult<BulkCreateRecommendationsCommand> invalidRecipients = validator.TestValidate(
             new BulkCreateRecommendationsCommand(
                 null,
                 [Guid.Empty, duplicate, duplicate],
                 new string('x', 2001),
                 new string('x', 101)));
-        var tooMany = validator.TestValidate(
+        TestValidationResult<BulkCreateRecommendationsCommand> tooMany = validator.TestValidate(
             new BulkCreateRecommendationsCommand(
                 null,
                 Enumerable.Range(0, 101).Select(_ => Guid.NewGuid()).ToList(),
                 "Text",
                 "key"));
-        var valid = validator.TestValidate(
+        TestValidationResult<BulkCreateRecommendationsCommand> valid = validator.TestValidate(
             new BulkCreateRecommendationsCommand(
                 null,
                 [Guid.NewGuid(), Guid.NewGuid()],
@@ -181,7 +181,7 @@ public sealed class DietologistResidualCoverageTests {
 
     [Fact]
     public async Task DietologistUserContextService_CoversFailureAndDelegatedMembers() {
-        UserId userId = UserId.New();
+        var userId = UserId.New();
         IUserContextService users = Substitute.For<IUserContextService>();
         users.GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Result.Failure<FoodDiary.Domain.Entities.Users.User>(Errors.Authentication.InvalidToken));

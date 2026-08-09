@@ -85,7 +85,7 @@ public sealed class UsdaQueryHandlerTests {
         ResultAssert.Success(result);
         Assert.Equal("Spinach", result.Value.Description);
         MicronutrientModel calcium = Assert.Single(result.Value.Nutrients);
-        Assert.Equal(120, calcium.AmountPer100g);
+        Assert.Equal(120, calcium.AmountPer100G);
         Assert.Equal(1000, calcium.DailyValue);
         Assert.Equal(12, calcium.PercentDailyValue);
         UsdaFoodPortionModel portion = Assert.Single(result.Value.Portions);

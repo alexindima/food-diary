@@ -23,7 +23,7 @@ using FoodDiary.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-#pragma warning disable IDE0007, IDE0008, MA0003
+#pragma warning disable MA0003
 
 namespace FoodDiary.Presentation.Api.Tests;
 

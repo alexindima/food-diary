@@ -20091,7 +20091,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs",
                               "isTest":  true,
-                              "referenceCount":  5
+                              "referenceCount":  9
                           },
                           {
                               "contract":  "BulkCreateRecommendationsCommand",
@@ -20403,7 +20403,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/ClientTaskHandlerTests.cs",
                               "isTest":  true,
-                              "referenceCount":  9
+                              "referenceCount":  11
                           },
                           {
                               "contract":  "ChangeClientTaskStatusCommand",
@@ -22119,7 +22119,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/ClientTaskHandlerTests.cs",
                               "isTest":  true,
-                              "referenceCount":  5
+                              "referenceCount":  7
                           },
                           {
                               "contract":  "CreateClientTaskCommand",
@@ -24004,7 +24004,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs",
                               "isTest":  true,
-                              "referenceCount":  4
+                              "referenceCount":  8
                           },
                           {
                               "contract":  "CreateRecommendationCommentCommand",
@@ -24186,7 +24186,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs",
                               "isTest":  true,
-                              "referenceCount":  5
+                              "referenceCount":  8
                           },
                           {
                               "contract":  "CreateRecommendationTemplateCommand",
@@ -98909,7 +98909,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/AttentionSignalTests.cs",
                               "isTest":  true,
-                              "referenceCount":  9
+                              "referenceCount":  12
                           },
                           {
                               "contract":  "SetAttentionSignalStateCommand",
@@ -102939,7 +102939,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs",
                               "isTest":  true,
-                              "referenceCount":  6
+                              "referenceCount":  9
                           },
                           {
                               "contract":  "UpdateRecommendationTemplateCommand",

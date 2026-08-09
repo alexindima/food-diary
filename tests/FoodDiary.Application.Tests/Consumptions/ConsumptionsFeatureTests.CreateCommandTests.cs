@@ -345,7 +345,7 @@ public partial class ConsumptionsFeatureTests {
 
         Result<ConsumptionModel> result = await handler.Handle(
             CreateConsumptionCommand(user.Id.Value, items: [
-                new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150, SourceAiItemId: Guid.Empty, Origin: "AIText"),
+                new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150, SourceAiItemId: Guid.Empty, Origin: "AiText"),
             ]),
             CancellationToken.None);
 
@@ -417,7 +417,7 @@ public partial class ConsumptionsFeatureTests {
 
         Result<ConsumptionModel> result = await handler.Handle(
             CreateConsumptionCommand(user.Id.Value, items: [
-                new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150, SourceAiItemId: Guid.NewGuid(), Origin: "AIText"),
+                new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150, SourceAiItemId: Guid.NewGuid(), Origin: "AiText"),
             ]),
             CancellationToken.None);
 

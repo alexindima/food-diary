@@ -82,14 +82,14 @@ public sealed class EfUnitOfWorkTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class FailFirstSaveInterceptor : SaveChangesInterceptor {
-        private bool failed;
+        private bool _failed;
 
         public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
             DbContextEventData eventData,
             InterceptionResult<int> result,
             CancellationToken cancellationToken = default) {
-            if (!failed) {
-                failed = true;
+            if (!_failed) {
+                _failed = true;
                 throw new InvalidOperationException("Simulated transient persistence failure.");
             }
 

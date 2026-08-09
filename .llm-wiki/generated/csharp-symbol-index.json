@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3011,
-                    "symbols":  3051,
+                    "sourceFiles":  3013,
+                    "symbols":  3053,
                     "interfaceImplementationLinks":  223,
                     "dependencyInjectionRegistrations":  222,
                     "kinds":  {
-                                  "class":  1540,
+                                  "class":  1542,
                                   "enum":  45,
                                   "interface":  399,
                                   "record":  957,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  3,
                                   "Options":  55,
-                                  "Other":  1072,
+                                  "Other":  1074,
                                   "Query":  155,
                                   "QueryHandler":  120,
                                   "ReadModelRepository":  29,
@@ -55,11 +55,25 @@
                         "line":  12
                     },
                     {
+                        "name":  "ParameterNamingAnalyzer",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Analyzers/ParameterNamingAnalyzer.cs",
+                        "line":  10
+                    },
+                    {
                         "name":  "PrimaryConstructorBackingFieldAnalyzer",
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Analyzers/PrimaryConstructorBackingFieldAnalyzer.cs",
                         "line":  11
+                    },
+                    {
+                        "name":  "PrivateInstanceFieldNamingAnalyzer",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Analyzers/PrivateInstanceFieldNamingAnalyzer.cs",
+                        "line":  10
                     },
                     {
                         "name":  "ProjectConventionAnalyzer",

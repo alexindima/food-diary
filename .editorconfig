@@ -34,6 +34,11 @@ csharp_style_prefer_top_level_statements = false:none
 csharp_style_var_when_type_is_apparent = true:error
 csharp_style_var_for_built_in_types = false:error
 csharp_style_var_elsewhere = false:error
+# Roslyn IDE0007/IDE0008 own this policy. Disable Rider's conflicting
+# var/type inspections while retaining build-time enforcement.
+resharper_suggest_var_or_type_built_in_types_highlighting = none
+resharper_suggest_var_or_type_elsewhere_highlighting = none
+resharper_suggest_var_or_type_simple_types_highlighting = none
 
 # Keep expression bodies conservative; they are useful for small members, noisy for methods.
 csharp_style_expression_bodied_accessors = true:suggestion
@@ -332,6 +337,18 @@ dotnet_diagnostic.MA0051.severity = warning
 dotnet_diagnostic.FD0005.severity = error
 dotnet_diagnostic.FD0010.severity = error
 dotnet_diagnostic.FD0011.severity = error
+dotnet_diagnostic.FD0013.severity = error
+dotnet_diagnostic.FD0014.severity = error
+
+dotnet_naming_rule.private_instance_fields_use_underscore.symbols = private_fields
+dotnet_naming_rule.private_instance_fields_use_underscore.style = underscore_camel_case
+dotnet_naming_rule.private_instance_fields_use_underscore.severity = error
+dotnet_naming_rule.private_static_fields_use_pascal_case.symbols = private_static_fields
+dotnet_naming_rule.private_static_fields_use_pascal_case.style = pascal_case
+dotnet_naming_rule.private_static_fields_use_pascal_case.severity = error
+dotnet_naming_rule.private_constants_use_pascal_case.symbols = private_constants
+dotnet_naming_rule.private_constants_use_pascal_case.style = pascal_case
+dotnet_naming_rule.private_constants_use_pascal_case.severity = error
 
 dotnet_naming_rule.local_variables_use_camel_case.symbols = local_variables
 dotnet_naming_rule.local_variables_use_camel_case.style = camel_case
@@ -364,20 +381,12 @@ dotnet_diagnostic.FD0004.severity = error
 
 [FoodDiary.Application/**/*.cs]
 dotnet_diagnostic.FD0012.severity = error
-dotnet_naming_rule.private_instance_fields_use_underscore.symbols = private_fields
-dotnet_naming_rule.private_instance_fields_use_underscore.style = underscore_camel_case
-dotnet_naming_rule.private_instance_fields_use_underscore.severity = error
-dotnet_naming_rule.private_static_fields_use_pascal_case.symbols = private_static_fields
-dotnet_naming_rule.private_static_fields_use_pascal_case.style = pascal_case
-dotnet_naming_rule.private_static_fields_use_pascal_case.severity = error
-dotnet_naming_rule.private_constants_use_pascal_case.symbols = private_constants
-dotnet_naming_rule.private_constants_use_pascal_case.style = pascal_case
-dotnet_naming_rule.private_constants_use_pascal_case.severity = error
 
 [MailInbox/FoodDiary.MailInbox.{Application,Client,Domain,Infrastructure,Presentation,WebApi}/**/*.cs]
 dotnet_diagnostic.FD0002.severity = error
 dotnet_diagnostic.FD0003.severity = error
 dotnet_diagnostic.FD0004.severity = error
+dotnet_diagnostic.FD0012.severity = error
 
 [MailRelay/FoodDiary.MailRelay.{Application,Client,Domain,Infrastructure,Initializer,Presentation,WebApi}/**/*.cs]
 dotnet_diagnostic.FD0002.severity = error
@@ -393,6 +402,7 @@ dotnet_diagnostic.FD0006.severity = error
 [tests/**/*.cs]
 dotnet_diagnostic.FD0007.severity = error
 dotnet_diagnostic.FD0009.severity = error
+dotnet_diagnostic.FD0012.severity = error
 
 [FoodDiary.{Application,Application.Abstractions,Domain,Infrastructure,Presentation.Api}/**/*.cs]
 dotnet_diagnostic.FD0008.severity = error

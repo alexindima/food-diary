@@ -15,7 +15,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-#pragma warning disable IDE0007, IDE0008, MA0003
+#pragma warning disable MA0003
 
 namespace FoodDiary.Application.Tests.Dietologist;
 
@@ -23,7 +23,7 @@ namespace FoodDiary.Application.Tests.Dietologist;
 public sealed class RecommendationTemplateHandlerTests {
     [Fact]
     public async Task CreateRecommendationTemplate_CreatesMapsAndPersistsTemplate() {
-        User dietologist = User.Create("dietologist@example.com", "hash");
+        var dietologist = User.Create("dietologist@example.com", "hash");
         IRecommendationTemplateRepository repository = Substitute.For<IRecommendationTemplateRepository>();
         var handler = new CreateRecommendationTemplateCommandHandler(
             repository,
@@ -63,11 +63,11 @@ public sealed class RecommendationTemplateHandlerTests {
     [Fact]
     public void CreateRecommendationTemplateValidator_ValidatesShape() {
         var validator = new CreateRecommendationTemplateCommandValidator();
-        var invalid = validator.TestValidate(
+        TestValidationResult<CreateRecommendationTemplateCommand> invalid = validator.TestValidate(
             new CreateRecommendationTemplateCommand(null, new string('x', 121), new string('x', 2001)));
-        var empty = validator.TestValidate(
+        TestValidationResult<CreateRecommendationTemplateCommand> empty = validator.TestValidate(
             new CreateRecommendationTemplateCommand(null, "", ""));
-        var valid = validator.TestValidate(
+        TestValidationResult<CreateRecommendationTemplateCommand> valid = validator.TestValidate(
             new CreateRecommendationTemplateCommand(null, new string('x', 120), new string('x', 2000)));
 
         Assert.Multiple(
@@ -80,8 +80,8 @@ public sealed class RecommendationTemplateHandlerTests {
 
     [Fact]
     public async Task UpdateRecommendationTemplate_UpdatesOwnedTemplate() {
-        User dietologist = User.Create("dietologist@example.com", "hash");
-        RecommendationTemplate template = RecommendationTemplate.Create(dietologist.Id, "Old", "Old text");
+        var dietologist = User.Create("dietologist@example.com", "hash");
+        var template = RecommendationTemplate.Create(dietologist.Id, "Old", "Old text");
         var handler = new UpdateRecommendationTemplateCommandHandler(
             CreateRepository(template),
             CreateUserContext(dietologist));
@@ -109,8 +109,8 @@ public sealed class RecommendationTemplateHandlerTests {
         bool failUser,
         bool emptyId,
         bool foreignOwner) {
-        User dietologist = User.Create("dietologist@example.com", "hash");
-        RecommendationTemplate template = RecommendationTemplate.Create(
+        var dietologist = User.Create("dietologist@example.com", "hash");
+        var template = RecommendationTemplate.Create(
             foreignOwner ? UserId.New() : dietologist.Id,
             "Name",
             "Text");
@@ -131,7 +131,7 @@ public sealed class RecommendationTemplateHandlerTests {
 
     [Fact]
     public async Task UpdateRecommendationTemplate_WhenTemplateIsMissing_ReturnsNotFound() {
-        User dietologist = User.Create("dietologist@example.com", "hash");
+        var dietologist = User.Create("dietologist@example.com", "hash");
         var handler = new UpdateRecommendationTemplateCommandHandler(
             Substitute.For<IRecommendationTemplateRepository>(),
             CreateUserContext(dietologist));
@@ -146,15 +146,15 @@ public sealed class RecommendationTemplateHandlerTests {
     [Fact]
     public void UpdateRecommendationTemplateValidator_ValidatesShape() {
         var validator = new UpdateRecommendationTemplateCommandValidator();
-        var invalid = validator.TestValidate(
+        TestValidationResult<UpdateRecommendationTemplateCommand> invalid = validator.TestValidate(
             new UpdateRecommendationTemplateCommand(null, Guid.Empty, "", ""));
-        var tooLong = validator.TestValidate(
+        TestValidationResult<UpdateRecommendationTemplateCommand> tooLong = validator.TestValidate(
             new UpdateRecommendationTemplateCommand(
                 null,
                 Guid.NewGuid(),
                 new string('x', 121),
                 new string('x', 2001)));
-        var valid = validator.TestValidate(
+        TestValidationResult<UpdateRecommendationTemplateCommand> valid = validator.TestValidate(
             new UpdateRecommendationTemplateCommand(null, Guid.NewGuid(), "Name", "Text"));
 
         Assert.Multiple(
@@ -168,8 +168,8 @@ public sealed class RecommendationTemplateHandlerTests {
 
     [Fact]
     public async Task ArchiveRecommendationTemplate_ArchivesOwnedTemplateIdempotently() {
-        User dietologist = User.Create("dietologist@example.com", "hash");
-        RecommendationTemplate template = RecommendationTemplate.Create(dietologist.Id, "Name", "Text");
+        var dietologist = User.Create("dietologist@example.com", "hash");
+        var template = RecommendationTemplate.Create(dietologist.Id, "Name", "Text");
         var handler = new ArchiveRecommendationTemplateCommandHandler(
             CreateRepository(template),
             CreateUserContext(dietologist));
@@ -194,8 +194,8 @@ public sealed class RecommendationTemplateHandlerTests {
         bool failUser,
         bool emptyId,
         bool foreignOwner) {
-        User dietologist = User.Create("dietologist@example.com", "hash");
-        RecommendationTemplate template = RecommendationTemplate.Create(
+        var dietologist = User.Create("dietologist@example.com", "hash");
+        var template = RecommendationTemplate.Create(
             foreignOwner ? UserId.New() : dietologist.Id,
             "Name",
             "Text");
@@ -214,7 +214,7 @@ public sealed class RecommendationTemplateHandlerTests {
 
     [Fact]
     public async Task ArchiveRecommendationTemplate_WhenTemplateIsMissing_ReturnsNotFound() {
-        User dietologist = User.Create("dietologist@example.com", "hash");
+        var dietologist = User.Create("dietologist@example.com", "hash");
         var handler = new ArchiveRecommendationTemplateCommandHandler(
             Substitute.For<IRecommendationTemplateRepository>(),
             CreateUserContext(dietologist));
@@ -228,7 +228,7 @@ public sealed class RecommendationTemplateHandlerTests {
 
     [Fact]
     public async Task RecommendationTemplateReadService_MapsRepositoryModels() {
-        UserId dietologistId = UserId.New();
+        var dietologistId = UserId.New();
         IRecommendationTemplateRepository repository = Substitute.For<IRecommendationTemplateRepository>();
         DateTime createdAt = DateTime.UtcNow.AddDays(-2);
         DateTime modifiedAt = DateTime.UtcNow.AddDays(-1);
@@ -261,7 +261,7 @@ public sealed class RecommendationTemplateHandlerTests {
 
     [Fact]
     public async Task SearchRecommendationTemplates_ReturnsReadServiceResult() {
-        User dietologist = User.Create("dietologist@example.com", "hash");
+        var dietologist = User.Create("dietologist@example.com", "hash");
         IRecommendationTemplateReadService readService = Substitute.For<IRecommendationTemplateReadService>();
         RecommendationTemplateModel expected = new(
             Guid.NewGuid(),

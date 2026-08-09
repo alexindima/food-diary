@@ -323,7 +323,7 @@ public sealed class ConsumptionHttpMappingsTests {
                 85,
                 "A",
                 SourceAiItemId: aiItemId,
-                Origin: "AIPhoto"),
+                Origin: "AiPhoto"),
         };
         var aiItems = new List<ConsumptionAiItemModel> {
             new(aiItemId, sessionId, "Rice", "Ð Ð¸Ñ", 200, "g", 260, 5, 0.6, 56, 0.4, 0),

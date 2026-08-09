@@ -1280,7 +1280,7 @@
                         "role":  "Component",
                         "selector":  "fd-ui-bar-chart",
                         "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/bar-chart/fd-ui-bar-chart.ts",
-                        "line":  74
+                        "line":  76
                     },
                     {
                         "name":  "FdUiButtonComponent",
@@ -1511,7 +1511,7 @@
                         "role":  "Component",
                         "selector":  "fd-ui-line-chart",
                         "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
-                        "line":  152
+                        "line":  154
                     },
                     {
                         "name":  "FdUiLoaderComponent",

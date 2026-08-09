@@ -148,15 +148,15 @@ public partial class NotificationsFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingPostCommitActionQueue : IPostCommitActionQueue {
-        private readonly List<Func<CancellationToken, Task>> actions = [];
+        private readonly List<Func<CancellationToken, Task>> _actions = [];
 
-        public bool HasActions => actions.Count > 0;
+        public bool HasActions => _actions.Count > 0;
 
-        public void Enqueue(string actionName, Func<CancellationToken, Task> action) => actions.Add(action);
+        public void Enqueue(string actionName, Func<CancellationToken, Task> action) => _actions.Add(action);
 
         public async Task FlushAsync(CancellationToken cancellationToken = default) {
-            Func<CancellationToken, Task>[] pendingActions = [.. actions];
-            actions.Clear();
+            Func<CancellationToken, Task>[] pendingActions = [.. _actions];
+            _actions.Clear();
 
             foreach (Func<CancellationToken, Task> action in pendingActions) {
                 await action(cancellationToken).ConfigureAwait(false);

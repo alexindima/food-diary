@@ -17,7 +17,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-#pragma warning disable IDE0007, IDE0008, MA0003
+#pragma warning disable MA0003
 
 namespace FoodDiary.Application.Tests.Dietologist;
 
@@ -27,8 +27,8 @@ public sealed class ClientTaskHandlerTests {
 
     [Fact]
     public async Task CreateClientTask_CreatesTaskAndNotifiesClient() {
-        User dietologist = User.Create("dietologist@example.com", "hash");
-        UserId clientId = UserId.New();
+        var dietologist = User.Create("dietologist@example.com", "hash");
+        var clientId = UserId.New();
         IClientTaskRepository tasks = Substitute.For<IClientTaskRepository>();
         INotificationWriter notifications = Substitute.For<INotificationWriter>();
         var handler = new CreateClientTaskCommandHandler(
@@ -69,7 +69,7 @@ public sealed class ClientTaskHandlerTests {
     public async Task CreateClientTask_ReturnsFailureForInvalidUserOrClient(
         bool failUser,
         bool emptyClient) {
-        User dietologist = User.Create("dietologist@example.com", "hash");
+        var dietologist = User.Create("dietologist@example.com", "hash");
         IUserContextService userContext = failUser
             ? CreateFailingUserContext()
             : CreateUserContext(dietologist);
@@ -94,7 +94,7 @@ public sealed class ClientTaskHandlerTests {
 
     [Fact]
     public async Task CreateClientTask_WhenRelationshipIsInactive_ReturnsAccessDenied() {
-        User dietologist = User.Create("dietologist@example.com", "hash");
+        var dietologist = User.Create("dietologist@example.com", "hash");
         var handler = new CreateClientTaskCommandHandler(
             Substitute.For<IClientTaskRepository>(),
             Substitute.For<IDietologistInvitationReadModelRepository>(),
@@ -112,9 +112,9 @@ public sealed class ClientTaskHandlerTests {
     [Fact]
     public void CreateClientTaskValidator_ValidatesShape() {
         var validator = new CreateClientTaskCommandValidator();
-        var invalid = validator.TestValidate(
+        TestValidationResult<CreateClientTaskCommand> invalid = validator.TestValidate(
             new CreateClientTaskCommand(null, Guid.Empty, "", new string('x', 2001), null));
-        var valid = validator.TestValidate(
+        TestValidationResult<CreateClientTaskCommand> valid = validator.TestValidate(
             new CreateClientTaskCommand(null, Guid.NewGuid(), new string('x', 200), null, null));
 
         Assert.Multiple(
@@ -126,9 +126,9 @@ public sealed class ClientTaskHandlerTests {
 
     [Fact]
     public async Task CancelClientTask_CancelsAndNotifiesOnce() {
-        User dietologist = User.Create("dietologist@example.com", "hash");
-        UserId clientId = UserId.New();
-        ClientTask task = ClientTask.Create(dietologist.Id, clientId, "Task", null, UtcNow.AddDays(-1));
+        var dietologist = User.Create("dietologist@example.com", "hash");
+        var clientId = UserId.New();
+        var task = ClientTask.Create(dietologist.Id, clientId, "Task", null, UtcNow.AddDays(-1));
         IClientTaskRepository tasks = CreateTaskRepository(task);
         INotificationWriter notifications = Substitute.For<INotificationWriter>();
         var handler = new CancelClientTaskCommandHandler(
@@ -164,10 +164,10 @@ public sealed class ClientTaskHandlerTests {
         bool failUser,
         bool emptyTask,
         bool missingTask) {
-        User dietologist = User.Create("dietologist@example.com", "hash");
+        var dietologist = User.Create("dietologist@example.com", "hash");
         IClientTaskRepository tasks = Substitute.For<IClientTaskRepository>();
         if (!missingTask) {
-            ClientTask otherTask = ClientTask.Create(UserId.New(), UserId.New(), "Task", null, null);
+            var otherTask = ClientTask.Create(UserId.New(), UserId.New(), "Task", null, null);
             tasks.GetByIdAsync(
                     Arg.Any<ClientTaskId>(),
                     true,
@@ -190,8 +190,8 @@ public sealed class ClientTaskHandlerTests {
 
     [Fact]
     public async Task CancelClientTask_WhenRelationshipIsInactive_ReturnsAccessDenied() {
-        User dietologist = User.Create("dietologist@example.com", "hash");
-        ClientTask task = ClientTask.Create(dietologist.Id, UserId.New(), "Task", null, null);
+        var dietologist = User.Create("dietologist@example.com", "hash");
+        var task = ClientTask.Create(dietologist.Id, UserId.New(), "Task", null, null);
         var handler = new CancelClientTaskCommandHandler(
             CreateTaskRepository(task),
             Substitute.For<IDietologistInvitationReadModelRepository>(),
@@ -208,9 +208,9 @@ public sealed class ClientTaskHandlerTests {
 
     [Fact]
     public async Task ChangeClientTaskStatus_CompletesAndReopensWithNotifications() {
-        User client = User.Create("client@example.com", "hash");
-        UserId dietologistId = UserId.New();
-        ClientTask task = ClientTask.Create(dietologistId, client.Id, "Task", null, UtcNow.AddDays(-1));
+        var client = User.Create("client@example.com", "hash");
+        var dietologistId = UserId.New();
+        var task = ClientTask.Create(dietologistId, client.Id, "Task", null, UtcNow.AddDays(-1));
         INotificationWriter notifications = Substitute.For<INotificationWriter>();
         var handler = new ChangeClientTaskStatusCommandHandler(
             CreateTaskRepository(task),
@@ -252,9 +252,9 @@ public sealed class ClientTaskHandlerTests {
         bool failUser,
         bool emptyTask,
         string status) {
-        User client = User.Create("client@example.com", "hash");
-        UserId dietologistId = UserId.New();
-        ClientTask task = ClientTask.Create(dietologistId, client.Id, "Task", null, null);
+        var client = User.Create("client@example.com", "hash");
+        var dietologistId = UserId.New();
+        var task = ClientTask.Create(dietologistId, client.Id, "Task", null, null);
         var handler = new ChangeClientTaskStatusCommandHandler(
             CreateTaskRepository(task),
             CreateActiveInvitationRepository(dietologistId, client.Id),
@@ -271,8 +271,8 @@ public sealed class ClientTaskHandlerTests {
 
     [Fact]
     public async Task ChangeClientTaskStatus_RejectsMissingForeignAndInaccessibleTask() {
-        User client = User.Create("client@example.com", "hash");
-        ClientTask foreign = ClientTask.Create(UserId.New(), UserId.New(), "Task", null, null);
+        var client = User.Create("client@example.com", "hash");
+        var foreign = ClientTask.Create(UserId.New(), UserId.New(), "Task", null, null);
         var missingHandler = new ChangeClientTaskStatusCommandHandler(
             Substitute.For<IClientTaskRepository>(),
             Substitute.For<IDietologistInvitationReadModelRepository>(),
@@ -285,7 +285,7 @@ public sealed class ClientTaskHandlerTests {
             CreateUserContext(client),
             Substitute.For<INotificationWriter>(),
             new FixedTimeProvider(UtcNow));
-        ClientTask own = ClientTask.Create(UserId.New(), client.Id, "Task", null, null);
+        var own = ClientTask.Create(UserId.New(), client.Id, "Task", null, null);
         var inaccessibleHandler = new ChangeClientTaskStatusCommandHandler(
             CreateTaskRepository(own),
             Substitute.For<IDietologistInvitationReadModelRepository>(),
@@ -312,9 +312,9 @@ public sealed class ClientTaskHandlerTests {
     [Fact]
     public void ChangeClientTaskStatusValidator_ValidatesShape() {
         var validator = new ChangeClientTaskStatusCommandValidator();
-        var invalid = validator.TestValidate(
+        TestValidationResult<ChangeClientTaskStatusCommand> invalid = validator.TestValidate(
             new ChangeClientTaskStatusCommand(null, Guid.Empty, "Cancelled"));
-        var valid = validator.TestValidate(
+        TestValidationResult<ChangeClientTaskStatusCommand> valid = validator.TestValidate(
             new ChangeClientTaskStatusCommand(null, Guid.NewGuid(), "completed"));
 
         Assert.Multiple(
@@ -325,7 +325,7 @@ public sealed class ClientTaskHandlerTests {
 
     [Fact]
     public async Task GetMyClientTasks_MapsOverdueState() {
-        User client = User.Create("client@example.com", "hash");
+        var client = User.Create("client@example.com", "hash");
         IClientTaskRepository tasks = Substitute.For<IClientTaskRepository>();
         tasks.GetByClientAsync(client.Id, Arg.Any<CancellationToken>())
             .Returns([
@@ -364,8 +364,8 @@ public sealed class ClientTaskHandlerTests {
 
     [Fact]
     public async Task GetClientTasksForDietologist_ReturnsMappedTasks() {
-        User dietologist = User.Create("dietologist@example.com", "hash");
-        UserId clientId = UserId.New();
+        var dietologist = User.Create("dietologist@example.com", "hash");
+        var clientId = UserId.New();
         IClientTaskRepository tasks = Substitute.For<IClientTaskRepository>();
         tasks.GetByDietologistAndClientAsync(dietologist.Id, clientId, Arg.Any<CancellationToken>())
             .Returns([CreateReadModel(dietologist.Id, clientId, ClientTaskStatus.Open, null)]);
@@ -391,7 +391,7 @@ public sealed class ClientTaskHandlerTests {
     public async Task GetClientTasksForDietologist_RejectsInvalidAccessOrClient(
         bool failUser,
         bool emptyClient) {
-        User dietologist = User.Create("dietologist@example.com", "hash");
+        var dietologist = User.Create("dietologist@example.com", "hash");
         var handler = new GetClientTasksForDietologistQueryHandler(
             Substitute.For<IClientTaskRepository>(),
             failUser ? CreateFailingUserContext() : CreateUserContext(dietologist),

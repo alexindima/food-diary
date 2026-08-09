@@ -9,12 +9,12 @@ public sealed partial class MailRelayQueueStore(
     IOptions<MailRelayQueueOptions> queueOptions,
     TimeProvider timeProvider) : IMailRelayQueueStore, IMailRelaySchemaInitializer {
     private static readonly System.Text.Json.JsonSerializerOptions JsonOptions = new(System.Text.Json.JsonSerializerDefaults.Web);
-    private readonly NpgsqlDataSource _dataSource = dataSource;
     private readonly MailRelayPostgresExecutor _executor = new(dataSource);
     private readonly MailRelayQueueOptions _queueOptions = queueOptions.Value;
+    private NpgsqlDataSource DataSource => dataSource;
 
     public async Task EnsureSchemaAsync(CancellationToken cancellationToken) {
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(MailRelayQueueSchema.EnsureSchemaSql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -24,7 +24,7 @@ public sealed partial class MailRelayQueueStore(
     }
 
     private async Task ExecuteStatusCommandAsync(string sql, Guid id, CancellationToken cancellationToken) {
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {

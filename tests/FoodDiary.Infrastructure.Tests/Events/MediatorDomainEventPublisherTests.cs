@@ -30,14 +30,14 @@ public sealed class MediatorDomainEventPublisherTests {
         Assert.Equal(typeof(RecommendationCreatedDomainEvent), notificationType.GetGenericArguments()[0]);
     }
 
-    private static FoodDiary.Application.Abstractions.Common.Abstractions.Events.IDomainEventPublisher CreatePublisher(
+    private static IDomainEventPublisher CreatePublisher(
         IPublisher publisher) {
         Type type = Type.GetType("FoodDiary.Infrastructure.Events.MediatorDomainEventPublisher, FoodDiary.Infrastructure", throwOnError: true)!;
         ConstructorInfo constructor = type.GetConstructors(
-                System.Reflection.BindingFlags.Instance |
-                System.Reflection.BindingFlags.Public |
-                System.Reflection.BindingFlags.NonPublic)
+                BindingFlags.Instance |
+                BindingFlags.Public |
+                BindingFlags.NonPublic)
             .Single();
-        return (FoodDiary.Application.Abstractions.Common.Abstractions.Events.IDomainEventPublisher)constructor.Invoke([publisher]);
+        return (IDomainEventPublisher)constructor.Invoke([publisher]);
     }
 }

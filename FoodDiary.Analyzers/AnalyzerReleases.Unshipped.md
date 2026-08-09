@@ -16,3 +16,5 @@ FD0009 | Reliability | Disabled | Reject direct test connections to literal exte
 FD0010 | Reliability | Disabled | Reject span overloads inside expression trees
 FD0011 | Style | Disabled | Reject redundant empty record parameter lists
 FD0012 | Style | Disabled | Reject private readonly fields that only store primary constructor parameters
+FD0013 | Style | Disabled | Require camel case parameter names outside positional records
+FD0014 | Style | Disabled | Require underscore camel case for private instance fields

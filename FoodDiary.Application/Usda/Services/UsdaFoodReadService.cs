@@ -56,7 +56,7 @@ public sealed class UsdaFoodReadService(
 
         IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel> dailyValues = await repository.GetDailyReferenceValueReadModelsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         IReadOnlyList<MicronutrientModel> nutrientModels = ApplyDailyValues(brandedDetail.Nutrients, dailyValues);
-        var nutrientAmounts = nutrientModels.ToDictionary(static nutrient => nutrient.NutrientId, static nutrient => nutrient.AmountPer100g);
+        var nutrientAmounts = nutrientModels.ToDictionary(static nutrient => nutrient.NutrientId, static nutrient => nutrient.AmountPer100G);
         var dvAmounts = dailyValues.ToDictionary(static kvp => kvp.Key, static kvp => kvp.Value.Value);
         var healthScores = HealthAreaScores.Calculate(nutrientAmounts, dvAmounts);
 
@@ -107,7 +107,7 @@ public sealed class UsdaFoodReadService(
             .Select(nutrient => {
                 dailyValues.TryGetValue(nutrient.NutrientId, out UsdaDailyReferenceValueReadModel? drv);
                 double? dailyValue = drv?.Value;
-                double? percentDv = dailyValue is > 0 ? Math.Round(nutrient.AmountPer100g / dailyValue.Value * 100, 1, MidpointRounding.ToEven) : null;
+                double? percentDv = dailyValue is > 0 ? Math.Round(nutrient.AmountPer100G / dailyValue.Value * 100, 1, MidpointRounding.ToEven) : null;
 
                 return nutrient with {
                     DailyValue = dailyValue,

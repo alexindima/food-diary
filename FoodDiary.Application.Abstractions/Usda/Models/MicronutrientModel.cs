@@ -4,6 +4,6 @@ public sealed record MicronutrientModel(
     int NutrientId,
     string Name,
     string Unit,
-    double AmountPer100g,
+    double AmountPer100G,
     double? DailyValue,
     double? PercentDailyValue);

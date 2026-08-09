@@ -245,7 +245,6 @@ public partial class ProductsFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubRecentItemRepository(IReadOnlyList<RecentProductUsage> recentProducts) : IRecentItemRepository {
-        private readonly IReadOnlyList<RecentProductUsage> _recentProducts = recentProducts;
         public int GetRecentProductsCallCount { get; private set; }
 
         public Task RegisterUsageAsync(
@@ -259,7 +258,7 @@ public partial class ProductsFeatureTests {
             int limit,
             CancellationToken cancellationToken = default) {
             GetRecentProductsCallCount++;
-            return Task.FromResult<IReadOnlyList<RecentProductUsage>>(_recentProducts.Take(limit).ToList());
+            return Task.FromResult<IReadOnlyList<RecentProductUsage>>(recentProducts.Take(limit).ToList());
         }
 
         public Task<IReadOnlyList<RecentRecipeUsage>> GetRecentRecipesAsync(
@@ -270,8 +269,6 @@ public partial class ProductsFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubFavoriteProductRepository(IReadOnlyList<FavoriteProduct> favorites) : IFavoriteProductRepository {
-        private readonly IReadOnlyList<FavoriteProduct> _favorites = favorites;
-
         public Task<FavoriteProduct> AddAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -279,11 +276,11 @@ public partial class ProductsFeatureTests {
         public Task<FavoriteProduct?> GetByProductIdAsync(ProductId productId, UserId userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<bool> ExistsByProductIdAsync(ProductId productId, UserId userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyDictionary<ProductId, FavoriteProduct>> GetByProductIdsAsync(UserId userId, IReadOnlyCollection<ProductId> productIds, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<ProductId, FavoriteProduct>>(_favorites.Where(f => productIds.Contains(f.ProductId)).ToDictionary(f => f.ProductId));
+            Task.FromResult<IReadOnlyDictionary<ProductId, FavoriteProduct>>(favorites.Where(f => productIds.Contains(f.ProductId)).ToDictionary(f => f.ProductId));
         public Task<IReadOnlyList<FavoriteProduct>> GetAllAsync(UserId userId, CancellationToken cancellationToken = default) =>
-            Task.FromResult(_favorites);
+            Task.FromResult(favorites);
         public Task<IReadOnlyList<FavoriteProductReadModel>> GetAllReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<FavoriteProductReadModel>>([.. _favorites.Select(ToReadModel)]);
+            Task.FromResult<IReadOnlyList<FavoriteProductReadModel>>([.. favorites.Select(ToReadModel)]);
 
         private static FavoriteProductReadModel ToReadModel(FavoriteProduct favorite) =>
             new(

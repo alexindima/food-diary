@@ -45,7 +45,7 @@ public static class UsdaHttpMappings {
                     model.Description,
                     model.FoodCategory,
                     model.Nutrients.Select(n => new MicronutrientHttpResponse(
-                        n.NutrientId, n.Name, n.Unit, n.AmountPer100g,
+                        n.NutrientId, n.Name, n.Unit, n.AmountPer100G,
                         n.DailyValue, n.PercentDailyValue)).ToList(),
                     model.Portions.Select(p => new UsdaFoodPortionHttpResponse(
                         p.Id, p.Amount, p.MeasureUnitName, p.GramWeight,

@@ -613,16 +613,14 @@ public sealed class TelegramBotWorkerTests {
 
         [ExcludeFromCodeCoverage]
         private sealed class RecordingHttpMessageHandler(Queue<HttpResponseMessage> responses) : HttpMessageHandler {
-            private readonly Queue<HttpResponseMessage> _responses = responses;
-
             public List<HttpRequestMessage> Requests { get; } = [];
 
             protected override Task<HttpResponseMessage> SendAsync(
                 HttpRequestMessage request,
                 CancellationToken cancellationToken) {
                 Requests.Add(request);
-                return Task.FromResult(_responses.Count > 0
-                    ? _responses.Dequeue()
+                return Task.FromResult(responses.Count > 0
+                    ? responses.Dequeue()
                     : new HttpResponseMessage(HttpStatusCode.OK));
             }
         }

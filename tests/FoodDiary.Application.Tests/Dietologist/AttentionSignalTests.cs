@@ -18,7 +18,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-#pragma warning disable IDE0007, IDE0008, MA0003
+#pragma warning disable MA0003
 
 namespace FoodDiary.Application.Tests.Dietologist;
 
@@ -31,7 +31,7 @@ public sealed class AttentionSignalTests {
         IUserContextService userContext = Substitute.For<IUserContextService>();
         userContext.EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(Errors.Authentication.InvalidToken);
-        var handler = CreateQueryHandler(userContext: userContext);
+        GetAttentionSignalsQueryHandler handler = CreateQueryHandler(userContext: userContext);
 
         Result<IReadOnlyList<AttentionSignalModel>> result = await handler.Handle(
             CreateQuery(UserId.New().Value),
@@ -43,11 +43,11 @@ public sealed class AttentionSignalTests {
 
     [Fact]
     public async Task GetAttentionSignals_WhenClientLookupFails_ReturnsFailure() {
-        User user = User.Create("dietologist@example.com", "hash");
+        var user = User.Create("dietologist@example.com", "hash");
         IDietologistInvitationReadService invitations = Substitute.For<IDietologistInvitationReadService>();
         invitations.GetMyClientsAsync(user.Id, Arg.Any<CancellationToken>())
             .Returns(Result.Failure<IReadOnlyList<ClientSummaryModel>>(Errors.Dietologist.AccessDenied));
-        var handler = CreateQueryHandler(invitations, userContext: CreateUserContext(user));
+        GetAttentionSignalsQueryHandler handler = CreateQueryHandler(invitations, userContext: CreateUserContext(user));
 
         Result<IReadOnlyList<AttentionSignalModel>> result = await handler.Handle(
             CreateQuery(user.Id.Value),
@@ -59,7 +59,7 @@ public sealed class AttentionSignalTests {
 
     [Fact]
     public async Task GetAttentionSignals_CreatesAndOrdersAllSupportedSignals() {
-        User user = User.Create("dietologist@example.com", "hash");
+        var user = User.Create("dietologist@example.com", "hash");
         ClientSummaryModel client = CreateClient(
             acceptedAtUtc: UtcNow.AddDays(-20),
             firstName: "Alex",
@@ -75,7 +75,7 @@ public sealed class AttentionSignalTests {
                 new WeightEntrySummaryModel(UtcNow.AddDays(-14), UtcNow.AddDays(-8), 100),
                 new WeightEntrySummaryModel(UtcNow.AddDays(-7), UtcNow, 90),
             ]);
-        var handler = CreateQueryHandler(
+        GetAttentionSignalsQueryHandler handler = CreateQueryHandler(
             CreateInvitationService(user.Id, client),
             CreateDashboardService(Result.Success(dashboard)),
             userContext: CreateUserContext(user));
@@ -101,13 +101,13 @@ public sealed class AttentionSignalTests {
 
     [Fact]
     public async Task GetAttentionSignals_UsesEmailAndAcceptedDateWhenClientHasNoMealsOrName() {
-        User user = User.Create("dietologist@example.com", "hash");
+        var user = User.Create("dietologist@example.com", "hash");
         ClientSummaryModel client = CreateClient(
             acceptedAtUtc: UtcNow.AddDays(-5),
             firstName: null,
             lastName: null,
             permissions: CreatePermissions(meals: true, statistics: false, weight: false));
-        var handler = CreateQueryHandler(
+        GetAttentionSignalsQueryHandler handler = CreateQueryHandler(
             CreateInvitationService(user.Id, client),
             CreateDashboardService(Result.Success(CreateDashboard())),
             userContext: CreateUserContext(user));
@@ -133,7 +133,7 @@ public sealed class AttentionSignalTests {
         string action,
         string? metadata,
         bool expectedVisible) {
-        User user = User.Create("dietologist@example.com", "hash");
+        var user = User.Create("dietologist@example.com", "hash");
         ClientSummaryModel client = CreateClient(
             acceptedAtUtc: UtcNow.AddDays(-5),
             permissions: CreatePermissions(meals: true, statistics: false, weight: false));
@@ -153,7 +153,7 @@ public sealed class AttentionSignalTests {
                     metadata,
                     UtcNow),
             ]);
-        var handler = CreateQueryHandler(
+        GetAttentionSignalsQueryHandler handler = CreateQueryHandler(
             CreateInvitationService(user.Id, client),
             CreateDashboardService(Result.Success(CreateDashboard())),
             audits,
@@ -169,7 +169,7 @@ public sealed class AttentionSignalTests {
 
     [Fact]
     public async Task GetAttentionSignals_IgnoresFailedDashboardAndInsufficientMetrics() {
-        User user = User.Create("dietologist@example.com", "hash");
+        var user = User.Create("dietologist@example.com", "hash");
         ClientSummaryModel first = CreateClient(UtcNow.AddDays(-1));
         ClientSummaryModel second = CreateClient(UtcNow.AddDays(-1));
         IDietologistClientReadService dashboards = Substitute.For<IDietologistClientReadService>();
@@ -198,7 +198,7 @@ public sealed class AttentionSignalTests {
                 dailyGoal: 0,
                 weeklyCalories: [new DailyCaloriesModel(UtcNow, 100)],
                 weightTrend: [new WeightEntrySummaryModel(UtcNow, UtcNow, 0)])));
-        var handler = CreateQueryHandler(
+        GetAttentionSignalsQueryHandler handler = CreateQueryHandler(
             CreateInvitationService(user.Id, first, second),
             dashboards,
             userContext: CreateUserContext(user));
@@ -213,7 +213,7 @@ public sealed class AttentionSignalTests {
 
     [Fact]
     public async Task GetAttentionSignals_DoesNotCreateSignalsBelowConfiguredThresholds() {
-        User user = User.Create("dietologist@example.com", "hash");
+        var user = User.Create("dietologist@example.com", "hash");
         ClientSummaryModel first = CreateClient(
             UtcNow.AddDays(-1),
             permissions: CreatePermissions(meals: false, statistics: true, weight: true));
@@ -253,7 +253,7 @@ public sealed class AttentionSignalTests {
                     new DailyCaloriesModel(UtcNow.AddDays(-1), 1000),
                 ],
                 weightTrend: [])));
-        var handler = CreateQueryHandler(
+        GetAttentionSignalsQueryHandler handler = CreateQueryHandler(
             CreateInvitationService(user.Id, first, second),
             dashboards,
             userContext: CreateUserContext(user));
@@ -268,8 +268,8 @@ public sealed class AttentionSignalTests {
 
     [Fact]
     public async Task SetAttentionSignalState_Acknowledge_WritesAuditEntry() {
-        User user = User.Create("dietologist@example.com", "hash");
-        UserId clientId = UserId.New();
+        var user = User.Create("dietologist@example.com", "hash");
+        var clientId = UserId.New();
         IAuditEntryWriter writer = Substitute.For<IAuditEntryWriter>();
         var handler = new SetAttentionSignalStateCommandHandler(
             CreateActiveInvitationRepository(user.Id, clientId),
@@ -294,8 +294,8 @@ public sealed class AttentionSignalTests {
 
     [Fact]
     public async Task SetAttentionSignalState_Snooze_WritesUtcMetadata() {
-        User user = User.Create("dietologist@example.com", "hash");
-        UserId clientId = UserId.New();
+        var user = User.Create("dietologist@example.com", "hash");
+        var clientId = UserId.New();
         IAuditEntryWriter writer = Substitute.For<IAuditEntryWriter>();
         var handler = new SetAttentionSignalStateCommandHandler(
             CreateActiveInvitationRepository(user.Id, clientId),
@@ -321,7 +321,7 @@ public sealed class AttentionSignalTests {
 
     [Fact]
     public async Task SetAttentionSignalState_RejectsInvalidClientAccessAndPastSnooze() {
-        User user = User.Create("dietologist@example.com", "hash");
+        var user = User.Create("dietologist@example.com", "hash");
         var handler = new SetAttentionSignalStateCommandHandler(
             Substitute.For<IDietologistInvitationReadModelRepository>(),
             Substitute.For<IAuditEntryWriter>(),
@@ -334,7 +334,7 @@ public sealed class AttentionSignalTests {
         Result denied = await handler.Handle(
             new SetAttentionSignalStateCommand(user.Id.Value, Guid.NewGuid(), "signal", "Acknowledge", null),
             CancellationToken.None);
-        UserId activeClient = UserId.New();
+        var activeClient = UserId.New();
         IDietologistInvitationReadModelRepository active = CreateActiveInvitationRepository(user.Id, activeClient);
         var pastHandler = new SetAttentionSignalStateCommandHandler(
             active,
@@ -373,11 +373,11 @@ public sealed class AttentionSignalTests {
     public void SetAttentionSignalStateValidator_ValidatesShape() {
         var validator = new SetAttentionSignalStateCommandValidator();
 
-        var invalid = validator.TestValidate(
+        TestValidationResult<SetAttentionSignalStateCommand> invalid = validator.TestValidate(
             new SetAttentionSignalStateCommand(null, Guid.Empty, "", "Later", null));
-        var missingSnoozeEnd = validator.TestValidate(
+        TestValidationResult<SetAttentionSignalStateCommand> missingSnoozeEnd = validator.TestValidate(
             new SetAttentionSignalStateCommand(null, Guid.NewGuid(), "signal", "Snooze", null));
-        var valid = validator.TestValidate(
+        TestValidationResult<SetAttentionSignalStateCommand> valid = validator.TestValidate(
             new SetAttentionSignalStateCommand(null, Guid.NewGuid(), "signal", "acknowledge", null));
 
         Assert.Multiple(

@@ -32,7 +32,8 @@ public sealed class PrimaryConstructorBackingFieldAnalyzer : DiagnosticAnalyzer 
         if (!field.Modifiers.Any(SyntaxKind.PrivateKeyword) ||
             !field.Modifiers.Any(SyntaxKind.ReadOnlyKeyword) ||
             field.Declaration.Variables.Count != 1 ||
-            field.Parent is not ClassDeclarationSyntax { ParameterList: { } parameterList }) {
+            field.Parent is not ClassDeclarationSyntax { ParameterList: { } parameterList } classDeclaration ||
+            classDeclaration.Modifiers.Any(SyntaxKind.PartialKeyword)) {
             return;
         }
 
@@ -45,10 +46,26 @@ public sealed class PrimaryConstructorBackingFieldAnalyzer : DiagnosticAnalyzer 
             return;
         }
 
+        string parameterName = initializer.Identifier.ValueText;
+        bool initializesAnotherField = classDeclaration.Members
+            .OfType<FieldDeclarationSyntax>()
+            .Where(otherField => !ReferenceEquals(otherField, field))
+            .SelectMany(otherField => otherField.Declaration.Variables)
+            .Any(otherVariable => otherVariable.Initializer?.Value
+                .DescendantNodesAndSelf()
+                .OfType<IdentifierNameSyntax>()
+                .Any(identifier => string.Equals(
+                    identifier.Identifier.ValueText,
+                    parameterName,
+                    System.StringComparison.Ordinal)) == true);
+        if (initializesAnotherField) {
+            return;
+        }
+
         context.ReportDiagnostic(Diagnostic.Create(
             Rule,
             variable.Identifier.GetLocation(),
             variable.Identifier.ValueText,
-            initializer.Identifier.ValueText));
+            parameterName));
     }
 }

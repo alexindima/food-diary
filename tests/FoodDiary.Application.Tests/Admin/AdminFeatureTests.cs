@@ -519,8 +519,6 @@ public partial class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserRepository(User user, IEnumerable<string> availableRoles) : IUserRepository, IAdminUserReadService, IAdminUserManagementService {
-        private readonly User _user = user;
-
         private readonly Dictionary<string, Role> _roles = availableRoles.ToDictionary(
             name => name,
             name => user.UserRoles
@@ -536,9 +534,9 @@ public partial class AdminFeatureTests {
 
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(_user.Id == userId ? _user : null);
+        public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == userId ? user : null);
 
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(_user.Id == userId ? _user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == userId ? user : null);
 
         async Task<AdminUserModel?> IAdminUserReadService.GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
             (await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false))?.ToAdminModel();

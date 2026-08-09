@@ -68,7 +68,7 @@ public sealed class UsdaFoodSearchServiceTests {
         Assert.Equal("Soda", result.FoodCategory);
         Assert.Equal(2, result.Nutrients.Count);
         Assert.Equal(1008, result.Nutrients[0].NutrientId);
-        Assert.Equal(48, result.Nutrients[0].AmountPer100g);
+        Assert.Equal(48, result.Nutrients[0].AmountPer100G);
         Assert.Single(result.Portions);
         Assert.Equal(355, result.Portions[0].GramWeight);
     }

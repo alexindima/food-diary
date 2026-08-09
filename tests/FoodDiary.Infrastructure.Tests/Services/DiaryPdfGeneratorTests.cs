@@ -1086,8 +1086,6 @@ public sealed class DiaryPdfGeneratorTests {
         private const string TransparentPngBase64 =
             "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=";
 
-        private readonly bool _successfulImageResponse = successfulImageResponse;
-
         public int RequestCount { get; private set; }
         public IReadOnlyList<string> RequestedUrls => _requestedUrls;
 
@@ -1097,7 +1095,7 @@ public sealed class DiaryPdfGeneratorTests {
             RequestCount++;
             _requestedUrls.Add(request.RequestUri?.ToString() ?? "");
 
-            if (!_successfulImageResponse) {
+            if (!successfulImageResponse) {
                 return Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.NotFound));
             }
 
@@ -1124,6 +1122,7 @@ public sealed class DiaryPdfGeneratorTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class ChunkedReadStream(int chunkSize, int totalBytes) : Stream {
+        // ReSharper disable once ReplaceWithPrimaryConstructorParameter
         private readonly int _totalBytes = totalBytes;
         private int _remaining = totalBytes;
 

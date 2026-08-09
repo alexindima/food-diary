@@ -11,10 +11,10 @@ namespace FoodDiary.Application.Tests.Authentication.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class InitialAdminBootstrapServiceTests {
-    private readonly IAuthenticationUserRegistrationService userRegistrationService =
+    private readonly IAuthenticationUserRegistrationService _userRegistrationService =
         Substitute.For<IAuthenticationUserRegistrationService>();
-    private readonly IPasswordHasher passwordHasher = Substitute.For<IPasswordHasher>();
-    private readonly IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+    private readonly IPasswordHasher _passwordHasher = Substitute.For<IPasswordHasher>();
+    private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
 
     [Fact]
     public async Task BootstrapAsync_WhenPasswordIsBlank_SkipsDatabaseWork() {
@@ -27,16 +27,16 @@ public sealed class InitialAdminBootstrapServiceTests {
         Assert.Multiple(
             () => Assert.Equal(BootstrapInitialAdminStatus.SkippedMissingPassword, model.Status),
             () => Assert.Equal("owner@fooddiary.test", model.Email));
-        await userRegistrationService
+        await _userRegistrationService
             .DidNotReceiveWithAnyArgs()
             .GetByEmailIncludingDeletedAsync(default!, default);
-        await unitOfWork.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
+        await _unitOfWork.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
     }
 
     [Fact]
     public async Task BootstrapAsync_WhenUserExists_DoesNotCreateDuplicate() {
         var existingUser = User.Create("owner@fooddiary.test", "existing-hash");
-        userRegistrationService
+        _userRegistrationService
             .GetByEmailIncludingDeletedAsync("owner@fooddiary.test", Arg.Any<CancellationToken>())
             .Returns(existingUser);
         InitialAdminBootstrapService service = CreateService();
@@ -49,8 +49,8 @@ public sealed class InitialAdminBootstrapServiceTests {
 
         BootstrapInitialAdminModel model = ResultAssert.Success(result);
         Assert.Equal(BootstrapInitialAdminStatus.SkippedExistingUser, model.Status);
-        await userRegistrationService.DidNotReceiveWithAnyArgs().AddAsync(default!, default);
-        await unitOfWork.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
+        await _userRegistrationService.DidNotReceiveWithAnyArgs().AddAsync(default!, default);
+        await _unitOfWork.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
     }
 
     [Fact]
@@ -60,12 +60,12 @@ public sealed class InitialAdminBootstrapServiceTests {
             Role.Create(RoleNames.Admin),
             Role.Create(RoleNames.Premium),
         ];
-        userRegistrationService
+        _userRegistrationService
             .EnsureRolesByNamesAsync(Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
             .Returns(roles);
-        passwordHasher.Hash("StrongPassword123").Returns("test-hash");
+        _passwordHasher.Hash("StrongPassword123").Returns("test-hash");
         User? capturedUser = null;
-        _ = userRegistrationService
+        _ = _userRegistrationService
             .AddAsync(Arg.Do<User>(user => capturedUser = user), Arg.Any<CancellationToken>());
         InitialAdminBootstrapService service = CreateService();
 
@@ -83,9 +83,9 @@ public sealed class InitialAdminBootstrapServiceTests {
             () => Assert.Equal("test-hash", admin.Password),
             () => Assert.True(admin.IsEmailConfirmed),
             () => Assert.Equal([RoleNames.Owner, RoleNames.Admin, RoleNames.Premium], admin.GetRoleNames()));
-        await unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+        await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
     private InitialAdminBootstrapService CreateService() =>
-        new(userRegistrationService, passwordHasher, unitOfWork);
+        new(_userRegistrationService, _passwordHasher, _unitOfWork);
 }

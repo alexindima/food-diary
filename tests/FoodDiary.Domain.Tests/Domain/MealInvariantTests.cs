@@ -305,10 +305,10 @@ public class MealInvariantTests {
         MealItem item = meal.AddProduct(ProductId.New(), 100);
         var sourceAiItemId = MealAiItemId.New();
 
-        item.ApplySource(sourceAiItemId, MealItemOrigin.AIText);
+        item.ApplySource(sourceAiItemId, MealItemOrigin.AiText);
 
         Assert.Equal(sourceAiItemId, item.SourceAiItemId);
-        Assert.Equal(MealItemOrigin.AIText, item.Origin);
+        Assert.Equal(MealItemOrigin.AiText, item.Origin);
         Assert.NotNull(item.ModifiedOnUtc);
     }
 

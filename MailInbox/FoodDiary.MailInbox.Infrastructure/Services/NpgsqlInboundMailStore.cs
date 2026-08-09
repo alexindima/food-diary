@@ -42,8 +42,6 @@ public sealed class NpgsqlInboundMailStore(
                 where read_at_utc is null;
             """),
     ];
-    private readonly TimeProvider _timeProvider = timeProvider;
-
     public async Task EnsureSchemaAsync(CancellationToken cancellationToken) {
         NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
@@ -276,7 +274,7 @@ public sealed class NpgsqlInboundMailStore(
             var insertCommand = new NpgsqlCommand(insertSql, connection, transaction);
             await using (insertCommand.ConfigureAwait(false)) {
                 insertCommand.Parameters.AddWithValue("name", migration.Name);
-                insertCommand.Parameters.AddWithValue("applied_at_utc", _timeProvider.GetUtcNow());
+                insertCommand.Parameters.AddWithValue("applied_at_utc", timeProvider.GetUtcNow());
                 await insertCommand.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
             }
 

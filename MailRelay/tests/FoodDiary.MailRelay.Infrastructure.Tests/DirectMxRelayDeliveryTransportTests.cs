@@ -155,10 +155,10 @@ public sealed class DirectMxRelayDeliveryTransportTests {
     [Fact]
     public async Task EndpointConnector_WhenDnsNameResolvesOnlyToLoopback_RejectsBeforeConnecting() {
         var connector = new DirectMxEndpointConnector();
-        const string LoopbackHost = "localhost";
+        const string loopbackHost = "localhost";
 
         InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            connector.ConnectAsync(LoopbackHost, 25, CancellationToken.None));
+            connector.ConnectAsync(loopbackHost, 25, CancellationToken.None));
 
         Assert.Contains("private or loopback", ex.Message, StringComparison.Ordinal);
     }

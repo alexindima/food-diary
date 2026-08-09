@@ -395,7 +395,6 @@ public partial class RecipesFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubRecentItemRepository(IReadOnlyList<RecentRecipeUsage> recentRecipes) : IRecentItemRepository {
-        private readonly IReadOnlyList<RecentRecipeUsage> _recentRecipes = recentRecipes;
         public int GetRecentRecipesCallCount { get; private set; }
 
         public Task RegisterUsageAsync(
@@ -414,25 +413,23 @@ public partial class RecipesFeatureTests {
             int limit,
             CancellationToken cancellationToken = default) {
             GetRecentRecipesCallCount++;
-            return Task.FromResult<IReadOnlyList<RecentRecipeUsage>>(_recentRecipes.Take(limit).ToList());
+            return Task.FromResult<IReadOnlyList<RecentRecipeUsage>>(recentRecipes.Take(limit).ToList());
         }
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class StubFavoriteRecipeRepository(IReadOnlyList<FavoriteRecipe> favorites) : IFavoriteRecipeRepository {
-        private readonly IReadOnlyList<FavoriteRecipe> _favorites = favorites;
-
         public Task<FavoriteRecipe> AddAsync(FavoriteRecipe favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(FavoriteRecipe favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<FavoriteRecipe?> GetByIdAsync(FavoriteRecipeId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<FavoriteRecipe?> GetByRecipeIdAsync(RecipeId recipeId, UserId userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<bool> ExistsByRecipeIdAsync(RecipeId recipeId, UserId userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyDictionary<RecipeId, FavoriteRecipe>> GetByRecipeIdsAsync(UserId userId, IReadOnlyCollection<RecipeId> recipeIds, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<RecipeId, FavoriteRecipe>>(_favorites.Where(f => recipeIds.Contains(f.RecipeId)).ToDictionary(f => f.RecipeId));
+            Task.FromResult<IReadOnlyDictionary<RecipeId, FavoriteRecipe>>(favorites.Where(f => recipeIds.Contains(f.RecipeId)).ToDictionary(f => f.RecipeId));
         public Task<IReadOnlyList<FavoriteRecipe>> GetAllAsync(UserId userId, CancellationToken cancellationToken = default) =>
-            Task.FromResult(_favorites);
+            Task.FromResult(favorites);
         public Task<IReadOnlyList<FavoriteRecipeReadModel>> GetAllReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<FavoriteRecipeReadModel>>([.. _favorites.Select(ToReadModel)]);
+            Task.FromResult<IReadOnlyList<FavoriteRecipeReadModel>>([.. favorites.Select(ToReadModel)]);
 
         private static FavoriteRecipeReadModel ToReadModel(FavoriteRecipe favorite) =>
             new(

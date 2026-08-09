@@ -1412,7 +1412,7 @@
                    },
                    {
                        "category":  "financial",
-                       "name":  "AmountPer100g",
+                       "name":  "AmountPer100G",
                        "type":  "double",
                        "path":  "FoodDiary.Application.Abstractions/Usda/Models/MicronutrientModel.cs",
                        "line":  7

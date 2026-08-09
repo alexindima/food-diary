@@ -27,6 +27,8 @@ public sealed class PrimaryConstructorBackingFieldAnalyzerTests {
     [InlineData("public sealed class Service(string value) { private string _value = value; }")]
     [InlineData("public sealed class Service(string value) { private readonly string _value = value.Trim(); }")]
     [InlineData("public sealed class Service { private readonly string _value = \"value\"; }")]
+    [InlineData("public sealed class Service(int value) { private readonly int _value = value; private int _remaining = value; }")]
+    [InlineData("public sealed partial class Service(string value) { private readonly string _value = value; }")]
     public async Task OtherFieldsDoNotReportDiagnosticAsync(string source) {
         Assert.Empty(await AnalyzeAsync(source));
     }

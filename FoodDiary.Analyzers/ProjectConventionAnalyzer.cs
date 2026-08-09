@@ -150,15 +150,16 @@ public sealed class ProjectConventionAnalyzer : DiagnosticAnalyzer {
         }
 
         ISymbol? symbol = context.SemanticModel.GetSymbolInfo(memberAccess, context.CancellationToken).Symbol;
-        string? containingType = symbol?.ContainingType?.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat);
-        if (containingType is not "System.DateTime" and not "System.DateTimeOffset") {
+        if (symbol?.ContainingType is not { } containingType ||
+            containingType.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)
+                is not ("System.DateTime" or "System.DateTimeOffset")) {
             return;
         }
 
         context.ReportDiagnostic(Diagnostic.Create(
             TimeProviderRequiredRule,
             memberAccess.GetLocation(),
-            symbol!.ContainingType.Name));
+            containingType.Name));
     }
 
     private static void AnalyzeTypeDeclaration(SyntaxNodeAnalysisContext context) {

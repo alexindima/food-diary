@@ -275,7 +275,7 @@ public sealed partial class MailRelayQueueStore {
                            where id = @id;
                            """;
 
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -356,7 +356,7 @@ public sealed partial class MailRelayQueueStore {
                            where id = @id;
                            """;
 
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             await using (transaction.ConfigureAwait(false)) {

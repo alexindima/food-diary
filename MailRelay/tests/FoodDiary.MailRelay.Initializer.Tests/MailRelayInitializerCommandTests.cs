@@ -3,7 +3,9 @@ extern alias Initializer;
 using FoodDiary.MailRelay.Application.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+#pragma warning disable IDE0005 // Required to import types from the aliased initializer assembly.
 using Initializer::FoodDiary.MailRelay.Initializer;
+#pragma warning restore IDE0005
 
 namespace FoodDiary.MailRelay.Initializer.Tests;
 

@@ -44,9 +44,9 @@ public sealed class HangfireRecurringJobRegistrationVerifierTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class FakeJobStorage(IReadOnlyCollection<string> registeredJobIds) : JobStorage {
-        private readonly FakeStorageConnection connection = new(registeredJobIds);
+        private readonly FakeStorageConnection _connection = new(registeredJobIds);
 
-        public override IStorageConnection GetConnection() => connection;
+        public override IStorageConnection GetConnection() => _connection;
 
         public override IMonitoringApi GetMonitoringApi() => throw new NotSupportedException();
     }

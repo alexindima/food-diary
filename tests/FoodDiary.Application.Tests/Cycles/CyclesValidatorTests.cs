@@ -13,7 +13,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task CreateCycle_WithNullUserId_HasError() {
         TestValidationResult<CreateCycleCommand> result = await new CreateCycleCommandValidator().TestValidateAsync(
-            CreateCommand(UseNullUserId: true));
+            CreateCommand(useNullUserId: true));
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
@@ -21,7 +21,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task CreateCycle_WithAverageLengthOutOfRange_HasError() {
         TestValidationResult<CreateCycleCommand> result = await new CreateCycleCommandValidator().TestValidateAsync(
-            CreateCommand(AverageCycleLength: 10));
+            CreateCommand(averageCycleLength: 10));
 
         result.ShouldHaveValidationErrorFor(c => c.AverageCycleLength);
     }
@@ -36,7 +36,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task UpsertCycleDay_WithEmptyProfileId_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            CreateDayCommand(CycleProfileId: Guid.Empty));
+            CreateDayCommand(cycleProfileId: Guid.Empty));
 
         result.ShouldHaveValidationErrorFor(c => c.CycleProfileId);
     }
@@ -44,7 +44,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task UpsertCycleDay_WithNullUserId_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            CreateDayCommand(UseNullUserId: true));
+            CreateDayCommand(useNullUserId: true));
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
@@ -52,7 +52,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task UpsertCycleDay_WithEmptyUserId_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            CreateDayCommand(UserId: Guid.Empty));
+            CreateDayCommand(userId: Guid.Empty));
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
@@ -60,7 +60,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task UpsertCycleDay_WithNullSymptoms_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            CreateDayCommand(UseNullSymptoms: true));
+            CreateDayCommand(useNullSymptoms: true));
 
         result.ShouldHaveValidationErrorFor(c => c.Symptoms);
     }
@@ -68,7 +68,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task UpsertCycleDay_WithClearNotesAndValue_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            CreateDayCommand(Bleeding: new BleedingLogCommandModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Light, PainImpact: null, Notes: "notes", ClearNotes: true)));
+            CreateDayCommand(bleeding: new BleedingLogCommandModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Light, PainImpact: null, Notes: "notes", ClearNotes: true)));
 
         result.ShouldHaveValidationErrorFor("Bleeding");
     }
@@ -78,7 +78,7 @@ public class CyclesValidatorTests {
     [InlineData((int)BleedingType.Bleeding, 999)]
     public async Task UpsertCycleDay_WithInvalidBleedingEnum_HasError(int type, int flow) {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            CreateDayCommand(Bleeding: new BleedingLogCommandModel(type, flow, PainImpact: null, Notes: null, ClearNotes: false)));
+            CreateDayCommand(bleeding: new BleedingLogCommandModel(type, flow, PainImpact: null, Notes: null, ClearNotes: false)));
 
         Assert.Contains(result.Errors, error => error.PropertyName is "Bleeding.Type" or "Bleeding.Flow");
     }
@@ -88,7 +88,7 @@ public class CyclesValidatorTests {
     [InlineData(11)]
     public async Task UpsertCycleDay_WithInvalidBleedingPainImpact_HasError(int painImpact) {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            CreateDayCommand(Bleeding: new BleedingLogCommandModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Light, painImpact, Notes: null, ClearNotes: false)));
+            CreateDayCommand(bleeding: new BleedingLogCommandModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Light, painImpact, Notes: null, ClearNotes: false)));
 
         result.ShouldHaveValidationErrorFor("Bleeding.PainImpact");
     }
@@ -96,7 +96,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task UpsertCycleDay_WithInvalidSymptomCategory_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            CreateDayCommand(Symptoms: [new SymptomLogCommandModel(999, 3, [], Note: null, ClearNote: false)]));
+            CreateDayCommand(symptoms: [new SymptomLogCommandModel(999, 3, [], Note: null, ClearNote: false)]));
 
         result.ShouldHaveValidationErrorFor("Symptoms[0].Category");
     }
@@ -104,7 +104,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task UpsertCycleDay_WithNullSymptomTags_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            CreateDayCommand(Symptoms: [new SymptomLogCommandModel((int)CycleSymptomCategory.Pain, 3, null!, Note: null, ClearNote: false)]));
+            CreateDayCommand(symptoms: [new SymptomLogCommandModel((int)CycleSymptomCategory.Pain, 3, null!, Note: null, ClearNote: false)]));
 
         result.ShouldHaveValidationErrorFor("Symptoms[0].Tags");
     }
@@ -112,7 +112,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task UpsertCycleDay_WithClearSymptomNoteAndValue_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            CreateDayCommand(Symptoms: [new SymptomLogCommandModel((int)CycleSymptomCategory.Pain, 3, [], Note: "note", ClearNote: true)]));
+            CreateDayCommand(symptoms: [new SymptomLogCommandModel((int)CycleSymptomCategory.Pain, 3, [], Note: "note", ClearNote: true)]));
 
         result.ShouldHaveValidationErrorFor("Symptoms[0]");
     }
@@ -120,7 +120,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task UpsertCycleDay_WithInvalidFertilityTemperature_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            CreateDayCommand(FertilitySignal: new FertilitySignalCommandModel(43, OvulationTestResult: null, CervicalFluid: null, HadSex: null, Notes: null, ClearNotes: false)));
+            CreateDayCommand(fertilitySignal: new FertilitySignalCommandModel(43, OvulationTestResult: null, CervicalFluid: null, HadSex: null, Notes: null, ClearNotes: false)));
 
         result.ShouldHaveValidationErrorFor("FertilitySignal.BasalBodyTemperatureCelsius");
     }
@@ -128,7 +128,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task UpsertCycleDay_WithInvalidOvulationTestResult_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            CreateDayCommand(FertilitySignal: new FertilitySignalCommandModel(BasalBodyTemperatureCelsius: null, OvulationTestResult: 999, CervicalFluid: null, HadSex: null, Notes: null, ClearNotes: false)));
+            CreateDayCommand(fertilitySignal: new FertilitySignalCommandModel(BasalBodyTemperatureCelsius: null, OvulationTestResult: 999, CervicalFluid: null, HadSex: null, Notes: null, ClearNotes: false)));
 
         result.ShouldHaveValidationErrorFor("FertilitySignal.OvulationTestResult");
     }
@@ -136,7 +136,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task UpsertCycleDay_WithClearFertilityNotesAndValue_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            CreateDayCommand(FertilitySignal: new FertilitySignalCommandModel(BasalBodyTemperatureCelsius: null, OvulationTestResult: null, CervicalFluid: null, HadSex: null, Notes: "note", ClearNotes: true)));
+            CreateDayCommand(fertilitySignal: new FertilitySignalCommandModel(BasalBodyTemperatureCelsius: null, OvulationTestResult: null, CervicalFluid: null, HadSex: null, Notes: "note", ClearNotes: true)));
 
         result.ShouldHaveValidationErrorFor("FertilitySignal");
     }
@@ -153,7 +153,7 @@ public class CyclesValidatorTests {
         DateTime startDate = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
 
         TestValidationResult<UpsertCycleFactorCommand> result = await new UpsertCycleFactorCommandValidator().TestValidateAsync(
-            CreateFactorCommand(StartDate: startDate, EndDate: startDate.AddDays(-1)));
+            CreateFactorCommand(startDate: startDate, endDate: startDate.AddDays(-1)));
 
         result.ShouldHaveValidationErrorFor(c => c.EndDate);
     }
@@ -161,7 +161,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task UpsertCycleFactor_WithClearNotesAndValue_HasError() {
         TestValidationResult<UpsertCycleFactorCommand> result = await new UpsertCycleFactorCommandValidator().TestValidateAsync(
-            CreateFactorCommand(Notes: "notes", ClearNotes: true));
+            CreateFactorCommand(notes: "notes", clearNotes: true));
 
         result.ShouldHaveValidationErrorFor(string.Empty);
     }
@@ -176,7 +176,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task ClearCycleDay_WithNullUserId_HasError() {
         TestValidationResult<ClearCycleDayCommand> result = await new ClearCycleDayCommandValidator().TestValidateAsync(
-            CreateClearDayCommand(UseNullUserId: true));
+            CreateClearDayCommand(useNullUserId: true));
 
         result.ShouldHaveValidationErrorFor(command => command.UserId);
     }
@@ -184,7 +184,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task ClearCycleDay_WithEmptyUserId_HasError() {
         TestValidationResult<ClearCycleDayCommand> result = await new ClearCycleDayCommandValidator().TestValidateAsync(
-            CreateClearDayCommand(UserId: Guid.Empty));
+            CreateClearDayCommand(userId: Guid.Empty));
 
         result.ShouldHaveValidationErrorFor(command => command.UserId);
     }
@@ -192,7 +192,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task ClearCycleDay_WithEmptyProfileId_HasError() {
         TestValidationResult<ClearCycleDayCommand> result = await new ClearCycleDayCommandValidator().TestValidateAsync(
-            CreateClearDayCommand(CycleProfileId: Guid.Empty));
+            CreateClearDayCommand(cycleProfileId: Guid.Empty));
 
         result.ShouldHaveValidationErrorFor(command => command.CycleProfileId);
     }
@@ -239,13 +239,13 @@ public class CyclesValidatorTests {
     }
 
     private static CreateCycleCommand CreateCommand(
-        bool UseNullUserId = false,
-        int? AverageCycleLength = 28) =>
+        bool useNullUserId = false,
+        int? averageCycleLength = 28) =>
         new(
-            UseNullUserId ? null : Guid.NewGuid(),
+            useNullUserId ? null : Guid.NewGuid(),
             DateTime.UtcNow,
             (int)CycleTrackingMode.PeriodTracking,
-            AverageCycleLength,
+            averageCycleLength,
             AveragePeriodLength: 5,
             LutealLength: 14,
             IsRegular: false,
@@ -255,41 +255,41 @@ public class CyclesValidatorTests {
             Notes: null);
 
     private static UpsertCycleDayCommand CreateDayCommand(
-        bool UseNullUserId = false,
-        Guid? UserId = null,
-        Guid? CycleProfileId = null,
-        BleedingLogCommandModel? Bleeding = null,
-        bool UseNullSymptoms = false,
-        IReadOnlyList<SymptomLogCommandModel>? Symptoms = null,
-        FertilitySignalCommandModel? FertilitySignal = null) =>
+        bool useNullUserId = false,
+        Guid? userId = null,
+        Guid? cycleProfileId = null,
+        BleedingLogCommandModel? bleeding = null,
+        bool useNullSymptoms = false,
+        IReadOnlyList<SymptomLogCommandModel>? symptoms = null,
+        FertilitySignalCommandModel? fertilitySignal = null) =>
         new(
-            UseNullUserId ? null : UserId ?? Guid.NewGuid(),
-            CycleProfileId ?? Guid.NewGuid(),
+            useNullUserId ? null : userId ?? Guid.NewGuid(),
+            cycleProfileId ?? Guid.NewGuid(),
             DateTime.UtcNow,
-            Bleeding ?? new BleedingLogCommandModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Light, PainImpact: null, Notes: null, ClearNotes: false),
-            UseNullSymptoms ? null! : Symptoms ?? [new SymptomLogCommandModel((int)CycleSymptomCategory.Pain, 3, [], Note: null, ClearNote: false)],
-            FertilitySignal);
+            bleeding ?? new BleedingLogCommandModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Light, PainImpact: null, Notes: null, ClearNotes: false),
+            useNullSymptoms ? null! : symptoms ?? [new SymptomLogCommandModel((int)CycleSymptomCategory.Pain, 3, [], Note: null, ClearNote: false)],
+            fertilitySignal);
 
     private static UpsertCycleFactorCommand CreateFactorCommand(
-        DateTime? StartDate = null,
-        DateTime? EndDate = null,
-        string? Notes = null,
-        bool ClearNotes = false) =>
+        DateTime? startDate = null,
+        DateTime? endDate = null,
+        string? notes = null,
+        bool clearNotes = false) =>
         new(
             Guid.NewGuid(),
             Guid.NewGuid(),
             (int)CycleFactorType.HormonalContraception,
-            StartDate ?? DateTime.UtcNow,
-            EndDate,
-            Notes,
-            ClearNotes);
+            startDate ?? DateTime.UtcNow,
+            endDate,
+            notes,
+            clearNotes);
 
     private static ClearCycleDayCommand CreateClearDayCommand(
-        bool UseNullUserId = false,
-        Guid? UserId = null,
-        Guid? CycleProfileId = null) =>
+        bool useNullUserId = false,
+        Guid? userId = null,
+        Guid? cycleProfileId = null) =>
         new(
-            UseNullUserId ? null : UserId ?? Guid.NewGuid(),
-            CycleProfileId ?? Guid.NewGuid(),
+            useNullUserId ? null : userId ?? Guid.NewGuid(),
+            cycleProfileId ?? Guid.NewGuid(),
             DateTime.UtcNow);
 }
