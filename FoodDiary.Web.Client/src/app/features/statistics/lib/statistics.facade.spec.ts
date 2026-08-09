@@ -116,7 +116,6 @@ describe('StatisticsFacade loading', () => {
         expect(facade.chartStatisticsData()?.calories).toEqual([FIRST_TOTAL_CALORIES]);
         expect(facade.weightSummaryPoints()).toHaveLength(1);
         expect(facade.waistSummaryPoints()).toHaveLength(1);
-        expect(facade.userHeightCm()).toBe(USER_HEIGHT_CM);
     });
 
     it('reloads aggregated data when the selected range changes', () => {
@@ -150,33 +149,6 @@ describe('StatisticsFacade loading', () => {
         TestBed.tick();
 
         expect(facade.currentRange()).toBe(currentRange);
-    });
-
-    it('uses capitalized month-only chart labels for year range', () => {
-        currentLanguage = 'ru';
-        languageChanges.next({});
-        facade.initialize();
-        TestBed.tick();
-
-        expect(facade.caloriesTrendPoints()[0]?.label).toBe('1 апр.');
-
-        facade.changeRange('year');
-        TestBed.tick();
-
-        expect(facade.caloriesTrendPoints()[0]?.label).toBe('Апр.');
-    });
-
-    it('rebuilds translated chart labels when language changes', () => {
-        facade.initialize();
-        TestBed.tick();
-
-        expect(facade.nutrientTrendGroups()[0]?.label).toBe('en:NUTRIENTS.PROTEINS');
-
-        currentLanguage = 'ru';
-        languageChanges.next({});
-        TestBed.tick();
-
-        expect(facade.nutrientTrendGroups()[0]?.label).toBe('ru:NUTRIENTS.PROTEINS');
     });
 });
 

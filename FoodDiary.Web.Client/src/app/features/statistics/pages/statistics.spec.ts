@@ -5,11 +5,10 @@ import { provideRouter } from '@angular/router';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
-import type { SummaryMetrics } from '../../../components/shared/statistics-summary/statistics-summary';
 import type { ExportFormat } from '../../../shared/models/export.models';
 import { StatisticsFacade } from '../lib/statistics.facade';
 import type { StatisticsDashboardCardsView } from '../lib/statistics-dashboard-card.mapper';
-import type { BodyChartTab, DateRange, NutritionChartTab, StatisticsRange } from '../lib/statistics-data-mapper';
+import type { DateRange, NutritionChartTab, StatisticsRange } from '../lib/statistics-data-mapper';
 import { StatisticsComponent } from './statistics';
 
 const RANGE: DateRange = {
@@ -18,9 +17,6 @@ const RANGE: DateRange = {
 };
 
 type StatisticsFacadeMock = {
-    bodyChartPoints: ReturnType<typeof signal<unknown[]>>;
-    caloriesTrendPoints: ReturnType<typeof signal<unknown[]>>;
-    changeBodyTab: ReturnType<typeof vi.fn>;
     changeNutritionTab: ReturnType<typeof vi.fn>;
     changeRange: ReturnType<typeof vi.fn>;
     currentRange: ReturnType<typeof signal<DateRange>>;
@@ -35,16 +31,9 @@ type StatisticsFacadeMock = {
     initialize: ReturnType<typeof vi.fn>;
     isBodyLoading: ReturnType<typeof signal<boolean>>;
     isLoading: ReturnType<typeof signal<boolean>>;
-    macroSparklinePoints: ReturnType<typeof signal<unknown[]>>;
-    nutrientBarItems: ReturnType<typeof signal<unknown[]>>;
-    nutrientPieSegments: ReturnType<typeof signal<unknown[]>>;
-    nutrientTrendGroups: ReturnType<typeof signal<unknown[]>>;
     reload: ReturnType<typeof vi.fn>;
-    selectedBodyTab: ReturnType<typeof signal<BodyChartTab>>;
     selectedNutritionTab: ReturnType<typeof signal<NutritionChartTab>>;
     selectedRange: ReturnType<typeof signal<StatisticsRange>>;
-    summaryMetrics: ReturnType<typeof signal<SummaryMetrics | null>>;
-    summarySparklinePoints: ReturnType<typeof signal<unknown[]>>;
 };
 
 function createStatisticsFacadeMock(): StatisticsFacadeMock {
@@ -82,7 +71,6 @@ function createStatisticsFacadeMock(): StatisticsFacadeMock {
     return {
         selectedRange: signal('week'),
         selectedNutritionTab: signal('calories'),
-        selectedBodyTab: signal('weight'),
         customRangeForm,
         currentRange: signal(RANGE),
         dashboardCardsView: signal(dashboardCardsView),
@@ -90,21 +78,12 @@ function createStatisticsFacadeMock(): StatisticsFacadeMock {
         isBodyLoading: signal(false),
         hasLoadError: signal(false),
         hasBodyLoadError: signal(false),
-        summaryMetrics: signal(null),
-        summarySparklinePoints: signal([]),
-        macroSparklinePoints: signal([]),
         hasStatisticsData: signal(false),
-        caloriesTrendPoints: signal([]),
-        nutrientTrendGroups: signal([]),
-        nutrientPieSegments: signal([]),
-        nutrientBarItems: signal([]),
-        bodyChartPoints: signal([]),
         hasBodyData: signal(false),
         exportingFormat: signal(null),
         initialize: vi.fn(),
         changeRange: vi.fn(),
         changeNutritionTab: vi.fn(),
-        changeBodyTab: vi.fn(),
         reload: vi.fn(),
         exportDiary: vi.fn(),
     };
@@ -160,11 +139,9 @@ describe('StatisticsComponent', () => {
 
         component['changeRange']('month');
         component['changeNutritionTab']('macros');
-        component['changeBodyTab']('bmi');
 
         expect(facade.changeRange).toHaveBeenCalledWith('month');
         expect(facade.changeNutritionTab).toHaveBeenCalledWith('macros');
-        expect(facade.changeBodyTab).toHaveBeenCalledWith('bmi');
     });
 
     it('ignores invalid range and tab changes', async () => {
@@ -172,11 +149,9 @@ describe('StatisticsComponent', () => {
 
         component['changeRange']('invalid');
         component['changeNutritionTab']('invalid');
-        component['changeBodyTab']('invalid');
 
         expect(facade.changeRange).not.toHaveBeenCalled();
         expect(facade.changeNutritionTab).not.toHaveBeenCalled();
-        expect(facade.changeBodyTab).not.toHaveBeenCalled();
     });
 
     it('delegates reload and export actions', async () => {

@@ -1,6 +1,34 @@
 <div class="statistics" fdPageContainer>
     <fd-page-header class="statistics__header" [title]="'STATISTICS.TITLE' | translate" [subtitle]="'STATISTICS.SUBTITLE' | translate">
         <fd-ui-button
+            variant="secondary"
+            fill="outline"
+            icon="download"
+            [loading]="exportingFormat() !== null"
+            [ariaLabel]="'STATISTICS.EXPORT_MENU_LABEL' | translate"
+            [fdUiMenuTrigger]="exportMenu"
+        >
+            {{ 'STATISTICS.EXPORT_MENU_LABEL' | translate }}
+        </fd-ui-button>
+        <fd-ui-menu #exportMenu>
+            <fd-ui-menu-item
+                [disabled]="exportingFormat() !== null"
+                [disabledReason]="exportingFormat() !== null ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                (itemClick)="exportDiary('csv')"
+            >
+                <fd-ui-icon name="table_view" />
+                {{ 'STATISTICS.EXPORT_CSV' | translate }}
+            </fd-ui-menu-item>
+            <fd-ui-menu-item
+                [disabled]="exportingFormat() !== null"
+                [disabledReason]="exportingFormat() !== null ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                (itemClick)="exportDiary('pdf')"
+            >
+                <fd-ui-icon name="picture_as_pdf" />
+                {{ 'STATISTICS.EXPORT_PDF' | translate }}
+            </fd-ui-menu-item>
+        </fd-ui-menu>
+        <fd-ui-button
             data-tour-id="statistics-tour-help"
             appearance="toolbar"
             variant="secondary"
@@ -60,41 +88,6 @@
                     <fd-statistics-diet-stability-card [data]="newCards.stability" />
                 </div>
             </section>
-
-            <fd-statistics-summary
-                data-tour-id="statistics-summary"
-                [summary]="summaryMetrics()"
-                [summarySparklinePoints]="summarySparklinePoints()"
-                [macroSparklinePoints]="macroSparklinePoints()"
-                [exportingFormat]="exportingFormat()"
-                (exportRequested)="exportDiary($event)"
-            />
-
-            <fd-statistics-nutrition
-                class="statistics__card statistics__card--charts"
-                data-tour-id="statistics-nutrition"
-                [tabs]="nutritionTabs"
-                [selectedTab]="selectedNutritionTab()"
-                [hasData]="hasStatisticsData()"
-                [caloriesTrendPoints]="caloriesTrendPoints()"
-                [nutrientTrendGroups]="nutrientTrendGroups()"
-                [nutrientPieSegments]="nutrientPieSegments()"
-                [nutrientBarItems]="nutrientBarItems()"
-                (selectedTabChange)="changeNutritionTab($event)"
-            />
-
-            <fd-statistics-body
-                class="statistics__card statistics__card--body"
-                data-tour-id="statistics-body"
-                [tabs]="bodyTabs"
-                [selectedTab]="selectedBodyTab()"
-                [isLoading]="isBodyLoading()"
-                [hasLoadError]="hasBodyLoadError()"
-                [bodyChartPoints]="bodyChartPoints()"
-                [hasBodyData]="hasBodyData()"
-                (retry)="reload()"
-                (selectedTabChange)="changeBodyTab($event)"
-            />
         }
     </fd-page-body>
 </div>

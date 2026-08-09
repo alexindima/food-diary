@@ -12,27 +12,6 @@ export const STATISTICS_TOUR: LocalizedTourConfig = {
             placement: 'bottom',
         },
         {
-            id: 'summary',
-            target: 'statistics-summary',
-            titleKey: 'SUMMARY_TITLE',
-            descriptionKey: 'SUMMARY_TEXT',
-            placement: 'top',
-        },
-        {
-            id: 'nutrition',
-            target: 'statistics-nutrition',
-            titleKey: 'NUTRITION_TITLE',
-            descriptionKey: 'NUTRITION_TEXT',
-            placement: 'top',
-        },
-        {
-            id: 'body',
-            target: 'statistics-body',
-            titleKey: 'BODY_TITLE',
-            descriptionKey: 'BODY_TEXT',
-            placement: 'top',
-        },
-        {
             id: 'help',
             target: 'statistics-tour-help',
             titleKey: 'HELP_TITLE',

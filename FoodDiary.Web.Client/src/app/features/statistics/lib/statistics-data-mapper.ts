@@ -1,17 +1,10 @@
-import type { FdUiBarChartItem, FdUiLineChartPoint, FdUiPieChartSegment } from 'fd-ui-kit';
+import type { FdUiLineChartPoint } from 'fd-ui-kit';
 
-import type { StatisticsBodyChartPoint } from '../../../components/shared/statistics-body/statistics-body';
-import type { NutritionTrendGroup } from '../../../components/shared/statistics-nutrition/statistics-nutrition';
-import type { SummaryMetrics, SummarySparklinePoint } from '../../../components/shared/statistics-summary/statistics-summary';
-import { CHART_COLORS } from '../../../constants/chart-colors';
 import { normalizeEndOfLocalDay, normalizeStartOfLocalDay } from '../../../shared/lib/local-date.utils';
 import { MS_PER_DAY } from '../../../shared/lib/time.constants';
-import type { MappedStatistics } from '../models/statistics.data';
 
 export type StatisticsRange = 'week' | 'month' | 'quarter' | 'halfYear' | 'year' | 'custom';
 export type NutritionChartTab = 'calories' | 'macros' | 'distribution';
-export type BodyChartTab = 'weight' | 'bmi' | 'waist' | 'whtr';
-export type MacroKey = 'proteins' | 'fats' | 'carbs' | 'fiber';
 
 export type DateRange = {
     start: Date;
@@ -24,10 +17,6 @@ export function isStatisticsRange(value: unknown): value is StatisticsRange {
 
 export function isNutritionTab(value: unknown): value is NutritionChartTab {
     return value === 'calories' || value === 'macros' || value === 'distribution';
-}
-
-export function isBodyTab(value: unknown): value is BodyChartTab {
-    return value === 'weight' || value === 'bmi' || value === 'waist' || value === 'whtr';
 }
 
 const HALF_YEAR_DAYS = 180;
@@ -51,13 +40,6 @@ function buildChartPoints(labels: readonly string[], series: ReadonlyArray<numbe
     return labels.map((label, index) => ({
         label,
         value: series?.[index] ?? null,
-    }));
-}
-
-function buildSparklinePoints(labels: readonly string[], series: ReadonlyArray<number | null> | undefined): SummarySparklinePoint[] {
-    return labels.map((label, index) => ({
-        label,
-        value: series?.[index] ?? 0,
     }));
 }
 
@@ -152,74 +134,11 @@ function createOrderedDateRange(start: Date, end: Date): DateRange {
     return start.getTime() <= end.getTime() ? { start, end } : { start: end, end: start };
 }
 
-export function buildCaloriesTrendPoints(stats: MappedStatistics | null, formatLabel: (date: Date) => string): FdUiLineChartPoint[] {
-    const labels = stats?.date.map(date => formatLabel(date)) ?? [];
-
-    return buildChartPoints(labels, stats?.calories);
-}
-
-export function buildNutrientTrendGroups(
-    stats: MappedStatistics | null,
-    formatLabel: (date: Date) => string,
-    translate: (key: string) => string,
-): NutritionTrendGroup[] {
-    const labels = stats?.date.map(date => formatLabel(date)) ?? [];
-    const nutrients = stats?.nutrientsStatistic;
-
-    return [
-        {
-            key: 'proteins',
-            label: translate('NUTRIENTS.PROTEINS'),
-            color: CHART_COLORS.proteins,
-            points: buildChartPoints(labels, nutrients?.proteins),
-        },
-        {
-            key: 'fats',
-            label: translate('NUTRIENTS.FATS'),
-            color: CHART_COLORS.fats,
-            points: buildChartPoints(labels, nutrients?.fats),
-        },
-        {
-            key: 'carbs',
-            label: translate('NUTRIENTS.CARBS'),
-            color: CHART_COLORS.carbs,
-            points: buildChartPoints(labels, nutrients?.carbs),
-        },
-        {
-            key: 'fiber',
-            label: translate('SHARED.NUTRIENTS_SUMMARY.FIBER'),
-            color: CHART_COLORS.fiber,
-            points: buildChartPoints(labels, nutrients?.fiber),
-        },
-    ];
-}
-
-export function buildNutrientPieSegments(stats: MappedStatistics | null, translate: (key: string) => string): FdUiPieChartSegment[] {
-    const aggregated = stats?.aggregatedNutrients;
-
-    return [
-        { label: translate('NUTRIENTS.PROTEINS'), value: aggregated?.proteins ?? 0, color: CHART_COLORS.proteins },
-        { label: translate('NUTRIENTS.FATS'), value: aggregated?.fats ?? 0, color: CHART_COLORS.fats },
-        { label: translate('NUTRIENTS.CARBS'), value: aggregated?.carbs ?? 0, color: CHART_COLORS.carbs },
-    ];
-}
-
-export function buildNutrientBarItems(stats: MappedStatistics | null, translate: (key: string) => string): FdUiBarChartItem[] {
-    const aggregated = stats?.aggregatedNutrients;
-
-    return [
-        { label: translate('NUTRIENTS.PROTEINS'), value: aggregated?.proteins ?? 0, color: CHART_COLORS.proteins },
-        { label: translate('NUTRIENTS.FATS'), value: aggregated?.fats ?? 0, color: CHART_COLORS.fats },
-        { label: translate('NUTRIENTS.CARBS'), value: aggregated?.carbs ?? 0, color: CHART_COLORS.carbs },
-        { label: translate('SHARED.NUTRIENTS_SUMMARY.FIBER'), value: aggregated?.fiber ?? 0, color: CHART_COLORS.fiber },
-    ];
-}
-
 export function buildBodyChartPoints<T extends { startDate: string }>(
     points: T[],
     getValue: (point: T) => number | null | undefined,
     formatLabel: (dateString: string) => string,
-): StatisticsBodyChartPoint[] {
+): FdUiLineChartPoint[] {
     if (points.length === 0) {
         return [];
     }
@@ -273,71 +192,4 @@ function interpolateMissingBodyValues(data: Array<number | null>): Array<number 
     }
 
     return result;
-}
-
-export function buildSummaryMetrics(stats: MappedStatistics | null, dayCount: number): SummaryMetrics | null {
-    if (stats === null) {
-        return null;
-    }
-
-    const totalCalories = stats.calories.reduce((sum, value) => sum + value, 0);
-    const effectiveDayCount = Math.max(MINIMUM_DAY_COUNT, dayCount);
-    const averageCalories = totalCalories / effectiveDayCount;
-    const aggregated = stats.aggregatedNutrients;
-
-    return {
-        totalCalories,
-        averageCard: {
-            consumption: averageCalories,
-            steps: 0,
-            burned: 0,
-        },
-        macros: [
-            {
-                key: 'proteins' as const,
-                labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
-                value: aggregated.proteins,
-                color: CHART_COLORS.proteins,
-            },
-            {
-                key: 'fats' as const,
-                labelKey: 'GENERAL.NUTRIENTS.FAT',
-                value: aggregated.fats,
-                color: CHART_COLORS.fats,
-            },
-            {
-                key: 'carbs' as const,
-                labelKey: 'GENERAL.NUTRIENTS.CARB',
-                value: aggregated.carbs,
-                color: CHART_COLORS.carbs,
-            },
-            {
-                key: 'fiber' as const,
-                labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER',
-                value: aggregated.fiber,
-                color: CHART_COLORS.fiber,
-            },
-        ],
-    };
-}
-
-export function buildMacroSparklinePoints(
-    stats: MappedStatistics | null,
-    formatLabel: (date: Date) => string,
-): Record<MacroKey, SummarySparklinePoint[]> {
-    const labels = stats?.date.map(date => formatLabel(date)) ?? [];
-    const nutrients = stats?.nutrientsStatistic;
-
-    return {
-        proteins: buildSparklinePoints(labels, nutrients?.proteins),
-        fats: buildSparklinePoints(labels, nutrients?.fats),
-        carbs: buildSparklinePoints(labels, nutrients?.carbs),
-        fiber: buildSparklinePoints(labels, nutrients?.fiber),
-    };
-}
-
-export function buildSummarySparklinePoints(stats: MappedStatistics | null, formatLabel: (date: Date) => string): SummarySparklinePoint[] {
-    const labels = stats?.date.map(date => formatLabel(date)) ?? [];
-
-    return buildSparklinePoints(labels, stats?.calories);
 }

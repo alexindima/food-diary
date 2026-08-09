@@ -7,7 +7,6 @@ import { finalize, forkJoin } from 'rxjs';
 import { ExportService } from '../../../shared/api/export.service';
 import { UserService } from '../../../shared/api/user.service';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
-import { CENTIMETERS_PER_METER } from '../../../shared/lib/body-measurement.constants';
 import { formatDateInputValue, parseLocalDateInputValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { RequestStateController } from '../../../shared/lib/request-state';
@@ -21,15 +20,7 @@ import { StatisticsService } from '../api/statistics.service';
 import type { MappedStatistics } from '../models/statistics.data';
 import { buildStatisticsDashboardCardsView } from './statistics-dashboard-card.mapper';
 import {
-    type BodyChartTab,
     buildBodyChartPoints,
-    buildCaloriesTrendPoints,
-    buildMacroSparklinePoints,
-    buildNutrientBarItems,
-    buildNutrientPieSegments,
-    buildNutrientTrendGroups,
-    buildSummaryMetrics,
-    buildSummarySparklinePoints,
     type DateRange,
     getCurrentDateRange,
     getDateRangeDayCount,
@@ -64,7 +55,6 @@ export class StatisticsFacade {
 
     public readonly selectedRange = signal<StatisticsRange>('week');
     public readonly selectedNutritionTab = signal<NutritionChartTab>('calories');
-    public readonly selectedBodyTab = signal<BodyChartTab>('weight');
     public readonly customRangeModel = signal<{ range: { start: Date | null; end: Date | null } | null }>({ range: null });
     public readonly customRangeForm = form(this.customRangeModel);
 
@@ -76,7 +66,6 @@ export class StatisticsFacade {
     public readonly chartStatisticsData = this.statisticsRequest.data;
     public readonly weightSummaryPoints = computed(() => this.bodyRequest.data()?.weight ?? []);
     public readonly waistSummaryPoints = computed(() => this.bodyRequest.data()?.waist ?? []);
-    public readonly userHeightCm = signal<number | null>(null);
     public readonly userProfile = signal<User | null>(null);
 
     public readonly currentRange = computed<DateRange>(() => {
@@ -84,61 +73,12 @@ export class StatisticsFacade {
 
         return getCurrentDateRange(selectedRange, selectedRange === 'custom' ? this.customRangeModel().range : null);
     });
-    public readonly summaryMetrics = computed(() =>
-        buildSummaryMetrics(this.chartStatisticsData(), getDateRangeDayCount(this.currentRange())),
-    );
-    public readonly macroSparklinePoints = computed(() =>
-        buildMacroSparklinePoints(this.chartStatisticsData(), date => this.formatDateLabel(date)),
-    );
     public readonly hasStatisticsData = computed(() => (this.chartStatisticsData()?.calories.length ?? 0) > 0);
-    public readonly caloriesTrendPoints = computed(() =>
-        buildCaloriesTrendPoints(this.chartStatisticsData(), date => this.formatDateLabel(date)),
-    );
-    public readonly nutrientTrendGroups = computed(() =>
-        buildNutrientTrendGroups(
-            this.chartStatisticsData(),
-            date => this.formatDateLabel(date),
-            key => this.translateKey(key),
-        ),
-    );
-    public readonly summarySparklinePoints = computed(() =>
-        buildSummarySparklinePoints(this.chartStatisticsData(), date => this.formatDateLabel(date)),
-    );
-    public readonly nutrientPieSegments = computed(() =>
-        buildNutrientPieSegments(this.chartStatisticsData(), key => this.translateKey(key)),
-    );
-    public readonly nutrientBarItems = computed(() => buildNutrientBarItems(this.chartStatisticsData(), key => this.translateKey(key)));
-    public readonly bodyChartPoints = computed(() => {
-        const selectedTab = this.selectedBodyTab();
-        const formatLabel = (dateString: string): string => this.formatSummaryLabel(dateString);
-
-        if (selectedTab === 'weight') {
-            return buildBodyChartPoints(this.weightSummaryPoints(), point => point.averageWeight, formatLabel);
-        }
-
-        if (selectedTab === 'waist') {
-            return buildBodyChartPoints(this.waistSummaryPoints(), point => point.averageCircumference, formatLabel);
-        }
-
-        if (selectedTab === 'bmi') {
-            const heightCm = this.userHeightCm();
-            if (heightCm === null || heightCm <= 0) {
-                return [];
-            }
-
-            const heightM = heightCm / CENTIMETERS_PER_METER;
-            return buildBodyChartPoints(this.weightSummaryPoints(), point => point.averageWeight / (heightM * heightM), formatLabel);
-        }
-
-        const heightCm = this.userHeightCm();
-        if (heightCm === null || heightCm <= 0) {
-            return [];
-        }
-
-        return buildBodyChartPoints(this.waistSummaryPoints(), point => point.averageCircumference / heightCm, formatLabel);
-    });
     public readonly hasBodyData = computed(() => {
-        return this.bodyChartPoints().some(point => point.value !== null);
+        return (
+            this.weightSummaryPoints().some(point => point.averageWeight > 0) ||
+            this.waistSummaryPoints().some(point => point.averageCircumference > 0)
+        );
     });
     public readonly dashboardCardsView = computed(() =>
         buildStatisticsDashboardCardsView({
@@ -217,10 +157,6 @@ export class StatisticsFacade {
 
     public changeNutritionTab(value: NutritionChartTab): void {
         this.selectedNutritionTab.set(value);
-    }
-
-    public changeBodyTab(value: BodyChartTab): void {
-        this.selectedBodyTab.set(value);
     }
 
     public reload(): void {
@@ -326,7 +262,6 @@ export class StatisticsFacade {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(user => {
                 this.userProfile.set(user);
-                this.userHeightCm.set(user?.height ?? null);
             });
     }
 
@@ -359,11 +294,6 @@ export class StatisticsFacade {
 
     private resolveCurrentLocale(): string {
         return resolveAppLocale(resolveTranslateLanguage(this.translateService));
-    }
-
-    private translateKey(key: string): string {
-        this.currentLocale();
-        return this.translateService.instant(key);
     }
 
     private capitalizeFirstLetter(value: string): string {

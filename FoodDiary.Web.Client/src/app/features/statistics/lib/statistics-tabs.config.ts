@@ -14,10 +14,3 @@ export const STATISTICS_NUTRITION_TABS: FdUiTab[] = [
     { value: 'macros', labelKey: 'STATISTICS.NUTRITION_TABS.MACROS' },
     { value: 'distribution', labelKey: 'STATISTICS.NUTRITION_TABS.DISTRIBUTION' },
 ];
-
-export const STATISTICS_BODY_TABS: FdUiTab[] = [
-    { value: 'weight', labelKey: 'STATISTICS.BODY_TABS.WEIGHT' },
-    { value: 'bmi', labelKey: 'STATISTICS.BODY_TABS.BMI' },
-    { value: 'waist', labelKey: 'STATISTICS.BODY_TABS.WAIST' },
-    { value: 'whtr', labelKey: 'STATISTICS.BODY_TABS.WHTR' },
-];
