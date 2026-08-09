@@ -37,6 +37,23 @@ describe('DashboardFacade loading', () => {
         expect(dashboardService.getSnapshot.mock.calls.length).toBe(initialCallCount + 1);
     });
 
+    it('should retain the current snapshot while a selected date is loading', () => {
+        const { facade, dashboardService, snapshot } = setupFacade();
+        const reload$ = new Subject<DashboardSnapshot>();
+        facade.initialize();
+        dashboardService.getSnapshot.mockReturnValueOnce(reload$);
+
+        facade.setSelectedDate(new Date('2026-03-20T12:00:00Z'));
+
+        expect(facade.isLoading()).toBe(true);
+        expect(facade.hasSnapshot()).toBe(true);
+        expect(facade.snapshot()).toEqual(snapshot);
+
+        reload$.next(createSnapshot(UPDATED_SNAPSHOT_CALORIES));
+        reload$.complete();
+        expect(facade.isLoading()).toBe(false);
+    });
+
     it('should use normalized fallback locale for snapshot requests', () => {
         const { facade, dashboardService, translateService } = setupFacade();
         translateService.getCurrentLang.mockReturnValue('');

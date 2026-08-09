@@ -71,6 +71,7 @@ export class StatisticsComponent {
     protected readonly currentRange = this.facade.currentRange;
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isBodyLoading = this.facade.isBodyLoading;
+    protected readonly hasStatisticsResponse = this.facade.hasStatisticsResponse;
     protected readonly hasLoadError = this.facade.hasLoadError;
     protected readonly hasBodyLoadError = this.facade.hasBodyLoadError;
     protected readonly hasStatisticsData = this.facade.hasStatisticsData;

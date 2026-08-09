@@ -9,6 +9,7 @@ import { StatisticsService } from './statistics.service';
 
 const BASE_URL = environment.apiUrls.statistics;
 const SERVICE_URL = `${BASE_URL}/`;
+const SUMMARY_URL = `${BASE_URL}/summary`;
 const QUANTIZATION_DAYS = 7;
 const RESPONSE: AggregatedStatistics[] = [
     {
@@ -71,5 +72,22 @@ describe('StatisticsService', () => {
         expect(req.request.params.get('dateFrom')).toBe(new Date('2026-05-01').toISOString());
         expect(req.request.params.get('dateTo')).toBe(new Date('2026-05-07').toISOString());
         req.flush([]);
+    });
+
+    it('queries the combined statistics summary with one request', () => {
+        const dateFrom = new Date('2026-05-01T00:00:00.000Z');
+        const dateTo = new Date('2026-05-07T23:59:59.999Z');
+        const response = { nutrition: RESPONSE, weight: [], waist: [] };
+
+        service.getSummary({ dateFrom, dateTo, quantizationDays: QUANTIZATION_DAYS }).subscribe(result => {
+            expect(result).toEqual(response);
+        });
+
+        const req = httpMock.expectOne(request => request.url === SUMMARY_URL);
+        expect(req.request.method).toBe('GET');
+        expect(req.request.params.get('dateFrom')).toBe(dateFrom.toISOString());
+        expect(req.request.params.get('dateTo')).toBe(dateTo.toISOString());
+        expect(req.request.params.get('quantizationDays')).toBe(String(QUANTIZATION_DAYS));
+        req.flush(response);
     });
 });

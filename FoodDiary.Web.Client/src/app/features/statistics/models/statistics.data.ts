@@ -24,6 +24,12 @@ export type GetStatisticsDto = {
     quantizationDays?: number;
 };
 
+export type StatisticsSummary = {
+    nutrition: AggregatedStatistics[];
+    weight: WeightEntrySummaryPoint[];
+    waist: WaistEntrySummaryPoint[];
+};
+
 export type MappedStatistics = {
     date: Date[];
     calories: number[];
@@ -54,3 +60,5 @@ export type AggregatedNutrients = {
     carbs: number;
     fiber: number;
 };
+import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
+import type { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';

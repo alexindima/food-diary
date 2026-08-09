@@ -32,7 +32,7 @@
     "RecipeLikes": ["Users"],
     "Recipes": ["FavoriteRecipes", "Images", "Nutrition", "RecentItems", "Users"],
     "ShoppingLists": ["Users"],
-    "Statistics": ["Users"],
+    "Statistics": ["Users", "WaistEntries", "WeightEntries"],
     "Tdee": ["Exercises", "Users", "WeightEntries"],
     "Usda": ["Consumptions", "Users"],
     "Users": ["Images"],

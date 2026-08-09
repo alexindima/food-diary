@@ -58,6 +58,23 @@
         gap: var(--fd-page-body-gap);
     }
 
+    &__card-shell {
+        position: relative;
+        min-width: 0;
+    }
+
+    &__card-loading {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        color: var(--fd-color-text-muted);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 18%, transparent);
+        border-radius: var(--fd-radius-md);
+        pointer-events: none;
+    }
+
     &__skeleton-grid {
         display: grid;
         gap: var(--fd-space-card-content-gap);

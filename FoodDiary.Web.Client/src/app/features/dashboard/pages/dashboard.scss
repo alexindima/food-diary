@@ -29,6 +29,28 @@ $color-text-secondary: var(--fd-color-text-muted);
         gap: var(--fd-space-dashboard-column-gap);
     }
 
+    &__grid {
+        position: relative;
+    }
+
+    &__refresh-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding-top: var(--fd-space-xl);
+        border-radius: var(--fd-radius-card);
+        background: color-mix(in srgb, var(--fd-bg-page) 12%, transparent);
+        pointer-events: none;
+    }
+
+    &__refresh-overlay fd-ui-loader {
+        position: sticky;
+        top: var(--fd-space-xl);
+    }
+
     &__column > :empty {
         display: none;
     }

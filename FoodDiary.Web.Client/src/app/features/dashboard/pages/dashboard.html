@@ -90,7 +90,7 @@
         }
 
         <div class="dashboard__body">
-            @if (isLoading()) {
+            @if (isLoading() && !hasSnapshot()) {
                 <div class="dashboard__loader fd-ui-body-sm">{{ 'DASHBOARD.LOADING' | translate }}</div>
             } @else {
                 @if (isTodaySelected() && !layout.isEditingLayout()) {
@@ -107,6 +107,11 @@
                     [class.dashboard__grid--editing]="layout.isEditingLayout()"
                     [class.dashboard__grid--single]="!hasRenderedAsideBlocks() && !layout.isEditingLayout()"
                 >
+                    @if (isLoading()) {
+                        <div class="dashboard__refresh-overlay" role="status" [attr.aria-label]="'DASHBOARD.LOADING' | translate">
+                            <fd-ui-loader />
+                        </div>
+                    }
                     @let blockStates = dashboardBlockStates();
                     @if (layout.isEditingLayout()) {
                         <fd-dashboard-edit-hint [actionLabel]="editSaveActionLabel()" (save)="layout.save()" />

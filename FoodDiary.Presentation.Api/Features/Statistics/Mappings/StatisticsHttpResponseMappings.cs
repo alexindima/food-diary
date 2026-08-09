@@ -1,5 +1,7 @@
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Presentation.Api.Features.Statistics.Responses;
+using FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;
+using FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
 
 namespace FoodDiary.Presentation.Api.Features.Statistics.Mappings;
 
@@ -25,6 +27,15 @@ public static class StatisticsHttpResponseMappings {
                 model.MealCount,
                 model.TrackedDayCount
             );
+        }
+    }
+
+    extension(StatisticsSummaryModel model) {
+        public StatisticsSummaryHttpResponse ToHttpResponse() {
+            return new StatisticsSummaryHttpResponse(
+                [.. model.Nutrition.Select(static item => item.ToHttpResponse())],
+                [.. model.Weight.Select(static item => item.ToHttpResponse())],
+                [.. model.Waist.Select(static item => item.ToHttpResponse())]);
         }
     }
 }

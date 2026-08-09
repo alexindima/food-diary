@@ -55,6 +55,7 @@ export class DashboardFacade {
     });
     public readonly snapshot = this.snapshotRequest.data;
     public readonly isLoading = this.snapshotRequest.isLoading;
+    public readonly hasSnapshot = this.snapshotRequest.hasData;
     public readonly loadError = this.snapshotRequest.error;
     public readonly cycle = computed<CycleResponse | null>(() => this.snapshot()?.currentCycle ?? null);
     public readonly isCycleLoading = computed(() => this.isLoading());

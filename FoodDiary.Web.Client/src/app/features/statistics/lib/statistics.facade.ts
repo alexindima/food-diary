@@ -2,19 +2,16 @@ import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angul
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
-import { finalize, forkJoin } from 'rxjs';
+import { finalize } from 'rxjs';
 
 import { ExportService } from '../../../shared/api/export.service';
 import { UserService } from '../../../shared/api/user.service';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
-import { formatDateInputValue, parseLocalDateInputValue } from '../../../shared/lib/local-date.utils';
+import { parseLocalDateInputValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { RequestStateController } from '../../../shared/lib/request-state';
 import type { ExportFormat } from '../../../shared/models/export.models';
-import type { User } from '../../../shared/models/user.data';
-import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
 import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
-import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
 import type { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
 import { StatisticsService } from '../api/statistics.service';
 import type { MappedStatistics } from '../models/statistics.data';
@@ -36,8 +33,6 @@ import { mapStatistics } from './statistics-statistics.mapper';
 @Injectable()
 export class StatisticsFacade {
     private readonly statisticsService = inject(StatisticsService);
-    private readonly weightEntriesService = inject(WeightEntriesService);
-    private readonly waistEntriesService = inject(WaistEntriesService);
     private readonly userService = inject(UserService);
     private readonly exportService = inject(ExportService);
     private readonly translateService = inject(TranslateService);
@@ -45,10 +40,9 @@ export class StatisticsFacade {
 
     private dateLabelFormatterCache: { locale: string; range: StatisticsRange; formatter: Intl.DateTimeFormat } | null = null;
     private lastLoadedRangeKey: string | null = null;
-    private readonly statisticsRequest = new RequestStateController<MappedStatistics, 'STATISTICS.LOAD_ERROR'>();
-    private readonly bodyRequest = new RequestStateController<
-        { weight: WeightEntrySummaryPoint[]; waist: WaistEntrySummaryPoint[] },
-        'STATISTICS.BODY_LOAD_ERROR'
+    private readonly statisticsRequest = new RequestStateController<
+        { statistics: MappedStatistics; weight: WeightEntrySummaryPoint[]; waist: WaistEntrySummaryPoint[] },
+        'STATISTICS.LOAD_ERROR'
     >();
     private readonly initialized = signal(false);
     private readonly currentLocale = signal(this.resolveCurrentLocale());
@@ -59,14 +53,15 @@ export class StatisticsFacade {
     public readonly customRangeForm = form(this.customRangeModel);
 
     public readonly isLoading = this.statisticsRequest.isLoading;
-    public readonly isBodyLoading = this.bodyRequest.isLoading;
-    public readonly hasLoadError = computed(() => this.statisticsRequest.error() !== null);
-    public readonly hasBodyLoadError = computed(() => this.bodyRequest.error() !== null);
+    public readonly isBodyLoading = this.statisticsRequest.isLoading;
+    public readonly hasStatisticsResponse = this.statisticsRequest.hasData;
+    public readonly hasLoadError = computed(() => this.statisticsRequest.error() !== null && !this.statisticsRequest.hasData());
+    public readonly hasBodyLoadError = this.hasLoadError;
     public readonly exportingFormat = signal<ExportFormat | null>(null);
-    public readonly chartStatisticsData = this.statisticsRequest.data;
-    public readonly weightSummaryPoints = computed(() => this.bodyRequest.data()?.weight ?? []);
-    public readonly waistSummaryPoints = computed(() => this.bodyRequest.data()?.waist ?? []);
-    public readonly userProfile = signal<User | null>(null);
+    public readonly chartStatisticsData = computed(() => this.statisticsRequest.data()?.statistics ?? null);
+    public readonly weightSummaryPoints = computed(() => this.statisticsRequest.data()?.weight ?? []);
+    public readonly waistSummaryPoints = computed(() => this.statisticsRequest.data()?.waist ?? []);
+    public readonly userProfile = this.userService.user;
 
     public readonly currentRange = computed<DateRange>(() => {
         const selectedRange = this.selectedRange();
@@ -136,7 +131,6 @@ export class StatisticsFacade {
         this.initialized.set(true);
         this.initializeCustomRange();
         this.loadAllData();
-        this.loadUserProfile();
     }
 
     public changeRange(value: StatisticsRange): void {
@@ -201,7 +195,6 @@ export class StatisticsFacade {
 
         this.lastLoadedRangeKey = rangeKey;
         this.loadStatistics(range);
-        this.loadBodySummaries(range);
     }
 
     private loadStatistics(range: DateRange): void {
@@ -211,7 +204,7 @@ export class StatisticsFacade {
         const quantizationDays = getQuantizationDays(normalizedStart, normalizedEnd);
 
         this.statisticsService
-            .getAggregatedStatistics({
+            .getSummary({
                 dateFrom: normalizedStart,
                 dateTo: normalizedEnd,
                 quantizationDays,
@@ -219,49 +212,15 @@ export class StatisticsFacade {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: data => {
-                    this.statisticsRequest.succeed(requestId, mapStatistics(data));
+                    this.statisticsRequest.succeed(requestId, {
+                        statistics: mapStatistics(data.nutrition),
+                        weight: data.weight,
+                        waist: data.waist,
+                    });
                 },
                 error: () => {
-                    this.statisticsRequest.fail(requestId, 'STATISTICS.LOAD_ERROR', { preserveData: false });
+                    this.statisticsRequest.fail(requestId, 'STATISTICS.LOAD_ERROR');
                 },
-            });
-    }
-
-    private loadBodySummaries(range: DateRange): void {
-        const requestId = this.bodyRequest.begin();
-        const normalizedStart = formatDateInputValue(range.start);
-        const normalizedEnd = formatDateInputValue(range.end);
-        const quantizationDays = getQuantizationDays(normalizeStartOfDay(range.start), normalizeEndOfDay(range.end));
-
-        forkJoin({
-            weight: this.weightEntriesService.getSummary({
-                dateFrom: normalizedStart,
-                dateTo: normalizedEnd,
-                quantizationDays,
-            }),
-            waist: this.waistEntriesService.getSummary({
-                dateFrom: normalizedStart,
-                dateTo: normalizedEnd,
-                quantizationDays,
-            }),
-        })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: ({ weight, waist }) => {
-                    this.bodyRequest.succeed(requestId, { weight, waist });
-                },
-                error: () => {
-                    this.bodyRequest.fail(requestId, 'STATISTICS.BODY_LOAD_ERROR', { preserveData: false });
-                },
-            });
-    }
-
-    private loadUserProfile(): void {
-        this.userService
-            .getInfo()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(user => {
-                this.userProfile.set(user);
             });
     }
 

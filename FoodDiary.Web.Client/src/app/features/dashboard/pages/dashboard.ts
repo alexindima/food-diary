@@ -17,6 +17,7 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDatePickerButtonComponent } from 'fd-ui-kit/date-picker-button/fd-ui-date-picker-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
 import type { AiInputBarResult } from '../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { NutritionWeeklyTrendCardComponent } from '../../../components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card';
@@ -72,6 +73,7 @@ import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-tre
         FdUiHintDirective,
         FdUiButtonComponent,
         FdUiDatePickerButtonComponent,
+        FdUiLoaderComponent,
         DashboardQuickAddComponent,
         DashboardEditHintComponent,
         DashboardFastingBlockComponent,
@@ -111,6 +113,7 @@ export class DashboardComponent {
     protected readonly isTodaySelected = this.facade.isTodaySelected;
     protected readonly snapshot = this.facade.snapshot;
     protected readonly isLoading = this.facade.isLoading;
+    protected readonly hasSnapshot = this.facade.hasSnapshot;
     protected readonly meals = this.facade.meals;
     protected readonly weeklyConsumed = this.facade.weeklyConsumed;
     protected readonly weeklyCalories = this.facade.weeklyCalories;

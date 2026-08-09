@@ -15,6 +15,7 @@ const RANGE: DateRange = {
     start: new Date('2026-05-01T00:00:00Z'),
     end: new Date('2026-05-07T00:00:00Z'),
 };
+const REFRESHING_CARD_COUNT = 5;
 
 type StatisticsFacadeMock = {
     changeNutritionTab: ReturnType<typeof vi.fn>;
@@ -28,6 +29,7 @@ type StatisticsFacadeMock = {
     hasBodyLoadError: ReturnType<typeof signal<boolean>>;
     hasLoadError: ReturnType<typeof signal<boolean>>;
     hasStatisticsData: ReturnType<typeof signal<boolean>>;
+    hasStatisticsResponse: ReturnType<typeof signal<boolean>>;
     initialize: ReturnType<typeof vi.fn>;
     isBodyLoading: ReturnType<typeof signal<boolean>>;
     isLoading: ReturnType<typeof signal<boolean>>;
@@ -79,6 +81,7 @@ function createStatisticsFacadeMock(): StatisticsFacadeMock {
         hasLoadError: signal(false),
         hasBodyLoadError: signal(false),
         hasStatisticsData: signal(false),
+        hasStatisticsResponse: signal(true),
         hasBodyData: signal(false),
         exportingFormat: signal(null),
         initialize: vi.fn(),
@@ -162,5 +165,31 @@ describe('StatisticsComponent', () => {
 
         expect(facade.reload).toHaveBeenCalledOnce();
         expect(facade.exportDiary).toHaveBeenCalledWith('csv');
+    });
+
+    it('keeps cards mounted and overlays each dependent card while refreshing', async () => {
+        const { facade, fixture } = await setupStatisticsAsync();
+
+        facade.isLoading.set(true);
+        facade.isBodyLoading.set(true);
+        fixture.detectChanges();
+
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.querySelector('fd-statistics-overview-card')).not.toBeNull();
+        expect(root.querySelector('fd-statistics-body-trend-card')).not.toBeNull();
+        expect(root.querySelectorAll('.statistics__card-loading')).toHaveLength(REFRESHING_CARD_COUNT);
+        expect(root.querySelector('.statistics__skeleton-grid')).toBeNull();
+    });
+
+    it('uses page skeletons only before the first statistics response', async () => {
+        const { facade, fixture } = await setupStatisticsAsync();
+
+        facade.hasStatisticsResponse.set(false);
+        facade.isLoading.set(true);
+        fixture.detectChanges();
+
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.querySelector('.statistics__skeleton-grid')).not.toBeNull();
+        expect(root.querySelector('.statistics__new-cards')).toBeNull();
     });
 });

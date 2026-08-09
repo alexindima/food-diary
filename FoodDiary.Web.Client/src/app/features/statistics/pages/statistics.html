@@ -60,7 +60,7 @@
                 (rangeChange)="changeRange($event)"
             />
         }
-        @if (!hasLoadError() && isLoading()) {
+        @if (!hasLoadError() && isLoading() && !hasStatisticsResponse()) {
             <div class="statistics__skeleton-grid">
                 <fd-skeleton-card class="statistics__skeleton statistics__skeleton--summary" />
                 <fd-skeleton-card class="statistics__skeleton statistics__skeleton--chart" />
@@ -73,19 +73,48 @@
 
             @let newCards = dashboardCardsView();
             <section class="statistics__new-cards" [attr.aria-label]="'STATISTICS.DASHBOARD.PREVIEW_TITLE' | translate">
-                <fd-statistics-overview-card [data]="newCards.overview" />
-                <fd-statistics-nutrition-trend-card
-                    [tabs]="nutritionTabs"
-                    [selectedTab]="selectedNutritionTab()"
-                    [days]="newCards.days"
-                    [calorieGoal]="newCards.overview.calorieGoal"
-                    [insights]="newCards.insights"
-                    (selectedTabChange)="changeNutritionTab($event)"
-                />
-                <fd-statistics-body-trend-card [data]="newCards.body" />
+                <div class="statistics__card-shell" [attr.aria-busy]="isLoading()">
+                    <fd-statistics-overview-card [data]="newCards.overview" />
+                    @if (isLoading()) {
+                        <div class="statistics__card-loading fd-ui-body-sm" role="status">{{ 'STATISTICS.LOADING' | translate }}</div>
+                    }
+                </div>
+                <div class="statistics__card-shell" [attr.aria-busy]="isLoading()">
+                    <fd-statistics-nutrition-trend-card
+                        [tabs]="nutritionTabs"
+                        [selectedTab]="selectedNutritionTab()"
+                        [days]="newCards.days"
+                        [calorieGoal]="newCards.overview.calorieGoal"
+                        [insights]="newCards.insights"
+                        (selectedTabChange)="changeNutritionTab($event)"
+                    />
+                    @if (isLoading()) {
+                        <div class="statistics__card-loading fd-ui-body-sm" role="status">{{ 'STATISTICS.LOADING' | translate }}</div>
+                    }
+                </div>
+                <div class="statistics__card-shell" [attr.aria-busy]="isBodyLoading()">
+                    <fd-statistics-body-trend-card [data]="newCards.body" />
+                    @if (isBodyLoading()) {
+                        <div class="statistics__card-loading fd-ui-body-sm" role="status">{{ 'STATISTICS.LOADING' | translate }}</div>
+                    }
+                </div>
                 <div class="statistics__new-cards-bottom">
-                    <fd-statistics-meal-structure-card [data]="newCards.mealStructure" />
-                    <fd-statistics-diet-stability-card [data]="newCards.stability" />
+                    <div class="statistics__card-shell" [attr.aria-busy]="isLoading()">
+                        <fd-statistics-meal-structure-card [data]="newCards.mealStructure" />
+                        @if (isLoading()) {
+                            <div class="statistics__card-loading fd-ui-body-sm" role="status">
+                                {{ 'STATISTICS.LOADING' | translate }}
+                            </div>
+                        }
+                    </div>
+                    <div class="statistics__card-shell" [attr.aria-busy]="isLoading()">
+                        <fd-statistics-diet-stability-card [data]="newCards.stability" />
+                        @if (isLoading()) {
+                            <div class="statistics__card-loading fd-ui-body-sm" role="status">
+                                {{ 'STATISTICS.LOADING' | translate }}
+                            </div>
+                        }
+                    </div>
                 </div>
             </section>
         }
