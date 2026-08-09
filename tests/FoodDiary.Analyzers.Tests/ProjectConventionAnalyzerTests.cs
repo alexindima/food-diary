@@ -82,6 +82,26 @@ public sealed class ProjectConventionAnalyzerTests {
     }
 
     [Fact]
+    public async Task UserDefinedUtcNowDoesNotReportDiagnosticAsync() {
+        const string source = """
+            public sealed class ClockValue {
+                public static int UtcNow => 42;
+            }
+
+            public sealed class Consumer {
+                public int Now => ClockValue.UtcNow;
+            }
+            """;
+
+        Assert.DoesNotContain(
+            await AnalyzeAsync(source),
+            diagnostic => string.Equals(
+                diagnostic.Id,
+                ProjectConventionAnalyzer.TimeProviderRequiredId,
+                StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task TestTypeWithoutCoverageExclusionReportsDiagnosticAsync() {
         const string source = "public sealed class ExampleTests { }";
 

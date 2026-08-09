@@ -466,6 +466,10 @@ resharper_class_never_instantiated_global_highlighting = none
 [FoodDiary.Presentation.Api/Controllers/CurrentUserUnavailableException.cs]
 dotnet_diagnostic.RCS1194.severity = none
 
+# Billing conflict exceptions require provider identifiers and must not expose context-free constructors.
+[FoodDiary.Application.Abstractions/Billing/Common/*Exception.cs]
+dotnet_diagnostic.RCS1194.severity = none
+
 # This file contains a ReSharper control comment, not member documentation.
 [Shared/FoodDiary.Domain.Primitives/Entity.cs]
 dotnet_diagnostic.RCS1181.severity = none

@@ -40,6 +40,24 @@ public sealed class BillingWebhookControllerTests {
         Assert.Equal(0, controller.Request.Body.Position);
     }
 
+    [Fact]
+    public async Task HandleWebhook_WithNonSeekableBody_DoesNotAttemptToResetStream() {
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Body = new NonSeekableReadStream(Encoding.UTF8.GetBytes("{}"));
+        httpContext.Request.ContentLength = 2;
+        var controller = new BillingWebhookController(sender, new BillingWebhookHttpProcessor()) {
+            ControllerContext = new ControllerContext { HttpContext = httpContext },
+        };
+
+        IActionResult result = await controller.HandleWebhook("YooKassa");
+
+        Assert.IsType<NoContentResult>(result);
+        ProcessBillingWebhookCommand command = Assert.IsType<ProcessBillingWebhookCommand>(sentRequest);
+        Assert.Equal("{}", command.Payload);
+    }
+
     [Theory]
     [InlineData("Paddle", "Paddle-Signature", "paddle-signature")]
     [InlineData("Stripe", "Stripe-Signature", "stripe-signature")]
@@ -100,6 +118,16 @@ public sealed class BillingWebhookControllerTests {
                 HttpContext = httpContext,
             },
         };
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class NonSeekableReadStream(byte[] payload) : MemoryStream(payload) {
+        public override bool CanSeek => false;
+
+        public override long Position {
+            get => base.Position;
+            set => throw new NotSupportedException();
+        }
     }
 
 }

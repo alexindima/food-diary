@@ -1,6 +1,6 @@
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR)
 . FoodDiary.Web.Client/.husky/progress.sh
-hook_progress_init "pre-commit" 11
+hook_progress_init "pre-commit" 12
 
 STAGED_FRONTEND_FORMATTABLE_FILES=$(echo "$STAGED_FILES" | grep -E '^FoodDiary\.Web\.Client/(src|projects)/.*\.(ts|html)$' || true)
 STAGED_FRONTEND_LINT_FILES=$(echo "$STAGED_FILES" | grep -E '^FoodDiary\.Web\.Client/(src|projects)/.*\.(ts|html)$' || true)
@@ -92,6 +92,12 @@ else
 fi
 
 cd ..
+
+if [ -z "$WIKI_POWERSHELL" ]; then
+  echo "PowerShell is required for nested .NET artifact cleanup."
+  exit 1
+fi
+hook_run "Nested .NET artifact cleanup" "$WIKI_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 || exit 1
 
 if [ -n "$WIKI_INDEX_INPUT_FILES" ]; then
   if [ -z "$WIKI_POWERSHELL" ]; then

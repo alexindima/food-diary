@@ -885,6 +885,34 @@ public sealed class BillingGatewayTests {
         Assert.Contains("price", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Theory]
+    [InlineData("null")]
+    [InlineData("[]")]
+    public async Task PaddleWebhook_WhenItemsAreNotPopulated_ReturnsValidationFailure(string itemsJson) {
+        string payload = $$"""
+            {
+              "event_id": "evt_invalid_items",
+              "event_type": "subscription.updated",
+              "data": {
+                "id": "sub_123",
+                "customer_id": "ctm_123",
+                "status": "active",
+                "items": {{itemsJson}}
+              }
+            }
+            """;
+        PaddleBillingGateway gateway = CreateConfiguredPaddleWebhookGateway();
+
+        Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
+            payload,
+            CreatePaddleSignature(payload, "secret"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+        Assert.Contains("price", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     [Fact]
     public async Task PaddleWebhook_WhenPriceIdUnknown_ReturnsValidationFailure() {
         string payload = JsonSerializer.Serialize(new {

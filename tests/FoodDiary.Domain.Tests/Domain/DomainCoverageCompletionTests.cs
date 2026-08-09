@@ -298,6 +298,7 @@ public sealed class DomainCoverageCompletionTests {
     public void MiscDomainMethods_CoverRemainingBranches() {
         var favorite = FavoriteProduct.Create(UserId.New(), ProductId.New(), "Apple", 100);
         favorite.UpdatePreferredPortionAmount(125);
+        favorite.UpdatePreferredPortionAmount(125);
         var asset = ImageAsset.Create(UserId.New(), " object/key ", " https://img ");
         var userRole = new UserRole(UserId.New(), RoleId.New());
         var session = UserRefreshTokenSession.Create(

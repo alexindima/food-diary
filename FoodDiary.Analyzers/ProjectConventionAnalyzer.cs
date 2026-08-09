@@ -164,10 +164,7 @@ public sealed class ProjectConventionAnalyzer : DiagnosticAnalyzer {
 
     private static void AnalyzeTypeDeclaration(SyntaxNodeAnalysisContext context) {
         var declaration = (TypeDeclarationSyntax)context.Node;
-        INamedTypeSymbol? type = context.SemanticModel.GetDeclaredSymbol(declaration, context.CancellationToken);
-        if (type is null) {
-            return;
-        }
+        INamedTypeSymbol type = context.SemanticModel.GetDeclaredSymbol(declaration, context.CancellationToken)!;
 
         if (!HasExcludeFromCodeCoverage(type)) {
             context.ReportDiagnostic(Diagnostic.Create(

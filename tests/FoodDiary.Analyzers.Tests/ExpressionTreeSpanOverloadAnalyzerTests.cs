@@ -56,6 +56,20 @@ public sealed class ExpressionTreeSpanOverloadAnalyzerTests {
         Assert.Empty(await AnalyzeAsync(source));
     }
 
+    [Fact]
+    public async Task ArrayContainsInsideOrdinaryLambdaDoesNotReportDiagnosticAsync() {
+        const string source = """
+            using System;
+
+            public static class Example {
+                public static Func<int, bool> Create(int[] ids) =>
+                    value => ids.Contains(value);
+            }
+            """;
+
+        Assert.Empty(await AnalyzeAsync(source));
+    }
+
     private static async Task<ImmutableArray<Diagnostic>> AnalyzeAsync(string source) {
         SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.CSharp14));
         IEnumerable<MetadataReference> references = new[] {

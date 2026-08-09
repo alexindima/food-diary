@@ -1,5 +1,12 @@
 . FoodDiary.Web.Client/.husky/progress.sh
-hook_progress_init "pre-push" 31
+hook_progress_init "pre-push" 32
+
+HOOK_POWERSHELL=$(command -v pwsh || command -v powershell.exe || true)
+if [ -z "$HOOK_POWERSHELL" ]; then
+  echo "PowerShell is required for nested .NET artifact cleanup."
+  exit 1
+fi
+hook_run "Nested .NET artifact cleanup" "$HOOK_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 || exit 1
 
 cd FoodDiary.Web.Client
 hook_run "Frontend formatting" npm run check:format:ci || exit 1

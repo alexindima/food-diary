@@ -558,11 +558,7 @@ $"{request.UserId:N}:{request.Plan.Trim().ToLowerInvariant()}";
     }
 
     private static JsonElement GetFirstTrialDates(JsonElement data) {
-        if (!data.TryGetProperty("items", out JsonElement items) || items.ValueKind != JsonValueKind.Array || items.GetArrayLength() == 0) {
-            return default;
-        }
-
-        JsonElement firstItem = items[0];
+        JsonElement firstItem = data.GetProperty("items")[0];
         return !firstItem.TryGetProperty("trial_dates", out JsonElement trialDates) ? default : trialDates;
     }
 
