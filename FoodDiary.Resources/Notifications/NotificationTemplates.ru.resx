@@ -96,6 +96,12 @@
   <data name="WeeklyCheckIn_Body" xml:space="preserve">
     <value>Открой обзор недели, чтобы увидеть тренды и рекомендации.</value>
   </data>
+  <data name="WeeklyGoalReminder_Title" xml:space="preserve">
+    <value>Продолжайте двигаться к цели недели</value>
+  </data>
+  <data name="WeeklyGoalReminder_Body" xml:space="preserve">
+    <value>Запишите сегодняшние приёмы пищи, чтобы продвинуться к цели по дневнику.</value>
+  </data>
   <data name="Hydration_Title" xml:space="preserve">
     <value>Напоминание о воде</value>
   </data>

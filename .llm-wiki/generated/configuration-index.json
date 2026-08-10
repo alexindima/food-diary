@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "optionTypes":  50,
+                    "optionTypes":  51,
                     "configurationFiles":  7,
                     "configurationKeys":  185,
                     "environmentVariables":  148
@@ -546,6 +546,15 @@
                                                "Subject"
                                            ],
                             "path":  "FoodDiary.Integrations/Options/WebPushOptions.cs"
+                        },
+                        {
+                            "type":  "WeeklyGoalReminderOptions",
+                            "section":  "WeeklyGoalReminders",
+                            "properties":  [
+                                               "Cron",
+                                               "Enabled"
+                                           ],
+                            "path":  "FoodDiary.JobManager/Services/WeeklyGoalReminderOptions.cs"
                         },
                         {
                             "type":  "YooKassaOptions",

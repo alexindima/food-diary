@@ -53,10 +53,17 @@
                 </p>
             </fd-ui-card>
 
-            <div class="check-in__main-grid">
-                <fd-ui-card class="check-in__summary" data-tour-id="weekly-check-in-stats">
-                    <h2 class="fd-ui-card-title">{{ 'WEEKLY_CHECK_IN.SUMMARY.TITLE' | translate }}</h2>
-                    <div class="check-in__insights">
+            <fd-ui-card class="check-in__summary" data-tour-id="weekly-check-in-stats">
+                <h2 class="fd-ui-card-title">{{ 'WEEKLY_CHECK_IN.SUMMARY.TITLE' | translate }}</h2>
+                <div class="check-in__insights">
+                    @if (isSelectedWeekPast() && review.daysLogged === 0) {
+                        <div class="check-in__insight">
+                            <span class="check-in__insight-icon" data-tone="neutral">
+                                <fd-ui-icon name="event_busy" />
+                            </span>
+                            <span class="fd-ui-body-sm">{{ 'WEEKLY_CHECK_IN.SUMMARY.PAST_WEEK_NO_DATA' | translate }}</span>
+                        </div>
+                    } @else {
                         @for (insight of summaryInsights(); track insight.key) {
                             <div class="check-in__insight">
                                 <span class="check-in__insight-icon" [attr.data-tone]="insight.tone">
@@ -65,43 +72,141 @@
                                 <span class="fd-ui-body-sm">{{ insight.labelKey | translate: { count: review.daysLogged } }}</span>
                             </div>
                         }
-                        @if (remainingInsightCount() > 0) {
-                            <span class="check-in__insights-more fd-ui-helper-text">
-                                {{ 'WEEKLY_CHECK_IN.MORE_INSIGHTS' | translate: { count: remainingInsightCount() } }}
-                            </span>
-                        }
-                    </div>
+                    }
+                    @if (!(isSelectedWeekPast() && review.daysLogged === 0) && remainingInsightCount() > 0) {
+                        <span class="check-in__insights-more fd-ui-helper-text">
+                            {{ 'WEEKLY_CHECK_IN.MORE_INSIGHTS' | translate: { count: remainingInsightCount() } }}
+                        </span>
+                    }
+                </div>
+                <fd-ui-button
+                    class="check-in__report-action"
+                    variant="secondary"
+                    fill="ghost"
+                    size="sm"
+                    icon="article"
+                    (click)="openDetailedReport(review)"
+                >
+                    {{ 'WEEKLY_CHECK_IN.OPEN_REPORT' | translate }}
+                </fd-ui-button>
+            </fd-ui-card>
+
+            <div class="check-in__goals-grid">
+                <fd-ui-card class="check-in__focus" data-tour-id="weekly-check-in-current-goal">
+                    <h2 class="fd-ui-card-title">{{ 'WEEKLY_CHECK_IN.GOAL.CURRENT_WEEK_LABEL' | translate }}</h2>
+                    @if (selectedWeekGoal(); as goal) {
+                        <strong class="check-in__focus-title">
+                            {{
+                                (goal.targetDays === 3
+                                    ? 'WEEKLY_CHECK_IN.GOAL.ACTIVE_TITLE_THREE'
+                                    : 'WEEKLY_CHECK_IN.GOAL.ACTIVE_TITLE_OTHER'
+                                ) | translate: { target: goal.targetDays }
+                            }}
+                        </strong>
+                        <p class="check-in__focus-copy fd-ui-body-sm">
+                            {{
+                                (isSelectedWeekPast() ? 'WEEKLY_CHECK_IN.GOAL.CLOSED_COPY' : 'WEEKLY_CHECK_IN.GOAL.ACTIVE_COPY')
+                                    | translate: { progress: goal.progressDays, target: goal.targetDays }
+                            }}
+                        </p>
+                        <div class="check-in__focus-progress" aria-hidden="true">
+                            @for (segment of [1, 2, 3, 4, 5, 6, 7]; track segment) {
+                                <span [class.check-in__focus-segment--filled]="segment <= goal.progressDays"></span>
+                            }
+                        </div>
+                        <span class="check-in__focus-count fd-ui-helper-text">{{ goal.progressDays }} / {{ goal.targetDays }}</span>
+                    } @else {
+                        <strong class="check-in__focus-title">
+                            {{
+                                (isSelectedWeekPast() ? 'WEEKLY_CHECK_IN.GOAL.CLOSED_TITLE' : 'WEEKLY_CHECK_IN.GOAL.CURRENT_EMPTY_TITLE')
+                                    | translate
+                            }}
+                        </strong>
+                        <p class="check-in__focus-copy fd-ui-body-sm">
+                            {{
+                                (isSelectedWeekPast()
+                                    ? 'WEEKLY_CHECK_IN.GOAL.CLOSED_EMPTY_COPY'
+                                    : 'WEEKLY_CHECK_IN.GOAL.CURRENT_EMPTY_COPY'
+                                ) | translate
+                            }}
+                        </p>
+                    }
                     <fd-ui-button
-                        class="check-in__report-action"
-                        variant="secondary"
-                        fill="ghost"
-                        size="sm"
-                        icon="article"
-                        (click)="openDetailedReport(review)"
+                        variant="primary"
+                        [fullWidth]="true"
+                        [loading]="isSelectedWeekGoalLoading()"
+                        [disabled]="isSelectedWeekPast()"
+                        [disabledReason]="'WEEKLY_CHECK_IN.GOAL.CLOSED_ACTION_HINT' | translate"
+                        [icon]="isSelectedWeekPast() || selectedWeekGoal() === null ? 'flag' : 'edit'"
+                        (click)="openSelectedWeekGoalDialog()"
                     >
-                        {{ 'WEEKLY_CHECK_IN.OPEN_REPORT' | translate }}
+                        {{
+                            (isSelectedWeekPast()
+                                ? 'WEEKLY_CHECK_IN.GOAL.CLOSED_ACTION'
+                                : selectedWeekGoal() === null
+                                  ? 'WEEKLY_CHECK_IN.GOAL.CREATE'
+                                  : 'WEEKLY_CHECK_IN.GOAL.EDIT'
+                            ) | translate
+                        }}
                     </fd-ui-button>
                 </fd-ui-card>
 
                 <fd-ui-card class="check-in__focus" data-tour-id="weekly-check-in-suggestions">
                     <h2 class="fd-ui-card-title">{{ 'WEEKLY_CHECK_IN.FOCUS.TITLE' | translate }}</h2>
-                    <strong class="check-in__focus-title">{{ review.focusTitleKey | translate }}</strong>
-                    <p class="check-in__focus-copy fd-ui-body-sm">{{ review.focusDescriptionKey | translate }}</p>
-                    <div class="check-in__focus-progress" aria-hidden="true">
-                        @for (segment of [1, 2, 3, 4, 5, 6, 7]; track segment) {
-                            <span [class.check-in__focus-segment--filled]="segment <= review.focusTarget"></span>
-                        }
-                    </div>
-                    <span class="check-in__focus-count fd-ui-helper-text">{{ review.focusTarget }} / 7</span>
+                    @if (weeklyGoal(); as goal) {
+                        <strong class="check-in__focus-title">
+                            {{
+                                (goal.targetDays === 3
+                                    ? 'WEEKLY_CHECK_IN.GOAL.ACTIVE_TITLE_THREE'
+                                    : 'WEEKLY_CHECK_IN.GOAL.ACTIVE_TITLE_OTHER'
+                                ) | translate: { target: goal.targetDays }
+                            }}
+                        </strong>
+                        <p class="check-in__focus-copy fd-ui-body-sm">
+                            @if (isGoalPeriodClosed()) {
+                                {{
+                                    'WEEKLY_CHECK_IN.GOAL.CLOSED_COPY' | translate: { progress: goal.progressDays, target: goal.targetDays }
+                                }}
+                            } @else {
+                                {{ 'WEEKLY_CHECK_IN.GOAL.ACTIVE_COPY' | translate }}
+                            }
+                        </p>
+                    } @else if (isGoalPeriodClosed()) {
+                        <strong class="check-in__focus-title">{{ 'WEEKLY_CHECK_IN.GOAL.CLOSED_TITLE' | translate }}</strong>
+                        <p class="check-in__focus-copy fd-ui-body-sm">{{ 'WEEKLY_CHECK_IN.GOAL.CLOSED_EMPTY_COPY' | translate }}</p>
+                    } @else {
+                        <strong class="check-in__focus-title">{{ review.focusTitleKey | translate }}</strong>
+                        <p class="check-in__focus-copy fd-ui-body-sm">{{ review.focusDescriptionKey | translate }}</p>
+                    }
+                    @if (!isGoalPeriodClosed() || weeklyGoal() !== null) {
+                        <div class="check-in__focus-progress" aria-hidden="true">
+                            @for (segment of [1, 2, 3, 4, 5, 6, 7]; track segment) {
+                                <span
+                                    [class.check-in__focus-segment--filled]="segment <= (weeklyGoal()?.progressDays ?? review.focusTarget)"
+                                ></span>
+                            }
+                        </div>
+                        <span class="check-in__focus-count fd-ui-helper-text">
+                            {{ weeklyGoal()?.progressDays ?? review.focusTarget }} / {{ weeklyGoal()?.targetDays ?? 7 }}
+                        </span>
+                    }
                     <fd-ui-button
                         variant="primary"
                         [fullWidth]="true"
-                        [disabled]="focusAccepted()"
-                        [disabledReason]="'WEEKLY_CHECK_IN.FOCUS.ACCEPTED' | translate"
-                        [ariaPressed]="focusAccepted()"
-                        (click)="acceptFocus()"
+                        [loading]="isGoalLoading()"
+                        [disabled]="isGoalPeriodClosed()"
+                        [disabledReason]="'WEEKLY_CHECK_IN.GOAL.CLOSED_ACTION_HINT' | translate"
+                        [icon]="weeklyGoal() === null ? 'flag' : 'edit'"
+                        (click)="openGoalDialog()"
                     >
-                        {{ (focusAccepted() ? 'WEEKLY_CHECK_IN.FOCUS.ACCEPTED' : 'WEEKLY_CHECK_IN.FOCUS.ACCEPT') | translate }}
+                        {{
+                            (isGoalPeriodClosed()
+                                ? 'WEEKLY_CHECK_IN.GOAL.CLOSED_ACTION'
+                                : weeklyGoal() === null
+                                  ? 'WEEKLY_CHECK_IN.GOAL.CREATE'
+                                  : 'WEEKLY_CHECK_IN.GOAL.EDIT'
+                            ) | translate
+                        }}
                     </fd-ui-button>
                 </fd-ui-card>
             </div>

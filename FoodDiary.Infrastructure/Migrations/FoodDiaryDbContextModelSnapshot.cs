@@ -3877,6 +3877,53 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("WearableSyncEntries");
                 });
 
+            modelBuilder.Entity("FoodDiary.Domain.Entities.WeeklyGoals.WeeklyGoal", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateOnly?>("LastReminderLocalDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("ReminderEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("ReminderTimeMinutes")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TargetDays")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("TimeZoneOffsetMinutes")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("WeekStartUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReminderEnabled", "WeekStartUtc");
+
+                    b.HasIndex("UserId", "WeekStartUtc")
+                        .IsUnique();
+
+                    b.ToTable("WeeklyGoals", (string)null);
+                });
+
             modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Achievements.AchievementEvaluationOutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -5017,6 +5064,15 @@ namespace FoodDiary.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.WeeklyGoals.WeeklyGoal", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Notifications.NotificationWebPushOutboxMessage", b =>

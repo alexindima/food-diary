@@ -63,13 +63,22 @@ public static class JobManagerServiceCollectionExtensions {
                 .Validate(NotificationWebPushOutboxOptions.HasValidConfiguration,
                     "NotificationWebPushOutbox configuration requires a positive batch size and a non-empty cron when enabled.")
                 .ValidateOnStart();
+            services.AddReminderOptions(configuration);
+        }
+
+        private void AddReminderOptions(IConfiguration configuration) {
             services.AddOptions<ClientTaskReminderOptions>()
                 .Bind(configuration.GetSection(ClientTaskReminderOptions.SectionName))
                 .Validate(
                     ClientTaskReminderOptions.HasValidConfiguration,
                     "ClientTaskReminders configuration requires a non-empty cron when enabled.")
                 .ValidateOnStart();
-
+            services.AddOptions<WeeklyGoalReminderOptions>()
+                .Bind(configuration.GetSection(WeeklyGoalReminderOptions.SectionName))
+                .Validate(
+                    WeeklyGoalReminderOptions.HasValidConfiguration,
+                    "WeeklyGoalReminders configuration requires a non-empty cron when enabled.")
+                .ValidateOnStart();
         }
 
         private void AddAchievementOutboxOptions(IConfiguration configuration) {
@@ -96,6 +105,7 @@ public static class JobManagerServiceCollectionExtensions {
             services.AddTransient<UserLoginEventCleanupJob>();
             services.AddTransient<MarketingAttributionCleanupJob>();
             services.AddTransient<ClientTaskReminderJob>();
+            services.AddTransient<WeeklyGoalReminderJob>();
             services.AddScoped<ClientTaskDueReminderProcessor>();
 
         }

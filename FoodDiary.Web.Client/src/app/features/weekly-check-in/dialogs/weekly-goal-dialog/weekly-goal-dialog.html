@@ -1,0 +1,54 @@
+<fd-ui-dialog
+    class="weekly-goal-dialog"
+    size="md"
+    [title]="data.titleKey | translate"
+    [subtitle]="'WEEKLY_CHECK_IN.GOAL.DIALOG_SUBTITLE' | translate"
+>
+    <section class="weekly-goal-dialog__section">
+        <h3 class="fd-ui-section-title">{{ 'WEEKLY_CHECK_IN.GOAL.FREQUENCY_TITLE' | translate }}</h3>
+        <p class="fd-ui-body-sm">{{ 'WEEKLY_CHECK_IN.GOAL.FREQUENCY_COPY' | translate }}</p>
+        <fd-ui-segmented-toggle
+            [options]="targetOptions"
+            [fullWidth]="true"
+            [ariaLabel]="'WEEKLY_CHECK_IN.GOAL.FREQUENCY_ARIA' | translate"
+            [(selectedValue)]="selectedTarget"
+        />
+    </section>
+
+    <section class="weekly-goal-dialog__section weekly-goal-dialog__reminder">
+        <div>
+            <h3 class="fd-ui-section-title">{{ 'WEEKLY_CHECK_IN.GOAL.REMINDER_TITLE' | translate }}</h3>
+            <p class="fd-ui-body-sm">{{ 'WEEKLY_CHECK_IN.GOAL.REMINDER_COPY' | translate }}</p>
+        </div>
+        <fd-ui-switch
+            [checked]="reminderEnabled()"
+            [ariaLabel]="'WEEKLY_CHECK_IN.GOAL.REMINDER_ARIA' | translate"
+            (checkedChange)="toggleReminder($event)"
+        />
+    </section>
+
+    @if (reminderEnabled()) {
+        <fd-ui-time-input
+            [label]="'WEEKLY_CHECK_IN.GOAL.REMINDER_TIME' | translate"
+            [pickerAriaLabel]="'WEEKLY_CHECK_IN.GOAL.REMINDER_TIME_ARIA' | translate"
+            [hoursLabel]="'WEEKLY_CHECK_IN.GOAL.REMINDER_HOURS' | translate"
+            [minutesLabel]="'WEEKLY_CHECK_IN.GOAL.REMINDER_MINUTES' | translate"
+            [(value)]="reminderTime"
+        />
+        <p class="weekly-goal-dialog__timezone fd-ui-helper-text">
+            {{ 'WEEKLY_CHECK_IN.GOAL.TIMEZONE_HINT' | translate }}
+        </p>
+    }
+
+    @if (saveFailed()) {
+        <p class="weekly-goal-dialog__error fd-ui-helper-text" role="alert">
+            {{ 'WEEKLY_CHECK_IN.GOAL.SAVE_ERROR' | translate }}
+        </p>
+    }
+
+    <div fdUiDialogFooter class="weekly-goal-dialog__footer fd-ui-actions fd-ui-actions--end">
+        <fd-ui-button icon="flag" [loading]="isSaving()" (click)="save()">
+            {{ (data.goal === null ? 'WEEKLY_CHECK_IN.GOAL.CREATE' : 'COMMON.SAVE') | translate }}
+        </fd-ui-button>
+    </div>
+</fd-ui-dialog>

@@ -1086,6 +1086,7 @@ public sealed class JobsTests {
                 RecurringJobIds.UserLoginEventsCleanup,
                 RecurringJobIds.MarketingAttributionCleanup,
                 RecurringJobIds.ClientTaskReminders,
+                RecurringJobIds.WeeklyGoalReminders,
             ],
             recurringJobManager.JobIds);
         Assert.Equal(
@@ -1104,6 +1105,7 @@ public sealed class JobsTests {
                 RecurringJobIds.UserLoginEventsCleanup,
                 RecurringJobIds.MarketingAttributionCleanup,
                 RecurringJobIds.ClientTaskReminders,
+                RecurringJobIds.WeeklyGoalReminders,
             ],
             verifier.ExpectedJobIds);
     }
@@ -1133,6 +1135,7 @@ public sealed class JobsTests {
     [Fact]
     public async Task RecurringJobsHostedService_StopAsync_CompletesWithoutWork() {
         var service = new RecurringJobsHostedService(
+            null!,
             null!,
             null!,
             null!,
@@ -1706,6 +1709,7 @@ public sealed class JobsTests {
             Options.Create(new MarketingAttributionCleanupOptions { Cron = "30 3 * * *" }),
             Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }),
             Options.Create(new ClientTaskReminderOptions { Cron = "0 * * * *" }),
+            Options.Create(new WeeklyGoalReminderOptions { Cron = "0 * * * *" }),
             NullLogger<RecurringJobsHostedService>.Instance);
 
     [ExcludeFromCodeCoverage]

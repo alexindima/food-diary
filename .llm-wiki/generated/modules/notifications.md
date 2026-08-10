@@ -15,7 +15,7 @@ sources:
 
 - Origin: module-graph
 - Dependencies: Users
-- Consumers: Authentication, Dietologist, Fasting, RecipeComments
+- Consumers: Authentication, Dietologist, Fasting, RecipeComments, WeeklyGoals
 
 ## Source Areas
 

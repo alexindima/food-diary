@@ -15,6 +15,7 @@ public static class RecurringJobIds {
     public const string UserLoginEventsCleanup = "user-login-events-cleanup";
     public const string MarketingAttributionCleanup = "marketing-attribution-cleanup";
     public const string ClientTaskReminders = "client-task-reminders";
+    public const string WeeklyGoalReminders = "weekly-goal-reminders";
 
     public static readonly string[] All = [
         ImageAssetsCleanup,
@@ -31,5 +32,6 @@ public static class RecurringJobIds {
         UserLoginEventsCleanup,
         MarketingAttributionCleanup,
         ClientTaskReminders,
+        WeeklyGoalReminders,
     ];
 }

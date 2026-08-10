@@ -15,10 +15,10 @@
                     "dotnetProjects":  61,
                     "testProjects":  29,
                     "frontendProjects":  4,
-                    "applicationModules":  38,
+                    "applicationModules":  39,
                     "extractedApplicationModules":  2,
-                    "controllers":  84,
-                    "endpoints":  269,
+                    "controllers":  85,
+                    "endpoints":  271,
                     "agentGuides":  43,
                     "documentationPages":  43
                 },
@@ -2500,6 +2500,14 @@
                                                     ]
                                },
                                {
+                                   "name":  "WeeklyGoals",
+                                   "dependencies":  [
+                                                        "Consumptions",
+                                                        "Notifications",
+                                                        "Users"
+                                                    ]
+                               },
+                               {
                                    "name":  "WeightEntries",
                                    "dependencies":  [
                                                         "Users"
@@ -4266,6 +4274,23 @@
                                                                "verb":  "GET",
                                                                "route":  "/api/v{version:apiVersion}/weekly-check-in",
                                                                "line":  14
+                                                           }
+                                                       ]
+                                     },
+                                     {
+                                         "name":  "WeeklyGoalsController",
+                                         "path":  "FoodDiary.Presentation.Api/Features/WeeklyGoals/WeeklyGoalsController.cs",
+                                         "routePrefix":  "api/v{version:apiVersion}/weekly-goals",
+                                         "endpoints":  [
+                                                           {
+                                                               "verb":  "GET",
+                                                               "route":  "/api/v{version:apiVersion}/weekly-goals",
+                                                               "line":  15
+                                                           },
+                                                           {
+                                                               "verb":  "PUT",
+                                                               "route":  "/api/v{version:apiVersion}/weekly-goals",
+                                                               "line":  21
                                                            }
                                                        ]
                                      },

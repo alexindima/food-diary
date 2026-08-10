@@ -15,7 +15,7 @@ sources:
 
 - Origin: module-graph
 - Dependencies: Images
-- Consumers: Admin, Ai, Authentication, Consumptions, ContentReports, Cycles, DailyAdvices, Dashboard, Dietologist, Exercises, Export, Fasting, FavoriteMeals, FavoriteProducts, FavoriteRecipes, Gamification, Hydration, Lessons, MealPlans, Notifications, Products, RecipeComments, RecipeLikes, Recipes, ShoppingLists, Statistics, Tdee, Usda, WaistEntries, Wearables, WeeklyCheckIn, WeightEntries
+- Consumers: Admin, Ai, Authentication, Consumptions, ContentReports, Cycles, DailyAdvices, Dashboard, Dietologist, Exercises, Export, Fasting, FavoriteMeals, FavoriteProducts, FavoriteRecipes, Gamification, Hydration, Lessons, MealPlans, Notifications, Products, RecipeComments, RecipeLikes, Recipes, ShoppingLists, Statistics, Tdee, Usda, WaistEntries, Wearables, WeeklyCheckIn, WeeklyGoals, WeightEntries
 
 ## Source Areas
 

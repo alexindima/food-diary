@@ -31,6 +31,7 @@ export const environment: AppConfig = {
         favoriteRecipes: `${serverUrl}/api/v1/favorite-recipes`,
         gamification: `${serverUrl}/api/v1/gamification`,
         weeklyCheckIn: `${serverUrl}/api/v1/weekly-check-in`,
+        weeklyGoals: `${serverUrl}/api/v1/weekly-goals`,
         tdee: `${serverUrl}/api/v1/tdee`,
         mealPlans: `${serverUrl}/api/v1/meal-plans`,
         exercises: `${serverUrl}/api/v1/exercises`,

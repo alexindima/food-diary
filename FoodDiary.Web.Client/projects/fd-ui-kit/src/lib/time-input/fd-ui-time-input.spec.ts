@@ -3,6 +3,11 @@ import { describe, expect, it } from 'vitest';
 
 import { FdUiTimeInputComponent } from './fd-ui-time-input';
 
+const HOURS_PER_DAY = 24;
+const LAST_HOUR_OF_DAY = 23;
+const SELECTED_HOUR = 21;
+const SELECTED_MINUTE = 35;
+
 type TimeInputTestContext = {
     component: FdUiTimeInputComponent;
     fixture: ComponentFixture<FdUiTimeInputComponent>;
@@ -167,6 +172,25 @@ describe('FdUiTimeInputComponent classes', () => {
 });
 
 describe('FdUiTimeInputComponent input handling', () => {
+    it('should expose a 24-hour picker without a meridiem period', async () => {
+        const { component } = await setupTimeInputAsync();
+
+        expect(component['hours']).toHaveLength(HOURS_PER_DAY);
+        expect(component['hours'][0]).toBe(0);
+        expect(component['hours'][LAST_HOUR_OF_DAY]).toBe(LAST_HOUR_OF_DAY);
+    });
+
+    it('should select an hour and a five-minute value', async () => {
+        const { component } = await setupTimeInputAsync();
+        component['onInput']('09:00');
+
+        component['selectHour'](SELECTED_HOUR);
+        component['selectMinute'](SELECTED_MINUTE);
+
+        expect(component.value()).toBe('21:35');
+        expect(component['isOpen']()).toBe(false);
+    });
+
     it('should update value with formatted time on valid input', async () => {
         const { component } = await setupTimeInputAsync();
 

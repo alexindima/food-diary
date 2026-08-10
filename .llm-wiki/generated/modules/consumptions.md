@@ -15,7 +15,7 @@ sources:
 
 - Origin: module-graph
 - Dependencies: Images, Nutrition, Users
-- Consumers: Dashboard, Export, FavoriteMeals, Gamification, Usda, WeeklyCheckIn
+- Consumers: Dashboard, Export, FavoriteMeals, Gamification, Usda, WeeklyCheckIn, WeeklyGoals
 
 ## Source Areas
 

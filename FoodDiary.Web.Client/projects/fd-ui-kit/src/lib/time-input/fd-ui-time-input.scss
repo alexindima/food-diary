@@ -104,10 +104,6 @@
     color: var(--fd-color-text-muted);
 }
 
-.fd-ui-time-input__control::-webkit-calendar-picker-indicator {
-    display: none;
-}
-
 .fd-ui-time-input__suffix {
     position: static;
     margin-left: var(--fd-space-xs);
@@ -121,6 +117,78 @@
     width: var(--fd-size-control-xxs);
     height: var(--fd-size-control-xxs);
     cursor: pointer;
+}
+
+.fd-ui-time-input__panel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(5.5rem, 1fr));
+    gap: var(--fd-space-calendar-grid-gap);
+    min-width: 12rem;
+    padding: var(--fd-space-calendar-padding);
+    border: var(--fd-border-strong);
+    border-radius: var(--fd-radius-panel);
+    background: var(--fd-bg-surface-raised);
+    box-shadow: var(--fd-shadow-xl);
+}
+
+.fd-ui-time-input__column {
+    display: grid;
+    gap: var(--fd-space-xs);
+    min-width: 0;
+}
+
+.fd-ui-time-input__column-title {
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-stat-label-size);
+    line-height: var(--fd-text-stat-label-line-height);
+    font-weight: var(--fd-text-stat-label-weight);
+    letter-spacing: var(--fd-text-stat-label-tracking);
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.fd-ui-time-input__options {
+    display: grid;
+    gap: var(--fd-space-calendar-grid-gap);
+    max-height: 13.5rem;
+    padding-right: var(--fd-space-xxs);
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.fd-ui-time-input__option {
+    appearance: none;
+    min-height: 2.25rem;
+    padding: 0 var(--fd-space-sm);
+    border: var(--fd-border-width) solid transparent;
+    border-radius: var(--fd-radius-button);
+    background: transparent;
+    color: var(--fd-color-text);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    cursor: pointer;
+    transition:
+        background-color 160ms ease,
+        border-color 160ms ease,
+        color 160ms ease;
+
+    &:where(:hover) {
+        background: var(--fd-bg-brand-tint-subtle);
+        border-color: var(--fd-color-border-calendar-hover);
+    }
+
+    &:where(:focus-visible) {
+        outline: none;
+        border-color: var(--fd-color-primary-500);
+        box-shadow: var(--fd-shadow-focus);
+    }
+}
+
+.fd-ui-time-input__option--selected {
+    background: var(--fd-bg-brand);
+    color: var(--fd-color-on-brand);
 }
 
 .fd-ui-time-input__suffix:where(:hover:not(:disabled)) {

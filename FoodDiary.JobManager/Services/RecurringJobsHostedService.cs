@@ -19,6 +19,7 @@ public sealed class RecurringJobsHostedService(
     IOptions<MarketingAttributionCleanupOptions> marketingAttributionCleanupOptions,
     IOptions<UserCleanupOptions> userCleanupOptions,
     IOptions<ClientTaskReminderOptions> clientTaskReminderOptions,
+    IOptions<WeeklyGoalReminderOptions> weeklyGoalReminderOptions,
     ILogger<RecurringJobsHostedService> logger,
     IOptions<AchievementEvaluationOutboxOptions>? achievementEvaluationOutboxOptions = null) : IHostedService {
     private static readonly TimeSpan RegistrationRetryDelay = TimeSpan.FromSeconds(1);
@@ -68,7 +69,6 @@ public sealed class RecurringJobsHostedService(
         UserLoginEventCleanupOptions userLoginEventSettings = userLoginEventCleanupOptions.Value;
         MarketingAttributionCleanupOptions marketingAttributionSettings = marketingAttributionCleanupOptions.Value;
         UserCleanupOptions userSettings = userCleanupOptions.Value;
-        ClientTaskReminderOptions clientTaskReminderSettings = clientTaskReminderOptions.Value;
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.ImageAssetsCleanup,
             Job.FromExpression<ImageCleanupJob>(job => job.Execute(CancellationToken.None)),
@@ -111,11 +111,19 @@ public sealed class RecurringJobsHostedService(
             RecurringJobIds.MarketingAttributionCleanup,
             Job.FromExpression<MarketingAttributionCleanupJob>(job => job.Execute(CancellationToken.None)),
             ResolveCron(marketingAttributionSettings.Cron, "30 3 * * *"));
+        RegisterReminderJobs();
+        recurringJobRegistrationVerifier.EnsureRegistered(RecurringJobIds.All);
+    }
+
+    private void RegisterReminderJobs() {
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.ClientTaskReminders,
             Job.FromExpression<ClientTaskReminderJob>(job => job.Execute(CancellationToken.None)),
-            ResolveCron(clientTaskReminderSettings.Cron, "0 * * * *"));
-        recurringJobRegistrationVerifier.EnsureRegistered(RecurringJobIds.All);
+            ResolveCron(clientTaskReminderOptions.Value.Cron, "0 * * * *"));
+        recurringJobManager.AddOrUpdate(
+            RecurringJobIds.WeeklyGoalReminders,
+            Job.FromExpression<WeeklyGoalReminderJob>(job => job.Execute(CancellationToken.None)),
+            ResolveCron(weeklyGoalReminderOptions.Value.Cron, "*/15 * * * *"));
     }
 
     private void RegisterBillingJobs() {

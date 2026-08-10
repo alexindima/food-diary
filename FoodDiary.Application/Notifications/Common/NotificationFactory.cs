@@ -64,6 +64,13 @@ public static class NotificationFactory {
             NotificationTypes.ClientTaskDueSoon,
             NotificationPayloads.Empty());
 
+    public static Notification CreateWeeklyGoalReminder(UserId userId, string referenceId) =>
+        Notification.Create(
+            userId,
+            NotificationTypes.WeeklyGoalReminder,
+            NotificationPayloads.Empty(),
+            referenceId);
+
     public static Notification CreateDietologistInvitationReceived(
         UserId userId,
         string clientName,

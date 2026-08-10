@@ -1,13 +1,13 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "domainTypes":  246,
-                    "entities":  74,
-                    "valueObjects":  108,
-                    "invariants":  373,
-                    "persistenceMappings":  80,
-                    "indexes":  144,
-                    "relationships":  94
+                    "domainTypes":  249,
+                    "entities":  75,
+                    "valueObjects":  109,
+                    "invariants":  380,
+                    "persistenceMappings":  81,
+                    "indexes":  146,
+                    "relationships":  95
                 },
     "domainTypes":  [
                         {
@@ -607,6 +607,13 @@
                         },
                         {
                             "area":  "FoodDiary",
+                            "name":  "WeeklyGoal",
+                            "role":  "entity",
+                            "path":  "FoodDiary.Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
+                            "line":  6
+                        },
+                        {
+                            "area":  "FoodDiary",
                             "name":  "WeightEntry",
                             "role":  "entity",
                             "path":  "FoodDiary.Domain/Entities/Tracking/WeightEntry.cs",
@@ -876,6 +883,13 @@
                             "name":  "WearableProvider",
                             "role":  "enum",
                             "path":  "FoodDiary.Domain/Enums/WearableProvider.cs",
+                            "line":  2
+                        },
+                        {
+                            "area":  "FoodDiary",
+                            "name":  "WeeklyGoalType",
+                            "role":  "enum",
+                            "path":  "FoodDiary.Domain/Enums/WeeklyGoalType.cs",
                             "line":  2
                         },
                         {
@@ -1625,6 +1639,13 @@
                             "name":  "WebPushSubscriptionId",
                             "role":  "value-object",
                             "path":  "FoodDiary.Domain/ValueObjects/Ids/WebPushSubscriptionId.cs",
+                            "line":  4
+                        },
+                        {
+                            "area":  "FoodDiary",
+                            "name":  "WeeklyGoalId",
+                            "role":  "value-object",
+                            "path":  "FoodDiary.Domain/ValueObjects/Ids/WeeklyGoalId.cs",
                             "line":  4
                         },
                         {
@@ -4067,6 +4088,55 @@
                        },
                        {
                            "area":  "FoodDiary",
+                           "type":  "InvalidOperationException",
+                           "message":  "throw new InvalidOperationException(\"A reminder cannot be marked for a goal with reminders disabled.\")",
+                           "path":  "FoodDiary.Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
+                           "line":  72
+                       },
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentException",
+                           "message":  "throw new ArgumentException(\"User id is required.\", nameof(userId))",
+                           "path":  "FoodDiary.Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
+                           "line":  81
+                       },
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentOutOfRangeException",
+                           "message":  "throw new ArgumentOutOfRangeException(nameof(value), \"Week start must be a Monday.\")",
+                           "path":  "FoodDiary.Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
+                           "line":  88
+                       },
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentOutOfRangeException",
+                           "message":  "throw new ArgumentOutOfRangeException(nameof(type), \"Unsupported weekly goal type.\")",
+                           "path":  "FoodDiary.Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
+                           "line":  101
+                       },
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentOutOfRangeException",
+                           "message":  "throw new ArgumentOutOfRangeException(nameof(targetDays), \"Target days must be 3, 5, or 7.\")",
+                           "path":  "FoodDiary.Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
+                           "line":  107
+                       },
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentOutOfRangeException",
+                           "message":  "throw new ArgumentOutOfRangeException(nameof(timeMinutes), \"Reminder time must be within a local day.\")",
+                           "path":  "FoodDiary.Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
+                           "line":  117
+                       },
+                       {
+                           "area":  "FoodDiary",
+                           "type":  "ArgumentOutOfRangeException",
+                           "message":  "throw new ArgumentOutOfRangeException(nameof(offsetMinutes), \"Time zone offset must be between UTC-14 and UTC+14.\")",
+                           "path":  "FoodDiary.Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
+                           "line":  121
+                       },
+                       {
+                           "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(nameof(value), \"Desired waist must be a finite number.\")",
                            "path":  "FoodDiary.Domain/ValueObjects/DesiredWaist.cs",
@@ -5770,6 +5840,23 @@
                                                           }
                                                       ],
                                     "path":  "FoodDiary.Infrastructure/Persistence/Configurations/Notifications/WebPushSubscriptionConfiguration.cs"
+                                },
+                                {
+                                    "area":  "FoodDiary",
+                                    "entity":  "WeeklyGoal",
+                                    "table":  "WeeklyGoals",
+                                    "indexes":  [
+                                                    "goal =\u003e new { goal.ReminderEnabled, goal.WeekStartUtc })",
+                                                    "goal =\u003e new { goal.UserId, goal.WeekStartUtc }).IsUnique()"
+                                                ],
+                                    "relationships":  [
+                                                          {
+                                                              "kind":  "HasOne",
+                                                              "target":  "User",
+                                                              "expression":  ")"
+                                                          }
+                                                      ],
+                                    "path":  "FoodDiary.Infrastructure/Persistence/Configurations/WeeklyGoals/WeeklyGoalConfiguration.cs"
                                 },
                                 {
                                     "area":  "FoodDiary",

@@ -1,16 +1,16 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "components":  413,
-                    "componentsWithoutDirectSpecs":  122,
-                    "inputs":  1286,
+                    "components":  415,
+                    "componentsWithoutDirectSpecs":  123,
+                    "inputs":  1288,
                     "outputs":  399,
                     "apiCalls":  219,
-                    "templatesWithTranslations":  255,
-                    "translationKeys":  1375,
-                    "consumerEdges":  941,
+                    "templatesWithTranslations":  257,
+                    "translationKeys":  1401,
+                    "consumerEdges":  948,
                     "consumedComponents":  274,
-                    "unconsumedComponents":  138
+                    "unconsumedComponents":  140
                 },
     "components":  [
                        {
@@ -5943,6 +5943,16 @@
                                           {
                                               "name":  "placeholder",
                                               "type":  "string",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "hoursLabel",
+                                              "type":  "",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "minutesLabel",
+                                              "type":  "",
                                               "required":  false
                                           },
                                           {
@@ -13115,6 +13125,34 @@
                            "specPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-trends/weekly-check-in-trends.spec.ts"
                        },
                        {
+                           "class":  "WeeklyGoalDialogComponent",
+                           "selector":  "fd-weekly-goal-dialog",
+                           "feature":  "weekly-check-in",
+                           "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.html",
+                           "inputs":  [
+
+                                      ],
+                           "outputs":  [
+
+                                       ],
+                           "specPath":  null
+                       },
+                       {
+                           "class":  "WeeklyReviewDialogComponent",
+                           "selector":  "fd-weekly-review-dialog",
+                           "feature":  "weekly-check-in",
+                           "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-review-dialog/weekly-review-dialog.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-review-dialog/weekly-review-dialog.html",
+                           "inputs":  [
+
+                                      ],
+                           "outputs":  [
+
+                                       ],
+                           "specPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-review-dialog/weekly-review-dialog.spec.ts"
+                       },
+                       {
                            "class":  "WeightGoalHistoryDialogComponent",
                            "selector":  "fd-weight-goal-history-dialog",
                            "feature":  "weight-history",
@@ -18959,6 +18997,44 @@
                              },
                              {
                                  "feature":  "weekly-check-in",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.html",
+                                 "keys":  [
+                                              "WEEKLY_CHECK_IN.GOAL.DIALOG_SUBTITLE",
+                                              "WEEKLY_CHECK_IN.GOAL.FREQUENCY_ARIA",
+                                              "WEEKLY_CHECK_IN.GOAL.FREQUENCY_COPY",
+                                              "WEEKLY_CHECK_IN.GOAL.FREQUENCY_TITLE",
+                                              "WEEKLY_CHECK_IN.GOAL.REMINDER_ARIA",
+                                              "WEEKLY_CHECK_IN.GOAL.REMINDER_COPY",
+                                              "WEEKLY_CHECK_IN.GOAL.REMINDER_HOURS",
+                                              "WEEKLY_CHECK_IN.GOAL.REMINDER_MINUTES",
+                                              "WEEKLY_CHECK_IN.GOAL.REMINDER_TIME",
+                                              "WEEKLY_CHECK_IN.GOAL.REMINDER_TIME_ARIA",
+                                              "WEEKLY_CHECK_IN.GOAL.REMINDER_TITLE",
+                                              "WEEKLY_CHECK_IN.GOAL.SAVE_ERROR",
+                                              "WEEKLY_CHECK_IN.GOAL.TIMEZONE_HINT"
+                                          ]
+                             },
+                             {
+                                 "feature":  "weekly-check-in",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-review-dialog/weekly-review-dialog.html",
+                                 "keys":  [
+                                              "GENERAL.UNITS.G",
+                                              "GENERAL.UNITS.KCAL",
+                                              "GENERAL.UNITS.ML",
+                                              "WEEKLY_CHECK_IN.FOCUS.TITLE",
+                                              "WEEKLY_CHECK_IN.METRICS.DAYS",
+                                              "WEEKLY_CHECK_IN.METRICS.LOGGED_AVERAGE",
+                                              "WEEKLY_CHECK_IN.METRICS.PROTEIN",
+                                              "WEEKLY_CHECK_IN.METRICS_ARIA",
+                                              "WEEKLY_CHECK_IN.REPORT.INSIGHTS_TITLE",
+                                              "WEEKLY_CHECK_IN.REPORT.SUBTITLE",
+                                              "WEEKLY_CHECK_IN.REPORT.SUMMARY_TITLE",
+                                              "WEEKLY_CHECK_IN.REPORT.TITLE",
+                                              "WEEKLY_CHECK_IN.REPORT.WATER"
+                                          ]
+                             },
+                             {
+                                 "feature":  "weekly-check-in",
                                  "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
                                  "keys":  [
                                               "GENERAL.UNITS.G",
@@ -18968,14 +19044,22 @@
                                               "WEEKLY_CHECK_IN.COVERAGE_TITLE",
                                               "WEEKLY_CHECK_IN.DISCLAIMER",
                                               "WEEKLY_CHECK_IN.FOCUS.TITLE",
+                                              "WEEKLY_CHECK_IN.GOAL.ACTIVE_COPY",
+                                              "WEEKLY_CHECK_IN.GOAL.CLOSED_ACTION_HINT",
+                                              "WEEKLY_CHECK_IN.GOAL.CLOSED_COPY",
+                                              "WEEKLY_CHECK_IN.GOAL.CLOSED_EMPTY_COPY",
+                                              "WEEKLY_CHECK_IN.GOAL.CLOSED_TITLE",
+                                              "WEEKLY_CHECK_IN.GOAL.CURRENT_WEEK_LABEL",
                                               "WEEKLY_CHECK_IN.LOADING",
                                               "WEEKLY_CHECK_IN.METRICS.DAYS",
                                               "WEEKLY_CHECK_IN.METRICS.LOGGED_AVERAGE",
                                               "WEEKLY_CHECK_IN.METRICS.PROTEIN",
                                               "WEEKLY_CHECK_IN.METRICS.WEIGHT",
                                               "WEEKLY_CHECK_IN.METRICS_ARIA",
+                                              "WEEKLY_CHECK_IN.MORE_INSIGHTS",
                                               "WEEKLY_CHECK_IN.OPEN_REPORT",
                                               "WEEKLY_CHECK_IN.SUBTITLE",
+                                              "WEEKLY_CHECK_IN.SUMMARY.PAST_WEEK_NO_DATA",
                                               "WEEKLY_CHECK_IN.SUMMARY.TITLE",
                                               "WEEKLY_CHECK_IN.TITLE",
                                               "WEEKLY_CHECK_IN.TOUR.START_TOUR",
@@ -21315,6 +21399,7 @@
                                                  "appearance",
                                                  "ariaLabel",
                                                  "disabled",
+                                                 "disabledReason",
                                                  "fill",
                                                  "fullWidth",
                                                  "icon",
@@ -24248,16 +24333,33 @@
                               "selector":  "fd-ui-button",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "weekly-check-in",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "icon",
+                                                 "loading"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiButtonComponent",
+                              "selector":  "fd-ui-button",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+                              "consumerFeature":  "weekly-check-in",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
-                              "occurrences":  2,
+                              "occurrences":  4,
                               "inputsUsed":  [
                                                  "appearance",
                                                  "ariaLabel",
-                                                 "ariaPressed",
                                                  "disabled",
+                                                 "disabledReason",
                                                  "fill",
                                                  "fullWidth",
                                                  "icon",
+                                                 "loading",
+                                                 "size",
                                                  "variant"
                                              ],
                               "outputsHandled":  [
@@ -25377,7 +25479,7 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
                               "consumerFeature":  "weekly-check-in",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
-                              "occurrences":  3,
+                              "occurrences":  4,
                               "inputsUsed":  [
 
                                              ],
@@ -26322,6 +26424,37 @@
                               "inputsUsed":  [
                                                  "dismissible",
                                                  "size",
+                                                 "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiDialogComponent",
+                              "selector":  "fd-ui-dialog",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+                              "consumerFeature":  "weekly-check-in",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "size",
+                                                 "subtitle",
+                                                 "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiDialogComponent",
+                              "selector":  "fd-ui-dialog",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+                              "consumerFeature":  "weekly-check-in",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-review-dialog/weekly-review-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "subtitle",
                                                  "title"
                                              ],
                               "outputsHandled":  [
@@ -27856,8 +27989,22 @@
                               "selector":  "fd-ui-icon",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "weekly-check-in",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-review-dialog/weekly-review-dialog.html",
+                              "occurrences":  5,
+                              "inputsUsed":  [
+                                                 "name"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "weekly-check-in",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
-                              "occurrences":  6,
+                              "occurrences":  7,
                               "inputsUsed":  [
                                                  "name"
                                              ],
@@ -30019,6 +30166,22 @@
                                                  ]
                           },
                           {
+                              "component":  "FdUiSegmentedToggleComponent",
+                              "selector":  "fd-ui-segmented-toggle",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
+                              "consumerFeature":  "weekly-check-in",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "ariaLabel",
+                                                 "fullWidth",
+                                                 "options"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
                               "component":  "FdUiSelectComponent",
                               "selector":  "fd-ui-select",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
@@ -30421,6 +30584,21 @@
                                                  ]
                           },
                           {
+                              "component":  "FdUiSwitchComponent",
+                              "selector":  "fd-ui-switch",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/switch/fd-ui-switch.ts",
+                              "consumerFeature":  "weekly-check-in",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "ariaLabel",
+                                                 "checked"
+                                             ],
+                              "outputsHandled":  [
+                                                     "checkedChange"
+                                                 ]
+                          },
+                          {
                               "component":  "FdUiTabsComponent",
                               "selector":  "fd-ui-tabs",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/tabs/fd-ui-tabs.ts",
@@ -30786,6 +30964,23 @@
                                                  "error",
                                                  "label",
                                                  "size"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiTimeInputComponent",
+                              "selector":  "fd-ui-time-input",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/time-input/fd-ui-time-input.ts",
+                              "consumerFeature":  "weekly-check-in",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "hoursLabel",
+                                                 "label",
+                                                 "minutesLabel",
+                                                 "pickerAriaLabel"
                                              ],
                               "outputsHandled":  [
 

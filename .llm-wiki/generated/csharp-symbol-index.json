@@ -8,41 +8,41 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3073,
-                    "symbols":  3113,
-                    "interfaceImplementationLinks":  231,
-                    "dependencyInjectionRegistrations":  230,
+                    "sourceFiles":  3100,
+                    "symbols":  3140,
+                    "interfaceImplementationLinks":  233,
+                    "dependencyInjectionRegistrations":  232,
                     "kinds":  {
-                                  "class":  1571,
-                                  "enum":  47,
-                                  "interface":  407,
-                                  "record":  976,
-                                  "record struct":  112
+                                  "class":  1588,
+                                  "enum":  48,
+                                  "interface":  409,
+                                  "record":  982,
+                                  "record struct":  113
                               },
                     "roles":  {
-                                  "Command":  152,
-                                  "CommandHandler":  148,
-                                  "Configuration":  82,
-                                  "Controller":  87,
-                                  "Entity":  80,
+                                  "Command":  153,
+                                  "CommandHandler":  149,
+                                  "Configuration":  83,
+                                  "Controller":  88,
+                                  "Entity":  81,
                                   "Event":  19,
                                   "Factory":  7,
                                   "Handler":  6,
                                   "LookupRepository":  3,
                                   "Mapper":  8,
-                                  "Mapping":  3,
-                                  "Options":  56,
-                                  "Other":  1101,
-                                  "Query":  159,
-                                  "QueryHandler":  122,
+                                  "Mapping":  4,
+                                  "Options":  57,
+                                  "Other":  1109,
+                                  "Query":  161,
+                                  "QueryHandler":  123,
                                   "ReadModelRepository":  29,
                                   "ReadRepository":  50,
-                                  "Repository":  103,
-                                  "Request":  123,
-                                  "Response":  170,
-                                  "Service":  258,
-                                  "Validator":  178,
-                                  "ValueObject":  122,
+                                  "Repository":  105,
+                                  "Request":  124,
+                                  "Response":  171,
+                                  "Service":  260,
+                                  "Validator":  180,
+                                  "ValueObject":  123,
                                   "WriteRepository":  47
                               }
                 },
@@ -3723,6 +3723,13 @@
                         "line":  2
                     },
                     {
+                        "name":  "IWeeklyGoalRepository",
+                        "kind":  "interface",
+                        "role":  "Repository",
+                        "path":  "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalRepository.cs",
+                        "line":  5
+                    },
+                    {
                         "name":  "IWeightEntryReadModelRepository",
                         "kind":  "interface",
                         "role":  "ReadModelRepository",
@@ -6822,6 +6829,13 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
                         "line":  30
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/DependencyInjection.WeeklyGoals.cs",
+                        "line":  6
                     },
                     {
                         "name":  "AcceptInvitationCommand",
@@ -11969,6 +11983,90 @@
                         "line":  8
                     },
                     {
+                        "name":  "UpsertWeeklyGoalCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpsertWeeklyGoalCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "UpsertWeeklyGoalCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "IWeeklyGoalReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application/WeeklyGoals/Common/IWeeklyGoalReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "WeeklyGoalMapping",
+                        "kind":  "class",
+                        "role":  "Mapping",
+                        "path":  "FoodDiary.Application/WeeklyGoals/Common/WeeklyGoalMapping.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "WeeklyGoalProgressReader",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/WeeklyGoals/Common/WeeklyGoalProgressReader.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "WeeklyGoalModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/WeeklyGoals/Models/WeeklyGoalModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "GetWeeklyGoalQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWeeklyGoalQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetWeeklyGoalQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "WeeklyGoalReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application/WeeklyGoals/Services/WeeklyGoalReadService.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "WeeklyGoalReminderProcessor",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
+                        "line":  8
+                    },
+                    {
                         "name":  "CreateWeightEntryCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -12739,6 +12837,13 @@
                         "line":  7
                     },
                     {
+                        "name":  "WeeklyGoal",
+                        "kind":  "class",
+                        "role":  "Entity",
+                        "path":  "FoodDiary.Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
+                        "line":  6
+                    },
+                    {
                         "name":  "AchievementMetric",
                         "kind":  "enum",
                         "role":  "Other",
@@ -13002,6 +13107,13 @@
                         "kind":  "enum",
                         "role":  "Other",
                         "path":  "FoodDiary.Domain/Enums/WearableProvider.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WeeklyGoalType",
+                        "kind":  "enum",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Domain/Enums/WeeklyGoalType.cs",
                         "line":  2
                     },
                     {
@@ -13558,6 +13670,13 @@
                         "line":  4
                     },
                     {
+                        "name":  "WeeklyGoalId",
+                        "kind":  "record struct",
+                        "role":  "ValueObject",
+                        "path":  "FoodDiary.Domain/ValueObjects/Ids/WeeklyGoalId.cs",
+                        "line":  4
+                    },
+                    {
                         "name":  "WeightEntryId",
                         "kind":  "record struct",
                         "role":  "ValueObject",
@@ -14074,6 +14193,13 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Infrastructure/DependencyInjection.Wearables.cs",
                         "line":  7
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Infrastructure/DependencyInjection.WeeklyGoals.cs",
+                        "line":  6
                     },
                     {
                         "name":  "DomainEventNotification",
@@ -14818,6 +14944,13 @@
                         "line":  7
                     },
                     {
+                        "name":  "WeeklyGoalConfiguration",
+                        "kind":  "class",
+                        "role":  "Configuration",
+                        "path":  "FoodDiary.Infrastructure/Persistence/Configurations/WeeklyGoals/WeeklyGoalConfiguration.cs",
+                        "line":  8
+                    },
+                    {
                         "name":  "NutritionLessonRepository",
                         "kind":  "class",
                         "role":  "Repository",
@@ -15151,7 +15284,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Tracking.cs",
-                        "line":  7
+                        "line":  8
                     },
                     {
                         "name":  "FoodDiaryDbContext",
@@ -15586,6 +15719,13 @@
                         "role":  "Repository",
                         "path":  "FoodDiary.Infrastructure/Persistence/Wearables/WearableSyncRepository.cs",
                         "line":  9
+                    },
+                    {
+                        "name":  "WeeklyGoalRepository",
+                        "kind":  "class",
+                        "role":  "Repository",
+                        "path":  "FoodDiary.Infrastructure/Persistence/WeeklyGoals/WeeklyGoalRepository.cs",
+                        "line":  7
                     },
                     {
                         "name":  "DatabaseCommandTelemetryInterceptor",
@@ -16411,6 +16551,20 @@
                         "kind":  "class",
                         "role":  "Options",
                         "path":  "FoodDiary.JobManager/Services/UserLoginEventCleanupOptions.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WeeklyGoalReminderJob",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.JobManager/Services/WeeklyGoalReminderJob.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "WeeklyGoalReminderOptions",
+                        "kind":  "class",
+                        "role":  "Options",
+                        "path":  "FoodDiary.JobManager/Services/WeeklyGoalReminderOptions.cs",
                         "line":  2
                     },
                     {
@@ -19485,6 +19639,41 @@
                         "role":  "Controller",
                         "path":  "FoodDiary.Presentation.Api/Features/WeeklyCheckIn/WeeklyCheckInController.cs",
                         "line":  13
+                    },
+                    {
+                        "name":  "WeeklyGoalHttpMappings",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Presentation.Api/Features/WeeklyGoals/Mappings/WeeklyGoalHttpMappings.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "GetWeeklyGoalHttpQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Presentation.Api/Features/WeeklyGoals/Requests/GetWeeklyGoalHttpQuery.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "UpsertWeeklyGoalHttpRequest",
+                        "kind":  "record",
+                        "role":  "Request",
+                        "path":  "FoodDiary.Presentation.Api/Features/WeeklyGoals/Requests/UpsertWeeklyGoalHttpRequest.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WeeklyGoalHttpResponse",
+                        "kind":  "record",
+                        "role":  "Response",
+                        "path":  "FoodDiary.Presentation.Api/Features/WeeklyGoals/Responses/WeeklyGoalHttpResponse.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WeeklyGoalsController",
+                        "kind":  "class",
+                        "role":  "Controller",
+                        "path":  "FoodDiary.Presentation.Api/Features/WeeklyGoals/WeeklyGoalsController.cs",
+                        "line":  14
                     },
                     {
                         "name":  "WeightEntryHttpMappings",
@@ -23444,6 +23633,20 @@
                                          "confidence":  "naming-convention"
                                      },
                                      {
+                                         "interface":  "IWeeklyGoalReadService",
+                                         "interfacePath":  "FoodDiary.Application/WeeklyGoals/Common/IWeeklyGoalReadService.cs",
+                                         "implementation":  "WeeklyGoalReadService",
+                                         "implementationPath":  "FoodDiary.Application/WeeklyGoals/Services/WeeklyGoalReadService.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
+                                         "interface":  "IWeeklyGoalRepository",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalRepository.cs",
+                                         "implementation":  "WeeklyGoalRepository",
+                                         "implementationPath":  "FoodDiary.Infrastructure/Persistence/WeeklyGoals/WeeklyGoalRepository.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
                                          "interface":  "IWeightEntryReadService",
                                          "interfacePath":  "FoodDiary.Application/WeightEntries/Common/IWeightEntryReadService.cs",
                                          "implementation":  "WeightEntryReadService",
@@ -24223,6 +24426,13 @@
                                                  "line":  61
                                              },
                                              {
+                                                 "service":  "IWeeklyGoalReadService",
+                                                 "implementation":  "WeeklyGoalReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application/DependencyInjection.WeeklyGoals.cs",
+                                                 "line":  10
+                                             },
+                                             {
                                                  "service":  "IAchievementDefinitionStore",
                                                  "implementation":  "AchievementDefinitionStore",
                                                  "lifetime":  "Scoped",
@@ -24825,6 +25035,13 @@
                                                  "line":  17
                                              },
                                              {
+                                                 "service":  "IWeeklyGoalRepository",
+                                                 "implementation":  "WeeklyGoalRepository",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Infrastructure/DependencyInjection.WeeklyGoals.cs",
+                                                 "line":  9
+                                             },
+                                             {
                                                  "service":  "IEmailVerificationNotifier",
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
@@ -24934,14 +25151,14 @@
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-                                                 "line":  84
+                                                 "line":  93
                                              },
                                              {
                                                  "service":  "IJobExecutionStateTracker",
                                                  "implementation":  "JobExecutionStateTracker",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-                                                 "line":  104
+                                                 "line":  114
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",

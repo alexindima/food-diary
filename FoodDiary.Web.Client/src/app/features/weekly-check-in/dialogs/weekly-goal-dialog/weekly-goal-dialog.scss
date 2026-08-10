@@ -1,0 +1,49 @@
+.weekly-goal-dialog {
+    &__section {
+        display: grid;
+        gap: var(--fd-space-xs);
+
+        h3,
+        p {
+            margin: 0;
+        }
+
+        p {
+            color: var(--fd-color-text-muted);
+        }
+
+        fd-ui-segmented-toggle {
+            margin-top: var(--fd-space-xs);
+        }
+    }
+
+    &__reminder {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        margin-top: var(--fd-space-lg);
+        padding-top: var(--fd-space-md);
+        border-top: var(--fd-border-default);
+    }
+
+    fd-ui-time-input {
+        display: block;
+        margin-top: var(--fd-space-md);
+    }
+
+    &__timezone {
+        margin: var(--fd-space-xxs) 0 0;
+        color: var(--fd-color-text-muted);
+    }
+
+    &__error {
+        margin: var(--fd-space-sm) 0 0;
+        color: var(--fd-color-danger);
+    }
+
+    &__footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        min-height: var(--fd-size-control-md);
+    }
+}

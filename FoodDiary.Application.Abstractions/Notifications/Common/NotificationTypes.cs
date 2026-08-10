@@ -18,6 +18,7 @@ public static class NotificationTypes {
     public const string FastingWindowStarted = "FastingWindowStarted";
     public const string FastingCheckInReminder = "FastingCheckInReminder";
     public const string WeeklyCheckIn = "WeeklyCheckIn";
+    public const string WeeklyGoalReminder = "WeeklyGoalReminder";
     public const string Hydration = "Hydration";
     public const string GoalReached = "GoalReached";
     public const string Lesson = "Lesson";

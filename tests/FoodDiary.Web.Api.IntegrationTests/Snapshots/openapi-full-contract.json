@@ -6562,6 +6562,56 @@
       ]
     },
     {
+      "Path": "/api/v{version}/weekly-goals",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "WeekStart",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
+          ]
+        },
+        {
+          "Method": "put",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/weight-entries",
       "Operations": [
         {

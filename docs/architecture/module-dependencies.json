@@ -39,6 +39,7 @@
     "WaistEntries": ["Users"],
     "Wearables": ["Users"],
     "WeeklyCheckIn": ["Consumptions", "Hydration", "Users", "WaistEntries", "WeightEntries"],
+    "WeeklyGoals": ["Consumptions", "Notifications", "Users"],
     "WeightEntries": ["Users"]
   },
   "knownCycles": []

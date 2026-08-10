@@ -8,9 +8,9 @@
                     "moduleCycleNodes":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
-                    "selectorUnreferencedComponents":  138,
-                    "componentsWithoutDirectSpecs":  122,
-                    "criticalSymbolsWithoutTestReferences":  29,
+                    "selectorUnreferencedComponents":  140,
+                    "componentsWithoutDirectSpecs":  123,
+                    "criticalSymbolsWithoutTestReferences":  34,
                     "explicitDebtMarkers":  3
                 },
     "projectDependencyViolations":  [
@@ -1139,6 +1139,22 @@
                                                "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-trends/weekly-check-in-trends.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-trends/weekly-check-in-trends.html",
                                                "specPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-trends/weekly-check-in-trends.spec.ts"
+                                           },
+                                           {
+                                               "class":  "WeeklyGoalDialogComponent",
+                                               "selector":  "fd-weekly-goal-dialog",
+                                               "feature":  "weekly-check-in",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.html",
+                                               "specPath":  null
+                                           },
+                                           {
+                                               "class":  "WeeklyReviewDialogComponent",
+                                               "selector":  "fd-weekly-review-dialog",
+                                               "feature":  "weekly-check-in",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-review-dialog/weekly-review-dialog.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-review-dialog/weekly-review-dialog.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-review-dialog/weekly-review-dialog.spec.ts"
                                            },
                                            {
                                                "class":  "WeightGoalHistoryDialogComponent",
@@ -4887,6 +4903,20 @@
                                              "specPath":  null
                                          },
                                          {
+                                             "class":  "WeeklyGoalDialogComponent",
+                                             "selector":  "fd-weekly-goal-dialog",
+                                             "feature":  "weekly-check-in",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.html",
+                                             "inputs":  [
+
+                                                        ],
+                                             "outputs":  [
+
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
                                              "class":  "WeightGoalHistoryDialogComponent",
                                              "selector":  "fd-weight-goal-history-dialog",
                                              "feature":  "weight-history",
@@ -5054,6 +5084,16 @@
                                                                         ]
                                                  },
                                                  {
+                                                     "name":  "UpsertWeeklyGoalCommandHandler",
+                                                     "role":  "CommandHandler",
+                                                     "path":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
+                                                     "line":  12,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
                                                      "name":  "AdminDashboardController",
                                                      "role":  "Controller",
                                                      "path":  "FoodDiary.Presentation.Api/Features/Admin/AdminDashboardController.cs",
@@ -5114,6 +5154,16 @@
                                                                         ]
                                                  },
                                                  {
+                                                     "name":  "WeeklyGoalsController",
+                                                     "role":  "Controller",
+                                                     "path":  "FoodDiary.Presentation.Api/Features/WeeklyGoals/WeeklyGoalsController.cs",
+                                                     "line":  14,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
                                                      "name":  "WeightGoalsController",
                                                      "role":  "Controller",
                                                      "path":  "FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs",
@@ -5138,6 +5188,16 @@
                                                      "role":  "QueryHandler",
                                                      "path":  "FoodDiary.Application/Admin/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
                                                      "line":  8,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
+                                                     "name":  "GetWeeklyGoalQueryHandler",
+                                                     "role":  "QueryHandler",
+                                                     "path":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
+                                                     "line":  9,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
 
@@ -5254,6 +5314,16 @@
                                                                         ]
                                                  },
                                                  {
+                                                     "name":  "GetWeeklyGoalQueryValidator",
+                                                     "role":  "Validator",
+                                                     "path":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryValidator.cs",
+                                                     "line":  4,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
                                                      "name":  "IngestMailRelayDeliveryEventCommandValidator",
                                                      "role":  "Validator",
                                                      "path":  "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommandValidator.cs",
@@ -5297,6 +5367,16 @@
                                                      "name":  "UpdateFavoriteProductCommandValidator",
                                                      "role":  "Validator",
                                                      "path":  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
+                                                     "line":  4,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
+                                                     "name":  "UpsertWeeklyGoalCommandValidator",
+                                                     "role":  "Validator",
+                                                     "path":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandValidator.cs",
                                                      "line":  4,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [

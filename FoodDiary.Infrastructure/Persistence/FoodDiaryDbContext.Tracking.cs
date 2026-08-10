@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.WeeklyGoals;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,7 @@ public sealed partial class FoodDiaryDbContext {
     public DbSet<WeightGoal> WeightGoals => Set<WeightGoal>();
     public DbSet<WaistEntry> WaistEntries => Set<WaistEntry>();
     public DbSet<WaistGoal> WaistGoals => Set<WaistGoal>();
+    public DbSet<WeeklyGoal> WeeklyGoals => Set<WeeklyGoal>();
     public DbSet<CycleProfile> CycleProfiles => Set<CycleProfile>();
     public DbSet<BleedingEntry> CycleBleedingEntries => Set<BleedingEntry>();
     public DbSet<CycleSymptomEntry> CycleSymptomEntries => Set<CycleSymptomEntry>();

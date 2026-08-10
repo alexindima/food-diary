@@ -45,6 +45,7 @@ export type AppConfigApiUrls = {
     favoriteRecipes: string;
     gamification: string;
     weeklyCheckIn: string;
+    weeklyGoals: string;
     tdee: string;
     mealPlans: string;
     exercises: string;

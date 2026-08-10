@@ -22,6 +22,7 @@ public static partial class DependencyInjection {
         services.AddModerationPersistence();
         services.AddUsdaPersistence();
         services.AddAchievementPersistence();
+        services.AddWeeklyGoalPersistence();
 
     }
 }

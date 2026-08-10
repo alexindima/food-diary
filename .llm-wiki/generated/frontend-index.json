@@ -8,19 +8,19 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1547,
-                    "symbols":  595,
+                    "typescriptFiles":  1553,
+                    "symbols":  598,
                     "routes":  86,
                     "features":  37,
-                    "specs":  551,
+                    "specs":  553,
                     "localeFiles":  5,
                     "roles":  {
-                                  "Component":  408,
+                                  "Component":  410,
                                   "Directive":  12,
                                   "Facade":  53,
                                   "Other":  17,
                                   "Pipe":  2,
-                                  "Service":  103
+                                  "Service":  104
                               }
                 },
     "features":  [
@@ -1188,16 +1188,21 @@
                                          "WeeklyCheckInService",
                                          "WeeklyCheckInStatsCardComponent",
                                          "WeeklyCheckInSuggestionsCardComponent",
-                                         "WeeklyCheckInTrendsComponent"
+                                         "WeeklyCheckInTrendsComponent",
+                                         "WeeklyGoalDialogComponent",
+                                         "WeeklyGoalService",
+                                         "WeeklyReviewDialogComponent"
                                      ],
                          "routes":  [
                                         ""
                                     ],
                          "tests":  [
                                        "FoodDiary.Web.Client/src/app/features/weekly-check-in/api/weekly-check-in.service.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/weekly-check-in/api/weekly-goal.service.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-stats-card/weekly-check-in-stats-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-suggestions-card/weekly-check-in-suggestions-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-trends/weekly-check-in-trends.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-review-dialog/weekly-review-dialog.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/weekly-check-in/lib/weekly-check-in.mapper.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/weekly-check-in/lib/weekly-review.mapper.spec.ts"
                                    ]
@@ -1705,7 +1710,7 @@
                         "role":  "Component",
                         "selector":  "fd-ui-time-input",
                         "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/time-input/fd-ui-time-input.ts",
-                        "line":  24
+                        "line":  37
                     },
                     {
                         "name":  "FdUiToastHostComponent",
@@ -4795,6 +4800,13 @@
                         "line":  10
                     },
                     {
+                        "name":  "WeeklyGoalService",
+                        "role":  "Service",
+                        "selector":  null,
+                        "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/api/weekly-goal.service.ts",
+                        "line":  10
+                    },
+                    {
                         "name":  "WeeklyCheckInStatsCardComponent",
                         "role":  "Component",
                         "selector":  "fd-weekly-check-in-stats-card",
@@ -4816,18 +4828,32 @@
                         "line":  16
                     },
                     {
+                        "name":  "WeeklyGoalDialogComponent",
+                        "role":  "Component",
+                        "selector":  "fd-weekly-goal-dialog",
+                        "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.ts",
+                        "line":  39
+                    },
+                    {
+                        "name":  "WeeklyReviewDialogComponent",
+                        "role":  "Component",
+                        "selector":  "fd-weekly-review-dialog",
+                        "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-review-dialog/weekly-review-dialog.ts",
+                        "line":  23
+                    },
+                    {
                         "name":  "WeeklyCheckInFacade",
                         "role":  "Facade",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/lib/weekly-check-in.facade.ts",
-                        "line":  13
+                        "line":  15
                     },
                     {
                         "name":  "WeeklyCheckInPageComponent",
                         "role":  "Component",
                         "selector":  "fd-weekly-check-in-page",
                         "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.ts",
-                        "line":  40
+                        "line":  43
                     },
                     {
                         "name":  "WeightEntriesService",
@@ -5841,8 +5867,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  3157,
-                             "russianProperties":  3157,
+                             "englishProperties":  3197,
+                             "russianProperties":  3197,
                              "countsMatch":  true
                          },
                          {

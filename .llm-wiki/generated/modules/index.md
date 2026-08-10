@@ -20,7 +20,7 @@ repository catalog. Regenerate it instead of editing it manually.
 | [Ai](ai.md) | 1 | 1 | 2 |
 | [Authentication](authentication.md) | 3 | 2 | 0 |
 | [Billing](billing.md) | 0 | 0 | 2 |
-| [Consumptions](consumptions.md) | 3 | 6 | 1 |
+| [Consumptions](consumptions.md) | 3 | 7 | 1 |
 | [ContentReports](content-reports.md) | 1 | 1 | 1 |
 | [Cycles](cycles.md) | 1 | 2 | 1 |
 | [DailyAdvices](daily-advices.md) | 1 | 1 | 0 |
@@ -39,7 +39,7 @@ repository catalog. Regenerate it instead of editing it manually.
 | [Lessons](lessons.md) | 1 | 1 | 1 |
 | [Marketing](marketing.md) | 0 | 0 | 1 |
 | [MealPlans](meal-plans.md) | 2 | 0 | 1 |
-| [Notifications](notifications.md) | 1 | 4 | 2 |
+| [Notifications](notifications.md) | 1 | 5 | 2 |
 | [Nutrition](nutrition.md) | 0 | 2 | 0 |
 | [OpenFoodFacts](open-food-facts.md) | 0 | 1 | 1 |
 | [Products](products.md) | 6 | 0 | 2 |
@@ -51,8 +51,9 @@ repository catalog. Regenerate it instead of editing it manually.
 | [Statistics](statistics.md) | 3 | 1 | 1 |
 | [Tdee](tdee.md) | 3 | 1 | 1 |
 | [Usda](usda.md) | 2 | 1 | 1 |
-| [Users](users.md) | 1 | 32 | 6 |
+| [Users](users.md) | 1 | 33 | 6 |
 | [WaistEntries](waist-entries.md) | 1 | 3 | 1 |
 | [Wearables](wearables.md) | 1 | 0 | 1 |
 | [WeeklyCheckIn](weekly-check-in.md) | 5 | 0 | 1 |
+| [WeeklyGoals](weekly-goals.md) | 3 | 0 | 1 |
 | [WeightEntries](weight-entries.md) | 1 | 4 | 1 |

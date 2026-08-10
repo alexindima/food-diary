@@ -108,6 +108,12 @@
   <data name="WeeklyCheckIn_Body" xml:space="preserve">
     <value>Open your weekly review to see trends and suggestions.</value>
   </data>
+  <data name="WeeklyGoalReminder_Title" xml:space="preserve">
+    <value>Keep your weekly goal moving</value>
+  </data>
+  <data name="WeeklyGoalReminder_Body" xml:space="preserve">
+    <value>Log today's meals to make progress toward your diary goal.</value>
+  </data>
   <data name="Hydration_Title" xml:space="preserve">
     <value>Hydration reminder</value>
   </data>

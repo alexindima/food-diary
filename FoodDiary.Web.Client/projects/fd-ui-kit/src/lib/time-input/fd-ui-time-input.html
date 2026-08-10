@@ -10,30 +10,87 @@
         }
         <div class="fd-ui-time-input__segment">
             <input
-                #timeInput
+                #origin="cdkOverlayOrigin"
+                cdkOverlayOrigin
                 class="fd-ui-time-input__control"
-                type="time"
-                step="60"
+                type="text"
+                role="combobox"
                 inputmode="numeric"
                 [id]="id()"
                 [value]="internalValue()"
+                [readOnly]="true"
                 [attr.placeholder]="placeholderAttribute()"
                 [disabled]="disabled()"
                 [attr.aria-describedby]="error() ? `${id()}-error` : null"
                 [attr.aria-invalid]="error() ? 'true' : null"
+                [attr.aria-controls]="`${id()}-dialog`"
+                [attr.aria-expanded]="isOpen()"
+                [attr.aria-haspopup]="'dialog'"
                 (focus)="onFocus()"
-                (input)="onInput(timeInput.value)"
-                (blur)="onBlur()"
+                (click)="openTimePicker()"
+                (keydown)="onInputKeydown($event)"
             />
             <button
                 type="button"
                 class="fd-ui-time-input__suffix"
                 [disabled]="disabled()"
                 [attr.aria-label]="pickerAriaLabel() ?? label()"
-                (click)="focusTime(timeInput)"
+                (click)="openTimePicker()"
             >
                 <fd-ui-icon name="schedule" />
             </button>
+
+            <ng-template
+                cdkConnectedOverlay
+                cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+                [cdkConnectedOverlayOrigin]="origin"
+                [cdkConnectedOverlayOpen]="isOpen()"
+                [cdkConnectedOverlayHasBackdrop]="true"
+                [cdkConnectedOverlayPositions]="[
+                    { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 8 },
+                    { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -8 },
+                ]"
+                (backdropClick)="closeTimePicker()"
+                (detach)="closeTimePicker()"
+                (overlayKeydown)="onOverlayKeydown($event)"
+            >
+                <div class="fd-ui-time-input__panel" role="dialog" tabindex="-1" [id]="`${id()}-dialog`">
+                    <div class="fd-ui-time-input__column">
+                        <div class="fd-ui-time-input__column-title">{{ hoursLabel() }}</div>
+                        <div class="fd-ui-time-input__options" role="listbox" [attr.aria-label]="hoursLabel()">
+                            @for (hour of hours; track hour) {
+                                <button
+                                    #hourOption
+                                    type="button"
+                                    class="fd-ui-time-input__option"
+                                    [class.fd-ui-time-input__option--selected]="selectedHour() === hour"
+                                    [attr.aria-selected]="selectedHour() === hour"
+                                    (click)="selectHour(hour)"
+                                >
+                                    {{ formatPart(hour) }}
+                                </button>
+                            }
+                        </div>
+                    </div>
+                    <div class="fd-ui-time-input__column">
+                        <div class="fd-ui-time-input__column-title">{{ minutesLabel() }}</div>
+                        <div class="fd-ui-time-input__options" role="listbox" [attr.aria-label]="minutesLabel()">
+                            @for (minute of minutes; track minute) {
+                                <button
+                                    #minuteOption
+                                    type="button"
+                                    class="fd-ui-time-input__option"
+                                    [class.fd-ui-time-input__option--selected]="selectedMinute() === minute"
+                                    [attr.aria-selected]="selectedMinute() === minute"
+                                    (click)="selectMinute(minute)"
+                                >
+                                    {{ formatPart(minute) }}
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
         </div>
     </div>
 

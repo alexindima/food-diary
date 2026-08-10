@@ -19,6 +19,7 @@ public static class NotificationTargetUrlResolver {
             NotificationTypes.NewClientTask => "/recommendations",
             NotificationTypes.ClientTaskCancelled => "/recommendations",
             NotificationTypes.ClientTaskDueSoon => "/recommendations",
+            NotificationTypes.WeeklyGoalReminder => "/weekly-check-in",
             NotificationTypes.ClientTaskChangedForDietologist when !string.IsNullOrWhiteSpace(referenceId) =>
                 $"/dietologist/clients/{referenceId}",
             NotificationTypes.DietologistInvitationReceived when !string.IsNullOrWhiteSpace(referenceId) =>
