@@ -8,6 +8,11 @@ $fullVerificationText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.ll
 $toolSmokeText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools/Test-LlmWikiTools.ps1') -Raw
 $indexCacheText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools/LlmWikiIndexCache.ps1') -Raw
 $pipelineText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1') -Raw
+$cachedBuilderTexts = @(
+    'Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiFrontendContractIndex.ps1',
+    'Build-LlmWikiBackendContractIndex.ps1', 'Build-LlmWikiQualityIndex.ps1',
+    'Build-LlmWikiArchitectureHealthIndex.ps1'
+) | ForEach-Object { Get-Content -LiteralPath (Join-Path $repositoryRoot ".llm-wiki/tools/$_") -Raw }
 
 if ($facadeText -notmatch "'verify-strict-affected'") { throw 'Wiki facade does not expose verify-strict-affected.' }
 if ($facadeText -notmatch "'ui-finalize'") { throw 'Wiki facade does not expose one-time UI finalization.' }
@@ -27,7 +32,7 @@ if (@([regex]::Matches($verifyBody, 'Invoke-ObservedWikiStage')).Count -lt 8) {
     throw 'Ordinary verify does not route every verification stage through the observed runner.'
 }
 $strictStart = $facadeText.IndexOf("    'verify-strict-affected' {")
-$strictEnd = $facadeText.IndexOf("    'verify-full' {", $strictStart)
+$strictEnd = $facadeText.IndexOf("    'repair-verify' {", $strictStart)
 if ($strictStart -lt 0 -or $strictEnd -le $strictStart) { throw 'Unable to isolate verify-strict-affected implementation.' }
 $body = $facadeText.Substring($strictStart, $strictEnd - $strictStart)
 foreach ($required in @('AffectedOnly = $true', 'Invoke-LlmWikiAffectedSmoke.ps1', 'FailOnViolation = $true', 'FailOnUnreviewed = $true')) {
@@ -43,6 +48,9 @@ $visualFastBody = $facadeText.Substring($visualFastStart, $visualFastEnd - $visu
 if ($visualFastBody -notmatch 'VisualUiCompletion' -or $visualFastBody -notmatch 'index regeneration is deferred until ui-finalize') {
     throw 'Visual UI iteration does not defer index synchronization to ui-finalize.'
 }
+if ($verifyBody -notmatch "'affected tool regression'" -or $verifyBody -match "'adaptive verification' 'Invoke-LlmWikiAdaptiveVerification") {
+    throw 'Ordinary product verify still replays the complete Wiki adaptive eval suite instead of affected tool regressions.'
+}
 if ($facadeText -notmatch "CI -ne 'true'" -or $facadeText -notmatch 'content-addressed stage resume') {
     throw 'Local verify does not enable resumable stages by default while keeping CI uncached.'
 }
@@ -52,11 +60,28 @@ if ($facadeText -notmatch 'ContractIndexesOnly' -or $facadeText -notmatch 'Requi
 if ($facadeText -notmatch 'No governed task workspace exists' -or $facadeText -notmatch 'task-start first') {
     throw 'Delivery status does not explain absent governed workspace state.'
 }
+if ($facadeText -notmatch "'repair-verify'" -or $facadeText -notmatch 'Repair verify \[1/3\]' -or $facadeText -notmatch 'pendingReviewIds') {
+    throw 'Wiki facade does not expose the combined affected update, grouped impact, and resumable verify repair flow.'
+}
+if ($facadeText -notmatch 'Grouped source-impact review recorded' -or $facadeText -notmatch '\$ReviewId') {
+    throw 'Wiki facade does not support one-rationale grouped source-impact reviews.'
+}
+foreach ($builderText in $cachedBuilderTexts) {
+    $checkStart = $builderText.IndexOf('if ($Check)')
+    $writeAfterCheck = $builderText.IndexOf('Write-LlmWikiIndexCache', $checkStart)
+    $successMessage = $builderText.IndexOf('is current:', $checkStart)
+    if ($checkStart -lt 0 -or $writeAfterCheck -lt $checkStart -or $writeAfterCheck -gt $successMessage) {
+        throw 'A cacheable index check does not refresh its receipt after proving the output current.'
+    }
+}
 if ($indexCacheText -notmatch 'hash-object --stdin-paths') {
     throw 'Index input fingerprints reverted to slow per-file PowerShell hashing.'
 }
 if ($pipelineText -notmatch 'analytical indexes:' -or $pipelineText -notmatch 'API snapshot review:' -or $pipelineText -notmatch 'migration review:') {
     throw 'Affected index pipeline omitted the compact delivery summary.'
+}
+if ($pipelineText -notmatch 'affected pipeline cache hit' -or $pipelineText -notmatch 'Get-PipelineCacheState' -or $pipelineText -notmatch 'outputFingerprint') {
+    throw 'Affected pipeline does not transfer exact successful index evidence to the pre-commit freshness check.'
 }
 
 $frontendSmoke = @(& (Join-Path $repositoryRoot '.llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1') `

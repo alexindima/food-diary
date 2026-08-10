@@ -66,6 +66,7 @@ During iteration, select only indexes affected by the current diff:
 ```powershell
 ./.llm-wiki/wiki.ps1 update -AffectedOnly
 ./.llm-wiki/wiki.ps1 update -AffectedOnly -ContractIndexesOnly
+./.llm-wiki/wiki.ps1 repair-verify -Reason '<evidence-based grouped review reason>'
 ./.llm-wiki/wiki.ps1 verify -AffectedOnly
 ./.llm-wiki/wiki.ps1 verify-fast
 ./.llm-wiki/wiki.ps1 verify-strict-affected
@@ -84,6 +85,12 @@ the integration session before commit, push, or final handoff. In every other
 stale case, the pipeline emits one canonical `wiki.ps1 update` repair command
 in addition to the focused `update -AffectedOnly` option.
 
+`repair-verify` is the fixing facade for a stale affected change: it performs
+one atomic affected update, discovers source-impact obligations, optionally
+records one supplied rationale across all pending page IDs, and then runs the
+resumable affected verify. Without `-Reason`, it stops before the expensive
+verify and prints the exact grouped review obligation instead of failing late.
+
 `verify-fast -VisualUiCompletion` is an iteration gate rather than a publication
 gate: it prints the affected index plan without regenerating or requiring current
 compiled artifacts. Run `ui-finalize` once after the visual series to update the
@@ -93,8 +100,11 @@ accumulated affected indexes and execute the uncached strict affected gate.
 `verify` runs every stage through an observed runner: it prints stage start and
 duration, emits a heartbeat every 30 seconds, applies a stage-specific timeout,
 and reports the exact standalone diagnostic command when a stage fails or times
-out. Index and adaptive verification each receive five minutes; cheap contract,
-policy, and impact stages use shorter limits.
+out. Its tool-regression stage is affected-aware: product-only changes skip Wiki
+evals, Wiki implementation changes select the relevant regression groups, and
+`verify-full`/CI retain the complete adaptive suite. Index and affected-tool
+verification each receive five minutes; cheap contract, policy, and impact
+stages use shorter limits.
 
 Each index worker also emits its own heartbeat and has an independent timeout.
 Timeout handling terminates the complete process tree on Windows and modern
@@ -158,6 +168,15 @@ CI deliberately bypasses verification-stage resume and retains a complete
 deterministic check. `-ContractIndexesOnly` defers quality, module-page, and
 architecture-health analytics during feature iteration; the ordinary affected
 update/verify refreshes them once at publication finalization.
+After a cache miss that proves an output current, check mode refreshes the
+receipt as well. Consequently a manual verify pays the cold computation once
+and the pre-commit freshness check can reuse that exact content-addressed proof;
+a later source edit still invalidates it.
+The affected pipeline also records a tool-set-specific aggregate receipt over
+all relevant repository inputs and compiled outputs. This lets an immediately
+following pre-commit freshness check return after one native hash pass instead
+of replaying uncached catalog, symbol, domain, sensitive-data, and module-page
+generators. Strict affected verification and CI do not request this reuse.
 
 Frontend and C# test-source-only changes select the quality index without
 forcing catalog, symbol, contract, sensitive-data, module-page, or architecture

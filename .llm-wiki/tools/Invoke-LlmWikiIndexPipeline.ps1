@@ -19,9 +19,37 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiGeneratedArtifacts.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
 $toolsRoot = [System.IO.Path]::GetFullPath($PSScriptRoot)
 $shellPath = [System.IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
+$pipelineCacheState = $null
+
+function Get-StringSha256([string]$Value) {
+    $sha = [Security.Cryptography.SHA256]::Create()
+    try { return ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($Value))) -replace '-', '').ToLowerInvariant() }
+    finally { $sha.Dispose() }
+}
+
+function Get-PipelineCacheState([string[]]$ToolNames) {
+    $repositoryInputs = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard)
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate pipeline cache inputs.' }
+    $repositoryInputs = @($repositoryInputs | Where-Object {
+        $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' -and
+        $_ -notmatch '^\.artifacts/' -and
+        $_ -notmatch '(?:^|/)(?:node_modules|bin|obj|dist|coverage|TestResults)/'
+    })
+    $generatedOutputs = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard -- '.llm-wiki/generated/**')
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate pipeline cache outputs.' }
+    $toolSet = @($ToolNames | Sort-Object -Unique) -join '|'
+    $toolSetHash = (Get-StringSha256 $toolSet).Substring(0, 16)
+    return [pscustomobject]@{
+        receiptPath = Join-Path $repositoryRoot ".artifacts/llm-wiki/index-cache/pipeline-$toolSetHash.json"
+        inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $repositoryInputs
+        outputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $generatedOutputs
+        toolSet = $toolSet
+    }
+}
 
 function Get-WorkspaceChangedPaths {
     $paths = @(& git -C $repositoryRoot diff --name-only --diff-filter=ACMRD HEAD --)
@@ -154,6 +182,23 @@ if ($AffectedOnly) {
         Write-Output "Affected path count: $($normalizedChangedPaths.Count)"
         Write-Output "Affected index tools: $(@($selectedTools | Sort-Object) -join ', ')"
         exit 0
+    }
+}
+
+$selectedToolNames = if ($AffectedOnly) { @($selectedTools | Sort-Object) } else { @($allIndexTools | Sort-Object) }
+if ($ReuseUnchangedChecks -and $selectedToolNames.Count -gt 0) {
+    $pipelineCacheState = Get-PipelineCacheState $selectedToolNames
+    if ($Check -and (Test-Path -LiteralPath $pipelineCacheState.receiptPath -PathType Leaf)) {
+        try {
+            $pipelineReceipt = Get-Content -LiteralPath $pipelineCacheState.receiptPath -Raw | ConvertFrom-Json
+            if ([int]$pipelineReceipt.schemaVersion -eq 1 -and
+                [string]$pipelineReceipt.toolSet -ceq [string]$pipelineCacheState.toolSet -and
+                [string]$pipelineReceipt.inputFingerprint -ceq [string]$pipelineCacheState.inputFingerprint -and
+                [string]$pipelineReceipt.outputFingerprint -ceq [string]$pipelineCacheState.outputFingerprint) {
+                Write-Host "LLM Wiki affected pipeline cache hit: $($selectedToolNames.Count) generator(s), source and generated hashes unchanged."
+                exit 0
+            }
+        } catch { Write-Verbose "Ignoring invalid affected pipeline receipt: $($_.Exception.Message)" }
     }
 }
 
@@ -321,6 +366,18 @@ try {
     }
 }
 $pipelineStopwatch.Stop()
+if ($ReuseUnchangedChecks -and $selectedToolNames.Count -gt 0) {
+    $finalPipelineCacheState = Get-PipelineCacheState $selectedToolNames
+    $null = New-Item -ItemType Directory -Path (Split-Path -Parent $finalPipelineCacheState.receiptPath) -Force
+    $pipelineReceipt = [ordered]@{
+        schemaVersion = 1
+        recordedAtUtc = [DateTime]::UtcNow.ToString('o')
+        toolSet = [string]$finalPipelineCacheState.toolSet
+        inputFingerprint = [string]$finalPipelineCacheState.inputFingerprint
+        outputFingerprint = [string]$finalPipelineCacheState.outputFingerprint
+    }
+    [IO.File]::WriteAllText($finalPipelineCacheState.receiptPath, (($pipelineReceipt | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+}
 Write-Host "LLM Wiki index pipeline completed in $(if ($Check) { 'check' } else { 'update' }) mode in $([Math]::Round($pipelineStopwatch.Elapsed.TotalSeconds, 2))s."
 if ($AffectedOnly) {
     $summaryTools = @($selectedTools | Sort-Object)

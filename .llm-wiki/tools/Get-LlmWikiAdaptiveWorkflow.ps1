@@ -99,8 +99,10 @@ $hasCriticalEvidence = -not $visualUiChange -and -not $uiDiscovery -and -not $sc
 $hasArchitecturalEvidence = -not $visualUiChange -and ($architecturalIntent -or [bool]$brief.decisionContext.reviewRequired -or @($brief.architectureHealthImpact.dependencyViolations).Count -gt 0)
 $crossCutting = $productionScopes.Count -gt 1 -or @($brief.change.directModules + $brief.change.downstreamModules | Select-Object -Unique).Count -gt 2
 $directModuleCount = @($brief.change.directModules | Select-Object -Unique).Count
+$boundedBugScopes = @('Backend', 'Api', 'Frontend', 'Contracts')
+if ($boundedDataQueryBugIntent -and -not $flags.databaseMigration) { $boundedBugScopes += 'Database' }
 $boundedCrossLayerBug = $bugIntent -and $scopeKnown -and -not $hasCriticalEvidence -and -not $hasArchitecturalEvidence -and
-    $directModuleCount -le 1 -and @($productionScopes | Where-Object { $_ -notin @('Backend', 'Api', 'Frontend', 'Contracts') }).Count -eq 0 -and
+    $directModuleCount -le 1 -and @($productionScopes | Where-Object { $_ -notin $boundedBugScopes }).Count -eq 0 -and
     -not $flags.databaseMigration -and -not $flags.externalIntegrations -and -not $flags.configuration
 $maintenanceChange = $scopeKnown -and ($ciMaintenanceIntent -or $dependencyMaintenanceIntent -or $deploymentBuildMaintenanceIntent) -and
     -not $explicitCriticalIncidentIntent -and -not $explicitCriticalMutationIntent -and -not $boundaryChangeIntent -and

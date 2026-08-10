@@ -65,9 +65,9 @@ if ($Action -eq 'Capture') {
     }
     $null = New-Item -ItemType Directory -Path $stateDirectory -Force
     $baseline | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $baselinePath -Encoding utf8
-    $result = [pscustomobject]@{ available = $true; sessionKey = $sessionKey; baselinePath = $baselinePath; head = $head; initialChangedPaths = $initialPaths; changedPaths = @() }
+    $result = [pscustomobject]@{ available = $true; sessionKey = $sessionKey; baselinePath = $baselinePath; head = $head; initialChangedPaths = $initialPaths; changedPaths = @(); excludedChangedPaths = $initialPaths }
 } elseif (-not (Test-Path -LiteralPath $baselinePath -PathType Leaf)) {
-    $result = [pscustomobject]@{ available = $false; sessionKey = $sessionKey; baselinePath = $baselinePath; head = $null; initialChangedPaths = @(); changedPaths = @() }
+    $result = [pscustomobject]@{ available = $false; sessionKey = $sessionKey; baselinePath = $baselinePath; head = $null; initialChangedPaths = @(); changedPaths = @(); excludedChangedPaths = @() }
 } else {
     $baseline = Get-Content -LiteralPath $baselinePath -Raw | ConvertFrom-Json
     $currentPaths = @(Get-ChangedPaths ([string]$baseline.head))
@@ -85,6 +85,7 @@ if ($Action -eq 'Capture') {
         head = [string]$baseline.head
         initialChangedPaths = @($baseline.initialChangedPaths)
         changedPaths = @($delta)
+        excludedChangedPaths = @($currentPaths | Where-Object { $_ -notin $delta })
     }
 }
 
@@ -93,7 +94,7 @@ switch ($Format) {
     'Text' {
         if (-not $result.available) { Write-Host 'LLM Wiki task baseline: not captured.' }
         elseif ($Action -eq 'Capture') { Write-Host "LLM Wiki task baseline captured: $(@($result.initialChangedPaths).Count) pre-existing changed path(s)." }
-        else { Write-Host "LLM Wiki task delta: $(@($result.changedPaths).Count) path(s) changed since develop." }
+        else { Write-Host "LLM Wiki task delta: $(@($result.changedPaths).Count) path(s) changed since develop; $(@($result.excludedChangedPaths).Count) pre-existing workspace path(s) remain excluded." }
     }
     default { return $result }
 }

@@ -105,6 +105,7 @@ if ($Check) {
         Write-Host 'Backend contract index is stale. Run ./.llm-wiki/wiki.ps1 update.'
         exit 1
     }
+    Write-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint
     Write-Host "Backend contract index is current: $($result.summary.contracts) contracts, $($result.summary.consumerEdges) consumer edges."
     exit 0
 }

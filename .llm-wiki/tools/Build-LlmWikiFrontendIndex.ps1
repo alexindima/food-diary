@@ -227,6 +227,7 @@ if ($Check) {
         Write-Host '  ./.llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1'
         exit 1
     }
+    Write-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint
     Write-Host "Frontend index is current: $($features.Count) features, $($symbols.Count) symbols, $($routes.Count) routes."
     return
 }

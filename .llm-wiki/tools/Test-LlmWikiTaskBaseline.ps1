@@ -28,11 +28,13 @@ try {
     $initialDelta = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action ChangedPaths -RepositoryRoot $fixtureRoot -SessionId 'fixture-a'
     Assert-Baseline (@($initialDelta.changedPaths) -contains 'task.txt') 'Task delta omitted a new task file.'
     Assert-Baseline (@($initialDelta.changedPaths) -notcontains 'pre-existing.txt') 'Task delta included an unchanged pre-existing dirty file.'
+    Assert-Baseline (@($initialDelta.excludedChangedPaths) -contains 'pre-existing.txt') 'Task baseline hid a pre-existing workspace path instead of exposing it as excluded context.'
 
     [System.IO.File]::WriteAllText((Join-Path $fixtureRoot 'pre-existing.txt'), 'changed during task')
     $updatedDelta = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action ChangedPaths -RepositoryRoot $fixtureRoot -SessionId 'fixture-a'
     Assert-Baseline (@($updatedDelta.changedPaths) -contains 'task.txt') 'Updated task delta omitted the new task file.'
     Assert-Baseline (@($updatedDelta.changedPaths) -contains 'pre-existing.txt') 'Task delta omitted a task edit to a pre-existing dirty file.'
+    Assert-Baseline (@($updatedDelta.excludedChangedPaths) -notcontains 'pre-existing.txt') 'Task baseline kept a subsequently edited path in excluded context.'
 
     & git -C $fixtureRoot add task.txt
     & git -C $fixtureRoot -c user.name='LLM Wiki' -c user.email='llm-wiki@example.invalid' commit --quiet -m task
@@ -46,4 +48,16 @@ try {
     if (Test-Path -LiteralPath $fixtureRoot) { Remove-Item -LiteralPath $fixtureRoot -Recurse -Force }
 }
 
-Write-Host 'LLM Wiki task-baseline smoke passed: pre-existing dirt is isolated, subsequent edits and commits remain visible.'
+$context = & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') `
+    -ChangedPath 'FoodDiary.Web.Client/src/app/example.ts' `
+    -BaselineExcludedPath @(
+        'FoodDiary.Application/Lessons/Example.cs',
+        'FoodDiary.Presentation.Api/Features/Lessons/ExampleResponse.cs',
+        'FoodDiary.Infrastructure/Persistence/ExampleRepository.cs'
+    ) -Format Json | ConvertFrom-Json
+Assert-Baseline (@($context.scopes) -contains 'Frontend') 'Task diff lost its active frontend scope.'
+foreach ($scope in @('Backend', 'Api', 'Database')) {
+    Assert-Baseline (@($context.workspaceContextScopes) -contains $scope) "Task diff hid excluded workspace scope: $scope"
+}
+
+Write-Host 'LLM Wiki task-baseline smoke passed: pre-existing dirt is isolated but its workspace scopes remain visible.'

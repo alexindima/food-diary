@@ -68,13 +68,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1",
-                                            "sha256":  "c01023f1935affeed781b62abe1c9c954b1fed58e3b90056d249e3b4e221a3d4"
+                                            "sha256":  "a7cfd40e741582b3806b6d4251d95fb30dfab55a2e9662f5ab153b8a6a3a988c"
                                         }
                                     ],
-                        "reason":  "Reviewed cache input enumeration and content hashing changes; frontend index model and authoritative sources remain unchanged.",
+                        "reason":  "Reviewed incremental verification, baseline-context visibility, and facade orchestration changes; indexed models and the documented evaluation, diff, brief, and dispatch semantics remain authoritative and unchanged outside the documented workflow improvements.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "17e0cb9388b8839460b0b9655763de8730c9ef1b",
-                        "reviewedAtUtc":  "2026-08-10T11:12:42.3518125Z"
+                        "gitHead":  "7f31792400af36f7855687ca29a96dd026535d0a",
+                        "reviewedAtUtc":  "2026-08-10T18:18:15.4779121Z"
                     },
                     {
                         "pageId":  "system.knowledge-model",
@@ -124,17 +124,17 @@
                     {
                         "pageId":  "workflow.evals",
                         "pagePath":  ".llm-wiki/workflows/evals.md",
-                        "pageSha256":  "a56903981fe1beecefa43b3ce94d33e50d90896c77fa85e7c01558a3d2ea96bc",
+                        "pageSha256":  "6ada105b75a86980fdb517297eb70f3dd62690bf8920afad9ff3d08740f2e241",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/evals/cases.json",
-                                            "sha256":  "4020fa785aab88b495a3e820ff2b07d31847d2675782d41ecbb05c59d529a6fc"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+                                            "sha256":  "4b5aac87710ae0a5e6475d7db069968e536deb296c1cbe8ed6e4d80b925228a6"
                                         }
                                     ],
-                        "reason":  "Updated the visual UI regression contract to require the new focused profile and its acceptance, test, build, and browser stages.",
+                        "reason":  "Reviewed incremental verification, baseline-context visibility, and facade orchestration changes; indexed models and the documented evaluation, diff, brief, and dispatch semantics remain authoritative and unchanged outside the documented workflow improvements.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8b70e3e238e923c84a062b4bfc08f1a7d3a80bb1",
-                        "reviewedAtUtc":  "2026-08-01T00:08:41.3091243Z"
+                        "gitHead":  "7f31792400af36f7855687ca29a96dd026535d0a",
+                        "reviewedAtUtc":  "2026-08-10T18:18:15.7371195Z"
                     },
                     {
                         "pageId":  "workflow.evidence-bundle",
@@ -191,14 +191,14 @@
                         "pageSha256":  "fc98ae1eba6a72137dfa02d7b37e13b08738bd2dd7b0408bf971d6f7dda29917",
                         "sources":  [
                                         {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "6096f9cb6ed9a05dbb604f83f46b51d774c43034c5703da05f96ec1a6892246c"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+                                            "sha256":  "4b5aac87710ae0a5e6475d7db069968e536deb296c1cbe8ed6e4d80b925228a6"
                                         }
                                     ],
-                        "reason":  "Reviewed the merged diff workflow obligations; both the statistics feature and runtime resilience fix retain their required verification paths.",
+                        "reason":  "Reviewed incremental verification, baseline-context visibility, and facade orchestration changes; indexed models and the documented evaluation, diff, brief, and dispatch semantics remain authoritative and unchanged outside the documented workflow improvements.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
-                        "reviewedAtUtc":  "2026-08-09T09:52:56.4306949Z"
+                        "gitHead":  "7f31792400af36f7855687ca29a96dd026535d0a",
+                        "reviewedAtUtc":  "2026-08-10T18:18:15.9631239Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -766,14 +766,14 @@
                         "pageSha256":  "5b0035be778c175914d29999e36b30dae6b04e0683647ace85fe88ffdb4509fb",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "4b8b2ef2195bc52fadf588f50037af85a50290fab3dfe15e1e634c1a7382c9c5"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+                                            "sha256":  "4b5aac87710ae0a5e6475d7db069968e536deb296c1cbe8ed6e4d80b925228a6"
                                         }
                                     ],
-                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
+                        "reason":  "Reviewed incremental verification, baseline-context visibility, and facade orchestration changes; indexed models and the documented evaluation, diff, brief, and dispatch semantics remain authoritative and unchanged outside the documented workflow improvements.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
-                        "reviewedAtUtc":  "2026-08-07T18:52:50.8758586Z"
+                        "gitHead":  "7f31792400af36f7855687ca29a96dd026535d0a",
+                        "reviewedAtUtc":  "2026-08-10T18:18:16.1600370Z"
                     },
                     {
                         "pageId":  "workflow-task-dispatch-receipts",
@@ -782,13 +782,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "b63a3eaebeecae4dce02ccf7a8761af1bc21c8e555a56b783747eafa2b128566"
+                                            "sha256":  "38eda3662ccb337e590e7532cadb10a1b97cb17863e57f63a90d215dda371db9"
                                         }
                                     ],
-                        "reason":  "Reviewed facade-only delivery workspace diagnostics and local verification resume defaults; task dispatch receipt semantics remain unchanged.",
+                        "reason":  "Reviewed the final baseline visibility, grouped repair workflow, cache-learning, aggregate pipeline receipt, and affected-regression orchestration; related knowledge-page claims remain correct and the updated workflow documentation captures the intentional behavior.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "17e0cb9388b8839460b0b9655763de8730c9ef1b",
-                        "reviewedAtUtc":  "2026-08-10T11:12:42.7754078Z"
+                        "gitHead":  "7f31792400af36f7855687ca29a96dd026535d0a",
+                        "reviewedAtUtc":  "2026-08-10T18:20:35.8318117Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",

@@ -274,6 +274,7 @@ if ($Check) {
         Write-Host 'Frontend contract index is stale. Run ./.llm-wiki/wiki.ps1 update.'
         exit 1
     }
+    Write-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint
     Write-Host "Frontend contract index is current: $($result.summary.components) components, $($result.summary.apiCalls) API calls."
     exit 0
 }

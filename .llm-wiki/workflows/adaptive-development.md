@@ -67,6 +67,12 @@ task delta, focused tests, browser evidence, and the visual completion gate. A
 backend, dependency-manifest, or public-entry-point expansion rejects this fast
 path and returns the task to the normal adaptive route.
 
+`diff` preserves that isolation while reporting the count and coarse scopes of
+still-dirty paths excluded by the task baseline. An existing backend, API, or
+database slice therefore remains visible beside a later frontend delta without
+being silently claimed from another session. Pass explicit `-ChangedPath` only
+when those paths genuinely belong to the current task.
+
 ## Profiles
 
 The router selects one FoodDiary-specific profile:

@@ -147,6 +147,7 @@ if ($Check) {
         Write-Host "Architecture drift detected: $($violations.Count) dependency violations, $($untrackedProductionProjects.Count) untracked projects, $($moduleCycleNodes.Count) cycle nodes."
         exit 1
     }
+    Write-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint
     Write-Host "Architecture health index is current: $($actualEdges.Count) project edges, no enforced drift."
     exit 0
 }

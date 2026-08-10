@@ -3,6 +3,7 @@ param(
     [string]$BaseRef = 'HEAD',
     [string]$HeadRef,
     [string[]]$ChangedPath,
+    [string[]]$BaselineExcludedPath,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateRange(1, 20)]
@@ -57,9 +58,22 @@ $changedPaths = @(
         ForEach-Object { ConvertTo-RepositoryPath $_ } |
         Sort-Object -Unique
 )
+$baselineExcludedPaths = @(
+    $BaselineExcludedPath |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        ForEach-Object { ConvertTo-RepositoryPath $_ } |
+        Sort-Object -Unique
+)
+$workspaceContextScopes = [Collections.Generic.List[string]]::new()
+if (@($baselineExcludedPaths | Where-Object { $_ -match '\.cs$|\.csproj$|Directory\.(Build|Packages)\.props$' }).Count -gt 0) { $workspaceContextScopes.Add('Backend') }
+if (@($baselineExcludedPaths | Where-Object { $_ -match 'Presentation|Web\.Api/.+\.cs$|Controller\.cs$|/Snapshots/' }).Count -gt 0) { $workspaceContextScopes.Add('Api') }
+if (@($baselineExcludedPaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/|^FoodDiary\.Mobile/' }).Count -gt 0) { $workspaceContextScopes.Add('Frontend') }
+if (@($baselineExcludedPaths | Where-Object { $_ -match 'Infrastructure/.*(Persistence|Migration)|Migrations?/|ModelSnapshot\.cs$' }).Count -gt 0) { $workspaceContextScopes.Add('Database') }
 if ($changedPaths.Count -eq 0) {
     $emptyResult = [ordered]@{
         changedPaths = @()
+        baselineExcludedPaths = $baselineExcludedPaths
+        workspaceContextScopes = @($workspaceContextScopes | Sort-Object -Unique)
         scopes = @()
         modules = @()
         projects = @()
@@ -73,7 +87,11 @@ if ($changedPaths.Count -eq 0) {
     if ($Format -eq 'Json') {
         $emptyResult | ConvertTo-Json -Depth 8
     } else {
-        Write-Host 'LLM Wiki diff context: no changed paths.'
+        Write-Host 'LLM Wiki diff context: no task-delta paths.'
+        if ($baselineExcludedPaths.Count -gt 0) {
+            Write-Host "Workspace context excluded by task baseline: $($baselineExcludedPaths.Count) path(s); scopes=$(if ($workspaceContextScopes.Count) { @($workspaceContextScopes | Sort-Object -Unique) -join ', ' } else { 'none detected' })."
+            Write-Host 'Use -ChangedPath explicitly to include any of those paths in the current task; they are shown but not silently claimed from another session.'
+        }
     }
     return
 }
@@ -98,7 +116,7 @@ $scopes = [ordered]@{
         $_ -match '^FoodDiary\.Web\.Client/|^FoodDiary\.Mobile/'
     }).Count -gt 0
     Database = @($changedPaths | Where-Object {
-        $_ -match 'Infrastructure/.+(Persistence|Migration)|Migrations?/|ModelSnapshot\.cs$'
+        $_ -match 'Infrastructure/.*(Persistence|Migration)|Migrations?/|ModelSnapshot\.cs$'
     }).Count -gt 0
     Tests = @($changedPaths | Where-Object { $_ -match '(^|/)tests/' -or $_ -match '\.(spec\.ts|test\.mjs)$' }).Count -gt 0
     Documentation = @($changedPaths | Where-Object { $_ -match '(^|/)(AGENTS|README)\.md$|^docs/|^\.llm-wiki/' }).Count -gt 0
@@ -413,6 +431,8 @@ $uniqueChecks = @($recommendedChecks | Sort-Object -Unique)
 
 $result = [ordered]@{
     changedPaths = $changedPaths
+    baselineExcludedPaths = $baselineExcludedPaths
+    workspaceContextScopes = @($workspaceContextScopes | Sort-Object -Unique)
     scopes = $activeScopes
     modules = @($matchedModules)
     projects = @($matchedProjects)
@@ -433,6 +453,10 @@ if ($Format -eq 'Json') {
 
 Write-Host "LLM Wiki diff context: $($changedPaths.Count) changed path(s)"
 Write-Host "Scopes: $(if ($activeScopes.Count) { $activeScopes -join ', ' } else { 'none detected' })"
+if ($baselineExcludedPaths.Count -gt 0) {
+    Write-Host "Workspace context excluded by task baseline: $($baselineExcludedPaths.Count) path(s); scopes=$(if ($workspaceContextScopes.Count) { @($workspaceContextScopes | Sort-Object -Unique) -join ', ' } else { 'none detected' })."
+    Write-Host 'Use -ChangedPath explicitly to include any of those paths in the current task; they are shown but not silently claimed from another session.'
+}
 
 function Write-Section {
     param(

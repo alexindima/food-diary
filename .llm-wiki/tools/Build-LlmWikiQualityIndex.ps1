@@ -197,6 +197,7 @@ if ($Check) {
         Write-Host 'Quality index is stale. Run ./.llm-wiki/wiki.ps1 update.'
         exit 1
     }
+    Write-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint
     Write-Host "Quality index is current: $($result.summary.criticalSymbols) critical symbols, $($result.summary.criticalSymbolsWithoutTestReferences) without test references."
     exit 0
 }

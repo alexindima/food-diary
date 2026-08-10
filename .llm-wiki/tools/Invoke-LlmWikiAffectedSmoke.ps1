@@ -42,7 +42,7 @@ foreach ($path in $paths) {
         Add-Group 'index-selection'
     } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiFrontendTrace|Find-LlmWikiTrace|Test-LlmWikiTraceOutput)\.ps1$') {
         Add-Group 'trace-output'
-    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiTaskBaseline|Test-LlmWikiTaskBaseline)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiTaskBaseline|Get-LlmWikiDiffContext|Test-LlmWikiTaskBaseline)\.ps1$') {
         Add-Group 'task-baseline'
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiUiContinuation|Test-LlmWikiUiContinuation|Get-LlmWikiTestPlan|Test-LlmWikiTools)\.ps1$') {
         Add-Group 'ui-continuation'

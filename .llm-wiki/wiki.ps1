@@ -2,7 +2,7 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
+        'help', 'update', 'repair-verify', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'diff', 'impact', 'review', 'ownership', 'api-compat', 'policy',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
@@ -280,12 +280,14 @@ if ($Command -in @('verify', 'verify-full') -and $env:CI -ne 'true' -and -not $P
     $ResumePassedStages = $true
 }
 
-$deltaAwareCommands = @('update', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'ownership', 'policy')
+$deltaAwareCommands = @('update', 'repair-verify', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'ownership', 'policy')
+$taskBaselineContext = $null
 if ($Command -eq 'develop') {
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId $TaskSessionId -Format Text
 } elseif ($Command -in $deltaAwareCommands -and -not $PSBoundParameters.ContainsKey('ChangedPath')) {
     $taskBaseline = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action ChangedPaths -SessionId $TaskSessionId -Format Object
     if ($taskBaseline.available) {
+        $taskBaselineContext = $taskBaseline
         $ChangedPath = @($taskBaseline.changedPaths)
         $PSBoundParameters['ChangedPath'] = $ChangedPath
     }
@@ -411,22 +413,25 @@ switch ($Command) {
         $script:verifyRunStopwatch = [Diagnostics.Stopwatch]::StartNew()
         $script:verifyStageExpectedSeconds = @{
             'workspace policy' = 2; 'page contracts' = 2; 'lint regression' = 10; 'indexes' = 120
-            'adaptive verification' = 120; 'failure knowledge' = 2; 'change policy' = 3; 'source impact' = 3
+            'affected tool regression' = 15; 'failure knowledge' = 2; 'change policy' = 3; 'source impact' = 3
         }
-        Write-Host "Wiki verify: 8 observable stages, expected cold duration ~262s; content-addressed stage resume is enabled=$([bool]$ResumePassedStages)."
+        $expectedVerifySeconds = ($script:verifyStageExpectedSeconds.Values | Measure-Object -Sum).Sum
+        Write-Host "Wiki verify: 8 observable stages, expected cold duration ~${expectedVerifySeconds}s; content-addressed stage resume is enabled=$([bool]$ResumePassedStages)."
         $indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
         $policyArguments = @{ FailOnViolation = $true }
         $impactArguments = @{ FailOnUnreviewed = $true }
+        $affectedSmokeArguments = @{ BaseRef = $BaseRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) {
             $policyArguments.ChangedPath = $ChangedPath
             $impactArguments.ChangedPath = $ChangedPath
+            $affectedSmokeArguments.ChangedPath = $ChangedPath
         }
         Invoke-ObservedWikiStage 'workspace policy' 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true } 60 './.llm-wiki/wiki.ps1 workspace-policy'
         Invoke-ObservedWikiStage 'page contracts' 'Test-LlmWiki.ps1' @{} 60 './.llm-wiki/wiki.ps1 lint'
         Invoke-ObservedWikiStage 'lint regression' 'Test-LlmWikiLint.ps1' @{} 120 './.llm-wiki/tools/Test-LlmWikiLint.ps1'
         Invoke-ObservedWikiStage 'indexes' 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments 300 './.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check'
-        Invoke-ObservedWikiStage 'adaptive verification' 'Invoke-LlmWikiAdaptiveVerification.ps1' @{} 300 './.llm-wiki/tools/Invoke-LlmWikiAdaptiveVerification.ps1'
+        Invoke-ObservedWikiStage 'affected tool regression' 'Invoke-LlmWikiAffectedSmoke.ps1' $affectedSmokeArguments 300 './.llm-wiki/wiki.ps1 smoke -SmokeGroup tools -AffectedOnly'
         Invoke-ObservedWikiStage 'failure knowledge' 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' } 60 './.llm-wiki/wiki.ps1 failures -Check'
         Invoke-ObservedWikiStage 'change policy' 'Test-LlmWikiChangePolicy.ps1' $policyArguments 60 './.llm-wiki/wiki.ps1 policy -FailOnViolation'
         Invoke-ObservedWikiStage 'source impact' 'Get-LlmWikiImpact.ps1' $impactArguments 60 './.llm-wiki/wiki.ps1 impact -FailOnUnreviewed'
@@ -506,6 +511,29 @@ switch ($Command) {
         Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' $policyArguments
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
         Write-Host 'Strict affected verification passed. Full repository verification remains the CI gate.'
+    }
+    'repair-verify' {
+        $repairPaths = @($ChangedPath)
+        if ($repairPaths.Count -eq 0) { Write-Host 'Repair verify: no task-delta paths; nothing to repair.'; break }
+        Write-Host 'Repair verify [1/3]: atomically updating affected indexes.'
+        Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' @{ AffectedOnly = $true; ChangedPath = $repairPaths; BaseRef = $BaseRef; ReuseUnchangedChecks = $true }
+        Write-Host 'Repair verify [2/3]: resolving source-impact reviews.'
+        $impactJson = & (Join-Path $toolsRoot 'Get-LlmWikiImpact.ps1') -ChangedPath $repairPaths -Format Json
+        $impactResult = $impactJson | ConvertFrom-Json
+        $pendingReviewIds = @($impactResult.impacts | Where-Object { -not $_.Reviewed } | ForEach-Object { [string]$_.Id })
+        if ($pendingReviewIds.Count -gt 0) {
+            if ([string]::IsNullOrWhiteSpace($Reason)) {
+                throw "Source-impact review is required for $($pendingReviewIds -join ', '). Re-run repair-verify -Reason '<one evidence-based reason>' to record the grouped review and continue."
+            }
+            foreach ($pendingPageId in $pendingReviewIds) {
+                & (Join-Path $toolsRoot 'Add-LlmWikiSourceReview.ps1') -Id $pendingPageId -Reason $Reason -ChangedPath $repairPaths
+                if (-not $?) { exit 1 }
+            }
+            Write-Host "Recorded one grouped source-impact decision for $($pendingReviewIds.Count) page(s)."
+        }
+        Write-Host 'Repair verify [3/3]: running resumable affected verification.'
+        & $PSCommandPath verify -AffectedOnly -ChangedPath $repairPaths -BaseRef $BaseRef
+        if (-not $?) { exit 1 }
     }
     'verify-full' {
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
@@ -1827,6 +1855,9 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ChangedPath')) {
             $diffArguments.ChangedPath = $ChangedPath
         }
+        if ($null -ne $taskBaselineContext -and @($taskBaselineContext.excludedChangedPaths).Count -gt 0) {
+            $diffArguments.BaselineExcludedPath = @($taskBaselineContext.excludedChangedPaths)
+        }
         Invoke-WikiTool 'Get-LlmWikiDiffContext.ps1' $diffArguments
     }
     'impact' {
@@ -1843,10 +1874,15 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
     }
     'review' {
-        $reviewArguments = @{ Id = $Id; Reason = $Reason; BaseRef = $BaseRef }
-        if ($PSBoundParameters.ContainsKey('HeadRef')) { $reviewArguments.HeadRef = $HeadRef }
-        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $reviewArguments.ChangedPath = $ChangedPath }
-        Invoke-WikiTool 'Add-LlmWikiSourceReview.ps1' $reviewArguments
+        $pageReviewIds = @($(if (@($ReviewId).Count -gt 0) { @($ReviewId) } else { @($Id) }) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
+        if ($pageReviewIds.Count -eq 0) { throw 'review requires -Id or -ReviewId.' }
+        foreach ($pageReviewId in $pageReviewIds) {
+            $reviewArguments = @{ Id = $pageReviewId; Reason = $Reason; BaseRef = $BaseRef }
+            if ($PSBoundParameters.ContainsKey('HeadRef')) { $reviewArguments.HeadRef = $HeadRef }
+            if ($PSBoundParameters.ContainsKey('ChangedPath')) { $reviewArguments.ChangedPath = $ChangedPath }
+            Invoke-WikiTool 'Add-LlmWikiSourceReview.ps1' $reviewArguments
+        }
+        if ($pageReviewIds.Count -gt 1) { Write-Host "Grouped source-impact review recorded for $($pageReviewIds.Count) pages with one shared rationale." }
     }
     'ownership' {
         $ownershipArguments = @{ BaseRef = $BaseRef; Format = $Format }
@@ -2118,6 +2154,7 @@ switch ($Command) {
         Write-Host ''
         Write-Host 'Usage:'
         Write-Host '  ./.llm-wiki/wiki.ps1 update [-AffectedOnly] [-BaseRef <ref>] [-ChangedPath <path[]>]'
+        Write-Host "  ./.llm-wiki/wiki.ps1 repair-verify [-Reason '<grouped source-review rationale>'] [-ChangedPath <path[]>]"
         Write-Host '  ./.llm-wiki/wiki.ps1 lint [-Format Json]'
         Write-Host '  ./.llm-wiki/wiki.ps1 smoke -SmokeGroup portable|linux|tools [-AffectedOnly] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify-fast [-BaseRef <ref>] [-ChangedPath <path[]>]'
@@ -2330,6 +2367,7 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 diff'
         Write-Host '  ./.llm-wiki/wiki.ps1 impact -FailOnUnreviewed'
         Write-Host '  ./.llm-wiki/wiki.ps1 review -Id <page-id> -Reason <reason> [-BaseRef <ref>]'
+        Write-Host '  ./.llm-wiki/wiki.ps1 review -ReviewId <page-id[]> -Reason <shared-reason> [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 ownership'
         Write-Host '  ./.llm-wiki/wiki.ps1 api-compat -BaseRef HEAD -FailOnBreaking'
         Write-Host '  ./.llm-wiki/wiki.ps1 policy [-RequireEvidence]'
