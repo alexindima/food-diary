@@ -12,12 +12,11 @@ $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $frontendRoot = Join-Path $repositoryRoot 'FoodDiary.Web.Client'
 $outputPath = Join-Path $wikiRoot 'generated/frontend-index.json'
 $cachePath = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-cache/frontend-index.json'
-$cacheInputs = @(
-    Get-ChildItem -LiteralPath $frontendRoot -Recurse -File -Force -Filter '*.ts' | Where-Object { $_.FullName -notmatch '[\/](node_modules|dist|coverage|\.angular)[\/]' } | ForEach-Object { $_.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/') }
-    Get-ChildItem -LiteralPath (Join-Path $frontendRoot 'assets/i18n') -Recurse -File -Filter '*.json' | ForEach-Object { $_.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/') }
-) + @('.llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1', '.llm-wiki/tools/LlmWikiJson.ps1', '.llm-wiki/tools/LlmWikiIndexCache.ps1')
+$cacheInputs = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard -- 'FoodDiary.Web.Client/**/*.ts' 'FoodDiary.Web.Client/assets/i18n/**/*.json')
+if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate frontend-index cache inputs.' }
+$cacheInputs = @($cacheInputs | Where-Object { $_ -notmatch '[\/](node_modules|dist|coverage|\.angular)[\/]' }) + @('.llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1', '.llm-wiki/tools/LlmWikiJson.ps1', '.llm-wiki/tools/LlmWikiIndexCache.ps1')
 $inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $cacheInputs
-if ($Check -and $ReuseUnchangedCheck -and (Test-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint)) { Write-Host 'Frontend index cache hit: inputs, generator, and output are unchanged.'; exit 0 }
+if ($ReuseUnchangedCheck -and (Test-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint)) { Write-Host 'Frontend index cache hit: inputs, generator, and output are unchanged.'; exit 0 }
 
 function ConvertTo-RepositoryPath {
     param([string]$Path)

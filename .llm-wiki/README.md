@@ -83,10 +83,9 @@ heartbeat, has its own timeout, and a failed update restores the generated tree.
 Verification timeouts terminate the complete subprocess tree and print the exact
 standalone command for diagnosis; publication CI still runs uncached strict
 verification.
-For an interrupted local strict or exhaustive run, use `verify
--ResumePassedStages` or `verify-full -ResumePassedStages`; receipts are
-content-addressed independently from each stage's relevant inputs, while CI
-omits the switch and therefore never trusts local cache.
+Interrupted local `verify` and `verify-full` runs resume passed stages by
+default; receipts are content-addressed independently from each stage's relevant
+inputs. CI disables this default and never trusts the local stage cache.
 
 The unified developer entrypoint is:
 

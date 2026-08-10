@@ -1,11 +1,26 @@
 [CmdletBinding()]
-param([switch]$Check)
+param([switch]$Check, [switch]$ReuseUnchangedCheck)
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $outputPath = Join-Path $wikiRoot 'generated/architecture-health-index.json'
+$cachePath = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-cache/architecture-health-index.json'
+$cacheInputs = @(
+    '.llm-wiki/generated/repository-catalog.json',
+    '.llm-wiki/generated/backend-contract-index.json',
+    '.llm-wiki/generated/frontend-contract-index.json',
+    '.llm-wiki/generated/quality-index.json',
+    'docs/architecture/module-dependencies.json',
+    'tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs',
+    '.llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1',
+    '.llm-wiki/tools/LlmWikiJson.ps1',
+    '.llm-wiki/tools/LlmWikiIndexCache.ps1'
+)
+$inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $cacheInputs
+if ($ReuseUnchangedCheck -and (Test-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint)) { Write-Host 'Architecture health index cache hit: inputs, generator, and output are unchanged.'; exit 0 }
 $catalog = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/repository-catalog.json') -Raw | ConvertFrom-Json
 $backendContracts = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/backend-contract-index.json') -Raw | ConvertFrom-Json
 $frontendContracts = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/frontend-contract-index.json') -Raw | ConvertFrom-Json
@@ -137,4 +152,5 @@ if ($Check) {
 }
 $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText($outputPath, $jsonText, $utf8WithoutBom)
+Write-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint
 Write-Host 'Generated .llm-wiki/generated/architecture-health-index.json.'

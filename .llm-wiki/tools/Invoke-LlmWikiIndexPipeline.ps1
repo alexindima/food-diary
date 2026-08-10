@@ -5,6 +5,7 @@ param(
     [switch]$Plan,
     [switch]$DeferPossiblyConcurrentStale,
     [switch]$ReuseUnchangedChecks,
+    [switch]$RequiredOnly,
     [string]$BaseRef = 'HEAD',
     [string[]]$ChangedPath,
     [ValidateRange(1, 8)]
@@ -46,6 +47,11 @@ $allIndexTools = @(
     'Build-LlmWikiConfigurationIndex.ps1', 'Build-LlmWikiRuntimeTopology.ps1',
     'Build-LlmWikiSensitiveDataIndex.ps1', 'Build-LlmWikiBackendContractIndex.ps1',
     'Build-LlmWikiQualityIndex.ps1', 'Build-LlmWikiModulePages.ps1',
+    'Build-LlmWikiArchitectureHealthIndex.ps1'
+)
+$analyticalIndexTools = @(
+    'Build-LlmWikiQualityIndex.ps1',
+    'Build-LlmWikiModulePages.ps1',
     'Build-LlmWikiArchitectureHealthIndex.ps1'
 )
 function Add-IndexTool([string]$Name) {
@@ -140,6 +146,10 @@ if ($AffectedOnly) {
         }).Count -gt 0) { Add-IndexTool 'Build-LlmWikiRuntimeTopology.ps1' }
     }
     Write-Host "LLM Wiki affected index pipeline: $($normalizedChangedPaths.Count) changed path(s), $($selectedTools.Count) selected tool(s)."
+    if ($RequiredOnly) {
+        foreach ($analyticalTool in $analyticalIndexTools) { $null = $selectedTools.Remove($analyticalTool) }
+        Write-Host "LLM Wiki required-index mode: deferred analytical indexes to the publication/CI gate; $($selectedTools.Count) required tool(s) remain."
+    }
     if ($Plan) {
         Write-Output "Affected path count: $($normalizedChangedPaths.Count)"
         Write-Output "Affected index tools: $(@($selectedTools | Sort-Object) -join ', ')"
@@ -183,8 +193,8 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
         $startInfo.FileName = $shellPath
         $startInfo.WorkingDirectory = $repositoryRoot
         $startInfo.UseShellExecute = $false
-        $cacheableTools = @('Build-LlmWikiQualityIndex.ps1', 'Build-LlmWikiBackendContractIndex.ps1', 'Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiFrontendContractIndex.ps1')
-        $reuseArgument = if ($CheckMode -and $ReuseUnchangedChecks -and $toolName -in $cacheableTools) { ' -ReuseUnchangedCheck' } else { '' }
+        $cacheableTools = @('Build-LlmWikiQualityIndex.ps1', 'Build-LlmWikiBackendContractIndex.ps1', 'Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiFrontendContractIndex.ps1', 'Build-LlmWikiArchitectureHealthIndex.ps1')
+        $reuseArgument = if ($ReuseUnchangedChecks -and $toolName -in $cacheableTools) { ' -ReuseUnchangedCheck' } else { '' }
         $startInfo.Arguments = "-NoLogo -NoProfile -File `"$scriptPath`"$(if ($CheckMode) { ' -Check' } else { '' })$reuseArgument"
         $startInfo.EnvironmentVariables['GIT_CONFIG_COUNT'] = '1'
         $startInfo.EnvironmentVariables['GIT_CONFIG_KEY_0'] = 'core.safecrlf'
@@ -312,3 +322,23 @@ try {
 }
 $pipelineStopwatch.Stop()
 Write-Host "LLM Wiki index pipeline completed in $(if ($Check) { 'check' } else { 'update' }) mode in $([Math]::Round($pipelineStopwatch.Elapsed.TotalSeconds, 2))s."
+if ($AffectedOnly) {
+    $summaryTools = @($selectedTools | Sort-Object)
+    $summaryPaths = @($normalizedChangedPaths)
+    $summaryLayers = [Collections.Generic.List[string]]::new()
+    if (@($summaryPaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/' }).Count -gt 0) { $summaryLayers.Add('Frontend') }
+    if (@($summaryPaths | Where-Object { $_ -match 'Presentation|Web\.Api|Snapshots/' }).Count -gt 0) { $summaryLayers.Add('API/Presentation') }
+    if (@($summaryPaths | Where-Object { $_ -match 'Application' }).Count -gt 0) { $summaryLayers.Add('Application') }
+    if (@($summaryPaths | Where-Object { $_ -match 'Infrastructure|Persistence' }).Count -gt 0) { $summaryLayers.Add('Infrastructure') }
+    if (@($summaryPaths | Where-Object { $_ -match 'Domain' }).Count -gt 0) { $summaryLayers.Add('Domain') }
+    if (@($summaryPaths | Where-Object { $_ -match '(?i)(^|/)(tests?|__tests__)/|\.Tests?/' }).Count -gt 0) { $summaryLayers.Add('Tests') }
+    Write-Host 'LLM Wiki index summary:'
+    Write-Host " - scope: $(@($normalizedChangedPaths).Count) changed path(s)"
+    Write-Host " - tier: $(if ($RequiredOnly) { 'required contracts/navigation' } else { 'all affected, including analytics' })"
+    Write-Host " - generators: $(if ($summaryTools.Count -gt 0) { $summaryTools -join ', ' } else { 'none' })"
+    Write-Host " - transaction: $(if ($Check) { 'read-only check' } else { 'atomic update with semantic no-op suppression' })"
+    Write-Host " - layers: $(if ($summaryLayers.Count -gt 0) { @($summaryLayers | Sort-Object -Unique) -join ', ' } else { 'Wiki/tooling only' })"
+    Write-Host " - API snapshot review: $(if (@($summaryPaths | Where-Object { $_ -match 'Presentation|Web\.Api|Snapshots/' }).Count -gt 0) { 'required/relevant' } else { 'not indicated by paths' })"
+    Write-Host " - migration review: $(if (@($summaryPaths | Where-Object { $_ -match '(?i)Migrations?/' }).Count -gt 0) { 'required' } else { 'not indicated by paths' })"
+    Write-Host " - analytical indexes: $(if ($RequiredOnly) { 'deferred until publication-finalization' } else { 'included when affected' })"
+}

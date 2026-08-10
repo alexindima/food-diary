@@ -4,8 +4,8 @@ param()
 $ErrorActionPreference = 'Stop'
 $pipelinePath = Join-Path $PSScriptRoot 'Invoke-LlmWikiIndexPipeline.ps1'
 
-function Get-IndexPlan([string[]]$ChangedPath) {
-    return (& $pipelinePath -AffectedOnly -Plan -ChangedPath $ChangedPath) -join [Environment]::NewLine
+function Get-IndexPlan([string[]]$ChangedPath, [switch]$RequiredOnly) {
+    return (& $pipelinePath -AffectedOnly -Plan -ChangedPath $ChangedPath -RequiredOnly:$RequiredOnly) -join [Environment]::NewLine
 }
 
 function Assert-Plan([bool]$Condition, [string]$Message) {
@@ -42,6 +42,11 @@ foreach ($unexpectedTool in @(
 
 $productionCSharpPlan = Get-IndexPlan 'FoodDiary.Infrastructure/Persistence/EmailOutbox.cs'
 Assert-Plan ($productionCSharpPlan -match 'Build-LlmWikiCatalog.ps1' -and $productionCSharpPlan -match 'Build-LlmWikiSymbolIndex.ps1') 'Production C# changes lost conservative index coverage.'
+$requiredProductionPlan = Get-IndexPlan 'FoodDiary.Infrastructure/Persistence/EmailOutbox.cs' -RequiredOnly
+Assert-Plan ($requiredProductionPlan -match 'Build-LlmWikiCatalog.ps1' -and $requiredProductionPlan -match 'Build-LlmWikiBackendContractIndex.ps1') 'Required-only mode lost contract/navigation generators.'
+foreach ($deferredTool in @('Build-LlmWikiQualityIndex.ps1', 'Build-LlmWikiModulePages.ps1', 'Build-LlmWikiArchitectureHealthIndex.ps1')) {
+    Assert-Plan ($requiredProductionPlan -notmatch [regex]::Escape($deferredTool)) "Required-only mode retained analytical generator: $deferredTool"
+}
 
 $contractPlan = Get-IndexPlan '.llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1'
 Assert-Plan ($contractPlan -match 'Build-LlmWikiFrontendContractIndex.ps1' -and $contractPlan -match 'Build-LlmWikiArchitectureHealthIndex.ps1' -and

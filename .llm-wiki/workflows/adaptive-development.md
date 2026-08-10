@@ -300,7 +300,9 @@ evidence lineage and freshness rules.
 
 The adaptive route never replaces deterministic gates:
 
-1. Confirm actual scope and journey impact with `diff`, `journeys`, and `delivery-status`.
+1. Confirm actual scope and journey impact with `diff` and `journeys`. Use
+   `delivery-status` only when `develop` emitted a required `workspace` stage;
+   ordinary feature routes intentionally have no governed task workspace.
 2. Use `delivery-replan -Reason <evidence>` only for intentional divergence; it
    refreshes evidence but never widens the task contract.
 3. Execute focused checks and the profile-selected Wiki verification.

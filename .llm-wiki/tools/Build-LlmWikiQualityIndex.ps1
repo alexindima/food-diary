@@ -6,6 +6,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
@@ -28,25 +29,16 @@ function Get-TextSha256([string]$Value) {
     } finally { $sha.Dispose() }
 }
 
-function Get-QualityInputFingerprint {
-    $sourcePaths = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard -- '*.cs' '*.ts')
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate quality-index inputs.' }
-    $sourcePaths += @(
-        '.llm-wiki/generated/csharp-symbol-index.json'
-        '.llm-wiki/tools/Build-LlmWikiQualityIndex.ps1'
-        '.llm-wiki/tools/LlmWikiJson.ps1'
-    )
-    $entries = foreach ($relativePath in @($sourcePaths | Sort-Object -Unique)) {
-        $absolutePath = Join-Path $repositoryRoot $relativePath
-        if (Test-Path -LiteralPath $absolutePath -PathType Leaf) {
-            "$($relativePath.Replace('\', '/')):$(Get-FileSha256 $absolutePath)"
-        }
-    }
-    return Get-TextSha256 ($entries -join "`n")
-}
-
-$inputFingerprint = Get-QualityInputFingerprint
-if ($Check -and $ReuseUnchangedCheck -and
+$cacheInputs = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard -- '*.cs' '*.ts')
+if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate quality-index inputs.' }
+$cacheInputs += @(
+    '.llm-wiki/generated/csharp-symbol-index.json'
+    '.llm-wiki/tools/Build-LlmWikiQualityIndex.ps1'
+    '.llm-wiki/tools/LlmWikiJson.ps1'
+    '.llm-wiki/tools/LlmWikiIndexCache.ps1'
+)
+$inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $cacheInputs
+if ($ReuseUnchangedCheck -and
     (Test-Path -LiteralPath $cachePath -PathType Leaf) -and
     (Test-Path -LiteralPath $outputPath -PathType Leaf)) {
     try {
@@ -211,12 +203,5 @@ if ($Check) {
 
 $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText($outputPath, $jsonText, $utf8WithoutBom)
-$cacheDirectory = Split-Path -Parent $cachePath
-$null = New-Item -ItemType Directory -Path $cacheDirectory -Force
-$receiptJson = ([ordered]@{
-    schemaVersion = 1
-    inputFingerprint = $inputFingerprint
-    outputFingerprint = Get-FileSha256 $outputPath
-} | ConvertTo-Json) + [Environment]::NewLine
-[System.IO.File]::WriteAllText($cachePath, $receiptJson, $utf8WithoutBom)
+Write-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint
 Write-Host "Generated .llm-wiki/generated/quality-index.json."

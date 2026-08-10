@@ -62,6 +62,21 @@
                         "reviewedAtUtc":  "2026-08-09T22:10:48.6733071Z"
                     },
                     {
+                        "pageId":  "system.frontend-index",
+                        "pagePath":  ".llm-wiki/system/frontend-index.md",
+                        "pageSha256":  "1ea0c12ce78af5d45542c40530c4a07ae52fdd0a10b3ab76e7f37e89601f1226",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1",
+                                            "sha256":  "c01023f1935affeed781b62abe1c9c954b1fed58e3b90056d249e3b4e221a3d4"
+                                        }
+                                    ],
+                        "reason":  "Reviewed cache input enumeration and content hashing changes; frontend index model and authoritative sources remain unchanged.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "17e0cb9388b8839460b0b9655763de8730c9ef1b",
+                        "reviewedAtUtc":  "2026-08-10T11:12:42.3518125Z"
+                    },
+                    {
                         "pageId":  "system.knowledge-model",
                         "pagePath":  ".llm-wiki/system/knowledge-model.md",
                         "pageSha256":  "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
@@ -767,13 +782,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "6486012c4a0c6432a4ff94a4dd2314f78ef4898dd42ce5b529aa2af813d19440"
+                                            "sha256":  "b63a3eaebeecae4dce02ccf7a8761af1bc21c8e555a56b783747eafa2b128566"
                                         }
                                     ],
-                        "reason":  "The ui-finalize facade command does not alter task dispatch receipt contracts.",
+                        "reason":  "Reviewed facade-only delivery workspace diagnostics and local verification resume defaults; task dispatch receipt semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1d74dd8f7503f77263aaac4472c7b2ab55a9104d",
-                        "reviewedAtUtc":  "2026-08-10T08:30:24.1284561Z"
+                        "gitHead":  "17e0cb9388b8839460b0b9655763de8730c9ef1b",
+                        "reviewedAtUtc":  "2026-08-10T11:12:42.7754078Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",

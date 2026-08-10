@@ -65,6 +65,7 @@ During iteration, select only indexes affected by the current diff:
 
 ```powershell
 ./.llm-wiki/wiki.ps1 update -AffectedOnly
+./.llm-wiki/wiki.ps1 update -AffectedOnly -ContractIndexesOnly
 ./.llm-wiki/wiki.ps1 verify -AffectedOnly
 ./.llm-wiki/wiki.ps1 verify-fast
 ./.llm-wiki/wiki.ps1 verify-strict-affected
@@ -106,8 +107,9 @@ and text artifacts with normalized line endings. If a builder changed only
 serialization formatting, the original artifact is restored and omitted from the
 Git diff; meaningful model changes remain visible.
 
-Local strict and exhaustive verification can opt into
-`-ResumePassedStages`. Each passed stage receipt is keyed by HEAD plus only the
+Local `verify` and `verify-full` enable resumable stages by default. CI remains
+uncached; `verify-strict-affected` also deliberately bypasses stage receipts.
+Each passed stage receipt is keyed by HEAD plus only the
 working-tree inputs relevant to that stage. Adding a source-impact receipt no
 longer invalidates already-passed indexes or adaptive evals, while a real input
 change still invalidates its dependent stage. The five newest receipts per stage
@@ -145,15 +147,17 @@ runs exactly once and each shard reports its own assertion total. Their
 individual durations remain visible, and `Test-LlmWikiAdaptiveWorkflow.ps1`
 still defaults to `-Group All` for a simple standalone full regression.
 
-The quality, backend-contract, frontend, and frontend-contract checks use local
-content-addressed receipts during `verify-fast`. A hit requires matching hashes
+The quality, backend-contract, frontend, and frontend-contract generators use
+local content-addressed receipts in both update and iterative check modes. A hit requires matching hashes
 for every declared source input, upstream compiled index, generator and shared
 helper, plus the current generated output. The pipeline prints an explicit
 cache-hit message. Any source, generator, dependency-index, or output change
 invalidates its receipt and runs the normal freshness computation. Receipts
 live under ignored `.artifacts/llm-wiki/index-cache`; they are never committed.
-`wiki verify`, publication hooks, and CI deliberately bypass this optimization
-and retain a complete deterministic check.
+CI deliberately bypasses verification-stage resume and retains a complete
+deterministic check. `-ContractIndexesOnly` defers quality, module-page, and
+architecture-health analytics during feature iteration; the ordinary affected
+update/verify refreshes them once at publication finalization.
 
 Frontend and C# test-source-only changes select the quality index without
 forcing catalog, symbol, contract, sensitive-data, module-page, or architecture

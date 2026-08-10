@@ -8,9 +8,20 @@ function Get-LlmWikiFileSha256([string]$Path) {
 }
 
 function Get-LlmWikiIndexInputFingerprint([string]$RepositoryRoot, [string[]]$InputPath) {
-    $entries = foreach ($relativePath in @($InputPath | Sort-Object -Unique)) {
+    $existingPaths = @($InputPath | Sort-Object -Unique | Where-Object {
+        Test-Path -LiteralPath (Join-Path $RepositoryRoot $_) -PathType Leaf
+    })
+    # git hash-object performs the same content scan in one native process. This
+    # avoids thousands of PowerShell FileStream/open/dispose round trips while
+    # retaining content-addressed invalidation for tracked and untracked files.
+    $contentHashes = @($existingPaths | & git -C $RepositoryRoot hash-object --stdin-paths)
+    if ($LASTEXITCODE -eq 0 -and $contentHashes.Count -eq $existingPaths.Count) {
+        $entries = for ($index = 0; $index -lt $existingPaths.Count; $index++) {
+            "$($existingPaths[$index].Replace('\', '/')):$($contentHashes[$index])"
+        }
+    } else {
+        $entries = foreach ($relativePath in $existingPaths) {
         $absolutePath = Join-Path $RepositoryRoot $relativePath
-        if (Test-Path -LiteralPath $absolutePath -PathType Leaf) {
             "$($relativePath.Replace('\', '/')):$(Get-LlmWikiFileSha256 $absolutePath)"
         }
     }

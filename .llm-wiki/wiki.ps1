@@ -76,6 +76,7 @@ param(
     [Alias('PlannedPath')]
     [string[]]$ProposedPath,
     [switch]$AffectedOnly,
+    [switch]$ContractIndexesOnly,
     [switch]$VisualUiCompletion,
     [switch]$FullTrace,
     [switch]$Fast,
@@ -271,6 +272,14 @@ if ($Fast) {
     Write-Host 'Compatibility alias: verify -Fast -> verify-fast'
 }
 
+# Verification receipts are content-addressed by the inputs of each stage. Reuse
+# them by default so a timeout or a source-impact failure resumes instead of
+# replaying the expensive stages. Callers may still force an uncached gate via
+# verify-strict-affected.
+if ($Command -in @('verify', 'verify-full') -and $env:CI -ne 'true' -and -not $PSBoundParameters.ContainsKey('ResumePassedStages')) {
+    $ResumePassedStages = $true
+}
+
 $deltaAwareCommands = @('update', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'ownership', 'policy')
 if ($Command -eq 'develop') {
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId $TaskSessionId -Format Text
@@ -309,6 +318,7 @@ function Invoke-ObservedWikiStage {
     )
     $toolPath = Join-Path $toolsRoot $ToolName
     $script:verifyStageOrdinal++
+    $expectedSeconds = if ($script:verifyStageExpectedSeconds.ContainsKey($Name)) { [int]$script:verifyStageExpectedSeconds[$Name] } else { $TimeoutSeconds }
     $receiptPath = $null
     if ($ResumePassedStages) {
         $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
@@ -319,12 +329,12 @@ function Invoke-ObservedWikiStage {
         $receiptName = (($Name -replace '[^a-zA-Z0-9_.-]', '-') + '-' + $fingerprint + '.passed')
         $receiptPath = Join-Path $script:verifyReceiptRoot $receiptName
         if (Test-Path -LiteralPath $receiptPath -PathType Leaf) {
-            Write-Host "[$script:verifyStageOrdinal/8] Resuming Wiki verify: $Name already passed for unchanged stage inputs."
+            Write-Host "[$script:verifyStageOrdinal/8] Resuming Wiki verify: $Name already passed for unchanged stage inputs (0s replay)."
             return
         }
     }
     $stopwatch = [Diagnostics.Stopwatch]::StartNew()
-    Write-Host "[$script:verifyStageOrdinal/8] Starting Wiki verify stage: $Name (timeout=${TimeoutSeconds}s)"
+    Write-Host "[$script:verifyStageOrdinal/8] Starting Wiki verify stage: $Name (expected~${expectedSeconds}s, timeout=${TimeoutSeconds}s)"
     $serializableArguments = @{}
     foreach ($entry in $ToolArguments.GetEnumerator()) {
         $serializableArguments[$entry.Key] = if ($entry.Value -is [Management.Automation.SwitchParameter]) { [bool]$entry.Value } else { $entry.Value }
@@ -345,7 +355,7 @@ function Invoke-ObservedWikiStage {
     try {
         while (-not $process.WaitForExit(1000)) {
             if ($stopwatch.Elapsed.TotalSeconds -ge $nextHeartbeat) {
-                Write-Host "[$script:verifyStageOrdinal/8] Wiki verify stage still running: $Name ($([Math]::Round($stopwatch.Elapsed.TotalSeconds))s)"
+                Write-Host "[$script:verifyStageOrdinal/8] Wiki verify stage still running: $Name ($([Math]::Round($stopwatch.Elapsed.TotalSeconds))s elapsed, expected~${expectedSeconds}s)"
                 $nextHeartbeat += 30
             }
             if ($stopwatch.Elapsed.TotalSeconds -ge $TimeoutSeconds) {
@@ -373,7 +383,7 @@ function Invoke-ObservedWikiStage {
 
 switch ($Command) {
     'update' {
-        $indexArguments = @{ AffectedOnly = $AffectedOnly; BaseRef = $BaseRef }
+        $indexArguments = @{ AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
         Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments
     }
@@ -398,7 +408,13 @@ switch ($Command) {
     'verify' {
         $script:verifyStageOrdinal = 0
         $script:verifyReceiptRoot = $null
-        $indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef }
+        $script:verifyRunStopwatch = [Diagnostics.Stopwatch]::StartNew()
+        $script:verifyStageExpectedSeconds = @{
+            'workspace policy' = 2; 'page contracts' = 2; 'lint regression' = 10; 'indexes' = 120
+            'adaptive verification' = 120; 'failure knowledge' = 2; 'change policy' = 3; 'source impact' = 3
+        }
+        Write-Host "Wiki verify: 8 observable stages, expected cold duration ~262s; content-addressed stage resume is enabled=$([bool]$ResumePassedStages)."
+        $indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
         $policyArguments = @{ FailOnViolation = $true }
         $impactArguments = @{ FailOnUnreviewed = $true }
@@ -414,6 +430,8 @@ switch ($Command) {
         Invoke-ObservedWikiStage 'failure knowledge' 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' } 60 './.llm-wiki/wiki.ps1 failures -Check'
         Invoke-ObservedWikiStage 'change policy' 'Test-LlmWikiChangePolicy.ps1' $policyArguments 60 './.llm-wiki/wiki.ps1 policy -FailOnViolation'
         Invoke-ObservedWikiStage 'source impact' 'Get-LlmWikiImpact.ps1' $impactArguments 60 './.llm-wiki/wiki.ps1 impact -FailOnUnreviewed'
+        $script:verifyRunStopwatch.Stop()
+        Write-Host "Wiki verify completed: 8/8 stages in $([Math]::Round($script:verifyRunStopwatch.Elapsed.TotalSeconds, 2))s."
     }
     'verify-fast' {
         $verificationMode = if ($VisualUiCompletion) { 'visual-ui' } else { 'default' }
@@ -694,6 +712,16 @@ switch ($Command) {
             'delivery-validate' = 'validate'
             'delivery-critique' = 'critique'
         }[$Command]
+        $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
+        $absoluteDeliveryWorkspace = if ([IO.Path]::IsPathRooted($WorkspacePath)) { $WorkspacePath } else { Join-Path $repositoryRoot $WorkspacePath }
+        if (-not (Test-Path -LiteralPath $absoluteDeliveryWorkspace -PathType Container)) {
+            if ($Command -eq 'delivery-status') {
+                Write-Host "No governed task workspace exists at $WorkspacePath. develop/research/design do not imply governed delivery state."
+                Write-Host 'Continue with diff + test-plan for an ordinary feature, or run task-start first when the adaptive workflow explicitly requires a workspace.'
+                break
+            }
+            throw "Governed delivery command '$Command' requires a task workspace. Run the workspace-stage task-start command emitted by develop first."
+        }
         Invoke-WikiTool 'Invoke-LlmWikiDeliveryWorkflow.ps1' @{
             Action = $deliveryAction
             WorkspacePath = $WorkspacePath

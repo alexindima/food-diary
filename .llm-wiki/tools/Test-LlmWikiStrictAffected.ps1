@@ -6,6 +6,8 @@ $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $facadeText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') -Raw
 $fullVerificationText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1') -Raw
 $toolSmokeText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools/Test-LlmWikiTools.ps1') -Raw
+$indexCacheText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools/LlmWikiIndexCache.ps1') -Raw
+$pipelineText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1') -Raw
 
 if ($facadeText -notmatch "'verify-strict-affected'") { throw 'Wiki facade does not expose verify-strict-affected.' }
 if ($facadeText -notmatch "'ui-finalize'") { throw 'Wiki facade does not expose one-time UI finalization.' }
@@ -40,6 +42,21 @@ $visualFastEnd = $facadeText.IndexOf("    'verify-strict-affected' {", $visualFa
 $visualFastBody = $facadeText.Substring($visualFastStart, $visualFastEnd - $visualFastStart)
 if ($visualFastBody -notmatch 'VisualUiCompletion' -or $visualFastBody -notmatch 'index regeneration is deferred until ui-finalize') {
     throw 'Visual UI iteration does not defer index synchronization to ui-finalize.'
+}
+if ($facadeText -notmatch "CI -ne 'true'" -or $facadeText -notmatch 'content-addressed stage resume') {
+    throw 'Local verify does not enable resumable stages by default while keeping CI uncached.'
+}
+if ($facadeText -notmatch 'ContractIndexesOnly' -or $facadeText -notmatch 'RequiredOnly = \$ContractIndexesOnly') {
+    throw 'Wiki facade does not expose the required contract/navigation index tier.'
+}
+if ($facadeText -notmatch 'No governed task workspace exists' -or $facadeText -notmatch 'task-start first') {
+    throw 'Delivery status does not explain absent governed workspace state.'
+}
+if ($indexCacheText -notmatch 'hash-object --stdin-paths') {
+    throw 'Index input fingerprints reverted to slow per-file PowerShell hashing.'
+}
+if ($pipelineText -notmatch 'analytical indexes:' -or $pipelineText -notmatch 'API snapshot review:' -or $pipelineText -notmatch 'migration review:') {
+    throw 'Affected index pipeline omitted the compact delivery summary.'
 }
 
 $frontendSmoke = @(& (Join-Path $repositoryRoot '.llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1') `

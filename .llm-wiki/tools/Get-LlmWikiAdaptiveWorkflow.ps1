@@ -211,9 +211,26 @@ if ($profile -eq 'visual-ui-change') {
     Add-Stage 'browser-evidence' 'Verify the changed rendering at the viewport(s) affected by the requested scope.' "./.llm-wiki/wiki.ps1 visual-qa -Url '<local URL>' -FixturePath '<upload fixture>' -TriggerSelector '<optional trigger>' -ResultSelector '<expected result>' -Run" $true 'Automated browser evidence proves upload, the affected viewport, visible result, screenshot, and console health; omitted viewports are explicitly out of scope.'
     Add-Stage 'completion' 'Confirm the final diff stays inside the visual owner slice and run the uncached strict affected gate.' "./.llm-wiki/wiki.ps1 diff; ./.llm-wiki/wiki.ps1 verify-strict-affected" $true 'Actual paths remain visual-only and the strict affected gate passes after focused checks and browser evidence; full repository verification remains the CI gate.'
 } else {
-    Add-Stage 'change-review' 'Recompute actual impact and compare the diff with intent, plan, and journeys.' $(if ($requiresWorkspace) { "./.llm-wiki/wiki.ps1 delivery-status -WorkspacePath .artifacts/llm-wiki/tasks/<task-name>; ./.llm-wiki/wiki.ps1 diff; ./.llm-wiki/wiki.ps1 test-plan -Intent '$escapedObjective'" } else { "./.llm-wiki/wiki.ps1 diff; ./.llm-wiki/wiki.ps1 test-plan -Intent '$escapedObjective'" }) $true 'Actual paths, checks, journey impact, and review obligations are known; intentional drift is replanned with a reason.'
-    $verifyCommand = if ($profile -eq 'tiny') { './.llm-wiki/wiki.ps1 verify-fast' } else { './.llm-wiki/wiki.ps1 verify' }
-    Add-Stage 'verification' 'Run risk-proportional deterministic verification.' $verifyCommand $true 'Required checks and Wiki verification pass.'
+    $changeReviewCommand = if ($requiresWorkspace) {
+        "./.llm-wiki/wiki.ps1 delivery-status -WorkspacePath .artifacts/llm-wiki/tasks/<task-name>; ./.llm-wiki/wiki.ps1 diff; ./.llm-wiki/wiki.ps1 test-plan -Intent '$escapedObjective'"
+    } else {
+        "./.llm-wiki/wiki.ps1 diff; ./.llm-wiki/wiki.ps1 test-plan -Intent '$escapedObjective'"
+    }
+    if ($profile -in @('feature', 'bug')) {
+        $changeReviewCommand += '; ./.llm-wiki/wiki.ps1 update -AffectedOnly -ContractIndexesOnly'
+    }
+    Add-Stage 'change-review' 'Recompute actual impact and compare the diff with intent, plan, and journeys.' $changeReviewCommand $true 'Actual paths, checks, journey impact, and review obligations are known; intentional drift is replanned with a reason.'
+    $verifyCommand = if ($profile -eq 'tiny') {
+        './.llm-wiki/wiki.ps1 verify-fast'
+    } elseif ($profile -in @('feature', 'bug')) {
+        './.llm-wiki/wiki.ps1 verify -AffectedOnly -ContractIndexesOnly'
+    } else {
+        './.llm-wiki/wiki.ps1 verify'
+    }
+    Add-Stage 'verification' 'Run risk-proportional deterministic verification.' $verifyCommand $true 'Required contract/navigation checks and focused product verification pass; successful Wiki stages are resumable.'
+    if ($profile -in @('feature', 'bug')) {
+        Add-Stage 'publication-finalization' 'Refresh deferred analytical indexes once after implementation stops changing.' './.llm-wiki/wiki.ps1 update -AffectedOnly; ./.llm-wiki/wiki.ps1 verify -AffectedOnly' $true 'All affected generated artifacts are current; cached successful stages are reused and publication hooks retain full regression coverage.'
+    }
 }
 if ($requiresWorkspace) {
     Add-Stage 'delivery-validation' 'Prove requirements against mapped implementation and current verification evidence.' './.llm-wiki/wiki.ps1 delivery-validate -WorkspacePath .artifacts/llm-wiki/tasks/<task-name> -FailOnInvalid' $true 'Requirements, acceptance, conformance, proof-of-change, and workspace readiness all pass.'
