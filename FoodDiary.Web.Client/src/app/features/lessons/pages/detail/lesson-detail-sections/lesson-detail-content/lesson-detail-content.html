@@ -1,20 +1,32 @@
 @if (isLoading()) {
-    <fd-ui-loader />
+    <div class="lesson-detail__loading" role="status">
+        <fd-ui-loader />
+    </div>
 } @else if (lesson(); as lesson) {
-    <article class="lesson-detail__article">
-        <div class="lesson-detail__meta-row fd-row fd-gap-sm">
-            <span class="lesson-detail__category fd-ui-pill fd-ui-pill--compact fd-ui-overline">
-                {{ lesson.categoryLabelKey | translate }}
-            </span>
-            <span class="lesson-detail__difficulty fd-ui-field-label--floating"> {{ lesson.difficultyLabelKey | translate }} </span>
-            <span class="lesson-detail__time fd-ui-field-label--floating">
-                {{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}
-            </span>
-        </div>
-        <h2 class="lesson-detail__title fd-ui-display-sm">{{ lesson.title }}</h2>
-        <div class="lesson-detail__content fd-ui-body">{{ lesson.content }}</div>
+    <article class="lesson-detail__article" aria-labelledby="lesson-detail-title">
+        <header class="lesson-detail__article-header">
+            <div class="lesson-detail__meta-row">
+                <span class="lesson-detail__category fd-ui-pill fd-ui-pill--compact fd-ui-overline">
+                    {{ lesson.categoryLabelKey | translate }}
+                </span>
+                <span class="lesson-detail__meta-item">
+                    <fd-ui-level-indicator [filledCount]="lesson.difficultyLevel" />
+                    <span>{{ lesson.difficultyLabelKey | translate }}</span>
+                </span>
+                <span class="lesson-detail__meta-item">
+                    <fd-ui-icon name="schedule" size="sm" />
+                    <span>{{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}</span>
+                </span>
+            </div>
+            <h2 id="lesson-detail-title" class="lesson-detail__title fd-ui-display-sm">{{ lesson.title }}</h2>
+            @if (lesson.summary) {
+                <p class="lesson-detail__summary">{{ lesson.summary }}</p>
+            }
+        </header>
 
-        <div class="lesson-detail__actions">
+        <div class="lesson-detail__content fd-rich-content" [innerHTML]="lesson.content"></div>
+
+        <footer class="lesson-detail__actions">
             @if (!lesson.isRead) {
                 <fd-ui-button icon="check" (click)="markRead.emit()"> {{ 'LESSONS.MARK_READ' | translate }} </fd-ui-button>
             } @else {
@@ -23,6 +35,8 @@
                     {{ 'LESSONS.ALREADY_READ' | translate }}
                 </div>
             }
-        </div>
+        </footer>
     </article>
+} @else {
+    <fd-ui-empty-state icon="menu_book" [message]="'LESSONS.EMPTY' | translate" />
 }

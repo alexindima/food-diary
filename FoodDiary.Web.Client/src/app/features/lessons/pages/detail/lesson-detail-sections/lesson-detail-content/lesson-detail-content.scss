@@ -1,0 +1,104 @@
+@use 'variables' as variables;
+
+.lesson-detail {
+    &__loading {
+        display: grid;
+        place-items: center;
+        min-height: 320px;
+    }
+
+    &__article {
+        width: 100%;
+        overflow: hidden;
+        border: var(--fd-border-default);
+        border-radius: var(--fd-radius-card);
+        background: var(--fd-color-surface-raised);
+    }
+
+    &__article-header {
+        display: grid;
+        gap: var(--fd-space-sm);
+        padding: var(--fd-space-xl);
+        border-bottom: var(--fd-border-muted);
+    }
+
+    &__meta-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--fd-space-sm);
+    }
+
+    &__category {
+        --fd-pill-bg: var(--fd-color-purple-700);
+        --fd-pill-border: var(--fd-color-purple-500);
+        --fd-pill-color: var(--fd-color-white);
+        color: var(--fd-color-white);
+    }
+
+    &__meta-item {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fd-space-xs);
+        color: var(--fd-color-text-muted);
+        font-size: var(--fd-text-body-sm-size);
+        font-weight: var(--fd-font-weight-bold);
+    }
+
+    &__title,
+    &__summary {
+        margin: 0;
+    }
+
+    &__summary {
+        max-width: 70ch;
+        color: var(--fd-color-text-muted);
+        font-size: var(--fd-text-body-lg-size);
+        line-height: var(--fd-text-body-lg-line-height);
+    }
+
+    &__content {
+        max-width: 90ch;
+        padding: var(--fd-space-xl);
+        color: var(--fd-color-text);
+        font-size: var(--fd-text-body-lg-size);
+        line-height: 1.75;
+    }
+
+    &__actions {
+        display: flex;
+        justify-content: flex-end;
+        padding: var(--fd-space-lg) var(--fd-space-xl);
+        border-top: var(--fd-border-muted);
+        background: var(--fd-bg-overlay-subtle);
+    }
+
+    &__read-badge {
+        --fd-pill-bg: var(--fd-bg-status-success);
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-green-500);
+    }
+}
+
+@media #{variables.$media-mobile} {
+    .lesson-detail {
+        &__article-header,
+        &__content {
+            padding: var(--fd-space-md);
+        }
+
+        &__content {
+            font-size: var(--fd-text-body-size);
+            line-height: var(--fd-text-body-line-height);
+        }
+
+        &__actions {
+            justify-content: stretch;
+            padding: var(--fd-space-md);
+
+            fd-ui-button {
+                width: 100%;
+            }
+        }
+    }
+}

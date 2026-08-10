@@ -162,13 +162,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "b8efd914f877c59e3db7aa3b9fd7b1d5ae195f99d35bbfdc2e28bfffab499261"
+                                            "sha256":  "247fa0cd7825ef91223bf5eda787fd3aab1b278d3ce347c4139dc347aeef9e0e"
                                         }
                                     ],
-                        "reason":  "Reviewed Academy UI component contracts, loading state, filters, pagination, and API response additions against current sources.",
+                        "reason":  "Reviewed Academy lesson detail contracts, rich HTML runtime trace, and focused quality evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cae6d72799492b3c6023b5810c9d2ab5fb28ea39",
-                        "reviewedAtUtc":  "2026-08-10T17:45:25.1766486Z"
+                        "gitHead":  "840063e33d312e8120f4f33df122686ba2a8508e",
+                        "reviewedAtUtc":  "2026-08-10T19:16:27.1589678Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -676,13 +676,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "608a1ab4558bc0f4fd0eb991d6e7dd04355114c93a4c81be325ca4c1f96fd6f1"
+                                            "sha256":  "76fee394f770e44fb557412954a4e14837ff8647704bbd5114b67e445cabe89f"
                                         }
                                     ],
-                        "reason":  "Reviewed generated quality risk changes for the Academy feature and its focused frontend/backend tests.",
+                        "reason":  "Reviewed Academy lesson detail contracts, rich HTML runtime trace, and focused quality evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cae6d72799492b3c6023b5810c9d2ab5fb28ea39",
-                        "reviewedAtUtc":  "2026-08-10T17:45:25.8006936Z"
+                        "gitHead":  "840063e33d312e8120f4f33df122686ba2a8508e",
+                        "reviewedAtUtc":  "2026-08-10T19:16:27.3664026Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -855,17 +855,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "b8efd914f877c59e3db7aa3b9fd7b1d5ae195f99d35bbfdc2e28bfffab499261"
+                                            "sha256":  "247fa0cd7825ef91223bf5eda787fd3aab1b278d3ce347c4139dc347aeef9e0e"
                                         },
                                         {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "2a78d370803000d5e80fa5bfaaeebd3a9e8f02aa4e8debb2320a05436acc8bfa"
+                                            "sha256":  "e0ebcc72862d270d2355212cbb60631751f8a3b57832b503cb819c35488c9e56"
                                         }
                                     ],
-                        "reason":  "Reviewed updated Academy frontend trace and contracts after server-side filtering, pagination, and UI design-system changes.",
+                        "reason":  "Reviewed Academy lesson detail contracts, rich HTML runtime trace, and focused quality evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cae6d72799492b3c6023b5810c9d2ab5fb28ea39",
-                        "reviewedAtUtc":  "2026-08-10T17:45:26.5766799Z"
+                        "gitHead":  "840063e33d312e8120f4f33df122686ba2a8508e",
+                        "reviewedAtUtc":  "2026-08-10T19:16:27.6163329Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

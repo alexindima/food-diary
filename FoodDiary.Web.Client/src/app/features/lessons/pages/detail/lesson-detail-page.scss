@@ -1,47 +1,7 @@
-@use 'variables' as variables;
-
 :host {
     display: block;
 }
 
 .lesson-detail {
-    &__article {
-        margin: var(--fd-space-lg) 0;
-        max-width: 720px;
-    }
-
-    &__meta-row {
-        margin-bottom: var(--fd-space-sm);
-    }
-
-    &__category {
-        --fd-pill-bg: var(--fd-bg-category-purple);
-        --fd-pill-border: transparent;
-        --fd-pill-color: var(--fd-color-purple-500);
-    }
-
-    &__difficulty,
-    &__time {
-        font-weight: var(--fd-font-weight-bold);
-        color: var(--fd-color-text-muted);
-    }
-
-    &__title {
-        margin: 0 0 var(--fd-space-lg);
-    }
-
-    &__content {
-        color: var(--fd-color-text);
-        white-space: pre-wrap;
-    }
-
-    &__actions {
-        margin-top: var(--fd-space-xl);
-    }
-
-    &__read-badge {
-        --fd-pill-bg: var(--fd-bg-status-success);
-        --fd-pill-border: transparent;
-        --fd-pill-color: var(--fd-color-green-500);
-    }
+    --fd-page-body-gap: var(--fd-space-md);
 }

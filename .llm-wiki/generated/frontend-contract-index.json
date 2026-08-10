@@ -8,7 +8,7 @@
                     "apiCalls":  219,
                     "templatesWithTranslations":  255,
                     "translationKeys":  1358,
-                    "consumerEdges":  936,
+                    "consumerEdges":  938,
                     "consumedComponents":  276,
                     "unconsumedComponents":  135
                 },
@@ -16960,6 +16960,7 @@
                                  "path":  "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-sections/lesson-detail-content/lesson-detail-content.html",
                                  "keys":  [
                                               "LESSONS.ALREADY_READ",
+                                              "LESSONS.EMPTY",
                                               "LESSONS.MARK_READ",
                                               "LESSONS.MIN_READ"
                                           ]
@@ -26411,6 +26412,21 @@
                               "component":  "FdUiEmptyStateComponent",
                               "selector":  "fd-ui-empty-state",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/empty-state/fd-ui-empty-state.ts",
+                              "consumerFeature":  "lessons",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-sections/lesson-detail-content/lesson-detail-content.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "icon",
+                                                 "message"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiEmptyStateComponent",
+                              "selector":  "fd-ui-empty-state",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/empty-state/fd-ui-empty-state.ts",
                               "consumerFeature":  "statistics",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
                               "occurrences":  1,
@@ -27216,9 +27232,10 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "lessons",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-sections/lesson-detail-content/lesson-detail-content.html",
-                              "occurrences":  1,
+                              "occurrences":  2,
                               "inputsUsed":  [
-                                                 "name"
+                                                 "name",
+                                                 "size"
                                              ],
                               "outputsHandled":  [
 
@@ -28596,6 +28613,20 @@
                                              ],
                               "outputsHandled":  [
                                                      "suffixButtonClicked"
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiLevelIndicatorComponent",
+                              "selector":  "fd-ui-level-indicator",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/level-indicator/fd-ui-level-indicator.ts",
+                              "consumerFeature":  "lessons",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-sections/lesson-detail-content/lesson-detail-content.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "filledCount"
+                                             ],
+                              "outputsHandled":  [
+
                                                  ]
                           },
                           {

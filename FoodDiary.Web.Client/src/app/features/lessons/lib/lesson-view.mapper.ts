@@ -24,6 +24,7 @@ export type LessonListItemViewModel = {
 export type LessonDetailViewModel = {
     categoryLabelKey: string;
     difficultyLabelKey: string;
+    difficultyLevel: number;
 } & LessonDetail;
 
 export function buildLessonCategoryOptions(categories: readonly string[], selectedCategory: string | null): LessonCategoryOption[] {
@@ -68,6 +69,7 @@ export function buildLessonDetailView(lesson: LessonDetail | null): LessonDetail
         ...lesson,
         categoryLabelKey: buildLessonCategoryLabelKey(lesson.category),
         difficultyLabelKey: buildLessonDifficultyLabelKey(lesson.difficulty),
+        difficultyLevel: buildLessonDifficultyLevel(lesson.difficulty),
     };
 }
 

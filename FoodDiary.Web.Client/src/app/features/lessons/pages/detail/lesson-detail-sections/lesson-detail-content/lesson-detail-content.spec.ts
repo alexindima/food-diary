@@ -35,6 +35,27 @@ describe('LessonDetailContentComponent', () => {
         expect(markRead).toHaveBeenCalled();
     });
 
+    it('renders lesson content as sanitized HTML', () => {
+        const fixture = createComponent({
+            lesson: createLesson({
+                content: '<h2>Energy source</h2><p>Useful <strong>context</strong>.</p><script>alert(1)</script>',
+            }),
+        });
+        const element = getElement(fixture);
+
+        expect(element.querySelector('.lesson-detail__content h2')?.textContent).toBe('Energy source');
+        expect(element.querySelector('.lesson-detail__content strong')?.textContent).toBe('context');
+        expect(element.querySelector('.lesson-detail__content script')).toBeNull();
+    });
+
+    it('renders level and reading-time icons in lesson metadata', () => {
+        const fixture = createComponent();
+        const element = getElement(fixture);
+
+        expect(element.querySelector('fd-ui-level-indicator')).not.toBeNull();
+        expect(element.querySelector('fd-ui-icon')).not.toBeNull();
+    });
+
     it('renders read badge for completed lesson', () => {
         const fixture = createComponent({ lesson: createLesson({ isRead: true }) });
         const element = getElement(fixture);
@@ -50,14 +71,21 @@ describe('LessonDetailContentComponent', () => {
         expect(element.querySelector('h1')).toBeNull();
         expect(element.querySelector('h2')?.textContent).toContain('Macros');
     });
+
+    it('renders an empty state when the lesson is unavailable', () => {
+        const fixture = createComponent({ lesson: null });
+
+        expect(getElement(fixture).querySelector('fd-ui-empty-state')).not.toBeNull();
+    });
 });
 
 function createComponent(
     overrides: Partial<{ isLoading: boolean; lesson: LessonDetailViewModel | null }> = {},
 ): ComponentFixture<LessonDetailContentComponent> {
     const fixture = TestBed.createComponent(LessonDetailContentComponent);
+    const lesson = 'lesson' in overrides ? (overrides.lesson ?? null) : createLesson();
     fixture.componentRef.setInput('isLoading', overrides.isLoading ?? false);
-    fixture.componentRef.setInput('lesson', overrides.lesson ?? createLesson());
+    fixture.componentRef.setInput('lesson', lesson);
     fixture.detectChanges();
 
     return fixture;
@@ -79,6 +107,7 @@ function createLesson(overrides: Partial<LessonDetailViewModel> = {}): LessonDet
         content: 'Lesson content',
         categoryLabelKey: 'LESSONS.CATEGORY.Macronutrients',
         difficultyLabelKey: 'LESSONS.DIFFICULTY.Beginner',
+        difficultyLevel: 1,
         ...overrides,
     };
 }

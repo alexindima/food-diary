@@ -43,6 +43,7 @@ describe('lesson view mapper', () => {
         expect(view).toMatchObject({
             categoryLabelKey: 'LESSONS.CATEGORY.Hydration',
             difficultyLabelKey: 'LESSONS.DIFFICULTY.Advanced',
+            difficultyLevel: 3,
         });
     });
 

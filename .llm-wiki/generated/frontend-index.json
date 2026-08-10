@@ -3426,7 +3426,7 @@
                         "role":  "Component",
                         "selector":  "fd-lesson-detail-content",
                         "path":  "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-sections/lesson-detail-content/lesson-detail-content.ts",
-                        "line":  16
+                        "line":  25
                     },
                     {
                         "name":  "LessonsListPageComponent",
