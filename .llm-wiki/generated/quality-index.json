@@ -27424,11 +27424,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/lessons/api/lesson.service.ts",
-                      "nonBlankLines":  55,
+                      "nonBlankLines":  53,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.6
+                      "structuralRiskScore":  2.56
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/lessons/lesson.routes.ts",
@@ -27448,11 +27448,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/lessons/lib/lesson.facade.ts",
-                      "nonBlankLines":  96,
+                      "nonBlankLines":  105,
                       "decisionPoints":  8,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  13.92
+                      "structuralRiskScore":  14.1
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/lessons/models/lesson.data.ts",
