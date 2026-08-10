@@ -16,6 +16,7 @@ export type LessonPage = {
     totalPages: number;
     totalLessonCount: number;
     readLessonCount: number;
+    availableCategories: string[];
 };
 
 export type LessonQuery = {
@@ -38,17 +39,3 @@ export type LessonDetail = {
     estimatedReadMinutes: number;
     isRead: boolean;
 };
-
-export const LESSON_CATEGORIES = [
-    'NutritionBasics',
-    'Macronutrients',
-    'Micronutrients',
-    'MealTiming',
-    'MindfulEating',
-    'WeightManagement',
-    'Hydration',
-    'FoodQuality',
-    'CookingTips',
-] as const;
-
-export type LessonCategoryKey = (typeof LESSON_CATEGORIES)[number];

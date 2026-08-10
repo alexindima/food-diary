@@ -13,12 +13,19 @@
     </fd-page-header>
 
     <fd-page-body>
-        <fd-lessons-list-progress
-            data-tour-id="lessons-progress"
-            [progress]="progress()"
-            [nextLesson]="nextLesson()"
-            (lessonOpen)="openLesson($event)"
-        />
+        <div class="lessons-list__loading-shell" [attr.aria-busy]="facade.isLoading()">
+            <fd-lessons-list-progress
+                data-tour-id="lessons-progress"
+                [progress]="progress()"
+                [nextLesson]="nextLesson()"
+                (lessonOpen)="openLesson($event)"
+            />
+            @if (facade.isLoading()) {
+                <div class="lessons-list__card-loading fd-ui-body-sm" role="status">
+                    {{ 'LESSONS.LOADING' | translate }}
+                </div>
+            }
+        </div>
         <div class="lessons-list__toolbar">
             <fd-ui-input
                 class="lessons-list__search"
@@ -46,26 +53,42 @@
         </div>
         <fd-lessons-list-filters
             data-tour-id="lessons-filters"
+            [categories]="facade.page().availableCategories"
             [selectedCategory]="selectedCategory()"
             (filterChange)="filterByCategory($event)"
         />
         @if (recommendedLesson(); as lesson) {
-            <section class="lessons-list__recommendation" aria-labelledby="lessons-recommendation-title">
+            <section
+                class="lessons-list__recommendation"
+                aria-labelledby="lessons-recommendation-title"
+                [attr.aria-busy]="facade.isLoading()"
+            >
+                <h2 id="lessons-recommendation-title" class="lessons-list__recommendation-title fd-ui-card-title">
+                    {{ 'LESSONS.RECOMMENDED' | translate }}
+                </h2>
                 <fd-ui-icon class="lessons-list__recommendation-icon" name="track_changes" aria-hidden="true" />
                 <div class="lessons-list__recommendation-copy">
-                    <h2 id="lessons-recommendation-title" class="fd-ui-section-title">{{ 'LESSONS.RECOMMENDED' | translate }}</h2>
                     <strong>{{ lesson.title }}</strong>
                     @if (lesson.summary) {
                         <span>{{ lesson.summary }}</span>
                     }
                 </div>
-                <span class="lessons-list__recommendation-meta">
-                    <fd-ui-level-indicator [filledCount]="lesson.difficultyLevel" />
-                    {{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }} · {{ lesson.difficultyLabelKey | translate }}
-                </span>
-                <fd-ui-button variant="secondary" fill="outline" (click)="openLesson(lesson.id)">
-                    {{ 'LESSONS.OPEN_ARTICLE' | translate }}
-                </fd-ui-button>
+                <div class="lessons-list__recommendation-actions">
+                    <span class="lessons-list__recommendation-meta">
+                        <fd-ui-level-indicator [filledCount]="lesson.difficultyLevel" />
+                        <span>{{ lesson.difficultyLabelKey | translate }}</span>
+                        <fd-ui-icon name="schedule" size="sm" />
+                        <span>{{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}</span>
+                    </span>
+                    <fd-ui-button variant="secondary" fill="outline" size="sm" (click)="openLesson(lesson.id)">
+                        {{ 'LESSONS.OPEN_ARTICLE' | translate }}
+                    </fd-ui-button>
+                </div>
+                @if (facade.isLoading()) {
+                    <div class="lessons-list__card-loading fd-ui-body-sm" role="status">
+                        {{ 'LESSONS.LOADING' | translate }}
+                    </div>
+                }
             </section>
         }
         <div class="lessons-list__section-heading fd-row fd-align-center fd-gap-sm">

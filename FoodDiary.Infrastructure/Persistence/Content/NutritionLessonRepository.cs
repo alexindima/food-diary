@@ -66,6 +66,11 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
             .AsNoTracking()
             .Where(lesson => lesson.Locale == locale);
         int totalLessonCount = await localeQuery.CountAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<LessonCategory> availableCategoryValues = await localeQuery
+            .Select(lesson => lesson.Category)
+            .Distinct()
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<string> availableCategories = [.. availableCategoryValues.Order().Select(category => category.ToString())];
 
         IQueryable<NutritionLesson> filteredQuery = localeQuery;
         if (category.HasValue) {
@@ -100,7 +105,7 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
                 lesson.SortOrder))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        return new LessonSummaryPageReadModel(items, totalCount, totalLessonCount);
+        return new LessonSummaryPageReadModel(items, totalCount, totalLessonCount, availableCategories);
     }
 
     public Task<int> CountReadLessonsByLocaleAsync(

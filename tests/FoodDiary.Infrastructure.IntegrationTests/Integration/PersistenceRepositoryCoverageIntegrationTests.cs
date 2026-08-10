@@ -190,6 +190,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.False(isHydrationRead);
         Assert.Equal(1, page.TotalCount);
         Assert.Equal(2, page.TotalLessonCount);
+        Assert.Equal([LessonCategory.NutritionBasics.ToString(), LessonCategory.Hydration.ToString()], page.AvailableCategories);
         Assert.Equal("Basics updated", Assert.Single(page.Items).Title);
         Assert.Equal(1, readLessonCount);
         Assert.Multiple(

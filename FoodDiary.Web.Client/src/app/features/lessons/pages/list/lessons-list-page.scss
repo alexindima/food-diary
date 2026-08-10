@@ -5,6 +5,23 @@
 }
 
 .lessons-list {
+    &__loading-shell,
+    &__recommendation {
+        position: relative;
+    }
+
+    &__card-loading {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        color: var(--fd-color-text-muted);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 18%, transparent);
+        border-radius: var(--fd-radius-card);
+        pointer-events: none;
+    }
+
     &__toolbar {
         display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(180px, 0.9fr) minmax(220px, 1fr);
@@ -19,9 +36,7 @@
 
     &__filters {
         display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        scrollbar-width: none;
+        flex-wrap: wrap;
         padding: var(--fd-space-xs);
         border: var(--fd-border-muted);
         border-radius: var(--fd-radius-md);
@@ -30,18 +45,14 @@
         fd-ui-button {
             flex: 0 0 auto;
         }
-
-        &::-webkit-scrollbar {
-            display: none;
-        }
     }
 
     &__recommendation {
         display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto auto;
+        grid-template-columns: auto minmax(0, 1fr) auto;
         align-items: center;
-        gap: var(--fd-space-lg);
-        padding: var(--fd-space-lg);
+        gap: var(--fd-space-md);
+        padding: var(--fd-space-md);
         border: var(--fd-border-default);
         border-radius: var(--fd-radius-card);
         background: var(--fd-color-surface-raised);
@@ -50,25 +61,41 @@
     &__recommendation-icon {
         display: grid;
         place-items: center;
-        width: calc(var(--fd-size-icon-xl) * 2);
-        height: calc(var(--fd-size-icon-xl) * 2);
+        width: calc(var(--fd-size-icon-xl) * 1.5);
+        height: calc(var(--fd-size-icon-xl) * 1.5);
         border-radius: var(--fd-radius-pill);
         background: var(--fd-bg-success-soft);
         color: var(--fd-color-primary-500);
         font-size: var(--fd-size-icon-xl);
     }
 
+    &__recommendation-title {
+        grid-column: 1 / -1;
+        margin: 0;
+    }
+
     &__recommendation-copy {
         display: grid;
         gap: var(--fd-space-xxs);
+        min-width: 0;
 
-        h2 {
-            margin: 0 0 var(--fd-space-xs);
+        strong,
+        span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         span {
             color: var(--fd-color-text-muted);
         }
+    }
+
+    &__recommendation-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--fd-space-md);
+        white-space: nowrap;
     }
 
     &__recommendation-meta,
@@ -101,7 +128,7 @@
 
 .academy-progress {
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+    grid-template-columns: minmax(0, 3fr) minmax(220px, 1fr);
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-card);
     background: var(--fd-color-surface-raised);
@@ -111,15 +138,15 @@
         display: grid;
         grid-template-columns: auto minmax(0, 1fr);
         align-items: center;
-        gap: var(--fd-space-xl);
-        padding: var(--fd-space-xl);
+        gap: var(--fd-space-md);
+        padding: var(--fd-space-md);
     }
 
     &__icon {
         display: grid;
         place-items: center;
-        width: calc(var(--fd-size-icon-xl) * 3);
-        height: calc(var(--fd-size-icon-xl) * 3);
+        width: calc(var(--fd-size-icon-xl) * 2);
+        height: calc(var(--fd-size-icon-xl) * 2);
         border-radius: var(--fd-radius-pill);
         background: var(--fd-bg-success-soft);
         color: var(--fd-color-primary-500);
@@ -132,17 +159,24 @@
         gap: var(--fd-space-xs);
 
         h2,
+        h3,
         p {
             margin: 0;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        h2 {
+        h3 {
             font-size: var(--fd-text-title-md-size);
+            color: var(--fd-color-text);
         }
 
         p,
         .academy-progress__meta {
             color: var(--fd-color-text-muted);
+            font-size: var(--fd-text-body-sm-size);
         }
 
         .academy-progress__meta {
@@ -152,18 +186,29 @@
         }
     }
 
-    &__eyebrow,
+    &__actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: var(--fd-space-md);
+        width: 100%;
+    }
+
+    &__card-title {
+        grid-column: 1 / -1;
+        margin: 0;
+    }
+
     &__percent {
         color: var(--fd-color-primary-500);
         font-weight: var(--fd-font-weight-bold);
     }
 
     &__summary {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: var(--fd-space-sm);
-        padding: var(--fd-space-xl);
+        display: grid;
+        align-content: center;
+        gap: var(--fd-space-xs);
+        padding: var(--fd-space-md);
         border-left: var(--fd-border-muted);
         color: var(--fd-color-text-muted);
 
@@ -171,6 +216,13 @@
             color: var(--fd-color-text);
             font-size: var(--fd-text-display-sm-size);
         }
+    }
+
+    &__summary-heading {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: var(--fd-space-sm);
     }
 }
 
@@ -220,10 +272,10 @@
     }
 
     &__category {
-        --fd-pill-bg: var(--fd-bg-category-purple);
-        --fd-pill-border: transparent;
-        --fd-pill-color: var(--fd-color-text);
-        color: var(--fd-color-text);
+        --fd-pill-bg: var(--fd-color-purple-700);
+        --fd-pill-border: var(--fd-color-purple-500);
+        --fd-pill-color: var(--fd-color-white);
+        color: var(--fd-color-white);
     }
 
     &__status {
@@ -277,10 +329,10 @@
         &__recommendation {
             grid-template-columns: auto minmax(0, 1fr);
 
-            fd-ui-button,
-            .lessons-list__recommendation-meta {
+            .lessons-list__recommendation-actions {
                 grid-column: 2;
-                justify-self: start;
+                justify-self: stretch;
+                justify-content: space-between;
             }
         }
 
@@ -309,14 +361,28 @@
         &__recommendation {
             grid-template-columns: 1fr;
 
-            fd-ui-button,
-            .lessons-list__recommendation-meta {
+            .lessons-list__recommendation-actions {
                 grid-column: 1;
+                align-items: flex-start;
+                flex-direction: column;
             }
         }
     }
 
     .academy-progress__lesson {
         grid-template-columns: 1fr;
+    }
+
+    .academy-progress {
+        &__actions {
+            align-items: flex-start;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        &__content h3,
+        &__content p {
+            white-space: normal;
+        }
     }
 }

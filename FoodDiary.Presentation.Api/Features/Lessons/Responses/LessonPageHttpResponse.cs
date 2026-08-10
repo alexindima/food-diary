@@ -7,4 +7,5 @@ public sealed record LessonPageHttpResponse(
     int TotalCount,
     int TotalPages,
     int TotalLessonCount,
-    int ReadLessonCount);
+    int ReadLessonCount,
+    IReadOnlyList<string> AvailableCategories);

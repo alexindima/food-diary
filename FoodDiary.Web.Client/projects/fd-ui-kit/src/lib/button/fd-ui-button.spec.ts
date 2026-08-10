@@ -171,6 +171,15 @@ describe('FdUiButtonComponent rendering', () => {
         expect(button().getAttribute('aria-label')).toBe('Close dialog');
     });
 
+    it('should expose pressed state when used as a toggle', () => {
+        const { button, fixture } = setupButton();
+
+        fixture.componentRef.setInput('ariaPressed', true);
+        fixture.detectChanges();
+
+        expect(button().getAttribute('aria-pressed')).toBe('true');
+    });
+
     it('should render icon when provided', () => {
         const { fixture } = setupButton();
 

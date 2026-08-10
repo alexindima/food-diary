@@ -20,6 +20,15 @@ describe('LessonsListProgressComponent', () => {
 
         expect(element.querySelector('.lessons-list__progress-fill')?.getAttribute('style')).toContain('width: 50%');
         expect(element.textContent).toContain('2 / 4');
+        expect(fixture.componentInstance['headingKey']()).toBe('LESSONS.CONTINUE_LEARNING');
+        expect(fixture.componentInstance['actionKey']()).toBe('LESSONS.CONTINUE');
+    });
+
+    it('uses start copy before the first completed lesson', () => {
+        const fixture = createComponent({ read: 0, total: 4, percent: 0 });
+
+        expect(fixture.componentInstance['headingKey']()).toBe('LESSONS.START_LEARNING');
+        expect(fixture.componentInstance['actionKey']()).toBe('LESSONS.START');
     });
 
     it('renders nothing when progress is missing', () => {

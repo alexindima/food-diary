@@ -45,6 +45,7 @@ export class LessonService extends ApiService {
             totalPages: Math.ceil(response.length / query.pageSize),
             totalLessonCount: response.length,
             readLessonCount: response.filter(lesson => lesson.isRead).length,
+            availableCategories: [...new Set(response.map(lesson => lesson.category))],
         };
     }
 
@@ -57,6 +58,7 @@ export class LessonService extends ApiService {
             totalPages: 0,
             totalLessonCount: 0,
             readLessonCount: 0,
+            availableCategories: [],
         };
     }
 }

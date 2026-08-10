@@ -5,7 +5,7 @@ import { buildLessonCategoryOptions, buildLessonDetailView, buildLessonListItems
 
 describe('lesson view mapper', () => {
     it('builds category options with selected fill state', () => {
-        const options = buildLessonCategoryOptions('Hydration');
+        const options = buildLessonCategoryOptions(['Hydration', 'Macronutrients'], 'Hydration');
 
         expect(options[0]).toEqual({
             value: null,
@@ -13,7 +13,8 @@ describe('lesson view mapper', () => {
             fill: 'outline',
         });
         expect(options.find(option => option.value === 'Hydration')?.fill).toBe('solid');
-        expect(options.find(option => option.value === 'NutritionBasics')?.fill).toBe('outline');
+        expect(options.find(option => option.value === 'Macronutrients')?.fill).toBe('outline');
+        expect(options.find(option => option.value === 'NutritionBasics')).toBeUndefined();
     });
 
     it('builds progress for read lessons', () => {

@@ -56,7 +56,7 @@ public sealed class LessonHttpMappingsTests {
             new(Guid.NewGuid(), "Advanced Macros", null, "macros", "advanced", 10, true),
         };
 
-        var model = new LessonPageModel(models, 1, 20, 2, 1, 31, 6);
+        var model = new LessonPageModel(models, 1, 20, 2, 1, 31, 6, ["nutrition", "macros"]);
         LessonPageHttpResponse response = model.ToHttpResponse();
         IReadOnlyList<LessonSummaryHttpResponse> responses = response.Items;
 
@@ -67,7 +67,8 @@ public sealed class LessonHttpMappingsTests {
             () => Assert.True(responses[1].IsRead),
             () => Assert.Null(responses[1].Summary),
             () => Assert.Equal(31, response.TotalLessonCount),
-            () => Assert.Equal(6, response.ReadLessonCount));
+            () => Assert.Equal(6, response.ReadLessonCount),
+            () => Assert.Equal(["nutrition", "macros"], response.AvailableCategories));
     }
 
     [Fact]

@@ -27,7 +27,8 @@ public static class LessonHttpMappings {
                 model.TotalCount,
                 model.TotalPages,
                 model.TotalLessonCount,
-                model.ReadLessonCount);
+                model.ReadLessonCount,
+                model.AvailableCategories);
     }
 
     extension(LessonDetailModel model) {

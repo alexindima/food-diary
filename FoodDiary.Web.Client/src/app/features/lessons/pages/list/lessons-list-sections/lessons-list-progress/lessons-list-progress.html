@@ -2,30 +2,36 @@
     <section class="academy-progress">
         @if (nextLesson(); as lesson) {
             <div class="academy-progress__lesson">
+                <h2 class="academy-progress__card-title fd-ui-card-title">{{ headingKey() | translate }}</h2>
                 <fd-ui-icon class="academy-progress__icon" name="auto_stories" aria-hidden="true" />
                 <div class="academy-progress__content">
-                    <span class="academy-progress__eyebrow">{{ 'LESSONS.CONTINUE_LEARNING' | translate }}</span>
-                    <h2>{{ lesson.title }}</h2>
-                    <span class="academy-progress__meta">
-                        <fd-ui-level-indicator [filledCount]="lesson.difficultyLevel" />
-                        {{ lesson.difficultyLabelKey | translate }} · {{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}
-                    </span>
+                    <h3>{{ lesson.title }}</h3>
                     @if (lesson.summary) {
                         <p>{{ lesson.summary }}</p>
                     }
-                    <fd-ui-button variant="primary" fill="solid" icon="play_arrow" (click)="lessonOpen.emit(lesson.id)">
-                        {{ 'LESSONS.CONTINUE' | translate }}
-                    </fd-ui-button>
+                    <div class="academy-progress__actions">
+                        <span class="academy-progress__meta">
+                            <fd-ui-level-indicator [filledCount]="lesson.difficultyLevel" />
+                            <span>{{ lesson.difficultyLabelKey | translate }}</span>
+                            <fd-ui-icon name="schedule" size="sm" />
+                            <span>{{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}</span>
+                        </span>
+                        <fd-ui-button variant="primary" fill="solid" size="sm" icon="play_arrow" (click)="lessonOpen.emit(lesson.id)">
+                            {{ actionKey() | translate }}
+                        </fd-ui-button>
+                    </div>
                 </div>
             </div>
         }
         <div class="academy-progress__summary">
-            <span>{{ 'LESSONS.OVERALL_PROGRESS' | translate }}</span>
-            <strong>{{ progress.read }} / {{ progress.total }}</strong>
-            <span class="academy-progress__percent">{{ progress.percent }}% {{ 'LESSONS.COMPLETED' | translate }}</span>
+            <div class="academy-progress__summary-heading">
+                <span>{{ 'LESSONS.OVERALL_PROGRESS' | translate }}</span>
+                <strong>{{ progress.read }} / {{ progress.total }}</strong>
+            </div>
             <div class="lessons-list__progress-bar">
                 <div class="lessons-list__progress-fill" [style.width.%]="progress.percent"></div>
             </div>
+            <span class="academy-progress__percent">{{ progress.percent }}% {{ 'LESSONS.COMPLETED' | translate }}</span>
         </div>
     </section>
 }

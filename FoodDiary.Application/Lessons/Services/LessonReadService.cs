@@ -46,7 +46,8 @@ public sealed class LessonReadService(
             result.TotalCount,
             totalPages,
             result.TotalLessonCount,
-            readLessonCount);
+            readLessonCount,
+            result.AvailableCategories);
     }
 
     public async Task<LessonDetailModel?> GetByIdAsync(

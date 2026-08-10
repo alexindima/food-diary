@@ -12,7 +12,8 @@ import { buildLessonCategoryOptions } from '../../../../lib/lesson-view.mapper';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LessonsListFiltersComponent {
+    public readonly categories = input.required<readonly string[]>();
     public readonly selectedCategory = input.required<string | null>();
-    protected readonly options = computed(() => buildLessonCategoryOptions(this.selectedCategory()));
+    protected readonly options = computed(() => buildLessonCategoryOptions(this.categories(), this.selectedCategory()));
     public readonly filterChange = output<string | null>();
 }

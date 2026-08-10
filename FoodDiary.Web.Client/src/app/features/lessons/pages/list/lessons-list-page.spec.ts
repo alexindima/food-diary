@@ -73,6 +73,7 @@ type FacadeStub = {
             totalPages: number;
             totalLessonCount: number;
             readLessonCount: number;
+            availableCategories: string[];
         }>
     >;
     lessons: ReturnType<typeof signal<LessonSummary[]>>;
@@ -108,11 +109,12 @@ function createFacadeStub(lessons: LessonSummary[] = []): FacadeStub {
         page: signal({
             items: lessons,
             page: 1,
-            pageSize: 20,
+            pageSize: 18,
             totalCount: lessons.length,
             totalPages: lessons.length > 0 ? 1 : 0,
             totalLessonCount: lessons.length,
             readLessonCount: lessons.filter(lesson => lesson.isRead).length,
+            availableCategories: [...new Set(lessons.map(lesson => lesson.category))],
         }),
         lessons: signal(lessons),
         isLoading: signal(false),

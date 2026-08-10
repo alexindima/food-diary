@@ -1,5 +1,5 @@
 import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
-import { LESSON_CATEGORIES, type LessonDetail, type LessonSummary } from '../models/lesson.data';
+import type { LessonDetail, LessonSummary } from '../models/lesson.data';
 
 const ADVANCED_DIFFICULTY_LEVEL = 3;
 
@@ -26,16 +26,13 @@ export type LessonDetailViewModel = {
     difficultyLabelKey: string;
 } & LessonDetail;
 
-const CATEGORY_DEFINITIONS = [
-    { value: null, labelKey: 'LESSONS.FILTER_ALL' },
-    ...LESSON_CATEGORIES.map(category => ({
-        value: category,
-        labelKey: `LESSONS.CATEGORY.${category}`,
-    })),
-];
+export function buildLessonCategoryOptions(categories: readonly string[], selectedCategory: string | null): LessonCategoryOption[] {
+    const definitions = [
+        { value: null, labelKey: 'LESSONS.FILTER_ALL' },
+        ...categories.map(category => ({ value: category, labelKey: `LESSONS.CATEGORY.${category}` })),
+    ];
 
-export function buildLessonCategoryOptions(selectedCategory: string | null): LessonCategoryOption[] {
-    return CATEGORY_DEFINITIONS.map(category => ({
+    return definitions.map(category => ({
         ...category,
         fill: selectedCategory === category.value ? 'solid' : 'outline',
     }));

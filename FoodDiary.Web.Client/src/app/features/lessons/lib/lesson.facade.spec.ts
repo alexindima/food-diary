@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
@@ -25,28 +25,7 @@ let translateService: {
 };
 
 describe('LessonFacade', () => {
-    beforeEach(() => {
-        TestBed.resetTestingModule();
-        lessonService = {
-            getAll: vi.fn(() => of(createPage())),
-            getById: vi.fn(() => of(createDetail())),
-            markRead: vi.fn(() => of(void 0)),
-        };
-        translateService = {
-            getCurrentLang: vi.fn(() => 'ru-RU'),
-            getFallbackLang: vi.fn(() => 'en'),
-        };
-
-        TestBed.configureTestingModule({
-            providers: [
-                LessonFacade,
-                { provide: LessonService, useValue: lessonService },
-                { provide: TranslateService, useValue: translateService },
-            ],
-        });
-
-        facade = TestBed.inject(LessonFacade);
-    });
+    beforeEach(setupFacade);
 
     it('loads lessons with normalized current locale and category filter', async () => {
         facade.loadLessons('Macronutrients');
@@ -60,7 +39,7 @@ describe('LessonFacade', () => {
             search: undefined,
             sort: 'recommended',
             page: 1,
-            pageSize: 20,
+            pageSize: 18,
         });
         expect(facade.lessons()).toEqual([createSummary()]);
     });
@@ -87,7 +66,7 @@ describe('LessonFacade', () => {
             search: undefined,
             sort: 'recommended',
             page: 1,
-            pageSize: 20,
+            pageSize: 18,
         });
     });
 
@@ -114,6 +93,55 @@ describe('LessonFacade', () => {
     });
 });
 
+describe('LessonFacade refresh state', () => {
+    beforeEach(setupFacade);
+
+    it('keeps the last loaded page while filters trigger a new request', async () => {
+        await waitForAsync(() => facade.lessons().length > 0);
+        const nextPage = new Subject<LessonPage>();
+        lessonService.getAll.mockReturnValue(nextPage);
+
+        facade.loadLessons('Micronutrients');
+        await waitForAsync(() => facade.isLoading());
+
+        expect(facade.lessons()).toEqual([createSummary()]);
+        expect(facade.page().availableCategories).toEqual(['Macronutrients']);
+
+        nextPage.next({
+            ...createPage(),
+            items: [{ ...createSummary(), id: 'lesson-2', category: 'Micronutrients' }],
+            availableCategories: ['Macronutrients', 'Micronutrients'],
+        });
+        nextPage.complete();
+        await waitForAsync(() => facade.lessons().at(0)?.id === 'lesson-2');
+
+        expect(facade.page().availableCategories).toEqual(['Macronutrients', 'Micronutrients']);
+    });
+});
+
+function setupFacade(): void {
+    TestBed.resetTestingModule();
+    lessonService = {
+        getAll: vi.fn(() => of(createPage())),
+        getById: vi.fn(() => of(createDetail())),
+        markRead: vi.fn(() => of(void 0)),
+    };
+    translateService = {
+        getCurrentLang: vi.fn(() => 'ru-RU'),
+        getFallbackLang: vi.fn(() => 'en'),
+    };
+
+    TestBed.configureTestingModule({
+        providers: [
+            LessonFacade,
+            { provide: LessonService, useValue: lessonService },
+            { provide: TranslateService, useValue: translateService },
+        ],
+    });
+
+    facade = TestBed.inject(LessonFacade);
+}
+
 async function waitForAsync(predicate: () => boolean): Promise<void> {
     for (let attempt = 0; attempt < WAIT_ATTEMPTS; attempt++) {
         TestBed.tick();
@@ -139,7 +167,16 @@ function createSummary(): LessonSummary {
 }
 
 function createPage(): LessonPage {
-    return { items: [createSummary()], page: 1, pageSize: 20, totalCount: 1, totalPages: 1, totalLessonCount: 1, readLessonCount: 0 };
+    return {
+        items: [createSummary()],
+        page: 1,
+        pageSize: 18,
+        totalCount: 1,
+        totalPages: 1,
+        totalLessonCount: 1,
+        readLessonCount: 0,
+        availableCategories: ['Macronutrients'],
+    };
 }
 
 function createDetail(): LessonDetail {

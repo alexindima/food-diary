@@ -121,6 +121,7 @@ public class LessonsFeatureTests {
                 Assert.Equal("Second", item.Title);
                 Assert.False(item.IsRead);
             });
+        Assert.Equal([LessonCategory.Macronutrients.ToString(), LessonCategory.Hydration.ToString()], result.Value.AvailableCategories);
         Assert.Equal(("ru", LessonCategory.Macronutrients), localeRequests.Single());
     }
 
@@ -140,6 +141,7 @@ public class LessonsFeatureTests {
         ResultAssert.Success(result);
         LessonSummaryModel lesson = Assert.Single(result.Value.Items);
         Assert.Equal(englishLesson.Id.Value, lesson.Id);
+        Assert.Equal([LessonCategory.NutritionBasics.ToString()], result.Value.AvailableCategories);
         Assert.Equal([("fr", null), ("en", null)], localeRequests);
     }
 
@@ -476,7 +478,12 @@ public class LessonsFeatureTests {
             .ToList();
         IReadOnlyList<LessonSummaryReadModel> items = [.. filteredLessons.Skip(skip).Take(take).Select(ToSummaryReadModel)];
 
-        return Task.FromResult(new LessonSummaryPageReadModel(items, filteredLessons.Count, localeLessons.Count));
+        IReadOnlyList<string> availableCategories = [.. localeLessons
+            .Select(lesson => lesson.Category)
+            .Distinct()
+            .Order()
+            .Select(category => category.ToString())];
+        return Task.FromResult(new LessonSummaryPageReadModel(items, filteredLessons.Count, localeLessons.Count, availableCategories));
     }
 
     private static LessonSummaryReadModel ToSummaryReadModel(NutritionLesson lesson) =>

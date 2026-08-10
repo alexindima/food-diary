@@ -59,6 +59,7 @@ describe('LessonService', () => {
                 totalPages: 0,
                 totalLessonCount: 0,
                 readLessonCount: 0,
+                availableCategories: [],
             });
         });
 
@@ -116,7 +117,16 @@ function createSummary(): LessonSummary {
 }
 
 function createPage(): LessonPage {
-    return { items: [createSummary()], page: 2, pageSize: 20, totalCount: 25, totalPages: 2, totalLessonCount: 31, readLessonCount: 6 };
+    return {
+        items: [createSummary()],
+        page: 2,
+        pageSize: 20,
+        totalCount: 25,
+        totalPages: 2,
+        totalLessonCount: 31,
+        readLessonCount: 6,
+        availableCategories: ['Macronutrients'],
+    };
 }
 
 function createDetail(): LessonDetail {

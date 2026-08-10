@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject, Injectable, resource, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable, resource, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { debounceTime, distinctUntilChanged, firstValueFrom } from 'rxjs';
@@ -7,7 +7,7 @@ import { resolveTranslateLanguage } from '../../../shared/i18n/translate-languag
 import { LessonService } from '../api/lesson.service';
 import type { LessonDetail, LessonPage } from '../models/lesson.data';
 
-const LESSON_PAGE_SIZE = 20;
+const LESSON_PAGE_SIZE = 18;
 const SEARCH_DEBOUNCE_MS = 300;
 
 @Injectable()
@@ -17,6 +17,7 @@ export class LessonFacade {
     private readonly translateService = inject(TranslateService);
     private readonly selectedLessonId = signal<string | null>(null);
     private readonly markedReadIds = signal<Set<string>>(new Set());
+    private readonly lastLoadedPage = signal<LessonPage | null>(null);
 
     public readonly categoryFilter = signal<string | null>(null);
     public readonly difficultyFilter = signal<string | null>(null);
@@ -58,10 +59,18 @@ export class LessonFacade {
         },
     });
 
+    public constructor() {
+        effect(() => {
+            if (this.lessonsResource.hasValue()) {
+                this.lastLoadedPage.set(this.lessonsResource.value());
+            }
+        });
+    }
+
     public readonly page = computed<LessonPage>(() =>
         this.lessonsResource.hasValue()
             ? this.lessonsResource.value()
-            : {
+            : (this.lastLoadedPage() ?? {
                   items: [],
                   page: this.pageIndex() + 1,
                   pageSize: LESSON_PAGE_SIZE,
@@ -69,7 +78,8 @@ export class LessonFacade {
                   totalPages: 0,
                   totalLessonCount: 0,
                   readLessonCount: 0,
-              },
+                  availableCategories: [],
+              }),
     );
     public readonly lessons = computed(() => {
         const lessons = this.page().items;

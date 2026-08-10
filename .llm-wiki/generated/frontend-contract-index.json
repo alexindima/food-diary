@@ -3,11 +3,11 @@
     "summary":  {
                     "components":  412,
                     "componentsWithoutDirectSpecs":  122,
-                    "inputs":  1271,
+                    "inputs":  1273,
                     "outputs":  399,
                     "apiCalls":  219,
                     "templatesWithTranslations":  255,
-                    "translationKeys":  1359,
+                    "translationKeys":  1358,
                     "consumerEdges":  936,
                     "consumedComponents":  276,
                     "unconsumedComponents":  135
@@ -3729,6 +3729,11 @@
                                               "required":  false
                                           },
                                           {
+                                              "name":  "ariaPressed",
+                                              "type":  "boolean | null",
+                                              "required":  false
+                                          },
+                                          {
                                               "name":  "disabledReason",
                                               "type":  "string | null",
                                               "required":  false
@@ -6501,6 +6506,11 @@
                            "path":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-filters/lessons-list-filters.ts",
                            "templatePath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-filters/lessons-list-filters.html",
                            "inputs":  [
+                                          {
+                                              "name":  "categories",
+                                              "type":  "readonly string[]",
+                                              "required":  true
+                                          },
                                           {
                                               "name":  "selectedCategory",
                                               "type":  "string | null",
@@ -16960,6 +16970,7 @@
                                  "keys":  [
                                               "LESSONS.ALL_LESSONS",
                                               "LESSONS.LEVEL_FILTER",
+                                              "LESSONS.LOADING",
                                               "LESSONS.MATERIALS",
                                               "LESSONS.MIN_READ",
                                               "LESSONS.OPEN_ARTICLE",
@@ -16985,8 +16996,6 @@
                                  "path":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-progress/lessons-list-progress.html",
                                  "keys":  [
                                               "LESSONS.COMPLETED",
-                                              "LESSONS.CONTINUE",
-                                              "LESSONS.CONTINUE_LEARNING",
                                               "LESSONS.MIN_READ",
                                               "LESSONS.OVERALL_PROGRESS"
                                           ]
@@ -22701,6 +22710,7 @@
                                                  "ariaLabel",
                                                  "fill",
                                                  "icon",
+                                                 "size",
                                                  "variant"
                                              ],
                               "outputsHandled":  [
@@ -22715,6 +22725,7 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-filters/lessons-list-filters.html",
                               "occurrences":  1,
                               "inputsUsed":  [
+                                                 "ariaPressed",
                                                  "fill",
                                                  "size",
                                                  "variant"
@@ -22733,6 +22744,7 @@
                               "inputsUsed":  [
                                                  "fill",
                                                  "icon",
+                                                 "size",
                                                  "variant"
                                              ],
                               "outputsHandled":  [
@@ -27218,20 +27230,6 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "lessons",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "name"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiIconComponent",
-                              "selector":  "fd-ui-icon",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
-                              "consumerFeature":  "lessons",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-grid/lessons-list-grid.html",
                               "occurrences":  2,
                               "inputsUsed":  [
                                                  "name",
@@ -27246,10 +27244,26 @@
                               "selector":  "fd-ui-icon",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "lessons",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-progress/lessons-list-progress.html",
-                              "occurrences":  1,
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-grid/lessons-list-grid.html",
+                              "occurrences":  3,
                               "inputsUsed":  [
-                                                 "name"
+                                                 "name",
+                                                 "size"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "lessons",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-progress/lessons-list-progress.html",
+                              "occurrences":  2,
+                              "inputsUsed":  [
+                                                 "name",
+                                                 "size"
                                              ],
                               "outputsHandled":  [
 
@@ -31017,6 +31031,7 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.html",
                               "occurrences":  1,
                               "inputsUsed":  [
+                                                 "categories",
                                                  "selectedCategory"
                                              ],
                               "outputsHandled":  [

@@ -5684,8 +5684,11 @@
     "LESSONS": {
         "TITLE": "Nutrition Academy",
         "SUBTITLE": "Learn about nutrition science, one lesson at a time",
+        "LOADING": "Loading lessons...",
         "FILTER_ALL": "All",
-        "CONTINUE_LEARNING": "CONTINUE LEARNING",
+        "START_LEARNING": "Start learning",
+        "START": "Start",
+        "CONTINUE_LEARNING": "Continue learning",
         "CONTINUE": "Continue",
         "OVERALL_PROGRESS": "Overall progress",
         "SEARCH": "Search the Academy",

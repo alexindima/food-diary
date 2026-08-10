@@ -227,6 +227,19 @@ describe('FdUiInputComponent signal form control', () => {
 });
 
 describe('FdUiInputComponent floating label', () => {
+    it('should not reserve floating-label space when label is omitted', async () => {
+        const { el, fixture, input } = await setupInputAsync();
+        fixture.componentRef.setInput('placeholder', 'Search');
+        fixture.detectChanges();
+
+        input().dispatchEvent(new Event('focus'));
+        fixture.detectChanges();
+
+        const wrapper = el.querySelector('.fd-ui-input');
+        expect(wrapper?.classList).not.toContain('fd-ui-input--floating');
+        expect(input().getAttribute('placeholder')).toBe('Search');
+    });
+
     it('should float label when focused', async () => {
         const { el, fixture, input } = await setupInputAsync();
         fixture.componentRef.setInput('label', 'Name');

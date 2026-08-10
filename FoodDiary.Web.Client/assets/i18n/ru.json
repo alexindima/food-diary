@@ -5684,8 +5684,11 @@
     "LESSONS": {
         "TITLE": "Академия питания",
         "SUBTITLE": "Изучайте нутрициологию — урок за уроком",
+        "LOADING": "Загружаем уроки...",
         "FILTER_ALL": "Все",
-        "CONTINUE_LEARNING": "ПРОДОЛЖИТЬ ОБУЧЕНИЕ",
+        "START_LEARNING": "Начать обучение",
+        "START": "Начать",
+        "CONTINUE_LEARNING": "Продолжить обучение",
         "CONTINUE": "Продолжить",
         "OVERALL_PROGRESS": "Общий прогресс",
         "SEARCH": "Поиск по Академии",

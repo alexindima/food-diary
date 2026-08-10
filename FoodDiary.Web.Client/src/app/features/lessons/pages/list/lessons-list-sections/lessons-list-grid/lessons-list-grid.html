@@ -31,11 +31,12 @@
                 @if (lesson.summary) {
                     <p class="lesson-card__summary fd-ui-caption">{{ lesson.summary }}</p>
                 }
-                <div class="lesson-card__meta fd-row fd-justify-between fd-gap-sm fd-ui-field-label--floating">
+                <div class="lesson-card__meta fd-row fd-justify-end fd-gap-sm fd-ui-field-label--floating">
                     <span class="fd-row fd-align-center fd-gap-xs">
                         <fd-ui-level-indicator [filledCount]="lesson.difficultyLevel" />
-                        {{ lesson.difficultyLabelKey | translate }} · {{ lesson.estimatedReadMinutes }}
-                        {{ 'LESSONS.MIN_READ' | translate }}
+                        <span>{{ lesson.difficultyLabelKey | translate }}</span>
+                        <fd-ui-icon name="schedule" size="sm" />
+                        <span>{{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}</span>
                     </span>
                 </div>
             </div>

@@ -459,7 +459,11 @@ public class AdminLessonFeatureTests {
                 .Where(lesson => !difficulty.HasValue || string.Equals(lesson.Difficulty, difficulty.Value.ToString(), StringComparison.Ordinal))
                 .Where(lesson => string.IsNullOrWhiteSpace(search) || $"{lesson.Title} {lesson.Summary}".Contains(search, StringComparison.OrdinalIgnoreCase))
                 .ToList();
-            return new LessonSummaryPageReadModel([.. filtered.Skip(skip).Take(take)], filtered.Count, lessons.Count);
+            IReadOnlyList<string> availableCategories = [.. lessons
+                .Select(lesson => lesson.Category)
+                .Distinct(StringComparer.Ordinal)
+                .Order(StringComparer.Ordinal)];
+            return new LessonSummaryPageReadModel([.. filtered.Skip(skip).Take(take)], filtered.Count, lessons.Count, availableCategories);
         }
 
         public Task<int> CountReadLessonsByLocaleAsync(

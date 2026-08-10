@@ -374,6 +374,7 @@ Primary button component.
 - `loading?: boolean`
 - `fullWidth?: boolean`
 - `ariaLabel?: string`
+- `ariaPressed?: boolean | null` (pressed state for toggle-style buttons)
 
 ### Cards
 

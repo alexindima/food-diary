@@ -118,8 +118,10 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         return type === 'date' || type === 'datetime-local' || type === 'time';
     });
     protected readonly shouldFloatLabel = computed(() => {
+        const label = this.label();
         const text = String(this.internalValue()).trim();
-        return this.isFocused() || text.length > 0;
+
+        return label !== undefined && label.trim().length > 0 && (this.isFocused() || text.length > 0);
     });
     protected readonly shouldShowPlaceholder = computed(() => {
         const text = String(this.internalValue()).trim();
