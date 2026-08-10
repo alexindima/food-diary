@@ -56,8 +56,7 @@ public sealed class CreateAdminUserCommandHandlerTests {
         Assert.NotEmpty(creation.TemporaryPassword);
         Assert.True(creation.CredentialsEmailQueued);
         await emailSender.Received(1).SendAccountCreatedAsync(
-            Arg.Is<AccountCreatedMessage>((AccountCreatedMessage? message) =>
-                message != null &&
+            Arg.Is<AccountCreatedMessage>((AccountCreatedMessage message) =>
                 string.Equals(message.ToEmail, "dietologist@example.com", StringComparison.Ordinal) &&
                 string.Equals(message.TemporaryPassword, creation.TemporaryPassword, StringComparison.Ordinal) &&
                 string.Equals(message.Language, "ru", StringComparison.Ordinal)),

@@ -627,10 +627,11 @@ $wikiFacadeText = Get-Content -LiteralPath (Join-Path $wikiRoot 'wiki.ps1') -Raw
 $taskBaselineText = Get-Content -LiteralPath (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Raw
 Assert-Wiki ($qualityBuilderText -match 'inputFingerprint' -and $qualityBuilderText -match 'outputFingerprint') 'Quality-index cache does not bind both inputs and generated output.'
 Assert-Wiki ($qualityBuilderText -match 'Build-LlmWikiQualityIndex\.ps1' -and $qualityBuilderText -match 'LlmWikiJson\.ps1') 'Quality-index cache fingerprint omits generator implementation inputs.'
-Assert-Wiki ($indexPipelineText -match "cacheableTools = @\('Build-LlmWikiQualityIndex\.ps1', 'Build-LlmWikiBackendContractIndex\.ps1', 'Build-LlmWikiFrontendIndex\.ps1', 'Build-LlmWikiFrontendContractIndex\.ps1'\)" -and
-    $indexPipelineText -match '\$CheckMode -and \$ReuseUnchangedChecks -and \$toolName -in \$cacheableTools') 'Index pipeline does not limit unchanged-check reuse to the approved cacheable indexes in check mode.'
+Assert-Wiki ($indexPipelineText -match "cacheableTools = @\('Build-LlmWikiQualityIndex\.ps1', 'Build-LlmWikiBackendContractIndex\.ps1', 'Build-LlmWikiFrontendIndex\.ps1', 'Build-LlmWikiFrontendContractIndex\.ps1', 'Build-LlmWikiArchitectureHealthIndex\.ps1'\)" -and
+    $indexPipelineText -match '\$ReuseUnchangedChecks -and \$toolName -in \$cacheableTools') 'Index pipeline does not limit unchanged-result reuse to the approved cacheable indexes.'
 Assert-Wiki ($wikiFacadeText.Contains('DeferPossiblyConcurrentStale = $true; ReuseUnchangedChecks = $true') -and
-    $wikiFacadeText.Contains('$indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef }')) 'Index cache reuse is not isolated to verify-fast.'
+    $wikiFacadeText.Contains('$indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }') -and
+    $wikiFacadeText.Contains('$indexArguments = @{ AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }')) 'Index cache reuse is not enabled consistently for fast, strict, and update workflows.'
 Assert-Wiki ($wikiFacadeText.Contains("`$Command -eq 'develop'") -and
     $wikiFacadeText.Contains("Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId `$TaskSessionId -Format Text") -and
     $wikiFacadeText.Contains("-not `$PSBoundParameters.ContainsKey('ChangedPath')") -and

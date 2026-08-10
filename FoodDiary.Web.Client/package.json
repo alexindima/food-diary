@@ -15,20 +15,22 @@
         "@microsoft/signalr": {
             "ws": "7.5.11"
         },
-        "hono": "4.12.27",
-        "jsdom": {
-            "undici": "7.28.0"
+        "hono": "4.12.34",
+        "ip-address": "10.3.1",
+        "js-yaml": "4.3.1",
+        "@lhci/utils": {
+            "js-yaml": "3.15.1"
         },
         "lighthouse": {
             "ws": "7.5.11"
         },
         "body-parser@1": "1.20.6",
         "body-parser@2": "2.3.0",
-        "brace-expansion": "5.0.8",
-        "fast-uri": "3.1.4",
+        "brace-expansion": "5.0.9",
+        "fast-uri": "3.1.5",
         "minimatch": "^10.2.4",
         "immutable": "5.1.9",
-        "postcss": "^8.5.18",
+        "postcss": "^8.5.23",
         "tar": "7.5.22",
         "tmp": "^0.2.7",
         "uuid": "^11.1.1",
