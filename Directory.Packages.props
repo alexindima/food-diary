@@ -9,7 +9,7 @@
     <PackageVersion Include="Roslynator.Analyzers" Version="4.15.0" />
 
     <!-- API -->
-    <PackageVersion Include="Asp.Versioning.Mvc" Version="10.0.1" />
+    <PackageVersion Include="Asp.Versioning.Mvc" Version="10.2.1" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.2.1" />
 
