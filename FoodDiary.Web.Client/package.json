@@ -137,7 +137,7 @@
         "@storybook/angular": "^10.5.5",
         "@types/express": "^5.0.6",
         "@types/node": "^26.1.2",
-        "@typescript-eslint/eslint-plugin": "^8.65.0",
+        "@typescript-eslint/eslint-plugin": "^8.66.0",
         "@typescript-eslint/parser": "^8.65.0",
         "@vitest/coverage-v8": "^4.1.10",
         "angular-eslint": "^22.1.0",
