@@ -105,12 +105,12 @@ public class LessonsFeatureTests {
             out List<(string Locale, LessonCategory? Category)> localeRequests);
         GetLessonsQueryHandler handler = CreateGetLessonsHandler(repository);
 
-        Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
+        Result<LessonPageModel> result = await handler.Handle(
             new GetLessonsQuery(userId.Value, " RU ", "macronutrients"), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Collection(
-            result.Value,
+            result.Value.Items,
             item => {
                 Assert.Equal(secondLesson.Id.Value, item.Id);
                 Assert.Equal("First", item.Title);
@@ -134,11 +134,11 @@ public class LessonsFeatureTests {
             out List<(string Locale, LessonCategory? Category)> localeRequests);
         GetLessonsQueryHandler handler = CreateGetLessonsHandler(repository);
 
-        Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
+        Result<LessonPageModel> result = await handler.Handle(
             new GetLessonsQuery(userId.Value, "fr", Category: null), CancellationToken.None);
 
         ResultAssert.Success(result);
-        LessonSummaryModel lesson = Assert.Single(result.Value);
+        LessonSummaryModel lesson = Assert.Single(result.Value.Items);
         Assert.Equal(englishLesson.Id.Value, lesson.Id);
         Assert.Equal([("fr", null), ("en", null)], localeRequests);
     }
@@ -151,11 +151,11 @@ public class LessonsFeatureTests {
             out List<(string Locale, LessonCategory? Category)> localeRequests);
         GetLessonsQueryHandler handler = CreateGetLessonsHandler(repository);
 
-        Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
+        Result<LessonPageModel> result = await handler.Handle(
             new GetLessonsQuery(Guid.NewGuid(), "en", "unknown"), CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.Empty(result.Value);
+        Assert.Empty(result.Value.Items);
         Assert.Equal(("en", null), localeRequests.Single());
     }
 
@@ -163,7 +163,7 @@ public class LessonsFeatureTests {
     public async Task GetLessons_WithNullUserId_ReturnsFailure() {
         GetLessonsQueryHandler handler = CreateGetLessonsHandler(CreateLessonRepository([], []));
 
-        Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
+        Result<LessonPageModel> result = await handler.Handle(
             new GetLessonsQuery(UserId: null, "en", Category: null), CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -437,6 +437,46 @@ public class LessonsFeatureTests {
 
                 return Task.FromResult(matchingLessons);
             });
+        repository
+            .GetSummaryPageByLocaleAsync(
+                Arg.Any<string>(),
+                Arg.Any<LessonCategory?>(),
+                Arg.Any<LessonDifficulty?>(),
+                Arg.Any<string?>(),
+                Arg.Any<LessonSortOption>(),
+                Arg.Any<int>(),
+                Arg.Any<int>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => ResolveSummaryPage(call, storedLessons, capturedLocaleRequests));
+        repository
+            .CountReadLessonsByLocaleAsync(Arg.Any<UserId>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(0);
+    }
+
+    private static Task<LessonSummaryPageReadModel> ResolveSummaryPage(
+        CallInfo call,
+        IReadOnlyCollection<NutritionLesson> storedLessons,
+        List<(string Locale, LessonCategory? Category)> capturedLocaleRequests) {
+        string locale = call.ArgAt<string>(0);
+        LessonCategory? category = call.ArgAt<LessonCategory?>(1);
+        LessonDifficulty? difficulty = call.ArgAt<LessonDifficulty?>(2);
+        string? search = call.ArgAt<string?>(3);
+        int skip = call.ArgAt<int>(5);
+        int take = call.ArgAt<int>(6);
+        capturedLocaleRequests.Add((locale, category));
+        var localeLessons = storedLessons
+            .Where(lesson => string.Equals(lesson.Locale, locale, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        var filteredLessons = localeLessons
+            .Where(lesson => !category.HasValue || lesson.Category == category.Value)
+            .Where(lesson => !difficulty.HasValue || lesson.Difficulty == difficulty.Value)
+            .Where(lesson => string.IsNullOrWhiteSpace(search) || $"{lesson.Title} {lesson.Summary}".Contains(search, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(lesson => lesson.Category)
+            .ThenBy(lesson => lesson.SortOrder)
+            .ToList();
+        IReadOnlyList<LessonSummaryReadModel> items = [.. filteredLessons.Skip(skip).Take(take).Select(ToSummaryReadModel)];
+
+        return Task.FromResult(new LessonSummaryPageReadModel(items, filteredLessons.Count, localeLessons.Count));
     }
 
     private static LessonSummaryReadModel ToSummaryReadModel(NutritionLesson lesson) =>

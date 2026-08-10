@@ -3633,7 +3633,7 @@
                                                            {
                                                                "verb":  "GET",
                                                                "route":  "/api/v{version:apiVersion}/lessons",
-                                                               "line":  13
+                                                               "line":  14
                                                            },
                                                            {
                                                                "verb":  "GET",

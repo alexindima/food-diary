@@ -8,14 +8,14 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1545,
-                    "symbols":  596,
+                    "typescriptFiles":  1542,
+                    "symbols":  594,
                     "routes":  86,
                     "features":  37,
-                    "specs":  551,
+                    "specs":  549,
                     "localeFiles":  5,
                     "roles":  {
-                                  "Component":  409,
+                                  "Component":  407,
                                   "Directive":  12,
                                   "Facade":  53,
                                   "Other":  17,
@@ -535,13 +535,10 @@
                          "root":  "FoodDiary.Web.Client/src/app/features/gamification",
                          "symbols":  [
                                          "GamificationAchievementsDialogComponent",
-                                         "GamificationBadgesCardComponent",
                                          "GamificationFacade",
                                          "GamificationHabitPathComponent",
-                                         "GamificationHealthScoreCardComponent",
                                          "GamificationPageComponent",
-                                         "GamificationService",
-                                         "GamificationStatsGridComponent"
+                                         "GamificationService"
                                      ],
                          "routes":  [
                                         ""
@@ -550,10 +547,7 @@
                                        "FoodDiary.Web.Client/src/app/features/gamification/api/gamification.service.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/gamification/lib/gamification.facade.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-lib/gamification-page-view.mapper.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/stats-grid/gamification-stats-grid.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.spec.ts"
                                    ]
                      },
@@ -1501,6 +1495,13 @@
                         "selector":  "fd-ui-input",
                         "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
                         "line":  46
+                    },
+                    {
+                        "name":  "FdUiLevelIndicatorComponent",
+                        "role":  "Component",
+                        "selector":  "fd-ui-level-indicator",
+                        "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/level-indicator/fd-ui-level-indicator.ts",
+                        "line":  25
                     },
                     {
                         "name":  "FdUiLineChartLegendComponent",
@@ -3302,32 +3303,11 @@
                         "line":  9
                     },
                     {
-                        "name":  "GamificationBadgesCardComponent",
-                        "role":  "Component",
-                        "selector":  "fd-gamification-badges-card",
-                        "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.ts",
-                        "line":  17
-                    },
-                    {
                         "name":  "GamificationHabitPathComponent",
                         "role":  "Component",
                         "selector":  "fd-gamification-habit-path",
                         "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.ts",
                         "line":  37
-                    },
-                    {
-                        "name":  "GamificationHealthScoreCardComponent",
-                        "role":  "Component",
-                        "selector":  "fd-gamification-health-score-card",
-                        "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.ts",
-                        "line":  12
-                    },
-                    {
-                        "name":  "GamificationStatsGridComponent",
-                        "role":  "Component",
-                        "selector":  "fd-gamification-stats-grid",
-                        "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/stats-grid/gamification-stats-grid.ts",
-                        "line":  16
                     },
                     {
                         "name":  "GamificationPageComponent",
@@ -3432,7 +3412,7 @@
                         "role":  "Facade",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/features/lessons/lib/lesson.facade.ts",
-                        "line":  11
+                        "line":  14
                     },
                     {
                         "name":  "LessonDetailPageComponent",
@@ -3453,28 +3433,28 @@
                         "role":  "Component",
                         "selector":  "fd-lessons-list-page",
                         "path":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.ts",
-                        "line":  37
+                        "line":  46
                     },
                     {
                         "name":  "LessonsListFiltersComponent",
                         "role":  "Component",
                         "selector":  "fd-lessons-list-filters",
                         "path":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-filters/lessons-list-filters.ts",
-                        "line":  13
+                        "line":  14
                     },
                     {
                         "name":  "LessonsListGridComponent",
                         "role":  "Component",
                         "selector":  "fd-lessons-list-grid",
                         "path":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-grid/lessons-list-grid.ts",
-                        "line":  16
+                        "line":  17
                     },
                     {
                         "name":  "LessonsListProgressComponent",
                         "role":  "Component",
                         "selector":  "fd-lessons-list-progress",
                         "path":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-progress/lessons-list-progress.ts",
-                        "line":  12
+                        "line":  16
                     },
                     {
                         "name":  "MealPlanService",
@@ -5853,8 +5833,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  3105,
-                             "russianProperties":  3105,
+                             "englishProperties":  3113,
+                             "russianProperties":  3113,
                              "countsMatch":  true
                          },
                          {

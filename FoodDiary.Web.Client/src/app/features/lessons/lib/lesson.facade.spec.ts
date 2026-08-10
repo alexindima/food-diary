@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { LessonService } from '../api/lesson.service';
-import type { LessonDetail, LessonSummary } from '../models/lesson.data';
+import type { LessonDetail, LessonPage, LessonSummary } from '../models/lesson.data';
 import { LessonFacade } from './lesson.facade';
 
 const WAIT_ATTEMPTS = 20;
@@ -28,7 +28,7 @@ describe('LessonFacade', () => {
     beforeEach(() => {
         TestBed.resetTestingModule();
         lessonService = {
-            getAll: vi.fn(() => of([createSummary()])),
+            getAll: vi.fn(() => of(createPage())),
             getById: vi.fn(() => of(createDetail())),
             markRead: vi.fn(() => of(void 0)),
         };
@@ -53,7 +53,15 @@ describe('LessonFacade', () => {
 
         await waitForAsync(() => facade.lessons().length > 0);
 
-        expect(lessonService.getAll).toHaveBeenLastCalledWith('ru', 'Macronutrients');
+        expect(lessonService.getAll).toHaveBeenLastCalledWith({
+            locale: 'ru',
+            category: 'Macronutrients',
+            difficulty: undefined,
+            search: undefined,
+            sort: 'recommended',
+            page: 1,
+            pageSize: 20,
+        });
         expect(facade.lessons()).toEqual([createSummary()]);
     });
 
@@ -72,7 +80,15 @@ describe('LessonFacade', () => {
 
         await waitForAsync(() => lessonService.getAll.mock.calls.length > 0);
 
-        expect(lessonService.getAll).toHaveBeenCalledWith('en', undefined);
+        expect(lessonService.getAll).toHaveBeenCalledWith({
+            locale: 'en',
+            category: undefined,
+            difficulty: undefined,
+            search: undefined,
+            sort: 'recommended',
+            page: 1,
+            pageSize: 20,
+        });
     });
 
     it('loads selected lesson detail and returns null for empty selection', async () => {
@@ -120,6 +136,10 @@ function createSummary(): LessonSummary {
         estimatedReadMinutes: READ_MINUTES,
         isRead: false,
     };
+}
+
+function createPage(): LessonPage {
+    return { items: [createSummary()], page: 1, pageSize: 20, totalCount: 1, totalPages: 1, totalLessonCount: 1, readLessonCount: 0 };
 }
 
 function createDetail(): LessonDetail {

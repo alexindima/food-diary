@@ -99,6 +99,7 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 
 ## UI/UX
 
+- Before creating or locally styling any control, search the public `fd-ui-kit` exports and `projects/fd-ui-kit/COMPONENTS.md` for an existing primitive or close composition. Extend the design-system component when the behavior is reusable; use a native/custom control only when the UI kit has no suitable contract, and document that exception in the change.
 - Keep mobile header/card patterns consistent across list pages.
 - Respect existing design system components from `fd-ui-kit`.
 - Meet WCAG AA and keep keyboard/focus behavior explicit.

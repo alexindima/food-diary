@@ -7,14 +7,15 @@ using FoodDiary.Application.Lessons.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Lessons.Models;
 
 namespace FoodDiary.Application.Lessons.Queries.GetLessons;
 
 public sealed class GetLessonsQueryHandler(
     ILessonReadService lessonReadService,
     ICurrentUserAccessService currentUserAccessService)
-    : IQueryHandler<GetLessonsQuery, Result<IReadOnlyList<LessonSummaryModel>>> {
-    public async Task<Result<IReadOnlyList<LessonSummaryModel>>> Handle(
+    : IQueryHandler<GetLessonsQuery, Result<LessonPageModel>> {
+    public async Task<Result<LessonPageModel>> Handle(
         GetLessonsQuery query,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
@@ -22,16 +23,28 @@ public sealed class GetLessonsQueryHandler(
             currentUserAccessService,
             cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return CurrentUserAccessResolver.ToFailure<IReadOnlyList<LessonSummaryModel>>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<LessonPageModel>(userIdResult);
         }
 
         LessonCategory? categoryFilter = EnumFilterParser.ParseOptional<LessonCategory>(query.Category);
+        LessonDifficulty? difficultyFilter = EnumFilterParser.ParseOptional<LessonDifficulty>(query.Difficulty);
+        LessonSortOption sort = EnumFilterParser.ParseOptional<LessonSortOption>(query.Sort)
+            ?? LessonSortOption.Recommended;
 
         string locale = string.IsNullOrWhiteSpace(query.Locale) ? "en" : query.Locale.Trim().ToLowerInvariant();
-        IReadOnlyList<LessonSummaryModel> models = await lessonReadService
-            .GetByLocaleAsync(userIdResult.Value, locale, categoryFilter, cancellationToken)
+        LessonPageModel model = await lessonReadService
+            .GetPageByLocaleAsync(
+                userIdResult.Value,
+                locale,
+                categoryFilter,
+                difficultyFilter,
+                query.Search,
+                sort,
+                query.Page,
+                query.PageSize,
+                cancellationToken)
             .ConfigureAwait(false);
 
-        return Result.Success(models);
+        return Result.Success(model);
     }
 }

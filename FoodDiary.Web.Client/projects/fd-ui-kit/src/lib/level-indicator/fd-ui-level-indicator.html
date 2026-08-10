@@ -1,0 +1,12 @@
+<svg viewBox="0 0 28 24" focusable="false">
+    @for (bar of bars; track bar.x) {
+        <rect
+            rx="2"
+            width="5"
+            [attr.x]="bar.x"
+            [attr.y]="bar.y"
+            [attr.height]="bar.height"
+            [class.fd-ui-level-indicator__bar--filled]="$index < normalizedFilledCount()"
+        />
+    }
+</svg>

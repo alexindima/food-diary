@@ -1,0 +1,23 @@
+:host {
+    display: inline-flex;
+    width: var(--fd-size-icon-sm);
+    height: var(--fd-size-icon-sm);
+    flex: 0 0 auto;
+    color: var(--fd-color-text-muted);
+}
+
+svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+rect {
+    fill: transparent;
+    stroke: currentcolor;
+    stroke-width: 1.75;
+}
+
+.fd-ui-level-indicator__bar--filled {
+    fill: currentcolor;
+}

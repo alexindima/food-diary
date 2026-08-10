@@ -34,6 +34,7 @@ export * from './image-preview-dialog/fd-ui-image-preview-dialog';
 export * from './inline-alert/fd-ui-inline-alert';
 export * from './input/fd-ui-input';
 export * from './input/fd-ui-input.tokens';
+export * from './level-indicator/fd-ui-level-indicator';
 export * from './line-chart/fd-ui-line-chart';
 export * from './loader/fd-ui-loader';
 export * from './menu/fd-ui-menu';

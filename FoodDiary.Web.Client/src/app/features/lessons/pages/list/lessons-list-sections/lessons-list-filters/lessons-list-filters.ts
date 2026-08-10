@@ -8,6 +8,7 @@ import { buildLessonCategoryOptions } from '../../../../lib/lesson-view.mapper';
     selector: 'fd-lessons-list-filters',
     imports: [TranslatePipe, FdUiButtonComponent],
     templateUrl: './lessons-list-filters.html',
+    styleUrl: '../../lessons-list-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LessonsListFiltersComponent {

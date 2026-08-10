@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "contracts":  1014,
+                    "contracts":  1016,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  7047,
-                    "productionConsumerEdges":  4303,
-                    "testConsumerEdges":  2744,
-                    "consumedContracts":  1014,
+                    "consumerEdges":  7054,
+                    "productionConsumerEdges":  4307,
+                    "testConsumerEdges":  2747,
+                    "consumedContracts":  1016,
                     "unconsumedContracts":  0
                 },
     "contracts":  [
@@ -4791,6 +4791,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Application/Lessons/Queries/GetLessonById/GetLessonByIdQuery.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "GetLessonsHttpQuery",
+                          "roles":  [
+                                        "Query"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Presentation.Api/Features/Lessons/Requests/GetLessonsHttpQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -12747,6 +12763,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Presentation.Api/Features/Lessons/Responses/LessonDetailHttpResponse.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "LessonPageHttpResponse",
+                          "roles":  [
+                                        "Response"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Presentation.Api/Features/Lessons/Responses/LessonPageHttpResponse.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -35111,6 +35143,58 @@
                                         ],
                               "definitionPaths":  [
                                                       "FoodDiary.Application/Lessons/Queries/GetLessonById/GetLessonByIdQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "GetLessonsHttpQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Lessons/Requests/GetLessonsHttpQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Lessons/LessonsController.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "GetLessonsHttpQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Lessons/Requests/GetLessonsHttpQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Lessons/Mappings/LessonHttpMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "GetLessonsHttpQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Lessons/Requests/GetLessonsHttpQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/LessonHttpMappingsTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "GetLessonsHttpQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Lessons/Requests/GetLessonsHttpQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
@@ -92148,16 +92232,55 @@
                               "referenceCount":  1
                           },
                           {
-                              "contract":  "LessonSummaryHttpResponse",
+                              "contract":  "LessonPageHttpResponse",
                               "roles":  [
                                             "Response"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Presentation.Api/Features/Lessons/Responses/LessonSummaryHttpResponse.cs"
+                                                      "FoodDiary.Presentation.Api/Features/Lessons/Responses/LessonPageHttpResponse.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Lessons/LessonsController.cs",
                               "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "LessonPageHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Lessons/Responses/LessonPageHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Lessons/Mappings/LessonHttpMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "LessonPageHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Lessons/Responses/LessonPageHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/LessonHttpMappingsTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "LessonPageHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Lessons/Responses/LessonPageHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
+                              "isTest":  true,
                               "referenceCount":  1
                           },
                           {
@@ -92171,7 +92294,20 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Lessons/Mappings/LessonHttpMappings.cs",
                               "isTest":  false,
-                              "referenceCount":  2
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "LessonSummaryHttpResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/Lessons/Responses/LessonSummaryHttpResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Lessons/Responses/LessonPageHttpResponse.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
                           },
                           {
                               "contract":  "LessonSummaryHttpResponse",
@@ -92196,19 +92332,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/LessonHttpMappingsTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "LessonSummaryHttpResponse",
-                              "roles":  [
-                                            "Response"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Presentation.Api/Features/Lessons/Responses/LessonSummaryHttpResponse.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
                               "isTest":  true,
                               "referenceCount":  1
                           },

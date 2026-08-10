@@ -17,16 +17,13 @@ describe('lesson view mapper', () => {
     });
 
     it('builds progress for read lessons', () => {
-        const progress = buildLessonProgress([
-            createSummary({ id: 'lesson-1', isRead: true }),
-            createSummary({ id: 'lesson-2', isRead: false }),
-        ]);
+        const progress = buildLessonProgress(1, 2);
 
         expect(progress).toEqual({ read: 1, total: 2, percent: 50 });
     });
 
     it('returns null progress for empty lessons', () => {
-        expect(buildLessonProgress([])).toBeNull();
+        expect(buildLessonProgress(0, 0)).toBeNull();
     });
 
     it('builds list item translation keys', () => {
@@ -35,6 +32,7 @@ describe('lesson view mapper', () => {
         expect(items[0]).toMatchObject({
             categoryLabelKey: 'LESSONS.CATEGORY.Macronutrients',
             difficultyLabelKey: 'LESSONS.DIFFICULTY.Beginner',
+            difficultyLevel: 1,
         });
     });
 

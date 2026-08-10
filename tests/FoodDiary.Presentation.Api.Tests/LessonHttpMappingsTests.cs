@@ -4,6 +4,7 @@ using FoodDiary.Application.Lessons.Queries.GetLessonById;
 using FoodDiary.Application.Lessons.Queries.GetLessons;
 using FoodDiary.Presentation.Api.Features.Lessons.Mappings;
 using FoodDiary.Presentation.Api.Features.Lessons.Responses;
+using FoodDiary.Presentation.Api.Features.Lessons.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -13,12 +14,17 @@ public sealed class LessonHttpMappingsTests {
     public void ToQuery_MapsAllFields() {
         var userId = Guid.NewGuid();
 
-        GetLessonsQuery query = userId.ToQuery("ru", "nutrition");
+        GetLessonsQuery query = userId.ToQuery(new GetLessonsHttpQuery("ru", "nutrition", "Beginner", "protein", "shortest", 2, 20));
 
         Assert.Multiple(
             () => Assert.Equal(userId, query.UserId),
             () => Assert.Equal("ru", query.Locale),
-            () => Assert.Equal("nutrition", query.Category));
+            () => Assert.Equal("nutrition", query.Category),
+            () => Assert.Equal("Beginner", query.Difficulty),
+            () => Assert.Equal("protein", query.Search),
+            () => Assert.Equal("shortest", query.Sort),
+            () => Assert.Equal(2, query.Page),
+            () => Assert.Equal(20, query.PageSize));
     }
 
     [Fact]
@@ -50,14 +56,18 @@ public sealed class LessonHttpMappingsTests {
             new(Guid.NewGuid(), "Advanced Macros", null, "macros", "advanced", 10, true),
         };
 
-        IReadOnlyList<LessonSummaryHttpResponse> responses = models.ToHttpResponse();
+        var model = new LessonPageModel(models, 1, 20, 2, 1, 31, 6);
+        LessonPageHttpResponse response = model.ToHttpResponse();
+        IReadOnlyList<LessonSummaryHttpResponse> responses = response.Items;
 
         Assert.Multiple(
             () => Assert.Equal(2, responses.Count),
             () => Assert.Equal("Basics of Nutrition", responses[0].Title),
             () => Assert.False(responses[0].IsRead),
             () => Assert.True(responses[1].IsRead),
-            () => Assert.Null(responses[1].Summary));
+            () => Assert.Null(responses[1].Summary),
+            () => Assert.Equal(31, response.TotalLessonCount),
+            () => Assert.Equal(6, response.ReadLessonCount));
     }
 
     [Fact]

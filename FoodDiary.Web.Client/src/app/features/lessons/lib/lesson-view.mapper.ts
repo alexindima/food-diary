@@ -1,6 +1,8 @@
 import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { LESSON_CATEGORIES, type LessonDetail, type LessonSummary } from '../models/lesson.data';
 
+const ADVANCED_DIFFICULTY_LEVEL = 3;
+
 export type LessonCategoryOption = {
     value: string | null;
     labelKey: string;
@@ -16,6 +18,7 @@ export type LessonProgressViewModel = {
 export type LessonListItemViewModel = {
     categoryLabelKey: string;
     difficultyLabelKey: string;
+    difficultyLevel: number;
 } & LessonSummary;
 
 export type LessonDetailViewModel = {
@@ -38,16 +41,15 @@ export function buildLessonCategoryOptions(selectedCategory: string | null): Les
     }));
 }
 
-export function buildLessonProgress(lessons: LessonSummary[]): LessonProgressViewModel | null {
-    if (lessons.length === 0) {
+export function buildLessonProgress(read: number, total: number): LessonProgressViewModel | null {
+    if (total === 0) {
         return null;
     }
 
-    const read = lessons.filter(lesson => lesson.isRead).length;
     return {
         read,
-        total: lessons.length,
-        percent: Math.round((read / lessons.length) * PERCENT_MULTIPLIER),
+        total,
+        percent: Math.round((read / total) * PERCENT_MULTIPLIER),
     };
 }
 
@@ -56,6 +58,7 @@ export function buildLessonListItems(lessons: LessonSummary[]): LessonListItemVi
         ...lesson,
         categoryLabelKey: buildLessonCategoryLabelKey(lesson.category),
         difficultyLabelKey: buildLessonDifficultyLabelKey(lesson.difficulty),
+        difficultyLevel: buildLessonDifficultyLevel(lesson.difficulty),
     }));
 }
 
@@ -77,4 +80,21 @@ function buildLessonCategoryLabelKey(category: string): string {
 
 function buildLessonDifficultyLabelKey(difficulty: string): string {
     return `LESSONS.DIFFICULTY.${difficulty}`;
+}
+
+function buildLessonDifficultyLevel(difficulty: string): number {
+    switch (difficulty) {
+        case 'Beginner': {
+            return 1;
+        }
+        case 'Intermediate': {
+            return 2;
+        }
+        case 'Advanced': {
+            return ADVANCED_DIFFICULTY_LEVEL;
+        }
+        default: {
+            return 0;
+        }
+    }
 }

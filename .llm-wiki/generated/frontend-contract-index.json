@@ -1,16 +1,16 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "components":  414,
+                    "components":  412,
                     "componentsWithoutDirectSpecs":  122,
-                    "inputs":  1275,
-                    "outputs":  398,
+                    "inputs":  1271,
+                    "outputs":  399,
                     "apiCalls":  219,
-                    "templatesWithTranslations":  257,
-                    "translationKeys":  1351,
-                    "consumerEdges":  932,
-                    "consumedComponents":  275,
-                    "unconsumedComponents":  138
+                    "templatesWithTranslations":  255,
+                    "translationKeys":  1359,
+                    "consumerEdges":  936,
+                    "consumedComponents":  276,
+                    "unconsumedComponents":  135
                 },
     "components":  [
                        {
@@ -4636,6 +4636,24 @@
                            "specPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.spec.ts"
                        },
                        {
+                           "class":  "FdUiLevelIndicatorComponent",
+                           "selector":  "fd-ui-level-indicator",
+                           "feature":  "fd-ui-kit",
+                           "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/level-indicator/fd-ui-level-indicator.ts",
+                           "templatePath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/level-indicator/fd-ui-level-indicator.html",
+                           "inputs":  [
+                                          {
+                                              "name":  "filledCount",
+                                              "type":  "",
+                                              "required":  false
+                                          }
+                                      ],
+                           "outputs":  [
+
+                                       ],
+                           "specPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/level-indicator/fd-ui-level-indicator.spec.ts"
+                       },
+                       {
                            "class":  "FdUiLineChartComponent",
                            "selector":  "fd-ui-line-chart",
                            "feature":  "fd-ui-kit",
@@ -6108,24 +6126,6 @@
                            "specPath":  null
                        },
                        {
-                           "class":  "GamificationBadgesCardComponent",
-                           "selector":  "fd-gamification-badges-card",
-                           "feature":  "gamification",
-                           "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "badges",
-                                              "type":  "Badge[]",
-                                              "required":  true
-                                          }
-                                      ],
-                           "outputs":  [
-
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.spec.ts"
-                       },
-                       {
                            "class":  "GamificationHabitPathComponent",
                            "selector":  "fd-gamification-habit-path",
                            "feature":  "gamification",
@@ -6169,24 +6169,6 @@
                            "specPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.spec.ts"
                        },
                        {
-                           "class":  "GamificationHealthScoreCardComponent",
-                           "selector":  "fd-gamification-health-score-card",
-                           "feature":  "gamification",
-                           "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "score",
-                                              "type":  "number",
-                                              "required":  true
-                                          }
-                                      ],
-                           "outputs":  [
-
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.spec.ts"
-                       },
-                       {
                            "class":  "GamificationPageComponent",
                            "selector":  "fd-gamification-page",
                            "feature":  "gamification",
@@ -6199,39 +6181,6 @@
 
                                        ],
                            "specPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.spec.ts"
-                       },
-                       {
-                           "class":  "GamificationStatsGridComponent",
-                           "selector":  "fd-gamification-stats-grid",
-                           "feature":  "gamification",
-                           "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/stats-grid/gamification-stats-grid.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/stats-grid/gamification-stats-grid.html",
-                           "inputs":  [
-                                          {
-                                              "name":  "currentStreak",
-                                              "type":  "number",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "longestStreak",
-                                              "type":  "number",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "totalMealsLogged",
-                                              "type":  "number",
-                                              "required":  true
-                                          },
-                                          {
-                                              "name":  "weeklyAdherence",
-                                              "type":  "number",
-                                              "required":  true
-                                          }
-                                      ],
-                           "outputs":  [
-
-                                       ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/stats-grid/gamification-stats-grid.spec.ts"
                        },
                        {
                            "class":  "CalorieGoalDialogComponent",
@@ -6617,10 +6566,18 @@
                                               "name":  "progress",
                                               "type":  "LessonProgressViewModel | null",
                                               "required":  true
+                                          },
+                                          {
+                                              "name":  "nextLesson",
+                                              "type":  "LessonListItemViewModel | null",
+                                              "required":  true
                                           }
                                       ],
                            "outputs":  [
-
+                                           {
+                                               "name":  "lessonOpen",
+                                               "type":  "string"
+                                           }
                                        ],
                            "specPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-progress/lessons-list-progress.spec.ts"
                        },
@@ -16854,14 +16811,6 @@
                              },
                              {
                                  "feature":  "gamification",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.html",
-                                 "keys":  [
-                                              "GAMIFICATION.BADGES_TITLE",
-                                              "GAMIFICATION.NO_BADGES"
-                                          ]
-                             },
-                             {
-                                 "feature":  "gamification",
                                  "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.html",
                                  "keys":  [
                                               "GAMIFICATION.CURRENT_STREAK",
@@ -16883,14 +16832,6 @@
                                               "GAMIFICATION.HABIT_PATH.VIEW_ALL",
                                               "GAMIFICATION.HEALTH_SCORE_TITLE",
                                               "GAMIFICATION.TITLE"
-                                          ]
-                             },
-                             {
-                                 "feature":  "gamification",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.html",
-                                 "keys":  [
-                                              "GAMIFICATION.HEALTH_SCORE_HINT",
-                                              "GAMIFICATION.HEALTH_SCORE_TITLE"
                                           ]
                              },
                              {
@@ -17017,6 +16958,14 @@
                                  "feature":  "lessons",
                                  "path":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.html",
                                  "keys":  [
+                                              "LESSONS.ALL_LESSONS",
+                                              "LESSONS.LEVEL_FILTER",
+                                              "LESSONS.MATERIALS",
+                                              "LESSONS.MIN_READ",
+                                              "LESSONS.OPEN_ARTICLE",
+                                              "LESSONS.RECOMMENDED",
+                                              "LESSONS.SEARCH",
+                                              "LESSONS.SORT",
                                               "LESSONS.SUBTITLE",
                                               "LESSONS.TITLE",
                                               "LESSONS.TOUR.START_TOUR"
@@ -17027,14 +16976,19 @@
                                  "path":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-grid/lessons-list-grid.html",
                                  "keys":  [
                                               "LESSONS.EMPTY",
-                                              "LESSONS.MIN_READ"
+                                              "LESSONS.MIN_READ",
+                                              "LESSONS.STATUS_COMPLETED"
                                           ]
                              },
                              {
                                  "feature":  "lessons",
                                  "path":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-progress/lessons-list-progress.html",
                                  "keys":  [
-                                              "LESSONS.COMPLETED"
+                                              "LESSONS.COMPLETED",
+                                              "LESSONS.CONTINUE",
+                                              "LESSONS.CONTINUE_LEARNING",
+                                              "LESSONS.MIN_READ",
+                                              "LESSONS.OVERALL_PROGRESS"
                                           ]
                              },
                              {
@@ -22741,7 +22695,7 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "lessons",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.html",
-                              "occurrences":  1,
+                              "occurrences":  2,
                               "inputsUsed":  [
                                                  "appearance",
                                                  "ariaLabel",
@@ -22763,6 +22717,22 @@
                               "inputsUsed":  [
                                                  "fill",
                                                  "size",
+                                                 "variant"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiButtonComponent",
+                              "selector":  "fd-ui-button",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+                              "consumerFeature":  "lessons",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-progress/lessons-list-progress.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "fill",
+                                                 "icon",
                                                  "variant"
                                              ],
                               "outputsHandled":  [
@@ -24719,36 +24689,8 @@
                               "selector":  "fd-ui-card",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
                               "consumerFeature":  "gamification",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "title"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiCardComponent",
-                              "selector":  "fd-ui-card",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-                              "consumerFeature":  "gamification",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.html",
                               "occurrences":  4,
-                              "inputsUsed":  [
-                                                 "title"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiCardComponent",
-                              "selector":  "fd-ui-card",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-                              "consumerFeature":  "gamification",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.html",
-                              "occurrences":  1,
                               "inputsUsed":  [
                                                  "title"
                                              ],
@@ -27217,36 +27159,8 @@
                               "selector":  "fd-ui-icon",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "gamification",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.html",
-                              "occurrences":  2,
-                              "inputsUsed":  [
-                                                 "name"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiIconComponent",
-                              "selector":  "fd-ui-icon",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
-                              "consumerFeature":  "gamification",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.html",
                               "occurrences":  5,
-                              "inputsUsed":  [
-                                                 "name"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiIconComponent",
-                              "selector":  "fd-ui-icon",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
-                              "consumerFeature":  "gamification",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/stats-grid/gamification-stats-grid.html",
-                              "occurrences":  1,
                               "inputsUsed":  [
                                                  "name"
                                              ],
@@ -27303,11 +27217,39 @@
                               "selector":  "fd-ui-icon",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "lessons",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "name"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "lessons",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-grid/lessons-list-grid.html",
                               "occurrences":  2,
                               "inputsUsed":  [
                                                  "name",
                                                  "size"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "lessons",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-progress/lessons-list-progress.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "name"
                                              ],
                               "outputsHandled":  [
 
@@ -28207,6 +28149,23 @@
                               "component":  "FdUiInputComponent",
                               "selector":  "fd-ui-input",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
+                              "consumerFeature":  "lessons",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "ariaLabel",
+                                                 "id",
+                                                 "placeholder",
+                                                 "prefixIcon"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiInputComponent",
+                              "selector":  "fd-ui-input",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
                               "consumerFeature":  "meals",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manual-item-dialog/meal-manual-item-dialog.html",
                               "occurrences":  1,
@@ -28623,6 +28582,48 @@
                                              ],
                               "outputsHandled":  [
                                                      "suffixButtonClicked"
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiLevelIndicatorComponent",
+                              "selector":  "fd-ui-level-indicator",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/level-indicator/fd-ui-level-indicator.ts",
+                              "consumerFeature":  "lessons",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "filledCount"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiLevelIndicatorComponent",
+                              "selector":  "fd-ui-level-indicator",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/level-indicator/fd-ui-level-indicator.ts",
+                              "consumerFeature":  "lessons",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-grid/lessons-list-grid.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "filledCount"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiLevelIndicatorComponent",
+                              "selector":  "fd-ui-level-indicator",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/level-indicator/fd-ui-level-indicator.ts",
+                              "consumerFeature":  "lessons",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-progress/lessons-list-progress.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "filledCount"
+                                             ],
+                              "outputsHandled":  [
+
                                                  ]
                           },
                           {
@@ -29296,6 +29297,21 @@
                               "component":  "FdUiPaginationComponent",
                               "selector":  "fd-ui-pagination",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
+                              "consumerFeature":  "lessons",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "length",
+                                                 "pageSize"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiPaginationComponent",
+                              "selector":  "fd-ui-pagination",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
                               "consumerFeature":  "meals",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-sections/meal-list-content/meal-list-content.html",
                               "occurrences":  1,
@@ -29419,21 +29435,6 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/progress-ring/fd-ui-progress-ring.ts",
                               "consumerFeature":  "gamification",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "ariaLabel",
-                                                 "value"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "FdUiProgressRingComponent",
-                              "selector":  "fd-ui-progress-ring",
-                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/progress-ring/fd-ui-progress-ring.ts",
-                              "consumerFeature":  "gamification",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "ariaLabel",
@@ -29874,6 +29875,21 @@
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "label",
+                                                 "options"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiSelectComponent",
+                              "selector":  "fd-ui-select",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+                              "consumerFeature":  "lessons",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.html",
+                              "occurrences":  2,
+                              "inputsUsed":  [
+                                                 "ariaLabel",
                                                  "options"
                                              ],
                               "outputsHandled":  [
@@ -31030,10 +31046,11 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.html",
                               "occurrences":  1,
                               "inputsUsed":  [
+                                                 "nextLesson",
                                                  "progress"
                                              ],
                               "outputsHandled":  [
-
+                                                     "lessonOpen"
                                                  ]
                           },
                           {

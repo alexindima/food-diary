@@ -161,6 +161,15 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         UserLessonProgress? lessonProgress = await repository.GetUserProgressForLessonAsync(user.Id, basics.Id);
         bool isBasicsRead = await repository.IsLessonReadAsync(user.Id, basics.Id);
         bool isHydrationRead = await repository.IsLessonReadAsync(user.Id, hydration.Id);
+        LessonSummaryPageReadModel page = await repository.GetSummaryPageByLocaleAsync(
+            "en",
+            LessonCategory.NutritionBasics,
+            LessonDifficulty.Advanced,
+            "UPDATED",
+            LessonSortOption.Shortest,
+            skip: 0,
+            take: 20);
+        int readLessonCount = await repository.CountReadLessonsByLocaleAsync(user.Id, "en");
 
         await repository.DeleteAsync(hydration);
         await context.SaveChangesAsync();
@@ -179,6 +188,10 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Equal(progress.Id, lessonProgress?.Id);
         Assert.True(isBasicsRead);
         Assert.False(isHydrationRead);
+        Assert.Equal(1, page.TotalCount);
+        Assert.Equal(2, page.TotalLessonCount);
+        Assert.Equal("Basics updated", Assert.Single(page.Items).Title);
+        Assert.Equal(1, readLessonCount);
         Assert.Multiple(
             () => Assert.Equal(basics.Id.Value, summary.Id),
             () => Assert.Equal("Basics", summary.Title),

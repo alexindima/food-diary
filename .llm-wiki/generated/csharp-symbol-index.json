@@ -8,15 +8,15 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3067,
-                    "symbols":  3107,
+                    "sourceFiles":  3072,
+                    "symbols":  3112,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
                                   "class":  1571,
-                                  "enum":  46,
+                                  "enum":  47,
                                   "interface":  407,
-                                  "record":  971,
+                                  "record":  975,
                                   "record struct":  112
                               },
                     "roles":  {
@@ -32,14 +32,14 @@
                                   "Mapper":  8,
                                   "Mapping":  3,
                                   "Options":  56,
-                                  "Other":  1098,
-                                  "Query":  157,
+                                  "Other":  1101,
+                                  "Query":  158,
                                   "QueryHandler":  122,
                                   "ReadModelRepository":  29,
                                   "ReadRepository":  50,
                                   "Repository":  103,
                                   "Request":  123,
-                                  "Response":  169,
+                                  "Response":  170,
                                   "Service":  258,
                                   "Validator":  178,
                                   "ValueObject":  122,
@@ -2502,6 +2502,20 @@
                         "kind":  "record",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Lessons/Models/LessonDetailReadModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "LessonSortOption",
+                        "kind":  "enum",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Lessons/Models/LessonSortOption.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "LessonSummaryPageReadModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Lessons/Models/LessonSummaryPageReadModel.cs",
                         "line":  2
                     },
                     {
@@ -9047,7 +9061,7 @@
                         "kind":  "interface",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Lessons/Common/ILessonReadService.cs",
-                        "line":  6
+                        "line":  7
                     },
                     {
                         "name":  "LessonAdministrationItem",
@@ -9068,6 +9082,13 @@
                         "kind":  "record",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Lessons/Models/LessonDetailModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "LessonPageModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/Lessons/Models/LessonPageModel.cs",
                         "line":  2
                     },
                     {
@@ -9103,7 +9124,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Lessons/Queries/GetLessons/GetLessonsQueryHandler.cs",
-                        "line":  12
+                        "line":  13
                     },
                     {
                         "name":  "GetLessonsQueryValidator",
@@ -18406,20 +18427,34 @@
                         "kind":  "class",
                         "role":  "Controller",
                         "path":  "FoodDiary.Presentation.Api/Features/Lessons/LessonsController.cs",
-                        "line":  12
+                        "line":  13
                     },
                     {
                         "name":  "LessonHttpMappings",
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Presentation.Api/Features/Lessons/Mappings/LessonHttpMappings.cs",
-                        "line":  8
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetLessonsHttpQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Presentation.Api/Features/Lessons/Requests/GetLessonsHttpQuery.cs",
+                        "line":  2
                     },
                     {
                         "name":  "LessonDetailHttpResponse",
                         "kind":  "record",
                         "role":  "Response",
                         "path":  "FoodDiary.Presentation.Api/Features/Lessons/Responses/LessonDetailHttpResponse.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "LessonPageHttpResponse",
+                        "kind":  "record",
+                        "role":  "Response",
+                        "path":  "FoodDiary.Presentation.Api/Features/Lessons/Responses/LessonPageHttpResponse.cs",
                         "line":  2
                     },
                     {

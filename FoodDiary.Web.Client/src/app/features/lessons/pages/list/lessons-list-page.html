@@ -13,17 +13,71 @@
     </fd-page-header>
 
     <fd-page-body>
-        <fd-lessons-list-progress data-tour-id="lessons-progress" [progress]="progress()" />
+        <fd-lessons-list-progress
+            data-tour-id="lessons-progress"
+            [progress]="progress()"
+            [nextLesson]="nextLesson()"
+            (lessonOpen)="openLesson($event)"
+        />
+        <div class="lessons-list__toolbar">
+            <fd-ui-input
+                class="lessons-list__search"
+                id="lessons-search"
+                prefixIcon="search"
+                [ariaLabel]="'LESSONS.SEARCH' | translate"
+                [placeholder]="'LESSONS.SEARCH' | translate"
+                [value]="searchQuery()"
+                (valueChange)="updateSearch($event)"
+            />
+            <fd-ui-select
+                class="lessons-list__select"
+                [ariaLabel]="'LESSONS.LEVEL_FILTER' | translate"
+                [options]="difficultyOptions()"
+                [value]="difficultyFilter()"
+                (valueChange)="updateDifficulty($event)"
+            />
+            <fd-ui-select
+                class="lessons-list__select"
+                [ariaLabel]="'LESSONS.SORT' | translate"
+                [options]="sortOptions()"
+                [value]="sortOrder()"
+                (valueChange)="updateSortOrder($event)"
+            />
+        </div>
         <fd-lessons-list-filters
             data-tour-id="lessons-filters"
-            [selectedCategory]="facade.categoryFilter()"
+            [selectedCategory]="selectedCategory()"
             (filterChange)="filterByCategory($event)"
         />
+        @if (recommendedLesson(); as lesson) {
+            <section class="lessons-list__recommendation" aria-labelledby="lessons-recommendation-title">
+                <fd-ui-icon class="lessons-list__recommendation-icon" name="track_changes" aria-hidden="true" />
+                <div class="lessons-list__recommendation-copy">
+                    <h2 id="lessons-recommendation-title" class="fd-ui-section-title">{{ 'LESSONS.RECOMMENDED' | translate }}</h2>
+                    <strong>{{ lesson.title }}</strong>
+                    @if (lesson.summary) {
+                        <span>{{ lesson.summary }}</span>
+                    }
+                </div>
+                <span class="lessons-list__recommendation-meta">
+                    <fd-ui-level-indicator [filledCount]="lesson.difficultyLevel" />
+                    {{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }} · {{ lesson.difficultyLabelKey | translate }}
+                </span>
+                <fd-ui-button variant="secondary" fill="outline" (click)="openLesson(lesson.id)">
+                    {{ 'LESSONS.OPEN_ARTICLE' | translate }}
+                </fd-ui-button>
+            </section>
+        }
+        <div class="lessons-list__section-heading fd-row fd-align-center fd-gap-sm">
+            <h2 class="fd-ui-section-title">{{ 'LESSONS.ALL_LESSONS' | translate }}</h2>
+            <span>{{ facade.page().totalCount }} {{ 'LESSONS.MATERIALS' | translate }}</span>
+        </div>
         <fd-lessons-list-grid
             data-tour-id="lessons-grid"
             [isLoading]="facade.isLoading()"
             [lessons]="lessons()"
             (lessonOpen)="openLesson($event)"
         />
+        <fd-ui-pagination [length]="facade.page().totalCount" [pageSize]="facade.page().pageSize" [(pageIndex)]="facade.pageIndex" />
     </fd-page-body>
 </div>

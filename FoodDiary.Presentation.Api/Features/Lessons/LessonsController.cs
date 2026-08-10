@@ -1,6 +1,7 @@
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Lessons.Mappings;
 using FoodDiary.Presentation.Api.Features.Lessons.Responses;
+using FoodDiary.Presentation.Api.Features.Lessons.Requests;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +12,11 @@ namespace FoodDiary.Presentation.Api.Features.Lessons;
 [Route("api/v{version:apiVersion}/lessons")]
 public sealed class LessonsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
-    [ProducesResponseType<IReadOnlyList<LessonSummaryHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<LessonPageHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetAll(
         [FromCurrentUser] Guid userId,
-        [FromQuery] string locale = "en",
-        [FromQuery] string? category = null) =>
-        HandleOk(userId.ToQuery(locale, category), static value => value.ToHttpResponse());
+        [FromQuery] GetLessonsHttpQuery query) =>
+        HandleOk(userId.ToQuery(query), static value => value.ToHttpResponse());
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType<LessonDetailHttpResponse>(StatusCodes.Status200OK)]

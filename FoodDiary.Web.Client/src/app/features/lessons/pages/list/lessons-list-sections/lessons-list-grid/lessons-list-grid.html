@@ -22,16 +22,21 @@
                         {{ lesson.categoryLabelKey | translate }}
                     </span>
                     @if (lesson.isRead) {
-                        <fd-ui-icon class="lesson-card__check" name="check_circle" />
+                        <span class="lesson-card__status lesson-card__status--complete">
+                            <fd-ui-icon name="check_circle" /> {{ 'LESSONS.STATUS_COMPLETED' | translate }}
+                        </span>
                     }
                 </div>
                 <h3 class="lesson-card__title fd-ui-section-title">{{ lesson.title }}</h3>
                 @if (lesson.summary) {
                     <p class="lesson-card__summary fd-ui-caption">{{ lesson.summary }}</p>
                 }
-                <div class="lesson-card__meta fd-row fd-gap-sm fd-ui-field-label--floating">
-                    <span>{{ lesson.difficultyLabelKey | translate }}</span>
-                    <span>{{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}</span>
+                <div class="lesson-card__meta fd-row fd-justify-between fd-gap-sm fd-ui-field-label--floating">
+                    <span class="fd-row fd-align-center fd-gap-xs">
+                        <fd-ui-level-indicator [filledCount]="lesson.difficultyLevel" />
+                        {{ lesson.difficultyLabelKey | translate }} · {{ lesson.estimatedReadMinutes }}
+                        {{ 'LESSONS.MIN_READ' | translate }}
+                    </span>
                 </div>
             </div>
         }

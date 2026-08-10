@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.Content;
 
 internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : INutritionLessonRepository {
+    private const string LikeEscapeCharacter = "\\";
     public async Task<IReadOnlyList<NutritionLesson>> GetByLocaleAsync(
         string locale,
         LessonCategory? category = null,
@@ -51,6 +52,64 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
                 l.SortOrder))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
+
+    public async Task<LessonSummaryPageReadModel> GetSummaryPageByLocaleAsync(
+        string locale,
+        LessonCategory? category,
+        LessonDifficulty? difficulty,
+        string? search,
+        LessonSortOption sort,
+        int skip,
+        int take,
+        CancellationToken cancellationToken = default) {
+        IQueryable<NutritionLesson> localeQuery = context.Set<NutritionLesson>()
+            .AsNoTracking()
+            .Where(lesson => lesson.Locale == locale);
+        int totalLessonCount = await localeQuery.CountAsync(cancellationToken).ConfigureAwait(false);
+
+        IQueryable<NutritionLesson> filteredQuery = localeQuery;
+        if (category.HasValue) {
+            filteredQuery = filteredQuery.Where(lesson => lesson.Category == category.Value);
+        }
+
+        if (difficulty.HasValue) {
+            filteredQuery = filteredQuery.Where(lesson => lesson.Difficulty == difficulty.Value);
+        }
+
+        if (!string.IsNullOrWhiteSpace(search)) {
+            string pattern = $"%{EscapeLikePattern(search.Trim())}%";
+            filteredQuery = filteredQuery.Where(lesson =>
+                EF.Functions.ILike(lesson.Title, pattern, LikeEscapeCharacter) ||
+                EF.Functions.ILike(lesson.Summary ?? string.Empty, pattern, LikeEscapeCharacter));
+        }
+
+        int totalCount = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
+        IOrderedQueryable<NutritionLesson> orderedQuery = sort == LessonSortOption.Shortest
+            ? filteredQuery.OrderBy(lesson => lesson.EstimatedReadMinutes).ThenBy(lesson => lesson.Category).ThenBy(lesson => lesson.SortOrder)
+            : filteredQuery.OrderBy(lesson => lesson.Category).ThenBy(lesson => lesson.SortOrder);
+        IReadOnlyList<LessonSummaryReadModel> items = await orderedQuery
+            .Skip(skip)
+            .Take(take)
+            .Select(lesson => new LessonSummaryReadModel(
+                lesson.Id.Value,
+                lesson.Title,
+                lesson.Summary,
+                lesson.Category.ToString(),
+                lesson.Difficulty.ToString(),
+                lesson.EstimatedReadMinutes,
+                lesson.SortOrder))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+
+        return new LessonSummaryPageReadModel(items, totalCount, totalLessonCount);
+    }
+
+    public Task<int> CountReadLessonsByLocaleAsync(
+        UserId userId,
+        string locale,
+        CancellationToken cancellationToken = default) =>
+        context.Set<UserLessonProgress>()
+            .AsNoTracking()
+            .CountAsync(progress => progress.UserId == userId && progress.Lesson.Locale == locale, cancellationToken);
 
     public async Task<IReadOnlyList<NutritionLesson>> GetAllAsync(
         CancellationToken cancellationToken = default) {
@@ -186,4 +245,9 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
         context.Set<NutritionLesson>().Remove(lesson);
         return Task.CompletedTask;
     }
+
+    private static string EscapeLikePattern(string value) =>
+        value.Replace(LikeEscapeCharacter, "\\\\", StringComparison.Ordinal)
+            .Replace("%", "\\%", StringComparison.Ordinal)
+            .Replace("_", "\\_", StringComparison.Ordinal);
 }

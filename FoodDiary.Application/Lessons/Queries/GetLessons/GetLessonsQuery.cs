@@ -7,4 +7,9 @@ namespace FoodDiary.Application.Lessons.Queries.GetLessons;
 public record GetLessonsQuery(
     Guid? UserId,
     string Locale,
-    string? Category) : IQuery<Result<IReadOnlyList<LessonSummaryModel>>>, IUserRequest;
+    string? Category = null,
+    string? Difficulty = null,
+    string? Search = null,
+    string? Sort = null,
+    int Page = 1,
+    int PageSize = 20) : IQuery<Result<LessonPageModel>>, IUserRequest;

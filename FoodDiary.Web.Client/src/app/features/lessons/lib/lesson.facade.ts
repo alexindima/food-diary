@@ -1,11 +1,14 @@
 import { computed, DestroyRef, inject, Injectable, resource, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { debounceTime, distinctUntilChanged, firstValueFrom } from 'rxjs';
 
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { LessonService } from '../api/lesson.service';
-import type { LessonDetail, LessonSummary } from '../models/lesson.data';
+import type { LessonDetail, LessonPage } from '../models/lesson.data';
+
+const LESSON_PAGE_SIZE = 20;
+const SEARCH_DEBOUNCE_MS = 300;
 
 @Injectable()
 export class LessonFacade {
@@ -16,13 +19,33 @@ export class LessonFacade {
     private readonly markedReadIds = signal<Set<string>>(new Set());
 
     public readonly categoryFilter = signal<string | null>(null);
+    public readonly difficultyFilter = signal<string | null>(null);
+    public readonly searchQuery = signal('');
+    public readonly sortOrder = signal<'recommended' | 'shortest'>('recommended');
+    public readonly pageIndex = signal(0);
+    private readonly debouncedSearchQuery = toSignal(
+        toObservable(this.searchQuery).pipe(debounceTime(SEARCH_DEBOUNCE_MS), distinctUntilChanged()),
+        { initialValue: '' },
+    );
     private readonly lessonsResource = resource({
         params: () => ({
             locale: this.getCurrentLocale(),
             category: this.categoryFilter(),
+            difficulty: this.difficultyFilter(),
+            search: this.debouncedSearchQuery(),
+            sort: this.sortOrder(),
+            page: this.pageIndex() + 1,
+            pageSize: LESSON_PAGE_SIZE,
         }),
-        loader: async ({ params }): Promise<LessonSummary[]> =>
-            firstValueFrom(this.service.getAll(params.locale, params.category ?? undefined)),
+        loader: async ({ params }): Promise<LessonPage> =>
+            firstValueFrom(
+                this.service.getAll({
+                    ...params,
+                    category: params.category ?? undefined,
+                    difficulty: params.difficulty ?? undefined,
+                    search: params.search.length > 0 ? params.search : undefined,
+                }),
+            ),
     });
     private readonly selectedLessonResource = resource({
         params: () => this.selectedLessonId(),
@@ -35,8 +58,21 @@ export class LessonFacade {
         },
     });
 
+    public readonly page = computed<LessonPage>(() =>
+        this.lessonsResource.hasValue()
+            ? this.lessonsResource.value()
+            : {
+                  items: [],
+                  page: this.pageIndex() + 1,
+                  pageSize: LESSON_PAGE_SIZE,
+                  totalCount: 0,
+                  totalPages: 0,
+                  totalLessonCount: 0,
+                  readLessonCount: 0,
+              },
+    );
     public readonly lessons = computed(() => {
-        const lessons = this.lessonsResource.hasValue() ? this.lessonsResource.value() : [];
+        const lessons = this.page().items;
         const markedReadIds = this.markedReadIds();
         if (markedReadIds.size === 0) {
             return lessons;
@@ -57,6 +93,10 @@ export class LessonFacade {
 
     public loadLessons(category?: string | null): void {
         this.categoryFilter.set(category ?? null);
+    }
+
+    public resetPage(): void {
+        this.pageIndex.set(0);
     }
 
     public loadLesson(id: string): void {

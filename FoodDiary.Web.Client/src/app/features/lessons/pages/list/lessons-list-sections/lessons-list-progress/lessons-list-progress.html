@@ -1,10 +1,31 @@
 @if (progress(); as progress) {
-    <div class="lessons-list__progress fd-row fd-gap-sm">
-        <div class="lessons-list__progress-bar">
-            <div class="lessons-list__progress-fill" [style.width.%]="progress.percent"></div>
+    <section class="academy-progress">
+        @if (nextLesson(); as lesson) {
+            <div class="academy-progress__lesson">
+                <fd-ui-icon class="academy-progress__icon" name="auto_stories" aria-hidden="true" />
+                <div class="academy-progress__content">
+                    <span class="academy-progress__eyebrow">{{ 'LESSONS.CONTINUE_LEARNING' | translate }}</span>
+                    <h2>{{ lesson.title }}</h2>
+                    <span class="academy-progress__meta">
+                        <fd-ui-level-indicator [filledCount]="lesson.difficultyLevel" />
+                        {{ lesson.difficultyLabelKey | translate }} · {{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}
+                    </span>
+                    @if (lesson.summary) {
+                        <p>{{ lesson.summary }}</p>
+                    }
+                    <fd-ui-button variant="primary" fill="solid" icon="play_arrow" (click)="lessonOpen.emit(lesson.id)">
+                        {{ 'LESSONS.CONTINUE' | translate }}
+                    </fd-ui-button>
+                </div>
+            </div>
+        }
+        <div class="academy-progress__summary">
+            <span>{{ 'LESSONS.OVERALL_PROGRESS' | translate }}</span>
+            <strong>{{ progress.read }} / {{ progress.total }}</strong>
+            <span class="academy-progress__percent">{{ progress.percent }}% {{ 'LESSONS.COMPLETED' | translate }}</span>
+            <div class="lessons-list__progress-bar">
+                <div class="lessons-list__progress-fill" [style.width.%]="progress.percent"></div>
+            </div>
         </div>
-        <span class="lessons-list__progress-text fd-ui-caption-strong">
-            {{ progress.read }}/{{ progress.total }} {{ 'LESSONS.COMPLETED' | translate }}
-        </span>
-    </div>
+    </section>
 }

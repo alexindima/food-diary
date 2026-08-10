@@ -3958,17 +3958,48 @@
           ],
           "QueryParameters": [
             {
-              "Name": "category",
+              "Name": "Category",
               "Location": "query",
               "Required": false,
               "Type": "string"
             },
             {
-              "Name": "locale",
+              "Name": "Difficulty",
               "Location": "query",
               "Required": false,
-              "Type": "string",
-              "Default": "\u0022en\u0022"
+              "Type": "string"
+            },
+            {
+              "Name": "Locale",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "PageSize",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Sort",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
             },
             {
               "Name": "userId",

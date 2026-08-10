@@ -19,7 +19,7 @@ describe('LessonsListProgressComponent', () => {
         const element = getElement(fixture);
 
         expect(element.querySelector('.lessons-list__progress-fill')?.getAttribute('style')).toContain('width: 50%');
-        expect(element.textContent).toContain('2/4');
+        expect(element.textContent).toContain('2 / 4');
     });
 
     it('renders nothing when progress is missing', () => {
@@ -32,6 +32,7 @@ describe('LessonsListProgressComponent', () => {
 function createComponent(progress: LessonProgressViewModel | null): ComponentFixture<LessonsListProgressComponent> {
     const fixture = TestBed.createComponent(LessonsListProgressComponent);
     fixture.componentRef.setInput('progress', progress);
+    fixture.componentRef.setInput('nextLesson', null);
     fixture.detectChanges();
 
     return fixture;

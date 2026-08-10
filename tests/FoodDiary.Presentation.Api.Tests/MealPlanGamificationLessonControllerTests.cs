@@ -23,6 +23,7 @@ using FoodDiary.Presentation.Api.Features.FavoriteMeals.Responses;
 using FoodDiary.Presentation.Api.Features.Gamification;
 using FoodDiary.Presentation.Api.Features.Gamification.Responses;
 using FoodDiary.Presentation.Api.Features.Lessons;
+using FoodDiary.Presentation.Api.Features.Lessons.Requests;
 using FoodDiary.Presentation.Api.Features.Lessons.Responses;
 using FoodDiary.Presentation.Api.Features.MealPlans;
 using FoodDiary.Presentation.Api.Features.MealPlans.Responses;
@@ -124,13 +125,13 @@ public sealed class MealPlanGamificationLessonControllerTests {
         var userId = Guid.NewGuid();
         var lessonId = Guid.NewGuid();
 
-        IRequest<Result<IReadOnlyList<LessonSummaryModel>>>? allRequest = null;
-        ISender allSender = SubstituteSender.Create(Result.Success<IReadOnlyList<LessonSummaryModel>>([
+        IRequest<Result<LessonPageModel>>? allRequest = null;
+        ISender allSender = SubstituteSender.Create(Result.Success(new LessonPageModel([
             new LessonSummaryModel(lessonId, "Basics", "Summary", "nutrition", "beginner", 5, IsRead: false),
-        ]), request => allRequest = request);
+        ], 1, 20, 1, 1, 1, 0)), request => allRequest = request);
         LessonsController allController = CreateController(new LessonsController(allSender));
-        IActionResult all = await allController.GetAll(userId, "ru", "nutrition");
-        Assert.IsAssignableFrom<IReadOnlyList<LessonSummaryHttpResponse>>(Assert.IsType<OkObjectResult>(all).Value);
+        IActionResult all = await allController.GetAll(userId, new GetLessonsHttpQuery("ru", "nutrition"));
+        Assert.IsType<LessonPageHttpResponse>(Assert.IsType<OkObjectResult>(all).Value);
         GetLessonsQuery allQuery = Assert.IsType<GetLessonsQuery>(allRequest);
         Assert.Equal("ru", allQuery.Locale);
         Assert.Equal("nutrition", allQuery.Category);

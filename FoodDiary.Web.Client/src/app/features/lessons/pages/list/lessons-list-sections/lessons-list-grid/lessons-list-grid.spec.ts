@@ -69,5 +69,6 @@ function createLesson(): LessonListItemViewModel {
         isRead: true,
         categoryLabelKey: 'LESSONS.CATEGORY.Macronutrients',
         difficultyLabelKey: 'LESSONS.DIFFICULTY.Beginner',
+        difficultyLevel: 1,
     };
 }

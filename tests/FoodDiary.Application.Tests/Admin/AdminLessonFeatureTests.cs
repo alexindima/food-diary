@@ -445,6 +445,29 @@ public class AdminLessonFeatureTests {
                         lesson.SortOrder)),
             ]);
 
+        public async Task<LessonSummaryPageReadModel> GetSummaryPageByLocaleAsync(
+            string locale,
+            LessonCategory? category,
+            LessonDifficulty? difficulty,
+            string? search,
+            LessonSortOption sort,
+            int skip,
+            int take,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<LessonSummaryReadModel> lessons = await GetSummaryReadModelsByLocaleAsync(locale, category, cancellationToken);
+            var filtered = lessons
+                .Where(lesson => !difficulty.HasValue || string.Equals(lesson.Difficulty, difficulty.Value.ToString(), StringComparison.Ordinal))
+                .Where(lesson => string.IsNullOrWhiteSpace(search) || $"{lesson.Title} {lesson.Summary}".Contains(search, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            return new LessonSummaryPageReadModel([.. filtered.Skip(skip).Take(take)], filtered.Count, lessons.Count);
+        }
+
+        public Task<int> CountReadLessonsByLocaleAsync(
+            UserId userId,
+            string locale,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(0);
+
         public Task<IReadOnlyList<LessonAdminReadModel>> GetAdminReadModelsAsync(CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<LessonAdminReadModel>>([
                 .. _lessons.Select(static lesson => new LessonAdminReadModel(

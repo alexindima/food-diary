@@ -78,6 +78,14 @@ Accessible circular progress indicator with a shared rounded SVG treatment, reve
 - `--fd-progress-ring-track-color`
 - `--fd-progress-ring-duration`
 
+#### `fd-ui-level-indicator`
+
+Compact four-step level indicator for difficulty, proficiency, signal strength, or similar ordinal values. It is decorative by default and should be paired with a visible text label.
+
+**Inputs**
+
+- `filledCount?: number` (clamped to `0..4`, defaults to `0`)
+
 #### `fd-ui-bar-chart`
 
 Responsive bar chart for simple comparisons and scaled categorical time series. Categorical mode supports single, grouped, and stacked bars, missing categories, Y-axis labels, units, highlighted labels, and reference lines.

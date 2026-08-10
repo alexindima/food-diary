@@ -10,6 +10,21 @@ public interface INutritionLessonReadModelRepository {
         LessonCategory? category = null,
         CancellationToken cancellationToken = default);
 
+    Task<LessonSummaryPageReadModel> GetSummaryPageByLocaleAsync(
+        string locale,
+        LessonCategory? category,
+        LessonDifficulty? difficulty,
+        string? search,
+        LessonSortOption sort,
+        int skip,
+        int take,
+        CancellationToken cancellationToken = default);
+
+    Task<int> CountReadLessonsByLocaleAsync(
+        UserId userId,
+        string locale,
+        CancellationToken cancellationToken = default);
+
     Task<IReadOnlyList<LessonAdminReadModel>> GetAdminReadModelsAsync(
         CancellationToken cancellationToken = default);
 

@@ -11,27 +11,42 @@ namespace FoodDiary.Application.Lessons.Services;
 public sealed class LessonReadService(
     INutritionLessonReadModelRepository readModelRepository)
     : ILessonReadService {
-    public async Task<IReadOnlyList<LessonSummaryModel>> GetByLocaleAsync(
+    public async Task<LessonPageModel> GetPageByLocaleAsync(
         UserId userId,
         string locale,
         LessonCategory? categoryFilter,
+        LessonDifficulty? difficultyFilter,
+        string? search,
+        LessonSortOption sort,
+        int page,
+        int pageSize,
         CancellationToken cancellationToken) {
-        IReadOnlyList<LessonSummaryReadModel> lessons = await readModelRepository
-            .GetSummaryReadModelsByLocaleAsync(locale, categoryFilter, cancellationToken)
+        int skip = (page - 1) * pageSize;
+        LessonSummaryPageReadModel result = await readModelRepository
+            .GetSummaryPageByLocaleAsync(locale, categoryFilter, difficultyFilter, search, sort, skip, pageSize, cancellationToken)
             .ConfigureAwait(false);
 
-        if (lessons.Count == 0 && !string.Equals(locale, "en", StringComparison.Ordinal)) {
-            lessons = await readModelRepository.GetSummaryReadModelsByLocaleAsync("en", categoryFilter, cancellationToken).ConfigureAwait(false);
+        string effectiveLocale = locale;
+        if (result.TotalLessonCount == 0 && !string.Equals(locale, "en", StringComparison.Ordinal)) {
+            effectiveLocale = "en";
+            result = await readModelRepository
+                .GetSummaryPageByLocaleAsync("en", categoryFilter, difficultyFilter, search, sort, skip, pageSize, cancellationToken)
+                .ConfigureAwait(false);
         }
 
         IReadOnlyList<Guid> readLessonIds = await readModelRepository.GetReadLessonIdsAsync(userId, cancellationToken).ConfigureAwait(false);
         var readIds = new HashSet<Guid>(readLessonIds);
+        int readLessonCount = await readModelRepository.CountReadLessonsByLocaleAsync(userId, effectiveLocale, cancellationToken).ConfigureAwait(false);
+        int totalPages = result.TotalCount == 0 ? 0 : (int)Math.Ceiling(result.TotalCount / (double)pageSize);
 
-        return lessons
-            .OrderBy(static lesson => lesson.Category, StringComparer.Ordinal)
-            .ThenBy(static lesson => lesson.SortOrder)
-            .Select(lesson => lesson.ToSummaryModel(readIds))
-            .ToList();
+        return new LessonPageModel(
+            result.Items.Select(lesson => lesson.ToSummaryModel(readIds)).ToList(),
+            page,
+            pageSize,
+            result.TotalCount,
+            totalPages,
+            result.TotalLessonCount,
+            readLessonCount);
     }
 
     public async Task<LessonDetailModel?> GetByIdAsync(
