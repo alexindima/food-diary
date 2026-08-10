@@ -1,6 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
@@ -23,7 +24,12 @@ describe('GamificationService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [GamificationService, provideHttpClient(), provideHttpClientTesting()],
+            providers: [
+                GamificationService,
+                { provide: TranslateService, useValue: { getCurrentLang: (): string => 'ru' } },
+                provideHttpClient(),
+                provideHttpClientTesting(),
+            ],
         });
 
         service = TestBed.inject(GamificationService);
@@ -41,6 +47,7 @@ describe('GamificationService', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/`);
         expect(req.request.method).toBe('GET');
+        expect(req.request.headers.get('Accept-Language')).toBe('ru');
         req.flush(MOCK_DATA);
     });
 

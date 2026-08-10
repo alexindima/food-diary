@@ -1,16 +1,16 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "components":  413,
-                    "componentsWithoutDirectSpecs":  121,
-                    "inputs":  1274,
+                    "components":  414,
+                    "componentsWithoutDirectSpecs":  122,
+                    "inputs":  1275,
                     "outputs":  398,
                     "apiCalls":  219,
-                    "templatesWithTranslations":  256,
+                    "templatesWithTranslations":  257,
                     "translationKeys":  1351,
-                    "consumerEdges":  931,
-                    "consumedComponents":  278,
-                    "unconsumedComponents":  134
+                    "consumerEdges":  932,
+                    "consumedComponents":  275,
+                    "unconsumedComponents":  138
                 },
     "components":  [
                        {
@@ -6094,6 +6094,20 @@
                            "specPath":  "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.spec.ts"
                        },
                        {
+                           "class":  "GamificationAchievementsDialogComponent",
+                           "selector":  "fd-gamification-achievements-dialog",
+                           "feature":  "gamification",
+                           "path":  "FoodDiary.Web.Client/src/app/features/gamification/dialogs/gamification-achievements-dialog/gamification-achievements-dialog.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/gamification/dialogs/gamification-achievements-dialog/gamification-achievements-dialog.html",
+                           "inputs":  [
+
+                                      ],
+                           "outputs":  [
+
+                                       ],
+                           "specPath":  null
+                       },
+                       {
                            "class":  "GamificationBadgesCardComponent",
                            "selector":  "fd-gamification-badges-card",
                            "feature":  "gamification",
@@ -6120,6 +6134,11 @@
                            "inputs":  [
                                           {
                                               "name":  "currentStreak",
+                                              "type":  "number",
+                                              "required":  true
+                                          },
+                                          {
+                                              "name":  "longestStreak",
                                               "type":  "number",
                                               "required":  true
                                           },
@@ -16826,6 +16845,15 @@
                              },
                              {
                                  "feature":  "gamification",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/gamification/dialogs/gamification-achievements-dialog/gamification-achievements-dialog.html",
+                                 "keys":  [
+                                              "GAMIFICATION.HABIT_PATH.ALL_ACHIEVEMENTS",
+                                              "GAMIFICATION.HABIT_PATH.RECEIVED",
+                                              "GAMIFICATION.HABIT_PATH.RECEIVED_HINT"
+                                          ]
+                             },
+                             {
+                                 "feature":  "gamification",
                                  "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.html",
                                  "keys":  [
                                               "GAMIFICATION.BADGES_TITLE",
@@ -16838,21 +16866,23 @@
                                  "keys":  [
                                               "GAMIFICATION.CURRENT_STREAK",
                                               "GAMIFICATION.HABIT_PATH.AHEAD",
+                                              "GAMIFICATION.HABIT_PATH.BEST_STREAK",
                                               "GAMIFICATION.HABIT_PATH.CLOSEST_GOALS",
                                               "GAMIFICATION.HABIT_PATH.COLLECTION",
-                                              "GAMIFICATION.HABIT_PATH.DAYS",
+                                              "GAMIFICATION.HABIT_PATH.DAYS_IN_A_ROW",
                                               "GAMIFICATION.HABIT_PATH.FILTERS",
-                                              "GAMIFICATION.HABIT_PATH.LEVEL",
-                                              "GAMIFICATION.HABIT_PATH.LEVEL_TITLE",
+                                              "GAMIFICATION.HABIT_PATH.HEALTH_SCORE_HINT",
                                               "GAMIFICATION.HABIT_PATH.NEXT_REWARD",
+                                              "GAMIFICATION.HABIT_PATH.NEXT_REWARD_PROGRESS",
                                               "GAMIFICATION.HABIT_PATH.NO_RECENT",
                                               "GAMIFICATION.HABIT_PATH.RECEIVED",
                                               "GAMIFICATION.HABIT_PATH.RECEIVED_HINT",
                                               "GAMIFICATION.HABIT_PATH.RECEIVED_SHORT",
                                               "GAMIFICATION.HABIT_PATH.RECENT",
                                               "GAMIFICATION.HABIT_PATH.REMAINING",
-                                              "GAMIFICATION.HABIT_PATH.TO_NEXT_LEVEL",
-                                              "GAMIFICATION.HEALTH_SCORE_TITLE"
+                                              "GAMIFICATION.HABIT_PATH.VIEW_ALL",
+                                              "GAMIFICATION.HEALTH_SCORE_TITLE",
+                                              "GAMIFICATION.TITLE"
                                           ]
                              },
                              {
@@ -16867,8 +16897,6 @@
                                  "feature":  "gamification",
                                  "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.html",
                                  "keys":  [
-                                              "GAMIFICATION.HABIT_PATH.LEGACY_HINT",
-                                              "GAMIFICATION.HABIT_PATH.LEGACY_TITLE",
                                               "GAMIFICATION.LOADING",
                                               "GAMIFICATION.SUBTITLE",
                                               "GAMIFICATION.TITLE",
@@ -22578,6 +22606,23 @@
                               "selector":  "fd-ui-button",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "gamification",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "fill",
+                                                 "icon",
+                                                 "type",
+                                                 "variant"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiButtonComponent",
+                              "selector":  "fd-ui-button",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+                              "consumerFeature":  "gamification",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.html",
                               "occurrences":  1,
                               "inputsUsed":  [
@@ -24688,6 +24733,20 @@
                               "selector":  "fd-ui-card",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
                               "consumerFeature":  "gamification",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.html",
+                              "occurrences":  4,
+                              "inputsUsed":  [
+                                                 "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiCardComponent",
+                              "selector":  "fd-ui-card",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+                              "consumerFeature":  "gamification",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.html",
                               "occurrences":  1,
                               "inputsUsed":  [
@@ -26304,6 +26363,21 @@
                               "component":  "FdUiDialogShellComponent",
                               "selector":  "fd-ui-dialog-shell",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog-shell/fd-ui-dialog-shell.ts",
+                              "consumerFeature":  "gamification",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/dialogs/gamification-achievements-dialog/gamification-achievements-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "size",
+                                                 "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiDialogShellComponent",
+                              "selector":  "fd-ui-dialog-shell",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog-shell/fd-ui-dialog-shell.ts",
                               "consumerFeature":  "waist-history",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.html",
                               "occurrences":  1,
@@ -27129,6 +27203,20 @@
                               "selector":  "fd-ui-icon",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "gamification",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/dialogs/gamification-achievements-dialog/gamification-achievements-dialog.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "name"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "gamification",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.html",
                               "occurrences":  2,
                               "inputsUsed":  [
@@ -27144,7 +27232,7 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "gamification",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.html",
-                              "occurrences":  6,
+                              "occurrences":  5,
                               "inputsUsed":  [
                                                  "name"
                                              ],
@@ -30501,20 +30589,6 @@
                                                  ]
                           },
                           {
-                              "component":  "GamificationBadgesCardComponent",
-                              "selector":  "fd-gamification-badges-card",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.ts",
-                              "consumerFeature":  "gamification",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "badges"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
                               "component":  "GamificationHabitPathComponent",
                               "selector":  "fd-gamification-habit-path",
                               "componentPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.ts",
@@ -30525,36 +30599,6 @@
                                                  "badges",
                                                  "currentStreak",
                                                  "healthScore",
-                                                 "totalMealsLogged",
-                                                 "weeklyAdherence"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "GamificationHealthScoreCardComponent",
-                              "selector":  "fd-gamification-health-score-card",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.ts",
-                              "consumerFeature":  "gamification",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "score"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "GamificationStatsGridComponent",
-                              "selector":  "fd-gamification-stats-grid",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/stats-grid/gamification-stats-grid.ts",
-                              "consumerFeature":  "gamification",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "currentStreak",
                                                  "longestStreak",
                                                  "totalMealsLogged",
                                                  "weeklyAdherence"

@@ -2001,14 +2001,16 @@
         "BADGE_MEALS_100": "100 приёмов",
         "BADGE_MEALS_500": "500 приёмов",
         "HABIT_PATH": {
-            "LEVEL": "Уровень",
-            "LEVEL_TITLE": "Уровень {{level}} · Уверенный старт",
-            "TO_NEXT_LEVEL": "до следующего уровня",
-            "DAYS": "дн.: {{count}}",
+            "DAYS_IN_A_ROW": "дней подряд",
+            "BEST_STREAK": "Рекорд серии: {{count}}",
+            "HEALTH_SCORE_HINT": "Показывает регулярность дневника и соблюдение целей за последние дни.",
             "NEXT_REWARD": "Следующая награда",
+            "NEXT_REWARD_PROGRESS": "Прогресс до следующей награды",
             "REMAINING": "Осталось: {{count}}",
             "CLOSEST_GOALS": "Ближайшие цели",
             "RECENT": "Недавние достижения",
+            "VIEW_ALL": "Посмотреть все",
+            "ALL_ACHIEVEMENTS": "Все полученные достижения",
             "WEEKLY_GOAL": "Неделя в цели",
             "GOAL_HINT_HABITS": "Каждый день — это шаг к привычке.",
             "GOAL_HINT_NUTRITION": "Продолжайте вести дневник питания.",
@@ -2020,10 +2022,9 @@
             "FILTER_ALL": "Все",
             "FILTER_HABITS": "Привычки",
             "FILTER_NUTRITION": "Питание",
+            "FILTER_ACADEMY": "Академия",
             "RECEIVED_SHORT": "получено",
-            "AHEAD": "впереди",
-            "LEGACY_TITLE": "Предыдущий вариант",
-            "LEGACY_HINT": "Оставили временно для сравнения"
+            "AHEAD": "впереди"
         },
         "TOUR": {
             "START_TOUR": "Показать подсказки по достижениям",

@@ -8,8 +8,8 @@
                     "moduleCycleNodes":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
-                    "selectorUnreferencedComponents":  134,
-                    "componentsWithoutDirectSpecs":  121,
+                    "selectorUnreferencedComponents":  138,
+                    "componentsWithoutDirectSpecs":  122,
                     "criticalSymbolsWithoutTestReferences":  29,
                     "explicitDebtMarkers":  3
                 },
@@ -525,12 +525,44 @@
                                                "specPath":  null
                                            },
                                            {
+                                               "class":  "GamificationAchievementsDialogComponent",
+                                               "selector":  "fd-gamification-achievements-dialog",
+                                               "feature":  "gamification",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/gamification/dialogs/gamification-achievements-dialog/gamification-achievements-dialog.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/gamification/dialogs/gamification-achievements-dialog/gamification-achievements-dialog.html",
+                                               "specPath":  null
+                                           },
+                                           {
+                                               "class":  "GamificationBadgesCardComponent",
+                                               "selector":  "fd-gamification-badges-card",
+                                               "feature":  "gamification",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/badges-card/gamification-badges-card.spec.ts"
+                                           },
+                                           {
+                                               "class":  "GamificationHealthScoreCardComponent",
+                                               "selector":  "fd-gamification-health-score-card",
+                                               "feature":  "gamification",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.spec.ts"
+                                           },
+                                           {
                                                "class":  "GamificationPageComponent",
                                                "selector":  "fd-gamification-page",
                                                "feature":  "gamification",
                                                "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.html",
                                                "specPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.spec.ts"
+                                           },
+                                           {
+                                               "class":  "GamificationStatsGridComponent",
+                                               "selector":  "fd-gamification-stats-grid",
+                                               "feature":  "gamification",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/stats-grid/gamification-stats-grid.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/stats-grid/gamification-stats-grid.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/stats-grid/gamification-stats-grid.spec.ts"
                                            },
                                            {
                                                "class":  "CalorieGoalDialogComponent",
@@ -4001,6 +4033,20 @@
                                                                 "type":  "PlaybookSection[]",
                                                                 "required":  false
                                                             }
+                                                        ],
+                                             "outputs":  [
+
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
+                                             "class":  "GamificationAchievementsDialogComponent",
+                                             "selector":  "fd-gamification-achievements-dialog",
+                                             "feature":  "gamification",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/gamification/dialogs/gamification-achievements-dialog/gamification-achievements-dialog.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/gamification/dialogs/gamification-achievements-dialog/gamification-achievements-dialog.html",
+                                             "inputs":  [
+
                                                         ],
                                              "outputs":  [
 

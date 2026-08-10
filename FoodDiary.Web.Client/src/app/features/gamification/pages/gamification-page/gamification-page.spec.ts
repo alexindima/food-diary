@@ -47,7 +47,6 @@ describe('GamificationPageComponent', () => {
         const element = getElement(fixture);
 
         expect(element.textContent).toContain('GAMIFICATION.LOADING');
-        expect(element.querySelector('fd-gamification-stats-grid')).toBeNull();
     });
 });
 

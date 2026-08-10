@@ -2461,14 +2461,16 @@
         "BADGE_MEALS_100": "100 meals",
         "BADGE_MEALS_500": "500 meals",
         "HABIT_PATH": {
-            "LEVEL": "Level",
-            "LEVEL_TITLE": "Level {{level}} · Confident start",
-            "TO_NEXT_LEVEL": "to the next level",
-            "DAYS": "Days: {{count}}",
+            "DAYS_IN_A_ROW": "days in a row",
+            "BEST_STREAK": "Best streak: {{count}}",
+            "HEALTH_SCORE_HINT": "Reflects diary consistency and how closely you followed your recent goals.",
             "NEXT_REWARD": "Next reward",
+            "NEXT_REWARD_PROGRESS": "Progress toward the next reward",
             "REMAINING": "Remaining: {{count}}",
             "CLOSEST_GOALS": "Closest goals",
             "RECENT": "Recent achievements",
+            "VIEW_ALL": "View all",
+            "ALL_ACHIEVEMENTS": "All earned achievements",
             "WEEKLY_GOAL": "Week on target",
             "GOAL_HINT_HABITS": "Every day is another step toward a habit.",
             "GOAL_HINT_NUTRITION": "Keep logging your meals.",
@@ -2480,10 +2482,9 @@
             "FILTER_ALL": "All",
             "FILTER_HABITS": "Habits",
             "FILTER_NUTRITION": "Nutrition",
+            "FILTER_ACADEMY": "Academy",
             "RECEIVED_SHORT": "earned",
-            "AHEAD": "ahead",
-            "LEGACY_TITLE": "Previous version",
-            "LEGACY_HINT": "Temporarily kept for comparison"
+            "AHEAD": "ahead"
         },
         "TOUR": {
             "START_TOUR": "Show achievements tour",

@@ -1,0 +1,22 @@
+<fd-ui-dialog-shell size="md" [title]="'GAMIFICATION.HABIT_PATH.ALL_ACHIEVEMENTS' | translate">
+    <div class="achievements-dialog__list">
+        @for (badge of badges; track badge.key) {
+            <article class="achievements-dialog__item">
+                <span class="achievements-dialog__medal">
+                    <fd-ui-icon [name]="badgeIcon(badge)" />
+                    <strong>{{ badge.threshold }}</strong>
+                </span>
+                <div class="achievements-dialog__copy">
+                    <strong>{{ badge.title || (badgeNameKey(badge) | translate) }}</strong>
+                    <small>{{ badge.description || ('GAMIFICATION.HABIT_PATH.RECEIVED_HINT' | translate) }}</small>
+                </div>
+                <div class="achievements-dialog__meta">
+                    <span>{{ 'GAMIFICATION.HABIT_PATH.RECEIVED' | translate }}</span>
+                    @if (badge.earnedAtUtc) {
+                        <time [attr.datetime]="badge.earnedAtUtc">{{ badge.earnedAtUtc | localizedDate: 'mediumDate' }}</time>
+                    }
+                </div>
+            </article>
+        }
+    </div>
+</fd-ui-dialog-shell>

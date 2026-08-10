@@ -1,71 +1,66 @@
-<section class="habit-path" aria-labelledby="habit-path-title">
-    <div class="habit-path__hero">
-        <fd-ui-progress-ring
-            class="habit-path__level-ring"
-            [value]="healthScore()"
-            [ariaLabel]="'GAMIFICATION.HEALTH_SCORE_TITLE' | translate"
-        >
-            <span class="habit-path__level-label fd-ui-overline">{{ 'GAMIFICATION.HABIT_PATH.LEVEL' | translate }}</span>
-            <strong class="fd-ui-metric-hero">{{ level() }}</strong>
-            <fd-ui-icon name="star" />
-        </fd-ui-progress-ring>
-
-        <div class="habit-path__identity">
-            <h2 id="habit-path-title">
-                {{ 'GAMIFICATION.HABIT_PATH.LEVEL_TITLE' | translate: { level: level() } }}
-            </h2>
-            <span class="habit-path__muted">{{ 'GAMIFICATION.HEALTH_SCORE_TITLE' | translate }}</span>
-            <div class="habit-path__score">
-                <strong>{{ healthScore() }}</strong
-                ><span>/ 100</span>
-            </div>
-        </div>
-
-        <div class="habit-path__xp">
-            <div class="habit-path__section-label">
-                <span class="habit-path__xp-mark">XP</span>
-                <span
-                    ><strong>{{ levelProgress() }} / {{ 20 }}</strong
-                    ><small>{{ 'GAMIFICATION.HABIT_PATH.TO_NEXT_LEVEL' | translate }}</small></span
+<section class="habit-path" [attr.aria-label]="'GAMIFICATION.TITLE' | translate">
+    <fd-ui-card class="habit-path__hero-card" data-tour-id="gamification-health-score">
+        <div class="habit-path__hero">
+            <section class="habit-path__health" aria-labelledby="health-score-title">
+                <fd-ui-progress-ring
+                    class="habit-path__health-ring"
+                    [value]="healthScore()"
+                    [ariaLabel]="'GAMIFICATION.HEALTH_SCORE_TITLE' | translate"
                 >
-            </div>
-            <div class="habit-path__progress"><span [style.width.%]="(levelProgress() / 20) * 100"></span></div>
-            <div class="habit-path__scale">
-                <span>0</span><strong>{{ levelProgress() }}</strong
-                ><span>20</span>
-            </div>
-        </div>
-
-        <div class="habit-path__streak">
-            <span class="habit-path__muted"
-                ><fd-ui-icon name="local_fire_department" />{{ 'GAMIFICATION.CURRENT_STREAK' | translate }}</span
-            >
-            <strong>{{ currentStreak() }}</strong>
-            <span>{{ 'GAMIFICATION.HABIT_PATH.DAYS' | translate: { count: currentStreak() } }}</span>
-        </div>
-
-        @if (nextReward(); as reward) {
-            <div class="habit-path__next">
-                <span class="habit-path__muted">{{ 'GAMIFICATION.HABIT_PATH.NEXT_REWARD' | translate }}</span>
-                <strong>{{
-                    (reward.key === 'weekly_goal'
-                        ? 'GAMIFICATION.HABIT_PATH.WEEKLY_GOAL'
-                        : 'GAMIFICATION.BADGE_' + reward.key.toUpperCase()
-                    ) | translate
-                }}</strong>
-                <span>{{ 'GAMIFICATION.HABIT_PATH.REMAINING' | translate: { count: reward.target - reward.current } }}</span>
-                <div class="habit-path__steps" aria-hidden="true">
-                    @for (step of rewardSteps; track $index) {
-                        <span [class.habit-path__step--done]="$index < completedRewardSteps(reward)"></span>
-                    }
+                    <strong class="fd-ui-metric-hero">{{ healthScore() }}</strong>
+                    <span>/ 100</span>
+                </fd-ui-progress-ring>
+                <div class="habit-path__health-copy">
+                    <h2 id="health-score-title" class="fd-ui-card-title">{{ 'GAMIFICATION.HEALTH_SCORE_TITLE' | translate }}</h2>
+                    <p>{{ 'GAMIFICATION.HABIT_PATH.HEALTH_SCORE_HINT' | translate }}</p>
                 </div>
-            </div>
-        }
-    </div>
+            </section>
+
+            <section class="habit-path__streak" aria-labelledby="current-streak-title">
+                <span id="current-streak-title" class="habit-path__label">
+                    <fd-ui-icon name="local_fire_department" />{{ 'GAMIFICATION.CURRENT_STREAK' | translate }}
+                </span>
+                <div class="habit-path__streak-value">
+                    <strong>{{ currentStreak() }}</strong>
+                    <span>{{ 'GAMIFICATION.HABIT_PATH.DAYS_IN_A_ROW' | translate }}</span>
+                </div>
+                <small>{{ 'GAMIFICATION.HABIT_PATH.BEST_STREAK' | translate: { count: longestStreak() } }}</small>
+            </section>
+
+            @if (nextReward(); as reward) {
+                <section class="habit-path__next" aria-labelledby="next-reward-title">
+                    <span id="next-reward-title" class="habit-path__label">{{ 'GAMIFICATION.HABIT_PATH.NEXT_REWARD' | translate }}</span>
+                    <div class="habit-path__next-heading">
+                        <strong>{{
+                            (reward.key === 'weekly_goal'
+                                ? 'GAMIFICATION.HABIT_PATH.WEEKLY_GOAL'
+                                : 'GAMIFICATION.BADGE_' + reward.key.toUpperCase()
+                            ) | translate
+                        }}</strong>
+                        <span>{{ reward.current }} / {{ reward.target }}</span>
+                    </div>
+                    <div
+                        class="habit-path__progress"
+                        role="progressbar"
+                        [attr.aria-label]="'GAMIFICATION.HABIT_PATH.NEXT_REWARD_PROGRESS' | translate"
+                        [attr.aria-valuenow]="reward.current"
+                        [attr.aria-valuemin]="0"
+                        [attr.aria-valuemax]="reward.target"
+                    >
+                        <span [style.width.%]="reward.percent"></span>
+                    </div>
+                    <small>{{ 'GAMIFICATION.HABIT_PATH.REMAINING' | translate: { count: reward.target - reward.current } }}</small>
+                </section>
+            }
+        </div>
+    </fd-ui-card>
 
     <div class="habit-path__middle">
-        <section class="habit-path__panel habit-path__goals" aria-labelledby="closest-goals-title">
-            <h2 id="closest-goals-title">{{ 'GAMIFICATION.HABIT_PATH.CLOSEST_GOALS' | translate }}</h2>
+        <fd-ui-card
+            class="habit-path__goals"
+            data-tour-id="gamification-stats"
+            [title]="'GAMIFICATION.HABIT_PATH.CLOSEST_GOALS' | translate"
+        >
             <div class="habit-path__goal-list">
                 @for (goal of goals(); track goal.key) {
                     <article class="habit-path__goal" [class.habit-path__goal--nutrition]="goal.category === 'nutrition'">
@@ -88,32 +83,51 @@
                     </article>
                 }
             </div>
-        </section>
+        </fd-ui-card>
 
-        <section class="habit-path__panel habit-path__recent" aria-labelledby="recent-title">
-            <h2 id="recent-title">{{ 'GAMIFICATION.HABIT_PATH.RECENT' | translate }}</h2>
+        <fd-ui-card class="habit-path__recent" [title]="'GAMIFICATION.HABIT_PATH.RECENT' | translate">
             <div class="habit-path__recent-list">
-                @for (badge of earnedBadges(); track badge.key) {
+                @for (badge of recentBadges(); track badge.key) {
                     <article class="habit-path__recent-item">
                         <span class="habit-path__medal"
                             ><fd-ui-icon [name]="badgeIcon(badge)" /><strong>{{ badge.threshold }}</strong></span
                         >
-                        <div>
-                            <strong>{{ badge.title || (badgeNameKey(badge) | translate) }}</strong
-                            ><small>{{ 'GAMIFICATION.HABIT_PATH.RECEIVED_HINT' | translate }}</small>
+                        <div class="habit-path__recent-copy">
+                            <strong>{{ badge.title || (badgeNameKey(badge) | translate) }}</strong>
+                            <small>{{ badge.description || ('GAMIFICATION.HABIT_PATH.RECEIVED_HINT' | translate) }}</small>
                         </div>
-                        <span class="habit-path__received">{{ 'GAMIFICATION.HABIT_PATH.RECEIVED' | translate }}</span>
+                        <div class="habit-path__received-meta">
+                            <span>{{ 'GAMIFICATION.HABIT_PATH.RECEIVED' | translate }}</span>
+                            @if (badge.earnedAtUtc) {
+                                <time [attr.datetime]="badge.earnedAtUtc">{{ badge.earnedAtUtc | localizedDate: 'mediumDate' }}</time>
+                            }
+                        </div>
                     </article>
                 } @empty {
                     <p class="habit-path__empty">{{ 'GAMIFICATION.HABIT_PATH.NO_RECENT' | translate }}</p>
                 }
             </div>
-        </section>
+            @if (earnedBadges().length > recentBadges().length) {
+                <fd-ui-button
+                    class="habit-path__view-all"
+                    type="button"
+                    variant="secondary"
+                    fill="outline"
+                    icon="open_in_new"
+                    (click)="openAchievementsDialog()"
+                >
+                    {{ 'GAMIFICATION.HABIT_PATH.VIEW_ALL' | translate }}
+                </fd-ui-button>
+            }
+        </fd-ui-card>
     </div>
 
-    <section class="habit-path__panel habit-path__collection" aria-labelledby="collection-title">
-        <header>
-            <h2 id="collection-title">{{ 'GAMIFICATION.HABIT_PATH.COLLECTION' | translate }}</h2>
+    <fd-ui-card
+        class="habit-path__collection"
+        data-tour-id="gamification-badges"
+        [title]="'GAMIFICATION.HABIT_PATH.COLLECTION' | translate"
+    >
+        <div class="habit-path__collection-toolbar">
             <div class="habit-path__filters" role="group" [attr.aria-label]="'GAMIFICATION.HABIT_PATH.FILTERS' | translate">
                 @for (filter of filters; track filter) {
                     <button type="button" [class.habit-path__filter--active]="activeFilter() === filter" (click)="setFilter(filter)">
@@ -125,7 +139,7 @@
                 <strong>{{ earnedBadges().length }}</strong> {{ 'GAMIFICATION.HABIT_PATH.RECEIVED_SHORT' | translate }} ·
                 <strong>{{ lockedBadges().length }}</strong> {{ 'GAMIFICATION.HABIT_PATH.AHEAD' | translate }}
             </span>
-        </header>
+        </div>
         <div class="habit-path__badge-grid">
             @for (badge of filteredBadges(); track badge.key) {
                 <article class="habit-path__badge" [class.habit-path__badge--earned]="badge.isEarned">
@@ -136,9 +150,9 @@
                             <fd-ui-icon class="habit-path__lock" name="lock" />
                         }
                     </span>
-                    <span>{{ badge.title || (badgeNameKey(badge) | translate) }}</span>
+                    <span class="habit-path__badge-title">{{ badge.title || (badgeNameKey(badge) | translate) }}</span>
                 </article>
             }
         </div>
-    </section>
+    </fd-ui-card>
 </section>

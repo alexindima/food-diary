@@ -21,6 +21,7 @@ public static class ApiServiceCollectionExtensions {
             return services
                 .AddApplicationModules(configuration, environment)
                 .AddApiOptions()
+                .AddLocalization()
                 .AddApiAuthentication()
                 .AddApiHostServices()
                 .AddApiDataProtection(configuration)

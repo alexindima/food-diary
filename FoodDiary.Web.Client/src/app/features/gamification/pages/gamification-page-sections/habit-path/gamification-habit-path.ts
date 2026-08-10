@@ -1,10 +1,17 @@
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiIconComponent, FdUiProgressRingComponent } from 'fd-ui-kit';
+import { FdUiCardComponent, FdUiIconComponent, FdUiProgressRingComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
+import { LocalizedDatePipe } from '../../../../../shared/i18n/localized-date.pipe';
+import {
+    GamificationAchievementsDialogComponent,
+    type GamificationAchievementsDialogData,
+} from '../../../dialogs/gamification-achievements-dialog/gamification-achievements-dialog';
 import type { Badge } from '../../../models/gamification.data';
 
-type RewardFilter = 'all' | 'habits' | 'nutrition';
+type RewardFilter = 'all' | 'habits' | 'nutrition' | 'academy';
 
 type ProgressGoal = {
     key: string;
@@ -15,31 +22,36 @@ type ProgressGoal = {
     category: RewardFilter;
 };
 
-const SCORE_PER_LEVEL = 20;
 const WEEK_DAYS = 7;
 const PERCENT_MAX = 100;
 const DEFAULT_MEALS_TARGET = 50;
+const RECENT_ACHIEVEMENT_LIMIT = 2;
 
 @Component({
     selector: 'fd-gamification-habit-path',
-    imports: [TranslatePipe, FdUiIconComponent, FdUiProgressRingComponent],
+    imports: [TranslatePipe, LocalizedDatePipe, FdUiButtonComponent, FdUiCardComponent, FdUiIconComponent, FdUiProgressRingComponent],
     templateUrl: './gamification-habit-path.html',
     styleUrl: './gamification-habit-path.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GamificationHabitPathComponent {
+    private readonly dialogService = inject(FdUiDialogService);
+
     public readonly currentStreak = input.required<number>();
+    public readonly longestStreak = input.required<number>();
     public readonly totalMealsLogged = input.required<number>();
     public readonly healthScore = input.required<number>();
     public readonly weeklyAdherence = input.required<number>();
     public readonly badges = input.required<Badge[]>();
 
     protected readonly activeFilter = signal<RewardFilter>('all');
-    protected readonly filters: RewardFilter[] = ['all', 'habits', 'nutrition'];
-    protected readonly rewardSteps = Array.from({ length: WEEK_DAYS });
-    protected readonly level = computed(() => Math.floor(this.healthScore() / SCORE_PER_LEVEL) + 1);
-    protected readonly levelProgress = computed(() => this.healthScore() % SCORE_PER_LEVEL);
-    protected readonly earnedBadges = computed(() => this.badges().filter(badge => badge.isEarned));
+    protected readonly filters: RewardFilter[] = ['all', 'habits', 'nutrition', 'academy'];
+    protected readonly earnedBadges = computed(() =>
+        this.badges()
+            .filter(badge => badge.isEarned)
+            .sort((left, right) => Date.parse(right.earnedAtUtc ?? '') - Date.parse(left.earnedAtUtc ?? '')),
+    );
+    protected readonly recentBadges = computed(() => this.earnedBadges().slice(0, RECENT_ACHIEVEMENT_LIMIT));
     protected readonly lockedBadges = computed(() => this.badges().filter(badge => !badge.isEarned));
     protected readonly filteredBadges = computed(() => {
         const activeFilter = this.activeFilter();
@@ -79,8 +91,14 @@ export class GamificationHabitPathComponent {
         this.activeFilter.set(filter);
     }
 
-    protected completedRewardSteps(reward: ProgressGoal): number {
-        return Math.round((reward.current / reward.target) * this.rewardSteps.length);
+    protected openAchievementsDialog(): void {
+        this.dialogService.open<GamificationAchievementsDialogComponent, GamificationAchievementsDialogData>(
+            GamificationAchievementsDialogComponent,
+            {
+                data: { badges: this.earnedBadges() },
+                preset: 'form',
+            },
+        );
     }
 
     protected badgeIcon(badge: Badge): string {
@@ -92,7 +110,11 @@ export class GamificationHabitPathComponent {
     }
 
     protected badgeFilter(badge: Badge): RewardFilter {
-        return badge.category === 'streak' ? 'habits' : 'nutrition';
+        if (badge.category === 'streak') {
+            return 'habits';
+        }
+
+        return badge.category === 'academy' ? 'academy' : 'nutrition';
     }
 
     private nextBadge(category: string): Badge | undefined {

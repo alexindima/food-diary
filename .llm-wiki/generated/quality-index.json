@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4061,
+                    "productionFiles":  4062,
                     "criticalSymbols":  533,
                     "criticalSymbolsWithTestReferences":  504,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -23088,11 +23088,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiApplicationBuilderExtensions.cs",
-                      "nonBlankLines":  49,
+                      "nonBlankLines":  53,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.98
+                      "structuralRiskScore":  4.06
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
@@ -23136,11 +23136,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                      "nonBlankLines":  64,
+                      "nonBlankLines":  65,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.28
+                      "structuralRiskScore":  4.3
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -27128,11 +27128,19 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/api/gamification.service.ts",
-                      "nonBlankLines":  16,
+                      "nonBlankLines":  21,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.32
+                      "structuralRiskScore":  0.42
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/src/app/features/gamification/dialogs/gamification-achievements-dialog/gamification-achievements-dialog.ts",
+                      "nonBlankLines":  27,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.04
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/gamification.routes.ts",
@@ -27192,11 +27200,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.ts",
-                      "nonBlankLines":  97,
-                      "decisionPoints":  7,
+                      "nonBlankLines":  117,
+                      "decisionPoints":  10,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  12.44
+                      "structuralRiskScore":  17.34
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/health-score-card/gamification-health-score-card.ts",
@@ -27216,11 +27224,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.ts",
-                      "nonBlankLines":  52,
+                      "nonBlankLines":  46,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.04
+                      "structuralRiskScore":  0.92
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-tour.ts",

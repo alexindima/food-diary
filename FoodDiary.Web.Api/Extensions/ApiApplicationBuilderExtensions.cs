@@ -17,6 +17,10 @@ public static class ApiApplicationBuilderExtensions {
             app.UseMiddleware<RequestObservabilityMiddleware>();
             app.UseExceptionHandler();
             app.UseForwardedHeaders();
+            app.UseRequestLocalization(options => options
+                .SetDefaultCulture("en")
+                .AddSupportedCultures("en", "ru")
+                .AddSupportedUICultures("en", "ru"));
             app.UseMiddleware<SecurityHeadersMiddleware>();
             app.UseHttpLogging();
 

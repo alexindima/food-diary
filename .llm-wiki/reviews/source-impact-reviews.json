@@ -143,13 +143,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "e10422be6b3770c2d03567668e806554d9feac985ed6dc92b190ebadc01bb6c8"
+                                            "sha256":  "beb3a6568f618b9f0b6ccfc630620c8388716b4eba7084aa514f8a26d25e7059"
                                         }
                                     ],
-                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "reason":  "Reviewed regenerated frontend contract: habit path inputs and consuming page were updated together; API language header is covered by a service test.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
-                        "reviewedAtUtc":  "2026-08-09T22:10:55.1654238Z"
+                        "gitHead":  "5d6ffb83b43f963e2c4159667d380fa2e9c05e4d",
+                        "reviewedAtUtc":  "2026-08-09T23:49:06.9465406Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -237,13 +237,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "2f183946b43991aecdb481efb985ee8da3a3945536f88f2bec35b1b75a5c5afd"
+                                            "sha256":  "2b1da743ad47dc555d647487cd29aee9266a037df5bbf48a48b58552a6c2be89"
                                         }
                                     ],
-                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "reason":  "Reviewed regenerated index impact: localization middleware and gamification UI do not change project dependencies.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
-                        "reviewedAtUtc":  "2026-08-09T22:10:51.2149221Z"
+                        "gitHead":  "5d6ffb83b43f963e2c4159667d380fa2e9c05e4d",
+                        "reviewedAtUtc":  "2026-08-09T23:49:06.2794784Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -653,13 +653,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "57e11f6f1917e432406df61ba42ab6c101f0ad4026426e3b7bf946f2a7709bdc"
+                                            "sha256":  "c0d68b9687c36aae09bea0e1fdf1a7d36b191292b2f3b04fdb5496c70aed411d"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated quality index; Academy metric, lesson enqueue idempotency, migration seeding, and PostgreSQL query behavior have focused unit and integration coverage.",
+                        "reason":  "Reviewed quality index after focused and full frontend tests plus backend build and gamification presentation tests.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "78f81b90e4a22ce4693aa8644a3e73126bc7817f",
-                        "reviewedAtUtc":  "2026-08-09T23:03:07.1859983Z"
+                        "gitHead":  "5d6ffb83b43f963e2c4159667d380fa2e9c05e4d",
+                        "reviewedAtUtc":  "2026-08-09T23:49:07.6873720Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -823,14 +823,18 @@
                         "pageSha256":  "aa8a6cbad3f7ccd39d71249321bc2a2450bad77ed00f7de72a1935fc813d5981",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/generated/frontend-contract-index.json",
+                                            "sha256":  "beb3a6568f618b9f0b6ccfc630620c8388716b4eba7084aa514f8a26d25e7059"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "7db7be56a4b44bf8a00a0cc45bab8aea19251ef845f0cf043fa22cbd4ade81d7"
+                                            "sha256":  "5097cd0a9c8c8cff0eaa4db56abd110651be6aefe6ddfdb2db8f2cae26adc4e0"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated frontend index; the only frontend change is an additional typed admin metric option with paired localization, with admin build and tests passing.",
+                        "reason":  "Reviewed gamification feature index after the achievements page redesign and request-localization wiring.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "78f81b90e4a22ce4693aa8644a3e73126bc7817f",
-                        "reviewedAtUtc":  "2026-08-09T23:03:08.1967885Z"
+                        "gitHead":  "5d6ffb83b43f963e2c4159667d380fa2e9c05e4d",
+                        "reviewedAtUtc":  "2026-08-09T23:49:08.5446032Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

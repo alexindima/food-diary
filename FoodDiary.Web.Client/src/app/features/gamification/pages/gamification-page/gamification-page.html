@@ -18,29 +18,12 @@
         } @else {
             <fd-gamification-habit-path
                 [currentStreak]="currentStreak()"
+                [longestStreak]="longestStreak()"
                 [totalMealsLogged]="totalMealsLogged()"
                 [healthScore]="healthScore()"
                 [weeklyAdherence]="weeklyAdherence()"
                 [badges]="badges()"
             />
-
-            <div class="gamification__legacy-divider">
-                <span>{{ 'GAMIFICATION.HABIT_PATH.LEGACY_TITLE' | translate }}</span>
-                <small>{{ 'GAMIFICATION.HABIT_PATH.LEGACY_HINT' | translate }}</small>
-            </div>
-
-            <fd-gamification-stats-grid
-                data-tour-id="gamification-stats"
-                [currentStreak]="currentStreak()"
-                [longestStreak]="longestStreak()"
-                [totalMealsLogged]="totalMealsLogged()"
-                [weeklyAdherence]="weeklyAdherence()"
-            />
-
-            <div class="gamification__grid fd-grid fd-gap-card-content">
-                <fd-gamification-health-score-card data-tour-id="gamification-health-score" [score]="healthScore()" />
-                <fd-gamification-badges-card data-tour-id="gamification-badges" [badges]="badges()" />
-            </div>
         }
     </fd-page-body>
 </div>
