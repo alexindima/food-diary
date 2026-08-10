@@ -12,6 +12,7 @@ $ui = & $tool -ChangedPath @(
 Assert-UiContinuation ([bool]$ui.eligible) 'A bounded frontend iteration was rejected.'
 Assert-UiContinuation (@($ui.focusedTests).Count -gt 0) 'UI continuation omitted focused tests.'
 Assert-UiContinuation ([string]$ui.completionCommand -match 'verify-fast') 'UI continuation omitted the fast completion gate.'
+Assert-UiContinuation ([string]$ui.finalizationCommand -match 'ui-finalize') 'UI continuation omitted the one-time final index synchronization.'
 
 $expanded = & $tool -ChangedPath @(
     'FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts',

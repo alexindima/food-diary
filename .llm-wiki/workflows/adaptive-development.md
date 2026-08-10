@@ -227,10 +227,9 @@ full research packet are unnecessary unless the brief exposes an unresolved
 product, ownership, compatibility, or accessibility decision.
 
 During visual iteration, `verify-fast -VisualUiCompletion` remains the cached local
-feedback gate. Final local completion uses `verify-strict-affected`: it is read-only,
-uncached, rejects stale affected indexes, and runs affected smoke, policy, and impact
-checks without expanding to unrelated repository areas. Full repository verification
-remains the CI gate.
+feedback gate. It reports the affected index plan but deliberately defers regeneration.
+After the last visual iteration, `ui-finalize` performs one affected update and the
+uncached strict affected checks. Full repository verification remains the CI gate.
 
 For this profile, the local completion gate follows focused tests, build, and
 browser evidence when the final diff

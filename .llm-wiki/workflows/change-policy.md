@@ -25,6 +25,9 @@ review obligations, and structural invariants.
 Current policy families cover backend boundaries, HTTP contracts, paired
 English/Russian localization, EF migration pairs, frontend verification,
 security-sensitive areas, and LLM-Wiki freshness.
+Angular TypeScript/templates require public component-contract review. Pure
+CSS/SCSS changes retain rendered visual and accessibility review without
+claiming that selectors, inputs, outputs, translations, or API shape changed.
 
 Structural violations fail immediately. Checks and human/agent review
 obligations can additionally be validated against an evidence bundle with

@@ -31,6 +31,7 @@ $result = [pscustomobject][ordered]@{
     requiredCommands = @($testPlan.commands | Where-Object priority -eq 'required')
     recommendedCommands = @($testPlan.commands | Where-Object priority -eq 'recommended')
     completionCommand = './.llm-wiki/wiki.ps1 verify-fast -VisualUiCompletion'
+    finalizationCommand = './.llm-wiki/wiki.ps1 ui-finalize'
     steps = @('review current UI delta', 'run focused component tests', 'run style/build checks', 'record browser evidence', 'run visual UI completion gate')
 }
 
@@ -46,3 +47,4 @@ foreach ($test in $result.focusedTests) { Write-Host " - [$($test.priority); $($
 Write-Host 'Completion flow:'
 foreach ($step in $result.steps) { Write-Host " - $step" }
 Write-Host "Final gate: $($result.completionCommand)"
+Write-Host "Finalize once before commit: $($result.finalizationCommand)"

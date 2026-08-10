@@ -8,6 +8,7 @@ $fullVerificationText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.ll
 $toolSmokeText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools/Test-LlmWikiTools.ps1') -Raw
 
 if ($facadeText -notmatch "'verify-strict-affected'") { throw 'Wiki facade does not expose verify-strict-affected.' }
+if ($facadeText -notmatch "'ui-finalize'") { throw 'Wiki facade does not expose one-time UI finalization.' }
 if (-not $facadeText.Contains("`$Command = 'verify-fast'") -or -not $facadeText.Contains('Compatibility alias: verify -Fast -> verify-fast')) {
     throw 'Wiki facade does not support the verify -Fast compatibility alias.'
 }
@@ -34,11 +35,26 @@ if ($body -match 'ReuseUnchangedChecks|DeferPossiblyConcurrentStale') {
     throw 'Strict affected verification unexpectedly enables cache reuse or stale deferral.'
 }
 if ($body -match 'Invoke-ObservedWikiStage') { throw 'Strict affected verification accidentally inherited the full observed verify stages.' }
+$visualFastStart = $facadeText.IndexOf("    'verify-fast' {")
+$visualFastEnd = $facadeText.IndexOf("    'verify-strict-affected' {", $visualFastStart)
+$visualFastBody = $facadeText.Substring($visualFastStart, $visualFastEnd - $visualFastStart)
+if ($visualFastBody -notmatch 'VisualUiCompletion' -or $visualFastBody -notmatch 'index regeneration is deferred until ui-finalize') {
+    throw 'Visual UI iteration does not defer index synchronization to ui-finalize.'
+}
 
 $frontendSmoke = @(& (Join-Path $repositoryRoot '.llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1') `
     -Plan -ChangedPath 'FoodDiary.Web.Client/src/app/example/example.ts' 6>&1 | ForEach-Object { $_.ToString() })
 if (($frontendSmoke -join "`n") -notmatch 'no LLM Wiki implementation paths changed' -or ($frontendSmoke -join "`n") -match 'full-tools') {
     throw 'Strict affected verification expanded a product-only change into the monolithic Wiki tools smoke.'
+}
+$stylePolicy = & (Join-Path $repositoryRoot '.llm-wiki/tools/Test-LlmWikiChangePolicy.ps1') `
+    -ChangedPath 'FoodDiary.Web.Client/src/app/example/example.scss' `
+    -Format Json | ConvertFrom-Json
+if (@($stylePolicy.reviewObligations.id) -contains 'frontend-public-contract') {
+    throw 'A stylesheet-only change incorrectly requires Angular public-contract review.'
+}
+if (@($stylePolicy.reviewObligations.id) -notcontains 'frontend-accessibility') {
+    throw 'A stylesheet-only change lost accessibility review.'
 }
 if ($fullVerificationText -notmatch 'still running' -or $fullVerificationText -notmatch 'groupStopwatch') {
     throw 'Full verification does not expose periodic per-group progress and duration.'

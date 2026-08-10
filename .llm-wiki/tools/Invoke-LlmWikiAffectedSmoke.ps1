@@ -38,7 +38,7 @@ foreach ($path in $paths) {
         Add-Group 'dependency-analysis'
     } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiObservedStage|Test-LlmWikiStrictAffected)|wiki\.ps1|workflows/index-pipeline\.md)') {
         Add-Group 'facade-contract'
-    } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiIndexPipeline|Test-LlmWikiIndexSelection)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiIndexPipeline|LlmWikiGeneratedArtifacts|Test-LlmWikiGeneratedArtifacts|Test-LlmWikiIndexSelection)\.ps1$') {
         Add-Group 'index-selection'
     } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiFrontendTrace|Find-LlmWikiTrace|Test-LlmWikiTraceOutput)\.ps1$') {
         Add-Group 'trace-output'
@@ -106,6 +106,8 @@ foreach ($group in $groups) {
         }
         'index-selection' {
             & (Join-Path $toolsRoot 'Test-LlmWikiIndexSelection.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiGeneratedArtifacts.ps1')
             if (-not $?) { exit 1 }
         }
         'ui-continuation' {

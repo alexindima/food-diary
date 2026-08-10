@@ -83,6 +83,11 @@ the integration session before commit, push, or final handoff. In every other
 stale case, the pipeline emits one canonical `wiki.ps1 update` repair command
 in addition to the focused `update -AffectedOnly` option.
 
+`verify-fast -VisualUiCompletion` is an iteration gate rather than a publication
+gate: it prints the affected index plan without regenerating or requiring current
+compiled artifacts. Run `ui-finalize` once after the visual series to update the
+accumulated affected indexes and execute the uncached strict affected gate.
+
 `verify -Fast` is a supported compatibility spelling of `verify-fast`. Ordinary
 `verify` runs every stage through an observed runner: it prints stage start and
 duration, emits a heartbeat every 30 seconds, applies a stage-specific timeout,
@@ -96,6 +101,10 @@ Timeout handling terminates the complete process tree on Windows and modern
 exclusive repository-local lock and snapshots the generated tree; an internal
 failure or worker timeout restores that snapshot before releasing the lock, so
 parallel sessions cannot publish overlapping or partially successful updates.
+After a successful update, the transaction compares generated JSON structurally
+and text artifacts with normalized line endings. If a builder changed only
+serialization formatting, the original artifact is restored and omitted from the
+Git diff; meaningful model changes remain visible.
 
 Local strict and exhaustive verification can opt into
 `-ResumePassedStages`. Each passed stage receipt is keyed by HEAD plus only the

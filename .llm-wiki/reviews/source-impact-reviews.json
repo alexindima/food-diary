@@ -124,17 +124,21 @@
                     {
                         "pageId":  "workflow.evidence-bundle",
                         "pagePath":  ".llm-wiki/workflows/evidence-bundle.md",
-                        "pageSha256":  "9fb6d076df2215c09907c9b35fd4b77db66be875fc4bef786efd35d0c3fc7e39",
+                        "pageSha256":  "dfce522394cc3d66d2a43c52d67969355bb1cbbc65b0dd94e694a38d20a610fa",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "335be12b113473ee2ebced8cd68ea807f1f2970718fd485647ee9c30cae0fd92"
+                                            "sha256":  "a1000269bde8a26504de9901132c803d04a32fbb380c23a7585f2fe3bcf89262"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/New-LlmWikiEvidenceLineage.ps1",
+                                            "sha256":  "d1fd3b4a49ab9eaf33f8a624f9d4c2f2b3580b54be5322cdb9ba475deb0a2f6c"
                                         }
                                     ],
-                        "reason":  "Reviewed: affected-viewport evidence remains compatible with evidence lineage and not-applicable reasons.",
+                        "reason":  "Style-only review obligations retain the existing evidence and lineage contract.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
-                        "reviewedAtUtc":  "2026-08-01T01:45:26.6380644Z"
+                        "gitHead":  "1d74dd8f7503f77263aaac4472c7b2ab55a9104d",
+                        "reviewedAtUtc":  "2026-08-10T08:30:20.8912861Z"
                     },
                     {
                         "pageId":  "workflow.frontend-contract-review",
@@ -358,12 +362,16 @@
                                         {
                                             "path":  ".llm-wiki/generated/configuration-index.json",
                                             "sha256":  "e6f20b1834331289ce87046a8338bdddd92af22d7e8c95923330830ff8f50812"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/policies/change-policies.json",
+                                            "sha256":  "a1000269bde8a26504de9901132c803d04a32fbb380c23a7585f2fe3bcf89262"
                                         }
                                     ],
-                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "reason":  "Frontend style policy split does not alter dependency or rollout semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
-                        "reviewedAtUtc":  "2026-08-09T22:10:52.9219754Z"
+                        "gitHead":  "1d74dd8f7503f77263aaac4472c7b2ab55a9104d",
+                        "reviewedAtUtc":  "2026-08-10T08:30:19.0930843Z"
                     },
                     {
                         "pageId":  "workflow-developer-experience",
@@ -566,13 +574,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "335be12b113473ee2ebced8cd68ea807f1f2970718fd485647ee9c30cae0fd92"
+                                            "sha256":  "a1000269bde8a26504de9901132c803d04a32fbb380c23a7585f2fe3bcf89262"
                                         }
                                     ],
-                        "reason":  "Reviewed: frontend visual completion exception does not alter persistence or observability obligations.",
+                        "reason":  "Style-only policy split does not alter performance or observability requirements.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
-                        "reviewedAtUtc":  "2026-08-01T01:45:27.1867588Z"
+                        "gitHead":  "1d74dd8f7503f77263aaac4472c7b2ab55a9104d",
+                        "reviewedAtUtc":  "2026-08-10T08:30:21.7969453Z"
                     },
                     {
                         "pageId":  "workflow-plan-diff-conformance",
@@ -726,12 +734,16 @@
                                         {
                                             "path":  ".llm-wiki/generated/runtime-topology.json",
                                             "sha256":  "a20c1051a95334eedff59a9bb2b675efdaf3d4db87903c64c0abf49b571b5f9b"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/policies/change-policies.json",
+                                            "sha256":  "a1000269bde8a26504de9901132c803d04a32fbb380c23a7585f2fe3bcf89262"
                                         }
                                     ],
-                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "reason":  "Style-only policy split and UI finalization do not alter runtime topology semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
-                        "reviewedAtUtc":  "2026-08-09T22:11:02.0391314Z"
+                        "gitHead":  "1d74dd8f7503f77263aaac4472c7b2ab55a9104d",
+                        "reviewedAtUtc":  "2026-08-10T08:30:23.1416749Z"
                     },
                     {
                         "pageId":  "workflow-task-brief",
@@ -755,13 +767,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "52ef30810cb9081a9cf2ed9dcd15257a4f918abb828c581ff725ab4505105d56"
+                                            "sha256":  "6486012c4a0c6432a4ff94a4dd2314f78ef4898dd42ce5b529aa2af813d19440"
                                         }
                                     ],
-                        "reason":  "Stage-specific verification receipts preserve dispatch and publication semantics.",
+                        "reason":  "The ui-finalize facade command does not alter task dispatch receipt contracts.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "18c115b2a072c332a3340f29c868f10899e3ea62",
-                        "reviewedAtUtc":  "2026-08-08T14:55:21.4881641Z"
+                        "gitHead":  "1d74dd8f7503f77263aaac4472c7b2ab55a9104d",
+                        "reviewedAtUtc":  "2026-08-10T08:30:24.1284561Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",
@@ -808,14 +820,18 @@
                         "pageSha256":  "58431db00a85f5a9da2ea8a0aa2d2910509884d52c68707826ae9c8c3bd23e16",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/policies/change-policies.json",
+                                            "sha256":  "a1000269bde8a26504de9901132c803d04a32fbb380c23a7585f2fe3bcf89262"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
                                             "sha256":  "6510169ab3b5ef5640e413553b731a6e44718dbab642ded10ece8c208fe8c6cd"
                                         }
                                     ],
-                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
+                        "reason":  "Style-only policy removes only the inapplicable public-contract review; frontend verification and accessibility remain.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
-                        "reviewedAtUtc":  "2026-08-07T18:52:51.6356877Z"
+                        "gitHead":  "1d74dd8f7503f77263aaac4472c7b2ab55a9104d",
+                        "reviewedAtUtc":  "2026-08-10T08:30:25.1187429Z"
                     },
                     {
                         "pageId":  "workflow-trace-feature",
@@ -843,13 +859,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "335be12b113473ee2ebced8cd68ea807f1f2970718fd485647ee9c30cae0fd92"
+                                            "sha256":  "a1000269bde8a26504de9901132c803d04a32fbb380c23a7585f2fe3bcf89262"
                                         }
                                     ],
-                        "reason":  "Reviewed: governed verification plans still cover every canonical publication check.",
+                        "reason":  "Deferred UI iteration remains local; finalization and publication verification stay strict.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "66e8d485ef5d323110b936e26c1dd8a26135df64",
-                        "reviewedAtUtc":  "2026-08-01T01:45:29.6259823Z"
+                        "gitHead":  "1d74dd8f7503f77263aaac4472c7b2ab55a9104d",
+                        "reviewedAtUtc":  "2026-08-10T08:30:25.9246957Z"
                     },
                     {
                         "pageId":  "workflow-verification-telemetry",

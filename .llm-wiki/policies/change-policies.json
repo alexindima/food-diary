@@ -466,7 +466,7 @@
       "id": "frontend-component-contract",
       "description": "Angular component and template changes require public contract, accessibility, and rendered-state review.",
       "pathPatterns": [
-        "^FoodDiary\\.Web\\.Client/.+\\.(ts|html|scss)$"
+        "^FoodDiary\\.Web\\.Client/.+\\.(ts|html)$"
       ],
       "excludePatterns": [
         "\\.(spec|test)\\.ts$"
@@ -482,6 +482,26 @@
           "id": "frontend-public-contract",
           "description": "Review selector, inputs, outputs, defaults, consuming templates, translation keys, and API call shape for compatibility."
         },
+        {
+          "id": "frontend-accessibility",
+          "description": "Verify semantic roles, accessible names, keyboard navigation, focus behavior, disabled/error states, and responsive rendered evidence."
+        }
+      ]
+    },
+    {
+      "id": "frontend-component-style",
+      "description": "Component stylesheet changes require rendered-state and accessibility review without implying a public Angular contract change.",
+      "pathPatterns": [
+        "^FoodDiary\\.Web\\.Client/.+\\.(scss|css)$"
+      ],
+      "excludePatterns": [],
+      "requiredChecks": [
+        {
+          "id": "frontend-verify",
+          "command": "cd FoodDiary.Web.Client && npm run verify"
+        }
+      ],
+      "reviewObligations": [
         {
           "id": "frontend-accessibility",
           "description": "Verify semantic roles, accessible names, keyboard navigation, focus behavior, disabled/error states, and responsive rendered evidence."

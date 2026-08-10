@@ -16,6 +16,8 @@ param(
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiChangeSemantics.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGeneratedArtifacts.ps1')
 $toolsRoot = [System.IO.Path]::GetFullPath($PSScriptRoot)
 $shellPath = [System.IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
@@ -283,6 +285,12 @@ try {
             $last = [Math]::Min($offset + $MaxConcurrency - 1, $tools.Count - 1)
             Invoke-PipelineBatch -StageName $stage.name -ToolNames @($tools[$offset..$last]) -CheckMode ([bool]$Check)
         }
+    }
+    if (-not $Check -and $transactionRoot) {
+        $semanticNoOps = @(Restore-LlmWikiSemanticNoOpArtifacts `
+            -GeneratedRoot $generatedRoot `
+            -BackupRoot (Join-Path $transactionRoot 'generated'))
+        if ($semanticNoOps.Count -gt 0) { Write-Host "LLM Wiki semantic no-op suppression restored $($semanticNoOps.Count) unchanged generated artifact(s)." }
     }
 } catch {
     if ($transactionRoot) {

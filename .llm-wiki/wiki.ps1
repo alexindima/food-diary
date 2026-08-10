@@ -2,7 +2,7 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'continue-ui', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
+        'help', 'update', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'diff', 'impact', 'review', 'ownership', 'api-compat', 'policy',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
@@ -271,7 +271,7 @@ if ($Fast) {
     Write-Host 'Compatibility alias: verify -Fast -> verify-fast'
 }
 
-$deltaAwareCommands = @('update', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'ownership', 'policy')
+$deltaAwareCommands = @('update', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'ownership', 'policy')
 if ($Command -eq 'develop') {
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId $TaskSessionId -Format Text
 } elseif ($Command -in $deltaAwareCommands -and -not $PSBoundParameters.ContainsKey('ChangedPath')) {
@@ -433,8 +433,19 @@ switch ($Command) {
         Invoke-WikiTool 'Test-LlmWikiLint.ps1'
         $indexArguments = @{ Check = $true; AffectedOnly = $true; BaseRef = $BaseRef; DeferPossiblyConcurrentStale = $true; ReuseUnchangedChecks = $true }
         if ($verificationCache.incrementalStyleOnly -or $PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $effectiveChangedPath }
-        $indexResult = @(Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments)
-        $deferredStale = @($indexResult | Where-Object { $_.deferredStale }).Count -gt 0
+        $deferredUiIndexes = [bool]$VisualUiCompletion
+        if ($deferredUiIndexes) {
+            $indexArguments.Remove('Check')
+            $indexArguments.Remove('DeferPossiblyConcurrentStale')
+            $indexArguments.Remove('ReuseUnchangedChecks')
+            $indexArguments.Plan = $true
+            Write-Host 'Visual UI iteration: index regeneration is deferred until ui-finalize.'
+            Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments
+            $indexResult = @()
+        } else {
+            $indexResult = @(Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments)
+        }
+        $deferredStale = $deferredUiIndexes -or @($indexResult | Where-Object { $_.deferredStale }).Count -gt 0
         $policyArguments = @{ FailOnViolation = $true }
         $impactArguments = @{ FailOnUnreviewed = -not $deferredStale }
         if ($verificationCache.incrementalStyleOnly -or $PSBoundParameters.ContainsKey('ChangedPath')) {
@@ -443,14 +454,14 @@ switch ($Command) {
         }
         Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' $policyArguments
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
-        if ($deferredStale) {
+        if ($deferredStale -and -not $deferredUiIndexes) {
             Write-Warning 'Fast source-impact enforcement was deferred with the possibly concurrent stale indexes. Strict verify remains required in the integration session.'
         } else {
             $verificationCacheArguments.Action = 'Record'
             $null = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') @verificationCacheArguments
         }
         if ($VisualUiCompletion) {
-            Write-Host 'Visual UI completion gate passed. Full frontend and Wiki verification remain publication gates enforced by pre-push and CI.'
+            Write-Host 'Visual UI iteration gate passed. Run ./.llm-wiki/wiki.ps1 ui-finalize once before the final commit; pre-push and CI remain full publication gates.'
         } else {
             Write-Host 'Fast scoped verification passed as the local completion gate. Strict publication verification remains enforced by pre-push and CI.'
         }
@@ -558,6 +569,29 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $continueArguments.ChangedPath = $ChangedPath }
         if ($PSBoundParameters.ContainsKey('Objective')) { $continueArguments.Intent = $Objective }
         Invoke-WikiTool 'Get-LlmWikiUiContinuation.ps1' $continueArguments
+    }
+    'ui-finalize' {
+        Write-Host 'Finalizing the accumulated UI delta: updating affected indexes once, then running the strict affected gate.'
+        $finalizeIndexArguments = @{ AffectedOnly = $true; BaseRef = $BaseRef }
+        $finalizeSmokeArguments = @{ BaseRef = $BaseRef }
+        $finalizePolicyArguments = @{ FailOnViolation = $true }
+        $finalizeImpactArguments = @{ FailOnUnreviewed = $true }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) {
+            $finalizeIndexArguments.ChangedPath = $ChangedPath
+            $finalizeSmokeArguments.ChangedPath = $ChangedPath
+            $finalizePolicyArguments.ChangedPath = $ChangedPath
+            $finalizeImpactArguments.ChangedPath = $ChangedPath
+        }
+        Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $finalizeIndexArguments
+        Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
+        Invoke-WikiTool 'Test-LlmWiki.ps1'
+        Invoke-WikiTool 'Test-LlmWikiLint.ps1'
+        $finalizeIndexArguments.Check = $true
+        Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $finalizeIndexArguments
+        Invoke-WikiTool 'Invoke-LlmWikiAffectedSmoke.ps1' $finalizeSmokeArguments
+        Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' $finalizePolicyArguments
+        Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $finalizeImpactArguments
+        Write-Host 'UI finalization passed: affected indexes are synchronized and the accumulated UI delta is publication-ready.'
     }
     { $_ -in @('status', 'next') } {
         $experienceArguments = @{ Action = $Command; WorkspacePath = $WorkspacePath; Format = $Format }
@@ -2238,6 +2272,7 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 task-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
         Write-Host "  ./.llm-wiki/wiki.ps1 develop -Intent '<task>' [-PlannedPath 'path/one','path/two']"
         Write-Host "  ./.llm-wiki/wiki.ps1 continue-ui [-Intent '<iteration>'] [-ChangedPath <path[]>]"
+        Write-Host "  ./.llm-wiki/wiki.ps1 ui-finalize [-ChangedPath <accumulated-ui-path[]>]"
         Write-Host "  ./.llm-wiki/wiki.ps1 next|status [-WorkspacePath <task>] [-Intent '<new task>']"
         Write-Host "  ./.llm-wiki/wiki.ps1 research -Intent '<task>' [-PlannedPath 'path/one','path/two']"
         Write-Host "  ./.llm-wiki/wiki.ps1 integration-scan -Intent '<task>' [-PlannedPath 'path/one','path/two']"
