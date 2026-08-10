@@ -70,17 +70,17 @@ afterEach(() => {
 
 describe('WeeklyCheckInService', () => {
     it('gets weekly check-in data', () => {
-        service.getData().subscribe(data => {
+        service.getData('2026-08-10').subscribe(data => {
             expect(data).toEqual(MOCK_DATA);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(`${BASE_URL}/?weekStart=2026-08-10`);
         expect(req.request.method).toBe('GET');
         req.flush(MOCK_DATA);
     });
 
     it('returns empty data on error', () => {
-        service.getData().subscribe(data => {
+        service.getData('2026-08-10').subscribe(data => {
             expect(data.thisWeek.totalCalories).toBe(0);
             expect(data.lastWeek.totalCalories).toBe(0);
             expect(data.trends.calorieChange).toBe(0);
@@ -88,7 +88,7 @@ describe('WeeklyCheckInService', () => {
             expect(data.suggestions).toEqual([]);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(`${BASE_URL}/?weekStart=2026-08-10`);
         req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });

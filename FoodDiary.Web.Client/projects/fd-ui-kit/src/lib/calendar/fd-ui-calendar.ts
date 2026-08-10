@@ -23,6 +23,9 @@ import {
     fdUiStartOfLocalMonth,
 } from '../date/fd-ui-date.utils';
 
+export type FdUiCalendarSelectionMode = 'date' | 'week';
+export type FdUiCalendarAppearance = 'standalone' | 'embedded';
+
 const WEEK_DAYS_COUNT = 7;
 const CALENDAR_WEEKS_COUNT = 6;
 const UTC_WEEKDAY_REFERENCE_YEAR = 2024;
@@ -55,7 +58,7 @@ type FdUiCalendarCell = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiCalendarComponent {
-    private readonly locale = inject(LOCALE_ID);
+    private readonly defaultLocale = inject(LOCALE_ID);
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly injector = inject(Injector);
     private readonly today = this.stripTime(new Date());
@@ -66,6 +69,10 @@ export class FdUiCalendarComponent {
     public readonly min = input<Date | null>(null);
     public readonly max = input<Date | null>(null);
     public readonly weekStartsOn = input<0 | 1>(1);
+    public readonly selectionMode = input<FdUiCalendarSelectionMode>('date');
+    public readonly appearance = input<FdUiCalendarAppearance>('standalone');
+    public readonly locale = input<string | null>(null);
+    public readonly selectedWeekLabel = input<string | null>(null);
 
     protected readonly visibleMonth = computed(() => {
         const month = this.displayMonth() ?? this.value() ?? this.activeDate();
@@ -73,7 +80,7 @@ export class FdUiCalendarComponent {
     });
 
     protected readonly monthLabel = computed(() => {
-        return new Intl.DateTimeFormat(this.locale, {
+        return new Intl.DateTimeFormat(this.effectiveLocale(), {
             month: 'long',
             year: 'numeric',
         }).format(this.visibleMonth());
@@ -89,15 +96,18 @@ export class FdUiCalendarComponent {
                     UTC_WEEKDAY_REFERENCE_DAY + ((startIndex + index) % WEEK_DAYS_COUNT),
                 ),
             );
-            return new Intl.DateTimeFormat(this.locale, { weekday: 'short', timeZone: 'UTC' }).format(day);
+            return new Intl.DateTimeFormat(this.effectiveLocale(), { weekday: 'short', timeZone: 'UTC' }).format(day);
         });
     });
+
+    private readonly effectiveLocale = computed(() => this.locale() ?? this.defaultLocale);
 
     protected readonly weeks = computed(() => {
         const monthStart = this.visibleMonth();
         const gridStart = this.startOfWeek(monthStart);
         const selectedValue = this.value();
         const selectedIso = selectedValue !== null ? this.toIsoDate(selectedValue) : null;
+        const selectedWeekStart = selectedValue !== null ? this.startOfWeek(selectedValue) : null;
         const activeIso = this.toIsoDate(this.activeDate());
 
         return Array.from({ length: CALENDAR_WEEKS_COUNT }, (_week, weekIndex) =>
@@ -111,9 +121,12 @@ export class FdUiCalendarComponent {
                     label: String(cellDate.getDate()),
                     isCurrentMonth: cellDate.getMonth() === monthStart.getMonth(),
                     isToday: iso === this.toIsoDate(this.today),
-                    isSelected: iso === selectedIso,
+                    isSelected:
+                        this.selectionMode() === 'week'
+                            ? selectedWeekStart !== null && this.isSameWeek(cellDate, selectedWeekStart)
+                            : iso === selectedIso,
                     isActive: iso === activeIso,
-                    isDisabled: this.isOutOfRange(cellDate, this.min(), this.max()),
+                    isDisabled: this.isSelectionOutOfRange(cellDate),
                 } satisfies FdUiCalendarCell;
             }),
         );
@@ -124,11 +137,11 @@ export class FdUiCalendarComponent {
     }
 
     protected selectDate(date: Date): void {
-        if (this.isOutOfRange(date, this.min(), this.max())) {
+        if (this.isSelectionOutOfRange(date)) {
             return;
         }
 
-        const normalized = this.stripTime(date);
+        const normalized = this.selectionMode() === 'week' ? this.startOfWeek(date) : this.stripTime(date);
         this.activeDate.set(normalized);
         this.value.set(normalized);
     }
@@ -208,6 +221,19 @@ export class FdUiCalendarComponent {
         const normalized = this.stripTime(date);
         const delta = (normalized.getDay() - this.weekStartsOn() + WEEK_DAYS_COUNT) % WEEK_DAYS_COUNT;
         return this.addDays(normalized, -delta);
+    }
+
+    private isSameWeek(date: Date, weekStart: Date): boolean {
+        return this.toIsoDate(this.startOfWeek(date)) === this.toIsoDate(weekStart);
+    }
+
+    private isSelectionOutOfRange(date: Date): boolean {
+        const comparableDate = this.selectionMode() === 'week' ? this.startOfWeek(date) : date;
+        const minimum = this.min();
+        const maximum = this.max();
+        const comparableMinimum = minimum !== null && this.selectionMode() === 'week' ? this.startOfWeek(minimum) : minimum;
+        const comparableMaximum = maximum !== null && this.selectionMode() === 'week' ? this.startOfWeek(maximum) : maximum;
+        return this.isOutOfRange(comparableDate, comparableMinimum, comparableMaximum);
     }
 
     private startOfMonth(date: Date): Date {

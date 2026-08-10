@@ -1,0 +1,67 @@
+:host {
+    display: block;
+}
+
+.fd-ui-week-picker {
+    display: grid;
+    grid-template-columns: auto minmax(0, 18rem) auto;
+    justify-content: center;
+    gap: var(--fd-space-xs);
+}
+
+.fd-ui-week-picker__trigger {
+    min-width: 0;
+}
+
+.fd-ui-week-picker__trigger-copy {
+    display: inline-flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    text-align: center;
+
+    strong {
+        overflow: hidden;
+        color: var(--fd-color-text-strong);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    small {
+        color: var(--fd-color-text-muted);
+        font-size: var(--fd-text-helper-size);
+        line-height: var(--fd-text-helper-line-height);
+    }
+}
+
+.fd-ui-week-picker__panel {
+    display: grid;
+    gap: var(--fd-space-sm);
+    width: min(26rem, calc(100vw - var(--fd-space-lg)));
+    padding: var(--fd-space-md);
+    border: var(--fd-border-strong);
+    border-radius: var(--fd-radius-panel);
+    background: var(--fd-bg-surface-raised);
+    box-shadow: var(--fd-shadow-xl);
+}
+
+.fd-ui-week-picker__panel-title {
+    margin: 0;
+    padding-bottom: var(--fd-space-sm);
+    border-bottom: var(--fd-border-default);
+    color: var(--fd-color-text-strong);
+    font-size: var(--fd-text-card-title-size);
+    line-height: var(--fd-text-card-title-line-height);
+    font-weight: var(--fd-text-card-title-weight);
+}
+
+@media (max-width: 30rem) {
+    .fd-ui-week-picker {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    .fd-ui-week-picker__panel {
+        width: calc(100vw - var(--fd-space-md));
+        padding: var(--fd-space-sm);
+    }
+}

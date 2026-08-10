@@ -109,7 +109,7 @@ public class WeeklyCheckInFeatureTests {
         var userId = UserId.New();
         var user = User.Create("weekly-last-summary-fails@example.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
-        DateTime thisWeekStart = Today.AddDays(-6);
+        DateTime thisWeekStart = Today;
         DateTime lastWeekStart = thisWeekStart.AddDays(-7);
         DateTime lastWeekEnd = thisWeekStart.AddDays(-1);
         IDashboardStatisticsReadService statisticsReadService = Substitute.For<IDashboardStatisticsReadService>();
@@ -152,7 +152,7 @@ public class WeeklyCheckInFeatureTests {
         var userId = UserId.New();
         var user = User.Create("user@example.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
-        DateTime thisWeekStart = Today.AddDays(-6);
+        DateTime thisWeekStart = Today;
         DateTime lastWeekStart = thisWeekStart.AddDays(-7);
         DateTime lastWeekEnd = thisWeekStart.AddDays(-1);
         DashboardStatisticsBucketReadModel[] thisWeekBuckets = [
@@ -189,6 +189,52 @@ public class WeeklyCheckInFeatureTests {
         Assert.Equal(11.4, model.ThisWeek.AvgProteins);
         Assert.Equal(7.1, model.ThisWeek.AvgFats);
         Assert.Equal(28.6, model.ThisWeek.AvgCarbs);
+    }
+
+    [Fact]
+    public async Task GetWeeklyCheckIn_WithHistoricalWeek_LoadsSelectedCalendarWeekAndPreviousWeek() {
+        var userId = UserId.New();
+        var user = User.Create("weekly-history@example.com", "hashed");
+        typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
+        DateTime selectedWeekStart = Today.AddDays(-14);
+        DateTime selectedWeekEnd = selectedWeekStart.AddDays(6);
+        DateTime previousWeekStart = selectedWeekStart.AddDays(-7);
+        DateTime previousWeekEnd = selectedWeekStart.AddDays(-1);
+        IDashboardStatisticsReadService statisticsReadService = CreateStatisticsReadService();
+        GetWeeklyCheckInQueryHandler handler = CreateHandler(
+            statisticsReadService: statisticsReadService,
+            profileService: CreateProfileService(user));
+
+        Result<WeeklyCheckInModel> result = await handler.Handle(
+            new GetWeeklyCheckInQuery(userId.Value, DateOnly.FromDateTime(selectedWeekStart)),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(DateTimeKind.Utc, selectedWeekStart.Kind);
+        await statisticsReadService.Received(1).GetStatisticsAsync(
+            userId,
+            Arg.Is<DateTime>(date => date == selectedWeekStart && date.Kind == DateTimeKind.Utc),
+            Arg.Is<DateTime>(date => date == selectedWeekEnd && date.Kind == DateTimeKind.Utc),
+            1,
+            Arg.Any<CancellationToken>());
+        await statisticsReadService.Received(1).GetStatisticsAsync(
+            userId, previousWeekStart, previousWeekEnd, 1, Arg.Any<CancellationToken>());
+    }
+
+    [Theory]
+    [InlineData(2026, 4, 7)]
+    [InlineData(2026, 4, 13)]
+    public async Task GetWeeklyCheckIn_WithInvalidWeekStart_ReturnsValidationFailure(int year, int month, int day) {
+        var userId = UserId.New();
+        var user = User.Create("weekly-invalid-date@example.com", "hashed");
+        typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
+        GetWeeklyCheckInQueryHandler handler = CreateHandler(profileService: CreateProfileService(user));
+
+        Result<WeeklyCheckInModel> result = await handler.Handle(
+            new GetWeeklyCheckInQuery(userId.Value, new DateOnly(year, month, day)),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
     }
 
     [Fact]

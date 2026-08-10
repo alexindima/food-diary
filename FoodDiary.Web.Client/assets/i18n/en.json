@@ -320,8 +320,8 @@
         "LESSONS_DESCRIPTION": "Learn about nutrition science with bite-sized lessons.",
         "MEAL_PLANS": "Meal Plans",
         "MEAL_PLANS_DESCRIPTION": "Browse and adopt curated meal plans by diet type.",
-        "WEEKLY_CHECK_IN": "Weekly Review",
-        "WEEKLY_CHECK_IN_DESCRIPTION": "Review your weekly nutrition progress and get personalized suggestions.",
+        "WEEKLY_CHECK_IN": "Weekly insights",
+        "WEEKLY_CHECK_IN_DESCRIPTION": "Understand your week and choose one useful focus for the next.",
         "PREMIUM": "Premium",
         "PREMIUM_DESCRIPTION": "Unlock advanced features with Food Diary Premium.",
         "PROFILE": "Profile",
@@ -4525,7 +4525,7 @@
         "FASTING": "Fasting",
         "ACHIEVEMENTS": "Achievements",
         "LESSONS": "Academy",
-        "WEEKLY_CHECK_IN": "Weekly review",
+        "WEEKLY_CHECK_IN": "Weekly insights",
         "THEME": "Theme",
         "THEME_OCEAN": "Blue",
         "THEME_LEAF": "Green",
@@ -5333,9 +5333,64 @@
         }
     },
     "WEEKLY_CHECK_IN": {
-        "TITLE": "Weekly review",
-        "SUBTITLE": "Your nutrition progress compared to last week",
+        "TITLE": "Weekly insights",
+        "SUBTITLE": "Your progress and one simple step for next week",
         "LOADING": "Loading weekly review...",
+        "WEEK_PICKER": {
+            "TITLE": "Choose a week",
+            "CURRENT": "Current week",
+            "RETURN_CURRENT": "Return to current week",
+            "PREVIOUS": "Previous week",
+            "NEXT": "Next week",
+            "OPEN": "Open week calendar"
+        },
+        "STATUS": {
+            "PRELIMINARY": "Preliminary review",
+            "READY": "Weekly review"
+        },
+        "COVERAGE_TITLE": "You logged {{count}} of 7 days this week",
+        "COVERAGE_ARIA": "Days logged this week",
+        "COVERAGE_LIMITED": "There isn't enough data yet for an accurate nutrition assessment.",
+        "COVERAGE_READY": "There is enough data to highlight meaningful patterns.",
+        "SUMMARY": {
+            "TITLE": "Your week at a glance",
+            "LIMITED": "The logged days reveal a few early signals. Add more entries to assess calories and nutrients accurately.",
+            "RELIABLE": "Your entries provide enough context to identify the most useful patterns from this week."
+        },
+        "INSIGHTS": {
+            "HYDRATION_IMPROVED": "Your water intake increased",
+            "PROTEIN_LOW": "Protein was low on logged days",
+            "LOGGING_PROGRESS_ONE": "You logged an entry on one day",
+            "LOGGING_PROGRESS_FEW": "You logged entries on {{count}} days",
+            "LOGGING_PROGRESS_MANY": "You logged entries on {{count}} days",
+            "START_LOGGING": "Start logging to unlock your weekly insights"
+        },
+        "FOCUS": {
+            "TITLE": "Next week's focus",
+            "LOGGING_TITLE": "Log your diary at least 5 days",
+            "LOGGING_DESCRIPTION": "This will make nutrition assessments and recommendations more accurate.",
+            "CONSISTENCY_TITLE": "Keep your logging rhythm",
+            "CONSISTENCY_DESCRIPTION": "Consistent entries make your weekly patterns easier to understand.",
+            "ACCEPT": "Set this focus",
+            "ACCEPTED": "Focus set"
+        },
+        "OPEN_REPORT": "Open detailed report",
+        "MORE_INSIGHTS": "+ {{count}} more",
+        "REPORT": {
+            "TITLE": "Detailed weekly report",
+            "SUBTITLE": "All signals and key metrics for the selected week",
+            "SUMMARY_TITLE": "Summary",
+            "INSIGHTS_TITLE": "All insights",
+            "WATER": "Average water"
+        },
+        "METRICS_ARIA": "Weekly metrics",
+        "METRICS": {
+            "DAYS": "Days with entries",
+            "LOGGED_AVERAGE": "Average on logged days",
+            "PROTEIN": "Average protein",
+            "WEIGHT": "Weight change"
+        },
+        "DISCLAIMER": "Averages use only days containing entries.",
         "THIS_WEEK": "This week",
         "LAST_WEEK": "Last week",
         "CALORIES": "Avg daily calories",

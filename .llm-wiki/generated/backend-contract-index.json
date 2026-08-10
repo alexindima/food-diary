@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "contracts":  1016,
+                    "contracts":  1017,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  7054,
-                    "productionConsumerEdges":  4307,
-                    "testConsumerEdges":  2747,
-                    "consumedContracts":  1016,
+                    "consumerEdges":  7058,
+                    "productionConsumerEdges":  4309,
+                    "testConsumerEdges":  2749,
+                    "consumedContracts":  1017,
                     "unconsumedContracts":  0
                 },
     "contracts":  [
@@ -5735,6 +5735,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Application/Notifications/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQuery.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "GetWeeklyCheckInHttpQuery",
+                          "roles":  [
+                                        "Query"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Presentation.Api/Features/WeeklyCheckIn/Requests/GetWeeklyCheckInHttpQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -38998,6 +39014,58 @@
                               "referenceCount":  2
                           },
                           {
+                              "contract":  "GetWeeklyCheckInHttpQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/WeeklyCheckIn/Requests/GetWeeklyCheckInHttpQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/WeeklyCheckIn/Mappings/WeeklyCheckInHttpMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "GetWeeklyCheckInHttpQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/WeeklyCheckIn/Requests/GetWeeklyCheckInHttpQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/WeeklyCheckIn/WeeklyCheckInController.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "GetWeeklyCheckInHttpQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/WeeklyCheckIn/Requests/GetWeeklyCheckInHttpQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "GetWeeklyCheckInHttpQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Presentation.Api/Features/WeeklyCheckIn/Requests/GetWeeklyCheckInHttpQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WeeklyCheckInHttpMappingsTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
                               "contract":  "GetWeeklyCheckInQuery",
                               "roles":  [
                                             "Query"
@@ -39034,7 +39102,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
                               "isTest":  true,
-                              "referenceCount":  8
+                              "referenceCount":  10
                           },
                           {
                               "contract":  "GetWeeklyCheckInQuery",
@@ -39047,7 +39115,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
                               "isTest":  true,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "GetWeeklyCheckInQuery",
@@ -54062,7 +54130,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
                               "isTest":  true,
-                              "referenceCount":  10
+                              "referenceCount":  11
                           },
                           {
                               "contract":  "IDashboardStatisticsReadService",

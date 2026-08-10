@@ -1,12 +1,13 @@
 using FoodDiary.Application.WeeklyCheckIn.Models;
 using FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
 using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Responses;
+using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Mappings;
 
 public static class WeeklyCheckInHttpMappings {
-    extension(Guid userId) {
-        public GetWeeklyCheckInQuery ToQuery() => new(userId);
+    extension(GetWeeklyCheckInHttpQuery query) {
+        public GetWeeklyCheckInQuery ToQuery(Guid userId) => new(userId, query.WeekStart);
     }
 
     extension(WeeklyCheckInModel model) {

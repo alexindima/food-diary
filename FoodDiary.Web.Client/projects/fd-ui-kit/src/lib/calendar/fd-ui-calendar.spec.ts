@@ -10,6 +10,7 @@ const MARCH_INDEX = 2;
 const APRIL_INDEX = 3;
 const CALENDAR_WEEKS_COUNT = 6;
 const CALENDAR_DAYS_COUNT = 42;
+const WEEK_DAYS_COUNT = 7;
 const BEFORE_MIN_DAY = 9;
 const MIN_DAY = 10;
 const TEST_DAY = 15;
@@ -49,10 +50,35 @@ describe('FdUiCalendarComponent', () => {
     registerRenderTests();
     registerSelectionTests();
     registerNavigationTests();
+    registerWeekSelectionTests();
 });
 
 function weekdayLabels(): Array<string | null> {
     return Array.from(host().querySelectorAll('.fd-ui-calendar__weekday')).map(label => label.textContent.trim());
+}
+
+function registerWeekSelectionTests(): void {
+    describe('week selection', () => {
+        it('normalizes the selected value to Monday and highlights the whole week', () => {
+            fixture.componentRef.setInput('selectionMode', 'week');
+            fixture.detectChanges();
+
+            component['selectDate'](MARCH_DATE);
+            fixture.detectChanges();
+
+            expect(component.value()?.getDate()).toBe(MIN_DAY);
+            expect(host().querySelectorAll('.fd-ui-calendar__day--week-selected').length).toBe(WEEK_DAYS_COUNT);
+        });
+
+        it('keeps standalone appearance by default and supports embedded appearance', () => {
+            expect(requireElement('.fd-ui-calendar').classList).not.toContain('fd-ui-calendar--embedded');
+
+            fixture.componentRef.setInput('appearance', 'embedded');
+            fixture.detectChanges();
+
+            expect(requireElement('.fd-ui-calendar').classList).toContain('fd-ui-calendar--embedded');
+        });
+    });
 }
 
 function registerRenderTests(): void {

@@ -61,3 +61,4 @@ export * from './toast/fd-ui-toast.service';
 export * from './toast/fd-ui-toast-host';
 export * from './top-loader/fd-ui-top-loader';
 export * from './types/field-size.type';
+export * from './week-picker/fd-ui-week-picker';

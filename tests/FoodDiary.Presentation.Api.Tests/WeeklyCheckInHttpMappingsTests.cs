@@ -2,18 +2,21 @@ using FoodDiary.Application.WeeklyCheckIn.Models;
 using FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
 using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Mappings;
 using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Responses;
+using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class WeeklyCheckInHttpMappingsTests {
     [Fact]
-    public void ToQuery_MapsUserId() {
+    public void ToQuery_MapsUserIdAndWeekStart() {
         var userId = Guid.NewGuid();
+        var weekStart = new DateOnly(2026, 4, 6);
 
-        GetWeeklyCheckInQuery query = userId.ToQuery();
+        GetWeeklyCheckInQuery query = new GetWeeklyCheckInHttpQuery(weekStart).ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
+        Assert.Equal(weekStart, query.WeekStart);
     }
 
     [Fact]

@@ -5,6 +5,7 @@ const DATE_INPUT_MONTH_INDEX = 2;
 const DATE_INPUT_DAY_INDEX = 3;
 const DATE_TIME_INPUT_HOUR_INDEX = 4;
 const DATE_TIME_INPUT_MINUTE_INDEX = 5;
+const WEEK_DAYS_COUNT = 7;
 
 export type FdUiDateValue = Date | string | null | undefined;
 
@@ -58,6 +59,12 @@ export function fdUiStartOfLocalDay(date: Date): Date {
 
 export function fdUiStartOfLocalMonth(date: Date): Date {
     return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+export function fdUiStartOfLocalWeek(date: Date, weekStartsOn: 0 | 1 = 1): Date {
+    const normalized = fdUiStartOfLocalDay(date);
+    const delta = (normalized.getDay() - weekStartsOn + WEEK_DAYS_COUNT) % WEEK_DAYS_COUNT;
+    return fdUiAddLocalDays(normalized, -delta);
 }
 
 export function fdUiAddLocalDays(date: Date, days: number): Date {

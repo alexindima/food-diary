@@ -13,6 +13,15 @@
     box-shadow: var(--fd-shadow-xl);
 }
 
+.fd-ui-calendar--embedded {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
 .fd-ui-calendar__header {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -34,6 +43,24 @@
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: var(--fd-space-calendar-grid-gap);
+}
+
+.fd-ui-calendar__week {
+    position: relative;
+}
+
+.fd-ui-calendar__selected-week-label {
+    position: absolute;
+    right: var(--fd-space-xxs);
+    bottom: calc(-1 * var(--fd-space-xs));
+    z-index: 1;
+    padding: 0 var(--fd-space-xxs);
+    border-radius: var(--fd-radius-pill);
+    color: var(--fd-color-primary-700);
+    background: var(--fd-bg-success-soft);
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
+    pointer-events: none;
 }
 
 .fd-ui-calendar__weekday {
@@ -104,6 +131,18 @@
     background: var(--fd-bg-brand);
     border-color: transparent;
     color: var(--fd-color-on-brand);
+}
+
+.fd-ui-calendar__day--week-selected {
+    border-radius: 0;
+
+    &:first-child {
+        border-radius: var(--fd-radius-button) 0 0 var(--fd-radius-button);
+    }
+
+    &:last-child {
+        border-radius: 0 var(--fd-radius-button) var(--fd-radius-button) 0;
+    }
 }
 
 .fd-ui-calendar__day--active:where(:not(.fd-ui-calendar__day--selected)) {

@@ -1,5 +1,6 @@
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Mappings;
+using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Requests;
 using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
@@ -12,6 +13,6 @@ namespace FoodDiary.Presentation.Api.Features.WeeklyCheckIn;
 public sealed class WeeklyCheckInController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<WeeklyCheckInHttpResponse>(StatusCodes.Status200OK)]
-    public Task<IActionResult> Get([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToQuery(), static value => value.ToHttpResponse());
+    public Task<IActionResult> Get([FromCurrentUser] Guid userId, [FromQuery] GetWeeklyCheckInHttpQuery query) =>
+        HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
 }

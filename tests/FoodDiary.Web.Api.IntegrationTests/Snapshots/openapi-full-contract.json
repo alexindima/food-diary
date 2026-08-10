@@ -6544,6 +6544,13 @@
           ],
           "QueryParameters": [
             {
+              "Name": "WeekStart",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
               "Name": "userId",
               "Location": "query",
               "Required": false,

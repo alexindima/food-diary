@@ -1,4 +1,4 @@
-<div class="check-in" fdPageContainer>
+<div class="check-in" fdPageContainer [class.check-in--refreshing]="isRefreshing()" [attr.aria-busy]="isRefreshing() || isLoading()">
     <fd-page-header [title]="'WEEKLY_CHECK_IN.TITLE' | translate" [subtitle]="'WEEKLY_CHECK_IN.SUBTITLE' | translate">
         <fd-ui-button
             data-tour-id="weekly-check-in-tour-help"
@@ -13,15 +13,133 @@
     </fd-page-header>
 
     <fd-page-body>
+        <fd-ui-week-picker
+            class="check-in__week-picker"
+            [max]="maximumWeek"
+            [locale]="language()"
+            [panelTitle]="'WEEKLY_CHECK_IN.WEEK_PICKER.TITLE' | translate"
+            [currentWeekLabel]="'WEEKLY_CHECK_IN.WEEK_PICKER.CURRENT' | translate"
+            [returnToCurrentWeekLabel]="'WEEKLY_CHECK_IN.WEEK_PICKER.RETURN_CURRENT' | translate"
+            [previousWeekAriaLabel]="'WEEKLY_CHECK_IN.WEEK_PICKER.PREVIOUS' | translate"
+            [nextWeekAriaLabel]="'WEEKLY_CHECK_IN.WEEK_PICKER.NEXT' | translate"
+            [openCalendarAriaLabel]="'WEEKLY_CHECK_IN.WEEK_PICKER.OPEN' | translate"
+            [(value)]="selectedWeek"
+        />
+
         @if (isLoading()) {
             <div class="check-in__loader fd-ui-body-sm">{{ 'WEEKLY_CHECK_IN.LOADING' | translate }}</div>
-        } @else {
-            <fd-weekly-check-in-trends data-tour-id="weekly-check-in-trends" [trends]="trendCards()" />
+        } @else if (review(); as review) {
+            <fd-ui-card class="check-in__coverage" data-tour-id="weekly-check-in-trends">
+                <h2 class="check-in__status fd-ui-card-title">
+                    {{ (review.hasEnoughData ? 'WEEKLY_CHECK_IN.STATUS.READY' : 'WEEKLY_CHECK_IN.STATUS.PRELIMINARY') | translate }}
+                </h2>
+                <p class="check-in__coverage-title fd-ui-section-title">
+                    {{ 'WEEKLY_CHECK_IN.COVERAGE_TITLE' | translate: { count: review.daysLogged } }}
+                </p>
+                <div
+                    class="check-in__segments"
+                    role="progressbar"
+                    aria-valuemin="0"
+                    aria-valuemax="7"
+                    [attr.aria-valuenow]="review.daysLogged"
+                    [attr.aria-label]="'WEEKLY_CHECK_IN.COVERAGE_ARIA' | translate"
+                >
+                    @for (segment of [1, 2, 3, 4, 5, 6, 7]; track segment) {
+                        <span class="check-in__segment" [class.check-in__segment--filled]="segment <= review.daysLogged"></span>
+                    }
+                </div>
+                <p class="check-in__coverage-copy fd-ui-body-sm">
+                    {{ (review.hasEnoughData ? 'WEEKLY_CHECK_IN.COVERAGE_READY' : 'WEEKLY_CHECK_IN.COVERAGE_LIMITED') | translate }}
+                </p>
+            </fd-ui-card>
 
-            <div class="check-in__grid fd-grid fd-gap-md">
-                <fd-weekly-check-in-stats-card data-tour-id="weekly-check-in-stats" [week]="thisWeek()" />
-                <fd-weekly-check-in-suggestions-card data-tour-id="weekly-check-in-suggestions" [suggestions]="suggestionRows()" />
+            <div class="check-in__main-grid">
+                <fd-ui-card class="check-in__summary" data-tour-id="weekly-check-in-stats">
+                    <h2 class="fd-ui-card-title">{{ 'WEEKLY_CHECK_IN.SUMMARY.TITLE' | translate }}</h2>
+                    <div class="check-in__insights">
+                        @for (insight of summaryInsights(); track insight.key) {
+                            <div class="check-in__insight">
+                                <span class="check-in__insight-icon" [attr.data-tone]="insight.tone">
+                                    <fd-ui-icon [name]="insight.icon" />
+                                </span>
+                                <span class="fd-ui-body-sm">{{ insight.labelKey | translate: { count: review.daysLogged } }}</span>
+                            </div>
+                        }
+                        @if (remainingInsightCount() > 0) {
+                            <span class="check-in__insights-more fd-ui-helper-text">
+                                {{ 'WEEKLY_CHECK_IN.MORE_INSIGHTS' | translate: { count: remainingInsightCount() } }}
+                            </span>
+                        }
+                    </div>
+                    <fd-ui-button
+                        class="check-in__report-action"
+                        variant="secondary"
+                        fill="ghost"
+                        size="sm"
+                        icon="article"
+                        (click)="openDetailedReport(review)"
+                    >
+                        {{ 'WEEKLY_CHECK_IN.OPEN_REPORT' | translate }}
+                    </fd-ui-button>
+                </fd-ui-card>
+
+                <fd-ui-card class="check-in__focus" data-tour-id="weekly-check-in-suggestions">
+                    <h2 class="fd-ui-card-title">{{ 'WEEKLY_CHECK_IN.FOCUS.TITLE' | translate }}</h2>
+                    <strong class="check-in__focus-title">{{ review.focusTitleKey | translate }}</strong>
+                    <p class="check-in__focus-copy fd-ui-body-sm">{{ review.focusDescriptionKey | translate }}</p>
+                    <div class="check-in__focus-progress" aria-hidden="true">
+                        @for (segment of [1, 2, 3, 4, 5, 6, 7]; track segment) {
+                            <span [class.check-in__focus-segment--filled]="segment <= review.focusTarget"></span>
+                        }
+                    </div>
+                    <span class="check-in__focus-count fd-ui-helper-text">{{ review.focusTarget }} / 7</span>
+                    <fd-ui-button
+                        variant="primary"
+                        [fullWidth]="true"
+                        [disabled]="focusAccepted()"
+                        [disabledReason]="'WEEKLY_CHECK_IN.FOCUS.ACCEPTED' | translate"
+                        [ariaPressed]="focusAccepted()"
+                        (click)="acceptFocus()"
+                    >
+                        {{ (focusAccepted() ? 'WEEKLY_CHECK_IN.FOCUS.ACCEPTED' : 'WEEKLY_CHECK_IN.FOCUS.ACCEPT') | translate }}
+                    </fd-ui-button>
+                </fd-ui-card>
             </div>
+
+            <div class="check-in__metrics" [attr.aria-label]="'WEEKLY_CHECK_IN.METRICS_ARIA' | translate">
+                <div class="check-in__metric">
+                    <fd-ui-icon name="calendar_today" />
+                    <strong>{{ review.daysLogged }} / 7</strong>
+                    <span>{{ 'WEEKLY_CHECK_IN.METRICS.DAYS' | translate }}</span>
+                </div>
+                <div class="check-in__metric">
+                    <fd-ui-icon name="local_fire_department" />
+                    <strong
+                        >{{ thisWeek()?.avgDailyCalories | number: '1.0-0' }} <small>{{ 'GENERAL.UNITS.KCAL' | translate }}</small></strong
+                    >
+                    <span>{{ 'WEEKLY_CHECK_IN.METRICS.LOGGED_AVERAGE' | translate }}</span>
+                </div>
+                <div class="check-in__metric">
+                    <fd-ui-icon name="fitness_center" />
+                    <strong
+                        >{{ thisWeek()?.avgProteins | number: '1.0-1' }} <small>{{ 'GENERAL.UNITS.G' | translate }}</small></strong
+                    >
+                    <span>{{ 'WEEKLY_CHECK_IN.METRICS.PROTEIN' | translate }}</span>
+                </div>
+                <div class="check-in__metric">
+                    <fd-ui-icon name="monitor_weight" />
+                    <strong
+                        >{{ (thisWeek()?.weightEnd ?? 0) - (thisWeek()?.weightStart ?? thisWeek()?.weightEnd ?? 0) | number: '1.1-1' }}
+                        <small>{{ 'GENERAL.UNITS.KG' | translate }}</small></strong
+                    >
+                    <span>{{ 'WEEKLY_CHECK_IN.METRICS.WEIGHT' | translate }}</span>
+                </div>
+            </div>
+
+            <p class="check-in__disclaimer fd-ui-helper-text">
+                <fd-ui-icon name="info_outline" />
+                {{ 'WEEKLY_CHECK_IN.DISCLAIMER' | translate }}
+            </p>
         }
     </fd-page-body>
 </div>

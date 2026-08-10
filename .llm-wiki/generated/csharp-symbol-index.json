@@ -8,15 +8,15 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3072,
-                    "symbols":  3112,
+                    "sourceFiles":  3073,
+                    "symbols":  3113,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
                                   "class":  1571,
                                   "enum":  47,
                                   "interface":  407,
-                                  "record":  975,
+                                  "record":  976,
                                   "record struct":  112
                               },
                     "roles":  {
@@ -33,7 +33,7 @@
                                   "Mapping":  3,
                                   "Options":  56,
                                   "Other":  1101,
-                                  "Query":  158,
+                                  "Query":  159,
                                   "QueryHandler":  122,
                                   "ReadModelRepository":  29,
                                   "ReadRepository":  50,
@@ -11945,7 +11945,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
-                        "line":  10
+                        "line":  11
                     },
                     {
                         "name":  "WeeklyCheckInCalculator",
@@ -19449,7 +19449,14 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Presentation.Api/Features/WeeklyCheckIn/Mappings/WeeklyCheckInHttpMappings.cs",
-                        "line":  6
+                        "line":  7
+                    },
+                    {
+                        "name":  "GetWeeklyCheckInHttpQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Presentation.Api/Features/WeeklyCheckIn/Requests/GetWeeklyCheckInHttpQuery.cs",
+                        "line":  2
                     },
                     {
                         "name":  "WeeklyCheckInHttpResponse",
@@ -19477,7 +19484,7 @@
                         "kind":  "class",
                         "role":  "Controller",
                         "path":  "FoodDiary.Presentation.Api/Features/WeeklyCheckIn/WeeklyCheckInController.cs",
-                        "line":  12
+                        "line":  13
                     },
                     {
                         "name":  "WeightEntryHttpMappings",

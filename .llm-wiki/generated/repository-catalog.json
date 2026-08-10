@@ -4265,7 +4265,7 @@
                                                            {
                                                                "verb":  "GET",
                                                                "route":  "/api/v{version:apiVersion}/weekly-check-in",
-                                                               "line":  13
+                                                               "line":  14
                                                            }
                                                        ]
                                      },

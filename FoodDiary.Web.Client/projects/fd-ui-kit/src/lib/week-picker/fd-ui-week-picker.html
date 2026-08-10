@@ -1,0 +1,82 @@
+<div class="fd-ui-week-picker">
+    <fd-ui-button
+        appearance="toolbar"
+        variant="secondary"
+        fill="outline"
+        icon="chevron_left"
+        [disabled]="previousDisabled()"
+        [disabledReason]="previousWeekAriaLabel()"
+        [ariaLabel]="previousWeekAriaLabel()"
+        (click)="selectPreviousWeek()"
+    />
+
+    <fd-ui-button
+        #origin="cdkOverlayOrigin"
+        cdkOverlayOrigin
+        class="fd-ui-week-picker__trigger"
+        appearance="default"
+        size="sm"
+        variant="secondary"
+        fill="outline"
+        icon="calendar_today"
+        [fullWidth]="true"
+        [ariaLabel]="openCalendarAriaLabel()"
+        (click)="open()"
+    >
+        <span class="fd-ui-week-picker__trigger-copy">
+            <strong>{{ rangeLabel() }}</strong>
+            @if (isCurrentWeek()) {
+                <small>{{ currentWeekLabel() }}</small>
+            }
+        </span>
+        <fd-ui-icon name="expand_more" size="sm" />
+    </fd-ui-button>
+
+    <fd-ui-button
+        appearance="toolbar"
+        variant="secondary"
+        fill="outline"
+        icon="chevron_right"
+        [disabled]="nextDisabled()"
+        [disabledReason]="nextWeekAriaLabel()"
+        [ariaLabel]="nextWeekAriaLabel()"
+        (click)="selectNextWeek()"
+    />
+</div>
+
+<ng-template
+    cdkConnectedOverlay
+    cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOpen]="isOpen()"
+    [cdkConnectedOverlayHasBackdrop]="true"
+    [cdkConnectedOverlayPush]="true"
+    [cdkConnectedOverlayPositions]="[
+        { originX: 'center', originY: 'bottom', overlayX: 'center', overlayY: 'top', offsetY: 8 },
+        { originX: 'center', originY: 'top', overlayX: 'center', overlayY: 'bottom', offsetY: -8 },
+    ]"
+    (backdropClick)="close()"
+    (detach)="close()"
+    (overlayKeydown)="onOverlayKeydown($event)"
+>
+    <section class="fd-ui-week-picker__panel" [attr.aria-label]="panelTitle()">
+        <h2 class="fd-ui-week-picker__panel-title">{{ panelTitle() }}</h2>
+        <fd-ui-calendar
+            appearance="embedded"
+            selectionMode="week"
+            [value]="normalizedValue()"
+            [displayMonth]="displayMonth()"
+            [min]="min()"
+            [max]="max()"
+            [locale]="effectiveLocale()"
+            [selectedWeekLabel]="isCurrentWeek() ? currentWeekLabel() : null"
+            (valueChange)="onCalendarSelect($event)"
+            (displayMonthChange)="onDisplayMonthChange($event)"
+        />
+        @if (!isCurrentWeek()) {
+            <fd-ui-button variant="ghost" fill="text" icon="history" (click)="selectCurrentWeek()">
+                {{ returnToCurrentWeekLabel() }}
+            </fd-ui-button>
+        }
+    </section>
+</ng-template>

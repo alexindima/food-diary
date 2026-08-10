@@ -10,8 +10,8 @@ import type { WeeklyCheckInData, WeekSummary, WeekTrend } from '../models/weekly
 export class WeeklyCheckInService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.weeklyCheckIn;
 
-    public getData(): Observable<WeeklyCheckInData> {
-        return super.get<WeeklyCheckInData>('').pipe(
+    public getData(weekStart: string): Observable<WeeklyCheckInData> {
+        return super.get<WeeklyCheckInData>('', { weekStart }).pipe(
             catchError((error: unknown) =>
                 fallbackApiError('Get weekly check-in error', error, {
                     thisWeek: createEmptySummary(),

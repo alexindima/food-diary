@@ -26,3 +26,22 @@ export type WeeklyCheckInSuggestionViewModel = {
     key: string;
     labelKey: string;
 };
+
+export type WeeklyReviewInsightTone = 'positive' | 'info' | 'attention';
+
+export type WeeklyReviewInsightViewModel = {
+    key: string;
+    icon: string;
+    tone: WeeklyReviewInsightTone;
+    labelKey: string;
+};
+
+export type WeeklyReviewViewModel = {
+    daysLogged: number;
+    hasEnoughData: boolean;
+    summaryKey: string;
+    focusTitleKey: string;
+    focusDescriptionKey: string;
+    focusTarget: number;
+    insights: WeeklyReviewInsightViewModel[];
+};

@@ -1,0 +1,53 @@
+<fd-ui-dialog
+    class="weekly-review-dialog"
+    [title]="'WEEKLY_CHECK_IN.REPORT.TITLE' | translate"
+    [subtitle]="'WEEKLY_CHECK_IN.REPORT.SUBTITLE' | translate"
+>
+    <section class="weekly-review-dialog__section">
+        <h3 class="fd-ui-card-title">{{ 'WEEKLY_CHECK_IN.REPORT.SUMMARY_TITLE' | translate }}</h3>
+        <p class="weekly-review-dialog__summary fd-ui-body-sm">{{ data.review.summaryKey | translate }}</p>
+    </section>
+
+    <section class="weekly-review-dialog__metrics" [attr.aria-label]="'WEEKLY_CHECK_IN.METRICS_ARIA' | translate">
+        <div class="weekly-review-dialog__metric">
+            <fd-ui-icon name="calendar_today" />
+            <strong>{{ data.review.daysLogged }} / 7</strong>
+            <span>{{ 'WEEKLY_CHECK_IN.METRICS.DAYS' | translate }}</span>
+        </div>
+        <div class="weekly-review-dialog__metric">
+            <fd-ui-icon name="local_fire_department" />
+            <strong>{{ data.week.avgDailyCalories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</strong>
+            <span>{{ 'WEEKLY_CHECK_IN.METRICS.LOGGED_AVERAGE' | translate }}</span>
+        </div>
+        <div class="weekly-review-dialog__metric">
+            <fd-ui-icon name="fitness_center" />
+            <strong>{{ data.week.avgProteins | number: '1.0-1' }} {{ 'GENERAL.UNITS.G' | translate }}</strong>
+            <span>{{ 'WEEKLY_CHECK_IN.METRICS.PROTEIN' | translate }}</span>
+        </div>
+        <div class="weekly-review-dialog__metric">
+            <fd-ui-icon name="water_drop" />
+            <strong>{{ data.week.avgDailyHydrationMl | number: '1.0-0' }} {{ 'GENERAL.UNITS.ML' | translate }}</strong>
+            <span>{{ 'WEEKLY_CHECK_IN.REPORT.WATER' | translate }}</span>
+        </div>
+    </section>
+
+    <section class="weekly-review-dialog__section">
+        <h3 class="fd-ui-card-title">{{ 'WEEKLY_CHECK_IN.REPORT.INSIGHTS_TITLE' | translate }}</h3>
+        <div class="weekly-review-dialog__insights">
+            @for (insight of data.review.insights; track insight.key) {
+                <div class="weekly-review-dialog__insight">
+                    <span class="weekly-review-dialog__insight-icon" [attr.data-tone]="insight.tone">
+                        <fd-ui-icon [name]="insight.icon" />
+                    </span>
+                    <span class="fd-ui-body-sm">{{ insight.labelKey | translate: { count: data.review.daysLogged } }}</span>
+                </div>
+            }
+        </div>
+    </section>
+
+    <section class="weekly-review-dialog__focus">
+        <span class="fd-ui-helper-text">{{ 'WEEKLY_CHECK_IN.FOCUS.TITLE' | translate }}</span>
+        <strong>{{ data.review.focusTitleKey | translate }}</strong>
+        <p class="fd-ui-body-sm">{{ data.review.focusDescriptionKey | translate }}</p>
+    </section>
+</fd-ui-dialog>

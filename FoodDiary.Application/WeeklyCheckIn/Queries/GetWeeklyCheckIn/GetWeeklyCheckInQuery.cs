@@ -5,4 +5,5 @@ using FoodDiary.Application.WeeklyCheckIn.Models;
 namespace FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
 
 public record GetWeeklyCheckInQuery(
-    Guid? UserId) : IQuery<Result<WeeklyCheckInModel>>, IUserRequest;
+    Guid? UserId,
+    DateOnly? WeekStart = null) : IQuery<Result<WeeklyCheckInModel>>, IUserRequest;

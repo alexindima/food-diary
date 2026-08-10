@@ -65,6 +65,7 @@ using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Responses;
 using FoodDiary.Presentation.Api.Features.WeeklyCheckIn;
 using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Responses;
+using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Requests;
 using FoodDiary.Presentation.Api.Features.WeightEntries;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Responses;
@@ -298,10 +299,13 @@ public sealed class AdditionalFeatureControllerTests {
         CapturedSender sender = SubstituteSender.Capture(Result.Success(model));
         WeeklyCheckInController controller = CreateController(new WeeklyCheckInController(sender));
 
-        IActionResult result = await controller.Get(userId);
+        var weekStart = new DateOnly(2026, 4, 6);
+        IActionResult result = await controller.Get(userId, new GetWeeklyCheckInHttpQuery(weekStart));
 
         Assert.IsType<WeeklyCheckInHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
-        Assert.Equal(userId, Assert.IsType<GetWeeklyCheckInQuery>(sender.Request).UserId);
+        GetWeeklyCheckInQuery query = Assert.IsType<GetWeeklyCheckInQuery>(sender.Request);
+        Assert.Equal(userId, query.UserId);
+        Assert.Equal(weekStart, query.WeekStart);
     }
 
     [Fact]

@@ -85,6 +85,7 @@
         font-size: var(--fd-button-icon-size);
         width: var(--fd-button-icon-size);
         height: var(--fd-button-icon-size);
+        translate: 0 -0.0625em;
     }
 
     &__content {

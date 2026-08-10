@@ -1,4 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Models;
@@ -32,11 +33,27 @@ public sealed class GetWeeklyCheckInQueryHandler(
 
         WeeklyCheckInUserProfile profile = profileResult.Value;
         DateTime today = dateTimeProvider.GetUtcNow().UtcDateTime.Date;
-        DateTime thisWeekStart = today.AddDays(-6);
+        DateTime currentWeekStart = StartOfWeek(today);
+        DateTime thisWeekStart = query.WeekStart is { } requestedWeekStart
+            ? DateTime.SpecifyKind(requestedWeekStart.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc)
+            : currentWeekStart;
+        if (thisWeekStart.DayOfWeek != DayOfWeek.Monday) {
+            return Result.Failure<WeeklyCheckInModel>(Errors.Validation.Invalid(
+                nameof(query.WeekStart),
+                "Week start must be a Monday."));
+        }
+
+        if (thisWeekStart > currentWeekStart) {
+            return Result.Failure<WeeklyCheckInModel>(Errors.Validation.Invalid(
+                nameof(query.WeekStart),
+                "Future weeks are not available."));
+        }
+
+        DateTime thisWeekEnd = thisWeekStart == currentWeekStart ? today : thisWeekStart.AddDays(6);
         DateTime lastWeekStart = thisWeekStart.AddDays(-7);
         DateTime lastWeekEnd = thisWeekStart.AddDays(-1);
 
-        Result<WeekSummaryModel> thisWeekSummaryResult = await weeklyCheckInReadService.LoadWeekSummaryAsync(userId, thisWeekStart, today, cancellationToken).ConfigureAwait(false);
+        Result<WeekSummaryModel> thisWeekSummaryResult = await weeklyCheckInReadService.LoadWeekSummaryAsync(userId, thisWeekStart, thisWeekEnd, cancellationToken).ConfigureAwait(false);
         if (thisWeekSummaryResult.IsFailure) {
             return Result.Failure<WeeklyCheckInModel>(thisWeekSummaryResult.Error);
         }
@@ -52,5 +69,10 @@ public sealed class GetWeeklyCheckInQueryHandler(
         IReadOnlyList<string> suggestions = WeeklyCheckInCalculator.GenerateSuggestions(thisWeekSummary, trends, profile.DailyCalorieTarget);
 
         return Result.Success(new WeeklyCheckInModel(thisWeekSummary, lastWeekSummary, trends, suggestions));
+    }
+
+    private static DateTime StartOfWeek(DateTime date) {
+        int daysSinceMonday = ((int)date.DayOfWeek - (int)DayOfWeek.Monday + 7) % 7;
+        return date.AddDays(-daysSinceMonday);
     }
 }

@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4066,
+                    "productionFiles":  4067,
                     "criticalSymbols":  533,
                     "criticalSymbolsWithTestReferences":  504,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -30064,11 +30064,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/lib/weekly-check-in.facade.ts",
-                      "nonBlankLines":  22,
+                      "nonBlankLines":  24,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.94
+                      "structuralRiskScore":  1.98
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/lib/weekly-check-in.mapper.ts",
@@ -30080,11 +30080,19 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/lib/weekly-check-in.types.ts",
-                      "nonBlankLines":  25,
+                      "nonBlankLines":  41,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.5
+                      "structuralRiskScore":  0.82
+                  },
+                  {
+                      "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/lib/weekly-review.mapper.ts",
+                      "nonBlankLines":  60,
+                      "decisionPoints":  9,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  14.7
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/models/weekly-check-in.data.ts",
@@ -30096,11 +30104,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.ts",
-                      "nonBlankLines":  47,
+                      "nonBlankLines":  51,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.94
+                      "structuralRiskScore":  1.02
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-tour.ts",

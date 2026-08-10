@@ -8,7 +8,7 @@
                     "moduleCycleNodes":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
-                    "selectorUnreferencedComponents":  135,
+                    "selectorUnreferencedComponents":  138,
                     "componentsWithoutDirectSpecs":  122,
                     "criticalSymbolsWithoutTestReferences":  29,
                     "explicitDebtMarkers":  3
@@ -1115,6 +1115,30 @@
                                                "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
                                                "specPath":  null
+                                           },
+                                           {
+                                               "class":  "WeeklyCheckInStatsCardComponent",
+                                               "selector":  "fd-weekly-check-in-stats-card",
+                                               "feature":  "weekly-check-in",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-stats-card/weekly-check-in-stats-card.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-stats-card/weekly-check-in-stats-card.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-stats-card/weekly-check-in-stats-card.spec.ts"
+                                           },
+                                           {
+                                               "class":  "WeeklyCheckInSuggestionsCardComponent",
+                                               "selector":  "fd-weekly-check-in-suggestions-card",
+                                               "feature":  "weekly-check-in",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-suggestions-card/weekly-check-in-suggestions-card.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-suggestions-card/weekly-check-in-suggestions-card.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-suggestions-card/weekly-check-in-suggestions-card.spec.ts"
+                                           },
+                                           {
+                                               "class":  "WeeklyCheckInTrendsComponent",
+                                               "selector":  "fd-weekly-check-in-trends",
+                                               "feature":  "weekly-check-in",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-trends/weekly-check-in-trends.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-trends/weekly-check-in-trends.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-trends/weekly-check-in-trends.spec.ts"
                                            },
                                            {
                                                "class":  "WeightGoalHistoryDialogComponent",

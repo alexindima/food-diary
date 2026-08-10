@@ -310,6 +310,20 @@ export type FdUiDateRangeValue = { start: Date | null; end: Date | null };
 
 Compact date trigger with overlay calendar.
 
+#### `fd-ui-week-picker`
+
+Week navigation control with previous/next actions and an overlay calendar that selects complete week rows.
+
+**Inputs / model**
+
+- `value: Date` (model; normalized to the configured Monday-start week)
+- `min?: Date | null` (earliest selectable week)
+- `max?: Date | null` (latest selectable week; defaults to the current week)
+- `locale?: string | null` (runtime locale for the range and calendar; falls back to `LOCALE_ID`)
+- localized labels: `panelTitle`, `currentWeekLabel`, `returnToCurrentWeekLabel`, `previousWeekAriaLabel`, `nextWeekAriaLabel`, `openCalendarAriaLabel`
+
+The component reuses `fd-ui-calendar` with `selectionMode="week"`. The calendar keeps `selectionMode="date"` and standalone appearance by default for existing date inputs.
+
 **Inputs**
 
 - `value?: Date | null`

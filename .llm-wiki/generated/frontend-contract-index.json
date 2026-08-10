@@ -1,16 +1,16 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "components":  412,
+                    "components":  413,
                     "componentsWithoutDirectSpecs":  122,
-                    "inputs":  1273,
+                    "inputs":  1286,
                     "outputs":  399,
                     "apiCalls":  219,
                     "templatesWithTranslations":  255,
-                    "translationKeys":  1358,
-                    "consumerEdges":  938,
-                    "consumedComponents":  276,
-                    "unconsumedComponents":  135
+                    "translationKeys":  1375,
+                    "consumerEdges":  941,
+                    "consumedComponents":  274,
+                    "unconsumedComponents":  138
                 },
     "components":  [
                        {
@@ -3765,6 +3765,26 @@
                                               "name":  "weekStartsOn",
                                               "type":  "0 | 1",
                                               "required":  false
+                                          },
+                                          {
+                                              "name":  "selectionMode",
+                                              "type":  "FdUiCalendarSelectionMode",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "appearance",
+                                              "type":  "FdUiCalendarAppearance",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "locale",
+                                              "type":  "string | null",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "selectedWeekLabel",
+                                              "type":  "string | null",
+                                              "required":  false
                                           }
                                       ],
                            "outputs":  [
@@ -5982,6 +6002,64 @@
 
                                        ],
                            "specPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/top-loader/fd-ui-top-loader.spec.ts"
+                       },
+                       {
+                           "class":  "FdUiWeekPickerComponent",
+                           "selector":  "fd-ui-week-picker",
+                           "feature":  "fd-ui-kit",
+                           "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/week-picker/fd-ui-week-picker.ts",
+                           "templatePath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/week-picker/fd-ui-week-picker.html",
+                           "inputs":  [
+                                          {
+                                              "name":  "min",
+                                              "type":  "Date | null",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "max",
+                                              "type":  "Date | null",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "panelTitle",
+                                              "type":  "",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "currentWeekLabel",
+                                              "type":  "",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "returnToCurrentWeekLabel",
+                                              "type":  "",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "previousWeekAriaLabel",
+                                              "type":  "",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "nextWeekAriaLabel",
+                                              "type":  "",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "openCalendarAriaLabel",
+                                              "type":  "",
+                                              "required":  false
+                                          },
+                                          {
+                                              "name":  "locale",
+                                              "type":  "string | null",
+                                              "required":  false
+                                          }
+                                      ],
+                           "outputs":  [
+
+                                       ],
+                           "specPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/week-picker/fd-ui-week-picker.spec.ts"
                        },
                        {
                            "class":  "StyleGovernanceDocsComponent",
@@ -18883,10 +18961,30 @@
                                  "feature":  "weekly-check-in",
                                  "path":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
                                  "keys":  [
+                                              "GENERAL.UNITS.G",
+                                              "GENERAL.UNITS.KCAL",
+                                              "GENERAL.UNITS.KG",
+                                              "WEEKLY_CHECK_IN.COVERAGE_ARIA",
+                                              "WEEKLY_CHECK_IN.COVERAGE_TITLE",
+                                              "WEEKLY_CHECK_IN.DISCLAIMER",
+                                              "WEEKLY_CHECK_IN.FOCUS.TITLE",
                                               "WEEKLY_CHECK_IN.LOADING",
+                                              "WEEKLY_CHECK_IN.METRICS.DAYS",
+                                              "WEEKLY_CHECK_IN.METRICS.LOGGED_AVERAGE",
+                                              "WEEKLY_CHECK_IN.METRICS.PROTEIN",
+                                              "WEEKLY_CHECK_IN.METRICS.WEIGHT",
+                                              "WEEKLY_CHECK_IN.METRICS_ARIA",
+                                              "WEEKLY_CHECK_IN.OPEN_REPORT",
                                               "WEEKLY_CHECK_IN.SUBTITLE",
+                                              "WEEKLY_CHECK_IN.SUMMARY.TITLE",
                                               "WEEKLY_CHECK_IN.TITLE",
-                                              "WEEKLY_CHECK_IN.TOUR.START_TOUR"
+                                              "WEEKLY_CHECK_IN.TOUR.START_TOUR",
+                                              "WEEKLY_CHECK_IN.WEEK_PICKER.CURRENT",
+                                              "WEEKLY_CHECK_IN.WEEK_PICKER.NEXT",
+                                              "WEEKLY_CHECK_IN.WEEK_PICKER.OPEN",
+                                              "WEEKLY_CHECK_IN.WEEK_PICKER.PREVIOUS",
+                                              "WEEKLY_CHECK_IN.WEEK_PICKER.RETURN_CURRENT",
+                                              "WEEKLY_CHECK_IN.WEEK_PICKER.TITLE"
                                           ]
                              },
                              {
@@ -21200,6 +21298,27 @@
                                                  "ariaLabel",
                                                  "fill",
                                                  "icon",
+                                                 "variant"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiButtonComponent",
+                              "selector":  "fd-ui-button",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+                              "consumerFeature":  "fd-ui-kit",
+                              "consumerPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/week-picker/fd-ui-week-picker.html",
+                              "occurrences":  4,
+                              "inputsUsed":  [
+                                                 "appearance",
+                                                 "ariaLabel",
+                                                 "disabled",
+                                                 "fill",
+                                                 "fullWidth",
+                                                 "icon",
+                                                 "size",
                                                  "variant"
                                              ],
                               "outputsHandled":  [
@@ -24130,11 +24249,14 @@
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "weekly-check-in",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
-                              "occurrences":  1,
+                              "occurrences":  2,
                               "inputsUsed":  [
                                                  "appearance",
                                                  "ariaLabel",
+                                                 "ariaPressed",
+                                                 "disabled",
                                                  "fill",
+                                                 "fullWidth",
                                                  "icon",
                                                  "variant"
                                              ],
@@ -24292,6 +24414,25 @@
                               "inputsUsed":  [
                                                  "max",
                                                  "min"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiCalendarComponent",
+                              "selector":  "fd-ui-calendar",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/calendar/fd-ui-calendar.ts",
+                              "consumerFeature":  "fd-ui-kit",
+                              "consumerPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/week-picker/fd-ui-week-picker.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "appearance",
+                                                 "locale",
+                                                 "max",
+                                                 "min",
+                                                 "selectedWeekLabel",
+                                                 "selectionMode"
                                              ],
                               "outputsHandled":  [
 
@@ -25225,6 +25366,20 @@
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "title"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiCardComponent",
+                              "selector":  "fd-ui-card",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+                              "consumerFeature":  "weekly-check-in",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
+                              "occurrences":  3,
+                              "inputsUsed":  [
+
                                              ],
                               "outputsHandled":  [
 
@@ -26820,6 +26975,21 @@
                               "component":  "FdUiIconComponent",
                               "selector":  "fd-ui-icon",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "fd-ui-kit",
+                              "consumerPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/week-picker/fd-ui-week-picker.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "name",
+                                                 "size"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
                               "consumerFeature":  "shared",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.html",
                               "occurrences":  1,
@@ -27674,6 +27844,20 @@
                               "consumerFeature":  "weekly-check-in",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-trends/weekly-check-in-trends.html",
                               "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "name"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiIconComponent",
+                              "selector":  "fd-ui-icon",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+                              "consumerFeature":  "weekly-check-in",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
+                              "occurrences":  6,
                               "inputsUsed":  [
                                                  "name"
                                              ],
@@ -30630,6 +30814,27 @@
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "visible"
+                                             ],
+                              "outputsHandled":  [
+
+                                                 ]
+                          },
+                          {
+                              "component":  "FdUiWeekPickerComponent",
+                              "selector":  "fd-ui-week-picker",
+                              "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/week-picker/fd-ui-week-picker.ts",
+                              "consumerFeature":  "weekly-check-in",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
+                              "occurrences":  1,
+                              "inputsUsed":  [
+                                                 "currentWeekLabel",
+                                                 "locale",
+                                                 "max",
+                                                 "nextWeekAriaLabel",
+                                                 "openCalendarAriaLabel",
+                                                 "panelTitle",
+                                                 "previousWeekAriaLabel",
+                                                 "returnToCurrentWeekLabel"
                                              ],
                               "outputsHandled":  [
 
@@ -34370,48 +34575,6 @@
                               "outputsHandled":  [
                                                      "configureGoal",
                                                      "viewGoalHistory"
-                                                 ]
-                          },
-                          {
-                              "component":  "WeeklyCheckInStatsCardComponent",
-                              "selector":  "fd-weekly-check-in-stats-card",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-stats-card/weekly-check-in-stats-card.ts",
-                              "consumerFeature":  "weekly-check-in",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "week"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "WeeklyCheckInSuggestionsCardComponent",
-                              "selector":  "fd-weekly-check-in-suggestions-card",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-suggestions-card/weekly-check-in-suggestions-card.ts",
-                              "consumerFeature":  "weekly-check-in",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "suggestions"
-                                             ],
-                              "outputsHandled":  [
-
-                                                 ]
-                          },
-                          {
-                              "component":  "WeeklyCheckInTrendsComponent",
-                              "selector":  "fd-weekly-check-in-trends",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-trends/weekly-check-in-trends.ts",
-                              "consumerFeature":  "weekly-check-in",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
-                              "occurrences":  1,
-                              "inputsUsed":  [
-                                                 "trends"
-                                             ],
-                              "outputsHandled":  [
-
                                                  ]
                           },
                           {

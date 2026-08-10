@@ -1,0 +1,96 @@
+@use 'variables' as variables;
+
+.weekly-review-dialog {
+    &__section + &__section,
+    &__metrics + &__section,
+    &__section + &__metrics {
+        margin-top: var(--fd-space-lg);
+    }
+
+    &__section h3,
+    &__summary,
+    &__focus p {
+        margin: 0;
+    }
+
+    &__summary {
+        margin-top: var(--fd-space-xs);
+        color: var(--fd-color-text-muted);
+    }
+
+    &__metrics {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--fd-space-sm);
+    }
+
+    &__metric {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: var(--fd-space-xxs) var(--fd-space-sm);
+        align-items: center;
+        padding: var(--fd-space-sm);
+        border: var(--fd-border-default);
+        border-radius: var(--fd-radius-card);
+        background: var(--fd-bg-surface-raised);
+
+        fd-ui-icon {
+            grid-row: 1 / 3;
+            color: var(--fd-color-primary-500);
+        }
+
+        span {
+            color: var(--fd-color-text-muted);
+        }
+    }
+
+    &__insights {
+        margin-top: var(--fd-space-xs);
+        border-top: var(--fd-border-subtle);
+    }
+
+    &__insight {
+        display: flex;
+        align-items: center;
+        gap: var(--fd-space-sm);
+        padding: var(--fd-space-sm) 0;
+        border-bottom: var(--fd-border-subtle);
+    }
+
+    &__insight-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--fd-size-control-compact);
+        height: var(--fd-size-control-compact);
+        flex: 0 0 auto;
+        border-radius: var(--fd-radius-pill);
+        color: var(--fd-color-primary-500);
+        background: var(--fd-bg-status-info);
+
+        &[data-tone='positive'] {
+            color: var(--fd-color-success);
+            background: var(--fd-bg-success-soft);
+        }
+
+        &[data-tone='attention'] {
+            color: var(--fd-color-amber-500);
+            background: var(--fd-bg-warning-soft);
+        }
+    }
+
+    &__focus {
+        display: grid;
+        gap: var(--fd-space-xs);
+        margin-top: var(--fd-space-lg);
+        padding: var(--fd-space-md);
+        border-radius: var(--fd-radius-card);
+        background: var(--fd-bg-brand-soft);
+    }
+
+    @media #{variables.$media-mobile} {
+        &__metrics {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+}

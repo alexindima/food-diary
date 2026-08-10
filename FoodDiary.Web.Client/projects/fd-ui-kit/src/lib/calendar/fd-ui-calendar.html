@@ -1,4 +1,4 @@
-<div class="fd-ui-calendar">
+<div class="fd-ui-calendar" [class.fd-ui-calendar--embedded]="appearance() === 'embedded'">
     <div class="fd-ui-calendar__header">
         <fd-ui-button
             appearance="plain-icon"
@@ -38,6 +38,7 @@
                         [class.fd-ui-calendar__day--outside]="!cell.isCurrentMonth"
                         [class.fd-ui-calendar__day--today]="cell.isToday"
                         [class.fd-ui-calendar__day--selected]="cell.isSelected"
+                        [class.fd-ui-calendar__day--week-selected]="selectionMode() === 'week' && cell.isSelected"
                         [class.fd-ui-calendar__day--active]="cell.isActive"
                         [disabled]="cell.isDisabled"
                         [attr.data-date]="cell.iso"
@@ -48,6 +49,9 @@
                     >
                         {{ cell.label }}
                     </button>
+                }
+                @if (selectionMode() === 'week' && week[0].isSelected && selectedWeekLabel(); as label) {
+                    <span class="fd-ui-calendar__selected-week-label">{{ label }}</span>
                 }
             </div>
         }
