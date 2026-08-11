@@ -43,4 +43,24 @@ public sealed class AchievementDefinitionTests {
             key, "habits", AchievementMetric.TotalMeals, 10,
             "Название", "Title", "Описание", "Description", "trophy", 0));
     }
+
+    [Fact]
+    public void Create_WithInvalidMetric_Throws() => Assert.Throws<ArgumentOutOfRangeException>(() => Create(metric: (AchievementMetric)int.MaxValue));
+
+    [Fact]
+    public void Create_WithNonPositiveThreshold_Throws() => Assert.Throws<ArgumentOutOfRangeException>(() => Create(threshold: 0));
+
+    [Fact]
+    public void Create_WithNegativeSortOrder_Throws() => Assert.Throws<ArgumentOutOfRangeException>(() => Create(sortOrder: -1));
+
+    [Fact]
+    public void Create_WithMissingRequiredValue_Throws() => Assert.Throws<ArgumentException>(() => Create(titleEn: " "));
+
+    private static AchievementDefinition Create(
+        AchievementMetric metric = AchievementMetric.TotalMeals,
+        int threshold = 10,
+        int sortOrder = 0,
+        string titleEn = "Title") => AchievementDefinition.Create(
+            "custom_10", "habits", metric, threshold,
+            "Title RU", titleEn, "Description RU", "Description", "trophy", sortOrder);
 }

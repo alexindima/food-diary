@@ -130,6 +130,14 @@ public class GamificationCalculatorTests {
         Assert.True(badge.IsEarned);
     }
 
+    [Fact]
+    public void GetMetricValue_WithUnknownMetric_Throws() {
+        var metrics = new AchievementMetricSnapshot(0, 0, 0);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            GamificationCalculator.GetMetricValue((AchievementMetric)int.MaxValue, metrics));
+    }
+
     private static IReadOnlyList<AchievementDefinition> CreateDefinitions() {
         var definitions = new List<AchievementDefinition>();
         int sortOrder = 0;
@@ -203,6 +211,20 @@ public class GamificationCalculatorTests {
     public void CalculateWeeklyAdherence_WithGoalButNoPositiveCalories_DoesNotCountDayAsMet() {
         IReadOnlyDictionary<DateTime, double> dailyCalories = new Dictionary<DateTime, double> {
             [Today.Date] = 0,
+        };
+
+        double adherence = GamificationCalculator.CalculateWeeklyAdherence(
+            dailyCalories, _ => 2000, Today);
+
+        Assert.Equal(0.0, adherence);
+    }
+
+    [Theory]
+    [InlineData(1500)]
+    [InlineData(2500)]
+    public void CalculateWeeklyAdherence_WithCaloriesOutsideTolerance_DoesNotCountDayAsMet(double calories) {
+        IReadOnlyDictionary<DateTime, double> dailyCalories = new Dictionary<DateTime, double> {
+            [Today.Date] = calories,
         };
 
         double adherence = GamificationCalculator.CalculateWeeklyAdherence(

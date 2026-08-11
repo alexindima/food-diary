@@ -52,4 +52,16 @@ public sealed class UserAchievementTests {
 
         Assert.Equal(DateTimeKind.Utc, achievement.EarnedAtUtc.Kind);
     }
+
+    [Fact]
+    public void Create_WithEmptyUserId_Throws() => Assert.Throws<ArgumentException>(() =>
+        UserAchievement.Create(UserId.Empty, "streak_3", EarnedAtUtc, 3, 1));
+
+    [Fact]
+    public void Create_WithNegativeEarnedValue_Throws() => Assert.Throws<ArgumentOutOfRangeException>(() =>
+        UserAchievement.Create(UserId.New(), "streak_3", EarnedAtUtc, -1, 1));
+
+    [Fact]
+    public void Create_WithNonPositiveDefinitionVersion_Throws() => Assert.Throws<ArgumentOutOfRangeException>(() =>
+        UserAchievement.Create(UserId.New(), "streak_3", EarnedAtUtc, 3, 0));
 }

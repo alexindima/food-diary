@@ -5,6 +5,26 @@ namespace FoodDiary.JobManager.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class OptionsValidationTests {
     [Theory]
+    [InlineData(false, 0, "", true)]
+    [InlineData(true, 10, "* * * * *", true)]
+    [InlineData(true, 0, "* * * * *", false)]
+    [InlineData(true, 10, " ", false)]
+    public void AchievementEvaluationOutboxOptions_ReturnExpectedValidationResult(bool enabled, int batchSize, string cron, bool expected) {
+        var options = new AchievementEvaluationOutboxOptions { Enabled = enabled, BatchSize = batchSize, Cron = cron };
+
+        Assert.Equal(expected, AchievementEvaluationOutboxOptions.HasValidConfiguration(options));
+    }
+
+    [Theory]
+    [InlineData(false, "", true)]
+    [InlineData(true, "*/15 * * * *", true)]
+    [InlineData(true, " ", false)]
+    public void WeeklyGoalReminderOptions_ReturnExpectedValidationResult(bool enabled, string cron, bool expected) {
+        var options = new WeeklyGoalReminderOptions { Enabled = enabled, Cron = cron };
+
+        Assert.Equal(expected, WeeklyGoalReminderOptions.HasValidConfiguration(options));
+    }
+    [Theory]
     [InlineData(false, "", true)]
     [InlineData(true, "0 * * * *", true)]
     [InlineData(true, "", false)]

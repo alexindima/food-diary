@@ -272,9 +272,11 @@ public class CommonAbstractionsTests {
     [InlineData(NotificationTypes.NewClientTask, null, "/recommendations")]
     [InlineData(NotificationTypes.ClientTaskCancelled, null, "/recommendations")]
     [InlineData(NotificationTypes.ClientTaskDueSoon, null, "/recommendations")]
+    [InlineData(NotificationTypes.WeeklyGoalReminder, null, "/weekly-check-in")]
     [InlineData(NotificationTypes.ClientTaskChangedForDietologist, null, null)]
     [InlineData(NotificationTypes.ClientTaskChangedForDietologist, "client-id", "/dietologist/clients/client-id")]
     [InlineData(NotificationTypes.NewRecommendationCommentForDietologist, "bad", null)]
+    [InlineData(NotificationTypes.NewRecommendationCommentForDietologist, null, null)]
     [InlineData(NotificationTypes.NewRecommendationCommentForDietologist, "bad|also-bad", null)]
     [InlineData(NotificationTypes.NewRecommendationCommentForDietologist, "00000000-0000-0000-0000-000000000001|bad", null)]
     [InlineData(
@@ -282,6 +284,7 @@ public class CommonAbstractionsTests {
         "00000000-0000-0000-0000-000000000001|00000000-0000-0000-0000-000000000002",
         "/dietologist/clients/00000000-0000-0000-0000-000000000001?recommendationId=00000000-0000-0000-0000-000000000002")]
     [InlineData(NotificationTypes.DietologistInvitationReceived, "invitation-id", "/dietologist-invitations/invitation-id")]
+    [InlineData(NotificationTypes.DietologistInvitationReceived, null, null)]
     [InlineData(NotificationTypes.DietologistInvitationAccepted, null, "/profile")]
     [InlineData(NotificationTypes.DietologistInvitationDeclined, null, "/profile")]
     [InlineData("Unknown", null, null)]
@@ -292,6 +295,18 @@ public class CommonAbstractionsTests {
         string? url = NotificationTargetUrlResolver.Resolve(notificationType, referenceId);
 
         Assert.Equal(expectedUrl, url);
+    }
+
+    [Theory]
+    [InlineData("not-a-guid|00000000-0000-0000-0000-000000000001")]
+    [InlineData("00000000-0000-0000-0000-000000000001|not-a-guid")]
+    [InlineData("00000000-0000-0000-0000-000000000001")]
+    public void NotificationTargetUrlResolver_ForMalformedDietologistCommentReference_ReturnsNull(string referenceId) {
+        string? url = NotificationTargetUrlResolver.Resolve(
+            NotificationTypes.NewRecommendationCommentForDietologist,
+            referenceId);
+
+        Assert.Null(url);
     }
 
     [Fact]

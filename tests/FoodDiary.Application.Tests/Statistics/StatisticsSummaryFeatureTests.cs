@@ -125,6 +125,27 @@ public sealed class StatisticsSummaryFeatureTests {
         Assert.Contains(nameof(GetStatisticsSummaryQuery.QuantizationDays), result.Error.Details!.Keys, StringComparer.Ordinal);
     }
 
+    [Fact]
+    public async Task GetStatisticsSummaryQueryHandler_WhenStatisticsReadFails_ReturnsFailureWithoutReadingBodyMeasurements() {
+        IDashboardStatisticsReadService statisticsReadService = Substitute.For<IDashboardStatisticsReadService>();
+        IWeightEntryReadService weightReadService = Substitute.For<IWeightEntryReadService>();
+        IWaistEntryReadService waistReadService = Substitute.For<IWaistEntryReadService>();
+        var error = new Error("Statistics.Unavailable", "Statistics unavailable.");
+        statisticsReadService
+            .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), 1, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(error)));
+        var handler = new GetStatisticsSummaryQueryHandler(
+            statisticsReadService, weightReadService, waistReadService, CreateCurrentUserAccessService());
+
+        Result<StatisticsSummaryModel> result = await handler.Handle(
+            new GetStatisticsSummaryQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 1),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, error.Code);
+        await weightReadService.DidNotReceiveWithAnyArgs().GetSummariesAsync(default, default, default, default, default);
+        await waistReadService.DidNotReceiveWithAnyArgs().GetSummariesAsync(default, default, default, default, default);
+    }
+
     private static ICurrentUserAccessService CreateCurrentUserAccessService() {
         ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
         service

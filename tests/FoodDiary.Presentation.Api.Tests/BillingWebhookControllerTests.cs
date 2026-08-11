@@ -41,6 +41,22 @@ public sealed class BillingWebhookControllerTests {
     }
 
     [Fact]
+    public async Task HandleWebhook_WhenDeclaredContentLengthExceedsLimit_RejectsBeforeReading() {
+        bool dispatched = false;
+        ISender sender = SubstituteSender.Create(Result.Success(), _ => dispatched = true);
+        BillingWebhookController controller = CreateController(sender, payload: "{}");
+        controller.Request.ContentLength = BillingWebhookHttpProcessor.MaxWebhookPayloadBytes + 1;
+
+        BadHttpRequestException exception = await Assert.ThrowsAsync<BadHttpRequestException>(() =>
+            controller.HandleWebhook("Stripe"));
+
+        Assert.Multiple(
+            () => Assert.Equal(StatusCodes.Status413PayloadTooLarge, exception.StatusCode),
+            () => Assert.False(dispatched),
+            () => Assert.Equal(0, controller.Request.Body.Position));
+    }
+
+    [Fact]
     public async Task HandleWebhook_WithNonSeekableBody_DoesNotAttemptToResetStream() {
         IRequest<Result>? sentRequest = null;
         ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);

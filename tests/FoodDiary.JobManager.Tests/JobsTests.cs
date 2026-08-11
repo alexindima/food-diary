@@ -464,6 +464,54 @@ public sealed class JobsTests {
     }
 
     [Fact]
+    public async Task AchievementEvaluationOutboxJob_WhenDisabled_DoesNotProcess() {
+        var processor = new RecordingAchievementEvaluationOutboxProcessor(processed: 3);
+        var tracker = new JobExecutionStateTracker();
+        var job = new AchievementEvaluationOutboxJob(
+            processor,
+            Options.Create(new AchievementEvaluationOutboxOptions { Enabled = false }),
+            new JobExecutionObserver(TimeProvider.System, tracker),
+            NullLogger<AchievementEvaluationOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Null(processor.BatchSize);
+        Assert.Equal(0, tracker.GetSnapshot("achievements.evaluation_outbox")?.ConsecutiveFailures);
+    }
+
+    [Fact]
+    public async Task AchievementEvaluationOutboxJob_WhenCanceled_RecordsCancellationAndRethrows() {
+        var processor = new RecordingAchievementEvaluationOutboxProcessor(processed: 0);
+        var tracker = new JobExecutionStateTracker();
+        var job = new AchievementEvaluationOutboxJob(
+            processor,
+            Options.Create(new AchievementEvaluationOutboxOptions { Enabled = true }),
+            new JobExecutionObserver(TimeProvider.System, tracker),
+            NullLogger<AchievementEvaluationOutboxJob>.Instance);
+        using var cancellation = new CancellationTokenSource();
+        await cancellation.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cancellation.Token));
+
+        Assert.Equal(0, tracker.GetSnapshot("achievements.evaluation_outbox")?.ConsecutiveFailures);
+    }
+
+    [Fact]
+    public async Task AchievementEvaluationOutboxJob_WhenProcessorFails_RecordsFailureAndRethrows() {
+        IAchievementEvaluationOutboxProcessor processor = new ThrowingAchievementEvaluationOutboxProcessor();
+        var tracker = new JobExecutionStateTracker();
+        var job = new AchievementEvaluationOutboxJob(
+            processor,
+            Options.Create(new AchievementEvaluationOutboxOptions { Enabled = true }),
+            new JobExecutionObserver(TimeProvider.System, tracker),
+            NullLogger<AchievementEvaluationOutboxJob>.Instance);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute(CancellationToken.None));
+
+        Assert.Equal(1, tracker.GetSnapshot("achievements.evaluation_outbox")?.ConsecutiveFailures);
+    }
+
+    [Fact]
     public async Task NotificationWebPushOutboxJob_WhenDisabled_RecordsSuccessWithoutProcessing() {
         var processor = new RecordingNotificationWebPushOutboxProcessor(processed: 4);
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
@@ -1395,6 +1443,12 @@ public sealed class JobsTests {
             BatchSize = batchSize;
             return Task.FromResult(processed);
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingAchievementEvaluationOutboxProcessor : IAchievementEvaluationOutboxProcessor {
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) =>
+            throw new InvalidOperationException("failure");
     }
 
     [ExcludeFromCodeCoverage]
