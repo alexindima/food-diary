@@ -639,7 +639,7 @@ Assert-Wiki ($indexPipelineText -match "cacheableTools = @\('Build-LlmWikiQualit
 Assert-Wiki ($wikiFacadeText.Contains('DeferPossiblyConcurrentStale = $true; ReuseUnchangedChecks = $true') -and
     $wikiFacadeText.Contains('$indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }') -and
     $wikiFacadeText.Contains('$indexArguments = @{ AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }')) 'Index cache reuse is not enabled consistently for fast, strict, and update workflows.'
-Assert-Wiki ($wikiFacadeText.Contains("`$Command -eq 'develop'") -and
+Assert-Wiki ($wikiFacadeText.Contains("`$Command -in @('develop', 'start')") -and
     $wikiFacadeText.Contains("Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId `$TaskSessionId -Format Text") -and
     $wikiFacadeText.Contains("-not `$PSBoundParameters.ContainsKey('ChangedPath')") -and
     $wikiFacadeText.Contains("Manage-LlmWikiTaskBaseline.ps1') -Action ChangedPaths -SessionId `$TaskSessionId -Format Object")) 'Wiki facade does not capture and reuse a task baseline while preserving explicit changed paths.'
