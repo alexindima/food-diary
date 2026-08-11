@@ -3,9 +3,9 @@
     "summary":  {
                     "contracts":  1024,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  7109,
+                    "consumerEdges":  7110,
                     "productionConsumerEdges":  4342,
-                    "testConsumerEdges":  2767,
+                    "testConsumerEdges":  2768,
                     "consumedContracts":  1024,
                     "unconsumedContracts":  0
                 },
@@ -12202,7 +12202,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                  "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -86996,7 +86996,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/DependencyInjection.Identity.cs",
@@ -87009,7 +87009,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Users/Common/UserContextService.cs",
@@ -87022,7 +87022,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Users/Queries/GetDesiredWaist/GetDesiredWaistQueryHandler.cs",
@@ -87035,7 +87035,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Users/Queries/GetDesiredWeight/GetDesiredWeightQueryHandler.cs",
@@ -87048,7 +87048,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Users/Queries/GetUserById/GetUserByIdQueryHandler.cs",
@@ -87061,7 +87061,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Users/Queries/GetUserGoals/GetUserGoalsQueryHandler.cs",
@@ -87074,7 +87074,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Users/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQueryHandler.cs",
@@ -87087,7 +87087,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
@@ -87100,7 +87100,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Users/Services/ProfileOverviewReadService.cs",
@@ -87113,7 +87113,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
@@ -87126,7 +87126,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
@@ -87139,7 +87139,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs",
@@ -87152,7 +87152,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Users/HistoryProfileCoverageTests.cs",
@@ -87165,12 +87165,25 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserProfileReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
                               "isTest":  true,
                               "referenceCount":  6
+                          },
+                          {
+                              "contract":  "IUserProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IUserRepository",

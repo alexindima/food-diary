@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 
 namespace FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 

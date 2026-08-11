@@ -8,7 +8,7 @@ using FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
 using FoodDiary.Application.Dietologist.Queries.GetClientGoals;
 using FoodDiary.Application.Dietologist.Queries.GetMyClients;
 using FoodDiary.Application.Dietologist.Queries.GetRecommendationsForClient;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
 using FoodDiary.Presentation.Api.Features.Dietologist;

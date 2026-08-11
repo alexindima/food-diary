@@ -82,6 +82,13 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "HasPassword",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "AccessToken",
                        "type":  "string",
                        "path":  "FoodDiary.Application.Abstractions/Wearables/Models/WearableTokenResult.cs",
@@ -296,13 +303,6 @@
                        "type":  "string",
                        "path":  "FoodDiary.Application/Users/Commands/SetPassword/SetPasswordCommand.cs",
                        "line":  8
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "HasPassword",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                       "line":  9
                    },
                    {
                        "category":  "credential",
@@ -1433,6 +1433,13 @@
                    },
                    {
                        "category":  "financial",
+                       "name":  "WebPushSubscriptions",
+                       "type":  "IReadOnlyList\u003cProfileWebPushSubscriptionModel\u003e",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/ProfileOverviewModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "financial",
                        "name":  "Subscription",
                        "type":  "BillingSubscription?",
                        "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookProcessingContext.cs",
@@ -1668,13 +1675,6 @@
                        "type":  "double?",
                        "path":  "FoodDiary.Application/ShoppingLists/Services/ShoppingListItemData.cs",
                        "line":  10
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "WebPushSubscriptions",
-                       "type":  "IReadOnlyList\u003cProfileWebPushSubscriptionModel\u003e",
-                       "path":  "FoodDiary.Application/Users/Models/ProfileOverviewModel.cs",
-                       "line":  6
                    },
                    {
                        "category":  "financial",
@@ -2896,6 +2896,97 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "DesiredWeight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWaist",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "MondayCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
+                       "line":  16
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TuesdayCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
+                       "line":  17
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WednesdayCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
+                       "line":  18
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ThursdayCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
+                       "line":  19
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FridayCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
+                       "line":  20
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "SaturdayCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
+                       "line":  21
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "SundayCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
+                       "line":  22
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ShareWeight",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/ProfileDietologistPermissionsModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ShareWaist",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/ProfileDietologistPermissionsModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ShareHydration",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/ProfileDietologistPermissionsModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ShareFasting",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/ProfileDietologistPermissionsModel.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "health",
                        "name":  "BirthDate",
                        "type":  "DateTime?",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
@@ -3019,6 +3110,174 @@
                        "type":  "int",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
                        "line":  46
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWaist",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDesiredWaistModel.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWeight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDesiredWeightModel.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "BirthDate",
+                       "type":  "DateTime?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Gender",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Weight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                       "line":  15
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWeight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                       "line":  16
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWaist",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                       "line":  17
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Height",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                       "line":  18
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ActivityLevel",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                       "line":  19
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "HydrationGoal",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                       "line":  27
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingPushNotificationsEnabled",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                       "line":  32
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingCheckInReminderHours",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                       "line":  34
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingCheckInFollowUpReminderHours",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                       "line":  35
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingPushNotificationsEnabled",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserNotificationPreferencesModel.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingCheckInReminderHours",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserNotificationPreferencesModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingCheckInFollowUpReminderHours",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserNotificationPreferencesModel.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TargetWaist",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/WaistGoalHistoryModel.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "StartWaist",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/WaistGoalHistoryModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "EndWaist",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/WaistGoalHistoryModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Height",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/WaistHistoryProfileModel.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TargetWeight",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/WeightGoalHistoryModel.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "StartWeight",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/WeightGoalHistoryModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "EndWeight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/WeightGoalHistoryModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Height",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/WeightHistoryProfileModel.cs",
+                       "line":  4
                    },
                    {
                        "category":  "health",
@@ -4146,265 +4405,6 @@
                        "type":  "string?",
                        "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
                        "line":  40
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "DesiredWeight",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/GoalsModel.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "DesiredWaist",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/GoalsModel.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "MondayCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/GoalsModel.cs",
-                       "line":  16
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TuesdayCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/GoalsModel.cs",
-                       "line":  17
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "WednesdayCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/GoalsModel.cs",
-                       "line":  18
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ThursdayCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/GoalsModel.cs",
-                       "line":  19
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FridayCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/GoalsModel.cs",
-                       "line":  20
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "SaturdayCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/GoalsModel.cs",
-                       "line":  21
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "SundayCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/GoalsModel.cs",
-                       "line":  22
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ShareWeight",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Users/Models/ProfileDietologistPermissionsModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ShareWaist",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Users/Models/ProfileDietologistPermissionsModel.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ShareHydration",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Users/Models/ProfileDietologistPermissionsModel.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ShareFasting",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Users/Models/ProfileDietologistPermissionsModel.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "DesiredWaist",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/UserDesiredWaistModel.cs",
-                       "line":  4
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "DesiredWeight",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/UserDesiredWeightModel.cs",
-                       "line":  4
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "BirthDate",
-                       "type":  "DateTime?",
-                       "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Gender",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Weight",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                       "line":  15
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "DesiredWeight",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                       "line":  16
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "DesiredWaist",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                       "line":  17
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Height",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                       "line":  18
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ActivityLevel",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                       "line":  19
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "HydrationGoal",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                       "line":  27
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingPushNotificationsEnabled",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                       "line":  32
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingCheckInReminderHours",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                       "line":  34
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingCheckInFollowUpReminderHours",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                       "line":  35
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingPushNotificationsEnabled",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Users/Models/UserNotificationPreferencesModel.cs",
-                       "line":  5
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingCheckInReminderHours",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Users/Models/UserNotificationPreferencesModel.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingCheckInFollowUpReminderHours",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Users/Models/UserNotificationPreferencesModel.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TargetWaist",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Users/Models/WaistGoalHistoryModel.cs",
-                       "line":  5
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "StartWaist",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Users/Models/WaistGoalHistoryModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "EndWaist",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/WaistGoalHistoryModel.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Height",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/WaistHistoryProfileModel.cs",
-                       "line":  4
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TargetWeight",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Users/Models/WeightGoalHistoryModel.cs",
-                       "line":  5
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "StartWeight",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Users/Models/WeightGoalHistoryModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "EndWeight",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/WeightGoalHistoryModel.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Height",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Models/WeightHistoryProfileModel.cs",
-                       "line":  4
                    },
                    {
                        "category":  "health",
@@ -6944,6 +6944,20 @@
                        "category":  "identity",
                        "name":  "Email",
                        "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/ProfileDietologistRelationshipModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "UserAgent",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/ProfileWebPushSubscriptionModel.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
                        "line":  8
                    },
@@ -6960,6 +6974,20 @@
                        "type":  "bool",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
                        "line":  49
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "IsEmailConfirmed",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                       "line":  40
                    },
                    {
                        "category":  "identity",
@@ -7177,34 +7205,6 @@
                        "type":  "string?",
                        "path":  "FoodDiary.Application/Notifications/Models/WebPushSubscriptionModel.cs",
                        "line":  8
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "Email",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Users/Models/ProfileDietologistRelationshipModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "UserAgent",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Users/Models/ProfileWebPushSubscriptionModel.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "Email",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "IsEmailConfirmed",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                       "line":  40
                    },
                    {
                        "category":  "identity",
@@ -8020,6 +8020,13 @@
                    },
                    {
                        "category":  "privateContent",
+                       "name":  "ProfileImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                       "line":  37
+                   },
+                   {
+                       "category":  "privateContent",
                        "name":  "PromptText",
                        "type":  "string",
                        "path":  "FoodDiary.Application/Admin/Commands/UpsertAdminAiPrompt/UpsertAdminAiPromptCommand.cs",
@@ -8682,13 +8689,6 @@
                        "type":  "ImageAssetId?",
                        "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
                        "line":  31
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ProfileImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                       "line":  37
                    },
                    {
                        "category":  "privateContent",

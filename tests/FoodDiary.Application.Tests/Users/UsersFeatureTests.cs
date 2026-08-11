@@ -21,7 +21,7 @@ using FoodDiary.Application.Users.Commands.UpdateUserAppearance;
 using FoodDiary.Application.Users.Commands.UpdateGoals;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Users.Queries.GetProfileOverview;
 using FoodDiary.Application.Users.Queries.GetDesiredWaist;
 using FoodDiary.Application.Users.Queries.GetDesiredWeight;

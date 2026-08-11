@@ -1,5 +1,5 @@
 using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Dietologist.Mappings;

@@ -83,13 +83,13 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - Physical isolation: folder
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent
-- Public contract files: 13
+- Public contract files: 14
 - Observed external consumer groups: 35
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 13
+- Public contract types: 14
 - Exported repository-shaped contracts: 5
 - `enum UserAccountStatusFilter`
 - `interface ICurrentUserAccessService`
@@ -100,6 +100,7 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - `interface IUserCurrentWeightProvider`
 - `interface IUserDirectoryService`
 - `interface IUserLookupRepository`
+- `interface IUserProfileReadService`
 - `interface IUserRepository`
 - `interface IUserRoleCatalogService`
 - `interface IUserRoleMembershipService`

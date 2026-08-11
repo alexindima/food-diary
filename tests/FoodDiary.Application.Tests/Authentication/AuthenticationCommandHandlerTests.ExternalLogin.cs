@@ -7,7 +7,7 @@ using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Authentication.Models;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FluentValidation.TestHelper;

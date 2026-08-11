@@ -1,4 +1,4 @@
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Presentation.Api.Features.Goals.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Goals.Mappings;

@@ -1,4 +1,4 @@
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 
 namespace FoodDiary.Application.WeightEntries.Models;
 

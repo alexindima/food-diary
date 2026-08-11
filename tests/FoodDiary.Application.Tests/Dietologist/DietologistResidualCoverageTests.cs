@@ -11,7 +11,7 @@ using FoodDiary.Application.Dietologist.Queries.GetAttentionSignals;
 using FoodDiary.Application.Dietologist.Queries.GetRecommendationComments;
 using FoodDiary.Application.Dietologist.Services;
 using FoodDiary.Application.Users.Common;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
@@ -191,7 +191,7 @@ public sealed class DietologistResidualCoverageTests {
         var service = new DietologistUserContextService(users, lookup);
 
         Result<string> email = await service.GetAccessibleUserEmailAsync(userId, CancellationToken.None);
-        Result<FoodDiary.Application.Users.Models.UserModel> model =
+        Result<FoodDiary.Application.Abstractions.Users.Models.UserModel> model =
             await service.GetUserModelByIdAsync(userId, CancellationToken.None);
         Result<FoodDiary.Domain.Entities.Users.User> accessible =
             await service.GetAccessibleUserAsync(userId, CancellationToken.None);

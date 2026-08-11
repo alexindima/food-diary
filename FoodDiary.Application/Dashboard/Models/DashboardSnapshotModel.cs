@@ -3,7 +3,7 @@ using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Tdee.Models;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WeightEntries.Models;
 

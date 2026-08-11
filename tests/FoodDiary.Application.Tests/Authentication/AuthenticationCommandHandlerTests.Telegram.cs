@@ -5,7 +5,7 @@ using FoodDiary.Application.Authentication.Commands.TelegramVerify;
 using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Authentication.Models;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 
 namespace FoodDiary.Application.Tests.Authentication;
 

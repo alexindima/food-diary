@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Common;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Users.Queries.GetWaistGoalHistory;
 using FoodDiary.Application.Users.Queries.GetWeightGoalHistory;
 using FoodDiary.Domain.Entities.Users;

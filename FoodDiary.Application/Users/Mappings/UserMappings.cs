@@ -1,4 +1,4 @@
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Users;
 using System.Text.Json;
 

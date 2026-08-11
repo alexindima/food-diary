@@ -3520,6 +3520,13 @@
                         "line":  2
                     },
                     {
+                        "name":  "IUserProfileReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs",
+                        "line":  6
+                    },
+                    {
                         "name":  "IUserRepository",
                         "kind":  "interface",
                         "role":  "Repository",
@@ -3562,11 +3569,109 @@
                         "line":  4
                     },
                     {
+                        "name":  "DashboardLayoutModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/DashboardLayoutModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "GoalsModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "ProfileDietologistPermissionsModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/ProfileDietologistPermissionsModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "ProfileDietologistRelationshipModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/ProfileDietologistRelationshipModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "ProfileOverviewModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/ProfileOverviewModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "ProfileWebPushSubscriptionModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/ProfileWebPushSubscriptionModel.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "UserAdminReadModel",
                         "kind":  "record",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
                         "line":  6
+                    },
+                    {
+                        "name":  "UserDesiredWaistModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDesiredWaistModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "UserDesiredWeightModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDesiredWeightModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "UserModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UserNotificationPreferencesModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserNotificationPreferencesModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WaistGoalHistoryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/WaistGoalHistoryModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WaistHistoryProfileModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/WaistHistoryProfileModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WeightGoalHistoryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/WeightGoalHistoryModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WeightHistoryProfileModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/WeightHistoryProfileModel.cs",
+                        "line":  2
                     },
                     {
                         "name":  "IWaistEntryReadModelRepository",
@@ -11318,13 +11423,6 @@
                         "line":  4
                     },
                     {
-                        "name":  "IUserProfileReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Users/Common/IUserProfileReadService.cs",
-                        "line":  6
-                    },
-                    {
                         "name":  "UserAppearancePreferences",
                         "kind":  "record",
                         "role":  "Other",
@@ -11358,104 +11456,6 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Users/Mappings/UserMappings.cs",
                         "line":  6
-                    },
-                    {
-                        "name":  "DashboardLayoutModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Models/DashboardLayoutModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "GoalsModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Models/GoalsModel.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ProfileDietologistPermissionsModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Models/ProfileDietologistPermissionsModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ProfileDietologistRelationshipModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Models/ProfileDietologistRelationshipModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ProfileOverviewModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Models/ProfileOverviewModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ProfileWebPushSubscriptionModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Models/ProfileWebPushSubscriptionModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "UserDesiredWaistModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Models/UserDesiredWaistModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "UserDesiredWeightModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Models/UserDesiredWeightModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "UserModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Models/UserModel.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UserNotificationPreferencesModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Models/UserNotificationPreferencesModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "WaistGoalHistoryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Models/WaistGoalHistoryModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "WaistHistoryProfileModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Models/WaistHistoryProfileModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "WeightGoalHistoryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Models/WeightGoalHistoryModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "WeightHistoryProfileModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Models/WeightHistoryProfileModel.cs",
-                        "line":  2
                     },
                     {
                         "name":  "GetDesiredWaistQuery",
@@ -11595,7 +11595,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Users/Services/ProfileOverviewReadService.cs",
-                        "line":  7
+                        "line":  8
                     },
                     {
                         "name":  "UserAdministrationReadService",

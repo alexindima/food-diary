@@ -38,7 +38,7 @@ using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 
 namespace FoodDiary.Application.Tests.Dietologist;
 

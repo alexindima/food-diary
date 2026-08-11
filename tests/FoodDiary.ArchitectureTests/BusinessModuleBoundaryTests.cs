@@ -31,6 +31,42 @@ public sealed class BusinessModuleBoundaryTests {
         Assert.DoesNotContain("services.TryAddScoped<", source, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void UsersProfileReadContracts_LiveInApplicationAbstractions() {
+        string legacyModelsRoot = ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Application",
+            "Users",
+            "Models");
+        string legacyContractPath = ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Application",
+            "Users",
+            "Common",
+            "IUserProfileReadService.cs");
+        string abstractionContractPath = ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Application.Abstractions",
+            "Users",
+            "Common",
+            "IUserProfileReadService.cs");
+
+        Assert.Empty(Directory.Exists(legacyModelsRoot) ? SourceScanner.SourceFiles(legacyModelsRoot) : []);
+        Assert.False(File.Exists(legacyContractPath));
+        Assert.True(File.Exists(abstractionContractPath));
+
+        string[] productionRoots = [
+            ArchitectureTestPaths.FromRoot("FoodDiary.Application"),
+            ArchitectureTestPaths.FromRoot("FoodDiary.Presentation.Api"),
+        ];
+        string[] violations = [.. productionRoots
+            .SelectMany(SourceScanner.SourceFiles)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, line, index }))
+            .Where(static entry => entry.line.Contains("FoodDiary.Application.Users.Models", StringComparison.Ordinal))
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} references the legacy Users model namespace")
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
     private static readonly HashSet<string> ApprovedFastingApplicationDependencies = new(StringComparer.Ordinal) {
         "FoodDiary.Application.Abstractions.Common",
         "FoodDiary.Application.Abstractions.Fasting",
@@ -49,7 +85,7 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Common",
         "FoodDiary.Application.Notifications",
         "FoodDiary.Application.Users.Common",
-        "FoodDiary.Application.Users.Models",
+        "FoodDiary.Application.Abstractions.Users.Models",
     };
 
     private static readonly HashSet<string> ApprovedBillingApplicationDependencies = new(StringComparer.Ordinal) {
@@ -134,6 +170,7 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Abstractions.Email.Common",
         "FoodDiary.Application.Abstractions.Notifications.Common",
         "FoodDiary.Application.Abstractions.Users.Common",
+        "FoodDiary.Application.Abstractions.Users.Models",
         "FoodDiary.Application.Authentication",
         "FoodDiary.Application.Common",
         "FoodDiary.Application.Email.Common",

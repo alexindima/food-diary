@@ -35,7 +35,7 @@ This map covers the governed business owners and composed read modules in the pr
 
 | Module | Owns aggregates/data | Public application surface | Approved collaborators |
 | --- | --- | --- | --- |
-| Users | user profile/lifecycle, credentials stored on User, roles and role audit | `IUserDirectoryService`, current-user access, role membership, administration and identity mutation capabilities | Images, Notifications/Profile composition, Dietologist relationship projection |
+| Users | user profile/lifecycle, credentials stored on User, roles and role audit | `IUserDirectoryService`, `IUserProfileReadService`, current-user access, role membership, administration and identity mutation capabilities | Images, Notifications/Profile composition, Dietologist relationship projection |
 | Authentication | login/register/restore workflows, refresh sessions and login events | authentication commands, token/session lifecycle | Users directory/mutation capabilities, Email, Notifications, external identity validators |
 | Consumption Diary | `Meal`, meal items, AI sessions and consumption mutations | consumption commands, `IConsumptionReadService`, specialized activity/nutrition/export projections | Products/Recipes lookup APIs, Users, Images, FavoriteMeals, RecentItems, Nutrition |
 | RecentItems | recent product/recipe usage ordering | `IRecentItemUsageReadService`, `IRecentItemUsageRecorder` | Products and Recipes consume usage ordering; Consumption Diary records usage |
@@ -117,6 +117,14 @@ When changing a module boundary:
 4. Add a public module contract only when a real consumer exists.
 5. Update this map and an ADR when ownership or allowed dependency direction changes.
 6. Add or extend an architecture test before migrating the next module.
+
+## Users extraction readiness boundary
+
+Users owns the `User`, `Role`, `UserRole` and `UserRoleAuditEvent` aggregates. Cross-module profile reads use `IUserProfileReadService` and projection models from `FoodDiary.Application.Abstractions/Users`; consumers must not depend on `FoodDiary.Application.Users.Models`.
+
+The aggregate-oriented `IUserContextService` remains internal to the Users application module for the current migration stage. New cross-module consumers must prefer `ICurrentUserAccessService`, `IUserProfileReadService` or another narrow abstraction-level capability instead of acquiring `IUserContextService` or a Users repository. Existing aggregate consumers are migration candidates and must not be treated as precedent for new dependencies.
+
+This separation is an extraction prerequisite: a future `FoodDiary.Application.Users` assembly must be able to implement the abstraction-level profile contract without forcing read consumers to reference the Users implementation assembly.
 
 ## Notifications boundary
 

@@ -1,6 +1,6 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Users.Commands.UpdateGoals;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Users.Queries.GetUserGoals;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Goals;

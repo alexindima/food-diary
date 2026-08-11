@@ -6,7 +6,7 @@ using FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightHistoryPageSummary;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Responses;

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Users.Models;
+namespace FoodDiary.Application.Abstractions.Users.Models;
 
 public sealed record WeightGoalHistoryModel(
     Guid Id,

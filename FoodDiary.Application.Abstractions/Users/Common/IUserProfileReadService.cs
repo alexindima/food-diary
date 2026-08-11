@@ -1,8 +1,8 @@
-using FoodDiary.Results;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Results;
 
-namespace FoodDiary.Application.Users.Common;
+namespace FoodDiary.Application.Abstractions.Users.Common;
 
 public interface IUserProfileReadService {
     Task<Result<UserModel>> GetUserAsync(UserId userId, CancellationToken cancellationToken);

@@ -1,5 +1,5 @@
 using FoodDiary.Application.Notifications.Models;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Notifications.Commands.RemoveWebPushSubscription;
 using FoodDiary.Application.Notifications.Commands.ScheduleTestNotification;
 using FoodDiary.Application.Notifications.Queries.GetNotificationPreferences;

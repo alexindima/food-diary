@@ -1,5 +1,5 @@
 using FoodDiary.Application.Users.Commands.UpdateGoals;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Users.Queries.GetUserGoals;
 using FoodDiary.Presentation.Api.Features.Goals.Mappings;
 using FoodDiary.Presentation.Api.Features.Goals.Requests;

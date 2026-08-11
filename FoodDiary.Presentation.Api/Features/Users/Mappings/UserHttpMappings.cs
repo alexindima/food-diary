@@ -13,7 +13,7 @@ using FoodDiary.Application.Users.Queries.GetDesiredWeight;
 using FoodDiary.Application.Users.Queries.GetWeightGoalHistory;
 using FoodDiary.Application.Users.Queries.GetWaistGoalHistory;
 using FoodDiary.Application.Users.Queries.GetUserById;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Presentation.Api.Features.Users.Models;
 using FoodDiary.Presentation.Api.Features.Users.Requests;
 

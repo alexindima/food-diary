@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace FoodDiary.Application.Users.Models;
+namespace FoodDiary.Application.Abstractions.Users.Models;
 
 [ExcludeFromCodeCoverage]
 public sealed record GoalsModel(

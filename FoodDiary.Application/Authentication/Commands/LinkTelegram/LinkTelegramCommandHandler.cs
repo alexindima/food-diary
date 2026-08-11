@@ -6,7 +6,7 @@ using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Users;
