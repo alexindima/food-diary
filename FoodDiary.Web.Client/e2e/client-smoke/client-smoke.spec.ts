@@ -222,6 +222,11 @@ test.describe('authenticated accessibility', () => {
             await mockAuthenticatedClientApiAsync(page);
 
             for (const route of ACCESSIBILITY_ROUTES) {
+                if (route === '/dietologist') {
+                    await replaceAuthenticatedRoleAsync(page, 'Dietologist');
+                } else if (route === '/recommendations') {
+                    await replaceAuthenticatedRoleAsync(page, 'User');
+                }
                 await page.goto(route);
                 await stabilizeAccessibilityPageAsync(page, route);
                 const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
@@ -545,6 +550,12 @@ async function authenticateUserAsync(page: Page, role = 'User'): Promise<void> {
         window.localStorage.setItem('refreshToken', 'refresh-token');
         window.localStorage.setItem('userId', 'u1');
         window.localStorage.setItem('emailConfirmed', 'true');
+    }, createAuthenticatedUserJwt(role));
+}
+
+async function replaceAuthenticatedRoleAsync(page: Page, role: 'Dietologist' | 'User'): Promise<void> {
+    await page.evaluate((token: string) => {
+        window.localStorage.setItem('authToken', token);
     }, createAuthenticatedUserJwt(role));
 }
 

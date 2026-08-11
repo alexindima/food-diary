@@ -501,7 +501,7 @@ export class ProductManageFormComponent {
                 this.setGlobalError('PRODUCT_MANAGE.USDA_SYNC_ERROR');
             }
         }
-        if (result.product !== null) {
+        if (result.product !== null && this.mode() === 'dialog') {
             this.saved.emit(result.product);
         }
     }

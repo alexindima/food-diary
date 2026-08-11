@@ -10,6 +10,12 @@ test.describe('admin smoke', () => {
     });
 
     test('renders admin pages for authenticated admin with mocked api', async ({ page }) => {
+        const consoleErrors: string[] = [];
+        page.on('console', message => {
+            if (message.type() === 'error') {
+                consoleErrors.push(message.text());
+            }
+        });
         await authenticateAdminAsync(page);
         await mockAdminApiAsync(page);
 
@@ -32,6 +38,7 @@ test.describe('admin smoke', () => {
         await expect(page).toHaveURL(/\/email-templates$/);
         await expect(page.getByRole('button', { name: 'Create template' })).toBeVisible();
         await expect(page.getByText('Verify your email')).toBeVisible();
+        expect(consoleErrors).toEqual([]);
     });
 });
 
@@ -53,7 +60,16 @@ async function mockAdminApiAsync(page: Page): Promise<void> {
         await route.fulfill(jsonResponse({ totalTokens: 12345, inputTokens: 7000, outputTokens: 5345 }));
     });
 
+    await page.route('**/api/v1/admin/telemetry/fasting**', async route => {
+        await route.fulfill(jsonResponse(null));
+    });
+
     await page.route('**/api/v1/admin/users**', async route => {
+        if (new URL(route.request().url()).pathname.endsWith('/login-summary')) {
+            await route.fulfill(jsonResponse([{ key: 'device:Desktop', count: 12 }]));
+            return;
+        }
+
         await route.fulfill(jsonResponse(createUsersPage()));
     });
 

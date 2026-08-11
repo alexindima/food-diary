@@ -320,12 +320,14 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
         await firstSubmit;
     });
 
-    it('should emit saved product after successful submit', async () => {
-        const { component, productManageFacade } = await setupComponentAsync();
+    it('should emit saved product after successful submit in dialog mode', async () => {
+        const { component, fixture, productManageFacade } = await setupComponentAsync();
         let savedProduct: Product | null = null;
         component['saved'].subscribe(product => {
             savedProduct = product;
         });
+        fixture.componentRef.setInput('mode', 'dialog');
+        fixture.detectChanges();
         productManageFacade.submitProductAsync.mockResolvedValue({ product: PRODUCT, error: null });
         fillValidProductForm(component);
 
@@ -335,12 +337,14 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
         expect(savedProduct).toBe(PRODUCT);
     });
 
-    it('should emit saved product and show USDA warning when post-save sync fails', async () => {
-        const { component, productManageFacade } = await setupComponentAsync();
+    it('should emit saved product and show USDA warning in dialog mode when post-save sync fails', async () => {
+        const { component, fixture, productManageFacade } = await setupComponentAsync();
         let savedProduct: Product | null = null;
         component['saved'].subscribe(product => {
             savedProduct = product;
         });
+        fixture.componentRef.setInput('mode', 'dialog');
+        fixture.detectChanges();
         productManageFacade.submitProductAsync.mockResolvedValue({
             product: PRODUCT,
             error: new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable }),
@@ -363,6 +367,21 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
         await component['onSubmitAsync']();
 
         expect(productManageFacade.submitProductAsync).toHaveBeenCalledWith(null, expect.any(Object), true, expect.any(Function));
+    });
+});
+
+describe('ProductManageFormComponent page-mode output lifecycle', () => {
+    it('should not emit saved product after submit navigates away', async () => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        const savedSpy = vi.fn();
+        component['saved'].subscribe(savedSpy);
+        productManageFacade.submitProductAsync.mockResolvedValue({ product: PRODUCT, error: null });
+        fillValidProductForm(component);
+
+        const result = await component['onSubmitAsync']();
+
+        expect(result).toBe(PRODUCT);
+        expect(savedSpy).not.toHaveBeenCalled();
     });
 });
 

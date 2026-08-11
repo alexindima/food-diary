@@ -23,10 +23,10 @@
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
                          "nonBlankLines":  565,
-                         "decisionPoints":  73,
+                         "decisionPoints":  74,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  120.8
+                         "structuralRiskScore":  122.3
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
@@ -28617,10 +28617,10 @@
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
                       "nonBlankLines":  565,
-                      "decisionPoints":  73,
+                      "decisionPoints":  74,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  120.8
+                      "structuralRiskScore":  122.3
                   },
                   {
                       "path":  "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-lib/product-manage-form.mapper.ts",
