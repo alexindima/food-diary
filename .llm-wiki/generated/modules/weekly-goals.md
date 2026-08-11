@@ -26,6 +26,7 @@ sources:
 - `FoodDiary.Infrastructure/Persistence/WeeklyGoals`
 - `FoodDiary.Presentation.Api/Features/WeeklyGoals`
 - `tests/FoodDiary.Application.Tests/WeeklyGoals`
+- `tests/FoodDiary.Domain.Tests/WeeklyGoals`
 
 ## HTTP Surface
 
@@ -38,7 +39,10 @@ Source: `FoodDiary.Presentation.Api/Features/WeeklyGoals/WeeklyGoalsController.c
 
 ## Focused Tests
 
+- `tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs`
 - `tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs`
+- `tests/FoodDiary.Domain.Tests/WeeklyGoals/WeeklyGoalTests.cs`
+- `tests/FoodDiary.Presentation.Api.Tests/WeeklyGoalsControllerTests.cs`
 
 ## Working Rule
 
