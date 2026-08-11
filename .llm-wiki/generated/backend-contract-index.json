@@ -3,9 +3,9 @@
     "summary":  {
                     "contracts":  1024,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  7108,
+                    "consumerEdges":  7109,
                     "productionConsumerEdges":  4342,
-                    "testConsumerEdges":  2766,
+                    "testConsumerEdges":  2767,
                     "consumedContracts":  1024,
                     "unconsumedContracts":  0
                 },
@@ -29452,6 +29452,19 @@
                               "consumerPath":  "tests/FoodDiary.Domain.Tests/Domain/FastingTelemetryEventTests.cs",
                               "isTest":  true,
                               "referenceCount":  8
+                          },
+                          {
+                              "contract":  "FastingTelemetryEvent",
+                              "roles":  [
+                                            "Event"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
                           },
                           {
                               "contract":  "FastingTelemetryPresetHttpResponse",

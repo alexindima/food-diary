@@ -790,13 +790,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "a1284144f5896079c45082fbb953a1c4af89de1b3221b563549693c53c90de94"
+                                            "sha256":  "76b1031ee2eef20f0de0722193d34742be5df744f48b9046057d38dcfab134cf"
                                         }
                                     ],
-                        "reason":  "Re-reviewed the final observable-duration calibration after the verified adaptive regression measured approximately 200 seconds; only progress estimation changed.",
+                        "reason":  "Reviewed read-only execution, explicit-scope isolation, focused consumer discovery, and affected verification behavior; no documented task-dispatch or test-plan contract is invalidated.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
-                        "reviewedAtUtc":  "2026-08-11T00:26:37.0666139Z"
+                        "gitHead":  "8ef79184a7834373670c50cf763115aae0ce4346",
+                        "reviewedAtUtc":  "2026-08-11T10:41:31.3980772Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",
@@ -844,13 +844,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-                                            "sha256":  "fb9841c5a4acbad741698ef4cf9d925eb32db172847047b4aaf871f4016c035e"
+                                            "sha256":  "a77a0b028997cb0b80d32a68c5fbb8207df02fea47132d82e9c81c4eec4763a9"
                                         }
                                     ],
-                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
+                        "reason":  "Reviewed read-only execution, explicit-scope isolation, focused consumer discovery, and affected verification behavior; no documented task-dispatch or test-plan contract is invalidated.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
-                        "reviewedAtUtc":  "2026-08-11T00:21:45.5080420Z"
+                        "gitHead":  "8ef79184a7834373670c50cf763115aae0ce4346",
+                        "reviewedAtUtc":  "2026-08-11T10:41:31.7299654Z"
                     },
                     {
                         "pageId":  "workflow-trace-feature",

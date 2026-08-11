@@ -11,6 +11,8 @@ tags:
   - design
   - handoff
 sources:
+  - .llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1
+  - .llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1
   - .llm-wiki/tools/Start-LlmWikiDevelopment.ps1
   - .llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1
   - .llm-wiki/tools/Get-LlmWikiResearchPacket.ps1
@@ -40,6 +42,8 @@ sources:
 For a non-trivial feature, prefer `./.llm-wiki/wiki.ps1 start -Intent <task> [-PlannedPath <paths>]`. It captures the task baseline before discovery, compiles research and a scope-aware acceptance checklist, and creates the governed workspace immediately when the adaptive route requires one and concrete paths are known. The checklist covers API/OpenAPI compatibility, migration pairs, notification safety, background-job configuration and direct consumers, frontend states, localization parity, and architecture boundaries only when applicable.
 
 Use `develop` as the read-oriented classifier when automatic workspace creation is not wanted.
+
+Read-oriented facade commands run under a shared index lock and byte-preserving guard for compiled Wiki, knowledge, and review files. An unexpected write is reverted and reported as a tool defect. When `-PlannedPath` is explicit, research and planning use that scope instead of inheriting an unrelated session baseline.
 
 Use one entrypoint before a non-trivial bug or feature:
 

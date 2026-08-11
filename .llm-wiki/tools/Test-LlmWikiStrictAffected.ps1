@@ -48,6 +48,9 @@ $visualFastBody = $facadeText.Substring($visualFastStart, $visualFastEnd - $visu
 if ($visualFastBody -notmatch 'VisualUiCompletion' -or $visualFastBody -notmatch 'index regeneration is deferred until ui-finalize') {
     throw 'Visual UI iteration does not defer index synchronization to ui-finalize.'
 }
+foreach ($receiptContract in @('verify-progress.json', 'Write-VerifyProgress', "'timed-out'", 'Buffered-shell progress receipt:')) {
+    if (-not $facadeText.Contains($receiptContract)) { throw "Observed verify omitted durable progress contract '$receiptContract'." }
+}
 if ($verifyBody -notmatch "'affected tool regression'" -or $verifyBody -match "'adaptive verification' 'Invoke-LlmWikiAdaptiveVerification") {
     throw 'Ordinary product verify still replays the complete Wiki adaptive eval suite instead of affected tool regressions.'
 }
@@ -92,6 +95,12 @@ if ($facadeText -notmatch "'start'" -or $facadeText -notmatch 'Start-LlmWikiDeve
 if ($facadeText -notmatch 'Repair verify \[0/3\]' -or $facadeText -notmatch 'Test-LlmWikiFormattingReady\.ps1') {
     throw 'Repair flow does not stabilize formatting before hashing and index generation.'
 }
+if ($facadeText -notmatch 'Wiki verify mode: affected/resumable' -or $verifyBody -notmatch 'AffectedOnly = \$true') {
+    throw 'Ordinary verify is not an affected/resumable gate by default.'
+}
+if ($facadeText -notmatch 'Invoke-LlmWikiReadOnlyTool\.ps1' -or $facadeText -notmatch 'explicitScopePlanningCommands') {
+    throw 'Read-oriented facade commands are not protected from tracked Wiki writes or stale baseline expansion.'
+}
 $testPlanText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools/Get-LlmWikiTestPlan.ps1') -Raw
 foreach ($contract in @('commandGroups', 'compile-direct-consumer', 'fullRegression')) {
     if (-not $testPlanText.Contains($contract)) { throw "Focused test planning omitted '$contract'." }
@@ -101,6 +110,11 @@ $frontendSmoke = @(& (Join-Path $repositoryRoot '.llm-wiki/tools/Invoke-LlmWikiA
     -Plan -ChangedPath 'FoodDiary.Web.Client/src/app/example/example.ts' 6>&1 | ForEach-Object { $_.ToString() })
 if (($frontendSmoke -join "`n") -notmatch 'no LLM Wiki implementation paths changed' -or ($frontendSmoke -join "`n") -match 'full-tools') {
     throw 'Strict affected verification expanded a product-only change into the monolithic Wiki tools smoke.'
+}
+$adaptiveDocsPlan = @(& (Join-Path $repositoryRoot '.llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1') `
+    -Plan -ChangedPath '.llm-wiki/workflows/adaptive-development.md' 6>&1 | ForEach-Object { $_.ToString() }) -join "`n"
+if ($adaptiveDocsPlan -match 'adaptive-routing' -or $adaptiveDocsPlan -notmatch 'facade-contract') {
+    throw 'Adaptive workflow documentation still triggers the complete adaptive eval suite.'
 }
 $stylePolicy = & (Join-Path $repositoryRoot '.llm-wiki/tools/Test-LlmWikiChangePolicy.ps1') `
     -ChangedPath 'FoodDiary.Web.Client/src/app/example/example.scss' `

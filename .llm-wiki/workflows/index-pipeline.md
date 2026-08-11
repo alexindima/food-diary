@@ -39,6 +39,8 @@ Mutable tool-smoke registries are redirected to `.artifacts/llm-wiki` instead of
 
 Test plans expose `required`, `recommended`, and `fullRegression` command groups. Direct owners and production projects referencing changed C# symbols are required; broad transitive coverage remains a publication-hook or CI concern.
 
+Ordinary `wiki verify` is always affected and resumable. `wiki verify-full`, pre-push, and CI retain the explicit full-repository gate. Successful stage receipts survive a later timeout, so rerunning `verify` continues from unchanged green stages rather than replaying them.
+
 `wiki lint` is the fast prerequisite for both verification commands and CI. It
 checks page contracts, sources, generated ownership, local links and anchors,
 and high-confidence credential signatures before expensive index work begins.

@@ -281,10 +281,12 @@ if ($Command -in @('verify', 'verify-full') -and $env:CI -ne 'true' -and -not $P
 }
 
 $deltaAwareCommands = @('update', 'repair-verify', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'ownership', 'policy')
+$explicitScopePlanningCommands = @('research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision')
 $taskBaselineContext = $null
 if ($Command -in @('develop', 'start')) {
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId $TaskSessionId -Format Text
-} elseif ($Command -in $deltaAwareCommands -and -not $PSBoundParameters.ContainsKey('ChangedPath')) {
+} elseif ($Command -in $deltaAwareCommands -and -not $PSBoundParameters.ContainsKey('ChangedPath') -and
+    -not ($Command -in $explicitScopePlanningCommands -and $PSBoundParameters.ContainsKey('ProposedPath'))) {
     $taskBaseline = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action ChangedPaths -SessionId $TaskSessionId -Format Object
     if ($taskBaseline.available) {
         $taskBaselineContext = $taskBaseline
@@ -301,7 +303,12 @@ function Invoke-WikiTool {
 
     $toolPath = Join-Path $toolsRoot $Name
     $global:LASTEXITCODE = 0
-    & $toolPath @ToolArguments
+    $readOnlyFacadeCommands = @('develop', 'research', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'diff', 'ownership', 'api-compat')
+    if ($Command -in $readOnlyFacadeCommands) {
+        & (Join-Path $toolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $toolPath -ToolArguments $ToolArguments
+    } else {
+        & $toolPath @ToolArguments
+    }
     if (-not $?) {
         exit 1
     }
@@ -321,6 +328,19 @@ function Invoke-ObservedWikiStage {
     $toolPath = Join-Path $toolsRoot $ToolName
     $script:verifyStageOrdinal++
     $expectedSeconds = if ($script:verifyStageExpectedSeconds.ContainsKey($Name)) { [int]$script:verifyStageExpectedSeconds[$Name] } else { $TimeoutSeconds }
+    $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
+    $progressPath = Join-Path $repositoryRoot '.artifacts/llm-wiki/verify-progress.json'
+    function Write-VerifyProgress([string]$Status, [int]$ElapsedSeconds, [string]$Detail = '') {
+        $null = New-Item -ItemType Directory -Path (Split-Path -Parent $progressPath) -Force
+        $payload = [ordered]@{
+            schemaVersion = 1; status = $Status; stage = $Name; ordinal = $script:verifyStageOrdinal; stageCount = 8
+            elapsedSeconds = $ElapsedSeconds; expectedSeconds = $expectedSeconds; timeoutSeconds = $TimeoutSeconds
+            detail = $Detail; resumeCommand = './.llm-wiki/wiki.ps1 verify'; updatedAtUtc = [DateTime]::UtcNow.ToString('o')
+        }
+        $temporary = "$progressPath.$PID.tmp"
+        [IO.File]::WriteAllText($temporary, (($payload | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        Move-Item -LiteralPath $temporary -Destination $progressPath -Force
+    }
     $receiptPath = $null
     if ($ResumePassedStages) {
         $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
@@ -332,11 +352,13 @@ function Invoke-ObservedWikiStage {
         $receiptPath = Join-Path $script:verifyReceiptRoot $receiptName
         if (Test-Path -LiteralPath $receiptPath -PathType Leaf) {
             Write-Host "[$script:verifyStageOrdinal/8] Resuming Wiki verify: $Name already passed for unchanged stage inputs (0s replay)."
+            Write-VerifyProgress 'resumed' 0 'Unchanged successful stage receipt reused.'
             return
         }
     }
     $stopwatch = [Diagnostics.Stopwatch]::StartNew()
     Write-Host "[$script:verifyStageOrdinal/8] Starting Wiki verify stage: $Name (expected~${expectedSeconds}s, timeout=${TimeoutSeconds}s)"
+    Write-VerifyProgress 'running' 0
     $serializableArguments = @{}
     foreach ($entry in $ToolArguments.GetEnumerator()) {
         $serializableArguments[$entry.Key] = if ($entry.Value -is [Management.Automation.SwitchParameter]) { [bool]$entry.Value } else { $entry.Value }
@@ -358,14 +380,17 @@ function Invoke-ObservedWikiStage {
         while (-not $process.WaitForExit(1000)) {
             if ($stopwatch.Elapsed.TotalSeconds -ge $nextHeartbeat) {
                 Write-Host "[$script:verifyStageOrdinal/8] Wiki verify stage still running: $Name ($([Math]::Round($stopwatch.Elapsed.TotalSeconds))s elapsed, expected~${expectedSeconds}s)"
+                Write-VerifyProgress 'running' ([int][Math]::Round($stopwatch.Elapsed.TotalSeconds)) 'Heartbeat: child process is still active.'
                 $nextHeartbeat += 30
             }
             if ($stopwatch.Elapsed.TotalSeconds -ge $TimeoutSeconds) {
                 Stop-LlmWikiProcessTree -Process $process
+                Write-VerifyProgress 'timed-out' ([int][Math]::Round($stopwatch.Elapsed.TotalSeconds)) "Run separately: $StandaloneCommand"
                 throw "Wiki verify stage timed out: $Name after ${TimeoutSeconds}s. Run separately: $StandaloneCommand"
             }
         }
         if ($process.ExitCode -ne 0) {
+            Write-VerifyProgress 'failed' ([int][Math]::Round($stopwatch.Elapsed.TotalSeconds)) "Run separately: $StandaloneCommand"
             throw "Wiki verify stage failed: $Name (exit=$($process.ExitCode)). Run separately: $StandaloneCommand"
         }
     } finally {
@@ -381,6 +406,7 @@ function Invoke-ObservedWikiStage {
             Remove-Item -Force
     }
     Write-Host "[$script:verifyStageOrdinal/8] Wiki verify stage passed: $Name ($([Math]::Round($stopwatch.Elapsed.TotalSeconds, 2))s)"
+    Write-VerifyProgress 'passed' ([int][Math]::Round($stopwatch.Elapsed.TotalSeconds))
 }
 
 switch ($Command) {
@@ -412,7 +438,7 @@ switch ($Command) {
         $script:verifyReceiptRoot = $null
         $script:verifyRunStopwatch = [Diagnostics.Stopwatch]::StartNew()
         $script:verifyStageExpectedSeconds = @{
-            'workspace policy' = 2; 'page contracts' = 2; 'lint regression' = 10; 'indexes' = 120
+            'workspace policy' = 2; 'page contracts' = 2; 'lint regression' = 10; 'indexes' = 45
             'affected tool regression' = 15; 'failure knowledge' = 2; 'change policy' = 3; 'source impact' = 3
         }
         if (@($ChangedPath | Where-Object { $_ -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Invoke-LlmWikiAdaptiveVerification)|evals/)' }).Count -gt 0) {
@@ -420,7 +446,9 @@ switch ($Command) {
         }
         $expectedVerifySeconds = ($script:verifyStageExpectedSeconds.Values | Measure-Object -Sum).Sum
         Write-Host "Wiki verify: 8 observable stages, expected cold duration ~${expectedVerifySeconds}s; content-addressed stage resume is enabled=$([bool]$ResumePassedStages)."
-        $indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }
+        Write-Host 'Buffered-shell progress receipt: .artifacts/llm-wiki/verify-progress.json'
+        Write-Host 'Wiki verify mode: affected/resumable. Use verify-full only for an explicit local full-repository gate; CI remains full and uncached.'
+        $indexArguments = @{ Check = $true; AffectedOnly = $true; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
         $policyArguments = @{ FailOnViolation = $true }
         $impactArguments = @{ FailOnUnreviewed = $true }

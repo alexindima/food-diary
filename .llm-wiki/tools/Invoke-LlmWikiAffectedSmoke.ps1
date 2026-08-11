@@ -32,11 +32,11 @@ $wikiRelevantPathCount = 0
 foreach ($path in $paths) {
     if ($path -notmatch '^\.llm-wiki/') { continue }
     $wikiRelevantPathCount++
-    if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Get-LlmWikiSolutionComparison|Get-LlmWikiDesignCheckpoint|Test-LlmWikiAdaptiveWorkflow|Get-LlmWikiIntegrationScan|Test-LlmWikiIntegrationScan|Invoke-LlmWikiAdaptiveVerification)|evals/|policies/experience-policies\.json|workflows/(adaptive-development|developer-experience|integration-scan|evals|learned-regression-evals)\.md)') {
+    if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Get-LlmWikiSolutionComparison|Get-LlmWikiDesignCheckpoint|Test-LlmWikiAdaptiveWorkflow|Get-LlmWikiIntegrationScan|Test-LlmWikiIntegrationScan|Invoke-LlmWikiAdaptiveVerification)|evals/|policies/experience-policies\.json|workflows/(developer-experience|integration-scan|evals|learned-regression-evals)\.md)') {
         Add-Group 'adaptive-routing'
     } elseif ($path -match '^\.llm-wiki/(tools/Get-LlmWikiDependencyChanges|workflows/dependency-rollout\.md)') {
         Add-Group 'dependency-analysis'
-    } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiObservedStage|Test-LlmWikiStrictAffected|Test-LlmWikiFormattingReady)|wiki\.ps1|workflows/index-pipeline\.md)') {
+    } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiObservedStage|Invoke-LlmWikiReadOnlyTool|Test-LlmWikiReadOnlyGuard|Test-LlmWikiStrictAffected|Test-LlmWikiFormattingReady)|wiki\.ps1|workflows/(adaptive-development|index-pipeline)\.md)') {
         Add-Group 'facade-contract'
     } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiIndexPipeline|LlmWikiIndexCache|LlmWikiGeneratedArtifacts|Build-LlmWiki(?:Frontend|FrontendContract|BackendContract|Quality|ArchitectureHealth)Index|Test-LlmWikiGeneratedArtifacts|Test-LlmWikiIndexSelection)\.ps1$') {
         Add-Group 'index-selection'
@@ -96,6 +96,8 @@ foreach ($group in $groups) {
             & (Join-Path $toolsRoot 'Test-LlmWikiLint.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiStrictAffected.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiReadOnlyGuard.ps1')
             if (-not $?) { exit 1 }
         }
         'trace-output' {

@@ -132,14 +132,13 @@ if ($changedTypeNames.Count -gt 0) {
             }
         }
     }
-    $trackedCSharpFiles = @(& git -C $repositoryRoot ls-files '*.cs')
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate C# consumers for the focused test plan.' }
+    $consumerPattern = @($changedTypeNames | ForEach-Object { [regex]::Escape($_) }) -join '|'
+    $trackedCSharpFiles = @(& git -C $repositoryRoot grep -l -E $consumerPattern -- '*.cs')
+    if ($LASTEXITCODE -notin @(0, 1)) { throw 'Unable to search C# consumers for the focused test plan.' }
     foreach ($relativeSource in $trackedCSharpFiles) {
         $normalizedSource = $relativeSource.Replace('\', '/')
         if ($normalizedSource -in @($diff.changedPaths) -or $normalizedSource -match '(?i)(^|/)(tests?|__tests__)/|\.Tests?/') { continue }
         $absoluteSource = Join-Path $repositoryRoot $relativeSource
-        $content = [IO.File]::ReadAllText($absoluteSource)
-        if (@($changedTypeNames | Where-Object { $content -match "\b$([regex]::Escape($_))\b" }).Count -eq 0) { continue }
         $directory = Split-Path -Parent $absoluteSource
         while ($directory.StartsWith($repositoryRoot, [StringComparison]::OrdinalIgnoreCase)) {
             $project = Get-ChildItem -LiteralPath $directory -Filter '*.csproj' -File -ErrorAction SilentlyContinue | Select-Object -First 1
