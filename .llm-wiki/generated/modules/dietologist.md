@@ -116,14 +116,19 @@ Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsControll
 - Physical isolation: folder
 - Architecture guardrails: graph-only
 - Declared owned entities: not yet enumerated
-- Public contract files: 22
+- Public contract files: 34
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 22
+- Public contract types: 34
+- Interfaces: 22
+- DTO/read-model/projection types: 10
+- Enums: 0
 - Exported repository-shaped contracts: 20
+- Contracts referencing domain entities: 8
+- `class DietologistErrors`
 - `interface IAttentionSignalMetricsReadService`
 - `interface IClientTaskReadModelRepository`
 - `interface IClientTaskRepository`
@@ -146,6 +151,14 @@ Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsControll
 - `interface IRecommendationTemplateRepository`
 - `interface IRecommendationTemplateWriteRepository`
 - `interface IRecommendationWriteRepository`
+- `record AttentionSignalDailyCaloriesReadModel`
+- `record AttentionSignalMetricsReadModel`
+- `record AttentionSignalWeightPointReadModel`
+- `record ClientTaskReadModel`
+- `record DietologistInvitationMessage`
+- `record DietologistInvitationReadModel`
+- `record DietologistPermissionsReadModel`
+- ... 4 more type(s)
 
 ## Focused Tests
 

@@ -57,14 +57,19 @@ Source: `FoodDiary.Presentation.Api/Features/Recipes/RecipesController.cs`
 - Physical isolation: folder
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: Recipe, RecipeIngredient, RecipeStep
-- Public contract files: 7
+- Public contract files: 12
 - Observed external consumer groups: 1
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 7
+- Public contract types: 12
+- Interfaces: 7
+- DTO/read-model/projection types: 0
+- Enums: 0
 - Exported repository-shaped contracts: 3
+- Contracts referencing domain entities: 5
+- `class RecipeErrors`
 - `interface IRecipeAccessService`
 - `interface IRecipeLookupService`
 - `interface IRecipeNutritionWriter`
@@ -72,6 +77,10 @@ Source: `FoodDiary.Presentation.Api/Features/Recipes/RecipesController.cs`
 - `interface IRecipeReadRepository`
 - `interface IRecipeRepository`
 - `interface IRecipeWriteRepository`
+- `record RecipeOverviewIngredientReadItem`
+- `record RecipeOverviewReadItem`
+- `record RecipeOverviewStepReadItem`
+- `record RecipeQueryFilters`
 
 ## Focused Tests
 

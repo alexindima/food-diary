@@ -29,6 +29,7 @@ if ($planPaths.Count -gt 0) { $planArguments.ChangedPath = $planPaths }
 $plan = & (Join-Path $PSScriptRoot 'Get-LlmWikiImplementationPlan.ps1') @planArguments | ConvertFrom-Json
 
 $decisionEvidence = @($Decision | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+$isExtractionDesign = $Objective -match '(?i)extract|move.+(?:contract|module|abstraction)|module.+boundary|contract.+abstraction'
 $decisionQuestions = @($research.openQuestions | ForEach-Object {
     $resolvedByInput = $_.id -eq 'resolve-design-boundary' -and $decisionEvidence.Count -gt 0
     [pscustomobject][ordered]@{
@@ -92,11 +93,15 @@ $result = [pscustomobject][ordered]@{
         finalGates = @($plan.finalGates)
     }
     decisionQuestions = $decisionQuestions
-    alternatives = @(
+    alternatives = if ($isExtractionDesign) { @(
+        [pscustomobject][ordered]@{ id = 'move-contract-as-is'; description = 'Move the existing contract to the abstraction assembly without changing its shape.'; evaluation = 'Fastest, but unsafe when it returns a domain aggregate or exposes mutation to unrelated modules.' }
+        [pscustomobject][ordered]@{ id = 'consumer-specific-projections'; description = 'Replace the broad contract with consumer-specific read projections and mutation capabilities.'; evaluation = 'Preferred when extraction should remove aggregate and implementation coupling; requires explicit consumer migration.' }
+        [pscustomobject][ordered]@{ id = 'adapter-transition'; description = 'Introduce narrow abstraction contracts and retain an implementation adapter during staged migration.'; evaluation = 'Preferred for incremental extraction when all consumers cannot move atomically.' }
+    ) } else { @(
         [pscustomobject][ordered]@{ id = 'existing-pattern'; description = 'Extend the closest current implementation pattern.'; evaluation = 'Preferred when current code and contracts prove it satisfies the target behavior.' }
         [pscustomobject][ordered]@{ id = 'bounded-change'; description = 'Introduce the smallest bounded change that preserves current consumers.'; evaluation = 'Preferred for bugs when no durable architecture decision is required.' }
         [pscustomobject][ordered]@{ id = 'structural-change'; description = 'Introduce a new abstraction or boundary.'; evaluation = 'Use only when the existing pattern cannot satisfy an explicit invariant; record the decision.' }
-    )
+    ) }
     implementationPhases = @($plan.phases)
     sliceStrategy = [pscustomobject][ordered]@{
         enabled = $usesVerticalSlices

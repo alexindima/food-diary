@@ -52,7 +52,11 @@ Source: `FoodDiary.Presentation.Api/Features/WeeklyGoals/WeeklyGoalsController.c
 ## Public Surface
 
 - Public contract types: 1
+- Interfaces: 1
+- DTO/read-model/projection types: 0
+- Enums: 0
 - Exported repository-shaped contracts: 1
+- Contracts referencing domain entities: 1
 - `interface IWeeklyGoalRepository`
 
 ## Focused Tests

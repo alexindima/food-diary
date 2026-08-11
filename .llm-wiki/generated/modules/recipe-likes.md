@@ -50,7 +50,11 @@ Source: `FoodDiary.Presentation.Api/Features/RecipeLikes/RecipeLikesController.c
 ## Public Surface
 
 - Public contract types: 3
+- Interfaces: 3
+- DTO/read-model/projection types: 0
+- Enums: 0
 - Exported repository-shaped contracts: 3
+- Contracts referencing domain entities: 2
 - `interface IRecipeLikeReadRepository`
 - `interface IRecipeLikeRepository`
 - `interface IRecipeLikeWriteRepository`

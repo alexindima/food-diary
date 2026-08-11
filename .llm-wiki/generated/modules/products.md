@@ -57,19 +57,26 @@ Source: `FoodDiary.Presentation.Api/Features/Products/ProductsController.cs`
 - Physical isolation: folder
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: Product
-- Public contract files: 5
+- Public contract files: 8
 - Observed external consumer groups: 1
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 5
+- Public contract types: 8
+- Interfaces: 5
+- DTO/read-model/projection types: 0
+- Enums: 0
 - Exported repository-shaped contracts: 3
+- Contracts referencing domain entities: 4
+- `class ProductErrors`
 - `interface IProductLookupService`
 - `interface IProductOverviewReadService`
 - `interface IProductReadRepository`
 - `interface IProductRepository`
 - `interface IProductWriteRepository`
+- `record ProductOverviewReadItem`
+- `record ProductQueryFilters`
 
 ## Focused Tests
 

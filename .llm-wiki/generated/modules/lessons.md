@@ -44,19 +44,28 @@ Source: `FoodDiary.Presentation.Api/Features/Lessons/LessonsController.cs`
 - Physical isolation: folder
 - Architecture guardrails: graph-only
 - Declared owned entities: not yet enumerated
-- Public contract files: 5
+- Public contract files: 10
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 5
+- Public contract types: 10
+- Interfaces: 4
+- DTO/read-model/projection types: 4
+- Enums: 1
 - Exported repository-shaped contracts: 4
+- Contracts referencing domain entities: 2
+- `class LessonErrors`
 - `enum LessonSortOption`
 - `interface INutritionLessonReadModelRepository`
 - `interface INutritionLessonReadRepository`
 - `interface INutritionLessonRepository`
 - `interface INutritionLessonWriteRepository`
+- `record LessonAdminReadModel`
+- `record LessonDetailReadModel`
+- `record LessonSummaryPageReadModel`
+- `record LessonSummaryReadModel`
 
 ## Focused Tests
 

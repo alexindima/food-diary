@@ -42,7 +42,11 @@ No literal attribute-routed controller was associated with this module.
 ## Public Surface
 
 - Public contract types: 0
+- Interfaces: 0
+- DTO/read-model/projection types: 0
+- Enums: 0
 - Exported repository-shaped contracts: 0
+- Contracts referencing domain entities: 0
 - No public declaration was found in the mapped abstraction areas.
 
 ## Focused Tests

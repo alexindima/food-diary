@@ -28,7 +28,7 @@ if ($facadeText -match 'Start-Job' -or -not $facadeText.Contains('Invoke-LlmWiki
 $verifyStart = $facadeText.IndexOf("    'verify' {")
 $verifyEnd = $facadeText.IndexOf("    'verify-fast' {", $verifyStart)
 $verifyBody = if ($verifyStart -ge 0 -and $verifyEnd -gt $verifyStart) { $facadeText.Substring($verifyStart, $verifyEnd - $verifyStart) } else { '' }
-if (@([regex]::Matches($verifyBody, 'Invoke-ObservedWikiStage')).Count -lt 8) {
+if ($verifyBody -notmatch '\$stages\s*=\s*@\(' -or @('workspace policy', 'page contracts', 'lint regression', 'indexes', 'affected tool regression', 'failure knowledge', 'change policy', 'source impact' | Where-Object { $verifyBody -notmatch [regex]::Escape($_) }).Count -gt 0) {
     throw 'Ordinary verify does not route every verification stage through the observed runner.'
 }
 $strictStart = $facadeText.IndexOf("    'verify-strict-affected' {")

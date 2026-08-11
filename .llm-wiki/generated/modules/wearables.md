@@ -49,14 +49,19 @@ Source: `FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs`
 - Physical isolation: folder
 - Architecture guardrails: graph-only
 - Declared owned entities: not yet enumerated
-- Public contract files: 10
+- Public contract files: 16
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 10
+- Public contract types: 16
+- Interfaces: 10
+- DTO/read-model/projection types: 3
+- Enums: 0
 - Exported repository-shaped contracts: 7
+- Contracts referencing domain entities: 4
+- `class WearableErrors`
 - `interface IWearableClient`
 - `interface IWearableConnectionReadRepository`
 - `interface IWearableConnectionRepository`
@@ -67,6 +72,11 @@ Source: `FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs`
 - `interface IWearableSyncRepository`
 - `interface IWearableSyncWriteRepository`
 - `interface IWearableTokenProtector`
+- `record WearableConnectionModel`
+- `record WearableDailySummaryModel`
+- `record WearableDataPoint`
+- `record WearableSyncEntryReadModel`
+- `record WearableTokenResult`
 
 ## Focused Tests
 

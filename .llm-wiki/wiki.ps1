@@ -3,7 +3,7 @@ param(
     [Parameter(Position = 0)]
     [ValidateSet(
         'help', 'start', 'update', 'repair-verify', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
-        'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
+        'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'contract-consumers', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'diff', 'impact', 'review', 'ownership', 'api-compat', 'policy',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
         'task-circuit-list', 'task-circuit-open', 'task-circuit-reset', 'task-circuit-verify', 'task-circuit-prune',
@@ -79,6 +79,8 @@ param(
     [switch]$ContractIndexesOnly,
     [ValidateSet('All', 'Backend', 'Frontend')]
     [string]$Area = 'All',
+    [ValidateSet('workspace policy', 'page contracts', 'lint regression', 'indexes', 'affected tool regression', 'failure knowledge', 'change policy', 'source impact')]
+    [string]$Stage,
     [switch]$VisualUiCompletion,
     [switch]$FullTrace,
     [switch]$Fast,
@@ -293,6 +295,13 @@ if ($Command -in @('develop', 'start')) {
     if ($taskBaseline.available) {
         $taskBaselineContext = $taskBaseline
         $ChangedPath = @($taskBaseline.changedPaths)
+        $workingTreePaths = @(& git -C (Resolve-Path (Join-Path $toolsRoot '../..')).Path diff --name-only --diff-filter=ACMRD HEAD --)
+        $workingTreePaths += @(& git -C (Resolve-Path (Join-Path $toolsRoot '../..')).Path ls-files --others --exclude-standard)
+        $workingTreePaths = @($workingTreePaths | Where-Object { $_ } | Sort-Object -Unique)
+        if ($workingTreePaths.Count -gt 0 -and $ChangedPath.Count -gt [Math]::Max(($workingTreePaths.Count * 3), ($workingTreePaths.Count + 50))) {
+            Write-Warning "Task baseline contains $($ChangedPath.Count) paths but the current working delta contains $($workingTreePaths.Count). Using the current delta to avoid stale-session over-expansion."
+            $ChangedPath = $workingTreePaths
+        }
         $PSBoundParameters['ChangedPath'] = $ChangedPath
     }
 }
@@ -332,12 +341,19 @@ function Invoke-ObservedWikiStage {
     $expectedSeconds = if ($script:verifyStageExpectedSeconds.ContainsKey($Name)) { [int]$script:verifyStageExpectedSeconds[$Name] } else { $TimeoutSeconds }
     $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
     $progressPath = Join-Path $repositoryRoot '.artifacts/llm-wiki/verify-progress.json'
+    $logRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/verify-logs'
+    $null = New-Item -ItemType Directory -Path $logRoot -Force
+    $safeStageName = $Name -replace '[^a-zA-Z0-9_.-]', '-'
+    $logPath = Join-Path $logRoot "$safeStageName.log"
     function Write-VerifyProgress([string]$Status, [int]$ElapsedSeconds, [string]$Detail = '') {
         $null = New-Item -ItemType Directory -Path (Split-Path -Parent $progressPath) -Force
         $payload = [ordered]@{
             schemaVersion = 1; status = $Status; stage = $Name; ordinal = $script:verifyStageOrdinal; stageCount = 8
             elapsedSeconds = $ElapsedSeconds; expectedSeconds = $expectedSeconds; timeoutSeconds = $TimeoutSeconds
-            detail = $Detail; resumeCommand = './.llm-wiki/wiki.ps1 verify'; updatedAtUtc = [DateTime]::UtcNow.ToString('o')
+            detail = $Detail; resumeCommand = "./.llm-wiki/wiki.ps1 verify -Stage '$Name'"
+            ownerProcessId = $PID; childProcessId = if ($null -ne $process -and -not $process.HasExited) { $process.Id } else { $null }
+            logPath = $logPath.Replace($repositoryRoot + [IO.Path]::DirectorySeparatorChar, '').Replace('\', '/')
+            updatedAtUtc = [DateTime]::UtcNow.ToString('o')
         }
         $temporary = "$progressPath.$PID.tmp"
         [IO.File]::WriteAllText($temporary, (($payload | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
@@ -366,14 +382,15 @@ function Invoke-ObservedWikiStage {
         $serializableArguments[$entry.Key] = if ($entry.Value -is [Management.Automation.SwitchParameter]) { [bool]$entry.Value } else { $entry.Value }
     }
     $argumentsJson = $serializableArguments | ConvertTo-Json -Depth 5 -Compress
-    $argumentsBase64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($argumentsJson))
+    $argumentsPath = Join-Path $logRoot "$safeStageName.arguments.$PID.json"
+    [IO.File]::WriteAllText($argumentsPath, $argumentsJson, [Text.UTF8Encoding]::new($false))
     $stageWrapper = Join-Path $toolsRoot 'Invoke-LlmWikiObservedStage.ps1'
     $shellPath = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
     $startInfo = New-Object Diagnostics.ProcessStartInfo
     $startInfo.FileName = $shellPath
     $startInfo.WorkingDirectory = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
     $startInfo.UseShellExecute = $false
-    $startInfo.Arguments = "-NoLogo -NoProfile -File `"$stageWrapper`" -ToolPath `"$toolPath`" -ArgumentsBase64 $argumentsBase64"
+    $startInfo.Arguments = "-NoLogo -NoProfile -File `"$stageWrapper`" -ToolPath `"$toolPath`" -ArgumentsPath `"$argumentsPath`" -StageName `"$Name`" -LogPath `"$logPath`""
     $process = New-Object Diagnostics.Process
     $process.StartInfo = $startInfo
     if (-not $process.Start()) { throw "Unable to start Wiki verify stage: $Name" }
@@ -398,6 +415,7 @@ function Invoke-ObservedWikiStage {
     } finally {
         $process.Dispose()
         $stopwatch.Stop()
+        Remove-Item -LiteralPath $argumentsPath -Force -ErrorAction SilentlyContinue
     }
     if ($receiptPath) {
         [IO.File]::WriteAllText($receiptPath, ([DateTime]::UtcNow.ToString('o') + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
@@ -436,6 +454,33 @@ switch ($Command) {
         }
     }
     'verify' {
+        $progressPath = Join-Path (Resolve-Path (Join-Path $toolsRoot '../..')).Path '.artifacts/llm-wiki/verify-progress.json'
+        if (Test-Path -LiteralPath $progressPath -PathType Leaf) {
+            try {
+                $previousProgress = Get-Content -LiteralPath $progressPath -Raw | ConvertFrom-Json
+                if ($previousProgress.status -eq 'running') {
+                    $ownerAlive = $false
+                    if ($previousProgress.ownerProcessId) {
+                        $ownerAlive = $null -ne (Get-Process -Id ([int]$previousProgress.ownerProcessId) -ErrorAction SilentlyContinue)
+                    }
+                    if (-not $ownerAlive) {
+                        if ($previousProgress.childProcessId) {
+                            $orphanedChild = Get-Process -Id ([int]$previousProgress.childProcessId) -ErrorAction SilentlyContinue
+                            if ($orphanedChild) {
+                                try { Stop-LlmWikiProcessTree -Process $orphanedChild } catch {
+                                    Write-Warning "Orphaned Wiki child cleanup reported: $($_.Exception.Message)"
+                                }
+                            }
+                        }
+                        $previousProgress.status = 'interrupted'
+                        $previousProgress.detail = 'Previous verify owner is no longer running. Its recorded child tree was cleaned up; resume only the unfinished stage.'
+                        $previousProgress.updatedAtUtc = [DateTime]::UtcNow.ToString('o')
+                        [IO.File]::WriteAllText($progressPath, (($previousProgress | ConvertTo-Json -Depth 6) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+                        Write-Warning "Recovered stale Wiki verify receipt at stage '$($previousProgress.stage)'. Resume: $($previousProgress.resumeCommand)"
+                    }
+                }
+            } catch { Write-Warning "Unable to inspect prior Wiki verify progress: $($_.Exception.Message)" }
+        }
         $script:verifyStageOrdinal = 0
         $script:verifyReceiptRoot = $null
         $script:verifyRunStopwatch = [Diagnostics.Stopwatch]::StartNew()
@@ -460,16 +505,23 @@ switch ($Command) {
             $impactArguments.ChangedPath = $ChangedPath
             $affectedSmokeArguments.ChangedPath = $ChangedPath
         }
-        Invoke-ObservedWikiStage 'workspace policy' 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true } 60 './.llm-wiki/wiki.ps1 workspace-policy'
-        Invoke-ObservedWikiStage 'page contracts' 'Test-LlmWiki.ps1' @{} 60 './.llm-wiki/wiki.ps1 lint'
-        Invoke-ObservedWikiStage 'lint regression' 'Test-LlmWikiLint.ps1' @{} 120 './.llm-wiki/tools/Test-LlmWikiLint.ps1'
-        Invoke-ObservedWikiStage 'indexes' 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments 300 './.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check'
-        Invoke-ObservedWikiStage 'affected tool regression' 'Invoke-LlmWikiAffectedSmoke.ps1' $affectedSmokeArguments 300 './.llm-wiki/wiki.ps1 smoke -SmokeGroup tools -AffectedOnly'
-        Invoke-ObservedWikiStage 'failure knowledge' 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' } 60 './.llm-wiki/wiki.ps1 failures -Check'
-        Invoke-ObservedWikiStage 'change policy' 'Test-LlmWikiChangePolicy.ps1' $policyArguments 60 './.llm-wiki/wiki.ps1 policy -FailOnViolation'
-        Invoke-ObservedWikiStage 'source impact' 'Get-LlmWikiImpact.ps1' $impactArguments 60 './.llm-wiki/wiki.ps1 impact -FailOnUnreviewed'
+        $stages = @(
+            [pscustomobject]@{ Name = 'workspace policy'; Tool = 'Get-LlmWikiWorkspacePolicy.ps1'; Arguments = @{ Action = 'validate'; FailOnInvalid = $true }; Timeout = 60; Standalone = './.llm-wiki/wiki.ps1 workspace-policy' }
+            [pscustomobject]@{ Name = 'page contracts'; Tool = 'Test-LlmWiki.ps1'; Arguments = @{}; Timeout = 60; Standalone = './.llm-wiki/wiki.ps1 lint' }
+            [pscustomobject]@{ Name = 'lint regression'; Tool = 'Test-LlmWikiLint.ps1'; Arguments = @{}; Timeout = 120; Standalone = './.llm-wiki/tools/Test-LlmWikiLint.ps1' }
+            [pscustomobject]@{ Name = 'indexes'; Tool = 'Invoke-LlmWikiIndexPipeline.ps1'; Arguments = $indexArguments; Timeout = 300; Standalone = './.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check' }
+            [pscustomobject]@{ Name = 'affected tool regression'; Tool = 'Invoke-LlmWikiAffectedSmoke.ps1'; Arguments = $affectedSmokeArguments; Timeout = 300; Standalone = './.llm-wiki/wiki.ps1 smoke -SmokeGroup tools -AffectedOnly' }
+            [pscustomobject]@{ Name = 'failure knowledge'; Tool = 'Manage-LlmWikiFailures.ps1'; Arguments = @{ Action = 'validate' }; Timeout = 60; Standalone = './.llm-wiki/wiki.ps1 failures -Check' }
+            [pscustomobject]@{ Name = 'change policy'; Tool = 'Test-LlmWikiChangePolicy.ps1'; Arguments = $policyArguments; Timeout = 60; Standalone = './.llm-wiki/wiki.ps1 policy -FailOnViolation' }
+            [pscustomobject]@{ Name = 'source impact'; Tool = 'Get-LlmWikiImpact.ps1'; Arguments = $impactArguments; Timeout = 60; Standalone = './.llm-wiki/wiki.ps1 impact -FailOnUnreviewed' }
+        )
+        $selectedStages = @(if ($PSBoundParameters.ContainsKey('Stage')) { $stages | Where-Object Name -eq $Stage } else { $stages })
+        if ($Stage) { Write-Host "Wiki verify single-stage mode: $Stage" }
+        foreach ($stageDefinition in $selectedStages) {
+            Invoke-ObservedWikiStage $stageDefinition.Name $stageDefinition.Tool $stageDefinition.Arguments $stageDefinition.Timeout $stageDefinition.Standalone
+        }
         $script:verifyRunStopwatch.Stop()
-        Write-Host "Wiki verify completed: 8/8 stages in $([Math]::Round($script:verifyRunStopwatch.Elapsed.TotalSeconds, 2))s."
+        Write-Host "Wiki verify completed: $($selectedStages.Count)/8 selected stage(s) in $([Math]::Round($script:verifyRunStopwatch.Elapsed.TotalSeconds, 2))s."
     }
     'verify-fast' {
         $verificationMode = if ($VisualUiCompletion) { 'visual-ui' } else { 'default' }
@@ -693,6 +745,13 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $researchArguments.ChangedPath = $ChangedPath }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $researchArguments.ProposedPath = $ProposedPath }
         Invoke-WikiTool 'Get-LlmWikiResearchPacket.ps1' $researchArguments
+        if ($Format -eq 'Text' -and $Objective -match '\b(I[A-Z][A-Za-z0-9]+(?:Service|Repository))\b') {
+            Write-Host ''
+            Invoke-WikiTool 'Get-LlmWikiContractConsumers.ps1' @{ Contract = $Matches[1]; Format = 'Text' }
+        }
+        if ($Format -eq 'Text' -and -not (Test-Path -LiteralPath (Join-Path (Resolve-Path (Join-Path $toolsRoot '../..')).Path $WorkspacePath))) {
+            Write-Host 'Delivery note: this is an ordinary research run; delivery-* commands require wiki start/task-start to create governed state.'
+        }
     }
     'integration-scan' {
         if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'integration-scan requires -Intent <task description>.' }
@@ -724,6 +783,14 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $designArguments.ProposedPath = $ProposedPath }
         if ($PSBoundParameters.ContainsKey('Decision')) { $designArguments.Decision = $Decision }
         Invoke-WikiTool 'Get-LlmWikiDesignCheckpoint.ps1' $designArguments
+        if ($Format -eq 'Text' -and -not (Test-Path -LiteralPath (Join-Path (Resolve-Path (Join-Path $toolsRoot '../..')).Path $WorkspacePath))) {
+            Write-Host 'Delivery note: design does not create governed state. Use wiki start/task-start only when the selected workflow requires delivery validation.'
+        }
+    }
+    'contract-consumers' {
+        $contractName = if (-not [string]::IsNullOrWhiteSpace($Query)) { $Query } elseif (-not [string]::IsNullOrWhiteSpace($Objective)) { $Objective } else { $null }
+        if (-not $contractName) { throw 'contract-consumers requires -Query <contract type>.' }
+        Invoke-WikiTool 'Get-LlmWikiContractConsumers.ps1' @{ Contract = $contractName; Format = $Format }
     }
     { $_ -in @('phase-status', 'phase-next', 'phase-complete') } {
         $phaseAction = @{ 'phase-status' = 'status'; 'phase-next' = 'next'; 'phase-complete' = 'complete' }[$Command]

@@ -45,18 +45,23 @@ Source: `FoodDiary.Presentation.Api/Features/OpenFoodFacts/OpenFoodFactsControll
 - Physical isolation: folder
 - Architecture guardrails: graph-only
 - Declared owned entities: not yet enumerated
-- Public contract files: 4
+- Public contract files: 5
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 4
+- Public contract types: 5
+- Interfaces: 4
+- DTO/read-model/projection types: 1
+- Enums: 0
 - Exported repository-shaped contracts: 3
+- Contracts referencing domain entities: 0
 - `interface IOpenFoodFactsProductCacheReadRepository`
 - `interface IOpenFoodFactsProductCacheRepository`
 - `interface IOpenFoodFactsProductCacheWriteRepository`
 - `interface IOpenFoodFactsService`
+- `record OpenFoodFactsProductModel`
 
 ## Focused Tests
 

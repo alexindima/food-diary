@@ -158,14 +158,19 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 - Physical isolation: folder
 - Architecture guardrails: graph-only
 - Declared owned entities: not yet enumerated
-- Public contract files: 12
+- Public contract files: 28
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 12
+- Public contract types: 28
+- Interfaces: 12
+- DTO/read-model/projection types: 10
+- Enums: 0
 - Exported repository-shaped contracts: 11
+- Contracts referencing domain entities: 3
+- `class AdminMailInboxErrors`
 - `interface IAdminBillingReadRepository`
 - `interface IAdminBillingRepository`
 - `interface IAdminImpersonationSessionReadRepository`
@@ -178,6 +183,21 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 - `interface IEmailTemplateReadRepository`
 - `interface IEmailTemplateRepository`
 - `interface IEmailTemplateWriteRepository`
+- `record AdminBillingListFilter`
+- `record AdminBillingPaymentReadModel`
+- `record AdminBillingRevenueCurrencyReadModel`
+- `record AdminBillingRevenueSummaryReadModel`
+- `record AdminBillingSubscriptionReadModel`
+- `record AdminBillingWebhookEventReadModel`
+- `record AdminImpersonationSessionReadModel`
+- `record AdminMailInboxMessageDetailsModel`
+- `record AdminMailInboxMessageSummaryModel`
+- `record AdminUserRoleAuditEventReadModel`
+- `record AiUsageBreakdown`
+- `record AiUsageDailySummary`
+- `record AiUsageSummary`
+- `record AiUsageUserSummary`
+- `record EmailTemplateReadModel`
 
 ## Focused Tests
 

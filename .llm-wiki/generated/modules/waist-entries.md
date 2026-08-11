@@ -48,18 +48,24 @@ Source: `FoodDiary.Presentation.Api/Features/WaistEntries/WaistEntriesController
 - Physical isolation: folder
 - Architecture guardrails: graph-only
 - Declared owned entities: WaistEntry
-- Public contract files: 4
+- Public contract files: 6
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 4
+- Public contract types: 6
+- Interfaces: 4
+- DTO/read-model/projection types: 1
+- Enums: 0
 - Exported repository-shaped contracts: 4
+- Contracts referencing domain entities: 2
+- `class WaistEntryErrors`
 - `interface IWaistEntryReadModelRepository`
 - `interface IWaistEntryReadRepository`
 - `interface IWaistEntryRepository`
 - `interface IWaistEntryWriteRepository`
+- `record WaistEntryReadModel`
 
 ## Focused Tests
 

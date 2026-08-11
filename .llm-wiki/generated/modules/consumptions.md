@@ -51,20 +51,31 @@ Source: `FoodDiary.Presentation.Api/Features/Consumptions/ConsumptionsController
 - Physical isolation: folder
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: Meal, MealItem, MealAiSession, MealAiItem
-- Public contract files: 6
+- Public contract files: 13
 - Observed external consumer groups: 8
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 6
+- Public contract types: 13
+- Interfaces: 6
+- DTO/read-model/projection types: 5
+- Enums: 0
 - Exported repository-shaped contracts: 6
+- Contracts referencing domain entities: 2
+- `class ConsumptionErrors`
 - `interface IMealActivityReadRepository`
 - `interface IMealConsumptionReadRepository`
 - `interface IMealProductNutritionReadRepository`
 - `interface IMealReadRepository`
 - `interface IMealRepository`
 - `interface IMealWriteRepository`
+- `record MealConsumptionAiItemReadModel`
+- `record MealConsumptionAiSessionReadModel`
+- `record MealConsumptionItemReadModel`
+- `record MealConsumptionReadModel`
+- `record MealProductNutritionReadModel`
+- `record MealQueryFilters`
 
 ## Focused Tests
 

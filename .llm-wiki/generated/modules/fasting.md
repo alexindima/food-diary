@@ -65,14 +65,19 @@ Source: `FoodDiary.Presentation.Api/Features/Fasting/FastingReadController.cs`
 - Physical isolation: folder
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: FastingPlan, FastingOccurrence, FastingCheckIn, FastingSession, FastingTelemetryEvent
-- Public contract files: 17
+- Public contract files: 22
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 17
+- Public contract types: 22
+- Interfaces: 17
+- DTO/read-model/projection types: 3
+- Enums: 0
 - Exported repository-shaped contracts: 17
+- Contracts referencing domain entities: 8
+- `class FastingErrors`
 - `interface IFastingCheckInReadModelRepository`
 - `interface IFastingCheckInReadRepository`
 - `interface IFastingCheckInRepository`
@@ -90,6 +95,10 @@ Source: `FoodDiary.Presentation.Api/Features/Fasting/FastingReadController.cs`
 - `interface IFastingTelemetryEventReadRepository`
 - `interface IFastingTelemetryEventRepository`
 - `interface IFastingTelemetryEventWriteRepository`
+- `record FastingCheckInReadModel`
+- `record FastingOccurrenceReadModel`
+- `record FastingPlanReadModel`
+- `record FastingTelemetryEventRecord`
 
 ## Focused Tests
 

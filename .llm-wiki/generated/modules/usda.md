@@ -48,14 +48,19 @@ Source: `FoodDiary.Presentation.Api/Features/Usda/UsdaController.cs`
 - Physical isolation: folder
 - Architecture guardrails: graph-only
 - Declared owned entities: not yet enumerated
-- Public contract files: 8
+- Public contract files: 20
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 8
+- Public contract types: 20
+- Interfaces: 8
+- DTO/read-model/projection types: 11
+- Enums: 0
 - Exported repository-shaped contracts: 6
+- Contracts referencing domain entities: 3
+- `class UsdaErrors`
 - `interface IUsdaDailyMicronutrientReadService`
 - `interface IUsdaFoodReadModelRepository`
 - `interface IUsdaFoodReadRepository`
@@ -64,6 +69,17 @@ Source: `FoodDiary.Presentation.Api/Features/Usda/UsdaController.cs`
 - `interface IUsdaProductLinkReadRepository`
 - `interface IUsdaProductLinkRepository`
 - `interface IUsdaProductLinkWriteRepository`
+- `record DailyMicronutrientModel`
+- `record DailyMicronutrientSummaryModel`
+- `record HealthAreaScoreModel`
+- `record HealthAreaScoresModel`
+- `record MicronutrientModel`
+- `record UsdaDailyReferenceValueReadModel`
+- `record UsdaFoodDetailModel`
+- `record UsdaFoodModel`
+- `record UsdaFoodPortionModel`
+- `record UsdaFoodReadModel`
+- `record UsdaNutrientReadModel`
 
 ## Focused Tests
 

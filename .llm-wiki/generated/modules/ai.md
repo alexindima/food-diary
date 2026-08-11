@@ -52,14 +52,19 @@ Source: `FoodDiary.Presentation.Api/Features/Ai/AiUsageController.cs`
 - Physical isolation: folder
 - Architecture guardrails: graph-only
 - Declared owned entities: not yet enumerated
-- Public contract files: 10
+- Public contract files: 20
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 10
+- Public contract types: 20
+- Interfaces: 10
+- DTO/read-model/projection types: 7
+- Enums: 0
 - Exported repository-shaped contracts: 7
+- Contracts referencing domain entities: 3
+- `class AiErrors`
 - `interface IAiPromptProvider`
 - `interface IAiPromptTemplateReadModelRepository`
 - `interface IAiPromptTemplateReadRepository`
@@ -70,6 +75,15 @@ Source: `FoodDiary.Presentation.Api/Features/Ai/AiUsageController.cs`
 - `interface IAiUsageWriteRepository`
 - `interface IOpenAiFoodClient`
 - `interface IOpenAiFoodService`
+- `record AiPromptTemplateReadModel`
+- `record AiUsageTotals`
+- `record FoodNutritionItemModel`
+- `record FoodNutritionModel`
+- `record FoodVisionItemModel`
+- `record FoodVisionModel`
+- `record OpenAiFoodClientResponse`
+- `record UserAiUsageModel`
+- `record struct AiUsageTokens`
 
 ## Focused Tests
 

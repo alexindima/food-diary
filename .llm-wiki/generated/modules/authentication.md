@@ -37,14 +37,19 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: folder
 - Architecture guardrails: graph-only
 - Declared owned entities: not yet enumerated
-- Public contract files: 17
+- Public contract files: 32
 - Observed external consumer groups: 7
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 17
+- Public contract types: 32
+- Interfaces: 17
+- DTO/read-model/projection types: 2
+- Enums: 0
 - Exported repository-shaped contracts: 6
+- Contracts referencing domain entities: 5
+- `class JwtImpersonationClaimNames`
 - `interface IAdminSsoService`
 - `interface IAuthenticationTokenService`
 - `interface IEmailSender`
@@ -62,6 +67,19 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUserLoginEventReadRepository`
 - `interface IUserLoginEventRepository`
 - `interface IUserLoginEventWriteRepository`
+- `record AccountCreatedMessage`
+- `record AdminSsoCode`
+- `record AuthenticationClientContext`
+- `record EmailTemplateContent`
+- `record EmailVerificationMessage`
+- `record GoogleIdentityPayload`
+- `record IssuedAuthenticationTokens`
+- `record JwtImpersonationContext`
+- `record PasswordResetMessage`
+- `record TelegramInitData`
+- `record TelegramLoginWidgetData`
+- `record TestEmailMessage`
+- ... 2 more type(s)
 
 ## Focused Tests
 

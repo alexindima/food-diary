@@ -48,18 +48,27 @@ Source: `FoodDiary.Presentation.Api/Features/ShoppingLists/ShoppingListsControll
 - Physical isolation: folder
 - Architecture guardrails: graph-only
 - Declared owned entities: not yet enumerated
-- Public contract files: 4
+- Public contract files: 9
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 4
+- Public contract types: 9
+- Interfaces: 4
+- DTO/read-model/projection types: 4
+- Enums: 0
 - Exported repository-shaped contracts: 4
+- Contracts referencing domain entities: 2
+- `class ShoppingListErrors`
 - `interface IShoppingListReadModelRepository`
 - `interface IShoppingListReadRepository`
 - `interface IShoppingListRepository`
 - `interface IShoppingListWriteRepository`
+- `record ShoppingListItemReadModel`
+- `record ShoppingListItemSourceReadModel`
+- `record ShoppingListReadModel`
+- `record ShoppingListSummaryReadModel`
 
 ## Focused Tests
 

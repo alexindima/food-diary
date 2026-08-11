@@ -205,6 +205,8 @@ function Get-HostConsumers {
 }
 
 $generatedFiles = [ordered]@{}
+$usersContextReadiness = & (Join-Path $PSScriptRoot 'Get-LlmWikiContractConsumers.ps1') -Contract IUserContextService -Format Json | ConvertFrom-Json
+$usersProfileReadiness = & (Join-Path $PSScriptRoot 'Get-LlmWikiContractConsumers.ps1') -Contract IUserProfileReadService -Format Json | ConvertFrom-Json
 $indexLines = New-FrontMatter 'generated.application-modules' @(
     $generatorPath
     '.llm-wiki/generated/repository-catalog.json'
@@ -251,15 +253,21 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
             $root = Join-Path $repositoryRoot "FoodDiary.Application.Abstractions/$area"
             if (Test-Path -LiteralPath $root) {
                 Get-ChildItem -LiteralPath $root -Recurse -File -Filter '*.cs' -ErrorAction SilentlyContinue |
-                    Where-Object { (Get-Content -LiteralPath $_.FullName -Raw) -match '\bpublic\s+(?:interface|record|class|enum)\b' }
+                    Where-Object { (Get-Content -LiteralPath $_.FullName -Raw) -match '\bpublic\s+(?:(?:sealed|abstract|partial|readonly|static)\s+)*(?:interface|record|class|struct|enum)\b' }
             }
         }
     )
     $publicContractTypes = @(
         foreach ($contractFile in $publicContractFiles) {
             $content = Get-Content -LiteralPath $contractFile.FullName -Raw
-            foreach ($match in [regex]::Matches($content, '\bpublic\s+(?<kind>interface|record|class|enum)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)')) {
-                [pscustomobject]@{ kind = $match.Groups['kind'].Value; name = $match.Groups['name'].Value }
+            foreach ($match in [regex]::Matches($content, '\bpublic\s+(?:(?:sealed|abstract|partial|readonly|static)\s+)*(?<kind>interface|record(?:\s+(?:class|struct))?|class|struct|enum)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)')) {
+                [pscustomobject]@{
+                    kind = $match.Groups['kind'].Value
+                    name = $match.Groups['name'].Value
+                    repositoryShaped = $match.Groups['name'].Value -match 'Repository|Store'
+                    projectionShaped = $match.Groups['name'].Value -match '(?:Dto|Model|ReadModel|Projection|Response|Request)$'
+                    domainEntityReference = $content -match '\bFoodDiary\.Domain\.Entities\.' -or $content -match '\bResult<User>\b'
+                }
             }
         }
     )
@@ -333,7 +341,11 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
     $lines.Add('## Public Surface')
     $lines.Add('')
     $lines.Add("- Public contract types: $($publicContractTypes.Count)")
-    $lines.Add("- Exported repository-shaped contracts: $(@($publicContractTypes | Where-Object name -match 'Repository').Count)")
+    $lines.Add("- Interfaces: $(@($publicContractTypes | Where-Object kind -eq 'interface').Count)")
+    $lines.Add("- DTO/read-model/projection types: $(@($publicContractTypes | Where-Object projectionShaped).Count)")
+    $lines.Add("- Enums: $(@($publicContractTypes | Where-Object kind -eq 'enum').Count)")
+    $lines.Add("- Exported repository-shaped contracts: $(@($publicContractTypes | Where-Object repositoryShaped).Count)")
+    $lines.Add("- Contracts referencing domain entities: $(@($publicContractTypes | Where-Object domainEntityReference).Count)")
     if ($publicContractTypes.Count -eq 0) {
         $lines.Add('- No public declaration was found in the mapped abstraction areas.')
     } else {
@@ -343,6 +355,31 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
         if ($publicContractTypes.Count -gt 30) { $lines.Add("- ... $($publicContractTypes.Count - 30) more type(s)") }
     }
     $lines.Add('')
+    if ($moduleName -eq 'Users') {
+        $legacyConsumerModules = @($usersContextReadiness.consumers.consumer | Sort-Object -Unique)
+        $profileConsumerModules = @($usersProfileReadiness.consumers.consumer | Sort-Object -Unique)
+        $lines.Add('## Extraction Readiness')
+        $lines.Add('')
+        $lines.Add("- Abstraction-owned profile-read consumers: $($usersProfileReadiness.readiness.productionConsumers) across $($profileConsumerModules.Count) group(s)")
+        $lines.Add("- Implementation-owned `IUserContextService` consumers: $($usersContextReadiness.readiness.productionConsumers) across $($legacyConsumerModules.Count) group(s)")
+        $lines.Add("- Consumers receiving the `User` aggregate: $($usersContextReadiness.readiness.aggregateConsumers)")
+        $lines.Add("- Consumers with aggregate mutation access: $($usersContextReadiness.readiness.mutationConsumers)")
+        $lines.Add("- Composition registrations: $($usersContextReadiness.readiness.compositionRegistrations)")
+        $lines.Add("- Remaining blocker classes: $(@($usersContextReadiness.readiness.blockers).Count)")
+        $lines.Add("- Extraction readiness: $(if (@($usersContextReadiness.readiness.blockers).Count) { 'partial; migrate legacy aggregate/mutation consumers' } else { 'ready by observed contract evidence' })")
+        $lines.Add('')
+        $lines.Add('| Consumer | Contract | Owning assembly | Methods/data | Access | Extraction |')
+        $lines.Add('| --- | --- | --- | --- | --- | --- |')
+        foreach ($consumerGroup in @($usersContextReadiness.consumers | Group-Object consumer | Sort-Object Name)) {
+            $entries = @($consumerGroup.Group)
+            $methods = @($entries.methods | Where-Object { $_ } | Sort-Object -Unique)
+            $data = @($entries.returnedData | Where-Object { $_ } | Sort-Object -Unique)
+            $access = @($entries.access | Sort-Object -Unique)
+            $safe = @($entries | Where-Object { -not $_.extractionSafe }).Count -eq 0
+            $lines.Add("| $($consumerGroup.Name) | IUserContextService | $($usersContextReadiness.owningAssembly) | $(if ($methods.Count) { $methods -join ', ' } else { 'constructor/registration only' }) => $(if ($data.Count) { $data -join ', ' } else { 'inherited or unresolved' }) | $($access -join ', ') | $(if ($safe) { 'safe' } else { 'migration-required' }) |")
+        }
+        $lines.Add('')
+    }
     $lines.Add('## Focused Tests')
     $lines.Add('')
     $lines.Add('Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.')

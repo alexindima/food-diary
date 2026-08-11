@@ -24,6 +24,7 @@ foreach ($check in $checks) {
     $process = [Diagnostics.Process]::new()
     $process.StartInfo = $startInfo
     if (-not $process.Start()) { throw "Unable to start LLM Wiki $($check.name) verification." }
+    Write-Host " - started $($check.name) (pid=$($process.Id))"
     $workers.Add([pscustomobject]@{ check = $check; process = $process; stopwatch = [Diagnostics.Stopwatch]::StartNew() })
 }
 
@@ -32,8 +33,9 @@ foreach ($worker in $workers) {
     try {
         $worker.process.WaitForExit()
         $worker.stopwatch.Stop()
+        $actualSeconds = if ($worker.process.HasExited) { ($worker.process.ExitTime - $worker.process.StartTime).TotalSeconds } else { $worker.stopwatch.Elapsed.TotalSeconds }
         if ($worker.process.ExitCode -ne 0) { $failures.Add("$($worker.check.name) (exit=$($worker.process.ExitCode))") }
-        Write-Host " - $($worker.check.name): $([Math]::Round($worker.stopwatch.Elapsed.TotalSeconds, 2))s"
+        Write-Host " - $($worker.check.name): $([Math]::Round($actualSeconds, 2))s"
     } finally {
         $worker.process.Dispose()
     }

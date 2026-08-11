@@ -55,14 +55,20 @@ Source: `FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs
 - Physical isolation: assembly
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: BillingSubscription, BillingPayment, BillingWebhookEvent
-- Public contract files: 17
+- Public contract files: 28
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 17
+- Public contract types: 28
+- Interfaces: 17
+- DTO/read-model/projection types: 9
+- Enums: 0
 - Exported repository-shaped contracts: 10
+- Contracts referencing domain entities: 5
+- `class BillingPaymentAlreadyExistsException`
+- `class BillingWebhookEventAlreadyProcessedException`
 - `interface IBillingCheckoutLock`
 - `interface IBillingMarketingConversionRecorder`
 - `interface IBillingPaymentReadRepository`
@@ -80,6 +86,15 @@ Source: `FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs
 - `interface IBillingWebhookEventReadRepository`
 - `interface IBillingWebhookEventRepository`
 - `interface IBillingWebhookEventWriteRepository`
+- `record BillingCheckoutSessionModel`
+- `record BillingCheckoutSessionRequestModel`
+- `record BillingPortalSessionModel`
+- `record BillingPortalSessionRequestModel`
+- `record BillingPublicConfigModel`
+- `record BillingRecurringPaymentModel`
+- `record BillingRecurringPaymentRequestModel`
+- `record BillingSubscriptionOverviewReadModel`
+- `record BillingWebhookEventModel`
 
 ## Focused Tests
 

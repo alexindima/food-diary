@@ -44,18 +44,35 @@ Source: `FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs`
 - Physical isolation: folder
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: not yet enumerated
-- Public contract files: 4
+- Public contract files: 17
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 4
+- Public contract types: 17
+- Interfaces: 4
+- DTO/read-model/projection types: 12
+- Enums: 0
 - Exported repository-shaped contracts: 0
+- Contracts referencing domain entities: 0
 - `interface IDashboardBodyReadService`
 - `interface IDashboardMealsReadService`
 - `interface IDashboardReadService`
 - `interface IDashboardStatisticsReadService`
+- `record DashboardBodyReadModel`
+- `record DashboardMealAiItemReadModel`
+- `record DashboardMealAiSessionReadModel`
+- `record DashboardMealItemReadModel`
+- `record DashboardMealReadModel`
+- `record DashboardMealsReadModel`
+- `record DashboardReadModel`
+- `record DashboardReadSections`
+- `record DashboardStatisticsBucketReadModel`
+- `record DashboardWaistPointReadModel`
+- `record DashboardWaistSummaryReadModel`
+- `record DashboardWeightPointReadModel`
+- `record DashboardWeightSummaryReadModel`
 
 ## Focused Tests
 

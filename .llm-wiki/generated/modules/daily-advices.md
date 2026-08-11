@@ -36,17 +36,23 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: folder
 - Architecture guardrails: graph-only
 - Declared owned entities: not yet enumerated
-- Public contract files: 3
+- Public contract files: 5
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 3
+- Public contract types: 5
+- Interfaces: 3
+- DTO/read-model/projection types: 1
+- Enums: 0
 - Exported repository-shaped contracts: 3
+- Contracts referencing domain entities: 1
+- `class DailyAdviceErrors`
 - `interface IDailyAdviceReadModelRepository`
 - `interface IDailyAdviceReadRepository`
 - `interface IDailyAdviceRepository`
+- `record DailyAdviceReadModel`
 
 ## Focused Tests
 

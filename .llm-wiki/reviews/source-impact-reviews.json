@@ -222,21 +222,21 @@
                     {
                         "pageId":  "workflow-adaptive-development",
                         "pagePath":  ".llm-wiki/workflows/adaptive-development.md",
-                        "pageSha256":  "eb80b7b3c67a44e783460ff52e1d66d57d2a58db9158bb8e2f30e101d4b0d40b",
+                        "pageSha256":  "816e17cb3087f1de89f17f4bc185c05b9245c849fde8fab1b51dc8fd0af71d58",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiFrontendRuntimeOwner.ps1",
-                                            "sha256":  "f3d1ac4110f6a26353821325bd5117456b6b3fcffd771e184198d50c87847d68"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1",
+                                            "sha256":  "1d1d4807ebdf8374aff44987d1f9b2ec38db90484cd841229339ea2bffcc9192"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
-                                            "sha256":  "a57d5068d5ab5e24e043705d5be44b637c2e61b32a738af2fe220205c217a2e6"
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAdaptiveVerification.ps1",
+                                            "sha256":  "117641bd3dc33a8a92f7bf0c92c9b11847f68ca06b658d6318d7bbae1615da64"
                                         }
                                     ],
-                        "reason":  "Reviewed query-only runtime-owner ranking regression; ambiguous AI photo matches remain visible for confirmation while generic dashboard shells are excluded.",
+                        "reason":  "Reviewed the new single-stage resumable verification, stale-process recovery, affected smoke routing, contract consumer analysis, and contract-boundary test-plan behavior; existing workflow guidance remains accurate and generated module pages were regenerated from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8b70e3e238e923c84a062b4bfc08f1a7d3a80bb1",
-                        "reviewedAtUtc":  "2026-08-01T00:05:36.8773450Z"
+                        "gitHead":  "f2df6b06a1eca407173e9d7e07a5423d373fd06e",
+                        "reviewedAtUtc":  "2026-08-11T23:04:58.9620947Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -510,25 +510,33 @@
                     {
                         "pageId":  "workflow-index-pipeline",
                         "pagePath":  ".llm-wiki/workflows/index-pipeline.md",
-                        "pageSha256":  "ca276bbd07823ed70e36ee2c6ae4807dcc3d4c4a7152015f22ca8bb0138bac91",
+                        "pageSha256":  "00ed44ae7969545582f106af9c38c4e07f6feb7ba746a6e1738dc2cb0bd9da70",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "6e5ad74cb7aa67e838546829fa92f56516bed4a41cd98fee55b31fb7dea4a108"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+                                            "sha256":  "1fb66612e1696461211866aee0913e8d4a3eab6e66cb3e8e236e501146d6469e"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
-                                            "sha256":  "f1057792976cb436e53610fea1db3b4e152c19e02cf1789404a83bbb5ea5d5d1"
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+                                            "sha256":  "8c0330f1b94933051dd3343cee921110a67cf6900b8e458b0338b8e7968f2ad1"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1",
+                                            "sha256":  "4a4564942635b023cc7cc39a0cc9dea71cb52bfad820315c6f4e07fad05fea7d"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
+                                            "sha256":  "c12a14ca8d849512de3dbfcb534ba9e06ed2cbb50f79ac72d402e830e2239c65"
                                         },
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "52ef30810cb9081a9cf2ed9dcd15257a4f918abb828c581ff725ab4505105d56"
+                                            "sha256":  "435a71b32bb2abd57e089d45c5f7b399314281aaab2635116d9012522b4b9715"
                                         }
                                     ],
-                        "reason":  "Affected smoke now routes test-only governance regressions without changing index semantics.",
+                        "reason":  "Reviewed the new single-stage resumable verification, stale-process recovery, affected smoke routing, contract consumer analysis, and contract-boundary test-plan behavior; existing workflow guidance remains accurate and generated module pages were regenerated from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e78bd7010ebd983422800b082d86c754a12ad794",
-                        "reviewedAtUtc":  "2026-08-09T15:40:41.6283775Z"
+                        "gitHead":  "f2df6b06a1eca407173e9d7e07a5423d373fd06e",
+                        "reviewedAtUtc":  "2026-08-11T23:04:59.3098033Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -794,13 +802,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "6a719742fc5e0d8cd630c1a2e2c90bafd78b60581d8823607a31c2e52e99e647"
+                                            "sha256":  "435a71b32bb2abd57e089d45c5f7b399314281aaab2635116d9012522b4b9715"
                                         }
                                     ],
-                        "reason":  "Reviewed catalog schema extension and verify Area forwarding: query discovery remains backward compatible, task dispatch semantics are unchanged, and backend/frontend area selection is explicitly diagnostic only.",
+                        "reason":  "Reviewed the new single-stage resumable verification, stale-process recovery, affected smoke routing, contract consumer analysis, and contract-boundary test-plan behavior; existing workflow guidance remains accurate and generated module pages were regenerated from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8f671ba7a65724908d3ab5328e8dda53ce8af38a",
-                        "reviewedAtUtc":  "2026-08-11T22:00:31.6743920Z"
+                        "gitHead":  "f2df6b06a1eca407173e9d7e07a5423d373fd06e",
+                        "reviewedAtUtc":  "2026-08-11T23:04:59.6310211Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",
@@ -848,13 +856,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-                                            "sha256":  "a77a0b028997cb0b80d32a68c5fbb8207df02fea47132d82e9c81c4eec4763a9"
+                                            "sha256":  "1fb66612e1696461211866aee0913e8d4a3eab6e66cb3e8e236e501146d6469e"
                                         }
                                     ],
-                        "reason":  "Reviewed read-only execution, explicit-scope isolation, focused consumer discovery, and affected verification behavior; no documented task-dispatch or test-plan contract is invalidated.",
+                        "reason":  "Reviewed the new single-stage resumable verification, stale-process recovery, affected smoke routing, contract consumer analysis, and contract-boundary test-plan behavior; existing workflow guidance remains accurate and generated module pages were regenerated from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8ef79184a7834373670c50cf763115aae0ce4346",
-                        "reviewedAtUtc":  "2026-08-11T10:41:31.7299654Z"
+                        "gitHead":  "f2df6b06a1eca407173e9d7e07a5423d373fd06e",
+                        "reviewedAtUtc":  "2026-08-11T23:04:59.9141229Z"
                     },
                     {
                         "pageId":  "workflow-trace-feature",

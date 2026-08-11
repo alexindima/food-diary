@@ -32,11 +32,13 @@ $wikiRelevantPathCount = 0
 foreach ($path in $paths) {
     if ($path -notmatch '^\.llm-wiki/') { continue }
     $wikiRelevantPathCount++
-    if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Get-LlmWikiSolutionComparison|Get-LlmWikiDesignCheckpoint|Test-LlmWikiAdaptiveWorkflow|Get-LlmWikiIntegrationScan|Test-LlmWikiIntegrationScan|Invoke-LlmWikiAdaptiveVerification)|evals/|policies/experience-policies\.json|workflows/(developer-experience|integration-scan|evals|learned-regression-evals)\.md)') {
+    if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Get-LlmWikiSolutionComparison|Test-LlmWikiAdaptiveWorkflow|Get-LlmWikiIntegrationScan|Test-LlmWikiIntegrationScan)|evals/|policies/experience-policies\.json|workflows/(developer-experience|integration-scan|evals|learned-regression-evals)\.md)') {
         Add-Group 'adaptive-routing'
+    } elseif ($path -match '^\.llm-wiki/tools/Get-LlmWikiDesignCheckpoint\.ps1$') {
+        Add-Group 'adaptive-experience'
     } elseif ($path -match '^\.llm-wiki/(tools/Get-LlmWikiDependencyChanges|workflows/dependency-rollout\.md)') {
         Add-Group 'dependency-analysis'
-    } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiObservedStage|Invoke-LlmWikiReadOnlyTool|Test-LlmWikiReadOnlyGuard|Test-LlmWikiStrictAffected|Test-LlmWikiFormattingReady)|wiki\.ps1|workflows/(adaptive-development|index-pipeline)\.md)') {
+    } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiObservedStage|Invoke-LlmWikiAdaptiveVerification|Invoke-LlmWikiReadOnlyTool|Test-LlmWikiReadOnlyGuard|Test-LlmWikiStrictAffected|Test-LlmWikiFormattingReady)|wiki\.ps1|workflows/(adaptive-development|index-pipeline)\.md)') {
         Add-Group 'facade-contract'
     } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiIndexPipeline|LlmWikiIndexCache|LlmWikiGeneratedArtifacts|Build-LlmWikiCatalog|Build-LlmWiki(?:Frontend|FrontendContract|BackendContract|Quality|ArchitectureHealth|ModulePages)Index|Build-LlmWikiModulePages|Test-LlmWikiGeneratedArtifacts|Test-LlmWikiIndexSelection|Test-LlmWikiBackendModuleModel)\.ps1$' -or $path -eq 'docs/architecture/backend-modules.json') {
         Add-Group 'index-selection'
@@ -52,6 +54,8 @@ foreach ($path in $paths) {
         Add-Group 'verification-cache'
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiQueryCache|Test-LlmWikiQueryCache|Get-LlmWikiTaskBrief|Get-LlmWikiResearchPacket|Get-LlmWikiTestPlan)\.ps1$') {
         Add-Group 'query-cache'
+    } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiContractConsumers|Test-LlmWikiContractConsumers)\.ps1$') {
+        Add-Group 'contract-consumers'
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiLearningPromotion|Manage-LlmWikiLearningExperiment|Manage-LlmWikiEvalPromotion|Manage-LlmWikiLearningHealth|Test-LlmWikiKnowledgeIsolation)\.ps1$') {
         Add-Group 'knowledge-isolation'
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiChangeManifest|Manage-LlmWikiAcceptanceMatrix|Test-LlmWikiTestOnlyGovernance)\.ps1$') {
@@ -73,9 +77,14 @@ if ($Plan) { exit 0 }
 
 foreach ($group in $groups) {
     $stopwatch = [Diagnostics.Stopwatch]::StartNew()
+    Write-Host "Affected tools smoke group starting: $group"
     switch ($group) {
         'adaptive-routing' {
             & (Join-Path $toolsRoot 'Invoke-LlmWikiAdaptiveVerification.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'adaptive-experience' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiAdaptiveWorkflow.ps1') -Group Experience
             if (-not $?) { exit 1 }
         }
         'dependency-analysis' {
@@ -130,6 +139,10 @@ foreach ($group in $groups) {
         }
         'query-cache' {
             & (Join-Path $toolsRoot 'Test-LlmWikiQueryCache.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'contract-consumers' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiContractConsumers.ps1')
             if (-not $?) { exit 1 }
         }
         'knowledge-isolation' {

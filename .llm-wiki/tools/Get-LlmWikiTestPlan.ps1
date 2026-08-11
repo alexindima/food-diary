@@ -316,6 +316,29 @@ foreach ($consumerProject in @($directConsumerProjects | Sort-Object)) {
         commandEvidence = $consumerProject
     }
 }
+$contractBoundaryChange = @($effectivePaths | Where-Object {
+    $_ -match '^FoodDiary\.Application(?:\.Abstractions)?/.+\.cs$' -and
+    $_ -match '(?:Common|Contracts|Models|Repositories)/|I[A-Z][A-Za-z0-9]+\.cs$'
+}).Count -gt 0
+$presentationBoundaryChange = @($effectivePaths | Where-Object { $_ -match '^FoodDiary\.Presentation\.Api/.+\.cs$' }).Count -gt 0
+if ($contractBoundaryChange) {
+    $commands += [pscustomobject]@{
+        id = 'application-contract-tests'; command = 'dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore'
+        source = 'contract-boundary'; priority = 'required'; reason = 'application-contract-moved-or-reshaped'; commandEvidence = 'Application/Application.Abstractions contract path'
+    }
+    $commands += [pscustomobject]@{
+        id = 'architecture-contract-tests'; command = 'dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore'
+        source = 'contract-boundary'; priority = 'required'; reason = 'assembly-and-namespace-boundary-change'; commandEvidence = 'Application/Application.Abstractions contract path'
+    }
+    Add-Scenario 'old-implementation-namespace-absent' 'Verify consumers no longer import the implementation namespace for contracts moved to an abstraction assembly.' 'Architecture test plus repository search for the former namespace'
+    Add-Scenario 'contract-return-type-boundary' 'Verify public abstraction contracts do not expose implementation-owned types or mutable domain aggregates unintentionally.' 'Contract consumer report and architecture test'
+}
+if ($presentationBoundaryChange -or ($contractBoundaryChange -and @($effectivePaths | Where-Object { $_ -match 'Presentation|Http|Controller|Mappings' }).Count)) {
+    $commands += [pscustomobject]@{
+        id = 'presentation-contract-tests'; command = 'dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj --no-restore'
+        source = 'contract-boundary'; priority = 'required'; reason = 'presentation-namespace-or-contract-consumer-change'; commandEvidence = 'Presentation API path or consumer'
+    }
+}
 $commands = @($commands | Sort-Object command -Unique)
 
 $result = [pscustomobject]@{

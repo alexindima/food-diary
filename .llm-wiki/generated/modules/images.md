@@ -44,14 +44,19 @@ Source: `FoodDiary.Presentation.Api/Features/Images/ImagesController.cs`
 - Physical isolation: folder
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: ImageAsset, ImageObjectDeletionOutboxMessage
-- Public contract files: 8
+- Public contract files: 12
 - Observed external consumer groups: 7
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 8
+- Public contract types: 12
+- Interfaces: 8
+- DTO/read-model/projection types: 0
+- Enums: 0
 - Exported repository-shaped contracts: 3
+- Contracts referencing domain entities: 3
+- `class ImageErrors`
 - `interface IImageAssetAccessService`
 - `interface IImageAssetCleanupService`
 - `interface IImageAssetReadRepository`
@@ -60,6 +65,9 @@ Source: `FoodDiary.Presentation.Api/Features/Images/ImagesController.cs`
 - `interface IImageObjectDeletionOutbox`
 - `interface IImageObjectDeletionOutboxProcessor`
 - `interface IImageStorageService`
+- `record DeleteImageAssetResult`
+- `record ImageObjectValidationResult`
+- `record PresignedUpload`
 
 ## Focused Tests
 

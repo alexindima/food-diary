@@ -37,19 +37,25 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: folder
 - Architecture guardrails: graph-only
 - Declared owned entities: RecentItem
-- Public contract files: 5
+- Public contract files: 7
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 5
+- Public contract types: 7
+- Interfaces: 5
+- DTO/read-model/projection types: 0
+- Enums: 0
 - Exported repository-shaped contracts: 3
+- Contracts referencing domain entities: 0
 - `interface IRecentItemReadRepository`
 - `interface IRecentItemRepository`
 - `interface IRecentItemUsageReadService`
 - `interface IRecentItemUsageRecorder`
 - `interface IRecentItemWriteRepository`
+- `record RecentProductUsage`
+- `record RecentRecipeUsage`
 
 ## Focused Tests
 
