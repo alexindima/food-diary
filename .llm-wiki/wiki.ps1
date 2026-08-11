@@ -77,6 +77,8 @@ param(
     [string[]]$ProposedPath,
     [switch]$AffectedOnly,
     [switch]$ContractIndexesOnly,
+    [ValidateSet('All', 'Backend', 'Frontend')]
+    [string]$Area = 'All',
     [switch]$VisualUiCompletion,
     [switch]$FullTrace,
     [switch]$Fast,
@@ -448,7 +450,7 @@ switch ($Command) {
         Write-Host "Wiki verify: 8 observable stages, expected cold duration ~${expectedVerifySeconds}s; content-addressed stage resume is enabled=$([bool]$ResumePassedStages)."
         Write-Host 'Buffered-shell progress receipt: .artifacts/llm-wiki/verify-progress.json'
         Write-Host 'Wiki verify mode: affected/resumable. Use verify-full only for an explicit local full-repository gate; CI remains full and uncached.'
-        $indexArguments = @{ Check = $true; AffectedOnly = $true; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }
+        $indexArguments = @{ Check = $true; AffectedOnly = $true; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly; Area = $Area }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
         $policyArguments = @{ FailOnViolation = $true }
         $impactArguments = @{ FailOnUnreviewed = $true }

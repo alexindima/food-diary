@@ -940,12 +940,15 @@ public sealed class BusinessModuleBoundaryTests {
         SyntaxTree tree = CSharpSyntaxTree.ParseText(File.ReadAllText(path));
         CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
 
-        return root.Usings
-            .Select(usingDirective => new {
-                Namespace = usingDirective.Name?.ToString() ?? string.Empty,
-                Line = tree.GetLineSpan(usingDirective.Span).StartLinePosition.Line + 1,
+        return root.DescendantNodes()
+            .OfType<NameSyntax>()
+            .Where(name => name.Parent is not NameSyntax)
+            .Select(name => new {
+                Namespace = name.ToString(),
+                Line = tree.GetLineSpan(name.Span).StartLinePosition.Line + 1,
             })
             .Where(entry => entry.Namespace.StartsWith(prefix, StringComparison.Ordinal))
+            .DistinctBy(entry => (entry.Namespace, entry.Line))
             .Select(entry => new NamespaceDependency(path, entry.Line, entry.Namespace));
     }
 

@@ -6,6 +6,8 @@ param(
     [switch]$DeferPossiblyConcurrentStale,
     [switch]$ReuseUnchangedChecks,
     [switch]$RequiredOnly,
+    [ValidateSet('All', 'Backend', 'Frontend')]
+    [string]$Area = 'All',
     [string]$BaseRef = 'HEAD',
     [string[]]$ChangedPath,
     [ValidateRange(1, 8)]
@@ -181,6 +183,15 @@ if ($AffectedOnly) {
             Add-IndexToolWithDependents 'Build-LlmWikiSymbolIndex.ps1'
             Add-IndexTool 'Build-LlmWikiSensitiveDataIndex.ps1'
         }
+        if (@($normalizedChangedPaths | Where-Object { $_ -in @(
+            'docs/architecture/module-dependencies.json',
+            'docs/architecture/backend-modules.json',
+            'docs/backend/BACKEND_MODULE_OWNERSHIP.md'
+        ) }).Count -gt 0) {
+            Add-IndexToolWithDependents 'Build-LlmWikiCatalog.ps1'
+            Add-IndexTool 'Build-LlmWikiModulePages.ps1'
+            Add-IndexTool 'Build-LlmWikiArchitectureHealthIndex.ps1'
+        }
         if (@($productionChangedPaths | Where-Object {
             $_ -match 'Domain/|Persistence/|Migrations?/|DbContext|Configuration\.cs$'
         }).Count -gt 0) { Add-IndexTool 'Build-LlmWikiDomainDataIndex.ps1' }
@@ -204,6 +215,18 @@ if ($AffectedOnly) {
 }
 
 $selectedToolNames = if ($AffectedOnly) { @($selectedTools | Sort-Object) } else { @($allIndexTools | Sort-Object) }
+if ($Area -eq 'Backend') {
+    $selectedToolNames = @($selectedToolNames | Where-Object { $_ -notin @(
+        'Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiFrontendContractIndex.ps1',
+        'Build-LlmWikiQualityIndex.ps1', 'Build-LlmWikiArchitectureHealthIndex.ps1'
+    ) })
+    Write-Host "LLM Wiki verification area: Backend ($($selectedToolNames.Count) generator(s)); frontend freshness is intentionally not evaluated."
+} elseif ($Area -eq 'Frontend') {
+    $selectedToolNames = @($selectedToolNames | Where-Object { $_ -in @(
+        'Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiFrontendContractIndex.ps1', 'Build-LlmWikiQualityIndex.ps1'
+    ) })
+    Write-Host "LLM Wiki verification area: Frontend ($($selectedToolNames.Count) generator(s)); backend freshness is intentionally not evaluated."
+}
 if ($ReuseUnchangedChecks -and $selectedToolNames.Count -gt 0) {
     $pipelineCacheState = Get-PipelineCacheState $selectedToolNames
     if ($Check -and (Test-Path -LiteralPath $pipelineCacheState.receiptPath -PathType Leaf)) {
@@ -356,7 +379,7 @@ try {
     }
 
     foreach ($stage in $stages) {
-        $tools = @($stage.tools | Where-Object { -not $AffectedOnly -or $selectedTools.Contains($_) })
+        $tools = @($stage.tools | Where-Object { $_ -in $selectedToolNames })
         if ($tools.Count -eq 0) { continue }
         Write-Host "LLM Wiki index stage: $($stage.name) ($($tools.Count) tool(s))"
         for ($offset = 0; $offset -lt $tools.Count; $offset += $MaxConcurrency) {
@@ -407,7 +430,7 @@ if ($ReuseUnchangedChecks -and $selectedToolNames.Count -gt 0) {
 }
 Write-Host "LLM Wiki index pipeline completed in $(if ($Check) { 'check' } else { 'update' }) mode in $([Math]::Round($pipelineStopwatch.Elapsed.TotalSeconds, 2))s."
 if ($AffectedOnly) {
-    $summaryTools = @($selectedTools | Sort-Object)
+    $summaryTools = @($selectedToolNames | Sort-Object)
     $summaryPaths = @($normalizedChangedPaths)
     $summaryLayers = [Collections.Generic.List[string]]::new()
     if (@($summaryPaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/' }).Count -gt 0) { $summaryLayers.Add('Frontend') }

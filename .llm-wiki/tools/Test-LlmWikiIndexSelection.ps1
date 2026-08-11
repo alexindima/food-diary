@@ -48,6 +48,11 @@ foreach ($deferredTool in @('Build-LlmWikiQualityIndex.ps1', 'Build-LlmWikiModul
     Assert-Plan ($requiredProductionPlan -notmatch [regex]::Escape($deferredTool)) "Required-only mode retained analytical generator: $deferredTool"
 }
 
+$moduleManifestPlan = Get-IndexPlan 'docs/architecture/backend-modules.json'
+foreach ($expectedTool in @('Build-LlmWikiCatalog.ps1', 'Build-LlmWikiModulePages.ps1', 'Build-LlmWikiArchitectureHealthIndex.ps1')) {
+    Assert-Plan ($moduleManifestPlan -match [regex]::Escape($expectedTool)) "Backend module manifest omitted generator: $expectedTool"
+}
+
 $contractPlan = Get-IndexPlan '.llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1'
 Assert-Plan ($contractPlan -match 'Build-LlmWikiFrontendContractIndex.ps1' -and $contractPlan -match 'Build-LlmWikiArchitectureHealthIndex.ps1' -and
     $contractPlan -notmatch 'Build-LlmWikiQualityIndex.ps1') 'Frontend contract builder dependency closure is incorrect.'

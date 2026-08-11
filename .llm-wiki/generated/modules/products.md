@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Products
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: FavoriteProducts, Images, OpenFoodFacts, RecentItems, Usda, Users
-- Consumers: none
+- Business-module dependencies: FavoriteProducts, Images, OpenFoodFacts, RecentItems, Usda, Users
+- Abstraction-contract dependencies: Images, OpenFoodFacts, RecentItems, Usda, Users
+- Business-module consumers: none observed
+- Host/adapter consumers: FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -25,9 +29,6 @@ sources:
 - `FoodDiary.Infrastructure/Persistence/Configurations/Products`
 - `FoodDiary.Infrastructure/Persistence/Products`
 - `FoodDiary.Presentation.Api/Features/Products`
-- `FoodDiary.Web.Client/assets/images/stubs/products`
-- `FoodDiary.Web.Client/src/app/features/products`
-- `tests/FoodDiary.Application.Tests/Products`
 
 ## HTTP Surface
 
@@ -50,17 +51,39 @@ Source: `FoodDiary.Presentation.Api/Features/Products/ProductsController.cs`
 - `DELETE /api/v{version:apiVersion}/products/{id:guid}`
 - `POST /api/v{version:apiVersion}/products/{id:guid}/duplicate`
 
+## Boundary Health
+
+- Role: aggregate-owner
+- Physical isolation: folder
+- Architecture guardrails: explicit-boundary-tests
+- Declared owned entities: Product
+- Public contract files: 5
+- Observed external consumer groups: 1
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 5
+- Exported repository-shaped contracts: 3
+- `interface IProductLookupService`
+- `interface IProductOverviewReadService`
+- `interface IProductReadRepository`
+- `interface IProductRepository`
+- `interface IProductWriteRepository`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Products/ProductSearchSuggestionTests.cs`
-- `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.CreateCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.MappingTests.cs`
-- `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs`
-- `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.UpdateCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/ProductSuggestionsControllerTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductSearchSuggestionTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.CreateCommandTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.MappingTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.UpdateCommandTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/ProductSuggestionsControllerTests.cs`
 
 ## Working Rule
 

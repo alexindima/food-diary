@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Gamification
@@ -14,15 +15,16 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Consumptions, Users
-- Consumers: Admin
+- Business-module dependencies: Consumptions, Users
+- Abstraction-contract dependencies: Achievements, Dashboard, Users
+- Business-module consumers: Admin
+- Host/adapter consumers: FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application/Gamification`
 - `FoodDiary.Presentation.Api/Features/Gamification`
-- `FoodDiary.Web.Client/src/app/features/gamification`
-- `tests/FoodDiary.Application.Tests/Gamification`
 
 ## HTTP Surface
 
@@ -32,14 +34,32 @@ Source: `FoodDiary.Presentation.Api/Features/Gamification/GamificationController
 
 - `GET /api/v{version:apiVersion}/gamification`
 
+## Boundary Health
+
+- Role: read-composer
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: not yet enumerated
+- Public contract files: 0
+- Observed external consumer groups: 2
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 0
+- Exported repository-shaped contracts: 0
+- No public declaration was found in the mapped abstraction areas.
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Gamification/AchievementAwardServiceTests.cs`
-- `tests/FoodDiary.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs`
-- `tests/FoodDiary.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs`
-- `tests/FoodDiary.Application.Tests/Gamification/GamificationCalculatorTests.cs`
-- `tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/GamificationHttpMappingsTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Gamification/AchievementAwardServiceTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Gamification/GamificationCalculatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/GamificationHttpMappingsTests.cs`
 
 ## Working Rule
 

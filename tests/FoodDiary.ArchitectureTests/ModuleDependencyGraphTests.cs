@@ -1,10 +1,11 @@
 using System.Text.Json;
-using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
-public sealed partial class ModuleDependencyGraphTests {
+public sealed class ModuleDependencyGraphTests {
     private static readonly JsonSerializerOptions SerializerOptions = new() {
         PropertyNameCaseInsensitive = true,
     };
@@ -63,15 +64,33 @@ public sealed partial class ModuleDependencyGraphTests {
         return modules.ToDictionary(
             static module => module,
             module => SourceScanner.SourceFiles(Path.Combine(applicationRoot, module))
-                .SelectMany(File.ReadLines)
-                .Select(line => ApplicationNamespaceRegex().Match(line))
-                .Where(static match => match.Success)
-                .Select(static match => match.Groups["module"].Value)
+                .SelectMany(ReadReferencedApplicationModules)
                 .Where(dependency => moduleSet.Contains(dependency) && !dependency.Equals(module, StringComparison.Ordinal))
                 .Distinct(StringComparer.Ordinal)
                 .Order(StringComparer.Ordinal)
                 .ToArray(),
             StringComparer.Ordinal);
+    }
+
+    private static IEnumerable<string> ReadReferencedApplicationModules(string path) {
+        CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(File.ReadAllText(path)).GetCompilationUnitRoot();
+        IEnumerable<string?> names = root.Usings
+            .Select(usingDirective => usingDirective.Name?.ToString())
+            .Concat(root.DescendantNodes()
+                .OfType<NameSyntax>()
+                .Select(name => name.ToString()));
+
+        foreach (string name in names.OfType<string>()) {
+            const string prefix = "FoodDiary.Application.";
+            if (!name.StartsWith(prefix, StringComparison.Ordinal) ||
+                name.StartsWith("FoodDiary.Application.Abstractions.", StringComparison.Ordinal)) {
+                continue;
+            }
+
+            string remainder = name[prefix.Length..];
+            int separator = remainder.IndexOf('.', StringComparison.Ordinal);
+            yield return separator < 0 ? remainder : remainder[..separator];
+        }
     }
 
     private static ModuleDependencyManifest LoadManifest() {
@@ -131,12 +150,6 @@ public sealed partial class ModuleDependencyGraphTests {
 
     private static string NormalizeCycle(IEnumerable<string> modules) =>
         string.Join(" <-> ", modules.Order(StringComparer.Ordinal));
-
-    [GeneratedRegex(
-        @"^using FoodDiary\.Application\.(?<module>[A-Za-z0-9_]+)(?:\.|;)",
-        RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture,
-        matchTimeoutMilliseconds: 1_000)]
-    private static partial Regex ApplicationNamespaceRegex();
 
     [ExcludeFromCodeCoverage]
     private sealed record ModuleDependencyManifest(

@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # ContentReports
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Users
-- Consumers: Admin
+- Business-module dependencies: Users
+- Abstraction-contract dependencies: Users
+- Business-module consumers: Admin
+- Host/adapter consumers: FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -24,7 +28,6 @@ sources:
 - `FoodDiary.Infrastructure/Persistence/Configurations/ContentReports`
 - `FoodDiary.Infrastructure/Persistence/ContentReports`
 - `FoodDiary.Presentation.Api/Features/ContentReports`
-- `tests/FoodDiary.Application.Tests/ContentReports`
 
 ## HTTP Surface
 
@@ -34,10 +37,31 @@ Source: `FoodDiary.Presentation.Api/Features/ContentReports/ContentReportsContro
 
 - `POST /api/v{version:apiVersion}/reports`
 
+## Boundary Health
+
+- Role: aggregate-owner
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: not yet enumerated
+- Public contract files: 4
+- Observed external consumer groups: 2
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 4
+- Exported repository-shaped contracts: 4
+- `interface IContentReportReadModelRepository`
+- `interface IContentReportReadRepository`
+- `interface IContentReportRepository`
+- `interface IContentReportWriteRepository`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/ContentReports/ContentReportsFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/ContentReports/ContentReportsValidatorTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/ContentReports/ContentReportsFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/ContentReports/ContentReportsValidatorTests.cs`
 
 ## Working Rule
 

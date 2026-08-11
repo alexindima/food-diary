@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Authentication
@@ -14,45 +15,78 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Email, Notifications, Users
-- Consumers: Admin, Dietologist
+- Business-module dependencies: Email, Notifications, Users
+- Abstraction-contract dependencies: Email, Notifications, Users
+- Business-module consumers: Admin, Dietologist
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Authentication`
 - `FoodDiary.Application/Authentication`
-- `FoodDiary.Infrastructure/Authentication`
 - `FoodDiary.Infrastructure/Persistence/Authentication`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Authentication`
-- `FoodDiary.Integrations/Authentication`
-- `tests/FoodDiary.Application.Tests/Authentication`
-- `tests/FoodDiary.Infrastructure.Tests/Authentication`
 
 ## HTTP Surface
 
 No literal attribute-routed controller was associated with this module.
+## Boundary Health
+
+- Role: aggregate-owner
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: not yet enumerated
+- Public contract files: 17
+- Observed external consumer groups: 7
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 17
+- Exported repository-shaped contracts: 6
+- `interface IAdminSsoService`
+- `interface IAuthenticationTokenService`
+- `interface IEmailSender`
+- `interface IEmailTemplateProvider`
+- `interface IGoogleIdentityUserDirectoryService`
+- `interface IGoogleTokenValidator`
+- `interface IJwtTokenGenerator`
+- `interface IPasswordHasher`
+- `interface IRefreshTokenSessionReadRepository`
+- `interface IRefreshTokenSessionRepository`
+- `interface IRefreshTokenSessionWriteRepository`
+- `interface ITelegramAssertionReplayGuard`
+- `interface ITelegramAuthValidator`
+- `interface ITelegramLoginWidgetValidator`
+- `interface IUserLoginEventReadRepository`
+- `interface IUserLoginEventRepository`
+- `interface IUserLoginEventWriteRepository`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Authentication/AuthenticationAdditionalValidatorTests.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.AdminSso.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.EmailVerification.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ExternalLogin.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Password.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.RegisterLogin.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Telegram.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/AuthenticationUserAccessPolicyTests.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/AuthenticationValidatorsTests.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/BootstrapInitialAdminCommandHandlerTests.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/EmailSenderTests.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/RegisterCommandValidatorTests.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/Services/InitialAdminBootstrapServiceTests.cs`
-- `tests/FoodDiary.Application.Tests/Authentication/UserAgentParserTests.cs`
-- `tests/FoodDiary.Infrastructure.Tests/Authentication/AdminSsoServiceTests.cs`
-- `tests/FoodDiary.Infrastructure.Tests/Authentication/JwtTokenGeneratorTests.cs`
-- `tests/FoodDiary.Infrastructure.Tests/Authentication/WearableOAuthStateServiceTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationAdditionalValidatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.AdminSso.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.EmailVerification.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ExternalLogin.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Password.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.RegisterLogin.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Telegram.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationUserAccessPolicyTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationValidatorsTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/BootstrapInitialAdminCommandHandlerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/EmailSenderTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/RegisterCommandValidatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/Services/InitialAdminBootstrapServiceTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/UserAgentParserTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Authentication/AdminSsoServiceTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Authentication/JwtTokenGeneratorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Authentication/WearableOAuthStateServiceTests.cs`
 
 ## Working Rule
 

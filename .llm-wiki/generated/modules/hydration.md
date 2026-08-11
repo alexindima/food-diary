@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Hydration
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Users
-- Consumers: Dashboard, WeeklyCheckIn
+- Business-module dependencies: Users
+- Abstraction-contract dependencies: Users
+- Business-module consumers: Dashboard, WeeklyCheckIn
+- Host/adapter consumers: FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -23,8 +27,6 @@ sources:
 - `FoodDiary.Application/Hydration`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Hydration`
 - `FoodDiary.Presentation.Api/Features/Hydration`
-- `FoodDiary.Web.Client/src/app/features/hydration`
-- `tests/FoodDiary.Application.Tests/Hydration`
 
 ## HTTP Surface
 
@@ -38,13 +40,35 @@ Source: `FoodDiary.Presentation.Api/Features/Hydration/HydrationEntriesControlle
 - `PUT /api/v{version:apiVersion}/hydrations/{id:guid}`
 - `DELETE /api/v{version:apiVersion}/hydrations/{id:guid}`
 
+## Boundary Health
+
+- Role: aggregate-owner
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: HydrationEntry
+- Public contract files: 5
+- Observed external consumer groups: 3
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 5
+- Exported repository-shaped contracts: 4
+- `interface IHydrationEntryReadModelRepository`
+- `interface IHydrationEntryReadRepository`
+- `interface IHydrationEntryRepository`
+- `interface IHydrationEntryWriteRepository`
+- `interface IHydrationGoalService`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Hydration/HydrationEntryReadModelTests.cs`
-- `tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs`
-- `tests/FoodDiary.Domain.Tests/Domain/HydrationEntryInvariantTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/HydrationHttpMappingsTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Hydration/HydrationEntryReadModelTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/HydrationEntryInvariantTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/HydrationHttpMappingsTests.cs`
 
 ## Working Rule
 

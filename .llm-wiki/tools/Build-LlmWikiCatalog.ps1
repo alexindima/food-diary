@@ -251,6 +251,7 @@ $catalog = [ordered]@{
         'Directory.Packages.props'
         'FoodDiary.Web.Client/angular.json'
         'docs/architecture/module-dependencies.json'
+        'docs/architecture/backend-modules.json'
         '**/*.csproj'
         '**/*Controller.cs'
         '**/AGENTS.md'
@@ -262,6 +263,7 @@ $catalog = [ordered]@{
         frontendProjects = $frontendProjects.Count
         applicationModules = $applicationModules.Count
         extractedApplicationModules = $extractedApplicationModules.Count
+        backendBusinessModules = $applicationModules.Count + $extractedApplicationModules.Count
         controllers = $controllers.Count
         endpoints = @($controllers | ForEach-Object { $_.endpoints }).Count
         agentGuides = $agentGuides.Count

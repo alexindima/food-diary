@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Dashboard
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Consumptions, Cycles, DailyAdvices, Exercises, Fasting, Hydration, Statistics, Tdee, Users, WaistEntries, WeightEntries
-- Consumers: Dietologist
+- Business-module dependencies: Consumptions, Cycles, DailyAdvices, Exercises, Fasting, Hydration, Statistics, Tdee, Users, WaistEntries, WeightEntries
+- Abstraction-contract dependencies: Authentication, Users
+- Business-module consumers: Dietologist
+- Host/adapter consumers: FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -23,8 +27,6 @@ sources:
 - `FoodDiary.Application/Dashboard`
 - `FoodDiary.Infrastructure/Persistence/Dashboard`
 - `FoodDiary.Presentation.Api/Features/Dashboard`
-- `FoodDiary.Web.Client/src/app/features/dashboard`
-- `tests/FoodDiary.Application.Tests/Dashboard`
 
 ## HTTP Surface
 
@@ -36,17 +38,38 @@ Source: `FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs`
 - `GET /api/v{version:apiVersion}/dashboard/advice`
 - `POST /api/v{version:apiVersion}/dashboard/test-email`
 
+## Boundary Health
+
+- Role: read-composer
+- Physical isolation: folder
+- Architecture guardrails: explicit-boundary-tests
+- Declared owned entities: not yet enumerated
+- Public contract files: 4
+- Observed external consumer groups: 2
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 4
+- Exported repository-shaped contracts: 0
+- `interface IDashboardBodyReadService`
+- `interface IDashboardMealsReadService`
+- `interface IDashboardReadService`
+- `interface IDashboardStatisticsReadService`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs`
-- `tests/FoodDiary.Application.Tests/Dashboard/DashboardValidatorTests.cs`
-- `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardBodyReadServiceTests.cs`
-- `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardMealsReadServiceTests.cs`
-- `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs`
-- `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardStatisticsReadServiceTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/DashboardControllerTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/DashboardHttpMappingsTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dashboard/DashboardValidatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardBodyReadServiceTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardMealsReadServiceTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardStatisticsReadServiceTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/DashboardControllerTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/DashboardHttpMappingsTests.cs`
 
 ## Working Rule
 

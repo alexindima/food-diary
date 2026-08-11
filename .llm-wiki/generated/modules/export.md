@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Export
@@ -14,15 +15,17 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Consumptions, Cycles, Users
-- Consumers: none
+- Business-module dependencies: Consumptions, Cycles, Users
+- Abstraction-contract dependencies: Meals, Users
+- Business-module consumers: none observed
+- Host/adapter consumers: FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Export`
 - `FoodDiary.Application/Export`
 - `FoodDiary.Presentation.Api/Features/Export`
-- `tests/FoodDiary.Application.Tests/Export`
 
 ## HTTP Surface
 
@@ -33,11 +36,31 @@ Source: `FoodDiary.Presentation.Api/Features/Export/ExportController.cs`
 - `GET /api/v{version:apiVersion}/export/diary`
 - `GET /api/v{version:apiVersion}/export/cycle`
 
+## Boundary Health
+
+- Role: read-composer
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: not yet enumerated
+- Public contract files: 3
+- Observed external consumer groups: 2
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 3
+- Exported repository-shaped contracts: 0
+- `interface IDiaryPdfGenerator`
+- `interface IDiaryPdfReportTextProvider`
+- `interface IExportDiaryReadService`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/Export/ExportValidatorTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/ExportControllerTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Export/ExportValidatorTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/ExportControllerTests.cs`
 
 ## Working Rule
 

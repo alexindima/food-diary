@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # WeeklyGoals
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Consumptions, Notifications, Users
-- Consumers: none
+- Business-module dependencies: Consumptions, Notifications, Users
+- Abstraction-contract dependencies: Notifications
+- Business-module consumers: none observed
+- Host/adapter consumers: FoodDiary.JobManager, FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -25,8 +29,6 @@ sources:
 - `FoodDiary.Infrastructure/Persistence/Configurations/WeeklyGoals`
 - `FoodDiary.Infrastructure/Persistence/WeeklyGoals`
 - `FoodDiary.Presentation.Api/Features/WeeklyGoals`
-- `tests/FoodDiary.Application.Tests/WeeklyGoals`
-- `tests/FoodDiary.Domain.Tests/WeeklyGoals`
 
 ## HTTP Surface
 
@@ -37,12 +39,30 @@ Source: `FoodDiary.Presentation.Api/Features/WeeklyGoals/WeeklyGoalsController.c
 - `GET /api/v{version:apiVersion}/weekly-goals`
 - `PUT /api/v{version:apiVersion}/weekly-goals`
 
+## Boundary Health
+
+- Role: aggregate-owner
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: not yet enumerated
+- Public contract files: 1
+- Observed external consumer groups: 2
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 1
+- Exported repository-shaped contracts: 1
+- `interface IWeeklyGoalRepository`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs`
-- `tests/FoodDiary.Domain.Tests/WeeklyGoals/WeeklyGoalTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/WeeklyGoalsControllerTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/WeeklyGoals/WeeklyGoalTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/WeeklyGoalsControllerTests.cs`
 
 ## Working Rule
 

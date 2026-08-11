@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Dietologist
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Authentication, Dashboard, Notifications, Users
-- Consumers: none
+- Business-module dependencies: Authentication, Dashboard, Notifications, Users
+- Abstraction-contract dependencies: Audit, Authentication, Email, Notifications, Users
+- Business-module consumers: none observed
+- Host/adapter consumers: FoodDiary.JobManager, FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -25,8 +29,6 @@ sources:
 - `FoodDiary.Infrastructure/Persistence/Configurations/Dietologist`
 - `FoodDiary.Infrastructure/Persistence/Dietologist`
 - `FoodDiary.Presentation.Api/Features/Dietologist`
-- `FoodDiary.Web.Client/src/app/features/dietologist`
-- `tests/FoodDiary.Application.Tests/Dietologist`
 
 ## HTTP Surface
 
@@ -108,35 +110,74 @@ Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsControll
 - `GET /api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments`
 - `POST /api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments`
 
+## Boundary Health
+
+- Role: aggregate-owner
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: not yet enumerated
+- Public contract files: 22
+- Observed external consumer groups: 2
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 22
+- Exported repository-shaped contracts: 20
+- `interface IAttentionSignalMetricsReadService`
+- `interface IClientTaskReadModelRepository`
+- `interface IClientTaskRepository`
+- `interface IClientTaskWriteRepository`
+- `interface IDietologistEmailSender`
+- `interface IDietologistInvitationReadModelRepository`
+- `interface IDietologistInvitationReadRepository`
+- `interface IDietologistInvitationRepository`
+- `interface IDietologistInvitationWriteRepository`
+- `interface IRecommendationBulkDispatchLookupRepository`
+- `interface IRecommendationBulkDispatchRepository`
+- `interface IRecommendationBulkDispatchWriteRepository`
+- `interface IRecommendationCommentReadModelRepository`
+- `interface IRecommendationCommentRepository`
+- `interface IRecommendationCommentWriteRepository`
+- `interface IRecommendationReadModelRepository`
+- `interface IRecommendationReadRepository`
+- `interface IRecommendationRepository`
+- `interface IRecommendationTemplateReadModelRepository`
+- `interface IRecommendationTemplateRepository`
+- `interface IRecommendationTemplateWriteRepository`
+- `interface IRecommendationWriteRepository`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Dietologist/AttentionSignalTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/BulkCreateRecommendationsHandlerTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/ClientTaskDueReminderProcessorTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/ClientTaskHandlerTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/DietologistAccessPolicyTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.AcceptInvitationCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.DeclineInvitationCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.InviteCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.MappingTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.RecommendationCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.RelationshipCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/DietologistValidatorTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs`
-- `tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs`
-- `tests/FoodDiary.Domain.Tests/Domain/DietologistInvitationInvariantTests.cs`
-- `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/DietologistPersistenceIntegrationTests.cs`
-- `tests/FoodDiary.Infrastructure.Tests/Services/DietologistEmailSenderTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/DietologistClientsControllerTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/DietologistControllerTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/DietologistHttpMappingsTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/DietologistInvitationsControllerTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/DietologistNewEndpointsCoverageTests.cs`
-- `tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationCurrentUserFlowTests.cs`
-- `tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationNotificationIntegrationTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/AttentionSignalTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/BulkCreateRecommendationsHandlerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/ClientTaskDueReminderProcessorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/ClientTaskHandlerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistAccessPolicyTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.AcceptInvitationCommandTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.DeclineInvitationCommandTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.InviteCommandTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.MappingTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.RecommendationCommandTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.RelationshipCommandTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistValidatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/DietologistInvitationInvariantTests.cs`
+- [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/DietologistPersistenceIntegrationTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/DietologistEmailSenderTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/DietologistClientsControllerTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/DietologistControllerTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/DietologistHttpMappingsTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/DietologistInvitationsControllerTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/DietologistNewEndpointsCoverageTests.cs`
+- [integration] `tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationCurrentUserFlowTests.cs`
+- [integration] `tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationNotificationIntegrationTests.cs`
 
 ## Working Rule
 

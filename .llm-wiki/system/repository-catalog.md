@@ -8,6 +8,7 @@ sources:
   - Directory.Packages.props
   - FoodDiary.Web.Client/angular.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Repository Catalog
@@ -21,11 +22,15 @@ It contains:
 - .NET projects, target frameworks, project references, and package references;
 - the explicit list of test projects;
 - Angular workspace projects and build targets;
-- application modules and their declared dependencies;
+- 39 folder application modules, 2 extracted application modules, and their declared dependencies;
 - controllers and literal attribute-routed HTTP endpoints;
 - repository instruction guides and long-form documentation pages.
 
 ## Limitations
+
+The catalog inventory does not treat an empty edge set as proof of isolation.
+Module pages combine it with the boundary manifest and distinguish folder API,
+abstraction-contract, project-reference and composition evidence.
 
 The HTTP inventory extracts literal ASP.NET Core `[Route]` and `[Http*]`
 attributes. It is a navigation aid, not an API contract. Runtime conventions,

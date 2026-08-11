@@ -176,14 +176,18 @@
                         "pageSha256":  "fbde1e3b8cec7d59d3bd96a9e14b252a9c9d6b5c88ee02ac0035f573bb091c0e",
                         "sources":  [
                                         {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "18a9d69f3391711dc98f0f7cf3f855675b0c00d4ae6a0eff4dc1ec1f754a525d"
+                                            "path":  ".llm-wiki/generated/repository-catalog.json",
+                                            "sha256":  "265d6afcbefd732c11bf0d98af9aeb5554073bbc8b93f8c4cf511aef51b06ca4"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
+                                            "sha256":  "7c2be5ecaa7e872476826cf1d4917af05e90bc8b4c516ec09b39f1472406f369"
                                         }
                                     ],
-                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
+                        "reason":  "Reviewed catalog schema extension and verify Area forwarding: query discovery remains backward compatible, task dispatch semantics are unchanged, and backend/frontend area selection is explicitly diagnostic only.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
-                        "reviewedAtUtc":  "2026-08-11T00:21:43.8123538Z"
+                        "gitHead":  "8f671ba7a65724908d3ab5328e8dda53ce8af38a",
+                        "reviewedAtUtc":  "2026-08-11T22:00:31.2998303Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -790,13 +794,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "76b1031ee2eef20f0de0722193d34742be5df744f48b9046057d38dcfab134cf"
+                                            "sha256":  "6a719742fc5e0d8cd630c1a2e2c90bafd78b60581d8823607a31c2e52e99e647"
                                         }
                                     ],
-                        "reason":  "Reviewed read-only execution, explicit-scope isolation, focused consumer discovery, and affected verification behavior; no documented task-dispatch or test-plan contract is invalidated.",
+                        "reason":  "Reviewed catalog schema extension and verify Area forwarding: query discovery remains backward compatible, task dispatch semantics are unchanged, and backend/frontend area selection is explicitly diagnostic only.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8ef79184a7834373670c50cf763115aae0ce4346",
-                        "reviewedAtUtc":  "2026-08-11T10:41:31.3980772Z"
+                        "gitHead":  "8f671ba7a65724908d3ab5328e8dda53ce8af38a",
+                        "reviewedAtUtc":  "2026-08-11T22:00:31.6743920Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",

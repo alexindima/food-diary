@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Images
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: none
-- Consumers: Consumptions, Products, Recipes, Users
+- Business-module dependencies: none observed
+- Abstraction-contract dependencies: none observed
+- Business-module consumers: Consumptions, Products, Recipes, Users
+- Host/adapter consumers: FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -24,8 +28,6 @@ sources:
 - `FoodDiary.Infrastructure/Persistence/Configurations/Images`
 - `FoodDiary.Infrastructure/Persistence/Images`
 - `FoodDiary.Presentation.Api/Features/Images`
-- `FoodDiary.Web.Client/assets/images`
-- `tests/FoodDiary.Application.Tests/Images`
 
 ## HTTP Surface
 
@@ -36,9 +38,34 @@ Source: `FoodDiary.Presentation.Api/Features/Images/ImagesController.cs`
 - `POST /api/v{version:apiVersion}/images/upload-url`
 - `DELETE /api/v{version:apiVersion}/images/{assetId:guid}`
 
+## Boundary Health
+
+- Role: aggregate-owner
+- Physical isolation: folder
+- Architecture guardrails: explicit-boundary-tests
+- Declared owned entities: ImageAsset, ImageObjectDeletionOutboxMessage
+- Public contract files: 8
+- Observed external consumer groups: 7
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 8
+- Exported repository-shaped contracts: 3
+- `interface IImageAssetAccessService`
+- `interface IImageAssetCleanupService`
+- `interface IImageAssetReadRepository`
+- `interface IImageAssetRepository`
+- `interface IImageAssetWriteRepository`
+- `interface IImageObjectDeletionOutbox`
+- `interface IImageObjectDeletionOutboxProcessor`
+- `interface IImageStorageService`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Images/ImagesFeatureTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Images/ImagesFeatureTests.cs`
 
 ## Working Rule
 

@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Wearables
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Users
-- Consumers: none
+- Business-module dependencies: Users
+- Abstraction-contract dependencies: Users
+- Business-module consumers: none observed
+- Host/adapter consumers: FoodDiary.Integrations, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -24,10 +28,7 @@ sources:
 - `FoodDiary.Domain/Entities/Wearables`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Wearables`
 - `FoodDiary.Infrastructure/Persistence/Wearables`
-- `FoodDiary.Integrations/Wearables`
 - `FoodDiary.Presentation.Api/Features/Wearables`
-- `FoodDiary.Web.Client/src/app/features/wearables`
-- `tests/FoodDiary.Application.Tests/Wearables`
 
 ## HTTP Surface
 
@@ -42,10 +43,37 @@ Source: `FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs`
 - `POST /api/v{version:apiVersion}/wearables/{provider}/sync`
 - `GET /api/v{version:apiVersion}/wearables/daily-summary`
 
+## Boundary Health
+
+- Role: aggregate-owner
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: not yet enumerated
+- Public contract files: 10
+- Observed external consumer groups: 3
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 10
+- Exported repository-shaped contracts: 7
+- `interface IWearableClient`
+- `interface IWearableConnectionReadRepository`
+- `interface IWearableConnectionRepository`
+- `interface IWearableConnectionWriteRepository`
+- `interface IWearableOAuthStateService`
+- `interface IWearableSyncReadModelRepository`
+- `interface IWearableSyncReadRepository`
+- `interface IWearableSyncRepository`
+- `interface IWearableSyncWriteRepository`
+- `interface IWearableTokenProtector`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/WearablesControllerTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/WearablesControllerTests.cs`
 
 ## Working Rule
 

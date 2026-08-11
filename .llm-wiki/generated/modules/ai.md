@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Ai
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Users
-- Consumers: Admin
+- Business-module dependencies: Users
+- Abstraction-contract dependencies: Admin, Images, Users
+- Business-module consumers: Admin
+- Host/adapter consumers: FoodDiary.Integrations, FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -25,8 +29,6 @@ sources:
 - `FoodDiary.Infrastructure/Persistence/Ai`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Ai`
 - `FoodDiary.Presentation.Api/Features/Ai`
-- `FoodDiary.Web.Client/src/app/features/meals/lib/ai`
-- `tests/FoodDiary.Application.Tests/Ai`
 
 ## HTTP Surface
 
@@ -44,18 +46,45 @@ Source: `FoodDiary.Presentation.Api/Features/Ai/AiUsageController.cs`
 
 - `GET /api/v{version:apiVersion}/ai/usage/me`
 
+## Boundary Health
+
+- Role: orchestrator
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: not yet enumerated
+- Public contract files: 10
+- Observed external consumer groups: 3
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 10
+- Exported repository-shaped contracts: 7
+- `interface IAiPromptProvider`
+- `interface IAiPromptTemplateReadModelRepository`
+- `interface IAiPromptTemplateReadRepository`
+- `interface IAiPromptTemplateRepository`
+- `interface IAiPromptTemplateWriteRepository`
+- `interface IAiUsageReadRepository`
+- `interface IAiUsageRepository`
+- `interface IAiUsageWriteRepository`
+- `interface IOpenAiFoodClient`
+- `interface IOpenAiFoodService`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs`
-- `tests/FoodDiary.Application.Tests/Ai/OpenAiFoodServiceTests.cs`
-- `tests/FoodDiary.Application.Tests/Ai/ParseFoodTextValidatorTests.cs`
-- `tests/FoodDiary.Application.Tests/Users/AiConsentTests.cs`
-- `tests/FoodDiary.Domain.Tests/Domain/AiPromptTemplateInvariantTests.cs`
-- `tests/FoodDiary.Domain.Tests/Domain/AiUsageInvariantTests.cs`
-- `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiUsageRepositoryIntegrationTests.cs`
-- `tests/FoodDiary.Infrastructure.Tests/Services/AiPromptProviderTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/AiFoodControllerTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/AiHttpMappingsTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Ai/OpenAiFoodServiceTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Ai/ParseFoodTextValidatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/AiConsentTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/AiPromptTemplateInvariantTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/AiUsageInvariantTests.cs`
+- [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiUsageRepositoryIntegrationTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/AiPromptProviderTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/AiFoodControllerTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/AiHttpMappingsTests.cs`
 
 ## Working Rule
 

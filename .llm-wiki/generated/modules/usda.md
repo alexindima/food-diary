@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Usda
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Consumptions, Users
-- Consumers: Products
+- Business-module dependencies: Consumptions, Users
+- Abstraction-contract dependencies: Meals, Users
+- Business-module consumers: Products
+- Host/adapter consumers: FoodDiary.Integrations, FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -25,8 +29,6 @@ sources:
 - `FoodDiary.Infrastructure/Persistence/Configurations/Usda`
 - `FoodDiary.Infrastructure/Persistence/Usda`
 - `FoodDiary.Presentation.Api/Features/Usda`
-- `FoodDiary.Web.Client/src/app/features/usda`
-- `tests/FoodDiary.Application.Tests/Usda`
 
 ## HTTP Surface
 
@@ -40,14 +42,39 @@ Source: `FoodDiary.Presentation.Api/Features/Usda/UsdaController.cs`
 - `DELETE /api/v{version:apiVersion}/usda/products/{productId:guid}/link`
 - `GET /api/v{version:apiVersion}/usda/daily-micronutrients`
 
+## Boundary Health
+
+- Role: adapter
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: not yet enumerated
+- Public contract files: 8
+- Observed external consumer groups: 3
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 8
+- Exported repository-shaped contracts: 6
+- `interface IUsdaDailyMicronutrientReadService`
+- `interface IUsdaFoodReadModelRepository`
+- `interface IUsdaFoodReadRepository`
+- `interface IUsdaFoodRepository`
+- `interface IUsdaFoodSearchService`
+- `interface IUsdaProductLinkReadRepository`
+- `interface IUsdaProductLinkRepository`
+- `interface IUsdaProductLinkWriteRepository`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Usda/UsdaFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/Usda/UsdaQueryHandlerTests.cs`
-- `tests/FoodDiary.Application.Tests/Usda/UsdaValidatorTests.cs`
-- `tests/FoodDiary.Infrastructure.Tests/Persistence/UsdaProductLinkRepositoryTests.cs`
-- `tests/FoodDiary.Infrastructure.Tests/Services/UsdaFoodSearchServiceTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/UsdaHttpMappingsTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Usda/UsdaFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Usda/UsdaQueryHandlerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Usda/UsdaValidatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/UsdaProductLinkRepositoryTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/UsdaFoodSearchServiceTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsdaHttpMappingsTests.cs`
 
 ## Working Rule
 

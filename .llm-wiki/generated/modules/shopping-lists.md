@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # ShoppingLists
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Users
-- Consumers: MealPlans
+- Business-module dependencies: Users
+- Abstraction-contract dependencies: Products, Users
+- Business-module consumers: MealPlans
+- Host/adapter consumers: FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -24,7 +28,6 @@ sources:
 - `FoodDiary.Infrastructure/Persistence/Configurations/ShoppingLists`
 - `FoodDiary.Infrastructure/Persistence/ShoppingLists`
 - `FoodDiary.Presentation.Api/Features/ShoppingLists`
-- `tests/FoodDiary.Application.Tests/ShoppingLists`
 
 ## HTTP Surface
 
@@ -39,17 +42,38 @@ Source: `FoodDiary.Presentation.Api/Features/ShoppingLists/ShoppingListsControll
 - `PATCH /api/v{version:apiVersion}/shopping-lists/{id:guid}`
 - `DELETE /api/v{version:apiVersion}/shopping-lists/{id:guid}`
 
+## Boundary Health
+
+- Role: aggregate-owner
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: not yet enumerated
+- Public contract files: 4
+- Observed external consumer groups: 2
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 4
+- Exported repository-shaped contracts: 4
+- `interface IShoppingListReadModelRepository`
+- `interface IShoppingListReadRepository`
+- `interface IShoppingListRepository`
+- `interface IShoppingListWriteRepository`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListCreationServiceTests.cs`
-- `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.CreateCommand.cs`
-- `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.DeleteCommand.cs`
-- `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.ItemBuilder.cs`
-- `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.Mapping.cs`
-- `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.Queries.cs`
-- `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.UpdateCommand.cs`
-- `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsValidatorTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListCreationServiceTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.CreateCommand.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.DeleteCommand.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.ItemBuilder.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.Mapping.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.Queries.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.UpdateCommand.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsValidatorTests.cs`
 
 ## Working Rule
 

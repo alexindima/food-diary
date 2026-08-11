@@ -98,6 +98,9 @@ if ($facadeText -notmatch 'Repair verify \[0/3\]' -or $facadeText -notmatch 'Tes
 if ($facadeText -notmatch 'Wiki verify mode: affected/resumable' -or $verifyBody -notmatch 'AffectedOnly = \$true') {
     throw 'Ordinary verify is not an affected/resumable gate by default.'
 }
+if ($facadeText -notmatch "ValidateSet\('All', 'Backend', 'Frontend'\)" -or $verifyBody -notmatch 'Area = \$Area') {
+    throw 'Wiki verify does not expose independently diagnosable Backend and Frontend areas.'
+}
 if ($facadeText -notmatch 'Invoke-LlmWikiReadOnlyTool\.ps1' -or $facadeText -notmatch 'explicitScopePlanningCommands') {
     throw 'Read-oriented facade commands are not protected from tracked Wiki writes or stale baseline expansion.'
 }

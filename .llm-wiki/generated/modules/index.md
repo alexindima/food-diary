@@ -7,53 +7,55 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Application Modules
 
-This index is generated from the executable application-module graph and
-repository catalog. Regenerate it instead of editing it manually.
+This index unifies 39 folder modules and 2 extracted application modules.
+Business-module edges, abstraction contracts, adapter consumers, and runtime composition
+are reported separately; `none observed` never means proven isolation.
 
-| Module | Dependencies | Consumers | Controllers |
-| --- | ---: | ---: | ---: |
-| [Admin](admin.md) | 7 | 0 | 16 |
-| [Ai](ai.md) | 1 | 1 | 2 |
-| [Authentication](authentication.md) | 3 | 2 | 0 |
-| [Billing](billing.md) | 0 | 0 | 2 |
-| [Consumptions](consumptions.md) | 3 | 7 | 1 |
-| [ContentReports](content-reports.md) | 1 | 1 | 1 |
-| [Cycles](cycles.md) | 1 | 2 | 1 |
-| [DailyAdvices](daily-advices.md) | 1 | 1 | 0 |
-| [Dashboard](dashboard.md) | 11 | 1 | 1 |
-| [Dietologist](dietologist.md) | 4 | 0 | 9 |
-| [Email](email.md) | 0 | 2 | 5 |
-| [Exercises](exercises.md) | 1 | 2 | 1 |
-| [Export](export.md) | 3 | 0 | 1 |
-| [Fasting](fasting.md) | 2 | 1 | 3 |
-| [FavoriteMeals](favorite-meals.md) | 2 | 0 | 1 |
-| [FavoriteProducts](favorite-products.md) | 1 | 1 | 1 |
-| [FavoriteRecipes](favorite-recipes.md) | 1 | 1 | 1 |
-| [Gamification](gamification.md) | 2 | 1 | 1 |
-| [Hydration](hydration.md) | 1 | 2 | 1 |
-| [Images](images.md) | 0 | 4 | 1 |
-| [Lessons](lessons.md) | 1 | 1 | 1 |
-| [Marketing](marketing.md) | 0 | 0 | 1 |
-| [MealPlans](meal-plans.md) | 2 | 0 | 1 |
-| [Notifications](notifications.md) | 1 | 5 | 2 |
-| [Nutrition](nutrition.md) | 0 | 2 | 0 |
-| [OpenFoodFacts](open-food-facts.md) | 0 | 1 | 1 |
-| [Products](products.md) | 6 | 0 | 2 |
-| [RecentItems](recent-items.md) | 0 | 2 | 0 |
-| [RecipeComments](recipe-comments.md) | 2 | 0 | 1 |
-| [RecipeLikes](recipe-likes.md) | 1 | 0 | 1 |
-| [Recipes](recipes.md) | 5 | 0 | 2 |
-| [ShoppingLists](shopping-lists.md) | 1 | 1 | 1 |
-| [Statistics](statistics.md) | 3 | 1 | 1 |
-| [Tdee](tdee.md) | 3 | 1 | 1 |
-| [Usda](usda.md) | 2 | 1 | 1 |
-| [Users](users.md) | 1 | 33 | 6 |
-| [WaistEntries](waist-entries.md) | 1 | 3 | 1 |
-| [Wearables](wearables.md) | 1 | 0 | 1 |
-| [WeeklyCheckIn](weekly-check-in.md) | 5 | 0 | 1 |
-| [WeeklyGoals](weekly-goals.md) | 3 | 0 | 1 |
-| [WeightEntries](weight-entries.md) | 1 | 4 | 1 |
+| Module | Role | Business deps | Contract deps | App consumers | Host consumers | Enforcement |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| [Admin](admin.md) | orchestrator | 7 | 7 | 0 | 2 | graph-only |
+| [Ai](ai.md) | orchestrator | 1 | 3 | 1 | 2 | graph-only |
+| [Authentication](authentication.md) | aggregate-owner | 3 | 3 | 2 | 5 | graph-only |
+| [Billing](billing.md) | aggregate-owner | 0 | 1 | 0 | 5 | assembly-isolated |
+| [Consumptions](consumptions.md) | aggregate-owner | 3 | 7 | 7 | 1 | explicit-boundary-tests |
+| [ContentReports](content-reports.md) | aggregate-owner | 1 | 1 | 1 | 1 | graph-only |
+| [Cycles](cycles.md) | aggregate-owner | 1 | 2 | 2 | 1 | graph-only |
+| [DailyAdvices](daily-advices.md) | aggregate-owner | 1 | 1 | 1 | 1 | graph-only |
+| [Dashboard](dashboard.md) | read-composer | 11 | 2 | 1 | 1 | explicit-boundary-tests |
+| [Dietologist](dietologist.md) | aggregate-owner | 4 | 5 | 0 | 2 | graph-only |
+| [Email](email.md) | aggregate-owner | 0 | 1 | 2 | 2 | graph-only |
+| [Exercises](exercises.md) | aggregate-owner | 1 | 1 | 2 | 1 | graph-only |
+| [Export](export.md) | read-composer | 3 | 2 | 0 | 2 | graph-only |
+| [Fasting](fasting.md) | aggregate-owner | 2 | 2 | 1 | 2 | explicit-boundary-tests |
+| [FavoriteMeals](favorite-meals.md) | aggregate-owner | 2 | 1 | 0 | 1 | graph-only |
+| [FavoriteProducts](favorite-products.md) | aggregate-owner | 1 | 2 | 1 | 1 | graph-only |
+| [FavoriteRecipes](favorite-recipes.md) | aggregate-owner | 1 | 2 | 1 | 1 | graph-only |
+| [Gamification](gamification.md) | read-composer | 2 | 3 | 1 | 1 | graph-only |
+| [Hydration](hydration.md) | aggregate-owner | 1 | 1 | 2 | 1 | graph-only |
+| [Images](images.md) | aggregate-owner | 0 | 0 | 4 | 3 | explicit-boundary-tests |
+| [Lessons](lessons.md) | aggregate-owner | 1 | 2 | 1 | 1 | graph-only |
+| [Marketing](marketing.md) | aggregate-owner | 0 | 1 | 0 | 4 | assembly-isolated |
+| [MealPlans](meal-plans.md) | aggregate-owner | 2 | 1 | 0 | 1 | graph-only |
+| [Notifications](notifications.md) | aggregate-owner | 1 | 1 | 5 | 5 | explicit-boundary-tests |
+| [Nutrition](nutrition.md) | domain-service | 0 | 0 | 2 | 0 | graph-only |
+| [OpenFoodFacts](open-food-facts.md) | adapter | 0 | 0 | 1 | 2 | graph-only |
+| [Products](products.md) | aggregate-owner | 6 | 5 | 0 | 1 | explicit-boundary-tests |
+| [RecentItems](recent-items.md) | aggregate-owner | 0 | 0 | 2 | 0 | graph-only |
+| [RecipeComments](recipe-comments.md) | aggregate-owner | 2 | 3 | 0 | 1 | graph-only |
+| [RecipeLikes](recipe-likes.md) | aggregate-owner | 1 | 2 | 0 | 1 | graph-only |
+| [Recipes](recipes.md) | aggregate-owner | 5 | 4 | 0 | 1 | explicit-boundary-tests |
+| [ShoppingLists](shopping-lists.md) | aggregate-owner | 1 | 2 | 1 | 1 | graph-only |
+| [Statistics](statistics.md) | read-composer | 3 | 2 | 1 | 1 | graph-only |
+| [Tdee](tdee.md) | read-composer | 3 | 2 | 1 | 1 | graph-only |
+| [Usda](usda.md) | adapter | 2 | 2 | 1 | 2 | graph-only |
+| [Users](users.md) | aggregate-owner | 1 | 2 | 33 | 2 | explicit-boundary-tests |
+| [WaistEntries](waist-entries.md) | aggregate-owner | 1 | 1 | 3 | 1 | graph-only |
+| [Wearables](wearables.md) | aggregate-owner | 1 | 1 | 0 | 3 | graph-only |
+| [WeeklyCheckIn](weekly-check-in.md) | read-composer | 5 | 3 | 0 | 1 | graph-only |
+| [WeeklyGoals](weekly-goals.md) | aggregate-owner | 3 | 1 | 0 | 2 | graph-only |
+| [WeightEntries](weight-entries.md) | aggregate-owner | 1 | 1 | 4 | 1 | graph-only |

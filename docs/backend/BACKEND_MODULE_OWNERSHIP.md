@@ -25,7 +25,9 @@ The rules are intentionally evolutionary:
 
 ## Governed ownership map
 
-The canonical Application module graph lives in `docs/architecture/module-dependencies.json`. Architecture tests derive direct `FoodDiary.Application.<Module>` dependencies from source and require an exact manifest match. Every new in-process Module API dependency is therefore an explicit architecture decision; unknown modules, self-edges and unacknowledged strongly connected components fail the build.
+The canonical ownership inventory and cross-layer mappings live in `docs/architecture/backend-modules.json`. It unifies 39 folder modules in `FoodDiary.Application` with the extracted Billing and Marketing assemblies (41 primary backend modules total). The executable folder-module API graph remains in `docs/architecture/module-dependencies.json`; architecture tests derive its direct `FoodDiary.Application.<Module>` dependencies with Roslyn syntax traversal and require an exact manifest match. Every new in-process Module API dependency is therefore an explicit architecture decision; unknown modules, self-edges and unacknowledged strongly connected components fail the build.
+
+Generated Wiki pages must keep business-module dependencies, abstraction-contract dependencies, project/host consumers and runtime composition evidence separate. An empty observed edge set is not proof of isolation; enforceability is declared per module in the ownership manifest.
 
 The Application module graph is now acyclic and `knownCycles` is empty. Consumer-owned profile ports removed FavoriteMeals, Dietologist, Notifications and the Dashboard/health-tracking chain from the original strongly connected component. Architecture tests reject any newly introduced cycle.
 

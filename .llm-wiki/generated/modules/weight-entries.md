@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # WeightEntries
@@ -14,15 +15,18 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Users
-- Consumers: Dashboard, Statistics, Tdee, WeeklyCheckIn
+- Business-module dependencies: Users
+- Abstraction-contract dependencies: Users
+- Business-module consumers: Dashboard, Statistics, Tdee, WeeklyCheckIn
+- Host/adapter consumers: FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/WeightEntries`
 - `FoodDiary.Application/WeightEntries`
+- `FoodDiary.Infrastructure/Persistence/Configurations/BodyMetrics`
 - `FoodDiary.Presentation.Api/Features/WeightEntries`
-- `tests/FoodDiary.Application.Tests/WeightEntries`
 
 ## HTTP Surface
 
@@ -38,10 +42,31 @@ Source: `FoodDiary.Presentation.Api/Features/WeightEntries/WeightEntriesControll
 - `PUT /api/v{version:apiVersion}/weight-entries/{id:guid}`
 - `DELETE /api/v{version:apiVersion}/weight-entries/{id:guid}`
 
+## Boundary Health
+
+- Role: aggregate-owner
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: WeightEntry
+- Public contract files: 4
+- Observed external consumer groups: 5
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 4
+- Exported repository-shaped contracts: 4
+- `interface IWeightEntryReadModelRepository`
+- `interface IWeightEntryReadRepository`
+- `interface IWeightEntryRepository`
+- `interface IWeightEntryWriteRepository`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/WeightEntries/WeightEntriesValidatorTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/WeightEntries/WeightEntriesValidatorTests.cs`
 
 ## Working Rule
 

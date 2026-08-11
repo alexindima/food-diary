@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Recipes
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: FavoriteRecipes, Images, Nutrition, RecentItems, Users
-- Consumers: none
+- Business-module dependencies: FavoriteRecipes, Images, Nutrition, RecentItems, Users
+- Abstraction-contract dependencies: Images, Products, RecentItems, Users
+- Business-module consumers: none observed
+- Host/adapter consumers: FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -25,8 +29,6 @@ sources:
 - `FoodDiary.Infrastructure/Persistence/Configurations/Recipes`
 - `FoodDiary.Infrastructure/Persistence/Recipes`
 - `FoodDiary.Presentation.Api/Features/Recipes`
-- `FoodDiary.Web.Client/src/app/features/recipes`
-- `tests/FoodDiary.Application.Tests/Recipes`
 
 ## HTTP Surface
 
@@ -49,25 +51,49 @@ Source: `FoodDiary.Presentation.Api/Features/Recipes/RecipesController.cs`
 - `DELETE /api/v{version:apiVersion}/recipes/{id:guid}`
 - `POST /api/v{version:apiVersion}/recipes/{id:guid}/duplicate`
 
+## Boundary Health
+
+- Role: aggregate-owner
+- Physical isolation: folder
+- Architecture guardrails: explicit-boundary-tests
+- Declared owned entities: Recipe, RecipeIngredient, RecipeStep
+- Public contract files: 7
+- Observed external consumer groups: 1
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 7
+- Exported repository-shaped contracts: 3
+- `interface IRecipeAccessService`
+- `interface IRecipeLookupService`
+- `interface IRecipeNutritionWriter`
+- `interface IRecipeOverviewReadService`
+- `interface IRecipeReadRepository`
+- `interface IRecipeRepository`
+- `interface IRecipeWriteRepository`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Recipes/CreateRecipeCommandValidatorTests.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/ExploreRecipesQueryValidatorTests.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/RecipeNutritionCalculatorTests.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.CreateCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DeleteCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DuplicateCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.NutritionAndIngredientTests.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.UpdateCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Media.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.NestedIngredients.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.UpdateFlow.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Validation.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.cs`
-- `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandValidatorTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/CreateRecipeCommandValidatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/ExploreRecipesQueryValidatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipeNutritionCalculatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.CreateCommandTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DeleteCommandTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DuplicateCommandTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.NutritionAndIngredientTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.UpdateCommandTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Media.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.NestedIngredients.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.UpdateFlow.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Validation.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandValidatorTests.cs`
 
 ## Working Rule
 

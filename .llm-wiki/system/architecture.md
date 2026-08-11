@@ -6,6 +6,8 @@ sources:
   - docs/ARCHITECTURE.md
   - docs/BACKEND_MODULE_MAP.md
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
+  - tests/FoodDiary.ArchitectureTests/BackendModuleManifestTests.cs
   - tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs
 ---
 
@@ -37,8 +39,13 @@ Infrastructure and Integrations -> Abstractions / Domain
 
 The executable project-reference allowlist is enforced by
 [`ProjectDependencyMatrixTests`](../../tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs).
-The application module graph is stored in
+The folder-module API graph is stored in
 [`module-dependencies.json`](../../docs/architecture/module-dependencies.json).
+The unified inventory, ownership, cross-layer mappings, physical isolation and
+enforceability for all 39 folder modules plus Billing and Marketing live in
+[`backend-modules.json`](../../docs/architecture/backend-modules.json). Generated
+module pages keep business API edges, abstraction contracts and host/composition
+consumers separate and explicitly label analysis limitations.
 
 ## Placement Rule
 

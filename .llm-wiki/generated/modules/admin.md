@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Admin
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Ai, Authentication, ContentReports, Email, Gamification, Lessons, Users
-- Consumers: none
+- Business-module dependencies: Ai, Authentication, ContentReports, Email, Gamification, Lessons, Users
+- Abstraction-contract dependencies: Ai, Audit, Authentication, ContentReports, Email, Lessons, Users
+- Business-module consumers: none observed
+- Host/adapter consumers: FoodDiary.Integrations, FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -25,7 +29,6 @@ sources:
 - `FoodDiary.Infrastructure/Persistence/Admin`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Admin`
 - `FoodDiary.Presentation.Api/Features/Admin`
-- `tests/FoodDiary.Application.Tests/Admin`
 
 ## HTTP Surface
 
@@ -149,25 +152,54 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 - `POST /api/v{version:apiVersion}/auth/admin-sso/start`
 - `POST /api/v{version:apiVersion}/auth/admin-sso/exchange`
 
+## Boundary Health
+
+- Role: orchestrator
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: not yet enumerated
+- Public contract files: 12
+- Observed external consumer groups: 2
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 12
+- Exported repository-shaped contracts: 11
+- `interface IAdminBillingReadRepository`
+- `interface IAdminBillingRepository`
+- `interface IAdminImpersonationSessionReadRepository`
+- `interface IAdminImpersonationSessionRepository`
+- `interface IAdminImpersonationSessionWriteRepository`
+- `interface IAdminMailInboxReader`
+- `interface IAdminUserRoleAuditReadRepository`
+- `interface IAdminUserRoleAuditRepository`
+- `interface IEmailTemplateReadModelRepository`
+- `interface IEmailTemplateReadRepository`
+- `interface IEmailTemplateRepository`
+- `interface IEmailTemplateWriteRepository`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.LessonCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.MappingTests.cs`
-- `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs`
-- `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs`
-- `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/Admin/AdminValidatorTests.cs`
-- `tests/FoodDiary.Application.Tests/Admin/CreateAdminUserCommandHandlerTests.cs`
-- `tests/FoodDiary.Application.Tests/Admin/CreateAdminUserCommandValidatorTests.cs`
-- `tests/FoodDiary.Application.Tests/Admin/GetCollaborationAuditQueryHandlerTests.cs`
-- `tests/FoodDiary.Application.Tests/Admin/UserLoginActivityFeatureTests.cs`
-- `tests/FoodDiary.Domain.Tests/Domain/AdminInvariantTests.cs`
-- `tests/FoodDiary.Infrastructure.Tests/Authentication/AdminSsoServiceTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/AdminAchievementDefinitionsControllerTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/AdminHttpMappingsTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/AdminSsoControllerTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.LessonCommandTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.MappingTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/AdminValidatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/CreateAdminUserCommandHandlerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/CreateAdminUserCommandValidatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/GetCollaborationAuditQueryHandlerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/UserLoginActivityFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/AdminInvariantTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Authentication/AdminSsoServiceTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/AdminAchievementDefinitionsControllerTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/AdminHttpMappingsTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/AdminSsoControllerTests.cs`
 
 ## Working Rule
 

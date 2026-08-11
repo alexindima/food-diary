@@ -1,0 +1,449 @@
+{
+  "schemaVersion": 1,
+  "description": "Canonical backend business-module inventory and cross-layer ownership mappings. Dependency evidence is generated separately and labelled by edge type.",
+  "inventory": {
+    "folderModules": 39,
+    "extractedModules": 2,
+    "totalModules": 41
+  },
+  "analysis": {
+    "compileTime": "Roslyn/syntax and project-reference evidence; unresolved or runtime-only DI edges are reported separately.",
+    "runtime": "Composition consumers come from project references and registration/source evidence; absence is never rendered as isolation.",
+    "limitations": [
+      "Dynamic reflection and provider behavior are not inferred.",
+      "Test discovery is navigation evidence unless an execution receipt is present."
+    ]
+  },
+  "modules": {
+    "Admin": {
+      "role": "orchestrator",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Ai": {
+      "role": "orchestrator",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Authentication": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Billing": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "assembly",
+      "enforcement": "assembly-isolated",
+      "ownedEntities": [
+        "BillingSubscription",
+        "BillingPayment",
+        "BillingWebhookEvent"
+      ],
+      "sourceMappings": {
+        "applicationProjects": [
+          "FoodDiary.Application.Billing"
+        ],
+        "abstractionAreas": [
+          "Billing"
+        ],
+        "domainAreas": [
+          "Billing"
+        ],
+        "persistenceAreas": [
+          "Billing"
+        ],
+        "adapterAreas": [
+          "FoodDiary.Integrations/Billing"
+        ]
+      }
+    },
+    "Consumptions": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "explicit-boundary-tests",
+      "ownedEntities": [
+        "Meal",
+        "MealItem",
+        "MealAiSession",
+        "MealAiItem"
+      ],
+      "sourceMappings": {
+        "abstractionAreas": [
+          "Consumptions",
+          "Meals"
+        ],
+        "domainAreas": [
+          "Meals"
+        ],
+        "persistenceAreas": [
+          "Meals"
+        ]
+      }
+    },
+    "ContentReports": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Cycles": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {
+        "abstractionAreas": [
+          "Cycles"
+        ],
+        "domainAreas": [
+          "Tracking/Cycles"
+        ],
+        "persistenceAreas": [
+          "Cycles"
+        ]
+      }
+    },
+    "DailyAdvices": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Dashboard": {
+      "role": "read-composer",
+      "physicalIsolation": "folder",
+      "enforcement": "explicit-boundary-tests",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Dietologist": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Email": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Exercises": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [
+        "ExerciseEntry"
+      ],
+      "sourceMappings": {}
+    },
+    "Export": {
+      "role": "read-composer",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Fasting": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "explicit-boundary-tests",
+      "ownedEntities": [
+        "FastingPlan",
+        "FastingOccurrence",
+        "FastingCheckIn",
+        "FastingSession",
+        "FastingTelemetryEvent"
+      ],
+      "sourceMappings": {
+        "abstractionAreas": [
+          "Fasting"
+        ],
+        "domainAreas": [
+          "Tracking/Fasting"
+        ],
+        "persistenceAreas": [
+          "Tracking"
+        ]
+      }
+    },
+    "FavoriteMeals": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "FavoriteProducts": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "FavoriteRecipes": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Gamification": {
+      "role": "read-composer",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Hydration": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [
+        "HydrationEntry"
+      ],
+      "sourceMappings": {}
+    },
+    "Images": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "explicit-boundary-tests",
+      "ownedEntities": [
+        "ImageAsset",
+        "ImageObjectDeletionOutboxMessage"
+      ],
+      "sourceMappings": {}
+    },
+    "Lessons": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Marketing": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "assembly",
+      "enforcement": "assembly-isolated",
+      "ownedEntities": [],
+      "sourceMappings": {
+        "applicationProjects": [
+          "FoodDiary.Application.Marketing"
+        ],
+        "abstractionAreas": [
+          "Marketing"
+        ],
+        "domainAreas": [
+          "Marketing"
+        ],
+        "persistenceAreas": [
+          "Marketing"
+        ]
+      }
+    },
+    "MealPlans": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Notifications": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "explicit-boundary-tests",
+      "ownedEntities": [
+        "Notification",
+        "WebPushSubscription",
+        "NotificationWebPushOutboxMessage"
+      ],
+      "sourceMappings": {}
+    },
+    "Nutrition": {
+      "role": "domain-service",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "OpenFoodFacts": {
+      "role": "adapter",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Products": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "explicit-boundary-tests",
+      "ownedEntities": [
+        "Product"
+      ],
+      "sourceMappings": {}
+    },
+    "RecentItems": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [
+        "RecentItem"
+      ],
+      "sourceMappings": {}
+    },
+    "RecipeComments": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {
+        "abstractionAreas": [
+          "RecipeComments"
+        ],
+        "domainAreas": [
+          "RecipeSocial"
+        ],
+        "persistenceAreas": [
+          "RecipeSocial"
+        ]
+      }
+    },
+    "RecipeLikes": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {
+        "abstractionAreas": [
+          "RecipeLikes"
+        ],
+        "domainAreas": [
+          "RecipeSocial"
+        ],
+        "persistenceAreas": [
+          "RecipeSocial"
+        ]
+      }
+    },
+    "Recipes": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "explicit-boundary-tests",
+      "ownedEntities": [
+        "Recipe",
+        "RecipeIngredient",
+        "RecipeStep"
+      ],
+      "sourceMappings": {}
+    },
+    "ShoppingLists": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Statistics": {
+      "role": "read-composer",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Tdee": {
+      "role": "read-composer",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Usda": {
+      "role": "adapter",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "Users": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "explicit-boundary-tests",
+      "ownedEntities": [
+        "User",
+        "Role",
+        "UserRole",
+        "UserRoleAuditEvent"
+      ],
+      "sourceMappings": {}
+    },
+    "WaistEntries": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [
+        "WaistEntry"
+      ],
+      "sourceMappings": {
+        "abstractionAreas": [
+          "WaistEntries"
+        ],
+        "domainAreas": [
+          "BodyMetrics"
+        ],
+        "persistenceAreas": [
+          "BodyMetrics"
+        ]
+      }
+    },
+    "Wearables": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "WeeklyCheckIn": {
+      "role": "read-composer",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "WeeklyGoals": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [],
+      "sourceMappings": {}
+    },
+    "WeightEntries": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "folder",
+      "enforcement": "graph-only",
+      "ownedEntities": [
+        "WeightEntry"
+      ],
+      "sourceMappings": {
+        "abstractionAreas": [
+          "WeightEntries"
+        ],
+        "domainAreas": [
+          "BodyMetrics"
+        ],
+        "persistenceAreas": [
+          "BodyMetrics"
+        ]
+      }
+    }
+  }
+}

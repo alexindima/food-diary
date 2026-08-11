@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # RecentItems
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: none
-- Consumers: Products, Recipes
+- Business-module dependencies: none observed
+- Abstraction-contract dependencies: none observed
+- Business-module consumers: Products, Recipes
+- Host/adapter consumers: none observed
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -27,7 +31,29 @@ sources:
 ## HTTP Surface
 
 No literal attribute-routed controller was associated with this module.
+## Boundary Health
+
+- Role: aggregate-owner
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: RecentItem
+- Public contract files: 5
+- Observed external consumer groups: 2
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 5
+- Exported repository-shaped contracts: 3
+- `interface IRecentItemReadRepository`
+- `interface IRecentItemRepository`
+- `interface IRecentItemUsageReadService`
+- `interface IRecentItemUsageRecorder`
+- `interface IRecentItemWriteRepository`
+
 ## Focused Tests
+
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 No test file with an exact module path/name match was found.
 

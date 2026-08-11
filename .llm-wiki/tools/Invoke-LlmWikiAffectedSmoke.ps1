@@ -38,7 +38,7 @@ foreach ($path in $paths) {
         Add-Group 'dependency-analysis'
     } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiObservedStage|Invoke-LlmWikiReadOnlyTool|Test-LlmWikiReadOnlyGuard|Test-LlmWikiStrictAffected|Test-LlmWikiFormattingReady)|wiki\.ps1|workflows/(adaptive-development|index-pipeline)\.md)') {
         Add-Group 'facade-contract'
-    } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiIndexPipeline|LlmWikiIndexCache|LlmWikiGeneratedArtifacts|Build-LlmWiki(?:Frontend|FrontendContract|BackendContract|Quality|ArchitectureHealth)Index|Test-LlmWikiGeneratedArtifacts|Test-LlmWikiIndexSelection)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiIndexPipeline|LlmWikiIndexCache|LlmWikiGeneratedArtifacts|Build-LlmWikiCatalog|Build-LlmWiki(?:Frontend|FrontendContract|BackendContract|Quality|ArchitectureHealth|ModulePages)Index|Build-LlmWikiModulePages|Test-LlmWikiGeneratedArtifacts|Test-LlmWikiIndexSelection|Test-LlmWikiBackendModuleModel)\.ps1$' -or $path -eq 'docs/architecture/backend-modules.json') {
         Add-Group 'index-selection'
     } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiFrontendTrace|Find-LlmWikiTrace|Test-LlmWikiTraceOutput)\.ps1$') {
         Add-Group 'trace-output'
@@ -112,6 +112,8 @@ foreach ($group in $groups) {
             & (Join-Path $toolsRoot 'Test-LlmWikiIndexSelection.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiGeneratedArtifacts.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiBackendModuleModel.ps1')
             if (-not $?) { exit 1 }
         }
         'ui-continuation' {

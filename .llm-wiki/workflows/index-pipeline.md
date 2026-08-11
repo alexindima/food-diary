@@ -41,6 +41,12 @@ Test plans expose `required`, `recommended`, and `fullRegression` command groups
 
 Ordinary `wiki verify` is always affected and resumable. `wiki verify-full`, pre-push, and CI retain the explicit full-repository gate. Successful stage receipts survive a later timeout, so rerunning `verify` continues from unchanged green stages rather than replaying them.
 
+When concurrent unfinished frontend work makes frontend indexes stale, use
+`wiki verify -Area Backend` to verify only backend generators and receive an
+explicit message that frontend freshness was intentionally not evaluated.
+`-Area Frontend` provides the inverse diagnostic. Area verification is a local
+diagnostic and never replaces the full uncached CI gate.
+
 `wiki lint` is the fast prerequisite for both verification commands and CI. It
 checks page contracts, sources, generated ownership, local links and anchors,
 and high-confidence credential signatures before expensive index work begins.

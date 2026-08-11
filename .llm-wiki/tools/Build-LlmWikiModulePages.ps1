@@ -8,11 +8,15 @@ $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $catalogPath = Join-Path $wikiRoot 'generated/repository-catalog.json'
+$boundaryManifestPath = Join-Path $repositoryRoot 'docs/architecture/backend-modules.json'
 $outputRoot = Join-Path $wikiRoot 'generated/modules'
 $generatorPath = '.llm-wiki/tools/Build-LlmWikiModulePages.ps1'
 
 if (-not (Test-Path -LiteralPath $catalogPath)) {
     throw 'Repository catalog is missing. Run Build-LlmWikiCatalog.ps1 first.'
+}
+if (-not (Test-Path -LiteralPath $boundaryManifestPath)) {
+    throw 'Backend module boundary manifest is missing: docs/architecture/backend-modules.json.'
 }
 
 function ConvertTo-RepositoryPath {
@@ -60,6 +64,7 @@ function New-FrontMatter {
 }
 
 $catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
+$boundaryManifest = Get-Content -LiteralPath $boundaryManifestPath -Raw | ConvertFrom-Json
 $allModules = [System.Collections.Generic.List[object]]::new()
 foreach ($graphModule in $catalog.applicationModules) {
     $allModules.Add([pscustomobject]@{
@@ -67,6 +72,7 @@ foreach ($graphModule in $catalog.applicationModules) {
         dependencies = @($graphModule.dependencies)
         origin = 'module-graph'
         project = $null
+        boundary = $boundaryManifest.modules.($graphModule.name)
     })
 }
 foreach ($extractedModule in $catalog.extractedApplicationModules) {
@@ -76,10 +82,18 @@ foreach ($extractedModule in $catalog.extractedApplicationModules) {
             dependencies = @()
             origin = 'extracted-project'
             project = $extractedModule.project
+            boundary = $boundaryManifest.modules.($extractedModule.name)
         })
     }
 }
 $moduleNames = @($allModules | ForEach-Object { $_.name })
+if ($moduleNames.Count -ne [int]$boundaryManifest.inventory.totalModules) {
+    throw "Backend module inventory mismatch: catalog=$($moduleNames.Count), manifest=$($boundaryManifest.inventory.totalModules)."
+}
+$missingBoundaryModules = @($moduleNames | Where-Object { $null -eq $boundaryManifest.modules.$_ })
+if ($missingBoundaryModules.Count -gt 0) {
+    throw "Backend module boundary metadata is missing for: $($missingBoundaryModules -join ', ')."
+}
 $repositoryFilePaths = @(Get-RepositoryFilePaths)
 $directoryPaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
 foreach ($filePath in $repositoryFilePaths) {
@@ -107,25 +121,111 @@ $allTestFiles = @(
         ForEach-Object { Get-Item -LiteralPath (Join-Path $repositoryRoot $_) -Force }
 )
 
+function Get-BoundaryMappingValues {
+    param([object]$Boundary, [string]$Name, [string[]]$Default)
+
+    $property = $Boundary.sourceMappings.PSObject.Properties[$Name]
+    if ($null -ne $property -and @($property.Value).Count -gt 0) {
+        return @($property.Value)
+    }
+    return @($Default)
+}
+
+function Get-SourceAreaPaths {
+    param([string]$ModuleName, [object]$Boundary)
+
+    $candidatePaths = [Collections.Generic.List[string]]::new()
+    foreach ($projectName in @(Get-BoundaryMappingValues $Boundary 'applicationProjects' @("FoodDiary.Application/$ModuleName"))) {
+        $candidatePaths.Add([string]$projectName)
+    }
+    foreach ($area in @(Get-BoundaryMappingValues $Boundary 'abstractionAreas' @($ModuleName))) {
+        $candidatePaths.Add("FoodDiary.Application.Abstractions/$area")
+    }
+    foreach ($area in @(Get-BoundaryMappingValues $Boundary 'domainAreas' @($ModuleName))) {
+        $candidatePaths.Add("FoodDiary.Domain/Entities/$area")
+    }
+    foreach ($area in @(Get-BoundaryMappingValues $Boundary 'persistenceAreas' @($ModuleName))) {
+        $candidatePaths.Add("FoodDiary.Infrastructure/Persistence/$area")
+        $candidatePaths.Add("FoodDiary.Infrastructure/Persistence/Configurations/$area")
+    }
+    foreach ($area in @(Get-BoundaryMappingValues $Boundary 'adapterAreas' @())) {
+        $candidatePaths.Add([string]$area)
+    }
+    $candidatePaths.Add("FoodDiary.Presentation.Api/Features/$ModuleName")
+
+    return @($candidatePaths | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique | Where-Object {
+        Test-Path -LiteralPath (Join-Path $repositoryRoot $_)
+    })
+}
+
+function Get-ReferencedContractAreas {
+    param([string[]]$SourceAreas, [string]$OwningModule)
+
+    $areas = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    foreach ($sourceArea in $SourceAreas) {
+        $absoluteArea = Join-Path $repositoryRoot $sourceArea
+        if (-not (Test-Path -LiteralPath $absoluteArea -PathType Container)) { continue }
+        foreach ($file in @(Get-ChildItem -LiteralPath $absoluteArea -Recurse -File -Filter '*.cs' -ErrorAction SilentlyContinue)) {
+            $content = Get-Content -LiteralPath $file.FullName -Raw
+            foreach ($match in [regex]::Matches($content, 'FoodDiary\.Application\.Abstractions\.(?<area>[A-Za-z0-9_]+)')) {
+                $area = $match.Groups['area'].Value
+                if ($area -notin @('Common', $OwningModule)) { [void]$areas.Add($area) }
+            }
+        }
+    }
+    return @($areas | Sort-Object { Get-LlmWikiOrdinalSortKey $_ })
+}
+
+function Get-HostConsumers {
+    param([string]$ModuleName, [string[]]$ContractAreas, [string]$ExtractedProject)
+
+    $consumers = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    if (-not [string]::IsNullOrWhiteSpace($ExtractedProject)) {
+        foreach ($project in @($catalog.dotnet.projects)) {
+            if (-not [bool]$project.isTestProject -and @($project.projectReferences) -contains $ExtractedProject) {
+                [void]$consumers.Add([string]$project.name)
+            }
+        }
+    }
+    $searchAreas = @($ModuleName) + @($ContractAreas)
+    foreach ($hostArea in @('FoodDiary.Presentation.Api', 'FoodDiary.JobManager', 'FoodDiary.Initializer', 'FoodDiary.Web.Api', 'FoodDiary.Integrations')) {
+        $hostRoot = Join-Path $repositoryRoot $hostArea
+        if (-not (Test-Path -LiteralPath $hostRoot)) { continue }
+        $matched = $false
+        foreach ($file in @(Get-ChildItem -LiteralPath $hostRoot -Recurse -File -Filter '*.cs' -ErrorAction SilentlyContinue)) {
+            $content = Get-Content -LiteralPath $file.FullName -Raw
+            if (@($searchAreas | Where-Object { $content -match "FoodDiary\.Application(?:\.Abstractions)?\.$([regex]::Escape($_))(?:\.|;)" }).Count -gt 0) {
+                $matched = $true
+                break
+            }
+        }
+        if ($matched) { [void]$consumers.Add($hostArea) }
+    }
+    return @($consumers | Sort-Object { Get-LlmWikiOrdinalSortKey $_ })
+}
+
 $generatedFiles = [ordered]@{}
 $indexLines = New-FrontMatter 'generated.application-modules' @(
     $generatorPath
     '.llm-wiki/generated/repository-catalog.json'
     'docs/architecture/module-dependencies.json'
+    'docs/architecture/backend-modules.json'
 )
 $indexLines.Add('')
 $indexLines.Add('# Application Modules')
 $indexLines.Add('')
-$indexLines.Add('This index is generated from the executable application-module graph and')
-$indexLines.Add('repository catalog. Regenerate it instead of editing it manually.')
+$indexLines.Add('This index unifies 39 folder modules and 2 extracted application modules.')
+$indexLines.Add('Business-module edges, abstraction contracts, adapter consumers, and runtime composition')
+$indexLines.Add('are reported separately; `none observed` never means proven isolation.')
 $indexLines.Add('')
-$indexLines.Add('| Module | Dependencies | Consumers | Controllers |')
-$indexLines.Add('| --- | ---: | ---: | ---: |')
+$indexLines.Add('| Module | Role | Business deps | Contract deps | App consumers | Host consumers | Enforcement |')
+$indexLines.Add('| --- | --- | ---: | ---: | ---: | ---: | --- |')
 
 foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.name })) {
     $moduleName = [string]$module.name
     $slug = ConvertTo-Slug $moduleName
     $relativeOutputPath = ".llm-wiki/generated/modules/$slug.md"
+    $boundary = $module.boundary
     $dependencies = @($module.dependencies | Sort-Object { Get-LlmWikiOrdinalSortKey $_ })
     $consumers = @(
         $allModules |
@@ -141,11 +241,27 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
             } |
             Sort-Object { Get-LlmWikiOrdinalSortKey $_.path }
     )
-    $sourceDirectories = @(
-        $allDirectories |
-            Where-Object { $_.Name -eq $moduleName } |
-            ForEach-Object { ConvertTo-RepositoryPath $_.FullName } |
-            Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique
+    $sourceDirectories = @(Get-SourceAreaPaths $moduleName $boundary)
+    $applicationSourceAreas = @($sourceDirectories | Where-Object { $_ -match '^FoodDiary\.Application(?:\.|/)' })
+    $contractAreas = @(Get-BoundaryMappingValues $boundary 'abstractionAreas' @($moduleName))
+    $contractDependencies = @(Get-ReferencedContractAreas $applicationSourceAreas $moduleName)
+    $hostConsumers = @(Get-HostConsumers $moduleName $contractAreas ([string]$module.project))
+    $publicContractFiles = @(
+        foreach ($area in $contractAreas) {
+            $root = Join-Path $repositoryRoot "FoodDiary.Application.Abstractions/$area"
+            if (Test-Path -LiteralPath $root) {
+                Get-ChildItem -LiteralPath $root -Recurse -File -Filter '*.cs' -ErrorAction SilentlyContinue |
+                    Where-Object { (Get-Content -LiteralPath $_.FullName -Raw) -match '\bpublic\s+(?:interface|record|class|enum)\b' }
+            }
+        }
+    )
+    $publicContractTypes = @(
+        foreach ($contractFile in $publicContractFiles) {
+            $content = Get-Content -LiteralPath $contractFile.FullName -Raw
+            foreach ($match in [regex]::Matches($content, '\bpublic\s+(?<kind>interface|record|class|enum)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)')) {
+                [pscustomobject]@{ kind = $match.Groups['kind'].Value; name = $match.Groups['name'].Value }
+            }
+        }
     )
     $tests = @(
         $allTestFiles |
@@ -161,6 +277,7 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
         $generatorPath
         '.llm-wiki/generated/repository-catalog.json'
         'docs/architecture/module-dependencies.json'
+        'docs/architecture/backend-modules.json'
     )
     $lines.Add('')
     $lines.Add("# $moduleName")
@@ -171,8 +288,11 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
     if (-not [string]::IsNullOrWhiteSpace($module.project)) {
         $lines.Add(('- Extracted project: `{0}`' -f $module.project))
     }
-    $lines.Add("- Dependencies: $(if ($dependencies.Count) { $dependencies -join ', ' } else { 'none' })")
-    $lines.Add("- Consumers: $(if ($consumers.Count) { $consumers -join ', ' } else { 'none' })")
+    $lines.Add("- Business-module dependencies: $(if ($dependencies.Count) { $dependencies -join ', ' } else { 'none observed' })")
+    $lines.Add("- Abstraction-contract dependencies: $(if ($contractDependencies.Count) { $contractDependencies -join ', ' } else { 'none observed' })")
+    $lines.Add("- Business-module consumers: $(if ($consumers.Count) { $consumers -join ', ' } else { 'none observed' })")
+    $lines.Add("- Host/adapter consumers: $(if ($hostConsumers.Count) { $hostConsumers -join ', ' } else { 'none observed' })")
+    $lines.Add('- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.')
     $lines.Add('')
     $lines.Add('## Source Areas')
     $lines.Add('')
@@ -200,13 +320,39 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
             $lines.Add('')
         }
     }
+    $lines.Add('## Boundary Health')
+    $lines.Add('')
+    $lines.Add("- Role: $($boundary.role)")
+    $lines.Add("- Physical isolation: $($boundary.physicalIsolation)")
+    $lines.Add("- Architecture guardrails: $($boundary.enforcement)")
+    $lines.Add("- Declared owned entities: $(if (@($boundary.ownedEntities).Count) { @($boundary.ownedEntities) -join ', ' } else { 'not yet enumerated' })")
+    $lines.Add("- Public contract files: $($publicContractFiles.Count)")
+    $lines.Add("- Observed external consumer groups: $($consumers.Count + $hostConsumers.Count)")
+    $lines.Add("- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page")
+    $lines.Add('')
+    $lines.Add('## Public Surface')
+    $lines.Add('')
+    $lines.Add("- Public contract types: $($publicContractTypes.Count)")
+    $lines.Add("- Exported repository-shaped contracts: $(@($publicContractTypes | Where-Object name -match 'Repository').Count)")
+    if ($publicContractTypes.Count -eq 0) {
+        $lines.Add('- No public declaration was found in the mapped abstraction areas.')
+    } else {
+        foreach ($contractType in @($publicContractTypes | Sort-Object kind, name | Select-Object -First 30)) {
+            $lines.Add(('- `{0} {1}`' -f $contractType.kind, $contractType.name))
+        }
+        if ($publicContractTypes.Count -gt 30) { $lines.Add("- ... $($publicContractTypes.Count - 30) more type(s)") }
+    }
+    $lines.Add('')
     $lines.Add('## Focused Tests')
+    $lines.Add('')
+    $lines.Add('Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.')
     $lines.Add('')
     if ($tests.Count -eq 0) {
         $lines.Add('No test file with an exact module path/name match was found.')
     } else {
         foreach ($test in $tests) {
-            $lines.Add(('- `{0}`' -f $test))
+            $testKind = if ($test -match 'ArchitectureTests') { 'architecture-boundary' } elseif ($test -match 'IntegrationTests') { 'integration' } elseif ($test -match 'Presentation') { 'presentation' } else { 'behavioral-or-text-match' }
+            $lines.Add(('- [{0}] `{1}`' -f $testKind, $test))
         }
     }
     $lines.Add('')
@@ -217,7 +363,7 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
     $lines.Add('changing the module.')
 
     $generatedFiles[$relativeOutputPath] = ($lines -join [Environment]::NewLine) + [Environment]::NewLine
-    $indexLines.Add("| [$moduleName]($slug.md) | $($dependencies.Count) | $($consumers.Count) | $($controllers.Count) |")
+    $indexLines.Add("| [$moduleName]($slug.md) | $($boundary.role) | $($dependencies.Count) | $($contractDependencies.Count) | $($consumers.Count) | $($hostConsumers.Count) | $($boundary.enforcement) |")
 }
 
 $indexRelativePath = '.llm-wiki/generated/modules/index.md'

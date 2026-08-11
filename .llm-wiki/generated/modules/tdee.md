@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Tdee
@@ -14,14 +15,16 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Exercises, Users, WeightEntries
-- Consumers: Dashboard
+- Business-module dependencies: Exercises, Users, WeightEntries
+- Abstraction-contract dependencies: Dashboard, Users
+- Business-module consumers: Dashboard
+- Host/adapter consumers: FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application/Tdee`
 - `FoodDiary.Presentation.Api/Features/Tdee`
-- `tests/FoodDiary.Application.Tests/Tdee`
 
 ## HTTP Surface
 
@@ -31,13 +34,31 @@ Source: `FoodDiary.Presentation.Api/Features/Tdee/TdeeController.cs`
 
 - `GET /api/v{version:apiVersion}/tdee`
 
+## Boundary Health
+
+- Role: read-composer
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: not yet enumerated
+- Public contract files: 0
+- Observed external consumer groups: 2
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 0
+- Exported repository-shaped contracts: 0
+- No public declaration was found in the mapped abstraction areas.
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Tdee/TdeeCalculatorTests.cs`
-- `tests/FoodDiary.Application.Tests/Tdee/TdeeFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/Tdee/TdeeValidatorTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/TdeeControllerTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/TdeeHttpMappingsTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Tdee/TdeeCalculatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Tdee/TdeeFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Tdee/TdeeValidatorTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/TdeeControllerTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/TdeeHttpMappingsTests.cs`
 
 ## Working Rule
 

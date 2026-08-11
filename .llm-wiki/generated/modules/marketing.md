@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Marketing
@@ -15,16 +16,18 @@ sources:
 
 - Origin: extracted-project
 - Extracted project: `FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj`
-- Dependencies: none
-- Consumers: none
+- Business-module dependencies: none observed
+- Abstraction-contract dependencies: Billing
+- Business-module consumers: none observed
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Marketing`
+- `FoodDiary.Application.Marketing`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Marketing`
 - `FoodDiary.Presentation.Api/Features/Marketing`
-- `FoodDiary.Web.Client/src/app/shared/marketing`
-- `tests/FoodDiary.Application.Tests/Marketing`
 
 ## HTTP Surface
 
@@ -34,16 +37,36 @@ Source: `FoodDiary.Presentation.Api/Features/Marketing/MarketingAttributionContr
 
 - `POST /api/v{version:apiVersion}/marketing/attribution-events`
 
+## Boundary Health
+
+- Role: aggregate-owner
+- Physical isolation: assembly
+- Architecture guardrails: assembly-isolated
+- Declared owned entities: not yet enumerated
+- Public contract files: 3
+- Observed external consumer groups: 4
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 3
+- Exported repository-shaped contracts: 3
+- `interface IMarketingAttributionEventReadRepository`
+- `interface IMarketingAttributionEventRepository`
+- `interface IMarketingAttributionEventWriteRepository`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Marketing/MarketingConversionRecorderTests.cs`
-- `tests/FoodDiary.Application.Tests/Marketing/MarketingDependencyInjectionTests.cs`
-- `tests/FoodDiary.ArchitectureTests/MarketingModuleExtractionTests.cs`
-- `tests/FoodDiary.Domain.Tests/Domain/MarketingAttributionEventInvariantTests.cs`
-- `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MarketingAttributionEventRepositoryIntegrationTests.cs`
-- `tests/FoodDiary.JobManager.Tests/MarketingAttributionCleanupJobTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/MarketingAttributionTests.cs`
-- `tests/FoodDiary.Web.Api.IntegrationTests/MarketingAttributionIntegrationTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Marketing/MarketingConversionRecorderTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Marketing/MarketingDependencyInjectionTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/MarketingModuleExtractionTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/MarketingAttributionEventInvariantTests.cs`
+- [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MarketingAttributionEventRepositoryIntegrationTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.JobManager.Tests/MarketingAttributionCleanupJobTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/MarketingAttributionTests.cs`
+- [integration] `tests/FoodDiary.Web.Api.IntegrationTests/MarketingAttributionIntegrationTests.cs`
 
 ## Working Rule
 

@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # MealPlans
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: ShoppingLists, Users
-- Consumers: none
+- Business-module dependencies: ShoppingLists, Users
+- Abstraction-contract dependencies: Users
+- Business-module consumers: none observed
+- Host/adapter consumers: FoodDiary.Presentation.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -25,7 +29,6 @@ sources:
 - `FoodDiary.Infrastructure/Persistence/Configurations/MealPlans`
 - `FoodDiary.Infrastructure/Persistence/MealPlans`
 - `FoodDiary.Presentation.Api/Features/MealPlans`
-- `tests/FoodDiary.Application.Tests/MealPlans`
 
 ## HTTP Surface
 
@@ -38,10 +41,31 @@ Source: `FoodDiary.Presentation.Api/Features/MealPlans/MealPlansController.cs`
 - `POST /api/v{version:apiVersion}/meal-plans/{id:guid}/adopt`
 - `POST /api/v{version:apiVersion}/meal-plans/{id:guid}/shopping-list`
 
+## Boundary Health
+
+- Role: aggregate-owner
+- Physical isolation: folder
+- Architecture guardrails: graph-only
+- Declared owned entities: not yet enumerated
+- Public contract files: 4
+- Observed external consumer groups: 1
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 4
+- Exported repository-shaped contracts: 4
+- `interface IMealPlanReadModelRepository`
+- `interface IMealPlanReadRepository`
+- `interface IMealPlanRepository`
+- `interface IMealPlanWriteRepository`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/MealPlans/MealPlansFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/MealPlans/MealPlansValidatorTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/MealPlans/MealPlansFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/MealPlans/MealPlansValidatorTests.cs`
 
 ## Working Rule
 

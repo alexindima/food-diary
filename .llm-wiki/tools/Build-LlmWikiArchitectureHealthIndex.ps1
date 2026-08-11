@@ -14,6 +14,7 @@ $cacheInputs = @(
     '.llm-wiki/generated/frontend-contract-index.json',
     '.llm-wiki/generated/quality-index.json',
     'docs/architecture/module-dependencies.json',
+    'docs/architecture/backend-modules.json',
     'tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs',
     '.llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1',
     '.llm-wiki/tools/LlmWikiJson.ps1',
@@ -26,6 +27,7 @@ $backendContracts = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/bac
 $frontendContracts = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/frontend-contract-index.json') -Raw | ConvertFrom-Json
 $quality = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/quality-index.json') -Raw | ConvertFrom-Json
 $moduleGraph = Get-Content -LiteralPath (Join-Path $repositoryRoot 'docs/architecture/module-dependencies.json') -Raw | ConvertFrom-Json
+$boundaryManifest = Get-Content -LiteralPath (Join-Path $repositoryRoot 'docs/architecture/backend-modules.json') -Raw | ConvertFrom-Json
 
 $projects = @($catalog.dotnet.projects)
 $projectByPath = @{}
@@ -104,6 +106,21 @@ while ($queue.Count -gt 0) {
     }
 }
 $moduleCycleNodes = @($remainingModules | Sort-Object)
+$moduleHotspots = @(
+    foreach ($property in @($moduleGraph.modules.PSObject.Properties)) {
+        $moduleName = $property.Name
+        $fanOut = @($property.Value).Count
+        $fanIn = @($moduleGraph.modules.PSObject.Properties | Where-Object { @($_.Value) -contains $moduleName }).Count
+        $level = if ($fanIn -ge 10 -or $fanOut -ge 8) { 'review-candidate' } else { 'informational' }
+        [pscustomobject]@{
+            module = $moduleName
+            fanIn = $fanIn
+            fanOut = $fanOut
+            level = $level
+            role = [string]$boundaryManifest.modules.$moduleName.role
+        }
+    }
+)
 
 $referencedFrontendComponents = @($frontendContracts.consumerEdges.component | Sort-Object -Unique)
 $selectorUnreferenced = @(
@@ -119,6 +136,8 @@ $result = [ordered]@{
         unusedAllowances = $unusedAllowances.Count
         untrackedProductionProjects = $untrackedProductionProjects.Count
         moduleCycleNodes = $moduleCycleNodes.Count
+        backendBusinessModules = [int]$boundaryManifest.inventory.totalModules
+        moduleHotspotReviewCandidates = @($moduleHotspots | Where-Object level -eq 'review-candidate').Count
         ambiguousBackendContracts = @($backendContracts.contracts | Where-Object ambiguous).Count
         unconsumedBackendContracts = @($backendContracts.contracts | Where-Object { $_.name -notin @($backendContracts.consumerEdges.contract) }).Count
         selectorUnreferencedComponents = $selectorUnreferenced.Count
@@ -130,6 +149,7 @@ $result = [ordered]@{
     unusedProjectAllowances = @($unusedAllowances)
     untrackedProductionProjects = $untrackedProductionProjects
     moduleCycleNodes = $moduleCycleNodes
+    moduleHotspots = @($moduleHotspots | Sort-Object @{ Expression = { $_.fanIn + $_.fanOut }; Descending = $true }, module)
     ambiguousBackendContracts = @($backendContracts.contracts | Where-Object ambiguous)
     unconsumedBackendContracts = @($backendContracts.contracts | Where-Object { $_.name -notin @($backendContracts.consumerEdges.contract) })
     selectorUnreferencedComponents = $selectorUnreferenced
@@ -148,7 +168,9 @@ if ($Check) {
         exit 1
     }
     Write-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint
-    Write-Host "Architecture health index is current: $($actualEdges.Count) project edges, no enforced drift."
+    $productionEdgeCount = @($actualEdges | Where-Object { -not $_.isTest }).Count
+    $testEdgeCount = @($actualEdges | Where-Object isTest).Count
+    Write-Host "Architecture health index is current: $productionEdgeCount production project edges, $testEdgeCount test project edges, no enforced drift."
     exit 0
 }
 $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)

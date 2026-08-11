@@ -12,6 +12,7 @@ sources:
   - FoodDiary.Web.Api/AGENTS.md
   - docs/BACKEND_MODULE_MAP.md
   - docs/backend/BACKEND_MODULE_OWNERSHIP.md
+  - docs/architecture/backend-modules.json
 ---
 
 # Primary Backend
@@ -43,6 +44,10 @@ mutations go through the owning module, while composed reads use explicit
 projection or read-service contracts. Ownership and the interaction allowlist
 are defined in
 [`BACKEND_MODULE_OWNERSHIP.md`](../../docs/backend/BACKEND_MODULE_OWNERSHIP.md).
+The machine-readable inventory and cross-layer vocabulary mappings are defined
+in [`backend-modules.json`](../../docs/architecture/backend-modules.json). Use
+the generated module page to distinguish business API dependencies,
+abstraction-contract dependencies, host consumers and boundary enforceability.
 
 Prefer the narrowest repository contract suitable for a use case:
 

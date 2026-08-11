@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
   - .llm-wiki/generated/repository-catalog.json
   - docs/architecture/module-dependencies.json
+  - docs/architecture/backend-modules.json
 ---
 
 # Notifications
@@ -14,8 +15,11 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Dependencies: Users
-- Consumers: Authentication, Dietologist, Fasting, RecipeComments, WeeklyGoals
+- Business-module dependencies: Users
+- Abstraction-contract dependencies: Users
+- Business-module consumers: Authentication, Dietologist, Fasting, RecipeComments, WeeklyGoals
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
@@ -25,10 +29,6 @@ sources:
 - `FoodDiary.Infrastructure/Persistence/Configurations/Notifications`
 - `FoodDiary.Infrastructure/Persistence/Notifications`
 - `FoodDiary.Presentation.Api/Features/Notifications`
-- `FoodDiary.Resources/Notifications`
-- `FoodDiary.Web.Client/src/app/shared/notifications`
-- `tests/FoodDiary.Application.Tests/Notifications`
-- `tests/FoodDiary.Resources.Tests/Notifications`
 
 ## HTTP Surface
 
@@ -53,19 +53,58 @@ Source: `FoodDiary.Presentation.Api/Features/Notifications/NotificationsControll
 - `GET /api/v{version:apiVersion}/notifications/preferences`
 - `PUT /api/v{version:apiVersion}/notifications/preferences`
 
+## Boundary Health
+
+- Role: aggregate-owner
+- Physical isolation: folder
+- Architecture guardrails: explicit-boundary-tests
+- Declared owned entities: Notification, WebPushSubscription, NotificationWebPushOutboxMessage
+- Public contract files: 22
+- Observed external consumer groups: 10
+- Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
+
+## Public Surface
+
+- Public contract types: 22
+- Exported repository-shaped contracts: 9
+- `interface INotificationCleanupService`
+- `interface INotificationClientRefreshService`
+- `interface INotificationDeduplicationService`
+- `interface INotificationLookupRepository`
+- `interface INotificationPusher`
+- `interface INotificationReadModelRepository`
+- `interface INotificationReadRepository`
+- `interface INotificationRepository`
+- `interface INotificationTestScheduler`
+- `interface INotificationTextRenderer`
+- `interface INotificationWebPushOutbox`
+- `interface INotificationWebPushOutboxProcessor`
+- `interface INotificationWriter`
+- `interface INotificationWriteRepository`
+- `interface ITestNotificationDeliveryDispatcher`
+- `interface IWebPushConfigurationProvider`
+- `interface IWebPushDeliveryAudienceService`
+- `interface IWebPushNotificationSender`
+- `interface IWebPushSubscriptionReadModelRepository`
+- `interface IWebPushSubscriptionReadRepository`
+- `interface IWebPushSubscriptionRepository`
+- `interface IWebPushSubscriptionWriteRepository`
+
 ## Focused Tests
 
-- `tests/FoodDiary.Application.Tests/Notifications/DeliverTestNotificationCommandHandlerTests.cs`
-- `tests/FoodDiary.Application.Tests/Notifications/NotificationReadServiceCoverageTests.cs`
-- `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.MappingAndCleanup.cs`
-- `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.Preferences.cs`
-- `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.Queries.cs`
-- `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.ReadCommands.cs`
-- `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.WebPush.cs`
-- `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.cs`
-- `tests/FoodDiary.Application.Tests/Notifications/NotificationsValidatorTests.cs`
-- `tests/FoodDiary.Presentation.Api.Tests/NotificationsControllerTests.cs`
-- `tests/FoodDiary.Resources.Tests/Notifications/NotificationResourceRendererTests.cs`
+Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
+
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/DeliverTestNotificationCommandHandlerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationReadServiceCoverageTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.MappingAndCleanup.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.Preferences.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.Queries.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.ReadCommands.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.WebPush.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsValidatorTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/NotificationsControllerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Resources.Tests/Notifications/NotificationResourceRendererTests.cs`
 
 ## Working Rule
 
