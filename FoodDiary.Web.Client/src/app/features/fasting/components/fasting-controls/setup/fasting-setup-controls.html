@@ -11,11 +11,15 @@
     />
 </div>
 
+@if (showGuidance()) {
+    <p class="fasting-controls__mode-description">{{ descriptionKey() | translate }}</p>
+}
+
 @switch (selectedMode()) {
     @case ('intermittent') {
         <div class="fasting-controls__protocol-group fd-stack fd-align-center fd-gap-xs">
             <div class="fasting-controls__protocol-group-title fd-ui-overline">{{ 'FASTING.INTERMITTENT_GROUP' | translate }}</div>
-            <div class="fasting-controls__protocol-row">
+            <div class="fasting-controls__protocol-row" [class.fasting-controls__protocol-row--inline-custom]="inlineCustomControls()">
                 <fd-ui-segmented-toggle
                     class="fasting-controls__segmented-toggle"
                     size="sm"
@@ -23,6 +27,7 @@
                     [selectedValue]="selectedProtocol()"
                     [ariaLabel]="'FASTING.INTERMITTENT_GROUP' | translate"
                     [shrinkItems]="true"
+                    [fitContent]="inlineCustomControls()"
                     [stackOnNarrow]="false"
                     (selectedValueChange)="protocolChange.emit($event)"
                 />
@@ -49,7 +54,7 @@
     @case ('extended') {
         <div class="fasting-controls__protocol-group fd-stack fd-align-center fd-gap-xs">
             <div class="fasting-controls__protocol-group-title fd-ui-overline">{{ 'FASTING.EXTENDED_GROUP' | translate }}</div>
-            <div class="fasting-controls__protocol-row">
+            <div class="fasting-controls__protocol-row" [class.fasting-controls__protocol-row--inline-custom]="inlineCustomControls()">
                 <fd-ui-segmented-toggle
                     class="fasting-controls__segmented-toggle"
                     size="sm"
@@ -57,6 +62,7 @@
                     [selectedValue]="selectedProtocol()"
                     [ariaLabel]="'FASTING.EXTENDED_GROUP' | translate"
                     [shrinkItems]="true"
+                    [fitContent]="inlineCustomControls()"
                     [stackOnNarrow]="false"
                     (selectedValueChange)="protocolChange.emit($event)"
                 />
@@ -88,6 +94,7 @@
             [cyclicEatDayFastHours]="cyclicEatDayFastHours()"
             [cyclicEatDayEatingWindowHours]="cyclicEatDayEatingWindowHours()"
             [isCustomCyclicPresetSelected]="isCustomCyclicPresetSelected()"
+            [inlineCustomControls]="inlineCustomControls()"
             (cyclicPresetChange)="cyclicPresetChange.emit($event)"
             (cyclicFastDaysChange)="cyclicFastDaysChange.emit($event)"
             (cyclicEatDaysChange)="cyclicEatDaysChange.emit($event)"
@@ -97,8 +104,17 @@
     }
 }
 
-<div class="fasting-controls__actions fd-ui-actions">
-    <fd-ui-button [loading]="isStarting()" (click)="startFasting.emit()">
-        {{ 'FASTING.START_FAST' | translate }}
-    </fd-ui-button>
-</div>
+@if (showGuidance()) {
+    <div class="fasting-controls__selection-summary">
+        <span aria-hidden="true"></span>
+        <strong>{{ selectionSummary() }}</strong>
+    </div>
+}
+
+@if (showStartAction()) {
+    <div class="fasting-controls__actions fd-ui-actions">
+        <fd-ui-button [fullWidth]="showGuidance()" [loading]="isStarting()" (click)="startFasting.emit()">
+            {{ 'FASTING.START_FAST' | translate }}
+        </fd-ui-button>
+    </div>
+}

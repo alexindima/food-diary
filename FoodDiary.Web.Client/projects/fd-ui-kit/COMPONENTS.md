@@ -547,6 +547,7 @@ Segmented toggle control.
 - `appearance?: 'default' | 'soft'`
 - `size?: 'sm' | 'md'`
 - `fullWidth?: boolean`
+- `fitContent?: boolean` (sizes the host to its segments for compact inline compositions)
 - `shrinkItems?: boolean`
 
 #### `fd-ui-chip-select`

@@ -16,6 +16,7 @@ const UPDATED_HUNGER_LEVEL = 4;
 const UPDATED_ENERGY_LEVEL = 5;
 const UPDATED_MOOD_LEVEL = 2;
 
+// eslint-disable-next-line max-lines-per-function -- the component states share one compact fixture setup and interaction contract.
 describe('FastingCheckInCardComponent', () => {
     beforeEach(() => {
         setupTestBed();
@@ -63,7 +64,7 @@ describe('FastingCheckInCardComponent', () => {
         emojiPickers[0].triggerEventHandler('selectedValueChange', UPDATED_HUNGER_LEVEL);
         emojiPickers[1].triggerEventHandler('selectedValueChange', UPDATED_ENERGY_LEVEL);
         emojiPickers[2].triggerEventHandler('selectedValueChange', UPDATED_MOOD_LEVEL);
-        fixture.debugElement.query(By.css('fd-ui-chip-select')).triggerEventHandler('selectedValuesChange', ['headache']);
+        fixture.debugElement.queryAll(By.css('fd-ui-chip-select'))[1].triggerEventHandler('selectedValuesChange', ['headache']);
         const notesInput = fixture.debugElement.query(By.css('textarea')).nativeElement as HTMLTextAreaElement;
         notesInput.value = 'Feeling okay';
         notesInput.dispatchEvent(new Event('input'));
@@ -91,7 +92,7 @@ describe('FastingCheckInCardComponent', () => {
     it('provides descriptive hints for emoji scales and symptom chips', () => {
         const fixture = createComponent({ isExpanded: true });
         const emojiPicker = fixture.debugElement.query(By.css('fd-ui-emoji-picker')).componentInstance as OptionsHost;
-        const symptomChips = fixture.debugElement.query(By.css('fd-ui-chip-select')).componentInstance as OptionsHost;
+        const symptomChips = fixture.debugElement.queryAll(By.css('fd-ui-chip-select'))[1].componentInstance as OptionsHost;
 
         expect(emojiPicker.options()[0]).toMatchObject({
             ariaLabel: 'FASTING.CHECK_IN.HUNGER_LEVEL_1. FASTING.CHECK_IN.HUNGER_LEVEL_1_DESCRIPTION',
@@ -101,6 +102,18 @@ describe('FastingCheckInCardComponent', () => {
             ariaLabel: 'FASTING.CHECK_IN.SYMPTOMS.HEADACHE. FASTING.CHECK_IN.SYMPTOM_HINTS.HEADACHE',
             hint: 'FASTING.CHECK_IN.SYMPTOM_HINTS.HEADACHE',
         });
+    });
+
+    it('keeps the no-symptoms choice mutually exclusive with warning symptoms', () => {
+        const selectedSymptoms = signal<string[]>(['headache']);
+        const fixture = createComponent({ isExpanded: true, selectedSymptoms });
+        const symptomPickers = fixture.debugElement.queryAll(By.css('fd-ui-chip-select'));
+
+        symptomPickers[0].triggerEventHandler('selectedValuesChange', ['good']);
+        expect(selectedSymptoms()).toEqual(['good']);
+
+        symptomPickers[1].triggerEventHandler('selectedValuesChange', ['dizziness']);
+        expect(selectedSymptoms()).toEqual(['dizziness']);
     });
 });
 

@@ -1,0 +1,49 @@
+<fd-ui-dialog-shell size="lg" [title]="'FASTING.TOUR.HISTORY_TITLE' | translate">
+    <div class="fasting-history-dialog__body">
+        @if (data.historyItems().length === 0) {
+            <p class="fasting-history-dialog__empty fd-ui-body-sm">{{ 'FASTING.NO_HISTORY' | translate }}</p>
+        } @else {
+            <div class="fasting-history-dialog__list">
+                @for (historyItem of data.historyItems(); track historyItem.session.id) {
+                    <button
+                        type="button"
+                        class="fasting-history-dialog__row"
+                        [attr.aria-label]="'FASTING.REDESIGN.OPEN_SESSION_DETAILS' | translate"
+                        (click)="openSession(historyItem.session)"
+                    >
+                        <span class="fasting-history-dialog__session">
+                            <strong>
+                                {{ historyItem.session.startedAtUtc | date: 'd MMMM y, HH:mm' : undefined : currentLocale() }}
+                            </strong>
+                            <span aria-hidden="true">&middot;</span>
+                            <span>{{ historyItem.sessionTypeLabel }} &middot; {{ historyItem.protocolDisplay }}</span>
+                        </span>
+                        <strong class="fasting-history-dialog__duration">
+                            {{ sessionDurationHours(historyItem.session) | number: '1.0-1' }} {{ 'FASTING.HOURS' | translate }}
+                        </strong>
+                        <span
+                            class="fasting-history-dialog__status fd-ui-pill"
+                            [class.fasting-history-dialog__status--completed]="historyItem.session.status === 'Completed'"
+                            [class.fasting-history-dialog__status--active]="historyItem.session.status === 'Active'"
+                            [class.fasting-history-dialog__status--interrupted]="historyItem.session.status === 'Interrupted'"
+                            [class.fasting-history-dialog__status--skipped]="historyItem.session.status === 'Skipped'"
+                            [class.fasting-history-dialog__status--postponed]="historyItem.session.status === 'Postponed'"
+                        >
+                            {{ historyItem.badgeKey | translate }}
+                        </span>
+                        <fd-ui-icon name="chevron_right" size="sm" aria-hidden="true" />
+                    </button>
+                }
+            </div>
+        }
+    </div>
+
+    <div fdUiDialogFooter class="fasting-history-dialog__footer fd-ui-actions fd-ui-actions--end">
+        @if (data.canLoadMoreHistory()) {
+            <fd-ui-button variant="secondary" fill="outline" [loading]="data.isLoadingMoreHistory()" (click)="data.onHistoryLoadMore()">
+                {{ 'FASTING.LOAD_MORE_HISTORY' | translate }}
+            </fd-ui-button>
+        }
+        <fd-ui-button (click)="close()">{{ 'COMMON.CLOSE' | translate }}</fd-ui-button>
+    </div>
+</fd-ui-dialog-shell>

@@ -29,6 +29,14 @@ fd-fasting-active-basic-controls {
         gap: var(--fd-space-sm);
     }
 
+    .fasting-controls-host--dialog & {
+        align-items: stretch;
+        width: min(100%, 760px);
+        margin-inline: auto;
+        gap: var(--fd-space-md);
+        padding: 0;
+    }
+
     &__mode-switch {
         width: 100%;
 
@@ -61,6 +69,11 @@ fd-fasting-active-basic-controls {
         width: 100%;
     }
 
+    &__protocol-row--inline-custom &__segmented-toggle {
+        width: auto;
+        flex: 0 0 auto;
+    }
+
     &__protocol-group {
         width: 100%;
 
@@ -80,6 +93,37 @@ fd-fasting-active-basic-controls {
 
         .fasting-controls-host--setup & {
             text-align: left;
+        }
+
+        .fasting-controls-host--dialog & {
+            text-align: left;
+        }
+    }
+
+    &__mode-description {
+        max-width: 620px;
+        margin: calc(var(--fd-space-xs) * -1) 0 0;
+        color: var(--fd-color-text-muted);
+        text-align: left;
+    }
+
+    &__selection-summary {
+        display: flex;
+        align-items: center;
+        gap: var(--fd-space-sm);
+        width: 100%;
+        padding: var(--fd-space-sm) var(--fd-space-md);
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-panel);
+        background: color-mix(in srgb, var(--fd-color-primary-500) 8%, var(--fd-bg-surface-raised));
+        color: var(--fd-color-text);
+
+        span {
+            width: var(--fd-size-icon-xs);
+            height: var(--fd-size-icon-xs);
+            flex: 0 0 auto;
+            border-radius: 50%;
+            background: var(--fd-color-primary-400);
         }
     }
 
@@ -120,6 +164,12 @@ fd-fasting-active-basic-controls {
             flex-wrap: nowrap;
             justify-content: flex-start;
         }
+    }
+
+    &__protocol-row--inline-custom &__custom-intermittent {
+        width: auto;
+        flex: 0 0 auto;
+        flex-wrap: nowrap;
     }
 
     &__custom-intermittent-summary {
@@ -256,6 +306,13 @@ fd-fasting-active-basic-controls {
             padding-bottom: 0;
             justify-content: flex-start;
         }
+
+        .fasting-controls-host--dialog & {
+            justify-content: flex-end;
+            margin-top: 0;
+            padding-top: var(--fd-space-md);
+            border-top: var(--fd-border-muted);
+        }
     }
 
     .fasting-controls-host--setup &__actions > fd-ui-button {
@@ -265,6 +322,16 @@ fd-fasting-active-basic-controls {
 }
 
 @container (max-width: 520px) {
+    .fasting-controls__protocol-row--inline-custom .fasting-controls__segmented-toggle {
+        width: 100%;
+        flex: 1 1 100%;
+    }
+
+    .fasting-controls__protocol-row--inline-custom .fasting-controls__custom-intermittent {
+        width: 100%;
+        flex: 1 1 100%;
+    }
+
     .fasting-controls__session-actions-grid {
         grid-template-columns: 1fr;
     }

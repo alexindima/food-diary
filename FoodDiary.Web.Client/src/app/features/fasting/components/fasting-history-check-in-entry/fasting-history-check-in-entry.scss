@@ -15,6 +15,11 @@
         color: var(--fd-color-text-muted);
     }
 
+    &__history-checkin-content {
+        margin-top: var(--fd-space-xxs);
+        padding-inline-start: var(--fd-space-sm);
+    }
+
     &__history-checkin-summary {
         color: var(--fd-color-text);
     }

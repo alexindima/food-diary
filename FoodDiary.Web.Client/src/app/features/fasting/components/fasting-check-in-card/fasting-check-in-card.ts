@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -32,6 +33,7 @@ import { FastingCheckInSummaryComponent } from '../fasting-check-in-summary/fast
 @Component({
     selector: 'fd-fasting-check-in-card',
     imports: [
+        NgTemplateOutlet,
         TranslatePipe,
         FdUiChipSelectComponent,
         FdUiEmojiPickerComponent,
@@ -41,6 +43,7 @@ import { FastingCheckInSummaryComponent } from '../fasting-check-in-summary/fast
         FastingCheckInSummaryComponent,
     ],
     templateUrl: './fasting-check-in-card.html',
+    styleUrl: './fasting-check-in-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FastingCheckInCardComponent {
@@ -50,6 +53,7 @@ export class FastingCheckInCardComponent {
     private readonly currentLanguage = signal(this.localizationService.getCurrentLanguage());
 
     public readonly isActive = input.required<boolean>();
+    public readonly presentation = input<'card' | 'dialog'>('card');
     public readonly isSaving = input.required<boolean>();
     public readonly isEnding = input.required<boolean>();
     public readonly isUpdatingCycle = input.required<boolean>();
@@ -75,7 +79,7 @@ export class FastingCheckInCardComponent {
     protected readonly symptomOptions = computed(() => {
         this.currentLanguage();
 
-        return FASTING_SYMPTOM_OPTIONS.map<FdUiChipSelectOption>(symptom => {
+        return FASTING_SYMPTOM_OPTIONS.filter(symptom => symptom.value !== 'good').map<FdUiChipSelectOption>(symptom => {
             const label = this.translateService.instant(symptom.labelKey);
             const description = this.translateService.instant(symptom.descriptionKey);
             return {
@@ -85,6 +89,17 @@ export class FastingCheckInCardComponent {
                 hint: description,
             };
         });
+    });
+    protected readonly noSymptomsOptions = computed(() => {
+        this.currentLanguage();
+        const option = FASTING_SYMPTOM_OPTIONS.find(symptom => symptom.value === 'good');
+        if (option === undefined) {
+            return [];
+        }
+
+        const label = this.translateService.instant(option.labelKey);
+        const description = this.translateService.instant(option.descriptionKey);
+        return [{ value: option.value, label, ariaLabel: `${label}. ${description}`, hint: description }];
     });
 
     public constructor() {
@@ -111,6 +126,26 @@ export class FastingCheckInCardComponent {
         this.notes().set(value === null ? '' : String(value));
     }
 
+    protected selectedHungerLabel(): string {
+        return this.getSelectedScaleLabel('FASTING.CHECK_IN.HUNGER', this.hungerLevel()());
+    }
+
+    protected selectedEnergyLabel(): string {
+        return this.getSelectedScaleLabel('FASTING.CHECK_IN.ENERGY', this.energyLevel()());
+    }
+
+    protected selectedMoodLabel(): string {
+        return this.getSelectedScaleLabel('FASTING.CHECK_IN.MOOD', this.moodLevel()());
+    }
+
+    protected setWarningSymptoms(values: string[]): void {
+        this.selectedSymptoms().set(values.filter(value => value !== 'good'));
+    }
+
+    protected setNoSymptoms(values: string[]): void {
+        this.selectedSymptoms().set(values.includes('good') ? ['good'] : []);
+    }
+
     private setNumericLevel(target: WritableSignal<number>, value: FdUiEmojiPickerValue | null): void {
         if (typeof value === 'number') {
             target.set(value);
@@ -132,5 +167,10 @@ export class FastingCheckInCardComponent {
                 hint: `${label}. ${description}`,
             };
         });
+    }
+
+    private getSelectedScaleLabel(labelKey: string, value: number): string {
+        this.currentLanguage();
+        return this.translateService.instant(`${labelKey}_LEVEL_${value}`);
     }
 }

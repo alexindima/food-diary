@@ -1,0 +1,57 @@
+<fd-ui-dialog-shell size="lg" [title]="'FASTING.REDESIGN.SESSION_DETAILS_TITLE' | translate" [subtitle]="periodLabel()">
+    <div class="fasting-session-details-dialog__body fd-stack fd-gap-md">
+        <div class="fasting-session-details-dialog__summary">
+            <div>
+                <small>{{ 'FASTING.REDESIGN.PROTOCOL_LABEL' | translate }}</small>
+                <strong>{{ data.sessionTypeLabel }} &middot; {{ data.protocolDisplay }}</strong>
+            </div>
+            <div>
+                <small>{{ 'FASTING.REDESIGN.DURATION_LABEL' | translate }}</small>
+                <strong>{{ durationHours() | number: '1.0-1' }} {{ 'FASTING.HOURS' | translate }}</strong>
+            </div>
+            <div>
+                <small>{{ 'FASTING.REDESIGN.STATUS_LABEL' | translate }}</small>
+                <span
+                    class="fasting-session-details-dialog__status"
+                    [class.fasting-session-details-dialog__status--completed]="data.session.status === 'Completed'"
+                    [class.fasting-session-details-dialog__status--interrupted]="data.session.status === 'Interrupted'"
+                    [class.fasting-session-details-dialog__status--skipped]="data.session.status === 'Skipped'"
+                    [class.fasting-session-details-dialog__status--postponed]="data.session.status === 'Postponed'"
+                >
+                    {{ data.badgeKey | translate }}
+                </span>
+            </div>
+        </div>
+
+        @if (data.session.notes) {
+            <section class="fasting-session-details-dialog__note">
+                <h3>{{ 'FASTING.REDESIGN.SESSION_NOTE' | translate }}</h3>
+                <p>{{ data.session.notes }}</p>
+            </section>
+        }
+
+        @if (data.checkIns.length > 1) {
+            <section class="fasting-session-details-dialog__section">
+                <h3>{{ 'FASTING.REDESIGN.WELLBEING_CHART_TITLE' | translate }}</h3>
+                <fd-fasting-check-in-chart [checkIns]="data.chartCheckIns" />
+            </section>
+        }
+
+        <section class="fasting-session-details-dialog__section">
+            <h3>{{ 'FASTING.REDESIGN.CHECK_INS_TITLE' | translate }}</h3>
+            @if (data.checkIns.length > 0) {
+                <div class="fasting-session-details-dialog__check-ins fd-stack">
+                    @for (checkIn of data.checkIns; track checkIn.checkIn.id) {
+                        <fd-fasting-history-check-in-entry [checkIn]="checkIn" />
+                    }
+                </div>
+            } @else {
+                <p class="fasting-session-details-dialog__empty">{{ 'FASTING.REDESIGN.NO_CHECK_INS' | translate }}</p>
+            }
+        </section>
+    </div>
+
+    <div fdUiDialogFooter class="fasting-session-details-dialog__footer fd-ui-actions fd-ui-actions--end">
+        <fd-ui-button (click)="close()">{{ 'COMMON.CLOSE' | translate }}</fd-ui-button>
+    </div>
+</fd-ui-dialog-shell>

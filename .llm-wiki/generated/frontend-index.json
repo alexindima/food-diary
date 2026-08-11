@@ -8,14 +8,14 @@
                        "localization":  "English/Russian locale file presence and recursive JSON property counts"
                    },
     "summary":  {
-                    "typescriptFiles":  1553,
-                    "symbols":  598,
+                    "typescriptFiles":  1564,
+                    "symbols":  605,
                     "routes":  86,
                     "features":  37,
-                    "specs":  553,
+                    "specs":  557,
                     "localeFiles":  5,
                     "roles":  {
-                                  "Component":  410,
+                                  "Component":  417,
                                   "Directive":  12,
                                   "Facade":  53,
                                   "Other":  17,
@@ -351,6 +351,7 @@
                                          "DashboardEditHintComponent",
                                          "DashboardFacade",
                                          "DashboardFastingBlockComponent",
+                                         "DashboardFastingCardComponent",
                                          "DashboardHydrationBlockComponent",
                                          "DashboardLayoutService",
                                          "DashboardMealsBlockComponent",
@@ -380,6 +381,7 @@
                                        "FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard.service.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/cycle-summary-card/cycle-summary-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/daily-advice-card/daily-advice-card.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-fasting-card/dashboard-fasting-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-content/tdee-insight-card-content.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card.spec.ts",
@@ -481,7 +483,9 @@
                                          "FastingActiveExtendedControlsComponent",
                                          "FastingAlertsSectionComponent",
                                          "FastingCheckInCardComponent",
+                                         "FastingCheckInChartComponent",
                                          "FastingCheckInChartDialogComponent",
+                                         "FastingCheckInDialogComponent",
                                          "FastingCheckInSummaryComponent",
                                          "FastingControlsComponent",
                                          "FastingCyclicSetupControlsComponent",
@@ -490,12 +494,16 @@
                                          "FastingHistoryCardComponent",
                                          "FastingHistoryCheckInEntryComponent",
                                          "FastingHistoryCheckInListComponent",
+                                         "FastingHistoryDialogComponent",
                                          "FastingHistoryItemComponent",
                                          "FastingInsightsSectionComponent",
                                          "FastingPageComponent",
                                          "FastingPromptStateStore",
+                                         "FastingProtocolDialogComponent",
+                                         "FastingRedesignPreviewComponent",
                                          "FastingSafetyDialogComponent",
                                          "FastingService",
+                                         "FastingSessionDetailsDialogComponent",
                                          "FastingSetupControlsComponent",
                                          "FastingStatsCardComponent",
                                          "FastingTimerCardComponent",
@@ -508,8 +516,9 @@
                          "tests":  [
                                        "FoodDiary.Web.Client/src/app/features/fasting/api/fasting.service.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-card/fasting-check-in-card.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-chart/fasting-check-in-chart.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-dialog/fasting-check-in-dialog.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-summary/fasting-check-in-summary.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/fasting-controls.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-end-confirm-dialog/fasting-end-confirm-dialog.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-card/fasting-history-card.spec.ts",
@@ -517,6 +526,7 @@
                                        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-check-in-list/fasting-history-check-in-list.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-item/fasting-history-item.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-insights-section/fasting-insights-section.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-safety-dialog/fasting-safety-dialog.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-lib/fasting-timer-card-display.mapper.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.spec.ts",
@@ -1535,7 +1545,7 @@
                         "role":  "Component",
                         "selector":  "fd-ui-line-chart",
                         "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
-                        "line":  154
+                        "line":  155
                     },
                     {
                         "name":  "FdUiLoaderComponent",
@@ -1647,7 +1657,7 @@
                         "role":  "Component",
                         "selector":  "fd-ui-segmented-toggle",
                         "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
-                        "line":  25
+                        "line":  26
                     },
                     {
                         "name":  "FdUiSelectComponent",
@@ -2742,6 +2752,13 @@
                         "line":  12
                     },
                     {
+                        "name":  "DashboardFastingCardComponent",
+                        "role":  "Component",
+                        "selector":  "fd-dashboard-fasting-card",
+                        "path":  "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-fasting-card/dashboard-fasting-card.ts",
+                        "line":  22
+                    },
+                    {
                         "name":  "HydrationCardComponent",
                         "role":  "Component",
                         "selector":  "fd-hydration-card",
@@ -3138,7 +3155,21 @@
                         "role":  "Component",
                         "selector":  "fd-fasting-check-in-card",
                         "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-card/fasting-check-in-card.ts",
-                        "line":  46
+                        "line":  49
+                    },
+                    {
+                        "name":  "FastingCheckInChartComponent",
+                        "role":  "Component",
+                        "selector":  "fd-fasting-check-in-chart",
+                        "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-chart/fasting-check-in-chart.ts",
+                        "line":  19
+                    },
+                    {
+                        "name":  "FastingCheckInDialogComponent",
+                        "role":  "Component",
+                        "selector":  "fd-fasting-check-in-dialog",
+                        "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-dialog/fasting-check-in-dialog.ts",
+                        "line":  20
                     },
                     {
                         "name":  "FastingCheckInSummaryComponent",
@@ -3152,7 +3183,7 @@
                         "role":  "Component",
                         "selector":  "fd-fasting-checkin-chart-dialog",
                         "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.ts",
-                        "line":  44
+                        "line":  21
                     },
                     {
                         "name":  "FastingActiveBasicControlsComponent",
@@ -3180,7 +3211,7 @@
                         "role":  "Component",
                         "selector":  "fd-fasting-controls",
                         "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/fasting-controls.ts",
-                        "line":  50
+                        "line":  51
                     },
                     {
                         "name":  "FastingSetupControlsComponent",
@@ -3218,6 +3249,13 @@
                         "line":  15
                     },
                     {
+                        "name":  "FastingHistoryDialogComponent",
+                        "role":  "Component",
+                        "selector":  "fd-fasting-history-dialog",
+                        "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-dialog/fasting-history-dialog.ts",
+                        "line":  39
+                    },
+                    {
                         "name":  "FastingHistoryItemComponent",
                         "role":  "Component",
                         "selector":  "fd-fasting-history-item",
@@ -3232,11 +3270,32 @@
                         "line":  13
                     },
                     {
+                        "name":  "FastingProtocolDialogComponent",
+                        "role":  "Component",
+                        "selector":  "fd-fasting-protocol-dialog",
+                        "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-protocol-dialog/fasting-protocol-dialog.ts",
+                        "line":  18
+                    },
+                    {
+                        "name":  "FastingRedesignPreviewComponent",
+                        "role":  "Component",
+                        "selector":  "fd-fasting-redesign-preview",
+                        "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
+                        "line":  40
+                    },
+                    {
                         "name":  "FastingSafetyDialogComponent",
                         "role":  "Component",
                         "selector":  "fd-fasting-safety-dialog",
                         "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-safety-dialog/fasting-safety-dialog.ts",
                         "line":  25
+                    },
+                    {
+                        "name":  "FastingSessionDetailsDialogComponent",
+                        "role":  "Component",
+                        "selector":  "fd-fasting-session-details-dialog",
+                        "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-details-dialog/fasting-session-details-dialog.ts",
+                        "line":  42
                     },
                     {
                         "name":  "FastingTimerCardGroupsComponent",
@@ -3292,7 +3351,7 @@
                         "role":  "Component",
                         "selector":  "fd-fasting-page",
                         "path":  "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page/fasting-page.ts",
-                        "line":  80
+                        "line":  88
                     },
                     {
                         "name":  "GamificationService",
@@ -5867,8 +5926,8 @@
                              "name":  "app.json",
                              "englishExists":  true,
                              "russianExists":  true,
-                             "englishProperties":  3197,
-                             "russianProperties":  3197,
+                             "englishProperties":  3263,
+                             "russianProperties":  3263,
                              "countsMatch":  true
                          },
                          {

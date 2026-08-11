@@ -59,14 +59,22 @@ describe('FastingPageComponent setup and actions', () => {
         expect(component['currentSessionRecentCheckIns']()).toHaveLength(1);
     });
 
-    it('opens and closes check-in form while resetting draft on close', () => {
+    it('opens the check-in dialog and resets the draft when it closes without saving', () => {
         component['openCheckInForm']();
-        expect(component['isCheckInExpanded']()).toBe(true);
 
-        component['closeCheckInForm']();
-
+        expect(dialogService.open).toHaveBeenCalledTimes(1);
         expect(component['isCheckInExpanded']()).toBe(false);
         expect(facade.resetCheckInDraft).toHaveBeenCalledTimes(1);
+    });
+
+    it('opens session management confirmation and ends the active fast after confirmation', () => {
+        facade.currentSession.set(createSession());
+        dialogService.open.mockReturnValue({ afterClosed: () => of('confirm') });
+
+        component['openSessionManagement']();
+
+        expect(dialogService.open).toHaveBeenCalledTimes(1);
+        expect(facade.endFasting).toHaveBeenCalledTimes(1);
     });
 
     it('delegates save and load more actions to facade', () => {
@@ -117,6 +125,51 @@ describe('FastingPageComponent setup and actions', () => {
         component['toggleHistorySession']('session-2');
         expect(component['isHistorySessionExpanded']('session-2')).toBe(false);
         expect(component['getHistoryCheckInToggleKey'](createHistorySession('session-2', 2))).toBe('FASTING.SHOW_HISTORY_CHECK_INS');
+    });
+});
+
+describe('FastingPageComponent history dialog', () => {
+    beforeEach(createComponentAsync);
+
+    it('opens full fasting history in a detail dialog', () => {
+        component['openHistory']();
+
+        expect(dialogService.open).toHaveBeenCalledTimes(1);
+        const options = dialogService.open.mock.calls[0]?.[1] as { preset?: string; data?: Record<string, unknown> } | undefined;
+        expect(options?.preset).toBe('detail');
+        expect(options?.data?.['historyItems']).toBe(component['historyItems']);
+        expect(options?.data?.['onHistoryLoadMore']).toBeTypeOf('function');
+    });
+
+    it('opens recent session details with all wellbeing check-ins', () => {
+        const session = createHistorySession('session-details', 2);
+
+        component['openSessionDetails'](session);
+
+        expect(dialogService.open).toHaveBeenCalledTimes(1);
+        const options = dialogService.open.mock.calls[0]?.[1] as { preset?: string; data?: Record<string, unknown> } | undefined;
+        expect(options?.preset).toBe('detail');
+        expect(options?.data?.['session']).toBe(session);
+        expect(options?.data?.['checkIns']).toHaveLength(2);
+        expect(options?.data?.['chartCheckIns']).toHaveLength(2);
+    });
+});
+
+describe('FastingPageComponent protocol settings', () => {
+    beforeEach(createComponentAsync);
+
+    it('opens settings with the current page facade only while fasting is inactive', () => {
+        component['openProtocolSettings']();
+
+        expect(dialogService.open).toHaveBeenCalledTimes(1);
+        const options = dialogService.open.mock.calls[0]?.[1] as { preset?: string; providers?: unknown[] } | undefined;
+        expect(options?.preset).toBe('detail');
+        expect(options?.providers).toHaveLength(1);
+
+        facade.isActive.set(true);
+        component['openProtocolSettings']();
+
+        expect(dialogService.open).toHaveBeenCalledTimes(1);
     });
 });
 

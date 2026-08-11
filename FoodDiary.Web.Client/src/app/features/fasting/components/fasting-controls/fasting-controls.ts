@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import type { FdUiSegmentedToggleOption } from 'fd-ui-kit';
@@ -45,6 +45,7 @@ const FASTING_MODES = new Set<FastingMode>(['intermittent', 'extended', 'cyclic'
     host: {
         '[class.fasting-controls-host--setup]': '!isActive()',
         '[class.fasting-controls-host--page-summary]': 'isActive()',
+        '[class.fasting-controls-host--dialog]': "presentation() === 'dialog'",
     },
 })
 export class FastingControlsComponent {
@@ -54,6 +55,9 @@ export class FastingControlsComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly localizationService = inject(LocalizationService);
     private readonly currentLanguage = signal(this.localizationService.getCurrentLanguage());
+
+    public readonly presentation = input<'default' | 'dialog'>('default');
+    public readonly showSetupStartAction = input(true);
 
     protected readonly isActive = this.facade.isActive;
     protected readonly currentSession = this.facade.currentSession;
@@ -142,6 +146,29 @@ export class FastingControlsComponent {
         }
 
         return this.getCyclicPresetSelectionValue(this.cyclicFastDays(), this.cyclicEatDays());
+    });
+    protected readonly setupDescriptionKey = computed(() => `FASTING.REDESIGN.MODE_DESCRIPTION_${this.selectedMode().toUpperCase()}`);
+    protected readonly setupSummary = computed(() => {
+        this.currentLanguage();
+        const mode = this.selectedMode();
+        if (mode === 'cyclic') {
+            return this.translateService.instant('FASTING.REDESIGN.CYCLIC_SELECTION_SUMMARY', {
+                fastDays: this.cyclicFastDays(),
+                eatDays: this.cyclicEatDays(),
+                fastHours: this.cyclicEatDayFastHours(),
+                eatHours: this.cyclicEatDayEatingWindowHours(),
+            });
+        }
+
+        const protocol = FASTING_PROTOCOLS.find(option => option.value === this.selectedProtocol());
+        const hours =
+            mode === 'intermittent' && this.selectedProtocol() === 'CustomIntermittent'
+                ? this.customIntermittentFastHours()
+                : mode === 'extended' && this.selectedProtocol() === 'Custom'
+                  ? this.customHours()
+                  : (protocol?.hours ?? MIN_FASTING_HOURS);
+        const key = mode === 'extended' ? 'FASTING.REDESIGN.EXTENDED_SELECTION_SUMMARY' : 'FASTING.REDESIGN.INTERMITTENT_SELECTION_SUMMARY';
+        return this.translateService.instant(key, { hours, eatHours: Math.max(0, HOURS_PER_DAY - hours) });
     });
 
     public constructor() {

@@ -20,55 +20,25 @@
                 <fd-skeleton-card class="fasting__skeleton fasting__skeleton--section" />
             </div>
         } @else {
-            <div class="fasting__grid fd-grid fd-gap-lg">
-                <fd-fasting-timer-card
-                    class="fasting__card"
-                    data-tour-id="fasting-timer"
-                    layout="page"
-                    [class.fasting__card--page-summary]="isActive()"
-                    [class.fasting__card--setup]="!isActive()"
-                />
-
-                <fd-fasting-stats-card data-tour-id="fasting-stats" [stats]="stats()" />
-            </div>
-
-            @if (isActive()) {
-                <fd-fasting-alerts-section
-                    [alerts]="visibleAlertItems()"
-                    (promptSnooze)="snoozePrompt($event)"
-                    (promptDismiss)="dismissPrompt($event)"
-                />
-            }
-
-            <fd-fasting-check-in-card
-                data-tour-id="fasting-check-in"
-                [isActive]="isActive()"
-                [isSaving]="isSavingCheckIn()"
-                [isEnding]="isEnding()"
-                [isUpdatingCycle]="isUpdatingCycle()"
-                [isExpanded]="isCheckInExpanded()"
-                [latestCheckIn]="currentSessionLatestCheckInView()"
-                [hungerLevel]="hungerLevel"
-                [energyLevel]="energyLevel"
-                [moodLevel]="moodLevel"
-                [selectedSymptoms]="selectedSymptoms"
-                [notes]="checkInNotes"
-                (formOpen)="openCheckInForm()"
-                (formClose)="closeCheckInForm()"
-                (save)="saveCheckIn()"
-            />
-
-            <fd-fasting-insights-section data-tour-id="fasting-insights" [insights]="insightItems()" />
-
-            <fd-fasting-history-card
-                data-tour-id="fasting-history"
-                [historyItems]="historyItems()"
-                [canLoadMoreHistory]="canLoadMoreHistory()"
-                [isLoadingMoreHistory]="isLoadingMoreHistory()"
-                (chartOpen)="openSessionCheckInChart($event)"
-                (historyToggle)="toggleHistorySession($event)"
-                (checkInsLoadMore)="loadMoreSessionCheckIns($event)"
-                (historyLoadMore)="loadMoreHistory()"
+            <fd-fasting-redesign-preview
+                [session]="currentSession()"
+                [stats]="stats()"
+                [history]="history()"
+                [elapsedFormatted]="elapsedFormatted()"
+                [remainingFormatted]="remainingFormatted()"
+                [progressPercent]="progressPercent()"
+                [now]="now()"
+                [selectedDurationHours]="plannedDurationHours()"
+                [isStarting]="isStarting()"
+                [alerts]="visibleAlertItems()"
+                [insights]="insightItems()"
+                (startRequested)="startFasting()"
+                (manageRequested)="openSessionManagement()"
+                (protocolSettingsRequested)="openProtocolSettings()"
+                (checkInRequested)="openCheckInForm()"
+                (historyRequested)="openHistory()"
+                (sessionDetailsRequested)="openSessionDetails($event)"
+                (alertDismissRequested)="dismissPrompt($event)"
             />
         }
     </fd-page-body>

@@ -1,6 +1,6 @@
 <div class="fasting-controls__protocol-group fd-stack fd-align-center fd-gap-xs">
     <div class="fasting-controls__protocol-group-title fd-ui-overline">{{ 'FASTING.CYCLIC_GROUP' | translate }}</div>
-    <div class="fasting-controls__protocol-row">
+    <div class="fasting-controls__protocol-row" [class.fasting-controls__protocol-row--inline-custom]="inlineCustomControls()">
         <fd-ui-segmented-toggle
             class="fasting-controls__segmented-toggle"
             size="sm"
@@ -8,6 +8,7 @@
             [selectedValue]="selectedCyclicPresetValue()"
             [ariaLabel]="'FASTING.CYCLIC_GROUP' | translate"
             [shrinkItems]="true"
+            [fitContent]="inlineCustomControls()"
             [stackOnNarrow]="false"
             (selectedValueChange)="cyclicPresetChange.emit($event)"
         />
@@ -42,7 +43,7 @@
 
 <div class="fasting-controls__protocol-group fd-stack fd-align-center fd-gap-xs">
     <div class="fasting-controls__protocol-group-title fd-ui-overline">{{ 'FASTING.EAT_DAY_WINDOW_GROUP' | translate }}</div>
-    <div class="fasting-controls__protocol-row">
+    <div class="fasting-controls__protocol-row" [class.fasting-controls__protocol-row--inline-custom]="inlineCustomControls()">
         <fd-ui-segmented-toggle
             class="fasting-controls__segmented-toggle"
             size="sm"
@@ -50,6 +51,7 @@
             [selectedValue]="cyclicEatDayProtocol()"
             [ariaLabel]="'FASTING.EAT_DAY_WINDOW_GROUP' | translate"
             [shrinkItems]="true"
+            [fitContent]="inlineCustomControls()"
             [stackOnNarrow]="false"
             (selectedValueChange)="cyclicEatDayProtocolChange.emit($event)"
         />

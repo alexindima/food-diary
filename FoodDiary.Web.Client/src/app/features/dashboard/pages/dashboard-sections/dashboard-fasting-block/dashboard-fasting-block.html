@@ -6,9 +6,8 @@
         (blockActivated)="blockClick.emit()"
     >
         <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
-            <fd-fasting-timer-card
+            <fd-dashboard-fasting-card
                 class="dashboard__card dashboard__card--clickable dashboard__card--fasting dashboard__card--fasting-hero"
-                layout="dashboard"
                 [session]="session()"
             />
         </fd-dashboard-card-shell>

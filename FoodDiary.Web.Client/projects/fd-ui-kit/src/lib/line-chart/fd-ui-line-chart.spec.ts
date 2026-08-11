@@ -138,6 +138,7 @@ describe('FdUiLineChartComponent', () => {
 
     it('supports proportional x positions and value suffixes', () => {
         fixture.componentRef.setInput('valueSuffix', 'kg');
+        fixture.componentRef.setInput('showAxisLabels', true);
         fixture.componentRef.setInput('points', [
             { label: 'Jul 7', value: 118, xPosition: 0 },
             { label: 'Jul 14', value: 116, xPosition: 0.25 },
@@ -147,6 +148,7 @@ describe('FdUiLineChartComponent', () => {
 
         expect(component['pointViews']()[1]?.x).toBe(QUARTER_POSITION_X);
         expect(host().querySelectorAll('.fd-ui-line-chart__point')[1].getAttribute('title')).toBe('Jul 14: 116 kg');
+        expect((host().querySelectorAll('.fd-ui-line-chart__x-axis span')[1] as HTMLElement).style.left).toBe('26%');
         expect(component['ariaLabel']()).toContain('Aug 4 113 kg');
     });
 

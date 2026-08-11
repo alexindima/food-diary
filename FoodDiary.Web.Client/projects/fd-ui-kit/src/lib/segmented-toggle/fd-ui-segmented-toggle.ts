@@ -20,6 +20,7 @@ export type FdUiSegmentedToggleSize = 'sm' | 'md';
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '[class.fd-ui-segmented-toggle-host--full-width]': 'fullWidth()',
+        '[class.fd-ui-segmented-toggle-host--fit-content]': 'fitContent()',
     },
 })
 export class FdUiSegmentedToggleComponent {
@@ -33,6 +34,7 @@ export class FdUiSegmentedToggleComponent {
     public readonly appearance = input<FdUiSegmentedToggleAppearance>('default');
     public readonly size = input<FdUiSegmentedToggleSize>('md');
     public readonly fullWidth = input(false);
+    public readonly fitContent = input(false);
     public readonly shrinkItems = input(false);
     public readonly stackOnNarrow = input(true);
     public readonly wrapOnNarrow = input(false);

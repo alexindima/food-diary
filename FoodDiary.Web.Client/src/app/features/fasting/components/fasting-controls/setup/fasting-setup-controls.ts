@@ -36,6 +36,11 @@ export class FastingSetupControlsComponent {
     public readonly cyclicEatDayEatingWindowHours = input.required<number>();
     public readonly isCustomCyclicPresetSelected = input.required<boolean>();
     public readonly isStarting = input.required<boolean>();
+    public readonly showGuidance = input(false);
+    public readonly descriptionKey = input.required<string>();
+    public readonly selectionSummary = input.required<string>();
+    public readonly inlineCustomControls = input(false);
+    public readonly showStartAction = input(true);
 
     public readonly modeChange = output<string>();
     public readonly protocolChange = output<string>();

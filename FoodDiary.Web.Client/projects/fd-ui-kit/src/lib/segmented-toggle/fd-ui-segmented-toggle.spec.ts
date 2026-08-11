@@ -32,28 +32,28 @@ function requireElement(selector: string): HTMLElement {
     return element;
 }
 
-describe('FdUiSegmentedToggleComponent', () => {
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [FdUiSegmentedToggleComponent],
-            providers: [
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string): string => key,
-                        onLangChange: EMPTY,
-                    },
+beforeEach(async () => {
+    await TestBed.configureTestingModule({
+        imports: [FdUiSegmentedToggleComponent],
+        providers: [
+            {
+                provide: TranslateService,
+                useValue: {
+                    instant: (key: string): string => key,
+                    onLangChange: EMPTY,
                 },
-            ],
-        }).compileComponents();
+            },
+        ],
+    }).compileComponents();
 
-        fixture = TestBed.createComponent(FdUiSegmentedToggleComponent);
-        component = fixture.componentInstance;
-        fixture.componentRef.setInput('options', testOptions);
-        fixture.componentRef.setInput('selectedValue', 'day');
-        fixture.detectChanges();
-    });
+    fixture = TestBed.createComponent(FdUiSegmentedToggleComponent);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('options', testOptions);
+    fixture.componentRef.setInput('selectedValue', 'day');
+    fixture.detectChanges();
+});
 
+describe('FdUiSegmentedToggleComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
@@ -113,6 +113,13 @@ describe('FdUiSegmentedToggleComponent', () => {
         fixture.detectChanges();
 
         expect(requireElement('.fd-ui-segmented-toggle').classList).toContain('fd-ui-segmented-toggle--wrap-on-narrow');
+    });
+
+    it('should size the host to its content when requested', () => {
+        fixture.componentRef.setInput('fitContent', true);
+        fixture.detectChanges();
+
+        expect(host().classList).toContain('fd-ui-segmented-toggle-host--fit-content');
     });
 
     it('should emit selectedValue change', () => {

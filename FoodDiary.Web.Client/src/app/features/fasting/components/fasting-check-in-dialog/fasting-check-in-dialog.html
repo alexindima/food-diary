@@ -1,0 +1,29 @@
+<fd-ui-dialog-shell size="lg" [title]="'FASTING.CHECK_IN.TITLE' | translate" [subtitle]="'FASTING.CHECK_IN.DIALOG_SUBTITLE' | translate">
+    <div class="fasting-check-in-dialog__body">
+        <fd-fasting-check-in-card
+            presentation="dialog"
+            [isActive]="true"
+            [isExpanded]="true"
+            [isSaving]="isSaving()"
+            [isEnding]="isEnding()"
+            [isUpdatingCycle]="isUpdatingCycle()"
+            [latestCheckIn]="null"
+            [hungerLevel]="hungerLevel"
+            [energyLevel]="energyLevel"
+            [moodLevel]="moodLevel"
+            [selectedSymptoms]="selectedSymptoms"
+            [notes]="notes"
+        />
+    </div>
+
+    <div fdUiDialogFooter class="fasting-check-in-dialog__footer fd-ui-actions fd-ui-actions--end">
+        <fd-ui-button
+            [loading]="isSaving()"
+            [disabled]="saveDisabled()"
+            [disabledReason]="isEnding() || isUpdatingCycle() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
+            (click)="save()"
+        >
+            {{ 'FASTING.CHECK_IN.SAVE' | translate }}
+        </fd-ui-button>
+    </div>
+</fd-ui-dialog-shell>

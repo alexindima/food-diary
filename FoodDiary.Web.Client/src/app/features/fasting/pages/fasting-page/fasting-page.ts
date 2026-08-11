@@ -17,14 +17,29 @@ import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { HOURS_PER_DAY, MINUTES_PER_HOUR, MS_PER_MINUTE } from '../../../../shared/lib/time.constants';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
-import { FastingCheckInCardComponent } from '../../components/fasting-check-in-card/fasting-check-in-card';
+import {
+    FastingCheckInDialogComponent,
+    type FastingCheckInDialogResult,
+} from '../../components/fasting-check-in-dialog/fasting-check-in-dialog';
 import {
     FastingCheckInChartDialogComponent,
     type FastingCheckInChartDialogData,
 } from '../../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog';
-import { FastingHistoryCardComponent } from '../../components/fasting-history-card/fasting-history-card';
-import { FastingInsightsSectionComponent } from '../../components/fasting-insights-section/fasting-insights-section';
-import { FastingTimerCardComponent } from '../../components/fasting-timer-card/fasting-timer-card';
+import {
+    FastingEndConfirmDialogComponent,
+    type FastingEndConfirmDialogData,
+    type FastingEndConfirmDialogResult,
+} from '../../components/fasting-end-confirm-dialog/fasting-end-confirm-dialog';
+import {
+    FastingHistoryDialogComponent,
+    type FastingHistoryDialogData,
+} from '../../components/fasting-history-dialog/fasting-history-dialog';
+import { FastingProtocolDialogComponent } from '../../components/fasting-protocol-dialog/fasting-protocol-dialog';
+import { FastingRedesignPreviewComponent } from '../../components/fasting-redesign-preview/fasting-redesign-preview';
+import {
+    FastingSessionDetailsDialogComponent,
+    type FastingSessionDetailsDialogData,
+} from '../../components/fasting-session-details-dialog/fasting-session-details-dialog';
 import {
     CURRENT_SESSION_RECENT_CHECK_INS_LIMIT,
     DEFAULT_CYCLIC_EAT_DAYS,
@@ -52,8 +67,6 @@ import type {
     FastingMessageViewModel,
 } from '../fasting-page-lib/fasting-page.types';
 import { FASTING_TOUR } from '../fasting-page-lib/fasting-tour';
-import { FastingAlertsSectionComponent } from '../fasting-page-sections/alerts-section/fasting-alerts-section';
-import { FastingStatsCardComponent } from '../fasting-page-sections/stats-card/fasting-stats-card';
 
 @Component({
     selector: 'fd-fasting-page',
@@ -65,12 +78,7 @@ import { FastingStatsCardComponent } from '../fasting-page-sections/stats-card/f
         PageBodyComponent,
         FdPageContainerDirective,
         SkeletonCardComponent,
-        FastingTimerCardComponent,
-        FastingHistoryCardComponent,
-        FastingInsightsSectionComponent,
-        FastingCheckInCardComponent,
-        FastingStatsCardComponent,
-        FastingAlertsSectionComponent,
+        FastingRedesignPreviewComponent,
     ],
     templateUrl: './fasting-page.html',
     styleUrl: './fasting-page.scss',
@@ -90,10 +98,16 @@ export class FastingPageComponent {
 
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isEnding = this.facade.isEnding;
+    protected readonly isStarting = this.facade.isStarting;
     protected readonly isUpdatingCycle = this.facade.isUpdatingCycle;
     protected readonly isSavingCheckIn = this.facade.isSavingCheckIn;
     protected readonly isActive = this.facade.isActive;
     protected readonly currentSession = this.facade.currentSession;
+    protected readonly elapsedFormatted = this.facade.elapsedFormatted;
+    protected readonly remainingFormatted = this.facade.remainingFormatted;
+    protected readonly progressPercent = this.facade.progressPercent;
+    protected readonly plannedDurationHours = this.facade.plannedDurationHours;
+    protected readonly now = this.facade.now;
     protected readonly stats = this.facade.stats;
     protected readonly history = this.facade.history;
     protected readonly hungerLevel = this.facade.hungerLevel;
@@ -170,8 +184,95 @@ export class FastingPageComponent {
         this.facade.saveCheckIn();
     }
 
+    protected startFasting(): void {
+        this.facade.startFasting();
+    }
+
     protected openCheckInForm(): void {
-        this.isCheckInExpanded.set(true);
+        this.dialogService
+            .open<FastingCheckInDialogComponent, void, FastingCheckInDialogResult>(FastingCheckInDialogComponent, {
+                preset: 'detail',
+                size: 'lg',
+                providers: [{ provide: FastingFacade, useValue: this.facade }],
+            })
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(result => {
+                if (result !== 'saved') {
+                    this.facade.resetCheckInDraft();
+                }
+            });
+    }
+
+    protected openSessionManagement(): void {
+        const session = this.currentSession();
+        if (session?.endedAtUtc !== null) {
+            return;
+        }
+
+        this.dialogService
+            .open<FastingEndConfirmDialogComponent, FastingEndConfirmDialogData, FastingEndConfirmDialogResult>(
+                FastingEndConfirmDialogComponent,
+                {
+                    preset: 'confirm',
+                    data: this.getEndConfirmDialogData(session),
+                },
+            )
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(result => {
+                if (result === 'confirm') {
+                    this.facade.endFasting();
+                }
+            });
+    }
+
+    protected openProtocolSettings(): void {
+        if (this.isActive()) {
+            return;
+        }
+
+        this.dialogService.open<FastingProtocolDialogComponent, void, void>(FastingProtocolDialogComponent, {
+            preset: 'detail',
+            providers: [{ provide: FastingFacade, useValue: this.facade }],
+        });
+    }
+
+    protected openHistory(): void {
+        this.dialogService.open<FastingHistoryDialogComponent, FastingHistoryDialogData, void>(FastingHistoryDialogComponent, {
+            preset: 'detail',
+            data: {
+                historyItems: this.historyItems,
+                canLoadMoreHistory: this.canLoadMoreHistory,
+                isLoadingMoreHistory: this.isLoadingMoreHistory,
+                onSessionOpen: session => {
+                    this.openSessionDetails(session);
+                },
+                onHistoryLoadMore: () => {
+                    this.loadMoreHistory();
+                },
+            },
+        });
+    }
+
+    protected openSessionDetails(session: FastingSession): void {
+        const checkIns = this.getSessionCheckIns(session);
+        this.dialogService.open<FastingSessionDetailsDialogComponent, FastingSessionDetailsDialogData, void>(
+            FastingSessionDetailsDialogComponent,
+            {
+                preset: 'detail',
+                data: {
+                    session,
+                    startedAtLabel: this.formatSessionDateLabel(session.startedAtUtc),
+                    endedAtLabel: session.endedAtUtc === null ? null : this.formatSessionDateLabel(session.endedAtUtc),
+                    sessionTypeLabel: this.getHistorySessionTypeLabel(session),
+                    protocolDisplay: this.getHistoryProtocolDisplay(session),
+                    badgeKey: this.getHistoryBadgeKey(session.status),
+                    checkIns: checkIns.map(checkIn => this.buildCheckInViewModel(checkIn)),
+                    chartCheckIns: checkIns,
+                },
+            },
+        );
     }
 
     protected closeCheckInForm(): void {
@@ -564,6 +665,25 @@ export class FastingPageComponent {
                 value.startsWith('FASTING.') ? this.translateService.instant(value) : value,
             ]),
         );
+    }
+
+    private getEndConfirmDialogData(session: FastingSession): FastingEndConfirmDialogData {
+        if (session.planType === 'Cyclic') {
+            return {
+                title: this.translateService.instant('FASTING.STOP_CYCLE_CONFIRM_TITLE'),
+                message: this.translateService.instant('FASTING.STOP_CYCLE_CONFIRM_MESSAGE'),
+                confirmLabel: this.translateService.instant('FASTING.STOP_CYCLE'),
+                cancelLabel: this.translateService.instant('FASTING.CANCEL_ACTION'),
+            };
+        }
+
+        const isIntermittent = session.planType !== 'Extended';
+        return {
+            title: this.translateService.instant(isIntermittent ? 'FASTING.END_CONFIRM_TITLE' : 'FASTING.INTERRUPT_CONFIRM_TITLE'),
+            message: this.translateService.instant(isIntermittent ? 'FASTING.END_CONFIRM_MESSAGE' : 'FASTING.INTERRUPT_CONFIRM_MESSAGE'),
+            confirmLabel: this.translateService.instant(isIntermittent ? 'FASTING.END_FAST' : 'FASTING.INTERRUPT_FAST'),
+            cancelLabel: this.translateService.instant('FASTING.CANCEL_ACTION'),
+        };
     }
 
     private getHungerSummaryValue(level: number | null): string {

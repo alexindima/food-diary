@@ -16,6 +16,11 @@
     width: 100%;
 }
 
+:host(:where(.fd-ui-segmented-toggle-host--fit-content)) {
+    width: max-content;
+    container-type: normal;
+}
+
 .fd-ui-segmented-toggle {
     display: inline-flex;
     align-items: stretch;

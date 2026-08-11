@@ -7,7 +7,11 @@
     [bodyScrollInset]="bodyScrollInset()"
     [dismissible]="dismissible()"
 >
-    <ng-content select="[fdUiDialogHeader]" />
-    <ng-content select="[fdUiDialogFooter]" />
+    <ng-container ngProjectAs="[fdUiDialogHeader]">
+        <ng-content select="[fdUiDialogHeader]" />
+    </ng-container>
     <ng-content />
+    <ng-container ngProjectAs="[fdUiDialogFooter]">
+        <ng-content select="[fdUiDialogFooter]" />
+    </ng-container>
 </fd-ui-dialog>

@@ -1,0 +1,280 @@
+<section class="fasting-redesign">
+    <div class="fasting-redesign__hero" data-tour-id="fasting-timer">
+        <div class="fasting-redesign__timer-column">
+            <fd-ui-progress-ring
+                class="fasting-redesign__ring"
+                [value]="progress()"
+                [ariaLabel]="'FASTING.TITLE' | translate"
+                [style.--fd-progress-ring-color]="'var(--fd-color-primary-400)'"
+                [style.--fd-progress-ring-track-color]="'var(--fd-color-border-summary-track)'"
+                [style.--fd-progress-ring-stroke-width]="6"
+            >
+                <span class="fasting-redesign__ring-label">
+                    {{ (isActive() ? phaseLabelKey() : 'FASTING.REDESIGN.READY') | translate }}
+                </span>
+                <strong class="fasting-redesign__time">{{ isActive() ? elapsedFormatted() : protocolLabel() }}</strong>
+                <strong class="fasting-redesign__percent">{{
+                    isActive() ? (progress() | number: '1.0-0') + '%' : ('FASTING.REDESIGN.SELECTED' | translate)
+                }}</strong>
+                @if (isActive()) {
+                    <span class="fasting-redesign__protocol">{{ protocolLabel() }}</span>
+                }
+            </fd-ui-progress-ring>
+        </div>
+
+        <div class="fasting-redesign__session">
+            @if (isActive() && session(); as activeSession) {
+                <div class="fasting-redesign__phase-heading">
+                    <span class="fasting-redesign__phase-badge">
+                        <span aria-hidden="true"></span>
+                        {{ phaseLabelKey() | translate }}
+                    </span>
+                    <strong>{{ flowView().key | translate: flowView().params }}</strong>
+                </div>
+                <div class="fasting-redesign__timeline-labels">
+                    <span
+                        ><small>{{ 'FASTING.REDESIGN.START' | translate }}</small
+                        ><strong>{{ activeSession.startedAtUtc | date: 'HH:mm' }}</strong></span
+                    >
+                    <span class="fasting-redesign__timeline-current"
+                        ><small>{{ 'FASTING.REDESIGN.NOW' | translate }}</small
+                        ><strong>{{ now() | date: 'HH:mm' }}</strong></span
+                    >
+                    <span
+                        ><small>{{ (nextPhaseLabelKey() ? 'FASTING.REDESIGN.PHASE_CHANGE' : 'FASTING.REDESIGN.END') | translate }}</small
+                        ><strong>{{ targetAt() | date: 'HH:mm' }}</strong></span
+                    >
+                </div>
+                <div
+                    class="fasting-redesign__timeline"
+                    role="progressbar"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    [attr.aria-valuenow]="progress()"
+                >
+                    <span class="fasting-redesign__timeline-progress" [style.width.%]="progress()"></span>
+                    <span class="fasting-redesign__timeline-point" [style.left.%]="progress()"></span>
+                </div>
+                @if (nextPhaseLabelKey(); as nextPhaseKey) {
+                    <div class="fasting-redesign__next-phase">
+                        <span>{{ 'FASTING.REDESIGN.NEXT' | translate }}</span>
+                        <fd-ui-icon name="arrow_forward" />
+                        <strong>{{ nextPhaseKey | translate }}</strong>
+                    </div>
+                }
+                <strong class="fasting-redesign__remaining"
+                    >{{ 'FASTING.REDESIGN.REMAINING' | translate }} {{ remainingFormatted() }}</strong
+                >
+                @if (stageView(); as stage) {
+                    <div class="fasting-redesign__stage">
+                        <span aria-hidden="true"></span>
+                        <div>
+                            <strong>{{ stage.titleKey | translate }}</strong>
+                            <small>{{ stage.descriptionKey | translate }}</small>
+                        </div>
+                    </div>
+                } @else {
+                    <p class="fasting-redesign__support">{{ 'FASTING.REDESIGN.SUPPORT' | translate }}</p>
+                }
+                @if (activeSession.notes; as sessionNote) {
+                    <div class="fasting-redesign__session-note">
+                        <fd-ui-icon name="notes" />
+                        <span
+                            ><small>{{ 'FASTING.REDESIGN.SESSION_NOTE' | translate }}</small
+                            ><span>{{ sessionNote }}</span></span
+                        >
+                    </div>
+                }
+                <div class="fasting-redesign__actions">
+                    <fd-ui-button size="lg" (click)="manageRequested.emit()">
+                        {{ managementLabelKey() | translate }}
+                    </fd-ui-button>
+                    <fd-ui-button variant="secondary" fill="text" size="sm" (click)="checkInRequested.emit()">
+                        {{ 'FASTING.REDESIGN.CHECK_IN' | translate }}
+                    </fd-ui-button>
+                </div>
+            } @else {
+                <div class="fasting-redesign__idle-copy">
+                    <span class="fasting-redesign__idle-icon"><fd-ui-icon name="schedule" /></span>
+                    <h3>{{ 'FASTING.REDESIGN.IDLE_TITLE' | translate }}</h3>
+                    <p>{{ 'FASTING.REDESIGN.IDLE_TEXT' | translate: { protocol: protocolLabel() } }}</p>
+                    <fd-ui-button size="lg" [loading]="isStarting()" (click)="startRequested.emit()">
+                        {{ 'FASTING.START_FAST' | translate }}
+                    </fd-ui-button>
+                    <fd-ui-button variant="secondary" fill="text" size="sm" (click)="protocolSettingsRequested.emit()">
+                        {{ 'FASTING.REDESIGN.CHANGE_PROTOCOL' | translate }}
+                    </fd-ui-button>
+                </div>
+            }
+        </div>
+
+        <aside class="fasting-redesign__today" data-tour-id="fasting-stats">
+            <h3>{{ 'FASTING.REDESIGN.TODAY' | translate }}</h3>
+            <div class="fasting-redesign__metric">
+                <span class="fasting-redesign__metric-icon fasting-redesign__metric-icon--purple"
+                    ><fd-ui-icon name="calendar_today"
+                /></span>
+                <span
+                    ><small>{{ 'FASTING.REDESIGN.STREAK' | translate }}</small
+                    ><strong>{{ stats()?.currentStreak ?? 0 }} {{ 'FASTING.DAYS' | translate }}</strong></span
+                >
+            </div>
+            <div class="fasting-redesign__metric">
+                <span class="fasting-redesign__metric-icon fasting-redesign__metric-icon--orange"><fd-ui-icon name="schedule" /></span>
+                <span
+                    ><small>{{ 'FASTING.REDESIGN.AVERAGE' | translate }}</small
+                    ><strong>{{ stats()?.averageDurationHours ?? 0 | number: '1.1-1' }} {{ 'FASTING.HOURS' | translate }}</strong></span
+                >
+            </div>
+            <div class="fasting-redesign__metric">
+                <span class="fasting-redesign__metric-icon fasting-redesign__metric-icon--sky"><fd-ui-icon name="favorite_border" /></span>
+                <span
+                    ><small>{{ 'FASTING.REDESIGN.WELLBEING' | translate }}</small
+                    ><strong>{{ wellbeingKey() | translate }}</strong></span
+                >
+            </div>
+            @if (session()?.checkInNotes; as checkInNote) {
+                <div class="fasting-redesign__today-note">
+                    <fd-ui-icon name="format_quote" />
+                    <span
+                        ><small>{{ 'FASTING.REDESIGN.CHECK_IN_NOTE' | translate }}</small
+                        ><span>{{ checkInNote }}</span></span
+                    >
+                </div>
+            }
+        </aside>
+    </div>
+
+    @if (primaryAlert(); as alert) {
+        <section class="fasting-redesign__alert" role="status">
+            <span class="fasting-redesign__alert-icon"><fd-ui-icon name="warning_amber" /></span>
+            <div class="fasting-redesign__alert-copy">
+                <strong>{{ alert.title }}</strong>
+                <span>{{ alert.body }}</span>
+            </div>
+            <div class="fasting-redesign__alert-actions">
+                <fd-ui-button variant="secondary" fill="outline" size="sm" (click)="checkInRequested.emit()">
+                    {{ 'FASTING.REDESIGN.CHECK_IN' | translate }}
+                </fd-ui-button>
+                <fd-ui-button variant="secondary" fill="text" size="sm" (click)="alertDismissRequested.emit(alert.message.id)">
+                    {{ 'FASTING.PROMPTS.DISMISS' | translate }}
+                </fd-ui-button>
+            </div>
+        </section>
+    }
+
+    <div class="fasting-redesign__lower-grid">
+        <section class="fasting-redesign__panel">
+            <h3>{{ 'FASTING.REDESIGN.RHYTHM_TITLE' | translate }}</h3>
+            <div class="fasting-redesign__rhythm">
+                @for (day of rhythmDays(); track day.dayKey) {
+                    <div class="fasting-redesign__day">
+                        <span>{{ day.dayKey | translate }}</span>
+                        <span class="fasting-redesign__day-ring" [style.--fd-fasting-day-progress]="day.progress + '%'">
+                            @if (day.completed) {
+                                <fd-ui-icon name="check" />
+                            }
+                        </span>
+                        <strong>{{ day.durationLabel }}</strong>
+                    </div>
+                }
+            </div>
+            <p class="fasting-redesign__panel-note">{{ 'FASTING.REDESIGN.RHYTHM_NOTE' | translate }}</p>
+        </section>
+
+        <section class="fasting-redesign__panel fasting-redesign__panel--history" data-tour-id="fasting-history">
+            <h3>{{ 'FASTING.REDESIGN.RECENT_TITLE' | translate }}</h3>
+            <div class="fasting-redesign__history-list">
+                @for (item of recentSessions(); track item.id) {
+                    <div class="fasting-redesign__history-item">
+                        <button
+                            type="button"
+                            class="fasting-redesign__history-row"
+                            [attr.aria-label]="'FASTING.REDESIGN.OPEN_SESSION_DETAILS' | translate"
+                            (click)="sessionDetailsRequested.emit(item)"
+                        >
+                            <span class="fasting-redesign__history-session">
+                                <strong>{{ item.startedAtUtc | date: 'd MMMM y, HH:mm' : undefined : currentLocale() }}</strong>
+                                <span aria-hidden="true">&middot;</span>
+                                <span>{{ historyTypeLabelKey(item) | translate }} &middot; {{ historyProtocolLabel(item) }}</span>
+                            </span>
+                            <strong class="fasting-redesign__history-duration">
+                                {{ sessionDurationHours(item) | number: '1.0-1' }} {{ 'FASTING.HOURS' | translate }}
+                            </strong>
+                            <span
+                                class="fasting-redesign__status"
+                                [class.fasting-redesign__status--completed]="item.status === 'Completed'"
+                                [class.fasting-redesign__status--active]="item.status === 'Active'"
+                                [class.fasting-redesign__status--interrupted]="item.status === 'Interrupted'"
+                                [class.fasting-redesign__status--skipped]="item.status === 'Skipped'"
+                                [class.fasting-redesign__status--postponed]="item.status === 'Postponed'"
+                            >
+                                {{ 'FASTING.BADGE_' + item.status.toUpperCase() | translate }}
+                            </span>
+                            <fd-ui-icon name="chevron_right" />
+                        </button>
+                    </div>
+                } @empty {
+                    <p class="fasting-redesign__empty">{{ 'FASTING.NO_HISTORY' | translate }}</p>
+                }
+            </div>
+            <fd-ui-button
+                class="fasting-redesign__history-action"
+                variant="secondary"
+                fill="ghost"
+                size="sm"
+                icon="article"
+                (click)="historyRequested.emit()"
+            >
+                {{ 'FASTING.REDESIGN.VIEW_HISTORY' | translate }}
+            </fd-ui-button>
+        </section>
+    </div>
+
+    @if (personalSummary() || insights().length > 0) {
+        <section class="fasting-redesign__panel fasting-redesign__patterns" data-tour-id="fasting-insights">
+            <header class="fasting-redesign__patterns-header">
+                <h3>{{ 'FASTING.PERSONAL_SUMMARY.TITLE' | translate }}</h3>
+                @if (personalSummary()) {
+                    <span>{{ 'FASTING.PERSONAL_SUMMARY.WINDOW' | translate }}</span>
+                }
+            </header>
+            @if (personalSummary()) {
+                <div class="fasting-redesign__summary-metrics">
+                    <div>
+                        <small>{{ 'FASTING.PERSONAL_SUMMARY.COMPLETION_RATE' | translate }}</small>
+                        <strong>{{ stats()?.completionRateLast30Days ?? 0 | number: '1.0-0' }}%</strong>
+                    </div>
+                    <div>
+                        <small>{{ 'FASTING.PERSONAL_SUMMARY.CHECK_IN_RATE' | translate }}</small>
+                        <strong>{{ stats()?.checkInRateLast30Days ?? 0 | number: '1.0-0' }}%</strong>
+                    </div>
+                    <div>
+                        <small>{{ 'FASTING.PERSONAL_SUMMARY.TOP_SYMPTOM' | translate }}</small>
+                        <strong>{{ topSymptomLabelKey() | translate }}</strong>
+                    </div>
+                </div>
+            }
+            @if (insights().length > 0) {
+                <div class="fasting-redesign__observations">
+                    <h4>{{ 'FASTING.REDESIGN.OBSERVATIONS_TITLE' | translate }}</h4>
+                    @for (insight of insights(); track insight.message.id) {
+                        <article
+                            class="fasting-redesign__observation"
+                            [class.fasting-redesign__observation--positive]="insight.message.tone === 'positive'"
+                            [class.fasting-redesign__observation--warning]="insight.message.tone === 'warning'"
+                        >
+                            <span class="fasting-redesign__observation-icon"><fd-ui-icon [name]="insightIcon(insight)" /></span>
+                            <div>
+                                <strong>{{ insight.title }}</strong
+                                ><span>{{ insight.body }}</span>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+        </section>
+    }
+
+    <p class="fasting-redesign__safety"><fd-ui-icon name="info_outline" /> {{ 'FASTING.REDESIGN.SAFETY' | translate }}</p>
+</section>

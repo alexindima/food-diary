@@ -19,20 +19,6 @@ export const FASTING_TOUR: LocalizedTourConfig = {
             placement: 'left',
         },
         {
-            id: 'check-in',
-            target: 'fasting-check-in',
-            titleKey: 'CHECK_IN_TITLE',
-            descriptionKey: 'CHECK_IN_TEXT',
-            placement: 'top',
-        },
-        {
-            id: 'insights',
-            target: 'fasting-insights',
-            titleKey: 'INSIGHTS_TITLE',
-            descriptionKey: 'INSIGHTS_TEXT',
-            placement: 'top',
-        },
-        {
             id: 'history',
             target: 'fasting-history',
             titleKey: 'HISTORY_TITLE',

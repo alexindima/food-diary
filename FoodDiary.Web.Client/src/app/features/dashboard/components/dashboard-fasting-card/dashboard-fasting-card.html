@@ -1,0 +1,48 @@
+@let view = state();
+<section class="dashboard-fasting-card-shell" [attr.aria-label]="'FASTING.TITLE' | translate">
+    <fd-dashboard-widget-frame [title]="'FASTING.TITLE' | translate">
+        <div class="dashboard-fasting-card">
+            <fd-ui-progress-ring
+                class="dashboard-fasting-card__ring"
+                [value]="progress()"
+                [ariaLabel]="'FASTING.TITLE' | translate"
+                [style.--fd-progress-ring-color]="ringColor()"
+                [style.--fd-progress-ring-track-color]="'var(--fd-color-border-summary-track)'"
+                [style.--fd-progress-ring-stroke-width]="7"
+            >
+                <span class="dashboard-fasting-card__state fd-ui-caption">{{ view.stateLabel }}</span>
+                <strong class="dashboard-fasting-card__elapsed">{{ view.elapsedFormatted }}</strong>
+                <strong class="dashboard-fasting-card__percent">{{ progress().toFixed(0) }}%</strong>
+            </fd-ui-progress-ring>
+
+            <div class="dashboard-fasting-card__summary">
+                <div class="dashboard-fasting-card__protocol fd-row fd-wrap fd-align-baseline fd-gap-card-header">
+                    <span class="fd-ui-meta-text">{{ planTypeLabelKey() | translate }}</span>
+                    <span aria-hidden="true">&middot;</span>
+                    <strong>{{ view.detailLabel }}</strong>
+                </div>
+
+                <div class="dashboard-fasting-card__remaining">
+                    <span class="fd-ui-caption">{{ view.remainingLabelKey | translate }}</span>
+                    <strong>{{ view.remainingFormatted }}</strong>
+                </div>
+
+                @if (view.stage !== null) {
+                    <div class="dashboard-fasting-card__stage">
+                        <span class="dashboard-fasting-card__stage-icon" aria-hidden="true"></span>
+                        <div>
+                            <strong>{{ view.stage.titleKey | translate }}</strong>
+                            <p>{{ view.stage.descriptionKey | translate }}</p>
+                        </div>
+                    </div>
+                }
+
+                @if (!view.isOvertime && view.nextStageFormatted !== null) {
+                    <span class="dashboard-fasting-card__next fd-ui-caption">
+                        {{ 'FASTING.STAGES.NEXT_IN' | translate: { time: view.nextStageFormatted } }}
+                    </span>
+                }
+            </div>
+        </div>
+    </fd-dashboard-widget-frame>
+</section>

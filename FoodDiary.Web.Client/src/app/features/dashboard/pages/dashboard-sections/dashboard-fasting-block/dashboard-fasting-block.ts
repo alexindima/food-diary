@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { FastingTimerCardComponent } from '../../../../fasting/components/fasting-timer-card/fasting-timer-card';
 import { DashboardCardShellComponent } from '../../../components/dashboard-card-shell/dashboard-card-shell';
+import { DashboardFastingCardComponent } from '../../../components/dashboard-fasting-card/dashboard-fasting-card';
 import { DashboardBlockContentDirective, DashboardBlockHostDirective } from '../../dashboard-lib/dashboard-block-host.directive';
 import type { DashboardBlockState, DashboardFastingSession } from '../../dashboard-lib/dashboard-view.types';
 
@@ -13,7 +13,7 @@ import type { DashboardBlockState, DashboardFastingSession } from '../../dashboa
         DashboardBlockContentDirective,
         DashboardBlockHostDirective,
         DashboardCardShellComponent,
-        FastingTimerCardComponent,
+        DashboardFastingCardComponent,
     ],
     templateUrl: './dashboard-fasting-block.html',
     styleUrl: '../../dashboard.scss',

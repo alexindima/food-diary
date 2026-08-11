@@ -1,0 +1,11 @@
+<fd-ui-dialog-shell size="lg" [title]="'FASTING.REDESIGN.SETTINGS_TITLE' | translate">
+    <div class="fasting-protocol-dialog__body">
+        <fd-fasting-controls presentation="dialog" [showSetupStartAction]="false" />
+    </div>
+
+    <div fdUiDialogFooter class="fasting-protocol-dialog__footer">
+        <fd-ui-button [loading]="isStarting()" (click)="startFasting()">
+            {{ 'FASTING.START_FAST' | translate }}
+        </fd-ui-button>
+    </div>
+</fd-ui-dialog-shell>

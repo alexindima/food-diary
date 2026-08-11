@@ -1,0 +1,118 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+}
+
+.fasting {
+    &__checkin-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: var(--fd-space-md);
+    }
+
+    &__checkin-field-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--fd-space-xs);
+    }
+
+    &__checkin-selection {
+        color: var(--fd-color-primary);
+        font-size: var(--fd-text-helper-size);
+        line-height: var(--fd-text-helper-line-height);
+        text-align: end;
+    }
+
+    &__symptom-options {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--fd-space-xs);
+    }
+
+    &__symptom-divider {
+        align-self: stretch;
+        border-inline-start: var(--fd-border-muted);
+    }
+}
+
+.fasting__checkin--dialog {
+    gap: var(--fd-space-lg);
+    padding-top: var(--fd-space-xxs);
+
+    .fasting__checkin-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+        overflow: hidden;
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-panel);
+        background: transparent;
+    }
+
+    .fasting__checkin-field {
+        display: grid;
+        grid-template-columns: minmax(120px, 0.32fr) minmax(0, 1fr);
+        align-items: center;
+        gap: var(--fd-space-lg);
+        padding: var(--fd-space-md);
+    }
+
+    .fasting__checkin-field + .fasting__checkin-field {
+        border-top: var(--fd-border-muted);
+    }
+
+    .fasting__checkin-field--symptoms {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--fd-space-sm);
+        padding: 0;
+    }
+
+    .fasting__checkin-field-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: var(--fd-space-micro);
+    }
+
+    .fasting__protocol-group-title {
+        text-align: start;
+    }
+
+    .fasting__checkin-selection {
+        font-size: var(--fd-text-body-sm-size);
+        text-align: start;
+    }
+
+    .fasting__symptom-options {
+        width: 100%;
+    }
+
+    fd-ui-emoji-picker {
+        --fd-emoji-picker-option-bg-default: transparent;
+    }
+}
+
+@media #{variables.$media-mobile} {
+    .fasting__checkin--dialog {
+        gap: var(--fd-space-md);
+
+        .fasting__checkin-field {
+            grid-template-columns: 1fr;
+            gap: var(--fd-space-sm);
+            padding: var(--fd-space-sm);
+        }
+
+        .fasting__checkin-field-heading {
+            width: 100%;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .fasting__symptom-divider {
+            display: none;
+        }
+    }
+}

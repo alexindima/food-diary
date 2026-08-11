@@ -5,24 +5,6 @@
         margin-bottom: var(--fd-page-header-gap);
     }
 
-    &__grid {
-        grid-template-columns: minmax(0, 1fr);
-        align-items: start;
-        align-content: start;
-
-        > :where(:not(template)) {
-            min-width: 0;
-        }
-    }
-
-    &__card {
-        height: 100%;
-
-        &--setup {
-            min-height: 0;
-        }
-    }
-
     &__skeleton {
         width: 100%;
 

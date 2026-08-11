@@ -1,0 +1,18 @@
+:host {
+    --fd-fasting-check-in-axis-width: calc(var(--fd-space-xl) + var(--fd-space-sm));
+    --fd-fasting-check-in-date-height: calc(var(--fd-space-xl) + var(--fd-space-xs));
+    display: block;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding-top: var(--fd-space-sm);
+}
+
+fd-ui-line-chart {
+    --fd-line-chart-height: calc(260px - var(--fd-fasting-check-in-date-height));
+    --fd-line-chart-stacked-axis-height: var(--fd-fasting-check-in-date-height);
+    --fd-line-chart-x-axis-label-offset: var(--fd-space-xs);
+    --fd-line-chart-y-axis-gap: 0;
+    --fd-line-chart-y-axis-label-right: var(--fd-space-xs);
+    --fd-line-chart-y-axis-width: var(--fd-fasting-check-in-axis-width);
+}

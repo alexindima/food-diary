@@ -8,8 +8,8 @@
                     "moduleCycleNodes":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
-                    "selectorUnreferencedComponents":  140,
-                    "componentsWithoutDirectSpecs":  123,
+                    "selectorUnreferencedComponents":  149,
+                    "componentsWithoutDirectSpecs":  126,
                     "criticalSymbolsWithoutTestReferences":  29,
                     "explicitDebtMarkers":  3
                 },
@@ -397,12 +397,28 @@
                                                "specPath":  "FoodDiary.Web.Client/src/app/features/explore/dialogs/report-dialog/report-dialog.spec.ts"
                                            },
                                            {
+                                               "class":  "FastingAlertsSectionComponent",
+                                               "selector":  "fd-fasting-alerts-section",
+                                               "feature":  "fasting",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/alerts-section/fasting-alerts-section.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/alerts-section/fasting-alerts-section.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/alerts-section/fasting-alerts-section.spec.ts"
+                                           },
+                                           {
                                                "class":  "FastingCheckInChartDialogComponent",
                                                "selector":  "fd-fasting-checkin-chart-dialog",
                                                "feature":  "fasting",
                                                "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.html",
-                                               "specPath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.spec.ts"
+                                               "specPath":  null
+                                           },
+                                           {
+                                               "class":  "FastingCheckInDialogComponent",
+                                               "selector":  "fd-fasting-check-in-dialog",
+                                               "feature":  "fasting",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-dialog/fasting-check-in-dialog.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-dialog/fasting-check-in-dialog.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-dialog/fasting-check-in-dialog.spec.ts"
                                            },
                                            {
                                                "class":  "FastingEndConfirmDialogComponent",
@@ -413,6 +429,30 @@
                                                "specPath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-end-confirm-dialog/fasting-end-confirm-dialog.spec.ts"
                                            },
                                            {
+                                               "class":  "FastingHistoryCardComponent",
+                                               "selector":  "fd-fasting-history-card",
+                                               "feature":  "fasting",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-card/fasting-history-card.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-card/fasting-history-card.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-card/fasting-history-card.spec.ts"
+                                           },
+                                           {
+                                               "class":  "FastingHistoryDialogComponent",
+                                               "selector":  "fd-fasting-history-dialog",
+                                               "feature":  "fasting",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-dialog/fasting-history-dialog.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-dialog/fasting-history-dialog.html",
+                                               "specPath":  null
+                                           },
+                                           {
+                                               "class":  "FastingInsightsSectionComponent",
+                                               "selector":  "fd-fasting-insights-section",
+                                               "feature":  "fasting",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-insights-section/fasting-insights-section.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-insights-section/fasting-insights-section.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-insights-section/fasting-insights-section.spec.ts"
+                                           },
+                                           {
                                                "class":  "FastingPageComponent",
                                                "selector":  "fd-fasting-page",
                                                "feature":  "fasting",
@@ -421,12 +461,44 @@
                                                "specPath":  "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page/fasting-page.spec.ts"
                                            },
                                            {
+                                               "class":  "FastingProtocolDialogComponent",
+                                               "selector":  "fd-fasting-protocol-dialog",
+                                               "feature":  "fasting",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-protocol-dialog/fasting-protocol-dialog.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-protocol-dialog/fasting-protocol-dialog.html",
+                                               "specPath":  null
+                                           },
+                                           {
                                                "class":  "FastingSafetyDialogComponent",
                                                "selector":  "fd-fasting-safety-dialog",
                                                "feature":  "fasting",
                                                "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-safety-dialog/fasting-safety-dialog.ts",
                                                "templatePath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-safety-dialog/fasting-safety-dialog.html",
                                                "specPath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-safety-dialog/fasting-safety-dialog.spec.ts"
+                                           },
+                                           {
+                                               "class":  "FastingSessionDetailsDialogComponent",
+                                               "selector":  "fd-fasting-session-details-dialog",
+                                               "feature":  "fasting",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-details-dialog/fasting-session-details-dialog.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-details-dialog/fasting-session-details-dialog.html",
+                                               "specPath":  null
+                                           },
+                                           {
+                                               "class":  "FastingStatsCardComponent",
+                                               "selector":  "fd-fasting-stats-card",
+                                               "feature":  "fasting",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.spec.ts"
+                                           },
+                                           {
+                                               "class":  "FastingTimerCardComponent",
+                                               "selector":  "fd-fasting-timer-card",
+                                               "feature":  "fasting",
+                                               "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.ts",
+                                               "templatePath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.html",
+                                               "specPath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.spec.ts"
                                            },
                                            {
                                                "class":  "DesignTokensDocsComponent",
@@ -2772,6 +2844,20 @@
                                              "specPath":  null
                                          },
                                          {
+                                             "class":  "FastingCheckInChartDialogComponent",
+                                             "selector":  "fd-fasting-checkin-chart-dialog",
+                                             "feature":  "fasting",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.html",
+                                             "inputs":  [
+
+                                                        ],
+                                             "outputs":  [
+
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
                                              "class":  "FastingCyclicSetupControlsComponent",
                                              "selector":  "fd-fasting-cyclic-setup-controls",
                                              "feature":  "fasting",
@@ -2822,6 +2908,11 @@
                                                                 "name":  "isCustomCyclicPresetSelected",
                                                                 "type":  "boolean",
                                                                 "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "inlineCustomControls",
+                                                                "type":  "",
+                                                                "required":  false
                                                             }
                                                         ],
                                              "outputs":  [
@@ -2845,6 +2936,48 @@
                                                                  "name":  "cyclicEatDayFastHoursChange",
                                                                  "type":  "string | number"
                                                              }
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
+                                             "class":  "FastingHistoryDialogComponent",
+                                             "selector":  "fd-fasting-history-dialog",
+                                             "feature":  "fasting",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-dialog/fasting-history-dialog.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-dialog/fasting-history-dialog.html",
+                                             "inputs":  [
+
+                                                        ],
+                                             "outputs":  [
+
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
+                                             "class":  "FastingProtocolDialogComponent",
+                                             "selector":  "fd-fasting-protocol-dialog",
+                                             "feature":  "fasting",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-protocol-dialog/fasting-protocol-dialog.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-protocol-dialog/fasting-protocol-dialog.html",
+                                             "inputs":  [
+
+                                                        ],
+                                             "outputs":  [
+
+                                                         ],
+                                             "specPath":  null
+                                         },
+                                         {
+                                             "class":  "FastingSessionDetailsDialogComponent",
+                                             "selector":  "fd-fasting-session-details-dialog",
+                                             "feature":  "fasting",
+                                             "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-details-dialog/fasting-session-details-dialog.ts",
+                                             "templatePath":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-details-dialog/fasting-session-details-dialog.html",
+                                             "inputs":  [
+
+                                                        ],
+                                             "outputs":  [
+
                                                          ],
                                              "specPath":  null
                                          },
@@ -2944,6 +3077,31 @@
                                                                 "name":  "isStarting",
                                                                 "type":  "boolean",
                                                                 "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "showGuidance",
+                                                                "type":  "",
+                                                                "required":  false
+                                                            },
+                                                            {
+                                                                "name":  "descriptionKey",
+                                                                "type":  "string",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "selectionSummary",
+                                                                "type":  "string",
+                                                                "required":  true
+                                                            },
+                                                            {
+                                                                "name":  "inlineCustomControls",
+                                                                "type":  "",
+                                                                "required":  false
+                                                            },
+                                                            {
+                                                                "name":  "showStartAction",
+                                                                "type":  "",
+                                                                "required":  false
                                                             }
                                                         ],
                                              "outputs":  [
@@ -3315,49 +3473,6 @@
                                                             },
                                                             {
                                                                 "name":  "disabled",
-                                                                "type":  "",
-                                                                "required":  false
-                                                            }
-                                                        ],
-                                             "outputs":  [
-
-                                                         ],
-                                             "specPath":  null
-                                         },
-                                         {
-                                             "class":  "FdUiDialogShellComponent",
-                                             "selector":  "fd-ui-dialog-shell",
-                                             "feature":  "fd-ui-kit",
-                                             "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog-shell/fd-ui-dialog-shell.ts",
-                                             "templatePath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog-shell/fd-ui-dialog-shell.html",
-                                             "inputs":  [
-                                                            {
-                                                                "name":  "title",
-                                                                "type":  "string | undefined",
-                                                                "required":  false
-                                                            },
-                                                            {
-                                                                "name":  "subtitle",
-                                                                "type":  "string | undefined",
-                                                                "required":  false
-                                                            },
-                                                            {
-                                                                "name":  "closeAriaLabel",
-                                                                "type":  "",
-                                                                "required":  false
-                                                            },
-                                                            {
-                                                                "name":  "size",
-                                                                "type":  "FdUiDialogSize",
-                                                                "required":  false
-                                                            },
-                                                            {
-                                                                "name":  "bodyScrollInset",
-                                                                "type":  "FdUiDialogBodyScrollInset",
-                                                                "required":  false
-                                                            },
-                                                            {
-                                                                "name":  "dismissible",
                                                                 "type":  "",
                                                                 "required":  false
                                                             }

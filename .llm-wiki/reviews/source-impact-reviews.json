@@ -162,13 +162,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "247fa0cd7825ef91223bf5eda787fd3aab1b278d3ce347c4139dc347aeef9e0e"
+                                            "sha256":  "44262c6e36fd88ff7fd41d5b045d8795f95e5d8865c978cac28a55a18cc0535a"
                                         }
                                     ],
-                        "reason":  "Reviewed Academy lesson detail contracts, rich HTML runtime trace, and focused quality evidence.",
+                        "reason":  "Reviewed regenerated indexes and dependent guidance for this frontend-only fasting presentation change; component contracts, architecture boundaries, feature trace, and focused quality risks remain valid.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "840063e33d312e8120f4f33df122686ba2a8508e",
-                        "reviewedAtUtc":  "2026-08-10T19:16:27.1589678Z"
+                        "gitHead":  "d8e2e1834fc0fb828f81b9a5aa71d19d08b9d141",
+                        "reviewedAtUtc":  "2026-08-11T21:38:25.9044506Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -256,13 +256,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "9488567ae6749e30c6558125a6e28f4bda39b22c42c9c0c6964b75b770cfc8b3"
+                                            "sha256":  "5dbc02c1f39ca8d7f0704bbdbce680aebca661ffded978baf26a17226bf168b5"
                                         }
                                     ],
-                        "reason":  "Academy UI redesign only; generated architecture health data remains semantically compatible.",
+                        "reason":  "Reviewed regenerated indexes and dependent guidance for this frontend-only fasting presentation change; component contracts, architecture boundaries, feature trace, and focused quality risks remain valid.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "faadb121768a3d8eb0f1ba50bcf09d222d546677",
-                        "reviewedAtUtc":  "2026-08-10T09:09:09.9229335Z"
+                        "gitHead":  "d8e2e1834fc0fb828f81b9a5aa71d19d08b9d141",
+                        "reviewedAtUtc":  "2026-08-11T21:38:26.1250129Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -684,13 +684,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "76fee394f770e44fb557412954a4e14837ff8647704bbd5114b67e445cabe89f"
+                                            "sha256":  "2ec45e8fddd8ec9b403916d0006f8c6903d057f1714c3ed48b163b7bd56ad559"
                                         }
                                     ],
-                        "reason":  "Reviewed Academy lesson detail contracts, rich HTML runtime trace, and focused quality evidence.",
+                        "reason":  "Reviewed regenerated indexes and dependent guidance for this frontend-only fasting presentation change; component contracts, architecture boundaries, feature trace, and focused quality risks remain valid.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "840063e33d312e8120f4f33df122686ba2a8508e",
-                        "reviewedAtUtc":  "2026-08-10T19:16:27.3664026Z"
+                        "gitHead":  "d8e2e1834fc0fb828f81b9a5aa71d19d08b9d141",
+                        "reviewedAtUtc":  "2026-08-11T21:38:26.3954831Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -859,17 +859,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "247fa0cd7825ef91223bf5eda787fd3aab1b278d3ce347c4139dc347aeef9e0e"
+                                            "sha256":  "44262c6e36fd88ff7fd41d5b045d8795f95e5d8865c978cac28a55a18cc0535a"
                                         },
                                         {
                                             "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "e0ebcc72862d270d2355212cbb60631751f8a3b57832b503cb819c35488c9e56"
+                                            "sha256":  "55c84a7481780a88e2d449efad980d759bc32d1700cb78c71c3117bec06cb24a"
                                         }
                                     ],
-                        "reason":  "Reviewed Academy lesson detail contracts, rich HTML runtime trace, and focused quality evidence.",
+                        "reason":  "Reviewed regenerated indexes and dependent guidance for this frontend-only fasting presentation change; component contracts, architecture boundaries, feature trace, and focused quality risks remain valid.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "840063e33d312e8120f4f33df122686ba2a8508e",
-                        "reviewedAtUtc":  "2026-08-10T19:16:27.6163329Z"
+                        "gitHead":  "d8e2e1834fc0fb828f81b9a5aa71d19d08b9d141",
+                        "reviewedAtUtc":  "2026-08-11T21:38:26.7217767Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

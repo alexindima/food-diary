@@ -31,12 +31,17 @@ describe('FastingEndConfirmDialogComponent', () => {
 
     it('renders dialog copy', () => {
         const fixture = createComponent();
-        const text = getElement(fixture).textContent;
+        const element = getElement(fixture);
+        const text = element.textContent;
 
         expect(text).toContain(data.title);
         expect(text).toContain(data.message);
         expect(text).toContain(data.confirmLabel);
         expect(text).toContain(data.cancelLabel);
+        expect(element.querySelector('.fasting-end-confirm-dialog__footer')?.classList).toContain('fd-ui-actions--end');
+        expect(
+            [...element.querySelectorAll('.fasting-end-confirm-dialog__footer fd-ui-button')].map(button => button.textContent.trim()),
+        ).toEqual([data.cancelLabel, data.confirmLabel]);
     });
 
     it('closes with confirm or cancel result', () => {

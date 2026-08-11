@@ -25,6 +25,7 @@ export class FastingCyclicSetupControlsComponent {
     public readonly cyclicEatDayFastHours = input.required<number>();
     public readonly cyclicEatDayEatingWindowHours = input.required<number>();
     public readonly isCustomCyclicPresetSelected = input.required<boolean>();
+    public readonly inlineCustomControls = input(false);
 
     public readonly cyclicPresetChange = output<string>();
     public readonly cyclicFastDaysChange = output<string | number>();
