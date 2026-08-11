@@ -6,10 +6,10 @@
                       "externalTransfers":  "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
                   },
     "summary":  {
-                    "candidateFields":  1400,
+                    "candidateFields":  1403,
                     "credential":  146,
                     "identity":  140,
-                    "health":  618,
+                    "health":  621,
                     "financial":  199,
                     "privateContent":  297,
                     "boundaryFiles":  179,
@@ -3222,6 +3222,27 @@
                        "type":  "int",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserNotificationPreferencesModel.cs",
                        "line":  8
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "EstimatedTdee",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserTdeeProfileModel.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Weight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserTdeeProfileModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWeight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserTdeeProfileModel.cs",
+                       "line":  7
                    },
                    {
                        "category":  "health",

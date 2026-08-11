@@ -9,9 +9,9 @@ using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
 using FoodDiary.Application.Ai.Services;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -249,11 +249,11 @@ public class AiValidatorsTests {
 
     [Fact]
     public async Task AiUserContextService_WhenUserMissing_ReturnsAccessFailure() {
-        IUserContextService userContextService = Substitute.For<IUserContextService>();
-        userContextService
-            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<User>(Errors.Authentication.InvalidToken));
-        var service = new AiUserContextService(userContextService);
+        IUserAiProfileReadService userProfileReadService = Substitute.For<IUserAiProfileReadService>();
+        userProfileReadService
+            .GetAiProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserAiProfileModel>(Errors.Authentication.InvalidToken));
+        var service = new AiUserContextService(userProfileReadService);
 
         Result<AiUserContext> result = await service.GetAsync(UserId.New(), CancellationToken.None);
 

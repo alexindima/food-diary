@@ -1,21 +1,25 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.WeeklyCheckIn.Common;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeeklyCheckIn.Services;
 
-public sealed class WeeklyCheckInUserProfileService(IUserContextService userContextService) : IWeeklyCheckInUserProfileService {
+public sealed class WeeklyCheckInUserProfileService(
+    ICurrentUserAccessService currentUserAccessService,
+    IUserWeeklyCheckInProfileReadService userProfileReadService) : IWeeklyCheckInUserProfileService {
     public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
-        userContextService.EnsureCanAccessAsync(userId, cancellationToken);
+        currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken);
 
     public async Task<Result<WeeklyCheckInUserProfile>> GetAsync(UserId userId, CancellationToken cancellationToken = default) {
-        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (userResult.IsFailure) {
-            return Result.Failure<WeeklyCheckInUserProfile>(userResult.Error);
+        Result<UserWeeklyCheckInProfileModel> profileResult = await userProfileReadService
+            .GetWeeklyCheckInProfileAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+        if (profileResult.IsFailure) {
+            return Result.Failure<WeeklyCheckInUserProfile>(profileResult.Error);
         }
 
-        return Result.Success(new WeeklyCheckInUserProfile(userResult.Value.DailyCalorieTarget));
+        return Result.Success(new WeeklyCheckInUserProfile(profileResult.Value.DailyCalorieTarget));
     }
 }

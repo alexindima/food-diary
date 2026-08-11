@@ -13,11 +13,11 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.Hydration.Mappings;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Hydration.Services;
-using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Tests.Hydration;
 
@@ -93,10 +93,10 @@ public class HydrationFeatureTests {
 
     [Fact]
     public async Task HydrationGoalService_WhenUserIsMissing_ReturnsInvalidToken() {
-        IUserContextService userContextService = Substitute.For<IUserContextService>();
-        userContextService.GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<User>(Errors.Authentication.InvalidToken));
-        var service = new HydrationGoalService(userContextService);
+        IUserHydrationProfileReadService userProfileReadService = Substitute.For<IUserHydrationProfileReadService>();
+        userProfileReadService.GetHydrationProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserHydrationProfileModel>(Errors.Authentication.InvalidToken));
+        var service = new HydrationGoalService(userProfileReadService);
 
         Result<double?> result = await service.GetCurrentGoalAsync(UserId.New(), CancellationToken.None);
 

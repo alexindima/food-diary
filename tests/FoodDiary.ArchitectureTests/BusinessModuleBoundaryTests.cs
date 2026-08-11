@@ -67,6 +67,22 @@ public sealed class BusinessModuleBoundaryTests {
         Assert.Empty(violations);
     }
 
+    [Fact]
+    public void MigratedUserProfileConsumers_DoNotDependOnInternalUserContextService() {
+        string[] migratedModules = ["Ai", "Hydration", "Tdee", "WeeklyCheckIn"];
+
+        string[] violations = [.. migratedModules
+            .Select(module => Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application", module))
+            .SelectMany(SourceScanner.SourceFiles)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, line, index }))
+            .Where(static entry => entry.line.Contains("IUserContextService", StringComparison.Ordinal))
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} references internal Users aggregate access")
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
     private static readonly HashSet<string> ApprovedFastingApplicationDependencies = new(StringComparer.Ordinal) {
         "FoodDiary.Application.Abstractions.Common",
         "FoodDiary.Application.Abstractions.Fasting",

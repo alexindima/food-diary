@@ -1,24 +1,26 @@
 using FoodDiary.Results;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Tdee.Common;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tdee.Services;
 
-public sealed class TdeeUserProfileService(IUserContextService userContextService) : ITdeeUserProfileService {
+public sealed class TdeeUserProfileService(IUserTdeeProfileReadService userProfileReadService) : ITdeeUserProfileService {
     public async Task<Result<TdeeUserProfile>> GetAsync(UserId userId, CancellationToken cancellationToken = default) {
-        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (userResult.IsFailure) {
-            return Result.Failure<TdeeUserProfile>(userResult.Error);
+        Result<UserTdeeProfileModel> profileResult = await userProfileReadService
+            .GetTdeeProfileAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+        if (profileResult.IsFailure) {
+            return Result.Failure<TdeeUserProfile>(profileResult.Error);
         }
 
-        User user = userResult.Value;
+        UserTdeeProfileModel profile = profileResult.Value;
         return Result.Success(new TdeeUserProfile(
-            user.CalculateBmr(),
-            user.CalculateEstimatedTdee(),
-            user.Weight,
-            user.DesiredWeight,
-            user.DailyCalorieTarget));
+            profile.Bmr,
+            profile.EstimatedTdee,
+            profile.Weight,
+            profile.DesiredWeight,
+            profile.DailyCalorieTarget));
     }
 }

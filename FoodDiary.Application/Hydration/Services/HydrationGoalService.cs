@@ -1,19 +1,20 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Hydration.Common;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Hydration.Services;
 
-public sealed class HydrationGoalService(IUserContextService userContextService) : IHydrationGoalService {
+public sealed class HydrationGoalService(IUserHydrationProfileReadService userProfileReadService) : IHydrationGoalService {
     public async Task<Result<double?>> GetCurrentGoalAsync(UserId userId, CancellationToken cancellationToken = default) {
-        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (userResult.IsFailure) {
-            return Result.Failure<double?>(userResult.Error);
+        Result<UserHydrationProfileModel> profileResult = await userProfileReadService
+            .GetHydrationProfileAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+        if (profileResult.IsFailure) {
+            return Result.Failure<double?>(profileResult.Error);
         }
 
-        User user = userResult.Value;
-        return Result.Success(user.HydrationGoal ?? user.WaterGoal);
+        return Result.Success(profileResult.Value.EffectiveWaterGoal);
     }
 }

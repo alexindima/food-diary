@@ -15,7 +15,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 
 namespace FoodDiary.Application.Tests.Tdee;
 
@@ -45,11 +45,11 @@ public class TdeeFeatureTests {
 
     [Fact]
     public async Task TdeeUserProfileService_WhenUserMissing_ReturnsAccessFailure() {
-        IUserContextService userContextService = Substitute.For<IUserContextService>();
-        userContextService
-            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<User>(Errors.Authentication.InvalidToken));
-        var service = new TdeeUserProfileService(userContextService);
+        IUserTdeeProfileReadService userProfileReadService = Substitute.For<IUserTdeeProfileReadService>();
+        userProfileReadService
+            .GetTdeeProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserTdeeProfileModel>(Errors.Authentication.InvalidToken));
+        var service = new TdeeUserProfileService(userProfileReadService);
 
         Result<TdeeUserProfile> result = await service.GetAsync(UserId.New(), CancellationToken.None);
 

@@ -19,6 +19,8 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Application.WeeklyCheckIn.Models;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 
 namespace FoodDiary.Application.Tests.WeeklyCheckIn;
 
@@ -241,8 +243,10 @@ public class WeeklyCheckInFeatureTests {
     public async Task WeeklyCheckInUserProfileService_WithAccessibleUser_ReturnsDailyCalorieTarget() {
         var user = User.Create("weekly-profile@example.com", "hashed");
         user.UpdateGoals(dailyCalorieTarget: 2200);
-        IUserContextService userContextService = CreateUserContextService(user);
-        var service = new WeeklyCheckInUserProfileService(userContextService);
+        IUserWeeklyCheckInProfileReadService userProfileReadService = Substitute.For<IUserWeeklyCheckInProfileReadService>();
+        userProfileReadService.GetWeeklyCheckInProfileAsync(user.Id, Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new UserWeeklyCheckInProfileModel(user.DailyCalorieTarget)));
+        var service = new WeeklyCheckInUserProfileService(CreateUserContextService(user), userProfileReadService);
 
         Result<WeeklyCheckInUserProfile> result = await service.GetAsync(user.Id, CancellationToken.None);
 
@@ -252,8 +256,10 @@ public class WeeklyCheckInFeatureTests {
 
     [Fact]
     public async Task WeeklyCheckInUserProfileService_WithMissingUser_ReturnsInvalidToken() {
-        IUserContextService userContextService = CreateUserContextService(user: null);
-        var service = new WeeklyCheckInUserProfileService(userContextService);
+        IUserWeeklyCheckInProfileReadService userProfileReadService = Substitute.For<IUserWeeklyCheckInProfileReadService>();
+        userProfileReadService.GetWeeklyCheckInProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserWeeklyCheckInProfileModel>(Errors.Authentication.InvalidToken));
+        var service = new WeeklyCheckInUserProfileService(CreateUserContextService(user: null), userProfileReadService);
 
         Result<WeeklyCheckInUserProfile> result = await service.GetAsync(UserId.New(), CancellationToken.None);
 
@@ -261,13 +267,15 @@ public class WeeklyCheckInFeatureTests {
     }
 
     [Fact]
-    public async Task WeeklyCheckInUserProfileService_EnsureCanAccessAsync_ForwardsToUserContextService() {
+    public async Task WeeklyCheckInUserProfileService_EnsureCanAccessAsync_ForwardsToAccessService() {
         var userId = UserId.New();
-        IUserContextService userContextService = Substitute.For<IUserContextService>();
-        userContextService
+        ICurrentUserAccessService currentUserAccessService = Substitute.For<ICurrentUserAccessService>();
+        currentUserAccessService
             .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Error?>(Errors.Authentication.AccountDeleted));
-        var service = new WeeklyCheckInUserProfileService(userContextService);
+        var service = new WeeklyCheckInUserProfileService(
+            currentUserAccessService,
+            Substitute.For<IUserWeeklyCheckInProfileReadService>());
 
         Error? error = await service.EnsureCanAccessAsync(userId, CancellationToken.None);
 

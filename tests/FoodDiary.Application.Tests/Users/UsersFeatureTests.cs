@@ -1051,6 +1051,42 @@ public partial class UsersFeatureTests {
         Assert.Equal(77, result.Value.DesiredWaist);
     }
 
+    [Fact]
+    public async Task UserContextService_FeatureProfiles_ProjectOnlyRequiredValues() {
+        var user = User.Create("feature-profiles@example.com", "hash");
+        user.UpdateGoals(new UserGoalUpdate(
+            DailyCalorieTarget: 2050,
+            ProteinTarget: null,
+            FatTarget: null,
+            CarbTarget: null,
+            FiberTarget: null,
+            WaterGoal: 2.4,
+            DesiredWeight: 71,
+            DesiredWaist: null));
+        IUserLookupRepository userLookupRepository = Substitute.For<IUserLookupRepository>();
+        userLookupRepository.GetByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Task.FromResult<User?>(user));
+        var service = new UserContextService(userLookupRepository, Substitute.For<IUserWriteRepository>());
+
+        UserAiProfileModel ai = ResultAssert.Success(await service.GetAiProfileAsync(user.Id, CancellationToken.None));
+        UserHydrationProfileModel hydration = ResultAssert.Success(await service.GetHydrationProfileAsync(user.Id, CancellationToken.None));
+        UserTdeeProfileModel tdee = ResultAssert.Success(await service.GetTdeeProfileAsync(user.Id, CancellationToken.None));
+        UserWeeklyCheckInProfileModel weeklyCheckIn = ResultAssert.Success(
+            await service.GetWeeklyCheckInProfileAsync(user.Id, CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal(user.Id, ai.UserId),
+            () => Assert.Equal(user.Language, ai.Language),
+            () => Assert.Equal(user.AiInputTokenLimit, ai.InputTokenLimit),
+            () => Assert.Equal(user.AiOutputTokenLimit, ai.OutputTokenLimit),
+            () => Assert.Equal(user.HydrationGoal ?? user.WaterGoal, hydration.EffectiveWaterGoal),
+            () => Assert.Equal(user.CalculateBmr(), tdee.Bmr),
+            () => Assert.Equal(user.CalculateEstimatedTdee(), tdee.EstimatedTdee),
+            () => Assert.Equal(user.Weight, tdee.Weight),
+            () => Assert.Equal(user.DesiredWeight, tdee.DesiredWeight),
+            () => Assert.Equal(user.DailyCalorieTarget, tdee.DailyCalorieTarget),
+            () => Assert.Equal(user.DailyCalorieTarget, weeklyCheckIn.DailyCalorieTarget));
+    }
+
     private static IUserContextService CreateAccessCheckedFailingUserContext(UserId userId) {
         IUserContextService userContextService = Substitute.For<IUserContextService>();
         userContextService

@@ -36,6 +36,10 @@ public static partial class DependencyInjection {
         services.AddScoped<ICurrentUserAccessService>(static provider => provider.GetRequiredService<UserContextService>());
         services.AddScoped<IUserContextService>(static provider => provider.GetRequiredService<UserContextService>());
         services.AddScoped<IUserProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
+        services.AddScoped<IUserAiProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
+        services.AddScoped<IUserHydrationProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
+        services.AddScoped<IUserTdeeProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
+        services.AddScoped<IUserWeeklyCheckInProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
         services.AddScoped<IProfileOverviewReadService, ProfileOverviewReadService>();
     }
 }

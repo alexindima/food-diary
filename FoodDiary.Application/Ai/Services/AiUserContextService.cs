@@ -1,23 +1,25 @@
 using FoodDiary.Application.Ai.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Ai.Services;
 
-public sealed class AiUserContextService(IUserContextService userContextService) : IAiUserContextService {
+public sealed class AiUserContextService(IUserAiProfileReadService userProfileReadService) : IAiUserContextService {
     public async Task<Result<AiUserContext>> GetAsync(UserId userId, CancellationToken cancellationToken = default) {
-        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (userResult.IsFailure) {
-            return Result.Failure<AiUserContext>(userResult.Error);
+        Result<UserAiProfileModel> profileResult = await userProfileReadService
+            .GetAiProfileAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+        if (profileResult.IsFailure) {
+            return Result.Failure<AiUserContext>(profileResult.Error);
         }
 
-        User user = userResult.Value;
+        UserAiProfileModel profile = profileResult.Value;
         return Result.Success(new AiUserContext(
-            user.Id,
-            user.Language,
-            user.AiInputTokenLimit,
-            user.AiOutputTokenLimit));
+            profile.UserId,
+            profile.Language,
+            profile.InputTokenLimit,
+            profile.OutputTokenLimit));
     }
 }
