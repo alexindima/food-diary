@@ -11,6 +11,7 @@ tags:
   - design
   - handoff
 sources:
+  - .llm-wiki/tools/Start-LlmWikiDevelopment.ps1
   - .llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1
   - .llm-wiki/tools/Get-LlmWikiResearchPacket.ps1
   - .llm-wiki/tools/Get-LlmWikiGitPrecedents.ps1
@@ -35,6 +36,10 @@ sources:
 ---
 
 # Adaptive FoodDiary Development
+
+For a non-trivial feature, prefer `./.llm-wiki/wiki.ps1 start -Intent <task> [-PlannedPath <paths>]`. It captures the task baseline before discovery, compiles research and a scope-aware acceptance checklist, and creates the governed workspace immediately when the adaptive route requires one and concrete paths are known. The checklist covers API/OpenAPI compatibility, migration pairs, notification safety, background-job configuration and direct consumers, frontend states, localization parity, and architecture boundaries only when applicable.
+
+Use `develop` as the read-oriented classifier when automatic workspace creation is not wanted.
 
 Use one entrypoint before a non-trivial bug or feature:
 

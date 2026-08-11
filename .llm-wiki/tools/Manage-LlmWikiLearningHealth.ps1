@@ -15,7 +15,15 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
-$registryPath = Join-Path $wikiRoot 'knowledge/learning-health.json'
+$knowledgeRoot = if ([string]::IsNullOrWhiteSpace($env:LLM_WIKI_TEST_KNOWLEDGE_ROOT)) {
+    Join-Path $wikiRoot 'knowledge'
+} else {
+    $candidate = [IO.Path]::GetFullPath($env:LLM_WIKI_TEST_KNOWLEDGE_ROOT)
+    $artifactsRoot = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts/llm-wiki'))
+    if (-not $candidate.StartsWith($artifactsRoot, [StringComparison]::OrdinalIgnoreCase)) { throw 'LLM_WIKI_TEST_KNOWLEDGE_ROOT must resolve under .artifacts/llm-wiki.' }
+    $candidate
+}
+$registryPath = Join-Path $knowledgeRoot 'learning-health.json'
 $policy = Get-Content -LiteralPath (Join-Path $wikiRoot 'policies/workspace-policies.json') -Raw | ConvertFrom-Json
 $healthPolicy = $policy.scheduler.learningPromotion.health
 

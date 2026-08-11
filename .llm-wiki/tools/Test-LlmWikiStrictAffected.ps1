@@ -83,6 +83,19 @@ if ($pipelineText -notmatch 'analytical indexes:' -or $pipelineText -notmatch 'A
 if ($pipelineText -notmatch 'affected pipeline cache hit' -or $pipelineText -notmatch 'Get-PipelineCacheState' -or $pipelineText -notmatch 'outputFingerprint') {
     throw 'Affected pipeline does not transfer exact successful index evidence to the pre-commit freshness check.'
 }
+if ($pipelineText -notmatch 'Restore-OrphanedIndexTransaction' -or $pipelineText -notmatch "status = 'in-progress'" -or $pipelineText -notmatch "status = 'committed'") {
+    throw 'Index updates do not recover an interrupted durable transaction before the next write.'
+}
+if ($facadeText -notmatch "'start'" -or $facadeText -notmatch 'Start-LlmWikiDevelopment\.ps1') {
+    throw 'Wiki facade does not expose one-command baseline, research, checklist, and governed workspace startup.'
+}
+if ($facadeText -notmatch 'Repair verify \[0/3\]' -or $facadeText -notmatch 'Test-LlmWikiFormattingReady\.ps1') {
+    throw 'Repair flow does not stabilize formatting before hashing and index generation.'
+}
+$testPlanText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools/Get-LlmWikiTestPlan.ps1') -Raw
+foreach ($contract in @('commandGroups', 'compile-direct-consumer', 'fullRegression')) {
+    if (-not $testPlanText.Contains($contract)) { throw "Focused test planning omitted '$contract'." }
+}
 
 $frontendSmoke = @(& (Join-Path $repositoryRoot '.llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1') `
     -Plan -ChangedPath 'FoodDiary.Web.Client/src/app/example/example.ts' 6>&1 | ForEach-Object { $_.ToString() })

@@ -55,6 +55,7 @@ $discoveredTests = [System.Collections.Generic.HashSet[string]]::new([System.Str
 $directTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $siblingTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $consumerTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+$directConsumerProjects = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $changedTestFiles = @(
     $diff.changedPaths |
         Where-Object { $_ -match '\.cs$' -and $_ -match '(^|/)tests/' -or $_ -match '\.(spec|test)\.ts$' } |
@@ -131,6 +132,25 @@ if ($changedTypeNames.Count -gt 0) {
             }
         }
     }
+    $trackedCSharpFiles = @(& git -C $repositoryRoot ls-files '*.cs')
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate C# consumers for the focused test plan.' }
+    foreach ($relativeSource in $trackedCSharpFiles) {
+        $normalizedSource = $relativeSource.Replace('\', '/')
+        if ($normalizedSource -in @($diff.changedPaths) -or $normalizedSource -match '(?i)(^|/)(tests?|__tests__)/|\.Tests?/') { continue }
+        $absoluteSource = Join-Path $repositoryRoot $relativeSource
+        $content = [IO.File]::ReadAllText($absoluteSource)
+        if (@($changedTypeNames | Where-Object { $content -match "\b$([regex]::Escape($_))\b" }).Count -eq 0) { continue }
+        $directory = Split-Path -Parent $absoluteSource
+        while ($directory.StartsWith($repositoryRoot, [StringComparison]::OrdinalIgnoreCase)) {
+            $project = Get-ChildItem -LiteralPath $directory -Filter '*.csproj' -File -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($project) {
+                $null = $directConsumerProjects.Add($project.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/'))
+                break
+            }
+            if ($directory -eq $repositoryRoot) { break }
+            $directory = Split-Path -Parent $directory
+        }
+    }
 }
 foreach ($path in @($directTests | Sort-Object)) { $null = $discoveredTests.Add($path) }
 foreach ($path in @($diff.focusedTests)) { $null = $discoveredTests.Add($path) }
@@ -152,7 +172,7 @@ function Add-RankedTests {
 Add-RankedTests $changedTestFiles 100 'changed-test'
 Add-RankedTests @($siblingTests | Sort-Object) 90 'direct-sibling-spec'
 Add-RankedTests @($consumerTests | Sort-Object) 80 'direct-component-consumer'
-Add-RankedTests @($directTests | Sort-Object) 70 'references-changed-symbol'
+Add-RankedTests @($directTests | Sort-Object) 90 'references-changed-symbol'
 Add-RankedTests @($diff.focusedTests) 40 'downstream-context'
 $selectedFocusedTests = @($rankedFocusedTests | Select-Object -First $Limit)
 
@@ -287,6 +307,16 @@ foreach ($testPath in $frontendFocusedTests) {
         }
     }
 }
+foreach ($consumerProject in @($directConsumerProjects | Sort-Object)) {
+    $commands += [pscustomobject]@{
+        id = 'compile-direct-consumer'
+        command = "dotnet build $consumerProject --no-restore"
+        source = 'consumer-graph'
+        priority = 'required'
+        reason = 'production-project-references-changed-symbol'
+        commandEvidence = $consumerProject
+    }
+}
 $commands = @($commands | Sort-Object command -Unique)
 
 $result = [pscustomobject]@{
@@ -297,6 +327,11 @@ $result = [pscustomobject]@{
     focusedTestFiles = @($selectedFocusedTests.path)
     focusedTestDetails = $selectedFocusedTests
     commands = @($commands)
+    commandGroups = [pscustomobject][ordered]@{
+        required = @($commands | Where-Object priority -eq 'required')
+        recommended = @($commands | Where-Object priority -eq 'recommended')
+        fullRegression = @($commands | Where-Object priority -in @('contextual', 'full-regression'))
+    }
     scenarios = @($scenarios)
     reviewObligations = @($policy.reviewObligations)
 }

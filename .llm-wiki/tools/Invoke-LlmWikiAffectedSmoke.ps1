@@ -32,11 +32,11 @@ $wikiRelevantPathCount = 0
 foreach ($path in $paths) {
     if ($path -notmatch '^\.llm-wiki/') { continue }
     $wikiRelevantPathCount++
-    if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Get-LlmWikiSolutionComparison|Get-LlmWikiDesignCheckpoint|Test-LlmWikiAdaptiveWorkflow|Get-LlmWikiIntegrationScan|Test-LlmWikiIntegrationScan|Invoke-LlmWikiAdaptiveVerification)|evals/|policies/experience-policies\.json|workflows/(adaptive-development|developer-experience|integration-scan|evals|learned-regression-evals)\.md)') {
+    if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Get-LlmWikiSolutionComparison|Get-LlmWikiDesignCheckpoint|Test-LlmWikiAdaptiveWorkflow|Get-LlmWikiIntegrationScan|Test-LlmWikiIntegrationScan|Invoke-LlmWikiAdaptiveVerification)|evals/|policies/experience-policies\.json|workflows/(adaptive-development|developer-experience|integration-scan|evals|learned-regression-evals)\.md)') {
         Add-Group 'adaptive-routing'
     } elseif ($path -match '^\.llm-wiki/(tools/Get-LlmWikiDependencyChanges|workflows/dependency-rollout\.md)') {
         Add-Group 'dependency-analysis'
-    } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiObservedStage|Test-LlmWikiStrictAffected)|wiki\.ps1|workflows/index-pipeline\.md)') {
+    } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiObservedStage|Test-LlmWikiStrictAffected|Test-LlmWikiFormattingReady)|wiki\.ps1|workflows/index-pipeline\.md)') {
         Add-Group 'facade-contract'
     } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiIndexPipeline|LlmWikiIndexCache|LlmWikiGeneratedArtifacts|Build-LlmWiki(?:Frontend|FrontendContract|BackendContract|Quality|ArchitectureHealth)Index|Test-LlmWikiGeneratedArtifacts|Test-LlmWikiIndexSelection)\.ps1$') {
         Add-Group 'index-selection'
@@ -52,6 +52,8 @@ foreach ($path in $paths) {
         Add-Group 'verification-cache'
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiQueryCache|Test-LlmWikiQueryCache|Get-LlmWikiTaskBrief|Get-LlmWikiResearchPacket|Get-LlmWikiTestPlan)\.ps1$') {
         Add-Group 'query-cache'
+    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiLearningPromotion|Manage-LlmWikiLearningExperiment|Manage-LlmWikiEvalPromotion|Manage-LlmWikiLearningHealth|Test-LlmWikiKnowledgeIsolation)\.ps1$') {
+        Add-Group 'knowledge-isolation'
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiChangeManifest|Manage-LlmWikiAcceptanceMatrix|Test-LlmWikiTestOnlyGovernance)\.ps1$') {
         Add-Group 'test-only-governance'
     } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiDeliveryWorkflow|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiTaskEvidence|Manage-LlmWikiChangeCritique|New-LlmWikiEvidenceLineage|Update-LlmWikiTaskEvidence|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiGovernedDeliveryRegression)\.ps1$') {
@@ -124,6 +126,10 @@ foreach ($group in $groups) {
         }
         'query-cache' {
             & (Join-Path $toolsRoot 'Test-LlmWikiQueryCache.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'knowledge-isolation' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiKnowledgeIsolation.ps1')
             if (-not $?) { exit 1 }
         }
         'test-only-governance' {

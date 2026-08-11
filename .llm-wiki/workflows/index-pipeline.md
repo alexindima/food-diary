@@ -15,6 +15,9 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiPortable.ps1
   - .llm-wiki/tools/Test-LlmWikiLinux.ps1
   - .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1
+  - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
+  - .llm-wiki/tools/Test-LlmWikiKnowledgeIsolation.ps1
+  - .llm-wiki/tools/Test-LlmWikiFormattingReady.ps1
   - .llm-wiki/tools/Build-LlmWikiQualityIndex.ps1
   - .llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1
   - .llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1
@@ -31,6 +34,10 @@ sources:
 ---
 
 # Run the Staged Index Pipeline
+
+Mutable tool-smoke registries are redirected to `.artifacts/llm-wiki` instead of editing canonical knowledge and relying on `finally` restoration. Index updates persist an in-progress transaction snapshot under the Git directory; the next update restores any interrupted transaction whose owner process no longer exists before making new changes.
+
+Test plans expose `required`, `recommended`, and `fullRegression` command groups. Direct owners and production projects referencing changed C# symbols are required; broad transitive coverage remains a publication-hook or CI concern.
 
 `wiki lint` is the fast prerequisite for both verification commands and CI. It
 checks page contracts, sources, generated ownership, local links and anchors,

@@ -2,7 +2,7 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'update', 'repair-verify', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
+        'help', 'start', 'update', 'repair-verify', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'diff', 'impact', 'review', 'ownership', 'api-compat', 'policy',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
@@ -282,7 +282,7 @@ if ($Command -in @('verify', 'verify-full') -and $env:CI -ne 'true' -and -not $P
 
 $deltaAwareCommands = @('update', 'repair-verify', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'ownership', 'policy')
 $taskBaselineContext = $null
-if ($Command -eq 'develop') {
+if ($Command -in @('develop', 'start')) {
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId $TaskSessionId -Format Text
 } elseif ($Command -in $deltaAwareCommands -and -not $PSBoundParameters.ContainsKey('ChangedPath')) {
     $taskBaseline = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action ChangedPaths -SessionId $TaskSessionId -Format Object
@@ -415,6 +415,9 @@ switch ($Command) {
             'workspace policy' = 2; 'page contracts' = 2; 'lint regression' = 10; 'indexes' = 120
             'affected tool regression' = 15; 'failure knowledge' = 2; 'change policy' = 3; 'source impact' = 3
         }
+        if (@($ChangedPath | Where-Object { $_ -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Invoke-LlmWikiAdaptiveVerification)|evals/)' }).Count -gt 0) {
+            $script:verifyStageExpectedSeconds['affected tool regression'] = 240
+        }
         $expectedVerifySeconds = ($script:verifyStageExpectedSeconds.Values | Measure-Object -Sum).Sum
         Write-Host "Wiki verify: 8 observable stages, expected cold duration ~${expectedVerifySeconds}s; content-addressed stage resume is enabled=$([bool]$ResumePassedStages)."
         $indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }
@@ -515,6 +518,8 @@ switch ($Command) {
     'repair-verify' {
         $repairPaths = @($ChangedPath)
         if ($repairPaths.Count -eq 0) { Write-Host 'Repair verify: no task-delta paths; nothing to repair.'; break }
+        Write-Host 'Repair verify [0/3]: checking source formatting before hashing and generation.'
+        Invoke-WikiTool 'Test-LlmWikiFormattingReady.ps1' @{ ChangedPath = $repairPaths }
         Write-Host 'Repair verify [1/3]: atomically updating affected indexes.'
         Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' @{ AffectedOnly = $true; ChangedPath = $repairPaths; BaseRef = $BaseRef; ReuseUnchangedChecks = $true }
         Write-Host 'Repair verify [2/3]: resolving source-impact reviews.'
@@ -609,6 +614,12 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $workflowArguments.ChangedPath = $ChangedPath }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $workflowArguments.ProposedPath = $ProposedPath }
         Invoke-WikiTool 'Get-LlmWikiAdaptiveWorkflow.ps1' $workflowArguments
+    }
+    'start' {
+        if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'start requires -Intent <task description>.' }
+        $startArguments = @{ Objective = $Objective; BaseRef = $BaseRef; WorkspacePath = $WorkspacePath; Format = $Format; Limit = [Math]::Min($Limit, 30) }
+        if ($PSBoundParameters.ContainsKey('ProposedPath')) { $startArguments.ProposedPath = $ProposedPath }
+        Invoke-WikiTool 'Start-LlmWikiDevelopment.ps1' $startArguments
     }
     'continue-ui' {
         $continueArguments = @{ BaseRef = $BaseRef; Format = $Format }
@@ -2336,6 +2347,7 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 task-finish -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-DryRun]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
         Write-Host "  ./.llm-wiki/wiki.ps1 develop -Intent '<task>' [-PlannedPath 'path/one','path/two']"
+        Write-Host "  ./.llm-wiki/wiki.ps1 start -Intent '<large task>' [-PlannedPath 'path/one','path/two']  # baseline + research + checklist + governed workspace"
         Write-Host "  ./.llm-wiki/wiki.ps1 continue-ui [-Intent '<iteration>'] [-ChangedPath <path[]>]"
         Write-Host "  ./.llm-wiki/wiki.ps1 ui-finalize [-ChangedPath <accumulated-ui-path[]>]"
         Write-Host "  ./.llm-wiki/wiki.ps1 next|status [-WorkspacePath <task>] [-Intent '<new task>']"

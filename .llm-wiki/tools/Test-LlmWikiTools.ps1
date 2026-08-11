@@ -13,12 +13,19 @@ $canonicalMemoryRegistryPath = Join-Path $wikiRoot 'knowledge/memories.json'
 $canonicalMemoryRegistryHash = (Get-FileHash -LiteralPath $canonicalMemoryRegistryPath -Algorithm SHA256).Hash
 $memoryRegistryPath = Join-Path $repositoryRoot '.artifacts/llm-wiki/tool-smoke-memory-registry.json'
 $previousTestMemoryRegistryPath = $env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH
+$previousTestKnowledgeRoot = $env:LLM_WIKI_TEST_KNOWLEDGE_ROOT
+$testKnowledgeRoot = Join-Path $repositoryRoot ".artifacts/llm-wiki/tool-smoke-knowledge-$([guid]::NewGuid().ToString('N'))"
 New-Item -ItemType Directory -Path (Split-Path -Parent $memoryRegistryPath) -Force | Out-Null
+New-Item -ItemType Directory -Path $testKnowledgeRoot -Force | Out-Null
+foreach ($registryName in @('learning-promotions.json', 'learning-experiments.json', 'eval-promotions.json', 'learning-health.json')) {
+    Copy-Item -LiteralPath (Join-Path $wikiRoot "knowledge/$registryName") -Destination (Join-Path $testKnowledgeRoot $registryName)
+}
 [IO.File]::WriteAllText(
     $memoryRegistryPath,
     "{`n  `"schemaVersion`": 1,`n  `"events`": []`n}`n",
     [Text.UTF8Encoding]::new($false))
 $env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH = $memoryRegistryPath
+$env:LLM_WIKI_TEST_KNOWLEDGE_ROOT = $testKnowledgeRoot
 $schedulerMemoryId = "smoke-scheduler-context-$([guid]::NewGuid().ToString('N'))"
 
 function Assert-Wiki {
@@ -1362,13 +1369,13 @@ try {
                 [string]::IsNullOrWhiteSpace([string]$_.id) -or $_.id -eq 'impact-'
             }).Count -eq 0
         ) 'Post-task retrospective did not convert observed misses into learning candidates.'
-        $learningPromotionPath = Join-Path $wikiRoot 'knowledge/learning-promotions.json'
+        $learningPromotionPath = Join-Path $testKnowledgeRoot 'learning-promotions.json'
         $learningPromotionRaw = Get-Content -LiteralPath $learningPromotionPath -Raw
-        $learningExperimentPath = Join-Path $wikiRoot 'knowledge/learning-experiments.json'
+        $learningExperimentPath = Join-Path $testKnowledgeRoot 'learning-experiments.json'
         $learningExperimentRaw = Get-Content -LiteralPath $learningExperimentPath -Raw
-        $evalPromotionPath = Join-Path $wikiRoot 'knowledge/eval-promotions.json'
+        $evalPromotionPath = Join-Path $testKnowledgeRoot 'eval-promotions.json'
         $evalPromotionRaw = Get-Content -LiteralPath $evalPromotionPath -Raw
-        $learningHealthPath = Join-Path $wikiRoot 'knowledge/learning-health.json'
+        $learningHealthPath = Join-Path $testKnowledgeRoot 'learning-health.json'
         $learningHealthRaw = Get-Content -LiteralPath $learningHealthPath -Raw
         $absolutePeerLearningWorkspacePath = $null
         try {
@@ -4842,6 +4849,14 @@ if ([string]::IsNullOrWhiteSpace($previousTestMemoryRegistryPath)) {
 }
 if (Test-Path -LiteralPath $memoryRegistryPath) {
     Remove-Item -LiteralPath $memoryRegistryPath -Force
+}
+if ([string]::IsNullOrWhiteSpace($previousTestKnowledgeRoot)) {
+    Remove-Item Env:LLM_WIKI_TEST_KNOWLEDGE_ROOT -ErrorAction SilentlyContinue
+} else {
+    $env:LLM_WIKI_TEST_KNOWLEDGE_ROOT = $previousTestKnowledgeRoot
+}
+if (Test-Path -LiteralPath $testKnowledgeRoot) {
+    Remove-Item -LiteralPath $testKnowledgeRoot -Recurse -Force -ErrorAction SilentlyContinue
 }
 
 if ($errors.Count -gt 0) {

@@ -25,6 +25,24 @@ $shellPath = [System.IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
 $pipelineCacheState = $null
 
+function Restore-OrphanedIndexTransaction([string]$TransactionStateRoot, [string]$GeneratedRoot) {
+    if (-not (Test-Path -LiteralPath $TransactionStateRoot -PathType Container)) { return }
+    foreach ($orphan in @(Get-ChildItem -LiteralPath $TransactionStateRoot -Directory -ErrorAction SilentlyContinue)) {
+        $statePath = Join-Path $orphan.FullName 'state.json'
+        $backupPath = Join-Path $orphan.FullName 'generated'
+        if (-not (Test-Path -LiteralPath $statePath -PathType Leaf) -or -not (Test-Path -LiteralPath $backupPath -PathType Container)) { continue }
+        try { $state = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json } catch { continue }
+        if ([string]$state.status -ne 'in-progress') { continue }
+        $ownerAlive = $false
+        try { $ownerAlive = $null -ne (Get-Process -Id ([int]$state.ownerPid) -ErrorAction Stop) } catch { $ownerAlive = $false }
+        if ($ownerAlive) { continue }
+        Write-Warning "Recovering interrupted LLM Wiki index transaction $($orphan.Name) before running another update."
+        foreach ($item in @(Get-ChildItem -LiteralPath $GeneratedRoot -Force)) { Remove-Item -LiteralPath $item.FullName -Recurse -Force }
+        foreach ($item in @(Get-ChildItem -LiteralPath $backupPath -Force)) { Copy-Item -LiteralPath $item.FullName -Destination $GeneratedRoot -Recurse -Force }
+        Remove-Item -LiteralPath $orphan.FullName -Recurse -Force
+    }
+}
+
 function Get-StringSha256([string]$Value) {
     $sha = [Security.Cryptography.SHA256]::Create()
     try { return ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($Value))) -replace '-', '').ToLowerInvariant() }
@@ -317,6 +335,7 @@ try {
         if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve Git directory for the index transaction.' }
         $transactionStateRoot = Join-Path $gitDirectory 'llm-wiki/index-transactions'
         $null = New-Item -ItemType Directory -Path $transactionStateRoot -Force
+        Restore-OrphanedIndexTransaction -TransactionStateRoot $transactionStateRoot -GeneratedRoot $generatedRoot
         $lockPath = Join-Path $transactionStateRoot 'update.lock'
         try {
             $updateLock = [IO.File]::Open($lockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
@@ -329,6 +348,10 @@ try {
         foreach ($item in @(Get-ChildItem -LiteralPath $generatedRoot -Force)) {
             Copy-Item -LiteralPath $item.FullName -Destination $backupRoot -Recurse -Force
         }
+        [IO.File]::WriteAllText(
+            (Join-Path $transactionRoot 'state.json'),
+            (([ordered]@{ schemaVersion = 1; status = 'in-progress'; ownerPid = $PID; startedAtUtc = [DateTime]::UtcNow.ToString('o') } | ConvertTo-Json) + [Environment]::NewLine),
+            [Text.UTF8Encoding]::new($false))
         Write-Host "LLM Wiki index transaction started: rollback snapshot captured."
     }
 
@@ -346,6 +369,10 @@ try {
             -GeneratedRoot $generatedRoot `
             -BackupRoot (Join-Path $transactionRoot 'generated'))
         if ($semanticNoOps.Count -gt 0) { Write-Host "LLM Wiki semantic no-op suppression restored $($semanticNoOps.Count) unchanged generated artifact(s)." }
+        [IO.File]::WriteAllText(
+            (Join-Path $transactionRoot 'state.json'),
+            (([ordered]@{ schemaVersion = 1; status = 'committed'; ownerPid = $PID; completedAtUtc = [DateTime]::UtcNow.ToString('o') } | ConvertTo-Json) + [Environment]::NewLine),
+            [Text.UTF8Encoding]::new($false))
     }
 } catch {
     if ($transactionRoot) {

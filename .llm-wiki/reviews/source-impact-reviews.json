@@ -8,13 +8,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "6096f9cb6ed9a05dbb604f83f46b51d774c43034c5703da05f96ec1a6892246c"
+                                            "sha256":  "18a9d69f3391711dc98f0f7cf3f855675b0c00d4ae6a0eff4dc1ec1f754a525d"
                                         }
                                     ],
-                        "reason":  "Reviewed after merging the statistics dashboard redesign with the JobManager lock retry fix; repository navigation and documented project boundaries remain accurate.",
+                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
-                        "reviewedAtUtc":  "2026-08-09T09:52:48.3163395Z"
+                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
+                        "reviewedAtUtc":  "2026-08-11T00:21:43.0688759Z"
                     },
                     {
                         "pageId":  "module.mail-services",
@@ -83,13 +83,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "6096f9cb6ed9a05dbb604f83f46b51d774c43034c5703da05f96ec1a6892246c"
+                                            "sha256":  "18a9d69f3391711dc98f0f7cf3f855675b0c00d4ae6a0eff4dc1ec1f754a525d"
                                         }
                                     ],
-                        "reason":  "Reviewed the merged generated indexes and source mappings; the knowledge model and authority hierarchy remain unchanged.",
+                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
-                        "reviewedAtUtc":  "2026-08-09T09:52:48.9511400Z"
+                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
+                        "reviewedAtUtc":  "2026-08-11T00:21:43.2932123Z"
                     },
                     {
                         "pageId":  "system.repository-catalog",
@@ -109,17 +109,17 @@
                     {
                         "pageId":  "workflow.change-policy",
                         "pagePath":  ".llm-wiki/workflows/change-policy.md",
-                        "pageSha256":  "3cddc70c9de8617c8ad3e97fff346fab0f7c586e72f13dfd0caa7acbb5967c15",
+                        "pageSha256":  "d09bef3a0319b7a8b848d8b35f4b8415ad8b349af18b18892057db2b6e63fca1",
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "6096f9cb6ed9a05dbb604f83f46b51d774c43034c5703da05f96ec1a6892246c"
+                                            "sha256":  "18a9d69f3391711dc98f0f7cf3f855675b0c00d4ae6a0eff4dc1ec1f754a525d"
                                         }
                                     ],
-                        "reason":  "Reviewed the applicable change policies for the merged statistics and JobManager changes; existing policy routing remains sufficient.",
+                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "690eb87aacbbe80ffe30f7f6a3c72323746c8261",
-                        "reviewedAtUtc":  "2026-08-09T09:52:51.0829600Z"
+                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
+                        "reviewedAtUtc":  "2026-08-11T00:21:43.4914697Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -176,14 +176,14 @@
                         "pageSha256":  "fbde1e3b8cec7d59d3bd96a9e14b252a9c9d6b5c88ee02ac0035f573bb091c0e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "e6d554c89dbc59483d22038beeddeed3d499f860f30b955dee66a3eae6f9dd05"
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "18a9d69f3391711dc98f0f7cf3f855675b0c00d4ae6a0eff4dc1ec1f754a525d"
                                         }
                                     ],
-                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
-                        "reviewedAtUtc":  "2026-08-09T22:10:59.9101150Z"
+                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
+                        "reviewedAtUtc":  "2026-08-11T00:21:43.8123538Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -191,14 +191,14 @@
                         "pageSha256":  "fc98ae1eba6a72137dfa02d7b37e13b08738bd2dd7b0408bf971d6f7dda29917",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-                                            "sha256":  "4b5aac87710ae0a5e6475d7db069968e536deb296c1cbe8ed6e4d80b925228a6"
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "18a9d69f3391711dc98f0f7cf3f855675b0c00d4ae6a0eff4dc1ec1f754a525d"
                                         }
                                     ],
-                        "reason":  "Reviewed incremental verification, baseline-context visibility, and facade orchestration changes; indexed models and the documented evaluation, diff, brief, and dispatch semantics remain authoritative and unchanged outside the documented workflow improvements.",
+                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f31792400af36f7855687ca29a96dd026535d0a",
-                        "reviewedAtUtc":  "2026-08-10T18:18:15.9631239Z"
+                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
+                        "reviewedAtUtc":  "2026-08-11T00:21:44.0778788Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -345,14 +345,22 @@
                         "pageSha256":  "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/knowledge/learning-promotions.json",
-                                            "sha256":  "ce8b1740e077701fea83b6bb0238678d2d30cc0df3eaea575b26e263a17143bb"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningExperiment.ps1",
+                                            "sha256":  "ed8b85b12f1c9229f137dcee33fade20726caf7668669b0f9646601ae82f4284"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningHealth.ps1",
+                                            "sha256":  "86cb41dfc1b81584dce4312222973a708df4d1b1765287bf1ef1eeb3da5d13c2"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1",
+                                            "sha256":  "05bac6e006f9cf06f37780fafa5746b7ddd311ef33db61cf6fceb179d5ae28de"
                                         }
                                     ],
-                        "reason":  "Reviewed the task completion cost-calibration observation; it is an unapproved candidate and does not change active verification policy.",
+                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
-                        "reviewedAtUtc":  "2026-07-31T13:40:45.3691026Z"
+                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
+                        "reviewedAtUtc":  "2026-08-11T00:21:44.3210503Z"
                     },
                     {
                         "pageId":  "workflow-controlled-repair-loop",
@@ -555,17 +563,17 @@
                     {
                         "pageId":  "workflow-learned-regression-evals",
                         "pagePath":  ".llm-wiki/workflows/learned-regression-evals.md",
-                        "pageSha256":  "14bab99a156fe6e89e7fc0793d3530b46b435db5ade9175325fc18e3d8df1d38",
+                        "pageSha256":  "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/evals/cases.json",
-                                            "sha256":  "4020fa785aab88b495a3e820ff2b07d31847d2675782d41ecbb05c59d529a6fc"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiEvalPromotion.ps1",
+                                            "sha256":  "bd230c6197acb4902ebc06c50373d3fa50cfe553cd8f6a507d091aae8125f548"
                                         }
                                     ],
-                        "reason":  "Updated the reviewed adaptive-route expectation; eval promotion and integrity semantics are unchanged.",
+                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8b70e3e238e923c84a062b4bfc08f1a7d3a80bb1",
-                        "reviewedAtUtc":  "2026-08-01T00:08:41.9187692Z"
+                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
+                        "reviewedAtUtc":  "2026-08-11T00:21:44.6948011Z"
                     },
                     {
                         "pageId":  "workflow-ownership-impact",
@@ -782,13 +790,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "38eda3662ccb337e590e7532cadb10a1b97cb17863e57f63a90d215dda371db9"
+                                            "sha256":  "a1284144f5896079c45082fbb953a1c4af89de1b3221b563549693c53c90de94"
                                         }
                                     ],
-                        "reason":  "Reviewed the final baseline visibility, grouped repair workflow, cache-learning, aggregate pipeline receipt, and affected-regression orchestration; related knowledge-page claims remain correct and the updated workflow documentation captures the intentional behavior.",
+                        "reason":  "Re-reviewed the final observable-duration calibration after the verified adaptive regression measured approximately 200 seconds; only progress estimation changed.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f31792400af36f7855687ca29a96dd026535d0a",
-                        "reviewedAtUtc":  "2026-08-10T18:20:35.8318117Z"
+                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
+                        "reviewedAtUtc":  "2026-08-11T00:26:37.0666139Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",
@@ -835,18 +843,14 @@
                         "pageSha256":  "58431db00a85f5a9da2ea8a0aa2d2910509884d52c68707826ae9c8c3bd23e16",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "a1000269bde8a26504de9901132c803d04a32fbb380c23a7585f2fe3bcf89262"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-                                            "sha256":  "6510169ab3b5ef5640e413553b731a6e44718dbab642ded10ece8c208fe8c6cd"
+                                            "sha256":  "fb9841c5a4acbad741698ef4cf9d925eb32db172847047b4aaf871f4016c035e"
                                         }
                                     ],
-                        "reason":  "Style-only policy removes only the inapplicable public-contract review; frontend verification and accessibility remain.",
+                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1d74dd8f7503f77263aaac4472c7b2ab55a9104d",
-                        "reviewedAtUtc":  "2026-08-10T08:30:25.1187429Z"
+                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
+                        "reviewedAtUtc":  "2026-08-11T00:21:45.5080420Z"
                     },
                     {
                         "pageId":  "workflow-trace-feature",
