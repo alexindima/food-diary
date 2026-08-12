@@ -229,7 +229,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'full-tools' {
-            & (Join-Path $toolsRoot 'Test-LlmWikiTools.ps1')
+            & (Join-Path $toolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `
+                -ToolPath (Join-Path $toolsRoot 'Test-LlmWikiTools.ps1')
             if (-not $?) { exit 1 }
         }
     }

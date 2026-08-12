@@ -233,14 +233,18 @@
                         "pageSha256":  "7b31e07462b7a226949fca58c200d0330514b3158ce5f905e77bc1d9bda431dd",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-                                            "sha256":  "591f03a1a481b9c5655b492d8dfa3c2ba696b11a3baa23cabf0b29f104c395a3"
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+                                            "sha256":  "916db7fb6a12a816066f2436cfdc916574838539bd70ffb9fd3456432bae6179"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
+                                            "sha256":  "b73a9dcf0dc846fd2167ba58089e7927565deb5a3c801c9f36063f9ca885e3e0"
                                         }
                                     ],
-                        "reason":  "Reviewed product-scope filtering for independent Wiki provenance; documented workflow behavior remains accurate.",
+                        "reason":  "Reviewed read-only execution hardening: existing dirty worktree files are preserved without changing adaptive workflow semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "edc50056e63d116c9798f70d0f5a072b64198013",
-                        "reviewedAtUtc":  "2026-08-12T08:19:23.3040560Z"
+                        "gitHead":  "7f00d41b9f73ab1fe9232893208ceaf92e827d3a",
+                        "reviewedAtUtc":  "2026-08-12T10:43:37.8236722Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -533,14 +537,14 @@
                         "pageSha256":  "4b700f452947b76c2dd708ab5978289650c76c32a49e06ea6356812757e73cd8",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "4ccd4e314e2aafcfeea44649132adde005b06ca6448038cbae60f69cbe3c6446"
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+                                            "sha256":  "9d9b06055a6a277ac5b7c4a71ce7ef7f060a3f83fb57c2eccdd784ffc5973acd"
                                         }
                                     ],
-                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
+                        "reason":  "Reviewed affected-smoke isolation: full-tools now runs through the read-only guard without changing index selection or publication semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
-                        "reviewedAtUtc":  "2026-08-12T08:06:44.2962161Z"
+                        "gitHead":  "7f00d41b9f73ab1fe9232893208ceaf92e827d3a",
+                        "reviewedAtUtc":  "2026-08-12T10:43:38.7903276Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",

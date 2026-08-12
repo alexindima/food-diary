@@ -21,6 +21,16 @@ function Get-ProtectedFiles {
     })
 }
 
+function Get-ExistingWorktreePaths {
+    $paths = @(& git -C $repositoryRoot status --porcelain=v1 --untracked-files=all)
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to snapshot the existing worktree for the read-only Wiki guard.' }
+    @($paths | ForEach-Object {
+        $path = ([string]$_).Substring(3).Trim()
+        if ($path -match ' -> ') { $path = ($path -split ' -> ', 2)[1] }
+        $path.Trim('"').Replace('/', '\')
+    } | Where-Object { $_ })
+}
+
 function Get-BytesHash([byte[]]$Bytes) {
     $sha = [Security.Cryptography.SHA256]::Create()
     try { return ([BitConverter]::ToString($sha.ComputeHash($Bytes)) -replace '-', '') }
@@ -37,6 +47,14 @@ try {
     foreach ($file in @(Get-ProtectedFiles)) {
         $relative = $file.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
         $bytes = [IO.File]::ReadAllBytes($file.FullName)
+        $before[$relative] = [pscustomobject]@{ bytes = $bytes; hash = Get-BytesHash $bytes }
+    }
+    foreach ($relativePath in @(Get-ExistingWorktreePaths)) {
+        $absolute = Join-Path $repositoryRoot $relativePath
+        if (-not (Test-Path -LiteralPath $absolute -PathType Leaf)) { continue }
+        $relative = $absolute.Substring($repositoryRoot.Length + 1).Replace('\', '/')
+        if ($before.ContainsKey($relative)) { continue }
+        $bytes = [IO.File]::ReadAllBytes($absolute)
         $before[$relative] = [pscustomobject]@{ bytes = $bytes; hash = Get-BytesHash $bytes }
     }
 
