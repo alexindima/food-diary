@@ -146,14 +146,14 @@
                         "pageSha256":  "dfce522394cc3d66d2a43c52d67969355bb1cbbc65b0dd94e694a38d20a610fa",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-                                            "sha256":  "d25cb3fa394cb5a240aa51b810c3c3d60fdf47152e2d2e7b1010cbdc980d3c57"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiContentFingerprint.ps1",
+                                            "sha256":  "2014060080165545c723db6597a0272612bfd7489ac39f43b7160475bc353bd2"
                                         }
                                     ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:05.9112020Z"
+                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
+                        "reviewedAtUtc":  "2026-08-12T09:04:29.3832272Z"
                     },
                     {
                         "pageId":  "workflow.frontend-contract-review",
@@ -383,14 +383,14 @@
                         "pageSha256":  "89bba606d2635692a16e530538c4ccc5a89b7d983e5a9465a605a1aefdd34e7c",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
-                                            "sha256":  "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+                                            "sha256":  "a9352cd94ed4c7edcf218ab1751a8206a3dd6e4fc64ff7d419d0673834413f59"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:42.3280292Z"
+                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
+                        "reviewedAtUtc":  "2026-08-12T09:04:28.4851488Z"
                     },
                     {
                         "pageId":  "workflow-decision-context",
@@ -473,18 +473,14 @@
                         "pageSha256":  "f329d54afe5274a4bfce5e5cc7e77455554286b51569c8b214ef3fd44fe8be83",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiFailurePrediction.ps1",
-                                            "sha256":  "a14617fb19b3deef55c3e0e4f46b3164169f939b60496c4eb1b6a393773454b9"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRiskCalibration.ps1",
-                                            "sha256":  "fa89f3a30ec410b9cb98f2a917fa787ab93b459f8b19f4bee6540f423787eccf"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+                                            "sha256":  "a9352cd94ed4c7edcf218ab1751a8206a3dd6e4fc64ff7d419d0673834413f59"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:43.4463086Z"
+                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
+                        "reviewedAtUtc":  "2026-08-12T09:04:30.4187149Z"
                     },
                     {
                         "pageId":  "workflow-impact-simulation",
@@ -508,13 +504,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "eac80e023c38d8ee7775525ce65c55e945c760a8bd1c13801ae62d5970e37506"
+                                            "sha256":  "d6149a9d74345df2e01803c392672ce0d7b97cfab2c53c2284815da516838aaa"
                                         }
                                     ],
-                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
+                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
-                        "reviewedAtUtc":  "2026-08-12T08:06:42.4996515Z"
+                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
+                        "reviewedAtUtc":  "2026-08-12T09:04:31.3355726Z"
                     },
                     {
                         "pageId":  "workflow-independent-change-critique",
@@ -590,6 +586,21 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
                         "reviewedAtUtc":  "2026-08-11T00:21:44.6948011Z"
+                    },
+                    {
+                        "pageId":  "workflow-model-routing",
+                        "pagePath":  ".llm-wiki/workflows/model-routing.md",
+                        "pageSha256":  "f2175e29d46c5bf4aca0b8bb756b10ce36fb1049494ab8ee1309f48f3f75fbe6",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+                                            "sha256":  "a9352cd94ed4c7edcf218ab1751a8206a3dd6e4fc64ff7d419d0673834413f59"
+                                        }
+                                    ],
+                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
+                        "reviewedAtUtc":  "2026-08-12T09:04:32.4184322Z"
                     },
                     {
                         "pageId":  "workflow-ownership-impact",
@@ -721,18 +732,14 @@
                         "pageSha256":  "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "eac80e023c38d8ee7775525ce65c55e945c760a8bd1c13801ae62d5970e37506"
+                                            "sha256":  "d6149a9d74345df2e01803c392672ce0d7b97cfab2c53c2284815da516838aaa"
                                         }
                                     ],
-                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
+                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
-                        "reviewedAtUtc":  "2026-08-12T08:06:47.1372405Z"
+                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
+                        "reviewedAtUtc":  "2026-08-12T09:04:33.3475390Z"
                     },
                     {
                         "pageId":  "workflow-review-report",
@@ -763,14 +770,14 @@
                         "pageSha256":  "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRiskCalibration.ps1",
-                                            "sha256":  "fa89f3a30ec410b9cb98f2a917fa787ab93b459f8b19f4bee6540f423787eccf"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+                                            "sha256":  "a9352cd94ed4c7edcf218ab1751a8206a3dd6e4fc64ff7d419d0673834413f59"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:54.3110993Z"
+                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
+                        "reviewedAtUtc":  "2026-08-12T09:04:34.3870682Z"
                     },
                     {
                         "pageId":  "workflow-runtime-impact",
@@ -793,14 +800,14 @@
                         "pageSha256":  "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-                                            "sha256":  "5574efda6a666037e232d154e87c9da4e5357ee01c5359633a8ac8b9a9c7a04f"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+                                            "sha256":  "a9352cd94ed4c7edcf218ab1751a8206a3dd6e4fc64ff7d419d0673834413f59"
                                         }
                                     ],
-                        "reason":  "Reviewed governed planning hardening: optional brief metadata is normalized, scalar path filters preserve their collection shape, and existing public workflow semantics remain unchanged.",
+                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
-                        "reviewedAtUtc":  "2026-08-12T02:47:09.4197016Z"
+                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
+                        "reviewedAtUtc":  "2026-08-12T09:04:35.2638787Z"
                     },
                     {
                         "pageId":  "workflow-task-brief",
@@ -861,14 +868,18 @@
                         "pageSha256":  "d82ff199232ffa58514f61a394d36cad07f3e2d96d7bab4fdaa09be847fce590",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-                                            "sha256":  "591f03a1a481b9c5655b492d8dfa3c2ba696b11a3baa23cabf0b29f104c395a3"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+                                            "sha256":  "a9352cd94ed4c7edcf218ab1751a8206a3dd6e4fc64ff7d419d0673834413f59"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
+                                            "sha256":  "d6149a9d74345df2e01803c392672ce0d7b97cfab2c53c2284815da516838aaa"
                                         }
                                     ],
-                        "reason":  "Reviewed product-scope filtering for independent Wiki provenance; documented workflow behavior remains accurate.",
+                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "edc50056e63d116c9798f70d0f5a072b64198013",
-                        "reviewedAtUtc":  "2026-08-12T08:19:25.2543136Z"
+                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
+                        "reviewedAtUtc":  "2026-08-12T09:04:36.3546267Z"
                     },
                     {
                         "pageId":  "workflow-test-plan",
@@ -910,14 +921,14 @@
                         "pageSha256":  "368dfe1e9684ead7a5e3207edd05e55477d432ae1f9627814d62bfeb9559fb84",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "43b4b5ceb2f76baf206b23d39c8afb23727ebf99cc79c7305375ea4a452845d2"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+                                            "sha256":  "a9352cd94ed4c7edcf218ab1751a8206a3dd6e4fc64ff7d419d0673834413f59"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:55:00.5388035Z"
+                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
+                        "reviewedAtUtc":  "2026-08-12T09:04:37.3002635Z"
                     },
                     {
                         "pageId":  "workflow-verification-telemetry",

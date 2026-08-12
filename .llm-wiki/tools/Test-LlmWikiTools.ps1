@@ -134,11 +134,12 @@ $billingJson = & (Join-Path $toolsRoot 'Find-LlmWikiContext.ps1') `
     -Limit 8
 $billing = $billingJson | ConvertFrom-Json
 Assert-Wiki ($billing.module.name -eq 'Billing') 'Billing context did not resolve the extracted application module.'
-Assert-Wiki (@($billing.wikiPages.path) -contains '.llm-wiki/generated/modules/billing.md') 'Billing module page is missing from context.'
+$billingWikiPagePaths = @($billing.wikiPages | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['path']) { [string]$_.path } })
+Assert-Wiki ($billingWikiPagePaths -contains '.llm-wiki/generated/modules/billing.md') 'Billing module page is missing from context.'
 Assert-Wiki (@($billing.controllers.name) -contains 'BillingController') 'BillingController is missing from API context.'
 Assert-Wiki (@($billing.projects.name) -contains 'FoodDiary.Application.Billing') 'Billing application project is missing from context.'
-Assert-Wiki (@($billing.symbols.path | Where-Object { $_ -match '/Billing/' }).Count -gt 0) 'Billing symbols are not ranked into context.'
-Assert-Wiki (@($billing.tests.path | Where-Object { $_ -match '/Billing/' }).Count -gt 0) 'Billing focused tests are missing from context.'
+Assert-Wiki (@($billing.symbols | ForEach-Object { if ($_.PSObject.Properties['path']) { [string]$_.path } } | Where-Object { $_ -match '/Billing/' }).Count -gt 0) 'Billing symbols are not ranked into context.'
+Assert-Wiki (@($billing.tests | ForEach-Object { if ($_.PSObject.Properties['path']) { [string]$_.path } } | Where-Object { $_ -match '/Billing/' }).Count -gt 0) 'Billing focused tests are missing from context.'
 
 $frontendContext = & (Join-Path $toolsRoot 'Find-LlmWikiContext.ps1') `
     -Query 'AI dashboard' `
@@ -147,11 +148,11 @@ $frontendContext = & (Join-Path $toolsRoot 'Find-LlmWikiContext.ps1') `
     -Format Json | ConvertFrom-Json
 Assert-Wiki (@($frontendContext.frontendSymbols.name) -contains 'AiPhotoResultComponent') 'Scoped frontend context omitted the AI photo component cluster.'
 Assert-Wiki (@($frontendContext.projects).Count -eq 0) 'Frontend-only context retained unrelated .NET projects.'
-Assert-Wiki (@($frontendContext.symbols.path | Where-Object { $_ -match 'MailInbox' }).Count -eq 0) 'Frontend AI context included the unrelated MailInbox cluster.'
+Assert-Wiki (@($frontendContext.symbols | ForEach-Object { if ($_.PSObject.Properties['path']) { [string]$_.path } } | Where-Object { $_ -match 'MailInbox' }).Count -eq 0) 'Frontend AI context included the unrelated MailInbox cluster.'
 Assert-Wiki (@($frontendContext.query.scopePaths).Count -eq 2) 'Context did not normalize semicolon-delimited planned paths.'
 Assert-Wiki (@($frontendContext.implementationFiles).Count -gt 0) 'Scoped frontend context omitted ranked implementation files.'
 Assert-Wiki (@($frontendContext.implementationFiles | Where-Object {
-    $_.path -like 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/*' -and
+    $_.PSObject.Properties['path'] -and $_.path -like 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/*' -and
     $_.provenance -eq 'tracked-source' -and
     $_.match -in @('path', 'content', 'path-and-content')
 }).Count -gt 0) 'Frontend implementation search omitted scoped provenance and match evidence.'
@@ -299,7 +300,8 @@ $decisionJson = & (Join-Path $toolsRoot 'Get-LlmWikiDecisionContext.ps1') `
     -Format Json
 $decision = $decisionJson | ConvertFrom-Json
 Assert-Wiki ([bool]$decision.reviewRequired) 'Decision context did not trigger ADR review for the module dependency graph.'
-Assert-Wiki (@($decision.relatedAdrs.path) -contains 'docs/adr/0009-executable-application-module-dependency-graph.md') 'Decision context did not find the existing module graph ADR.'
+$decisionAdrPaths = @($decision.relatedAdrs | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['path']) { [string]$_.path } })
+Assert-Wiki ($decisionAdrPaths -contains 'docs/adr/0009-executable-application-module-dependency-graph.md') 'Decision context did not find the existing module graph ADR.'
 
 $traceJson = & (Join-Path $toolsRoot 'Find-LlmWikiTrace.ps1') -Query StartPremiumTrial -Format Json
 $trace = @($traceJson | ConvertFrom-Json)
@@ -528,7 +530,7 @@ $scopedPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') `
     -Category all `
     -ScopePath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result' `
     -Format Json | ConvertFrom-Json
-Assert-Wiki (@($scopedPrivacy.items | Where-Object providerHost -eq 'api.openai.com').Count -gt 0) 'Scoped photo privacy review omitted the external OpenAI image boundary.'
+Assert-Wiki (@($scopedPrivacy.items | Where-Object { $_.PSObject.Properties['providerHost'] -and $_.providerHost -eq 'api.openai.com' }).Count -gt 0) 'Scoped photo privacy review omitted the external OpenAI image boundary.'
 
 $multiPathBrief = & (Join-Path $wikiRoot 'wiki.ps1') brief `
     -PlannedPath 'FoodDiary.Web.Client/src/app/features/dashboard;FoodDiary.Web.Client/src/app/components/shared/ai-input-bar' `

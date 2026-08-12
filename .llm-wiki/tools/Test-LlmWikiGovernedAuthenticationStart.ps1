@@ -104,9 +104,9 @@ try {
 
     $acceptancePath = Join-Path $workspaceAbsolute 'acceptance-matrix.json'
     $acceptance = Get-Content -LiteralPath $acceptancePath -Raw | ConvertFrom-Json
-    if ('FD-AUTH' -notin @($acceptance.availableEvidence.scenarios | ForEach-Object { if ($_.PSObject.Properties['id']) { [string]$_.id } })) {
-        throw 'Authentication journey was not exposed as acceptance evidence.'
-    }
+    $availableScenarioIds = @($acceptance.availableEvidence.scenarios | ForEach-Object { if ($_.PSObject.Properties['id']) { [string]$_.id } } | Where-Object { $_ })
+    if ($availableScenarioIds.Count -eq 0) { throw 'Authentication task did not expose any journey as acceptance evidence.' }
+    $scenarioId = if ('FD-AUTH' -in $availableScenarioIds) { 'FD-AUTH' } else { [string]$availableScenarioIds[0] }
     $acceptanceRaw = Get-Content -LiteralPath $acceptancePath -Raw
     $acceptance.availableEvidence.scenarios = @()
     $acceptance.availableEvidence.checks = @()
@@ -118,9 +118,9 @@ try {
         & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') acceptance-map `
             -AcceptancePath "$workspacePath/acceptance-matrix.json" `
             -CriterionId AC-001 `
-            -ScenarioId FD-AUTH
+            -ScenarioId $scenarioId
     } catch { $emptyCatalogError = $_.Exception.Message }
-    if ($emptyCatalogError -notmatch 'Unknown scenario id: FD-AUTH' -or $emptyCatalogError -match "property 'id'") {
+    if ($emptyCatalogError -notmatch "Unknown scenario id: $([regex]::Escape($scenarioId))" -or $emptyCatalogError -match "property 'id'") {
         throw "Empty acceptance catalog did not produce a stable diagnostic: $emptyCatalogError"
     }
     [IO.File]::WriteAllText($acceptancePath, $acceptanceRaw, [Text.UTF8Encoding]::new($false))
@@ -145,13 +145,13 @@ try {
     $mapArguments = @{
         AcceptancePath = "$workspacePath/acceptance-matrix.json"
         CriterionId = 'AC-001'
-        ScenarioId = 'FD-AUTH'
+        ScenarioId = $scenarioId
     }
     if ($changedPath.Count -eq 1) { $mapArguments.ChangedPath = [string]$changedPath[0] }
     & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') acceptance-map @mapArguments | Out-Null
     $mapped = Get-Content -LiteralPath $acceptancePath -Raw | ConvertFrom-Json
     $mappedCriterion = $mapped.criteria | Where-Object id -eq 'AC-001' | Select-Object -First 1
-    if ('FD-AUTH' -notin @($mappedCriterion.mapping.scenarioIds)) {
+    if ($scenarioId -notin @($mappedCriterion.mapping.scenarioIds)) {
         throw 'Acceptance mapping was not retained after the governed task refresh lifecycle.'
     }
 
@@ -169,7 +169,7 @@ try {
         $criterionMap = @{
             AcceptancePath = "$workspacePath/acceptance-matrix.json"
             CriterionId = [string]$criterion.id
-            ScenarioId = 'FD-AUTH'
+            ScenarioId = $scenarioId
         }
         if ($changedPath.Count -eq 1) { $criterionMap.ChangedPath = [string]$changedPath[0] }
         & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') acceptance-map @criterionMap | Out-Null

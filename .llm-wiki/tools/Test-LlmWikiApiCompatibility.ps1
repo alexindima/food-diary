@@ -26,6 +26,11 @@ function Get-Properties {
     if ($null -eq $Object) { return @() }
     return @($Object.PSObject.Properties)
 }
+function Get-PropertyValue {
+    param($Object, [string]$Name)
+    if ($null -eq $Object -or -not $Object.PSObject.Properties[$Name]) { return $null }
+    $Object.PSObject.Properties[$Name].Value
+}
 
 function Add-Change {
     param(
@@ -46,7 +51,7 @@ function Add-Change {
 function ConvertTo-ComparableOpenApi {
     param($Snapshot)
 
-    if ($null -ne $Snapshot.Endpoints) {
+    if ($null -ne $Snapshot -and $Snapshot.PSObject.Properties['Endpoints'] -and $null -ne $Snapshot.Endpoints) {
         $paths = [ordered]@{}
         foreach ($endpoint in @($Snapshot.Endpoints)) {
             $operations = [ordered]@{}
@@ -55,15 +60,16 @@ function ConvertTo-ComparableOpenApi {
                 foreach ($responseCode in @($operation.ResponseCodes)) {
                     $responses[[string]$responseCode] = [ordered]@{}
                 }
-                $parameters = @($operation.QueryParameters | Where-Object { $null -ne $_ } | ForEach-Object {
+                $queryParameters = if ($operation.PSObject.Properties['QueryParameters']) { @($operation.QueryParameters) } else { @() }
+                $parameters = @($queryParameters | Where-Object { $null -ne $_ } | ForEach-Object {
                     [ordered]@{
                         name = [string]$_.Name
                         in = [string]$_.Location
                         required = [bool]$_.Required
                         schema = [ordered]@{
                             type = [string]$_.Type
-                            format = [string]$_.Format
-                            default = $_.Default
+                            format = $(if ($_.PSObject.Properties['Format']) { [string]$_.Format } else { '' })
+                            default = $(if ($_.PSObject.Properties['Default']) { $_.Default } else { $null })
                         }
                     }
                 })
@@ -215,7 +221,9 @@ $baseText = if ($PSBoundParameters.ContainsKey('BaseSnapshotContent')) {
 
 $beforeSource = $baseText | ConvertFrom-Json
 $afterSource = $currentText | ConvertFrom-Json
-$snapshotFormat = if ($null -ne $beforeSource.Endpoints -or $null -ne $afterSource.Endpoints) {
+$beforeHasEndpoints = $null -ne $beforeSource -and $beforeSource.PSObject.Properties['Endpoints'] -and $null -ne $beforeSource.Endpoints
+$afterHasEndpoints = $null -ne $afterSource -and $afterSource.PSObject.Properties['Endpoints'] -and $null -ne $afterSource.Endpoints
+$snapshotFormat = if ($beforeHasEndpoints -or $afterHasEndpoints) {
     'endpoint-contract'
 } else {
     'openapi'
@@ -262,8 +270,8 @@ foreach ($pathProperty in Get-Properties $before.paths) {
             if (-not $beforeParameter.required -and $afterParameter.required) {
                 Add-Change $changes 'breaking' 'required-parameter' $location 'Parameter became required.'
             }
-            $beforeShape = "$($beforeParameter.schema.type)|$($beforeParameter.schema.format)|default=$($beforeParameter.schema.default)"
-            $afterShape = "$($afterParameter.schema.type)|$($afterParameter.schema.format)|default=$($afterParameter.schema.default)"
+            $beforeShape = "$(Get-PropertyValue $beforeParameter.schema 'type')|$(Get-PropertyValue $beforeParameter.schema 'format')|default=$(Get-PropertyValue $beforeParameter.schema 'default')"
+            $afterShape = "$(Get-PropertyValue $afterParameter.schema 'type')|$(Get-PropertyValue $afterParameter.schema 'format')|default=$(Get-PropertyValue $afterParameter.schema 'default')"
             if ($beforeShape -ne $afterShape) {
                 Add-Change $changes 'breaking' 'changed-parameter' $location "Parameter shape changed from '$beforeShape' to '$afterShape'."
             }
@@ -332,8 +340,10 @@ foreach ($schemaProperty in Get-Properties $beforeSchemas) {
             Add-Change $changes 'breaking' 'removed-schema-property' "$schemaName.$($property.Name)" 'Schema property was removed.'
             continue
         }
-        $beforeShape = "$($property.Value.type)|$($property.Value.format)|$($property.Value.'$ref')|nullable=$($property.Value.nullable)|items=$($property.Value.items.type):$($property.Value.items.'$ref')"
-        $afterShape = "$($afterProperty.Value.type)|$($afterProperty.Value.format)|$($afterProperty.Value.'$ref')|nullable=$($afterProperty.Value.nullable)|items=$($afterProperty.Value.items.type):$($afterProperty.Value.items.'$ref')"
+        $beforeItems = Get-PropertyValue $property.Value 'items'
+        $afterItems = Get-PropertyValue $afterProperty.Value 'items'
+        $beforeShape = "$(Get-PropertyValue $property.Value 'type')|$(Get-PropertyValue $property.Value 'format')|$(Get-PropertyValue $property.Value '$ref')|nullable=$(Get-PropertyValue $property.Value 'nullable')|items=$(Get-PropertyValue $beforeItems 'type'):$(Get-PropertyValue $beforeItems '$ref')"
+        $afterShape = "$(Get-PropertyValue $afterProperty.Value 'type')|$(Get-PropertyValue $afterProperty.Value 'format')|$(Get-PropertyValue $afterProperty.Value '$ref')|nullable=$(Get-PropertyValue $afterProperty.Value 'nullable')|items=$(Get-PropertyValue $afterItems 'type'):$(Get-PropertyValue $afterItems '$ref')"
         if ($beforeShape -ne $afterShape) {
             Add-Change $changes 'breaking' 'changed-schema-property' "$schemaName.$($property.Name)" "Property shape changed from '$beforeShape' to '$afterShape'."
         }

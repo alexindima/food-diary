@@ -29,6 +29,7 @@ $entries = foreach ($normalizedPath in $normalizedPaths) {
     }
 }
 $json = @($entries) | ConvertTo-Json -Depth 5 -Compress
+if ($null -eq $json) { $json = '[]' }
 $bytes = [System.Text.Encoding]::UTF8.GetBytes($json)
 $sha = [System.Security.Cryptography.SHA256]::Create()
 try {

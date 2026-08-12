@@ -31,6 +31,7 @@ $workspacePolicy = Get-Content -LiteralPath $workspacePolicyPath -Raw | ConvertF
 
 function Get-Hash([object]$Value) {
     $json = $Value | ConvertTo-Json -Depth 30 -Compress
+    if ($null -eq $json) { $json = 'null' }
     $bytes = [Text.Encoding]::UTF8.GetBytes($json)
     $sha = [Security.Cryptography.SHA256]::Create()
     try { return ([BitConverter]::ToString($sha.ComputeHash($bytes)) -replace '-', '').ToLowerInvariant() } finally { $sha.Dispose() }
@@ -226,10 +227,10 @@ function Test-Plan([object]$Plan) {
     }
     $required = @($current.policy.requiredChecks.id | Sort-Object -Unique)
     $recorded = @($Plan.requiredCheckIds | Sort-Object -Unique)
-    if ($required.Count -ne $recorded.Count -or (Compare-Object $required $recorded).Count -ne 0) { $issues.Add('Required check set drifted.') }
+    if ($required.Count -ne $recorded.Count -or @(Compare-Object $required $recorded).Count -ne 0) { $issues.Add('Required check set drifted.') }
     $covered = @($Plan.coverage.checkId | Sort-Object -Unique)
     $duplicateCoverage = @($Plan.coverage | Group-Object checkId | Where-Object Count -ne 1)
-    if ($covered.Count -ne $required.Count -or (Compare-Object $covered $required).Count -ne 0 -or $duplicateCoverage.Count -gt 0) {
+    if ($covered.Count -ne $required.Count -or @(Compare-Object $covered $required).Count -ne 0 -or $duplicateCoverage.Count -gt 0) {
         $issues.Add('Plan does not cover every required check exactly once.')
     }
     $executionIds = @($Plan.executions.primaryCheckId)
@@ -243,7 +244,7 @@ function Test-Plan([object]$Plan) {
         }
         $expectedCovered = @($Plan.coverage | Where-Object primaryCheckId -eq $execution.primaryCheckId | Select-Object -ExpandProperty checkId | Sort-Object)
         $actualCovered = @($execution.coversCheckIds | Sort-Object)
-        if ($expectedCovered.Count -ne $actualCovered.Count -or (Compare-Object $expectedCovered $actualCovered).Count -ne 0) {
+        if ($expectedCovered.Count -ne $actualCovered.Count -or @(Compare-Object $expectedCovered $actualCovered).Count -ne 0) {
             $issues.Add("Execution '$($execution.primaryCheckId)' coverage is inconsistent.")
         }
     }
