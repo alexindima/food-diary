@@ -2,7 +2,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
+using FoodDiary.Application.Dashboard.Queries.GetDietologistClientDashboard;
 using FoodDiary.Application.Dietologist.Queries.GetClientGoals;
 using FoodDiary.Application.Dietologist.Queries.GetInvitationByToken;
 using FoodDiary.Application.Dietologist.Queries.GetInvitationForCurrentUser;
@@ -401,10 +401,10 @@ public partial class DietologistFeatureTests {
 
     [Fact]
     public async Task GetClientDashboard_WithNullUserId_ReturnsFailure() {
-        GetClientDashboardQueryHandler handler = CreateGetClientDashboardHandler();
+        GetDietologistClientDashboardQueryHandler handler = CreateGetClientDashboardHandler();
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
-            new GetClientDashboardQuery(UserId: null, Guid.NewGuid(), DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
+            new GetDietologistClientDashboardQuery(UserId: null, Guid.NewGuid(), DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -415,10 +415,10 @@ public partial class DietologistFeatureTests {
         var dietologistId = UserId.New();
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
-        GetClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(userRepository: userRepo);
+        GetDietologistClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(userRepository: userRepo);
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
-            new GetClientDashboardQuery(dietologistId.Value, Guid.NewGuid(), DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
+            new GetDietologistClientDashboardQuery(dietologistId.Value, Guid.NewGuid(), DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -426,21 +426,9 @@ public partial class DietologistFeatureTests {
 
     [Fact]
     public async Task GetClientDashboard_WhenDietologistAccessFails_ReturnsFailure() {
-        var service = new DietologistClientReadService(
-            new InMemoryInvitationRepository(),
-            new ThrowingDashboardSnapshotBuilder(),
-            new InMemoryUserRepository(),
-            new InMemoryUserRepository());
-
-        Result<DashboardSnapshotModel> result = await service.GetDashboardAsync(
-            UserId.New(),
-            Guid.NewGuid(),
-            DateTime.UtcNow,
-            dateTo: null,
-            "en",
-            trendDays: 7,
-            page: 1,
-            pageSize: 10,
+        GetDietologistClientDashboardQueryHandler handler = CreateGetClientDashboardHandler();
+        Result<DashboardSnapshotModel> result = await handler.Handle(
+            new GetDietologistClientDashboardQuery(UserId.New().Value, Guid.NewGuid(), DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -451,21 +439,9 @@ public partial class DietologistFeatureTests {
         var dietologistId = UserId.New();
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
-        var service = new DietologistClientReadService(
-            new InMemoryInvitationRepository(),
-            new ThrowingDashboardSnapshotBuilder(),
-            userRepo,
-            userRepo);
-
-        Result<DashboardSnapshotModel> result = await service.GetDashboardAsync(
-            dietologistId,
-            Guid.Empty,
-            DateTime.UtcNow,
-            dateTo: null,
-            "en",
-            trendDays: 7,
-            page: 1,
-            pageSize: 10,
+        GetDietologistClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(userRepository: userRepo);
+        Result<DashboardSnapshotModel> result = await handler.Handle(
+            new GetDietologistClientDashboardQuery(dietologistId.Value, Guid.Empty, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -491,12 +467,12 @@ public partial class DietologistFeatureTests {
         var snapshotBuilder = new RecordingDashboardSnapshotBuilder(CreateDashboardSnapshot());
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
-        GetClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(invRepo, snapshotBuilder, userRepo);
+        GetDietologistClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(invRepo, snapshotBuilder, userRepo);
         DateTime dateFrom = DateTime.UtcNow.Date;
         DateTime dateTo = dateFrom.AddDays(6);
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
-            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, dateFrom, dateTo, 1, 10, "en", 7),
+            new GetDietologistClientDashboardQuery(dietologistId.Value, clientId.Value, dateFrom, dateTo, 1, 10, "en", 7),
             CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -531,10 +507,10 @@ public partial class DietologistFeatureTests {
 
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
-        GetClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(invRepo, userRepository: userRepo);
+        GetDietologistClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(invRepo, userRepository: userRepo);
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
-            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
+            new GetDietologistClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -550,10 +526,10 @@ public partial class DietologistFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateDeletedUser(dietologistId, "diet@example.com"));
 
-        GetClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(invRepo, userRepository: userRepo);
+        GetDietologistClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(invRepo, userRepository: userRepo);
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
-            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
+            new GetDietologistClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -570,10 +546,10 @@ public partial class DietologistFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
 
-        GetClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(invRepo, new FailingDashboardSnapshotBuilder(), userRepo);
+        GetDietologistClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(invRepo, new FailingDashboardSnapshotBuilder(), userRepo);
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
-            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
+            new GetDietologistClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -604,8 +580,6 @@ public partial class DietologistFeatureTests {
     public async Task GetClientGoals_WhenDietologistEmailLookupFails_ReturnsFailure() {
         var service = new DietologistClientReadService(
             new InMemoryInvitationRepository(),
-            new ThrowingDashboardSnapshotBuilder(),
-            new InMemoryUserRepository(),
             new InMemoryUserRepository());
 
         Result<UserModel> result = await service.GetGoalsAsync(
@@ -623,8 +597,6 @@ public partial class DietologistFeatureTests {
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
         var service = new DietologistClientReadService(
             new InMemoryInvitationRepository(),
-            new ThrowingDashboardSnapshotBuilder(),
-            userRepo,
             userRepo);
 
         Result<UserModel> result = await service.GetGoalsAsync(

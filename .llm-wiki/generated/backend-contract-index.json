@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "contracts":  1027,
+                    "contracts":  1028,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  7097,
-                    "productionConsumerEdges":  4334,
-                    "testConsumerEdges":  2763,
-                    "consumedContracts":  1027,
+                    "consumerEdges":  7100,
+                    "productionConsumerEdges":  4338,
+                    "testConsumerEdges":  2762,
+                    "consumedContracts":  1028,
                     "unconsumedContracts":  0
                 },
     "contracts":  [
@@ -4059,22 +4059,6 @@
                           "ambiguous":  false
                       },
                       {
-                          "name":  "GetClientDashboardQuery",
-                          "roles":  [
-                                        "Query"
-                                    ],
-                          "kinds":  [
-                                        "record"
-                                    ],
-                          "areas":  [
-                                        "FoodDiary"
-                                    ],
-                          "definitionPaths":  [
-                                                  "FoodDiary.Application/Dietologist/Queries/GetClientDashboard/GetClientDashboardQuery.cs"
-                                              ],
-                          "ambiguous":  false
-                      },
-                      {
                           "name":  "GetClientGoalsQuery",
                           "roles":  [
                                         "Query"
@@ -4391,6 +4375,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Application.Users/Queries/GetDesiredWeight/GetDesiredWeightQuery.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "GetDietologistClientDashboardQuery",
+                          "roles":  [
+                                        "Query"
+                                    ],
+                          "kinds":  [
+                                        "record"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -7607,6 +7607,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Application/Dietologist/Common/IDietologistClientReadService.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "IDietologistDashboardAccessService",
+                          "roles":  [
+                                        "Service"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Abstractions/Dietologist/Common/IDietologistDashboardAccessService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -26130,6 +26146,19 @@
                                                       "FoodDiary.Application/Dashboard/Services/DashboardSnapshotRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "DashboardSnapshotRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Dashboard/Services/DashboardSnapshotRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Services/DashboardSectionDataLoader.cs",
                               "isTest":  false,
                               "referenceCount":  3
@@ -26170,19 +26199,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Services/IDashboardSnapshotBuilder.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "DashboardSnapshotRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Dashboard/Services/DashboardSnapshotRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Services/DietologistClientReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -32193,71 +32209,6 @@
                               "referenceCount":  3
                           },
                           {
-                              "contract":  "GetClientDashboardQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Dietologist/Queries/GetClientDashboard/GetClientDashboardQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Queries/GetClientDashboard/GetClientDashboardQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  2
-                          },
-                          {
-                              "contract":  "GetClientDashboardQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Dietologist/Queries/GetClientDashboard/GetClientDashboardQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Dietologist/Mappings/DietologistHttpMappings.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "GetClientDashboardQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Dietologist/Queries/GetClientDashboard/GetClientDashboardQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  6
-                          },
-                          {
-                              "contract":  "GetClientDashboardQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Dietologist/Queries/GetClientDashboard/GetClientDashboardQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/DietologistClientsControllerTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  2
-                          },
-                          {
-                              "contract":  "GetClientDashboardQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Dietologist/Queries/GetClientDashboard/GetClientDashboardQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/DietologistHttpMappingsTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  3
-                          },
-                          {
                               "contract":  "GetClientGoalsQuery",
                               "roles":  [
                                             "Query"
@@ -33608,6 +33559,71 @@
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/UsersControllerTests.cs",
                               "isTest":  true,
                               "referenceCount":  2
+                          },
+                          {
+                              "contract":  "GetDietologistClientDashboardQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "GetDietologistClientDashboardQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Presentation.Api/Features/Dietologist/Mappings/DietologistHttpMappings.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "GetDietologistClientDashboardQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  8
+                          },
+                          {
+                              "contract":  "GetDietologistClientDashboardQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/DietologistClientsControllerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "GetDietologistClientDashboardQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/DietologistHttpMappingsTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  3
                           },
                           {
                               "contract":  "GetExerciseEntriesQuery",
@@ -42952,6 +42968,19 @@
                                                       "FoodDiary.Application.Abstractions/Audit/Common/IAuditEntryWriter.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAuditEntryWriter",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Audit/Common/IAuditEntryWriter.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -42966,19 +42995,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IAuditEntryWriter",
-                              "roles":  [
-                                            "Other"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Audit/Common/IAuditEntryWriter.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Queries/GetClientDashboard/GetClientDashboardQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -50271,6 +50287,19 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Services/DashboardUserContextService.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -50479,19 +50508,6 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Queries/GetClientDashboard/GetClientDashboardQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/Queries/GetClientGoals/GetClientGoalsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -50636,19 +50652,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Services/DietologistClientReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -53781,6 +53784,19 @@
                                                       "FoodDiary.Application/Dashboard/Services/IDashboardSnapshotBuilder.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IDashboardSnapshotBuilder",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Dashboard/Services/IDashboardSnapshotBuilder.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotBuilder.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -53795,19 +53811,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IDashboardSnapshotBuilder",
-                              "roles":  [
-                                            "Other"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Dashboard/Services/IDashboardSnapshotBuilder.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Services/DietologistClientReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -53848,7 +53851,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
                               "isTest":  true,
-                              "referenceCount":  5
+                              "referenceCount":  4
                           },
                           {
                               "contract":  "IDashboardStatisticsReadService",
@@ -54392,19 +54395,6 @@
                                                       "FoodDiary.Application/Dietologist/Common/IDietologistClientReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Queries/GetClientDashboard/GetClientDashboardQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IDietologistClientReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Dietologist/Common/IDietologistClientReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/Queries/GetClientGoals/GetClientGoalsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -54431,19 +54421,6 @@
                                                       "FoodDiary.Application/Dietologist/Common/IDietologistClientReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/AttentionSignalTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  10
-                          },
-                          {
-                              "contract":  "IDietologistClientReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Dietologist/Common/IDietologistClientReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
                               "isTest":  true,
                               "referenceCount":  1
@@ -54459,6 +54436,45 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
                               "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IDietologistDashboardAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Dietologist/Common/IDietologistDashboardAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IDietologistDashboardAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Dietologist/Common/IDietologistDashboardAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Identity.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IDietologistDashboardAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Dietologist/Common/IDietologistDashboardAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Services/DietologistDashboardAccessService.cs",
+                              "isTest":  false,
                               "referenceCount":  1
                           },
                           {
@@ -54653,6 +54669,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/Services/DietologistClientReadService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IDietologistInvitationReadModelRepository",
+                              "roles":  [
+                                            "ReadModelRepository"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Dietologist/Common/IDietologistInvitationReadModelRepository.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Services/DietologistDashboardAccessService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -67508,6 +67537,19 @@
                                                       "FoodDiary.Application.Abstractions/Notifications/Common/INotificationClientRefreshService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Common/DietologistNotificationPostCommitActions.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "INotificationClientRefreshService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Notifications/Common/INotificationClientRefreshService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/EventHandlers/RecommendationCreatedEventHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -71161,6 +71203,19 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Common/DietologistNotificationPostCommitActions.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IPostCommitActionQueue",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/EventHandlers/RecommendationCreatedEventHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -72786,7 +72841,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQuery.cs",
+                              "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -72799,7 +72854,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Queries/GetClientDashboard/GetClientDashboardQuery.cs",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74255,7 +74310,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74268,7 +74323,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Queries/GetClientDashboard/GetClientDashboardQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83433,7 +83488,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Queries/GetClientDashboard/GetClientDashboardQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -87606,6 +87661,19 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/Commands/AcceptInvitation/AcceptInvitationCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -87854,19 +87922,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Queries/GetClientDashboard/GetClientDashboardQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },

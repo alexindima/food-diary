@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Services;
@@ -22,7 +22,7 @@ public sealed class ClientTaskDueReminderProcessor(
 
         foreach (ClientTask task in tasks) {
             await notificationWriter.AddAsync(
-                NotificationFactory.CreateClientTaskDueSoon(task.ClientUserId),
+                DietologistNotificationFactory.CreateClientTaskDueSoon(task.ClientUserId),
                 cancellationToken: cancellationToken).ConfigureAwait(false);
             task.MarkDueReminderSent(utcNow);
         }

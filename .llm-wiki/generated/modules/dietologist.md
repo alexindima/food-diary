@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Business-module dependencies: Authentication, Dashboard, Notifications
+- Business-module dependencies: none observed
 - Abstraction-contract dependencies: Audit, Authentication, Email, Notifications, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.JobManager, FoodDiary.Presentation.Api
@@ -116,14 +116,14 @@ Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsControll
 - Physical isolation: folder
 - Architecture guardrails: graph-only
 - Declared owned entities: not yet enumerated
-- Public contract files: 34
+- Public contract files: 35
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 34
-- Interfaces: 22
+- Public contract types: 35
+- Interfaces: 23
 - DTO/read-model/projection types: 10
 - Enums: 0
 - Exported repository-shaped contracts: 20
@@ -133,6 +133,7 @@ Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsControll
 - `interface IClientTaskReadModelRepository`
 - `interface IClientTaskRepository`
 - `interface IClientTaskWriteRepository`
+- `interface IDietologistDashboardAccessService`
 - `interface IDietologistEmailSender`
 - `interface IDietologistInvitationReadModelRepository`
 - `interface IDietologistInvitationReadRepository`
@@ -157,8 +158,7 @@ Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsControll
 - `record ClientTaskReadModel`
 - `record DietologistInvitationMessage`
 - `record DietologistInvitationReadModel`
-- `record DietologistPermissionsReadModel`
-- ... 4 more type(s)
+- ... 5 more type(s)
 
 ## Focused Tests
 
@@ -181,6 +181,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistValidatorTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/DietologistModuleBoundaryTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/DietologistInvitationInvariantTests.cs`
 - [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/DietologistPersistenceIntegrationTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/DietologistEmailSenderTests.cs`

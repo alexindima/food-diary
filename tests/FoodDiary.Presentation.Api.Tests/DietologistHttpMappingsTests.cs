@@ -8,7 +8,7 @@ using FoodDiary.Application.Dietologist.Commands.InviteDietologist;
 using FoodDiary.Application.Dietologist.Commands.MarkRecommendationRead;
 using FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
 using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
+using FoodDiary.Application.Dashboard.Queries.GetDietologistClientDashboard;
 using FoodDiary.Application.Dietologist.Queries.GetClientGoals;
 using FoodDiary.Application.Dietologist.Queries.GetInvitationByToken;
 using FoodDiary.Application.Dietologist.Queries.GetInvitationForCurrentUser;
@@ -72,13 +72,13 @@ public sealed class DietologistHttpMappingsTests {
     }
 
     [Fact]
-    public void GetClientDashboardQuery_MapsAllFields() {
+    public void GetDietologistClientDashboardQuery_MapsAllFields() {
         var userId = Guid.NewGuid();
         var clientUserId = Guid.NewGuid();
         var date = new DateTime(2026, 4, 1);
         var httpQuery = new GetClientDashboardHttpQuery(date, Page: 2, PageSize: 20, Locale: "ru", TrendDays: 14);
 
-        GetClientDashboardQuery query = httpQuery.ToClientDashboardQuery(userId, clientUserId, TodayUtc);
+        GetDietologistClientDashboardQuery query = httpQuery.ToClientDashboardQuery(userId, clientUserId, TodayUtc);
 
         Assert.Multiple(
             () => Assert.Equal(userId, query.UserId),
@@ -91,7 +91,7 @@ public sealed class DietologistHttpMappingsTests {
     }
 
     [Fact]
-    public void GetClientDashboardQuery_UsesDateRangeWhenProvided() {
+    public void GetDietologistClientDashboardQuery_UsesDateRangeWhenProvided() {
         var userId = Guid.NewGuid();
         var clientUserId = Guid.NewGuid();
         var date = new DateTime(2026, 4, 1);
@@ -106,7 +106,7 @@ public sealed class DietologistHttpMappingsTests {
             Locale: "en",
             TrendDays: 7);
 
-        GetClientDashboardQuery query = httpQuery.ToClientDashboardQuery(userId, clientUserId, TodayUtc);
+        GetDietologistClientDashboardQuery query = httpQuery.ToClientDashboardQuery(userId, clientUserId, TodayUtc);
 
         Assert.Equal(dateFrom, query.Date);
         Assert.Equal(dateTo, query.DateTo);
@@ -155,12 +155,12 @@ public sealed class DietologistHttpMappingsTests {
     }
 
     [Fact]
-    public void GetClientDashboardQuery_WhenDateIsMissing_UsesProvidedToday() {
+    public void GetDietologistClientDashboardQuery_WhenDateIsMissing_UsesProvidedToday() {
         var userId = Guid.NewGuid();
         var clientUserId = Guid.NewGuid();
         var httpQuery = new GetClientDashboardHttpQuery();
 
-        GetClientDashboardQuery query = httpQuery.ToClientDashboardQuery(userId, clientUserId, TodayUtc);
+        GetDietologistClientDashboardQuery query = httpQuery.ToClientDashboardQuery(userId, clientUserId, TodayUtc);
 
         Assert.Equal(TodayUtc.Date, query.Date);
         Assert.Null(query.DateTo);

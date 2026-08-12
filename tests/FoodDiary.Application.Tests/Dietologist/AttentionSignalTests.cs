@@ -172,7 +172,7 @@ public sealed class AttentionSignalTests {
         var user = User.Create("dietologist@example.com", "hash");
         ClientSummaryModel first = CreateClient(UtcNow.AddDays(-1));
         ClientSummaryModel second = CreateClient(UtcNow.AddDays(-1));
-        IDietologistClientReadService dashboards = Substitute.For<IDietologistClientReadService>();
+        ILegacyDashboardTestService dashboards = Substitute.For<ILegacyDashboardTestService>();
         dashboards.GetDashboardAsync(
                 Arg.Any<UserId>(),
                 first.UserId,
@@ -220,7 +220,7 @@ public sealed class AttentionSignalTests {
         ClientSummaryModel second = CreateClient(
             UtcNow.AddDays(-1),
             permissions: CreatePermissions(meals: false, statistics: true, weight: true));
-        IDietologistClientReadService dashboards = Substitute.For<IDietologistClientReadService>();
+        ILegacyDashboardTestService dashboards = Substitute.For<ILegacyDashboardTestService>();
         dashboards.GetDashboardAsync(
                 Arg.Any<UserId>(),
                 first.UserId,
@@ -390,7 +390,7 @@ public sealed class AttentionSignalTests {
 
     private static GetAttentionSignalsQueryHandler CreateQueryHandler(
         IDietologistInvitationReadService? invitations = null,
-        IDietologistClientReadService? dashboards = null,
+        ILegacyDashboardTestService? dashboards = null,
         IAuditEntryReadService? audits = null,
         IUserContextService? userContext = null) {
         if (invitations is null) {
@@ -414,7 +414,7 @@ public sealed class AttentionSignalTests {
     }
 
     private static IAttentionSignalMetricsReadService CreateMetricsService(
-        IDietologistClientReadService? dashboards) {
+        ILegacyDashboardTestService? dashboards) {
         IAttentionSignalMetricsReadService service = Substitute.For<IAttentionSignalMetricsReadService>();
         service.GetAsync(
                 Arg.Any<IReadOnlyCollection<UserId>>(),
@@ -431,7 +431,7 @@ public sealed class AttentionSignalTests {
     }
 
     private static async Task<IReadOnlyList<AttentionSignalMetricsReadModel>> BuildMetricsAsync(
-        IDietologistClientReadService? dashboards,
+        ILegacyDashboardTestService? dashboards,
         IReadOnlyCollection<UserId> clientIds,
         DateTime dateFrom,
         DateTime dateTo,
@@ -486,8 +486,8 @@ public sealed class AttentionSignalTests {
         return service;
     }
 
-    private static IDietologistClientReadService CreateDashboardService(Result<DashboardSnapshotModel> result) {
-        IDietologistClientReadService service = Substitute.For<IDietologistClientReadService>();
+    private static ILegacyDashboardTestService CreateDashboardService(Result<DashboardSnapshotModel> result) {
+        ILegacyDashboardTestService service = Substitute.For<ILegacyDashboardTestService>();
         service.GetDashboardAsync(
                 Arg.Any<UserId>(),
                 Arg.Any<Guid>(),
@@ -610,6 +610,19 @@ public sealed class AttentionSignalTests {
             null,
             [],
             []);
+
+    public interface ILegacyDashboardTestService {
+        Task<Result<DashboardSnapshotModel>> GetDashboardAsync(
+            UserId dietologistUserId,
+            Guid clientUserId,
+            DateTime date,
+            DateTime? dateTo,
+            string locale,
+            int trendDays,
+            int page,
+            int pageSize,
+            CancellationToken cancellationToken);
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider(DateTime utcNow) : TimeProvider {

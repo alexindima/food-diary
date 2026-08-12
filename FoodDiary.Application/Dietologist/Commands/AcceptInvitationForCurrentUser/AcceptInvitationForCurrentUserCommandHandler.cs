@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
@@ -38,13 +38,13 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
         }
 
         UserDietologistProfileModel user = userResult.Value;
-        Result<DietologistInvitationId> invitationIdResult = RequiredIdParser.Parse(
+        Result<DietologistInvitationId> invitationIdResult = DietologistRequiredIdParser.Parse(
             command.InvitationId,
             nameof(command.InvitationId),
             "Invitation id must not be empty.",
             value => new DietologistInvitationId(value));
         if (invitationIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure(invitationIdResult);
+            return DietologistRequiredIdParser.ToFailure(invitationIdResult);
         }
 
         DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(

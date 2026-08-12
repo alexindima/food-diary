@@ -20,14 +20,14 @@ are reported separately; `none observed` never means proven isolation.
 | --- | --- | ---: | ---: | ---: | ---: | --- |
 | [Admin](admin.md) | orchestrator | 6 | 7 | 0 | 2 | graph-only |
 | [Ai](ai.md) | orchestrator | 0 | 3 | 1 | 2 | graph-only |
-| [Authentication](authentication.md) | aggregate-owner | 2 | 3 | 2 | 5 | graph-only |
+| [Authentication](authentication.md) | aggregate-owner | 2 | 3 | 1 | 5 | graph-only |
 | [Billing](billing.md) | aggregate-owner | 0 | 1 | 0 | 5 | assembly-isolated |
 | [Consumptions](consumptions.md) | aggregate-owner | 2 | 7 | 7 | 1 | explicit-boundary-tests |
 | [ContentReports](content-reports.md) | aggregate-owner | 0 | 1 | 1 | 1 | graph-only |
 | [Cycles](cycles.md) | aggregate-owner | 0 | 2 | 2 | 1 | graph-only |
 | [DailyAdvices](daily-advices.md) | aggregate-owner | 0 | 1 | 1 | 1 | graph-only |
-| [Dashboard](dashboard.md) | read-composer | 10 | 2 | 1 | 1 | explicit-boundary-tests |
-| [Dietologist](dietologist.md) | aggregate-owner | 3 | 5 | 0 | 2 | graph-only |
+| [Dashboard](dashboard.md) | read-composer | 10 | 4 | 0 | 1 | explicit-boundary-tests |
+| [Dietologist](dietologist.md) | aggregate-owner | 0 | 5 | 0 | 2 | graph-only |
 | [Email](email.md) | aggregate-owner | 0 | 1 | 2 | 2 | graph-only |
 | [Exercises](exercises.md) | aggregate-owner | 0 | 1 | 2 | 1 | graph-only |
 | [Export](export.md) | read-composer | 2 | 2 | 0 | 2 | graph-only |
@@ -41,7 +41,7 @@ are reported separately; `none observed` never means proven isolation.
 | [Lessons](lessons.md) | aggregate-owner | 0 | 2 | 1 | 1 | graph-only |
 | [Marketing](marketing.md) | aggregate-owner | 0 | 1 | 0 | 4 | assembly-isolated |
 | [MealPlans](meal-plans.md) | aggregate-owner | 1 | 1 | 0 | 1 | graph-only |
-| [Notifications](notifications.md) | aggregate-owner | 0 | 1 | 5 | 5 | explicit-boundary-tests |
+| [Notifications](notifications.md) | aggregate-owner | 0 | 1 | 4 | 5 | explicit-boundary-tests |
 | [Nutrition](nutrition.md) | domain-service | 0 | 0 | 2 | 0 | graph-only |
 | [OpenFoodFacts](open-food-facts.md) | adapter | 0 | 0 | 1 | 2 | graph-only |
 | [Products](products.md) | aggregate-owner | 5 | 5 | 0 | 1 | explicit-boundary-tests |

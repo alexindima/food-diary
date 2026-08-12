@@ -3,7 +3,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
@@ -31,7 +31,7 @@ public sealed class DietologistInvitationReadService(
 
         Result<DietologistInvitationId> invitationIdResult = ParseInvitationId(invitationId);
         if (invitationIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure<DietologistInvitationForCurrentUserModel, DietologistInvitationId>(invitationIdResult);
+            return DietologistRequiredIdParser.ToFailure<DietologistInvitationForCurrentUserModel, DietologistInvitationId>(invitationIdResult);
         }
 
         DietologistInvitationReadModel? invitation = await invitationRepository.GetByIdReadModelAsync(
@@ -54,7 +54,7 @@ public sealed class DietologistInvitationReadService(
         CancellationToken cancellationToken) {
         Result<DietologistInvitationId> invitationIdResult = ParseInvitationId(invitationId);
         if (invitationIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure<InvitationModel, DietologistInvitationId>(invitationIdResult);
+            return DietologistRequiredIdParser.ToFailure<InvitationModel, DietologistInvitationId>(invitationIdResult);
         }
 
         DietologistInvitationReadModel? invitation = await invitationRepository.GetByIdReadModelAsync(invitationIdResult.Value, cancellationToken).ConfigureAwait(false);
@@ -158,7 +158,7 @@ public sealed class DietologistInvitationReadService(
             relationship.AcceptedAtUtc);
 
     private static Result<DietologistInvitationId> ParseInvitationId(Guid invitationId) =>
-        RequiredIdParser.Parse(
+        DietologistRequiredIdParser.Parse(
             invitationId,
             nameof(invitationId),
             "Invitation id must not be empty.",

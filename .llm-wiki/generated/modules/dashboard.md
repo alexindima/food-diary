@@ -16,8 +16,8 @@ sources:
 
 - Origin: module-graph
 - Business-module dependencies: Consumptions, Cycles, DailyAdvices, Exercises, Fasting, Hydration, Statistics, Tdee, WaistEntries, WeightEntries
-- Abstraction-contract dependencies: Authentication, Users
-- Business-module consumers: Dietologist
+- Abstraction-contract dependencies: Audit, Authentication, Dietologist, Users
+- Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Presentation.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
@@ -45,7 +45,7 @@ Source: `FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs`
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: not yet enumerated
 - Public contract files: 17
-- Observed external consumer groups: 2
+- Observed external consumer groups: 1
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

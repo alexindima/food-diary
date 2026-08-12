@@ -14,7 +14,7 @@ using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
+using FoodDiary.Application.Dashboard.Queries.GetDietologistClientDashboard;
 using FoodDiary.Application.Dietologist.Queries.GetClientGoals;
 using FoodDiary.Application.Dietologist.Queries.GetInvitationByToken;
 using FoodDiary.Application.Dietologist.Queries.GetInvitationForCurrentUser;
@@ -334,15 +334,13 @@ public partial class DietologistFeatureTests {
         ICurrentUserAccessService currentUserAccessService) =>
         new DietologistInvitationReadService(invitationRepository, userContextService, currentUserAccessService, TimeProvider.System);
 
-    private static GetClientDashboardQueryHandler CreateGetClientDashboardHandler(
+    private static GetDietologistClientDashboardQueryHandler CreateGetClientDashboardHandler(
         IDietologistInvitationReadModelRepository? invitationRepository = null,
         IDashboardSnapshotBuilder? snapshotBuilder = null,
         InMemoryUserRepository? userRepository = null) =>
         new(
-            CreateDietologistClientReadService(
-            invitationRepository ?? new InMemoryInvitationRepository(),
+            new DietologistDashboardAccessService(invitationRepository ?? new InMemoryInvitationRepository()),
             snapshotBuilder ?? new ThrowingDashboardSnapshotBuilder(),
-            userRepository ?? new InMemoryUserRepository()),
             Substitute.For<IAuditEntryWriter>(),
             Substitute.For<IUnitOfWork>(),
             userRepository ?? new InMemoryUserRepository());
@@ -353,15 +351,13 @@ public partial class DietologistFeatureTests {
         new(
             CreateDietologistClientReadService(
             invitationRepository ?? new InMemoryInvitationRepository(),
-            new ThrowingDashboardSnapshotBuilder(),
             userRepository ?? new InMemoryUserRepository()),
             userRepository ?? new InMemoryUserRepository());
 
     private static IDietologistClientReadService CreateDietologistClientReadService(
         IDietologistInvitationReadModelRepository invitationRepository,
-        IDashboardSnapshotBuilder snapshotBuilder,
         InMemoryUserRepository userRepository) =>
-        new DietologistClientReadService(invitationRepository, snapshotBuilder, userRepository, userRepository);
+        new DietologistClientReadService(invitationRepository, userRepository);
 
     private static GetMyRecommendationsQueryHandler CreateGetMyRecommendationsHandler(
         IRecommendationReadModelRepository? recommendationRepository = null,

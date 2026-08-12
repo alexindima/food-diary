@@ -10,7 +10,7 @@
     "Cycles": [],
     "DailyAdvices": [],
     "Dashboard": ["Consumptions", "Cycles", "DailyAdvices", "Exercises", "Fasting", "Hydration", "Statistics", "Tdee", "WaistEntries", "WeightEntries"],
-    "Dietologist": ["Authentication", "Dashboard", "Notifications"],
+    "Dietologist": [],
     "Email": [],
     "Exercises": [],
     "Export": ["Consumptions", "Cycles"],

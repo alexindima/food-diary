@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Domain.Entities.Dietologist;
@@ -18,7 +18,7 @@ public sealed class RecommendationDiscussionReadService(
         UserId userId,
         Guid recommendationId,
         CancellationToken cancellationToken) {
-        Result<RecommendationId> recommendationIdResult = RequiredIdParser.Parse(
+        Result<RecommendationId> recommendationIdResult = DietologistRequiredIdParser.Parse(
             recommendationId,
             nameof(recommendationId),
             "Recommendation id must not be empty.",

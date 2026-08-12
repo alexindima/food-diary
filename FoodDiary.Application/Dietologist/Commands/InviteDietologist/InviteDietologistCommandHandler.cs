@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
@@ -7,7 +6,6 @@ using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Enums;
@@ -62,7 +60,7 @@ public sealed class InviteDietologistCommandHandler(
             return Result.Failure(Errors.Dietologist.PendingInvitationExists);
         }
 
-        string rawToken = SecurityTokenGenerator.GenerateUrlSafeToken();
+        string rawToken = DietologistInvitationTokenGenerator.GenerateUrlSafeToken();
         string tokenHash = passwordHasher.Hash(rawToken);
         DateTime expiresAt = dateTimeProvider.GetUtcNow().UtcDateTime.AddDays(7);
         DietologistPermissions permissions = command.Permissions.ToPermissions();
@@ -101,13 +99,13 @@ public sealed class InviteDietologistCommandHandler(
         UserDietologistProfileModel client,
         DietologistInvitation invitation,
         CancellationToken cancellationToken) {
-        Notification notification = NotificationFactory.CreateDietologistInvitationReceived(
+        Notification notification = DietologistNotificationFactory.CreateInvitationReceived(
             new UserId(registeredDietologist.Id),
             ResolveClientName(client),
             invitation.Id.Value.ToString());
 
         await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
-        NotificationPostCommitActions.EnqueueUnreadCountPush(
+        DietologistNotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,
             notificationClientRefreshService,
             new UserId(registeredDietologist.Id));

@@ -3,10 +3,9 @@ using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -30,7 +29,7 @@ public sealed class ChangeClientTaskStatusCommandHandler(
             return CurrentUserAccessResolver.ToFailure<ClientTaskModel>(userIdResult);
         }
 
-        Result<ClientTaskId> taskIdResult = RequiredIdParser.Parse(
+        Result<ClientTaskId> taskIdResult = DietologistRequiredIdParser.Parse(
             command.TaskId,
             nameof(command.TaskId),
             "Task id must not be empty.",
@@ -55,7 +54,7 @@ public sealed class ChangeClientTaskStatusCommandHandler(
         }
 
         ClientTaskStatus previousStatus = task.Status;
-        Result<ClientTaskStatus> statusResult = EnumValueParser.ParseRequired<ClientTaskStatus>(
+        Result<ClientTaskStatus> statusResult = DietologistEnumValueParser.ParseRequired<ClientTaskStatus>(
             command.Status,
             nameof(command.Status),
             "Task status must be Open or Completed.");
@@ -75,7 +74,7 @@ public sealed class ChangeClientTaskStatusCommandHandler(
 
         if (task.Status != previousStatus) {
             await notificationWriter.AddAsync(
-                NotificationFactory.CreateClientTaskChanged(
+                DietologistNotificationFactory.CreateClientTaskChanged(
                     task.DietologistUserId,
                     task.ClientUserId.Value.ToString(),
                     forDietologist: true),

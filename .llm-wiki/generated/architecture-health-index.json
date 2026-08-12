@@ -30,7 +30,7 @@
     "moduleHotspots":  [
                            {
                                "module":  "Dashboard",
-                               "fanIn":  1,
+                               "fanIn":  0,
                                "fanOut":  10,
                                "level":  "review-candidate",
                                "role":  "read-composer"
@@ -50,13 +50,6 @@
                                "role":  "orchestrator"
                            },
                            {
-                               "module":  "Notifications",
-                               "fanIn":  5,
-                               "fanOut":  0,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
                                "module":  "Products",
                                "fanIn":  0,
                                "fanOut":  5,
@@ -64,9 +57,9 @@
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "Authentication",
-                               "fanIn":  2,
-                               "fanOut":  2,
+                               "module":  "Notifications",
+                               "fanIn":  4,
+                               "fanOut":  0,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
@@ -92,9 +85,9 @@
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "Dietologist",
-                               "fanIn":  0,
-                               "fanOut":  3,
+                               "module":  "Authentication",
+                               "fanIn":  1,
+                               "fanOut":  2,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
@@ -276,6 +269,13 @@
                            {
                                "module":  "ShoppingLists",
                                "fanIn":  1,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "Dietologist",
+                               "fanIn":  0,
                                "fanOut":  0,
                                "level":  "informational",
                                "role":  "aggregate-owner"

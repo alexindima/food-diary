@@ -1,6 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Dietologist.Common;
-using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Events;
@@ -20,13 +19,13 @@ public sealed class RecommendationCreatedEventHandler(
         UserDietologistProfileModel? dietologist = await userLookupService.FindByIdAsync(domainEvent.DietologistUserId, cancellationToken).ConfigureAwait(false);
         string dietologistName = ResolveDietologistLabel(dietologist);
 
-        Notification createdNotification = NotificationFactory.CreateNewRecommendation(
+        Notification createdNotification = DietologistNotificationFactory.CreateNewRecommendation(
             domainEvent.ClientUserId,
             dietologistName,
             domainEvent.RecommendationId.Value.ToString());
 
         await notificationWriter.AddAsync(createdNotification, cancellationToken: cancellationToken).ConfigureAwait(false);
-        NotificationPostCommitActions.EnqueueUnreadCountPush(
+        DietologistNotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,
             notificationClientRefreshService,
             domainEvent.ClientUserId,

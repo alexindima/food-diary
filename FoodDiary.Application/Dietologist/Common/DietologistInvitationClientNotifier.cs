@@ -1,4 +1,3 @@
-using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Notifications;
@@ -19,7 +18,7 @@ internal static class DietologistInvitationClientNotifier {
             notificationWriter,
             notificationClientRefreshService,
             postCommitActionQueue,
-            NotificationFactory.CreateDietologistInvitationAccepted(
+            DietologistNotificationFactory.CreateInvitationAccepted(
                 clientUserId,
                 dietologistDisplayName,
                 invitationReferenceId),
@@ -37,7 +36,7 @@ internal static class DietologistInvitationClientNotifier {
             notificationWriter,
             notificationClientRefreshService,
             postCommitActionQueue,
-            NotificationFactory.CreateDietologistInvitationDeclined(
+            DietologistNotificationFactory.CreateInvitationDeclined(
                 clientUserId,
                 dietologistDisplayName,
                 invitationReferenceId),
@@ -50,7 +49,7 @@ internal static class DietologistInvitationClientNotifier {
         Notification notification,
         CancellationToken cancellationToken) {
         await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
-        NotificationPostCommitActions.EnqueueUnreadCountPush(
+        DietologistNotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,
             notificationClientRefreshService,
             notification.UserId);

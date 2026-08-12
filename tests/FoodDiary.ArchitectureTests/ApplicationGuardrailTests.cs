@@ -1193,7 +1193,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Dietologist", "Commands", "CreateRecommendation", "CreateRecommendationCommandHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Commands", "DeclineInvitationForCurrentUser", "DeclineInvitationForCurrentUserCommandHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Commands", "InviteDietologist", "InviteDietologistCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetClientDashboard", "GetClientDashboardQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Dashboard", "Queries", "GetDietologistClientDashboard", "GetDietologistClientDashboardQueryHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Queries", "GetClientGoals", "GetClientGoalsQueryHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Queries", "GetInvitationByToken", "GetInvitationByTokenQueryHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Queries", "GetInvitationForCurrentUser", "GetInvitationForCurrentUserQueryHandler.cs"),

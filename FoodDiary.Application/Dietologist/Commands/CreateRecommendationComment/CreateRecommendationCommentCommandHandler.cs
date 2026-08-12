@@ -3,10 +3,9 @@ using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Dietologist;
@@ -34,7 +33,7 @@ public sealed class CreateRecommendationCommentCommandHandler(
             return CurrentUserAccessResolver.ToFailure<RecommendationCommentModel>(userIdResult);
         }
 
-        Result<RecommendationId> recommendationIdResult = RequiredIdParser.Parse(
+        Result<RecommendationId> recommendationIdResult = DietologistRequiredIdParser.Parse(
             command.RecommendationId,
             nameof(command.RecommendationId),
             "Recommendation id must not be empty.",
@@ -73,7 +72,7 @@ public sealed class CreateRecommendationCommentCommandHandler(
         UserId recipientUserId = authorUserId == recommendation.ClientUserId
             ? recommendation.DietologistUserId
             : recommendation.ClientUserId;
-        Notification notification = NotificationFactory.CreateNewRecommendationComment(
+        Notification notification = DietologistNotificationFactory.CreateNewRecommendationComment(
             recipientUserId,
             recommendation.Id.Value.ToString(),
             recommendation.ClientUserId.Value.ToString(),

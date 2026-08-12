@@ -4,7 +4,7 @@ using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
 using FoodDiary.Application.Dietologist.Commands.DisconnectDietologist;
 using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
+using FoodDiary.Application.Dashboard.Queries.GetDietologistClientDashboard;
 using FoodDiary.Application.Dietologist.Queries.GetClientGoals;
 using FoodDiary.Application.Dietologist.Queries.GetMyClients;
 using FoodDiary.Application.Dietologist.Queries.GetRecommendationsForClient;
@@ -72,7 +72,7 @@ public sealed class DietologistClientsControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         DashboardSnapshotHttpResponse response = Assert.IsType<DashboardSnapshotHttpResponse>(ok.Value);
         Assert.Equal(date, response.Date);
-        GetClientDashboardQuery sentQuery = Assert.IsType<GetClientDashboardQuery>(sentRequest);
+        GetDietologistClientDashboardQuery sentQuery = Assert.IsType<GetDietologistClientDashboardQuery>(sentRequest);
         Assert.Equal(userId, sentQuery.UserId);
         Assert.Equal(clientUserId, sentQuery.ClientUserId);
         Assert.Equal(date, sentQuery.Date);

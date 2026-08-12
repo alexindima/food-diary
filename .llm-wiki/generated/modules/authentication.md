@@ -17,7 +17,7 @@ sources:
 - Origin: module-graph
 - Business-module dependencies: Email, Notifications
 - Abstraction-contract dependencies: Email, Notifications, Users
-- Business-module consumers: Admin, Dietologist
+- Business-module consumers: Admin
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
@@ -38,7 +38,7 @@ No literal attribute-routed controller was associated with this module.
 - Architecture guardrails: graph-only
 - Declared owned entities: not yet enumerated
 - Public contract files: 31
-- Observed external consumer groups: 7
+- Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

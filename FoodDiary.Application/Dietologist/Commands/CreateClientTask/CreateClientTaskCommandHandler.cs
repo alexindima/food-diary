@@ -2,10 +2,9 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
@@ -28,7 +27,7 @@ public sealed class CreateClientTaskCommandHandler(
             return CurrentUserAccessResolver.ToFailure<ClientTaskModel>(dietologistIdResult);
         }
 
-        Result<UserId> clientIdResult = RequiredIdParser.Parse(
+        Result<UserId> clientIdResult = DietologistRequiredIdParser.Parse(
             command.ClientUserId,
             nameof(command.ClientUserId),
             "Client user id must not be empty.",
@@ -54,7 +53,7 @@ public sealed class CreateClientTaskCommandHandler(
             command.DueAtUtc);
         await taskRepository.AddAsync(task, cancellationToken).ConfigureAwait(false);
         await notificationWriter.AddAsync(
-            NotificationFactory.CreateClientTaskChanged(
+            DietologistNotificationFactory.CreateClientTaskChanged(
                 task.ClientUserId,
                 task.ClientUserId.Value.ToString(),
                 forDietologist: false),

@@ -1,8 +1,7 @@
-using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
@@ -23,13 +22,13 @@ public sealed class MarkRecommendationReadCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<RecommendationId> recommendationIdResult = RequiredIdParser.Parse(
+        Result<RecommendationId> recommendationIdResult = DietologistRequiredIdParser.Parse(
             command.RecommendationId,
             nameof(command.RecommendationId),
             "Recommendation id must not be empty.",
             value => new RecommendationId(value));
         if (recommendationIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure(recommendationIdResult);
+            return DietologistRequiredIdParser.ToFailure(recommendationIdResult);
         }
 
         RecommendationId recommendationId = recommendationIdResult.Value;

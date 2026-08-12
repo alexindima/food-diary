@@ -969,6 +969,10 @@
                                                                       "version":  null
                                                                   },
                                                                   {
+                                                                      "name":  "SSH.NET",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
                                                                       "name":  "Testcontainers.PostgreSql",
                                                                       "version":  null
                                                                   },
@@ -1420,6 +1424,10 @@
                                                                       "version":  null
                                                                   },
                                                                   {
+                                                                      "name":  "SSH.NET",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
                                                                       "name":  "Testcontainers.PostgreSql",
                                                                       "version":  null
                                                                   },
@@ -1751,6 +1759,10 @@
                                                                   },
                                                                   {
                                                                       "name":  "NSubstitute",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "SSH.NET",
                                                                       "version":  null
                                                                   },
                                                                   {
@@ -2108,6 +2120,10 @@
                                                                       "version":  null
                                                                   },
                                                                   {
+                                                                      "name":  "SSH.NET",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
                                                                       "name":  "Testcontainers.PostgreSql",
                                                                       "version":  null
                                                                   },
@@ -2334,9 +2350,7 @@
                                {
                                    "name":  "Dietologist",
                                    "dependencies":  [
-                                                        "Authentication",
-                                                        "Dashboard",
-                                                        "Notifications"
+
                                                     ]
                                },
                                {

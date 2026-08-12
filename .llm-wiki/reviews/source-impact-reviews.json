@@ -60,26 +60,14 @@
                         "pageSha256":  "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
                         "sources":  [
                                         {
-                                            "path":  "docs/ARCHITECTURE.md",
-                                            "sha256":  "a80223456d17bf2e7fa685c8df442da74f19fa60bd44a89e9f31430d65744da0"
-                                        },
-                                        {
-                                            "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "e9b9fa663479b59e59d7cd87448d79eb0fbfc440c6945344de9412be09502b27"
-                                        },
-                                        {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "63e0225b2bbde9e9a9e16a8e4d36e2206f1438c5094de4a433a1fa1639fb0f75"
-                                        },
-                                        {
-                                            "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "054c014c796303fd02cf7b36e11f0390623872bf9103eed0a0dd45bb1ad74a88"
+                                            "sha256":  "e95937b80e5728344bae63a823bc39b0a217b36be30e460a7e2023a385248f27"
                                         }
                                     ],
-                        "reason":  "The durable architecture overview now matches the implemented Users assembly boundary and shared CQRS contracts in Application.Abstractions; dependency matrix and architecture tests validate the graph.",
+                        "reason":  "Dietologist dashboard composition moved to Dashboard ownership; module graph and generated indexes reviewed.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:51:44.4999108Z"
+                        "gitHead":  "68661f84b2aa0c708015af78cdc689864d38f7ae",
+                        "reviewedAtUtc":  "2026-08-12T19:59:29.5609508Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -117,18 +105,14 @@
                         "pageSha256":  "33c51571757b7022e33f2b3767e959f88ea9e5367948bc5bf1ed44d191187847",
                         "sources":  [
                                         {
-                                            "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "e9b9fa663479b59e59d7cd87448d79eb0fbfc440c6945344de9412be09502b27"
-                                        },
-                                        {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "63e0225b2bbde9e9a9e16a8e4d36e2206f1438c5094de4a433a1fa1639fb0f75"
+                                            "sha256":  "e95937b80e5728344bae63a823bc39b0a217b36be30e460a7e2023a385248f27"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Dietologist dashboard composition moved to Dashboard ownership; module graph and generated indexes reviewed.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:12.4186042Z"
+                        "gitHead":  "68661f84b2aa0c708015af78cdc689864d38f7ae",
+                        "reviewedAtUtc":  "2026-08-12T19:59:30.4918170Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -201,21 +185,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "bb7cfeb1470820798a1d894aeb110f4e66901f1ef70352f22a1a08a6e6f9f45a"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-                                            "sha256":  "150ea94964bd22930d85c6cfb61d9839446bebad9ce2bfe299818596eedc3083"
-                                        },
-                                        {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "2e127c4d90a2de601293eb995f442197e117f68ae45651eb3391e08f9c48ae7d"
+                                            "sha256":  "daafbfae1b1c3e4e3034ae96296db754dbbf1bc1466f3541f25f0376ee571e7f"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Dietologist dashboard composition moved to Dashboard ownership; module graph and generated indexes reviewed.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:18.0309948Z"
+                        "gitHead":  "68661f84b2aa0c708015af78cdc689864d38f7ae",
+                        "reviewedAtUtc":  "2026-08-12T19:59:35.5243428Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -304,21 +280,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "10883234d3dfd8b4b28d4e3a44b7c1d48c597f4605ae22ae9eca184c86047e7a"
-                                        },
-                                        {
-                                            "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "e9b9fa663479b59e59d7cd87448d79eb0fbfc440c6945344de9412be09502b27"
-                                        },
-                                        {
-                                            "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "054c014c796303fd02cf7b36e11f0390623872bf9103eed0a0dd45bb1ad74a88"
+                                            "sha256":  "9b09ee96eaa411685b5c3eee345e533e23c5f6e6ae65c2e5714f403f11b9a555"
                                         }
                                     ],
-                        "reason":  "Architecture health evidence was regenerated after Users extraction; project references match the allowed matrix and all 544 architecture guardrails pass.",
+                        "reason":  "Dietologist dashboard composition moved to Dashboard ownership; module graph and generated indexes reviewed.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:30.0858698Z"
+                        "gitHead":  "68661f84b2aa0c708015af78cdc689864d38f7ae",
+                        "reviewedAtUtc":  "2026-08-12T19:59:31.5548589Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -327,13 +295,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "7703ee4f72cbd59d40bcc52b1088088cdd0d61b07b448a3ba2bcbdfbe4f6f8ea"
+                                            "sha256":  "c753d1bd33d27a635e2073457e6004192701dddd5090933fc5aeb9bd3ff4f546"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Dietologist dashboard composition moved to Dashboard ownership; module graph and generated indexes reviewed.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:13.1343948Z"
+                        "gitHead":  "68661f84b2aa0c708015af78cdc689864d38f7ae",
+                        "reviewedAtUtc":  "2026-08-12T19:59:32.5109915Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -771,13 +739,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "63e0225b2bbde9e9a9e16a8e4d36e2206f1438c5094de4a433a1fa1639fb0f75"
+                                            "sha256":  "e95937b80e5728344bae63a823bc39b0a217b36be30e460a7e2023a385248f27"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Dietologist dashboard composition moved to Dashboard ownership; module graph and generated indexes reviewed.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:16.7181887Z"
+                        "gitHead":  "68661f84b2aa0c708015af78cdc689864d38f7ae",
+                        "reviewedAtUtc":  "2026-08-12T19:59:33.5492355Z"
                     },
                     {
                         "pageId":  "workflow-performance-observability-review",
@@ -888,13 +856,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "c18fe06bad4efbe22652ea600ce3392ed102a825d879d2360b6c417fc5de8a5e"
+                                            "sha256":  "39fea20da35fde7a776fce4dd25f0c4e381c52db2045bf7b4343b67f62d58951"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Dietologist dashboard composition moved to Dashboard ownership; module graph and generated indexes reviewed.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:17.6819120Z"
+                        "gitHead":  "68661f84b2aa0c708015af78cdc689864d38f7ae",
+                        "reviewedAtUtc":  "2026-08-12T19:59:34.4746570Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

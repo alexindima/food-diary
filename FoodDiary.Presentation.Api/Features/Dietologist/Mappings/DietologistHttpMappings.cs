@@ -20,7 +20,7 @@ using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Dietologist.Queries.GetMyRecommendations;
 using FoodDiary.Application.Dietologist.Queries.GetRecommendationComments;
 using FoodDiary.Application.Dietologist.Queries.GetRecommendationsForClient;
-using FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
+using FoodDiary.Application.Dashboard.Queries.GetDietologistClientDashboard;
 using FoodDiary.Application.Dietologist.Queries.GetAttentionSignals;
 using FoodDiary.Application.Dietologist.Commands.SetAttentionSignalState;
 using FoodDiary.Application.Dietologist.Queries.GetClientGoals;
@@ -113,7 +113,7 @@ public static class DietologistHttpMappings {
     }
 
     extension(GetClientDashboardHttpQuery query) {
-        public GetClientDashboardQuery ToClientDashboardQuery(
+        public GetDietologistClientDashboardQuery ToClientDashboardQuery(
         Guid userId, Guid clientUserId, DateTime todayUtc) {
             DateTime dateFrom = query.DateFrom ?? query.Date ?? todayUtc.Date;
             DateTime? dateTo = query.DateTo ?? query.Date;

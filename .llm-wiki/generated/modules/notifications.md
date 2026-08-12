@@ -17,7 +17,7 @@ sources:
 - Origin: module-graph
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
-- Business-module consumers: Authentication, Dietologist, Fasting, RecipeComments, WeeklyGoals
+- Business-module consumers: Authentication, Fasting, RecipeComments, WeeklyGoals
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
@@ -60,7 +60,7 @@ Source: `FoodDiary.Presentation.Api/Features/Notifications/NotificationsControll
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: Notification, WebPushSubscription, NotificationWebPushOutboxMessage
 - Public contract files: 39
-- Observed external consumer groups: 10
+- Observed external consumer groups: 9
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

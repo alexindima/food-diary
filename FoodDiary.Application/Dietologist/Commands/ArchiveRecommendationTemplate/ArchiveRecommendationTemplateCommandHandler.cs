@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
@@ -22,7 +22,7 @@ public sealed class ArchiveRecommendationTemplateCommandHandler(
             return Result.Failure(userIdResult.Error);
         }
 
-        Result<RecommendationTemplateId> templateIdResult = RequiredIdParser.Parse(
+        Result<RecommendationTemplateId> templateIdResult = DietologistRequiredIdParser.Parse(
             command.TemplateId,
             nameof(command.TemplateId),
             "Template id must not be empty.",

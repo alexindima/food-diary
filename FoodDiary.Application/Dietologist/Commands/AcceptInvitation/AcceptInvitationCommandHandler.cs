@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
@@ -38,7 +38,7 @@ public sealed class AcceptInvitationCommandHandler(
 
         Result<DietologistInvitationId> invitationIdResult = ParseInvitationId(command);
         if (invitationIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure(invitationIdResult);
+            return DietologistRequiredIdParser.ToFailure(invitationIdResult);
         }
 
         DietologistInvitationId invitationId = invitationIdResult.Value;
@@ -89,7 +89,7 @@ public sealed class AcceptInvitationCommandHandler(
         CurrentUserAccessResolver.ResolveAsync(command.UserId, dietologistUserContextService, cancellationToken);
 
     private static Result<DietologistInvitationId> ParseInvitationId(AcceptInvitationCommand command) =>
-        RequiredIdParser.Parse(
+        DietologistRequiredIdParser.Parse(
             command.InvitationId,
             nameof(command.InvitationId),
             "Invitation id must not be empty.",

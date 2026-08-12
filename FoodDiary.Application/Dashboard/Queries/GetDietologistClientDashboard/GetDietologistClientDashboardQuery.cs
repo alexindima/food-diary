@@ -1,10 +1,10 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Results;
 using FoodDiary.Application.Dashboard.Models;
+using FoodDiary.Results;
 
-namespace FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
+namespace FoodDiary.Application.Dashboard.Queries.GetDietologistClientDashboard;
 
-public record GetClientDashboardQuery(
+public sealed record GetDietologistClientDashboardQuery(
     Guid? UserId,
     Guid ClientUserId,
     DateTime Date,

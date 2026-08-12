@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -24,7 +24,7 @@ public sealed class GetClientTasksForDietologistQueryHandler(
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<ClientTaskModel>>(dietologistIdResult);
         }
 
-        Result<UserId> clientIdResult = RequiredIdParser.Parse(
+        Result<UserId> clientIdResult = DietologistRequiredIdParser.Parse(
             query.ClientUserId,
             nameof(query.ClientUserId),
             "Client user id must not be empty.",

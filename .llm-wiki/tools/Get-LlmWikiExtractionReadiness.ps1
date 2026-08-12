@@ -87,11 +87,11 @@ $productionLeaks = @($leaks | Where-Object {
     $_.consumerModule -ne $Module -and
     $_.consumerPath -notmatch "^FoodDiary\.Infrastructure/Persistence/$Module/"
 })
-$mutationConsumers = @($context.consumers | Where-Object {
+$mutationConsumers = @(if ($Module -eq 'Users') { @($context.consumers | Where-Object {
     $_.access -eq 'mutation' -and
     -not $_.compositionRegistration -and
     $_.consumer -ne $Module
-})
+}) } else { @() })
 $blockers = [Collections.Generic.List[string]]::new()
 if ($productionLeaks.Count -gt 0) { $blockers.Add("$($productionLeaks.Count) production path(s) expose the $aggregateName aggregate through direct or transitive contracts.") }
 if ($mutationConsumers.Count -gt 0) { $blockers.Add("$($mutationConsumers.Count) IUserContextService mutation consumer(s) still require a narrow mutation capability.") }
