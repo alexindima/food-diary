@@ -334,14 +334,14 @@
                         "pageSha256":  "c6ad719eb6441142cdea59a921180a1c64d63b5c3143b6d0ac37ccf2df185fda",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-                                            "sha256":  "150ea94964bd22930d85c6cfb61d9839446bebad9ce2bfe299818596eedc3083"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
+                                            "sha256":  "1a1a2534a643883ffcfd8cfb2becfe34abaf2d925c03b1c010621973793f611e"
                                         }
                                     ],
-                        "reason":  "Reviewed optional module metadata normalization and focused context-bundle smoke routing.",
+                        "reason":  "Reviewed safe metrics aggregation for empty, invalid, single, and multiple context feedback receipt sets.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0d08671c1d651c61876941d03e33372a0dedbc3c",
-                        "reviewedAtUtc":  "2026-08-12T13:06:04.5848719Z"
+                        "gitHead":  "866a5578a309c7615014cab797ce2e9ae9822c39",
+                        "reviewedAtUtc":  "2026-08-12T13:19:41.3475664Z"
                     },
                     {
                         "pageId":  "workflow-controlled-learning-promotion",
@@ -530,13 +530,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "bca94339f80832069d5c0b3d744aadfc2f7203683e47a71a234177dd57660117"
+                                            "sha256":  "427ae4ccb8fc8108e5a8342e223003b7c0381fe880a54cc88c3060fc31fadb68"
                                         }
                                     ],
-                        "reason":  "Reviewed granular affected-smoke routing; full-tools remains available for unknown changes and full CI.",
+                        "reason":  "Reviewed focused context-feedback smoke routing; full-tools remains the fallback for unknown tooling changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0d08671c1d651c61876941d03e33372a0dedbc3c",
-                        "reviewedAtUtc":  "2026-08-12T13:06:06.6521581Z"
+                        "gitHead":  "866a5578a309c7615014cab797ce2e9ae9822c39",
+                        "reviewedAtUtc":  "2026-08-12T13:19:42.5462866Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -876,6 +876,21 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "2c158142caaff6421211c35f28d13f32fe688431",
                         "reviewedAtUtc":  "2026-08-12T11:38:13.9112572Z"
+                    },
+                    {
+                        "pageId":  "workflow-task-scheduler",
+                        "pagePath":  ".llm-wiki/workflows/task-scheduler.md",
+                        "pageSha256":  "b964048fb46e10eb6f3e28c3ddcfb451e3443691f1da29c8708d768c8ac1629c",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
+                                            "sha256":  "1a1a2534a643883ffcfd8cfb2becfe34abaf2d925c03b1c010621973793f611e"
+                                        }
+                                    ],
+                        "reason":  "Reviewed isolated feedback fixture root and safe receipt enumeration without changing scheduler scoring semantics.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "866a5578a309c7615014cab797ce2e9ae9822c39",
+                        "reviewedAtUtc":  "2026-08-12T13:19:43.6045005Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",

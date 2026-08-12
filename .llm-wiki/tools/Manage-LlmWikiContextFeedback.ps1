@@ -19,7 +19,14 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
-$feedbackRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/scheduler/context-feedback'
+$feedbackRoot = if ([string]::IsNullOrWhiteSpace($env:LLM_WIKI_TEST_CONTEXT_FEEDBACK_ROOT)) {
+    Join-Path $repositoryRoot '.artifacts/llm-wiki/scheduler/context-feedback'
+} else {
+    $candidate = [IO.Path]::GetFullPath($env:LLM_WIKI_TEST_CONTEXT_FEEDBACK_ROOT)
+    $artifactsRoot = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts/llm-wiki'))
+    if (-not $candidate.StartsWith($artifactsRoot, [StringComparison]::OrdinalIgnoreCase)) { throw 'LLM_WIKI_TEST_CONTEXT_FEEDBACK_ROOT must resolve under .artifacts/llm-wiki.' }
+    $candidate
+}
 $dispatchRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/scheduler/dispatches'
 $policyPath = Join-Path $wikiRoot 'policies/workspace-policies.json'
 $policy = Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json
@@ -130,13 +137,14 @@ function Get-QualitySnapshot([object]$Dispatch, [string]$Outcome) {
     }
 }
 function Get-Views {
-    @((Get-FeedbackFiles) | ForEach-Object {
+    @((Get-FeedbackFiles) | Where-Object { $_ -is [IO.FileInfo] } | ForEach-Object {
+        $feedbackFilePath = $_.FullName
         try {
-            $receipt = Get-Content -LiteralPath $_.FullName -Raw | ConvertFrom-Json
+            $receipt = Get-Content -LiteralPath $feedbackFilePath -Raw | ConvertFrom-Json
             $validation = Test-Receipt $receipt
-            [pscustomobject][ordered]@{ receipt = $receipt; valid = $validation.valid; issues = @($validation.issues); path = $_.FullName }
+            [pscustomobject][ordered]@{ receipt = $receipt; valid = $validation.valid; issues = @($validation.issues); path = $feedbackFilePath }
         } catch {
-            [pscustomobject][ordered]@{ receipt = $null; valid = $false; issues = @($_.Exception.Message); path = $_.FullName }
+            [pscustomobject][ordered]@{ receipt = $null; valid = $false; issues = @($_.Exception.Message); path = $feedbackFilePath }
         }
     })
 }
@@ -158,10 +166,12 @@ function Get-Metrics([object[]]$Views) {
         }
     })
     $paths = @(
-        $validReceipts.helpfulPaths
-        $validReceipts.noisyPaths
-        $validReceipts.missingPaths
-    ) | Where-Object { $_ } | Sort-Object -Unique
+        $validReceipts | ForEach-Object {
+            foreach ($propertyName in @('helpfulPaths', 'noisyPaths', 'missingPaths')) {
+                if ($_.PSObject.Properties[$propertyName]) { @($_.$propertyName) }
+            }
+        } | Where-Object { $_ } | Sort-Object -Unique
+    )
     $profiles = @($paths | ForEach-Object {
         $path = [string]$_
         $helpful = @($validReceipts | Where-Object { $path -in @($_.helpfulPaths) }).Count
