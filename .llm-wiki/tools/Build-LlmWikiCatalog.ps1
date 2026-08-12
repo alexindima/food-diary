@@ -242,6 +242,8 @@ $extractedApplicationModules = @(
         } |
         Sort-Object { $_.name }
 )
+$extractedApplicationModuleNames = @($extractedApplicationModules | ForEach-Object { [string]$_.name })
+$folderApplicationModules = @($applicationModules | Where-Object { [string]$_.name -notin $extractedApplicationModuleNames })
 
 $catalog = [ordered]@{
     schemaVersion = 1
@@ -261,9 +263,9 @@ $catalog = [ordered]@{
         dotnetProjects = $dotnetProjects.Count
         testProjects = $testProjects.Count
         frontendProjects = $frontendProjects.Count
-        applicationModules = $applicationModules.Count
+        applicationModules = $folderApplicationModules.Count
         extractedApplicationModules = $extractedApplicationModules.Count
-        backendBusinessModules = $applicationModules.Count + $extractedApplicationModules.Count
+        backendBusinessModules = $folderApplicationModules.Count + $extractedApplicationModules.Count
         controllers = $controllers.Count
         endpoints = @($controllers | ForEach-Object { $_.endpoints }).Count
         agentGuides = $agentGuides.Count
@@ -277,7 +279,7 @@ $catalog = [ordered]@{
         workspace = 'FoodDiary.Web.Client/angular.json'
         projects = @($frontendProjects)
     }
-    applicationModules = @($applicationModules)
+    applicationModules = @($folderApplicationModules)
     extractedApplicationModules = $extractedApplicationModules
     http = [ordered]@{
         extraction = 'Literal ASP.NET Core Http* and controller Route attributes'

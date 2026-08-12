@@ -17,6 +17,16 @@ $ProposedPath = @(
         Where-Object { $_ } |
         Sort-Object -Unique
 )
+$absoluteWorkspace = Join-Path $repositoryRoot $WorkspacePath
+if (Test-Path -LiteralPath $absoluteWorkspace -PathType Container) {
+    $descriptorPath = Join-Path $absoluteWorkspace 'workspace.json'
+    $existingObjective = if (Test-Path -LiteralPath $descriptorPath -PathType Leaf) {
+        [string](Get-Content -LiteralPath $descriptorPath -Raw | ConvertFrom-Json).objective
+    } else { '' }
+    if ([string]::IsNullOrWhiteSpace($existingObjective) -or $existingObjective.Trim() -cne $Objective.Trim()) {
+        throw "Existing governed workspace '$WorkspacePath' belongs to a different objective ('$existingObjective'). Supply a new -WorkspacePath for '$Objective'; the workspace was not reused."
+    }
+}
 $workflowArguments = @{ Objective = $Objective; BaseRef = $BaseRef; Format = 'Json'; Limit = $Limit }
 if ($PSBoundParameters.ContainsKey('ProposedPath')) { $workflowArguments.ProposedPath = $ProposedPath }
 $workflow = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') @workflowArguments | ConvertFrom-Json
@@ -36,9 +46,10 @@ if ('Localization' -in $scopes) { $criteria.Add('English and Russian localizatio
 if (@($scopes | Where-Object { $_ -in @('Backend', 'Api', 'Database', 'Frontend') }).Count -gt 1) { $criteria.Add('Cross-module and project dependencies remain allowed, acyclic, and covered by architecture checks.') }
 $workspaceCreated = $false
 $workspaceMessage = 'not required by adaptive route'
-$absoluteWorkspace = Join-Path $repositoryRoot $WorkspacePath
 if ([bool]$workflow.requiresWorkspace) {
-    if (Test-Path -LiteralPath $absoluteWorkspace -PathType Container) { $workspaceMessage = "existing workspace reused: $WorkspacePath" }
+    if (Test-Path -LiteralPath $absoluteWorkspace -PathType Container) {
+        $workspaceMessage = "existing workspace reused: $WorkspacePath"
+    }
     elseif ($paths.Count -eq 0) { $workspaceMessage = 'workspace required, but concrete paths are not grounded; complete research/reclassification first' }
     else {
         $allowedPaths = @($paths | ForEach-Object { '^' + [regex]::Escape([string]$_) + '$' })

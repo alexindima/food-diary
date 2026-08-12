@@ -16,9 +16,9 @@
                     "dotnetProjects":  64,
                     "testProjects":  29,
                     "frontendProjects":  4,
-                    "applicationModules":  39,
+                    "applicationModules":  36,
                     "extractedApplicationModules":  5,
-                    "backendBusinessModules":  44,
+                    "backendBusinessModules":  41,
                     "controllers":  85,
                     "endpoints":  271,
                     "agentGuides":  46,
@@ -2423,12 +2423,6 @@
                                                     ]
                                },
                                {
-                                   "name":  "Dietologist",
-                                   "dependencies":  [
-
-                                                    ]
-                               },
-                               {
                                    "name":  "Email",
                                    "dependencies":  [
 
@@ -2499,12 +2493,6 @@
                                    "name":  "MealPlans",
                                    "dependencies":  [
                                                         "ShoppingLists"
-                                                    ]
-                               },
-                               {
-                                   "name":  "Notifications",
-                                   "dependencies":  [
-
                                                     ]
                                },
                                {
@@ -2580,12 +2568,6 @@
                                    "name":  "Usda",
                                    "dependencies":  [
                                                         "Consumptions"
-                                                    ]
-                               },
-                               {
-                                   "name":  "Users",
-                                   "dependencies":  [
-
                                                     ]
                                },
                                {

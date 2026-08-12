@@ -116,14 +116,21 @@ $traces = @(
         } else {
             @($contractIndex.consumerEdges | Where-Object component -eq $target.name)
         }
-        $relatedPaths = @($target.path) + @($related.path) + @($selectorConsumers.consumerPath)
+        $relatedPaths = @(
+            @($target.path) +
+            @($related | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['path']) { [string]$_.path } }) +
+            @($selectorConsumers | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['consumerPath']) { [string]$_.consumerPath } }) |
+                Where-Object { $_ } |
+                Sort-Object -Unique
+        )
         $apiCalls = @(
             $contractIndex.apiCalls |
                 Where-Object { $_.path -in $relatedPaths } |
                 Sort-Object path, line -Unique
         )
         $relatedFeatures = @(
-            $related.path |
+            $related |
+                ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['path']) { [string]$_.path } } |
                 ForEach-Object {
                     $featureMatch = [regex]::Match($_, '/features/(?<feature>[^/]+)/')
                     if ($featureMatch.Success) { $featureMatch.Groups['feature'].Value }

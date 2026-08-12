@@ -129,18 +129,14 @@
                         "pageSha256":  "33c51571757b7022e33f2b3767e959f88ea9e5367948bc5bf1ed44d191187847",
                         "sources":  [
                                         {
-                                            "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "aa6d761e23d0682dab040feac89558ec3fa940b2f039f3d4981d3ba880b26d0f"
-                                        },
-                                        {
-                                            "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "46889177098569713bfa7aadb9e0ab923fe96a562da560c5aa74dd27846808da"
+                                            "path":  ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
+                                            "sha256":  "8d8a6f17daa7d9a44e0509548706ea72287dd930ba380a4ea1d4300b0f41959e"
                                         }
                                     ],
-                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
+                        "reason":  "Reviewed trace null-safety, canonical 36+5 module inventory generation, and objective-safe governed workspace selection against current workflow pages.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
-                        "reviewedAtUtc":  "2026-08-12T21:52:33.5907097Z"
+                        "gitHead":  "4145e274a7a1daea8112754ab0575514046cf969",
+                        "reviewedAtUtc":  "2026-08-12T22:06:15.0675158Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -213,17 +209,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "364d21158c193acbb76fb33ccef7066cebf89ea527a5b41ed6bc148a26eca1e3"
+                                            "sha256":  "4fa6ce05609d4ff03e38edf9f63f92d699bdda10fe9e6b965020c7f7fe49dab3"
                                         },
                                         {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "d9d99d28a0f90992dfa5680134eee1abdb575bf602aa2eb27774665249aa06e2"
+                                            "path":  ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
+                                            "sha256":  "8d8a6f17daa7d9a44e0509548706ea72287dd930ba380a4ea1d4300b0f41959e"
                                         }
                                     ],
-                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
+                        "reason":  "Reviewed trace null-safety, canonical 36+5 module inventory generation, and objective-safe governed workspace selection against current workflow pages.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
-                        "reviewedAtUtc":  "2026-08-12T21:52:35.2063046Z"
+                        "gitHead":  "4145e274a7a1daea8112754ab0575514046cf969",
+                        "reviewedAtUtc":  "2026-08-12T22:06:15.7078001Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -258,37 +254,21 @@
                     {
                         "pageId":  "workflow-adaptive-development",
                         "pagePath":  ".llm-wiki/workflows/adaptive-development.md",
-                        "pageSha256":  "7b31e07462b7a226949fca58c200d0330514b3158ce5f905e77bc1d9bda431dd",
+                        "pageSha256":  "d2c5fb2ce16991118d641fd45d46d2507d334f6f4576c3a1e3774fe5b90a769f",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1",
-                                            "sha256":  "976227def0a39e4d55d9ce81056df5fd860f6d9d42f5c7a254638dfc45e47278"
+                                            "path":  ".llm-wiki/tools/Start-LlmWikiDevelopment.ps1",
+                                            "sha256":  "304ccee856b4e996019f60b7d898b758407e9b68947a50b5e5a116087e38d81d"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAdaptiveVerification.ps1",
-                                            "sha256":  "252cfe09742f6c7f62b12cc1f47a0446358dde09877c9c03e922727e1aacf2b0"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
-                                            "sha256":  "c84d77ebb9730212326aebc45ec44b31285f9e15d53034a486ea75f5317b9a35"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-                                            "sha256":  "8d980c4d6e8a270343626b3559f8374d51f0f4a1f476b26359c2bad9874e6c6f"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-                                            "sha256":  "591f03a1a481b9c5655b492d8dfa3c2ba696b11a3baa23cabf0b29f104c395a3"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-                                            "sha256":  "499b12903b4bd2a153b3ec3150d801dd34f61736c748f7a015eedb15a6e7ad0f"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
+                                            "sha256":  "375929cd50a8fa8c994c566b800813054916af0cc80b7f08da191dfdef15aee9"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Verified that start preserves normalized planned paths and refuses to reuse a governed workspace whose stored objective differs from the requested objective; isolated adaptive regressions cover both behaviors.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:12.6258379Z"
+                        "gitHead":  "4145e274a7a1daea8112754ab0575514046cf969",
+                        "reviewedAtUtc":  "2026-08-12T22:13:15.4414251Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -1118,18 +1098,14 @@
                         "pageSha256":  "aa8a6cbad3f7ccd39d71249321bc2a2450bad77ed00f7de72a1935fc813d5981",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "44262c6e36fd88ff7fd41d5b045d8795f95e5d8865c978cac28a55a18cc0535a"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "55c84a7481780a88e2d449efad980d759bc32d1700cb78c71c3117bec06cb24a"
+                                            "path":  ".llm-wiki/tools/Find-LlmWikiFrontendTrace.ps1",
+                                            "sha256":  "dde51bf07962d0d752e1dfce0b50cf1b15e7196ee60d53c9bb852d88e7e1df06"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated indexes and dependent guidance for this frontend-only fasting presentation change; component contracts, architecture boundaries, feature trace, and focused quality risks remain valid.",
+                        "reason":  "Reviewed trace null-safety, canonical 36+5 module inventory generation, and objective-safe governed workspace selection against current workflow pages.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d8e2e1834fc0fb828f81b9a5aa71d19d08b9d141",
-                        "reviewedAtUtc":  "2026-08-11T21:38:26.7217767Z"
+                        "gitHead":  "4145e274a7a1daea8112754ab0575514046cf969",
+                        "reviewedAtUtc":  "2026-08-12T22:06:16.0222544Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

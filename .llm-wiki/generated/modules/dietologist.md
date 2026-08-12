@@ -14,7 +14,8 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: none observed
 - Business-module consumers: none observed

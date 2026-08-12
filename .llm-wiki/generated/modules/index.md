@@ -12,7 +12,7 @@ sources:
 
 # Application Modules
 
-This index unifies 39 folder modules and 2 extracted application modules.
+This index unifies 36 folder modules and 5 extracted application modules.
 Business-module edges, abstraction contracts, adapter consumers, and runtime composition
 are reported separately; `none observed` never means proven isolation.
 

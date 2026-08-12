@@ -216,7 +216,7 @@ $indexLines = New-FrontMatter 'generated.application-modules' @(
 $indexLines.Add('')
 $indexLines.Add('# Application Modules')
 $indexLines.Add('')
-$indexLines.Add('This index unifies 39 folder modules and 2 extracted application modules.')
+$indexLines.Add("This index unifies $([int]$boundaryManifest.inventory.folderModules) folder modules and $([int]$boundaryManifest.inventory.extractedModules) extracted application modules.")
 $indexLines.Add('Business-module edges, abstraction contracts, adapter consumers, and runtime composition')
 $indexLines.Add('are reported separately; `none observed` never means proven isolation.')
 $indexLines.Add('')

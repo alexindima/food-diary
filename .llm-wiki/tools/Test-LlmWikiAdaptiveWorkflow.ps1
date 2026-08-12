@@ -262,6 +262,23 @@ Assert-Adaptive (-not $ungrounded.scopeKnown -and $ungrounded.requiresPathDiscov
 Assert-Adaptive ($ungrounded.confidence -eq 'low') 'Ungrounded intent did not expose low confidence.'
 }
 if ($Group -in @('All', 'Experience')) {
+$workspaceReuseName = ".workspace-reuse-$([Guid]::NewGuid().ToString('N'))"
+$workspaceReusePath = ".artifacts/llm-wiki/tasks/$workspaceReuseName"
+$workspaceReuseAbsolute = Join-Path $repositoryRoot $workspaceReusePath
+try {
+    New-Item -ItemType Directory -Path $workspaceReuseAbsolute -Force | Out-Null
+    [IO.File]::WriteAllText(
+        (Join-Path $workspaceReuseAbsolute 'workspace.json'),
+        (([pscustomobject]@{ objective = 'Original Dietologist objective' } | ConvertTo-Json) + [Environment]::NewLine),
+        [Text.UTF8Encoding]::new($false))
+    $reuseError = ''
+    try {
+        & (Join-Path $PSScriptRoot 'Start-LlmWikiDevelopment.ps1') -Objective 'New Notifications objective' -WorkspacePath $workspaceReusePath | Out-Null
+    } catch { $reuseError = $_.Exception.Message }
+    Assert-Adaptive ($reuseError -match 'belongs to a different objective') 'Start silently reused a governed workspace from another objective.'
+} finally {
+    Remove-Item -LiteralPath $workspaceReuseAbsolute -Recurse -Force -ErrorAction SilentlyContinue
+}
 $precedents = & (Join-Path $PSScriptRoot 'Get-LlmWikiGitPrecedents.ps1') `
     -Objective 'Improve photo annotation visibility' `
     -ScopePath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result' `
@@ -327,6 +344,7 @@ Assert-Adaptive (@(Get-AdaptiveIds $qa.cases) -notcontains 'QA-MOBILE') 'Backend
 
 $experience = & (Join-Path $PSScriptRoot 'Get-LlmWikiExperience.ps1') `
     -Action next `
+    -WorkspacePath ".artifacts/llm-wiki/tasks/adaptive-experience-$([Guid]::NewGuid().ToString('N'))" `
     -Objective 'Improve photo annotation visibility with clearer SVG connectors.' `
     -ProposedPath $visualPaths `
     -Format Json | ConvertFrom-Json
