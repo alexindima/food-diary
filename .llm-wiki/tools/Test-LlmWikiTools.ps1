@@ -954,7 +954,11 @@ try {
         $directoryScopePacket = $directoryScopePacketRaw | ConvertFrom-Json
         $directoryScopeManifest.scope.plannedPaths = @('tests/FoodDiary.ArchitectureTests')
         $directoryScopeManifest.scope.allowedPathPatterns = @('^tests/FoodDiary\.ArchitectureTests/')
-        $directoryScopePacket.diff.changedPaths = @('tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs')
+        $governanceProvenancePath = '.llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1'
+        $directoryScopePacket.diff.changedPaths = @(
+            'tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs'
+            $governanceProvenancePath
+        )
         [IO.File]::WriteAllText($directoryScopeManifestPath, (($directoryScopeManifest | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
         [IO.File]::WriteAllText($directoryScopePacketPath, (($directoryScopePacket | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
         $directoryScopeConformance = & (Join-Path $toolsRoot 'Manage-LlmWikiPlanConformance.ps1') assess `
@@ -963,8 +967,25 @@ try {
         Assert-Wiki (
             $directoryScopeConformance.valid -and
             @($directoryScopeConformance.conformance.classification.plannedChangedPaths) -contains 'tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs' -and
+            @($directoryScopeConformance.conformance.classification.actualPaths) -notcontains $governanceProvenancePath -and
+            @($directoryScopeConformance.conformance.classification.governanceGeneratedPaths) -contains $governanceProvenancePath -and
+            @((Get-Content -LiteralPath $directoryScopePacketPath -Raw | ConvertFrom-Json).diff.changedPaths) -contains $governanceProvenancePath -and
             @($directoryScopeConformance.conformance.classification.missingPlannedPaths).Count -eq 0
-        ) 'Plan conformance treated a dotted directory scope as an exact file path.'
+        ) 'Plan conformance did not separate product scope from independent Wiki provenance.'
+
+        $directoryScopeManifest.scope.plannedPaths = @($governanceProvenancePath)
+        $directoryScopeManifest.scope.allowedPathPatterns = @('^\.llm-wiki/tools/')
+        $directoryScopePacket.diff.changedPaths = @($governanceProvenancePath)
+        [IO.File]::WriteAllText($directoryScopeManifestPath, (($directoryScopeManifest | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        [IO.File]::WriteAllText($directoryScopePacketPath, (($directoryScopePacket | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        $wikiProductConformance = & (Join-Path $toolsRoot 'Manage-LlmWikiPlanConformance.ps1') assess `
+            -WorkspacePath $taskWorkspacePath `
+            -Format Json | ConvertFrom-Json
+        Assert-Wiki (
+            $wikiProductConformance.valid -and
+            @($wikiProductConformance.conformance.classification.actualPaths) -contains $governanceProvenancePath -and
+            @($wikiProductConformance.conformance.classification.plannedChangedPaths) -contains $governanceProvenancePath
+        ) 'Plan conformance excluded Wiki tooling from an explicitly governed Wiki task.'
     }
     finally {
         [IO.File]::WriteAllText($directoryScopeManifestPath, $directoryScopeManifestRaw, [Text.UTF8Encoding]::new($false))

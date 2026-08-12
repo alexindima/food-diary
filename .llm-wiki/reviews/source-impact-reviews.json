@@ -234,13 +234,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-                                            "sha256":  "1bcaebfe8fdb53a5007a06e28075321841199ac91905e8e388ad831d78fc1600"
+                                            "sha256":  "591f03a1a481b9c5655b492d8dfa3c2ba696b11a3baa23cabf0b29f104c395a3"
                                         }
                                     ],
-                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
+                        "reason":  "Reviewed product-scope filtering for independent Wiki provenance; documented workflow behavior remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
-                        "reviewedAtUtc":  "2026-08-12T08:06:38.7493996Z"
+                        "gitHead":  "edc50056e63d116c9798f70d0f5a072b64198013",
+                        "reviewedAtUtc":  "2026-08-12T08:19:23.3040560Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -628,17 +628,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-                                            "sha256":  "1bcaebfe8fdb53a5007a06e28075321841199ac91905e8e388ad831d78fc1600"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
+                                            "sha256":  "591f03a1a481b9c5655b492d8dfa3c2ba696b11a3baa23cabf0b29f104c395a3"
                                         }
                                     ],
-                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
+                        "reason":  "Reviewed product-scope filtering for independent Wiki provenance; documented workflow behavior remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
-                        "reviewedAtUtc":  "2026-08-12T08:06:45.2089079Z"
+                        "gitHead":  "edc50056e63d116c9798f70d0f5a072b64198013",
+                        "reviewedAtUtc":  "2026-08-12T08:19:24.2089244Z"
                     },
                     {
                         "pageId":  "workflow-privacy-review",
@@ -866,21 +862,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-                                            "sha256":  "1bcaebfe8fdb53a5007a06e28075321841199ac91905e8e388ad831d78fc1600"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "eac80e023c38d8ee7775525ce65c55e945c760a8bd1c13801ae62d5970e37506"
+                                            "sha256":  "591f03a1a481b9c5655b492d8dfa3c2ba696b11a3baa23cabf0b29f104c395a3"
                                         }
                                     ],
-                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
+                        "reason":  "Reviewed product-scope filtering for independent Wiki provenance; documented workflow behavior remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
-                        "reviewedAtUtc":  "2026-08-12T08:06:49.0437997Z"
+                        "gitHead":  "edc50056e63d116c9798f70d0f5a072b64198013",
+                        "reviewedAtUtc":  "2026-08-12T08:19:25.2543136Z"
                     },
                     {
                         "pageId":  "workflow-test-plan",

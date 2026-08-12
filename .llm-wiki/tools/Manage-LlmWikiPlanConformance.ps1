@@ -48,6 +48,9 @@ function Test-GovernanceGeneratedPath([string]$Value) {
     $Value -match '^\.llm-wiki/generated/' -or
         $Value -eq '.llm-wiki/reviews/source-impact-reviews.json'
 }
+function Test-WikiToolingPath([string]$Value) {
+    $Value.Replace('\', '/') -match '^\.llm-wiki/'
+}
 function Get-PlannedPathPattern([string]$Value, [object[]]$ActualPaths) {
     $normalized = $Value.Replace('\', '/').TrimEnd('/')
     $absolute = Join-Path $repositoryRoot $normalized
@@ -79,9 +82,13 @@ function Get-Payload([object]$Receipt) {
 function Get-Assessment {
     $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
     $packet = Get-Content -LiteralPath $packetPath -Raw | ConvertFrom-Json
-    $actual = @($packet.diff.changedPaths | Where-Object { -not (Test-GovernanceGeneratedPath ([string]$_)) } | Sort-Object -Unique)
-    $governanceGenerated = @($packet.diff.changedPaths | Where-Object { Test-GovernanceGeneratedPath ([string]$_) } | Sort-Object -Unique)
     $planned = @($manifest.scope.plannedPaths | Where-Object { -not (Test-GovernanceGeneratedPath ([string]$_)) } | Sort-Object -Unique)
+    $wikiToolingIsProductScope = @($planned | Where-Object { Test-WikiToolingPath ([string]$_) }).Count -gt 0
+    $governanceProvenance = @($packet.diff.changedPaths | Where-Object {
+        (Test-GovernanceGeneratedPath ([string]$_)) -or
+        ((Test-WikiToolingPath ([string]$_)) -and -not $wikiToolingIsProductScope)
+    } | Sort-Object -Unique)
+    $actual = @($packet.diff.changedPaths | Where-Object { $_ -notin $governanceProvenance } | Sort-Object -Unique)
     $outOfScope = @($actual | Where-Object {
         -not (Test-PathMatch $_ @($manifest.scope.allowedPathPatterns)) -or
         (Test-PathMatch $_ @($manifest.scope.excludedPathPatterns))
@@ -132,7 +139,7 @@ function Get-Assessment {
             plannedPhaseFiles = $phaseFiles
             changedPhaseFiles = $changedPhaseFiles
             changedPathCount = $actual.Count
-            governanceGeneratedPaths = $governanceGenerated
+            governanceGeneratedPaths = $governanceProvenance
             plannedCoveragePercent = $(if ($planned.Count -eq 0) { 100 } else { [Math]::Round(($plannedChanged.Count * 100.0) / $planned.Count, 2) })
         }
         findings = @($findings)
