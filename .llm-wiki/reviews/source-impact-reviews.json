@@ -488,14 +488,14 @@
                         "pageSha256":  "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
+                                            "sha256":  "3e3767dfd27ab232d7f94a573e2030a89673a74265fe6d1070e170293cf4efb8"
                                         }
                                     ],
-                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
+                        "reason":  "Reviewed scalar-safe feature cardinality handling for zero, one, and multiple matches; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
-                        "reviewedAtUtc":  "2026-08-12T08:06:41.5243243Z"
+                        "gitHead":  "ae3b2a9c65c2ce767d1586109d3b31c002896f8d",
+                        "reviewedAtUtc":  "2026-08-12T10:11:57.1127681Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",

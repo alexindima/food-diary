@@ -1158,6 +1158,19 @@ try {
         Assert-Wiki ($misalignedFrontendImpact.alignment.status -eq 'mismatch') 'Impact simulation did not detect objective/path feature mismatch.'
         Assert-Wiki (@($misalignedFrontendImpact.alignment.expectedFeatures) -contains 'dashboard') 'Impact simulation did not infer the dashboard feature from the objective.'
         Assert-Wiki (@($misalignedFrontendImpact.alignment.suggestedPaths) -contains 'FoodDiary.Web.Client/src/app/features/dashboard') 'Impact simulation did not suggest an objective-aligned frontend path.'
+        $featureCardinalityCases = @(
+            @{ objective = 'Adjust synthetic behavior.'; expected = 0 }
+            @{ objective = 'Adjust dashboard behavior.'; expected = 1 }
+            @{ objective = 'Adjust dashboard meal behavior.'; expected = 2 }
+        )
+        foreach ($case in $featureCardinalityCases) {
+            $cardinalityImpact = & (Join-Path $toolsRoot 'Manage-LlmWikiImpactSimulation.ps1') simulate `
+                -WorkspacePath $taskWorkspacePath `
+                -ProposedPath 'FoodDiary.Web.Client/src/app/features/products/pages/product-list.ts' `
+                -Objective $case.objective `
+                -Format Json | ConvertFrom-Json
+            Assert-Wiki (@($cardinalityImpact.alignment.requiredFeatures).Count -eq $case.expected) "Impact simulation failed the $($case.expected)-feature cardinality case."
+        }
         $impactSimulation = & (Join-Path $toolsRoot 'Manage-LlmWikiImpactSimulation.ps1') create `
             -WorkspacePath $taskWorkspacePath `
             -AsOfUtc ([DateTime]'2026-01-01T00:00:00Z') `

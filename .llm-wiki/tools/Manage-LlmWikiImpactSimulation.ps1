@@ -144,20 +144,24 @@ function Get-ScopeAlignment([string]$ObjectiveText, [string[]]$Paths) {
             Sort-Object -Unique
     )
     $requiredFeatures = @(
-        foreach ($term in $terms) {
-            if ($term -in @($featureIndex.features.name)) { $term }
-            if ($term -eq 'meal') { 'meals' }
-        }
-    ) | Sort-Object -Unique
+        @(
+            foreach ($term in $terms) {
+                if ($term -in @($featureIndex.features.name)) { $term }
+                if ($term -eq 'meal') { 'meals' }
+            }
+        ) | Sort-Object -Unique
+    )
     $coveredFeatures = @($expectedFeatures | Where-Object { $pathText -match "/features/$([regex]::Escape($_))/" })
     $suggestedPaths = @(
-        $featureIndex.features |
-            Where-Object name -in $expectedFeatures |
-            ForEach-Object root
-        if ($normalizedObjective -match 'photo|image|vision|annotation') {
-            'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar'
-        }
-    ) | Sort-Object -Unique
+        @(
+            $featureIndex.features |
+                Where-Object name -in $expectedFeatures |
+                ForEach-Object root
+            if ($normalizedObjective -match 'photo|image|vision|annotation') {
+                'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar'
+            }
+        ) | Sort-Object -Unique
+    )
     $missingRequiredFeatures = @($requiredFeatures | Where-Object { $_ -notin $coveredFeatures })
     $aligned = if ($requiredFeatures.Count -gt 0) {
         $missingRequiredFeatures.Count -eq 0
