@@ -38,9 +38,41 @@ if ($sourceVersion -lt 1) { throw "Unsupported workspace schemaVersion: $sourceV
 if ($sourceVersion -gt $latestVersion) {
     throw "Workspace schemaVersion $sourceVersion is newer than supported version $latestVersion."
 }
+$baseArtifactNames = @('workspace.json', 'task-contract.json', 'change-manifest.json', 'acceptance-matrix.json', 'evidence.json')
+$baseArtifacts = [ordered]@{}
+foreach ($name in $baseArtifactNames) {
+    $path = Join-Path $absoluteWorkspacePath $name
+    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Task workspace is incomplete; missing $name." }
+    $baseArtifacts[$name] = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json
+}
+$storedStartSha = @(
+    @(
+        [string]$descriptor.git.headAtStart
+        [string]$baseArtifacts['task-contract.json'].git.headAtStart
+        [string]$baseArtifacts['change-manifest.json'].git.headAtInit
+        [string]$baseArtifacts['acceptance-matrix.json'].git.headAtInit
+    ) | Where-Object { $_ -match '^[a-f0-9]{40}$' } | Sort-Object -Unique
+)
+$currentBases = @(
+    @(
+        [string]$descriptor.git.base
+        [string]$baseArtifacts['task-contract.json'].git.base
+        [string]$baseArtifacts['change-manifest.json'].git.base
+        [string]$baseArtifacts['acceptance-matrix.json'].git.base
+        [string]$baseArtifacts['evidence.json'].git.base
+    ) | Sort-Object -Unique
+)
+$needsBasePin = @($currentBases | Where-Object { $_ -notmatch '^[a-f0-9]{40}$' }).Count -gt 0
+if ($needsBasePin -and $storedStartSha.Count -ne 1) {
+    throw "Cannot migrate symbolic Git base: expected one stored headAtStart/headAtInit SHA, found $($storedStartSha.Count)."
+}
+$pinnedBase = if ($needsBasePin) { [string]$storedStartSha[0] } else { [string]$currentBases[0] }
+$initialPacketFingerprint = if ($descriptor.PSObject.Properties['initialPacketFingerprint']) { [string]$descriptor.initialPacketFingerprint } else { '' }
+$needsAcceptanceOriginRepair = $initialPacketFingerprint -match '^[a-f0-9]{64}$' -and
+    [string]$baseArtifacts['acceptance-matrix.json'].packetFingerprint -cne $initialPacketFingerprint
 
 $completionPath = Join-Path $absoluteWorkspacePath 'completion.json'
-if ($sourceVersion -lt $latestVersion -and (Test-Path -LiteralPath $completionPath -PathType Leaf)) {
+if (($sourceVersion -lt $latestVersion -or $needsBasePin -or $needsAcceptanceOriginRepair) -and (Test-Path -LiteralPath $completionPath -PathType Leaf)) {
     throw 'A sealed workspace cannot be migrated because migration would invalidate its completion seal.'
 }
 
@@ -88,20 +120,34 @@ if ($sourceVersion -lt 4) {
         description = 'Retain the accepted policy snapshot so future policy drift can be explained semantically.'
     })
 }
+if ($needsBasePin) {
+    $steps.Add([pscustomobject][ordered]@{
+        fromVersion = $sourceVersion
+        toVersion = $sourceVersion
+        description = "Pin symbolic Git base to immutable start commit $pinnedBase."
+    })
+}
+if ($needsAcceptanceOriginRepair) {
+    $steps.Add([pscustomobject][ordered]@{
+        fromVersion = $sourceVersion
+        toVersion = $sourceVersion
+        description = 'Restore acceptance origin to the immutable initial packet fingerprint.'
+    })
+}
 
 $result = [ordered]@{
     schemaVersion = 1
     workspace = $normalizedWorkspacePath
     sourceVersion = $sourceVersion
     targetVersion = $latestVersion
-    migrationRequired = $sourceVersion -lt $latestVersion
+    migrationRequired = $sourceVersion -lt $latestVersion -or $needsBasePin -or $needsAcceptanceOriginRepair
     dryRun = [bool]$DryRun
     changed = $false
     backupPath = $null
     steps = @($steps)
 }
 
-if ($sourceVersion -eq $latestVersion) {
+if ($sourceVersion -eq $latestVersion -and -not $needsBasePin -and -not $needsAcceptanceOriginRepair) {
     $doctor = & (Join-Path $PSScriptRoot 'Test-LlmWikiTaskWorkspace.ps1') `
         -WorkspacePath $normalizedWorkspacePath `
         -Format Json | ConvertFrom-Json
@@ -118,7 +164,7 @@ if ($sourceVersion -eq $latestVersion) {
         $backupName = ([DateTime]::UtcNow.ToString('yyyyMMddTHHmmssfffffffZ')) + "-v$sourceVersion"
         $backupPath = Join-Path $backupRoot $backupName
         New-Item -ItemType Directory -Path $backupPath | Out-Null
-        foreach ($name in @('workspace.json', 'journal.json')) {
+        foreach ($name in @($baseArtifactNames + 'journal.json')) {
             $source = Join-Path $absoluteWorkspacePath $name
             if (Test-Path -LiteralPath $source -PathType Leaf) {
                 Copy-Item -LiteralPath $source -Destination (Join-Path $backupPath $name)
@@ -127,7 +173,10 @@ if ($sourceVersion -eq $latestVersion) {
         $result.backupPath = "$normalizedWorkspacePath/.migration-backups/$backupName"
     }
 
-    $originalDescriptor = Get-Content -LiteralPath $descriptorPath -Raw
+    $originalArtifacts = [ordered]@{}
+    foreach ($name in $baseArtifactNames) {
+        $originalArtifacts[$name] = Get-Content -LiteralPath (Join-Path $absoluteWorkspacePath $name) -Raw
+    }
     $journalWasCreated = $false
     try {
         if (-not (Test-Path -LiteralPath $journalPath -PathType Leaf)) {
@@ -197,6 +246,29 @@ if ($sourceVersion -eq $latestVersion) {
             $descriptor | Add-Member -NotePropertyName policyValidatedAtUtc -NotePropertyValue ([DateTime]::UtcNow.ToString('o')) -Force
             $currentVersion = 4
         }
+        if ($needsBasePin) {
+            foreach ($name in $baseArtifactNames) {
+                $artifact = if ($name -eq 'workspace.json') { $descriptor } else { $baseArtifacts[$name] }
+                if (-not $artifact.PSObject.Properties['git'] -or $null -eq $artifact.git) {
+                    $artifact | Add-Member -NotePropertyName git -NotePropertyValue ([pscustomobject]@{}) -Force
+                }
+                $artifact.git | Add-Member -NotePropertyName base -NotePropertyValue $pinnedBase -Force
+                if ($name -ne 'workspace.json') {
+                    [System.IO.File]::WriteAllText(
+                        (Join-Path $absoluteWorkspacePath $name),
+                        (($artifact | ConvertTo-Json -Depth 40) + [Environment]::NewLine),
+                        [System.Text.UTF8Encoding]::new($false))
+                }
+            }
+        }
+        if ($needsAcceptanceOriginRepair) {
+            $acceptanceArtifact = $baseArtifacts['acceptance-matrix.json']
+            $acceptanceArtifact | Add-Member -NotePropertyName packetFingerprint -NotePropertyValue $initialPacketFingerprint -Force
+            [System.IO.File]::WriteAllText(
+                (Join-Path $absoluteWorkspacePath 'acceptance-matrix.json'),
+                (($acceptanceArtifact | ConvertTo-Json -Depth 40) + [Environment]::NewLine),
+                [System.Text.UTF8Encoding]::new($false))
+        }
         $descriptor | Add-Member -NotePropertyName migrations -NotePropertyValue @($migrations) -Force
         [System.IO.File]::WriteAllText(
             $descriptorPath,
@@ -206,12 +278,20 @@ if ($sourceVersion -eq $latestVersion) {
         $doctor = & (Join-Path $PSScriptRoot 'Test-LlmWikiTaskWorkspace.ps1') `
             -WorkspacePath $normalizedWorkspacePath `
             -Format Json | ConvertFrom-Json
-        if (-not $doctor.valid) {
+        if (-not $doctor.valid -and $sourceVersion -lt $latestVersion) {
             throw "Migrated workspace failed validation: $(@($doctor.errors) -join ' ')"
+        }
+        if ($needsBasePin -and ($doctor.errors -contains 'Git base must match across task contract, manifest, acceptance, and evidence.')) {
+            throw 'Migrated workspace retained inconsistent Git bases.'
         }
         $result.changed = $true
     } catch {
-        [System.IO.File]::WriteAllText($descriptorPath, $originalDescriptor, [System.Text.UTF8Encoding]::new($false))
+        foreach ($name in $baseArtifactNames) {
+            [System.IO.File]::WriteAllText(
+                (Join-Path $absoluteWorkspacePath $name),
+                [string]$originalArtifacts[$name],
+                [System.Text.UTF8Encoding]::new($false))
+        }
         if ($journalWasCreated -and (Test-Path -LiteralPath $journalPath)) {
             Remove-Item -LiteralPath $journalPath -Force
         }

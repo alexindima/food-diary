@@ -38,6 +38,41 @@ try {
         -WorkspacePath $workspacePath
     if (-not (Test-Path -LiteralPath (Join-Path $workspaceAbsolute 'workspace.json') -PathType Leaf)) { throw 'Governed task-start did not create a workspace.' }
 
+    $baseArtifactNames = @('workspace.json', 'task-contract.json', 'change-manifest.json', 'acceptance-matrix.json', 'evidence.json')
+    $pinnedBase = ''
+    foreach ($name in $baseArtifactNames) {
+        $path = Join-Path $workspaceAbsolute $name
+        $artifact = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json
+        if ([string]$artifact.git.base -notmatch '^[a-f0-9]{40}$') { throw "New workspace retained a symbolic Git base in $name." }
+        if ([string]::IsNullOrWhiteSpace($pinnedBase)) { $pinnedBase = [string]$artifact.git.base }
+        elseif ([string]$artifact.git.base -cne $pinnedBase) { throw 'New workspace artifacts disagree on the pinned Git base.' }
+        $artifact.git.base = 'HEAD'
+        if ($name -eq 'acceptance-matrix.json') { $artifact.packetFingerprint = ('0' * 64) }
+        Write-Json $path $artifact
+    }
+    $legacyDoctor = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-doctor `
+        -WorkspacePath $workspacePath `
+        -Format Json | ConvertFrom-Json
+    if (-not $legacyDoctor.migrationRequired) { throw 'Task doctor did not request migration for symbolic legacy bases.' }
+    $migrationPlan = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-migrate `
+        -WorkspacePath $workspacePath `
+        -DryRun `
+        -Format Json | ConvertFrom-Json
+    if (-not $migrationPlan.migrationRequired -or $migrationPlan.changed) { throw 'Legacy base migration dry run was not read-only.' }
+    $migration = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-migrate `
+        -WorkspacePath $workspacePath `
+        -Format Json | ConvertFrom-Json
+    if (-not $migration.changed) { throw 'Legacy symbolic Git base was not migrated.' }
+    foreach ($name in $baseArtifactNames) {
+        $artifact = Get-Content -LiteralPath (Join-Path $workspaceAbsolute $name) -Raw | ConvertFrom-Json
+        if ([string]$artifact.git.base -cne $pinnedBase) { throw "Migration did not restore the initial SHA in $name." }
+    }
+    $migratedDescriptor = Get-Content -LiteralPath (Join-Path $workspaceAbsolute 'workspace.json') -Raw | ConvertFrom-Json
+    $migratedAcceptance = Get-Content -LiteralPath (Join-Path $workspaceAbsolute 'acceptance-matrix.json') -Raw | ConvertFrom-Json
+    if ([string]$migratedAcceptance.packetFingerprint -cne [string]$migratedDescriptor.initialPacketFingerprint) {
+        throw 'Migration did not restore the acceptance origin fingerprint.'
+    }
+
     $initialAssessment = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-requirements-assess `
         -WorkspacePath $workspacePath `
         -Format Json | ConvertFrom-Json

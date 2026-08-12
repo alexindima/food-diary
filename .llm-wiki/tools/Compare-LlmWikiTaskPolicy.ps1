@@ -37,6 +37,7 @@ function Add-PolicyLeaves([object]$Value, [string]$Path, [hashtable]$Leaves) {
         $items = @($Value)
         for ($index = 0; $index -lt $items.Count; $index++) {
             $key = if ($items[$index] -is [System.Management.Automation.PSCustomObject] -and
+                $items[$index].PSObject.Properties['id'] -and
                 -not [string]::IsNullOrWhiteSpace([string]$items[$index].id)) {
                 "id=$($items[$index].id)"
             } else {

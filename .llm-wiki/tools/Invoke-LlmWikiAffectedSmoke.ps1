@@ -53,7 +53,7 @@ foreach ($path in $paths) {
         $null = $smokeGroups.Add('task-baseline')
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiGitPaths|Test-LlmWikiGitPaths)\.ps1$') {
         $null = $smokeGroups.Add('git-paths')
-    } elseif ($path -match '^\.llm-wiki/tools/(Initialize-LlmWikiTaskWorkspace|Manage-LlmWikiTaskContract|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiPlanConformance|Test-LlmWikiTaskScope)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Initialize-LlmWikiTaskWorkspace|Manage-LlmWikiTaskContract|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiPlanConformance|Test-LlmWikiTaskScope|Test-LlmWikiTaskWorkspace|Update-LlmWikiTaskWorkspace|Manage-LlmWikiTaskJournal|Compare-LlmWikiTaskPolicy)\.ps1$') {
         $null = $smokeGroups.Add('task-scope')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiUiContinuation|Test-LlmWikiUiContinuation|Get-LlmWikiTestPlan|Test-LlmWikiTools)\.ps1$') {
         $null = $smokeGroups.Add('ui-continuation')

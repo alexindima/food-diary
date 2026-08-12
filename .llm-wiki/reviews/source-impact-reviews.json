@@ -457,6 +457,21 @@
                         "reviewedAtUtc":  "2026-08-09T22:10:54.0868838Z"
                     },
                     {
+                        "pageId":  "workflow-durable-memory",
+                        "pagePath":  ".llm-wiki/workflows/durable-memory.md",
+                        "pageSha256":  "95480b241c0d18016bd62e851be9ae87207340be4b90243c591d7d6da7fb608e",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskJournal.ps1",
+                                            "sha256":  "e203a5aef1a161ba884d4f632842cd6831546fc18537212634186c6b9c3d7f61"
+                                        }
+                                    ],
+                        "reason":  "Reviewed immutable task-base pinning, legacy workspace migration, scalar-safe validation, and governed lifecycle regression; the documented workflow remains accurate.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "2eed50cc0c54d4bb4308a3f7c679dc4ff3be3dc9",
+                        "reviewedAtUtc":  "2026-08-12T05:06:52.2152782Z"
+                    },
+                    {
                         "pageId":  "workflow-failure-prediction",
                         "pagePath":  ".llm-wiki/workflows/failure-prediction.md",
                         "pageSha256":  "f329d54afe5274a4bfce5e5cc7e77455554286b51569c8b214ef3fd44fe8be83",
@@ -501,13 +516,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "7c6f11fd08ac3bc2ec0a767a697f1850fff03d1e48b25659d5cbf216e9688c8d"
+                                            "sha256":  "82212c188eb8ce5dd6bd282fbc556c10cabce449bc9996a21bec963286db4213"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Reviewed governed Authentication regression extensions for symbolic-base migration and preserved implementation-diff discovery.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:45.7328229Z"
+                        "gitHead":  "2eed50cc0c54d4bb4308a3f7c679dc4ff3be3dc9",
+                        "reviewedAtUtc":  "2026-08-12T05:11:48.0332523Z"
                     },
                     {
                         "pageId":  "workflow-independent-change-critique",
@@ -535,13 +550,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "cca21c7afb0feb30ed1881bae72ff5010f78982c1daef015ab303abdd98ee70c"
+                                            "sha256":  "9a94c4973df4a35e7e21b1a66aacfbb714e1c734b47fd20f2baaf3583d8acc91"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Reviewed immutable task-base pinning, legacy workspace migration, scalar-safe validation, and governed lifecycle regression; the documented workflow remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:48.3122994Z"
+                        "gitHead":  "2eed50cc0c54d4bb4308a3f7c679dc4ff3be3dc9",
+                        "reviewedAtUtc":  "2026-08-12T05:06:54.3788061Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -730,22 +745,14 @@
                         "pageSha256":  "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "02472ad53ed2b022d13a6bd6d480e768a3d08da93d11144d519e350a7f0e6bc3"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "c2eb1728e955cc738dfb9f3325daf787f68a1fafce428e0b202d351149c1db4c"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "7c6f11fd08ac3bc2ec0a767a697f1850fff03d1e48b25659d5cbf216e9688c8d"
+                                            "sha256":  "82212c188eb8ce5dd6bd282fbc556c10cabce449bc9996a21bec963286db4213"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Reviewed governed Authentication regression extensions; requirement expansion and lifecycle semantics remain accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:53.0548434Z"
+                        "gitHead":  "2eed50cc0c54d4bb4308a3f7c679dc4ff3be3dc9",
+                        "reviewedAtUtc":  "2026-08-12T05:11:48.9778467Z"
                     },
                     {
                         "pageId":  "workflow-review-report",
@@ -871,17 +878,37 @@
                     {
                         "pageId":  "workflow-task-workspace",
                         "pagePath":  ".llm-wiki/workflows/task-workspace.md",
-                        "pageSha256":  "117ec86ecffb8488f8850acedce4a4bb9afd6bde01f6bc17ae1e8fc0dcc61658",
+                        "pageSha256":  "d82ff199232ffa58514f61a394d36cad07f3e2d96d7bab4fdaa09be847fce590",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Compare-LlmWikiTaskPolicy.ps1",
+                                            "sha256":  "d8d701e60201adfb049f0f38f7938ca4d0f3bef47b1cf584b451ce17a2ba1274"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Initialize-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "f160c6405659b367bf7b697676aa8b36429d9d23805ad1877e3958979dc48406"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskJournal.ps1",
+                                            "sha256":  "e203a5aef1a161ba884d4f632842cd6831546fc18537212634186c6b9c3d7f61"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "22f4b919862eb3ee5c2b77018690259bbce61de866f0f9f4a92bb61e2340831c"
+                                            "sha256":  "82212c188eb8ce5dd6bd282fbc556c10cabce449bc9996a21bec963286db4213"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "455f5ae7b64bdf7b170c8687635343c9d5db61fb0014cda5ca7ca36b84d4ddc6"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Update-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "4976e20ec55b8eca59e9ca47b3c729eb7a0845e7834a16551ba4cb9dc4a8f5d4"
                                         }
                                     ],
-                        "reason":  "Reviewed atomic requirement expansion regression: governed task creation semantics are unchanged; the test now proves invalid compound criteria become a valid atomic model.",
+                        "reason":  "Reviewed immutable SHA base creation, same-schema legacy base and acceptance-origin migration, scalar-safe doctor validation, and end-to-end Authentication lifecycle coverage.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b4cf2cb961400df3cc4ab722be496514f63c2197",
-                        "reviewedAtUtc":  "2026-08-12T03:00:39.1801716Z"
+                        "gitHead":  "2eed50cc0c54d4bb4308a3f7c679dc4ff3be3dc9",
+                        "reviewedAtUtc":  "2026-08-12T05:11:47.1591942Z"
                     },
                     {
                         "pageId":  "workflow-test-plan",

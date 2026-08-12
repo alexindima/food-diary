@@ -54,6 +54,11 @@ function Get-Fingerprint([object]$Value) {
         return ([BitConverter]::ToString($sha.ComputeHash($bytes)) -replace '-', '').ToLowerInvariant()
     } finally { $sha.Dispose() }
 }
+function Get-Ids([object[]]$Items) {
+    @($Items | ForEach-Object {
+        if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id }
+    } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+}
 
 if (-not (Test-Path -LiteralPath $absoluteWorkspacePath -PathType Container)) {
     throw "Task workspace does not exist: $normalizedWorkspacePath"
@@ -113,20 +118,25 @@ foreach ($artifactItem in @(
 
 if ($null -ne $descriptor -and $null -ne $taskContract -and $null -ne $manifest -and $null -ne $acceptance) {
     $objectives = @(
-        [string]$descriptor.objective
-        [string]$taskContract.objective
-        [string]$manifest.objective
-        [string]$acceptance.objective
-    ) | Sort-Object -Unique
+        @(
+            [string]$descriptor.objective
+            [string]$taskContract.objective
+            [string]$manifest.objective
+            [string]$acceptance.objective
+        ) | Sort-Object -Unique
+    )
     Add-Check 'objective-consistency' ($objectives.Count -eq 1 -and -not [string]::IsNullOrWhiteSpace($objectives[0])) 'Objective must match across descriptor, task contract, manifest, and acceptance.'
 
     $baseRefs = @(
-        [string]$taskContract.git.base
-        [string]$manifest.git.base
-        [string]$acceptance.git.base
-        [string]$evidence.git.base
-    ) | Sort-Object -Unique
+        @(
+            [string]$taskContract.git.base
+            [string]$manifest.git.base
+            [string]$acceptance.git.base
+            [string]$evidence.git.base
+        ) | Sort-Object -Unique
+    )
     Add-Check 'git-base-consistency' ($baseRefs.Count -eq 1 -and -not [string]::IsNullOrWhiteSpace($baseRefs[0])) 'Git base must match across task contract, manifest, acceptance, and evidence.'
+    Add-Check 'git-base-pinned' ($baseRefs.Count -eq 1 -and $baseRefs[0] -match '^[a-f0-9]{40}$') 'Git base should be pinned to an immutable commit SHA; run task-migrate.' -Warning
 }
 
 if ($null -ne $descriptor -and $null -ne $packet) {
@@ -141,10 +151,10 @@ if ($null -ne $manifest) {
 }
 
 if ($null -ne $acceptance) {
-    $scenarioIds = @($acceptance.availableEvidence.scenarios.id)
-    $checkIds = @($acceptance.availableEvidence.checks.id)
-    $reviewIds = @($acceptance.availableEvidence.reviews.id)
-    $criterionIds = @($acceptance.criteria.id)
+    $scenarioIds = @(Get-Ids @($acceptance.availableEvidence.scenarios))
+    $checkIds = @(Get-Ids @($acceptance.availableEvidence.checks))
+    $reviewIds = @(Get-Ids @($acceptance.availableEvidence.reviews))
+    $criterionIds = @(Get-Ids @($acceptance.criteria))
     Add-Check 'acceptance-criterion-ids' (@($criterionIds | Sort-Object -Unique).Count -eq $criterionIds.Count) 'Acceptance criterion IDs must be unique.'
     foreach ($criterion in @($acceptance.criteria)) {
         foreach ($id in @($criterion.mapping.scenarioIds)) {
@@ -160,8 +170,10 @@ if ($null -ne $acceptance) {
 }
 
 if ($null -ne $manifest -and $null -ne $evidence) {
-    $missingChecks = @($manifest.plan.requiredChecks.id | Where-Object { $_ -notin @($evidence.checks.id) })
-    $missingReviews = @($manifest.plan.reviewObligations.id | Where-Object { $_ -notin @($evidence.reviews.id) })
+    $evidenceCheckIds = @(Get-Ids @($evidence.checks))
+    $evidenceReviewIds = @(Get-Ids @($evidence.reviews))
+    $missingChecks = @(Get-Ids @($manifest.plan.requiredChecks) | Where-Object { $_ -notin $evidenceCheckIds })
+    $missingReviews = @(Get-Ids @($manifest.plan.reviewObligations) | Where-Object { $_ -notin $evidenceReviewIds })
     Add-Check 'evidence-check-coverage' ($missingChecks.Count -eq 0) "Evidence must contain every manifest check. Missing: $($missingChecks -join ', ')"
     Add-Check 'evidence-review-coverage' ($missingReviews.Count -eq 0) "Evidence must contain every manifest review. Missing: $($missingReviews -join ', ')"
 }
@@ -182,7 +194,8 @@ if ($null -ne $journal) {
 $temporaryFiles = @(Get-ChildItem -LiteralPath $absoluteWorkspacePath -File -Force | Where-Object {
     $_.Name -like '.refresh-*' -or $_.Name -like '.completion-*'
 })
-Add-Check 'temporary-files' ($temporaryFiles.Count -eq 0) "Workspace must not contain abandoned temporary files: $(@($temporaryFiles.Name) -join ', ')"
+$temporaryFileNames = @($temporaryFiles | ForEach-Object { if ($null -ne $_) { [string]$_.Name } })
+Add-Check 'temporary-files' ($temporaryFiles.Count -eq 0) "Workspace must not contain abandoned temporary files: $($temporaryFileNames -join ', ')"
 
 $completionPath = Join-Path $absoluteWorkspacePath 'completion.json'
 if (Test-Path -LiteralPath $completionPath -PathType Leaf) {
@@ -202,7 +215,8 @@ $result = [pscustomobject][ordered]@{
     workspace = $normalizedWorkspacePath
     workspaceSchemaVersion = $(if ($null -ne $descriptor) { [int]$descriptor.schemaVersion } else { $null })
     latestWorkspaceSchemaVersion = $latestWorkspaceSchemaVersion
-    migrationRequired = $null -ne $descriptor -and [int]$descriptor.schemaVersion -lt $latestWorkspaceSchemaVersion
+    migrationRequired = ($null -ne $descriptor -and [int]$descriptor.schemaVersion -lt $latestWorkspaceSchemaVersion) -or
+        ($null -ne $taskContract -and [string]$taskContract.git.base -notmatch '^[a-f0-9]{40}$')
     storedPolicyFingerprint = $(if ($null -ne $descriptor) { [string]$descriptor.policyFingerprint } else { '' })
     currentPolicyFingerprint = [string]$workspacePolicySnapshot.fingerprint
     policyDrift = $null -ne $descriptor -and

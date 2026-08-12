@@ -416,7 +416,7 @@ Diagnose cross-artifact corruption before trusting a workspace:
 ```
 
 The doctor verifies required files and JSON schemas, canonical artifact paths,
-objective and Git-base consistency, current/initial fingerprints, the manifest
+objective and Git-base consistency, immutable SHA pinning, current/initial fingerprints, the manifest
 plan fingerprint, acceptance mapping references, evidence coverage, journal
 event integrity, abandoned temporary files, and the completion seal when
 present. `task-list` runs the same fast doctor and surfaces a corrupt workspace
@@ -432,6 +432,13 @@ Upgrade an older unsealed workspace before resuming it:
 ./.llm-wiki/wiki.ps1 task-migrate `
   -WorkspacePath .artifacts/llm-wiki/tasks/fasting-command
 ```
+
+New workspaces resolve the requested Git base (including `HEAD`) to an immutable
+commit SHA before compiling any governed artifacts. Migration also repairs a
+current-schema legacy workspace whose base is symbolic by using its single
+stored `headAtStart`/`headAtInit` SHA and updating workspace, contract, manifest,
+acceptance, and evidence metadata transactionally. A dry run reports this as a
+same-schema migration without writing files.
 
 Workspace schema v2 introduced the stable format name and per-artifact schema
 versions; v3 adds policy fingerprint provenance. Migration is stepwise and

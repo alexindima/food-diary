@@ -158,7 +158,7 @@ switch ($Action) {
     }
     'validate' {
         $journal = Read-Journal
-        $issues = Test-Journal $journal
+        $issues = @(Test-Journal $journal)
         $result = [pscustomobject][ordered]@{
             valid = $issues.Count -eq 0
             eventCount = @($journal.events).Count

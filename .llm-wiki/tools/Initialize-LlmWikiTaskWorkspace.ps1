@@ -34,6 +34,11 @@ $ChangedPath = @($ChangedPath | Where-Object { $_ } | ForEach-Object { ([string]
 $PlannedPath = @($PlannedPath | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') } | Sort-Object -Unique)
 $AllowedPath = @($AllowedPath | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
 $ExcludedPath = @($ExcludedPath | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+$resolvedBaseRef = [string](& git -C $repositoryRoot rev-parse --verify "$BaseRef^{commit}")
+if ($LASTEXITCODE -ne 0 -or $resolvedBaseRef -notmatch '^[a-f0-9]{40}$') {
+    throw "Unable to resolve task base '$BaseRef' to a commit SHA."
+}
+$BaseRef = $resolvedBaseRef
 
 $absoluteWorkspacePath = Join-Path $repositoryRoot $normalizedWorkspacePath
 if (Test-Path -LiteralPath $absoluteWorkspacePath) {
@@ -121,7 +126,7 @@ try {
     }
     & (Join-Path $PSScriptRoot 'Get-LlmWikiReviewReport.ps1') @reportArguments | Out-Null
 
-    $head = git rev-parse HEAD
+    $head = git -C $repositoryRoot rev-parse HEAD
     if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve HEAD.' }
     $workspace = [ordered]@{
         schemaVersion = [int]$workspacePolicy.workspace.latestSchemaVersion
