@@ -54,6 +54,7 @@ $journalView = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskJournal.ps1') show 
     -Format Json | ConvertFrom-Json
 
 function Test-PathMatch([string]$Value, [object[]]$Patterns) {
+    $Value = $Value.Replace('\', '/')
     foreach ($pattern in @($Patterns)) {
         if (-not [string]::IsNullOrWhiteSpace([string]$pattern) -and $Value -match $pattern) { return $true }
     }

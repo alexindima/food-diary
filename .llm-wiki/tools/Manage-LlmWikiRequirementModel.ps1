@@ -63,12 +63,14 @@ function Get-RequirementType([string]$Text) {
     if ($Text -match '(?i)locali[sz]|translation|russian|english') { return 'localization' }
     if ($Text -match '(?i)migrat|database|persist|data') { return 'data' }
     if ($Text -match '(?i)observ|metric|log|trace') { return 'observability' }
+    if ($Text -match '(?i)abstraction|projection|module boundary|ownership|dependency direction') { return 'structure' }
     'behavior'
 }
 function Get-Recommendations([object]$Packet, [object[]]$Criteria) {
     $recommendations = [Collections.Generic.List[object]]::new()
+    $appliedRecommendationIds = @($Criteria | ForEach-Object { [string]$_.origin.recommendationId } | Where-Object { $_ } | Sort-Object -Unique)
     function Add-Recommendation([string]$Id, [string]$Type, [string]$Text, [string]$Rationale, [string]$Pattern) {
-        if (-not (Test-Coverage $Criteria $Pattern) -and $recommendations.Count -lt [int]$modelPolicy.maximumRecommendations) {
+        if ($Id -notin $appliedRecommendationIds -and -not (Test-Coverage $Criteria $Pattern) -and $recommendations.Count -lt [int]$modelPolicy.maximumRecommendations) {
             $recommendations.Add([pscustomobject][ordered]@{ id = $Id; type = $Type; text = $Text; rationale = $Rationale })
         }
     }
@@ -137,6 +139,9 @@ function Get-Assessment {
     }
     for ($left = 0; $left -lt $criteria.Count; $left++) {
         for ($right = $left + 1; $right -lt $criteria.Count; $right++) {
+            $leftType = Get-RequirementType ([string]$criteria[$left].text)
+            $rightType = Get-RequirementType ([string]$criteria[$right].text)
+            if ($leftType -ne $rightType) { continue }
             $similarity = Get-Similarity ([string]$criteria[$left].text) ([string]$criteria[$right].text)
             if ($similarity -ge [double]$modelPolicy.duplicateSimilarityPercent) {
                 $findings.Add([pscustomobject][ordered]@{ id = 'criteria-near-duplicate'; severity = 'block'; criterionId = [string]$criteria[$left].id; relatedCriterionId = [string]$criteria[$right].id; similarityPercent = $similarity })
@@ -220,22 +225,29 @@ if ($Action -eq 'expand') {
     } finally {
         if (Test-Path -LiteralPath $temporaryPath) { [IO.File]::Delete($temporaryPath) }
     }
-    foreach ($stalePath in @($receiptPath, $proofPath)) { if (Test-Path -LiteralPath $stalePath) { [IO.File]::Delete($stalePath) } }
+    if (Test-Path -LiteralPath $proofPath) { [IO.File]::Delete($proofPath) }
+    $expandedModel = New-Receipt (Get-Assessment)
+    $temporaryModelPath = "$receiptPath.$([guid]::NewGuid().ToString('N')).tmp"
+    try {
+        [IO.File]::WriteAllText($temporaryModelPath, (($expandedModel | ConvertTo-Json -Depth 40) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        if (Test-Path -LiteralPath $receiptPath) { [IO.File]::Delete($receiptPath) }
+        [IO.File]::Move($temporaryModelPath, $receiptPath)
+    } finally {
+        if (Test-Path -LiteralPath $temporaryModelPath) { [IO.File]::Delete($temporaryModelPath) }
+    }
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskJournal.ps1') add -WorkspacePath $normalizedWorkspace -JournalType decision -Text "Expanded acceptance with $($added.Count) requirement recommendation(s)." -Rationale $Reason | Out-Null
-    $result = [pscustomobject][ordered]@{ action = 'expand'; valid = $true; addedCount = $added.Count; addedCriteria = @($added); model = New-Receipt (Get-Assessment) }
+    $result = [pscustomobject][ordered]@{ action = 'expand'; valid = $expandedModel.valid; addedCount = $added.Count; addedCriteria = @($added); model = $expandedModel; savedPath = "$normalizedWorkspace/requirement-model.json" }
 } elseif ($Action -in @('assess', 'create')) {
     $receipt = New-Receipt (Get-Assessment)
-    if ($Action -eq 'create') {
-        $temporaryPath = "$receiptPath.$([guid]::NewGuid().ToString('N')).tmp"
-        try {
-            [IO.File]::WriteAllText($temporaryPath, (($receipt | ConvertTo-Json -Depth 40) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
-            if (Test-Path -LiteralPath $receiptPath) { [IO.File]::Delete($receiptPath) }
-            [IO.File]::Move($temporaryPath, $receiptPath)
-        } finally {
-            if (Test-Path -LiteralPath $temporaryPath) { [IO.File]::Delete($temporaryPath) }
-        }
+    $temporaryPath = "$receiptPath.$([guid]::NewGuid().ToString('N')).tmp"
+    try {
+        [IO.File]::WriteAllText($temporaryPath, (($receipt | ConvertTo-Json -Depth 40) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        if (Test-Path -LiteralPath $receiptPath) { [IO.File]::Delete($receiptPath) }
+        [IO.File]::Move($temporaryPath, $receiptPath)
+    } finally {
+        if (Test-Path -LiteralPath $temporaryPath) { [IO.File]::Delete($temporaryPath) }
     }
-    $result = [pscustomobject][ordered]@{ action = $Action; valid = $receipt.valid; model = $receipt; savedPath = $(if ($Action -eq 'create') { "$normalizedWorkspace/requirement-model.json" } else { $null }) }
+    $result = [pscustomobject][ordered]@{ action = $Action; valid = $receipt.valid; model = $receipt; savedPath = "$normalizedWorkspace/requirement-model.json" }
 } else {
     if (-not (Test-Path -LiteralPath $receiptPath -PathType Leaf)) { throw "Requirement model is absent: $normalizedWorkspace/requirement-model.json" }
     $receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json

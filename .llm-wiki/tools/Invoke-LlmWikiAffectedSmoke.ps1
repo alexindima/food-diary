@@ -2,7 +2,11 @@
 param(
     [string]$BaseRef = 'HEAD',
     [string[]]$ChangedPath,
-    [switch]$Plan
+    [switch]$Plan,
+    [string[]]$Group,
+    [switch]$NoCache,
+    [ValidateSet('Text', 'Json')]
+    [string]$Format = 'Text'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -34,6 +38,8 @@ foreach ($path in $paths) {
     $wikiRelevantPathCount++
     if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Get-LlmWikiSolutionComparison|Test-LlmWikiAdaptiveWorkflow|Get-LlmWikiIntegrationScan|Test-LlmWikiIntegrationScan)|evals/|policies/experience-policies\.json|workflows/(developer-experience|integration-scan|evals|learned-regression-evals)\.md)') {
         Add-Group 'adaptive-routing'
+    } elseif ($path -match '^\.llm-wiki/(policies/change-policies\.json|tools/(Get-LlmWikiChangePolicy|Test-LlmWikiChangePolicy)\.ps1)$') {
+        Add-Group 'change-policy'
     } elseif ($path -match '^\.llm-wiki/tools/Get-LlmWikiDesignCheckpoint\.ps1$') {
         Add-Group 'adaptive-experience'
     } elseif ($path -match '^\.llm-wiki/(tools/Get-LlmWikiDependencyChanges|workflows/dependency-rollout\.md)') {
@@ -46,6 +52,8 @@ foreach ($path in $paths) {
         Add-Group 'trace-output'
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiTaskBaseline|Get-LlmWikiDiffContext|Test-LlmWikiTaskBaseline)\.ps1$') {
         Add-Group 'task-baseline'
+    } elseif ($path -match '^\.llm-wiki/tools/(Initialize-LlmWikiTaskWorkspace|Manage-LlmWikiTaskContract|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiPlanConformance|Test-LlmWikiTaskScope)\.ps1$') {
+        Add-Group 'task-scope'
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiUiContinuation|Test-LlmWikiUiContinuation|Get-LlmWikiTestPlan|Test-LlmWikiTools)\.ps1$') {
         Add-Group 'ui-continuation'
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiReviewReport|Test-LlmWikiReviewReport)\.ps1$') {
@@ -60,7 +68,7 @@ foreach ($path in $paths) {
         Add-Group 'knowledge-isolation'
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiChangeManifest|Manage-LlmWikiAcceptanceMatrix|Test-LlmWikiTestOnlyGovernance)\.ps1$') {
         Add-Group 'test-only-governance'
-    } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiDeliveryWorkflow|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiTaskEvidence|Manage-LlmWikiChangeCritique|New-LlmWikiEvidenceLineage|Update-LlmWikiTaskEvidence|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiGovernedDeliveryRegression)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiDeliveryWorkflow|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiTaskEvidence|Manage-LlmWikiChangeCritique|Manage-LlmWikiRequirementModel|New-LlmWikiEvidenceLineage|Update-LlmWikiTaskEvidence|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiGovernedDeliveryRegression)\.ps1$') {
         Add-Group 'governed-delivery'
     } elseif ($path -match '^\.llm-wiki/tools/') {
         $hasUnknownToolChange = $true
@@ -71,11 +79,38 @@ if ($wikiRelevantPathCount -eq 0) {
     exit 0
 }
 if ($hasUnknownToolChange -or $groups.Count -eq 0) { Add-Group 'full-tools' }
+if (@($Group).Count -gt 0) {
+    $requestedGroups = @($Group | Where-Object { $_ } | Sort-Object -Unique)
+    $selectedGroups = @($groups | Where-Object { $_ -in $requestedGroups })
+    $groups = [Collections.Generic.List[string]]::new()
+    foreach ($selectedGroup in $selectedGroups) { $groups.Add($selectedGroup) }
+}
 
+$planResult = [pscustomobject][ordered]@{ changedPathCount = $paths.Count; groups = @($groups) }
+if ($Plan -and $Format -eq 'Json') { $planResult | ConvertTo-Json -Depth 3; exit 0 }
 Write-Host "Affected tools smoke: $($paths.Count) changed path(s), groups=$($groups -join ',')."
 if ($Plan) { exit 0 }
 
+$gitDirectoryOutput = @(& git -C $repositoryRoot rev-parse --absolute-git-dir)
+if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve the Git directory for smoke receipts.' }
+$gitDirectory = [string]($gitDirectoryOutput | Select-Object -First 1)
+$receiptRoot = Join-Path $gitDirectory 'llm-wiki/affected-smoke-groups'
+$null = New-Item -ItemType Directory -Path $receiptRoot -Force
 foreach ($group in $groups) {
+    $fingerprint = & (Join-Path $toolsRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') `
+        -Stage "affected smoke:$group" `
+        -Arguments @{ group = $group } `
+        -Format Text
+    $receiptPath = Join-Path $receiptRoot "$group.json"
+    if (-not $NoCache -and (Test-Path -LiteralPath $receiptPath -PathType Leaf)) {
+        try {
+            $receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json
+            if ([string]$receipt.fingerprint -ceq [string]$fingerprint) {
+                Write-Host "Affected tools smoke group cached: $group ($($receipt.durationSeconds)s)."
+                continue
+            }
+        } catch { }
+    }
     $stopwatch = [Diagnostics.Stopwatch]::StartNew()
     Write-Host "Affected tools smoke group starting: $group"
     switch ($group) {
@@ -85,6 +120,10 @@ foreach ($group in $groups) {
         }
         'adaptive-experience' {
             & (Join-Path $toolsRoot 'Test-LlmWikiAdaptiveWorkflow.ps1') -Group Experience
+            if (-not $?) { exit 1 }
+        }
+        'change-policy' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiChangePolicy.ps1')
             if (-not $?) { exit 1 }
         }
         'dependency-analysis' {
@@ -115,6 +154,10 @@ foreach ($group in $groups) {
         }
         'task-baseline' {
             & (Join-Path $toolsRoot 'Test-LlmWikiTaskBaseline.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'task-scope' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiTaskScope.ps1')
             if (-not $?) { exit 1 }
         }
         'index-selection' {
@@ -165,5 +208,14 @@ foreach ($group in $groups) {
         }
     }
     $stopwatch.Stop()
-    Write-Host " - ${group}: $([Math]::Round($stopwatch.Elapsed.TotalSeconds, 2))s"
+    $durationSeconds = [Math]::Round($stopwatch.Elapsed.TotalSeconds, 2)
+    $receipt = [ordered]@{
+        schemaVersion = 1
+        group = $group
+        fingerprint = [string]$fingerprint
+        recordedAtUtc = [DateTime]::UtcNow.ToString('o')
+        durationSeconds = $durationSeconds
+    }
+    [IO.File]::WriteAllText($receiptPath, (($receipt | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+    Write-Host " - ${group}: ${durationSeconds}s"
 }

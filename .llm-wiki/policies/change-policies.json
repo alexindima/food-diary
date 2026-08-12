@@ -147,11 +147,13 @@
       "pathPatterns": [
         "^FoodDiary\\.Infrastructure/(?:.*/)?(Repositories|Persistence)/.+\\.cs$",
         "^Mail(Relay|Inbox)/FoodDiary\\..*Infrastructure/(?:.*/)?(Persistence|Repositories)/.+\\.cs$",
-        "(Repository|Store|ReadService|QueryHandler)\\.cs$"
+        "^(?:FoodDiary\\.Infrastructure|Mail(?:Relay|Inbox)/FoodDiary\\..*Infrastructure)/.+(?:Repository|Store|ReadService|QueryHandler)\\.cs$"
       ],
       "excludePatterns": [
         "(^|/)tests/",
-        "/Migrations/"
+        "/Migrations/",
+        "^FoodDiary\\.Application\\.Abstractions/Users/(?:Models|Common)/",
+        "^FoodDiary\\.Application/Users/Common/UserContextService\\.cs$"
       ],
       "requiredChecks": [
         {
@@ -340,7 +342,9 @@
       ],
       "excludePatterns": [
         "(^|/)tests/",
-        "/Migrations/"
+        "/Migrations/",
+        "^FoodDiary\\.Application\\.Abstractions/Users/(?:Models|Common)/",
+        "^FoodDiary\\.Application/Users/Common/UserContextService\\.cs$"
       ],
       "requiredChecks": [],
       "reviewObligations": [
@@ -425,7 +429,8 @@
       ],
       "excludePatterns": [
         "(^|/)tests/",
-        "(Handler|Validator)\\.cs$"
+        "(Handler|Validator)\\.cs$",
+        "^FoodDiary\\.Application\\.Abstractions/Users/(?:Models|Common)/"
       ],
       "requiredChecks": [
         {
@@ -485,6 +490,46 @@
         {
           "id": "frontend-accessibility",
           "description": "Verify semantic roles, accessible names, keyboard navigation, focus behavior, disabled/error states, and responsive rendered evidence."
+        }
+      ]
+    },
+    {
+      "id": "backend-inprocess-contract",
+      "description": "In-process application projections require direct consumer and compile-boundary review without cross-process rollout ceremony.",
+      "pathPatterns": [
+        "^FoodDiary\\.Application\\.Abstractions/Users/(?:Models|Common)/.+\\.cs$"
+      ],
+      "excludePatterns": [
+        "(^|/)tests/"
+      ],
+      "requiredChecks": [
+        {
+          "id": "architecture-tests",
+          "command": "dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj"
+        }
+      ],
+      "reviewObligations": [
+        {
+          "id": "inprocess-consumer-review",
+          "description": "Compile direct consumers and review changed members, nullability, defaults, and module ownership; serialization and mixed-version rollout are not required unless a process boundary also changed."
+        }
+      ]
+    },
+    {
+      "id": "privacy-data-structure",
+      "description": "In-process personal-data projections require a lightweight minimization and access-boundary review.",
+      "pathPatterns": [
+        "^FoodDiary\\.Application\\.Abstractions/Users/(?:Models|Common)/.+\\.cs$",
+        "^FoodDiary\\.Application/Users/Common/UserContextService\\.cs$"
+      ],
+      "excludePatterns": [
+        "(^|/)tests/"
+      ],
+      "requiredChecks": [],
+      "reviewObligations": [
+        {
+          "id": "privacy-structure-review",
+          "description": "Confirm fields are required by direct in-process consumers and that authorization remains at the existing boundary; provider sharing, retention, export, and telemetry reviews are not required unless those flows changed."
         }
       ]
     },

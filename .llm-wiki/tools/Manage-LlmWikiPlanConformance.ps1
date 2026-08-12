@@ -38,6 +38,7 @@ function Get-Hash([object]$Value) {
     try { ([BitConverter]::ToString($sha.ComputeHash($bytes)) -replace '-', '').ToLowerInvariant() } finally { $sha.Dispose() }
 }
 function Test-PathMatch([string]$Value, [object[]]$Patterns) {
+    $Value = $Value.Replace('\', '/')
     foreach ($pattern in @($Patterns)) {
         if (-not [string]::IsNullOrWhiteSpace([string]$pattern) -and $Value -match [string]$pattern) { return $true }
     }
@@ -72,9 +73,18 @@ function Get-Assessment {
         -not (Test-PathMatch $_ @($manifest.scope.allowedPathPatterns)) -or
         (Test-PathMatch $_ @($manifest.scope.excludedPathPatterns))
     })
-    $plannedChanged = @($actual | Where-Object { $_ -in $planned })
-    $unplannedAllowed = @($actual | Where-Object { $_ -notin $planned -and $_ -notin $outOfScope })
-    $missingPlanned = @($planned | Where-Object { $_ -notin $actual })
+    $plannedPatterns = @($planned | ForEach-Object {
+        $normalized = ([string]$_).Replace('\', '/').TrimEnd('/')
+        if ([IO.Path]::GetExtension($normalized)) { '^' + [regex]::Escape($normalized) + '$' }
+        else { '^' + [regex]::Escape($normalized) + '(?:/.*)?$' }
+    })
+    $plannedChanged = @($actual | Where-Object { Test-PathMatch $_ $plannedPatterns })
+    $unplannedAllowed = @($actual | Where-Object { -not (Test-PathMatch $_ $plannedPatterns) -and $_ -notin $outOfScope })
+    $missingPlanned = @($planned | Where-Object {
+        $normalized = ([string]$_).Replace('\', '/').TrimEnd('/')
+        $pattern = if ([IO.Path]::GetExtension($normalized)) { '^' + [regex]::Escape($normalized) + '$' } else { '^' + [regex]::Escape($normalized) + '(?:/.*)?$' }
+        -not (@($actual | Where-Object { Test-PathMatch $_ @($pattern) }).Count)
+    })
     $phaseFiles = @($manifest.plan.phases.files | Where-Object { $_ -and -not (Test-GovernanceGeneratedPath ([string]$_)) } | Sort-Object -Unique)
     $changedPhaseFiles = @($actual | Where-Object { $_ -in $phaseFiles })
     $findings = [Collections.Generic.List[object]]::new()

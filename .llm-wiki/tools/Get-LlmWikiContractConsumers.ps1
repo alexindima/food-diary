@@ -71,10 +71,14 @@ $result = [pscustomobject][ordered]@{
     consumers = @($consumers)
     readiness = [pscustomobject][ordered]@{
         productionConsumers = @($consumers).Count
+        businessConsumers = @($consumers | Where-Object { -not $_.compositionRegistration -and @($_.methods).Count -gt 0 }).Count
+        compositionRegistrations = @($consumers | Where-Object compositionRegistration).Count
+        internalOwnerConsumers = @($consumers | Where-Object { $_.consumer -eq 'Users' -and -not $_.compositionRegistration }).Count
+        externalModuleConsumers = @($consumers | Where-Object { $_.consumer -ne 'Users' -and -not $_.compositionRegistration -and @($_.methods).Count -gt 0 }).Count
+        emptyReferenceMatches = @($consumers | Where-Object { -not $_.compositionRegistration -and @($_.methods).Count -eq 0 }).Count
         abstractionOwned = $owningAssembly -match '\.Abstractions$'
         aggregateConsumers = @($consumers | Where-Object access -eq 'aggregate-read').Count
         mutationConsumers = @($consumers | Where-Object access -eq 'mutation').Count
-        compositionRegistrations = @($consumers | Where-Object compositionRegistration).Count
         extractionSafeConsumers = @($consumers | Where-Object extractionSafe).Count
         blockers = @(
             if ($owningAssembly -notmatch '\.Abstractions$') { "Contract is owned by implementation assembly $owningAssembly." }
@@ -86,7 +90,8 @@ $result = [pscustomobject][ordered]@{
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 8; exit 0 }
 Write-Host "Contract extraction readiness: $Contract"
 Write-Host "Declaration: $declarationPath ($owningAssembly)"
-Write-Host "Consumers: $($result.readiness.productionConsumers); aggregate=$($result.readiness.aggregateConsumers); mutation=$($result.readiness.mutationConsumers); extraction-safe=$($result.readiness.extractionSafeConsumers)"
+Write-Host "Consumers: $($result.readiness.productionConsumers); business=$($result.readiness.businessConsumers); external=$($result.readiness.externalModuleConsumers); owner-internal=$($result.readiness.internalOwnerConsumers); composition=$($result.readiness.compositionRegistrations); empty=$($result.readiness.emptyReferenceMatches)"
+Write-Host "Extraction blockers: aggregate=$($result.readiness.aggregateConsumers); mutation=$($result.readiness.mutationConsumers); extraction-safe=$($result.readiness.extractionSafeConsumers)"
 foreach ($blocker in $result.readiness.blockers) { Write-Host "BLOCKER: $blocker" }
 foreach ($consumer in $result.consumers) {
     Write-Host "- $($consumer.consumer): $($consumer.methods -join ', ') -> $($consumer.returnedData -join ', ') [$($consumer.access)]"

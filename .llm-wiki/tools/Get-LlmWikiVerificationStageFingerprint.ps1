@@ -22,6 +22,15 @@ function Test-RelevantPath([string]$Path) {
         'failure knowledge' { return $normalized -match '^\.llm-wiki/(known-failures|tools/Manage-LlmWikiFailures)' }
         'change policy' { return $normalized -notmatch '^\.llm-wiki/reviews/source-impact-reviews\.json$' }
         'source impact' { return $normalized -match '^\.llm-wiki/' }
+        'affected smoke:change-policy' { return $normalized -match '^\.llm-wiki/(policies/change-policies\.json|tools/(?:Test-LlmWikiChangePolicy|Invoke-LlmWikiAffectedSmoke|Get-LlmWikiVerificationStageFingerprint)\.ps1)$' }
+        'affected smoke:contract-consumers' { return $normalized -match '^\.llm-wiki/tools/(?:Get-LlmWikiContractConsumers|Test-LlmWikiContractConsumers|Invoke-LlmWikiAffectedSmoke|Get-LlmWikiVerificationStageFingerprint)\.ps1$' }
+        'affected smoke:ui-continuation' { return $normalized -match '^\.llm-wiki/tools/(?:Get-LlmWikiUiContinuation|Test-LlmWikiUiContinuation|Get-LlmWikiTestPlan|Invoke-LlmWikiAffectedSmoke|Get-LlmWikiVerificationStageFingerprint)\.ps1$' }
+        'affected smoke:verification-cache' { return $normalized -match '^\.llm-wiki/tools/(?:Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|Get-LlmWikiVerificationStageFingerprint|Invoke-LlmWikiFullVerification|Invoke-LlmWikiAffectedSmoke)\.ps1$' }
+        'affected smoke:task-scope' { return $normalized -match '^\.llm-wiki/tools/(?:Initialize-LlmWikiTaskWorkspace|Manage-LlmWikiTaskContract|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiPlanConformance|Test-LlmWikiTaskScope|Invoke-LlmWikiAffectedSmoke|Get-LlmWikiVerificationStageFingerprint)\.ps1$' }
+        'affected smoke:facade-contract' { return $normalized -match '^\.llm-wiki/wiki\.ps1$|^\.llm-wiki/tools/(?:Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiObservedStage|Invoke-LlmWikiAdaptiveVerification|Invoke-LlmWikiReadOnlyTool|Test-LlmWikiReadOnlyGuard|Test-LlmWikiStrictAffected|Test-LlmWikiFormattingReady|Get-LlmWikiVerificationStageFingerprint)\.ps1$' }
+        'affected smoke:test-only-governance' { return $normalized -match '^\.llm-wiki/tools/(?:Manage-LlmWikiChangeManifest|Manage-LlmWikiAcceptanceMatrix|Test-LlmWikiTestOnlyGovernance|Invoke-LlmWikiAffectedSmoke|Get-LlmWikiVerificationStageFingerprint)\.ps1$' }
+        'affected smoke:governed-delivery' { return $normalized -match '^\.llm-wiki/tools/(?:Invoke-LlmWikiDeliveryWorkflow|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiTaskEvidence|Manage-LlmWikiChangeCritique|Manage-LlmWikiRequirementModel|New-LlmWikiEvidenceLineage|Update-LlmWikiTaskEvidence|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiGovernedDeliveryRegression|Invoke-LlmWikiAffectedSmoke|Get-LlmWikiVerificationStageFingerprint)\.ps1$' }
+        { $_ -like 'affected smoke:*' } { return $normalized -match '^\.llm-wiki/(tools|policies|workflows|evals)/|^\.llm-wiki/wiki\.ps1$' }
         default { return $true }
     }
 }

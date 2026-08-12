@@ -112,14 +112,14 @@
                         "pageSha256":  "d09bef3a0319b7a8b848d8b35f4b8415ad8b349af18b18892057db2b6e63fca1",
                         "sources":  [
                                         {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "18a9d69f3391711dc98f0f7cf3f855675b0c00d4ae6a0eff4dc1ec1f754a525d"
+                                            "path":  ".llm-wiki/policies/change-policies.json",
+                                            "sha256":  "43b4b5ceb2f76baf206b23d39c8afb23727ebf99cc79c7305375ea4a452845d2"
                                         }
                                     ],
-                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
-                        "reviewedAtUtc":  "2026-08-11T00:21:43.4914697Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:54.6138749Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -143,17 +143,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "a1000269bde8a26504de9901132c803d04a32fbb380c23a7585f2fe3bcf89262"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/New-LlmWikiEvidenceLineage.ps1",
-                                            "sha256":  "d1fd3b4a49ab9eaf33f8a624f9d4c2f2b3580b54be5322cdb9ba475deb0a2f6c"
+                                            "sha256":  "43b4b5ceb2f76baf206b23d39c8afb23727ebf99cc79c7305375ea4a452845d2"
                                         }
                                     ],
-                        "reason":  "Style-only review obligations retain the existing evidence and lineage contract.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1d74dd8f7503f77263aaac4472c7b2ab55a9104d",
-                        "reviewedAtUtc":  "2026-08-10T08:30:20.8912861Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:54.9444054Z"
                     },
                     {
                         "pageId":  "workflow.frontend-contract-review",
@@ -207,17 +203,17 @@
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
                         "pagePath":  ".llm-wiki/workflows/acceptance-evidence-matrix.md",
-                        "pageSha256":  "2d07a5efa798e292ad02283e267c6e772f7b9e85fa4b51e8def80115458cf883",
+                        "pageSha256":  "c0e1bc0c3cb6ad64db35aa0621096f5bc9be70d2408f61cf2a0c4b0a6be86c40",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-                                            "sha256":  "591bfdd4d941d5fc22cd5e26e90b3bcb930b3ce4535bf4bcb636506bbf09931b"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+                                            "sha256":  "11fac10bbcda9426ababd9a6618c940aa01ba41b4be203d0c1002ec3441e6860"
                                         }
                                     ],
-                        "reason":  "Reviewed the Windows host-executable fix for canonical Wiki evidence checks; acceptance mapping and resolution semantics are unchanged.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
-                        "reviewedAtUtc":  "2026-07-31T13:18:54.2436760Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:55.1361583Z"
                     },
                     {
                         "pageId":  "workflow-adaptive-development",
@@ -225,18 +221,14 @@
                         "pageSha256":  "816e17cb3087f1de89f17f4bc185c05b9245c849fde8fab1b51dc8fd0af71d58",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1",
-                                            "sha256":  "1d1d4807ebdf8374aff44987d1f9b2ec38db90484cd841229339ea2bffcc9192"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAdaptiveVerification.ps1",
-                                            "sha256":  "117641bd3dc33a8a92f7bf0c92c9b11847f68ca06b658d6318d7bbae1615da64"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
+                                            "sha256":  "1b48297e8c5ee5ebc96d49371f2a9de45a4dd74ff87a3321d56a7c73d3bd8276"
                                         }
                                     ],
-                        "reason":  "Reviewed the new single-stage resumable verification, stale-process recovery, affected smoke routing, contract consumer analysis, and contract-boundary test-plan behavior; existing workflow guidance remains accurate and generated module pages were regenerated from current sources.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f2df6b06a1eca407173e9d7e07a5423d373fd06e",
-                        "reviewedAtUtc":  "2026-08-11T23:04:58.9620947Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:55.3304515Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -286,17 +278,17 @@
                     {
                         "pageId":  "workflow-change-manifest",
                         "pagePath":  ".llm-wiki/workflows/change-manifest.md",
-                        "pageSha256":  "1873fb9a30e3af135a64e1ed7b95edb8739f21e9b232c060391eaa0ed1183f72",
+                        "pageSha256":  "e2967f35c4924a0eef44b5f281529a2636278600f77e2fec29ca9b7dfb410823",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "4b8b2ef2195bc52fadf588f50037af85a50290fab3dfe15e1e634c1a7382c9c5"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+                                            "sha256":  "7205a2f62b5c6b695f801fde2b8d29386c900aed75d39d8bb784c6a3cc52f404"
                                         }
                                     ],
-                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
-                        "reviewedAtUtc":  "2026-08-07T18:52:46.7423776Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:55.5255032Z"
                     },
                     {
                         "pageId":  "workflow-change-packet",
@@ -320,13 +312,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
+                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
                                         }
                                     ],
-                        "reason":  "Reviewed governed-delivery hardening. Existing domain semantics remain unchanged; only status separation, atomic refresh, generated-scope isolation, and focused regression coverage were added.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
-                        "reviewedAtUtc":  "2026-08-08T11:15:35.3294320Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:55.7172304Z"
                     },
                     {
                         "pageId":  "workflow-context-bundles",
@@ -373,13 +365,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
+                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
                                         }
                                     ],
-                        "reason":  "Reviewed governed-delivery hardening. Existing domain semantics remain unchanged; only status separation, atomic refresh, generated-scope isolation, and focused regression coverage were added.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
-                        "reviewedAtUtc":  "2026-08-08T11:15:36.0365045Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:55.9638995Z"
                     },
                     {
                         "pageId":  "workflow-dependency-rollout",
@@ -387,18 +379,14 @@
                         "pageSha256":  "285b7d0005f1b054eda23538c5f17b3dd44d318411cb12f6e7e4146e9db95db9",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/generated/configuration-index.json",
-                                            "sha256":  "e6f20b1834331289ce87046a8338bdddd92af22d7e8c95923330830ff8f50812"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "a1000269bde8a26504de9901132c803d04a32fbb380c23a7585f2fe3bcf89262"
+                                            "sha256":  "43b4b5ceb2f76baf206b23d39c8afb23727ebf99cc79c7305375ea4a452845d2"
                                         }
                                     ],
-                        "reason":  "Frontend style policy split does not alter dependency or rollout semantics.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1d74dd8f7503f77263aaac4472c7b2ab55a9104d",
-                        "reviewedAtUtc":  "2026-08-10T08:30:19.0930843Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:56.2325401Z"
                     },
                     {
                         "pageId":  "workflow-developer-experience",
@@ -460,18 +448,14 @@
                         "pageSha256":  "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "4b8b2ef2195bc52fadf588f50037af85a50290fab3dfe15e1e634c1a7382c9c5"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
+                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
                                         }
                                     ],
-                        "reason":  "Reviewed governed-delivery hardening. Existing domain semantics remain unchanged; only status separation, atomic refresh, generated-scope isolation, and focused regression coverage were added.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
-                        "reviewedAtUtc":  "2026-08-08T11:15:36.7495597Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:56.5332112Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -494,18 +478,14 @@
                         "pageSha256":  "033f7616fa69222933f081cd5a872dadfb1266e95f95809f37fc2f619103b669",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeCritique.ps1",
-                                            "sha256":  "b262e192c70600dc74713dfeb4b887ee7b2b4066d25c75cf3b15e97f481016d3"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
+                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
                                         }
                                     ],
-                        "reason":  "Critique findings document exact next commands for mechanically closable findings.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "18c115b2a072c332a3340f29c868f10899e3ea62",
-                        "reviewedAtUtc":  "2026-08-08T14:55:20.7104558Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:56.8071885Z"
                     },
                     {
                         "pageId":  "workflow-index-pipeline",
@@ -514,29 +494,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-                                            "sha256":  "1fb66612e1696461211866aee0913e8d4a3eab6e66cb3e8e236e501146d6469e"
+                                            "sha256":  "3889e00f10746ad6fcdf9cbf0e266a19b11e430995c806ddcb20b033bc190dac"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "8c0330f1b94933051dd3343cee921110a67cf6900b8e458b0338b8e7968f2ad1"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1",
-                                            "sha256":  "4a4564942635b023cc7cc39a0cc9dea71cb52bfad820315c6f4e07fad05fea7d"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
-                                            "sha256":  "c12a14ca8d849512de3dbfcb534ba9e06ed2cbb50f79ac72d402e830e2239c65"
+                                            "sha256":  "4cbfb0c340bb206c36e74a2e6670594bc0d7308daba975db7429cc641564786f"
                                         },
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "435a71b32bb2abd57e089d45c5f7b399314281aaab2635116d9012522b4b9715"
+                                            "sha256":  "69a64530f5a3b6f848762e1272c769aa62259a361ff1010f218866fbe0c072d6"
                                         }
                                     ],
-                        "reason":  "Reviewed the new single-stage resumable verification, stale-process recovery, affected smoke routing, contract consumer analysis, and contract-boundary test-plan behavior; existing workflow guidance remains accurate and generated module pages were regenerated from current sources.",
+                        "reason":  "Re-reviewed after making affected-smoke fingerprints group-specific so unrelated Wiki changes no longer invalidate every group; documented behavior remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f2df6b06a1eca407173e9d7e07a5423d373fd06e",
-                        "reviewedAtUtc":  "2026-08-11T23:04:59.3098033Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:59:10.3371813Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -609,13 +581,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "a1000269bde8a26504de9901132c803d04a32fbb380c23a7585f2fe3bcf89262"
+                                            "sha256":  "43b4b5ceb2f76baf206b23d39c8afb23727ebf99cc79c7305375ea4a452845d2"
                                         }
                                     ],
-                        "reason":  "Style-only policy split does not alter performance or observability requirements.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1d74dd8f7503f77263aaac4472c7b2ab55a9104d",
-                        "reviewedAtUtc":  "2026-08-10T08:30:21.7969453Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:57.3986134Z"
                     },
                     {
                         "pageId":  "workflow-plan-diff-conformance",
@@ -624,21 +596,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-                                            "sha256":  "f4d6aedbe559131d122d5ee9ed5b8964533ff5c1e0e87c14c4671e4e75e2109d"
+                                            "sha256":  "7205a2f62b5c6b695f801fde2b8d29386c900aed75d39d8bb784c6a3cc52f404"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-                                            "sha256":  "414b6c9394869ec5b2141990ddbfd65649e01141eed54ceef207a94540cc1244"
+                                            "sha256":  "1b48297e8c5ee5ebc96d49371f2a9de45a4dd74ff87a3321d56a7c73d3bd8276"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
+                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
                                         }
                                     ],
-                        "reason":  "Manifest planning now separates allowed product delta from derived Wiki bookkeeping; conformance boundaries remain strict.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e78bd7010ebd983422800b082d86c754a12ad794",
-                        "reviewedAtUtc":  "2026-08-09T15:40:42.3442798Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:57.7351889Z"
                     },
                     {
                         "pageId":  "workflow-privacy-review",
@@ -677,17 +649,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "9a08021f6f3e902b6ae5a71c133e24cb0b8e1c26d97bf23d7dfbca0eb7e63af8"
+                                            "sha256":  "11fac10bbcda9426ababd9a6618c940aa01ba41b4be203d0c1002ec3441e6860"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
+                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
                                         }
                                     ],
-                        "reason":  "Automatic test-only mapping supplies links but still requires resolution and current verification evidence.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e78bd7010ebd983422800b082d86c754a12ad794",
-                        "reviewedAtUtc":  "2026-08-09T15:40:43.1886392Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:58.0243759Z"
                     },
                     {
                         "pageId":  "workflow-quality-risk",
@@ -710,22 +682,18 @@
                         "pageSha256":  "8d205fad5d3e0217b2cf58036b664e0a41bdc0aa8060576198e13be9c07bd919",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-                                            "sha256":  "2282fa973b99388db3bb3e83f1bf6ce3d244bd700801c2f94d1d37428882012b"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "9a08021f6f3e902b6ae5a71c133e24cb0b8e1c26d97bf23d7dfbca0eb7e63af8"
+                                            "sha256":  "11fac10bbcda9426ababd9a6618c940aa01ba41b4be203d0c1002ec3441e6860"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-                                            "sha256":  "f4d6aedbe559131d122d5ee9ed5b8964533ff5c1e0e87c14c4671e4e75e2109d"
+                                            "sha256":  "7205a2f62b5c6b695f801fde2b8d29386c900aed75d39d8bb784c6a3cc52f404"
                                         }
                                     ],
-                        "reason":  "Automatic test-only mapping and product-only manifest scope preserve readiness requirements.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e78bd7010ebd983422800b082d86c754a12ad794",
-                        "reviewedAtUtc":  "2026-08-09T15:40:44.0800239Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:58.2779061Z"
                     },
                     {
                         "pageId":  "workflow-requirement-intelligence",
@@ -734,17 +702,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "9a08021f6f3e902b6ae5a71c133e24cb0b8e1c26d97bf23d7dfbca0eb7e63af8"
+                                            "sha256":  "11fac10bbcda9426ababd9a6618c940aa01ba41b4be203d0c1002ec3441e6860"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
+                                            "sha256":  "03afbcfbd25ebd814549c264050d9b60b46de452c3a515097fab5567393eb38e"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
+                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
                                         }
                                     ],
-                        "reason":  "Test-only automatic mapping does not alter criterion parsing or resolution semantics.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e78bd7010ebd983422800b082d86c754a12ad794",
-                        "reviewedAtUtc":  "2026-08-09T15:40:44.9408304Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:58.6124812Z"
                     },
                     {
                         "pageId":  "workflow-review-report",
@@ -767,18 +739,14 @@
                         "pageSha256":  "f76e9e0aeb3642ca5dbda529bb9b4b9598b30d636df9df042d6a0d0edd2e9233",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/generated/runtime-topology.json",
-                                            "sha256":  "a20c1051a95334eedff59a9bb2b675efdaf3d4db87903c64c0abf49b571b5f9b"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "a1000269bde8a26504de9901132c803d04a32fbb380c23a7585f2fe3bcf89262"
+                                            "sha256":  "43b4b5ceb2f76baf206b23d39c8afb23727ebf99cc79c7305375ea4a452845d2"
                                         }
                                     ],
-                        "reason":  "Style-only policy split and UI finalization do not alter runtime topology semantics.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1d74dd8f7503f77263aaac4472c7b2ab55a9104d",
-                        "reviewedAtUtc":  "2026-08-10T08:30:23.1416749Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:58.9398531Z"
                     },
                     {
                         "pageId":  "workflow-task-brief",
@@ -796,58 +764,69 @@
                         "reviewedAtUtc":  "2026-08-10T18:18:16.1600370Z"
                     },
                     {
+                        "pageId":  "workflow-task-contract",
+                        "pagePath":  ".llm-wiki/workflows/task-contract.md",
+                        "pageSha256":  "888080c8bba4b9ca779a914f57d720a181f282a6fda946b34af360cf55bd2e18",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskContract.ps1",
+                                            "sha256":  "b913fcdba8e023cec77a49bbfd12a9e91047f1eb31deafb54de131ce44abaa86"
+                                        }
+                                    ],
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:59.2181151Z"
+                    },
+                    {
                         "pageId":  "workflow-task-dispatch-receipts",
                         "pagePath":  ".llm-wiki/workflows/task-dispatch-receipts.md",
                         "pageSha256":  "d0a2b7fd2b51f7c02d228efb6e23130eff42e68885eb5349dc126e22e6d4f98d",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "435a71b32bb2abd57e089d45c5f7b399314281aaab2635116d9012522b4b9715"
+                                            "sha256":  "69a64530f5a3b6f848762e1272c769aa62259a361ff1010f218866fbe0c072d6"
                                         }
                                     ],
-                        "reason":  "Reviewed the new single-stage resumable verification, stale-process recovery, affected smoke routing, contract consumer analysis, and contract-boundary test-plan behavior; existing workflow guidance remains accurate and generated module pages were regenerated from current sources.",
+                        "reason":  "Re-reviewed after making affected-smoke fingerprints group-specific so unrelated Wiki changes no longer invalidate every group; documented behavior remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f2df6b06a1eca407173e9d7e07a5423d373fd06e",
-                        "reviewedAtUtc":  "2026-08-11T23:04:59.6310211Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:59:10.6189431Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",
                         "pagePath":  ".llm-wiki/workflows/task-workspace.md",
-                        "pageSha256":  "9f54f7a45d80375cad7754e10e9a0c30fee0b3e3d38b018e40168f3e79485f62",
+                        "pageSha256":  "a45447b6e7f1265860361cf0f2b350b00fa2414147ce4d9a5bb02bf29b7aa1ec",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-                                            "sha256":  "2282fa973b99388db3bb3e83f1bf6ce3d244bd700801c2f94d1d37428882012b"
+                                            "path":  ".llm-wiki/tools/Initialize-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "744abb37b94f136a5ecf40a38bb49e952c79c4deaca470287e6786f2dbdbed7f"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
-                                            "sha256":  "56a47c0debafd6c0a7e88e5076f77b38bab37713799f6d31f71f75a588eb3db8"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+                                            "sha256":  "11fac10bbcda9426ababd9a6618c940aa01ba41b4be203d0c1002ec3441e6860"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
-                                            "sha256":  "46b93858f0b8b84225462a1eaab4b06817ab3f576eef006cb11bba21e5570e32"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+                                            "sha256":  "7205a2f62b5c6b695f801fde2b8d29386c900aed75d39d8bb784c6a3cc52f404"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-                                            "sha256":  "414b6c9394869ec5b2141990ddbfd65649e01141eed54ceef207a94540cc1244"
+                                            "sha256":  "1b48297e8c5ee5ebc96d49371f2a9de45a4dd74ff87a3321d56a7c73d3bd8276"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskContract.ps1",
+                                            "sha256":  "b913fcdba8e023cec77a49bbfd12a9e91047f1eb31deafb54de131ce44abaa86"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "b56c1c9749d95441fff40952c6fc3dcbcdef1b5d16afca94208103104e101431"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
-                                            "sha256":  "06654a1a1560ca90b3eeaeffb65dd123488799b169855694f0aad955a7bbf83c"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Update-LlmWikiTaskEvidence.ps1",
-                                            "sha256":  "43d747a157bfe30e951a69b981ad1a1f48d2eef41ebfadc3922e549c54d1c892"
+                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
                                         }
                                     ],
-                        "reason":  "Evidence lineage excludes derived governance outputs and refresh auto-links only unambiguous production paths.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "18c115b2a072c332a3340f29c868f10899e3ea62",
-                        "reviewedAtUtc":  "2026-08-08T14:55:22.2777696Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:54:59.8995716Z"
                     },
                     {
                         "pageId":  "workflow-test-plan",
@@ -855,14 +834,18 @@
                         "pageSha256":  "58431db00a85f5a9da2ea8a0aa2d2910509884d52c68707826ae9c8c3bd23e16",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/policies/change-policies.json",
+                                            "sha256":  "43b4b5ceb2f76baf206b23d39c8afb23727ebf99cc79c7305375ea4a452845d2"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-                                            "sha256":  "1fb66612e1696461211866aee0913e8d4a3eab6e66cb3e8e236e501146d6469e"
+                                            "sha256":  "3889e00f10746ad6fcdf9cbf0e266a19b11e430995c806ddcb20b033bc190dac"
                                         }
                                     ],
-                        "reason":  "Reviewed the new single-stage resumable verification, stale-process recovery, affected smoke routing, contract consumer analysis, and contract-boundary test-plan behavior; existing workflow guidance remains accurate and generated module pages were regenerated from current sources.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f2df6b06a1eca407173e9d7e07a5423d373fd06e",
-                        "reviewedAtUtc":  "2026-08-11T23:04:59.9141229Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:55:00.2356427Z"
                     },
                     {
                         "pageId":  "workflow-trace-feature",
@@ -890,13 +873,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "a1000269bde8a26504de9901132c803d04a32fbb380c23a7585f2fe3bcf89262"
+                                            "sha256":  "43b4b5ceb2f76baf206b23d39c8afb23727ebf99cc79c7305375ea4a452845d2"
                                         }
                                     ],
-                        "reason":  "Deferred UI iteration remains local; finalization and publication verification stay strict.",
+                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1d74dd8f7503f77263aaac4472c7b2ab55a9104d",
-                        "reviewedAtUtc":  "2026-08-10T08:30:25.9246957Z"
+                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+                        "reviewedAtUtc":  "2026-08-11T23:55:00.5388035Z"
                     },
                     {
                         "pageId":  "workflow-verification-telemetry",

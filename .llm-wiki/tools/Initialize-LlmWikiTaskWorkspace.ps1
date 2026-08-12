@@ -8,6 +8,8 @@ param(
     [string]$BaseRef = 'HEAD',
     [string]$HeadRef,
     [string[]]$ChangedPath,
+    [Alias('ProposedPath')]
+    [string[]]$PlannedPath = @(),
     [string[]]$AllowedPath = @(),
     [string[]]$ExcludedPath = @()
 )
@@ -28,6 +30,8 @@ if ($normalizedWorkspacePath -notmatch '^\.artifacts/llm-wiki/tasks/[^/]+(?:/.*)
 if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'Objective must not be empty.' }
 $criteria = @($Criterion | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
 if ($criteria.Count -eq 0) { throw 'At least one acceptance criterion is required.' }
+$ChangedPath = @($ChangedPath | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/') } | Sort-Object -Unique)
+$PlannedPath = @($PlannedPath | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') } | Sort-Object -Unique)
 
 $absoluteWorkspacePath = Join-Path $repositoryRoot $normalizedWorkspacePath
 if (Test-Path -LiteralPath $absoluteWorkspacePath) {
@@ -59,10 +63,15 @@ try {
     & (Join-Path $PSScriptRoot 'Get-LlmWikiChangePacket.ps1') @packetArguments | Out-Null
     $packet = Get-Content -LiteralPath (Join-Path $temporaryAbsolutePath 'change-packet.json') -Raw | ConvertFrom-Json
 
+    $scopeRoots = if ($PlannedPath.Count -gt 0) { @($PlannedPath) } elseif ($ChangedPath.Count -gt 0) { @($ChangedPath) } else { @($packet.diff.changedPaths) }
     $allowedPatterns = if ($AllowedPath.Count -gt 0) {
         @($AllowedPath)
     } else {
-        @($packet.diff.changedPaths | ForEach-Object { '^' + [regex]::Escape([string]$_) + '$' })
+        @($scopeRoots | ForEach-Object {
+            $normalized = ([string]$_).Replace('\', '/').TrimEnd('/')
+            if ([IO.Path]::GetExtension($normalized)) { '^' + [regex]::Escape($normalized) + '$' }
+            else { '^' + [regex]::Escape($normalized) + '(?:/.*)?$' }
+        })
     }
     if ($allowedPatterns.Count -eq 0) {
         throw 'No changed paths were detected; provide at least one -AllowedPath regex.'
@@ -82,13 +91,16 @@ try {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeManifest.ps1') init `
         @changeArguments `
         -Path (Get-TemporaryArtifactPath 'change-manifest.json') `
+        -PlannedPath $scopeRoots `
         -AllowedPath $allowedPatterns `
-        -ExcludedPath $ExcludedPath | Out-Null
+        -ExcludedPath $ExcludedPath `
+        -EvidencePath "$normalizedWorkspacePath/evidence.json" | Out-Null
 
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiAcceptanceMatrix.ps1') init `
         @changeArguments `
         -Path (Get-TemporaryArtifactPath 'acceptance-matrix.json') `
-        -Criterion $criteria | Out-Null
+        -Criterion $criteria `
+        -EvidencePath "$normalizedWorkspacePath/evidence.json" | Out-Null
 
     $evidenceArguments = @{ BaseRef = $BaseRef; Path = (Get-TemporaryArtifactPath 'evidence.json') }
     if ($PSBoundParameters.ContainsKey('HeadRef')) { $evidenceArguments.HeadRef = $HeadRef }
@@ -156,6 +168,8 @@ try {
     Move-Item -LiteralPath $temporaryAbsolutePath -Destination $absoluteWorkspacePath
     Write-Host "Initialized LLM Wiki task workspace: $normalizedWorkspacePath"
     Write-Host "Artifacts: packet, task contract, manifest, acceptance matrix, evidence, and review report."
+    Write-Host "Planned paths: $($scopeRoots.Count)."
+    if ($scopeRoots.Count -eq 0) { Write-Warning 'Governed task workspace has no planned paths; provide -PlannedPath or -ChangedPath.' }
 } catch {
     if (Test-Path -LiteralPath $temporaryAbsolutePath) {
         Remove-Item -LiteralPath $temporaryAbsolutePath -Recurse -Force

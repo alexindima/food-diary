@@ -86,6 +86,19 @@ switch ($Action) {
         $automaticCheckIds = if ($testOnlyPacket) { @($packet.policy.requiredChecks.id) } else { @() }
         $automaticTestPaths = if ($testOnlyPacket) { @($packet.testPlan.focusedTestFiles) } else { @() }
         for ($index = 0; $index -lt $criteriaText.Count; $index++) {
+            $criterionTokens = @([regex]::Matches($criteriaText[$index].ToLowerInvariant(), '[\p{L}\p{Nd}]+') | ForEach-Object Value | Where-Object { $_.Length -ge 4 } | Sort-Object -Unique)
+            $suggestedChangedPaths = @($packet.diff.changedPaths | Where-Object {
+                $candidate = ([string]$_).ToLowerInvariant()
+                @($criterionTokens | Where-Object { $candidate.Contains($_) }).Count -gt 0
+            } | Select-Object -First 6)
+            $suggestedTestPaths = @($packet.testPlan.focusedTestFiles | Where-Object {
+                $candidate = ([string]$_).ToLowerInvariant()
+                @($criterionTokens | Where-Object { $candidate.Contains($_) }).Count -gt 0
+            } | Select-Object -First 4)
+            $suggestedScenarioIds = @($packet.testPlan.scenarios | Where-Object {
+                $candidate = "$($_.id) $($_.description)".ToLowerInvariant()
+                @($criterionTokens | Where-Object { $candidate.Contains($_) }).Count -gt 0
+            } | ForEach-Object id | Select-Object -First 4)
             $criteria.Add([pscustomobject][ordered]@{
                 id = 'AC-{0:d3}' -f ($index + 1)
                 text = $criteriaText[$index]
@@ -96,6 +109,11 @@ switch ($Action) {
                     checkIds = @($automaticCheckIds)
                     reviewIds = @()
                     testPaths = @($automaticTestPaths)
+                }
+                mappingSuggestions = [pscustomobject][ordered]@{
+                    changedPaths = $suggestedChangedPaths
+                    scenarioIds = $suggestedScenarioIds
+                    testPaths = $suggestedTestPaths
                 }
                 resolution = [pscustomobject][ordered]@{
                     reason = $null
@@ -120,7 +138,7 @@ switch ($Action) {
             evidencePath = $EvidencePath
             automaticMapping = [ordered]@{
                 applied = $testOnlyPacket
-                mode = $(if ($testOnlyPacket) { 'test-only-bundle' } else { 'none' })
+                mode = $(if ($testOnlyPacket) { 'test-only-bundle' } else { 'suggestions-only' })
             }
         }
         Write-Matrix $matrix
@@ -134,11 +152,13 @@ switch ($Action) {
         $availableScenarioIds = @($matrix.availableEvidence.scenarios.id)
         $availableCheckIds = @($matrix.availableEvidence.checks.id)
         $availableReviewIds = @($matrix.availableEvidence.reviews.id)
-        $availableChangedPaths = @($matrix.availableEvidence.changedPaths)
+        $availableChangedPaths = @($matrix.availableEvidence.changedPaths | ForEach-Object { ([string]$_).Replace('\', '/') })
         if ($null -eq $matrix.availableEvidence.PSObject.Properties['changedPaths']) {
             $availableChangedPaths = @()
         }
-        foreach ($path in @($ChangedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })) {
+        $normalizedChangedPaths = @($ChangedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | ForEach-Object { ([string]$_).Replace('\', '/') })
+        $normalizedTestPaths = @($TestPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | ForEach-Object { ([string]$_).Replace('\', '/') })
+        foreach ($path in $normalizedChangedPaths) {
             if ($path -notin $availableChangedPaths) { throw "Changed path is not present in the task packet: $path" }
         }
         foreach ($id in @($ScenarioId | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })) {
@@ -153,11 +173,11 @@ switch ($Action) {
         if ($null -eq $item.mapping.PSObject.Properties['changedPaths']) {
             $item.mapping | Add-Member -NotePropertyName changedPaths -NotePropertyValue @()
         }
-        $item.mapping.changedPaths = Merge-Unique @($item.mapping.changedPaths) @($ChangedPath)
+        $item.mapping.changedPaths = Merge-Unique @($item.mapping.changedPaths) $normalizedChangedPaths
         $item.mapping.scenarioIds = Merge-Unique @($item.mapping.scenarioIds) @($ScenarioId)
         $item.mapping.checkIds = Merge-Unique @($item.mapping.checkIds) @($CheckId)
         $item.mapping.reviewIds = Merge-Unique @($item.mapping.reviewIds) @($ReviewId)
-        $item.mapping.testPaths = Merge-Unique @($item.mapping.testPaths) @($TestPath)
+        $item.mapping.testPaths = Merge-Unique @($item.mapping.testPaths) $normalizedTestPaths
         Write-Matrix $matrix
         Write-Host "Mapped acceptance criterion: $CriterionId"
     }
@@ -240,6 +260,8 @@ switch ($Action) {
             $mapped = @($item.mapping.changedPaths + $item.mapping.scenarioIds + $item.mapping.checkIds + $item.mapping.reviewIds + $item.mapping.testPaths)
             Write-Host " - $($item.id) [$($item.status)]: $($item.text)"
             if ($mapped.Count -gt 0) { Write-Host "   Evidence mapping: $($mapped -join ', ')" }
+            $suggested = @($item.mappingSuggestions.changedPaths + $item.mappingSuggestions.scenarioIds + $item.mappingSuggestions.testPaths | Where-Object { $_ })
+            if ($mapped.Count -eq 0 -and $suggested.Count -gt 0) { Write-Host "   Suggested mapping (review before applying): $($suggested -join ', ')" }
         }
     }
 }

@@ -111,7 +111,12 @@ $changedTypeNames = @($diff.changedPaths | Where-Object { $_ -match '\.(cs|ts)$'
 } | Sort-Object -Unique)
 if ($changedTypeNames.Count -gt 0) {
     $testFiles = @()
-    foreach ($testRoot in @('tests', 'MailRelay/tests', 'MailInbox/tests', 'FoodDiary.Web.Client/src')) {
+    $testRoots = [Collections.Generic.List[string]]::new()
+    $testRoots.Add('tests')
+    $testRoots.Add('FoodDiary.Web.Client/src')
+    if (@($effectivePaths | Where-Object { $_ -match '^MailRelay/' }).Count -gt 0) { $testRoots.Add('MailRelay/tests') }
+    if (@($effectivePaths | Where-Object { $_ -match '^MailInbox/' }).Count -gt 0) { $testRoots.Add('MailInbox/tests') }
+    foreach ($testRoot in $testRoots) {
         $absoluteTestRoot = Join-Path $repositoryRoot $testRoot
         if (-not (Test-Path -LiteralPath $absoluteTestRoot)) { continue }
         $testFiles += @(
@@ -132,7 +137,8 @@ if ($changedTypeNames.Count -gt 0) {
             }
         }
     }
-    $consumerPattern = @($changedTypeNames | ForEach-Object { [regex]::Escape($_) }) -join '|'
+    $consumerNamesPattern = @($changedTypeNames | ForEach-Object { [regex]::Escape($_) }) -join '|'
+    $consumerPattern = "(^|[^A-Za-z0-9_])($consumerNamesPattern)([^A-Za-z0-9_]|$)"
     $trackedCSharpFiles = @(& git -C $repositoryRoot grep -l -E $consumerPattern -- '*.cs')
     if ($LASTEXITCODE -notin @(0, 1)) { throw 'Unable to search C# consumers for the focused test plan.' }
     foreach ($relativeSource in $trackedCSharpFiles) {
@@ -339,7 +345,9 @@ if ($presentationBoundaryChange -or ($contractBoundaryChange -and @($effectivePa
         source = 'contract-boundary'; priority = 'required'; reason = 'presentation-namespace-or-contract-consumer-change'; commandEvidence = 'Presentation API path or consumer'
     }
 }
-$commands = @($commands | Sort-Object command -Unique)
+$commands = @($commands | Group-Object { ([string]$_.command) -replace '\s+--no-restore\s*$', '' } | ForEach-Object {
+    @($_.Group | Sort-Object @{ Expression = { switch ($_.priority) { 'required' { 0 } 'recommended' { 1 } 'contextual' { 2 } default { 3 } } } }, command | Select-Object -First 1)
+} | Sort-Object command)
 
 $result = [pscustomobject]@{
     scopes = $scopes

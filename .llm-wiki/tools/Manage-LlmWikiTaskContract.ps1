@@ -38,6 +38,7 @@ function Read-Contract {
 
 function Test-PathMatch {
     param([string]$Value, [string[]]$Patterns)
+    $Value = $Value.Replace('\', '/')
     foreach ($pattern in @($Patterns)) {
         if ([string]::IsNullOrWhiteSpace($pattern)) { continue }
         if ($Value -match $pattern) { return $true }

@@ -8,5 +8,8 @@ if ($result.declarationPath -ne 'FoodDiary.Application/Users/Common/IUserContext
 }
 if ($result.readiness.abstractionOwned) { throw 'IUserContextService must currently be reported as implementation-owned.' }
 if ($result.readiness.aggregateConsumers -lt 1) { throw 'Expected aggregate-reading IUserContextService consumers.' }
-if (@($result.consumers | Where-Object { $_.consumer -eq 'Ai' }).Count -ne 1) { throw 'Expected the Ai consumer in the contract report.' }
+if (@($result.consumers | Where-Object { $_.consumer -eq 'Dashboard' }).Count -ne 1) { throw 'Expected the Dashboard consumer in the contract report.' }
+if ($result.readiness.businessConsumers -ge $result.readiness.productionConsumers) { throw 'Composition and empty reference matches must not be counted as business consumers.' }
+if ($result.readiness.compositionRegistrations -lt 1) { throw 'Expected DI registration evidence to be reported separately.' }
+if ($result.readiness.externalModuleConsumers -lt 1 -or $result.readiness.internalOwnerConsumers -lt 1) { throw 'Expected external and owner-internal consumers to be reported separately.' }
 Write-Host "LLM Wiki contract consumer tests passed: $($result.readiness.productionConsumers) production consumer(s)."

@@ -8,6 +8,7 @@ param(
     [string]$BaseRef = 'HEAD',
     [string]$HeadRef,
     [string[]]$ChangedPath,
+    [string[]]$PlannedPath = @(),
     [string[]]$AllowedPath = @(),
     [string[]]$ExcludedPath = @(),
     [string]$EvidencePath = '.artifacts/llm-wiki/evidence.json',
@@ -38,6 +39,7 @@ function Read-Manifest {
 }
 
 function Test-PathMatch([string]$Value, [object[]]$Patterns) {
+    $Value = $Value.Replace('\', '/')
     foreach ($pattern in @($Patterns)) {
         if (-not [string]::IsNullOrWhiteSpace([string]$pattern) -and $Value -match $pattern) { return $true }
     }
@@ -74,10 +76,11 @@ switch ($Action) {
             try { $null = [regex]::new($pattern) } catch { throw "Invalid path regex: $pattern" }
         }
         $inputs = Get-ChangeInputs $BaseRef
-        $plannedPaths = @($inputs.brief.change.paths | Where-Object {
+        $candidatePlannedPaths = if (@($PlannedPath).Count -gt 0) { @($PlannedPath) } else { @($inputs.brief.change.paths) }
+        $plannedPaths = @($candidatePlannedPaths | ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') } | Where-Object {
             $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' -and
             $_ -notmatch '^\.artifacts/llm-wiki/'
-        })
+        } | Sort-Object -Unique)
         $allowedPatterns = if ($AllowedPath.Count -gt 0) {
             @($AllowedPath)
         } else {
@@ -133,6 +136,10 @@ switch ($Action) {
     }
     'validate' {
         $manifest = Read-Manifest
+        $manifestDirectory = (Split-Path -Parent $Path).Replace('\', '/').TrimEnd('/')
+        $normalizedManifestEvidence = ([string]$manifest.evidencePath).Replace('\', '/')
+        $workspaceEvidenceMismatch = $manifestDirectory -match '^\.artifacts/llm-wiki/tasks/' -and
+            $normalizedManifestEvidence -cne "$manifestDirectory/evidence.json"
         $Objective = $manifest.objective
         $BaseRef = $manifest.git.base
         $inputs = Get-ChangeInputs $BaseRef
@@ -170,7 +177,7 @@ switch ($Action) {
                 }
             }
         }
-        $valid = $outOfScope.Count -eq 0 -and $newChecks.Count -eq 0 -and $newReviews.Count -eq 0 -and
+        $valid = $outOfScope.Count -eq 0 -and $newChecks.Count -eq 0 -and $newReviews.Count -eq 0 -and -not $workspaceEvidenceMismatch -and
             $structuralViolations.Count -eq 0 -and -not $evidenceMissing -and $unresolvedEvidence.Count -eq 0
         $result = [pscustomobject][ordered]@{
             valid = $valid
@@ -183,6 +190,7 @@ switch ($Action) {
             structuralViolations = $structuralViolations
             evidenceRequired = [bool]$RequireEvidence
             evidenceMissing = $evidenceMissing
+            workspaceEvidenceMismatch = $workspaceEvidenceMismatch
             unresolvedEvidence = @($unresolvedEvidence)
         }
         if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 10 } else {
@@ -191,6 +199,7 @@ switch ($Action) {
             foreach ($item in $newChecks) { Write-Host " - NEW CHECK: $item" }
             foreach ($item in $newReviews) { Write-Host " - NEW REVIEW: $item" }
             if ($evidenceMissing) { Write-Host " - EVIDENCE MISSING: $EvidencePath" }
+            if ($workspaceEvidenceMismatch) { Write-Host " - WORKSPACE EVIDENCE PATH MISMATCH: $normalizedManifestEvidence (expected $manifestDirectory/evidence.json)" }
             foreach ($item in $unresolvedEvidence) { Write-Host " - UNRESOLVED $($item.kind): $($item.id) [$($item.status)]" }
         }
         if ($FailOnInvalid -and -not $valid) { exit 1 }
