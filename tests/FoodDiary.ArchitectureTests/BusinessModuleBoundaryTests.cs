@@ -69,7 +69,7 @@ public sealed class BusinessModuleBoundaryTests {
 
     [Fact]
     public void MigratedUserProfileConsumers_DoNotDependOnInternalUserContextService() {
-        string[] migratedModules = ["Ai", "Dashboard", "Gamification", "Hydration", "Tdee", "WeeklyCheckIn"];
+        string[] migratedModules = ["Ai", "Dashboard", "Dietologist", "Gamification", "Hydration", "Tdee", "WeeklyCheckIn"];
 
         string[] violations = [.. migratedModules
             .Select(module => Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application", module))

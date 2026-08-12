@@ -1,49 +1,47 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Dietologist.Common;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dietologist.Services;
 
 internal sealed class DietologistUserContextService(
-    IUserContextService userContextService,
+    ICurrentUserAccessService currentUserAccessService,
+    IUserDietologistProfileReadService profileReadService,
+    IUserProfileReadService userProfileReadService,
     IDietologistUserLookupService userLookupService) : IDietologistUserContextService {
     public async Task<Result<string>> GetAccessibleUserEmailAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        return userResult.IsFailure
-            ? Result.Failure<string>(userResult.Error)
-            : Result.Success(userResult.Value.Email);
+        Result<UserDietologistProfileModel> profileResult = await profileReadService.GetAccessibleProfileAsync(userId, cancellationToken).ConfigureAwait(false);
+        return profileResult.IsFailure
+            ? Result.Failure<string>(profileResult.Error)
+            : Result.Success(profileResult.Value.Email);
     }
 
     public async Task<string?> GetUserEmailByIdAsync(UserId userId, CancellationToken cancellationToken) {
-        User? user = await userLookupService.GetUserByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        return user?.Email;
+        UserDietologistProfileModel? profile = await userLookupService.FindByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        return profile?.Email;
     }
 
     public async Task<Result<UserModel>> GetUserModelByIdAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        User? user = await userLookupService.GetUserByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        return user is null
-            ? Result.Failure<UserModel>(Errors.Dietologist.AccessDenied)
-            : Result.Success(user.ToModel());
+        Result<UserModel> userResult = await userProfileReadService.GetUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        return userResult.IsFailure ? Result.Failure<UserModel>(Errors.Dietologist.AccessDenied) : userResult;
     }
 
-    public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) =>
-        userContextService.GetAccessibleUserAsync(userId, cancellationToken);
+    public Task<Result<UserDietologistProfileModel>> GetAccessibleProfileAsync(UserId userId, CancellationToken cancellationToken) =>
+        profileReadService.GetAccessibleProfileAsync(userId, cancellationToken);
 
     public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
-        userContextService.EnsureCanAccessAsync(userId, cancellationToken);
+        currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken);
 
-    public Task<User?> GetAccessibleUserByEmailAsync(string email, CancellationToken cancellationToken) =>
-        userLookupService.GetAccessibleUserByEmailAsync(email, cancellationToken);
+    public Task<UserDietologistProfileModel?> FindByEmailAsync(string email, CancellationToken cancellationToken) =>
+        userLookupService.FindByEmailAsync(email, cancellationToken);
 
-    public Task<User?> GetUserByIdAsync(UserId userId, CancellationToken cancellationToken) =>
-        userLookupService.GetUserByIdAsync(userId, cancellationToken);
+    public Task<UserDietologistProfileModel?> FindByIdAsync(UserId userId, CancellationToken cancellationToken) =>
+        userLookupService.FindByIdAsync(userId, cancellationToken);
 }

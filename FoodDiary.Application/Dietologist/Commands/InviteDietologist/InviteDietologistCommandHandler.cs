@@ -13,7 +13,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.Entities.Notifications;
 
@@ -39,12 +39,12 @@ public sealed class InviteDietologistCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<User> userResult = await dietologistUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserDietologistProfileModel> userResult = await dietologistUserContextService.GetAccessibleProfileAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);
         }
 
-        User user = userResult.Value;
+        UserDietologistProfileModel user = userResult.Value;
         string normalizedEmail = command.DietologistEmail.Trim().ToLowerInvariant();
 
         if (string.Equals(user.Email, normalizedEmail, StringComparison.OrdinalIgnoreCase)) {
@@ -68,7 +68,7 @@ public sealed class InviteDietologistCommandHandler(
         DietologistPermissions permissions = command.Permissions.ToPermissions();
 
         var invitation = DietologistInvitation.Create(userId, normalizedEmail, tokenHash, expiresAt, permissions);
-        User? registeredDietologist = await dietologistUserContextService.GetAccessibleUserByEmailAsync(normalizedEmail, cancellationToken).ConfigureAwait(false);
+        UserDietologistProfileModel? registeredDietologist = await dietologistUserContextService.FindByEmailAsync(normalizedEmail, cancellationToken).ConfigureAwait(false);
         await invitationRepository.AddAsync(invitation, cancellationToken).ConfigureAwait(false);
         await EnqueueInvitationEmailAsync(normalizedEmail, invitation, rawToken, user, cancellationToken).ConfigureAwait(false);
 
@@ -83,7 +83,7 @@ public sealed class InviteDietologistCommandHandler(
         string normalizedEmail,
         DietologistInvitation invitation,
         string rawToken,
-        User user,
+        UserDietologistProfileModel user,
         CancellationToken cancellationToken) {
         DietologistInvitationMessage message = new(
             normalizedEmail,
@@ -97,12 +97,12 @@ public sealed class InviteDietologistCommandHandler(
     }
 
     private async Task NotifyRegisteredDietologistAsync(
-        User registeredDietologist,
-        User client,
+        UserDietologistProfileModel registeredDietologist,
+        UserDietologistProfileModel client,
         DietologistInvitation invitation,
         CancellationToken cancellationToken) {
         Notification notification = NotificationFactory.CreateDietologistInvitationReceived(
-            registeredDietologist.Id,
+            new UserId(registeredDietologist.Id),
             ResolveClientName(client),
             invitation.Id.Value.ToString());
 
@@ -110,10 +110,10 @@ public sealed class InviteDietologistCommandHandler(
         NotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,
             notificationClientRefreshService,
-            registeredDietologist.Id);
+            new UserId(registeredDietologist.Id));
     }
 
-    private static string ResolveClientName(User user) {
+    private static string ResolveClientName(UserDietologistProfileModel user) {
         string clientName = $"{user.FirstName} {user.LastName}".Trim();
         return string.IsNullOrWhiteSpace(clientName) ? user.Email : clientName;
     }

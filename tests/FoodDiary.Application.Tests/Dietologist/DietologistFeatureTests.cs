@@ -36,7 +36,6 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Abstractions.Users.Models;
 
@@ -109,29 +108,37 @@ public partial class DietologistFeatureTests {
     }
 
     [Fact]
-    public async Task DietologistUserContextService_GetUserByIdAsync_ReturnsRepositoryUser() {
+    public async Task DietologistUserContextService_FindByIdAsync_ReturnsProfile() {
         var user = User.Create("dietologist-context@example.com", "hash");
+        UserDietologistProfileModel profile = ToDietologistProfile(user);
         IDietologistUserLookupService userLookupService = Substitute.For<IDietologistUserLookupService>();
-        userLookupService.GetUserByIdAsync(user.Id, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<User?>(user));
-        IUserContextService userContextService = Substitute.For<IUserContextService>();
-        var service = new DietologistUserContextService(userContextService, userLookupService);
+        userLookupService.FindByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(profile);
+        var service = new DietologistUserContextService(
+            Substitute.For<ICurrentUserAccessService>(),
+            Substitute.For<IUserDietologistProfileReadService>(),
+            Substitute.For<IUserProfileReadService>(),
+            userLookupService);
 
-        User? result = await service.GetUserByIdAsync(user.Id, CancellationToken.None);
+        UserDietologistProfileModel? result = await service.FindByIdAsync(user.Id, CancellationToken.None);
 
-        Assert.Same(user, result);
+        Assert.Same(profile, result);
     }
 
     [Fact]
     public async Task DietologistUserContextService_GetUserEmailAndModelById_ReturnsLookupResults() {
         var user = User.Create("dietologist-context-model@example.com", "hash");
+        UserDietologistProfileModel profile = ToDietologistProfile(user);
         IDietologistUserLookupService userLookupService = Substitute.For<IDietologistUserLookupService>();
-        userLookupService.GetUserByIdAsync(user.Id, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<User?>(user));
-        userLookupService.GetUserByIdAsync(Arg.Is<UserId>(id => id != user.Id), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<User?>(null));
-        IUserContextService userContextService = Substitute.For<IUserContextService>();
-        var service = new DietologistUserContextService(userContextService, userLookupService);
+        userLookupService.FindByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(profile);
+        IUserProfileReadService profileReadService = Substitute.For<IUserProfileReadService>();
+        profileReadService.GetUserAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Result.Success(user.ToModel()));
+        profileReadService.GetUserAsync(Arg.Is<UserId>(id => id != user.Id), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserModel>(Errors.Authentication.InvalidToken));
+        var service = new DietologistUserContextService(
+            Substitute.For<ICurrentUserAccessService>(),
+            Substitute.For<IUserDietologistProfileReadService>(),
+            profileReadService,
+            userLookupService);
 
         string? email = await service.GetUserEmailByIdAsync(user.Id, CancellationToken.None);
         Result<UserModel> model = await service.GetUserModelByIdAsync(user.Id, CancellationToken.None);
@@ -145,16 +152,16 @@ public partial class DietologistFeatureTests {
     }
 
     [Fact]
-    public async Task DietologistUserLookupService_GetUserByIdAsync_ReturnsRepositoryUser() {
+    public async Task DietologistUserLookupService_FindByIdAsync_ReturnsProfile() {
         User user = CreateUser(UserId.New(), "lookup@example.com");
-        IUserLookupRepository userRepository = Substitute.For<IUserLookupRepository>();
-        userRepository.GetByIdAsync(user.Id, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<User?>(user));
-        var service = new DietologistUserLookupService(userRepository);
+        UserDietologistProfileModel profile = ToDietologistProfile(user);
+        IUserDietologistProfileReadService profileReadService = Substitute.For<IUserDietologistProfileReadService>();
+        profileReadService.FindByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(profile);
+        var service = new DietologistUserLookupService(profileReadService);
 
-        User? result = await service.GetUserByIdAsync(user.Id, CancellationToken.None);
+        UserDietologistProfileModel? result = await service.FindByIdAsync(user.Id, CancellationToken.None);
 
-        Assert.Same(user, result);
+        Assert.Same(profile, result);
     }
 
     private static InviteDietologistCommandHandler CreateInviteHandler(
@@ -581,10 +588,19 @@ public partial class DietologistFeatureTests {
             .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Error?>(null));
         userContextService
-            .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+            .GetAccessibleProfileAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<UserDietologistProfileModel>(Errors.Authentication.InvalidToken)));
         return userContextService;
     }
+
+    private static UserDietologistProfileModel ToDietologistProfile(User user) =>
+        new(
+            user.Id.Value,
+            user.Email,
+            user.FirstName,
+            user.LastName,
+            user.Language,
+            user.HasRole(RoleNames.Dietologist));
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserRepository : IUserRepository, ICurrentUserAccessService, IDietologistUserContextService, IDietologistUserLookupService {
@@ -624,6 +640,13 @@ public partial class DietologistFeatureTests {
             return Task.FromResult(error is not null ? Result.Failure<User>(error) : Result.Success(user!));
         }
 
+        public async Task<Result<UserDietologistProfileModel>> GetAccessibleProfileAsync(UserId userId, CancellationToken cancellationToken) {
+            Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            return userResult.IsFailure
+                ? Result.Failure<UserDietologistProfileModel>(userResult.Error)
+                : Result.Success(ToDietologistProfile(userResult.Value));
+        }
+
         public async Task<Result<string>> GetAccessibleUserEmailAsync(
             UserId userId,
             CancellationToken cancellationToken) {
@@ -647,11 +670,15 @@ public partial class DietologistFeatureTests {
                 : Result.Success(user.ToModel());
         }
 
-        public Task<User?> GetAccessibleUserByEmailAsync(string email, CancellationToken cancellationToken) =>
-            GetByEmailAsync(email, cancellationToken);
+        public async Task<UserDietologistProfileModel?> FindByEmailAsync(string email, CancellationToken cancellationToken) {
+            User? user = await GetByEmailAsync(email, cancellationToken).ConfigureAwait(false);
+            return user is null ? null : ToDietologistProfile(user);
+        }
 
-        public Task<User?> GetUserByIdAsync(UserId userId, CancellationToken cancellationToken) =>
-            GetByIdAsync(userId, cancellationToken);
+        public async Task<UserDietologistProfileModel?> FindByIdAsync(UserId userId, CancellationToken cancellationToken) {
+            User? user = await GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+            return user is null ? null : ToDietologistProfile(user);
+        }
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default) =>
             Task.FromResult(_users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase)));
@@ -700,6 +727,13 @@ public partial class DietologistFeatureTests {
             return Task.FromResult(error is not null ? Result.Failure<User>(error) : Result.Success(user!));
         }
 
+        public async Task<Result<UserDietologistProfileModel>> GetAccessibleProfileAsync(UserId userId, CancellationToken cancellationToken) {
+            Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            return userResult.IsFailure
+                ? Result.Failure<UserDietologistProfileModel>(userResult.Error)
+                : Result.Success(ToDietologistProfile(userResult.Value));
+        }
+
         public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
             User? user = _users.Count > 0 ? _users.Peek() : null;
             Error? error = user switch {
@@ -734,11 +768,15 @@ public partial class DietologistFeatureTests {
                 : Result.Success(user.ToModel());
         }
 
-        public Task<User?> GetAccessibleUserByEmailAsync(string email, CancellationToken cancellationToken) =>
-            GetByEmailAsync(email, cancellationToken);
+        public async Task<UserDietologistProfileModel?> FindByEmailAsync(string email, CancellationToken cancellationToken) {
+            User? user = await GetByEmailAsync(email, cancellationToken).ConfigureAwait(false);
+            return user is null ? null : ToDietologistProfile(user);
+        }
 
-        public Task<User?> GetUserByIdAsync(UserId userId, CancellationToken cancellationToken) =>
-            GetByIdAsync(userId, cancellationToken);
+        public async Task<UserDietologistProfileModel?> FindByIdAsync(UserId userId, CancellationToken cancellationToken) {
+            User? user = await GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+            return user is null ? null : ToDietologistProfile(user);
+        }
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default) =>
             throw new NotSupportedException();

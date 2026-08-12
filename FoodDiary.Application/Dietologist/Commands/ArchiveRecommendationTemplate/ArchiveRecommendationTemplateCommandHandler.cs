@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Abstractions.Messaging;
@@ -11,7 +12,7 @@ namespace FoodDiary.Application.Dietologist.Commands.ArchiveRecommendationTempla
 
 public sealed class ArchiveRecommendationTemplateCommandHandler(
     IRecommendationTemplateWriteRepository repository,
-    IUserContextService userContextService)
+    ICurrentUserAccessService userContextService)
     : ICommandHandler<ArchiveRecommendationTemplateCommand, Result> {
     public async Task<Result> Handle(
         ArchiveRecommendationTemplateCommand command,

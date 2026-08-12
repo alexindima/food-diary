@@ -9,7 +9,7 @@ using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Commands.DeclineInvitationForCurrentUser;
@@ -31,12 +31,12 @@ public sealed class DeclineInvitationForCurrentUserCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<User> userResult = await dietologistUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserDietologistProfileModel> userResult = await dietologistUserContextService.GetAccessibleProfileAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);
         }
 
-        User user = userResult.Value;
+        UserDietologistProfileModel user = userResult.Value;
         Result<DietologistInvitationId> invitationIdResult = RequiredIdParser.Parse(
             command.InvitationId,
             nameof(command.InvitationId),
@@ -75,7 +75,7 @@ public sealed class DeclineInvitationForCurrentUserCommandHandler(
         return Result.Success();
     }
 
-    private static string ResolveDietologistDisplayName(User user) {
+    private static string ResolveDietologistDisplayName(UserDietologistProfileModel user) {
         string fullName = $"{user.FirstName} {user.LastName}".Trim();
         return string.IsNullOrWhiteSpace(fullName) ? user.Email : fullName;
     }

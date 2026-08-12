@@ -6,10 +6,10 @@ using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Domain.Entities.Dietologist;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 
 namespace FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
 
@@ -29,7 +29,7 @@ public sealed class CreateRecommendationCommandHandler(
         }
 
         UserId dietologistUserId = userIdResult.Value;
-        Result<User> dietologistResult = await dietologistUserContextService.GetAccessibleUserAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
+        Result<UserDietologistProfileModel> dietologistResult = await dietologistUserContextService.GetAccessibleProfileAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
         if (dietologistResult.IsFailure) {
             return Result.Failure<RecommendationModel>(dietologistResult.Error);
         }

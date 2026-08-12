@@ -3029,7 +3029,7 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void DietologistUserContextService_UsesSharedUserContextAndNarrowLookupServices() {
+    public void DietologistUserContextService_UsesOnlyNarrowUserCapabilities() {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
@@ -3039,8 +3039,11 @@ public sealed class ApplicationGuardrailTests {
             "DietologistUserContextService.cs");
         string source = File.ReadAllText(servicePath);
 
-        Assert.Contains("IUserContextService", source, StringComparison.Ordinal);
+        Assert.Contains("IUserDietologistProfileReadService", source, StringComparison.Ordinal);
+        Assert.Contains("ICurrentUserAccessService", source, StringComparison.Ordinal);
         Assert.Contains("IDietologistUserLookupService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IUserContextService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Domain.Entities.Users", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IUserRepository", source, StringComparison.Ordinal);
         Assert.DoesNotContain("CurrentUserAccessPolicy", source, StringComparison.Ordinal);
     }

@@ -6,9 +6,9 @@
                       "externalTransfers":  "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
                   },
     "summary":  {
-                    "candidateFields":  1409,
+                    "candidateFields":  1410,
                     "credential":  146,
-                    "identity":  141,
+                    "identity":  142,
                     "health":  626,
                     "financial":  199,
                     "privateContent":  297,
@@ -7037,6 +7037,13 @@
                        "type":  "string",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDashboardProfileModel.cs",
                        "line":  7
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDietologistProfileModel.cs",
+                       "line":  5
                    },
                    {
                        "category":  "identity",

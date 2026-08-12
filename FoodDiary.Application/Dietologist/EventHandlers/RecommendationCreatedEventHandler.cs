@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Events;
 using FoodDiary.Mediator;
 using FoodDiary.Domain.Entities.Notifications;
@@ -17,7 +17,7 @@ public sealed class RecommendationCreatedEventHandler(
     : INotificationHandler<NotificationEnvelope<RecommendationCreatedDomainEvent>> {
     public async Task Handle(NotificationEnvelope<RecommendationCreatedDomainEvent> notification, CancellationToken cancellationToken) {
         RecommendationCreatedDomainEvent domainEvent = notification.Value;
-        User? dietologist = await userLookupService.GetUserByIdAsync(domainEvent.DietologistUserId, cancellationToken).ConfigureAwait(false);
+        UserDietologistProfileModel? dietologist = await userLookupService.FindByIdAsync(domainEvent.DietologistUserId, cancellationToken).ConfigureAwait(false);
         string dietologistName = ResolveDietologistLabel(dietologist);
 
         Notification createdNotification = NotificationFactory.CreateNewRecommendation(
@@ -33,7 +33,7 @@ public sealed class RecommendationCreatedEventHandler(
             pushChanged: false);
     }
 
-    private static string ResolveDietologistLabel(User? dietologist) {
+    private static string ResolveDietologistLabel(UserDietologistProfileModel? dietologist) {
         if (dietologist is null) {
             return string.Empty;
         }

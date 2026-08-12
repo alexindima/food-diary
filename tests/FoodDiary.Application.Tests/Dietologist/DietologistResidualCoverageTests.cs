@@ -182,22 +182,26 @@ public sealed class DietologistResidualCoverageTests {
     [Fact]
     public async Task DietologistUserContextService_CoversFailureAndDelegatedMembers() {
         var userId = UserId.New();
-        IUserContextService users = Substitute.For<IUserContextService>();
-        users.GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<FoodDiary.Domain.Entities.Users.User>(Errors.Authentication.InvalidToken));
-        users.EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
+        ICurrentUserAccessService access = Substitute.For<ICurrentUserAccessService>();
+        access.EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Errors.Authentication.InvalidToken);
+        IUserDietologistProfileReadService profiles = Substitute.For<IUserDietologistProfileReadService>();
+        profiles.GetAccessibleProfileAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserDietologistProfileModel>(Errors.Authentication.InvalidToken));
+        IUserProfileReadService userProfiles = Substitute.For<IUserProfileReadService>();
+        userProfiles.GetUserAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserModel>(Errors.Authentication.InvalidToken));
         IDietologistUserLookupService lookup = Substitute.For<IDietologistUserLookupService>();
-        var service = new DietologistUserContextService(users, lookup);
+        var service = new DietologistUserContextService(access, profiles, userProfiles, lookup);
 
         Result<string> email = await service.GetAccessibleUserEmailAsync(userId, CancellationToken.None);
         Result<FoodDiary.Application.Abstractions.Users.Models.UserModel> model =
             await service.GetUserModelByIdAsync(userId, CancellationToken.None);
-        Result<FoodDiary.Domain.Entities.Users.User> accessible =
-            await service.GetAccessibleUserAsync(userId, CancellationToken.None);
+        Result<UserDietologistProfileModel> accessible =
+            await service.GetAccessibleProfileAsync(userId, CancellationToken.None);
         Error? accessError = await service.EnsureCanAccessAsync(userId, CancellationToken.None);
-        FoodDiary.Domain.Entities.Users.User? byEmail =
-            await service.GetAccessibleUserByEmailAsync("missing@example.com", CancellationToken.None);
+        UserDietologistProfileModel? byEmail =
+            await service.FindByEmailAsync("missing@example.com", CancellationToken.None);
 
         Assert.Multiple(
             () => ResultAssert.Failure(email),
@@ -209,14 +213,14 @@ public sealed class DietologistResidualCoverageTests {
 
     [Fact]
     public async Task DietologistUserLookupService_DelegatesEmailLookup() {
-        IUserDirectoryService directory = Substitute.For<IUserDirectoryService>();
-        var service = new DietologistUserLookupService(directory);
+        IUserDietologistProfileReadService profiles = Substitute.For<IUserDietologistProfileReadService>();
+        var service = new DietologistUserLookupService(profiles);
 
-        FoodDiary.Domain.Entities.Users.User? result =
-            await service.GetAccessibleUserByEmailAsync("missing@example.com", CancellationToken.None);
+        UserDietologistProfileModel? result =
+            await service.FindByEmailAsync("missing@example.com", CancellationToken.None);
 
         Assert.Null(result);
-        await directory.Received(1).GetByEmailAsync("missing@example.com", Arg.Any<CancellationToken>());
+        await profiles.Received(1).FindByEmailAsync("missing@example.com", Arg.Any<CancellationToken>());
     }
 
     private static IUserContextService CreateFailingUserContext() {

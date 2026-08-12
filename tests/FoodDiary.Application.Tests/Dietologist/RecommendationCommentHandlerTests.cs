@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Dietologist.Commands.CreateRecommendationComment;
 using FoodDiary.Application.Dietologist.Queries.GetRecommendationComments;
 using FoodDiary.Application.Dietologist.Services;
@@ -29,7 +30,8 @@ public sealed class RecommendationCommentHandlerTests {
             Substitute.For<IDietologistInvitationReadModelRepository>(),
             Substitute.For<INotificationWriter>(),
             Substitute.For<IAuditEntryWriter>(),
-            users);
+            users,
+            Substitute.For<IUserDietologistProfileReadService>());
 
         Result<FoodDiary.Application.Dietologist.Models.RecommendationCommentModel> result = await handler.Handle(
             new CreateRecommendationCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "Text"),
@@ -47,7 +49,8 @@ public sealed class RecommendationCommentHandlerTests {
             Substitute.For<IDietologistInvitationReadModelRepository>(),
             Substitute.For<INotificationWriter>(),
             Substitute.For<IAuditEntryWriter>(),
-            CreateAccessibleUserContext(user));
+            CreateAccessibleUserContext(user),
+            CreateProfileReadService(user));
 
         Result<FoodDiary.Application.Dietologist.Models.RecommendationCommentModel> result = await handler.Handle(
             new CreateRecommendationCommentCommand(user.Id.Value, Guid.Empty, "Text"),
@@ -65,13 +68,17 @@ public sealed class RecommendationCommentHandlerTests {
             .Returns((Error?)null);
         users.GetAccessibleUserAsync(clientId, Arg.Any<CancellationToken>())
             .Returns(Result.Failure<User>(Errors.Authentication.InvalidToken));
+        IUserDietologistProfileReadService profiles = Substitute.For<IUserDietologistProfileReadService>();
+        profiles.GetAccessibleProfileAsync(clientId, Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserDietologistProfileModel>(Errors.Authentication.InvalidToken));
         var handler = new CreateRecommendationCommentCommandHandler(
             CreateRecommendationRepository(recommendation),
             Substitute.For<IRecommendationCommentRepository>(),
             Substitute.For<IDietologistInvitationReadModelRepository>(),
             Substitute.For<INotificationWriter>(),
             Substitute.For<IAuditEntryWriter>(),
-            users);
+            users,
+            profiles);
 
         Result<FoodDiary.Application.Dietologist.Models.RecommendationCommentModel> result = await handler.Handle(
             new CreateRecommendationCommentCommand(clientId.Value, recommendation.Id.Value, "Text"),
@@ -96,7 +103,8 @@ public sealed class RecommendationCommentHandlerTests {
             Substitute.For<IDietologistInvitationReadModelRepository>(),
             notifications,
             Substitute.For<IAuditEntryWriter>(),
-            users);
+            users,
+            CreateProfileReadService(client));
 
         Result<FoodDiary.Application.Dietologist.Models.RecommendationCommentModel> result = await handler.Handle(
             new CreateRecommendationCommentCommand(clientId.Value, recommendation.Id.Value, "  My question  "),
@@ -136,7 +144,8 @@ public sealed class RecommendationCommentHandlerTests {
             Substitute.For<IDietologistInvitationReadModelRepository>(),
             Substitute.For<INotificationWriter>(),
             Substitute.For<IAuditEntryWriter>(),
-            CreateAccessibleUserContext(dietologist));
+            CreateAccessibleUserContext(dietologist),
+            CreateProfileReadService(dietologist));
 
         Result<FoodDiary.Application.Dietologist.Models.RecommendationCommentModel> result = await handler.Handle(
             new CreateRecommendationCommentCommand(dietologistId.Value, recommendation.Id.Value, "Reply"),
@@ -160,7 +169,8 @@ public sealed class RecommendationCommentHandlerTests {
             Substitute.For<IDietologistInvitationReadModelRepository>(),
             Substitute.For<INotificationWriter>(),
             Substitute.For<IAuditEntryWriter>(),
-            CreateAccessibleUserContext(outsider));
+            CreateAccessibleUserContext(outsider),
+            CreateProfileReadService(outsider));
 
         Result<FoodDiary.Application.Dietologist.Models.RecommendationCommentModel> result = await handler.Handle(
             new CreateRecommendationCommentCommand(outsider.Id.Value, recommendation.Id.Value, "Reply"),
@@ -226,6 +236,19 @@ public sealed class RecommendationCommentHandlerTests {
             .Returns((Error?)null);
         service.GetAccessibleUserAsync(user.Id, Arg.Any<CancellationToken>())
             .Returns(Result.Success(user));
+        return service;
+    }
+
+    private static IUserDietologistProfileReadService CreateProfileReadService(User user) {
+        IUserDietologistProfileReadService service = Substitute.For<IUserDietologistProfileReadService>();
+        service.GetAccessibleProfileAsync(user.Id, Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new UserDietologistProfileModel(
+                user.Id.Value,
+                user.Email,
+                user.FirstName,
+                user.LastName,
+                user.Language,
+                IsDietologist: false)));
         return service;
     }
 

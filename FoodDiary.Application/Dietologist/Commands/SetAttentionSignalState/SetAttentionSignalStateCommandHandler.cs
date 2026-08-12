@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Users.Common;
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Audit.Common;
@@ -14,7 +15,7 @@ namespace FoodDiary.Application.Dietologist.Commands.SetAttentionSignalState;
 public sealed class SetAttentionSignalStateCommandHandler(
     IDietologistInvitationReadModelRepository invitationRepository,
     IAuditEntryWriter auditWriter,
-    IUserContextService userContextService,
+    ICurrentUserAccessService userContextService,
     TimeProvider timeProvider)
     : ICommandHandler<SetAttentionSignalStateCommand, Result> {
     public async Task<Result> Handle(

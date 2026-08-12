@@ -38,13 +38,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "520a39d1429d8fbdf89837096360e173f5b4350abadd991c3fde20db00ba26a5"
+                                            "sha256":  "90535f04d319fffae38f45a0a1c0827b04c1bca020e7130ec24dcef26be99401"
                                         }
                                     ],
-                        "reason":  "Dashboard and Gamification now consume narrow Users projections; ownership guidance was updated and verified against implementation and architecture tests.",
+                        "reason":  "Dietologist now consumes Users through a narrow identity/display/role projection and separate access capability; ownership and authorization remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "bac97b16dde146849cc323ac975df7734d2fe440",
-                        "reviewedAtUtc":  "2026-08-12T00:17:26.5148579Z"
+                        "gitHead":  "0f72054060c2a6bcaa7bd4dc0314a7aec4af00ac",
+                        "reviewedAtUtc":  "2026-08-12T01:32:47.8821596Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -291,13 +291,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "f87920aaa52ed515dd69bac732083dff58465adc179c46a192be33972db397fd"
+                                            "sha256":  "1633058bb977e6d76acb1176bc3e948c135b46f5181dc429f292a9ea80c19ef0"
                                         }
                                     ],
-                        "reason":  "Generated backend contract index reflects two fewer aggregate blockers after Dashboard and Gamification migration.",
+                        "reason":  "The regenerated contract index confirms Dietologist no longer consumes IUserContextService or the User aggregate and aggregate blockers are zero.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "bac97b16dde146849cc323ac975df7734d2fe440",
-                        "reviewedAtUtc":  "2026-08-12T00:17:27.5105161Z"
+                        "gitHead":  "0f72054060c2a6bcaa7bd4dc0314a7aec4af00ac",
+                        "reviewedAtUtc":  "2026-08-12T01:32:49.1608530Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -662,13 +662,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "0727089b1c73880ad1dc5e63366de0ba03fae30ce09fa6d5cfaa7333e7219f46"
+                                            "sha256":  "9b63fdd2f28b55b57b46f529831ae8d28b9c5bcf9f5d5dc80e8d399697cf78d0"
                                         }
                                     ],
-                        "reason":  "New projections contain only fields required by their direct in-process consumers; existing authorization remains separate and unchanged.",
+                        "reason":  "The Dietologist projection contains only identity, display, language, and role fields required by invitation, comment, and notification flows; no provider sharing or retention changed.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "bac97b16dde146849cc323ac975df7734d2fe440",
-                        "reviewedAtUtc":  "2026-08-12T00:17:28.6673015Z"
+                        "gitHead":  "0f72054060c2a6bcaa7bd4dc0314a7aec4af00ac",
+                        "reviewedAtUtc":  "2026-08-12T01:32:50.8517278Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -711,13 +711,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "e5250d8c0749d871e5819bffd2611333ebce950fc2be3bb9a68aade6ba639095"
+                                            "sha256":  "927ac86132c0ba44a9c4d960416892bc2c6cbdc885a83998bb01c0b977aab543"
                                         }
                                     ],
-                        "reason":  "Focused Dashboard, Gamification and Users tests plus the full Application and Architecture suites passed.",
+                        "reason":  "Focused Dietologist and Users tests, the full Application suite, and all architecture tests passed after the boundary migration.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "bac97b16dde146849cc323ac975df7734d2fe440",
-                        "reviewedAtUtc":  "2026-08-12T00:17:29.7169668Z"
+                        "gitHead":  "0f72054060c2a6bcaa7bd4dc0314a7aec4af00ac",
+                        "reviewedAtUtc":  "2026-08-12T01:32:52.1915441Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

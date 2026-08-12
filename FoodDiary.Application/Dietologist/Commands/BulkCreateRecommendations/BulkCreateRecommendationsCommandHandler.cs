@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
@@ -15,7 +16,7 @@ public sealed class BulkCreateRecommendationsCommandHandler(
     IRecommendationBulkDispatchLookupRepository dispatchLookupRepository,
     IRecommendationBulkDispatchWriteRepository dispatchWriteRepository,
     IDietologistInvitationReadModelRepository invitationRepository,
-    IUserContextService userContextService)
+    ICurrentUserAccessService userContextService)
     : ICommandHandler<BulkCreateRecommendationsCommand, Result<BulkRecommendationResultModel>> {
     public async Task<Result<BulkRecommendationResultModel>> Handle(
         BulkCreateRecommendationsCommand command,

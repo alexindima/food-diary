@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Users.Common;
@@ -15,6 +16,7 @@ internal sealed class UserContextService(
     ICurrentUserAccessService,
     IUserAiProfileReadService,
     IUserDashboardProfileReadService,
+    IUserDietologistProfileReadService,
     IUserGamificationProfileReadService,
     IUserHydrationProfileReadService,
     IUserTdeeProfileReadService,
@@ -85,6 +87,25 @@ internal sealed class UserContextService(
             : Result.Success(new UserGamificationProfileModel(CreateCalorieSchedule(userResult.Value)));
     }
 
+    public async Task<Result<UserDietologistProfileModel>> GetAccessibleProfileAsync(
+        UserId userId,
+        CancellationToken cancellationToken) {
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        return userResult.IsFailure
+            ? Result.Failure<UserDietologistProfileModel>(userResult.Error)
+            : Result.Success(ToDietologistProfile(userResult.Value));
+    }
+
+    public async Task<UserDietologistProfileModel?> FindByIdAsync(UserId userId, CancellationToken cancellationToken) {
+        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        return user is null ? null : ToDietologistProfile(user);
+    }
+
+    public async Task<UserDietologistProfileModel?> FindByEmailAsync(string email, CancellationToken cancellationToken) {
+        User? user = await userLookupRepository.GetByEmailAsync(email, cancellationToken).ConfigureAwait(false);
+        return user is null ? null : ToDietologistProfile(user);
+    }
+
     public async Task<Result<UserHydrationProfileModel>> GetHydrationProfileAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
@@ -131,6 +152,15 @@ internal sealed class UserContextService(
             user.FridayCalories,
             user.SaturdayCalories,
             user.SundayCalories);
+
+    private static UserDietologistProfileModel ToDietologistProfile(User user) =>
+        new(
+            user.Id.Value,
+            user.Email,
+            user.FirstName,
+            user.LastName,
+            user.Language,
+            user.HasRole(RoleNames.Dietologist));
 
     public async Task<Result<UserModel>> GetUserAsync(UserId userId, CancellationToken cancellationToken) {
         Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);

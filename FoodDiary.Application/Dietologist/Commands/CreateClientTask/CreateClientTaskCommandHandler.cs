@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
@@ -15,7 +16,7 @@ namespace FoodDiary.Application.Dietologist.Commands.CreateClientTask;
 public sealed class CreateClientTaskCommandHandler(
     IClientTaskWriteRepository taskRepository,
     IDietologistInvitationReadModelRepository invitationRepository,
-    IUserContextService userContextService,
+    ICurrentUserAccessService userContextService,
     INotificationWriter notificationWriter,
     TimeProvider timeProvider)
     : ICommandHandler<CreateClientTaskCommand, Result<ClientTaskModel>> {

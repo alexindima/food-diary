@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4120,
+                    "productionFiles":  4122,
                     "criticalSymbols":  538,
                     "criticalSymbolsWithTestReferences":  509,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -4551,6 +4551,14 @@
                       "structuralRiskScore":  0.18
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserDietologistProfileReadService.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserDirectoryService.cs",
                       "nonBlankLines":  11,
                       "decisionPoints":  0,
@@ -4741,6 +4749,14 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDietologistProfileModel.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserGamificationProfileModel.cs",
@@ -8536,11 +8552,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                      "nonBlankLines":  45,
+                      "nonBlankLines":  46,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.9
+                      "structuralRiskScore":  0.92
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
@@ -8624,11 +8640,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommandHandler.cs",
-                      "nonBlankLines":  38,
+                      "nonBlankLines":  39,
                       "decisionPoints":  4,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  8.76
+                      "structuralRiskScore":  8.78
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommand.cs",
@@ -8640,11 +8656,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandHandler.cs",
-                      "nonBlankLines":  90,
+                      "nonBlankLines":  91,
                       "decisionPoints":  4,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  9.8
+                      "structuralRiskScore":  9.82
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandValidator.cs",
@@ -8704,11 +8720,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Commands/CreateClientTask/CreateClientTaskCommandHandler.cs",
-                      "nonBlankLines":  59,
+                      "nonBlankLines":  60,
                       "decisionPoints":  3,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.68
+                      "structuralRiskScore":  7.7
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Commands/CreateClientTask/CreateClientTaskCommandValidator.cs",
@@ -8752,11 +8768,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
-                      "nonBlankLines":  115,
+                      "nonBlankLines":  117,
                       "decisionPoints":  8,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  16.3
+                      "structuralRiskScore":  16.34
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandValidator.cs",
@@ -8776,11 +8792,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandHandler.cs",
-                      "nonBlankLines":  26,
+                      "nonBlankLines":  27,
                       "decisionPoints":  1,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.02
+                      "structuralRiskScore":  4.04
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandValidator.cs",
@@ -8904,11 +8920,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandHandler.cs",
-                      "nonBlankLines":  61,
+                      "nonBlankLines":  62,
                       "decisionPoints":  5,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.72
+                      "structuralRiskScore":  10.74
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandValidator.cs",
@@ -8944,11 +8960,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandHandler.cs",
-                      "nonBlankLines":  40,
+                      "nonBlankLines":  41,
                       "decisionPoints":  4,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  8.8
+                      "structuralRiskScore":  8.82
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandValidator.cs",
@@ -9008,11 +9024,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Common/IDietologistUserContextService.cs",
-                      "nonBlankLines":  14,
+                      "nonBlankLines":  13,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.28
+                      "structuralRiskScore":  0.26
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Common/IDietologistUserLookupService.cs",
@@ -9392,11 +9408,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
-                      "nonBlankLines":  27,
+                      "nonBlankLines":  28,
                       "decisionPoints":  1,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.04
+                      "structuralRiskScore":  4.06
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Services/ClientTaskDueReminderProcessor.cs",
@@ -9440,11 +9456,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Services/DietologistUserContextService.cs",
-                      "nonBlankLines":  41,
+                      "nonBlankLines":  39,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.82
+                      "structuralRiskScore":  0.78
                   },
                   {
                       "path":  "FoodDiary.Application/Dietologist/Services/DietologistUserLookupService.cs",
@@ -13712,11 +13728,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Users/Common/UserContextService.cs",
-                      "nonBlankLines":  233,
+                      "nonBlankLines":  259,
                       "decisionPoints":  9,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  18.16
+                      "structuralRiskScore":  18.68
                   },
                   {
                       "path":  "FoodDiary.Application/Users/Common/UserPreferenceCodeParser.cs",
@@ -33886,7 +33902,7 @@
                                 "name":  "ArchiveRecommendationTemplateCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Dietologist/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommandHandler.cs",
-                                "line":  11,
+                                "line":  12,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
@@ -33906,7 +33922,7 @@
                                 "name":  "BulkCreateRecommendationsCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandHandler.cs",
-                                "line":  12,
+                                "line":  13,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Dietologist/BulkCreateRecommendationsHandlerTests.cs",
@@ -34030,7 +34046,7 @@
                                 "name":  "CreateClientTaskCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Dietologist/Commands/CreateClientTask/CreateClientTaskCommandHandler.cs",
-                                "line":  14,
+                                "line":  15,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Dietologist/ClientTaskHandlerTests.cs"
@@ -34158,7 +34174,7 @@
                                 "name":  "CreateRecommendationCommentCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
-                                "line":  18,
+                                "line":  19,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs"
@@ -34168,7 +34184,7 @@
                                 "name":  "CreateRecommendationTemplateCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandHandler.cs",
-                                "line":  11,
+                                "line":  12,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
@@ -34907,7 +34923,7 @@
                                 "name":  "SetAttentionSignalStateCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandHandler.cs",
-                                "line":  13,
+                                "line":  14,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Dietologist/AttentionSignalTests.cs"
@@ -35208,7 +35224,7 @@
                                 "name":  "UpdateRecommendationTemplateCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandHandler.cs",
-                                "line":  13,
+                                "line":  14,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
@@ -37560,7 +37576,7 @@
                                 "name":  "SearchRecommendationTemplatesQueryHandler",
                                 "role":  "QueryHandler",
                                 "path":  "FoodDiary.Application/Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
-                                "line":  9,
+                                "line":  10,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"

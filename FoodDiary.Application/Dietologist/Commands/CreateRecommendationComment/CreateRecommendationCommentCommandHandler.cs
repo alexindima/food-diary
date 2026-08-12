@@ -8,9 +8,10 @@ using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Notifications;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
@@ -22,7 +23,8 @@ public sealed class CreateRecommendationCommentCommandHandler(
     IDietologistInvitationReadModelRepository invitationRepository,
     INotificationWriter notificationWriter,
     IAuditEntryWriter auditWriter,
-    IUserContextService userContextService)
+    ICurrentUserAccessService userContextService,
+    IUserDietologistProfileReadService profileReadService)
     : ICommandHandler<CreateRecommendationCommentCommand, Result<RecommendationCommentModel>> {
     public async Task<Result<RecommendationCommentModel>> Handle(
         CreateRecommendationCommentCommand command,
@@ -57,7 +59,7 @@ public sealed class CreateRecommendationCommentCommandHandler(
             return Result.Failure<RecommendationCommentModel>(accessResult.Error);
         }
 
-        Result<User> authorResult = await userContextService.GetAccessibleUserAsync(
+        Result<UserDietologistProfileModel> authorResult = await profileReadService.GetAccessibleProfileAsync(
             authorUserId, cancellationToken).ConfigureAwait(false);
         if (authorResult.IsFailure) {
             return Result.Failure<RecommendationCommentModel>(authorResult.Error);
@@ -115,7 +117,7 @@ public sealed class CreateRecommendationCommentCommandHandler(
             : Result.Success();
     }
 
-    private static RecommendationCommentModel ToModel(RecommendationComment comment, User author) =>
+    private static RecommendationCommentModel ToModel(RecommendationComment comment, UserDietologistProfileModel author) =>
         new(
             comment.Id.Value,
             comment.RecommendationId.Value,

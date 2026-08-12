@@ -12,7 +12,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.Entities.Dietologist;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Application.Abstractions.Users.Models;
 
 namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
 
@@ -32,7 +32,7 @@ public sealed class AcceptInvitationCommandHandler(
         }
 
         UserId dietologistUserId = userIdResult.Value;
-        Result<User> userResult = await dietologistUserContextService.GetAccessibleUserAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
+        Result<UserDietologistProfileModel> userResult = await dietologistUserContextService.GetAccessibleProfileAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);
         }
@@ -61,15 +61,15 @@ public sealed class AcceptInvitationCommandHandler(
             return Result.Failure(Errors.Dietologist.InvitationInvalidToken);
         }
 
-        User user = userResult.Value;
+        UserDietologistProfileModel user = userResult.Value;
         if (!string.Equals(invitation.DietologistEmail, user.Email, StringComparison.OrdinalIgnoreCase)) {
             return Result.Failure(Errors.Dietologist.InvitationNotFound);
         }
 
         invitation.Accept(dietologistUserId);
 
-        if (!user.HasRole(RoleNames.Dietologist)) {
-            await userRoleMembershipService.EnsureRoleAsync(user.Id, RoleNames.Dietologist, cancellationToken).ConfigureAwait(false);
+        if (!user.IsDietologist) {
+            await userRoleMembershipService.EnsureRoleAsync(new UserId(user.Id), RoleNames.Dietologist, cancellationToken).ConfigureAwait(false);
         }
 
         await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);
@@ -96,7 +96,7 @@ public sealed class AcceptInvitationCommandHandler(
             "Invitation id must not be empty.",
             value => new DietologistInvitationId(value));
 
-    private static string ResolveDietologistDisplayName(User user) {
+    private static string ResolveDietologistDisplayName(UserDietologistProfileModel user) {
         string fullName = $"{user.FirstName} {user.LastName}".Trim();
         return string.IsNullOrWhiteSpace(fullName) ? user.Email : fullName;
     }

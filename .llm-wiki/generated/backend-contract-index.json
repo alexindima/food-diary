@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "contracts":  1030,
+                    "contracts":  1031,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  7128,
-                    "productionConsumerEdges":  4356,
-                    "testConsumerEdges":  2772,
-                    "consumedContracts":  1030,
+                    "consumerEdges":  7137,
+                    "productionConsumerEdges":  4361,
+                    "testConsumerEdges":  2776,
+                    "consumedContracts":  1031,
                     "unconsumedContracts":  0
                 },
     "contracts":  [
@@ -12123,6 +12123,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Application.Abstractions/Users/Common/IUserDashboardProfileReadService.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "IUserDietologistProfileReadService",
+                          "roles":  [
+                                        "Service"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Abstractions/Users/Common/IUserDietologistProfileReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -50800,6 +50816,32 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/Commands/CancelClientTask/CancelClientTaskCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -50814,6 +50856,45 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Commands/CreateClientTask/CreateClientTaskCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -50865,7 +50946,33 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/Commands/UpdateDietologistPermissions/UpdateDietologistPermissionsCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -51060,6 +51167,19 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/Services/DietologistClientReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -51087,6 +51207,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/Services/DietologistRecommendationReadService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Services/DietologistUserContextService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -52778,7 +52911,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
                               "isTest":  true,
-                              "referenceCount":  10
+                              "referenceCount":  12
                           },
                           {
                               "contract":  "ICurrentUserAccessService",
@@ -52791,7 +52924,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs",
                               "isTest":  true,
-                              "referenceCount":  2
+                              "referenceCount":  4
                           },
                           {
                               "contract":  "ICurrentUserAccessService",
@@ -53195,6 +53328,19 @@
                               "consumerPath":  "tests/FoodDiary.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
                               "isTest":  true,
                               "referenceCount":  3
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
                           },
                           {
                               "contract":  "ICycleReadModelRepository",
@@ -85756,123 +85902,6 @@
                                                       "FoodDiary.Application/Users/Common/IUserContextService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserContextService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserContextService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserContextService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserContextService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Commands/CreateClientTask/CreateClientTaskCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserContextService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserContextService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserContextService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserContextService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserContextService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserContextService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserContextService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserContextService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserContextService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserContextService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserContextService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserContextService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Services/DietologistUserContextService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserContextService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserContextService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Notifications/Services/NotificationUserAccessService.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -86133,22 +86162,9 @@
                                                       "FoodDiary.Application/Users/Common/IUserContextService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  4
-                          },
-                          {
-                              "contract":  "IUserContextService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserContextService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs",
                               "isTest":  true,
-                              "referenceCount":  6
+                              "referenceCount":  4
                           },
                           {
                               "contract":  "IUserContextService",
@@ -86424,6 +86440,123 @@
                               "referenceCount":  2
                           },
                           {
+                              "contract":  "IUserDietologistProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserDietologistProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Identity.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserDietologistProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserDietologistProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserDietologistProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserDietologistProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Services/DietologistUserContextService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserDietologistProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserDietologistProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Services/DietologistUserLookupService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserDietologistProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserDietologistProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Users/Common/UserContextService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserDietologistProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserDietologistProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  4
+                          },
+                          {
+                              "contract":  "IUserDietologistProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserDietologistProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  4
+                          },
+                          {
+                              "contract":  "IUserDietologistProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserDietologistProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  6
+                          },
+                          {
+                              "contract":  "IUserDietologistProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserDietologistProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
                               "contract":  "IUserDirectoryService",
                               "roles":  [
                                             "Service"
@@ -86536,19 +86669,6 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/IUserDirectoryService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dietologist/Services/DietologistUserLookupService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserDirectoryService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserDirectoryService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Notifications/Services/WebPushDeliveryAudienceService.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -86589,19 +86709,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.OverviewAndContextTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  2
-                          },
-                          {
-                              "contract":  "IUserDirectoryService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserDirectoryService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs",
                               "isTest":  true,
                               "referenceCount":  2
                           },
@@ -87147,19 +87254,6 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/IUserLookupRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  2
-                          },
-                          {
-                              "contract":  "IUserLookupRepository",
-                              "roles":  [
-                                            "LookupRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserLookupRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Users/HistoryProfileCoverageTests.cs",
                               "isTest":  true,
                               "referenceCount":  2
@@ -87226,6 +87320,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/DependencyInjection.Identity.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dietologist/Services/DietologistUserContextService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -87358,6 +87465,32 @@
                               "consumerPath":  "FoodDiary.Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  3
+                          },
+                          {
+                              "contract":  "IUserProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IUserProfileReadService",

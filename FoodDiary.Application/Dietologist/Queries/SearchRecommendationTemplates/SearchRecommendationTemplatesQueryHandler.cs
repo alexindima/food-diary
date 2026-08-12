@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
@@ -9,7 +10,7 @@ namespace FoodDiary.Application.Dietologist.Queries.SearchRecommendationTemplate
 
 public sealed class SearchRecommendationTemplatesQueryHandler(
     IRecommendationTemplateReadService readService,
-    IUserContextService userContextService)
+    ICurrentUserAccessService userContextService)
     : IQueryHandler<SearchRecommendationTemplatesQuery, Result<IReadOnlyList<RecommendationTemplateModel>>> {
     public async Task<Result<IReadOnlyList<RecommendationTemplateModel>>> Handle(
         SearchRecommendationTemplatesQuery query,

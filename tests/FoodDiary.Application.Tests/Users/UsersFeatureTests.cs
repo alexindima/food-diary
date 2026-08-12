@@ -1076,6 +1076,8 @@ public partial class UsersFeatureTests {
             await service.GetDashboardProfileAsync(user.Id, CancellationToken.None));
         UserGamificationProfileModel gamification = ResultAssert.Success(
             await service.GetGamificationProfileAsync(user.Id, CancellationToken.None));
+        UserDietologistProfileModel dietologist = ResultAssert.Success(
+            await service.GetAccessibleProfileAsync(user.Id, CancellationToken.None));
 
         Assert.Multiple(
             () => Assert.Equal(user.Id, ai.UserId),
@@ -1092,7 +1094,10 @@ public partial class UsersFeatureTests {
             () => Assert.Equal(user.Email, dashboard.Email),
             () => Assert.Equal(user.DashboardLayoutJson, dashboard.DashboardLayoutJson),
             () => Assert.Equal(user.DailyCalorieTarget, dashboard.CalorieSchedule.GetTargetForDate(DateTime.UtcNow)),
-            () => Assert.Equal(user.DailyCalorieTarget, gamification.CalorieSchedule.GetTargetForDate(DateTime.UtcNow)));
+            () => Assert.Equal(user.DailyCalorieTarget, gamification.CalorieSchedule.GetTargetForDate(DateTime.UtcNow)),
+            () => Assert.Equal(user.Email, dietologist.Email),
+            () => Assert.Equal(user.FirstName, dietologist.FirstName),
+            () => Assert.False(dietologist.IsDietologist));
     }
 
     private static IUserContextService CreateAccessCheckedFailingUserContext(UserId userId) {
