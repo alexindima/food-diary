@@ -142,14 +142,14 @@
                         "pageSha256":  "dfce522394cc3d66d2a43c52d67969355bb1cbbc65b0dd94e694a38d20a610fa",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiContentFingerprint.ps1",
-                                            "sha256":  "2014060080165545c723db6597a0272612bfd7489ac39f43b7160475bc353bd2"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
+                                            "sha256":  "86d0979768a76d5e5c8fa9dc9a6fa27f2ca2e71eba544dda6f6e6a887170bfc2"
                                         }
                                     ],
-                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
+                        "reason":  "Reviewed evidence-lineage set comparison hardening; semantics are unchanged and equal, different, and empty evidence sets are now handled safely.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
-                        "reviewedAtUtc":  "2026-08-12T09:04:29.3832272Z"
+                        "gitHead":  "009e677aa8c7d6f4b4cbec20e302b47165a8b316",
+                        "reviewedAtUtc":  "2026-08-12T13:32:26.1764095Z"
                     },
                     {
                         "pageId":  "workflow.frontend-contract-review",
@@ -526,13 +526,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "0d3dcbdb652358eeaaab43316d3f6b3d4089f7efd47556a4b6f54812f781f062"
+                                            "sha256":  "6cebfb79d3736961c9fd7e6ff28f83c372b9ccb9a5c9a0d49060c89546d56950"
                                         }
                                     ],
-                        "reason":  "Reviewed JSON plan behavior when no LLM Wiki implementation paths are affected.",
+                        "reason":  "Reviewed affected-smoke routing for the focused evidence-lineage regression; only the governed-delivery test selection is expanded.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d40159f1a5ebc3b2d5f3dcb6df7de39b018e41e6",
-                        "reviewedAtUtc":  "2026-08-12T13:26:31.8523115Z"
+                        "gitHead":  "009e677aa8c7d6f4b4cbec20e302b47165a8b316",
+                        "reviewedAtUtc":  "2026-08-12T13:32:29.3446944Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -894,18 +894,14 @@
                         "pageSha256":  "d82ff199232ffa58514f61a394d36cad07f3e2d96d7bab4fdaa09be847fce590",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Initialize-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "29363c6858c21e523e7b499c3a9b421089b065079b92e38716a86c27b3fa85a1"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
+                                            "sha256":  "86d0979768a76d5e5c8fa9dc9a6fa27f2ca2e71eba544dda6f6e6a887170bfc2"
                                         }
                                     ],
-                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
+                        "reason":  "Reviewed task-workspace lineage validation impact; no workspace schema or lifecycle contract changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
-                        "reviewedAtUtc":  "2026-08-12T09:51:55.2464113Z"
+                        "gitHead":  "009e677aa8c7d6f4b4cbec20e302b47165a8b316",
+                        "reviewedAtUtc":  "2026-08-12T13:32:32.8212603Z"
                     },
                     {
                         "pageId":  "workflow-test-plan",

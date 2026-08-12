@@ -10,6 +10,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiCollections.ps1')
 if ([string]::IsNullOrWhiteSpace($WorkspacePath) -eq [string]::IsNullOrWhiteSpace($EvidencePath)) {
     throw 'Specify exactly one of WorkspacePath or EvidencePath.'
 }
@@ -53,11 +54,6 @@ function Get-Hash([object]$Value) {
     $sha = [System.Security.Cryptography.SHA256]::Create()
     try { return ([BitConverter]::ToString($sha.ComputeHash($bytes)) -replace '-', '').ToLowerInvariant() } finally { $sha.Dispose() }
 }
-function Test-SameSet([object[]]$Left, [object[]]$Right) {
-    $leftValues = @($Left | ForEach-Object { [string]$_ } | Sort-Object -Unique)
-    $rightValues = @($Right | ForEach-Object { [string]$_ } | Sort-Object -Unique)
-    return ($leftValues.Count -eq $rightValues.Count -and (Compare-Object $leftValues $rightValues).Count -eq 0)
-}
 function Test-Lineage([string]$Kind, [object]$Entry, [object]$Requirement) {
     $entryIssues = [System.Collections.Generic.List[string]]::new()
     $lineage = $Entry.lineage
@@ -71,7 +67,7 @@ function Test-Lineage([string]$Kind, [object]$Entry, [object]$Requirement) {
         if ([string]$lineage.subject.definitionFingerprint -cne (Get-Hash $expectedDefinition)) { $entryIssues.Add('definition fingerprint is invalid') }
         if ([string]$lineage.subject.sourceRule -cne [string]$Requirement.sourceRule) { $entryIssues.Add('source rule changed') }
         $expectedPaths = @($policy.matchedRules | Where-Object id -eq $Requirement.sourceRule | Select-Object -First 1).matchedPaths
-        if (-not (Test-SameSet @($lineage.dependencies.paths) $expectedPaths)) { $entryIssues.Add('dependency paths changed') }
+        if (-not (Test-LlmWikiSameSet @($lineage.dependencies.paths) $expectedPaths)) { $entryIssues.Add('dependency paths changed') }
         $content = & (Join-Path $PSScriptRoot 'Get-LlmWikiContentFingerprint.ps1') -Path $expectedPaths -Format Json | ConvertFrom-Json
         if ([string]$lineage.dependencies.contentFingerprint -cne [string]$content.fingerprint) { $entryIssues.Add('dependency content changed') }
         if ([string]$lineage.policyFingerprint -cne $policyHash) { $entryIssues.Add('change policy changed') }
