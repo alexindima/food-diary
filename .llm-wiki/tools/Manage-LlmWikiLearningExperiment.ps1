@@ -138,10 +138,17 @@ function Get-Shadow([object]$Candidate, [object]$Application) {
     }
 }
 function Get-CanaryEvaluation([object[]]$Observations) {
-    $sampleCount = @($Observations).Count
-    $improved = @($Observations | Where-Object outcome -eq 'improved').Count
-    $neutral = @($Observations | Where-Object outcome -eq 'neutral').Count
-    $degraded = @($Observations | Where-Object outcome -eq 'degraded').Count
+    $normalizedObservations = @($Observations | Where-Object { $null -ne $_ })
+    $sampleCount = $normalizedObservations.Count
+    $outcomes = @($normalizedObservations | ForEach-Object {
+        if ($_.PSObject.Properties['outcome']) { [string]$_.outcome }
+    })
+    $workspaces = @($normalizedObservations | ForEach-Object {
+        if ($_.PSObject.Properties['workspace'] -and -not [string]::IsNullOrWhiteSpace([string]$_.workspace)) { [string]$_.workspace }
+    } | Sort-Object -Unique)
+    $improved = @($outcomes | Where-Object { $_ -eq 'improved' }).Count
+    $neutral = @($outcomes | Where-Object { $_ -eq 'neutral' }).Count
+    $degraded = @($outcomes | Where-Object { $_ -eq 'degraded' }).Count
     $degradationPercent = if ($sampleCount -eq 0) { 0 } else { [Math]::Round(100 * $degraded / $sampleCount, 2) }
     $verdict = if ($sampleCount -lt [int]$experimentPolicy.minimumCanarySamples) {
         'inconclusive'
@@ -150,7 +157,7 @@ function Get-CanaryEvaluation([object[]]$Observations) {
     } else { 'fail' }
     [pscustomobject][ordered]@{
         sampleCount = $sampleCount
-        distinctWorkspaceCount = @($Observations.workspace | Sort-Object -Unique).Count
+        distinctWorkspaceCount = $workspaces.Count
         improvedCount = $improved
         neutralCount = $neutral
         degradedCount = $degraded

@@ -172,18 +172,14 @@
                         "pageSha256":  "fbde1e3b8cec7d59d3bd96a9e14b252a9c9d6b5c88ee02ac0035f573bb091c0e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "265d6afcbefd732c11bf0d98af9aeb5554073bbc8b93f8c4cf511aef51b06ca4"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
-                                            "sha256":  "7c2be5ecaa7e872476826cf1d4917af05e90bc8b4c516ec09b39f1472406f369"
+                                            "path":  ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+                                            "sha256":  "150ea94964bd22930d85c6cfb61d9839446bebad9ce2bfe299818596eedc3083"
                                         }
                                     ],
-                        "reason":  "Reviewed catalog schema extension and verify Area forwarding: query discovery remains backward compatible, task dispatch semantics are unchanged, and backend/frontend area selection is explicitly diagnostic only.",
+                        "reason":  "Reviewed safe origin, project, and dependency extraction for heterogeneous module catalog entries.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8f671ba7a65724908d3ab5328e8dda53ce8af38a",
-                        "reviewedAtUtc":  "2026-08-11T22:00:31.2998303Z"
+                        "gitHead":  "0d08671c1d651c61876941d03e33372a0dedbc3c",
+                        "reviewedAtUtc":  "2026-08-12T13:06:07.6580609Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -335,17 +331,17 @@
                     {
                         "pageId":  "workflow-context-bundles",
                         "pagePath":  ".llm-wiki/workflows/context-bundles.md",
-                        "pageSha256":  "0b135cd36bc0ddc7e081cff3196a5d6e7c26254db35a24b05f828d0941ac4ecd",
+                        "pageSha256":  "c6ad719eb6441142cdea59a921180a1c64d63b5c3143b6d0ac37ccf2df185fda",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-                                            "sha256":  "13db1e8a95f3692db2ef975a20f3e6972e804bad2698da987bf6be11054861bf"
+                                            "sha256":  "150ea94964bd22930d85c6cfb61d9839446bebad9ce2bfe299818596eedc3083"
                                         }
                                     ],
-                        "reason":  "Reviewed scoped context ranking; bundle storage and validation semantics are unchanged.",
+                        "reason":  "Reviewed optional module metadata normalization and focused context-bundle smoke routing.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9ee37a9ccd4f1777efdfc303df8bbce091f66dad",
-                        "reviewedAtUtc":  "2026-07-30T21:38:33.8318808Z"
+                        "gitHead":  "0d08671c1d651c61876941d03e33372a0dedbc3c",
+                        "reviewedAtUtc":  "2026-08-12T13:06:04.5848719Z"
                     },
                     {
                         "pageId":  "workflow-controlled-learning-promotion",
@@ -353,14 +349,14 @@
                         "pageSha256":  "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1",
-                                            "sha256":  "10b711a24c85adebd3a9469a5d118dd322cb0ca859166788eb0144fb3964c7c4"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningExperiment.ps1",
+                                            "sha256":  "9c32a9b69a02d9ed721902feb0ba15f743660d6d2c8629a549b5c8cca4f9eefc"
                                         }
                                     ],
-                        "reason":  "Reviewed atomic legacy hash-chain migration, corruption rejection, idempotent empty-result formatting, and single-event output semantics.",
+                        "reason":  "Reviewed canary evaluation for empty, legacy, and multi-workspace observations.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "3f99ed7d556db2dfd976ba80b39b4278d1339189",
-                        "reviewedAtUtc":  "2026-08-12T12:22:22.5070430Z"
+                        "gitHead":  "0d08671c1d651c61876941d03e33372a0dedbc3c",
+                        "reviewedAtUtc":  "2026-08-12T13:06:05.5707782Z"
                     },
                     {
                         "pageId":  "workflow-controlled-repair-loop",
@@ -533,14 +529,14 @@
                         "pageSha256":  "4b700f452947b76c2dd708ab5978289650c76c32a49e06ea6356812757e73cd8",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "3196cd63340ac4d76b5af5c48ec24b67f3d02d3705c5d381b0307bab77340e61"
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+                                            "sha256":  "bca94339f80832069d5c0b3d744aadfc2f7203683e47a71a234177dd57660117"
                                         }
                                     ],
-                        "reason":  "Reviewed full-tools timeout and resumable standalone command; index update mutual exclusion remains unchanged.",
+                        "reason":  "Reviewed granular affected-smoke routing; full-tools remains available for unknown changes and full CI.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2c158142caaff6421211c35f28d13f32fe688431",
-                        "reviewedAtUtc":  "2026-08-12T11:38:11.5835731Z"
+                        "gitHead":  "0d08671c1d651c61876941d03e33372a0dedbc3c",
+                        "reviewedAtUtc":  "2026-08-12T13:06:06.6521581Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",

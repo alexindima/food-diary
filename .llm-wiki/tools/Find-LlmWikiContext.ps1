@@ -176,9 +176,9 @@ if ($null -ne $matchedModule) {
     )
     $moduleContext = [ordered]@{
         name = $matchedModule.name
-        origin = if ($null -ne $matchedModule.origin) { $matchedModule.origin } else { 'module-graph' }
-        project = $matchedModule.project
-        dependencies = @($matchedModule.dependencies)
+        origin = if ($matchedModule.PSObject.Properties['origin'] -and -not [string]::IsNullOrWhiteSpace([string]$matchedModule.origin)) { [string]$matchedModule.origin } else { 'module-graph' }
+        project = if ($matchedModule.PSObject.Properties['project']) { $matchedModule.project } else { $null }
+        dependencies = @(if ($matchedModule.PSObject.Properties['dependencies']) { @($matchedModule.dependencies) })
         consumers = $consumers
     }
 }
@@ -399,7 +399,7 @@ if ($null -ne $symbolIndex) {
             if ([string]$symbol.path -match $modulePathPattern) {
                 $score += 12
             }
-            if (-not [string]::IsNullOrWhiteSpace([string]$matchedModule.project)) {
+            if ($matchedModule.PSObject.Properties['project'] -and -not [string]::IsNullOrWhiteSpace([string]$matchedModule.project)) {
                 $moduleProjectDirectory = (Split-Path -Parent $matchedModule.project).Replace('\', '/')
                 if ([string]$symbol.path -like "$moduleProjectDirectory/*") {
                     $score += 12

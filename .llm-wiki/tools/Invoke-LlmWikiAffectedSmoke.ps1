@@ -71,6 +71,8 @@ foreach ($path in $paths) {
         $null = $smokeGroups.Add('contract-consumers')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiLearningPromotion|Manage-LlmWikiLearningExperiment|Manage-LlmWikiEvalPromotion|Manage-LlmWikiLearningHealth|Test-LlmWikiKnowledgeIsolation)\.ps1$') {
         $null = $smokeGroups.Add('knowledge-isolation')
+    } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiContext|Manage-LlmWikiContextBundle)\.ps1$') {
+        $null = $smokeGroups.Add('context-bundle')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiChangeManifest|Manage-LlmWikiAcceptanceMatrix|Test-LlmWikiTestOnlyGovernance)\.ps1$') {
         $null = $smokeGroups.Add('test-only-governance')
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiChangePacket|Invoke-LlmWikiDeliveryWorkflow|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiTaskEvidence|Manage-LlmWikiAcceptanceMatrix|Manage-LlmWikiChangeCritique|Manage-LlmWikiConfidenceLedger|Manage-LlmWikiImpactSimulation|Manage-LlmWikiRiskCalibration|Manage-LlmWikiFailurePrediction|Manage-LlmWikiVerificationCost|Manage-LlmWikiRequirementModel|New-LlmWikiEvidenceLineage|Update-LlmWikiTaskEvidence|Add-LlmWikiSourceReview|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiChangePacketMetadata|Test-LlmWikiGovernedDeliveryRegression|Test-LlmWikiGovernedAuthenticationStart)\.ps1$') {
@@ -215,6 +217,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'knowledge-isolation' {
             & (Join-Path $toolsRoot 'Test-LlmWikiKnowledgeIsolation.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'context-bundle' {
+            & (Join-Path $toolsRoot 'Find-LlmWikiContext.ps1') -Module Users -Format Json | Out-Null
             if (-not $?) { exit 1 }
         }
         'test-only-governance' {
