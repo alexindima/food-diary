@@ -17,6 +17,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'Format-LlmWikiLearningExperimentResult.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $knowledgeRoot = if ([string]::IsNullOrWhiteSpace($env:LLM_WIKI_TEST_KNOWLEDGE_ROOT)) {
@@ -360,9 +361,5 @@ if ($Action -eq 'shadow') {
 }
 if ($FailOnInvalid -and -not $result.valid) { throw "Learning-experiment registry is invalid: $(@($result.issues) -join ' ')" }
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 50 } else {
-    Write-Host "Learning experiment: action=$Action, valid=$($result.valid)"
-    foreach ($experiment in @($result.experiments | Where-Object { $null -ne $_ })) {
-        Write-Host " - $($experiment.candidateId): shadow=$($experiment.shadow.verdict), canary=$($experiment.canaryState), current=$($experiment.currentEvaluation.verdict), successful=$($experiment.successful)"
-    }
-    foreach ($issue in @($result.issues)) { Write-Host " - $issue" }
+    Write-LlmWikiLearningExperimentResult $result
 }

@@ -375,14 +375,14 @@
                         "pageSha256":  "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-                                            "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningExperiment.ps1",
+                                            "sha256":  "bcb5da42c93ff7837fbf33ec9c50b89145c6487fab6f82ea97d61d3bd08cc110"
                                         }
                                     ],
-                        "reason":  "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
+                        "reason":  "Reviewed action-aware learning-experiment text formatting; registry mutations and learning lifecycle semantics are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "11ad75c4c7b137342ee1af037f718414c8be6578",
-                        "reviewedAtUtc":  "2026-08-12T14:07:38.5329842Z"
+                        "gitHead":  "a3fdd12ec9a1508fee0e8edbde837563bc10aaae",
+                        "reviewedAtUtc":  "2026-08-12T14:34:29.4045312Z"
                     },
                     {
                         "pageId":  "workflow-controlled-repair-loop",
@@ -556,13 +556,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "70ec2fc34bbc7fdbb1eb62b91156b04f1e823ff28f72a649e60c1ecdca44a485"
+                                            "sha256":  "1f4a5275a1943a73e167f77538a48ce18a7f2146cc60e8e420ff78590ac85edc"
                                         }
                                     ],
-                        "reason":  "Reviewed dedicated strict-shapes affected suite; collection contract changes now avoid the broader governed-delivery smoke while full CI coverage remains unchanged.",
+                        "reason":  "Reviewed focused knowledge-isolation formatter regression routing; affected verification remains strict without invoking unrelated full-tools scenarios.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cf6c3bec7afa720a04231fdd065416ca324f7a49",
-                        "reviewedAtUtc":  "2026-08-12T14:17:04.0214758Z"
+                        "gitHead":  "a3fdd12ec9a1508fee0e8edbde837563bc10aaae",
+                        "reviewedAtUtc":  "2026-08-12T14:34:32.4741910Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",

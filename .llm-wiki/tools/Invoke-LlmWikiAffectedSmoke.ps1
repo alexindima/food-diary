@@ -73,7 +73,7 @@ foreach ($path in $paths) {
         $null = $smokeGroups.Add('query-cache')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiContractConsumers|Test-LlmWikiContractConsumers|Get-LlmWikiExtractionReadiness|Test-LlmWikiExtractionReadiness)\.ps1$') {
         $null = $smokeGroups.Add('contract-consumers')
-    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiLearningPromotion|Manage-LlmWikiLearningExperiment|Manage-LlmWikiEvalPromotion|Manage-LlmWikiLearningHealth|Test-LlmWikiKnowledgeIsolation)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiLearningPromotion|Manage-LlmWikiLearningExperiment|Format-LlmWikiLearningExperimentResult|Test-LlmWikiLearningExperimentFormatting|Manage-LlmWikiEvalPromotion|Manage-LlmWikiLearningHealth|Test-LlmWikiKnowledgeIsolation)\.ps1$') {
         $null = $smokeGroups.Add('knowledge-isolation')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiMemory|Test-LlmWikiMemoryIsolation)\.ps1$') {
         $null = $smokeGroups.Add('memory')
@@ -231,6 +231,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'knowledge-isolation' {
             & (Join-Path $toolsRoot 'Test-LlmWikiKnowledgeIsolation.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiLearningExperimentFormatting.ps1')
             if (-not $?) { exit 1 }
         }
         'memory' {
